@@ -1,0 +1,109 @@
+@charset "utf-8"
+
+@import url(https://use.fontawesome.com/releases/v5.4.1/css/all.css)
+
+// Vitess colors
+$vitess-orange: #f16626
+
+// Other brand colors
+$twitter-blue: #1da1f3
+$slack-green: #74cdb0
+$stack-overflow-orange: #f48024
+
+// CNCF colors
+$cncf-dark-blue: #446ca9
+$cncf-light-blue: #76c4d5
+
+@import "bulma/sass/utilities/initial-variables"
+@import "bulma/sass/utilities/functions"
+
+$orange: $vitess-orange
+
+$primary: $orange
+$link: $cncf-dark-blue
+
+@import "bulma/sass/utilities/derived-variables"
+
+$colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $white), "orange": ($orange, $orange-invert), "twitter-blue": ($twitter-blue, $white), "slack-green": ($slack-green, $white)), $colors)
+
+@import "bulma/bulma"
+
+.is-video
+  max-width: 100%
+
+.column
+  &.is-thin
+    margin: 0 2%
+
+.is-user-logo
+  margin-bottom: 1rem
+  margin-right: .75rem
+
+  +tablet
+    max-height: 4rem
+    max-width: 8rem
+
+  +touch
+    max-height: 3rem
+    max-width: 6rem
+
+.sidebar
+  position: fixed
+
+  .sidebar-links
+    padding: 1rem
+
+    .sidebar-link
+      display: block
+
+      & + .sidebar-link
+        margin-top: .25rem
+
+=logo($touch, $tablet)
+  +touch
+    width: $touch
+  +tablet
+    width: $tablet
+
+.is-fixed-left
+  position: absolute
+
+.is-logo-button
+  span:nth-child(2)
+    margin-left: .5rem
+
+.is-home-hero-logo
+  +logo(40%, 30%)
+
+.is-cncf-logo
+  +logo(60%, 35%)
+
+.is-footer-logo
+  +logo(30%, 10%)
+
+.media
+  min-height: 9rem
+
+.button
+  border-radius: 0
+  border: none
+
+.section
+  &.is-light
+    background-color: $light
+
+=sticky-footer
+  display: flex
+  flex-direction: column
+  min-height: 100vh
+
+  .main
+    flex: 1
+
+
+.is-docs-article
+  +sticky-footer
+
+.toc
+  &.is-active
+    position: fixed

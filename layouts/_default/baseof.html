@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {{ partial "css.html" . }}
+  </head>
+  <body class="page has-navbar-fixed-top">
+    {{ block "main" . }}{{ end }}
+
+    {{ partial "javascript.html" . }}
+  </body>
+</html>
