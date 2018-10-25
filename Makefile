@@ -1,5 +1,5 @@
 production-build:
-	hugo
+	hugo --verbose
 
 preview-build:
 	hugo \
