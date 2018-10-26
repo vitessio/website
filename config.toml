@@ -1,0 +1,14 @@
+baseURL = "https://vitess.io"
+title   = "Vitess"
+
+[params.home]
+title = "Vitess is a database clustering system for horizontal scaling of MySQL"
+
+[params.assets]
+js = ["jquery-3.3.1", "app"]
+
+[params.social]
+github        = "vitessio/vitess"
+twitter       = "vitessio"
+slack         = "vitess"
+stackOverflow = "vitess"

@@ -1,0 +1,47 @@
+{{- $social  := $.Site.Params.social }}
+{{- $github  := printf "https://github.com/%s" $social.github }}
+{{- $twitter := printf "https://twitter.com/%s" $social.twitter }}
+{{- $slack   := printf "https://%s.slack.com" $social.slack }}
+{{- $stack   := printf "https://stackoverflow.com/search?q=%s" $social.stackOverflow }}
+<div class="buttons">
+  <a class="button is-white" href="{{ $github }}">
+    <span class="icon">
+      <i class="fab fa-lg fa-github"></i>
+    </span>
+    {{- if .footer }}
+    <span class="has-text-weight-bold">
+      GitHub
+    </span>
+    {{- end }}
+  </a>
+  <a class="button is-twitter-blue" href="{{ $twitter }}">
+    <span class="icon">
+      <i class="fab fa-lg fa-twitter"></i>
+    </span>
+    {{- if .footer}}
+    <span class="has-text-weight-bold">
+      Twitter
+    </span>
+    {{- end }}
+  </a>
+  <a class="button is-slack-green" href="{{ $slack }}">
+    <span class="icon">
+      <i class="fab fa-lg fa-slack"></i>
+    </span>
+    {{- if .footer }}
+    <span class="has-text-weight-bold">
+      Slack
+    </span>
+    {{- end }}
+  </a>
+  <a class="button is-stack-overflow-orange" href="{{ $stack }}">
+    <span class="icon">
+      <i class="fab fa-lg fa-stack-overflow"></i>
+    </span>
+    {{- if .footer }}
+    <span>
+      Stack Overflow
+    </span>
+    {{- end }}
+  </a>
+</div>

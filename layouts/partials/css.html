@@ -1,0 +1,14 @@
+{{- $inServerMode := .Site.IsServer }}
+{{- $style        := "sass/style.sass" }}
+{{- $target       := "css/style.css" }}
+{{- $includes     := (slice "node_modules") }}
+{{- $cssDevOpts   := (dict "includePaths" $includes "targetPath" $target "enableSourceMap" true) }}
+{{- $cssProdOpts  := (dict "includePaths" $includes "targetPath" $target "outputStyle" "compressed") }}
+{{- $cssOpts      := cond $inServerMode $cssDevOpts $cssProdOpts }}
+{{- $css          := resources.Get $style | toCSS $cssOpts }}
+{{- if $inServerMode }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}">
+{{- else }}
+{{- $prodCss      := $css | fingerprint }}
+<link rel="stylesheet" href="{{ $prodCss.RelPermalink }}" integrity="{{ $prodCss.Data.Integrity }}">
+{{- end }}

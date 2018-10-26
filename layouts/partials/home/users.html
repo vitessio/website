@@ -1,0 +1,29 @@
+{{- $userLogos := readDir "static/img/logos/users" }}
+<section class="section">
+  <div class="container has-text-centered">
+    <div class="columns">
+      <div class="column is-thin">
+        <p class="is-size-2 is-size-3-mobile">
+          Who uses Vitess
+        </p>
+
+        <hr class="has-background-orange" />
+
+        {{- range $userLogos }}
+        {{- $imgUrl := printf "img/logos/users/%s" .Name }}
+        <img class="is-user-logo" src="{{ $imgUrl }}">
+        {{- end }}
+      </div>
+
+      <div class="column is-thin">
+        <p class="is-size-2 is-size-3-mobile">
+          An introducton to Vitess
+        </p>
+
+        <hr class="has-background-orange" />
+
+        <iframe class="is-video" src="https://www.youtube.com/embed/q65TleTn2vg?rel=0" allowfullscreen="" width="480" height="270" frameborder="0"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
