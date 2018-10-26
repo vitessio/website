@@ -28,6 +28,14 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
 
 @import "bulma/bulma"
 
+.page
+  display: flex
+  flex-direction: column
+  min-height: 100vh
+
+  .main
+    flex: 1
+
 .is-video
   max-width: 100%
 
