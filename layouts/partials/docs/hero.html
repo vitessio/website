@@ -4,12 +4,12 @@
 <section class="hero is-dark">
   <div class="container">
     <div class="hero-body">
-      <p class="title is-size-1{{ if isset .Params "description" }} is-spaced{{ end }}">
+      <p class="title is-size-1 is-size-2-touch {{ if isset .Params "description" }} is-spaced{{ end }}">
         {{ .Title }}
       </p>
 
       {{- with .Params.description }}
-      <p class="subtitle is-size-2">
+      <p class="subtitle is-size-3 is-size-4-touch">
         {{ . | markdownify }}
       </p>
       {{- end }}

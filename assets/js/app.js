@@ -1,3 +1,11 @@
+const tocifyOptions = {
+  context: '.is-docs-content',
+  selectors: 'h2,h3',
+  showAndHide: false,
+  smoothScroll: true,
+  scrollTo: $('.navbar').height() + 25
+}
+
 function navbarBurgerToggle() {
   const burger = $('.navbar-burger'),
         menu   = $('.navbar-menu');
@@ -26,7 +34,12 @@ function fixUponScroll() {
   });
 }
 
+function tableOfContents(options) {
+  $('#tableOfContents').tocify(options);
+}
+
 $(function() {
   navbarBurgerToggle();
   fixUponScroll();
+  tableOfContents(tocifyOptions);
 });

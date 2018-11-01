@@ -6,7 +6,7 @@ disableKinds = ["taxonomy", "taxonomyTerms"]
 title = "Vitess is a database clustering system for horizontal scaling of MySQL"
 
 [params.assets]
-js = ["jquery-3.3.1", "app"]
+js = ["jquery-3.3.1", "jquery-ui-1.12.1", "jquery.tocify-1.9.0", "app"]
 
 [params.social]
 github        = "vitessio/vitess"
