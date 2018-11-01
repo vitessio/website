@@ -1,5 +1,6 @@
 baseURL = "https://vitess.io"
 title   = "Vitess"
+disableKinds = ["taxonomy", "taxonomyTerms"]
 
 [params.home]
 title = "Vitess is a database clustering system for horizontal scaling of MySQL"

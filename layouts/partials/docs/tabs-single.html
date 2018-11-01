@@ -1,0 +1,15 @@
+{{- $docs          := where .Site.RegularPages "Section" "docs" }}
+{{- $docsInSection := where $docs "CurrentSection.Name" .Parent.Name }}
+<nav class="tabs is-hidden-touch">
+  <div class="container">
+    <ul>
+      {{- range $docsInSection }}
+      <li>
+        <a href="{{ .URL }}">
+          {{ .Title }}
+        </a>
+      </li>
+      {{- end }}
+    </ul>
+  </div>
+</nav>
