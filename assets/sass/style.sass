@@ -1,6 +1,7 @@
 @charset "utf-8"
 
 @import url(https://use.fontawesome.com/releases/v5.4.1/css/all.css)
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700)
 
 // Vitess colors
 $vitess-orange: #f16626
@@ -13,6 +14,7 @@ $stack-overflow-orange: #f48024
 // CNCF colors
 $cncf-dark-blue: #446ca9
 $cncf-light-blue: #76c4d5
+$family-sans-serif: 'Open Sans', sans-serif
 
 @import "bulma/sass/utilities/initial-variables"
 @import "bulma/sass/utilities/functions"
@@ -28,6 +30,26 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
 
 @import "bulma/bulma"
 
+.toc
+  border-left: 2px solid $dark
+  padding: 1rem 0 0 .75rem
+
+
+  &.is-fixed
+    position: fixed
+
+  .tocify-header
+    margin-left: .5rem
+
+    .tocify-item
+      &.active
+        font-weight: 700
+
+    .tocify-subheader
+      margin-left: .5rem
+
+    
+
 .page
   display: flex
   flex-direction: column
@@ -38,6 +60,14 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
 
 .is-video
   max-width: 100%
+
+.is-docs-article
+  margin: 2rem 0
+
+  .content
+    +touch
+      margin-left: 2rem
+      margin-right: 2rem
 
 .column
   &.is-thin
@@ -54,18 +84,6 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
   +touch
     max-height: 3rem
     max-width: 6rem
-
-.sidebar
-  position: fixed
-
-  .sidebar-links
-    padding: 1rem
-
-    .sidebar-link
-      display: block
-
-      & + .sidebar-link
-        margin-top: .25rem
 
 =logo($touch, $tablet)
   +touch

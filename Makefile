@@ -11,4 +11,5 @@ serve:
 	hugo server \
 	--buildDrafts \
 	--buildFuture \
+	--ignoreCache \
 	--disableFastRender

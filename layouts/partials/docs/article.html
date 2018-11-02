@@ -1,0 +1,17 @@
+<div class="container">
+  <article class="is-docs-article">
+    <div class="columns">
+      <div class="column">
+        <div class="content is-docs-content">
+          {{ .Content }}
+        </div>
+      </div>
+
+      <div class="column is-2 is-hidden-touch">
+        <p class="is-size-3">
+          {{ partial "docs/toc.html" . }}
+        </p>
+      </div>
+    </div>
+  </article>
+</div>
