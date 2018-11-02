@@ -1,0 +1,32 @@
+{{- $date            := dateFormat "January 2, 2006" .Date }}
+{{- $authors         := .Params.authors }}
+{{- $authorsIncluded := gt (len $authors) 0 }}
+<a href="{{ .URL }}">
+  <div class="card">
+    <div class="card-content">
+      <p class="title is-size-3 is-size-4-mobile{{ if $authorsIncluded }} is-spaced{{ end }}">
+        {{ .Title }}
+      </p>
+
+      {{- if $authorsIncluded }}
+      <p class="subtitle is-size-5 is-size-6-mobile">
+        {{ delimit $authors ", " }}
+      </p>
+      {{- end }}
+
+      <p class="is-size-5 has-text-weight-light">
+        {{ $date }}
+      </p>
+
+      {{- if .Summary }}
+      <hr class="has-background-grey-light" />
+
+      <div class="content">
+        {{ .Summary }}
+      </div>
+      {{- end }}
+    </div>
+  </div>
+</a>
+
+<br />

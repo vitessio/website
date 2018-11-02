@@ -1,0 +1,32 @@
+{{ define "main" }}
+{{- $posts := where .Site.RegularPages "Section" "blog" }}
+<section class="hero is-black">
+  <div class="container">
+    <div class="hero-body">
+      <p class="title is-size-1 has-text-grey-light is-spaced">
+        {{ .Title }}
+      </p>
+
+      <p class="subtitle is-size-4 has-text-white-bis">
+        Updates and insights on Vitess, the database clustering system for horizontal scaling of MySQL
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-8">
+        {{- range $posts }}
+        {{ .Render "post-card" }}
+        {{- end }}
+      </div>
+      <div class="column">
+        
+      </div>
+    </div>
+  </div>
+</section>
+
+{{ end }}
