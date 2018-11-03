@@ -1,11 +1,10 @@
-+++
-author = "Adrianna Tan"
-published = 2018-08-05T07:15:00-07:00
-slug = "2018-08-05-vitess-weekly-digest"
-tags = ['Weekly Digest']
-title = "Vitess Weekly Digest - Aug 5 2018"
-+++
-
+---
+author: "Adrianna Tan"
+published: 2018-08-05T07:15:00-07:00
+slug: "2018-08-05-vitess-weekly-digest"
+tags: ['Weekly Digest']
+title: "Vitess Weekly Digest - Aug 5 2018"
+---
 *This week, we kick off our new weekly blog updates — bringing you the best of Vitess questions and topics on our [Slack](https://slack.com) discussions. The goal is to show the most interesting topics and requests so those of you just getting started can see highlights of what has been covered.*
 
 Since this is our first ever digest, we’re going to go back in time and publish a little more than what happened last week.

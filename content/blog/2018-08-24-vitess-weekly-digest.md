@@ -1,11 +1,10 @@
-+++
-author = "Adrianna Tan"
-published = 2018-08-05T07:15:00-07:00
-slug = "2018-08-24-vitess-weekly-digest"
-tags = ['Weekly Digest']
-title = "Vitess Weekly Digest - Aug 24 2018"
-+++
-
+---
+author: "Adrianna Tan"
+published: 2018-08-05T07:15:00-07:00
+slug: "2018-08-24-vitess-weekly-digest"
+tags: ['Weekly Digest']
+title: "Vitess Weekly Digest - Aug 24 2018"
+---
 *This week, we continue the digest from the Slack discussions.*
 
 ### Update stream

@@ -1,9 +1,9 @@
 ---
-author = "Anthony Yeh"
-published = 2015-03-20T13:53:00-07:00
-slug = "2015-03-20-scaling-mysql-in-the-cloud-with-vitess-and-kubernetes"
-tags = [ "kubernetes", "cloud",]
-title = "Scaling MySQL in the cloud with Vitess and Kubernetes"
+author: "Anthony Yeh"
+published: 2015-03-20T13:53:00-07:00
+slug: "2015-03-20-scaling-mysql-in-the-cloud-with-vitess-and-kubernetes"
+tags: [ "kubernetes", "cloud",]
+title: "Scaling MySQL in the cloud with Vitess and Kubernetes"
 ---
 *Cross-posted
 on [Google Cloud Platform
