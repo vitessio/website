@@ -1,16 +1,16 @@
-+++
-author = "Sugu Sougoumarane"
-published = 2018-09-24T07:15:00-07:00
-slug = "2018-09-24-vitess-weekly-digest"
-tags = ['Weekly Digest']
-title = "Vitess Weekly Digest - Sep 24 2018"
-+++
+---
+author: "Sugu Sougoumarane"
+published: 2018-09-24T07:15:00-07:00
+slug: "2018-09-24-vitess-weekly-digest"
+tags: ['Weekly Digest']
+title: "Vitess Weekly Digest - Sep 24 2018"
+---
 
 This week, we continue the digest from the Slack discussions for Sep 1 2018 to Sep 21 2018. As of this post, we are fully caught up on our backlog.
 
 ### Tracking progress of resharding
 
-**jk [Sep 5th]** 
+**jk [Sep 5th]**
 
 In the  SplitClone Stage of resharding, how can i get the percent of process ?  Or Could I estimate the time left ?
 
@@ -185,7 +185,7 @@ is EmergencyReparentShard ?
 :+1: i'll take a look at it. thanks
 
 **sougou**
-or that one 
+or that one
 
 ### Resource estimation
 
@@ -212,7 +212,7 @@ Even for vttablet, we've seen 50-100% in CPU variance. So, take those recommenda
 https://product.hubspot.com/blog/infrastructure-as-code-getting-the-best-of-both-worlds-with-aws-and-google-cloud-platform
 
 > Our first big project has been migrating all 400+ of our MySQL databases from standalone instances into Kubernetes with the help of the Vitess project.
-I know some folks from HubSpot are in this channel. Are you able to give any more details on this? Are you really running all of your MySQL in Vitess? That’s pretty impressive. 
+I know some folks from HubSpot are in this channel. Are you able to give any more details on this? Are you really running all of your MySQL in Vitess? That’s pretty impressive.
 
 **acharis**
 

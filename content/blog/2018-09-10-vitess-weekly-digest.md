@@ -1,10 +1,10 @@
-+++
-author = "Sugu Sougoumarane"
-published = 2018-09-10T07:15:00-07:00
-slug = "2018-09-10-vitess-weekly-digest"
-tags = ['Weekly Digest']
-title = "Vitess Weekly Digest - Sep 10 2018"
-+++
+---
+author: "Sugu Sougoumarane"
+published: 2018-09-10T07:15:00-07:00
+slug: "2018-09-10-vitess-weekly-digest"
+tags: ['Weekly Digest']
+title: "Vitess Weekly Digest - Sep 10 2018"
+---
 
 *This week, we continue the digest from the Slack discussions for Aug 3 2018 to Aug 31 2018.*
 
