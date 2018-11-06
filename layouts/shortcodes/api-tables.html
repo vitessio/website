@@ -1,0 +1,45 @@
+{{- $api            := .Site.Data.api }}
+{{- $groups         := $api.groups }}
+{{- range $groups }}
+{{- $id := urlize .name }}
+<h2 id="{{ $id }}">{{ .name }}</h2>
+
+{{- range .methods }}
+{{- $method   := .name }}
+{{- $methodId := urlize .name }}
+{{- $id     := urlize .name }}
+<h3 id="{{ $id }}">
+  <code>
+    {{ .name }}
+  </code>
+</h3>
+
+<p>
+  <code>{{ .name }}</code> {{ .description | markdownify }}
+</p>
+
+{{- with .request }}
+{{- $id := urlize .name }}
+<h4 id="{{ $id }}">
+  Request
+</h4>
+
+<p>
+  <code>{{ .name }}</code> is the payload to <a href="{{ $methodId }}"><code>{{ $method }}</code></a>
+</p>
+{{ partial "api/api-table" .params }}
+{{- end }}
+
+{{- with .response }}
+{{- $id := urlize .name }}
+<h4 id="{{ $id }}">
+  Response
+</h4>
+
+<p>
+  <code>{{ .name }}</code> is the returned value from <a href="{{ $methodId }}"><code>{{ $method }}</code></a>
+</p>
+{{ partial "api/api-table" .params }}
+{{- end }}
+{{- end }}
+{{- end }}

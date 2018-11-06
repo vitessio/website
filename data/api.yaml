@@ -1,0 +1,90 @@
+groups:
+- name: Range-based sharding
+  methods:
+  - name: ExecuteBatchKeyspaceIds
+    description: executes the list of queries based on the specified keyspace ids.
+    request:
+      name: ExecuteBatchKeyspaceIdsRequest
+      params:
+      - name: caller_id
+        type: vtrpc.CallerID
+        description: |
+          CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational. The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes.
+      - name: session
+        type: Session
+        description: |
+          Session objects are session cookies and are invalidated on use. Query results will contain updated session values. Their content should be opaque to the user.
+      - name: queries
+        collection: list
+        type: BoundKeyspaceIdQuery
+        description: BoundKeyspaceIdQuery represents a single query request for the specified list of keyspace ids. This is used in a list for ExecuteBatchKeyspaceIdsRequest.
+      - name: tablet_type
+        type: topodata.TabletType
+        description: |
+          TabletType represents the type of a given tablet.
+      - name: as_transaction
+        type: bool
+        description: |
+          as_transaction will execute the queries in this batch in a single transaction per shard, created for this purpose. (this can be seen as adding a 'begin' before and 'commit' after the queries). Only makes sense if tablet_type is master. If set, the Session is ignored.
+      - name: options
+        type: query.ExecuteOptions
+        description: ExecuteOptions is passed around for all Execute calls.
+    response:
+      name: ExecuteBatchKeyspaceIdsResponse
+      params:
+      - name: error
+        type: vtrpc.RPCError
+        description: |
+          RPCError is an application-level error structure returned by VtTablet (and passed along by VtGate if appropriate). We use this so the clients don't have to parse the error messages, but instead can depend on the value of the code.
+      - name: session
+        type: Session
+        description: |
+          RPCError is an application-level error structure returned by VtTablet (and passed along by VtGate if appropriate). We use this so the clients don't have to parse the error messages, but instead can depend on the value of the code.
+      - name: results
+        collection: list
+        type: query.QueryResult
+        description: |
+          QueryResult is returned by Execute and ExecuteStream. As returned by Execute, len(fields) is always equal to len(row) (for each row in rows). As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]).
+  - name: ExecuteEntityIds
+    description: executes the query based on the specified external id to keyspace id map
+    request:
+      name: ExecuteEntityIdsRequest
+      params:
+      - name: caller_id
+        type: vtrpc.CallerID
+        description: |
+          CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational. The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes.
+      - name: session
+        type: Session
+        description: |
+          Session objects are session cookies and are invalidated on use. Query results will contain updated session values. Their content should be opaque to the user.
+      - name: query
+        type: query.BoundQuery
+        description: BoundQuery is a query with its bind variables
+      - name: keyspace
+        type: string
+        description: |
+          keyspace to target the query to.
+      - name: entity_column_name
+        type: string
+        description: |
+          entity_column_name is the column name to use.
+      - name: entity_keyspace_ids
+        collection: list
+        type: EntityId
+        description: |
+          entity_keyspace_ids are pairs of entity_column_name values associated with its corresponding keyspace_id.
+      - name: tablet_type
+        type: topodata.TabletType
+        description: |
+          TabletType represents the type of a given tablet.
+      - name: not_in_transaction
+        type: bool
+        description: |
+          not_in_transaction is deprecated and should not be used.
+      - name: options
+        type: query.ExecuteOptions
+        description: |
+          ExecuteOptions is passed around for all Execute calls.
+
+   

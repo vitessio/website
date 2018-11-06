@@ -1,0 +1,33 @@
+{{- $api    := .Site.Data.api }}
+{{- $groups := $api.groups }}
+
+<table>
+  {{- range $groups }}
+  {{- $link := urlize .name }}
+  <thead>
+    <tr>
+      <th>
+        <a href="#{{ $link }}">
+          {{ .name }}
+        </a>
+      </th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{- range .methods }}
+    {{- $link := urlize .name }}
+    <tr>
+      <td>
+        <a href="#{{ $link }}">
+          {{ .name }}
+        </a>
+      </td>
+      <td>
+        {{ .description | markdownify }}
+      </td>
+    </tr>
+    {{- end }}
+  </tbody>
+  {{- end }}
+</table>

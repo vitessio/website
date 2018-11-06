@@ -13,3 +13,6 @@ github        = "vitessio/vitess"
 twitter       = "vitessio"
 slack         = "vitess"
 stackOverflow = "vitess"
+
+[params.api]
+primitiveTypes = ["bool", "bytes", "int64", "string"]

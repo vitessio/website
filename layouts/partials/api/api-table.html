@@ -1,0 +1,37 @@
+<table>
+  <thead>
+    <tr>
+      <th>
+        Name
+      </th>
+      <th>
+        Description
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {{- range . }}
+    {{- $collection := .collection }}
+    {{- $type       := .type }}
+    {{- $typeUrl    := printf "#%s" (urlize $type) }}
+    <tr>
+      <td>
+        <code>{{ .name }}</code>
+        {{- with $collection }}
+        <br /><br />
+
+        <code>{{ . }}&lt;<a href="{{ $typeUrl }}">{{ $type }}</a>&gt;</code>
+        {{- end }}
+        {{- if and $type (not $collection) }}
+        <br /><br />
+
+        <code><a href="{{ $typeUrl }}">{{ $type }}</a></code>
+        {{- end }}
+      </td>
+      <td>
+        {{ .description | markdownify }}
+      </td>
+    </tr>
+    {{- end }}
+  </tbody>
+</table>
