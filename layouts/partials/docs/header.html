@@ -1,0 +1,24 @@
+{{- $path    := .File.Path }}
+{{- $editUrl := printf "https://github.com/vitessio/website/edit/master/content/%s" $path }}
+<header class="docs-header">
+  <p class="title is-size-1 is-size-2-mobile{{ if .Params.description }} is-spaced{{ end }}">
+    {{ .Title }} {{ .File.Path }}
+  </p>
+
+  {{- with .Params.description }}
+  <p class="subtitle is-size-3 is-size-4-mobile">
+    {{ . | markdownify }}
+  </p>
+  {{- end }}
+
+  <div class="buttons">
+    <a class="button is-dark" href="{{ $editUrl }}">
+      <span class="icon">
+        <i class="fab fa-github"></i>
+      </span>
+      <span>
+        Edit
+      </span>
+    </a>
+  </div>
+</header>

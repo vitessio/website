@@ -1,15 +1,5 @@
 <article class="docs-content">
-  <header class="docs-header">
-    <p class="title is-size-1 is-size-2-mobile{{ if .Params.description }} is-spaced{{ end }}">
-      {{ .Title }}
-    </p>
-
-    {{- with .Params.description }}
-    <p class="subtitle is-size-3 is-size-4-mobile">
-      {{ . | markdownify }}
-    </p>
-    {{- end }}
-  </header>
+  {{ partial "docs/header.html" . }}
 
   <div class="columns">
     <div class="column{{ if .TableOfContents }} is-9{{ end }}">
