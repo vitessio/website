@@ -2,7 +2,7 @@
 {{- $editUrl := printf "https://github.com/vitessio/website/edit/master/content/%s" $path }}
 <header class="docs-header">
   <p class="title is-size-1 is-size-2-mobile{{ if .Params.description }} is-spaced{{ end }}">
-    {{ .Title }} {{ .File.Path }}
+    {{ .Title }}
   </p>
 
   {{- with .Params.description }}
