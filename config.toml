@@ -13,3 +13,6 @@ github        = "vitessio/vitess"
 twitter       = "vitessio"
 slack         = "vitess"
 stackOverflow = "vitess"
+
+[params.blog]
+subtitle = "Updates and insights on **Vitess**, a database clustering system for horizontal scaling of MySQL"
