@@ -1,14 +1,10 @@
 {{ define "main" }}
 {{- $posts := where .Site.RegularPages "Section" "blog" }}
-<section class="hero is-black">
-  <div class="container">
+<section class="hero is-dark is-medium">
+  <div class="container has-text-centered">
     <div class="hero-body">
-      <p class="title is-size-1 has-text-grey-light is-spaced">
+      <p class="title is-size-1 is-hidden-tablet">
         {{ .Title }}
-      </p>
-
-      <p class="subtitle is-size-4 has-text-white-bis">
-        Updates and insights on Vitess, the database clustering system for horizontal scaling of MySQL
       </p>
     </div>
   </div>
@@ -17,16 +13,58 @@
 <section class="section">
   <div class="container">
     <div class="columns">
-      <div class="column is-8">
-        {{- range $posts }}
-        {{ .Render "post-card" }}
-        {{- end }}
+      <div class="column is-3">
+        <p class="title is-size-1">
+          {{ .Title }}
+        </p>
+
+        <hr class="has-background-primary" />
+
+        <p class="is-size-4">
+          Updates and insights from YouTube's MySQL scalability team
+        </p>
       </div>
-      <div class="column">
-        
+
+      <div class="column is-8 is-blog-container">
+        {{- range $posts }}
+        {{- $date := dateFormat "January 2, 2006" .Date }}
+        <div class="card is-blog-card">
+          <div class="card-content">
+            <div class="media">
+              <div class="media-content">
+                <span class="title is-size-3 has-text-weight-bolder is-blog-post-title">
+                  {{ .Title }}
+                </span>
+
+                <div class="buttons">
+
+                </div>
+
+                <nav class="level is-size-4">
+                  <div class="level-left">
+                    <span class="has-text-weight-bolder">
+                      {{ .Params.author }}
+                    </span>
+                  </div>
+                  <div class="level-right">
+                    <span class="has-text-weight-light">
+                      {{ $date }}
+                    </span>
+                  </div>
+                </nav>
+
+                <hr />
+
+                <div class="content is-blog-summary">
+                  {{ .Summary | markdownify }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{- end }}
       </div>
     </div>
   </div>
 </section>
-
 {{ end }}

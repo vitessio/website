@@ -1,16 +1,15 @@
-{{- $date            := dateFormat "January 2, 2006" .Date }}
-{{- $authors         := .Params.authors }}
-{{- $authorsIncluded := gt (len $authors) 0 }}
+{{- $date   := dateFormat "January 2, 2006" .Date }}
+{{- $author := .Params.author }}
 <a href="{{ .URL }}">
   <div class="card">
     <div class="card-content">
-      <p class="title is-size-3 is-size-4-mobile{{ if $authorsIncluded }} is-spaced{{ end }}">
+      <p class="title is-size-3 is-size-4-mobile">
         {{ .Title }}
       </p>
 
-      {{- if $authorsIncluded }}
+      {{- with $author }}
       <p class="subtitle is-size-5 is-size-6-mobile">
-        {{ delimit $authors ", " }}
+        {{ . }}
       </p>
       {{- end }}
 

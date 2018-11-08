@@ -31,6 +31,27 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
 
 @import "bulma/bulma"
 
+.is-blog-container
+  margin: -12rem auto 0 auto
+
+  .is-blog-card
+    padding: 1.5rem
+
+    .is-blog-post-title
+      color: $grey-dark
+
+      &:hover
+        color: $grey
+
+    & + .is-blog-card
+      margin-top: 1rem
+
+    .is-blog-summary
+      line-height: 175%
+      margin-bottom: 1.5rem
+
+
+
 .toc
   border-left: 2px solid $dark
   padding: 1rem 0 0 .75rem
