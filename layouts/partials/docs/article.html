@@ -1,17 +1,23 @@
-<div class="container">
-  <article class="is-docs-article">
-    <div class="columns">
-      <div class="column">
-        <div class="content is-docs-content">
-          {{ .Content }}
-        </div>
-      </div>
+<article class="docs-content">
+  <header class="docs-header">
+    <p class="title is-size-1 is-size-2-mobile{{ if .Params.description }} is-spaced{{ end }}">
+      {{ .Title }}
+    </p>
 
-      <div class="column is-2 is-hidden-touch">
-        <p class="is-size-3">
-          {{ partial "docs/toc.html" . }}
-        </p>
+    {{- with .Params.description }}
+    <p class="subtitle is-size-3 is-size-4-mobile">
+      {{ . | markdownify }}
+    </p>
+    {{- end }}
+  </header>
+
+  <div class="columns">
+    <div class="column{{ if .TableOfContents }} is-9{{ end }}">
+      <div class="content">
+        {{ .Content }}
       </div>
     </div>
-  </article>
-</div>
+
+    {{ partial "docs/toc.html" . }}
+  </div>
+</article>

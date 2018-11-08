@@ -1,4 +1,5 @@
 {{ define "main" }}
+{{ partial "navbar.html" . }}
 {{- $posts := where .Site.RegularPages "Section" "blog" }}
 <section class="hero is-black">
   <div class="container">

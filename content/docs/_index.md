@@ -13,6 +13,4 @@ Vitess includes compliant JDBC and Go database drivers using a native query prot
 
 Vitess has been serving all YouTube database traffic since 2011, and has now been adopted by many enterprises for their production needs.
 
-## Something
-
-### Something else entirely
+## Here is a header
