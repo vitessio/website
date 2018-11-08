@@ -1,5 +1,13 @@
 {{ define "main" }}
-{{ partial "docs/hero.html" . }}
-{{ partial "docs/tabs-list.html" . }}
-{{ partial "docs/article.html" . }}
+{{- $toc := .TableOfContents }}
+<div class="docs-wrapper">
+  <div class="docs-sidebar is-hidden-touch">
+    {{ partial "docs/sidebar.html" . }}
+  </div>
+
+  <div class="docs-article">
+    {{ partial "docs/navbar.html" . }}
+    {{ partial "docs/article.html" . }}
+  </div>
+</div>
 {{ end }}

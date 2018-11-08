@@ -1,16 +1,17 @@
+{{- $isDocsPage := eq .Section "docs" }}
 <!DOCTYPE html>
 <html>
   <head>
     {{ partial "css.html" . }}
   </head>
-  <body class="page has-navbar-fixed-top">
-    {{ partial "navbar.html" . }}
-
+  <body class="page{{ if not $isDocsPage }} has-navbar-fixed-top{{ end }}">
     <main class="main">
       {{ block "main" . }}{{ end }}
     </main>
 
+    {{- if not $isDocsPage }}
     {{ partial "footer.html" . }}
+    {{- end }}
     {{ partial "javascript.html" . }}
   </body>
 </html>

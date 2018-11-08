@@ -31,6 +31,8 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
 
 @import "bulma/bulma"
 
+@import "docs"
+
 .is-blog-container
   margin: -12rem auto 0 auto
 
@@ -82,14 +84,6 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
 
 .is-video
   max-width: 100%
-
-.is-docs-article
-  margin: 2rem 0
-
-  .content
-    +touch
-      margin-left: 2rem
-      margin-right: 2rem
 
 .column
   &.is-thin
@@ -148,9 +142,6 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
   .main
     flex: 1
 
-
-.is-docs-article
-  +sticky-footer
 
 .toc
   &.is-active

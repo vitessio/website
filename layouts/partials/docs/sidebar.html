@@ -1,0 +1,47 @@
+{{- $logoUrl        := "img/logos/vitess.png" | relURL }}
+{{- $docsSections   := where .Site.Sections "Section" "docs" }}
+{{- $currentSection := .CurrentSection.Name }}
+{{- $currentUrl     := .URL }}
+<div class="docs-menu">
+  <header class="docs-menu-header">
+    <a href="{{ .Site.BaseURL }}">
+      <img class="docs-menu-logo" src="{{ $logoUrl }}">
+    </a>
+  </header>
+
+  <aside class="docs-menu-bar">
+    {{- range $docsSections }}
+    {{- $isCurrentPage := eq .URL $currentUrl }}
+    <div class="docs-section">
+      <a class="docs-section-title{{ if $isCurrentPage }} is-active{{ end }}" href="{{ .URL }}">
+        {{ .Title }}
+      </a>
+    </div>
+
+    {{- range .Sections }}
+    {{- $isCurrentSection := eq $currentSection .Name }}
+
+    <div class="docs-section">
+      <a class="docs-section-title{{ if $isCurrentSection }} is-active{{ end }}" href="{{ .URL }}">
+        {{ .Name }}
+      </a>
+
+      {{- if $isCurrentSection }}
+      <div class="docs-section-list">
+        <ul>
+          {{- range .Pages }}
+          {{- $isCurrentPage := eq $currentUrl .URL }}
+          <li{{ if $isCurrentPage }} class="is-active"{{ end }}>
+            <a href="{{ .URL }}">
+              {{ .Title }}
+            </a>
+          </li>
+          {{- end }}
+        </ul>
+      </div>
+      {{- end }}
+    </div>
+    {{- end }}
+    {{- end }}
+  </aside>
+</div>

@@ -2,6 +2,7 @@
 {{- $subtitle := .Site.Params.blog.subtitle | markdownify }}
 {{- $posts    := where .Site.RegularPages "Section" "blog" }}
 
+{{ partial "navbar.html" . }}
 {{ partial "blog/hero.html" . }}
 <section class="section">
   <div class="container">

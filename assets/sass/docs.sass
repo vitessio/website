@@ -1,0 +1,84 @@
+$docs-sidebar-logo-width: 30%
+$docs-sidebar-margin: 1.75rem
+$docs-sidebar-header-margin-bottom: 2rem
+$docs-content-margin: 3rem
+$tan: #f5993a
+ 
+=flex
+  display: flex
+
+=h-center
+  justify-content: center
+
+.docs-wrapper
+  +flex
+  flex-direction: row
+  height: 100vh
+
+  .docs-sidebar
+    +flex
+    background-color: $dark
+    flex: 0 0 20rem
+    border-right: 1px solid lighten($dark, 10%)
+    +h-center
+    overflow: scroll
+
+    .docs-menu
+      width: 100%
+      margin: $docs-sidebar-margin
+
+      .docs-menu-header
+        margin-bottom: $docs-sidebar-header-margin-bottom
+
+        .docs-menu-logo
+          width: $docs-sidebar-logo-width
+          margin: 0 auto
+          display: block
+
+      .docs-menu-bar
+        .docs-section
+          & + .docs-section
+            margin-top: 1.25rem
+
+          .docs-section-title
+            font-size: 1.5rem
+            color: $grey-lighter
+            line-height: 100%
+            
+            &.is-active
+              color: $primary
+
+          .docs-section-list
+            margin-left: .3rem
+            border-left: 2px solid $grey
+
+            ul
+              margin-top: .75rem
+
+              li
+                font-size: 1.2rem
+                margin-left: 1rem
+                line-height: 120%
+
+                a
+                  color: $grey-lighter
+
+                & + li
+                  margin-top: .8rem
+
+                &.is-active
+                  a
+                    color: $tan
+      
+
+  .docs-article
+    flex: 1 1 auto
+    overflow: scroll
+
+    .docs-content
+      margin: $docs-content-margin
+
+      .docs-header
+        padding-bottom: 2rem
+        border-bottom: 1px solid $grey-dark
+        margin-bottom: 2rem

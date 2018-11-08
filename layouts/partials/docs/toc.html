@@ -1,12 +1,5 @@
-{{- $toc := .TableOfContents }}
-{{- if $toc }}
-<div class="toc">
-  <p class="title is-size-4">
-    Contents
-  </p>
-
-  <div id="tableOfContents">
-
-  </div>
-</div>  
+{{- with .TableOfContents }}
+<div class="column is-3">
+  {{ . }}
+</div>
 {{- end }}
