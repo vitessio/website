@@ -12,6 +12,13 @@
 
   <aside class="docs-menu-bar">
     {{- range $docsSections }}
+    {{- $isCurrentPage := eq .URL $currentUrl }}
+    <div class="docs-section">
+      <a class="docs-section-title{{ if $isCurrentPage }} is-active{{ end }}" href="{{ .URL }}">
+        {{ .Title }}
+      </a>
+    </div>
+
     {{- range .Sections }}
     {{- $isCurrentSection := eq $currentSection .Name }}
 
