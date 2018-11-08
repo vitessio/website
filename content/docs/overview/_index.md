@@ -1,4 +1,4 @@
 ---
-title: Understanding Vitess
+title: Overview
 weight: 1
 ---
