@@ -2,8 +2,7 @@
 {{- $isBlog  := eq .Section "blog" }}
 {{- $nav     := .Site.Data.nav }}
 {{- $logoUrl := "img/logos/vitess.png" | relURL }}
-{{- $bgColor := cond $isBlog "black" "dark" }}
-<nav class="navbar is-fixed-top is-{{ $bgColor }}">
+<nav class="navbar is-fixed-top is-dark">
   <div class="container">
     <div class="navbar-brand">
       {{- if not $isHome }}
