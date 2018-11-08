@@ -1,3 +1,44 @@
 {{ define "main" }}
+{{- $date    := dateFormat "January 2, 2006" .Date }}
+
 {{ partial "blog/hero.html" . }}
+
+<section class="section">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-blog-container">
+        <div class="card is-blog-card">
+          <div class="card-content">
+            <div class="media">
+              <div class="media-content">
+                <a class="title is-size-3 has-text-weight-bolder is-blog-post-title" href="{{ .URL }}">
+                  {{ .Title }}
+                </a>
+
+                <nav class="level is-size-4">
+                  <div class="level-left">
+                    <span class="has-text-weight-bolder">
+                      {{ .Params.author }}
+                    </span>
+                  </div>
+                  <div class="level-right">
+                    <span class="has-text-weight-light">
+                      {{ $date }}
+                    </span>
+                  </div>
+                </nav>
+
+                <hr />
+
+                <div class="content">
+                  {{ .Content }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 {{ end }}

@@ -1,44 +1,34 @@
 {{ define "main" }}
-{{- $posts := where .Site.RegularPages "Section" "blog" }}
-<section class="hero is-dark is-medium">
-  <div class="container has-text-centered">
-    <div class="hero-body">
-      <p class="title is-size-1 is-hidden-tablet">
-        {{ .Title }}
-      </p>
-    </div>
-  </div>
-</section>
+{{- $subtitle := .Site.Params.blog.subtitle | markdownify }}
+{{- $posts    := where .Site.RegularPages "Section" "blog" }}
 
+{{ partial "blog/hero.html" . }}
 <section class="section">
   <div class="container">
     <div class="columns">
       <div class="column is-3 has-text-right">
-        <p class="title is-size-1">
+        <p class="title is-size-1 has-text-weight-light">
           {{ .Title }}
         </p>
 
         <hr class="has-background-primary" />
 
-        <p class="is-size-4">
-          Updates and insights from YouTube's MySQL scalability team
+        <p class="is-size-4 has-text-weight-light">
+          {{ $subtitle }}
         </p>
       </div>
 
       <div class="column is-8 is-blog-container">
         {{- range $posts }}
-        {{- $date := dateFormat "January 2, 2006" .Date }}
+        {{- $date    := dateFormat "January 2, 2006" .Date }}
+        {{- $summary := .Summary | truncate 250 | markdownify }}
         <div class="card is-blog-card">
           <div class="card-content">
             <div class="media">
               <div class="media-content">
-                <span class="title is-size-3 has-text-weight-bolder is-blog-post-title">
+                <a class="title is-size-3 has-text-weight-bolder is-blog-post-title" href="{{ .URL }}">
                   {{ .Title }}
-                </span>
-
-                <div class="buttons">
-
-                </div>
+                </a>
 
                 <nav class="level is-size-4">
                   <div class="level-left">
@@ -56,7 +46,7 @@
                 <hr />
 
                 <div class="content is-blog-summary">
-                  {{ .Summary | markdownify }}
+                  {{ $summary }}
                 </div>
               </div>
             </div>
