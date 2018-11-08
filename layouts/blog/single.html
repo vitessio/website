@@ -1,8 +1,8 @@
 {{ define "main" }}
 {{- $date    := dateFormat "January 2, 2006" .Date }}
 
+{{ partial "navbar.html" . }}
 {{ partial "blog/hero.html" . }}
-
 <section class="section">
   <div class="container">
     <div class="columns">
