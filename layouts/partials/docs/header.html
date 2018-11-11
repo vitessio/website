@@ -2,12 +2,12 @@
 {{- $editUrl := printf "https://github.com/vitessio/website/edit/master/content/%s" $path }}
 {{- $docsSections   := where .Site.Sections "Section" "docs" }}
 <header class="docs-header">
-  <p class="title is-size-1 is-size-2-mobile{{ if .Params.description }} is-spaced{{ end }}">
+  <p class="title is-size-1 is-size-2-mobile has-text-weight-light{{ if .Params.description }} is-spaced{{ end }}">
     {{ .Title }}
   </p>
 
   {{- with .Params.description }}
-  <p class="subtitle is-size-3 is-size-4-mobile">
+  <p class="subtitle is-size-3 is-size-4-mobile has-text-weight-light">
     {{ . | markdownify }}
   </p>
   {{- end }}
@@ -22,12 +22,9 @@
       </span>
     </a>
 
-    <br />
-    <br />
-
     <div class="dropdown is-hoverable is-hidden-desktop">
       <div class="dropdown-trigger">
-        <button class="button is-primary" aria-haspopup="true" aria-controls="dropdown-menu">
+        <button class="button is-primary" aria-haspopup="true" aria-controls="docs-menu">
           <span>
             Documentation
           </span>
@@ -36,7 +33,7 @@
           </span>
         </button>
       </div>
-      <div class="dropdown-menu" id="dropdown-menu" role="menu">
+      <div class="dropdown-menu" id="docs-menu" role="menu">
         <div class="dropdown-content">
           {{- range $docsSections }}
           <a class="dropdown-item has-text-weight-bold" href="{{ .URL }}">
@@ -45,20 +42,15 @@
 
           <hr class="dropdown-divider" />
 
-          {{- range $idx, $section := .Sections }}
-          {{- $isLastSection := eq (len $docsSections) $idx }}
-          <a class="dropdown-item has-text-weight-bold" href="{{ $section.URL }}">
-            {{ $section.Name }}
+          {{- range .Sections }}
+          <a class="dropdown-item has-text-weight-bold" href="{{ .URL }}">
+            {{ .Name }}
           </a>
 
           {{- range .Pages }}
           <a class="dropdown-item" href="{{ .URL }}">
             {{ .Title }}
           </a>
-          {{- end }}
-
-          {{- if not $isLastSection }}
-          <hr class="dropdown-divider" />
           {{- end }}
           {{- end }}
           {{- end }}

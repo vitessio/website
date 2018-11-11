@@ -27,6 +27,7 @@ $navbar-burger-color: $primary
 
 @import "bulma/sass/utilities/derived-variables"
 
+$code: $dark
 $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $white), "orange": ($orange, $orange-invert), "twitter-blue": ($twitter-blue, $white), "slack-green": ($slack-green, $white)), $colors)
 
 @import "bulma/bulma"
@@ -52,27 +53,35 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
       line-height: 175%
       margin-bottom: 1.5rem
 
+.toc-column
+  overlow-y: auto
 
-
-.toc
-  border-left: 2px solid $dark
-  padding: 1rem 0 0 .75rem
-
-
-  &.is-fixed
+  .toc
+    padding: .75rem 0 .75rem 1rem
+    max-width: 15rem
     position: fixed
 
-  .tocify-header
-    margin-left: .5rem
+    .toc-title
+      margin-bottom: 1.5rem
 
-    .tocify-item
-      &.active
-        font-weight: 700
+    ul
+      ul li
+        line-height: 120%
+        font-size: 1.25rem
 
-    .tocify-subheader
-      margin-left: .5rem
+        ul
+          margin-top: .5rem
+          margin-left: 1rem
 
-    
+          li
+            font-size: 1rem
+            line-height: 120%
+
+            & + li
+              margin-top: .5rem
+
+        & + li
+          margin-top: .5rem
 
 .page
   display: flex
@@ -122,9 +131,6 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
 
 .is-footer-logo
   +logo(30%, 10%)
-
-.media
-  min-height: 9rem
 
 .button
   border-radius: 0

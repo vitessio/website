@@ -1,5 +1,13 @@
 {{- with .TableOfContents }}
-<div class="column is-3">
-  {{ . }}
+{{- if not $.Params.noToc }}
+<div class="column toc-column is-3">
+  <aside class="toc">
+    <p class="toc-title is-size-4 has-text-weight-light">
+      Content
+    </p>
+
+    {{ . }}
+  </aside>
 </div>
+{{- end }}
 {{- end }}

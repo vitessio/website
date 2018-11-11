@@ -1,8 +1,11 @@
 $docs-sidebar-logo-width: 30%
 $docs-sidebar-margin: 1.75rem
 $docs-sidebar-header-margin-bottom: 2rem
-$docs-content-margin: 3rem
+$docs-content-margin: 3rem 3rem 8rem 3rem
 $tan: #f5993a
+
+html, body
+  overflow: auto
  
 =flex
   display: flex
@@ -15,12 +18,16 @@ $tan: #f5993a
   flex-direction: row
   height: 100vh
 
+  .docs-navbar
+    position: sticky
+    top: 0
+
   .docs-sidebar
     +flex
+    +h-center
     background-color: $dark
     flex: 0 0 20rem
     border-right: 1px solid lighten($dark, 10%)
-    +h-center
     overflow: scroll
 
     .docs-menu
@@ -36,6 +43,8 @@ $tan: #f5993a
           display: block
 
       .docs-menu-bar
+        padding-bottom: 5rem
+
         .docs-section
           & + .docs-section
             margin-top: 1.25rem
@@ -56,7 +65,7 @@ $tan: #f5993a
               margin-top: .75rem
 
               li
-                font-size: 1.2rem
+                font-size: 1rem
                 margin-left: 1rem
                 line-height: 120%
 
@@ -70,13 +79,19 @@ $tan: #f5993a
                   a
                     color: $tan
       
-
   .docs-article
     flex: 1 1 auto
-    overflow: scroll
+    overflow: auto
 
     .docs-content
       margin: $docs-content-margin
+
+      .content
+        p a, li a
+          font-weight: 700
+
+        li .highlight, ol li
+          margin-bottom: 1rem
 
       .docs-header
         padding-bottom: 2rem

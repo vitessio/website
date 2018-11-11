@@ -1,7 +1,7 @@
 {{- $logoUrl     := "img/logos/vitess.png" | relURL }}
 {{- $nav          := .Site.Data.nav }}
 {{- $docsSections := where .Site.Sections "Section" "docs" }}
-<nav class="navbar is-dark">
+<nav class="navbar docs-navbar is-dark">
   <div class="navbar-brand">
     <a role="button" class="navbar-burger burger">
       <span aria-hidden="true"></span>
@@ -11,6 +11,12 @@
   </div>
 
   <div class="navbar-menu">
+    <div class="navbar-start is-hidden">
+      <span class="navbar-item has-text-weight-bold">
+        {{ .Title }}
+      </span>
+    </div>
+
     <div class="navbar-end">
       <a class="navbar-item has-text-weight-bold" href="{{ .Site.BaseURL }}">
         Home
