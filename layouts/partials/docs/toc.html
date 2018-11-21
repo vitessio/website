@@ -1,13 +1,26 @@
-{{- with .TableOfContents }}
-{{- if not $.Params.noToc }}
-<div class="column toc-column is-3">
-  <aside class="toc">
-    <p class="toc-title is-size-4 has-text-weight-light">
+{{- $path    := .File.Path }}
+{{- $editUrl := printf "https://github.com/vitessio/website/edit/master/content/%s" $path }}
+<div class="docs-toc is-hidden-touch">
+  <div class="docs-toc-container">
+    {{- with .TableOfContents }}
+    {{- if not $.Params.noToc }}
+    <span class="docs-toc-title">
       Content
-    </p>
+    </span>
 
-    {{ . }}
-  </aside>
+    <div class="docs-toc-menu">
+      {{ . }}
+    </div>
+    {{- end }}
+    {{- end }}
+
+    <a class="button is-small is-dark" href="{{ $editUrl }}">
+      <span class="icon">
+        <i class="fab fa-github"></i>
+      </span>
+      <span>
+        Edit
+      </span>
+    </a>
+  </div>
 </div>
-{{- end }}
-{{- end }}

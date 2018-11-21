@@ -1,5 +1,3 @@
-{{- $path    := .File.Path }}
-{{- $editUrl := printf "https://github.com/vitessio/website/edit/master/content/%s" $path }}
 {{- $docsSections   := where .Site.Sections "Section" "docs" }}
 <header class="docs-header">
   <p class="title is-size-1 is-size-2-mobile has-text-weight-light{{ if .Params.description }} is-spaced{{ end }}">
@@ -13,15 +11,6 @@
   {{- end }}
 
   <div class="buttons">
-    <a class="button is-dark" href="{{ $editUrl }}">
-      <span class="icon">
-        <i class="fab fa-github"></i>
-      </span>
-      <span>
-        Edit
-      </span>
-    </a>
-
     <div class="dropdown is-hoverable is-hidden-desktop">
       <div class="dropdown-trigger">
         <button class="button is-primary" aria-haspopup="true" aria-controls="docs-menu">

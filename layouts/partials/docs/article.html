@@ -1,13 +1,7 @@
 <article class="docs-content">
-  <div class="columns">
-    <div class="column is-9">
-      {{ partial "docs/header.html" . }}
+  {{ partial "docs/header.html" . }}
 
-      <div class="content">
-        {{ .Content }}
-      </div>
-    </div>
-
-    {{ partial "docs/toc.html" . }}
+  <div class="content">
+    {{ .Content }}
   </div>
 </article>
