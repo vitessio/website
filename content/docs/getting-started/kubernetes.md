@@ -1,5 +1,6 @@
 ---
 title: Run Vitess on Kubernetes
+weight: 1
 ---
 
 This page shows you how to run Vitess on a [Kubernetes](http://kubernetes.io) cluster.
