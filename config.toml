@@ -7,6 +7,9 @@ pygmentsCodeFences = true
 pygmentsUseClasses = false
 pygmentsStyle = "fruity"
 
+[params]
+description = "A database clustering system for horizontal scaling of MySQL"
+
 [params.home]
 title = "Vitess is a database clustering system for horizontal scaling of MySQL"
 

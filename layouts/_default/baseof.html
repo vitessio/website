@@ -2,6 +2,10 @@
 <!DOCTYPE html>
 <html>
   <head>
+    {{ partial "meta.html" . }}
+    <title>
+      {{ block "title" . }}{{ .Site.Title }} | {{ .Site.Params.description }}{{ end }}
+    </title>
     {{ partial "css.html" . }}
   </head>
   <body class="page{{ if not $isDocsPage }} has-navbar-fixed-top{{ end }}">

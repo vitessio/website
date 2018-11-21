@@ -1,5 +1,6 @@
 ---
 title: Overview
+description: High-level information about Vitess
 weight: 2
 ---
 

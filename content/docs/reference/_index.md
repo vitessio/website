@@ -1,5 +1,6 @@
 ---
 title: Reference
+description: Comprehensive information about Vitess interfaces
 weight: 4
 ---
 
