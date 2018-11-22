@@ -1,26 +1,13 @@
-{{- $path    := .File.Path }}
-{{- $editUrl := printf "https://github.com/vitessio/website/edit/master/content/%s" $path }}
+{{- if .TableOfContents }}
 <div class="docs-toc is-hidden-touch">
   <div class="docs-toc-container">
-    {{- with .TableOfContents }}
-    {{- if not $.Params.noToc }}
     <span class="docs-toc-title">
       Content
     </span>
 
     <div class="docs-toc-menu">
-      {{ . }}
-    </div>
-    {{- end }}
-    {{- end }}
-
-    <a class="button is-small is-dark" href="{{ $editUrl }}">
-      <span class="icon">
-        <i class="fab fa-github"></i>
-      </span>
-      <span>
-        Edit
-      </span>
-    </a>
+      {{ .TableOfContents }}
+    </div>   
   </div>
 </div>
+{{- end }}

@@ -1,7 +1,6 @@
 $docs-sidebar-logo-width: 30%
 $docs-sidebar-margin: 1.75rem
 $docs-sidebar-header-margin-bottom: 2rem
-$docs-content-margin: 2rem 2rem 6rem 2rem
 $tan: #f5993a
 
 html, body
@@ -26,7 +25,7 @@ html, body
     +flex
     +h-center
     background-color: $dark
-    flex: 0 0 18rem
+    flex: 0 0 15%
     border-right: 1px solid lighten($dark, 10%)
     overflow: scroll
 
@@ -50,7 +49,7 @@ html, body
             margin-top: 1.25rem
 
           .docs-section-title
-            font-size: 1.5rem
+            font-size: 1.3rem
             color: $grey-lighter
             line-height: 100%
             
@@ -84,7 +83,12 @@ html, body
     overflow: auto
 
     .docs-content
-      margin: $docs-content-margin
+      margin: 2rem 2.5rem
+
+      +touch
+        margin: 1.5rem
+
+      padding-bottom: 5rem
 
       .content
         p a, li a
@@ -99,9 +103,10 @@ html, body
         margin-bottom: 2rem
 
   .docs-toc
-    flex: 0 0 15rem
+    flex: 0 0 15%
     background-color: $white-bis
     overflow: auto
+    border-left: 1px solid $grey-light
 
     &-container
       margin: 1rem
@@ -112,6 +117,12 @@ html, body
 
     &-menu
       margin: 1.5rem 0
+
+      a
+        color: $dark
+
+        &:hover
+          color: $primary
 
       ul
         ul
