@@ -1,13 +1,13 @@
-{{- with .TableOfContents }}
-{{- if not $.Params.noToc }}
-<div class="column toc-column is-3">
-  <aside class="toc">
-    <p class="toc-title is-size-4 has-text-weight-light">
+{{- if .TableOfContents }}
+<div class="docs-toc is-hidden-touch">
+  <div class="docs-toc-container">
+    <span class="docs-toc-title">
       Content
-    </p>
+    </span>
 
-    {{ . }}
-  </aside>
+    <div class="docs-toc-menu">
+      {{ .TableOfContents }}
+    </div>   
+  </div>
 </div>
-{{- end }}
 {{- end }}
