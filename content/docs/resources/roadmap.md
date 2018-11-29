@@ -1,17 +1,8 @@
 ---
-layout: doc
-title: "Vitess Roadmap"
-description: Current version, what we are working on, what's planned.
-modified:
-excerpt:
-tags: []
-image:
-  feature:
-  teaser:
-  thumb:
-toc: true
-share: false
+title: Vitess Roadmap
+description: Current version, what we are working on, what's planned
 ---
+
 Vitess is an active open source project.  Here is a list of recent and upcoming
 features the team is focused on: Check with us on
 our [forums](https://groups.google.com/forum/#!forum/vitess) for more

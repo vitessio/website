@@ -1,6 +1,6 @@
 ---
 title: Advanced Features
-weight: 5
+weight: 6
 ---
 
 The pages in this Advanced Features section can be understood as a complement to the [User Guides](../user-guides) section of the docs. Here, we describe advanced Vitess features that you may want to enable or tune in a production setup.

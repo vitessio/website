@@ -1,4 +1,6 @@
-# GitHub Workflow
+---
+title: GitHub Workflow
+---
 
 If you are new to Git and GitHub, we recommend to read this page. Otherwise, you may skip it.
 
@@ -73,7 +75,7 @@ $ git checkout master
 
 Try to commit small pieces along the way as you finish them, with an explanation
 of the changes in the commit message.
-Please see the [Code Review page]({% link contributing/code-reviews.md %}) for more guidance.
+Please see the [Code Review page](../code-reviews) for more guidance.
 
 As you work in a package, you can run just
 the unit tests for that package by running `go test` from within that package.
@@ -136,3 +138,4 @@ Once your pull request is merged:
 
 *  close the GitHub issue (if it wasn't automatically closed)
 *  delete your local topic branch (`git branch -d new-feature`)
+
