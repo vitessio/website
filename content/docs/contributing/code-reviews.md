@@ -1,4 +1,6 @@
-# Code Reviews
+---
+title: Code Reviews
+---
 
 Every GitHub pull request must go through a code review and get approved before it will be merged into the master branch.
 
@@ -70,3 +72,4 @@ Internal team members can merge their **own** pull requests.
 Most of the bugs the team is working on are tracked internally.
 We reference to them as `b/########` or `BUG=########` in commit messages and comments.
 External users can ignore these.
+

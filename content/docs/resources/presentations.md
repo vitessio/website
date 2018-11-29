@@ -1,16 +1,5 @@
 ---
-layout: doc
-title: "Presentations and Videos"
-description: Slides and videos from presentations about Vitess.
-modified:
-excerpt:
-tags: []
-image:
-  feature:
-  teaser:
-  thumb:
-toc: true
-share: false
+title: Presentations and Videos
 ---
 
 ## Percona Live 2016
@@ -23,8 +12,8 @@ completely hidden from the application. They gave a live demo of
 which now knows nothing about shards, and explained how new features in VTGate
 make all of this possible.
 
-<iframe src="https://docs.google.com/gview?url=https://vitess.io/resources/percona-2016.pdf&embedded=true" style="width:643px; height:379px; margin-top: 20px;" frameborder="0"></iframe>
-<div style="text-align: right; width: 100%; margin-bottom:20px"><a href="https://vitess.io/resources/percona-2016.pdf">download slides</a></div>
+<iframe src="/resources/percona-2016.pdf&embedded=true" style="width:643px; height:379px; margin-top: 20px;" frameborder="0"></iframe>
+<div style="text-align: right; width: 100%; margin-bottom:20px"><a href="/resources/percona-2016.pdf">download slides</a></div>
 
 ## CoreOS Meetup, January 2016
 
@@ -36,7 +25,7 @@ of the [Vitess on Kubernetes](https://github.com/vitessio/vitess/tree/master/exa
 deployment templates.
 
 <iframe src="https://docs.google.com/gview?url=https://vitess.io/resources/coreos-meetup-2016-01-27.pdf&embedded=true" style="width:643px; height:379px; margin-top: 20px;" frameborder="0"></iframe>
-<div style="text-align: right; width: 100%; margin-bottom:20px"><a href="https://vitess.io/resources/coreos-meetup-2016-01-27.pdf">download slides</a></div>
+<div style="text-align: right; width: 100%; margin-bottom:20px"><a href="/resources/coreos-meetup-2016-01-27.pdf">download slides</a></div>
 
 ## Oracle OpenWorld 2015
 
@@ -49,7 +38,7 @@ applied to MySQL in the cloud. The talk also included a deep dive into
 features of Vitess that makes it well-adapted for a Cloud Native environment.
 
 <iframe src="https://docs.google.com/gview?url=https://vitess.io/resources/openworld-2015-vitess.pdf&embedded=true" style="width:643px; height:379px; margin-top: 20px;" frameborder="0"></iframe>
-<div style="text-align: right; width: 100%; margin-bottom:20px"><a href="https://vitess.io/resources/openworld-2015-vitess.pdf">download slides</a></div>
+<div style="text-align: right; width: 100%; margin-bottom:20px"><a href="/resources/openworld-2015-vitess.pdf">download slides</a></div>
 
 ## Percona Live 2015
 

@@ -1,3 +1,7 @@
+---
+title: Design Docs
+---
+
 The pages below this navigation entry "Design Docs" represent the design considerations
 that went behind some of the features implemented. They may not be necessarily up-to-date.
 
