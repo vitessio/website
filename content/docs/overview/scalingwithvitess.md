@@ -1,5 +1,6 @@
 ---
 title: Scaling MySQL With Vitess
+weight: 2
 ---
 
 Traditionally, it's been difficult to scale a MySQL-based database to an arbitrary size. Since MySQL lacks the out-of-the-box multi-instance support required to really scale an application, the process can be complex and obscure.
