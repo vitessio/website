@@ -49,14 +49,26 @@ The following sections compare Vitess to two common alternatives, a vanilla MySQ
 
 Vitess improves a vanilla MySQL implementation in several ways:
 
-[Insert table Vanilla MySQL vs Vitess]
+| Vanilla MySQL                                                                                                                                                                                                                                                                                                                                                                     | Vitess                                                                                                                                                                                                                                                                           |
+|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Every MySQL connection has a memory overhead that ranges between 256KB  and almost 3MB, depending on which MySQL release you're using. As your  user base grows, you need to add RAM to support additional connections,  but the RAM does not contribute to faster queries. In addition, there is  a significant CPU cost associated with obtaining the connections.              | Vitess' gRPC-based protocol creates very lightweight connections.  Vitess' connection pooling feature uses Go's concurrency support to map  these lightweight connections to a small pool of MySQL connections. As  such, Vitess can easily handle thousands of connections.     |
+| Poorly written queries, such as those that don't set a LIMIT, can negatively impact database performance for all users.                                                                                                                                                                                                                                                           | Vitess employs a SQL parser that uses a configurable set of rules to rewrite queries that might hurt database performance.                                                                                                                                                       |
+| Sharding is a process of partitioning your data to improve scalability  and performance. MySQL lacks native sharding support, requiring you to  write sharding code and embed sharding logic in your application.                                                                                                                                                                 | Vitess supports a variety of sharding schemes. It can also migrate  tables into different databases and scale up or down the number of  shards. These functions are performed non-intrusively, completing most  data transitions with just a few seconds of read-only downtime.  |
+| A MySQL cluster using replication for availability has a master database  and a few replicas. If the master fails, a replica should become the  new master. This requires you to manage the database lifecycle and  communicate the current system state to your application.                                                                                                     | Vitess helps to manage the lifecycle of your database scenarios. It  supports and automatically handles various scenarios, including master  failover and data backups.                                                                                                          |
+| A MySQL cluster can have custom database configurations for different  workloads, like a master database for writes, fast read-only replicas  for web clients, slower read-only replicas for batch jobs, and so forth.  If the database has horizontal sharding, the setup is repeated for each  shard, and the app needs baked-in logic to know how to find the right  database. | Vitess uses a topology backed by a consistent data store, like etcd or  ZooKeeper. This means the cluster view is always up-to-date and  consistent for different clients. Vitess also provides a proxy that  routes queries efficiently to the most appropriate MySQL instance. |
+
 
 ### Vitess vs. NoSQL
 
 If you're considering a NoSQL solution primarily because of concerns about the scalability of MySQL, Vitess might be a more appropriate choice for your application. While NoSQL provides great support for unstructured data, Vitess still offers several benefits not available in NoSQL datastores:
 
-[Insert table NoSQL vs Vitess]
-
+| NoSQL                                                                                                               | Vitess                                                                                                                                      |
+|---------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| NoSQL databases do not define relationships between database tables, and only support a subset of the SQL language. | Vitess is not a simple key-value store. It supports complex query  semantics such as where clauses, JOINS, aggregation functions, and more. |
+| NoSQL datastores do not support transactions.                                                                       |                                                                                                                                             |
+| NoSQL solutions have custom APIs, leading to custom architectures, applications, and tools.                         | Vitess adds very little variance to MySQL, a database that most people are already accustomed to working with.                              |
+| NoSQL solutions provide limited support for database indexes compared to MySQL.                                     | Vitess allows you to use all of MySQL's indexing functionality to optimize query performance.                                               |
+|                                                                                                                                                                                        
 ## Architecture
 
 The Vitess platform consists of a number of server processes, command-line utilities, and web-based utilities, backed by a consistent metadata store.
@@ -67,7 +79,7 @@ Vitess tools and servers are designed to help you whether you start with a compl
 
 The diagram below illustrates Vitess' components:
 
-[Insert Vitess architecture diagram]
+![Vitess Overview Architecture Diagram](/img/VitessOverview.png)
 
 ## Topology
 

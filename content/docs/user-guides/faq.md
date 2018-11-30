@@ -1,5 +1,6 @@
 ---
 title: Frequently Asked Questions
+weight: 2
 ---
 
 ## Does the application need to know about the sharding scheme underneath Vitess?
