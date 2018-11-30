@@ -15,18 +15,18 @@ We continue the digest from the Slack discussions for Sep 22 2018 to Oct 5 2018.
 Hi,
 I want to query vitess on vtgate but I have below error. How can i fix this problem?
 
-`` vitess@vtctldv3-hrl74:/$ vtctlclient -server 10.5.61.20:16999  VtGateExecute -server 10.5.61.21:16991 "show tables"
+`` vitess@vtctldv3-hrl74:/$ vtctlclient -server 10.5.61.20:16999  VtGateExecute -server 10.5.61.21:16991 "show tables"``
 
-E0923 05:14:55.169771    1102 main.go:61] Remote error: rpc error: code = Unknown desc = query commands are disabled (set the -enable_queries flag to enable)
+``E0923 05:14:55.169771    1102 main.go:61] Remote error: rpc error: code = Unknown desc = query commands are disabled (set the -enable_queries flag to enable)
 ``
 
 **sougou**
 
 you need to add this flag to vtctld:
 
-``-enable_queries
+``-enable_queries``
 
-        if set, allows vtgate and vttablet queries. May have security implications, as the queries will be run from this process.
+``if set, allows vtgate and vttablet queries. May have security implications, as the queries will be run from this process.
 ``
 
 ###  Multi-column Primary Key
