@@ -123,10 +123,6 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
 .is-fixed-left
   position: absolute
 
-.is-logo-button
-  span:nth-child(2)
-    margin-left: .5rem
-
 .is-home-hero-logo
   +logo(40%, 30%)
 
@@ -138,7 +134,9 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
 
 .button
   border-radius: 0
-  border: none
+
+  .icon + span
+    margin-left: .4rem
 
 .section
   &.is-light
