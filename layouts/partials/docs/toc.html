@@ -1,8 +1,8 @@
-{{- if .TableOfContents }}
+{{- if and .TableOfContents (not .Params.notoc) }}
 <div class="docs-toc is-hidden-touch">
   <div class="docs-toc-container">
     <span class="docs-toc-title">
-      Content
+      {{ .Title }}
     </span>
 
     <div class="docs-toc-menu">

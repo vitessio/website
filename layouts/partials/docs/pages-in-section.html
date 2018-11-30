@@ -1,0 +1,13 @@
+<h3>
+  Pages in this section
+</h3>
+
+<ul>
+  {{- range .Pages }}
+  <li>
+    <a href="{{ .URL }}">
+      {{ .Title }}
+    </a>
+  </li>
+  {{- end }}
+</ul>
