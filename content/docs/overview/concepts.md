@@ -1,5 +1,5 @@
 ---
-title: Key Vitess Concepts and Terminology
+title: Key Vitess Concepts
 ---
 
 This document defines common Vitess terminology and explains some core concepts.
