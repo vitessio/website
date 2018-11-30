@@ -12,7 +12,23 @@
 
   <div class="docs-article">
     {{ partial "docs/navbar.html" . }}
-    {{ partial "docs/article.html" . }}
+    
+    <article class="docs-content">
+      {{ partial "docs/header.html" . }}
+    
+      <div class="content">
+        {{- if .Sections }}
+        {{ partial "docs/landing-page.html" . }}
+        {{- else }}
+        {{ partial "docs/pages-in-section.html" . }}
+
+        <hr class="has-background-grey" />
+
+        {{ .Content }}
+        {{- end }}
+      </div>
+    
+    </article>
   </div>
 
   {{ partial "docs/toc.html" . }}
