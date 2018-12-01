@@ -80,7 +80,7 @@ Vitess tools and servers are designed to help you whether you start with a compl
 
 The diagram below illustrates Vitess' components:
 
-![Vitess Overview Architecture Diagram](/img/VitessOverview.png)
+![Vitess Overview Architecture Diagram](../img/VitessOverview.png)
 
 ## Topology
 
