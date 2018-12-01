@@ -1,6 +1,5 @@
 ---
 title: User Guides
-weight: 3
 ---
 
 ## Platform support
@@ -26,7 +25,7 @@ This approach allows you to exploit the full capabilities of MySQL
 as long as the relationships and constraints are within one shard (or
 unsharded keyspace).
 
-For relationships that go beyond shards, Vitess provides 
+For relationships that go beyond shards, Vitess provides
 support through the [VSchema](vschema).
 
 ### Schema management
@@ -35,7 +34,7 @@ Vitess supports several functions for looking at your schema and
 validating its consistency across tablets in a shard or across all
 shards in a keyspace.
 
-In addition, Vitess supports 
+In addition, Vitess supports
 [data definition statements](https://dev.mysql.com/doc/refman/5.6/en/sql-syntax-data-definition.html)
 that create, modify, or delete database tables. Vitess executes
 schema changes on the master tablet within each shard, and those
@@ -85,4 +84,4 @@ and Ceph.
 
 See the [Backing Up and Restoring Data](backup-and-restore) section
 of this guide for more information about creating and restoring data
-backups with Vitess. 
+backups with Vitess.
