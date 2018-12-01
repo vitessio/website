@@ -1,5 +1,6 @@
 ---
 title: Backing Up and Restoring Data
+weight: 4
 ---
 
 This document explains how to create and restore data backups with
@@ -229,7 +230,7 @@ For example, suppose you typically keep four days of replication logs
 and you create daily backups. In that case, even if a backup fails,
 you have at least a couple of days from the time of the failure to
 investigate and fix the problem.
-        
+
 ## Concurrency
 
 The back-up and restore processes simultaneously copy and either
@@ -242,5 +243,3 @@ can control the concurrency using command-line flags:
 
 If the network link is fast enough, the concurrency matches the CPU
 usage of the process during the backup or restore process.
-
-

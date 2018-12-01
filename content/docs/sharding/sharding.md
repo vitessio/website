@@ -163,7 +163,7 @@ the filtered replication process. This performed the following way:
     stream the correct data to the destination tablet.
 1. A client process on the destination tablet applies the filtered logs,
     which are just regular SQL statements at this point.
-    
+
 #### Row-based Replication
 
 If MySQL is configured to use Row-based Replication (RBR), the filtered replication
@@ -189,4 +189,3 @@ Vitess provides the following tools to help manage range-based shards:
 * The [MapReduce framework](https://github.com/vitessio/vitess/tree/master/java/hadoop/src/main/java/io/vitess/hadoop)
     fully utilizes key ranges to read data as quickly as possible,
     concurrently from all shards and all replicas.
-

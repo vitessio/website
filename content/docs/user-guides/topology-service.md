@@ -1,5 +1,6 @@
 ---
 title: Topology Service
+weight: 6
 ---
 
 This document describes the Topology Service, a key part of the Vitess
@@ -584,5 +585,3 @@ and the migration uses multiple phases:
   * then, change the configuration to use the new one as `primary`, and the
     old one as `secondary`. Reverse the lock order here.
   * then rollout a configuration to just use the new service.
-
-  
