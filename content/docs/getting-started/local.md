@@ -1,7 +1,7 @@
 ---
 title: Run Vitess Locally
 description: Instructions for using Vitess on your machine for testing and development purposes
-weight: 2
+weight: 3
 ---
 
 You can build Vitess using either [Docker](#docker) or a [manual](#manual) build process.
@@ -91,7 +91,7 @@ In addition, Vitess requires the software and libraries listed below.
     [MySQL 5.6](http://dev.mysql.com/downloads/mysql). You can use any
     installation method (src/bin/rpm/deb), but be sure to include the client
     development headers (`libmariadbclient-dev` or `libmysqlclient-dev`).
- 
+
     The Vitess development team currently tests against MariaDB 10.0.21
     and MySQL 5.6.27.
 
@@ -131,7 +131,7 @@ In addition, Vitess requires the software and libraries listed below.
     for [ZooKeeper](https://zookeeper.apache.org), [etcd](https://coreos.com/etcd/),
     and [Consul](https://www.consul.io/).
 
-    - ZooKeeper 3.4.10 is included by default. 
+    - ZooKeeper 3.4.10 is included by default.
     - Install [etcd v3.0+](https://github.com/coreos/etcd/releases).
       If you use etcd, remember to include the `etcd` command
       on your path.
@@ -167,28 +167,28 @@ In addition, Vitess requires the software and libraries listed below.
     ```sh
     $ sudo apt-get install openjdk-7-jre
     ```
-    
+
 #### macOS
 
 1.  [Install Homebrew](http://brew.sh/). If your `/usr/local` directory is not empty and you haven't yet used Homebrew,
-    you [need to](https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/El_Capitan_and_Homebrew.md) 
+    you [need to](https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/El_Capitan_and_Homebrew.md)
     run the following command:
-    
+
     ```sh
     sudo chown -R $(whoami):admin /usr/local
     ```
 
 2.  On macOS, you must use MySQL 5.6, as MariaDB does not yet work. MySQL should be installed using Homebrew
     (install steps are below).
-    
+
 3.  If [Xcode](https://developer.apple.com/xcode/) is installed (with Console tools, which should be bundled
     automatically since version 7.1), all the dev dependencies should be satisfied in this step. If Xcode isn't present,
     you'll need to install [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/).
-     
+
     ```sh
     brew install pkg-config
     ```
-   
+
 4.  ZooKeeper is used as a lock service.
 
 5.  Run the following commands:
@@ -200,23 +200,23 @@ In addition, Vitess requires the software and libraries listed below.
     pip install MySQL-python
     pip install tox
     ```
-    
+
 6.  The Vitess bootstrap script makes some checks for the go runtime, so it is recommended to have the following
     commands in your `~/.profile`, `~/.bashrc`, `~/.zshrc`, or `~/.bash_profile`:
-    
+
     ```sh
     export PATH="/usr/local/opt/mysql@5.6/bin:$PATH"
     export PATH=/usr/local/go/bin:$PATH
     export GOROOT=/usr/local/go
     ```
-    
+
 7.  For the Vitess hostname resolving functions to work correctly, a new entry has to be added into the /etc/hosts file
     with the current LAN IP address of the computer (preferably IPv4) and the current hostname, which you get by
     typing the 'hostname' command in the terminal.
-    
-    It is also a good idea to put the following line to [force the Go DNS resolver](https://golang.org/doc/go1.5#net) 
+
+    It is also a good idea to put the following line to [force the Go DNS resolver](https://golang.org/doc/go1.5#net)
     in your ~/.profile or ~/.bashrc or ~/.zshrc:
-    
+
     ```sh
     export GODEBUG=netdns=go
     ```
@@ -225,7 +225,7 @@ In addition, Vitess requires the software and libraries listed below.
 
 1.  Navigate to the directory where you want to download the Vitess
     source code and clone the Vitess Github repo. After doing so,
-    navigate to the `src/vitess.io/vitess` directory. For go to work 
+    navigate to the `src/vitess.io/vitess` directory. For go to work
     correctly, you should create a symbolic link to this inide your ${HOME}/go/src
 
     ```sh
@@ -252,7 +252,7 @@ In addition, Vitess requires the software and libraries listed below.
 
     ```sh
     # export VT_MYSQL_ROOT=/usr/local/mysql
-    
+
     # on macOS, this is the correct value:
     export VT_MYSQL_ROOT=/usr/local/opt/mysql@5.6
     ```
@@ -269,7 +269,7 @@ In addition, Vitess requires the software and libraries listed below.
     If your machine requires a proxy to access the Internet, you will need
     to set the usual environment variables (e.g. `http_proxy`,
     `https_proxy`, `no_proxy`).
-    
+
     Run the boostrap.sh script:
 
     ```sh
@@ -431,7 +431,7 @@ lock service. ZooKeeper is included in the Vitess distribution.
     turn is configured to point to the local instance. In our sample scripts,
     they are both hosted in the same ZooKeeper service.
 
-    If you want to use Etcd as a distributed lock service, The following script 
+    If you want to use Etcd as a distributed lock service, The following script
     creates a Etcd instance:
 
     ```sh
@@ -441,7 +441,7 @@ lock service. ZooKeeper is included in the Vitess distribution.
     ### example output:
     # enter etcd2 env
     # etcdmain: etcd Version: 3.X.X
-    # ... 
+    # ...
     # etcd start done...
     ```
 
@@ -601,7 +601,7 @@ lock service. ZooKeeper is included in the Vitess distribution.
     In the examples, we are using just a single database with no specific
     configuration, so we just need to make that (empty) configuration visible
     for serving. This is done using this command:
-    
+
     ```sh
     vitess/examples/local$ ./lvtctl.sh RebuildVSchemaGraph
     ```
@@ -682,4 +682,3 @@ If you need help diagnosing a problem, send a message to our
 In addition to any errors you see at the command-line, it would also help to
 upload an archive of your `VTDATAROOT` directory to a file sharing service
 and provide a link to it.
-
