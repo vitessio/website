@@ -48,7 +48,7 @@ Another alternative is to customize our Docker images and build them yourselves.
 
 6. Build the `vitess/lite[:<flavor>]` image. This will run a script that extracts from `vitess/base` only the files needed to run Vitess.
 
-   Choose one of the following commands (the command without suffix builds the default image containing MySQL 5.7):
+    Choose one of the following commands (the command without suffix builds the default image containing MySQL 5.7):
 
     ``` sh
     vitess$ make docker_lite
