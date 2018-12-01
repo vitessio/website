@@ -7,13 +7,17 @@ By default, the [Kubernetes configs](https://github.com/vitessio/vitess/tree/mas
 
 We created the `lite` image as a stripped down version of our main image `base` such that Kubernetes pods can start faster. The `lite` image does not change very often and is updated manually by the Vitess team with every release. In contrast, the base image is updated automatically after every push to the GitHub master branch. For more information on the different images we provide, please read the `docker/README.md` [file](https://github.com/vitessio/vitess/tree/master/docker).
 
+{{< info >}}
 If your goal is run the latest Vitess code, the simplest solution is to use the bigger base image instead of `lite`.
+{{< /info >}}
 
 Another alternative is to customize our Docker images and build them yourselves. This is described below and involves building the `base` image first. Then you can run our build script for the `lite` image which extracts the Vitess binaries from the built `base` image.
 
 1. Install [Docker](https://www.docker.com/) on your workstation.
 
-  Our scripts also assume you can run the `docker` command without `sudo`, which you can do by [setting up a docker group](https://docs.docker.com/engine/installation/linux/ubuntulinux/#create-a-docker-group).
+{{< info >}}
+Our scripts also assume you can run the `docker` command without `sudo`, which you can do by [setting up a docker group](https://docs.docker.com/engine/installation/linux/ubuntulinux/#create-a-docker-group).
+{{< /info >}}
 
 2. Create an account on Docker Hub and then `docker login` to it.
 
@@ -28,11 +32,12 @@ vitess$ docker pull vitess/bootstrap:percona57 # Percona Server 5.7
 vitess$ docker pull vitess/bootstrap:percona   # Percona Server
 vitess$ docker pull vitess/bootstrap:mariadb   # MariaDB
 ```
-  **Note**: If you have already downloaded the `vitess/bootstrap:<flavor>` image on your machine before then it could be old, which may cause build failures. So it would be a good idea to always execute this step.
+
+        **Note**: If you have already downloaded the `vitess/bootstrap:<flavor>` image on your machine before then it could be old, which may cause build failures. So it would be a good idea to always execute this step.
 
 5. Build the `vitess/base[:<flavor>]` image. It will include the compiled the Vitess binaries. (`vitess/base` also contains the source code and tests i.e. everything needed for development work.)
 
-  Choose one of the following commands (the command without suffix builds the default image containing MySQL 5.7):
+        Choose one of the following commands (the command without suffix builds the default image containing MySQL 5.7):
 
 ``` sh
 vitess$ make docker_base
@@ -44,7 +49,7 @@ vitess$ make docker_base_mariadb
 
 6. Build the `vitess/lite[:<flavor>]` image. This will run a script that extracts from `vitess/base` only the files needed to run Vitess.
 
-  Choose one of the following commands (the command without suffix builds the default image containing MySQL 5.7):
+        Choose one of the following commands (the command without suffix builds the default image containing MySQL 5.7):
 
 ``` sh
 vitess$ make docker_lite
@@ -60,7 +65,8 @@ vitess$ make docker_lite_mariadb
 vitess$ docker tag -f vitess/lite yourname/vitess
 vitess$ docker push yournam - e/vitess
 ```
-  **Note**: If you chose a non-default flavor above, then change `vitess/lite` in the above command to `vitess/lite:<flavor>`.
+
+        **Note**: If you chose a non-default flavor above, then change `vitess/lite` in the above command to `vitess/lite:<flavor>`.
 
 8. Change the Kubernetes configs to point to your personal repository:
 
@@ -68,8 +74,8 @@ vitess$ docker push yournam - e/vitess
 vitess/examples/kubernetes$ sed -i -e 's,image: vitess/lite,image: yourname/vitess:latest,' *.yaml
 ```
 
-  Adding the `:latest` label at the end of the image name tells Kubernetes to check for a newer image every time a pod is launched. When you push a new version of your image, any new pods will use it automatically without you having to clear the Kubernetes image cache.
+        Adding the `:latest` label at the end of the image name tells Kubernetes to check for a newer image every time a pod is launched. When you push a new version of your image, any new pods will use it automatically without you having to clear the Kubernetes image cache.
 
-  Once you've stabilized your image, you'll probably want to replace `:latest` with a specific label that you change each time you make a new build, so you can control when pods update.
+        Once you've stabilized your image, you'll probably want to replace `:latest` with a specific label that you change each time you make a new build, so you can control when pods update.
 
 9. Launch [Vitess on Kubernetes](https://vitess.io/getting-started/ ) as usual.
