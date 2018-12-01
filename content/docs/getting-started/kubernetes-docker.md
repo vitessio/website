@@ -69,4 +69,4 @@ Adding the `:latest` label at the end of the image name tells Kubernetes to chec
 
 Once you've stabilized your image, you'll probably want to replace `:latest` with a specific label that you change each time you make a new build, so you can control when pods update.
 
-9. Launch [Vitess on Kubernetes](https://vitess.io/getting-started/) as usual.
+9. Launch [Vitess on Kubernetes](https://vitess.io/getting-started/ ) as usual.
