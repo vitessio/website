@@ -1,5 +1,6 @@
 ---
 title: User Guides
+weight: 3
 ---
 
 ## Platform support
