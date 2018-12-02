@@ -101,7 +101,7 @@ The following sample command applies the SQL in the **user_table.sql** file to t
 
 `ApplySchema -sql_file=user_table.sql user`
 
-#### [](#permitted-schema-changes)Permitted schema changes
+#### [Permitted schema changes](#permitted-schema-changes)
 
 The `ApplySchema` command supports a limited set of DDL statements. In addition, Vitess rejects some schema changes because large changes can slow replication and may reduce the availability of your overall system.
 
