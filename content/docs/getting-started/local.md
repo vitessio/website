@@ -521,7 +521,7 @@ The `client.py` file is a simple sample application that connects to `vtgate` an
 
 * add the Vitess Python packages to your `PYTHONPATH`
 
-or
+  or
 
 * use the `client.sh` wrapper script, which temporarily sets up the environment and then runs `client.py`.
 
