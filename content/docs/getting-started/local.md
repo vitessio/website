@@ -168,22 +168,19 @@ In addition, Vitess requires the software and libraries listed below.
     $ sudo apt-get install openjdk-7-jre
     ```
 
-#### macOS
+#### Mac OS
 
-1.  [Install Homebrew](http://brew.sh/). If your `/usr/local` directory is not empty and you haven't yet used Homebrew,
-    you [need to](https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/El_Capitan_and_Homebrew.md)
-    run the following command:
+1.  [Install Homebrew](http://brew.sh/). If your `/usr/local` directory is not empty and you haven't yet used Homebrew, you need to run the following command:
 
     ```sh
     sudo chown -R $(whoami):admin /usr/local
     ```
 
-2.  On macOS, you must use MySQL 5.6, as MariaDB does not yet work. MySQL should be installed using Homebrew
+2.  On Mac OS, you must use MySQL 5.6, as MariaDB does not yet work. MySQL should be installed using Homebrew
     (install steps are below).
 
 3.  If [Xcode](https://developer.apple.com/xcode/) is installed (with Console tools, which should be bundled
-    automatically since version 7.1), all the dev dependencies should be satisfied in this step. If Xcode isn't present,
-    you'll need to install [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/).
+    automatically since version 7.1), all the dev dependencies should be satisfied in this step. If Xcode isn't present, you'll need to install [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/).
 
     ```sh
     brew install pkg-config
@@ -201,8 +198,7 @@ In addition, Vitess requires the software and libraries listed below.
     pip install tox
     ```
 
-6.  The Vitess bootstrap script makes some checks for the go runtime, so it is recommended to have the following
-    commands in your `~/.profile`, `~/.bashrc`, `~/.zshrc`, or `~/.bash_profile`:
+6.  The Vitess bootstrap script makes some checks for the go runtime, so it is recommended to have the following commands in your `~/.profile`, `~/.bashrc`, `~/.zshrc`, or `~/.bash_profile`:
 
     ```sh
     export PATH="/usr/local/opt/mysql@5.6/bin:$PATH"
@@ -210,12 +206,9 @@ In addition, Vitess requires the software and libraries listed below.
     export GOROOT=/usr/local/go
     ```
 
-7.  For the Vitess hostname resolving functions to work correctly, a new entry has to be added into the /etc/hosts file
-    with the current LAN IP address of the computer (preferably IPv4) and the current hostname, which you get by
-    typing the 'hostname' command in the terminal.
+7.  For the Vitess hostname resolving functions to work correctly, a new entry has to be added into the /etc/hosts file with the current LAN IP address of the computer (preferably IPv4) and the current hostname, which you get by typing the 'hostname' command in the terminal.
 
-    It is also a good idea to put the following line to [force the Go DNS resolver](https://golang.org/doc/go1.5#net)
-    in your ~/.profile or ~/.bashrc or ~/.zshrc:
+    It is also a good idea to put the following line to [force the Go DNS resolver](https://golang.org/doc/go1.5#net) in your ~/.profile or ~/.bashrc or ~/.zshrc:
 
     ```sh
     export GODEBUG=netdns=go
@@ -223,10 +216,7 @@ In addition, Vitess requires the software and libraries listed below.
 
 ### Build Vitess
 
-1.  Navigate to the directory where you want to download the Vitess
-    source code and clone the Vitess Github repo. After doing so,
-    navigate to the `src/vitess.io/vitess` directory. For go to work
-    correctly, you should create a symbolic link to this inide your ${HOME}/go/src
+1. Navigate to the directory where you want to download the Vitess source code and clone the Vitess Github repo. After doing so, navigate to the `src/vitess.io/vitess` directory. For go to work correctly, you should create a symbolic link to this inside your `${HOME}/go/src`
 
     ```sh
     cd $WORKSPACE
@@ -236,8 +226,7 @@ In addition, Vitess requires the software and libraries listed below.
     cd ${HOME}/go/src/vitess.io/vitess
     ```
 
-1.  Set the `MYSQL_FLAVOR` environment variable. Choose the appropriate
-    value for your database. This value is case-sensitive.
+2. Set the `MYSQL_FLAVOR` environment variable. Choose the appropriate value for your database. This value is case-sensitive.
 
     ```sh
     # export MYSQL_FLAVOR=MariaDB
@@ -245,10 +234,7 @@ In addition, Vitess requires the software and libraries listed below.
     export MYSQL_FLAVOR=MySQL56
     ```
 
-1.  If your selected database installed in a location other than `/usr/bin`,
-    set the `VT_MYSQL_ROOT` variable to the root directory of your
-    MariaDB installation. For example, if mysql is installed in
-    `/usr/local/mysql`, run the following command.
+3. If your selected database installed in a location other than `/usr/bin`, set the `VT_MYSQL_ROOT` variable to the root directory of your MariaDB installation. For example, if mysql is installed in `/usr/local/mysql`, run the following command.
 
     ```sh
     # export VT_MYSQL_ROOT=/usr/local/mysql
@@ -257,18 +243,11 @@ In addition, Vitess requires the software and libraries listed below.
     export VT_MYSQL_ROOT=/usr/local/opt/mysql@5.6
     ```
 
-    Note that the command indicates that the `mysql` executable should
-    be found at `/usr/local/opt/mysql@5.6/bin/mysql`.
+    Note that the command indicates that the `mysql` executable should be found at `/usr/local/opt/mysql@5.6/bin/mysql`.
 
-1.  Run `mysqld --version` and confirm that you
-    are running the correct version of MariaDB or MySQL. The value should
-    be 10 or higher for MariaDB and 5.6.x for MySQL.
+4. Run `mysqld --version` and confirm that you are running the correct version of MariaDB or MySQL. The value should be 10 or higher for MariaDB and 5.6.x for MySQL.
 
-1.  Build Vitess using the commands below. Note that the
-    `bootstrap.sh` script needs to download some dependencies.
-    If your machine requires a proxy to access the Internet, you will need
-    to set the usual environment variables (e.g. `http_proxy`,
-    `https_proxy`, `no_proxy`).
+5. Build Vitess using the commands below. Note that the `bootstrap.sh` script needs to download some dependencies. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`).
 
     Run the boostrap.sh script:
 
@@ -305,11 +284,7 @@ export VT_TEST_FLAGS='--topo-server-flavor=consul'
 ```
 {{< /info >}}
 
-The default targets when running `make test` contain a full set of
-tests intended to help Vitess developers to verify code changes. Those tests
-simulate a small Vitess cluster by launching many servers on the local
-machine. To do so, they require a lot of resources; a minimum of 8GB RAM
-and SSD is recommended to run the tests.
+The default targets when running `make test` contain a full set of tests intended to help Vitess developers to verify code changes. Those tests simulate a small Vitess cluster by launching many servers on the local machine. To do so, they require a lot of resources; a minimum of 8GB RAM and SSD is recommended to run the tests.
 
 Some tests require extra packages. For example, on Ubuntu:
 
@@ -317,8 +292,7 @@ Some tests require extra packages. For example, on Ubuntu:
 $ sudo apt-get install chromium-browser mvn xvfb
 ```
 
-If you want only to check that Vitess is working in your environment,
-you can run a lighter set of tests:
+If you want only to check that Vitess is working in your environment, you can run a lighter set of tests:
 
 ```sh
 make site_test
@@ -326,18 +300,11 @@ make site_test
 
 #### Common Test Issues
 
-Attempts to run the full developer test suite (`make test`)
-on an underpowered machine often results in failure. If you still see
-the same failures when running the lighter set of tests (`make site_test`),
-please let the development team know in the
-[vitess@googlegroups.com](https://groups.google.com/forum/#!forum/vitess)
-discussion forum.
+Attempts to run the full developer test suite (`make test`) on an underpowered machine often results in failure. If you still see the same failures when running the lighter set of tests (`make site_test`), please let the development team know in the [vitess@googlegroups.com](https://groups.google.com/forum/#!forum/vitess) discussion forum.
 
 ##### Node already exists, port in use, etc.
 
-A failed test can leave orphaned processes. If you use the default
-settings, you can use the following commands to identify and kill
-those processes:
+A failed test can leave orphaned processes. If you use the default settings, you can use the following commands to identify and kill those processes:
 
 ```sh
 pgrep -f -l '(vtdataroot|VTDATAROOT)' # list Vitess processes
@@ -346,20 +313,15 @@ pkill -f '(vtdataroot|VTDATAROOT)' # kill Vitess processes
 
 ##### Too many connections to MySQL, or other timeouts
 
-This error often means your disk is too slow. If you don't have access
-to an SSD, you can try [testing against a
-ramdisk](https://github.com/vitessio/vitess/blob/master/doc/TestingOnARamDisk.md).
+This error often means your disk is too slow. If you don't have access to an SSD, you can try [testing against a ramdisk](https://github.com/vitessio/vitess/blob/master/doc/TestingOnARamDisk.md).
 
 ##### Connection refused to tablet, MySQL socket not found, etc.
 
-These errors might indicate that the machine ran out of RAM and a server
-crashed when trying to allocate more RAM. Some of the heavier tests
-require up to 8GB RAM.
+These errors might indicate that the machine ran out of RAM and a server crashed when trying to allocate more RAM. Some of the heavier tests require up to 8GB RAM.
 
 ##### Connection refused in zkctl test
 
-This error might indicate that the machine does not have a Java Runtime
-installed, which is a requirement if you are using ZooKeeper as the lock server.
+This error might indicate that the machine does not have a Java Runtime installed, which is a requirement if you are using ZooKeeper as the lock server.
 
 ##### Running out of disk space
 
@@ -368,34 +330,21 @@ Some of the larger tests use up to 4GB of temporary space on disk.
 
 ## Start a Vitess cluster
 
-After completing the instructions above to [build Vitess](#build-vitess),
-you can use the example scripts in the Github repo to bring up a Vitess
-cluster on your local machine. These scripts use ZooKeeper as the
-lock service. ZooKeeper is included in the Vitess distribution.
+After completing the instructions above to [build Vitess](#build-vitess), you can use the example scripts in the Github repo to bring up a Vitess cluster on your local machine. These scripts use ZooKeeper as the lock service. ZooKeeper is included in the Vitess distribution.
 
-1.  **Check system settings**
+1. **Check system settings**
 
-    Some Linux distributions ship with default file descriptor limits
-    that are too low for database servers. This issue could show up
-    as the database crashing with the message "too many open files".
+    Some Linux distributions ship with default file descriptor limits that are too low for database servers. This issue could show up as the database crashing with the message "too many open files".
 
-    Check the system-wide `file-max` setting as well as user-specific
-    `ulimit` values. We recommend setting them above 100K to be safe.
-    The exact [procedure](http://www.cyberciti.biz/faq/linux-increase-the-maximum-number-of-open-files/)
-     may vary depending on your Linux distribution.
+    Check the system-wide `file-max` setting as well as user-specific `ulimit` values. We recommend setting them above 100K to be safe. The exact [procedure](http://www.cyberciti.biz/faq/linux-increase-the-maximum-number-of-open-files/) may vary depending on your Linux distribution.
 
-1.  **Configure environment variables**
+2. **Configure environment variables**
 
-    If you are still in the same terminal window that
-    you used to run the build commands, you can skip to the next
-    step since the environment variables will already be set.
+    If you are still in the same terminal window that you used to run the build commands, you can skip to the next step since the environment variables will already be set.
 
-    If you're adapting this example to your own deployment, the only environment
-    variables required before running the scripts are `VTROOT` and `VTDATAROOT`.
+    If you're adapting this example to your own deployment, the only environment variables required before running the scripts are `VTROOT` and `VTDATAROOT`.
 
-    Set `VTROOT` to the parent of the Vitess source tree. For example, if you
-    ran `make build` while in `$HOME/vt/src/vitess.io/vitess`,
-    then you should set:
+    Set `VTROOT` to the parent of the Vitess source tree. For example, if you ran `make build` while in `$HOME/vt/src/vitess.io/vitess`, then you should set:
 
     ```sh
     export VTROOT=$HOME/vt
@@ -408,11 +357,9 @@ lock service. ZooKeeper is included in the Vitess distribution.
     export VTDATAROOT=$HOME/vtdataroot
     ```
 
-1.  **Start ZooKeeper or Etcd**
+3. **Start ZooKeeper or Etcd**
 
-    Servers in a Vitess cluster find each other by looking for
-    dynamic configuration data stored in a distributed lock
-    service. The following script creates a small ZooKeeper cluster:
+    Servers in a Vitess cluster find each other by looking for dynamic configuration data stored in a distributed lock service. The following script creates a small ZooKeeper cluster:
 
     ```sh
     $ cd $VTROOT/src/vitess.io/vitess/examples/local
@@ -422,17 +369,11 @@ lock service. ZooKeeper is included in the Vitess distribution.
     # Waiting for zk servers to be ready...
     ```
 
-    After the ZooKeeper cluster is running, we only need to tell each
-    Vitess process how to connect to ZooKeeper. Then, each process can
-    find all of the other Vitess processes by coordinating via ZooKeeper.
+    After the ZooKeeper cluster is running, we only need to tell each Vitess process how to connect to ZooKeeper. Then, each process can find all of the other Vitess processes by coordinating via ZooKeeper.
 
-    Each of our scripts automatically uses the `TOPOLOGY_FLAGS` environment
-    variable to point to the global ZooKeeper instance. The global instance in
-    turn is configured to point to the local instance. In our sample scripts,
-    they are both hosted in the same ZooKeeper service.
+    Each of our scripts automatically uses the `TOPOLOGY_FLAGS` environment variable to point to the global ZooKeeper instance. The global instance in turn is configured to point to the local instance. In our sample scripts, they are both hosted in the same ZooKeeper service.
 
-    If you want to use Etcd as a distributed lock service, The following script
-    creates a Etcd instance:
+    If you want to use Etcd as a distributed lock service, The following script creates a Etcd instance:
 
     ```sh
     $ cd $VTROOT/src/vitess.io/vitess/examples/local
@@ -445,10 +386,9 @@ lock service. ZooKeeper is included in the Vitess distribution.
     # etcd start done...
     ```
 
-1.  **Start vtctld**
+4. **Start vtctld**
 
-    The `vtctld` server provides a web interface that
-    displays all of the coordination information stored in ZooKeeper.
+    The `vtctld` server provides a web interface that displays all of the coordination information stored in ZooKeeper.
 
     ```sh
     vitess/examples/local$ ./vtctld-up.sh
@@ -457,30 +397,20 @@ lock service. ZooKeeper is included in the Vitess distribution.
     # Send commands with: vtctlclient -server localhost:15999 ...
     ```
 
-    Open `http://localhost:15000` to verify that
-    `vtctld` is running. There won't be any information
-    there yet, but the menu should come up, which indicates that
-    `vtctld` is running.
+    Open `http://localhost:15000` to verify that `vtctld` is running. There won't be any information there yet, but the menu should come up, which indicates that `vtctld` is running.
 
-    The `vtctld` server also accepts commands from the `vtctlclient` tool,
-    which is used to administer the cluster. Note that the port for RPCs
-    (in this case `15999`) is different from the web UI port (`15000`).
-    These ports can be configured with command-line flags, as demonstrated
-    in `vtctld-up.sh`.
+    The `vtctld` server also accepts commands from the `vtctlclient` tool, which is used to administer the cluster. Note that the port for RPCs (in this case `15999`) is different from the web UI port (`15000`). These ports can be configured with command-line flags, as demonstrated in `vtctld-up.sh`.
 
-    For convenience, we'll use the `lvtctl.sh` script in example commands,
-    to avoid having to type the `vtctld` address every time.
+    For convenience, we'll use the `lvtctl.sh` script in example commands, to avoid having to type the `vtctld` address every time.
 
     ```sh
     # List available commands
     vitess/examples/local$ ./lvtctl.sh help
     ```
 
-1.  **Start vttablets**
+5. **Start vttablets**
 
-    The `vttablet-up.sh` script brings up three vttablets, and assigns them to
-    a [keyspace](../../overview/concepts#keyspace) and [shard](../../overview/concepts#shard)
-    according to the variables set at the top of the script file.
+    The `vttablet-up.sh` script brings up three vttablets, and assigns them to a [keyspace](../../overview/concepts#keyspace) and [shard](../../overview/concepts#shard) according to the variables set at the top of the script file.
 
     ```sh
     vitess/examples/local$ ./vttablet-up.sh
@@ -496,26 +426,15 @@ lock service. ZooKeeper is included in the Vitess distribution.
     # Access tablet test-0000000102 at http://localhost:15102/debug/status
     ```
 
-    After this command completes, refresh the `vtctld` web UI, and you should
-    see a keyspace named `test_keyspace` with a single shard named `0`.
-    This is what an unsharded keyspace looks like.
+    After this command completes, refresh the `vtctld` web UI, and you should see a keyspace named `test_keyspace` with a single shard named `0`. This is what an unsharded keyspace looks like.
 
-    If you click on the shard box, you'll see a list of [tablets]
-    (../../overview/concepts#tablet) in that shard.
-    Note that it's normal for the tablets to be unhealthy at this point, since
-    you haven't initialized them yet.
+    If you click on the shard box, you'll see a list of [tablets](../../overview/concepts#tablet) in that shard. Note that it's normal for the tablets to be unhealthy at this point, since you haven't initialized them yet.
 
-    You can also click the **STATUS** link on each tablet to be taken to its
-    status page, showing more details on its operation. Every Vitess server has
-    a status page served at `/debug/status` on its web port.
+    You can also click the **STATUS** link on each tablet to be taken to its status page, showing more details on its operation. Every Vitess server has a status page served at `/debug/status` on its web port.
 
-1.  **Initialize MySQL databases**
+6. **Initialize MySQL databases**
 
-    Next, designate one of the tablets to be the initial master.
-    Vitess will automatically connect the other slaves' mysqld instances so
-    that they start replicating from the master's mysqld.
-    This is also when the default database is created. Since our keyspace is
-    named `test_keyspace`, the MySQL database will be named `vt_test_keyspace`.
+    Next, designate one of the tablets to be the initial master. Vitess will automatically connect the other slaves' mysqld instances so that they start replicating from the master's mysqld. This is also when the default database is created. Since our keyspace is named `test_keyspace`, the MySQL database will be named `vt_test_keyspace`.
 
     ```sh
     vitess/examples/local$ ./lvtctl.sh InitShardMaster -force test_keyspace/0 test-100
@@ -524,16 +443,9 @@ lock service. ZooKeeper is included in the Vitess distribution.
     # master-elect tablet test-0000000100 is not a master in the shard, proceeding anyway as -force was used
     ```
 
-    **Note:** Since this is the first time the shard has been started,
-    the tablets are not already doing any replication, and there is no
-    existing master. The `InitShardMaster` command above uses the `-force` flag
-    to bypass the usual sanity checks that would apply if this wasn't a
-    brand new shard.
+    **Note:** Since this is the first time the shard has been started, the tablets are not already doing any replication, and there is no existing master. The `InitShardMaster` command above uses the `-force` flag to bypass the usual sanity checks that would apply if this wasn't a brand new shard.
 
-    After running this command, go back to the **Shard Status** page
-    in the `vtctld` web interface. When you refresh the
-    page, you should see that one `vttablet` is the master,
-    two are replicas and two are rdonly.
+    After running this command, go back to the **Shard Status** page in the `vtctld` web interface. When you refresh the page, you should see that one `vttablet` is the master, two are replicas and two are rdonly.
 
     You can also see this on the command line:
 
@@ -547,11 +459,9 @@ lock service. ZooKeeper is included in the Vitess distribution.
     # test-0000000104 test_keyspace 0 rdonly localhost:15104 localhost:17104 []
     ```
 
-1.  **Create a table**
+7.  **Create a table**
 
-    The `vtctlclient` tool can be used to apply the database schema across all
-    tablets in a keyspace. The following command creates the table defined in
-    the `create_test_table.sql` file:
+    The `vtctlclient` tool can be used to apply the database schema across all tablets in a keyspace. The following command creates the table defined in the `create_test_table.sql` file:
 
     ```sh
     # Make sure to run this from the examples/local dir, so it finds the file.
@@ -569,14 +479,9 @@ lock service. ZooKeeper is included in the Vitess distribution.
     ) ENGINE=InnoDB
     ```
 
-1.  **Take a backup**
+8.  **Take a backup**
 
-    Now that the initial schema is applied, it's a good time to take the first
-    [backup](../../user-guides/backup-and-restore). This backup
-    will be used to automatically restore any additional replicas that you run,
-    before they connect themselves to the master and catch up on replication.
-    If an existing tablet goes down and comes back up without its data, it will
-    also automatically restore from the latest backup and then resume replication.
+    Now that the initial schema is applied, it's a good time to take the first [backup](../../user-guides/backup-and-restore). This backup will be used to automatically restore any additional replicas that you run, before they connect themselves to the master and catch up on replication. If an existing tablet goes down and comes back up without its data, it will also automatically restore from the latest backup and then resume replication.
 
     ```sh
     vitess/examples/local$ ./lvtctl.sh Backup test-0000000102
@@ -590,17 +495,11 @@ lock service. ZooKeeper is included in the Vitess distribution.
     # 2016-05-06.072724.test-0000000102
     ```
 
-    **Note:** In this single-server example setup, backups are stored at
-    `$VTDATAROOT/backups`. In a multi-server deployment, you would usually mount
-    an NFS directory there. You can also change the location by setting the
-    `-file_backup_storage_root` flag on `vtctld` and `vttablet`, as demonstrated
-    in `vtctld-up.sh` and `vttablet-up.sh`.
+    **Note:** In this single-server example setup, backups are stored at `$VTDATAROOT/backups`. In a multi-server deployment, you would usually mount an NFS directory there. You can also change the location by setting the `-file_backup_storage_root` flag on `vtctld` and `vttablet`, as demonstrated in `vtctld-up.sh` and `vttablet-up.sh`.
 
-1. **Initialize Vitess Routing Schema**
+9. **Initialize Vitess Routing Schema**
 
-    In the examples, we are using just a single database with no specific
-    configuration, so we just need to make that (empty) configuration visible
-    for serving. This is done using this command:
+    In the examples, we are using just a single database with no specific configuration, so we just need to make that (empty) configuration visible for serving. This is done using this command:
 
     ```sh
     vitess/examples/local$ ./lvtctl.sh RebuildVSchemaGraph
@@ -608,11 +507,9 @@ lock service. ZooKeeper is included in the Vitess distribution.
 
     This command will not display any output if successful.
 
-1.  **Start vtgate**
+10. **Start vtgate**
 
-    Vitess uses `vtgate` to route each client query to the correct `vttablet`. This
-    local example runs a single `vtgate` instance. A production deployment would likely
-    run multiple `vtgate` instances to share the load.
+    Vitess uses `vtgate` to route each client query to the correct `vttablet`. This local example runs a single `vtgate` instance. A production deployment would likely run multiple `vtgate` instances to share the load.
 
     ```sh
     vitess/examples/local$ ./vtgate-up.sh
@@ -620,12 +517,13 @@ lock service. ZooKeeper is included in the Vitess distribution.
 
 ### Run a Client Application
 
-The `client.py` file is a simple sample application that connects to `vtgate` and
-executes some queries. To run it, you need to either
+The `client.py` file is a simple sample application that connects to `vtgate` and executes some queries. To run it, you need to either
 
-*   add the Vitess Python packages to your `PYTHONPATH` or
-*   use the `client.sh` wrapper script, which temporarily
-    sets up the environment and then runs `client.py`.
+* add the Vitess Python packages to your `PYTHONPATH`
+
+or
+
+* use the `client.sh` wrapper script, which temporarily sets up the environment and then runs `client.py`.
 
     ```sh
     vitess/examples/local$ ./client.sh
@@ -638,19 +536,13 @@ executes some queries. To run it, you need to either
     # ...
     ```
 
-There are also sample clients in the same directory for Java, PHP, and Go.
-See the comments at the top of each sample file for usage instructions.
+There are also sample clients in the same directory for Java, PHP, and Go. See the comments at the top of each sample file for usa e instructions.
 
 ### Try Vitess resharding
 
-Now that you have a full Vitess stack running, you may want to go on to the
-[Horizontal Sharding workflow guide](../../user-guides/horizontal-sharding-workflow)
-or [Horizontal Sharding codelab](../../user-guides/horizontal-sharding)
-(if you prefer to run each step manually through commands) to try out
-[dynamic resharding](../../user-guides/sharding#resharding).
+Now that you have a full Vitess stack running, you may want to go on to the [Horizontal Sharding workflow guide](../../user-guides/horizontal-sharding-workflow) or [Horizontal Sharding codelab](../../user-guides/horizontal-sharding) (if you prefer to run each step manually through commands) to try out [dynamic resharding](../../user-guides/sharding#resharding).
 
-If so, you can skip the tear-down since the sharding guide picks up right here.
-If not, continue to the clean-up steps below.
+If so, you can skip the tear-down since the sharding guide picks up right here. If not, continue to the clean-up steps below.
 
 ### Tear down the cluster
 
@@ -663,8 +555,7 @@ vitess/examples/local$ ./vtctld-down.sh
 vitess/examples/local$ ./zk-down.sh  # If you use Etcd, run ./etcd-down.sh
 ```
 
-Note that the `-down.sh` scripts will leave behind any data files created.
-If you're done with this example data, you can clear out the contents of `VTDATAROOT`:
+Note that the `-down.sh` scripts will leave behind any data files created. If you're done with this example data, you can clear out the contents of `VTDATAROOT`:
 
 ```sh
 $ cd $VTDATAROOT
@@ -673,12 +564,6 @@ $ cd $VTDATAROOT
 
 ## Troubleshooting
 
-If anything goes wrong, check the logs in your `$VTDATAROOT/tmp` directory
-for error messages. There are also some tablet-specific logs, as well as
-MySQL logs in the various `$VTDATAROOT/vt_*` directories.
+If anything goes wrong, check the logs in your `$VTDATAROOT/tmp` directory for error messages. There are also some tablet-specific logs, as well as MySQL logs in the various `$VTDATAROOT/vt_*` directories.
 
-If you need help diagnosing a problem, send a message to our
-[mailing list](https://groups.google.com/forum/#!forum/vitess).
-In addition to any errors you see at the command-line, it would also help to
-upload an archive of your `VTDATAROOT` directory to a file sharing service
-and provide a link to it.
+If you need help diagnosing a problem, send a message to our [mailing list](https://groups.google.com/forum/#!forum/vitess). In addition to any errors you see at the command-line, it would also help to upload an archive of your `VTDATAROOT` directory to a file sharing service and provide a link to it.
