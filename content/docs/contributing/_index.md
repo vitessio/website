@@ -1,5 +1,6 @@
 ---
 title: Contributing to Vitess
+description: We love contributors, here's how
 weight: 9
 ---
 
