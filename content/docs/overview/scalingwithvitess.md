@@ -19,7 +19,7 @@ While Vitess is designed to manage large, multi-instance databases, it offers fe
 
 Starting out, our first step is getting a simple, reliable, durable database cluster in place with a master instance and a couple of replicas. In Vitess terminology, that's a single-shard, single-keyspace database. Once that building block is in place, we can focus on scaling it up.
 
-## Planning for scale
+### Planning for scale
 
 We recommend a number of best practices to facilitate scaling your database as your product evolves. You might not experience the benefits of these actions immediately, but adopting these practices from day one will make it much easier for your database and product to grow:
 
@@ -47,7 +47,7 @@ Vitess has several components that keep this complexity out of your application:
 * The *Topology Service* -- Vitess supports Zookeeper, etcd and Consul -- maintains configuration data for the database system. Vitess relies on the service to know where to route queries based on both the sharding scheme and the availability of individual MySQL instances.
 * The *vtctl* and *vtctld* tools offer command-line and web interfaces to the system.
 
-[Insert image here]
+![Vitess Overview Architecture Diagram](../img/VitessOverview.png)
 
 Setting up these components directly -- for example, writing your own topology service or your own implementation of vtgate -- would require a lot of scripting specific to a given configuration. It would also yield a system that would be difficult and costly to support. In addition, while any one of the components on its own is useful in limiting complexity, you need all of them to keep your application as simple as possible while also optimizing performance.
 
