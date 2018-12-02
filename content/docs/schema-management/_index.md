@@ -7,7 +7,7 @@ weight: 6
 Using Vitess requires you to work with two different types of schemas:
 
 1. The MySQL database schema. This is the schema of the individual MySQL instances.
-2. The [VSchema](/vschema), which describes all the keyspaces and how they're sharded.
+2. The [VSchema](../schema-management/vschema), which describes all the keyspaces and how they're sharded.
 
 The workflow for the `VSchema` is as follows:
 
@@ -16,7 +16,7 @@ The workflow for the `VSchema` is as follows:
 
 This document describes the [`vtctl`](../reference/vtctl/) commands that you can use to [review](#reviewing-your-schema) or [update](#changing-your-schema) your schema in Vitess.
 
-Note that this functionality is not recommended for long-running schema changes. In such cases, we recommend to do a [schema swap](/schema-swap) instead.
+Note that this functionality is not recommended for long-running schema changes. In such cases, we recommend to do a [schema swap](../schema-management/schema-swap) instead.
 
 ## Reviewing your schema
 
@@ -32,7 +32,7 @@ This section describes the following vtctl commands, which let you look at the s
 
 The [GetSchema](../reference/vtctl/#getschema) command displays the full schema for a tablet or a subset of the tablet's tables. When you call `GetSchema`, you specify the tablet alias that uniquely identifies the tablet. The `<tablet alias>` argument value has the format `<cell name>-<uid>`.
 
-**Note**: You can use the [`vtctl ListAllTablets`](link) command to retrieve a list of tablets in a cell and their unique IDs.
+**Note**: You can use the [`vtctl ListAllTablets`](../reference/vtctl/#listalltablets) command to retrieve a list of tablets in a cell and their unique IDs.
 
 The following example retrieves the schema for the tablet with the unique ID test-000000100:
 
@@ -88,7 +88,7 @@ Vitess' schema modification functionality is designed the following goals in min
 
 Note that, at this time, Vitess only supports [data definition statements](https://dev.mysql.com/doc/refman/5.6/en/sql-syntax-data-definition.html) that create, modify, or delete database tables. For instance, `ApplySchema` does not affect stored procedures or grants.
 
-The [ApplySchema](link) command applies a schema change to the specified keyspace on every master tablet, running in parallel on all shards. Changes are then propagated to slaves via replication. The command format is: `ApplySchema {-sql=<sql> || -sql_file=<filename>} <keyspace>`
+The [ApplySchema](../reference/vtctl/#applyvschema) command applies a schema change to the specified keyspace on every master tablet, running in parallel on all shards. Changes are then propagated to slaves via replication. The command format is: `ApplySchema {-sql=<sql> || -sql_file=<filename>} <keyspace>`
 
 When the `ApplySchema` action actually applies a schema change to the specified keyspace, it performs the following steps:
 
