@@ -89,8 +89,7 @@ $ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
 
 **Note:** If you are running Kubernetes elsewhere, skip to [Start a Vitess cluster](#start-a-vitess-cluster).
 
-1.  Set the [zone](https://cloud.google.com/compute/docs/zones#overview)
-    that your installation will use:
+1.  Set the [zone](https://cloud.google.com/compute/docs/zones#overview) that your installation will use:
 
     ``` sh
     $ gcloud config set compute/zone us-central1-b
@@ -120,8 +119,7 @@ $ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
 
 1.  **Navigate to your local Vitess source code**
 
-    This directory would have been created when you installed
-    `vtctlclient`:
+    This directory would have been created when you installed `vtctlclient`:
 
     ``` sh
     $ cd $GOPATH/src/vitess.io/vitess/examples/kubernetes
@@ -129,14 +127,10 @@ $ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
 
 2.  **Configure site-local settings**
 
-    Run the `configure.sh` script to generate a `config.sh` file, which will be
-    used to customize your cluster settings.
+    Run the `configure.sh` script to generate a `config.sh` file, which will be used to customize your cluster settings.
 
-    Currently, we have out-of-the-box support for storing
-    [backups](../../user-guides/backup-and-restore) in
-    [Google Cloud Storage](https://cloud.google.com/storage/). If you're using
-    GCS, fill in the fields requested by the configure script, including the
-    name of the bucket you created above.
+    Currently, we have out-of-the-box support for storing [backups](../../user-guides/backup-and-restore) in
+    [Google Cloud Storage](https://cloud.google.com/storage/). If you're using GCS, fill in the fields requested by the configure script, including the name of the bucket you created above.
 
     ``` sh
     vitess/examples/kubernetes$ ./configure.sh
@@ -147,30 +141,16 @@ $ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
     # Saving config.sh...
     ```
 
-    For other platforms, you'll need to choose the `file` backup storage plugin,
-    and mount a read-write network volume into the `vttablet` and `vtctld` pods.
-    For example, you can mount any storage service accessible through NFS into a
-    [Kubernetes volume](https://kubernetes.io/docs/concepts/storage/volumes#nfs).
-    Then provide the mount path to the configure script here.
+    For other platforms, you'll need to choose the `file` backup storage plugin, and mount a read-write network volume into the `vttablet` and `vtctld` pods. For example, you can mount any storage service accessible through NFS into a [Kubernetes volume](https://kubernetes.io/docs/concepts/storage/volumes#nfs). Then provide the mount path to the configure script here.
 
-    Direct support for other cloud blob stores like Amazon S3 can be added by
-    implementing the Vitess [BackupStorage plugin interface]
-    (https://github.com/vitessio/vitess/blob/master/go/vt/mysqlctl/backupstorage/interface.go).
-    Let us know on the [discussion forum](https://groups.google.com/forum/#!forum/vitess)
-    if you have any specific plugin requests.
+    Direct support for other cloud blob stores like Amazon S3 can be added by implementing the Vitess [BackupStorage plugin interface](https://github.com/vitessio/vitess/blob/master/go/vt/mysqlctl/backupstorage/interface.go). Let us know on the [discussion forum](https://groups.google.com/forum/#!forum/vitess) if you have any specific plugin requests.
 
 3.  **Start an etcd cluster**
 
-    The Vitess [topology service](../../overview/concepts#topology-service)
-    stores coordination data for all the servers in a Vitess cluster.
-    It can store this data in one of several consistent storage systems.
-    In this example, we'll use [etcd](https://github.com/coreos/etcd).
-    Note that we need our own etcd clusters, separate from the one used by
-    Kubernetes itself. We will use etcd-operator to manage these clusters.
+    The Vitess [topology service](../../overview/concepts#topology-service) stores coordination data for all the servers in a Vitess cluster. It can store this data in one of several consistent storage systems.
+    In this example, we'll use [etcd](https://github.com/coreos/etcd). Note that we need our own etcd clusters, separate from the one used by Kubernetes itself. We will use etcd-operator to manage these clusters.
 
-    If you haven't done so already, make sure you
-    [install etcd-operator](https://github.com/coreos/etcd-operator/blob/master/doc/user/install_guide.md)
-    in the same namespace in which you plan to run Vitess
+    If you haven't done so already, make sure you [install etcd-operator](https://github.com/coreos/etcd-operator/blob/master/doc/user/install_guide.md) in the same namespace in which you plan to run Vitess
     before continuing.
 
     ``` sh
@@ -204,15 +184,9 @@ $ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
     # etcd-test-0002                  1/1       Running   0          1m
     ```
 
-    It may take a while for each Kubernetes node to download the
-    Docker images the first time it needs them. While the images
-    are downloading, the pod status will be Pending.
+    It may take a while for each Kubernetes node to download the Docker images the first time it needs them. While the images are downloading, the pod status will be Pending.
 
-    **Note:** In this example, each script that has a name ending in
-    `-up.sh` also has a corresponding `-down.sh`
-    script, which can be used to stop certain components of the
-    Vitess cluster without bringing down the whole cluster. For
-    example, to tear down the `etcd` deployment, run:
+    **Note:** In this example, each script that has a name ending in `-up.sh` also has a corresponding `-down.sh` script, which can be used to stop certain components of the Vitess cluster without bringing down the whole cluster. For example, to tear down the `etcd` deployment, run:
 
     ``` sh
     vitess/examples/kubernetes$ ./etcd-down.sh
@@ -235,12 +209,9 @@ $ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
 
 5.  **Access the vtctld web UI**
 
-    To access vtctld from outside Kubernetes, use [kubectl proxy]
-    (https://kubernetes.io/docs/tasks/access-kubernetes-api/http-proxy-access-api/)
-    to create an authenticated tunnel on your workstation:
+    To access vtctld from outside Kubernetes, use [kubectl proxy](https://kubernetes.io/docs/tasks/access-kubernetes-api/http-proxy-access-api/) to create an authenticated tunnel on your workstation:
 
-    **Note:** The proxy command runs in the foreground,
-    so you may want to run it in a separate terminal.
+    **Note:** The proxy command runs in the foreground, so you may want to run it in a separate terminal.
 
     ``` sh
     $ kubectl proxy --port=8001
@@ -260,17 +231,11 @@ $ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
 
 6.  **Use vtctlclient to send commands to vtctld**
 
-    You can now run `vtctlclient` locally to issue commands
-    to the `vtctld` service on your Kubernetes cluster.
+    You can now run `vtctlclient` locally to issue commands to the `vtctld` service on your Kubernetes cluster.
 
-    To enable RPC access into the Kubernetes cluster, we'll again use
-    `kubectl` to set up an authenticated tunnel. Unlike the HTTP proxy
-    we used for the web UI, this time we need raw [port forwarding]
-    (https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/) for vtctld's [gRPC](http://grpc.io) port.
+    To enable RPC access into the Kubernetes cluster, we'll again use `kubectl` to set up an authenticated tunnel. Unlike the HTTP proxy we used for the web UI, this time we need raw [port forwarding](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/) for vtctld's [gRPC](http://grpc.io) port.
 
-    Since the tunnel needs to target a particular vtctld pod name,
-    we've provided the `kvtctl.sh` script, which uses `kubectl` to
-    discover the pod name and set up the tunnel before running `vtctlclient`.
+    Since the tunnel needs to target a particular vtctld pod name, we've provided the `kvtctl.sh` script, which uses `kubectl` to discover the pod name and set up the tunnel before running `vtctlclient`.
 
     Now, running `kvtctl.sh help` will test your connection to `vtctld` and also list the `vtctlclient` commands that you can use to administer the Vitess cluster.
 
@@ -293,10 +258,7 @@ $ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
 
 7. **Setup the cell in the topology**
 
-    The global etcd cluster is configured from command-line parameters,
-    specified in the Kubernetes configuration files. The per-cell etcd cluster
-    however needs to be configured, so it is reachable by Vitess. The following
-    command sets it up:
+    The global etcd cluster is configured from command-line parameters, specified in the Kubernetes configuration files. The per-cell etcd cluster however needs to be configured, so it is reachable by Vitess. The following command sets it up:
 
     ``` sh
     ./kvtctl.sh AddCellInfo --root /test -server_address http://etcd-test-client:2379 test
@@ -304,15 +266,9 @@ $ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
 
 8.  **Start vttablets**
 
-    A Vitess [tablet](../../overview/concepts#tablet) is the
-    unit of scaling for the database. A tablet consists of the
-    `vttablet` and `mysqld` processes, running on the same
-    host. We enforce this coupling in Kubernetes by putting the respective
-    containers for vttablet and mysqld inside a single
-    [pod](http://kubernetes.io/v1.1/docs/user-guide/pods.html).
+    A Vitess [tablet](../../overview/concepts#tablet) is the unit of scaling for the database. A tablet consists of the `vttablet` and `mysqld` processes, running on the same host. We enforce this coupling in Kubernetes by putting the respective containers for vttablet and mysqld inside a single [pod](https://kubernetes.io/docs/concepts/workloads/pods/).
 
-    Run the following script to launch the vttablet pods, which also include
-    mysqld:
+    Run the following script to launch the vttablet pods, which also include mysqld:
 
     ``` sh
     vitess/examples/kubernetes$ ./vttablet-up.sh
@@ -330,18 +286,10 @@ $ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
     # pod "vttablet-104" created
     ```
 
-    In the vtctld web UI, you should soon see a
-    [keyspace](../../overview/concepts#keyspace) named `test_keyspace`
-    with a single [shard](../../overview/concepts#shard) named `0`.
-    Click on the shard name to see the list of tablets. When all 5 tablets
-    show up on the shard status page, you're ready to continue. Note that it's
-    normal for the tablets to be unhealthy at this point, since you haven't
+    In the vtctld web UI, you should soon see a [keyspace](../../overview/concepts#keyspace) named `test_keyspace` with a single [shard](../../overview/concepts#shard) named `0`. Click on the shard name to see the list of tablets. When all 5 tablets show up on the shard status page, you're ready to continue. Note that it's normal for the tablets to be unhealthy at this point, since you haven't
     initialized the databases on them yet.
 
-    It can take some time for the tablets to come up for the first time if a pod
-    was scheduled on a node that hasn't downloaded the [Vitess Docker image]
-    (https://hub.docker.com/u/vitess/) yet. You can also check the status of the
-    tablets from the command line using `kvtctl.sh`:
+    It can take some time for the tablets to come up for the first time if a pod was scheduled on a node that hasn't downloaded the [Vitess Docker image](https://hub.docker.com/u/vitess/) yet. You can also check the status of the tablets from the command line using `kvtctl.sh`:
 
     ``` sh
     vitess/examples/kubernetes$ ./kvtctl.sh ListAllTablets test
@@ -355,16 +303,11 @@ $ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
 
 9.  **Initialize MySQL databases**
 
-    Once all the tablets show up, you're ready to initialize the underlying
-    MySQL databases.
+    Once all the tablets show up, you're ready to initialize the underlying MySQL databases.
 
     **Note:** Many `vtctlclient` commands produce no output on success.
 
-    First, designate one of the tablets to be the initial master. Vitess will
-    automatically connect the other slaves' mysqld instances so that they start
-    replicating from the master's mysqld. This is also when the default database
-    is created. Since our keyspace is named `test_keyspace`, the MySQL database
-    will be named `vt_test_keyspace`.
+    First, designate one of the tablets to be the initial master. Vitess will automatically connect the other slaves' mysqld instances so that they start replicating from the master's mysqld. This is also when the default database is created. Since our keyspace is named `test_keyspace`, the MySQL database will be named `vt_test_keyspace`.
 
     ``` sh
     vitess/examples/kubernetes$ ./kvtctl.sh InitShardMaster -force test_keyspace/0 test-0000000100
@@ -373,13 +316,9 @@ $ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
     # master-elect tablet test-0000000100 is not a master in the shard, proceeding anyway as -force was used
     ```
 
-    **Note:** Since this is the first time the shard has been started, the
-    tablets are not already doing any replication, and there is no existing
-    master. The `InitShardMaster` command above uses the `-force` flag to bypass
-    the usual sanity checks that would apply if this wasn't a brand new shard.
+    **Note:** Since this is the first time the shard has been started, the tablets are not already doing any replication, and there is no existing master. The `InitShardMaster` command above uses the `-force` flag to bypass the usual sanity checks that would apply if this wasn't a brand new shard.
 
-    After the tablets finish updating, you should see one **master**, and
-    several **replica** and **rdonly** tablets:
+    After the tablets finish updating, you should see one **master**, and several **replica** and **rdonly** tablets:
 
     ``` sh
     vitess/examples/kubernetes$ ./kvtctl.sh ListAllTablets test
@@ -391,16 +330,11 @@ $ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
     # test-0000000104 test_keyspace 0 rdonly 10.64.2.6:15002 10.64.2.6:3306 []
     ```
 
-    The **replica** tablets are used for serving live web traffic, while the
-    **rdonly** tablets are used for offline processing, such as batch jobs and backups.
-    The amount of each [tablet type](../../overview/concepts#tablet)
-    that you launch can be configured in the `vttablet-up.sh` script.
+    The **replica** tablets are used for serving live web traffic, while the **rdonly** tablets are used for offline processing, such as batch jobs and backups. The amount of each [tablet type](../../overview/concepts#tablet) that you launch can be configured in the `vttablet-up.sh` script.
 
 10.  **Create a table**
 
-    The `vtctlclient` tool can be used to apply the database schema
-    across all tablets in a keyspace. The following command creates
-    the table defined in the `create_test_table.sql` file:
+    The `vtctlclient` tool can be used to apply the database schema across all tablets in a keyspace. The following command creates the table defined in the `create_test_table.sql` file:
 
     ``` sh
     # Make sure to run this from the examples/kubernetes dir, so it finds the file.
@@ -418,9 +352,7 @@ $ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
     ) ENGINE=InnoDB
     ```
 
-    You can run this command to confirm that the schema was created
-    properly on a given tablet, where `test-0000000100`
-    is a tablet alias as shown by the `ListAllTablets` command:
+    You can run this command to confirm that the schema was created properly on a given tablet, where `test-0000000100` is a tablet alias as shown by the `ListAllTablets` command:
 
     ``` sh
     vitess/examples/kubernetes$ ./kvtctl.sh GetSchema test-0000000100
@@ -441,16 +373,9 @@ $ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
 
 11.  **Take a backup**
 
-    Now that the initial schema is applied, it's a good time to take the first
-    [backup](../../user-guides/backup-and-restore). This backup
-    will be used to automatically restore any additional replicas that you run,
-    before they connect themselves to the master and catch up on replication.
-    If an existing tablet goes down and comes back up without its data, it will
-    also automatically restore from the latest backup and then resume replication.
+    Now that the initial schema is applied, it's a good time to take the first [backup](../../user-guides/backup-and-restore). This backup will be used to automatically restore any additional replicas that you run, before they connect themselves to the master and catch up on replication. If an existing tablet goes down and comes back up without its data, it will also automatically restore from the latest backup and then resume replication.
 
-    Select one of the **rdonly** tablets and tell it to take a backup. We use a
-    **rdonly** tablet instead of a **replica** because the tablet will pause
-    replication and stop serving during data copy to create a consistent snapshot.
+    Select one of the **rdonly** tablets and tell it to take a backup. We use a **rdonly** tablet instead of a **replica** because the tablet will pause replication and stop serving during data copy to create a consistent snapshot.
 
     ``` sh
     vitess/examples/kubernetes$ ./kvtctl.sh Backup test-0000000104
@@ -466,9 +391,7 @@ $ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
 
 12. **Initialize Vitess Routing Schema**
 
-    In the examples, we are just using a single database with no specific
-    configuration. So we just need to make that (empty) configuration visible
-    for serving. This is done by running the following command:
+    In the examples, we are just using a single database with no specific configuration. So we just need to make that (empty) configuration visible for serving. This is done by running the following command:
 
     ``` sh
     vitess/examples/kubernetes$ ./kvtctl.sh RebuildVSchemaGraph
@@ -478,10 +401,7 @@ $ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
 
 13.  **Start vtgate**
 
-    Vitess uses [vtgate](../../overview/concepts#vtgate) to route each client
-    query to the correct `vttablet`. In Kubernetes, a `vtgate` service
-    distributes connections to a pool of `vtgate` pods. The pods are curated by
-    a [replication controller](https://kubernetes.io/docs/concepts/workloads/pods/).
+    Vitess uses [vtgate](../../overview/concepts#vtgate) to route each client query to the correct `vttablet`. In Kubernetes, a `vtgate` service distributes connections to a pool of `vtgate` pods. The pods are curated by a [replication controller](https://kubernetes.io/docs/concepts/workloads/pods/).
 
     ``` sh
     vitess/examples/kubernetes$ ./vtgate-up.sh
@@ -494,7 +414,7 @@ $ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
 
 ## Test your cluster with a client app
 
-The GuestBook app in the example is ported from the [Kubernetes GuestBook example](https://github.com/kubernetes/kubernetes/tree/master/examples/guestbook-go). The server-side code has been rewritten in Python to use Vitess as the storage engine. The client-side code (HTML/JavaScript) has been modified to support multiple Guestbook pages, which will be useful to demonstrate Vitess sharding in a later guide.
+The GuestBook app in the example is ported from the [Kubernetes GuestBook example](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/). The server-side code has been rewritten in Python to use Vitess as the storage engine. The client-side code (HTML/JavaScript) has been modified to support multiple Guestbook pages, which will be useful to demonstrate Vitess sharding in a later guide.
 
 ``` sh
 vitess/examples/kubernetes$ ./guestbook-up.sh
@@ -525,20 +445,11 @@ $ kubectl get service guestbook
 # guestbook   10.67.242.247   3.4.5.6         80/TCP    1m
 ```
 
-If the `EXTERNAL-IP` is still empty, give it a few minutes to create
-the external load balancer and check again.
+If the `EXTERNAL-IP` is still empty, give it a few minutes to create the external load balancer and check again.
 
-Once the pods are running, the GuestBook app should be accessible
-from the load balancer's external IP. In the example above, it would be at
-`http://3.4.5.6`.
+Once the pods are running, the GuestBook app should be accessible from the load balancer's external IP. In the example above, it would be at `http://3.4.5.6`.
 
-You can see Vitess' replication capabilities by opening the app in
-multiple browser windows, with the same Guestbook page number.
-Each new entry is committed to the master database.
-In the meantime, JavaScript on the page continuously polls
-the app server to retrieve a list of GuestBook entries. The app serves
-read-only requests by querying Vitess in 'replica' mode, confirming
-that replication is working.
+You can see Vitess' replication capabilities by opening the app in multiple browser windows, with the same Guestbook page number. Each new entry is committed to the master database. In the meantime, JavaScript on the page continuously polls the app server to retrieve a list of GuestBook entries. The app serves read-only requests by querying Vitess in 'replica' mode, confirming that replication is working.
 
 You can also inspect the data stored by the app:
 
@@ -552,26 +463,18 @@ vitess/examples/kubernetes$ ./kvtctl.sh ExecuteFetchAsDba test-0000000100 "SELEC
 # +------+---------------------+---------+
 ```
 
-The [GuestBook source code]
-(https://github.com/vitessio/vitess/tree/master/examples/kubernetes/guestbook)
+The [GuestBook source code](https://github.com/vitessio/vitess/tree/master/examples/kubernetes/guestbook)
 provides more detail about how the app server interacts with Vitess.
 
 ## Try Vitess resharding
 
-Now that you have a full Vitess stack running, you may want to go on to the
-[Sharding in Kubernetes workflow guide](../../user-guides/sharding-kubernetes)
-or [Sharding in Kubernetes codelab](../../user-guides/sharding-kubernetes)
-(if you prefer to run each step manually through commands) to try out
-[dynamic resharding](../../user-guides/sharding#resharding).
+Now that you have a full Vitess stack running, you may want to go on to the [Sharding in Kubernetes workflow guide](../../user-guides/sharding-kubernetes) or [Sharding in Kubernetes codelab](../../user-guides/sharding-kubernetes) (if you prefer to run each step manually through commands) to try out [dynamic resharding](../../user-guides/sharding#resharding).
 
-If so, you can skip the tear-down since the sharding guide picks up right here.
-If not, continue to the clean-up steps below.
+If so, you can skip the tear-down since the sharding guide picks up right here. If not, continue to the clean-up steps below.
 
 ## Tear down and clean up
 
-Before stopping the Container Engine cluster, you should tear down the Vitess
-services. Kubernetes will then take care of cleaning up any entities it created
-for those services, like external load balancers.
+Before stopping the Container Engine cluster, you should tear down the Vitess services. Kubernetes will then take care of cleaning up any entities it created for those services, like external load balancers.
 
 ```sh
 vitess/examples/kubernetes$ ./guestbook-down.sh
@@ -581,15 +484,13 @@ vitess/examples/kubernetes$ ./vtctld-down.sh
 vitess/examples/kubernetes$ ./etcd-down.sh
 ```
 
-Then tear down the Container Engine cluster itself, which will stop the virtual
-machines running on Compute Engine:
+Then tear down the Container Engine cluster itself, which will stop the virtual machines running on Compute Engine:
 
 ```sh
 $ gcloud container clusters delete example
 ```
 
-It's also a good idea to remove any firewall rules you created, unless you plan
-to use them again soon:
+It's also a good idea to remove any firewall rules you created, unless you plan to use them again soon:
 
 ```sh
 $ gcloud compute firewall-rules delete guestbook
@@ -599,9 +500,7 @@ $ gcloud compute firewall-rules delete guestbook
 
 ### Server logs
 
-If a pod enters the `Running` state, but the server
-doesn't respond as expected, use the `kubectl logs`
-command to check the pod output:
+If a pod enters the `Running` state, but the server doesn't respond as expected, use the `kubectl logs` command to check the pod output:
 
 ```sh
 # show logs for container 'vttablet' within pod 'vttablet-100'
