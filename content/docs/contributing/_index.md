@@ -1,6 +1,6 @@
 ---
 title: Contributing to Vitess
-weight: 5
+weight: 9
 ---
 
 You want to contribute to Vitess? That's awesome!
@@ -41,7 +41,7 @@ To make sure you're writing idiomatic Go code, please read the following documen
   * Talk about Go readability with many specific examples.
 * "Effective Go": https://golang.org/doc/effective_go.html
   * Recommendations for writing good Go code.
-* Go Code Review Comments: https://github.com/golang/go/wiki/CodeReviewComments 
+* Go Code Review Comments: https://github.com/golang/go/wiki/CodeReviewComments
   * The closest thing to a style guide.
 
 ### Other Resources
@@ -51,7 +51,7 @@ It is well written and easy to understand.
 
 ### Appreciating Go
 
-After using Go for several weeks, we hope that you'll start to love Go as much as we do. 
+After using Go for several weeks, we hope that you'll start to love Go as much as we do.
 
 In our opinion, the song "Write in Go" from ScaleAbility, a Google acapella band, perfectly captures what's so special about Go. Watch it and enjoy that you learnt Go: www.youtube.com/watch?v=LJvEIjRBSDA
 
@@ -66,7 +66,7 @@ Before diving into the Vitess codebase, make yourself familiar with the system a
   * We also recommend to look at our [latest presentations](../resources/presentations). They contain many illustrations which help understanding how Vitess works in detail.
 
   * After studying the pages, try to answer the following question (click expand to see the answer):
-    <details> 
+    <details>
       <summary>
         Let's assume a keyspace with 256 range-based shards: What is the name of the first, the second and the last shard?
       </summary>
