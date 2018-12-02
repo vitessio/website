@@ -35,8 +35,7 @@ Internally at Google, code reviews are subject to an additional "readability" re
 
 A readability reviewer ensures that the reviewee is writing idiomatic code and following the programming language's style guide.
 
-While there's no Go style guide, there is a set of recommendations in the Go community which add up to an implicit style guide.
-To make sure you're writing idiomatic Go code, please read the following documents:
+While there's no Go style guide, there is a set of recommendations in the Go community which add up to an implicit style guide. To make sure you're writing idiomatic Go code, please read the following documents:
 
 * Go Readablity slides: https://talks.golang.org/2014/readability.slide
   * Talk about Go readability with many specific examples.
@@ -60,9 +59,9 @@ In our opinion, the song "Write in Go" from ScaleAbility, a Google acapella band
 
 Before diving into the Vitess codebase, make yourself familiar with the system and run it yourself:
 
-* Read the [What is Vitess](../overview) page, in particular the architecture section.
+* Read the [What is Vitess](../overview/whatisvitess) page, in particular the architecture section.
 
-* Read the [Vitess concepts](../overview/concepts) and the [Sharding](../user-guides/sharding) page.
+* Read the [Vitess concepts](../overview/concepts) and the [Sharding](../sharding) page.
 
   * We also recommend to look at our [latest presentations](../resources/presentations). They contain many illustrations which help understanding how Vitess works in detail.
 
@@ -76,4 +75,4 @@ Before diving into the Vitess codebase, make yourself familiar with the system a
 
 * Go through the [Vitess Kubernetes tutorial](../getting-started/kubernetes).
 
-  * While going through the tutorial, look back at the [architecture](../overview/#architecture) and match the processes you start in Kubernetes with the boxes in the diagram.
+  * While going through the tutorial, look back at the [architecture](../overview/whatisvitess/#architecture) and match the processes you start in Kubernetes with the boxes in the diagram.
