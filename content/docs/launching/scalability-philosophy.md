@@ -17,7 +17,7 @@ There are fewer lock contentions to worry about, replication is a lot happier, p
 
 Although Vitess is designed to run in the cloud, it is entirely possible to run it on baremetal configs, and many users still do. If deploying in a cloud, the assignment of servers and ports is abstracted away from the administrator. On baremetal, the operator still has these responsibilities.
 
-We provide sample configs to help you [get started on Kubernetes](../getting-starting/kubernetes) since it's the most similar to Borg (the [predecessor to Kubernetes](http://blog.kubernetes.io/2015/04/borg-predecessor-to-kubernetes.html) on which Vitess now runs in YouTube). If you're more familiar with alternatives like Mesos, Swarm, Nomad, or DC/OS, we'd welcome your contribution of sample configs for Vitess.
+We provide sample configs to help you [get started on Kubernetes](../../getting-starting/kubernetes) since it's the most similar to Borg (the [predecessor to Kubernetes](http://blog.kubernetes.io/2015/04/borg-predecessor-to-kubernetes.html) on which Vitess now runs in YouTube). If you're more familiar with alternatives like Mesos, Swarm, Nomad, or DC/OS, we'd welcome your contribution of sample configs for Vitess.
 
 These orchestration systems typically use [containers](https://en.wikipedia.org/wiki/Software_container) to isolate small instances so they can be efficiently packed onto machines without contention on ports, paths, or compute resources. Then an automated scheduler does the job of shuffling instances around for failure resilience and optimum utilization.
 
@@ -101,7 +101,7 @@ Note Vitess uses local-cell data first, and is very resilient to any cell going 
 
 Vitess is a highly available service, and Vitess itself needs to store a small amount of metadata very reliably. For that purpose, Vitess needs a highly available and consistent data store.
 
-Lock servers were built for this exact purpose, and Vitess needs one such cluster to be setup to run smoothly. Vitess can be customized to utilize any lock server, and by default it supports Zookeeper, etcd and Consul. We call this component [Topology Service](../user-guides/topology-service).
+Lock servers were built for this exact purpose, and Vitess needs one such cluster to be setup to run smoothly. Vitess can be customized to utilize any lock server, and by default it supports Zookeeper, etcd and Consul. We call this component [Topology Service](../../user-guides/topology-service).
 
 As Vitess is meant to run in multiple data centers / regions (called cells below), it relies on two different lock servers:
 
