@@ -14,6 +14,7 @@ Although Vitess meets a lot of Slack’s needs, it’s not an out-of-the-box sol
 
 Ameet Kotkian, senior storage operations engineer at Slack, shows us how Slack uses Vitess.
 
+<iframe src = "/ViewerJS/#../files/20181002-ameet-velocity-slides.pdf" width='400' height='300' allowfullscreen webkitallowfullscreen></iframe> 
 
 ### Percona Live Europe 2017
 
