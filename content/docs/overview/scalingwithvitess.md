@@ -19,7 +19,7 @@ While Vitess is designed to manage large, multi-instance databases, it offers fe
 
 Starting out, our first step is getting a simple, reliable, durable database cluster in place with a master instance and a couple of replicas. In Vitess terminology, that's a single-shard, single-keyspace database. Once that building block is in place, we can focus on scaling it up.
 
-## Planning for scale
+### Planning for scale
 
 We recommend a number of best practices to facilitate scaling your database as your product evolves. You might not experience the benefits of these actions immediately, but adopting these practices from day one will make it much easier for your database and product to grow:
 
