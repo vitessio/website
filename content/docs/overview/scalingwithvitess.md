@@ -59,10 +59,10 @@ Setting up these components directly -- for example, writing your own topology s
 
 **Related Vitess Documentation**
 
-* [Running Vitess on Kubernetes](../getting-started/kubernetes)
-* [Running Vitess locally](../getting-started/local)
-* [Backing up data](../user-guides/backup-and-restore)
-* [Reparenting - basic assignment of master instance in Vitess](../user-guides/reparenting)
+* [Running Vitess on Kubernetes](../../getting-started/kubernetes)
+* [Running Vitess locally](../../getting-started/local)
+* [Backing up data](../../user-guides/backup-and-restore)
+* [Reparenting - basic assignment of master instance in Vitess](../../user-guides/reparenting)
 
 ## Step 2: Connect your application to your databases
 
@@ -86,8 +86,8 @@ The final option is to deploy Vitess directly onto the existing MySQL instances 
 
 **Related Vitess Documentation**
 
-* [Schema Management](../schema-management)
-* [Transport Security Model](../user-guides/transport-security-model)
+* [Schema Management](../../schema-management)
+* [Transport Security Model](../../user-guides/transport-security-model)
 
 ## Step 3: Vertical sharding (scaling to multiple keyspaces)
 
@@ -117,8 +117,8 @@ Vitess offers robust resharding support, which involves updating the sharding sc
 
 **Related Vitess Documentation**
 
-* [VSchema Reference guide](../schema-management/vschema)
-* [Sharding](../sharding)
+* [VSchema Reference guide](../../schema-management/vschema)
+* [Sharding](../../sharding)
 * [Horizontal sharding (Codelab)](link)
 * [Sharding in Kubernetes (Codelab)](link)
 
