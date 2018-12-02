@@ -1,5 +1,6 @@
 ---
 title: Vitess Sequences
+weight: 3
 ---
 
 This document describes the Vitess Sequences feature, and how to use it.
@@ -208,4 +209,3 @@ SHOW CREATE SEQUENCE my_sequence;
 
 But for now, the Sequence backing table has to be created and managed using the
 usual schema management features, with the right column definitions and table comment.
-
