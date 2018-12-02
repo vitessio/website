@@ -154,7 +154,7 @@ During the data copying, *vtworker* streams the data from a single source to mul
 
 ### Details in WaitForFilteredReplication phase
 
-Once the copying from a paused snapshot (phase SplitClone) has finished, *vtworker* turns on [filtered replication](../sharding#filtered-replication), which allows the destination shards to catch up on updates that have continued to flow in from the app since the time of the snapshot. After the destination shards are caught up, they will continue to replicate new updates.
+Once the copying from a paused snapshot (phase SplitClone) has finished, *vtworker* turns on [filtered replication](../#filtered-replication), which allows the destination shards to catch up on updates that have continued to flow in from the app since the time of the snapshot. After the destination shards are caught up, they will continue to replicate new updates.
 
 ### Details in MigrateServedTypeMaster phase
 
