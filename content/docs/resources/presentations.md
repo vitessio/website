@@ -1,19 +1,37 @@
 ---
 title: Presentations and Videos
+weight: 1
 ---
+### Velocity New York 2018
+
+#### Smooth scaling: Slack’s journey toward a new database
+
+Slack has experienced tremendous growth for a young company, serving over nine million weekly active customers. But with great growth comes greater growth pains. Slack’s rapid growth over the last few years outpaced the scaling capacity of its original sharded MySQL database, which negatively impacted the company’s customers and engineers.
+
+Ameet Kotian explains how a small team of engineers embarked on a journey for the right database solution, which eventually led them to Vitess, a powerful open source database cluster solution for MySQL. Vitess combines the features of MySQL with the scalability of a NoSQL database. It has been serving Youtube’s traffic for numerous years and has a strong community.
+
+Although Vitess meets a lot of Slack’s needs, it’s not an out-of-the-box solution. Ameet shares how the journey to Vitess was planned and executed, with little customer impact, in the face of piling operational challenges, such as AWS issues, MySQL replication, automatic failovers, deployments strategies, and so forth. Ameet also covers Vitess’s architecture, trade-offs, and what the future of Vitess looks like at Slack.
+
+Ameet Kotkian, senior storage operations engineer at Slack, shows us how Slack uses Vitess.
+
+<iframe src="https://docs.google.com/gview?url=https://drive.google.com/file/d/1DVOKldB38Vxsn1pjkx0x6qHwBrB3b4BT/view?usp=sharing&embedded=true"></iframe>
+
+
+### Percona Live Europe 2017
+
+#### Migrating to Vitess at (Slack) Scale
+
+Slack is embarking on a major smigration of the mysql infrastructure at the core of our service to use Vitess' flexible sharding and management instead of our simple application-based shard routing and manual administration. This effort is driven by the need for an architecture that scales to meet the growing demands of our largest customers and features under the pressure to maintain a stable and performant service that executes billions of MySQL transactions per hour. This talk will present the driving motivations behind the change, why Vitess won out as the best option, and how we went about laying the groundwork for the switch. Finally, we will discuss some challenges and surprises (both good and bad) found during our initial migration efforts, and suggest some ways in which the Vitess ecosystem can improve that will aid future migration efforts.
+
+Michael Demmer shows us how, at [Percona Live Eurpoe 2017](https://www.percona.com/live/e17/sessions/migrating-to-vitess-at-slack-scale).
+
+<iframe src="https://docs.google.com/gview?url=https://drive.google.com/open?id=1V6G-RmiANMuLJa07vQLc9gBxUqrH3iY8&embedded=true"></iframe>
 
 ## Percona Live 2016
 
-[Sugu](https://github.com/sougou) and [Anthony](https://github.com/enisoc)
-showed what it looks like to use Vitess now that
-[Keyspace IDs]({% link overview/concepts.md %}#keyspace-id) can be
-completely hidden from the application. They gave a live demo of
-[resharding the Guestbook sample app]({% link user-guide/sharding-kubernetes.md %}),
-which now knows nothing about shards, and explained how new features in VTGate
-make all of this possible.
+[Sugu](https://github.com/sougou) and [Anthony](https://github.com/enisoc) showed what it looks like to use Vitess now that Keyspace IDs can be completely hidden from the application. They gave a live demo of resharding the Guestbook sample app, which now knows nothing about shards, and explained how new features in VTGate make all of this possible.
 
-<iframe src="/resources/percona-2016.pdf&embedded=true" style="width:643px; height:379px; margin-top: 20px;" frameborder="0"></iframe>
-<div style="text-align: right; width: 100%; margin-bottom:20px"><a href="/resources/percona-2016.pdf">download slides</a></div>
+<iframe src="https://vitess.io/resources/percona-2016.pdf&embedded=true"></iframe>
 
 ## CoreOS Meetup, January 2016
 
@@ -24,38 +42,25 @@ within Kubernetes, followed by a deep dive into the design trade-offs
 of the [Vitess on Kubernetes](https://github.com/vitessio/vitess/tree/master/examples/kubernetes)
 deployment templates.
 
-<iframe src="https://docs.google.com/gview?url=https://vitess.io/resources/coreos-meetup-2016-01-27.pdf&embedded=true" style="width:643px; height:379px; margin-top: 20px;" frameborder="0"></iframe>
-<div style="text-align: right; width: 100%; margin-bottom:20px"><a href="/resources/coreos-meetup-2016-01-27.pdf">download slides</a></div>
+<iframe src="https://docs.google.com/gview?url=https://vitess.io/resources/coreos-meetup-2016-01-27.pdf&embedded=true"></iframe>
+
 
 ## Oracle OpenWorld 2015
 
-Vitess team member [Anthony Yeh](https://github.com/enisoc)'s talk at
-Oracle OpenWorld 2015 focused on
-what the [Cloud Native Computing](http://cncf.io) paradigm means when
-applied to MySQL in the cloud. The talk also included a deep dive into
-[transparent, live resharding]
-({% link user-guide/sharding.md %}#resharding), one of the key
+Vitess team member [Anthony Yeh](https://github.com/enisoc)'s talk at Oracle OpenWorld 2015 focused on what the [Cloud Native Computing](http://cncf.io) paradigm means when applied to MySQL in the cloud. The talk also included a deep dive into [transparent, live resharding](../sharding), one of the key
 features of Vitess that makes it well-adapted for a Cloud Native environment.
 
-<iframe src="https://docs.google.com/gview?url=https://vitess.io/resources/openworld-2015-vitess.pdf&embedded=true" style="width:643px; height:379px; margin-top: 20px;" frameborder="0"></iframe>
-<div style="text-align: right; width: 100%; margin-bottom:20px"><a href="/resources/openworld-2015-vitess.pdf">download slides</a></div>
+<iframe src="https://docs.google.com/gview?url=https://vitess.io/resources/openworld-2015-vitess.pdf&embedded=true"></iframe>
 
 ## Percona Live 2015
 
-Vitess team member [Anthony Yeh](https://github.com/enisoc)'s talk at
-Percona Live 2015 provided an overview of Vitess as well as an explanation
-of how Vitess has evolved to live in a containerized world with
-Kubernetes and Docker.
+Vitess team member [Anthony Yeh](https://github.com/enisoc)'s talk at Percona Live 2015 provided an overview of Vitess as well as an explanation of how Vitess has evolved to live in a containerized world with Kubernetes and Docker.
 
-<iframe src="https://docs.google.com/gview?url=https://vitess.io/resources/percona-2015-vitess-and-kubernetes.pdf&embedded=true" style="width:643px; height:379px; margin-top: 20px;" frameborder="0"></iframe>
-<div style="text-align: right; width: 100%; margin-bottom:20px"><a href="https://github.com/vitessio/vitess/blob/master/doc/slides/Percona2015.pptx?raw=true">download slides</a></div>
+<iframe src="https://docs.google.com/gview?url=https://vitess.io/resources/percona-2015-vitess-and-kubernetes.pdf&embedded=true"></iframe>
 
 
 ## Google I/O 2014 - Scaling with Go: YouTube's Vitess
 
-In this talk, [Sugu Sougoumarane](https://github.com/sougou)
-from the Vitess team talks about how Vitess
-solved YouTube's scalability problems as well as about tips and techniques
-used to scale with Go.<br><br>
+In this talk, [Sugu Sougoumarane](https://github.com/sougou) from the Vitess team talks about how Vitess solved YouTube's scalability problems as well as about tips and techniques used to scale with Go.<br><br>
 
-<iframe width="640" height="360" src="https://www.youtube.com/embed/midJ6b1LkA0" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/midJ6b1LkA0"></iframe>
