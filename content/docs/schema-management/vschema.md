@@ -1,5 +1,6 @@
 ---
 title: VSchema User Guide
+weight: 1
 ---
 
 VSchema stands for Vitess Schema. In contrast to a traditional database schema that contains metadata about tables, a VSchema contains metadata about how tables are organized across keyspaces and shards. Simply put, it contains the information needed to make Vitess look like a single database server.
@@ -340,4 +341,3 @@ VSchema is still evolving. Features are mostly added on demand. The following fe
 * DDL support
 * Lookup Vindex backfill
 * Pinned tables: This feature will allow unsharded tables to be pinned to a keyspace id. This avoids the need for a separate unsharded keyspace to contain them.
-
