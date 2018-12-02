@@ -105,7 +105,7 @@ Several vtctl functions -- vtctl is Vitess' command-line tool for managing your 
 
 **Related Vitess Documentation**
 
-* [vtctl Reference Guide](link)
+* [vtctl Reference Guide](../../reference/vtctl)
 
 ## Step 4: Horizontal sharding (partitioning your data)
 
