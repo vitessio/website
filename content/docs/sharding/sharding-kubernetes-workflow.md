@@ -54,7 +54,7 @@ You should complete the [Getting Started on Kubernetes](../../getting-started/ku
 
 ### Create the Workflow
 
-Using the web vtctld UI to create the workflow is the same with [steps in local environment](../horizontal-sharding-workflow/#create-the-workflow) except for filling the "vtworker Addresses" slot. You need to get the external IP for vtworker service (mentioned in [Prerequisites](/#prerequisites)) and use <EXTERNAL-IP>:15033 as the vtworker addresses.
+Using the web vtctld UI to create the workflow is the same with [steps in local environment](../horizontal-sharding-workflow/#create-the-workflow) except for filling the "vtworker Addresses" slot. You need to get the external IP for vtworker service (mentioned in Prerequisites) and use <EXTERNAL-IP>:15033 as the vtworker addresses.
 
 Another way to start the workflow is through the vtctlclient command:
 
