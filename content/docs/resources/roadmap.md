@@ -1,6 +1,7 @@
 ---
 title: Vitess Roadmap
 description: Current version, what we are working on, what's planned
+weight: 2
 ---
 
 Vitess is an active open source project.  Here is a list of recent and upcoming
@@ -65,7 +66,7 @@ following core features:
 
 * Increase large installation scalability with two-layer vtgate pools (l2vtgate,
   applicable to 100+ shard installations).
-  
+
 * Better Kubernetes support (Helm support, better scripts, ...).
 
 * New implementations of the topology services for Zookeeper (`zk2`) and etcd
@@ -73,7 +74,7 @@ following core features:
   the old `zookeeper` and `etcd` will be deprecated. In Vitess 2.2 only the new
   `zk2` and `etcd2` implementations will remain, so please migrate after upgrade
   to Vitess 2.1.
-  
+
 * Added support for [Consul](http://consul.io) topology service client.
 
 * Initial version of the Master Buffering feature. It allows for buffering
