@@ -63,7 +63,7 @@ Note if the main use case is Filtered Replicaiton for resharding, this limitatio
 
 ### Applying Schema Changes
 
-When using RBR, [Schema Swap](../schema-management/schema-swap) becomes useless, as replication between hosts with different schemas will most likely break. This is however an existing limitation that is already known and handled by MySQL DBAs.
+When using RBR, [Schema Swap](../../schema-management/schema-swap) becomes useless, as replication between hosts with different schemas will most likely break. This is however an existing limitation that is already known and handled by MySQL DBAs.
 
 Vitess at this point does not provide an integrated way of applying involved schema changes through RBR. A number of external tools however already exist to handle this case, like gh-ost.
 

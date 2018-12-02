@@ -168,7 +168,6 @@ And the table it is going to be using it can also reference the Sequence in its 
         "sequence": "user_seq"
       }
     },
-
 ```
 
 After this done (and the Schema has been reloaded on master tablet, and the
