@@ -4,7 +4,6 @@ description: Run Vitess using Kubernetes, Docker, or a manual build
 weight: 1
 ---
 
-There are two ways that you can quickly get up and running with Vitess:
+These pages describe the primary ways that you can utilize to quickly get up and running with Vitess.
 
-* You can run and build Vitess in your local environment either using [Docker](local#docker) or a [manual build](local#manual-build)
-* You can run Vitess in a [Kubernetes cluster](kubernetes)
+In the coming weeks, new and updated documentation around how to get started with Kubernetes will be updated with new examples.
