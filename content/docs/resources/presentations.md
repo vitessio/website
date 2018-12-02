@@ -2,7 +2,8 @@
 title: Presentations and Videos
 weight: 1
 ---
-### Velocity New York 2018
+
+## Velocity New York 2018
 
 **Smooth scaling: Slack’s journey toward a new database**
 
@@ -16,7 +17,7 @@ Ameet Kotkian, senior storage operations engineer at Slack, shows us how Slack u
 
 <iframe src = "/ViewerJS/#../files/20181002-ameet-velocity-slides.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
 
-### Percona Live Europe 2017
+## Percona Live Europe 2017
 
 **Migrating to Vitess at (Slack) Scale**
 
@@ -26,7 +27,7 @@ Michael Demmer shows us how, at [Percona Live Europe 2017](https://www.percona.c
 
 <iframe src = "/ViewerJS/#../files/2017-demmer-percona.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
 
-### Vitess Deep Dive sessions
+## Vitess Deep Dive sessions
 
 Start with session 1 and work your way through the playlist. This series focuses on the V3 engine of VTGate.
 
