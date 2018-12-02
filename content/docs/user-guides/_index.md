@@ -1,5 +1,6 @@
 ---
 title: User Guides
+description: Practical Guides for Most Scenarios
 weight: 3
 ---
 

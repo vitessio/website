@@ -1,5 +1,6 @@
 ---
 title: Advanced Features
+description: Work-in-progress section to highlight advanced features you may want to use
 weight: 10
 ---
 
