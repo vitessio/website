@@ -1,5 +1,6 @@
 ---
 title: Horizontal Sharding (Tutorial, automated)
+weight: 1
 ---
 
 This guide shows you an example about how to apply range-based sharding
@@ -13,7 +14,7 @@ The horizontal resharding process mainly contains the following steps
 (each step is a phase in the workflow):
 
 1.  Copy schema from original shards to destination shards.
-    (**Phase: CopySchemaShard**) 
+    (**Phase: CopySchemaShard**)
 1.  Copy the data with a batch process called *vtworker*
     (**Phase: SplitClone**).
     [more details](#details-in-splitclone-phase)
@@ -116,7 +117,7 @@ Further click a phase node, you can inspect tasks in this phase.
 For example, in the "CopySchemaShard" phase, it includes tasks to copy schema
 to 2 destination shards, therefore you can see task node "Shard -80" and
 "Shard 80-". You should see a page similar to
-[this](https://cloud.githubusercontent.com/assets/23492389/24313539/71c9c8ae-109a-11e7-9e4a-0c3e8ee8ba85.png). 
+[this](https://cloud.githubusercontent.com/assets/23492389/24313539/71c9c8ae-109a-11e7-9e4a-0c3e8ee8ba85.png).
 
 ### Approvals of Tasks Execution (Canary feature)
 
@@ -124,7 +125,7 @@ Once the workflow start to run (click the "Start" button if you selected
 "Skip Start" and the workflow hasn't started yet.), you need to approve the
 task execution for each phase if "enable_approvals" is selected. The approvals
 include 2 stages. The first stage approves only the first task, which runs as
-canarying. The second stage approves the remaining tasks. 
+canarying. The second stage approves the remaining tasks.
 
 The resharding workflow runs through phases sequentially. Once the phase starts,
 you can see the approval buttons for all the stages under the phase node (click
@@ -165,7 +166,7 @@ no long be executed. The phases afterwards will no longer be executed.
 The resharding workflow tracks the status for every task and checkpoint these
 status into topology server whenever there is a status update. When a workflow
 is stopped and restarted by loading the checkpoint in the topology, it can
-continue to run all the unfinished tasks. 
+continue to run all the unfinished tasks.
 
 
 ## Verify Results and Clean up
@@ -255,7 +256,7 @@ Once the copying from a paused snapshot (phase SplitClone) has finished,
 *vtworker* turns on [filtered replication](../sharding#filtered-replication),
 which allows the destination shards to catch up on updates that have continued
 to flow in from the app since the time of the snapshot. After the destination
-shards are caught up, they will continue to replicate new updates. 
+shards are caught up, they will continue to replicate new updates.
 
 ### Details in MigrateServedTypeMaster phase
 
@@ -264,4 +265,3 @@ accepting updates. Then the process will wait for the new shard masters to
 fully catch up on filtered replication before allowing them to begin serving.
 After the master traffic is migrated, the filtered replication will be stopped.
 Data updates will be visible on the new shards, but not on the original shards.
-

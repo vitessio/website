@@ -1,5 +1,6 @@
 ---
 title: Horizontal Sharding (Tutorial, manual)
+weight: 2
 ---
 
 This guide walks you through the process of sharding an existing unsharded
@@ -262,5 +263,3 @@ vitess/examples/local$ ./sharded-vttablet-down.sh
 vitess/examples/local$ ./vtctld-down.sh
 vitess/examples/local$ ./zk-down.sh
 ```
-
-

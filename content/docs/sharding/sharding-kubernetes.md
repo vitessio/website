@@ -1,5 +1,6 @@
 ---
 title: Sharding in Kubernetes (Tutorial, manual)
+weight: 4
 ---
 
 This guide walks you through the process of sharding an existing unsharded
@@ -288,4 +289,3 @@ to use them again soon:
 ``` sh
 $ gcloud compute firewall-rules delete vtctld guestbook
 ```
-
