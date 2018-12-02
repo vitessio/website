@@ -1,3 +1,0 @@
----
-title: Row Based Replication
----

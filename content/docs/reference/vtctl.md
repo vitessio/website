@@ -1,6 +1,7 @@
 ---
 title: vtctl Reference
 noToc: true
+weight: 2
 ---
 
 This reference guide explains the commands that the <b>vtctl</b> tool supports. **vtctl** is a command-line tool used to administer a Vitess cluster, and it allows a human or application to easily interact with a Vitess implementation.
@@ -2571,5 +2572,3 @@ Waits for the workflow to finish.
 
 * the <code>&lt;uuid&gt;</code> argument is required for the <code>&lt;WorkflowWait&gt;</code> command This error occurs if the command is not called with exactly one argument.
 * no workflow.Manager registered
-
-
