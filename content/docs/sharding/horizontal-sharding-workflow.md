@@ -19,7 +19,9 @@ The horizontal resharding process mainly contains the following steps (each step
 
 ## Prerequisites
 
+{{< success >}}
 You should complete the [Getting Started](../../getting-started/local) guide (please finish all the steps before Try Vitess resharding) and have left the cluster running. Then, please follow these steps before running the resharding process:
+{{< /success >}}
 
 1. Configure sharding information. By running the command below, we tell Vitess to shard the data using the page column through the provided VSchema.
 

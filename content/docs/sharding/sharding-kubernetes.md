@@ -7,7 +7,9 @@ This guide walks you through the process of sharding an existing unsharded Vites
 
 ## Prerequisites
 
+{{< success >}}
 We begin by assuming you've completed the [Getting Started on Kubernetes](../../getting-started/kubernetes) guide, and have left the cluster running.
+{{< /success >}}
 
 ## Overview
 

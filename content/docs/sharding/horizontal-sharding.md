@@ -7,7 +7,9 @@ This guide walks you through the process of sharding an existing unsharded Vites
 
 ## Prerequisites
 
+{{< success >}}
 We begin by assuming that you've completed the [Getting Started](../../getting-started/local) guide and have left the cluster running.
+{{< /success >}}
 
 ## Overview
 
