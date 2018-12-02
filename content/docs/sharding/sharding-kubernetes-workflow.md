@@ -3,11 +3,11 @@ title: Sharding in Kubernetes (Tutorial, automated)
 weight: 3
 ---
 
-This guide shows you an example about how to apply range-based sharding process in an existing unsharded Vitess [keyspace](../../overview/concepts#keyspace) in [Kubernetes](https://kubernetes.io) using the horizontal resharding workflow. In this example, we will reshard from 1 shard "0" into 2 shards "-80" and "80-". We will follow a process similar to the general [Horizontal Sharding](../horizontal-resharding) guide except that here we'll give you the commands you'll need in the kubernetes environment.
+This guide shows you an example about how to apply range-based sharding process in an existing unsharded Vitess [keyspace](../../overview/concepts#keyspace) in [Kubernetes](https://kubernetes.io) using the horizontal resharding workflow. In this example, we will reshard from 1 shard "0" into 2 shards "-80" and "80-". We will follow a process similar to the general [Horizontal Sharding](../horizontal-sharding) guide except that here we'll give you the commands you'll need in the kubernetes environment.
 
 ## Overview
 
-The horizontal resharding process overview can be found [here](../horizontal-resharding-workflow).
+The horizontal resharding process overview can be found [here](../horizontal-sharding-workflow).
 
 ## Prerequisites
 
@@ -54,7 +54,7 @@ You should complete the [Getting Started on Kubernetes](../../getting-started/ku
 
 ### Create the Workflow
 
-Using the web vtctld UI to create the workflow is the same with [steps in local environment](../horizontal-resharding-workflow/#create-the-workflow) except for filling the "vtworker Addresses" slot. You need to get the external IP for vtworker service (mentioned in [Prerequisites](#Prerequisites)) and use <EXTERNAL-IP>:15033 as the vtworker addresses.
+Using the web vtctld UI to create the workflow is the same with [steps in local environment](../horizontal-sharding-workflow/#create-the-workflow) except for filling the "vtworker Addresses" slot. You need to get the external IP for vtworker service (mentioned in [Prerequisites](/#prerequisites)) and use <EXTERNAL-IP>:15033 as the vtworker addresses.
 
 Another way to start the workflow is through the vtctlclient command:
 
@@ -64,15 +64,15 @@ vitess/examples/kubernetes$ ./kvtctl.sh WorkflowCreate -skip_start=false horizon
 
 ### Approvals of Tasks Execution (Canary feature)
 
-Please check the content in general [Horizontal Sharding guide](../horizontal-resharding-workflow/#approvals-of-tasks-execution-canary-feature)
+Please check the content in general [Horizontal Sharding guide](../horizontal-sharding-workflow/#approvals-of-tasks-execution-canary-feature)
 
 ### Retry
 
-Please check the content in general [Horizontal Sharding guide]((../horizontal-resharding-workflow/#retry)
+Please check the content in general [Horizontal Sharding guide](../horizontal-sharding-workflow/#retry)
 
 ### Checkpoint and Recovery
 
-Please check the content in general [Horizontal Sharding guide]((../horizontal-resharding-workflow/#checkpoint-and-recovery)
+Please check the content in general [Horizontal Sharding guide](../horizontal-sharding-workflow/#checkpoint-and-recovery)
 
 ## Verify Results and Clean up
 
