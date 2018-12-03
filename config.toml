@@ -20,7 +20,7 @@ js = ["jquery-3.3.1", "jquery-ui-1.12.1", "jquery.tocify-1.9.0", "app"]
 github        = "vitessio/vitess"
 twitter       = "vitessio"
 slack         = "vitess"
-stackOverflow = "vitess"
+stackoverflow = "vitess"
 
 [params.blog]
 subtitle = "Updates and insights from the **Vitess** team."
