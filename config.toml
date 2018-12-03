@@ -1,4 +1,4 @@
-baseURL = "https://vitess-io.netlify.com"
+baseURL = "https://vitess.io"
 title   = "Vitess"
 canonifyurls = true
 disableKinds = ["taxonomy", "taxonomyTerm"]
