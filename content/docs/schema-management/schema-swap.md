@@ -5,7 +5,7 @@ weight: 2
 
 This page describes how to apply long-running schema changes in Vitess/MySQL without disrupting ongoing operations. Examples for long-running changes on large databases are `ALTER TABLE` (for example to add a column), `OPTIMIZE TABLE` or large-scale data changes (e.g. populating a column or clearing out values).
 
-If a schema change is not long-running, please use the simpler [`vtctl ApplySchema`](link) instead.
+If a schema change is not long-running, please use the simpler [`vtctl ApplySchema`](../../reference/vtctl/#applyschema) instead.
 
 ## Overview
 

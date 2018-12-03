@@ -254,7 +254,7 @@ $ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
     vitess/examples/kubernetes$ ./kvtctl.sh help ListAllTablets
     ```
 
-    See the [`vtctl`](../reference/vtctl) reference for a web-formatted version of the vtctl help output.
+    See the [`vtctl`](../../reference/vtctl) reference for a web-formatted version of the vtctl help output.
 
 7. **Setup the cell in the topology**
 
@@ -468,7 +468,7 @@ provides more detail about how the app server interacts with Vitess.
 
 ## Try Vitess resharding
 
-Now that you have a full Vitess stack running, you may want to go on to the [Sharding in Kubernetes workflow guide](../../user-guides/sharding-kubernetes) or [Sharding in Kubernetes codelab](../../user-guides/sharding-kubernetes) (if you prefer to run each step manually through commands) to try out [dynamic resharding](../../user-guides/sharding#resharding).
+Now that you have a full Vitess stack running, you may want to go on to the [Sharding in Kubernetes workflow guide](../../sharding/sharding-kubernetes-workflow) or [Sharding in Kubernetes codelab](../../sharding/sharding-kubernetes) (if you prefer to run each step manually through commands) to try out [dynamic resharding](../../sharding/#resharding).
 
 If so, you can skip the tear-down since the sharding guide picks up right here. If not, continue to the clean-up steps below.
 

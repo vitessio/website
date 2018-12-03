@@ -28,7 +28,7 @@ as long as the relationships and constraints are within one shard (or
 unsharded keyspace).
 
 For relationships that go beyond shards, Vitess provides
-support through the [VSchema](vschema).
+support through the [VSchema](../schema-management/vschema).
 
 ### Schema management
 
@@ -50,7 +50,7 @@ check to ensure that the update can be applied to your schema. In
 addition, to avoid reducing the availability of your entire system,
 Vitess rejects changes that exceed a certain scope.
 
-See the [Schema Management](schema-management)
+See the [Schema Management](../schema-management)
 section of this guide for more information.
 
 ## Supported clients

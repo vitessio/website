@@ -54,7 +54,7 @@ deployment templates.
 
 ## Oracle OpenWorld 2015
 
-Vitess team member [Anthony Yeh](https://github.com/enisoc)'s talk at Oracle OpenWorld 2015 focused on what the [Cloud Native Computing](http://cncf.io) paradigm means when applied to MySQL in the cloud. The talk also included a deep dive into [transparent, live resharding](../sharding), one of the key
+Vitess team member [Anthony Yeh](https://github.com/enisoc)'s talk at Oracle OpenWorld 2015 focused on what the [Cloud Native Computing](http://cncf.io) paradigm means when applied to MySQL in the cloud. The talk also included a deep dive into [transparent, live resharding](../../sharding), one of the key
 features of Vitess that makes it well-adapted for a Cloud Native environment.
 
 <iframe src = "/ViewerJS/#../files/openworld-2015-vitess.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
