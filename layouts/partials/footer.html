@@ -1,6 +1,7 @@
 {{- $year       := now.Year }}
 {{- $nav        := .Site.Data.nav }}
 {{- $footerLogo := "img/logos/vitess-horizontal.png" | relURL }}
+{{- $social     := .Site.Params.social }}
 <footer class="footer has-background-black">
   <div class="container">
     <img class="is-footer-logo" src="{{ $footerLogo }}">
@@ -18,7 +19,7 @@
 
       <div class="level-right">
         <div class="level-item">
-          {{- partial "social-buttons.html" (dict "footer" true) }}
+          {{- partial "social-buttons.html" (dict "footer" true "social" $social) }}
         </div>
       </div>
     </nav>

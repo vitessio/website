@@ -1,8 +1,8 @@
-{{- $social  := $.Site.Params.social }}
+{{- $social  := .social }}
 {{- $github  := printf "https://github.com/%s" $social.github }}
 {{- $twitter := printf "https://twitter.com/%s" $social.twitter }}
 {{- $slack   := printf "https://%s.slack.com" $social.slack }}
-{{- $stack   := printf "https://stackoverflow.com/search?q=%s" $social.stackOverflow }}
+{{- $stack   := printf "https://stackoverflow.com/search?q=%s" $social.stackoverflow }}
 <div class="buttons">
   <a class="button is-white" href="{{ $github }}">
     <span class="icon">
@@ -14,6 +14,7 @@
     </span>
     {{- end }}
   </a>
+
   <a class="button is-twitter-blue" href="{{ $twitter }}">
     <span class="icon">
       <i class="fab fa-lg fa-twitter"></i>

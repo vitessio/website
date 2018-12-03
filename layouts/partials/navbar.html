@@ -2,6 +2,7 @@
 {{- $isBlog  := eq .Section "blog" }}
 {{- $nav     := .Site.Data.nav }}
 {{- $logoUrl := "img/logos/vitess.png" | relURL }}
+{{- $social  := .Site.Params.social }}
 <nav class="navbar is-fixed-top is-dark">
   <div class="container">
     <div class="navbar-brand">
@@ -27,7 +28,7 @@
         {{- end }}
 
         <div class="navbar-item">
-          {{ partial "social-buttons.html" (dict "footer" false) }}
+          {{ partial "social-buttons.html" (dict "footer" false "social" $social) }}
         </div>
       </div>
     </div>
