@@ -3,16 +3,24 @@
   <div class="container has-text-centered">
     <div class="columns">
       <div class="column is-thin">
-        <p class="is-size-2 is-size-3-mobile">
+        <p class="is-size-2 is-size-3-mobile" id="who-uses">
           Who uses Vitess
         </p>
 
         <hr class="has-background-orange" />
 
-        {{- range $userLogos }}
-        {{- $imgUrl := printf "img/logos/users/%s" .Name }}
-        <img class="is-user-logo" src="{{ $imgUrl }}">
-        {{- end }}
+        <div class="is-user-logo-section">
+          {{- range $userLogos }}
+          {{- $imgUrl := printf "img/logos/users/%s" .Name }}
+          <img class="is-user-logo" src="{{ $imgUrl }}">
+          {{- end }}
+        </div>
+
+        <br />
+
+        <p class="is-size-5 has-text-primary">
+          Want to see your logo in this space?<br />Follow the instructions <a href="https://github.com/vitessio/website/#adding-a-user-logo">here</a>
+        </p>
       </div>
 
       <div class="column is-thin">
