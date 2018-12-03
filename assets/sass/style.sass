@@ -102,17 +102,15 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
   &.is-thin
     margin: 0 2%
 
-.is-user-logo
-  margin-bottom: 1rem
-  margin-right: .75rem
+.is-user-logo-section
+  display: flex
+  flex-wrap: wrap
+  justify-content: space-around
 
-  +tablet
-    max-height: 4rem
-    max-width: 8rem
-
-  +touch
+  .is-user-logo
     max-height: 3rem
-    max-width: 6rem
+    max-width: 10rem
+    margin: 1rem
 
 =logo($touch, $tablet)
   +touch
