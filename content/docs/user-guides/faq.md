@@ -40,7 +40,7 @@ The list of unsupported constructs is currently in the form of test cases contai
 
 ## If I have a log of all queries from my app. Is there a way I can try them against vitess to see how they’ll work?
 
-Yes. The [vtexplain](/vtexplain) tool can be used to preview how your queries will be executed by vitess. It can also be used to try different sharding scenarios before deciding on one.
+Yes. The [vtexplain](../vtexplain) tool can be used to preview how your queries will be executed by vitess. It can also be used to try different sharding scenarios before deciding on one.
 
 ## Does the Primary Vindex for a tablet have to be the same as its Primary Key.
 

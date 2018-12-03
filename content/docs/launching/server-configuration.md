@@ -112,7 +112,7 @@ Vitess servers are written in Go. There are a few Vitess-specific knobs that app
 
 ### Go version
 
-Go, being a young language, tends to add major improvements over each version. So, the latest Go version is almost always recommended. Note that the latest Go version may be higher than the minimum version we require for compiling the binaries (see ["Prerequisites" section in the Getting Started guide](link)).
+Go, being a young language, tends to add major improvements over each version. So, the latest Go version is almost always recommended. Note that the latest Go version may be higher than the minimum version we require for compiling the binaries (see ["Prerequisites" section in the Getting Started guide](../../getting-started/kubernetes/#prerequisites)).
 
 ### GOMAXPROCS
 
@@ -131,7 +131,7 @@ Vitess uses gRPC for communication between client and Vitess, and between Vitess
 
 Also, even without using SSL, we allow the use of an application-provided CallerID object. It allows unsecure but easy to use authorization using Table ACLs.
 
-See the [Transport Security Model](../user-guides/transport-security-model) document for more information on how to setup both of these features, and what command line parameters exist.
+See the [Transport Security Model](../../user-guides/transport-security-model) document for more information on how to setup both of these features, and what command line parameters exist.
 
 ### Topology Service configuration  
 
@@ -526,7 +526,7 @@ Things that need to be configured:
 
 ### Periodic backup configuration
 
-We recommend to take backups regularly e.g. you should set up a cron job for it. See our recommendations at [/user-guide/backup-and-restore/#backup-frequency](../user-guides/backup-and-restore/#backup-frequency).
+We recommend to take backups regularly e.g. you should set up a cron job for it. See our recommendations at [/user-guide/backup-and-restore/#backup-frequency](../../user-guides/backup-and-restore/#backup-frequency).
 
 ### Logs archiver/purger
 
@@ -555,7 +555,7 @@ There is also one thing that Vitess needs to know from Orchestrator, which is th
 
 From our experience at YouTube, we believe that this signal is too critical for data integrity to rely on bottom-up detection such as asking each MySQL if it thinks it's the master. Instead, we rely on Orchestrator to be the source of truth, and expect it to send a top-down signal to Vitess.
 
-This signal is sent by ensuring the Orchestrator server has access to vtctlclient, which it then uses to send an RPC to vtctld, informing Vitess of the change in mastership via the [`TabletExternallyReparented`](link) command.
+This signal is sent by ensuring the Orchestrator server has access to vtctlclient, which it then uses to send an RPC to vtctld, informing Vitess of the change in mastership via the [`TabletExternallyReparented`](../../reference/vtctl/#tabletexternallyreparented) command.
 
 ``` json
 "PostMasterFailoverProcesses": [
