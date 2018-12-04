@@ -2,6 +2,7 @@
 title: vtctl Reference
 noToc: true
 weight: 2
+featured: true
 ---
 
 This reference guide explains the commands that the <b>vtctl</b> tool supports. **vtctl** is a command-line tool used to administer a Vitess cluster, and it allows a human or application to easily interact with a Vitess implementation.

@@ -1,8 +1,9 @@
-{{- $isHome  := .IsHome }}
-{{- $isBlog  := eq .Section "blog" }}
-{{- $nav     := .Site.Data.nav }}
-{{- $logoUrl := "img/logos/vitess.png" | relURL }}
-{{- $social  := .Site.Params.social }}
+{{- $isHome       := .IsHome }}
+{{- $isBlog       := eq .Section "blog" }}
+{{- $nav          := .Site.Data.nav }}
+{{- $logoUrl      := "img/logos/vitess.png" | relURL }}
+{{- $social       := .Site.Params.social }}
+{{- $docs         := where .Site.Pages "Section" "docs" }}
 <nav class="navbar is-fixed-top is-dark">
   <div class="container">
     <div class="navbar-brand">
@@ -21,11 +22,29 @@
 
     <div class="navbar-menu">
       <div class="navbar-end">
-        {{- range $nav }}
-        <a class="navbar-item has-text-weight-bold" href="{{ .link }}">
-          {{ .text }}
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link has-text-weight-bold">
+            Docs
+          </a>
+
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="/docs">
+              The Vitess documentation
+            </a>
+
+            {{- range $docs }}
+            {{- if .Params.featured }}
+            <a class="navbar-item" href="{{ .URL }}">
+              {{ .Title }}
+            </a>
+            {{- end }}
+            {{- end }}
+          </div>
+        </div>
+
+        <a class="navbar-item has-text-weight-bold" href="/blog">
+          Blog
         </a>
-        {{- end }}
 
         <div class="navbar-item">
           {{ partial "social-buttons.html" (dict "footer" false "social" $social) }}
