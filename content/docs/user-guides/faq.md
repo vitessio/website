@@ -1,6 +1,7 @@
 ---
 title: Frequently Asked Questions
 weight: 2
+featured: true
 ---
 
 ## Does the application need to know about the sharding scheme underneath Vitess?
@@ -27,9 +28,9 @@ Vitess supports different modes. In OLTP mode, the result size is typically limi
 
 However, OLAP mode has no limit to the number of rows returned. In order to change to this mode, you may issue the following command command before executing your query:
 
-``
+```shell
 set workload='olap'
-``
+```
 You can also set the workload to `dba mode`, which allows you to override the implicit timeouts that exist in vttablet. However, this mode should be used judiciously as it supersedes shutdown and reparent commands.
 
 The general convention is to send OLTP queries to `REPLICA` tablet types, and OLAP queries to `RDONLY`.
@@ -50,17 +51,17 @@ It is not necessary that a Primary Vindex be the same as the Primary Key. In fac
 
 If you look at the example [vtgate-up.sh](https://github.com/vitessio/vitess/blob/master/examples/local/vtgate-up.sh) script, you'll see the following lines:
 
-``  
+```shell
 -mysql_server_port $mysql_server_port \
 -mysql_server_socket_path $mysql_server_socket_path \
 -mysql_auth_server_static_file "./mysql_auth_server_static_creds.json" \
-``
+```
 
 In that example, vtgate accepts mysql connections on port 15306, and the authentication info is stored in the json file. So, you should be able to connect to it using the following command:
 
-``
+```shell
 mysql -h 127.0.0.1 -P 15306 -u mysql_user --password=mysql_password
-``
+```
 
 ## Can I override the default db name from vt_xxx to my own?
 
@@ -70,10 +71,10 @@ Yes. You can start vttablet with the `-init_db_name_override` command line optio
 
 Most likely this means that apparmor is running on your server and is preventing vitess processes from accessing the my.cnf file. The workaround is to uninstall apparmor:
 
-``
+```shell
 sudo service apparmor stop
 sudo service apparmor teardown
 sudo update-rc.d -f apparmor remove
-``
+```
 
 You may also need to reboot the machine after this. Many programs automatically install apparmor, so you may need to uninstall again.
