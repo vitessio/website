@@ -4,6 +4,7 @@
 {{- $logoUrl      := "img/logos/vitess.png" | relURL }}
 {{- $social       := .Site.Params.social }}
 {{- $docs         := where .Site.Pages "Section" "docs" }}
+{{- $blogPosts    := where .Site.RegularPages "Section" "blog" }}
 <nav class="navbar is-fixed-top is-dark">
   <div class="container">
     <div class="navbar-brand">
@@ -23,15 +24,11 @@
     <div class="navbar-menu">
       <div class="navbar-end">
         <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link has-text-weight-bold">
+          <a class="navbar-link has-text-weight-bold" href="/docs">
             Docs
           </a>
 
           <div class="navbar-dropdown">
-            <a class="navbar-item" href="/docs">
-              The Vitess documentation
-            </a>
-
             {{- range $docs }}
             {{- if .Params.featured }}
             <a class="navbar-item" href="{{ .URL }}">
@@ -42,8 +39,24 @@
           </div>
         </div>
 
-        <a class="navbar-item has-text-weight-bold" href="/blog">
-          Blog
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link has-text-weight-bold" href="/blog">
+            Blog
+          </a>
+
+          <div class="navbar-dropdown">
+            {{- range first 5 $blogPosts }}
+            <a class="navbar-item" href="{{ .URL }}">
+              {{ .Title }}
+            </a>
+            {{- end }}
+
+            <hr class="navbar-divider" />
+
+            <a class="navbar-item has-text-weight-bold" href="/blog">
+              More ...
+            </a>
+          </div>
         </a>
 
         <div class="navbar-item">
