@@ -2,6 +2,7 @@
 title: Run Vitess Locally
 description: Instructions for using Vitess on your machine for testing and development purposes
 weight: 3
+featured: true
 ---
 
 You can build Vitess using either [Docker](#docker) or a [manual](#manual) build process.

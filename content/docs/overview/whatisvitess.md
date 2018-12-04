@@ -1,6 +1,7 @@
 ---
 title: What Is Vitess
 weight: 1
+featured: true
 ---
 
 Vitess is a database solution for deploying, scaling and managing large clusters of MySQL instances. It's architected to run as effectively in a public or private cloud architecture as it does on dedicated hardware. It combines and extends many important MySQL features with the scalability of a NoSQL database. Vitess can help you with the following problems:
