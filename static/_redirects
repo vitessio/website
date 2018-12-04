@@ -1,2 +1,18 @@
 /vitess/*   go-get=1 /go-import/vitess.html   200
 /messages/* go-get=1 /go-import/messages.html 200
+
+/advanced          /docs/advanced
+/advanced/*        /docs/advanced/:splat
+/contributing      /docs/contributing
+/contributing/*    /docs/contributing/:splat
+/getting-started   /docs/getting-started
+/getting-started/* /docs/getting-started/:splat
+/overview          /docs/overview
+/overview/*        /docs/overview/:splat
+/reference         /docs/reference
+/reference/*       /docs/reference/:splat
+/user-guide        /docs/user-guides
+/user-guide/*      /docs/user-guides/:splat
+
+/user-guide/schema-management /docs/schema-management
+/user-guide/sharding          /docs/sharding
