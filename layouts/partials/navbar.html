@@ -1,8 +1,10 @@
-{{- $isHome  := .IsHome }}
-{{- $isBlog  := eq .Section "blog" }}
-{{- $nav     := .Site.Data.nav }}
-{{- $logoUrl := "img/logos/vitess.png" | relURL }}
-{{- $social  := .Site.Params.social }}
+{{- $isHome       := .IsHome }}
+{{- $isBlog       := eq .Section "blog" }}
+{{- $nav          := .Site.Data.nav }}
+{{- $logoUrl      := "img/logos/vitess.png" | relURL }}
+{{- $social       := .Site.Params.social }}
+{{- $docs         := where .Site.Pages "Section" "docs" }}
+{{- $blogPosts    := where .Site.RegularPages "Section" "blog" }}
 <nav class="navbar is-fixed-top is-dark">
   <div class="container">
     <div class="navbar-brand">
@@ -21,11 +23,41 @@
 
     <div class="navbar-menu">
       <div class="navbar-end">
-        {{- range $nav }}
-        <a class="navbar-item has-text-weight-bold" href="{{ .link }}">
-          {{ .text }}
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link has-text-weight-bold" href="/docs">
+            Docs
+          </a>
+
+          <div class="navbar-dropdown">
+            {{- range $docs }}
+            {{- if .Params.featured }}
+            <a class="navbar-item" href="{{ .URL }}">
+              {{ .Title }}
+            </a>
+            {{- end }}
+            {{- end }}
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link has-text-weight-bold" href="/blog">
+            Blog
+          </a>
+
+          <div class="navbar-dropdown">
+            {{- range first 5 $blogPosts }}
+            <a class="navbar-item" href="{{ .URL }}">
+              {{ .Title }}
+            </a>
+            {{- end }}
+
+            <hr class="navbar-divider" />
+
+            <a class="navbar-item has-text-weight-bold" href="/blog">
+              More ...
+            </a>
+          </div>
         </a>
-        {{- end }}
 
         <div class="navbar-item">
           {{ partial "social-buttons.html" (dict "footer" false "social" $social) }}

@@ -1,6 +1,7 @@
 ---
 title: Key Vitess Concepts
 weight: 3
+featured: true
 ---
 
 This document defines common Vitess terminology and explains some core concepts.

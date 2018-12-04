@@ -1,6 +1,7 @@
 ---
 title: Run Vitess on Kubernetes
 weight: 1
+featured: true
 ---
 
 This page shows you how to run Vitess on a [Kubernetes](http://kubernetes.io) cluster. It also provides [instructions](#gke) for setting up a Kubernetes cluster using [Google Container Engine](https://cloud.google.com/container-engine/).
