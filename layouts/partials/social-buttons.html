@@ -1,7 +1,7 @@
 {{- $social  := .social }}
 {{- $github  := printf "https://github.com/%s" $social.github }}
 {{- $twitter := printf "https://twitter.com/%s" $social.twitter }}
-{{- $slack   := printf "https://%s.slack.com" $social.slack }}
+{{- $slack   := $social.slack }}
 {{- $stack   := printf "https://stackoverflow.com/search?q=%s" $social.stackoverflow }}
 <div class="buttons">
   <a class="button is-white" href="{{ $github }}">
