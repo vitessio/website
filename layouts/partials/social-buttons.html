@@ -4,7 +4,7 @@
 {{- $slack   := $social.slack }}
 {{- $stack   := printf "https://stackoverflow.com/search?q=%s" $social.stackoverflow }}
 <div class="buttons">
-  <a class="button is-white" href="{{ $github }}">
+  <a class="button is-white" href="{{ $github }}" target="_blank">
     <span class="icon">
       <i class="fab fa-lg fa-github"></i>
     </span>
@@ -15,7 +15,7 @@
     {{- end }}
   </a>
 
-  <a class="button is-twitter-blue" href="{{ $twitter }}">
+  <a class="button is-twitter-blue" href="{{ $twitter }}" target="_blank">
     <span class="icon">
       <i class="fab fa-lg fa-twitter"></i>
     </span>
@@ -25,7 +25,8 @@
     </span>
     {{- end }}
   </a>
-  <a class="button is-slack-green" href="{{ $slack }}">
+
+  <a class="button is-slack-green" href="{{ $slack }}" target="_blank">
     <span class="icon">
       <i class="fab fa-lg fa-slack"></i>
     </span>
@@ -35,7 +36,8 @@
     </span>
     {{- end }}
   </a>
-  <a class="button is-stack-overflow-orange" href="{{ $stack }}">
+  
+  <a class="button is-stack-overflow-orange" href="{{ $stack }}" target="_blank">
     <span class="icon">
       <i class="fab fa-lg fa-stack-overflow"></i>
     </span>

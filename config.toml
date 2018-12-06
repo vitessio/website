@@ -19,7 +19,7 @@ js = ["jquery-3.3.1", "jquery-ui-1.12.1", "jquery.tocify-1.9.0", "app"]
 [params.social]
 github        = "vitessio/vitess"
 twitter       = "vitessio"
-slack         = "https://vitess.slack.com/join/shared_invite/enQtMzIxMDMyMzA0NzA1LTBjYjY1M2I2Yjg5YmY3ODIwOTk0N2M1YzI4Y2ViODdiNmIxMDdiMDM5YWQ1ZTc0YmJhZDdiOTliMGVkNDY4MjMs"
+slack         = "https://vitess.slack.com/join/shared_invite/enQtMzIxMDMyMzA0NzA1LTBjYjY1M2I2Yjg5YmY3ODIwOTk0N2M1YzI4Y2ViODdiNmIxMDdiMDM5YWQ1ZTc0YmJhZDdiOTliMGVkNDY4MjM"
 stackoverflow = "vitess"
 
 [params.blog]
