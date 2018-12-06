@@ -1,6 +1,29 @@
 /vitess/*   go-get=1 /go-import/vitess.html   200
 /messages/* go-get=1 /go-import/messages.html 200
 
+# User guide redirects
+/user-guide/schema-management             /docs/schema-management
+/user-guide/sharding                      /docs/sharding
+/user-guide/introduction                  /docs/user-guides
+/user-guide/replication                   /docs/reference/vitess-replication
+/user-guide/vitess-sequences              /docs/reference/vitess-sequences
+/user-guide/vschema                       /docs/schema-management/vschema
+/user-guide/twopc                         /docs/launching/twopc
+/user-guide/server-configuration          /docs/launching/server-configuration
+/user-guide/scalability-philosophy        /docs/launching/scalability-philosophy
+/user-guide/horizontal-sharding           /docs/launching/horizontal-sharding
+/user-guide/horizontal-sharding-workflow  /docs/launching/horizontal-sharding-workflow
+/user-guide/mysql-server-protocol         /docs/reference/mysql-server-protocol
+/user-guide/production-planning           /docs/launching/production-planning
+/user-guide/row-based-replication         /docs/reference/row-based-replication
+/user-guide/schema-swap                   /docs/schema-management/schema-swap
+/user-guide/sharding-kubernetes-workflow  /docs/sharding/sharding-kubernetes-workflow
+/user-guide/sharding-kubernetes           /docs/sharding/sharding-kubernetes
+/user-guide/troubleshooting               /docs/launching/troubleshooting
+/user-guide/update-stream                 /docs/reference/update-stream
+/user-guide/vitess-replication            /docs/reference/vitess-replication
+
+# Splat-style redirects
 /advanced          /docs/advanced
 /advanced/*        /docs/advanced/:splat
 /contributing      /docs/contributing
@@ -11,8 +34,3 @@
 /overview/*        /docs/overview/:splat
 /reference         /docs/reference
 /reference/*       /docs/reference/:splat
-/user-guide        /docs/user-guides
-/user-guide/*      /docs/user-guides/:splat
-
-/user-guide/schema-management /docs/schema-management
-/user-guide/sharding          /docs/sharding
