@@ -36,6 +36,9 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
 
 @import "docs"
 
+.has-extra-padding
+  padding: 2.5rem
+
 .docs-article ul li
   margin-left: -.5rem
   list-style-type: square
@@ -98,7 +101,7 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
     flex: 1
 
 .is-video
-  max-width: 100%
+  width: 100%
 
 .column
   &.is-thin
@@ -107,7 +110,7 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
 .is-user-logo-section
   display: flex
   flex-wrap: wrap
-  justify-content: space-around
+  justify-content: space-between
 
   .is-user-logo
     max-height: 3rem
