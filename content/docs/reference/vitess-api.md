@@ -1,6 +1,5 @@
 ---
 title: Vitess API Reference
-noToc: true
 weight: 1
 ---
 
