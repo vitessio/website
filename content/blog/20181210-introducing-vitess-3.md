@@ -35,6 +35,6 @@ We are really excited about this and we see practical applications of VReplicati
 * Companies ingesting large time-series data who would mostly need to query roll ups and aggregates
 * All types of companies that want the flexibility to not worry about being stuck with their original sharding key. VReplication allows you the ability to make changes to your sharding key as your product evolves. In fact the internal name for this feature for a long time was “the regret feature” :).
 
-As with any major version upgrade, we recommend that you follow our [upgrading guide](../docs/user-guides/upgrading/). Reach out to the Vitess community on [our Slack channel](https://vitess.slack.com) (or click the Slack icon in the top right to join) at any time for assistance and discussion. We welcome everyone to our community.
+As with any major version upgrade, we recommend that you follow our [upgrading guide](../../docs/user-guides/upgrading/). Reach out to the Vitess community on [our Slack channel](https://vitess.slack.com) (or click the Slack icon in the top right to join) at any time for assistance and discussion. We welcome everyone to our community.
 
 Head on over to [check out Vitess 3.0](https://github.com/vitessio/vitess/release) now.
