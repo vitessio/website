@@ -83,8 +83,5 @@ Thus, you can survive sudden master failure without losing any transactions that
 On the other hand these behaviors also give a requirement that each shard must have at least 2 tablets with type *replica* (with addition of the master that can be demoted to type *replica* this gives a minimum of 3 tablets with initial type *replica*). This will allow for the master to have a semi-sync acker when one of the replica tablets is down for any reason (for a version update, machine reboot, schema swap or anything else).
 
 With regard to replication lag, note that this does **not** guarantee there is always at least one replica type slave from which queries will always return up-to-date results. Semi-sync guarantees that at least one slave has the transaction in its relay log, but it has not necessarily been applied yet. The only way to guarantee a fully up-to-date read is to send the request to the master.
-Appendix: Adding support for RBR in Vitess
-
-We are in the process of adding support for RBR in Vitess.
 
 See this [document](../row-based-replication) for more information.
