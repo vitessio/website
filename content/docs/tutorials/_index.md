@@ -1,6 +1,6 @@
 ---
-title: Getting Started
-description: Run Vitess using Kubernetes, Docker, or a manual build
+title: Tutorials
+description: Run Vitess using Kubernetes, or a manual build
 weight: 1
 ---
 
