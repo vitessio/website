@@ -90,5 +90,3 @@ Then, using this in conjunction with binlog-row-image would help provide a featu
 ## Vttablet Simplifications
 
 A lot of the work done by vttablet now is to find the Primary Key of the modified rows, to rewrite the queries in an efficient way and tag each statement with the Primary Key. None of this may be necessary with RBR.
-
-We plan to eventually add a `rbr_mode` flag to vttablet to disable all the things it can skip if RBR is used.
