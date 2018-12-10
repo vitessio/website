@@ -1,9 +1,9 @@
 ---
 author: "Adrianna Tan"
-published: 2018-12-09T07:35:00-07:00
-slug: "2018-12-09-introducing-vitess-3.0"
+date: 2018-12-10T09:07:21-08:00
+slug: "2018-12-10-introducing-vitess-3.0"
 tags: ['Major Versions, Announcements']
-title: "Vitess Weekly Digest - Nov 12 2018"
+title: "Introducing Vitess 3.0"
 ---
 
 We are pleased to announce Vitess 3.0, a major upgrade from Vitess 2.2. Every major release of Vitess brings new features and improvements for our community, and also sometimes introduces new ways of doing things.
@@ -37,4 +37,4 @@ We are really excited about this and we see practical applications of VReplicati
 
 As with any major version upgrade, we recommend that you follow our [upgrading guide](../docs/user-guides/upgrading/). Reach out to the Vitess community on [our Slack channel](https://vitess.slack.com) (or click the Slack icon in the top right to join) at any time for assistance and discussion. We welcome everyone to our community.
 
-Head on over to [check out Vitss 3.0](https://github.com/vitessio/vitess/release) now.
+Head on over to [check out Vitess 3.0](https://github.com/vitessio/vitess/release) now.
