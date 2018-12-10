@@ -37,4 +37,4 @@ We are really excited about this and we see practical applications of VReplicati
 
 As with any major version upgrade, we recommend that you follow our [upgrading guide](../../docs/user-guides/upgrading/). Reach out to the Vitess community on [our Slack channel](https://vitess.slack.com) (or click the Slack icon in the top right to join) at any time for assistance and discussion. We welcome everyone to our community.
 
-Head on over to [check out Vitess 3.0](https://github.com/vitessio/vitess/release) now.
+Head on over to [check out Vitess 3.0](https://github.com/vitessio/vitess/releases/tag/v3.0) now.
