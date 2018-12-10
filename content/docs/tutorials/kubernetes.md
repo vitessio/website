@@ -4,572 +4,823 @@ weight: 1
 featured: true
 ---
 
-This page shows you how to run Vitess on a [Kubernetes](http://kubernetes.io) cluster. It also provides [instructions](#gke) for setting up a Kubernetes cluster using [Google Container Engine](https://cloud.google.com/container-engine/).
+*The following example will use a simple commerce database to illustrate how Vitess can take you through the journey of scaling from a single database to a fully distributed and sharded cluster. This is a fairly common story, and it applies to many use cases beyond e-commerce.*
 
-{{< success >}}
-If you already have Kubernetes v1.0+ running in one of the other [supported platforms](http://kubernetes.io/docs/getting-started-guides/), you can skip the `gcloud` steps below. The `kubectl` steps will apply to any Kubernetes cluster.
-{{< /success >}}
+It’s 2018 and, no surprise to anyone, people are still buying stuff online. You recently attended the first half of a seminar on disruption in the tech industry and want to create a completely revolutionary e-commerce site. In classic tech postmodern fashion, you call your products widgets instead of a more meaningful identifier and it somehow fits.
 
-## Prerequisites
+Naturally, you realize the need for a reliable transactional datastore. Because of the new generation of hipsters, you’re probably going to pull traffic away from the main industry players just because you’re not them. You’re smart enough to foresee the scalability you need, so you choose Vitess as your best scaling solution.
 
-To complete the exercises in this guide, you need to install the [etcd-operator](https://github.com/coreos/etcd-operator/blob/master/doc/user/install_guide.md) in the same namespace in which you plan to run Vitess.
+### Prerequisites
 
-You also must locally install Go 1.11+, the Vitess `vtctlclient` tool, and [`kubectl`](https://kubernetes.io/docs/reference/kubectl/overview/). The following sections explain how to set these up in your environment.
-
-### Install Go 1.11+
-
-You need to install [Go 1.11+](http://golang.org/doc/install) to build the [`vtctlclient`](#vtctlclient) tool, which issues commands to Vitess.
-
-After installing Go, make sure your `GOPATH` environment variable is set to the root of your workspace. The most common setting is `GOPATH=$HOME/go`, and the value should identify a directory to which your non-root user has write access.
-
-In addition, make sure that `$GOPATH/bin` is included in your `$PATH`. More information about setting up a Go
-workspace can be found at [How to Write Go Code](http://golang.org/doc/code.html#Organization).
-
-### Build and install vtctlclient {#vtctlclient}
-
-The `vtctlclient` tool issues commands to Vitess. You can install it using `go get`:
-
-``` sh
-$ go get vitess.io/vitess/go/cmd/vtctlclient
-```
-
-This command downloads and builds the Vitess source code at `$GOPATH/src/vitess.io/vitess`. It also copies the built `vtctlclient` binary into `$GOPATH/bin`.
-
-### Set up Google Compute Engine, Container Engine, and Cloud tools {#gke}
+Before we get started, let’s get a few things out of the way.
 
 {{< info >}}
-If you are running Kubernetes outside of Google Container Engine, skip to the [Locate kubectl](#locate-kubectl) section below.
+The example settings have been tuned to run on Minikube. However, you should be able to try this on your own Kubernetes cluster. If you do, you may also want to remove some of the minikube specific resource settings (explained below).
 {{< /info >}}
 
-To run Vitess on Kubernetes using Google Compute Engine (GCE), you must have a GCE account with billing enabled. The instructions below explain how to enable billing and how to associate a billing account with a project in the Google Developers Console.
+* [Download vitess](https://github.com/vitessio/vitess)
+* [Install Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
+* Start a minikube engine: `minikube start --cpus=4 --memory=5000`. Note the additional resource requirements. In order to go through all the use cases, many vttablet and mysql instances will be launched. These require more resources than the defaults used by minikube.
+* [Install etcd operator](https://github.com/coreos/etcd-operator/blob/master/doc/user/install_guide.md)
+* [Install helm](https://docs.helm.sh/using_helm/)
+* After installing, run `helm init`
 
-1. Log in to the Google Developers Console to [enable billing](https://console.developers.google.com/billing).
-  - Click the **Billing** pane if you are not there already.
-  - Click **New billing account**.
-  - Assign a name to the billing account, e.g. **Vitess on Kubernetes**, then click **Continue**. You can sign up for a [free trial](https://cloud.google.com/free-trial/) to avoid any charges.
+### Optional
 
-2. Create a project in the Google Developers Console that uses your billing account:
-    - At the top of the Google Developers Console, click the **Projects** dropdown.
-    - Click the **Create a Project...** link.
-    - Assign a name to your project. Then click the **Create** button. Your project should be created and associated with your billing account. (If you have multiple billing accounts, confirm that the project is associated with the correct account).
-    - After creating your project, click **API Manager** in the left menu.
-    - Find **Google Compute Engine** and **Google Container Engine API**. (both should be listed under **Google Cloud APIs**). For each, click on it, then click the **"Enable API"** button.
+* Install mysql client. On Ubuntu: `apt-get install mysql-client`
+* Install vtctlclient
+    * Install go 1.11+
+    * `go get vitess.io/vitess/go/cmd/vtctlclient`
+    * vtctlclient will be installed at `$GOPATH/bin/`
 
-3. Follow the [Google Cloud SDK quickstart instructions](https://cloud.google.com/sdk/#Quick_Start) to set up and test the Google Cloud SDK. You will also set your default project ID while completing the quickstart.
+## Starting a single keyspace cluster
 
-    **Note:** If you skip the quickstart guide because you've previously set up the Google Cloud SDK, just make sure to set a default project ID by running the following command. Replace `PROJECT` with the project ID assigned to your [Google Developers Console](https://console.developers.google.com/)
-    project. You can [find the ID] (https://cloud.google.com/compute/docs/projects#projectids) by navigating to the **Overview** page for the project in the Console.
+So you searched keyspace on Google and got a bunch of stuff about NoSQL… what’s the deal? It took a few hours, but after diving through the ancient Vitess scrolls you figure out that in the NewSQL world, keyspaces and databases are essentially the same thing when unsharded. Finally, it’s time to get started.
 
-    ``` sh
-    $ gcloud config set project PROJECT
-    ```
-
-4.  Install or update the `kubectl` tool:
-
-    ``` sh
-    $ gcloud components update kubectl
-    ```
-
-### Locate kubectl
-
-Check if `kubectl` is on your `PATH`:
+Change to the helm example directory:
 
 ``` sh
-$ which kubectl
-### example output:
-# ~/google-cloud-sdk/bin/kubectl
+cd examples/helm
 ```
 
-If `kubectl` isn't on your `PATH`, you can tell our scripts where to find it by setting the `KUBECTL` environment variable:
+In this directory, you will see a group of yaml files. The first digit of each file name indicates the phase of example. The next two digits indicate the order in which to execute them. For example, ‘101_initial_cluster.yaml’ is the first file of the first phase. We shall execute that now:
 
 ``` sh
-$ export KUBECTL=/example/path/to/google-cloud-sdk/bin/kubectl
+helm install ../../helm/vitess -f 101_initial_cluster.yaml
 ```
 
-## Start a Container Engine cluster
+This will bring up the initial Vitess cluster with a single keyspace.
 
-**Note:** If you are running Kubernetes elsewhere, skip to [Start a Vitess cluster](#start-a-vitess-cluster).
+### Verify cluster
 
-1.  Set the [zone](https://cloud.google.com/compute/docs/zones#overview) that your installation will use:
-
-    ``` sh
-    $ gcloud config set compute/zone us-central1-b
-    ```
-
-2.  Create a Container Engine cluster:
-
-    ``` sh
-    $ gcloud container clusters create example --machine-type n1-standard-4 --num-nodes 5 --scopes storage-rw
-    ### example output:
-    # Creating cluster example...done.
-    # Created [https://container.googleapis.com/v1/projects/vitess/zones/us-central1-b/clusters/example].
-    # kubeconfig entry generated for example.
-    ```
-
-    **Note:** The `--scopes storage-rw` argument is necessary to allow [built-in backup/restore](../../user-guides/backup-and-restore) to access [Google Cloud Storage](https://cloud.google.com/storage/).
-
-3.  Create a Cloud Storage bucket:
-
-    To use the Cloud Storage plugin for built-in backups, first create a [bucket](https://cloud.google.com/storage/docs/concepts-techniques#concepts) for Vitess backup data. See the [bucket naming guidelines](https://cloud.google.com/storage/docs/bucket-naming) if you're new to Cloud Storage.
-
-    ``` sh
-    $ gsutil mb gs://my-backup-bucket
-    ```
-
-## Start a Vitess cluster
-
-1.  **Navigate to your local Vitess source code**
-
-    This directory would have been created when you installed `vtctlclient`:
-
-    ``` sh
-    $ cd $GOPATH/src/vitess.io/vitess/examples/kubernetes
-    ```
-
-2.  **Configure site-local settings**
-
-    Run the `configure.sh` script to generate a `config.sh` file, which will be used to customize your cluster settings.
-
-    Currently, we have out-of-the-box support for storing [backups](../../user-guides/backup-and-restore) in
-    [Google Cloud Storage](https://cloud.google.com/storage/). If you're using GCS, fill in the fields requested by the configure script, including the name of the bucket you created above.
-
-    ``` sh
-    vitess/examples/kubernetes$ ./configure.sh
-    ### example output:
-    # Backup Storage (file, gcs) [gcs]:
-    # Google Developers Console Project [my-project]:
-    # Google Cloud Storage bucket for Vitess backups: my-backup-bucket
-    # Saving config.sh...
-    ```
-
-    For other platforms, you'll need to choose the `file` backup storage plugin, and mount a read-write network volume into the `vttablet` and `vtctld` pods. For example, you can mount any storage service accessible through NFS into a [Kubernetes volume](https://kubernetes.io/docs/concepts/storage/volumes#nfs). Then provide the mount path to the configure script here.
-
-    Direct support for other cloud blob stores like Amazon S3 can be added by implementing the Vitess [BackupStorage plugin interface](https://github.com/vitessio/vitess/blob/master/go/vt/mysqlctl/backupstorage/interface.go). Let us know on the [discussion forum](https://groups.google.com/forum/#!forum/vitess) if you have any specific plugin requests.
-
-3.  **Start an etcd cluster**
-
-    The Vitess [topology service](../../overview/concepts#topology-service) stores coordination data for all the servers in a Vitess cluster. It can store this data in one of several consistent storage systems.
-    In this example, we'll use [etcd](https://github.com/coreos/etcd). Note that we need our own etcd clusters, separate from the one used by Kubernetes itself. We will use etcd-operator to manage these clusters.
-
-    If you haven't done so already, make sure you [install etcd-operator](https://github.com/coreos/etcd-operator/blob/master/doc/user/install_guide.md) in the same namespace in which you plan to run Vitess
-    before continuing.
-
-    ``` sh
-    vitess/examples/kubernetes$ ./etcd-up.sh
-    ### example output:
-    # Creating etcd service for 'global' cell...
-    # etcdcluster "etcd-global" created
-    # Creating etcd service for 'global' cell...
-    # etcdcluster "etcd-test" created
-    # ...
-    ```
-
-    This command creates two clusters. One is for the
-    [global cell](../../user-guides/topology-service#global-vs-local),
-    and the other is for a
-    [local cell](../../overview/concepts#cell-data-center)
-    called *test*. You can check the status of the
-    [pods](https://kubernetes.io/docs/concepts/workloads/pods/)
-    in the cluster by running:
-
-    ``` sh
-    $ kubectl get pods
-    ### example output:
-    # NAME                READY     STATUS    RESTARTS   AGE
-    # etcd-global-0000                1/1       Running   0          1m
-    # etcd-global-0001                1/1       Running   0          1m
-    # etcd-global-0002                1/1       Running   0          1m
-    # etcd-operator-857677187-rvgf5   1/1       Running   0          28m
-    # etcd-test-0000                  1/1       Running   0          1m
-    # etcd-test-0001                  1/1       Running   0          1m
-    # etcd-test-0002                  1/1       Running   0          1m
-    ```
-
-    It may take a while for each Kubernetes node to download the Docker images the first time it needs them. While the images are downloading, the pod status will be Pending.
-
-    **Note:** In this example, each script that has a name ending in `-up.sh` also has a corresponding `-down.sh` script, which can be used to stop certain components of the Vitess cluster without bringing down the whole cluster. For example, to tear down the `etcd` deployment, run:
-
-    ``` sh
-    vitess/examples/kubernetes$ ./etcd-down.sh
-    ```
-
-4.  **Start vtctld**
-
-    The `vtctld` server provides a web interface to inspect the state of the
-    Vitess cluster. It also accepts RPC commands from `vtctlclient` to modify
-    the cluster.
-
-    ```shell
-    vitess/examples/kubernetes$ ./vtctld-up.sh
-    ### example output:
-    # Creating vtctld ClusterIP service...
-    # service "vtctld" created
-    # Creating vtctld replicationcontroller...
-    # replicationcontroller "vtctld" create createdd
-    ```
-
-5.  **Access the vtctld web UI**
-
-    To access vtctld from outside Kubernetes, use [kubectl proxy](https://kubernetes.io/docs/tasks/access-kubernetes-api/http-proxy-access-api/) to create an authenticated tunnel on your workstation:
-
-    **Note:** The proxy command runs in the foreground, so you may want to run it in a separate terminal.
-
-    ``` sh
-    $ kubectl proxy --port=8001
-    ### example output:
-    # Starting to serve on localhost:8001
-    ```
-
-    You can then load the vtctld web UI on `localhost`:
-
-    http://localhost:8001/api/v1/namespaces/default/services/vtctld:web/proxy
-
-    You can also use this proxy to access the [Kubernetes Dashboard]
-    (https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/),
-    where you can monitor nodes, pods, and services:
-
-    http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/.
-
-6.  **Use vtctlclient to send commands to vtctld**
-
-    You can now run `vtctlclient` locally to issue commands to the `vtctld` service on your Kubernetes cluster.
-
-    To enable RPC access into the Kubernetes cluster, we'll again use `kubectl` to set up an authenticated tunnel. Unlike the HTTP proxy we used for the web UI, this time we need raw [port forwarding](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/) for vtctld's [gRPC](http://grpc.io) port.
-
-    Since the tunnel needs to target a particular vtctld pod name, we've provided the `kvtctl.sh` script, which uses `kubectl` to discover the pod name and set up the tunnel before running `vtctlclient`.
-
-    Now, running `kvtctl.sh help` will test your connection to `vtctld` and also list the `vtctlclient` commands that you can use to administer the Vitess cluster.
-
-    ``` sh
-    vitess/examples/kubernetes$ ./kvtctl.sh help
-    ### example output:
-    # Available commands:
-    #
-    # Tablets:
-    #   InitTablet ...
-    # ...
-    ```
-    You can also use the help command to get more details about each command:
-
-    ``` sh
-    vitess/examples/kubernetes$ ./kvtctl.sh help ListAllTablets
-    ```
-
-    See the [`vtctl`](../../reference/vtctl) reference for a web-formatted version of the vtctl help output.
-
-7. **Setup the cell in the topology**
-
-    The global etcd cluster is configured from command-line parameters, specified in the Kubernetes configuration files. The per-cell etcd cluster however needs to be configured, so it is reachable by Vitess. The following command sets it up:
-
-    ``` sh
-    ./kvtctl.sh AddCellInfo --root /test -server_address http://etcd-test-client:2379 test
-    ```
-
-8.  **Start vttablets**
-
-    A Vitess [tablet](../../overview/concepts#tablet) is the unit of scaling for the database. A tablet consists of the `vttablet` and `mysqld` processes, running on the same host. We enforce this coupling in Kubernetes by putting the respective containers for vttablet and mysqld inside a single [pod](https://kubernetes.io/docs/concepts/workloads/pods/).
-
-    Run the following script to launch the vttablet pods, which also include mysqld:
-
-    ``` sh
-    vitess/examples/kubernetes$ ./vttablet-up.sh
-    ### example output:
-    # Creating test_keyspace.shard-0 pods in cell test...
-    # Creating pod for tablet test-0000000100...
-    # pod "vttablet-100" created
-    # Creating pod for tablet test-0000000101...
-    # pod "vttablet-101" created
-    # Creating pod for tablet test-0000000102...
-    # pod "vttablet-102" created
-    # Creating pod for tablet test-0000000103...
-    # pod "vttablet-103" created
-    # Creating pod for tablet test-0000000104...
-    # pod "vttablet-104" created
-    ```
-
-    In the vtctld web UI, you should soon see a [keyspace](../../overview/concepts#keyspace) named `test_keyspace` with a single [shard](../../overview/concepts#shard) named `0`. Click on the shard name to see the list of tablets. When all 5 tablets show up on the shard status page, you're ready to continue. Note that it's normal for the tablets to be unhealthy at this point, since you haven't
-    initialized the databases on them yet.
-
-    It can take some time for the tablets to come up for the first time if a pod was scheduled on a node that hasn't downloaded the [Vitess Docker image](https://hub.docker.com/u/vitess/) yet. You can also check the status of the tablets from the command line using `kvtctl.sh`:
-
-    ``` sh
-    vitess/examples/kubernetes$ ./kvtctl.sh ListAllTablets test
-    ### example output:
-    # test-0000000100 test_keyspace 0 spare 10.64.1.6:15002 10.64.1.6:3306 []
-    # test-0000000101 test_keyspace 0 spare 10.64.2.5:15002 10.64.2.5:3306 []
-    # test-0000000102 test_keyspace 0 spare 10.64.0.7:15002 10.64.0.7:3306 []
-    # test-0000000103 test_keyspace 0 spare 10.64.1.7:15002 10.64.1.7:3306 []
-    # test-0000000104 test_keyspace 0 spare 10.64.2.6:15002 10.64.2.6:3306 []
-    ```
-
-9.  **Initialize MySQL databases**
-
-    Once all the tablets show up, you're ready to initialize the underlying MySQL databases.
-
-    **Note:** Many `vtctlclient` commands produce no output on success.
-
-    First, designate one of the tablets to be the initial master. Vitess will automatically connect the other slaves' mysqld instances so that they start replicating from the master's mysqld. This is also when the default database is created. Since our keyspace is named `test_keyspace`, the MySQL database will be named `vt_test_keyspace`.
-
-    ``` sh
-    vitess/examples/kubernetes$ ./kvtctl.sh InitShardMaster -force test_keyspace/0 test-0000000100
-    ### example output:
-    # master-elect tablet test-0000000100 is not the shard master, proceeding anyway as -force was used
-    # master-elect tablet test-0000000100 is not a master in the shard, proceeding anyway as -force was used
-    ```
-
-    **Note:** Since this is the first time the shard has been started, the tablets are not already doing any replication, and there is no existing master. The `InitShardMaster` command above uses the `-force` flag to bypass the usual sanity checks that would apply if this wasn't a brand new shard.
-
-    After the tablets finish updating, you should see one **master**, and several **replica** and **rdonly** tablets:
-
-    ``` sh
-    vitess/examples/kubernetes$ ./kvtctl.sh ListAllTablets test
-    ### example output:
-    # test-0000000100 test_keyspace 0 master 10.64.1.6:15002 10.64.1.6:3306 []
-    # test-0000000101 test_keyspace 0 replica 10.64.2.5:15002 10.64.2.5:3306 []
-    # test-0000000102 test_keyspace 0 replica 10.64.0.7:15002 10.64.0.7:3306 []
-    # test-0000000103 test_keyspace 0 rdonly 10.64.1.7:15002 10.64.1.7:3306 []
-    # test-0000000104 test_keyspace 0 rdonly 10.64.2.6:15002 10.64.2.6:3306 []
-    ```
-
-    The **replica** tablets are used for serving live web traffic, while the **rdonly** tablets are used for offline processing, such as batch jobs and backups. The amount of each [tablet type](../../overview/concepts#tablet) that you launch can be configured in the `vttablet-up.sh` script.
-
-10.  **Create a table**
-
-    The `vtctlclient` tool can be used to apply the database schema across all tablets in a keyspace. The following command creates the table defined in the `create_test_table.sql` file:
-
-    ``` sh
-    # Make sure to run this from the examples/kubernetes dir, so it finds the file.
-    vitess/examples/kubernetes$ ./kvtctl.sh ApplySchema -sql "$(cat create_test_table.sql)" test_keyspace
-    ```
-
-    The SQL to create the table is shown below:
-
-    ``` sql
-    CREATE TABLE messages (
-      page BIGINT(20) UNSIGNED,
-      time_created_ns BIGINT(20) UNSIGNED,
-      message VARCHAR(10000),
-      PRIMARY KEY (page, time_created_ns)
-    ) ENGINE=InnoDB
-    ```
-
-    You can run this command to confirm that the schema was created properly on a given tablet, where `test-0000000100` is a tablet alias as shown by the `ListAllTablets` command:
-
-    ``` sh
-    vitess/examples/kubernetes$ ./kvtctl.sh GetSchema test-0000000100
-    ### example output:
-    # {
-    #   "DatabaseSchema": "CREATE DATABASE `{{.DatabaseName}}` /*!40100 DEFAULT CHARACTER SET utf8 */",
-    #   "TableDefinitions": [
-    #     {
-    #       "Name": "messages",
-    #       "Schema": "CREATE TABLE `messages` (\n  `page` bigint(20) unsigned NOT NULL DEFAULT '0',\n  `time_created_ns` bigint(20) unsigned NOT NULL DEFAULT '0',\n  `message` varchar(10000) DEFAULT NULL,\n  PRIMARY KEY (`page`,`time_created_ns`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8",
-    #       "Columns": [
-    #         "page",
-    #         "time_created_ns",
-    #         "message"
-    #       ],
-    # ...
-    ```
-
-11.  **Take a backup**
-
-    Now that the initial schema is applied, it's a good time to take the first [backup](../../user-guides/backup-and-restore). This backup will be used to automatically restore any additional replicas that you run, before they connect themselves to the master and catch up on replication. If an existing tablet goes down and comes back up without its data, it will also automatically restore from the latest backup and then resume replication.
-
-    Select one of the **rdonly** tablets and tell it to take a backup. We use a **rdonly** tablet instead of a **replica** because the tablet will pause replication and stop serving during data copy to create a consistent snapshot.
-
-    ``` sh
-    vitess/examples/kubernetes$ ./kvtctl.sh Backup test-0000000104
-    ```
-
-    After the backup completes, you can list available backups for the shard:
-
-    ``` sh
-    vitess/examples/kubernetes$ ./kvtctl.sh ListBackups test_keyspace/0
-    ### example output:
-    # 2015-10-21.042940.test-0000000104
-    ```
-
-12. **Initialize Vitess Routing Schema**
-
-    In the examples, we are just using a single database with no specific configuration. So we just need to make that (empty) configuration visible for serving. This is done by running the following command:
-
-    ``` sh
-    vitess/examples/kubernetes$ ./kvtctl.sh RebuildVSchemaGraph
-    ```
-
-    (As it works, this command will not display any output.)
-
-13.  **Start vtgate**
-
-    Vitess uses [vtgate](../../overview/concepts#vtgate) to route each client query to the correct `vttablet`. In Kubernetes, a `vtgate` service distributes connections to a pool of `vtgate` pods. The pods are curated by a [replication controller](https://kubernetes.io/docs/concepts/workloads/pods/).
-
-    ``` sh
-    vitess/examples/kubernetes$ ./vtgate-up.sh
-    ### example output:
-    # Creating vtgate service in cell test...
-    # service "vtgate-test" created
-    # Creating vtgate replicationcontroller in cell test...
-    # replicationcontroller "vtgate-test" created
-    ```
-
-## Test your cluster with a client app
-
-The GuestBook app in the example is ported from the [Kubernetes GuestBook example](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/). The server-side code has been rewritten in Python to use Vitess as the storage engine. The client-side code (HTML/JavaScript) has been modified to support multiple Guestbook pages, which will be useful to demonstrate Vitess sharding in a later guide.
+Once successful, you should see the following state:
 
 ``` sh
-vitess/examples/kubernetes$ ./guestbook-up.sh
-### example output:
-# Creating guestbook service...
-# services "guestbook" created
-# Creating guestbook replicationcontroller...
-# replicationcontroller "guestbook" created
+~/...vitess/helm/vitess/templates> kubectl get pods,jobs
+NAME                               READY     STATUS    RESTARTS   AGE
+po/etcd-global-2cwwqfkf8d          1/1       Running   0          14m
+po/etcd-operator-9db58db94-25crx   1/1       Running   0          15m
+po/etcd-zone1-btv8p7pxsg           1/1       Running   0          14m
+po/vtctld-55c47c8b6c-5v82t         1/1       Running   1          14m
+po/vtgate-zone1-569f7b64b4-zkxgp   1/1       Running   2          14m
+po/zone1-commerce-0-rdonly-0       6/6       Running   0          14m
+po/zone1-commerce-0-replica-0      6/6       Running   0          14m
+po/zone1-commerce-0-replica-1      6/6       Running   0          14m
+
+NAME                                      DESIRED   SUCCESSFUL   AGE
+jobs/commerce-apply-schema-initial        1         1            14m
+jobs/commerce-apply-vschema-initial       1         1            14m
+jobs/zone1-commerce-0-init-shard-master   1         1            14m
 ```
 
-As with the `vtctld` service, by default the GuestBook app is not accessible from outside Kubernetes. In this case, since this is a user-facing frontend, we set `type: LoadBalancer` in the GuestBook service definition, which tells Kubernetes to create a public [load balancer](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/) using the API for whatever platform your Kubernetes cluster is in.
-
-You also need to [allow access through your platform's firewall](https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/).
+If you have installed the mysql client, you should now be able to connect to the cluster using the following command:
 
 ``` sh
-# For example, to open port 80 in the GCE firewall:
-$ gcloud compute firewall-rules create guestbook --allow tcp:80
+~/...vitess/examples/helm> ./kmysql.sh
+mysql> show tables;
++--------------------+
+| Tables_in_commerce |
++--------------------+
+| corder             |
+| customer           |
+| product            |
++--------------------+
+3 rows in set (0.01 sec)
 ```
 
-**Note:** For simplicity, the firewall rule above opens the port on **all** GCE instances in your project. In a production system, you would likely limit it to specific instances.
-
-Then, get the external IP of the load balancer for the GuestBook service:
+You can also browse to the vtctld console using the following command (Ubuntu):
 
 ``` sh
-$ kubectl get service guestbook
-### example output:
-# NAME        CLUSTER-IP      EXTERNAL-IP     PORT(S)   AGE
-# guestbook   10.67.242.247   3.4.5.6         80/TCP    1m
+./kvtctld.sh
 ```
 
-If the `EXTERNAL-IP` is still empty, give it a few minutes to create the external load balancer and check again.
+### Minikube Customizations
 
-Once the pods are running, the GuestBook app should be accessible from the load balancer's external IP. In the example above, it would be at `http://3.4.5.6`.
+The helm example is based on the the `values.yaml` file provided as the default helm chart for Vitess. The following overrides have been performed in order to run under minikube:
 
-You can see Vitess' replication capabilities by opening the app in multiple browser windows, with the same Guestbook page number. Each new entry is committed to the master database. In the meantime, JavaScript on the page continuously polls the app server to retrieve a list of GuestBook entries. The app serves read-only requests by querying Vitess in 'replica' mode, confirming that replication is working.
+* `resources`: have been nulled out. This instructs the Kubernetes environment to use whatever is available. Note, this is not recommended for a production environment. In such cases, you should start with the baseline values provided in `helm/vitess/values.yaml` and iterate from those.
+* etcd and vtgate replicas are set to 1. In a production environment, there should be 3-5 etcd replicas. The number of vtgates will need to scale up based on cluster size.
+* `mysqlProtocol.authType` is set to `none`. This should be changed to `secret` and the credentials should be stored as Kubernetes secrets.
+* A serviceType of `NodePort` is not recommended in production. You may choose not to expose these end points to anyone outside Kubernetes at all. Another option is to create Ingress controllers.
 
-You can also inspect the data stored by the app:
+### Topology
+
+The helm chart specifies a single unsharded keyspace: `commerce`. Unsharded keyspaces have a single shard named `0`.
+
+NOTE: keyspace/shards are global entities of a cluster, independent of a cell. Ideally, you should list the keyspace/shards separately. For a cell, you should only have to specify which of those keyspace/shards are deployed in that cell. However, for simplicity, the existence of keyspace/shards are implicitly inferred from the fact that they are mentioned under each cell.
+
+In this deployment, we are requesting two `replica` type tables and one `rdonly` type tablet. When deployed, one of the `replica` tablet types will automatically be elected as master. In the vtctld console, you should see one `master`, one `replica` and one `rdonly` vttablets.
+
+The purpose of a replica tablet is for serving OLTP read traffic, whereas rdonly tablets are for serving analytics, or performing cluster maintenance operations like backups, or resharding. rdonly replicas are allowed to lag far behind the master because replication needs to be stopped to perform some of these functions.
+
+In our use case, we are provisioning one rdonly replica per shard in order to perform resharding operations.
+
+### Schema
+
+``` sql
+create table product(
+  sku varbinary(128),
+  description varbinary(128),
+  price bigint,
+  primary key(sku)
+);
+create table customer(
+  customer_id bigint not null auto_increment,
+  email varbinary(128),
+  primary key(customer_id)
+);
+create table corder(
+  order_id bigint not null auto_increment,
+  customer_id bigint,
+  sku varbinary(128),
+  price bigint,
+  primary key(order_id)
+);
+```
+
+The schema has been simplified to include only those fields that are significant to the example:
+
+* The `product` table contains the product information for all of the products.
+* The `customer` table has a customer_id that has an auto-increment. A typical customer table would have a lot more columns, and sometimes additional detail tables.
+* The `corder` table (named so because `order` is an SQL reserved word) has an order_id auto-increment column. It also has foreign keys into customer(customer_id) and product(sku).
+
+### VSchema
+
+Since Vitess is a distributed system, a VSchema (Vitess schema) is usually required to describe how the keyspaces are organized.
+
+``` json
+{
+  "tables": {
+    "product": {},
+    "customer": {},
+    "corder": {}
+  }
+}
+```
+
+With a single unsharded keyspace, the VSchema is very simple; it just lists all the tables in that keyspace.
+
+NOTE: In the case of a single unsharded keyspace, a VSchema is not strictly necessary because Vitess knows that there are no other keyspaces, and will therefore redirect all queries to the only one present.
+
+## Vertical Split
+
+Due to a massive ingress of free-trade, single-origin yerba mate merchants to your website, hipsters are swarming to buy stuff from you. As more users flock to your website and app, the `customer` and `corder` tables start growing at an alarming rate. To keep up, you’ll want to separate those tables by moving `customer` and `corder` to their own keyspace. Since you only have as many products as there are types of yerba mate, you won’t need to shard the product table!
+
+Let us add some data into our tables to illustrate how the vertical split works.
 
 ``` sh
-vitess/examples/kubernetes$ ./kvtctl.sh ExecuteFetchAsDba test-0000000100 "SELECT * FROM messages"
-### example output:
-# +------+---------------------+---------+
-# | page |   time_created_ns   | message |
-# +------+---------------------+---------+
-# |   42 | 1460771336286560000 | Hello   |
-# +------+---------------------+---------+
+./kmysql.sh < ../common/insert_commerce_data.sql
 ```
 
-The [GuestBook source code](https://github.com/vitessio/vitess/tree/master/examples/kubernetes/guestbook)
-provides more detail about how the app server interacts with Vitess.
-
-## Try Vitess resharding
-
-Now that you have a full Vitess stack running, you may want to go on to the [Sharding in Kubernetes workflow guide](../../sharding/sharding-kubernetes-workflow) or [Sharding in Kubernetes codelab](../../sharding/sharding-kubernetes) (if you prefer to run each step manually through commands) to try out [dynamic resharding](../../sharding/#resharding).
-
-If so, you can skip the tear-down since the sharding guide picks up right here. If not, continue to the clean-up steps below.
-
-## Tear down and clean up
-
-Before stopping the Container Engine cluster, you should tear down the Vitess services. Kubernetes will then take care of cleaning up any entities it created for those services, like external load balancers.
-
-```sh
-vitess/examples/kubernetes$ ./guestbook-down.sh
-vitess/examples/kubernetes$ ./vtgate-down.sh
-vitess/examples/kubernetes$ ./vttablet-down.sh
-vitess/examples/kubernetes$ ./vtctld-down.sh
-vitess/examples/kubernetes$ ./etcd-down.sh
-```
-
-Then tear down the Container Engine cluster itself, which will stop the virtual machines running on Compute Engine:
-
-```sh
-$ gcloud container clusters delete example
-```
-
-It's also a good idea to remove any firewall rules you created, unless you plan to use them again soon:
-
-```sh
-$ gcloud compute firewall-rules delete guestbook
-```
-
-## Troubleshooting
-
-### Server logs
-
-If a pod enters the `Running` state, but the server doesn't respond as expected, use the `kubectl logs` command to check the pod output:
-
-```sh
-# show logs for container 'vttablet' within pod 'vttablet-100'
-$ kubectl logs vttablet-100 vttablet
-
-# show logs for container 'mysql' within pod 'vttablet-100'
-# Note that this is NOT MySQL error log.
-$ kubectl logs vttablet-100 mysql
-```
-
-Post the logs somewhere and send a link to the [Vitess mailing list](https://groups.google.com/forum/#!forum/vitess) to get more help.
-
-### Shell access
-
-If you want to poke around inside a container, you can use `kubectl exec` to run a shell.
-
-For example, to launch a shell inside the `vttablet` container of the `vttablet-100` pod:
-
-```sh
-$ kubectl exec vttablet-100 -c vttablet -t -i -- bash -il
-root@vttablet-100:/# ls /vt/vtdataroot/vt_0000000100
-### example output:
-# bin-logs   innodb                  my.cnf      relay-logs
-# data       memcache.sock764383635  mysql.pid   slow-query.log
-# error.log  multi-master.info       mysql.sock  tmp
-```
-
-### Root certificates
-
-If you see in the logs a message like this:
-
-```sh
-x509: failed to load system roots and no roots provided
-```
-
-It usually means that your Kubernetes nodes are running a host OS that puts root certificates in a different place than our configuration expects by default (for example, Fedora). See the comments in the [etcd controller template](https://github.com/vitessio/vitess/blob/master/examples/kubernetes/etcd-controller-template.yaml) for examples of how to set the right location for your host OS. You'll also need to adjust the same certificate path settings in the `vtctld` and `vttablet` templates.
-
-### Status pages for vttablets
-
-Each `vttablet` serves a set of HTML status pages on its primary port. The `vtctld` interface provides a **STATUS** link for each tablet.
-
-If you access the vtctld web UI through the kubectl proxy as described above, it will automatically link to the vttablets through that same proxy, giving you access from outside the cluster.
-
-You can also use the proxy to go directly to a tablet. For example, to see the status page for the tablet with ID `100`, you could navigate to:
-
-http://localhost:8001/api/v1/proxy/namespaces/default/pods/vttablet-100:15002/debug/status
-
-### Direct connection to mysqld
-
-Since the `mysqld` within the `vttablet` pod is only meant to be accessed via vttablet, our default bootstrap settings only allow connections from localhost.
-
-If you want to check or manipulate the underlying mysqld, you can issue simple queries or commands through `vtctlclient` like this:
+We can look at what we just inserted:
 
 ``` sh
-# Send a query to tablet 100 in cell 'test'.
-vitess/examples/kubernetes$ ./kvtctl.sh ExecuteFetchAsDba test-0000000100 "SELECT VERSION()"
-### example output:
-# +------------+
-# | VERSION()  |
-# +------------+
-# | 5.7.13-log |
-# +------------+
+./kmysql.sh --table < ../common/select_commerce_data.sql
+Using commerce/0
+Customer
++-------------+--------------------+
+| customer_id | email              |
++-------------+--------------------+
+|           1 | alice@domain.com   |
+|           2 | bob@domain.com     |
+|           3 | charlie@domain.com |
+|           4 | dan@domain.com     |
+|           5 | eve@domain.com     |
++-------------+--------------------+
+Product
++----------+-------------+-------+
+| sku      | description | price |
++----------+-------------+-------+
+| SKU-1001 | Monitor     |   100 |
+| SKU-1002 | Keyboard    |    30 |
++----------+-------------+-------+
+COrder
++----------+-------------+----------+-------+
+| order_id | customer_id | sku      | price |
++----------+-------------+----------+-------+
+|        1 |           1 | SKU-1001 |   100 |
+|        2 |           2 | SKU-1002 |    30 |
+|        3 |           3 | SKU-1002 |    30 |
+|        4 |           4 | SKU-1002 |    30 |
+|        5 |           5 | SKU-1002 |    30 |
++----------+-------------+----------+-------+
+
 ```
 
-If you need a truly direct connection to mysqld, you can [launch a shell](#shell-access) inside the mysql container, and then connect with the `mysql` command-line client:
+Notice that we are using keyspace `commerce/0` to select data from our tables.
+
+### Create Keyspace
+
+For subsequent commands, it will be convenient to capture the name of the release and save into a variable:
 
 ``` sh
-$ kubectl exec vttablet-100 -c mysql -t -i -- bash -il
-root@vttablet-100:/# export TERM=ansi
-root@vttablet-100:/# mysql -S /vt/vtdataroot/vt_0000000100/mysql.sock -u vt_dba
+export release=$(helm ls -q)
 ```
+
+For a vertical split, we first need to create a special `served_from` keyspace. This keyspace starts off as an alias for the `commerce` keyspace. Any queries sent to this keyspace will be redirected to `commerce`. Once this is created, we can vertically split tables into the new keyspace without having to make the app aware of this change:
+
+``` sh
+helm upgrade $release ../../helm/vitess/ -f 201_customer_keyspace.yaml
+```
+
+Looking into the yaml file, the only addition over the previous version is the following job:
+
+``` yaml
+jobs:
+  - name: "create-customer-ks"
+    kind: "vtctlclient"
+    command: "CreateKeyspace -served_from='master:commerce,replica:commerce,rdonly:commerce' customer"
+```
+
+This creates an entry into the topology indicating that any requests to master, replica, or rdonly sent to `customer` must be redirected to (served from) `commerce`. These tablet type specific redirects will be used to control how we transition the cutover from `commerce` to `customer`.
+
+A successful completion of this job should show up as:
+
+``` sh
+NAME                                      DESIRED   SUCCESSFUL   AGE
+jobs/vtctlclient-create-customer-ks       1         1            10s
+```
+
+### Customer Tablets
+
+Now you have to create vttablet instances to back this new keyspace onto which you’ll move the necessary tables:
+
+``` sh
+helm upgrade $release ../../helm/vitess/ -f 202_customer_tablets.yaml
+```
+
+This yaml also makes a few additional changes:
+
+``` yaml
+        - name: "commerce"
+          shards:
+            - name: "0"
+              tablets:
+                - type: "replica"
+                  vttablet:
+                    replicas: 2
+                - type: "rdonly"
+                  vttablet:
+                    replicas: 1
+          vschema:
+            vsplit: |-
+              {
+                "tables": {
+                  "product": {}
+                }
+              }
+        - name: "customer"
+          shards:
+            - name: "0"
+              tablets:
+                - type: "replica"
+                  vttablet:
+                    replicas: 2
+                - type: "rdonly"
+                  vttablet:
+                    replicas: 1
+              copySchema:
+                source: "commerce/0"
+                tables:
+                  - "customer"
+                  - "corder"
+          vschema:
+            vsplit: |-
+              {
+                "tables": {
+                  "customer": {},
+                  "corder": {}
+                }
+              }
+```
+
+The most significant change, of course, is the instantiation of vttablets for the new keyspace. Additionally:
+
+* You moved customer and corder from the commerce’s VSchema to customer’s VSchema. Note that the physical tables are still in commerce.
+* You requested that the schema for customer and corder be copied to customer using the `copySchema` directive.
+
+The move in the vschema should not be material yet because any queries sent to customer are still redirected to commerce, where all the data is still present.
+
+Upon completion of this step, there must be six running vttablet pods, and the following new jobs must have completed successfully:
+
+``` sh
+NAME                                      DESIRED   SUCCESSFUL   AGE
+jobs/commerce-apply-vschema-vsplit        1         1            5m
+jobs/customer-apply-vschema-vsplit        1         1            5m
+jobs/customer-copy-schema-0               1         1            5m
+jobs/zone1-customer-0-init-shard-master   1         1            5m
+```
+
+### VerticalSplitClone
+
+The next step:
+
+``` sh
+helm upgrade $release ../../helm/vitess/ -f 203_vertical_split.yaml
+```
+
+starts the process of migrating the data from commerce to customer. The new content on this file is:
+
+``` yaml
+jobs:
+  - name: "vertical-split"
+    kind: "vtworker"
+    cell: "zone1"
+    command: "VerticalSplitClone -min_healthy_rdonly_tablets=1 -tables=customer,corder customer/0"
+```
+
+For large tables, this job could potentially run for many days, and may be restarted if failed. This job performs the following tasks:
+
+* Dirty copy data from commerce’s customer and corder tables to customer’s tables.
+* Stop replication on commerce’s rdonly tablet and perform a final sync.
+* Start a filtered replication process from commerce->customer that keeps the customer’s tables in sync with those in commerce.
+
+
+NOTE: In production, you would want to run multiple sanity checks on the replication by running `SplitDiff` jobs multiple times before starting the cutover:
+
+``` yaml
+jobs:
+  - name: "vertical-split-diff"
+    kind: "vtworker"
+    cell: "zone1"
+    command: "VerticalSplitDiff -min_healthy_rdonly_tablets=1 customer/0"
+```
+
+We can look at the results of VerticalSplitClone by examining the data in the customer keyspace. Notice that all data in the `customer` and `corder` tables has been copied over.
+
+``` sh
+./kmysql.sh --table < ../common/select_customer0_data.sql
+Using customer/0
+Customer
++-------------+--------------------+
+| customer_id | email              |
++-------------+--------------------+
+|           1 | alice@domain.com   |
+|           2 | bob@domain.com     |
+|           3 | charlie@domain.com |
+|           4 | dan@domain.com     |
+|           5 | eve@domain.com     |
++-------------+--------------------+
+COrder
++----------+-------------+----------+-------+
+| order_id | customer_id | sku      | price |
++----------+-------------+----------+-------+
+|        1 |           1 | SKU-1001 |   100 |
+|        2 |           2 | SKU-1002 |    30 |
+|        3 |           3 | SKU-1002 |    30 |
+|        4 |           4 | SKU-1002 |    30 |
+|        5 |           5 | SKU-1002 |    30 |
++----------+-------------+----------+-------+
+
+```
+
+### Cut over
+
+Once you have verified that the customer and corder tables are being continuously updated from commerce, you can cutover the traffic. This is typically performed in three steps: `rdonly`, `replica` and `master`:
+
+For rdonly and replica:
+
+``` sh
+helm upgrade $release ../../helm/vitess/ -f 204_vertical_migrate_replicas.yaml
+```
+
+For master:
+
+``` sh
+helm upgrade $release ../../helm/vitess/ -f 205_vertical_migrate_master.yaml
+```
+
+Once this is done, the `customer` and `corder` tables are no longer accessible in the `commerce` keyspace. You can verify this by trying to read from them.
+
+``` sh
+./kmysql.sh --table < ../common/select_commerce_data.sql
+Using commerce/0
+Customer
+ERROR 1105 (HY000) at line 4: vtgate: http://vtgate-zone1-5ff9c47db6-7rmld:15001/: target: commerce.0.master, used tablet: zone1-1564760600 (zone1-commerce-0-replica-0.vttablet), vttablet: rpc error: code = FailedPrecondition desc = disallowed due to rule: enforce blacklisted tables (CallerID: userData1)
+```
+
+The replica and rdonly cutovers are freely reversible. However, the master cutover is one-way and cannot be reversed. This is a limitation of vertical resharding, which will be resolved in the near future. For now, care should be taken so that no loss of data or availability occurs after the cutover completes.
+
+### Clean up
+
+After celebrating your first successful ‘vertical resharding’, you will need to clean up the leftover artifacts:
+
+``` sh
+helm upgrade $release ../../helm/vitess/ -f 206_clean_commerce.yaml
+```
+
+You can see the following DMLs in commerce:
+
+``` sql
+            postsplit: |-
+              drop table customer;
+              drop table corder;
+```
+
+Those tables are now being served from customer. So, they can be dropped from commerce.
+
+``` yaml
+jobs:
+  - name: "vclean1"
+    kind: "vtctlclient"
+    command: "SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 rdonly"
+  - name: "vclean2"
+    kind: "vtctlclient"
+    command: "SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 replica"
+  - name: "vclean3"
+    kind: "vtctlclient"
+    command: "SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 master"
+```
+
+These ‘control’ records were added by the `MigrateServedFrom` command during the cutover to prevent the commerce tables from accidentally accepting writes. They can now be removed.
+
+After this step, the `customer` and `corder` tables no longer exist in the `commerce` keyspace.
+
+``` sh
+./kmysql.sh --table < ../common/select_commerce_data.sql
+Using commerce/0
+Customer
+ERROR 1105 (HY000) at line 4: vtgate: http://vtgate-zone1-5ff9c47db6-7rmld:15001/: target: commerce.0.master, used tablet: zone1-1564760600 (zone1-commerce-0-replica-0.vttablet), vttablet: rpc error: code = InvalidArgument desc = table customer not found in schema (CallerID: userData1)
+```
+
+## Horizontal sharding
+
+The DBAs you hired with massive troves of hipster cash are pinging you on Slack and are freaking out. With the amount of data that you’re loading up in your keyspaces, MySQL performance is starting to tank - it’s okay, you’re prepared for this! Although the query guardrails and connection pooling are cool features that Vitess can offer to a single unsharded keyspace, the real value comes into play with horizontal sharding.
+
+### Preparation
+
+Before starting the resharding process, you need to make some decisions and prepare the system for horizontal resharding. Important note, this is something that should have been done before starting the vertical split. However, this is a good time to explain what normally would have been decided upon earlier the process.
+
+#### Sequences
+
+The first issue to address is the fact that customer and corder have auto-increment columns. This scheme does not work well in a sharded setup. Instead, Vitess provides an equivalent feature through sequences.
+
+The sequence table is an unsharded single row table that Vitess can use to generate monotonically increasing ids. The syntax to generate an id is: `select next :n values from customer_seq`. The vttablet that exposes this table is capable of serving a very large number of such ids because values are cached and served out of memory. The cache value is configurable.
+
+The VSchema allows you to associate a column of a table with the sequence table. Once this is done, an insert on that table transparently fetches an id from the sequence table, fills in the value, and routes the row to the appropriate shard. This makes the construct backward compatible to how mysql’s auto_increment column works.
+
+Since sequences are unsharded tables, they will be stored in the commerce database. The schema:
+
+``` sql
+create table customer_seq(id int, next_id bigint, cache bigint, primary key(id)) comment 'vitess_sequence';
+insert into customer_seq(id, next_id, cache) values(0, 1000, 100);
+create table order_seq(id int, next_id bigint, cache bigint, primary key(id)) comment 'vitess_sequence';
+insert into order_seq(id, next_id, cache) values(0, 1000, 100);
+```
+
+Note the `vitess_sequence` comment in the create table statement. VTTablet will use this metadata to treat this table as a sequence.
+
+* `id` is always 0
+* `next_id` is set to `1000`: the value should be comfortably greater than the auto_increment max value used so far.
+* `cache` specifies the number of values to cache before vttablet updates `next_id`.
+
+Higher cache values are more performant. However, cached values are lost if a reparent happens. The new master will start off at the `next_id` that was saved by the old master.
+
+The VTGates also need to know about the sequence tables. This is done by updating the vschema for commerce as follows:
+
+``` json
+{
+  "tables": {
+    "customer_seq": {
+      "type": "sequence"
+    },
+    "order_seq": {
+      "type": "sequence"
+    },
+    "product": {}
+  }
+}
+```
+#### Vindexes
+
+The next decision is about the sharding keys, aka Primary Vindexes. This is a complex decision that involves the following considerations:
+
+* What are the highest QPS queries, and what are the where clauses for them?
+* Cardinality of the column; it must be high.
+* Do we want some rows to live together to support in-shard joins?
+* Do we want certain rows that will be in the same transaction to live together?
+
+Using the above considerations, in our use case, we can determine that:
+
+* For the customer table, the most common where clause uses `customer_id`. So, it shall have a Primary Vindex.
+* Given that it has lots of users, its cardinality is also high.
+* For the corder table, we have a choice between `customer_id` and `order_id`. Given that our app joins `customer` with `corder` quite often on the `customer_id` column, it will be beneficial to choose `customer_id` as the Primary Vindex for the `corder` table as well.
+* Coincidentally, transactions also update `corder` tables with their corresponding `customer` rows. This further reinforces the decision to use `customer_id` as Primary Vindex.
+
+NOTE: It may be worth creating a secondary lookup Vindex on `corder.order_id`. This is not part of the example. We will discuss this in the advanced section.
+
+NOTE: For some use cases, `customer_id` may actually map to a `tenant_id`. In such cases, the cardinality of a tenant id may be too low. It’s also common that such systems have queries that use other high cardinality columns in their where clauses. Those should then be taken into consideration when deciding on a good Primary Vindex.
+
+Putting it all together, we have the following VSchema for `customer`:
+
+``` json
+{
+  "sharded": true,
+  "vindexes": {
+    "hash": {
+      "type": "hash"
+    }
+  },
+  "tables": {
+    "customer": {
+      "column_vindexes": [
+        {
+          "column": "customer_id",
+          "name": "hash"
+        }
+      ],
+      "auto_increment": {
+        "column": "customer_id",
+        "sequence": "customer_seq"
+      }
+    },
+    "corder": {
+      "column_vindexes": [
+        {
+          "column": "customer_id",
+          "name": "hash"
+        }
+      ],
+      "auto_increment": {
+        "column": "order_id",
+        "sequence": "order_seq"
+      }
+    }
+  }
+}
+```
+
+Note that we have now marked the keyspace as sharded. Making this change will also change how Vitess treats this keyspace. Some complex queries that previously worked may not work anymore. This is a good time to conduct thorough testing to ensure that all the queries work. If any queries fail, you can temporarily revert the keyspace as unsharded. You can go back and forth until you have got all the queries working again.
+
+Since the primary vindex columns are `BIGINT`, we choose `hash` as the primary vindex, which is a pseudo-random way of distributing rows into various shards.
+
+NOTE: For `VARCHAR` columns, use `unicode_loose_md5`. For `VARBINARY`, use `binary_md5`.
+
+NOTE: All vindexes in Vitess are plugins. If none of the predefined vindexes suit your needs, you can develop your own custom vindex.
+
+Now that we have made all the important decisions, it’s time to apply these changes:
+
+``` sh
+helm upgrade $release ../../helm/vitess/ -f 301_customer_sharded.yaml
+```
+
+The jobs to watch for:
+
+``` sh
+NAME                                      DESIRED   SUCCESSFUL   AGE
+jobs/commerce-apply-schema-seq            1         1            19s
+jobs/commerce-apply-vschema-seq           1         1            19s
+jobs/customer-apply-schema-sharded        1         1            19s
+jobs/customer-apply-vschema-sharded       1         1            19s
+```
+
+### Create new shards
+
+At this point, you have finalized your sharded vschema and vetted all the queries to make sure they still work. Now, it’s time to reshard.
+
+The resharding process works by splitting existing shards into smaller shards. This type of resharding is the most appropriate for Vitess. There are some use cases where you may want to spin up a new shard and add new rows in the most recently created shard. This can be achieved in Vitess by splitting a shard in such a way that no rows end up in the ‘new’ shard. However, it’s not natural for Vitess.
+
+We have to create the new target shards:
+
+``` sh
+helm upgrade $release ../../helm/vitess/ -f 302_new_shards.yaml
+```
+
+The change we are applying is:
+
+``` yaml
+        - name: "customer"
+          shards:
+            - name: "0"
+              tablets:
+                - type: "replica"
+                  vttablet:
+                    replicas: 2
+                - type: "rdonly"
+                  vttablet:
+                    replicas: 1
+            - name: "-80"
+              tablets:
+                - type: "replica"
+                  vttablet:
+                    replicas: 2
+                - type: "rdonly"
+                  vttablet:
+                    replicas: 1
+              copySchema:
+                source: "customer/0"
+            - name: "80-"
+              tablets:
+                - type: "replica"
+                  vttablet:
+                    replicas: 2
+                - type: "rdonly"
+                  vttablet:
+                    replicas: 1
+              copySchema:
+                source: "customer/0"
+```
+
+Shard 0 was already there. We have now added shards `-80` and `80-`. We’ve also added the `copySchema` directive which requests that the schema from shard 0 be copied into the new shards.
+
+#### Shard naming
+
+What is the meaning of `-80` and `80-`? The shard names have the following characteristics:
+
+* They represent a range, where the left number is included, but the right is not.
+* Their notation is hexadecimal.
+* They are left justified.
+* A `-` prefix means: anything less than the RHS value.
+* A `-` postfix means: anything greater than or equal to the LHS value.
+* A plain `-` denotes the full keyrange.
+
+What does this mean: `-80` == `00-80` == `0000-8000` == `000000-800000`
+
+`80-` is not the same as `80-FF`. This is why:
+
+`80-FF` == `8000-FF00`. Therefore `FFFF` will be out of the `80-FF` range.
+
+`80-` means: ‘anything greater than or equal to `0x80`
+
+A `hash` vindex produces an 8-byte number. This means that all numbers less than `0x8000000000000000` will fall in shard `-80`. Any number with the highest bit set will be >= `0x8000000000000000`, and will therefore belong to shard `80-`.
+
+This left-justified approach allows you to have keyspace ids of arbitrary length. However, the most significant bits are the ones on the left.
+
+For example an `md5` hash produces 16 bytes. That can also be used as a keyspace id.
+
+A `varbinary` of arbitrary length can also be mapped as is to a keyspace id. This is what the `binary` vindex does.
+
+In the above case, we are essentially creating two shards: any keyspace id that does not have its leftmost bit set will go to `-80`. All others will go to `80-`.
+
+Applying the above change should result in the creation of six more vttablet pods, and the following new jobs:
+
+``` sh
+NAME                                         DESIRED   SUCCESSFUL   AGE
+jobs/customer-copy-schema-80-x               1         1            58m
+jobs/customer-copy-schema-x-80               1         1            58m
+jobs/zone1-customer-80-x-init-shard-master   1         1            58m
+jobs/zone1-customer-x-80-init-shard-master   1         1            58m
+```
+At this point, the tables have been created in the new shards but have no data yet.
+
+``` sh
+./kmysql.sh --table < ../common/select_customer-80_data.sql
+Using customer/-80
+Customer
+COrder
+./kmysql.sh --table < ../common/select_customer80-_data.sql
+Using customer/80-
+Customer
+COrder
+```
+
+### SplitClone
+
+The process for SplitClone is similar to VerticalSplitClone. It starts the horizontal resharding process:
+
+``` sh
+helm upgrade $release ../../helm/vitess/ -f 303_horizontal_split.yaml
+```
+
+This starts the following job:
+
+``` yaml
+jobs:
+  - name: "horizontal-split"
+    kind: "vtworker"
+    cell: "zone1"
+    command: "SplitClone -min_healthy_rdonly_tablets=1 customer/0"
+```
+
+For large tables, this job could potentially run for many days, and can be restarted if failed. This job performs the following tasks:
+
+* Dirty copy data from customer/0 into the two new shards. But rows are split based on their target shards.
+* Stop replication on customer/0 rdonly tablet and perform a final sync.
+* Start a filtered replication process from customer/0 into the two shards by sending changes to one or the other shard depending on which shard the rows belong to.
+
+Once `SplitClone` has completed, you should see this:
+
+``` sh
+NAME                                         DESIRED   SUCCESSFUL   AGE
+jobs/vtworker-horizontal-split               1         1            5m
+```
+
+The horizontal counterpart to `VerticalSplitDiff` is `SplitDiff`. It can be used to validate the data integrity of the resharding process:
+
+``` yaml
+jobs:
+  - name: "horizontal-split-diff"
+    kind: "vtworker"
+    cell: "zone1"
+    command: "SplitDiff -min_healthy_rdonly_tablets=1 customer/-80"
+```
+
+Note that the last argument of SplitDiff is the target (smaller) shard. You will need to run one job for each target shard. Also, you cannot run them in parallel because they need to take an `rdonly` instance offline to perform the comparison.
+
+NOTE: This example does not actually run this command.
+
+NOTE: SplitDiff can be used to split shards as well as to merge them.
+
+### Cut over
+Now that you have verified that the tables are being continuously updated from the source shard, you can cutover the traffic. This is typically performed in three steps: `rdonly`, `replica` and `master`:
+
+For rdonly and replica:
+
+``` sh
+helm upgrade $release ../../helm/vitess/ -f 304_migrate_replicas.yaml
+```
+
+For master:
+
+``` sh
+helm upgrade $release ../../helm/vitess/ -f 305_migrate_master.yaml
+```
+
+The replica and rdonly cutovers are freely reversible. Unlike the Vertical Split, a horizontal split is also reversible. You just have to add a `-reverse_replication` flag while cutting over the master. This flag causes the entire resharding process to run in the opposite direction, allowing you to Migrate in the other direction if the need arises.
+
+You should now be able to see the data that has been copied over to the new shards.
+
+``` sh
+./kmysql.sh --table < ../common/select_customer-80_data.sql
+Using customer/-80
+Customer
++-------------+--------------------+
+| customer_id | email              |
++-------------+--------------------+
+|           1 | alice@domain.com   |
+|           2 | bob@domain.com     |
+|           3 | charlie@domain.com |
+|           5 | eve@domain.com     |
++-------------+--------------------+
+COrder
++----------+-------------+----------+-------+
+| order_id | customer_id | sku      | price |
++----------+-------------+----------+-------+
+|        1 |           1 | SKU-1001 |   100 |
+|        2 |           2 | SKU-1002 |    30 |
+|        3 |           3 | SKU-1002 |    30 |
+|        5 |           5 | SKU-1002 |    30 |
++----------+-------------+----------+-------+
+
+./kmysql.sh --table < ../common/select_customer80-_data.sql
+Using customer/80-
+Customer
++-------------+----------------+
+| customer_id | email          |
++-------------+----------------+
+|           4 | dan@domain.com |
++-------------+----------------+
+COrder
++----------+-------------+----------+-------+
+| order_id | customer_id | sku      | price |
++----------+-------------+----------+-------+
+|        4 |           4 | SKU-1002 |    30 |
++----------+-------------+----------+-------+
+```
+
+### Clean up
+
+After celebrating your second successful resharding, you are now ready to clean up the leftover artifacts:
+
+``` sh
+helm upgrade $release ../../helm/vitess/ -f 306_down_shard_0.yaml
+```
+
+In this yaml, we just deleted shard 0. This will cause all those vttablet pods to be deleted. But the shard metadata is still present. We can clean that up with this command (after all vttablets have been brought down):
+
+``` sh
+helm upgrade $release ../../helm/vitess/ -f 307_delete_shard_0.yaml
+```
+
+This command runs the following job:
+
+``` yaml
+jobs:
+  - name: "delete-shard0"
+    kind: "vtctlclient"
+    command: "DeleteShard -recursive customer/0"
+```
+
+Beyond this, you will also need to manually delete the Persistent Volume Claims associated to this shard.
+
+And, as the final act, we remove the last executed job:
+
+``` sh
+helm upgrade $release ../../helm/vitess/ -f 308_final.yaml
+```
+
+### Teardown (optional)
+
+You can delete the whole example if you are not proceeding to another exercise.
+
+``` sh
+helm delete $release
+```
+
+You will need to delete the persistent volume claims too
+
+``` sh
+kubectl delete pvc $(kubectl get pvc | grep vtdataroot-zone1 | awk '{print $1}')
+```
+
+Congratulations on completing this exercise!
