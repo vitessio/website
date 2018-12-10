@@ -74,9 +74,9 @@ We have future plans to:
 
 ## Unsupported Features
 
-This part describes the features that are not supported for RBR in Vitess as of March 2017:
+This part describes the features that are not supported for RBR in Vitess as of December 2018:
 
-* Floating point columns are not supported. This is because they are inherently inaccurate, and could cause inaccuracies while being replayed during resharding.
+* *Floating point columns*: This is because they are inherently inaccurate, and could cause inaccuracies while being replayed during resharding.
 * *Timezones support*: the binary logs store timestamps in UTC. When converting these to SQL, we print the UTC value. If the server is not in UTC, that will result in data corruption. Note: we are working on a fix for that one.
 
 ## Update Stream Extensions
