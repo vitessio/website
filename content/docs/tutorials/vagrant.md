@@ -95,7 +95,7 @@ After completing the instructions above to [build Vitess](#build-vitess-vagrant)
    
     There is a messages table ready for you to use:
 
-    ```
+    ```sh
     mysql> select count(*) from messages;
     +----------+
     | count(*) |
