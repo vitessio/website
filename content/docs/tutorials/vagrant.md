@@ -85,7 +85,7 @@ After completing the instructions above to [build Vitess](#build-vitess-vagrant)
 
     **Note:** This will start a full Vitess cluster with a single shard and five tablets. 
 
-2. ** Connect to Vtgate**
+2. **Connect to Vtgate**
    
    From the VM, you can connect to vtgate using mysql protocol with the following command:
 
@@ -107,7 +107,7 @@ After completing the instructions above to [build Vitess](#build-vitess-vagrant)
 
    Also, vtgate admin UI is available in http://localhost:15001
    
-3. ** Connect to Vtctld**
+3. **Connect to Vtctld**
    
    Vitess cluster admin control UI is available in http://localhost:15000
    
