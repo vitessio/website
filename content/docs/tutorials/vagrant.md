@@ -105,7 +105,7 @@ After completing the instructions above to [build Vitess](#build-vitess-vagrant)
     1 row in set (0.01 sec)
     ```
 
-   Also, vtgate admin UI is available in http://localhost:15001
+    Also, vtgate admin UI is available in http://localhost:15001
    
 3. **Connect to Vtctld**
     
