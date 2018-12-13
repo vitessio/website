@@ -87,29 +87,29 @@ After completing the instructions above to [build Vitess](#build-vitess-vagrant)
 
 2. **Connect to Vtgate**
    
-   From the VM, you can connect to vtgate using mysql protocol with the following command:
-
-   ```sh
-   mysql -umysql_user -pmysql_password -h vitess -P 15306
-   ``` 
+    From the VM, you can connect to vtgate using mysql protocol with the following command:
+    
+    ```sh
+    mysql -umysql_user -pmysql_password -h vitess -P 15306
+    ``` 
    
-   There is a messages table ready for you to use:
+    There is a messages table ready for you to use:
 
-   ```
-   mysql> select count(*) from messages;
-   +----------+
-   | count(*) |
-   +----------+
-   |        0 |
-   +----------+
-   1 row in set (0.01 sec)
-   ```
+    ```sh
+    mysql> select count(*) from messages;
+    +----------+
+    | count(*) |
+    +----------+
+    |        0 |
+    +----------+
+    1 row in set (0.01 sec)
+    ```
 
-   Also, vtgate admin UI is available in http://localhost:15001
+    Also, vtgate admin UI is available in http://localhost:15001
    
 3. **Connect to Vtctld**
-   
-   Vitess cluster admin control UI is available in http://localhost:15000
+    
+    Vitess cluster admin control UI is available in http://localhost:15000
    
 
 ### Run a Client Application
