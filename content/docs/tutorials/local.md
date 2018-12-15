@@ -8,7 +8,7 @@ featured: true
 You can build Vitess using the [manual](#manual) build process outlined below.
 
 {{< info >}}
-If you run into issues or have questions, we recommend posting in the [Vitess Google Group](https://groups.google.com/forum/#!forum/vitess). This is a very active community forum and a great place to interact with other users. You can also post questions in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join.
+If you run into issues or have questions, we recommend posting in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
 {{< /info >}}
 
 ## Manual Build
