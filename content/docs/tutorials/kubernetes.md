@@ -736,6 +736,8 @@ For master:
 helm upgrade $release ../../helm/vitess/ -f 305_migrate_master.yaml
 ```
 
+During the *master* migration, the original shard master will first stop accepting updates. Then the process will wait for the new shard masters to fully catch up on filtered replication before allowing them to begin serving. Since filtered replication has been following along with live updates, there should only be a few seconds of master unavailability.
+
 The replica and rdonly cutovers are freely reversible. Unlike the Vertical Split, a horizontal split is also reversible. You just have to add a `-reverse_replication` flag while cutting over the master. This flag causes the entire resharding process to run in the opposite direction, allowing you to Migrate in the other direction if the need arises.
 
 You should now be able to see the data that has been copied over to the new shards.
