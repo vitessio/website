@@ -249,6 +249,7 @@ VSchema:
   "vindexes": {
     "hash": {
       "type": "hash"
+      }
     },
   "tables": {
     "user": {
