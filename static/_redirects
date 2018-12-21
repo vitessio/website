@@ -11,25 +11,26 @@
 /user-guide/twopc                         /docs/launching/twopc
 /user-guide/server-configuration          /docs/launching/server-configuration
 /user-guide/scalability-philosophy        /docs/launching/scalability-philosophy
-/user-guide/horizontal-sharding           /docs/launching/horizontal-sharding
-/user-guide/horizontal-sharding-workflow  /docs/launching/horizontal-sharding-workflow
+/user-guide/horizontal-sharding           /docs/tutorials/local
+/user-guide/horizontal-sharding-workflow  /docs/tutorials/local
 /user-guide/mysql-server-protocol         /docs/reference/mysql-server-protocol
 /user-guide/production-planning           /docs/launching/production-planning
 /user-guide/row-based-replication         /docs/reference/row-based-replication
 /user-guide/schema-swap                   /docs/schema-management/schema-swap
-/user-guide/sharding-kubernetes-workflow  /docs/sharding/sharding-kubernetes-workflow
-/user-guide/sharding-kubernetes           /docs/sharding/sharding-kubernetes
+/user-guide/sharding-kubernetes-workflow  /docs/tutorials/kubernetes
+/user-guide/sharding-kubernetes           /docs/tutorials/kubernetes
 /user-guide/troubleshooting               /docs/launching/troubleshooting
 /user-guide/update-stream                 /docs/reference/update-stream
 /user-guide/vitess-replication            /docs/reference/vitess-replication
+
 
 # Splat-style redirects
 /advanced          /docs/advanced
 /advanced/*        /docs/advanced/:splat
 /contributing      /docs/contributing
 /contributing/*    /docs/contributing/:splat
-/getting-started   /docs/getting-started
-/getting-started/* /docs/getting-started/:splat
+/getting-started   /docs/tutorials
+/getting-started/* /docs/tutorials/:splat
 /overview          /docs/overview
 /overview/*        /docs/overview/:splat
 /reference         /docs/reference
