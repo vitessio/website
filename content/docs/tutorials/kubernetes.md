@@ -96,7 +96,7 @@ You can also browse to the vtctld console using the following command (Ubuntu):
 
 ### Minikube Customizations
 
-The helm example is based on the the `values.yaml` file provided as the default helm chart for Vitess. The following overrides have been performed in order to run under minikube:
+The helm example is based on the `values.yaml` file provided as the default helm chart for Vitess. The following overrides have been performed in order to run under minikube:
 
 * `resources`: have been nulled out. This instructs the Kubernetes environment to use whatever is available. Note, this is not recommended for a production environment. In such cases, you should start with the baseline values provided in `helm/vitess/values.yaml` and iterate from those.
 * etcd and vtgate replicas are set to 1. In a production environment, there should be 3-5 etcd replicas. The number of vtgates will need to scale up based on cluster size.

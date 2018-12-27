@@ -133,7 +133,7 @@ The `client.py` file is a simple sample application that connects to `vtgate` an
     # ...
     ```
 
-There are also sample clients in the same directory for Java, PHP, and Go. See the comments at the top of each sample file for usa e instructions.
+There are also sample clients in the same directory for Java, PHP, and Go. See the comments at the top of each sample file for usage instructions.
 
 ### Tear down the cluster
 
