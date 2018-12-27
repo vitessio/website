@@ -107,7 +107,7 @@ If MySQL is configured to use Row-based Replication (RBR), the filtered replicat
 is performed the following way:
 
 1. The server process uses the primary vindex to compute the keyspace ID for every row coming throug the replication stream, and sends that row to the corresponding target shard.
-2. The target shard converts the row into the corresponding DML (Data Manipulation Languate) and applies the statement.
+2. The target shard converts the row into the corresponding DML (Data Manipulation Language) and applies the statement.
 
 If using RBR, it's generally required that you have full image turned on. However, if your Primary Vindex is also part of the Primary key, it's not required, because every RBR event
 will always contain the full primary key of its affected row.
