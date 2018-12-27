@@ -58,7 +58,7 @@ Two key ranges are consecutive if the end value of one range equals the start va
 
 ### Shard Names
 
-A shard's name identifies the start and end of the shard's key range, printed in hexadecimal and separated by a hyphen. For instance, if a shard's key range is the array of bytes beginning with [ 0x80 ] and ending, noninclusively, with [ 0xc0], then sthe shard's name is `80-c0`.
+A shard's name identifies the start and end of the shard's key range, printed in hexadecimal and separated by a hyphen. For instance, if a shard's key range is the array of bytes beginning with [ 0x80 ] and ending, noninclusively, with [ 0xc0], then the shard's name is `80-c0`.
 
 Using this naming convention, the following four shards would be a valid full partition:
 
