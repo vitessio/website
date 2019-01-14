@@ -1,26 +1,67 @@
 {{- $logoUrl        := "img/logos/vitess.png" | relURL }}
 {{- $docsSections   := where .Site.Sections "Section" "docs" }}
 {{- $currentSection := .CurrentSection.Name }}
+{{ $currentVersion  := index (split .File.Path "/") 1 }}
+{{ $allDocsVersions := .Site.Params.versions }}
 {{- $currentUrl     := .URL }}
+{{ $latest          := index .Site.Params.versions 0 }}
+{{ $isLatest        := eq $latest $currentVersion }}
 <div class="docs-menu">
-  <header class="docs-menu-header">
+  <header class="docs-menu-header has-text-centered">
     <a href="{{ .Site.BaseURL }}">
       <img class="docs-menu-logo" src="{{ $logoUrl }}">
     </a>
+
+    <br />
+
+    <div class="dropdown is-hoverable">
+      <div class="dropdown-trigger">
+        <button class="button is-primary" aria-haspopup="true" aria-controls="dropdown-menu">
+          <span>
+            Version <strong>{{ $currentVersion }}</strong>
+            {{ if $isLatest }}
+            (latest)
+            {{ end }}
+          </span>
+          <span class="icon is-small has-text-grey-lighter">
+            <i class="fas fa-angle-down" aria-hidden="true"></i>
+          </span>
+        </button>
+      </div>
+      <div class="dropdown-menu" id="dropdown-menu" role="menu">
+        <div class="dropdown-content">
+          {{ range $allDocsVersions }}
+          {{ $isLatest := eq . $latest }}
+          {{ if ne . $currentVersion  }}
+          
+          <a href="/docs/{{ . }}" class="dropdown-item">
+            Version <strong>{{ . }}</strong>
+            {{ if $isLatest }}
+            (latest)
+            {{ end }}
+          </a>
+          {{ end }}
+          {{ end }}
+        </div>
+      </div>
+    </div>
   </header>
 
   <aside class="docs-menu-bar">
-    {{- range $docsSections }}
-    {{- $isCurrentPage := eq .URL $currentUrl }}
     <div class="docs-section">
-      <a class="docs-section-title{{ if $isCurrentPage }} is-active{{ end }}" href="{{ .URL }}">
-        {{ .Title }}
+      <a class="docs-section-title" href="/docs/{{ $currentVersion }}">
+        Vitess {{ $currentVersion }} Home
       </a>
     </div>
 
+    {{- range $docsSections }}
     {{- range .Sections }}
-    {{- $isCurrentSection := eq $currentSection .Name }}
+  
 
+    {{- range .Sections }}
+    {{ $version := index (split .File.Path "/") 1 }}
+    {{ if eq $version $currentVersion }}
+    {{- $isCurrentSection := eq $currentSection .Name }}
     <div class="docs-section">
       <a class="docs-section-title{{ if $isCurrentSection }} is-active{{ end }}" href="{{ .URL }}">
         {{ .Name }}
@@ -41,6 +82,8 @@
       </div>
       {{- end }}
     </div>
+    {{ end }}
+    {{- end }}
     {{- end }}
     {{- end }}
   </aside>

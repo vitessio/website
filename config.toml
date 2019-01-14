@@ -9,6 +9,7 @@ pygmentsStyle = "fruity"
 
 [params]
 description = "A database clustering system for horizontal scaling of MySQL"
+versions = ["2.0", "1.0"]
 
 [params.home]
 title = "Vitess is a database clustering system for horizontal scaling of MySQL"
@@ -24,3 +25,4 @@ stackoverflow = "vitess"
 
 [params.blog]
 subtitle = "Updates and insights from the **Vitess** team."
+
