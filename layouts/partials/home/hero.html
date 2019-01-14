@@ -1,6 +1,6 @@
 {{- $logoUrl := "img/logos/vitess.png" | relURL }}
-{{- $title   := .Site.Params.home.title | markdownify }}
-{{ $latest := index .Site.Params.versions 0 }}
+{{- $title   := site.Params.home.title | markdownify }}
+{{ $latest   := index site.Params.versions 0 }}
 <section class="hero is-dark">
   <div class="container">
     <div class="hero-body has-text-centered">

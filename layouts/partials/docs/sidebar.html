@@ -1,14 +1,14 @@
 {{- $logoUrl        := "img/logos/vitess.png" | relURL }}
-{{- $docsSections   := where .Site.Sections "Section" "docs" }}
+{{- $docsSections   := where site.Sections "Section" "docs" }}
 {{- $currentSection := .CurrentSection.Name }}
 {{ $currentVersion  := index (split .File.Path "/") 1 }}
-{{ $allDocsVersions := .Site.Params.versions }}
+{{ $allDocsVersions := site.Params.versions }}
 {{- $currentUrl     := .URL }}
-{{ $latest          := index .Site.Params.versions 0 }}
+{{ $latest          := index site.Params.versions 0 }}
 {{ $isLatest        := eq $latest $currentVersion }}
 <div class="docs-menu">
   <header class="docs-menu-header has-text-centered">
-    <a href="{{ .Site.BaseURL }}">
+    <a href="{{ site.BaseURL }}">
       <img class="docs-menu-logo" src="{{ $logoUrl }}">
     </a>
 
