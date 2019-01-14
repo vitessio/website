@@ -1,0 +1,4 @@
+{{- $latest := index .Site.Params.versions 0 -}}
+/docs     /docs/{{ $latest }}
+/docs/latest     /docs/{{ $latest }}
+/docs/latest/*     /docs/{{ $latest }}/:splat
