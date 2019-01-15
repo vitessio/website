@@ -20,7 +20,9 @@
         {{- if .Sections }}
         {{ partial "docs/landing-page.html" . }}
         {{- else }}
+        {{ if gt 0 (len .Sections) }}
         {{ partial "docs/pages-in-section.html" . }}
+        {{ end }}
 
         <hr class="has-background-grey" />
 

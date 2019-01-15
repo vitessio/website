@@ -1,6 +1,7 @@
 {{- $docsSections   := where site.Sections "Section" "docs" }}
 {{- $path           := .File.Path }}
 {{- $editUrl        := printf "https://github.com/vitessio/website/tree/master/content/%s" $path }}
+{{ $currentVersion  := index (split .File.Path "/") 1 }}
 <header class="docs-header">
   <p class="title is-size-1 is-size-2-mobile has-text-weight-light{{ if .Params.description }} is-spaced{{ end }}">
     {{ .Title }}
@@ -36,6 +37,10 @@
       <div class="dropdown-menu" id="docs-menu" role="menu">
         <div class="dropdown-content">
           {{- range $docsSections }}
+          {{ range .Sections }}
+          {{ $version := index (split .File.Path "/") 1 }}
+          {{ $isCurrentVersion := eq $version $currentVersion }}
+          {{ if $isCurrentVersion }}
           <a class="dropdown-item has-text-weight-bold" href="{{ .URL }}">
             {{ .Name }}
           </a>
@@ -51,6 +56,8 @@
           <a class="dropdown-item" href="{{ .URL }}">
             {{ .Title }}
           </a>
+          {{- end }}
+          {{- end }}
           {{- end }}
           {{- end }}
           {{- end }}

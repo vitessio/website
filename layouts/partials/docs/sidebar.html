@@ -6,6 +6,7 @@
 {{- $currentUrl     := .URL }}
 {{ $latest          := index site.Params.versions 0 }}
 {{ $isLatest        := eq $latest $currentVersion }}
+{{ $isDocsRoot      := eq .URL (printf "/docs/%s/" $currentVersion) }}
 <div class="docs-menu">
   <header class="docs-menu-header has-text-centered">
     <a href="{{ site.BaseURL }}">
@@ -49,7 +50,7 @@
 
   <aside class="docs-menu-bar">
     <div class="docs-section">
-      <a class="docs-section-title" href="/docs/{{ $currentVersion }}">
+      <a class="docs-section-title{{ if $isDocsRoot }} is-active{{ end }}" href="/docs/{{ $currentVersion }}">
         Vitess {{ $currentVersion }} Home
       </a>
     </div>
