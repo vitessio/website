@@ -3,9 +3,9 @@ title: Row Based Replication
 weight: 7
 ---
 
-In Vitess 2.2, we are adding preliminary support for Row Based Replication. This document explains how we are managing it and how it affects various Vitess features.
+Since Vitess 2.2, Vitess has supported Row Based Replication. This document explains how it affects various Vitess features.
 
-See the Vitess and Replication document for an introduction on various types of replication and how it affects Vitess.
+See the [Vitess and Replication document](../vitess-replication) for an introduction on various types of replication and how it affects Vitess.
 
 ## MySQL Row Based Replication
 
@@ -74,10 +74,9 @@ We have future plans to:
 
 ## Unsupported Features
 
-This part describes the features that are not supported for RBR in Vitess as of March 2017:
+This part describes the features that are not supported for RBR in Vitess as of December 2018:
 
-* *Fractional timestamps for MariaDB*: not supported. This affects the objects of type TIMESTAMP, TIME and DATETIME. The way that feature is implemented in MariaDB, the binary logs do not contain enough information to be parsed, but instead MariaDB relies on the schema knowledge. This is very fragile. MySQL 5.6+ added new data types, and these are supported.
-* *JSON type in MySQL 5.7+*: the representation of these in the binlogs is a blob containing indexed binary data. Re-building the SQL version of the data, so it can be re-inserted during resharding, is not supported yet. It wouldn't however be a lot of work, with other libraries also supporting this, and the C++ MySQL code being well written and easy to read. See for instance https://github.com/shyiko/mysql-binlog-connector-java/pull/119
+* *Floating point columns*: This is because they are inherently inaccurate, and could cause inaccuracies while being replayed during resharding.
 * *Timezones support*: the binary logs store timestamps in UTC. When converting these to SQL, we print the UTC value. If the server is not in UTC, that will result in data corruption. Note: we are working on a fix for that one.
 
 ## Update Stream Extensions
@@ -91,5 +90,3 @@ Then, using this in conjunction with binlog-row-image would help provide a featu
 ## Vttablet Simplifications
 
 A lot of the work done by vttablet now is to find the Primary Key of the modified rows, to rewrite the queries in an efficient way and tag each statement with the Primary Key. None of this may be necessary with RBR.
-
-We plan to eventually add a `rbr_mode` flag to vttablet to disable all the things it can skip if RBR is used.

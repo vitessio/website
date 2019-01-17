@@ -58,7 +58,7 @@ Two key ranges are consecutive if the end value of one range equals the start va
 
 ### Shard Names
 
-A shard's name identifies the start and end of the shard's key range, printed in hexadecimal and separated by a hyphen. For instance, if a shard's key range is the array of bytes beginning with [ 0x80 ] and ending, noninclusively, with [ 0xc0], then sthe shard's name is `80-c0`.
+A shard's name identifies the start and end of the shard's key range, printed in hexadecimal and separated by a hyphen. For instance, if a shard's key range is the array of bytes beginning with [ 0x80 ] and ending, noninclusively, with [ 0xc0], then the shard's name is `80-c0`.
 
 Using this naming convention, the following four shards would be a valid full partition:
 
@@ -107,7 +107,7 @@ If MySQL is configured to use Row-based Replication (RBR), the filtered replicat
 is performed the following way:
 
 1. The server process uses the primary vindex to compute the keyspace ID for every row coming throug the replication stream, and sends that row to the corresponding target shard.
-2. The target shard converts the row into the corresponding DML (Data Manipulation Languate) and applies the statement.
+2. The target shard converts the row into the corresponding DML (Data Manipulation Language) and applies the statement.
 
 If using RBR, it's generally required that you have full image turned on. However, if your Primary Vindex is also part of the Primary key, it's not required, because every RBR event
 will always contain the full primary key of its affected row.

@@ -8,7 +8,7 @@ This document defines common Vitess terminology and explains some core concepts.
 
 ## Keyspace
 
-A *keyspace* is a logical database. If you're using [sharding](http://en.wikipedia.org/wiki/Shard_(database_architecture)), a keyspace maps to multiple MySQL databases; if you're not using sharding, a keyspace maps directly to a MySQL database name.  In either case, a keyspace appears as a single database from the standpoing of the the application.
+A *keyspace* is a logical database. If you're using [sharding](http://en.wikipedia.org/wiki/Shard_(database_architecture)), a keyspace maps to multiple MySQL databases; if you're not using sharding, a keyspace maps directly to a MySQL database name.  In either case, a keyspace appears as a single database from the standpoint of the application.
 
 Reading data from a keyspace is just like reading from a MySQL database. However, depending on the consistency requirements of the read operation, Vitess might fetch the data from a master database or from a replica. By routing each query to the appropriate database, Vitess allows your code to be structured as if it were reading from a single MySQL database.
 
@@ -18,7 +18,7 @@ The *keyspace ID* is the value that is used to decide on which shard a given row
 
 Using this technique means you can split a given shard by replacing it with two or more new shards that combine to cover the original range of keyspace IDs, without having to move any records in other shards.
 
-The keyspace ID itself is computed using a function of some column in your data, such as the user ID. Vitess allows you to choose from a variety of functions ([vindexes](../../schema-management/vschema/) to perform this mapping. This allows you to choose the right one to achieve optimal distribution of the data across shards.
+The keyspace ID itself is computed using a function of some column in your data, such as the user ID. Vitess allows you to choose from a variety of functions ([vindexes](../../schema-management/vschema/)) to perform this mapping. This allows you to choose the right one to achieve optimal distribution of the data across shards.
 
 ## VSchema
 

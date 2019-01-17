@@ -5,7 +5,7 @@ weight: 8
 
 This document highlights things to look after when upgrading a Vitess production installation to a newer Vitess release.
 
-Generally speaking, upgrading Vitess is a safe and and easy process because it is explicitly designed for it. This is because in YouTube we follow the practice of releasing new versions often (usually from the tip of the Git master branch).
+Generally speaking, upgrading Vitess is a safe and easy process because it is explicitly designed for it. This is because in YouTube we follow the practice of releasing new versions often (usually from the tip of the Git master branch).
 
 ## Compatibility
 
@@ -21,12 +21,10 @@ We recommend to upgrade components in a bottom-to-top order such that "old" clie
 
 Please use this upgrade order (unless otherwise noted in the release notes):
 
-* vtctld
 * vttablet
+* vtctld
 * vtgate
 * application code which links client libraries
-
-`vtctld` is listed first to make sure that you can still adminstrate Vitess - or if not find out as soon as possible.
 
 ## Canary Testing
 

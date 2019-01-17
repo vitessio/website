@@ -13,7 +13,7 @@ In the mode with the highest control, VTTablet can take backups. It can also aut
 
 It will also load other information from the my.cnf, like the location of data files, etc. When it receives a request to take a backup, it will shut down mysql, copy the mysql data files to the backup store, and restart mysql.
 
-The my.cnf file can be specified the following ways:
+The my.cnf file can be specified in the following ways:
 
 * Implicit: If mysql was initialized by the `mysqlctl` tool, then vttablet can find it based on just the `-tablet-path`. The default location for this file is `$VTDATAROOT/vt_<tablet-path>/my.cnf`.
 * `-mycnf-file`: This option can be used if the file is not present in the default location.

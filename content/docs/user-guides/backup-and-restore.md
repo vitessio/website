@@ -98,7 +98,7 @@ access to the location where you are storing backups.
         file with a JSON object as configuration. The JSON object requires the
         following keys: <code>accessKey</code>, <code>secretKey</code>,
         <code>endPoint</code> and <code>useSSL</code>. Bucket name is computed
-        from keyspace name and shard name and is separate for different
+        from keyspace name and shard name is separated for different
         keyspaces / shards.</td>
     </tr>
     <tr>

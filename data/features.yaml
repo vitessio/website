@@ -8,7 +8,7 @@
   description: Vitess automatically handles functions like master failovers and backups. It uses a lock server to track and administer servers, letting your application be blissfully ignorant of database topology.
   icon: tachometer-alt
 - title: Connection pooling
-  description: Vitess eliminates the high-memory overhead of MySQL connections. Its gRPC-based protocol lets Vitess servers easily handle thousands of connections at once.
+  description: Vitess eliminates the high-memory overhead of MySQL connections. Vitess servers easily handle thousands of connections at once.
   icon: share-alt
 - title: Shard management
   description: MySQL doesn't natively support sharding, but you will likely need it as your database grows. Vitess saves you from having to add sharding logic to your app and also enables live resharding with minimal read-only downtime.
