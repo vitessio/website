@@ -1,15 +1,15 @@
 {{- $isHome       := .IsHome }}
 {{- $isBlog       := eq .Section "blog" }}
-{{- $nav          := .Site.Data.nav }}
+{{- $nav          := site.Data.nav }}
 {{- $logoUrl      := "img/logos/vitess.png" | relURL }}
-{{- $social       := .Site.Params.social }}
-{{- $docs         := where .Site.Pages "Section" "docs" }}
-{{- $blogPosts    := where .Site.RegularPages "Section" "blog" }}
+{{- $social       := site.Params.social }}
+{{- $docs         := where site.Pages "Section" "docs" }}
+{{- $blogPosts    := where site.RegularPages "Section" "blog" }}
 <nav class="navbar is-fixed-top is-dark">
   <div class="container">
     <div class="navbar-brand">
       {{- if not $isHome }}
-      <a class="navbar-item" href="{{ .Site.BaseURL }}">
+      <a class="navbar-item" href="{{ site.BaseURL }}">
         <img src="{{ $logoUrl }}" alt="Vitess logo">
       </a>
       {{- end }}

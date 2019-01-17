@@ -1,4 +1,4 @@
-{{- $docsSections   := where .Site.Sections "Section" "docs" }}
+{{- $docsSections   := where site.Sections "Section" "docs" }}
 {{- $path           := .File.Path }}
 {{- $editUrl        := printf "https://github.com/vitessio/website/tree/master/content/%s" $path }}
 <header class="docs-header">

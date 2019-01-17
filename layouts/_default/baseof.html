@@ -4,7 +4,7 @@
   <head>
     {{ partial "meta.html" . }}
     <title>
-      {{ block "title" . }}{{ .Site.Title }} | {{ .Site.Params.description }}{{ end }}
+      {{ block "title" . }}{{ site.Title }} | {{ site.Params.description }}{{ end }}
     </title>
     {{ partial "css.html" . }}
   </head>
