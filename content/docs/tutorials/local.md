@@ -183,7 +183,7 @@ In addition, Vitess requires the software and libraries listed below.
 
     ```sh
     # Remaining commands to build Vitess
-    . ./dev.env
+    source ./dev.env
     make build
     ```
 
@@ -831,4 +831,4 @@ You can delete the whole example if you are not proceeding to another exercise:
 
 ``` sh
 ./401_teardown.sh
-`
+```
