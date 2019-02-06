@@ -60,8 +60,8 @@ Setting up these components directly -- for example, writing your own topology s
 
 **Related Vitess Documentation**
 
-* [Running Vitess on Kubernetes](../../getting-started/kubernetes)
-* [Running Vitess locally](../../getting-started/local)
+* [Running Vitess on Kubernetes](../../tutorials/kubernetes)
+* [Running Vitess locally](../../tutorials/local)
 * [Backing up data](../../user-guides/backup-and-restore)
 * [Reparenting - basic assignment of master instance in Vitess](../../user-guides/reparenting)
 
