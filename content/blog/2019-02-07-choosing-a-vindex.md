@@ -37,5 +37,5 @@ No. Vitess does not support updating primary vindex columns, even if it will sta
 
 Finally, after we have decided on our column value, we can settle on a map type. Vitess supports some predefined ones such as identities, md5 hashes, bit reversal, and others, but you can also define your own! For most cases, identities and binary md5s work great, but there are some exceptions. While not common, certain use cases involving geolocation may warrant these custom defined vindexes. For example, when you want to co-locate information from a certain region or customer, you can create functions that take information from the columns and create the keyspace ID to have expected similar properties. This allows you to have finer grained control over your shard ranges. 
 
-If you have any other questions, check the article on it in our [documentation](https://vitess.io/docs/schema-management/vschema/) or head on over to the [Vitess Slack channel](https://vitess.slack.com/messages)
+If you have any other questions, check the article on it in our [documentation](https://vitess.io/docs/schema-management/vschema/) or head on over to the [Vitess Slack channel!](https://vitess.slack.com/messages)
 
