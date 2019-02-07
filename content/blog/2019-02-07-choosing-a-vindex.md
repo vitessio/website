@@ -22,7 +22,7 @@ Half the battle of designing a VSchema is choosing a strong primary vindex - you
 
 Let’s break this down. Uniqueness just means that a vindex will map a column value to only one keyspace ID (or none at all). Remember that all vindexes need to do is direct our queries to the correct shard, so it’s okay if another column value maps to the same keyspace ID - it’s Vitess’ job to figure that out. 
 
-**Note:** If a vindex maps a column value to a null keyspace ID, Vitess will simply error out or neutralize the query depending on the query type.*
+**Note:** If a vindex maps a column value to a null keyspace ID, Vitess will simply error out or neutralize the query depending on the query type.
 
 Co-location is a critical concept to understand and should heavily influence your sharding scheme. When Vitess performs operations on your keyspaces, you want as many of them to be isolated to a single shard as possible. This can be easily achieved by using the same primary vindex for multiple tables, as all rows tied to the same primary index will automatically be located in the same shard due to the uniqueness property of the vindex map. 
 
