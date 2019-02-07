@@ -120,8 +120,8 @@ Vitess offers robust resharding support, which involves updating the sharding sc
 
 * [VSchema Reference guide](../../schema-management/vschema)
 * [Sharding](../../sharding)
-* [Horizontal sharding (Codelab)](link)
-* [Sharding in Kubernetes (Codelab)](link)
+* [Horizontal sharding](../../tutorials/local/)
+* [Sharding in Kubernetes](../../tutorials/kubernetes/)
 
 ## Related tasks
 
