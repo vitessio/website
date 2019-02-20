@@ -26,9 +26,9 @@ In addition, Vitess requires the software and libraries listed below.
 
 1.  [Install Go 1.11+](http://golang.org/doc/install).
 
-2.  Install [MariaDB 10.0](https://downloads.mariadb.org/) or [MySQL 5.6](http://dev.mysql.com/downloads/mysql). You can use any installation method (src/bin/rpm/deb), but be sure to include the client development headers (`libmariadbclient-dev` or `libmysqlclient-dev`).
+2.  Install [MariaDB 10.0 (or later)](https://downloads.mariadb.org/) or [MySQL 5.6 (or later)](http://dev.mysql.com/downloads/mysql). You can use any installation method (src/bin/rpm/deb), but be sure to include the client development headers (`libmariadbclient-dev` or `libmysqlclient-dev`).
 
-    The Vitess development team currently tests against MariaDB 10.0.21 and MySQL 5.6.27.
+    Vitess tests are written to run against all MySQL and MariaDB flavors (mysql 5.6, MySql 5.7, MariaDB 10.2, MariaDB 10.3, Percona 5.6, Percona 5.7 as of this writing), however the CI system only uses the MySQL 5.7 images to run the official tests.
 
     If you are installing MariaDB, note that you must install version 10.0 or higher. If you are using `apt-get`, confirm that your repository offers an option to install that version. You can also download the source directly from [mariadb.org](https://downloads.mariadb.org/mariadb/).
 
@@ -183,7 +183,7 @@ In addition, Vitess requires the software and libraries listed below.
 
     ```sh
     # Remaining commands to build Vitess
-    . ./dev.env
+    source ./dev.env
     make build
     ```
 
@@ -831,4 +831,4 @@ You can delete the whole example if you are not proceeding to another exercise:
 
 ``` sh
 ./401_teardown.sh
-`
+```
