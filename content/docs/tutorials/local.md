@@ -84,7 +84,7 @@ In addition, Vitess requires the software and libraries listed below.
     Java runtime, such as [OpenJDK](https://openjdk.java.net/).
 
     ```sh
-    $ sudo apt-get install openjdk-7-jre
+    $ sudo apt-get install openjdk-8-jre
     ```
 
 #### Mac OS
@@ -141,7 +141,7 @@ In addition, Vitess requires the software and libraries listed below.
     cd $WORKSPACE
     git clone https://github.com/vitessio/vitess.git \
         src/vitess.io/vitess
-    ln -s src/vitess.io ${HOME}/go/src/vitess.io
+    ln -s $(pwd)/src/vitess.io ${HOME}/go/src/vitess.io
     cd ${HOME}/go/src/vitess.io/vitess
     ```
 
