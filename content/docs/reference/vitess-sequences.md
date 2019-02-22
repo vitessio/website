@@ -137,7 +137,7 @@ create table user_seq(id int, next_id bigint, cache bigint, primary key(id)) com
 insert into user_seq(id, next_id, cache) values(0, 1, 100);
 ```
 
-Then, the Sequence has to be define in the VSchema for that keyspace:
+Then, the Sequence has to be defined in the VSchema for that keyspace:
 
 ``` json
 {
