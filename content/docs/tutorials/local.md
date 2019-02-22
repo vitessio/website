@@ -812,7 +812,7 @@ COrder
 After celebrating your second successful resharding, you are now ready to clean up the leftover artifacts:
 
 ``` sh
-./306_down_shard.sh
+./306_down_shard_0.sh
 ```
 
 In this script, we just stopped all tablet instances for shard 0. This will cause all those vttablet and mysqld processes to be stopped. But the shard metadata is still present. We can clean that up with this command (after all vttablets have been brought down):
