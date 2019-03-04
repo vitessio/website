@@ -1566,7 +1566,7 @@ Deletes the specified shard(s). In recursive mode, it also deletes all tablets b
 
 ### EmergencyReparentShard
 
-Reparents the shard to the new master. Assumes the old master is dead and not responsding.
+Reparents the shard to the new master. Assumes the old master is dead and not responding.
 
 #### Example
 
