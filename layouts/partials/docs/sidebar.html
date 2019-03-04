@@ -1,10 +1,10 @@
 {{- $logoUrl        := "img/logos/vitess.png" | relURL }}
-{{- $docsSections   := where .Site.Sections "Section" "docs" }}
+{{- $docsSections   := where site.Sections "Section" "docs" }}
 {{- $currentSection := .CurrentSection.Name }}
 {{- $currentUrl     := .URL }}
 <div class="docs-menu">
   <header class="docs-menu-header">
-    <a href="{{ .Site.BaseURL }}">
+    <a href="{{ site.BaseURL }}">
       <img class="docs-menu-logo" src="{{ $logoUrl }}">
     </a>
   </header>

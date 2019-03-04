@@ -1,4 +1,4 @@
-{{- $jsFiles := .Site.Params.assets.js }}
+{{- $jsFiles := site.Params.assets.js }}
 {{- range $jsFiles }}
 {{- $path := printf "js/%s.js" . }}
 {{- $js := resources.Get $path | minify | fingerprint }}
