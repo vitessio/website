@@ -1,7 +1,7 @@
-{{- $features := .Site.Data.features }}
+{{- $features := site.Data.features }}
 <section class="section is-light">
   <div class="container">
-    <div class="columns">
+    <div class="columns is-variable is-8">
       <div class="column">
         {{- range first 3 $features }}
         {{ partial "home/feature.html" . }}

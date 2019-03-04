@@ -1,36 +1,26 @@
 {{- $userLogos := readDir "static/img/logos/users" }}
 <section class="section">
-  <div class="container has-text-centered">
-    <div class="columns">
-      <div class="column is-thin">
-        <p class="is-size-2 is-size-3-mobile" id="who-uses">
+  <div class="container">
+    <div class="columns is-vcentered">
+      <div class="column is-one-third">
+        <p class="title is-spaced is-size-2 is-size-3-mobile has-text-dark has-text-weight-light" id="who-uses">
           Who uses Vitess
         </p>
 
-        <hr class="has-background-orange" />
 
+
+        <a class="button is-small is-primary has-text-weight-bold" href="https://github.com/vitessio/website/#adding-a-user-logo" target="_blank">
+          Add your logo
+        </a>
+      </div>
+
+      <div class="column">
         <div class="is-user-logo-section">
           {{- range $userLogos }}
           {{- $imgUrl := printf "img/logos/users/%s" .Name }}
           <img class="is-user-logo" src="{{ $imgUrl }}">
           {{- end }}
         </div>
-
-        <br />
-
-        <p class="is-size-5 has-text-primary">
-          Want to see your logo in this space?<br />Follow the instructions <a href="https://github.com/vitessio/website/#adding-a-user-logo">here</a>
-        </p>
-      </div>
-
-      <div class="column is-thin">
-        <p class="is-size-2 is-size-3-mobile">
-          An introducton to Vitess
-        </p>
-
-        <hr class="has-background-orange" />
-
-        <iframe class="is-video" src="https://www.youtube.com/embed/q65TleTn2vg?rel=0" allowfullscreen="" width="480" height="270" frameborder="0"></iframe>
       </div>
     </div>
   </div>

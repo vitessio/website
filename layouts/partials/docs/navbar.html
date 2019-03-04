@@ -1,10 +1,10 @@
 {{- $logoUrl      := "img/logos/vitess.png" | relURL }}
-{{- $nav          := .Site.Data.nav }}
-{{- $docsSections := where .Site.Sections "Section" "docs" }}
-{{- $social       := .Site.Params.social }}
+{{- $nav          := site.Data.nav }}
+{{- $docsSections := where site.Sections "Section" "docs" }}
+{{- $social       := site.Params.social }}
 <nav class="navbar docs-navbar is-dark">
   <div class="navbar-brand">
-    <a class="navbar-item is-hidden-desktop" href="{{ .Site.BaseURL }}">
+    <a class="navbar-item is-hidden-desktop" href="{{ site.BaseURL }}">
       <img src="{{ $logoUrl }}" alt="Vitess logo">
     </a>
 
@@ -17,7 +17,7 @@
 
   <div class="navbar-menu">
     <div class="navbar-end">
-      <a class="navbar-item has-text-weight-bold" href="{{ .Site.BaseURL }}">
+      <a class="navbar-item has-text-weight-bold" href="{{ site.BaseURL }}">
         Home
       </a>
 

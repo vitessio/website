@@ -1,6 +1,6 @@
 {{ define "main" }}
-{{- $subtitle := .Site.Params.blog.subtitle | markdownify }}
-{{- $posts    := where .Site.RegularPages "Section" "blog" }}
+{{- $subtitle := site.Params.blog.subtitle | markdownify }}
+{{- $posts    := where site.RegularPages "Section" "blog" }}
 
 {{ partial "navbar.html" . }}
 {{ partial "blog/hero.html" . }}
