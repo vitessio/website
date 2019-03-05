@@ -12,7 +12,7 @@
 /user-guide/server-configuration          /docs/launching/server-configuration
 /user-guide/scalability-philosophy        /docs/launching/scalability-philosophy
 /user-guide/horizontal-sharding           /docs/tutorials/local
-/user-guide/horizontal-sharding-workflow  /docs/tutorials/local
+/user-guide/horizontal-sharding-workflow  /docs/tutorials/local/#workflow
 /user-guide/mysql-server-protocol         /docs/reference/mysql-server-protocol
 /user-guide/production-planning           /docs/launching/production-planning
 /user-guide/row-based-replication         /docs/reference/row-based-replication
@@ -22,7 +22,8 @@
 /user-guide/troubleshooting               /docs/launching/troubleshooting
 /user-guide/update-stream                 /docs/reference/update-stream
 /user-guide/vitess-replication            /docs/reference/vitess-replication
-
+/getting-started/local-instance		  /docs/tutorials/local
+/user-guide/vschema.html		  /docs/schema-management/vschema/
 
 # Splat-style redirects
 /advanced          /docs/advanced
