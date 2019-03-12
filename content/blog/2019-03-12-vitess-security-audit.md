@@ -40,7 +40,7 @@ promises they make.”
 
 The auditors identified three areas of improvement for the Vitess team to work on. We thank Cure53, CNCF, The Linux Foundation and all project contributors for their assistance. 
 
-Click [here](../files/VIT-01-report.pdf) to read the report in full.  
+Click [here](../../files/VIT-01-report.pdf) to read the report in full.  
 
 
 
