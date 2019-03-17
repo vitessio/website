@@ -1,5 +1,6 @@
 /vitess/*   go-get=1 /go-import/vitess.html   200
 /messages/* go-get=1 /go-import/messages.html 200
+/operator/* go-get=1 /go-import/operator.html 200
 
 # User guide redirects
 /user-guide/schema-management             /docs/schema-management
