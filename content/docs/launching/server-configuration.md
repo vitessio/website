@@ -112,7 +112,7 @@ Vitess servers are written in Go. There are a few Vitess-specific knobs that app
 
 ### Go version
 
-Go, being a young language, tends to add major improvements over each version. So, the latest Go version is almost always recommended. Note that the latest Go version may be higher than the minimum version we require for compiling the binaries (see ["Prerequisites" section in the Getting Started guide](../../getting-started/kubernetes/#prerequisites)).
+Go, being a young language, tends to add major improvements over each version. So, the latest Go version is almost always recommended. Note that the latest Go version may be higher than the minimum version we require for compiling the binaries (see ["Prerequisites" section in the Getting Started guide](../../tutorials/kubernetes/#prerequisites)).
 
 ### GOMAXPROCS
 
@@ -537,7 +537,7 @@ You will need to run some cron jobs to archive or purge log files periodically.
 
 For the most part, Vitess is agnostic to the actions of Orchestrator, which operates below Vitess at the MySQL level. That means you can pretty much https://github.com/github/orchestrator/wiki/Orchestrator-Manual[set up Orchestrator](https://github.com/github/orchestrator/wiki/Orchestrator-Manual) in the normal way, with just a few additions as described below.
 
-For the [Kubernetes](../../getting-started/kubernetes) example, we provide a sample script to launch Orchestrator for you with these settings applied.
+For the [Kubernetes](../../tutorials/kubernetes) example, we provide a sample script to launch Orchestrator for you with these settings applied.
 
 #### Orchestrator configuration
 

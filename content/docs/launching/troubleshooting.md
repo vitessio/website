@@ -28,9 +28,9 @@ Diagnosis 4: No particular transaction seems to be the culprit. Nothing seems to
 
 ## Master starts up read-only
 
-To prevent accidentally accepting writes, our default my.cnf settings tell MySQL to always start up read-only. If the master MySQL gets restarted, it will thus come back read-only until you intervene to confirm that it should accept writes. You can use the [`SetReadWrite`](link) command to do that.
+To prevent accidentally accepting writes, our default my.cnf settings tell MySQL to always start up read-only. If the master MySQL gets restarted, it will thus come back read-only until you intervene to confirm that it should accept writes. You can use the `SetReadWrite` command to do that.
 
-However, usually if something unexpected happens to the master, it's better to reparent to a different replica with [`EmergencyReparentShard`](link). If you need to do planned maintenance on the master, it's best to first reparent to another replica with [`PlannedReparentShard`](link).
+However, usually if something unexpected happens to the master, it's better to reparent to a different replica with `EmergencyReparentShard`. If you need to do planned maintenance on the master, it's best to first reparent to another replica with `PlannedReparentShard`.
 
 ## Vitess sees the wrong tablet as master
 

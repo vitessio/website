@@ -295,7 +295,7 @@ global and local data. A local cell record still needs to be created, just use
 the same server address, and very importantly a *different* root directory.
 
 [Zookeeper
-Observers](https://zookeeper.apache.org/doc/trunk/zookeeperObservers.html) can
+Observers](https://zookeeper.apache.org/doc/current/zookeeperObservers.html) can
 also be used to limit the load on the global Zookeeper.  They are configured by
 specifying the adresses of the observers in the server address, after a `|`,
 for instance:
