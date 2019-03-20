@@ -309,7 +309,7 @@ Thank you, I’ve got a couple of ideas I will try.
 
 **raj.veerappan [Aug 2nd]**
 
-Another question on https://vitess.io/overview/scaling-mysql/#migrating-production-data-to-vitess
+Another question on https://vitess.io/docs/overview/scalingwithvitess/#migrating-production-data-to-vitess
 
 In that approach, you'd enable MySQL replication from your source database to the Vitess master database.
 
