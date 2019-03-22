@@ -5,13 +5,15 @@ weight: 5
 
 ## Statement vs Row Based Replication
 
-MySQL supports two primary modes of replication in its binary logs: statement or row based. Vitess supports both these modes.
+MySQL supports two primary modes of replication in its binary logs: statement (SBR) or row based (RBR). Vitess traditionally supported both these modes. 
+
+{{< info >}}
+As of May 1 2019, Vitess will begin deprecating support for statement-based replication. We will announce more details of SBR deprecation in a blog post.
+{{< /info >}}
 
 For schema changes, if the number of affected rows is greater > 100k (configurable), we don't allow direct application of DDLs. The recommended tools in such cases are [gh-ost](https://github.com/github/gh-ost) or [pt-osc](https://www.percona.com/doc/percona-toolkit/LATEST/pt-online-schema-change.html).
 
 Not all statements are safe for Statement Based Replication (SBR): https://dev.mysql.com/doc/refman/8.0/en/replication-rbr-safe-unsafe.html. Vitess rewrites some of these statements to be safe for SBR, and others are explicitly failed. This is described in detail below.
-
-With statement based replication, it becomes easier to perform offline advanced schema changes, or large data updates. Vitess’s solution is called schema swap (described below).
 
 ## Rewriting Update Statements
 
@@ -33,28 +35,6 @@ With this rewrite in effect, we know exactly which rows are affected, by primary
 The replication stream then doesn’t contain the expensive WHERE clauses, but only the UPDATE statements by primary key. In a sense, it is combining the best of row based and statement based replication: the slaves only do primary key based updates, but the replication stream is very friendly for schema changes.
 
 Also, Vitess adds comments to the rewritten statements that identify the primary key affected by that statement. This allows us to produce an Update Stream (see section below).
-
-## Vitess Schema Swap
-
-Within YouTube, we also use a combination of statement based replication and backups to apply long-running schema changes without disrupting ongoing operations. See the [schema swap](../../schema-management/schema-swap) tutorial for a detailed example.
-
-This operation, which is called **schema swap**, works as follows:
-
-* Pick a slave, take it out of service. It is not used by clients any more.
-* Apply whatever schema or large data change is needed, on the slave.
-* Take a backup of that slave.
-* On all the other slaves, one at a time, take them out of service, restore the backup, catch up on replication, put them back into service.
-* When all slaves are done, reparent to a slave that has applied the change.
-* The old master can then be restored from a backup too, and put back into service.
-
-With this process, the only guarantee we need is for the change (schema or data) to be backward compatible: the clients won’t know if they talk to a server that has applied the change yet or not. This is usually fairly easy to deal with:
-
-* When adding a column, clients cannot use it until the schema swap is done.
-* When removing a column, all clients must stop referring to it before the schema swap begins.
-* A column rename is still tricky: the best way to do it is to add a new column with the new name in one schema swap, then change the client to populate both (and backfill the values), then change the client again to use the new column only, then use another schema swap to remove the original column.
-* A whole bunch of operations are really easy to perform though: index changes, optimize table, …
-
-Note the real change is only applied to one instance. We then rely on the backup / restore process to propagate the change. This is a very good improvement from letting the changes through the replication stream, where they are applied to all hosts, not just one. This is also a very good improvement over the industry practice of online schema change, which also must run on all hosts. Since Vitess’s backup / restore and reparent processes are very reliable (they need to be reliable on their own, independently of this process!), this does not add much more complexity to a running system.
 
 ## Update Stream
 
