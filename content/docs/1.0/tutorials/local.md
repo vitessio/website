@@ -84,7 +84,7 @@ In addition, Vitess requires the software and libraries listed below.
     Java runtime, such as [OpenJDK](https://openjdk.java.net/).
 
     ```sh
-    $ sudo apt-get install openjdk-7-jre
+    $ sudo apt-get install openjdk-8-jre
     ```
 
 #### Mac OS
@@ -141,7 +141,7 @@ In addition, Vitess requires the software and libraries listed below.
     cd $WORKSPACE
     git clone https://github.com/vitessio/vitess.git \
         src/vitess.io/vitess
-    ln -s src/vitess.io ${HOME}/go/src/vitess.io
+    ln -s $(pwd)/src/vitess.io ${HOME}/go/src/vitess.io
     cd ${HOME}/go/src/vitess.io/vitess
     ```
 
@@ -812,7 +812,7 @@ COrder
 After celebrating your second successful resharding, you are now ready to clean up the leftover artifacts:
 
 ``` sh
-./306_down_shard.sh
+./306_down_shard_0.sh
 ```
 
 In this script, we just stopped all tablet instances for shard 0. This will cause all those vttablet and mysqld processes to be stopped. But the shard metadata is still present. We can clean that up with this command (after all vttablets have been brought down):

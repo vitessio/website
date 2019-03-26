@@ -64,5 +64,5 @@ Here is a short list of all the basic workflows Vitess supports:
 * [Failover](../../user-guides/upgrading/) / [Reparents](../../user-guides/reparenting/)
 * [Backup/Restore](../../user-guides/backup-and-restore)
 * [Schema Management](../../schema-management) / [Schema Swap](../../schema-management/schema-swap)
-* [Resharding](../../sharding/#resharding) / [Horizontal Resharding Tutorial](../../sharding/horizontal-sharding-workflow/)
+* [Resharding](../../sharding/#resharding) / [Horizontal Resharding Tutorial](../../tutorials/local/)
 * [Upgrading](../../user-guides/upgrading)

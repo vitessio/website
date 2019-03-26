@@ -71,7 +71,7 @@ Let's start by looking at the MySQL auto-increment feature:
   set the current value.
 
 * The value used by the master in a statement is sent in the replication stream,
-  so slaves will have the same value when re-playing the stream.
+  so replicas will have the same value when re-playing the stream.
 
 * There is no strict guarantee about ordering: two concurrent statements may
   have their commit time in one order, but their auto-incrementing ID in the
@@ -100,11 +100,9 @@ the MySQL table is only done every N IDs (N being configurable), and in between
 only memory structures in vttablet are updated, making the QPS only limited by
 RPC latency.
 
-In a sharded keyspace, a Sequence's data is only present in one shard (but its
-schema is in all the shards). We configure which shard has the data by using a
-keyspace_id for the sequence, and route all sequence traffic to the shard that
-hold that keyspace_id. That way we are completely compatible with any horizontal
-resharding.
+The sequence table then is an unsharded single row table that Vitess can use to generate monotonically increasing ids. The VSchema allows you to associate a column of a table with the sequence table. Once they are associated, an insert on that table will transparently fetch an id from the sequence table, fill in the value, and route the row to the appropriate shard.
+
+Since sequences are unsharded tables, they will be stored in the database (in our tutorial example, this is the commerce database).
 
 The final goal is to have Sequences supported with SQL statements, like:
 
@@ -139,7 +137,7 @@ create table user_seq(id int, next_id bigint, cache bigint, primary key(id)) com
 insert into user_seq(id, next_id, cache) values(0, 1, 100);
 ```
 
-Then, the Sequence has to be define in the VSchema for that keyspace:
+Then, the Sequence has to be defined in the VSchema for that keyspace:
 
 ``` json
 {

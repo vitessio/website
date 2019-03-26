@@ -123,7 +123,7 @@ In addition, Vitess applies the following rules when assessing the impact of a p
 * `ALTER` statements are only allowed if the table on the shard's master tablet has 100,000 rows or less.
 * For all other statements, the table on the shard's master tablet must have 2 million rows or less.
 
-If a schema change gets rejected because it affects too many rows, you can specify the flag `-allow_long_unavailability` to tell `ApplySchema` to skip this check. However, we do not recommend this. Instead, you should apply large schema changes by following the [schema swap](../schema-swap) process.
+If a schema change gets rejected because it affects too many rows, you can specify the flag `-allow_long_unavailability` to tell `ApplySchema` to skip this check. However, we do not recommend this. Instead, you should apply large schema changes by following the [schema swap](../schema-management/schema-swap) process.
 
 ### ApplyVSchema
 

@@ -95,7 +95,7 @@ The *replication graph* identifies the relationships between master databases an
 
 The [*Topology Service*](../../user-guides/topology-service) is a set of backend processes running on different servers. Those servers store topology data and provide a distributed locking service.
 
-Vitess uses a plug-in system to support various backends for storing topology data, which are assumed to provide a distributed, consistent key-value store. By default, our [local example](../../getting-started/local) uses the ZooKeeper plugin, and the [Kubernetes example](../../getting-started/kubernetes) uses etcd.
+Vitess uses a plug-in system to support various backends for storing topology data, which are assumed to provide a distributed, consistent key-value store. By default, our [local example](../../tutorials/local) uses the ZooKeeper plugin, and the [Kubernetes example](../../tutorials/kubernetes) uses etcd.
 
 The topology service exists for several reasons:
 

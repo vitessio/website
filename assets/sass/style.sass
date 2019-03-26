@@ -1,6 +1,8 @@
+{{ $fontAwesomeVersion := site.Params.assets.fontawesomeversion }}
+{{ $fontAwesomeUrl     := printf "https://use.fontawesome.com/releases/v%s/css/all.css" $fontAwesomeVersion }}
 @charset "utf-8"
 
-@import url(https://use.fontawesome.com/releases/v5.4.1/css/all.css)
+@import url({{ $fontAwesomeUrl }})
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700)
 
 // Vitess colors
@@ -8,7 +10,7 @@ $vitess-orange: #f16626
 
 // Other brand colors
 $twitter-blue: #1da1f3
-$slack-green: #74cdb0
+$slack-green: #2EB67D
 $stack-overflow-orange: #f48024
 
 // CNCF colors
@@ -35,6 +37,9 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
 @import "bulma/bulma"
 
 @import "docs"
+
+.has-extra-padding
+  padding: 2.5rem
 
 .docs-article ul li
   margin-left: -.5rem
@@ -98,7 +103,7 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
     flex: 1
 
 .is-video
-  max-width: 100%
+  width: 100%
 
 .column
   &.is-thin
@@ -107,12 +112,12 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
 .is-user-logo-section
   display: flex
   flex-wrap: wrap
-  justify-content: space-around
+  justify-content: right
 
   .is-user-logo
-    max-height: 3rem
+    max-height: 2.5rem
     max-width: 10rem
-    margin: 1rem
+    margin: 1.25rem
 
 =logo($touch, $tablet)
   +touch
