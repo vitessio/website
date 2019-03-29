@@ -73,6 +73,6 @@ Before diving into the Vitess codebase, make yourself familiar with the system a
       -01, 01-02, ff-
     </details>
 
-* Go through the [Vitess Kubernetes tutorial](../getting-started/kubernetes).
+* Go through the [Vitess Kubernetes tutorial](../tutorials/kubernetes).
 
   * While going through the tutorial, look back at the [architecture](../overview/whatisvitess/#architecture) and match the processes you start in Kubernetes with the boxes in the diagram.
