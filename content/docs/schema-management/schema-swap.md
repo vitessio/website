@@ -13,7 +13,7 @@ One solution to realize such long-running schema changes is to use a temporary t
 
 Here we describe an alternative solution which uses a combination of MySQL's statement based replication and backups to apply the changes to all tablets. Since the long-running schema changes are applied to an offline tablet, ongoing operations are not affected. We called this process schema swap due to the way it's done, and therefore we refer to it by this name throughout the document.
 
-This tutorial outlines the necessary steps for a schema swap and is based on the [Vitess Kubernetes Getting Started Guide](../../getting-started/kubernetes).
+This tutorial outlines the necessary steps for a schema swap and is based on the [Vitess Kubernetes Getting Started Guide](../../tutorials/kubernetes).
 
 **At the high level, a schema swap comprises the following phases:**
 
@@ -34,7 +34,7 @@ Now let's carry out an actual schema swap based on our Guestbook example schema.
 ## Prerequisites
 
 {{< success >}}
-We assume that you have followed the [Vitess Kubernetes Getting Started Guide](../../getting-started/kubernetes) up to and including the step "9. Create a table".
+We assume that you have followed the [Vitess Kubernetes Getting Started Guide](../../tutorials/kubernetes) up to and including the step "9. Create a table".
 {{< /success >}}
 
 ## Schema Swap Steps
