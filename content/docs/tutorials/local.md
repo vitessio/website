@@ -541,7 +541,7 @@ NOTE: This example does not actually run this command.
 
 Note that the last argument of SplitDiff is the target (smaller) shard. You will need to run one job for each target shard. Also, you cannot run them in parallel because they need to take an `rdonly` instance offline to perform the comparison.
 
-NOTE: SplitDiff can be used to split shards as well as to merge them.
+NOTE: SplitClone can be used to split shards as well as to merge them.
 
 ### Cut over
 
