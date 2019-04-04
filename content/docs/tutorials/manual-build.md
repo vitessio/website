@@ -1,5 +1,5 @@
 ---
-title: Build from Source
+title: Building from Source
 description: Instructions for building Vitess from source for testing and development purposes
 weight: 3
 featured: true

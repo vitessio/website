@@ -15,7 +15,7 @@ If you run into issues or have questions, we recommend posting in our [Slack cha
 
 *The following example will use a simple commerce database to illustrate how Vitess can take you through the journey of scaling from a single database to a fully distributed and sharded cluster. This is a fairly common story, and it applies to many use cases beyond e-commerce.*
 
-It’s 2018 and, no surprise to anyone, people are still buying stuff online. You recently attended the first half of a seminar on disruption in the tech industry and want to create a completely revolutionary e-commerce site. In classic tech postmodern fashion, you call your products widgets instead of a more meaningful identifier and it somehow fits.
+It’s 2019 and, no surprise to anyone, people are still buying stuff online. You recently attended the first half of a seminar on disruption in the tech industry and want to create a completely revolutionary e-commerce site. In classic tech postmodern fashion, you call your products widgets instead of a more meaningful identifier and it somehow fits.
 
 Naturally, you realize the need for a reliable transactional datastore. Because of the new generation of hipsters, you’re probably going to pull traffic away from the main industry players just because you’re not them. You’re smart enough to foresee the scalability you need, so you choose Vitess as your best scaling solution.
 
