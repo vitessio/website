@@ -1,0 +1,29 @@
+{{ define "main" }}
+{{ $description := .Params.description }}
+
+{{ partial "navbar.html" . }}
+
+<section class="hero is-dark">
+  <div class="hero-body">
+    <div class="container">
+      <p class="title is-size-1 has-text-weight-light{{ if $description }} is-spaced{{ end }}">
+        {{ .Title }}
+      </p>
+
+      {{ with $description }}
+      <p class="subtitle is-size-3 is-size-4-mobile has-text-weight-light">
+        {{ . | markdownify }}
+      </p>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="content">
+      {{ .Content }}
+    </div>
+  </div>
+</section>
+{{ end }}
