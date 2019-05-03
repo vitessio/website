@@ -6,6 +6,8 @@ description: Details for dialing in to the monthly meeting
 We use Zoom for our monthly meeting. You can dial-in by phone from these countries with the following details.
 
 Using the Zoom app on mobile or web: [click here](https://slack.zoom.us/j/314170129)
+ 
+Meeting ID: 314 170 129 
 
 **Joining by phone:**
 
