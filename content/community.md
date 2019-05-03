@@ -26,7 +26,7 @@ To join by phone:
 * International dial-in numbers [click here](../dialin)
 * Meeting ID (required to join the call): 314 170 129
 
-If you would like to submit a topic for discussion at the meeting, please [email us](cncf-vitess-maintainers@lists.cncf.io). 
+If you would like to submit a topic for discussion at the meeting, please [email us](mailto:cncf-vitess-maintainers@lists.cncf.io). 
  
 To review notes from past meetings, click [here](https://docs.google.com/document/d/1d8PcVD-ppnytRXZPOPvhRnnwei7-tYvgopD0UYzbAMs/edit).
 
