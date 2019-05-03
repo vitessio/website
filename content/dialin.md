@@ -7,13 +7,13 @@ We use Zoom for our monthly meeting. You can dial-in by phone from these countri
 
 Using the Zoom app on mobile or web: [click here](https://slack.zoom.us/j/314170129)
 
-Joining by phone:
+**Joining by phone:**
 
 Or iPhone one-tap :
 
  US: +16699006833,,314170129#  or +16465588656,,314170129#
 
-Or other phone:
+**Or other phone:**
 
 Dial(for higher quality, dial a number based on your current location)：
 US: +1 669 900 6833 or +1 646 558 8656 or +1 877 853 5247  (Toll Free) or +1 877 369 0926 (Toll Free)

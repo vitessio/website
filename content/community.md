@@ -5,9 +5,9 @@ description: A guide to the Vitess ecosystem
 
 The Vitess community welcomes one and all. Join our Vitess Slack channel for general assistance and chatter, or contact us in these ways:
 
-* [Get in touch with Vitess maintainers](cncf-vitess-maintainers@lists.cncf.io)
+* [Get in touch with Vitess maintainers](mailto:cncf-vitess-maintainers@lists.cncf.io)
 * [Follow us on Twitter](https://twitter.com/vitessio)
-* [Report a security vulnerability](cncf-vitess-maintainers@lists.cncf.io)
+* [Report a security vulnerability](mailto:cncf-vitess-maintainers@lists.cncf.io)
 * [Say hi on Slack](https://vitess.slack.com) (click [here](https://vitess.slack.com/join/shared_invite/enQtMzIxMDMyMzA0NzA1LTBjYjY1M2I2Yjg5YmY3ODIwOTk0N2M1YzI4Y2ViODdiNmIxMDdiMDM5YWQ1ZTc0YmJhZDdiOTliMGVkNDY4MjM) if you need an account) 
 
 ### Vitess Monthly Meetings
@@ -23,7 +23,7 @@ On the third Thursday of the month (unless otherwise specified), the Vitess comm
 To join by phone: 
 
 * US: +16699006833,,314170129#  or +16465588656,,314170129#
-* International dial-in numbers [click here](dialin.md)
+* International dial-in numbers [click here](../dialin)
 * Meeting ID (required to join the call): 314 170 129
 
 If you would like to submit a topic for discussion at the meeting, please [email us](cncf-vitess-maintainers@lists.cncf.io). 
@@ -45,7 +45,7 @@ Vitess is made better by the involvement of other projects we love. In no partic
 
 ### Commercial Vitess Support
 
-If you need commercial assistance for open source Vitess, consider getting in touch with the following companies.
+If you need commercial assistance for open source Vitess, consider getting in touch with the following companies, listed in alphabetical order.
 
 #### PlanetScale
 
@@ -59,5 +59,4 @@ If you need commercial assistance for open source Vitess, consider getting in to
 * Enterprise Support
 * Vitess Training
 
-If you provide services in the Vitess ecosystem and would like to be listed here, [let us know](cncf-vitess-maintainers@lists.cncf.io).
-
+If you provide services in the Vitess ecosystem and would like to be listed here, [let us know](mailto:cncf-vitess-maintainers@lists.cncf.io) or send us a pull request on this page.
