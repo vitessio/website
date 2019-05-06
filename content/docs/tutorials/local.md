@@ -141,8 +141,7 @@ In addition, Vitess requires the software and libraries listed below.
     cd $WORKSPACE
     git clone https://github.com/vitessio/vitess.git \
         src/vitess.io/vitess
-    ln -s $(pwd)/src/vitess.io ${HOME}/go/src/vitess.io
-    cd ${HOME}/go/src/vitess.io/vitess
+    cd src/vitess.io/vitess
     ```
 
 2. Set the `MYSQL_FLAVOR` environment variable. Choose the appropriate value for your database. This value is case-sensitive.
