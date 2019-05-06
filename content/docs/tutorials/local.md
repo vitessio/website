@@ -135,7 +135,7 @@ In addition, Vitess requires the software and libraries listed below.
 
 ### Build Vitess
 
-1. Navigate to the directory where you want to download the Vitess source code and clone the Vitess Github repo. After doing so, navigate to the `src/vitess.io/vitess` directory. For go to work correctly, you should create a symbolic link to this inside your `${HOME}/go/src`
+1. Navigate to the directory where you want to download the Vitess source code and clone the Vitess Github repo. After doing so, navigate to the `src/vitess.io/vitess` directory.
 
     ```sh
     cd $WORKSPACE
