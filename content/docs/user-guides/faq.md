@@ -132,6 +132,7 @@ mysql -h 127.0.0.1 -P 15306 -u mysql_user --password=mysql_password
 Is there documentation on reading a vitess query plan / documentation describing the fields in the plan?  I tried to trace the code and seems ExecTime is reported in nanoseconds:
 (https://github.com/vitessio/vp)
 
+\___________________________________________________________________
 
 ## [Server Configuration_](#top)
 
