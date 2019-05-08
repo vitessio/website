@@ -157,7 +157,7 @@ Yes. You can start vttablet with the `-init_db_name_override` command line optio
 
 ### It seems that vttablets will not come up unless sql_mode is set to STRICT_TRANS_TABLES, is there anyway to avoid this requirement?
 
-This check can be disabled by  setting `-enforce_strict_trans_tables=false` on the vttablet`
+This check can be disabled by  setting `-enforce_strict_trans_tables=false` on the vttablet
 
 \___________________________________________________________________
 
@@ -323,12 +323,14 @@ These are the last 15 rates at which vreplication is processing, averaged by the
 Using tuples in a WHERE clause can cause a MySQL slowdown.
 
 Consider:
-```UPDATE tbl SET col=1 WHERE (pk1, pk2, pk3) IN (1,2,3), (4,5,6)```
+```
+UPDATE tbl SET col=1 WHERE (pk1, pk2, pk3) IN (1,2,3), (4,5,6)
+```
 
-After a few tuples, MySQL may switch to a full table scan and lock the entire table for the duration. It should perform as expected once `FORCE INDEX (PRIMARY)` s added.
+After a few tuples, MySQL may switch to a full table scan and lock the entire table for the duration. It should perform as expected once `FORCE INDEX (PRIMARY)` is added.
 
 See `https://dev.mysql.com/doc/refman/8.0/en/index-hints.html`
-```
+
 \_________________________________
 
 ### Vitess has mapreduce to read the data from readOnly replica. But since it doesn't have MVCC type, how do we ensure we read a consistent snapshot? Can we pause replication to read only replica to specific point in time in all the shard to achieve this?
