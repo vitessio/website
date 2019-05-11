@@ -50,11 +50,11 @@ keyspace/shard.
 A given stream can replicate multiple tables. For each table, you can
 specify a `select` statement that represents both the transformation
 rule and the filtering rule. The select expressions specify the
-transformation, and the wher clause specifies the filtering.
+transformation, and the where clause specifies the filtering.
 
 The select expressions can be any non-aggregate mysql expression, or
 they can also be `count` or `sum` as aggregate expressions. Aggregate
-expressions combined with the corresponding group by clauses will
+expressions combined with the corresponding `group by` clauses will
 allow you to materialize real-time rollups of the source table, which
 can be used for analytics. The target table can have a different name
 from the source.
@@ -65,6 +65,7 @@ will be multiple source shards as well as destination shards, and
 the relationship between them may not be one to one.
 
 VReplication performs the following essential functions:
+
 * Copy data from the source to the destination table in a consistent
   fashion. For large data, this copy can be long-running. It can be
   interrupted and resumed. If interrupted, VReplication can keep
@@ -80,9 +81,9 @@ VReplication performs the following essential functions:
 * Correctness verification (to be implemented): VReplication can
   verify that the target table is an exact representaion of
   the select statement from the source by capturing consistent
-  snapshots of the source and target. This step can be done without
-  the need to create special replicas and stopping their replication
-  to perform these tasks.
+  snapshots of the source and target and comparing them against each
+  other. This step can be done without the need to create special
+  snapshot replicas.
 * Journaling (to be implemented): If there is any kind of traffic
   cut-over where we start writing to a different table than we used
   to before, VReplication will save the current binlog positions
@@ -99,7 +100,7 @@ VReplication performs the following essential functions:
 
 ## VReplicationExec
 
-The VReplicationExec command is used to manage vreplication streams.
+The `VReplicationExec` command is used to manage vreplication streams.
 The commands are issued as SQL statements. For example, a `select`
 can be used to see the current list of streams. An `insert` can
 be used to create one, etc. By design, the metadata for vreplication
@@ -159,7 +160,9 @@ involved:
 * One of the parameters within the protobuf is an SQL select expression
   for the materialized view.
 
-Here is a python script to create a VReplication stream:
+However, you can use [vreplgen.go](https://github.com/vitessio/contrib/blob/master/vreplgen/vreplgen.go) to generate a fully escaped bash command.
+
+Alternately, you can use a python program. Here's an example:
 
 ```python
 cmd = [
@@ -171,8 +174,6 @@ cmd = [
   ('vt_keyspace', 'keyspace:"lookup" shard:"0" filter:<rules:<match:"uproduct" filter:"select * from product" > >', '', 99999, 99999, 'master', 0, 0, 'Running')""",
 ]
 ```
-
-Alternately, you can use [vreplgen.go](https://github.com/vitessio/contrib/blob/master/vreplgen/vreplgen.go) to generate a fully escaped bash command.
 
 The first argument to the command is the master tablet id of the target keyspace/shard.
 
