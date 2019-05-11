@@ -93,19 +93,6 @@ Cool a hot tablet | For read access, add replicas or split shards. For write acc
 
 The cornerstone of resharding is replicating the right data. Vitess implements the following functions to support filtered replication, the process that ensures that the correct source tablet data is transferred to the proper destination tablets.
 
-#### Statement-based Replication
-
-If you've configured the MySQL servers to use Statement-based Replication (SBR), then Vitess must be able to identify the destination for such statements during the filtered replication process. This is performed the following way:
-
-1. The source tablet tags transactions with comments so that MySQL binlogs contain the filtering data needed during the resharding process. The comments describe the scope of each transaction (its keyspace ID, table, etc.).
-2. A server process uses the comments to filter the MySQL binlogs and stream the correct data to the destination tablet.
-3. A client process on the destination tablet applies the filtered logs, which are just regular SQL statements at this point.
-
-#### Row-based Replication
-
-If MySQL is configured to use Row-based Replication (RBR), the filtered replication
-is performed the following way:
-
 1. The server process uses the primary vindex to compute the keyspace ID for every row coming throug the replication stream, and sends that row to the corresponding target shard.
 2. The target shard converts the row into the corresponding DML (Data Manipulation Language) and applies the statement.
 
