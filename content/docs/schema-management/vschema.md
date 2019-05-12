@@ -1,6 +1,6 @@
 ---
 title: VSchema User Guide
-weight: 1
+weight: 2
 ---
 
 VSchema stands for Vitess Schema. In contrast to a traditional database schema that contains metadata about tables, a VSchema contains metadata about how tables are organized across keyspaces and shards. Simply put, it contains the information needed to make Vitess look like a single database server.
@@ -129,20 +129,30 @@ Vitess provides the following predefined Vindexes:
 Name | Type | Description | Primary | Reversible | Cost
 ---- | ---- | ----------- | ------- | ---------- | ----
 binary | Functional Unique | Identity | Yes | Yes | 0
-binary_md5 | Functional Unique | md5 hash | Yes | No | 1
+binary\_md5 | Functional Unique | md5 hash | Yes | No | 1
 hash | Functional Unique | 3DES null-key hash | Yes | Yes | 1
 lookup | Lookup NonUnique | Lookup table non-unique values | No | Yes | 20
-lookup_unique | Lookup Unique | Lookup table unique values | If unowned | Yes | 10
+lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | Yes | 10
+consistent\_lookup | Lookup NonUnique | Lookup table non-unique values | No | No | 20
+consistent\_lookup\_unique | Lookup Unique | Lookup table unique values | unowned | No | 10
 numeric | Functional Unique | Identity | Yes | Yes | 0
-numeric_static_map | Functional Unique | A JSON file that maps input values to keyspace IDs | Yes | No | 1
-unicode_loose_md5 | Functional Unique | Case-insensitive (UCA level 1) md5 hash | Yes | No | 1
-reverse_bits | Functional Unique | Bit Reversal | Yes | Yes | 1
+numeric\_static\_map | Functional Unique | A JSON file that maps input values to keyspace IDs | Yes | No | 1
+unicode\_loose\_md5 | Functional Unique | Case-insensitive (UCA level 1) md5 hash | Yes | No | 1
+reverse\_bits | Functional Unique | Bit Reversal | Yes | Yes | 1
+
+[Consistent lookup vindexes](consistent-lookup) are a new category of vindexes that are meant to replace the existing lookup vindexes. For the time being, they have a different name to allow for users to switch back and forth.
 
 Custom vindexes can also be plugged in as needed.
 
 ## Sequences
 
 Auto-increment columns do not work very well for sharded tables. [Vitess sequences](../../reference/vitess-sequences) solve this problem. Sequence tables must be specified in the VSchema, and then tied to table columns. At the time of insert, if no value is specified for such a column, VTGate will generate a number for it using the sequence table.
+
+## Refernce tables
+
+Vitess allows you to create an unsharded table and deploy it into all shards of a sharded keyspace. The data in such a table is assumed to be identical for all shards. In this case, you can specify that the table is of type `reference`, and should not specify any vindex for it. Any joins of this table with an unsharded table will be treated as a local join.
+
+Typically, such a table has a cannonical source in an unsharded keyspace, and the copies in the sharded keyspace are kept up-to-date through VReplication.
 
 ## VSchema
 
@@ -153,7 +163,17 @@ If you have multiple unsharded keyspaces, you can still avoid defining a VSchema
 1. Connect to a keyspace and all queries are sent to it.
 2. Connect to Vitess without specifying a keyspace, but use qualifed names for tables, like `keyspace.table` in your queries.
 
-However, once the setup exceeds the above complexity, VSchemas become a necessity. Vitess has a [working demo](https://github.com/vitessio/vitess/tree/master/examples/demo) of VSchemas. This section documents the various features highlighted with snippets pulled from the demo.
+However, once the setup exceeds the above complexity, VSchemas become a necessity. Vitess has a [working demo](https://github.com/vitessio/vitess/tree/master/examples/demo) of VSchemas.
+
+### ApplyVSchema
+
+You can use the vtctlclient ApplyVSchema command to apply a VSchema:
+
+```
+ApplyVSchema {-vschema=<vschema> || -vschema_file=<vschema file> || -sql=<sql> || -sql_file=<sql file>} [-cells=c1,c2,...] [-skip_rebuild] [-dry-run] <keyspace>
+```
+
+The following sections document the various features highlighted with snippets pulled from the demo.
 
 ### Unsharded Table
 
@@ -200,7 +220,8 @@ VSchema:
   "vindexes": {
     "hash": {
       "type": "hash"
-    },
+    }
+  },
   "tables": {
     "user": {
       "column_vindexes": [
@@ -249,8 +270,8 @@ VSchema:
   "vindexes": {
     "hash": {
       "type": "hash"
-      }
-    },
+    }
+  },
   "tables": {
     "user": {
       "column_vindexes": [
@@ -302,7 +323,8 @@ VSchema:
         "to": "user_id"
       },
       "owner": "user"
-    },
+    }
+  },
   "tables": {
     "user": {
       "column_vindexes": [
