@@ -79,7 +79,7 @@ VReplication performs the following essential functions:
   be kept up-to-date from the data coming from the binlog. For
   example, joins are not supported.
 * Correctness verification (to be implemented): VReplication can
-  verify that the target table is an exact representaion of
+  verify that the target table is an exact representation of
   the select statement from the source by capturing consistent
   snapshots of the source and target and comparing them against each
   other. This step can be done without the need to create special
@@ -131,8 +131,7 @@ CREATE TABLE _vt.vreplication (
 )
 ```
 
-Not all fields are required or used right now. But values still need
-to be provided for legacy reasons.
+The fields are explained in the following section.
 
 This is the syntax of the command:
 
@@ -184,7 +183,7 @@ The parameters are as follows:
   will not be required, and will be automatically filled in by the vttablet.
 * `source`: The protobuf representation of the stream source, explained below.
 * `pos`: For a brand new stream, this should be empty. To start
-  from a specific positoin, a flavor-encoded position must be specified. A
+  from a specific position, a flavor-encoded position must be specified. A
   typical position would look like this `MySQL56/ac6c45eb-71c2-11e9-92ea-0a580a1c1026:1-1296`.
 * `max_tps`: 99999, reserved.
 * `max_replication_lag`: 99999, reserved.
@@ -250,7 +249,7 @@ The double-backslash for the strings inside the select will first be escaped by 
 which will cause the expression to internally be `\'unicode_loose_md5\'`. Since the entire
 source is surrounded by single quotes when being sent as a value inside the outer insert statement,
 the single `\` will escape the single quotes that follow. The final value in the source will
-there fore be:
+therefore be:
 
 
 ```
@@ -264,7 +263,7 @@ This particular stream generally wouldn't make sense in isolation. This would ty
 be one of four streams that combine together to create a materialized view of `uorder`
 from the `user` keyspace into the target (`merchant`) keyspace, but sharded by using
 `mname` as the primary vindex. The vindex used would be `unicode_loose_md5` which should
-also match the primary vindex of the primary vindex of other tables in the target keyspace.
+also match the primary vindex of other tables in the target keyspace.
 
 ```
 keyspace:"user" shard:"-80" filter:<rules:<match:"sales" filter:"select pid, count(*) as kount, sum(price) as amount from uorder group by pid" > >
@@ -284,12 +283,14 @@ This causes VReplication to copy the contents of the source table first, and the
 start the replication.
 
 For large tables, this is done in chunks. After each chunk is copied, replication
-is resumed until it's caught up. Following this another chunk is copied, and so on,
+is resumed until it's caught up. VReplication ensures that only changes that affect
+existing rows are applied. Following this another chunk is copied, and so on,
 until all tables are completed. After that, replication runs indefinitely.
 
 #### It's a shared row
 
-The vreplication table is a shared row. Once the row is creates, the VReplication stream
+The vreplication row is shared between the operator and Vreplication itself.
+Once the row is created, the VReplication stream
 updates various fields of the row to save and report on its own status. For example, the
 `pos` field is continuously updated as it makes forward progress.
 
@@ -332,8 +333,11 @@ and starts reporting itself accordingly.
 
 ### Self-replication
 
-VReplication allows you the source keyspace/shard to be the same as the target.
-This is especially useful for schema rollouts. In this situation, and apply on
+VReplication allows you to set the source keyspace/shard to be the same as the target.
+This is especially useful for performing schema rollouts: you can create the target
+table with the intended schema and vreplicate from the source table to the new
+target. Once caught up, you can cutover to write to the target table.
+In this situation, an apply on
 the target generates a binlog event that will be picked up by the source and
 sent to the target. Typically, it will be an empty transaction. In such cases,
 the target does not generally apply these transactions, because such an application
@@ -353,7 +357,7 @@ that the frequency of such occurences can be tracked.
 
 If any other error is encountered, the replication is retried after a short wait.
 Each time, the stream searches from the full list of available sources and picks
-one at randeom.
+one at random.
 
 ### on\_ddl
 
