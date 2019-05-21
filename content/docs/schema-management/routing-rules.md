@@ -77,7 +77,7 @@ know that it's better to send the query to the `user` keyspace instead of `looku
 
 Typically, table equivalence makes sense when a view table is materialized from a source table using VReplication.
 
-### Orhtogonality
+### Orthogonality
 
 The tablet type targeting and table equivalence features are orthogonal to each other and can be combined. Although
 there's no immediate use case for this, it's a possibility we can consider if the use case arises.
