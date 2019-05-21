@@ -193,6 +193,8 @@ The parameters are as follows:
 * `time_updated`: 0, reserved.
 * `transaction_timestamp`: 0, reserved.
 * `state`: 'Running' or 'Stopped'.
+* `cell`: is an optional parameter that specifies the cell from which the stream
+  can be sourced.
 
 #### The source field
 
@@ -274,6 +276,23 @@ keyspace using the expression: `select pid, count(*) as kount, sum(price) as amo
 
 This represents only one stream from source shard `-80`. Presumably, there will be one
 more for the other `-80` shard.
+
+#### The 'select' features
+
+The select statement has the following features (and restrictions):
+
+* The Select expressions can be any deterministic mysql expression.
+  Subqueries are not supported. Among aggregate expressions, only
+  `count(*)` and `sum(col)` are supported.
+* The where clause can only contain the `in_keyrange` construct. It
+  has two forms:
+  * `in_keyrange('-80')`: The row's source keyrange matched against `-80`.
+  * `in_keyrange(col, 'hash', '-80')`: The keyrange is computed using
+    `hash(col)` and matched against `-80`.
+* `group by`: can be specified if using aggregations. The group by
+  expressions are expected to cover the non-aggregated columns just
+  like regular SQL requires.
+* No other constructs like `order by`, `limit`, joins, etc. are allowed.
 
 #### The pos field
 
