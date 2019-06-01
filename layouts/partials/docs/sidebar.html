@@ -1,7 +1,7 @@
 {{- $logoUrl        := "img/logos/vitess.png" | relURL }}
 {{- $docsSections   := where site.Sections "Section" "docs" }}
 {{- $currentSection := .CurrentSection.Name }}
-{{- $currentUrl     := .URL }}
+{{- $currentUrl     := .RelPermalink }}
 <div class="docs-menu">
   <header class="docs-menu-header">
     <a href="{{ site.BaseURL }}">
@@ -11,9 +11,9 @@
 
   <aside class="docs-menu-bar">
     {{- range $docsSections }}
-    {{- $isCurrentPage := eq .URL $currentUrl }}
+    {{- $isCurrentPage := eq .RelPermalink $currentUrl }}
     <div class="docs-section">
-      <a class="docs-section-title{{ if $isCurrentPage }} is-active{{ end }}" href="{{ .URL }}">
+      <a class="docs-section-title{{ if $isCurrentPage }} is-active{{ end }}" href="{{ .RelPermalink }}">
         {{ .Title }}
       </a>
     </div>
@@ -22,7 +22,7 @@
     {{- $isCurrentSection := eq $currentSection .Name }}
 
     <div class="docs-section">
-      <a class="docs-section-title{{ if $isCurrentSection }} is-active{{ end }}" href="{{ .URL }}">
+      <a class="docs-section-title{{ if $isCurrentSection }} is-active{{ end }}" href="{{ .RelPermalink }}">
         {{ .Name }}
       </a>
 
@@ -30,9 +30,9 @@
       <div class="docs-section-list">
         <ul>
           {{- range .Pages }}
-          {{- $isCurrentPage := eq $currentUrl .URL }}
+          {{- $isCurrentPage := eq $currentUrl .RelPermalink }}
           <li{{ if $isCurrentPage }} class="is-active"{{ end }}>
-            <a href="{{ .URL }}">
+            <a href="{{ .RelPermalink }}">
               {{ .Title }}
             </a>
           </li>

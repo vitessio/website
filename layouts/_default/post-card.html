@@ -1,6 +1,6 @@
 {{- $date   := dateFormat "January 2, 2006" .Date }}
 {{- $author := .Params.author }}
-<a href="{{ .URL }}">
+<a href="{{ .RelPermalink }}">
   <div class="card">
     <div class="card-content">
       <p class="title is-size-3 is-size-4-mobile">
