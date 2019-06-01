@@ -36,19 +36,19 @@
       <div class="dropdown-menu" id="docs-menu" role="menu">
         <div class="dropdown-content">
           {{- range $docsSections }}
-          <a class="dropdown-item has-text-weight-bold" href="{{ .URL }}">
+          <a class="dropdown-item has-text-weight-bold" href="{{ .RelPermalink }}">
             {{ .Name }}
           </a>
 
           <hr class="dropdown-divider" />
 
           {{- range .Sections }}
-          <a class="dropdown-item has-text-weight-bold" href="{{ .URL }}">
+          <a class="dropdown-item has-text-weight-bold" href="{{ .RelPermalink }}">
             {{ .Name }}
           </a>
 
           {{- range .Pages }}
-          <a class="dropdown-item" href="{{ .URL }}">
+          <a class="dropdown-item" href="{{ .RelPermalink }}">
             {{ .Title }}
           </a>
           {{- end }}

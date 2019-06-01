@@ -1,5 +1,5 @@
 {{ define "title" }}
-{{- $isHomeDocsPage := eq .URL "/docs/" }}
+{{- $isHomeDocsPage := eq .RelPermalink "/docs/" }}
 {{ cond $isHomeDocsPage .Title (printf "The Vitess Docs | %s" .Title) }}
 {{ end }}
 

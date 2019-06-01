@@ -1,7 +1,7 @@
 <!-- Main docs page -->
 <div class="columns is-2 is-multiline is-desktop">
   {{- range .Sections }}
-  {{- $sectionUrl := .URL }}
+  {{- $sectionUrl := .RelPermalink }}
   {{- $numPages := len .Pages }}
   {{- $maxPages := 3 }}
   <div class="column is-4">
@@ -22,7 +22,7 @@
         <ul>
           {{- range first $maxPages .Pages }}
           <li>
-            <a href="{{ .URL }}">
+            <a href="{{ .RelPermalink }}">
               {{ .Title }}
             </a>
           </li>

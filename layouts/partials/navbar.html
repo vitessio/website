@@ -31,7 +31,7 @@
           <div class="navbar-dropdown">
             {{- range $docs }}
             {{- if .Params.featured }}
-            <a class="navbar-item" href="{{ .URL }}">
+            <a class="navbar-item" href="{{ .RelPermalink }}">
               {{ .Title }}
             </a>
             {{- end }}
@@ -46,7 +46,7 @@
 
           <div class="navbar-dropdown">
             {{- range first 5 $blogPosts }}
-            <a class="navbar-item" href="{{ .URL }}">
+            <a class="navbar-item" href="{{ .RelPermalink }}">
               {{ .Title }}
             </a>
             {{- end }}
@@ -58,6 +58,10 @@
             </a>
           </div>
         </div>
+
+        <a class="navbar-item has-text-weight-bold" href="/community">
+          Community
+        </a>
 
         <div class="navbar-item">
           {{ partial "social-buttons.html" (dict "footer" false "social" $social) }}
