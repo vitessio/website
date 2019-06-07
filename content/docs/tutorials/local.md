@@ -105,12 +105,13 @@ In addition, Vitess requires the software and libraries listed below.
     brew install pkg-config
     ```
 
-4.  ZooKeeper is used as a lock service.
+4.  ZooKeeper is used as a lock service. To compile ZooKeeper, you need to install a
+    Java 8 runtime, and only Oracle JDK 8 is available at this time. [Oracle JavaSE Development Kit 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html).
 
 5.  Run the following commands:
 
     ```sh
-    brew install go automake libtool python git bison curl wget mysql56
+    brew install go ant automake libtool python git bison curl wget mysql56
     pip install --upgrade pip setuptools
     pip install virtualenv
     pip install MySQL-python
