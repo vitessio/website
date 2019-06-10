@@ -6,7 +6,7 @@ tags: ['Guides', 'Unsharded', 'Benefits']
 title: "The Benefits of Unsharded Vitess"
 ---
 
-For many large companies seeking help with horizontal scaling, Vitess' value proposition is easily understood; running stateful workloads at astronomical scale is a hard problem that Vitess has boldly solved in the past. However, for businesses that aren't hitting the performance limitations of standard MySQL, it may seem difficult to justify placing seemingly complex middleware in your data path with no immediate reward. I'm here to show you why unsharded Vitess is not just a pre-optimization - it provides many upgrades to the MySQL experience.
+For many large companies seeking help with horizontal scaling, Vitess' value proposition is easily understood; running stateful workloads at astronomical scale is a hard problem that Vitess has boldly solved in the past. However, for businesses that aren't hitting the performance limitations of standard MySQL, it may seem difficult to justify placing seemingly complex middleware in your data path with no immediate reward. I'm here to show you why unsharded Vitess is not just a pre-optimization for future horizontal scaling - it provides many upgrades to the MySQL experience.
 
 ### Query Optimization
 
