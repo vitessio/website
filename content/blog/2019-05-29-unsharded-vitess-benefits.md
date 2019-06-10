@@ -22,7 +22,7 @@ Unlike stock SQL offerings, Vitess' topology is backed by a consensus-based meta
 
 ### Networking Optimization
 
-Most individuals who have tried to run stock MySQL likely understand that its memory usage is farily unpredictable; you are often at the mercy of uncontrolled memory allocations and have to spend large amounts of time configuring connection buffers or overprovisioning memory to avoid performance failures. Instead of opening a new thread for every connection to the database, Vitess maps its lightweight connections to a small set of MySQL connections to shrink configuration time and vastly increase the amount of open connections.
+Most individuals who have tried to run stock MySQL likely understand that its memory usage is fairly unpredictable; you are often at the mercy of uncontrolled memory allocations and have to spend large amounts of time configuring connection buffers or overprovisioning memory to avoid performance failures. Instead of opening a new thread for every connection to the database, Vitess maps its lightweight connections to a small set of MySQL connections to shrink configuration time and vastly increase the amount of open connections.
 
 ### Kubernetes Migration
 
