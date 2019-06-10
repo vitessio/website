@@ -18,11 +18,11 @@ Vitess includes a fairly extensive debug suite with variables that are set up to
 
 ### Consistent Topology
 
-Unlike stock SQL offerings, Vitess' topology is always backed by a consesus-based metadata store, so you will always have a consistent view of your database, its replicas, and any read-only analytics replicas that you have created. Along with this comes a built-in control plane that can handle high-level operations such as reparenting, all displayed in a clean web GUI. Finally, Vitess was created to be highly-available; its control plane and topology store work together nicely to deploy your databases across multiple regions.
+Unlike stock SQL offerings, Vitess' topology is backed by a consensus-based metadata store, so you will always have a consistent view of your database, its replicas, and any read-only analytics replicas that you have created. Along with this comes a built-in control plane that can handle high-level operations such as reparenting, all displayed in a clean web GUI. Finally, Vitess was created to be highly-available; its control plane and topology store work together nicely to deploy your databases across multiple regions.
 
 ### Networking Optimization
 
-Most individuals who have tried to run stock MySQL likely understand that its memory usage is farily unpredictable; you are often at the mercy of uncontrolled memory allocations and have to spend large amounts of time configuring connection buffers or overprovisioning memory to avoid performance failures. Instead of opening a new thread for every connection to the database, Vitess maps its lightweight connections to a small set of MySQL connections to shrink configuration time and vastly increase the amount of open connections.
+Most individuals who have tried to run stock MySQL likely understand that its memory usage is fairly unpredictable; you are often at the mercy of uncontrolled memory allocations and have to spend large amounts of time configuring connection buffers or overprovisioning memory to avoid performance failures. Instead of opening a new thread for every connection to the database, Vitess maps its lightweight connections to a small set of MySQL connections to shrink configuration time and vastly increase the amount of open connections.
 
 ### Kubernetes Migration
 
