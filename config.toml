@@ -22,13 +22,13 @@ subtitle = "Updates and insights from the **Vitess** team."
 
 # Language settings
 DefaultContentLanguage = "en"
-defaultContentLanguageInSubdir = false
-contentDir = "content/en"
+defaultContentLanguageInSubdir = true
 disableLanguages = ["zh"]
 
 # English
 [languages.en]
 title = "Vitess"
+contentDir = "content/en"
 languageName = "English"
 weight = 1
 
@@ -38,6 +38,7 @@ description = "A database clustering system for horizontal scaling of MySQL"
 # Chinese
 [languages.zh]
 title = "Vitess"
+contentDir = "content/zh"
 languageName = "中文 Chinese"
 weight = 2
 
