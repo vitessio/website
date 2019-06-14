@@ -1,0 +1,20 @@
+{{ define "main" }}
+{{ $home := site.BaseURL }}
+{{ partial "navbar.html" . }}
+
+<section class="hero is-medium">
+  <div class="hero-body">
+    <div class="container">
+      <p class="title is-size-1 is-size-2-mobile has-text-primary is-spaced">
+        404
+      </p>
+
+      <hr />
+
+      <p class="subtitle is-size-4 is-size-5-mobile">
+        We're sorry, but this page could not be found. Click <a href="{{ $home }}">here</a> to return to the main page.
+      </p>
+    </div>
+  </div>
+</section>
+{{ end }}
