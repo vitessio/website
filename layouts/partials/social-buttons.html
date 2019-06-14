@@ -1,50 +1,50 @@
-{{- $social  := .social }}
-{{- $github  := printf "https://github.com/%s" $social.github }}
-{{- $twitter := printf "https://twitter.com/%s" $social.twitter }}
-{{- $slack   := $social.slack }}
-{{- $stack   := printf "https://stackoverflow.com/search?q=%s" $social.stackoverflow }}
+{{ $social  := .social }}
+{{ $github  := printf "https://github.com/%s" $social.github }}
+{{ $twitter := printf "https://twitter.com/%s" $social.twitter }}
+{{ $slack   := $social.slack }}
+{{ $stack   := printf "https://stackoverflow.com/search?q=%s" $social.stackoverflow }}
 <div class="buttons">
   <a class="button is-white" href="{{ $github }}" target="_blank">
     <span class="icon">
       <i class="fab fa-lg fa-github"></i>
     </span>
-    {{- if .footer }}
+    {{ if .footer }}
     <span class="has-text-weight-bold">
       {{ T "github" }}
     </span>
-    {{- end }}
+    {{ end }}
   </a>
 
   <a class="button is-twitter-blue" href="{{ $twitter }}" target="_blank">
     <span class="icon">
       <i class="fab fa-lg fa-twitter"></i>
     </span>
-    {{- if .footer}}
+    {{ if .footer}}
     <span class="has-text-weight-bold">
       {{ T "twitter" }}
     </span>
-    {{- end }}
+    {{ end }}
   </a>
 
   <a class="button is-slack-green" href="{{ $slack }}" target="_blank">
     <span class="icon">
       <i class="fab fa-lg fa-slack"></i>
     </span>
-    {{- if .footer }}
+    {{ if .footer }}
     <span class="has-text-weight-bold">
       {{ T "slack" }}
     </span>
-    {{- end }}
+    {{ end }}
   </a>
   
   <a class="button is-stack-overflow-orange" href="{{ $stack }}" target="_blank">
     <span class="icon">
       <i class="fab fa-lg fa-stack-overflow"></i>
     </span>
-    {{- if .footer }}
+    {{ if .footer }}
     <span class="has-text-weight-bold">
       {{ T "stack_overflow" }}
     </span>
-    {{- end }}
+    {{ end }}
   </a>
 </div>

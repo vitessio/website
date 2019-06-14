@@ -1,4 +1,4 @@
-{{- $userLogos := readDir "static/img/logos/users" }}
+{{ $userLogos := readDir "static/img/logos/users" }}
 <section class="section">
   <div class="container">
     <div class="columns is-vcentered">
@@ -14,10 +14,10 @@
 
       <div class="column">
         <div class="is-user-logo-section">
-          {{- range $userLogos }}
-          {{- $imgUrl := printf "img/logos/users/%s" .Name | relURL }}
+          {{ range $userLogos }}
+          {{ $imgUrl := printf "img/logos/users/%s" .Name | relURL }}
           <img class="is-user-logo" src="{{ $imgUrl }}">
-          {{- end }}
+          {{ end }}
         </div>
       </div>
     </div>

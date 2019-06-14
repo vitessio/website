@@ -1,5 +1,5 @@
-{{- $date   := dateFormat "January 2, 2006" .Date }}
-{{- $author := .Params.author }}
+{{ $date   := dateFormat "January 2, 2006" .Date }}
+{{ $author := .Params.author }}
 <a href="{{ .RelPermalink }}">
   <div class="card">
     <div class="card-content">
@@ -7,23 +7,23 @@
         {{ .Title }}
       </p>
 
-      {{- with $author }}
+      {{ with $author }}
       <p class="subtitle is-size-5 is-size-6-mobile">
         {{ . }}
       </p>
-      {{- end }}
+      {{ end }}
 
       <p class="is-size-5 has-text-weight-light">
         {{ $date }}
       </p>
 
-      {{- if .Summary }}
+      {{ if .Summary }}
       <hr class="has-background-grey-light" />
 
       <div class="content">
         {{ .Summary }}
       </div>
-      {{- end }}
+      {{ end }}
     </div>
   </div>
 </a>

@@ -1,20 +1,20 @@
-{{- $isHome       := .IsHome }}
-{{- $isBlog       := eq .Section "blog" }}
-{{- $nav          := site.Data.nav }}
-{{- $logoUrl      := "img/logos/vitess.png" | relURL }}
-{{- $social       := site.Params.social }}
-{{- $docs         := where site.Pages "Section" "docs" }}
-{{- $blogPosts    := where site.RegularPages "Section" "blog" }}
-{{- $currentLang  := .Language.LanguageName }}
-{{- $translations := site.Home.AllTranslations }}
+{{ $isHome       := .IsHome }}
+{{ $isBlog       := eq .Section "blog" }}
+{{ $nav          := site.Data.nav }}
+{{ $logoUrl      := "img/logos/vitess.png" | relURL }}
+{{ $social       := site.Params.social }}
+{{ $docs         := where site.Pages "Section" "docs" }}
+{{ $blogPosts    := where site.RegularPages "Section" "blog" }}
+{{ $currentLang  := .Language.LanguageName }}
+{{ $translations := site.Home.AllTranslations }}
 <nav class="navbar is-fixed-top is-dark">
   <div class="container">
     <div class="navbar-brand">
-      {{- if not $isHome }}
+      {{ if not $isHome }}
       <a class="navbar-item" href="{{ site.BaseURL }}">
         <img src="{{ $logoUrl }}" alt="Vitess logo">
       </a>
-      {{- end }}
+      {{ end }}
 
       <a role="button" class="navbar-burger burger">
         <span aria-hidden="true"></span>
@@ -46,13 +46,13 @@
           </a>
 
           <div class="navbar-dropdown">
-            {{- range $docs }}
-            {{- if .Params.featured }}
+            {{ range $docs }}
+            {{ if .Params.featured }}
             <a class="navbar-item" href="{{ .RelPermalink }}">
               {{ .Title }}
             </a>
-            {{- end }}
-            {{- end }}
+            {{ end }}
+            {{ end }}
           </div>
         </div>
 
@@ -62,22 +62,22 @@
           </a>
 
           <div class="navbar-dropdown">
-            {{- range first 5 $blogPosts }}
+            {{ range first 5 $blogPosts }}
             <a class="navbar-item" href="{{ .RelPermalink }}">
               {{ .Title }}
             </a>
-            {{- end }}
+            {{ end }}
 
             <hr class="navbar-divider" />
 
             <a class="navbar-item has-text-weight-bold" href="/{{ .Language }}/blog">
-              More ...
+              {{ T "more" }}
             </a>
           </div>
         </div>
 
         <a class="navbar-item has-text-weight-bold" href="/{{ .Language }}/community">
-          Community
+          {{ T "community" }}
         </a>
 
         <div class="navbar-item">

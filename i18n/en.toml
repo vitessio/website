@@ -1,3 +1,7 @@
+# Miscellaneous
+[more]
+other = "More ..."
+
 # Main page hero buttons
 [quickstart]
 other = "Kubernetes Quickstart"

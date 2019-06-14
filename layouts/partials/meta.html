@@ -1,30 +1,30 @@
-{{- $isHome        := .IsHome }}
-{{- $isDoc         := eq .Section "docs" }}
-{{- $title         := cond $isHome site.Title (printf "%s | %s" site.Title .Title) }}
-{{- $description   := cond $isHome site.Params.home.title .Params.description }}
-{{- $pageType      := cond $isHome "website" "article" }}
-{{- $imageUrl      := "img/logos/vitess-horizontal.png" | absURL }}
-{{- $twitterHandle := site.Params.social.twitter }}
-{{- $favicon       := "favicon.png" | relURL }}
+{{ $isHome        := .IsHome }}
+{{ $isDoc         := eq .Section "docs" }}
+{{ $title         := cond $isHome site.Title (printf "%s | %s" site.Title .Title) }}
+{{ $description   := cond $isHome site.Params.home.title .Params.description }}
+{{ $pageType      := cond $isHome "website" "article" }}
+{{ $imageUrl      := "img/logos/vitess-horizontal.png" | absURL }}
+{{ $twitterHandle := site.Params.social.twitter }}
+{{ $favicon       := "favicon.png" | relURL }}
 <meta charset="utf-8">
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-{{- with $description }}
+{{ with $description }}
 <meta name="description" content="{{ . }}" />
-{{- end }}
+{{ end }}
 
 <!-- OpenGraph metadata-->
 <meta property="og:title" content="{{ $title }}">
-{{- if $isDoc }}
+{{ if $isDoc }}
 <meta property="og:type" content="documentation">
-{{- end }}
+{{ end }}
 <meta property="og:url" content="{{ .Permalink }}">
 <meta property="og:locale" content="en_US">
-{{- if not $isHome }}
+{{ if not $isHome }}
 <meta property="og:site_name" content="{{ site.Title }}">
-{{- end }}
-{{- with $description }}
+{{ end }}
+{{ with $description }}
 <meta property="og:description" content="{{ . }}">
-{{- end }}
+{{ end }}
 <meta name="og:type" content="{{ $pageType }}">
 <meta name="og:image" content="{{ $imageUrl }}">
 <meta name="og:image:alt" content="Vitess project logo">

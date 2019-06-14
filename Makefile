@@ -1,15 +1,19 @@
 production-build:
-	hugo --verbose
+	hugo \
+	--minify \
+	--verbose
 
 preview-build:
 	hugo \
 	--buildDrafts \
 	--buildFuture \
-	--baseURL $(DEPLOY_PRIME_URL)
+	--baseURL $(DEPLOY_PRIME_URL) \
+	--minify
 
 serve:
 	hugo server \
 	--buildDrafts \
 	--buildFuture \
 	--ignoreCache \
-	--disableFastRender
+	--disableFastRender \
+	--verbose

@@ -1,5 +1,5 @@
 {{ define "main" }}
-{{- $date    := dateFormat "January 2, 2006" .Date }}
+{{ $date := dateFormat "January 2, 2006" .Date }}
 
 {{ partial "navbar.html" . }}
 {{ partial "blog/hero.html" . }}
