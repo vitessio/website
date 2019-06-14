@@ -1,10 +1,10 @@
 {{ define "title" }}
-{{- $isHomeDocsPage := eq .RelPermalink "/docs/" }}
+{{ $isHomeDocsPage := eq .RelPermalink "/docs/" }}
 {{ cond $isHomeDocsPage .Title (printf "The Vitess Docs | %s" .Title) }}
 {{ end }}
 
 {{ define "main" }}
-{{- $toc := .TableOfContents }}
+{{ $toc := .TableOfContents }}
 <div class="docs-wrapper">
   <div class="docs-sidebar is-hidden-touch">
     {{ partial "docs/sidebar.html" . }}
@@ -17,15 +17,15 @@
       {{ partial "docs/header.html" . }}
     
       <div class="content">
-        {{- if .Sections }}
+        {{ if .Sections }}
         {{ partial "docs/landing-page.html" . }}
-        {{- else }}
+        {{ else }}
         {{ partial "docs/pages-in-section.html" . }}
 
         <hr class="has-background-grey" />
 
         {{ .Content }}
-        {{- end }}
+        {{ end }}
       </div>
     
     </article>

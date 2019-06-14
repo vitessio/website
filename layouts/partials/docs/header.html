@@ -1,16 +1,16 @@
-{{- $docsSections   := where site.Sections "Section" "docs" }}
-{{- $path           := .File.Path }}
-{{- $editUrl        := printf "https://github.com/vitessio/website/tree/master/content/%s" $path }}
+{{ $docsSections   := where site.Sections "Section" "docs" }}
+{{ $path           := .File.Path }}
+{{ $editUrl        := printf "https://github.com/vitessio/website/tree/master/content/%s" $path }}
 <header class="docs-header">
   <p class="title is-size-1 is-size-2-mobile has-text-weight-light{{ if .Params.description }} is-spaced{{ end }}">
     {{ .Title }}
   </p>
 
-  {{- with .Params.description }}
+  {{ with .Params.description }}
   <p class="subtitle is-size-3 is-size-4-mobile has-text-weight-light">
     {{ . | markdownify }}
   </p>
-  {{- end }}
+  {{ end }}
 
   <div class="buttons">
     <a class="button is-dark" href="{{ $editUrl }}">
@@ -35,25 +35,25 @@
       </div>
       <div class="dropdown-menu" id="docs-menu" role="menu">
         <div class="dropdown-content">
-          {{- range $docsSections }}
+          {{ range $docsSections }}
           <a class="dropdown-item has-text-weight-bold" href="{{ .RelPermalink }}">
             {{ .Name }}
           </a>
 
           <hr class="dropdown-divider" />
 
-          {{- range .Sections }}
+          {{ range .Sections }}
           <a class="dropdown-item has-text-weight-bold" href="{{ .RelPermalink }}">
             {{ .Name }}
           </a>
 
-          {{- range .Pages }}
+          {{ range .Pages }}
           <a class="dropdown-item" href="{{ .RelPermalink }}">
             {{ .Title }}
           </a>
-          {{- end }}
-          {{- end }}
-          {{- end }}
+          {{ end }}
+          {{ end }}
+          {{ end }}
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
-{{- $logoUrl      := "img/logos/vitess.png" | relURL }}
-{{- $nav          := site.Data.nav }}
-{{- $docsSections := where site.Sections "Section" "docs" }}
-{{- $social       := site.Params.social }}
+{{ $logoUrl      := "img/logos/vitess.png" | relURL }}
+{{ $nav          := site.Data.nav }}
+{{ $docsSections := where site.Sections "Section" "docs" }}
+{{ $social       := site.Params.social }}
 <nav class="navbar docs-navbar is-dark">
   <div class="navbar-brand">
     <a class="navbar-item is-hidden-desktop" href="{{ site.BaseURL }}">
