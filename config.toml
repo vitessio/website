@@ -43,6 +43,7 @@ weight = 2
 
 [languages.zh.params]
 description = "A database clustering system for horizontal scaling of MySQL"
+language_alternatives = ["en"]
 
 # Features (English)
 [[languages.en.params.features]]
