@@ -22,7 +22,8 @@ subtitle = "Updates and insights from the **Vitess** team."
 
 # Language settings
 DefaultContentLanguage = "en"
-defaultContentLanguageInSubdir = true
+defaultContentLanguageInSubdir = false
+contentDir = "content/en"
 disableLanguages = ["zh"]
 
 # English
@@ -34,6 +35,16 @@ weight = 1
 [languages.en.params]
 description = "A database clustering system for horizontal scaling of MySQL"
 
+# Chinese
+[languages.zh]
+title = "Vitess"
+languageName = "中文 Chinese"
+weight = 2
+
+[languages.zh.params]
+description = "A database clustering system for horizontal scaling of MySQL"
+
+# Features (English)
 [[languages.en.params.features]]
 title = "Scalability"
 description = "Vitess combines many important MySQL features with the scalability of a NoSQL database. Its built-in sharding features let you grow your database without adding sharding logic to your application."
@@ -64,15 +75,7 @@ title = "Workflow"
 description = "Vitess keeps track of all of the metadata about your cluster configuration so that the cluster view is always up-to-date and consistent for different clients."
 icon = "magic"
 
-# Chinese
-[languages.zh]
-title = "Vitess"
-languageName = "中文 Chinese"
-weight = 2
-
-[languages.zh.params]
-description = "A database clustering system for horizontal scaling of MySQL"
-
+# Features (Chinese)
 [[languages.zh.params.features]]
 title = "Scalability"
 description = "Vitess combines many important MySQL features with the scalability of a NoSQL database. Its built-in sharding features let you grow your database without adding sharding logic to your application."
