@@ -1,6 +1,6 @@
 {{ define "main" }}
-{{- $subtitle := site.Params.blog.subtitle | markdownify }}
-{{- $posts    := where site.RegularPages "Section" "blog" }}
+{{ $subtitle := site.Params.blog.subtitle | markdownify }}
+{{ $posts    := where site.RegularPages "Section" "blog" }}
 
 {{ partial "navbar.html" . }}
 {{ partial "blog/hero.html" . }}
@@ -20,9 +20,9 @@
       </div>
 
       <div class="column is-8 is-blog-container">
-        {{- range $posts }}
-        {{- $date    := dateFormat "January 2, 2006" .Date }}
-        {{- $summary := .Summary | truncate 250 | markdownify }}
+        {{ range $posts }}
+        {{ $date    := dateFormat "January 2, 2006" .Date }}
+        {{ $summary := .Summary | truncate 250 | markdownify }}
         <div class="card is-blog-card">
           <div class="card-content">
             <div class="media">
@@ -53,7 +53,7 @@
             </div>
           </div>
         </div>
-        {{- end }}
+        {{ end }}
       </div>
     </div>
   </div>

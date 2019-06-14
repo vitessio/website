@@ -1,9 +1,9 @@
 <!-- Main docs page -->
 <div class="columns is-2 is-multiline is-desktop">
-  {{- range .Sections }}
-  {{- $sectionUrl := .RelPermalink }}
-  {{- $numPages := len .Pages }}
-  {{- $maxPages := 3 }}
+  {{ range .Sections }}
+  {{ $sectionUrl := .RelPermalink }}
+  {{ $numPages := len .Pages }}
+  {{ $maxPages := 3 }}
   <div class="column is-4">
     <div class="card is-shadowless">
       <div class="card-content content">
@@ -20,23 +20,23 @@
         <hr />
 
         <ul>
-          {{- range first $maxPages .Pages }}
+          {{ range first $maxPages .Pages }}
           <li>
             <a href="{{ .RelPermalink }}">
               {{ .Title }}
             </a>
           </li>
-          {{- end }}
-          {{- if gt $numPages $maxPages }}
+          {{ end }}
+          {{ if gt $numPages $maxPages }}
           <li>
             <a href="{{ $sectionUrl }}">
               More...
             </a>
           </li>
-          {{- end }}
+          {{ end }}
         </ul>
       </div>
     </div>
   </div>
-  {{- end }}
+  {{ end }}
 </div>

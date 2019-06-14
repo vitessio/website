@@ -1,4 +1,4 @@
-{{- $isDocsPage := eq .Section "docs" }}
+{{ $isDocsPage := eq .Section "docs" }}
 <!DOCTYPE html>
 <html>
   <head>
@@ -13,9 +13,10 @@
       {{ block "main" . }}{{ end }}
     </main>
 
-    {{- if not $isDocsPage }}
+    {{ if not $isDocsPage }}
     {{ partial "footer.html" . }}
-    {{- end }}
+    {{ end }}
+    
     {{ partial "javascript.html" . }}
   </body>
 </html>
