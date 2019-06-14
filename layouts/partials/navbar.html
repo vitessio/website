@@ -5,6 +5,8 @@
 {{- $social       := site.Params.social }}
 {{- $docs         := where site.Pages "Section" "docs" }}
 {{- $blogPosts    := where site.RegularPages "Section" "blog" }}
+{{- $currentLang  := .Language.LanguageName }}
+{{- $translations := site.Home.AllTranslations }}
 <nav class="navbar is-fixed-top is-dark">
   <div class="container">
     <div class="navbar-brand">
@@ -23,6 +25,21 @@
 
     <div class="navbar-menu">
       <div class="navbar-end">
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link has-text-weight-bold">
+            {{ $currentLang }}
+          </a>
+
+          <div class="navbar-dropdown">
+            {{ range $translations }}
+            <a class="navbar-item" href="{{ .RelPermalink }}">
+              {{ .Language.LanguageName }}
+            </a>
+            {{ end }}
+          </div>
+        </div>
+
+
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link has-text-weight-bold" href="/docs">
             Docs

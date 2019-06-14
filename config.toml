@@ -1,14 +1,11 @@
 baseURL = "https://vitess.io"
-title   = "Vitess"
 canonifyurls = true
 disableKinds = ["taxonomy", "taxonomyTerm"]
 
+# Syntax highlighting settings
 pygmentsCodeFences = true
 pygmentsUseClasses = false
 pygmentsStyle = "fruity"
-
-[params]
-description = "A database clustering system for horizontal scaling of MySQL"
 
 [params.home]
 title = "Vitess is a database clustering system for horizontal scaling of MySQL"
@@ -25,3 +22,22 @@ stackoverflow = "vitess"
 
 [params.blog]
 subtitle = "Updates and insights from the **Vitess** team."
+
+# Language settings
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = true
+contentDir = "content/en"
+
+[languages]
+[languages.en]
+title   = "Vitess"
+description = "A database clustering system for horizontal scaling of MySQL"
+languageName = "English"
+weight = 1
+
+[languages.zh]
+title = "Vitess"
+description = "A database clustering system for horizontal scaling of MySQL"
+languageName = "中文 Chinese"
+weight = 2
+
