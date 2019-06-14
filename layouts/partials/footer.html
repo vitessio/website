@@ -9,15 +9,15 @@
 
     <nav class="level">
       <div class="level-left">
-        <a class="level-item has-text-orange is-size-4 is-size-5-mobile" href="/{{ .Language }}/docs">
+        <a class="level-item has-text-orange is-size-4 is-size-5-mobile" href="{{ "/docs" | relLangURL }}">
           {{ T "docs" }}
         </a>
 
-        <a class="level-item has-text-orange is-size-4 is-size-5-mobile" href="/{{ .Language }}/blog">
+        <a class="level-item has-text-orange is-size-4 is-size-5-mobile" href="{{ "/blog" | relLangURL }}">
           {{ T "blog" }}
         </a>
 
-        <a class="level-item has-text-orange is-size-4 is-size-5-mobile" href="/{{ .Language }}/community">
+        <a class="level-item has-text-orange is-size-4 is-size-5-mobile" href="{{ "/community" | relLangURL }}">
           {{ T "community" }}
         </a>
       </div>
