@@ -27,17 +27,82 @@ subtitle = "Updates and insights from the **Vitess** team."
 defaultContentLanguage = "en"
 defaultContentLanguageInSubdir = true
 contentDir = "content/en"
+disableLanguages = ["zh"]
 
-[languages]
+# English
 [languages.en]
-title   = "Vitess"
-description = "A database clustering system for horizontal scaling of MySQL"
+title = "Vitess"
 languageName = "English"
 weight = 1
 
+[languages.en.params]
+description = "A database clustering system for horizontal scaling of MySQL"
+
+[[languages.en.params.features]]
+title = "Scalability"
+description = "Vitess combines many important MySQL features with the scalability of a NoSQL database. Its built-in sharding features let you grow your database without adding sharding logic to your application."
+icon = "cubes"
+
+[[languages.en.params.features]]
+title = "Performance"
+description = "Vitess automatically rewrites queries that hurt database performance. It also uses caching mechanisms to mediate queries and prevent duplicate queries from simultaneously reaching your database."
+icon = "fighter-jet"
+
+[[languages.en.params.features]]
+title = "Manageability"
+description = "Vitess automatically handles functions like master failovers and backups. It uses a lock server to track and administer servers, letting your application be blissfully ignorant of database topology."
+icon = "tachometer-alt"
+
+[[languages.en.params.features]]
+title = "Connection pooling"
+description = "Vitess eliminates the high-memory overhead of MySQL connections. Vitess servers easily handle thousands of connections at once."
+icon = "share-alt"
+
+[[languages.en.params.features]]
+title = "Shard management"
+description = "MySQL doesn't natively support sharding, but you will likely need it as your database grows. Vitess saves you from having to add sharding logic to your app and also enables live resharding with minimal read-only downtime."
+icon = "object-ungroup"
+
+[[languages.en.params.features]]
+title = "Workflow"
+description = "Vitess keeps track of all of the metadata about your cluster configuration so that the cluster view is always up-to-date and consistent for different clients."
+icon = "magic"
+
+# Chinese
 [languages.zh]
 title = "Vitess"
-description = "A database clustering system for horizontal scaling of MySQL"
 languageName = "中文 Chinese"
 weight = 2
 
+[languages.zh.params]
+description = "A database clustering system for horizontal scaling of MySQL"
+
+[[languages.zh.params.features]]
+title = "Scalability"
+description = "Vitess combines many important MySQL features with the scalability of a NoSQL database. Its built-in sharding features let you grow your database without adding sharding logic to your application."
+icon = "cubes"
+
+[[languages.zh.params.features]]
+title = "Performance"
+description = "Vitess automatically rewrites queries that hurt database performance. It also uses caching mechanisms to mediate queries and prevent duplicate queries from simultaneously reaching your database."
+icon = "fighter-jet"
+
+[[languages.zh.params.features]]
+title = "Manageability"
+description = "Vitess automatically handles functions like master failovers and backups. It uses a lock server to track and administer servers, letting your application be blissfully ignorant of database topology."
+icon = "tachometer-alt"
+
+[[languages.zh.params.features]]
+title = "Connection pooling"
+description = "Vitess eliminates the high-memory overhead of MySQL connections. Vitess servers easily handle thousands of connections at once."
+icon = "share-alt"
+
+[[languages.zh.params.features]]
+title = "Shard management"
+description = "MySQL doesn't natively support sharding, but you will likely need it as your database grows. Vitess saves you from having to add sharding logic to your app and also enables live resharding with minimal read-only downtime."
+icon = "object-ungroup"
+
+[[languages.zh.params.features]]
+title = "Workflow"
+description = "Vitess keeps track of all of the metadata about your cluster configuration so that the cluster view is always up-to-date and consistent for different clients."
+icon = "magic"

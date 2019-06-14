@@ -1,5 +1,4 @@
 {{- $year       := now.Year }}
-{{- $nav        := site.Data.nav }}
 {{- $footerLogo := "img/logos/vitess-horizontal.png" | relURL }}
 {{- $social     := site.Params.social }}
 <footer class="footer has-background-black">
@@ -10,11 +9,17 @@
 
     <nav class="level">
       <div class="level-left">
-        {{- range $nav }}
-        <a class="level-item has-text-orange is-size-4 is-size-5-mobile" href="{{ .link }}">
-          {{ .text }}
+        <a class="level-item has-text-orange is-size-4 is-size-5-mobile" href="/{{ .Language }}/docs">
+          {{ T "docs" }}
         </a>
-        {{- end }}
+
+        <a class="level-item has-text-orange is-size-4 is-size-5-mobile" href="/{{ .Language }}/blog">
+          {{ T "blog" }}
+        </a>
+
+        <a class="level-item has-text-orange is-size-4 is-size-5-mobile" href="/{{ .Language }}/community">
+          {{ T "community" }}
+        </a>
       </div>
 
       <div class="level-right">
@@ -27,7 +32,7 @@
     <br /><br />
 
     <p class="has-text-centered has-text-grey-light">
-      &copy; {{ $year }} The Vitess authors
+      &copy; {{ $year }} {{ T "authors" }}
     </p>
   </div>
 </footer>

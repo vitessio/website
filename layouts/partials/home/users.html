@@ -4,20 +4,18 @@
     <div class="columns is-vcentered">
       <div class="column is-one-third">
         <p class="title is-spaced is-size-2 is-size-3-mobile has-text-dark has-text-weight-light" id="who-uses">
-          Who uses Vitess
+          {{ T "who_uses" }}
         </p>
 
-
-
         <a class="button is-small is-primary has-text-weight-bold" href="https://github.com/vitessio/website/#adding-a-user-logo" target="_blank">
-          Add your logo
+          {{ T "add_logo" }}
         </a>
       </div>
 
       <div class="column">
         <div class="is-user-logo-section">
           {{- range $userLogos }}
-          {{- $imgUrl := printf "img/logos/users/%s" .Name }}
+          {{- $imgUrl := printf "img/logos/users/%s" .Name | relURL }}
           <img class="is-user-logo" src="{{ $imgUrl }}">
           {{- end }}
         </div>

@@ -1,5 +1,5 @@
 {{- $logoUrl := "img/logos/vitess.png" | relURL }}
-{{- $title   := site.Params.home.title | markdownify }}
+{{- $title   := site.Params.description | markdownify }}
 <section class="hero is-dark">
   <div class="container">
     <div class="hero-body has-text-centered">
@@ -17,7 +17,7 @@
             <img src="/img/logos/kubernetes.svg">
           </span>
           <span>
-            Kubernetes Quickstart
+            {{ T "quickstart" }}
           </span>
         </a>
 
@@ -26,7 +26,7 @@
             <i class="fas fa-hammer"></i>
           </span>
           <span>
-            Manual build
+            {{ T "build" }}
           </span>
         </a>
 
@@ -35,7 +35,7 @@
             <i class="fas fa-university"></i>
           </span>
           <span>
-            Documentation
+            {{ T "documentation" }}
           </span>
         </a>
       </div>

@@ -17,16 +17,16 @@
 
   <div class="navbar-menu">
     <div class="navbar-end">
-      <a class="navbar-item has-text-weight-bold" href="{{ site.BaseURL }}">
-        Home
+      <a class="navbar-item has-text-weight-bold" href="/{{ .Language }}/docs">
+        {{ T "docs" }}
       </a>
 
-      <a class="navbar-item has-text-weight-bold" href="/blog">
-        Blog
+      <a class="navbar-item has-text-weight-bold" href="/{{ .Language }}/blog">
+        {{ T "blog" }}
       </a>
 
-      <a class="navbar-item has-text-weight-bold" href="/community">
-        Community
+      <a class="navbar-item has-text-weight-bold" href="/{{ .Language }}/community">
+        {{ T "community" }}
       </a>
 
       <div class="navbar-item">
