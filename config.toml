@@ -7,9 +7,6 @@ pygmentsCodeFences = true
 pygmentsUseClasses = false
 pygmentsStyle = "fruity"
 
-[params.home]
-title = "Vitess is a database clustering system for horizontal scaling of MySQL"
-
 [params.assets]
 js = ["jquery-3.3.1", "jquery-ui-1.12.1", "jquery.tocify-1.9.0", "app"]
 fontawesomeversion = "5.7.2"
@@ -25,8 +22,7 @@ subtitle = "Updates and insights from the **Vitess** team."
 
 # Language settings
 defaultContentLanguage = "en"
-defaultContentLanguageInSubdir = true
-contentDir = "content/en"
+defaultContentLanguageInSubdir = false
 disableLanguages = ["zh"]
 
 # English
