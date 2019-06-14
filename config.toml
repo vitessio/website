@@ -21,8 +21,8 @@ stackoverflow = "vitess"
 subtitle = "Updates and insights from the **Vitess** team."
 
 # Language settings
-defaultContentLanguage = "en"
-defaultContentLanguageInSubdir = false
+DefaultContentLanguage = "en"
+defaultContentLanguageInSubdir = true
 disableLanguages = ["zh"]
 
 # English
