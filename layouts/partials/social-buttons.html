@@ -10,7 +10,7 @@
     </span>
     {{ if .footer }}
     <span class="has-text-weight-bold">
-      GitHub
+      {{ T "github" }}
     </span>
     {{ end }}
   </a>
@@ -21,7 +21,7 @@
     </span>
     {{ if .footer}}
     <span class="has-text-weight-bold">
-      Twitter
+      {{ T "twitter" }}
     </span>
     {{ end }}
   </a>
@@ -32,7 +32,7 @@
     </span>
     {{ if .footer }}
     <span class="has-text-weight-bold">
-      Slack
+      {{ T "slack" }}
     </span>
     {{ end }}
   </a>
@@ -42,8 +42,8 @@
       <i class="fab fa-lg fa-stack-overflow"></i>
     </span>
     {{ if .footer }}
-    <span>
-      Stack Overflow
+    <span class="has-text-weight-bold">
+      {{ T "stack_overflow" }}
     </span>
     {{ end }}
   </a>

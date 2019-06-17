@@ -5,6 +5,8 @@
 {{ $social       := site.Params.social }}
 {{ $docs         := where site.Pages "Section" "docs" }}
 {{ $blogPosts    := where site.RegularPages "Section" "blog" }}
+{{ $currentLang  := .Language.LanguageName }}
+{{ $translations := site.Home.AllTranslations }}
 <nav class="navbar is-fixed-top is-dark">
   <div class="container">
     <div class="navbar-brand">
@@ -23,9 +25,28 @@
 
     <div class="navbar-menu">
       <div class="navbar-end">
+        <!--
         <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link has-text-weight-bold" href="/docs">
-            Docs
+          <a class="navbar-link has-text-weight-bold">
+            {{ $currentLang }}
+          </a>
+
+          <div class="navbar-dropdown">
+            {{ range $translations }}
+            {{ $lang := .Language.LanguageName }}
+            {{ $url  := .RelPermalink }}
+            <a class="navbar-item" href="{{ $url }}">
+              {{ $lang }}
+            </a>
+            {{ end }}
+          </div>
+        </div>
+        -->
+
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link has-text-weight-bold" href="{{ "/docs" | relLangURL }}">
+            {{ T "docs" }}
           </a>
 
           <div class="navbar-dropdown">
@@ -40,8 +61,8 @@
         </div>
 
         <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link has-text-weight-bold" href="/blog">
-            Blog
+          <a class="navbar-link has-text-weight-bold" href="{{ "/blog" | relLangURL }}">
+            {{ T "blog" }}
           </a>
 
           <div class="navbar-dropdown">
@@ -53,14 +74,14 @@
 
             <hr class="navbar-divider" />
 
-            <a class="navbar-item has-text-weight-bold" href="/blog">
-              More ...
+            <a class="navbar-item has-text-weight-bold" href="{{ "/blog" | relLangURL }}">
+              {{ T "more" }}
             </a>
           </div>
         </div>
 
-        <a class="navbar-item has-text-weight-bold" href="/community">
-          Community
+        <a class="navbar-item has-text-weight-bold" href="{{ "/community" | relLangURL }}">
+          {{ T "community" }}
         </a>
 
         <div class="navbar-item">

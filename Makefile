@@ -15,4 +15,5 @@ serve:
 	--buildDrafts \
 	--buildFuture \
 	--ignoreCache \
-	--disableFastRender
+	--disableFastRender \
+	--verbose
