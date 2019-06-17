@@ -10,7 +10,7 @@ For many large companies seeking help with horizontal scaling, Vitess' value pro
 
 ### Query Optimization
 
-No matter how advanced our new generation of SQL databases is, we still need to protect them against rogue engineers and unexpected harmful queries. Thankfully, Vitess kills and rewrites dangerous queries to make sure that your database performance isn't due to application or user error. For example, we will add configurable limits to your OLTP queries, reducing the number of full table scans. Additionally, Vitess kills non-deterministic updates that MySQL would normally run silently. If you have special toxic queries that are unique to your data path, you can make your own custom rules that fail them before they touch your database. If that weren't enough, our query optimizer reads your SQL and knows what parts it can reuse to prevent identical requests from hitting your database at the same time.
+No matter how advanced our new generation of SQL databases is, we still need to protect them against rogue engineers and unexpected harmful queries. Thankfully, Vitess kills and rewrites dangerous queries to make sure that your database performance isn't due to application or user error. For example, we will add configurable limits to your OLTP queries, reducing the number of full table scans. If you have special toxic queries that are unique to your data path, you can make your own custom rules that fail them before they touch your database. Additionally, Vitess also protects your database from hot queries by reusing results and preventing identical requests from hitting your database at the same time.
 
 ### Monitoring
 
@@ -20,7 +20,7 @@ Vitess includes a fairly extensive debug suite with variables that are set up to
 
 Unlike stock SQL offerings, Vitess' topology is backed by a consensus-based metadata store, so you will always have a consistent view of your database, its replicas, and any read-only analytics replicas that you have created. Along with this comes a built-in control plane that can handle high-level operations such as reparenting, all displayed in a clean web GUI. Finally, Vitess was created to be highly-available; its control plane and topology store work together nicely to deploy your databases across multiple regions.
 
-### Networking Optimization
+### Connection Pooling
 
 Most individuals who have tried to run stock MySQL likely understand that its memory usage is fairly unpredictable; you are often at the mercy of uncontrolled memory allocations and have to spend large amounts of time configuring connection buffers or overprovisioning memory to avoid performance failures. Instead of opening a new thread for every connection to the database, Vitess maps its lightweight connections to a small set of MySQL connections to shrink configuration time and vastly increase the amount of open connections.
 
