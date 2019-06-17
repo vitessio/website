@@ -1,7 +1,7 @@
 ---
 author: "Abhi Vaidyanatha"
-date: 2019-05-29T09:07:21-08:00
-slug: "2019-05-29-unsharded-vitess-benefits"
+date: 2019-06-17T09:07:21-08:00
+slug: "2019-06-17-unsharded-vitess-benefits"
 tags: ['Guides', 'Unsharded', 'Benefits']
 title: "The Benefits of Unsharded Vitess"
 ---
