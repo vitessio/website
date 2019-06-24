@@ -10,7 +10,7 @@ For many large companies seeking help with horizontal scaling, Vitess' value pro
 
 ### Query Optimization
 
-No matter how advanced our new generation of SQL databases is, we still need to protect them against rogue engineers and unexpected harmful queries. Thankfully, Vitess kills and rewrites dangerous queries to make sure that your database performance isn't due to application or user error. For example, we will add configurable limits to your OLTP queries, reducing the number of full table scans. If you have special toxic queries that are unique to your data path, you can make your own custom rules that fail them before they touch your database. Additionally, Vitess also protects your database from hot queries by reusing results and preventing identical requests from hitting your database at the same time.
+No matter how advanced our new generation of SQL databases is, we still need to protect them against toxic queries in fast moving environments. Thankfully, Vitess kills and rewrites dangerous queries to make sure that your database performance isn't due to application or user error. For example, we will add configurable limits to your OLTP queries, reducing the number of full table scans. If you have special toxic queries that are unique to your data path, you can make your own custom rules that fail them before they touch your database. Additionally, Vitess also protects your database from hot queries by reusing results and preventing identical requests from hitting your database at the same time.
 
 ### Monitoring
 
