@@ -12,7 +12,9 @@ The Vitess community welcomes one and all. Join our Vitess Slack channel for gen
 
 ### Vitess Monthly Meetings
 
-On the third Thursday of the month (unless otherwise specified), the Vitess community holds a monthly meeting by video conference to discuss the state of Vitess. New features will be previewed or discussed, and everyone regardless of location and familiarity with Vitess is welcome to join.
+On the third Thursday of the month (unless otherwise specified), the Vitess community holds a monthly meeting by video conference to discuss the state of Vitess. New features will be previewed or discussed, and everyone, regardless of location and familiarity with Vitess is welcome to join.
+
+To stay up to date on these monthly meetings and other meetups, click [here](https://calendar.google.com/calendar/embed?src=planetscale.com_21541iv1dn67m0jd023lql4dak%40group.calendar.google.com&ctz=America%2FLos_Angeles) to add them to your calendar.
 
 **Date**: 3rd Thursday of every month
 
