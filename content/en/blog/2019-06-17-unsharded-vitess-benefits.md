@@ -8,9 +8,11 @@ title: "The Benefits of Unsharded Vitess"
 
 For many large companies seeking help with horizontal scaling, Vitess' value proposition is easily understood; running stateful workloads at astronomical scale is a hard problem that Vitess has boldly solved in the past. However, for businesses that aren't hitting the performance limitations of standard MySQL, it may seem difficult to justify placing seemingly complex middleware in your data path with no immediate reward. I'm here to show you why unsharded Vitess is not just a pre-optimization for future horizontal scaling - it provides many upgrades to the MySQL experience.
 
-### Query Optimization
+### Restrict Toxic Queries
 
-No matter how advanced our new generation of SQL databases is, we still need to protect them against toxic queries in fast moving environments. Thankfully, Vitess kills and rewrites dangerous queries to make sure that your database performance isn't due to application or user error. For example, we will add configurable limits to your OLTP queries, reducing the number of full table scans. If you have special toxic queries that are unique to your data path, you can make your own custom rules that fail them before they touch your database. Additionally, Vitess also protects your database from hot queries by reusing results and preventing identical requests from hitting your database at the same time.
+It is far too easy to write SQL queries that look simple, but are inefficient to execute at the database layer due to missing indexes or small logic mistakes. These __toxic queries__ can easily be introduced in otherwise benign looking code changes, but their impact can be severe enough to bring down your application.
+
+Thankfully, Vitess kills and rewrites dangerous queries to make sure that your database performance isn't due to application or user error. For example, we will add configurable limits to your OLTP queries, reducing the number of full table scans. If you have special toxic queries that are unique to your data path, you can make your own custom rules that fail them before they touch your database. Additionally, Vitess also protects your database from hot queries by reusing results and preventing identical requests from hitting your database at the same time.
 
 ### Monitoring
 
