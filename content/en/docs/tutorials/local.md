@@ -238,7 +238,7 @@ Before we get started, let’s get a few things out of the way.
     * Set VTROOT to the parent of the Vitess source tree. For example, if you ran make build while in $HOME/vt/src/vitess.io/vitess, then you should set:
 
 ``` sh
-export VTROOT=$HOME/vt
+export VTROOT=$HOME/vt/src/vitess.io/vitess
 ```
 
  * Set VTDATAROOT to the directory where you want data files and logs to be stored. For example
