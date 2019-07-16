@@ -61,7 +61,7 @@ cd examples/local
 
 You should see output similar to the following:
 
-```
+```bash
 ~/...vitess/examples/local> ./101_initial_cluster.sh
 enter zk2 env
 Starting zk servers...
