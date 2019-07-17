@@ -95,7 +95,7 @@ The *replication graph* identifies the relationships between master databases an
 
 The [*Topology Service*](../../user-guides/topology-service) (also referred to as the lock service) is a set of backend processes running on different servers. Those servers store topology data and provide a distributed locking service.
 
-Vitess uses a plug-in system to support various backends for storing topology data, which are assumed to provide a distributed, consistent key-value store. By default, our [local example](../../tutorials/local) uses the etcd2 plugin.
+Vitess uses a plug-in system to support various backends for storing topology data, which are assumed to provide a distributed, consistent key-value store. By default, Vitess uses the `etcd2` plugin.
 
 The topology service exists for several reasons:
 
