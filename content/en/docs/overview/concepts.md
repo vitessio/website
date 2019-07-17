@@ -95,7 +95,7 @@ The *replication graph* identifies the relationships between master databases an
 
 The [*Topology Service*](../../user-guides/topology-service) (also referred to as the lock service) is a set of backend processes running on different servers. Those servers store topology data and provide a distributed locking service.
 
-Vitess uses a plug-in system to support various backends for storing topology data, which are assumed to provide a distributed, consistent key-value store. By default, our [local example](../../tutorials/local) uses the ZooKeeper plugin, and the [Kubernetes example](../../tutorials/kubernetes) uses etcd.
+Vitess uses a plug-in system to support various backends for storing topology data, which are assumed to provide a distributed, consistent key-value store. By default, our [local example](../../tutorials/local) uses the etcd2 plugin.
 
 The topology service exists for several reasons:
 
@@ -125,5 +125,4 @@ A *cell* is a group of servers and network infrastructure collocated in an area,
 
 Each cell in a Vitess implementation has a [local topology service](#topology-service), which is hosted in that cell. The topology service contains most of the information about the Vitess tablets in its cell. This enables a cell to be taken down and rebuilt as a unit.
 
-Vitess limits cross-cell traffic for both data and metadata. While it may be useful to also have the ability to route read traffic to individual cells, Vitess currently serves reads only from the local cell. Writes will go cross-cell when necessary, to wherever the master for that shard
-resides.
+Vitess limits cross-cell traffic for both data and metadata. While it may be useful to also have the ability to route read traffic to individual cells, Vitess currently serves reads only from the local cell. Writes will go cross-cell when necessary, to wherever the master for that shard resides.

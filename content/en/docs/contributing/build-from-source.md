@@ -11,7 +11,7 @@ If you run into issues or have questions, we recommend posting in our [Slack cha
 
 ## Build From Source
 
-The following sections explain the process for manually building Vitess on Linux and macOS. If you are new to Vitess, it is recommended to start with the [local install](../tutorial/local.md) guide instead.
+The following sections explain the process for manually building Vitess on Linux and macOS. If you are new to Vitess, it is recommended to start with the [local install](../../tutorial/local) guide instead.
 
 ### Install Dependencies
 
@@ -45,7 +45,7 @@ _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your in
 
 4.  Install [etcd v3.0+](https://github.com/coreos/etcd/releases). Remember to include `etcd` command on your path.
 
-    We will use ectd for the [topology service](../overview/concepts.md). Vitess also includes built-in support for [ZooKeeper](https://zookeeper.apache.org) and [Consul](https://www.consul.io/).
+    We will use ectd for the [topology service](../../overview/concepts). Vitess also includes built-in support for [ZooKeeper](https://zookeeper.apache.org) and [Consul](https://www.consul.io/).
 
 5.  Install the following other tools needed to build and run Vitess:
 
@@ -86,7 +86,7 @@ _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your in
 
 3.  Install [etcd v3.0+](https://github.com/coreos/etcd/releases). Remember to include `etcd` command on your path.
 
-    We will use ectd for the [topology service](../overview/concepts.md). Vitess also includes built-in support for [ZooKeeper](https://zookeeper.apache.org) and [Consul](https://www.consul.io/).
+    We will use ectd for the [topology service](../../overview/concepts). Vitess also includes built-in support for [ZooKeeper](https://zookeeper.apache.org) and [Consul](https://www.consul.io/).
 
 5.  Run the following commands:
 
@@ -263,4 +263,4 @@ http://localhost:15000
 
 ### Next steps
 
-Congratulations! You now have a local vitess cluster up and running. You can complete additional exercises by following along with [Run Vitess Locally](../tutorial/local.md) guide.
+Congratulations! You now have a local vitess cluster up and running. You can complete additional exercises by following along with [Run Vitess Locally](../../tutorial/local) guide.
