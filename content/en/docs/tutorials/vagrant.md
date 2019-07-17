@@ -75,7 +75,7 @@ make site_test
 
 ## Start a Vitess cluster
 
-After completing the instructions above to [build Vitess](#build-vitess-vagrant), you can use the example scripts in the Github repo to bring up a Vitess cluster on your local machine. These scripts use ZooKeeper as the lock service. ZooKeeper is included in the Vitess distribution.
+After completing the instructions above to [build Vitess](#build-vitess-vagrant), you can use the example scripts in the Github repo to bring up a Vitess cluster on your local machine. These scripts use ZooKeeper as the [topology service](../overview/concepts.md). ZooKeeper is included in the Vitess distribution.
 
 1. **Start Cluster**
 

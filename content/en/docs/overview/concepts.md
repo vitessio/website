@@ -91,9 +91,9 @@ There can be a different `ServedFrom` record for each `(cell, tablet type)` pair
 
 The *replication graph* identifies the relationships between master databases and their respective replicas. During a master failover, the replication graph enables Vitess to point all existing replicas to a newly designated master database so that replication can continue.
 
-## Topology Service
+## Topology Service (TOPO)
 
-The [*Topology Service*](../../user-guides/topology-service) is a set of backend processes running on different servers. Those servers store topology data and provide a distributed locking service.
+The [*Topology Service*](../../user-guides/topology-service) (also referred to as the lock service) is a set of backend processes running on different servers. Those servers store topology data and provide a distributed locking service.
 
 Vitess uses a plug-in system to support various backends for storing topology data, which are assumed to provide a distributed, consistent key-value store. By default, our [local example](../../tutorials/local) uses the ZooKeeper plugin, and the [Kubernetes example](../../tutorials/kubernetes) uses etcd.
 

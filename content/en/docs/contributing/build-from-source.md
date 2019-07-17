@@ -15,7 +15,7 @@ The following sections explain the process for manually building Vitess on Linux
 
 ### Install Dependencies
 
-We currently test Vitess regularly on Ubuntu 14.04 (Trusty) and Debian 8 (Jessie).  macOS 10.11 (El Capitan) and above should work as well. The installation instructions are [below](#macos).
+We currently test Vitess regularly on Ubuntu 14.04 (Trusty) and Debian 8 (Jessie). macOS 10.11 (El Capitan) and above should work as well. The installation instructions are [below](#macos).
 
 #### Ubuntu and Debian
 
@@ -45,7 +45,7 @@ _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your in
 
 4.  Install [etcd v3.0+](https://github.com/coreos/etcd/releases). Remember to include `etcd` command on your path.
 
-    We will use ectd for the lock service. Vitess also includes built-in support for [ZooKeeper](https://zookeeper.apache.org) and [Consul](https://www.consul.io/).
+    We will use ectd for the [topology service](../overview/concepts.md). Vitess also includes built-in support for [ZooKeeper](https://zookeeper.apache.org) and [Consul](https://www.consul.io/).
 
 5.  Install the following other tools needed to build and run Vitess:
 
@@ -86,7 +86,7 @@ _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your in
 
 3.  Install [etcd v3.0+](https://github.com/coreos/etcd/releases). Remember to include `etcd` command on your path.
 
-    We will use ectd for the lock service. Vitess also includes built-in support for [ZooKeeper](https://zookeeper.apache.org) and [Consul](https://www.consul.io/).
+    We will use ectd for the [topology service](../overview/concepts.md). Vitess also includes built-in support for [ZooKeeper](https://zookeeper.apache.org) and [Consul](https://www.consul.io/).
 
 5.  Run the following commands:
 
@@ -108,7 +108,7 @@ _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your in
 
 7.  For the Vitess hostname resolving functions to work correctly, a new entry has to be added into the /etc/hosts file with the current LAN IP address of the computer (preferably IPv4) and the current hostname, which you get by typing the 'hostname' command in the terminal.
 
-    It is also a good idea to put the following line to [force the Go DNS resolver](https://golang.org/doc/go1.5#net) in your ~/.profile or ~/.bashrc or ~/.zshrc:
+    It is also a good idea to put the following line to [force the Go DNS resolver](https://golang.org/doc/go1.5#net) in your `~/.profile` or `~/.bashrc` or `~/.zshrc`:
 
     ```sh
     export GODEBUG=netdns=go
@@ -172,9 +172,13 @@ export MYSQL_FLAVOR=MySQL56
 If you run into issues or have questions, we recommend posting in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
 {{< /info >}}
 
-##### Python errors
+##### Python Errors
 
-The end-to-end test suite currently requires Python 2.7. We are working on removing this dependency, and recommend that you bootstrap with test-building disabled (`BUILD_TESTS=0 ./bootstrap.sh`).
+The end-to-end test suite currently requires Python 2.7. We are working on removing this dependency, but in the mean time you can run tests from within Docker. The MySQL 5.7 container provided includes the required dependencies:
+
+```bash
+make docker_test flavor=mysql57
+```
 
 ##### Node already exists, port in use, etc.
 
