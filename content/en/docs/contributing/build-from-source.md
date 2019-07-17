@@ -11,7 +11,7 @@ If you run into issues or have questions, we recommend posting in our [Slack cha
 
 ## Build From Source
 
-The following sections explain the process for manually building Vitess on Linux and macOS. If you are new to Vitess, it is recommended to start with the [local install](../../tutorial/local) guide instead.
+The following sections explain the process for manually building Vitess on Linux and macOS. If you are new to Vitess, it is recommended to start with the [local install](../../tutorials/local) guide instead.
 
 ### Install Dependencies
 
@@ -263,4 +263,4 @@ http://localhost:15000
 
 ### Next steps
 
-Congratulations! You now have a local vitess cluster up and running. You can complete additional exercises by following along with [Run Vitess Locally](../../tutorial/local) guide.
+Congratulations! You now have a local vitess cluster up and running. You can complete additional exercises by following along with [Run Vitess Locally](../../tutorials/local) guide.
