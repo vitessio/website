@@ -1,5 +1,6 @@
 ---
-title: Frequently Asked Questions
+title: FAQ
+description: Frequently Asked Questions about Vitess.
 weight: 8
 ---
 

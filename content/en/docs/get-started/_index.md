@@ -1,9 +1,7 @@
 ---
 title: Get Started 
-description: Run Vitess using Kubernetes, or a manual build
+description: Get started by deploying Vitess on your favorite platform.
 weight: 2 
 ---
 
-These pages describe the primary ways that you can utilize to quickly get up and running with Vitess.
-
-In the coming weeks, new and updated documentation around how to get started with Kubernetes will be updated with new examples.
+Vitess supports binary deployment on the following platforms. See also [Build From Source](#TODO) if you are interesting in building your own binary, or contributing to Vitess.

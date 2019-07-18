@@ -1,7 +1,6 @@
 ---
 title: The Vitess Documentation
 description: Everything you need to know about the world's most scalable open-source MySQL platform
-notoc: true
 ---
 
 Vitess is a database solution for deploying, scaling and managing large clusters of MySQL instances. It's built to run with equal effectiveness on public cloud architecture, private cloud architecture, and dedicated hardware.

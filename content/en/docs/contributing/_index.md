@@ -1,6 +1,6 @@
 ---
 title: Contributing to Vitess
-description: We love contributors, here's how to take part
+description: Get involved with Vitess development.
 weight: 6
 ---
 

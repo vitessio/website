@@ -1,6 +1,6 @@
 ---
 title: User Guides
-description: Practical Guides for Most Scenarios
+description: Task-based guides for common usage scenarios.
 weight: 4
 ---
 
