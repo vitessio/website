@@ -1,7 +1,7 @@
 ---
-title: Tutorials
+title: Get Started 
 description: Run Vitess using Kubernetes, or a manual build
-weight: 1
+weight: 2 
 ---
 
 These pages describe the primary ways that you can utilize to quickly get up and running with Vitess.

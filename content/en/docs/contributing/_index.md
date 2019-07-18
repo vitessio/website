@@ -1,7 +1,7 @@
 ---
 title: Contributing to Vitess
 description: We love contributors, here's how to take part
-weight: 9
+weight: 6
 ---
 
 You want to contribute to Vitess? That's awesome!

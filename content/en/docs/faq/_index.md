@@ -1,7 +1,6 @@
 ---
 title: Frequently Asked Questions
-weight: 2
-featured: true
+weight: 8
 ---
 
 ## Does the application need to know about the sharding scheme underneath Vitess?
