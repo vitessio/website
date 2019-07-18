@@ -11,7 +11,7 @@ featured: true
 The following guide will show you how to build and run Vitess in your local environment using this tool. 
 
 {{< info >}}
-If you run into issues or have questions, we recommend posting in the [Vitess Google Group](https://groups.google.com/forum/#!forum/vitess). This is a very active community forum and a great place to interact with other users.
+If you run into issues or have questions, we recommend posting in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
 {{< /info >}}
 
 ## Install dependencies
@@ -75,7 +75,7 @@ make site_test
 
 ## Start a Vitess cluster
 
-After completing the instructions above to [build Vitess](#build-vitess-vagrant), you can use the example scripts in the Github repo to bring up a Vitess cluster on your local machine. These scripts use ZooKeeper as the lock service. ZooKeeper is included in the Vitess distribution.
+After completing the instructions above to [build Vitess](#build-vitess-vagrant), you can use the example scripts in the Github repo to bring up a Vitess cluster on your local machine. These scripts use `etcd2` as the default [topology service](../../overview/concepts) plugin.
 
 1. **Start Cluster**
 
@@ -147,4 +147,4 @@ When you are done testing, you can tear down the cluster with the following scri
 
 If anything goes wrong, check the logs in your `$VTDATAROOT/tmp` directory for error messages. There are also some tablet-specific logs, as well as MySQL logs in the various `$VTDATAROOT/vt_*` directories.
 
-If you need help diagnosing a problem, send a message to our [mailing list](https://groups.google.com/forum/#!forum/vitess). In addition to any errors you see at the command-line, it would also help to upload an archive of your `VTDATAROOT` directory to a file sharing service and provide a link to it.
+If you need help diagnosing a problem, send a message to our [Slack channel](https://vitess.slack.com). In addition to any errors you see at the command-line, it would also help to upload an archive of your `VTDATAROOT` directory to a file sharing service and provide a link to it.
