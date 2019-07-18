@@ -1,6 +1,6 @@
 ---
 title: Get Started 
-description: Get started by deploying Vitess on your favorite platform.
+description: Deploy Vitess on your favorite platform.
 weight: 2 
 ---
 
