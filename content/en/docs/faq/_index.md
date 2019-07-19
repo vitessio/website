@@ -2,7 +2,6 @@
 title: FAQ
 description: Frequently Asked Questions about Vitess
 weight: 8
-notoc: true
 ---
 
 ## Does the application need to know about the sharding scheme underneath Vitess?

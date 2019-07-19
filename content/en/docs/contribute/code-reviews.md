@@ -67,9 +67,3 @@ Pull requests can be merged after they were approved and the Travis tests have p
 External contributions will be merged by a team member.
 Internal team members can merge their **own** pull requests.
 
-## Internal Bug Numbers
-
-Most of the bugs the team is working on are tracked internally.
-We reference to them as `b/########` or `BUG=########` in commit messages and comments.
-External users can ignore these.
-

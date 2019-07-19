@@ -1,5 +1,5 @@
 ---
 title: Resources
-description: Additional resources including Presentations and Roadmap.
+description: Additional resources including Presentations and Roadmap
 weight: 7
 ---
