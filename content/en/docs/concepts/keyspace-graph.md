@@ -2,8 +2,6 @@
 title: Keyspace Graph
 ---
 
-# Keyspace Graph
-
 The *keyspace graph* allows Vitess to decide which set of shards to use for a given keyspace, cell, and tablet type.
 
 ## Partitions

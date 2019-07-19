@@ -2,8 +2,6 @@
 title: Tablet
 ---
 
-# Tablet
-
 A *tablet* is a combination of a `mysqld` process and a corresponding `vttablet` process, usually running on the same machine.
 
 Each tablet is assigned a *tablet type*, which specifies what role it currently performs.

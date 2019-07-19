@@ -2,8 +2,6 @@
 title: Topology Service
 ---
 
-# Topology Service
-
 The [*Topology Service*](../../user-guides/topology-service) is a set of backend processes running on different servers. Those servers store topology data and provide a distributed locking service.
 
 Vitess uses a plug-in system to support various backends for storing topology data, which are assumed to provide a distributed, consistent key-value store. By default, our [local example](../../tutorials/local) uses the ZooKeeper plugin, and the [Kubernetes example](../../tutorials/kubernetes) uses etcd.

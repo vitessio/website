@@ -1,6 +1,6 @@
 ---
 title: Contribute
-description: Get involved with Vitess development.
+description: Get involved with Vitess development
 weight: 6
 ---
 

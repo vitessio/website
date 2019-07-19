@@ -1,6 +1,6 @@
 ---
 title: User Guides
-description: Task-based guides for common usage scenarios.
+description: Task-based guides for common usage scenarios
 weight: 4
 ---
 
