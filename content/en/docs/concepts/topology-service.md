@@ -1,5 +1,6 @@
 ---
 title: Topology Service
+description: Also known as the TOPO or lock service
 ---
 
 The [*Topology Service*](../../user-guides/topology-service) is a set of backend processes running on different servers. Those servers store topology data and provide a distributed locking service.
@@ -27,4 +28,3 @@ In order to survive any single cell going down, the global topology service shou
 Each local topology contains information related to its own cell. Specifically, it contains data about tablets in the cell, the keyspace graph for that cell, and the replication graph for that cell.
 
 The local topology service must be available for Vitess to discover tablets and adjust routing as tablets come and go. However, no calls to the topology service are made in the critical path of serving a query at steady state. That means queries are still served during temporary unavailability of topology.
-

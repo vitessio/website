@@ -1,6 +1,5 @@
 ---
 title: Keyspace ID
-description: Learn core Vitess concepts and terminology.
 ---
 
 The *keyspace ID* is the value that is used to decide on which shard a given row lives. [Range-based Sharding](../../sharding/#key-ranges-and-partitions) refers to creating shards that each cover a particular range of keyspace IDs.
