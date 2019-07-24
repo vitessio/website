@@ -1,6 +1,7 @@
 ---
 title: VSchema User Guide
 weight: 2
+aliases: ['/docs/schema-management/vschema/']
 ---
 
 VSchema stands for Vitess Schema. In contrast to a traditional database schema that contains metadata about tables, a VSchema contains metadata about how tables are organized across keyspaces and shards. Simply put, it contains the information needed to make Vitess look like a single database server.

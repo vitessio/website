@@ -1,6 +1,7 @@
 ---
 title: Scalability Philosophy
 weight: 1
+aliases: ['/docs/launching/scalability-philosophy/']
 ---
 
 Scalability problems can be solved using many approaches. This document describes Vitess’ approach to address these problems.

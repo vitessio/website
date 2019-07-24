@@ -1,7 +1,7 @@
 ---
 title: Advanced Features
 description: Work-in-progress section to highlight advanced features you may want to use
-weight: 10
+aliases: ['/docs/advanced/']
 ---
 
 The pages in this Advanced Features section can be understood as a complement to the [User Guides](../user-guides) section of the docs. Here, we describe advanced Vitess features that you may want to enable or tune in a production setup.

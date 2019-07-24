@@ -1,6 +1,7 @@
 ---
 title: Server Configuration
 weight: 3
+aliases: ['/docs/launching/server-configuration/']
 ---
 
 ## MySQL
