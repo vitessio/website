@@ -2,7 +2,6 @@
 title: Schema Management
 description: More information about all things schema and VSchema
 weight: 6
-aliases: ['/docs/schema-management/']
 ---
 
 Using Vitess requires you to work with two different types of schemas:

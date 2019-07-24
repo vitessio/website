@@ -1,7 +1,6 @@
 ---
 title: Applying MySQL schema
 weight: 1
-aliases: ['/docs/schema-management/mysql-schema/']
 ---
 
 For applying schema changes for MySQL instances managed by Vitess, there are a few options.
