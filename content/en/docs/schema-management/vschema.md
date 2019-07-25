@@ -148,7 +148,7 @@ Custom vindexes can also be plugged in as needed.
 
 Auto-increment columns do not work very well for sharded tables. [Vitess sequences](../../reference/vitess-sequences) solve this problem. Sequence tables must be specified in the VSchema, and then tied to table columns. At the time of insert, if no value is specified for such a column, VTGate will generate a number for it using the sequence table.
 
-## Refernce tables
+## Reference tables
 
 Vitess allows you to create an unsharded table and deploy it into all shards of a sharded keyspace. The data in such a table is assumed to be identical for all shards. In this case, you can specify that the table is of type `reference`, and should not specify any vindex for it. Any joins of this table with an unsharded table will be treated as a local join.
 
