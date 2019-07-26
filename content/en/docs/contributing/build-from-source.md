@@ -2,14 +2,11 @@
 title: Build From Source
 description: Instructions for building Vitess on your machine for testing and development purposes
 weight: 1
-featured: true
 ---
 
 {{< info >}}
 If you run into issues or have questions, we recommend posting in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
 {{< /info >}}
-
-## Build From Source
 
 The following sections explain the process for manually building Vitess on Linux and macOS. If you are new to Vitess, it is recommended to start with the [local install](../../tutorials/local) guide instead.
 
