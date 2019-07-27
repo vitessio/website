@@ -1,8 +1,7 @@
 ---
 title: VReplication Operator's Guide
+aliases: ['/docs/advanced/vreplication/']
 ---
-
-## Overview
 
 VReplication is a core component of vitess that can be used to compose
 many features. It can be used for the following use cases:

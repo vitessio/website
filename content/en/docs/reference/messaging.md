@@ -1,8 +1,7 @@
 ---
 title: Vitess Messaging
+aliases: ['/docs/advanced/messaging/']
 ---
-
-## Overview
 
 Vitess messaging gives the application an easy way to schedule and manage work
 that needs to be performed asynchronously. Under the covers, messages are
