@@ -366,7 +366,7 @@ The first issue to address is the fact that customer and corder have auto-increm
 
 The sequence table is an unsharded single row table that Vitess can use to generate monotonically increasing ids. The syntax to generate an id is: `select next :n values from customer_seq`. The vttablet that exposes this table is capable of serving a very large number of such ids because values are cached and served out of memory. The cache value is configurable.
 
-The VSchema allows you to associate a column of a table with the sequence table. Once this is done, an insert on that table transparently fetches an id from the sequence table, fills in the value, and routes the row to the appropriate shard. This makes the construct backward compatible to how MySQL's auto_increment column works.
+The VSchema allows you to associate a column of a table with the sequence table. Once this is done, an insert on that table transparently fetches an id from the sequence table, fills in the value, and routes the row to the appropriate shard. This makes the construct backward compatible to how MySQL's `auto_increment` property works.
 
 Since sequences are unsharded tables, they will be stored in the commerce database. The schema:
 
@@ -380,7 +380,7 @@ insert into order_seq(id, next_id, cache) values(0, 1000, 100);
 Note the `vitess_sequence` comment in the create table statement. VTTablet will use this metadata to treat this table as a sequence.
 
 * `id` is always 0
-* `next_id` is set to `1000`: the value should be comfortably greater than the auto_increment max value used so far.
+* `next_id` is set to `1000`: the value should be comfortably greater than the `auto_increment` max value used so far.
 * `cache` specifies the number of values to cache before vttablet updates `next_id`.
 
 Higher cache values are more performant. However, cached values are lost if a reparent happens. The new master will start off at the `next_id` that was saved by the old master.
