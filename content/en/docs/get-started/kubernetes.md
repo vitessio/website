@@ -233,7 +233,7 @@ jobs:
     command: "CreateKeyspace -served_from='master:commerce,replica:commerce,rdonly:commerce' customer"
 ```
 
-This creates an entry into the topology indicating that any requests to master, replica, or rdonly sent to `customer` must be redirected to (served from) `commerce`. These tablet type specific redirects will be used to control how we transition the cut-over from `commerce` to `customer`.
+This creates an entry into the topology indicating that any requests to master, replica, or rdonly sent to `customer` must be redirected to (served from) `commerce`. These tablet type specific redirects will be used to control how we transition the cutover from `commerce` to `customer`.
 
 A successful completion of this job should show up as:
 
@@ -337,7 +337,7 @@ For large tables, this job could potentially run for many days, and may be resta
 * Start a filtered replication process from commerce->customer that keeps the customer’s tables in sync with those in commerce.
 
 
-NOTE: In production, you would want to run multiple sanity checks on the replication by running `SplitDiff` jobs multiple times before starting the cut-over:
+NOTE: In production, you would want to run multiple sanity checks on the replication by running `SplitDiff` jobs multiple times before starting the cutover:
 
 ``` yaml
 jobs:
@@ -377,7 +377,7 @@ COrder
 
 ### Cut over
 
-Once you have verified that the customer and corder tables are being continuously updated from commerce, you can cut-over the traffic. This is typically performed in three steps: `rdonly`, `replica` and `master`:
+Once you have verified that the customer and corder tables are being continuously updated from commerce, you can cutover the traffic. This is typically performed in three steps: `rdonly`, `replica` and `master`:
 
 For rdonly and replica:
 
@@ -400,7 +400,7 @@ Customer
 ERROR 1105 (HY000) at line 4: vtgate: http://vtgate-zone1-5ff9c47db6-7rmld:15001/: target: commerce.0.master, used tablet: zone1-1564760600 (zone1-commerce-0-replica-0.vttablet), vttablet: rpc error: code = FailedPrecondition desc = disallowed due to rule: enforce blacklisted tables (CallerID: userData1)
 ```
 
-The replica and rdonly cut-overs are freely reversible. However, the master cut-over is one-way and cannot be reversed. This is a limitation of vertical resharding, which will be resolved in the near future. For now, care should be taken so that no loss of data or availability occurs after the cut-over completes.
+The replica and rdonly cutovers are freely reversible. However, the master cutover is one-way and cannot be reversed. This is a limitation of vertical resharding, which will be resolved in the near future. For now, care should be taken so that no loss of data or availability occurs after the cutover completes.
 
 ### Clean up
 
@@ -433,7 +433,7 @@ jobs:
     command: "SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 master"
 ```
 
-These ‘control’ records were added by the `MigrateServedFrom` command during the cut-over to prevent the commerce tables from accidentally accepting writes. They can now be removed.
+These ‘control’ records were added by the `MigrateServedFrom` command during the cutover to prevent the commerce tables from accidentally accepting writes. They can now be removed.
 
 After this step, the `customer` and `corder` tables no longer exist in the `commerce` keyspace.
 
@@ -723,7 +723,7 @@ NOTE: This example does not actually run this command.
 NOTE: SplitDiff can be used to split shards as well as to merge them.
 
 ### Cut over
-Now that you have verified that the tables are being continuously updated from the source shard, you can cut-over the traffic. This is typically performed in three steps: `rdonly`, `replica` and `master`:
+Now that you have verified that the tables are being continuously updated from the source shard, you can cutover the traffic. This is typically performed in three steps: `rdonly`, `replica` and `master`:
 
 For rdonly and replica:
 
@@ -739,7 +739,7 @@ helm upgrade $release ../../helm/vitess/ -f 305_migrate_master.yaml
 
 During the *master* migration, the original shard master will first stop accepting updates. Then the process will wait for the new shard masters to fully catch up on filtered replication before allowing them to begin serving. Since filtered replication has been following along with live updates, there should only be a few seconds of master unavailability.
 
-The replica and rdonly cut-overs are freely reversible. Unlike the Vertical Split, a horizontal split is also reversible. You just have to add a `-reverse_replication` flag while cutting over the master. This flag causes the entire resharding process to run in the opposite direction, allowing you to Migrate in the other direction if the need arises.
+The replica and rdonly cutovers are freely reversible. Unlike the Vertical Split, a horizontal split is also reversible. You just have to add a `-reverse_replication` flag while cutting over the master. This flag causes the entire resharding process to run in the opposite direction, allowing you to Migrate in the other direction if the need arises.
 
 You should now be able to see the data that has been copied over to the new shards.
 

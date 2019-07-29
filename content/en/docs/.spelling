@@ -1,0 +1,57 @@
+# markdown-spellcheck spelling configuration file
+# Format - lines beginning # are comments
+# global dictionary is at the start, file overrides afterwards
+# one word per line, to define a file override use ' - filename'
+# where filename is relative to this configuration file
+Vitess
+MySQL
+NoSQL
+sharding
+JDBC
+Golang
+keyspace
+resharding
+rdonly
+keyspaces
+unsharded
+sharded
+GTID
+plugin
+Kubernetes
+etcd
+toposphere
+reparenting
+VSchema
+VTGate
+macOS
+MariaDB
+AppArmor
+automake
+libtool
+python-virtualenv
+python-mysqldb
+libssl-dev
+pkg-config
+Homebrew
+hostname
+IPv4
+vtctld
+RPC
+LGTM
+OLTP
+OLAP
+DDL
+DBA
+Minikube
+NewSQL
+artifacts
+plugins
+reshard
+keyrange
+mysqld
+gRPC
+VTTablet
+QPS
+Mesos
+2PC
+MapReduce
