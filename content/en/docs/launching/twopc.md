@@ -39,8 +39,6 @@ For the Go driver, you request the atomicity by adding it to the context using t
 
 For Python, the begin function of the cursor has an optional single_db flag. If the flag is True, then the request is for a single-db transaction. If False (or unspecified), then the following commit call's twopc flag decides if the commit is 2PC or Best Effort (multi).
 
-### Java & PHP (TODO)
-
 #### Adding support in a new driver
 
 The VTGate RPC API extends the Begin and Commit functions to specify atomicity. The API mimics the Python driver: The BeginRequest message provides a single_db flag and the CommitRequest message provides an atomic flag which is synonymous to twopc.

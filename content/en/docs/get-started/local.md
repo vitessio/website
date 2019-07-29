@@ -474,10 +474,6 @@ Now that we have made all the important decisions, it’s time to apply these ch
 ./301_customer_sharded.sh
 ```
 
-The jobs to watch for:
-TODO(jiten): Add grep command here.
-
-
 ### Create new shards
 
 At this point, you have finalized your sharded VSchema and vetted all the queries to make sure they still work. Now, it’s time to reshard.
