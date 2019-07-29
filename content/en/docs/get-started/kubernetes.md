@@ -16,19 +16,19 @@ Naturally, you realize the need for a reliable transactional datastore. Because 
 Before we get started, let’s get a few things out of the way.
 
 {{< info >}}
-The example settings have been tuned to run on Minikube. However, you should be able to try this on your own Kubernetes cluster. If you do, you may also want to remove some of the minikube specific resource settings (explained below).
+The example settings have been tuned to run on Minikube. However, you should be able to try this on your own Kubernetes cluster. If you do, you may also want to remove some of the Minikube specific resource settings (explained below).
 {{< /info >}}
 
-* [Download vitess](https://github.com/vitessio/vitess)
+* [Download Vitess](https://github.com/vitessio/vitess)
 * [Install Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
-* Start a minikube engine: `minikube start --cpus=4 --memory=5000`. Note the additional resource requirements. In order to go through all the use cases, many vttablet and mysql instances will be launched. These require more resources than the defaults used by minikube.
+* Start a Minikube engine: `minikube start --cpus=4 --memory=5000`. Note the additional resource requirements. In order to go through all the use cases, many vttablet and MySQL instances will be launched. These require more resources than the defaults used by Minikube.
 * [Install etcd operator](https://github.com/coreos/etcd-operator/blob/master/doc/user/install_guide.md)
 * [Install helm](https://docs.helm.sh/using_helm/)
 * After installing, run `helm init`
 
 ### Optional
 
-* Install mysql client. On Ubuntu: `apt-get install mysql-client`
+* Install the MySQL client. On Ubuntu: `apt-get install mysql-client`
 * Install vtctlclient
     * Install go 1.11+
     * `go get vitess.io/vitess/go/cmd/vtctlclient`
@@ -74,7 +74,7 @@ jobs/commerce-apply-vschema-initial       1         1            14m
 jobs/zone1-commerce-0-init-shard-master   1         1            14m
 ```
 
-If you have installed the mysql client, you should now be able to connect to the cluster using the following command:
+If you have installed the the MySQL client, you should now be able to connect to the cluster using the following command:
 
 ``` sh
 ~/...vitess/examples/helm> ./kmysql.sh
@@ -97,10 +97,10 @@ You can also browse to the vtctld console using the following command (Ubuntu):
 
 ### Minikube Customizations
 
-The helm example is based on the `values.yaml` file provided as the default helm chart for Vitess. The following overrides have been performed in order to run under minikube:
+The helm example is based on the `values.yaml` file provided as the default helm chart for Vitess. The following overrides have been performed in order to run under Minikube:
 
 * `resources`: have been nulled out. This instructs the Kubernetes environment to use whatever is available. Note, this is not recommended for a production environment. In such cases, you should start with the baseline values provided in `helm/vitess/values.yaml` and iterate from those.
-* etcd and vtgate replicas are set to 1. In a production environment, there should be 3-5 etcd replicas. The number of vtgates will need to scale up based on cluster size.
+* etcd and VTGate replicas are set to 1. In a production environment, there should be 3-5 etcd replicas. The number of VTGate servers will need to scale up based on cluster size.
 * `mysqlProtocol.authType` is set to `none`. This should be changed to `secret` and the credentials should be stored as Kubernetes secrets.
 * A serviceType of `NodePort` is not recommended in production. You may choose not to expose these end points to anyone outside Kubernetes at all. Another option is to create Ingress controllers.
 
@@ -233,7 +233,7 @@ jobs:
     command: "CreateKeyspace -served_from='master:commerce,replica:commerce,rdonly:commerce' customer"
 ```
 
-This creates an entry into the topology indicating that any requests to master, replica, or rdonly sent to `customer` must be redirected to (served from) `commerce`. These tablet type specific redirects will be used to control how we transition the cutover from `commerce` to `customer`.
+This creates an entry into the topology indicating that any requests to master, replica, or rdonly sent to `customer` must be redirected to (served from) `commerce`. These tablet type specific redirects will be used to control how we transition the cut-over from `commerce` to `customer`.
 
 A successful completion of this job should show up as:
 
@@ -300,7 +300,7 @@ The most significant change, of course, is the instantiation of vttablets for th
 * You moved customer and corder from the commerce’s VSchema to customer’s VSchema. Note that the physical tables are still in commerce.
 * You requested that the schema for customer and corder be copied to customer using the `copySchema` directive.
 
-The move in the vschema should not be material yet because any queries sent to customer are still redirected to commerce, where all the data is still present.
+The move in the VSchema should not be material yet because any queries sent to customer are still redirected to commerce, where all the data is still present.
 
 Upon completion of this step, there must be six running vttablet pods, and the following new jobs must have completed successfully:
 
@@ -337,7 +337,7 @@ For large tables, this job could potentially run for many days, and may be resta
 * Start a filtered replication process from commerce->customer that keeps the customer’s tables in sync with those in commerce.
 
 
-NOTE: In production, you would want to run multiple sanity checks on the replication by running `SplitDiff` jobs multiple times before starting the cutover:
+NOTE: In production, you would want to run multiple sanity checks on the replication by running `SplitDiff` jobs multiple times before starting the cut-over:
 
 ``` yaml
 jobs:
@@ -377,7 +377,7 @@ COrder
 
 ### Cut over
 
-Once you have verified that the customer and corder tables are being continuously updated from commerce, you can cutover the traffic. This is typically performed in three steps: `rdonly`, `replica` and `master`:
+Once you have verified that the customer and corder tables are being continuously updated from commerce, you can cut-over the traffic. This is typically performed in three steps: `rdonly`, `replica` and `master`:
 
 For rdonly and replica:
 
@@ -400,7 +400,7 @@ Customer
 ERROR 1105 (HY000) at line 4: vtgate: http://vtgate-zone1-5ff9c47db6-7rmld:15001/: target: commerce.0.master, used tablet: zone1-1564760600 (zone1-commerce-0-replica-0.vttablet), vttablet: rpc error: code = FailedPrecondition desc = disallowed due to rule: enforce blacklisted tables (CallerID: userData1)
 ```
 
-The replica and rdonly cutovers are freely reversible. However, the master cutover is one-way and cannot be reversed. This is a limitation of vertical resharding, which will be resolved in the near future. For now, care should be taken so that no loss of data or availability occurs after the cutover completes.
+The replica and rdonly cut-overs are freely reversible. However, the master cut-over is one-way and cannot be reversed. This is a limitation of vertical resharding, which will be resolved in the near future. For now, care should be taken so that no loss of data or availability occurs after the cut-over completes.
 
 ### Clean up
 
@@ -410,7 +410,7 @@ After celebrating your first successful ‘vertical resharding’, you will need
 helm upgrade $release ../../helm/vitess/ -f 206_clean_commerce.yaml
 ```
 
-You can see the following DMLs in commerce:
+You can see the following DML statements in commerce:
 
 ``` sql
             postsplit: |-
@@ -433,7 +433,7 @@ jobs:
     command: "SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 master"
 ```
 
-These ‘control’ records were added by the `MigrateServedFrom` command during the cutover to prevent the commerce tables from accidentally accepting writes. They can now be removed.
+These ‘control’ records were added by the `MigrateServedFrom` command during the cut-over to prevent the commerce tables from accidentally accepting writes. They can now be removed.
 
 After this step, the `customer` and `corder` tables no longer exist in the `commerce` keyspace.
 
@@ -458,7 +458,7 @@ The first issue to address is the fact that customer and corder have auto-increm
 
 The sequence table is an unsharded single row table that Vitess can use to generate monotonically increasing ids. The syntax to generate an id is: `select next :n values from customer_seq`. The vttablet that exposes this table is capable of serving a very large number of such ids because values are cached and served out of memory. The cache value is configurable.
 
-The VSchema allows you to associate a column of a table with the sequence table. Once this is done, an insert on that table transparently fetches an id from the sequence table, fills in the value, and routes the row to the appropriate shard. This makes the construct backward compatible to how mysql’s auto_increment column works.
+The VSchema allows you to associate a column of a table with the sequence table. Once this is done, an insert on that table transparently fetches an id from the sequence table, fills in the value, and routes the row to the appropriate shard. This makes the construct backward compatible to how MySQL's auto_increment column works.
 
 Since sequences are unsharded tables, they will be stored in the commerce database. The schema:
 
@@ -477,7 +477,7 @@ Note the `vitess_sequence` comment in the create table statement. VTTablet will 
 
 Higher cache values are more performant. However, cached values are lost if a reparent happens. The new master will start off at the `next_id` that was saved by the old master.
 
-The VTGates also need to know about the sequence tables. This is done by updating the vschema for commerce as follows:
+The VTGate servers also need to know about the sequence tables. This is done by updating the VSchema for commerce as follows:
 
 ``` json
 {
@@ -577,7 +577,7 @@ jobs/customer-apply-vschema-sharded       1         1            19s
 
 ### Create new shards
 
-At this point, you have finalized your sharded vschema and vetted all the queries to make sure they still work. Now, it’s time to reshard.
+At this point, you have finalized your sharded VSchema and vetted all the queries to make sure they still work. Now, it’s time to reshard.
 
 The resharding process works by splitting existing shards into smaller shards. This type of resharding is the most appropriate for Vitess. There are some use cases where you may want to spin up a new shard and add new rows in the most recently created shard. This can be achieved in Vitess by splitting a shard in such a way that no rows end up in the ‘new’ shard. However, it’s not natural for Vitess.
 
@@ -723,7 +723,7 @@ NOTE: This example does not actually run this command.
 NOTE: SplitDiff can be used to split shards as well as to merge them.
 
 ### Cut over
-Now that you have verified that the tables are being continuously updated from the source shard, you can cutover the traffic. This is typically performed in three steps: `rdonly`, `replica` and `master`:
+Now that you have verified that the tables are being continuously updated from the source shard, you can cut-over the traffic. This is typically performed in three steps: `rdonly`, `replica` and `master`:
 
 For rdonly and replica:
 
@@ -739,7 +739,7 @@ helm upgrade $release ../../helm/vitess/ -f 305_migrate_master.yaml
 
 During the *master* migration, the original shard master will first stop accepting updates. Then the process will wait for the new shard masters to fully catch up on filtered replication before allowing them to begin serving. Since filtered replication has been following along with live updates, there should only be a few seconds of master unavailability.
 
-The replica and rdonly cutovers are freely reversible. Unlike the Vertical Split, a horizontal split is also reversible. You just have to add a `-reverse_replication` flag while cutting over the master. This flag causes the entire resharding process to run in the opposite direction, allowing you to Migrate in the other direction if the need arises.
+The replica and rdonly cut-overs are freely reversible. Unlike the Vertical Split, a horizontal split is also reversible. You just have to add a `-reverse_replication` flag while cutting over the master. This flag causes the entire resharding process to run in the opposite direction, allowing you to Migrate in the other direction if the need arises.
 
 You should now be able to see the data that has been copied over to the new shards.
 

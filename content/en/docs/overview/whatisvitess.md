@@ -142,7 +142,7 @@ The easiest way to run Vitess is via Kubernetes. However, it's not a requirement
 
 **Related Vitess Documentation**
 
-* [Kubernetes Quickstart](../../tutorials/kubernetes)
+* [Kubernetes Quickstart](../../get-started/kubernetes)
 
 ## History
 

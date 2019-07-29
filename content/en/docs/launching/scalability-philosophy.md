@@ -17,7 +17,7 @@ There are fewer lock contentions to worry about, replication is a lot happier, p
 
 Although Vitess is designed to run in the cloud, it is entirely possible to run it on baremetal configs, and many users still do. If deploying in a cloud, the assignment of servers and ports is abstracted away from the administrator. On baremetal, the operator still has these responsibilities.
 
-We provide sample configs to help you [get started on Kubernetes](../../tutorials/kubernetes) since it's the most similar to Borg (the [predecessor to Kubernetes](https://kubernetes.io/blog/2015/04/borg-predecessor-to-kubernetes/) on which Vitess now runs in YouTube). If you're more familiar with alternatives like Mesos, Swarm, Nomad, or DC/OS, we'd welcome your contribution of sample configs for Vitess.
+We provide sample configs to help you [get started on Kubernetes](../../get-started/kubernetes) since it's the most similar to Borg (the [predecessor to Kubernetes](https://kubernetes.io/blog/2015/04/borg-predecessor-to-kubernetes/) on which Vitess now runs in YouTube). If you're more familiar with alternatives like Mesos, Swarm, Nomad, or DC/OS, we'd welcome your contribution of sample configs for Vitess.
 
 These orchestration systems typically use [containers](https://en.wikipedia.org/wiki/Software_container) to isolate small instances so they can be efficiently packed onto machines without contention on ports, paths, or compute resources. Then an automated scheduler does the job of shuffling instances around for failure resilience and optimum utilization.
 
@@ -42,7 +42,7 @@ Single shard transactions continue to remain ACID, just like MySQL supports it.
 
 If there are read-only code paths that can tolerate slightly stale data, the queries should be sent to REPLICA tablets for OLTP, and RDONLY tablets for OLAP workloads. This allows you to scale your read traffic more easily, and gives you the ability to distribute them geographically.
 
-This tradeoff allows for better throughput at the expense of stale or possible inconsistent reads, since the reads may be lagging behind the master, as data changes (and possibly with varying lag on different shards). To mitigate this, VTGates are capable of monitoring replica lag and can be configured to avoid serving data from instances that are lagging beyond X seconds.
+This trade-off allows for better throughput at the expense of stale or possible inconsistent reads, since the reads may be lagging behind the master, as data changes (and possibly with varying lag on different shards). To mitigate this, VTGate servers are capable of monitoring replica lag and can be configured to avoid serving data from instances that are lagging beyond X seconds.
 
 For true snapshot, the queries must be sent to the master within a transaction. For read-after-write consistency, reading from the master without a transaction is sufficient.
 
@@ -56,7 +56,7 @@ As for atomicity, the following levels are supported:
 
 * `SINGLE`: disallow multi-db transactions.
 * `MULTI`: multi-db transactions with best effort commit.
-* `TWOPC`: multi-db transactions with 2pc commit.
+* `TWOPC`: multi-db transactions with 2PC commit.
 
 ### No multi-master
 
@@ -138,7 +138,7 @@ Although Vitess strives to minimize the app changes required to scale, there are
 
 ### Commands specific to single MySQL instances
 
-Since vitess represents a combined view of all MySQL instances, there are some operations it cannot reasonably perform in a backward compatible manner. For example:
+Since Vitess represents a combined view of all MySQL instances, there are some operations it cannot reasonably perform in a backward compatible manner. For example:
 
 * `SET GLOBAL`
 * `SHOW`

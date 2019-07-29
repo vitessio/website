@@ -20,12 +20,10 @@ Both authors and reviewers need to answer these general questions:
 *   Does this match our current patterns? Example include RPC patterns,
     Retries / Waits / Timeouts patterns using Context, ...
 
-Additionally, we recommend every author to look over your own reviews just before committing them and check if you are following the recommendations below.
-We usually check these kinds of things while skimming through `git diff --cached` just before committing.
+Additionally, we recommend every author to look over your own reviews just before committing them and check if you are following the recommendations below. We usually check these kinds of things while skimming through `git diff --cached` just before committing.
 
 *   Scan the diffs as if you're the reviewer.
     *   Look for files that shouldn't be checked in (temporary/generated files).
-    *   Googlers only: Remove Google confidential info (e.g. internal URLs).
     *   Look for temporary code/comments you added while debugging.
         *   Example: fmt.Println("AAAAAAAAAAAAAAAAAA")
     *   Look for inconsistencies in indentation.
@@ -43,12 +41,11 @@ We usually check these kinds of things while skimming through `git diff --cached
     *   `// Prefer complete sentences when possible.`
     *   Leave a space after the comment marker `//`.
 
-During the review make sure you address all comments. Click Done (reviewable.io) or reply with "Done." (GitHub Review) to mark comments as addressed. There should be 0 unresolved discussions when it's ready to merge.
+If your reviewer leaves you comments, make sure that you address them and then click "Resolve conversation". There should be zero unresolved discussions before the PR is ready to merge.
 
 ## Assigning a Pull Request
 
-If you want to address your review to a particular set of teammates, add them as Assignee (righthand side on the pull request).
-They'll receive an email.
+Vitess uses [code owners](https://github.blog/2017-07-06-introducing-code-owners/) to auto-assign reviewers to a particular PR. If you have been granted membership to the Vitess team, you can add additional reviewers using the right-hand side pull request menu.
 
 During discussions, you can also refer to somebody using the *@username* syntax and they'll receive an email as well.
 
@@ -58,18 +55,10 @@ If you want to receive notifications even when you aren't mentioned, you can go 
 
 As a reviewer you can approve a pull request through two ways:
 
-* Approve the pull request via GitHub's new code review system
-* reply with a comment that contains the word *LGTM*  (Looks Good To Me)
+* Approve the pull request via GitHub's code review system
+* Reply with a comment that contains *LGTM*  (Looks Good To Me)
 
 ## Merging a Pull Request
 
-Pull requests can be merged after they were approved and the Travis tests have passed.
-External contributions will be merged by a team member.
-Internal team members can merge their **own** pull requests.
-
-## Internal Bug Numbers
-
-Most of the bugs the team is working on are tracked internally.
-We reference to them as `b/########` or `BUG=########` in commit messages and comments.
-External users can ignore these.
+Pull requests can be merged after they were approved and the CI tests have passed.
 

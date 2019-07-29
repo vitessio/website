@@ -60,8 +60,8 @@ Setting up these components directly -- for example, writing your own topology s
 
 **Related Vitess Documentation**
 
-* [Running Vitess on Kubernetes](../../tutorials/kubernetes)
-* [Running Vitess locally](../../tutorials/local)
+* [Running Vitess on Kubernetes](../../get-started/kubernetes)
+* [Running Vitess locally](../../get-started/local)
 * [Backing up data](../../user-guides/backup-and-restore)
 * [Reparenting - basic assignment of master instance in Vitess](../../user-guides/reparenting)
 
@@ -120,8 +120,8 @@ Vitess offers robust resharding support, which involves updating the sharding sc
 
 * [VSchema Reference guide](../../schema-management/vschema)
 * [Sharding](../../sharding)
-* [Horizontal sharding](../../tutorials/local/)
-* [Sharding in Kubernetes](../../tutorials/kubernetes/)
+* [Horizontal sharding](../../get-started/local/)
+* [Sharding in Kubernetes](../../get-started/kubernetes/)
 
 ## Related tasks
 

@@ -1,7 +1,7 @@
 ---
 title: User Guides
-description: Practical Guides for Most Scenarios
-weight: 3
+description: Task-based guides for common usage scenarios
+weight: 4
 ---
 
 ## Platform support

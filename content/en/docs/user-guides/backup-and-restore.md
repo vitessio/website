@@ -124,7 +124,7 @@ the [scope](https://cloud.google.com/compute/docs/authentication#using) that
 grants read-write access to Cloud Storage. When using Container Engine, you can
 do this for all the instances it creates by adding `--scopes storage-rw` to the
 `gcloud container clusters create` command as shown in the [Vitess on Kubernetes
-guide](../../tutorials/kubernetes#start-a-container-engine-cluster).
+guide](../../get-started/kubernetes#start-a-container-engine-cluster).
 
 ## Creating a backup
 

@@ -76,7 +76,7 @@ make site_test
 
 ## Start a Vitess cluster
 
-After completing the instructions above to [build Vitess](#build-vitess-vagrant), you can use the example scripts in the Github repo to bring up a Vitess cluster on your local machine. These scripts use `etcd2` as the default [topology service](../../overview/concepts) plugin.
+After completing the instructions above to [build Vitess](#build-vitess-vagrant), you can use the example scripts in the GitHub repo to bring up a Vitess cluster on your local machine. These scripts use `etcd2` as the default [topology service](../../overview/concepts) plugin.
 
 1. **Start Cluster**
 
@@ -86,9 +86,9 @@ After completing the instructions above to [build Vitess](#build-vitess-vagrant)
 
     **Note:** This will start a full Vitess cluster with a single shard and five tablets. 
 
-2. **Connect to Vtgate**
+2. **Connect to VTGate**
    
-    From the VM, you can connect to vtgate using mysql protocol with the following command:
+    From the VM, you can connect to VTGate using the MySQL protocol with the following command:
     
     ```sh
     mysql -umysql_user -pmysql_password -h vitess -P 15306
