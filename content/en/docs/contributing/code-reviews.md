@@ -41,7 +41,7 @@ Additionally, we recommend every author to look over your own reviews just befor
     *   `// Prefer complete sentences when possible.`
     *   Leave a space after the comment marker `//`.
 
-If your reviewer leaves you comments, make sure that you address them and then click "Resolve conversation". There should be zero unresolved discussions before the PR is ready to merge.
+If your reviewer leaves comments, make sure that you address them and then click "Resolve conversation". There should be zero unresolved discussions when the PR merges.
 
 ## Assigning a Pull Request
 
