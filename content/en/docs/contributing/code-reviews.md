@@ -60,5 +60,4 @@ As a reviewer you can approve a pull request through two ways:
 
 ## Merging a Pull Request
 
-Pull requests can be merged after they were approved and the CI tests have passed.
-
+The Vitess team will merge your pull request after the PR has been approved and CI tests have passed.
