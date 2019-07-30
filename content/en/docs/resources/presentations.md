@@ -3,6 +3,85 @@ title: Presentations and Videos
 weight: 1
 ---
 
+## Vitess Meetup 2019
+
+Co-hosted by Slack and PlanetScale.
+
+**Vitess: New and Coming Soon!**
+
+Deepthi Sigireddi shares new features recently introduced in Vitess, and what's on the roadmap moving forward.
+
+[TODO SLIDES](#)
+
+**Deploying multi-cell Vitess**
+
+Rafael Chacon Vivas describes how Vitess is used in Slack.
+
+[TODO SLIDES](#)
+
+**Vitess at Pinterest**
+
+David Weitzman provides an overview of how Vitess is used at Pinterest.
+
+{{< youtube id="1cWWlaqlia8" autoplay="false" >}}
+
+**No more Regrets**
+
+Sugu Sougoumarane demonstrates new features coming to VReplication.
+
+{{< youtube id="B1Nrtptjtcs" autoplay="false" >}}
+
+## Cloud Native Show 2019
+
+**Vitess at scale - how Nozzle.io runs MySQL on Kubernetes**
+
+Derek Perkins joins the Cloud Native show and explains how Nozzle uses Vitess.
+
+[Listen to Podcast](https://anchor.fm/cloud-native-show/episodes/Vitess-at-scale---how-Nozzle-io-runs-MySQL-on-Kubernetes-e4m5lo)
+
+## CNCF Webinar 2019
+
+**Vitess: Sharded MySQL on Kubernetes**
+
+Sugu Sougoumarane xxxx
+
+{{< youtube id="E6H4bgJ3Z6c" autoplay="false" >}}
+
+## Kubecon China 2019
+
+**How JD.Com runs the World's Largest Vitess**
+
+Description here xxx
+
+{{< youtube id="qww4UVNG3Io" autoplay="false" >}}
+
+## RootConf 2019
+
+**OLTP or OLAP: why not both?**
+
+Jiten xxx
+{{< youtube id="bhzJJF82mFc" autoplay="false" >}}
+
+## Kubecon 19 Barcelona
+
+**Vitess Deep Dive**
+
+TBD xxxxx
+{{< youtube id="OZl4HrB9p-8" autoplay="false" >}}
+
+## Percona Live Austin 2019
+
+**Vitess: Running Sharded MySQL on Kubernetes**
+i
+TBD xxx
+{{< youtube id="v7oxiVmGXp4" autoplay="false" >}}
+
+**MySQL, Kubernetes, Business & Enterprise**
+
+David Cohen (Intel), Steve Shaw (Intel) and Jiten Vaidra (PlanetScale) discuss Open Source cloud native databases.
+
+[View Talk Abstract and Slides](https://www.percona.com/live/19/sessions/an-open-source-cloud-native-database-cndb)
+
 ## Velocity New York 2018
 
 **Smooth scaling: Slack’s journey toward a new database**
