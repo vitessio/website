@@ -43,7 +43,7 @@ We have plans to make this Update Stream feature more consistent, very resilient
 
 ## Semi-Sync
 
-Vitess uses Semisynchronous replication in it's default configuration. This means the following will happen:
+Vitess uses Semisynchronous replication in its default configuration. This means the following will happen:
 
 * The master will only accept writes if it has at least one slave connected and sending semi-sync ACK. It will never fall back to asynchronous (not requiring ACKs) because of timeouts while waiting for ACK, nor because of having zero slaves connected (although it will fall back to asynchronous in case of shutdown, abrupt or graceful).
 
