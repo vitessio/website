@@ -3,10 +3,10 @@ title: 拓扑服务
 description: 拓扑或分布式锁服务
 ---
 
-[*拓扑服务*]（../../ user-guides / topology-service）是一个包含服务器信息、分片方案和主从信息的元数据信息存储服务。拓扑服务是基于一致性存储方案来实现数据一致性， 例如：zookeeper和etcd。 用户可以通过使用vtctl（命令行）和vtctld（web）访问拓扑服务。
+[*拓扑服务*]（../../user-guides/topology-service）是一个包含服务器信息、分片方案和主从信息的元数据信息存储服务。拓扑服务是基于一致性存储方案来实现数据一致性， 例如：zookeeper和etcd。 用户可以通过使用vtctl（命令行）和vtctld（web）访问拓扑服务。
 
 
-Vitess使用插件系统来支持各种后端服务用于存储拓扑数据，为这些后端服务提供式分布式一致性键值存储。默认情况下，[本地示例]（../../ tutorials / local）使用ZooKeeper插件，而[Kubernetes示例]（../../ tutorials / kubernetes）使用etcd。
+Vitess使用插件系统来支持各种后端服务用于存储拓扑数据，为这些后端服务提供式分布式一致性键值存储。默认情况下，[本地示例]（../../tutorials/ local）使用ZooKeeper插件，而[Kubernetes示例]（../../tutorials/kubernetes）使用etcd。
 
 使用拓扑服务有以下几个原因：
 

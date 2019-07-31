@@ -2,7 +2,7 @@
 title: VSchema
 ---
 
-[VSchema]（../../ schema-management / vschema /）用于描述如何在keyspace和分片中存储数据。Vschma用于带路由键的SQL查询，也用于拆分分片操作。
+[VSchema]（../../schema-management/vschema/）用于描述如何在keyspace和分片中存储数据。Vschma用于带路由键的SQL查询，也用于拆分分片操作。
 
 对于keyspace，你可以指定它是否分片。对于分片的keyspace来说，你可以指定每张表的vindexes(路由键)。
 
