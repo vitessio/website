@@ -3,9 +3,7 @@ title: Presentations and Videos
 weight: 1
 ---
 
-## Vitess Meetup 2019
-
-Co-hosted by Slack and PlanetScale.
+## Vitess Meetup 2019 @ Slack HQ
 
 **Vitess: New and Coming Soon!**
 
@@ -43,7 +41,7 @@ Derek Perkins joins the Cloud Native show and explains how Nozzle uses Vitess.
 
 **Vitess: Sharded MySQL on Kubernetes**
 
-Sugu Sougoumarane xxxx
+Sugu Sougoumarane provides an overview of Vitess for Kubernetes users.
 
 {{< youtube id="E6H4bgJ3Z6c" autoplay="false" >}}
 
@@ -51,7 +49,7 @@ Sugu Sougoumarane xxxx
 
 **How JD.Com runs the World's Largest Vitess**
 
-Description here xxx
+Xuhaihua and Jin Ke Xie present on their experience operating the largest known Vitess cluster, two years in.
 
 {{< youtube id="qww4UVNG3Io" autoplay="false" >}}
 
@@ -59,21 +57,24 @@ Description here xxx
 
 **OLTP or OLAP: why not both?**
 
-Jiten xxx
+Jiten Vaidya from PlanetScale explains how you can use both OLTP and OLAP on Vitess.
+
 {{< youtube id="bhzJJF82mFc" autoplay="false" >}}
 
 ## Kubecon 19 Barcelona
 
 **Vitess Deep Dive**
 
-TBD xxxxx
+Jiten Vaidya and Dan Kozlowski from PlanetScale deep dive on Vitess.
+
 {{< youtube id="OZl4HrB9p-8" autoplay="false" >}}
 
 ## Percona Live Austin 2019
 
 **Vitess: Running Sharded MySQL on Kubernetes**
-i
-TBD xxx
+
+Sugu Sougoumarane shows how you can run sharded MySQL on Kubernetes.
+
 {{< youtube id="v7oxiVmGXp4" autoplay="false" >}}
 
 **MySQL, Kubernetes, Business & Enterprise**
