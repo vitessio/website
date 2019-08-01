@@ -84,7 +84,7 @@ VReplication performs the following essential functions:
   other. This step can be done without the need to create special
   snapshot replicas.
 * Journaling (to be implemented): If there is any kind of traffic
-  cutover where we start writing to a different table than we used
+  cut-over where we start writing to a different table than we used
   to before, VReplication will save the current binlog positions
   into a journal table. This can be used by other streams to resume
   replication from the new source.
@@ -92,7 +92,7 @@ VReplication performs the following essential functions:
   functionality of VReplication, it works hand in hand with it. It allows
   you to specify sophisticated rules about where to route queries
   depending on the type of workflow being performed. For example,
-  it can be used to control the cutover during resharding. In
+  it can be used to control the cut-over during resharding. In
   the case of materialized views, it can be used to establish
   equivalence of tables, which will allow VTGate to compute the most optimal
   plans given the available options.

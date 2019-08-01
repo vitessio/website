@@ -31,8 +31,6 @@ It's a lot of fun and demonstrates how simple it is to write Go code.
 
 ### Go Readability
 
-As was the practice at Google, code reviews may be subject to an additional "readability" review. A readability reviewer ensures that the author is writing idiomatic code and following the programming language's style guide.
-
 While there's no Go style guide, there is a set of recommendations in the Go community which add up to an implicit style guide. To make sure you're writing idiomatic Go code, please read the following documents:
 
 * Go Readability slides: https://talks.golang.org/2014/readability.slide

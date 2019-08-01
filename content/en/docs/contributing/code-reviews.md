@@ -20,7 +20,7 @@ Both authors and reviewers need to answer these general questions:
 *   Does this match our current patterns? Example include RPC patterns,
     Retries / Waits / Timeouts patterns using Context, ...
 
-Additionally, we recommend every author to look over your own reviews just before committing them and check if you are following the recommendations below. We usually check these kinds of things while skimming through `git diff --cached` just before committing.
+Additionally, we recommend that every author look over their code change before committing and ensure that the recommendations below are being followed. This can be done by skimming through `git diff --cached` just before committing.
 
 *   Scan the diffs as if you're the reviewer.
     *   Look for files that shouldn't be checked in (temporary/generated files).

@@ -256,7 +256,7 @@ The most significant change, this script makes is the instantiation of vttablets
 * You moved customer and corder from the commerce’s VSchema to customer’s VSchema. Note that the physical tables are still in commerce.
 * You requested that the schema for customer and corder be copied to customer using the `copySchema` directive.
 
-The move in the VSchema should not be material yet because any queries sent to customer are still redirected to commerce, where all the data is still present.
+The move in the VSchema should not make a difference yet because any queries sent to customer are still redirected to commerce, where all the data is still present.
 
 ### VerticalSplitClone
 
