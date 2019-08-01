@@ -1,7 +1,6 @@
 ---
 title: Build From Source
 description: Instructions for building Vitess on your machine for testing and development purposes
-weight: 3
 ---
 
 {{< info >}}
