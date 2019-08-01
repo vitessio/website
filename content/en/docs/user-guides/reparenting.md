@@ -59,7 +59,7 @@ The `EmergencyReparentShard` command is used to force a reparent to a new master
 
 As such, this command does not rely on the current master at all to replicate data to the new master. Instead, it makes sure that the master-elect is the most advanced in replication within all of the available slaves.
 
-**Important**: Before calling this command, you must first identify the slave with the most advanced replication position as that slave must be designated as the new master. You can use the `[vtctl ShardReplicationPositions](https://vitess.io/reference/vtctl/#shardreplicationpositions)` command to determine the current replication positions of a shard's slaves.
+**Important**: Before calling this command, you must first identify the slave with the most advanced replication position as that slave must be designated as the new master. You can use the [`vtctl ShardReplicationPositions`](https://vitess.io/reference/vtctl/#shardreplicationpositions) command to determine the current replication positions of a shard's slaves.
 
 This command performs the following actions:
 

@@ -9,7 +9,7 @@ The vtexplain tool provides information about how Vitess will execute a statemen
 
 ## Prerequisites
 
-You'll need to build the `vtexplain` binary in your environment. To find instructions on how to build this binary please refer to this [guide](../../tutorials/local).
+You'll need to build the `vtexplain` binary in your environment. To find instructions on how to build this binary please refer to the [Build From Source](../../contributing/build-from-source) guide.
 
 ## Explaining a Query
 

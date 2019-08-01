@@ -1,17 +1,13 @@
 ---
 title: Build From Source
 description: Instructions for building Vitess on your machine for testing and development purposes
-weight: 1
-featured: true
 ---
 
 {{< info >}}
 If you run into issues or have questions, we recommend posting in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
 {{< /info >}}
 
-## Build From Source
-
-The following sections explain the process for manually building Vitess on Linux and macOS. If you are new to Vitess, it is recommended to start with the [local install](../../tutorials/local) guide instead.
+The following sections explain the process for manually building Vitess on Linux and macOS. If you are new to Vitess, it is recommended to start with the [local install](../../get-started/local) guide instead.
 
 ### Install Dependencies
 
@@ -45,7 +41,7 @@ _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your in
 
 4.  Install [etcd v3.0+](https://github.com/coreos/etcd/releases). Remember to include `etcd` command on your path.
 
-    We will use ectd for the [topology service](../../overview/concepts). Vitess also includes built-in support for [ZooKeeper](https://zookeeper.apache.org) and [Consul](https://www.consul.io/).
+    We will use etcd for the [topology service](../../overview/concepts). Vitess also includes built-in support for [ZooKeeper](https://zookeeper.apache.org) and [Consul](https://www.consul.io/).
 
 5.  Install the following other tools needed to build and run Vitess:
 
@@ -86,7 +82,7 @@ _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your in
 
 3.  Install [etcd v3.0+](https://github.com/coreos/etcd/releases). Remember to include `etcd` command on your path.
 
-    We will use ectd for the [topology service](../../overview/concepts). Vitess also includes built-in support for [ZooKeeper](https://zookeeper.apache.org) and [Consul](https://www.consul.io/).
+    We will use etcd for the [topology service](../../overview/concepts). Vitess also includes built-in support for [ZooKeeper](https://zookeeper.apache.org) and [Consul](https://www.consul.io/).
 
 5.  Run the following commands:
 
@@ -116,7 +112,7 @@ _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your in
 
 ## Build Vitess
 
-1. Navigate to the directory where you want to download the Vitess source code and clone the Vitess Github repo. After doing so, navigate to the `src/vitess.io/vitess` directory.
+1. Navigate to the directory where you want to download the Vitess source code and clone the Vitess GitHub repo. After doing so, navigate to the `src/vitess.io/vitess` directory.
 
     ```sh
     cd $WORKSPACE
@@ -263,4 +259,4 @@ http://localhost:15000
 
 ### Next steps
 
-Congratulations! You now have a local vitess cluster up and running. You can complete additional exercises by following along with [Run Vitess Locally](../../tutorials/local) guide.
+Congratulations! You now have a local Vitess cluster up and running. You can complete additional exercises by following along with [Run Vitess Locally](../../get-started/local) guide.
