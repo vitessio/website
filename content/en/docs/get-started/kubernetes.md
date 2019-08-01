@@ -1,6 +1,6 @@
 ---
 title: Run Vitess on Kubernetes
-weight: 1
+weight: 3
 featured: true
 aliases: ['/docs/tutorials/kubernetes/']
 ---
