@@ -26,21 +26,6 @@ UPDATE <table> SET <set values> WHERE <primary key columns> IN <result from prev
 
 With this rewrite in effect, we know exactly which rows are affected, by primary key, and we also document them as a SQL comment.
 
-The replication stream then doesn’t contain the expensive WHERE clauses, but only the UPDATE statements by primary key. In a sense, it is combining the best of row based and statement based replication: the slaves only do primary key based updates, but the replication stream is very friendly for schema changes.
-
-Also, Vitess adds comments to the rewritten statements that identify the primary key affected by that statement. This allows us to produce an Update Stream (see section below).
-
-
-## Update Stream
-
-Since the replication stream also contains comments of which primary key is affected by a change, it is possible to look at the replication stream and know exactly what objects have changed. This Vitess feature is called [Update Stream](../update-stream).
-
-By subscribing to the Update Stream for a given shard, one can know what values change. This stream can be used to create a stream of data changes (export to an Apache Kafka for instance), or even invalidate an application layer cache.
-
-Note: the [Update Stream](../update-stream) only reliably contains the primary key values of the rows that have changed, not the actual values for all columns. To get these values, it is necessary to re-query the database.
-
-We have plans to make this Update Stream feature more consistent, very resilient, fast, and transparent to sharding.
-
 ## Semi-Sync
 
 Vitess uses Semisynchronous replication in its default configuration. This means the following will happen:
