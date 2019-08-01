@@ -140,7 +140,7 @@ numeric\_static\_map | Functional Unique | A JSON file that maps input values to
 unicode\_loose\_md5 | Functional Unique | Case-insensitive (UCA level 1) md5 hash | Yes | No | 1
 reverse\_bits | Functional Unique | Bit Reversal | Yes | Yes | 1
 
-[Consistent lookup vindexes](consistent-lookup) are a new category of vindexes that are meant to replace the existing lookup vindexes. For the time being, they have a different name to allow for users to switch back and forth.
+[Consistent lookup vindexes](../consistent-lookup) are a new category of vindexes that are meant to replace the existing lookup vindexes. For the time being, they have a different name to allow for users to switch back and forth.
 
 Custom vindexes can also be plugged in as needed.
 
@@ -239,7 +239,7 @@ Because Vindexes can be shared, the JSON requires them to be specified in a sepa
 
 ### Specifying A Sequence
 
-Since user is a sharded table, it will be beneficial to tie it to a Sequence. However, the sequence must be defined in the lookup (unsharded) keyspace. It is then referred from the user (sharded) keyspace. In this example, we are designating the user_id (Primary Vindex) column as the auto-increment.
+Since user is a sharded table, it will be beneficial to tie it to a Sequence. However, the sequence must be defined in the lookup (unsharded) keyspace. It is then referred from the user (sharded) keyspace. In this example, we are designating the `user_id` (Primary Vindex) column as the auto-increment.
 
 Schema:
 
@@ -357,10 +357,3 @@ The examples/demo also shows more tricks you can perform:
 * `music_extra` defines an additional Functional Vindex called `keyspace_id` which the demo auto-populates using the reverse mapping capability.
 * There is also a `name_info` table that showcases a case-insensitive Vindex `unicode_loose_md5`.
 
-## Roadmap
-
-VSchema is still evolving. Features are mostly added on demand. The following features are currently on our roadmap:
-
-* DDL support
-* Lookup Vindex backfill
-* Pinned tables: This feature will allow unsharded tables to be pinned to a keyspace id. This avoids the need for a separate unsharded keyspace to contain them.
