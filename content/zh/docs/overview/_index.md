@@ -1,7 +1,7 @@
 ---
-title: Overview
-description: High-level information about Vitess
-weight: 2
+title: 概览
+description: Vitess 概述
+weight: 1
 ---
 
-The Vitess overview documentation provides general information about Vitess that's less immediately practical than what you'll find in the [Tutorials](../tutorials) section and the [User Guides](../user-guides).
+Vitess概述文档提供了有关Vitess的大致信息， 您可以获得更多的详细信息在[Get Started](../get-started) 章节和 [User Guides](../user-guides)章节.
