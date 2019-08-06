@@ -5,17 +5,11 @@ weight: 1
 
 ## Vitess Meetup 2019 @ Slack HQ
 
-**Vitess: New and Coming Soon!**
-
-Deepthi Sigireddi shares new features recently introduced in Vitess, and what's on the roadmap moving forward.
-
-[TODO SLIDES](#)
-
 **Deploying multi-cell Vitess**
 
 Rafael Chacon Vivas describes how Vitess is used in Slack.
 
-[TODO SLIDES](#)
+<iframe src = "/ViewerJS/#../files/2019-rafael-vitess-meetup.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
 
 **Vitess at Pinterest**
 
