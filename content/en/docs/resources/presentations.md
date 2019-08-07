@@ -3,6 +3,7 @@ title: Presentations and Videos
 weight: 1
 ---
 
+
 ## Vitess Meetup 2019 @ Slack HQ
 
 **Deploying multi-cell Vitess**
