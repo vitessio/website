@@ -60,7 +60,7 @@ A NonUnique Vindex is analogous to a database non-unique index. It is a secondar
 
 A Functional Vindex is one where the column value to keyspace ID mapping is pre-established, typically through an algorithmic function. In contrast, a Lookup Vindex is one that gives you the ability to create an association between a value and a keyspace ID, and recall it later when needed.
 
-Typically, the Primary Vindex is Functional. In some cases, it is the identity function where the input value yields itself as the kesypace id. However, one could also choose other algorithms like hashing or mod functions.
+Typically, the Primary Vindex is Functional. In some cases, it is the identity function where the input value yields itself as the keyspace id. However, one could also choose other algorithms like hashing or mod functions.
 
 A Lookup Vindex is usually backed by a lookup table. This is analogous to the traditional database index, except that it is cross-shard. At the time of insert, the computed keyspace ID of the row is stored in the lookup table against the column value.
 
