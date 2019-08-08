@@ -28,7 +28,7 @@ Vitess has been serving all YouTube database traffic since 2011, and has now bee
     - Table ACLs – Specify access control lists (ACLs) for tables based on the connected user.
 
 * Monitoring
-    - Performance analysis - Tools let you monitor, diagnose, and analyze your database performance.
+    - Performance analysis tools let you monitor, diagnose, and analyze your database performance.
 
 * Topology Management Tools
     - Master management tools (handles reparenting)
