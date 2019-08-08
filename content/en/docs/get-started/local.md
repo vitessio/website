@@ -256,7 +256,7 @@ The most significant change, this script makes is the instantiation of vttablets
 * You moved customer and corder from the commerce’s VSchema to customer’s VSchema. Note that the physical tables are still in commerce.
 * You requested that the schema for customer and corder be copied to customer using the `copySchema` directive.
 
-The move in the vschema should not be material yet because any queries sent to customer are still redirected to commerce, where all the data is still present.
+The move in the VSchema should not make a difference yet because any queries sent to customer are still redirected to commerce, where all the data is still present.
 
 ### VerticalSplitClone
 
@@ -366,7 +366,7 @@ The first issue to address is the fact that customer and corder have auto-increm
 
 The sequence table is an unsharded single row table that Vitess can use to generate monotonically increasing ids. The syntax to generate an id is: `select next :n values from customer_seq`. The vttablet that exposes this table is capable of serving a very large number of such ids because values are cached and served out of memory. The cache value is configurable.
 
-The VSchema allows you to associate a column of a table with the sequence table. Once this is done, an insert on that table transparently fetches an id from the sequence table, fills in the value, and routes the row to the appropriate shard. This makes the construct backward compatible to how mysql’s auto_increment column works.
+The VSchema allows you to associate a column of a table with the sequence table. Once this is done, an insert on that table transparently fetches an id from the sequence table, fills in the value, and routes the row to the appropriate shard. This makes the construct backward compatible to how MySQL's `auto_increment` property works.
 
 Since sequences are unsharded tables, they will be stored in the commerce database. The schema:
 
@@ -380,12 +380,12 @@ insert into order_seq(id, next_id, cache) values(0, 1000, 100);
 Note the `vitess_sequence` comment in the create table statement. VTTablet will use this metadata to treat this table as a sequence.
 
 * `id` is always 0
-* `next_id` is set to `1000`: the value should be comfortably greater than the auto_increment max value used so far.
+* `next_id` is set to `1000`: the value should be comfortably greater than the `auto_increment` max value used so far.
 * `cache` specifies the number of values to cache before vttablet updates `next_id`.
 
 Higher cache values are more performant. However, cached values are lost if a reparent happens. The new master will start off at the `next_id` that was saved by the old master.
 
-The VTGates also need to know about the sequence tables. This is done by updating the vschema for commerce as follows:
+The VTGate servers also need to know about the sequence tables. This is done by updating the VSchema for commerce as follows:
 
 ``` json
 {
@@ -474,13 +474,9 @@ Now that we have made all the important decisions, it’s time to apply these ch
 ./301_customer_sharded.sh
 ```
 
-The jobs to watch for:
-TODO(jiten): Add grep command here.
-
-
 ### Create new shards
 
-At this point, you have finalized your sharded vschema and vetted all the queries to make sure they still work. Now, it’s time to reshard.
+At this point, you have finalized your sharded VSchema and vetted all the queries to make sure they still work. Now, it’s time to reshard.
 
 The resharding process works by splitting existing shards into smaller shards. This type of resharding is the most appropriate for Vitess. There are some use cases where you may want to spin up a new shard and add new rows in the most recently created shard. This can be achieved in Vitess by splitting a shard in such a way that no rows end up in the ‘new’ shard. However, it’s not natural for Vitess.
 

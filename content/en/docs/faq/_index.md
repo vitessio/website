@@ -8,7 +8,7 @@ aliases: ['/docs/user-guides/faq/']
 
 ## Does the application need to know about the sharding scheme underneath Vitess?
 
-The application does not need to know about how the data is sharded. This information is stored in a VSchema which the VTGates use to automatically route your queries. This allows the application to connect to vitess and use it as if it’s a single giant database server.
+The application does not need to know about how the data is sharded. This information is stored in a VSchema which the VTGate servers use to automatically route your queries. This allows the application to connect to Vitess and use it as if it’s a single giant database server.
 
 ## Can I address a specific shard if I want to?
 
@@ -24,9 +24,9 @@ You can also specify the database name as `@master`, etc, which instructs Vitess
 
 If no tablet type was specified, then VTGate chooses its default, which can be overridden with the `-default_tablet_type` command line argument.
 
-## There seems to be a 10,000 row limit per query. What if I want to do a full table scan?
+## There seems to be a 10 000 row limit per query. What if I want to do a full table scan?
 
-Vitess supports different modes. In OLTP mode, the result size is typically limited to a preset number (10,000 rows by default). This limit can be adjusted based on your needs.
+Vitess supports different modes. In OLTP mode, the result size is typically limited to a preset number (10 000 rows by default). This limit can be adjusted based on your needs.
 
 However, OLAP mode has no limit to the number of rows returned. In order to change to this mode, you may issue the following command before executing your query:
 
@@ -41,15 +41,15 @@ The general convention is to send OLTP queries to `REPLICA` tablet types, and OL
 
 The list of unsupported constructs is currently in the form of test cases contained in [this test file](https://github.com/vitessio/vitess/blob/b2b3aeb7cf5316eeedbe667fecaa91b1c34a6cea/go/vt/vtgate/planbuilder/testdata/unsupported_cases.txt). However, contrary to the test cases, there is limited support for SET, DDL and DBA constructs. This will be documented in greater detail soon. Until then, [this test file](https://github.com/vitessio/vitess/blob/b2b3aeb7cf5316eeedbe667fecaa91b1c34a6cea/go/vt/vtgate/planbuilder/testdata/unsupported_cases.txt) serves as the canonical source of information on unsupported queries. Do also check on the [Vitess Slack channel](https://vitess.slack.com) (click [here](https://vitess.slack.com/join/shared_invite/enQtMzIxMDMyMzA0NzA1LTBjYjY1M2I2Yjg5YmY3ODIwOTk0N2M1YzI4Y2ViODdiNmIxMDdiMDM5YWQ1ZTc0YmJhZDdiOTliMGVkNDY4MjM) to join) to ask our friendly community about other queries you have in mind. 
 
-## If I have a log of all queries from my app. Is there a way I can try them against vitess to see how they’ll work?
+## If I have a log of all queries from my app. Is there a way I can try them against Vitess to see how they’ll work?
 
-Yes. The [vtexplain](../vtexplain) tool can be used to preview how your queries will be executed by vitess. It can also be used to try different sharding scenarios before deciding on one.
+Yes. The [vtexplain](../vtexplain) tool can be used to preview how your queries will be executed by Vitess. It can also be used to try different sharding scenarios before deciding on one.
 
-## Does the Primary Vindex for a tablet have to be the same as its Primary Key.
+## Does the Primary Vindex for a tablet have to be the same as its Primary Key?
 
 It is not necessary that a Primary Vindex be the same as the Primary Key. In fact, there are many use cases where you would not want this. For example, if there are tables with one-to-many relationships, the Primary Vindex of the main table is likely to be the same as the Primary Key. However, if you want the rows of the secondary table to reside in the same shard as the parent row, the Primary Vindex for that table must be the foreign key that points to the main table. A typical example is a user and order table. In this case, the order table has the `user_id` as a foreign key to the `id` of the user table. The `order_id` may be the primary key for `order`, but you may still want to choose `user_id` as Primary Vindex, which will make a user's orders live in the same shard as the user.
 
-## How do I connect to vtgate using mysql protocol?
+## How do I connect to VTGate using the MySQL protocol?
 
 If you look at the example [vtgate-up.sh](https://github.com/vitessio/vitess/blob/master/examples/local/vtgate-up.sh) script, you'll see the following lines:
 
@@ -59,7 +59,7 @@ If you look at the example [vtgate-up.sh](https://github.com/vitessio/vitess/blo
 -mysql_auth_server_static_file "./mysql_auth_server_static_creds.json" \
 ```
 
-In that example, vtgate accepts mysql connections on port 15306, and the authentication info is stored in the json file. So, you should be able to connect to it using the following command:
+In that example, VTGate accepts MySQL connections on port 15306, and the authentication info is stored in the JSON file. So, you should be able to connect to it using the following command:
 
 ```shell
 mysql -h 127.0.0.1 -P 15306 -u mysql_user --password=mysql_password
@@ -71,7 +71,7 @@ Yes. You can start vttablet with the `-init_db_name_override` command line optio
 
 ## I cannot start a cluster, and see these errors in the logs: Could not open required defaults file: /path/to/my.cnf
 
-Most likely this means that apparmor is running on your server and is preventing vitess processes from accessing the my.cnf file. The workaround is to uninstall apparmor:
+Most likely this means that AppArmor is running on your server and is preventing Vitess processes from accessing the my.cnf file. The workaround is to uninstall AppArmor:
 
 ```shell
 sudo service apparmor stop
@@ -79,4 +79,4 @@ sudo service apparmor teardown
 sudo update-rc.d -f apparmor remove
 ```
 
-You may also need to reboot the machine after this. Many programs automatically install apparmor, so you may need to uninstall again.
+You may also need to reboot the machine after this. Many programs automatically install AppArmor, so you may need to uninstall again.

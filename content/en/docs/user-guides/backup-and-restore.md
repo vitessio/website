@@ -112,19 +112,14 @@ access to the location where you are storing backups.
 
 ### Authentication
 
-Note that for the Google Cloud Storage plugin, we currently only
-support
+Note that for the Google Cloud Storage plugin, we currently only support
 [Application Default Credentials](https://developers.google.com/identity/protocols/application-default-credentials).
 It means that access to Cloud Storage is automatically granted by virtue of
 the fact that you're already running within Google Compute Engine or Container
 Engine.
 
-For this to work, the GCE instances must have been created with
-the [scope](https://cloud.google.com/compute/docs/authentication#using) that
-grants read-write access to Cloud Storage. When using Container Engine, you can
-do this for all the instances it creates by adding `--scopes storage-rw` to the
-`gcloud container clusters create` command as shown in the [Vitess on Kubernetes
-guide](../../tutorials/kubernetes#start-a-container-engine-cluster).
+For this to work, the GCE instances must have been created with the [scope](https://cloud.google.com/compute/docs/authentication#using) that grants read-write access to Cloud Storage. When using Container Engine, you can
+do this for all the instances it creates by adding `--scopes storage-rw` to the `gcloud container clusters create` command as shown in the [Vitess on Kubernetes guide](../../get-started/kubernetes#start-a-container-engine-cluster).
 
 ## Creating a backup
 

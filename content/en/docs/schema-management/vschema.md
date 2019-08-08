@@ -60,7 +60,7 @@ A NonUnique Vindex is analogous to a database non-unique index. It is a secondar
 
 A Functional Vindex is one where the column value to keyspace ID mapping is pre-established, typically through an algorithmic function. In contrast, a Lookup Vindex is one that gives you the ability to create an association between a value and a keyspace ID, and recall it later when needed.
 
-Typically, the Primary Vindex is Functional. In some cases, it is the identity function where the input value yields itself as the kesypace id. However, one could also choose other algorithms like hashing or mod functions.
+Typically, the Primary Vindex is Functional. In some cases, it is the identity function where the input value yields itself as the keyspace id. However, one could also choose other algorithms like hashing or mod functions.
 
 A Lookup Vindex is usually backed by a lookup table. This is analogous to the traditional database index, except that it is cross-shard. At the time of insert, the computed keyspace ID of the row is stored in the lookup table against the column value.
 
@@ -140,7 +140,7 @@ numeric\_static\_map | Functional Unique | A JSON file that maps input values to
 unicode\_loose\_md5 | Functional Unique | Case-insensitive (UCA level 1) md5 hash | Yes | No | 1
 reverse\_bits | Functional Unique | Bit Reversal | Yes | Yes | 1
 
-[Consistent lookup vindexes](consistent-lookup) are a new category of vindexes that are meant to replace the existing lookup vindexes. For the time being, they have a different name to allow for users to switch back and forth.
+[Consistent lookup vindexes](../consistent-lookup) are a new category of vindexes that are meant to replace the existing lookup vindexes. For the time being, they have a different name to allow for users to switch back and forth.
 
 Custom vindexes can also be plugged in as needed.
 
@@ -148,7 +148,7 @@ Custom vindexes can also be plugged in as needed.
 
 Auto-increment columns do not work very well for sharded tables. [Vitess sequences](../../reference/vitess-sequences) solve this problem. Sequence tables must be specified in the VSchema, and then tied to table columns. At the time of insert, if no value is specified for such a column, VTGate will generate a number for it using the sequence table.
 
-## Refernce tables
+## Reference tables
 
 Vitess allows you to create an unsharded table and deploy it into all shards of a sharded keyspace. The data in such a table is assumed to be identical for all shards. In this case, you can specify that the table is of type `reference`, and should not specify any vindex for it. Any joins of this table with an unsharded table will be treated as a local join.
 
@@ -239,7 +239,7 @@ Because Vindexes can be shared, the JSON requires them to be specified in a sepa
 
 ### Specifying A Sequence
 
-Since user is a sharded table, it will be beneficial to tie it to a Sequence. However, the sequence must be defined in the lookup (unsharded) keyspace. It is then referred from the user (sharded) keyspace. In this example, we are designating the user_id (Primary Vindex) column as the auto-increment.
+Since user is a sharded table, it will be beneficial to tie it to a Sequence. However, the sequence must be defined in the lookup (unsharded) keyspace. It is then referred from the user (sharded) keyspace. In this example, we are designating the `user_id` (Primary Vindex) column as the auto-increment.
 
 Schema:
 
@@ -357,10 +357,3 @@ The examples/demo also shows more tricks you can perform:
 * `music_extra` defines an additional Functional Vindex called `keyspace_id` which the demo auto-populates using the reverse mapping capability.
 * There is also a `name_info` table that showcases a case-insensitive Vindex `unicode_loose_md5`.
 
-## Roadmap
-
-VSchema is still evolving. Features are mostly added on demand. The following features are currently on our roadmap:
-
-* DDL support
-* Lookup Vindex backfill
-* Pinned tables: This feature will allow unsharded tables to be pinned to a keyspace id. This avoids the need for a separate unsharded keyspace to contain them.
