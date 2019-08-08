@@ -1,7 +1,7 @@
 ---
 title: Run Vitess with Vagrant
 description: Instructions for building Vitess on your machine for testing and development purposes using Vagrant
-weight: 3
+weight: 4
 featured: true
 aliases: ['/docs/tutorials/vagrant/']
 ---
