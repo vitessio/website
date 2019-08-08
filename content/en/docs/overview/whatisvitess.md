@@ -28,9 +28,7 @@ Vitess has been serving all YouTube database traffic since 2011, and has now bee
     - Table ACLs – Specify access control lists (ACLs) for tables based on the connected user.
 
 * Monitoring
-    - Performance analysis: Tools let you monitor, diagnose, and analyze your database performance.
-    - Query streaming – Use a list of incoming queries to serve OLAP workloads.
-    - Update stream – A server streams the list of rows changing in the database, which can be used as a mechanism to propagate changes to other data stores.
+    - Performance analysis tools let you monitor, diagnose, and analyze your database performance.
 
 * Topology Management Tools
     - Master management tools (handles reparenting)
@@ -41,7 +39,6 @@ Vitess has been serving all YouTube database traffic since 2011, and has now bee
     - Virtually seamless dynamic re-sharding
     - Vertical and Horizontal sharding support
     - Multiple sharding schemes, with the ability to plug-in custom ones
-
 
 ## Comparisons to other storage options
 
