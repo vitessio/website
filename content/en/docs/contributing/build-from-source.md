@@ -121,13 +121,7 @@ _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your in
     cd src/vitess.io/vitess
     ```
 
-2. Set the `MYSQL_FLAVOR`:
-```sh
-# It is recommended to use MySQL56 even for MySQL 5.7 and 8.0. For MariaDB you can use MariaDB:
-export MYSQL_FLAVOR=MySQL56
-```
-
-3. If your selected database installed in a location other than `/usr/bin`, set the `VT_MYSQL_ROOT` variable to the root directory of your MySQL installation:
+2. If your selected database installed in a location other than `/usr/bin`, set the `VT_MYSQL_ROOT` variable to the root directory of your MySQL installation:
 
     ```sh
     # For generic tarballs on Linux
@@ -139,9 +133,9 @@ export MYSQL_FLAVOR=MySQL56
 
     Note that the command indicates that the `mysql` executable should be found at `/usr/local/opt/mysql@5.7/bin/mysql`.
 
-4. Run `mysqld --version` and confirm that you are running MySQL 5.7.
+3. Run `mysqld --version` and confirm that you are running MySQL 5.7.
 
-5. Build Vitess using the commands below. Note that the `bootstrap.sh` script needs to download some dependencies. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`).
+4. Build Vitess using the commands below. Note that the `bootstrap.sh` script needs to download some dependencies. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`).
 
     Run the boostrap.sh script:
 

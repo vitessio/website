@@ -42,7 +42,6 @@ Add the following to your `.bashrc` file. Make sure to replace `/path/to/extract
 ```bash
 export VTROOT=/path/to/extracted-tarball
 export VTTOP=$VTROOT
-export MYSQL_FLAVOR=MySQL56
 export VTDATAROOT=${HOME}/vtdataroot
 export PATH=${VTROOT}/bin:${PATH}
 ```

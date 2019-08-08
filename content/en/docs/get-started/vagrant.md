@@ -122,7 +122,6 @@ The `client.py` file is a simple sample application that connects to `vtgate` an
     ```sh
     export VTROOT=/vagrant
     export VTDATAROOT=/tmp/vtdata-dev
-    export MYSQL_FLAVOR=MySQL56
     cd "$VITESS_WORKSPACE"/examples/local
     ./client.sh
     ### example output:
