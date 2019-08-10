@@ -20,7 +20,7 @@ Vitess strongly recommends the use of Semisynchronous replication for High Avail
 
 * Slaves of replica type will send semi-sync ACK. Slaves of rdonly type will not send ACK. This is because rdonly slaves are not eligible to be promoted to master, so we want to avoid the case where a rdonly slave is the single best candidate for election at the time of master failure (though a split brain is possible when all rdonly slaves have transactions that none of replica slaves have).
 
-These behaviors combine to give you the property that, in case of master failure, there is at least one other replica type slave that has every transaction that was ever reported to clients as having completed. You can then ([manually](../vtctl/#emergencyreparentshard)], or with an automated tool like [Orchestrator](https://github.com/github/orchestrator)) pick the replica that is farthest ahead in GTID position and promote that to be the new master.
+These behaviors combine to give you the property that, in case of master failure, there is at least one other replica type slave that has every transaction that was ever reported to clients as having completed. You can then ([manually](../vtctl/#emergencyreparentshard), or with an automated tool like [Orchestrator](https://github.com/github/orchestrator)) pick the replica that is farthest ahead in GTID position and promote that to be the new master.
 
 Thus, you can survive sudden master failure without losing any transactions that were reported to clients as completed. In MySQL 5.7+, this guarantee is strengthened slightly to preventing loss of any transactions that were ever **committed** on the original master, eliminating so-called [phantom reads](http://bugs.mysql.com/bug.php?id=62174).
 
