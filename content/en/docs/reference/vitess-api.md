@@ -104,7 +104,7 @@ ExecuteBatchKeyspaceIds executes the list of queries based on the specified keys
 
 | Name |Description |
 | :-------- | :--------
-| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational.  The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
+| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational. The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
 | <code>session</code> <br>[Session](#session)| Session objects are session cookies and are invalidated on use. Query results will contain updated session values. Their content should be opaque to the user. |
 | <code>queries</code> <br>list &lt;[BoundKeyspaceIdQuery](#boundkeyspaceidquery)&gt;| BoundKeyspaceIdQuery represents a single query request for the specified list of keyspace ids. This is used in a list for ExecuteBatchKeyspaceIdsRequest. |
 | <code>tablet_type</code> <br>[topodata.TabletType](#topodata.tablettype)| TabletType represents the type of a given tablet. |
@@ -121,7 +121,7 @@ ExecuteBatchKeyspaceIds executes the list of queries based on the specified keys
 | :-------- | :--------
 | <code>error</code> <br>[vtrpc.RPCError](#vtrpc.rpcerror)| RPCError is an application-level error structure returned by VtTablet (and passed along by VtGate if appropriate). We use this so the clients don't have to parse the error messages, but instead can depend on the value of the code. |
 | <code>session</code> <br>[Session](#session)| Session objects are session cookies and are invalidated on use. Query results will contain updated session values. Their content should be opaque to the user. |
-| <code>results</code> <br>list &lt;[query.QueryResult](#query.queryresult)&gt;| QueryResult is returned by Execute and ExecuteStream.  As returned by Execute, len(fields) is always equal to len(row) (for each row in rows).  As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
+| <code>results</code> <br>list &lt;[query.QueryResult](#query.queryresult)&gt;| QueryResult is returned by Execute and ExecuteStream. As returned by Execute, len(fields) is always equal to len(row) (for each row in rows). As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
 
 ### ExecuteEntityIds
 
@@ -135,7 +135,7 @@ ExecuteEntityIds executes the query based on the specified external id to keyspa
 
 | Name |Description |
 | :-------- | :--------
-| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational.  The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
+| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational. The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
 | <code>session</code> <br>[Session](#session)| Session objects are session cookies and are invalidated on use. Query results will contain updated session values. Their content should be opaque to the user. |
 | <code>query</code> <br>[query.BoundQuery](#query.boundquery)| BoundQuery is a query with its bind variables |
 | <code>keyspace</code> <br>string| keyspace to target the query to. |
@@ -167,7 +167,7 @@ ExecuteEntityIds executes the query based on the specified external id to keyspa
 | :-------- | :--------
 | <code>error</code> <br>[vtrpc.RPCError](#vtrpc.rpcerror)| RPCError is an application-level error structure returned by VtTablet (and passed along by VtGate if appropriate). We use this so the clients don't have to parse the error messages, but instead can depend on the value of the code. |
 | <code>session</code> <br>[Session](#session)| Session objects are session cookies and are invalidated on use. Query results will contain updated session values. Their content should be opaque to the user. |
-| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream.  As returned by Execute, len(fields) is always equal to len(row) (for each row in rows).  As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
+| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream. As returned by Execute, len(fields) is always equal to len(row) (for each row in rows). As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
 
 ### ExecuteKeyRanges
 
@@ -181,7 +181,7 @@ ExecuteKeyRanges executes the query based on the specified key ranges.
 
 | Name |Description |
 | :-------- | :--------
-| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational.  The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
+| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational. The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
 | <code>session</code> <br>[Session](#session)| Session objects are session cookies and are invalidated on use. Query results will contain updated session values. Their content should be opaque to the user. |
 | <code>query</code> <br>[query.BoundQuery](#query.boundquery)| BoundQuery is a query with its bind variables |
 | <code>keyspace</code> <br>string| keyspace to target the query to |
@@ -200,7 +200,7 @@ ExecuteKeyRanges executes the query based on the specified key ranges.
 | :-------- | :--------
 | <code>error</code> <br>[vtrpc.RPCError](#vtrpc.rpcerror)| RPCError is an application-level error structure returned by VtTablet (and passed along by VtGate if appropriate). We use this so the clients don't have to parse the error messages, but instead can depend on the value of the code. |
 | <code>session</code> <br>[Session](#session)| Session objects are session cookies and are invalidated on use. Query results will contain updated session values. Their content should be opaque to the user. |
-| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream.  As returned by Execute, len(fields) is always equal to len(row) (for each row in rows).  As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
+| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream. As returned by Execute, len(fields) is always equal to len(row) (for each row in rows). As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
 
 ### ExecuteKeyspaceIds
 
@@ -214,7 +214,7 @@ ExecuteKeyspaceIds executes the query based on the specified keyspace ids.
 
 | Name |Description |
 | :-------- | :--------
-| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational.  The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
+| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational. The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
 | <code>session</code> <br>[Session](#session)| Session objects are session cookies and are invalidated on use. Query results will contain updated session values. Their content should be opaque to the user. |
 | <code>query</code> <br>[query.BoundQuery](#query.boundquery)| BoundQuery is a query with its bind variables |
 | <code>keyspace</code> <br>string| keyspace to target the query to. |
@@ -233,7 +233,7 @@ ExecuteKeyspaceIds executes the query based on the specified keyspace ids.
 | :-------- | :--------
 | <code>error</code> <br>[vtrpc.RPCError](#vtrpc.rpcerror)| RPCError is an application-level error structure returned by VtTablet (and passed along by VtGate if appropriate). We use this so the clients don't have to parse the error messages, but instead can depend on the value of the code. |
 | <code>session</code> <br>[Session](#session)| Session objects are session cookies and are invalidated on use. Query results will contain updated session values. Their content should be opaque to the user. |
-| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream.  As returned by Execute, len(fields) is always equal to len(row) (for each row in rows).  As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
+| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream. As returned by Execute, len(fields) is always equal to len(row) (for each row in rows). As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
 
 ### StreamExecuteKeyRanges
 
@@ -247,7 +247,7 @@ StreamExecuteKeyRanges executes a streaming query based on key ranges. Use this 
 
 | Name |Description |
 | :-------- | :--------
-| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational.  The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
+| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational. The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
 | <code>query</code> <br>[query.BoundQuery](#query.boundquery)| BoundQuery is a query with its bind variables |
 | <code>keyspace</code> <br>string| keyspace to target the query to. |
 | <code>key_ranges</code> <br>list &lt;[topodata.KeyRange](#topodata.keyrange)&gt;| KeyRange describes a range of sharding keys, when range-based sharding is used. |
@@ -262,7 +262,7 @@ StreamExecuteKeyRanges executes a streaming query based on key ranges. Use this 
 
 | Name |Description |
 | :-------- | :--------
-| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream.  As returned by Execute, len(fields) is always equal to len(row) (for each row in rows).  As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
+| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream. As returned by Execute, len(fields) is always equal to len(row) (for each row in rows). As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
 
 ### StreamExecuteKeyspaceIds
 
@@ -276,7 +276,7 @@ StreamExecuteKeyspaceIds executes a streaming query based on keyspace ids. Use t
 
 | Name |Description |
 | :-------- | :--------
-| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational.  The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
+| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational. The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
 | <code>query</code> <br>[query.BoundQuery](#query.boundquery)| BoundQuery is a query with its bind variables |
 | <code>keyspace</code> <br>string| keyspace to target the query to. |
 | <code>keyspace_ids</code> <br>list &lt;bytes&gt;| keyspace_ids contains the list of keyspace_ids affected by this query. Will be used to find the shards to send the query to. |
@@ -291,7 +291,7 @@ StreamExecuteKeyspaceIds executes a streaming query based on keyspace ids. Use t
 
 | Name |Description |
 | :-------- | :--------
-| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream.  As returned by Execute, len(fields) is always equal to len(row) (for each row in rows).  As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
+| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream. As returned by Execute, len(fields) is always equal to len(row) (for each row in rows). As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
 
 ##Transactions
 ### Begin
@@ -306,7 +306,7 @@ Begin a transaction.
 
 | Name |Description |
 | :-------- | :--------
-| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational.  The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
+| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational. The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
 | <code>single_db</code> <br>bool| single_db specifies if the transaction should be restricted to a single database. |
 
 #### Response
@@ -331,7 +331,7 @@ Commit a transaction.
 
 | Name |Description |
 | :-------- | :--------
-| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational.  The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
+| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational. The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
 | <code>session</code> <br>[Session](#session)| Session objects are session cookies and are invalidated on use. Query results will contain updated session values. Their content should be opaque to the user. |
 | <code>atomic</code> <br>bool| atomic specifies if the commit should go through the 2PC workflow to ensure atomicity. |
 
@@ -356,7 +356,7 @@ ResolveTransaction resolves a transaction.
 
 | Name |Description |
 | :-------- | :--------
-| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational.  The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
+| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational. The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
 | <code>dtid</code> <br>string| dtid is the dtid of the transaction to be resolved. |
 
 #### Response
@@ -380,7 +380,7 @@ Rollback a transaction.
 
 | Name |Description |
 | :-------- | :--------
-| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational.  The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
+| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational. The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
 | <code>session</code> <br>[Session](#session)| Session objects are session cookies and are invalidated on use. Query results will contain updated session values. Their content should be opaque to the user. |
 
 #### Response
@@ -405,7 +405,7 @@ ExecuteBatchShards executes the list of queries on the specified shards.
 
 | Name |Description |
 | :-------- | :--------
-| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational.  The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
+| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational. The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
 | <code>session</code> <br>[Session](#session)| Session objects are session cookies and are invalidated on use. Query results will contain updated session values. Their content should be opaque to the user. |
 | <code>queries</code> <br>list &lt;[BoundShardQuery](#boundshardquery)&gt;| BoundShardQuery represents a single query request for the specified list of shards. This is used in a list for ExecuteBatchShardsRequest. |
 | <code>tablet_type</code> <br>[topodata.TabletType](#topodata.tablettype)| TabletType represents the type of a given tablet. |
@@ -422,7 +422,7 @@ ExecuteBatchShards executes the list of queries on the specified shards.
 | :-------- | :--------
 | <code>error</code> <br>[vtrpc.RPCError](#vtrpc.rpcerror)| RPCError is an application-level error structure returned by VtTablet (and passed along by VtGate if appropriate). We use this so the clients don't have to parse the error messages, but instead can depend on the value of the code. |
 | <code>session</code> <br>[Session](#session)| Session objects are session cookies and are invalidated on use. Query results will contain updated session values. Their content should be opaque to the user. |
-| <code>results</code> <br>list &lt;[query.QueryResult](#query.queryresult)&gt;| QueryResult is returned by Execute and ExecuteStream.  As returned by Execute, len(fields) is always equal to len(row) (for each row in rows).  As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
+| <code>results</code> <br>list &lt;[query.QueryResult](#query.queryresult)&gt;| QueryResult is returned by Execute and ExecuteStream. As returned by Execute, len(fields) is always equal to len(row) (for each row in rows). As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
 
 ### ExecuteShards
 
@@ -436,7 +436,7 @@ ExecuteShards executes the query on the specified shards.
 
 | Name |Description |
 | :-------- | :--------
-| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational.  The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
+| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational. The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
 | <code>session</code> <br>[Session](#session)| Session objects are session cookies and are invalidated on use. Query results will contain updated session values. Their content should be opaque to the user. |
 | <code>query</code> <br>[query.BoundQuery](#query.boundquery)| BoundQuery is a query with its bind variables |
 | <code>keyspace</code> <br>string| keyspace to target the query to. |
@@ -455,7 +455,7 @@ ExecuteShards executes the query on the specified shards.
 | :-------- | :--------
 | <code>error</code> <br>[vtrpc.RPCError](#vtrpc.rpcerror)| RPCError is an application-level error structure returned by VtTablet (and passed along by VtGate if appropriate). We use this so the clients don't have to parse the error messages, but instead can depend on the value of the code. |
 | <code>session</code> <br>[Session](#session)| Session objects are session cookies and are invalidated on use. Query results will contain updated session values. Their content should be opaque to the user. |
-| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream.  As returned by Execute, len(fields) is always equal to len(row) (for each row in rows).  As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
+| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream. As returned by Execute, len(fields) is always equal to len(row) (for each row in rows). As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
 
 ### StreamExecuteShards
 
@@ -469,7 +469,7 @@ StreamExecuteShards executes a streaming query based on shards. Use this method 
 
 | Name |Description |
 | :-------- | :--------
-| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational.  The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
+| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational. The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
 | <code>query</code> <br>[query.BoundQuery](#query.boundquery)| BoundQuery is a query with its bind variables |
 | <code>keyspace</code> <br>string| keyspace to target the query to. |
 | <code>shards</code> <br>list &lt;string&gt;| shards to target the query to. |
@@ -484,7 +484,7 @@ StreamExecuteShards executes a streaming query based on shards. Use this method 
 
 | Name |Description |
 | :-------- | :--------
-| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream.  As returned by Execute, len(fields) is always equal to len(row) (for each row in rows).  As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
+| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream. As returned by Execute, len(fields) is always equal to len(row) (for each row in rows). As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
 
 ##Map Reduce
 ### SplitQuery
@@ -493,13 +493,13 @@ Split a query into non-overlapping sub queries
 
 #### Request
 
- SplitQueryRequest is the payload to SplitQuery.  SplitQuery takes a "SELECT" query and generates a list of queries called "query-parts". Each query-part consists of the original query with an added WHERE clause that restricts the query-part to operate only on rows whose values in the the columns listed in the "split_column" field of the request (see below) are in a particular range.  It is guaranteed that the set of rows obtained from executing each query-part on a database snapshot and merging (without deduping) the results is equal to the set of rows obtained from executing the original query on the same snapshot with the rows containing NULL values in any of the split_column's excluded.  This is typically called by the MapReduce master when reading from Vitess. There it's desirable that the sets of rows returned by the query-parts have roughly the same size.
+ SplitQueryRequest is the payload to SplitQuery. SplitQuery takes a "SELECT" query and generates a list of queries called "query-parts". Each query-part consists of the original query with an added WHERE clause that restricts the query-part to operate only on rows whose values in the the columns listed in the "split_column" field of the request (see below) are in a particular range. It is guaranteed that the set of rows obtained from executing each query-part on a database snapshot and merging (without deduping) the results is equal to the set of rows obtained from executing the original query on the same snapshot with the rows containing NULL values in any of the split_column's excluded. This is typically called by the MapReduce master when reading from Vitess. There it's desirable that the sets of rows returned by the query-parts have roughly the same size.
 
 ##### Parameters
 
 | Name |Description |
 | :-------- | :--------
-| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational.  The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
+| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational. The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
 | <code>keyspace</code> <br>string| keyspace to target the query to. |
 | <code>query</code> <br>[query.BoundQuery](#query.boundquery)| BoundQuery is a query with its bind variables |
 | <code>split_column</code> <br>list &lt;string&gt;| Each generated query-part will be restricted to rows whose values in the columns listed in this field are in a particular range. The list of columns named here must be a prefix of the list of columns defining some index or primary key of the table referenced in 'query'. For many tables using the primary key columns (in order) is sufficient and this is the default if this field is omitted. See the comment on the 'algorithm' field for more restrictions and information. |
@@ -587,7 +587,7 @@ Execute tries to route the query to the right shard. It depends on the query and
 
 | Name |Description |
 | :-------- | :--------
-| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational.  The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
+| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational. The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
 | <code>session</code> <br>[Session](#session)| Session objects are session cookies and are invalidated on use. Query results will contain updated session values. Their content should be opaque to the user. |
 | <code>query</code> <br>[query.BoundQuery](#query.boundquery)| BoundQuery is a query with its bind variables |
 | <code>tablet_type</code> <br>[topodata.TabletType](#topodata.tablettype)| TabletType represents the type of a given tablet. |
@@ -605,7 +605,7 @@ Execute tries to route the query to the right shard. It depends on the query and
 | :-------- | :--------
 | <code>error</code> <br>[vtrpc.RPCError](#vtrpc.rpcerror)| RPCError is an application-level error structure returned by VtTablet (and passed along by VtGate if appropriate). We use this so the clients don't have to parse the error messages, but instead can depend on the value of the code. |
 | <code>session</code> <br>[Session](#session)| Session objects are session cookies and are invalidated on use. Query results will contain updated session values. Their content should be opaque to the user. |
-| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream.  As returned by Execute, len(fields) is always equal to len(row) (for each row in rows).  As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
+| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream. As returned by Execute, len(fields) is always equal to len(row) (for each row in rows). As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
 
 ### StreamExecute
 
@@ -619,7 +619,7 @@ StreamExecute executes a streaming query based on shards. It depends on the quer
 
 | Name |Description |
 | :-------- | :--------
-| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational.  The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
+| <code>caller_id</code> <br>[vtrpc.CallerID](#vtrpc.callerid)| CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational. The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes. |
 | <code>query</code> <br>[query.BoundQuery](#query.boundquery)| BoundQuery is a query with its bind variables |
 | <code>tablet_type</code> <br>[topodata.TabletType](#topodata.tablettype)| TabletType represents the type of a given tablet. |
 | <code>keyspace</code> <br>string| keyspace to target the query to. |
@@ -633,7 +633,7 @@ StreamExecute executes a streaming query based on shards. It depends on the quer
 
 | Name |Description |
 | :-------- | :--------
-| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream.  As returned by Execute, len(fields) is always equal to len(row) (for each row in rows).  As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
+| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream. As returned by Execute, len(fields) is always equal to len(row) (for each row in rows). As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
 
 ## Enums
 
@@ -682,8 +682,8 @@ StreamExecute executes a streaming query based on shards. It depends on the quer
 | Name |Value |Description |
 | :-------- | :-------- | :--------
 | <code>UNSET</code> | <code>0</code> | UNSET is the default value, when range-based sharding is not used.  |
-| <code>UINT64</code> | <code>1</code> | UINT64 is when uint64 value is used. This is represented as 'unsigned bigint' in mysql  |
-| <code>BYTES</code> | <code>2</code> | BYTES is when an array of bytes is used. This is represented as 'varbinary' in mysql  |
+| <code>UINT64</code> | <code>1</code> | UINT64 is when uint64 value is used. This is represented as `UNSIGNED BIGINT` in MySQL  |
+| <code>BYTES</code> | <code>2</code> | BYTES is when an array of bytes is used. This is represented as `VARBINARY` in MySQL  |
 
 ### topodata.TabletType
 
@@ -816,7 +816,7 @@ ExecuteOptions is passed around for all Execute calls.
 | :-------- | :--------
 | <code>include_event_token</code> <br>bool| This used to be exclude_field_names, which was replaced by IncludedFields enum below If set, we will try to include an EventToken with the responses. |
 | <code>compare_event_token</code> <br>[EventToken](#query.eventtoken)| EventToken is a structure that describes a point in time in a replication stream on one shard. The most recent known replication position can be retrieved from vttablet when executing a query. It is also sent with the replication streams from the binlog service. |
-| <code>included_fields</code> <br>[IncludedFields](#executeoptions.includedfields)| Controls what fields are returned in Field message responses from mysql, i.e. field name, table name, etc. This is an optimization for high-QPS queries where the client knows what it's getting |
+| <code>included_fields</code> <br>[IncludedFields](#executeoptions.includedfields)| Controls what fields are returned in Field message responses from MySQL, i.e. field name, table name, etc. This is an optimization for high-QPS queries where the client knows what it's getting |
 
 #### Enums
 
@@ -849,7 +849,7 @@ Field describes a single column returned by a query
 
 ### query.QueryResult
 
-QueryResult is returned by Execute and ExecuteStream.  As returned by Execute, len(fields) is always equal to len(row) (for each row in rows).  As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]).
+QueryResult is returned by Execute and ExecuteStream. As returned by Execute, len(fields) is always equal to len(row) (for each row in rows). As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]).
 
 #### Properties
 
@@ -881,7 +881,7 @@ ResultWithError represents a query response in the form of result or error but n
 | Name |Description |
 | :-------- | :--------
 | <code>error</code> <br>[vtrpc.RPCError](#vtrpc.rpcerror)| RPCError is an application-level error structure returned by VtTablet (and passed along by VtGate if appropriate). We use this so the clients don't have to parse the error messages, but instead can depend on the value of the code. |
-| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream.  As returned by Execute, len(fields) is always equal to len(row) (for each row in rows).  As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
+| <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream. As returned by Execute, len(fields) is always equal to len(row) (for each row in rows). As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
 
 ### query.Row
 
@@ -1015,7 +1015,7 @@ ServedFrom indicates a relationship between a TabletType and the keyspace name t
 
 ### vtrpc.CallerID
 
-CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational.  The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes.
+CallerID is passed along RPCs to identify the originating client for a request. It is not meant to be secure, but only informational. The client can put whatever info they want in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and to easily find a client. VtGate propagates it to VtTablet, and VtTablet may use this information for monitoring purposes, to display on dashboards, or for blacklisting purposes.
 
 #### Properties
 

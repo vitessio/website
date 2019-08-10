@@ -626,7 +626,7 @@ After celebrating your second successful resharding, you are now ready to clean 
 ./306_down_shard_0.sh
 ```
 
-In this script, we just stopped all tablet instances for shard 0. This will cause all those vttablet and mysqld processes to be stopped. But the shard metadata is still present. We can clean that up with this command (after all vttablets have been brought down):
+In this script, we just stopped all tablet instances for shard 0. This will cause all those vttablet and `mysqld` processes to be stopped. But the shard metadata is still present. We can clean that up with this command (after all vttablets have been brought down):
 
 ``` sh
 ./307_delete_shard_0.sh

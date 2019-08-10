@@ -3,7 +3,7 @@ title: VReplication Operator's Guide
 aliases: ['/docs/advanced/vreplication/']
 ---
 
-VReplication is a core component of vitess that can be used to compose
+VReplication is a core component of Vitess that can be used to compose
 many features. It can be used for the following use cases:
 
 * **Resharding**: Legacy workflows of vertical and horizontal resharding.
@@ -15,19 +15,19 @@ many features. It can be used for the following use cases:
   can use a different primary vindex than the source. It can also materialize
   a subset of the source columns, or add new expressions from the source.
   This view will be kept up-to-date in real time. One can also materialize
-  reference tables onto all shards and have vitess perform efficient
+  reference tables onto all shards and have Vitess perform efficient
   local joins with those materialized tables.
 * **Realtime rollups**; The materialization expression can include aggregation
-  expressions in which case, vitess will create a rolled up version of the
+  expressions in which case, Vitess will create a rolled up version of the
   source table which can be used for realtime analytics.
 * **Backfilling lookup vindexes**: VReplication can be used to backfill a
   newly created lookup vindex. Workflows can be built manage the switching
   from a backfill mode to the vindex itself keeping it up-to-date.
 * **Schema deployment**: We can use VReplication to recreate the workflow
   performed by gh-ost and thereby support zero-downtime schema deployments
-  in vitess natively.
+  in Vitess natively.
 * **Data migration**: VReplication can be setup to migrate data from an
-  existing system into vitess. The replication could also be reversed after
+  existing system into Vitess. The replication could also be reversed after
   a cutover giving you the option to rollback a migration if something went
   wrong.
 * **Change notification**: The streamer component of VReplication can be
@@ -51,14 +51,14 @@ specify a `select` statement that represents both the transformation
 rule and the filtering rule. The select expressions specify the
 transformation, and the where clause specifies the filtering.
 
-The select expressions can be any non-aggregate mysql expression, or
+The select expressions can be any non-aggregate MySQL expression, or
 they can also be `count` or `sum` as aggregate expressions. Aggregate
 expressions combined with the corresponding `group by` clauses will
 allow you to materialize real-time rollups of the source table, which
 can be used for analytics. The target table can have a different name
 from the source.
 
-For a sharded system like vitess, multiple VReplication streams
+For a sharded system like Vitess, multiple VReplication streams
 may be needed to achieve the necessary goals. This is because there
 will be multiple source shards as well as destination shards, and
 the relationship between them may not be one to one.
@@ -178,7 +178,7 @@ The first argument to the command is the master tablet id of the target keyspace
 The second argument is the SQL command. To start a new stream, you need an insert statement.
 The parameters are as follows:
 
-* `db_name`: This name must match the name of the mysql database. In the future, this
+* `db_name`: This name must match the name of the MySQL database. In the future, this
   will not be required, and will be automatically filled in by the vttablet.
 * `source`: The protobuf representation of the stream source, explained below.
 * `pos`: For a brand new stream, this should be empty. To start
@@ -280,7 +280,7 @@ more for the other `-80` shard.
 
 The select statement has the following features (and restrictions):
 
-* The Select expressions can be any deterministic mysql expression.
+* The Select expressions can be any deterministic MySQL expression.
   Subqueries are not supported. Among aggregate expressions, only
   `count(*)` and `sum(col)` are supported.
 * The where clause can only contain the `in_keyrange` construct. It
@@ -422,7 +422,7 @@ VReplicationExec command with `select * from _vt.vreplication`.
 VReplication also reports the following variables that can be scraped by
 monitoring tools like prometheus:
 
-* VReplicationStreamCount: Number of vreplication streams.
+* VReplicationStreamCount: Number of VReplication streams.
 * VReplicationSecondsBehindMasterMax: Max vreplication seconds behind master.
 * VReplicationSecondsBehindMaster: vreplication seconds behind master per stream.
 * VReplicationSource: The source for each VReplication stream.
