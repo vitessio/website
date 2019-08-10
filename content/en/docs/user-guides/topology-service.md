@@ -296,7 +296,7 @@ the same server address, and very importantly a *different* root directory.
 
 [Zookeeper
 Observers](https://zookeeper.apache.org/doc/current/zookeeperObservers.html) can
-also be used to limit the load on the global Zookeeper.  They are configured by
+also be used to limit the load on the global Zookeeper. They are configured by
 specifying the adresses of the observers in the server address, after a `|`,
 for instance:
 `global_server1:p1,global_server2:p2|observer1:po1,observer2:po2`.
@@ -427,7 +427,7 @@ cluster in only one cell / region. This part explains how to do this, and later
 on upgrade to multiple cells / regions.
 
 If running in a single cell, the same topology service can be used for both
-global and local data.  A local cell record still needs to be created, just use
+global and local data. A local cell record still needs to be created, just use
 the same server address and, very importantly, a *different* root node path.
 
 In that case, just running 3 servers for topology service quorum is probably

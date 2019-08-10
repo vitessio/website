@@ -150,7 +150,7 @@ sequence of actions:
 1. Restarts replication (with the right semi-sync flags corresponding to its
    original type, if applicable).
 
-1. Switches its type back to its original type.  After this, it will most likely
+1. Switches its type back to its original type. After this, it will most likely
    be behind on replication, and not used by vtgate for serving until it catches
    up.
 
