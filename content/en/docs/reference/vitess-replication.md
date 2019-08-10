@@ -1,34 +1,18 @@
 ---
-title: Vitess, MySQL Replication, and Schema Changes
+title: Vitess Replication
 weight: 5
+aliases: ['/docs/reference/row-based-replication/']
 ---
 
-## Statement vs Row Based Replication
+{{< warning >}}
+Vitess requires the use of Row-Based Replication with GTIDs enabled. In addition, Vitess only supports the default `binlog_row_image` of `FULL`.
+{{< /warning >}}
 
-MySQL supports two primary modes of replication in its binary logs: statement or row based. Vitess recommends using Row-based Replication.
-
-For schema changes, if the number of affected rows is greater > 100k (configurable), we don't allow direct application of DDLs. The recommended tools in such cases are [gh-ost](https://github.com/github/gh-ost) or [pt-osc](https://www.percona.com/doc/percona-toolkit/LATEST/pt-online-schema-change.html).
-
-## Rewriting Update Statements
-
-Vitess rewrites ‘UPDATE’ SQL statements to always know what rows will be affected. For instance, this statement:
-
-``` sql
-UPDATE <table> SET <set values> WHERE <clause>
-```
-
-Will be rewritten into:
-
-``` sql
-SELECT <primary key columns> FROM <table> WHERE <clause> FOR UPDATE
-UPDATE <table> SET <set values> WHERE <primary key columns> IN <result from previous SELECT> /* primary key values: … */
-```
-
-With this rewrite in effect, we know exactly which rows are affected, by primary key, and we also document them as a SQL comment.
+Vitess makes use of MySQL Replication for both high availability and to receive a feed of changes to database tables. This feed is then used in features such as [VReplication](../vreplication), and to identify schema changes so that caches can be updated.
 
 ## Semi-Sync
 
-Vitess uses Semisynchronous replication in its default configuration. This means the following will happen:
+Vitess strongly recommends the use of Semisynchronous replication for High Availability. Semi-sync has the following characteristics:
 
 * The master will only accept writes if it has at least one slave connected and sending semi-sync ACK. It will never fall back to asynchronous (not requiring ACKs) because of timeouts while waiting for ACK, nor because of having zero slaves connected (although it will fall back to asynchronous in case of shutdown, abrupt or graceful).
 
@@ -44,4 +28,23 @@ On the other hand these behaviors also give a requirement that each shard must h
 
 With regard to replication lag, note that this does **not** guarantee there is always at least one replica type slave from which queries will always return up-to-date results. Semi-sync guarantees that at least one slave has the transaction in its relay log, but it has not necessarily been applied yet. The only way to guarantee a fully up-to-date read is to send the request to the master.
 
-See this [document](../row-based-replication) for more information.
+## Filtered Replication
+
+This is used during horizontal and vertical resharding, to keep source and destination shards up to date.
+
+We need to transform the RBR events into SQL statements, filter them based either on `keyspace_id` (horizontal resharding) or table name (vertical resharding), and apply them.
+
+For horizontal splits, we need to understand the VSchema to be able to find the primary VIndex used for sharding.
+
+*Note*: this again means we need accurate schema information. We could do one of two things:
+
+* Send all statements to all destination shards, and let them do the filtering. They can have accurate schema information if they receive and apply all schema changes through Filtered Replication.
+* Have the filtering be done on the stream server side, and assume the schema doesn't change in incompatible ways. As this is simpler for now, that's the option we're going with.
+
+## Database Schema Considerations
+
+* Row-based replication requires that replicas have the same schema as the master, and corruption will likely occur if the column order does not match. Earlier versions of Vitess which used Statement-Based replication recommended applying schema changes on replicas first, and then swapping their role to master. This method is no longer recommended and a tool such as [`gh-ost`](https://github.com/github/gh-ost) or [`pt-online-schema-change`](https://www.percona.com/doc/percona-toolkit/LATEST/pt-online-schema-change.html) should be used instead.
+
+* Using a column of type `FLOAT` or `DOUBLE` as part of a Primary Key is not supported. This limitation is because Vitess may try to execute a query for a value (for example 2.2) which MySQL will return zero results, even when the approximate value is present.
+
+* It is not recommended to change the schema at the same time a resharding operation is being performed. This limitation exists because interpreting RBR events requires accurate knowledge of the table's schema, and Vitess does not always correctly handle the case that the schema has changed.
