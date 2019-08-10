@@ -1,6 +1,6 @@
 ---
-title: 2PC Overview
-weight: 4
+title: Two-Phase Commit
+aliases: ['/docs/launching/twopc/']
 ---
 
 Vitess 2PC allows you to perform atomic distributed commits. The feature is implemented using traditional MySQL transactions, and hence inherits the same guarantees. With this addition, Vitess can be configured to support the following three levels of atomicity:

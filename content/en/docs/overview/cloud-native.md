@@ -1,5 +1,6 @@
 ---
 title: Cloud Native
+weight: 4
 ---
 
 Vitess is well-suited for Cloud deployments because it enables databases to incrementally add capacity. The easiest way to run Vitess is via Kubernetes.
