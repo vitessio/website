@@ -28,19 +28,6 @@ On the other hand these behaviors also give a requirement that each shard must h
 
 With regard to replication lag, note that this does **not** guarantee there is always at least one replica type slave from which queries will always return up-to-date results. Semi-sync guarantees that at least one slave has the transaction in its relay log, but it has not necessarily been applied yet. The only way to guarantee a fully up-to-date read is to send the request to the master.
 
-## Filtered Replication
-
-This is used during horizontal and vertical resharding, to keep source and destination shards up to date.
-
-We need to transform the RBR events into SQL statements, filter them based either on `keyspace_id` (horizontal resharding) or table name (vertical resharding), and apply them.
-
-For horizontal splits, we need to understand the VSchema to be able to find the primary VIndex used for sharding.
-
-*Note*: this again means we need accurate schema information. We could do one of two things:
-
-* Send all statements to all destination shards, and let them do the filtering. They can have accurate schema information if they receive and apply all schema changes through Filtered Replication.
-* Have the filtering be done on the stream server side, and assume the schema doesn't change in incompatible ways. As this is simpler for now, that's the option we're going with.
-
 ## Database Schema Considerations
 
 * Row-based replication requires that replicas have the same schema as the master, and corruption will likely occur if the column order does not match. Earlier versions of Vitess which used Statement-Based replication recommended applying schema changes on replicas first, and then swapping their role to master. This method is no longer recommended and a tool such as [`gh-ost`](https://github.com/github/gh-ost) or [`pt-online-schema-change`](https://www.percona.com/doc/percona-toolkit/LATEST/pt-online-schema-change.html) should be used instead.
