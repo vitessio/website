@@ -25,7 +25,7 @@ Vitess requires the use of global transaction identifiers ([GTIDs](https://dev.m
 
 Vitess does not depend on [semisynchronous replication](https://dev.mysql.com/doc/refman/5.6/en/replication-semisync.html) but does work if it is implemented. Larger Vitess deployments typically do implement semisynchronous replication.
 
-### [Active Reparenting](#active-reparenting)
+### Active Reparenting
 
 You can use the following `vtctl` commands to perform reparenting operations:
 
@@ -69,9 +69,9 @@ This command performs the following actions:
     - On the master-elect tablet, Vitess inserts an entry in a test table and then updates the `MasterAlias` record of the global Shard object.
     - In parallel on each slave, excluding the old master, Vitess sets the master and waits for the test entry to replicate to the slave tablet. (Slave tablets that had not been replicating before the command was called are left in their current state and do not start replication after the reparenting process.)
 
-## [External Reparenting](#external-reparenting)
+## External Reparenting
 
-External reparenting occurs when another tool handles the process of changing a shard's master tablet. After that occurs, the tool needs to call the `[vtctl TabletExternallyReparented](https://vitess.io/reference/vtctl/#tabletexternallyreparented)` command to ensure that the topology server, replication graph, and serving graph are updated accordingly.
+External reparenting occurs when another tool handles the process of changing a shard's master tablet. After that occurs, the tool needs to call the [`vtctl TabletExternallyReparented`](https://vitess.io/reference/vtctl/#tabletexternallyreparented) command to ensure that the topology server, replication graph, and serving graph are updated accordingly.
 
 That command performs the following operations:
 
