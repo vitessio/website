@@ -1,5 +1,5 @@
 ---
-title: Troubleshooting
+title: Troubleshoot
 aliases: ['/docs/launching/troubleshooting/']
 description: Debug common issues with Vitess
 weight: 7
