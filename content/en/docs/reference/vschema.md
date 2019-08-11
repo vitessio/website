@@ -198,7 +198,7 @@ VSchema:
 }
 ```
 
-For a normal unsharded table, the VSchema only needs to know the table name.  No additional metadata is needed.
+For a normal unsharded table, the VSchema only needs to know the table name. No additional metadata is needed.
 
 ### Sharded Table With Simple Primary Vindex
 

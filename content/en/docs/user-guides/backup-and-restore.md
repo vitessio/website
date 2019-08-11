@@ -119,7 +119,7 @@ the fact that you're already running within Google Compute Engine or Container
 Engine.
 
 For this to work, the GCE instances must have been created with the [scope](https://cloud.google.com/compute/docs/authentication#using) that grants read-write access to Cloud Storage. When using Container Engine, you can
-do this for all the instances it creates by adding `--scopes storage-rw` to the `gcloud container clusters create` command as shown in the [Vitess on Kubernetes guide](../../get-started/kubernetes#start-a-container-engine-cluster).
+do this for all the instances it creates by adding `--scopes storage-rw` to the `gcloud container clusters create` command.
 
 ## Creating a backup
 
@@ -150,7 +150,7 @@ sequence of actions:
 1. Restarts replication (with the right semi-sync flags corresponding to its
    original type, if applicable).
 
-1. Switches its type back to its original type.  After this, it will most likely
+1. Switches its type back to its original type. After this, it will most likely
    be behind on replication, and not used by vtgate for serving until it catches
    up.
 

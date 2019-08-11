@@ -13,7 +13,7 @@ Consistent lookup vindexes use an alternate approach that make use of careful lo
 
 ## Modified guidance
 
-The guidance for implementing lookup vindexes has been to create a two-column table. The first column (from column) should match the type of the column of the main table that needs the vindex. The second column (to column) should be a `binary` or a `varbinary` large enough to accommodate the keyspace id.
+The guidance for implementing lookup vindexes has been to create a two-column table. The first column (from column) should match the type of the column of the main table that needs the vindex. The second column (to column) should be a `BINARY` or a `VARBINARY` large enough to accommodate the keyspace id.
 
 This guidance remains the same for unique lookup vindexes.
 
