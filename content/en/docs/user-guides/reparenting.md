@@ -7,8 +7,8 @@ weight: 5
 
 This document explains the types of reparenting that Vitess supports:
 
-* [Active reparenting](https://vitess.io/user-guide/reparenting/#active-reparenting) occurs when the Vitess toolchain manages the entire reparenting process.
-* [External reparenting](https://vitess.io/user-guide/reparenting/#external-reparenting) occurs when another tool handles the reparenting process, and the Vitess toolchain just updates its topology server, replication graph, and serving graph to accurately reflect master-slave relationships.
+* [Active reparenting](../reparenting/#active-reparenting) occurs when the Vitess toolchain manages the entire reparenting process.
+* [External reparenting](../reparenting/#external-reparenting) occurs when another tool handles the reparenting process, and the Vitess toolchain just updates its topology server, replication graph, and serving graph to accurately reflect master-slave relationships.
 
 **Note:** The `InitShardMaster` command defines the initial parenting relationships within a shard. That command makes the specified tablet the master and makes the other tablets in the shard slaves that replicate from that master.
 
@@ -19,7 +19,7 @@ This document explains the types of reparenting that Vitess supports:
 Vitess requires the use of global transaction identifiers ([GTIDs](https://dev.mysql.com/doc/refman/5.6/en/replication-gtids-concepts.html)) for its operations:
 
 * During active reparenting, Vitess uses GTIDs to initialize the replication process and then depends on the GTID stream to be correct when reparenting. (During external reparenting, Vitess assumes the external tool manages the replication process.)
-* During resharding, Vitess uses GTIDs for [filtered replication](https://vitess.io/user-guide/sharding/#filtered-replication), the process by which source tablet data is transferred to the proper destination tablets.
+* During resharding, Vitess uses GTIDs for [VReplication](../../reference/vreplication), the process by which source tablet data is transferred to the proper destination tablets.
 
 ### Semisynchronous replication
 

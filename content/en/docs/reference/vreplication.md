@@ -1,5 +1,5 @@
 ---
-title: VReplication Operator's Guide
+title: VReplication
 aliases: ['/docs/advanced/vreplication/']
 ---
 
