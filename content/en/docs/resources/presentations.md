@@ -1,6 +1,7 @@
 ---
 title: Presentations and Videos
 weight: 1
+aliases: ['/resources/presentations.html']
 ---
 
 

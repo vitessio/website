@@ -2,6 +2,7 @@
 title: User Guides
 description: Task-based guides for common usage scenarios
 weight: 4
+aliases: ['/user-guide/client-libraries.html']
 ---
 
 ## Platform support

@@ -61,7 +61,7 @@ Before diving into the Vitess codebase, make yourself familiar with the system a
 
 * Read the [What is Vitess](../overview/whatisvitess) page, in particular the architecture section.
 
-* Read the [Vitess concepts](../overview/concepts) and the [Sharding](../sharding) page.
+* Read the [Vitess concepts](../overview/concepts) and the [Sharding](../reference/sharding) page.
 
   * We also recommend to look at our [latest presentations](../resources/presentations). They contain many illustrations which help understanding how Vitess works in detail.
 
@@ -73,6 +73,6 @@ Before diving into the Vitess codebase, make yourself familiar with the system a
       -01, 01-02, ff-
     </details>
 
-* Go through the [Vitess Kubernetes tutorial](../tutorials/kubernetes).
+* Go through the [Vitess Kubernetes tutorial](../get-started/kubernetes).
 
   * While going through the tutorial, look back at the [architecture](../overview/whatisvitess/#architecture) and match the processes you start in Kubernetes with the boxes in the diagram.
