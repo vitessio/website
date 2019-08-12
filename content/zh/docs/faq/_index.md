@@ -3,7 +3,6 @@ title: FAQ
 description: Frequently Asked Questions about Vitess
 weight: 8
 featured: true
-aliases: ['/docs/user-guides/faq/']
 ---
 
 ## Does the application need to know about the sharding scheme underneath Vitess?
