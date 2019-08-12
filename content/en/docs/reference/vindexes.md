@@ -1,5 +1,5 @@
 ---
-title: VIndexes
+title: Vindexes
 aliases: ['/docs/schema-management/consistent-lookup/']
 ---
 
