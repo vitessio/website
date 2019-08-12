@@ -21,7 +21,7 @@ many features. It can be used for the following use cases:
   expressions in which case, vitess will create a rolled up version of the
   source table which can be used for realtime analytics.
 * **Backfilling lookup vindexes**: VReplication can be used to backfill a
-  newly created lookup vindex. Workflows can be built manage the switching
+  newly created lookup vindex. Workflows can be built to manage the switching
   from a backfill mode to the vindex itself keeping it up-to-date.
 * **Schema deployment**: We can use VReplication to recreate the workflow
   performed by gh-ost and thereby support zero-downtime schema deployments
@@ -424,7 +424,7 @@ monitoring tools like prometheus:
 
 * VReplicationStreamCount: Number of vreplication streams.
 * VReplicationSecondsBehindMasterMax: Max vreplication seconds behind master.
-* VReplicationSecondsBehindMaster: vreplication seconds behind master per stream.
+* VReplicationSecondsBehindMaster: VReplication seconds behind master per stream.
 * VReplicationSource: The source for each VReplication stream.
 * VReplicationSourceTablet: The source tablet for each VReplication stream.
 
