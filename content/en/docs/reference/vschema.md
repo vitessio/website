@@ -140,13 +140,13 @@ numeric\_static\_map | Functional Unique | A JSON file that maps input values to
 unicode\_loose\_md5 | Functional Unique | Case-insensitive (UCA level 1) md5 hash | Yes | No | 1
 reverse\_bits | Functional Unique | Bit Reversal | Yes | Yes | 1
 
-[Consistent lookup vindexes](../consistent-lookup) are a new category of vindexes that are meant to replace the existing lookup vindexes. For the time being, they have a different name to allow for users to switch back and forth.
+[Consistent lookup vindexes](../vindexes) are a new category of vindexes that are meant to replace the existing lookup vindexes. For the time being, they have a different name to allow for users to switch back and forth.
 
 Custom vindexes can also be plugged in as needed.
 
 ## Sequences
 
-Auto-increment columns do not work very well for sharded tables. [Vitess sequences](../../reference/vitess-sequences) solve this problem. Sequence tables must be specified in the VSchema, and then tied to table columns. At the time of insert, if no value is specified for such a column, VTGate will generate a number for it using the sequence table.
+Auto-increment columns do not work very well for sharded tables. [Vitess sequences](../vitess-sequences) solve this problem. Sequence tables must be specified in the VSchema, and then tied to table columns. At the time of insert, if no value is specified for such a column, VTGate will generate a number for it using the sequence table.
 
 ## Reference tables
 

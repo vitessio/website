@@ -3,37 +3,36 @@
 /operator/* go-get=1 /go-import/operator.html 200
 
 # User guide redirects
-/user-guide/schema-management             /docs/schema-management
-/user-guide/sharding                      /docs/sharding
+/user-guide/schema-management             /docs/user-guides/schema-management
+/user-guide/sharding                      /docs/reference/sharding
 /user-guide/introduction                  /docs/user-guides
 /user-guide/replication                   /docs/reference/vitess-replication
 /user-guide/vitess-sequences              /docs/reference/vitess-sequences
-/user-guide/vschema                       /docs/schema-management/vschema
-/user-guide/twopc                         /docs/launching/twopc
-/user-guide/server-configuration          /docs/launching/server-configuration
-/user-guide/scalability-philosophy        /docs/launching/scalability-philosophy
-/user-guide/horizontal-sharding           /docs/tutorials/local
-/user-guide/horizontal-sharding-workflow  /docs/tutorials/local/#workflow
+/user-guide/vschema                       /docs/reference/vschema
+/user-guide/twopc                         /docs/reference/two-phase-commit
+/user-guide/server-configuration          /docs/user-guides/server-configuration
+/user-guide/scalability-philosophy        /docs/overview/scalability-philosophy
+/user-guide/horizontal-sharding           /docs/get-started/local
+/user-guide/horizontal-sharding-workflow  /docs/get-started/local/#workflow
 /user-guide/mysql-server-protocol         /docs/reference/mysql-server-protocol
-/user-guide/production-planning           /docs/launching/production-planning
+/user-guide/production-planning           /docs/user-guide/production-planning
 /user-guide/row-based-replication         /docs/reference/row-based-replication
-/user-guide/schema-swap                   /docs/schema-management/schema-swap
-/user-guide/sharding-kubernetes-workflow  /docs/tutorials/kubernetes
-/user-guide/sharding-kubernetes           /docs/tutorials/kubernetes
-/user-guide/troubleshooting               /docs/launching/troubleshooting
-/user-guide/update-stream                 /docs/reference/update-stream
+/user-guide/schema-swap                   /docs/reference
+/user-guide/sharding-kubernetes-workflow  /docs/get-started/kubernetes
+/user-guide/sharding-kubernetes           /docs/get-started/kubernetes
+/user-guide/troubleshooting               /docs/troubleshoot
 /user-guide/vitess-replication            /docs/reference/vitess-replication
-/getting-started/local-instance		  /docs/tutorials/local
-/user-guide/vschema.html		  /docs/schema-management/vschema/
+/getting-started/local-instance		  /docs/get-started/local
+/user-guide/vschema.html		  /docs/reference/vschema
 
 # Splat-style redirects
 /advanced          /docs/advanced
 /advanced/*        /docs/advanced/:splat
 /contributing      /docs/contributing
 /contributing/*    /docs/contributing/:splat
-/getting-started   /docs/tutorials
-/getting-started/* /docs/tutorials/:splat
-/docs/getting-started/* /docs/tutorials/:splat
+/getting-started   /docs/get-started
+/getting-started/* /docs/get-started/:splat
+/docs/getting-started/* /docs/get-started/:splat
 /overview          /docs/overview
 /overview/*        /docs/overview/:splat
 /reference         /docs/reference
