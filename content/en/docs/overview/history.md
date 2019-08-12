@@ -1,6 +1,7 @@
 ---
 title: History
 description: Born at YouTube, released as Open Source
+weight: 5
 ---
 
 Vitess has been a fundamental component of YouTube infrastructure since 2011. This section briefly summarizes the sequence of events that led to Vitess' creation:
