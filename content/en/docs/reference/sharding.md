@@ -2,7 +2,7 @@
 title: Sharding
 description: Shard widely, shard often.
 weight: 5
-aliases: ['/docs/sharding/']
+aliases: ['/docs/sharding/','/user-guide/sharding.html']
 ---
 
 Sharding is a method of horizontally partitioning a database to store data across two or more database servers. This document explains how sharding works in Vitess and the types of sharding that Vitess supports.
@@ -94,6 +94,6 @@ Cool a hot tablet | For read access, add replicas or split shards. For write acc
 
 Vitess provides the following tools to help manage range-based shards:
 
-* The [vtctl](../reference/vtctl) command-line tool supports functions for managing keyspaces, shards, tablets, and more.
+* The [vtctl](../vtctl) command-line tool supports functions for managing keyspaces, shards, tablets, and more.
 * Client APIs account for sharding operations.
 * The [MapReduce framework](https://github.com/vitessio/vitess/tree/master/java/hadoop/src/main/java/io/vitess/hadoop) fully utilizes key ranges to read data as quickly as possible, concurrently from all shards and all replicas.
