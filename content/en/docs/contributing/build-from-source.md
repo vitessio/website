@@ -24,7 +24,8 @@ In addition, Vitess requires the following software and libraries:
 # Apt based
 sudo apt-get install mysql-server
 # Yum based
-sudo yum install mysql-server
+sudo yum localinstall https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
+sudo yum install mysql-community-server
 ```
 
 _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your installation method provides a choice._
