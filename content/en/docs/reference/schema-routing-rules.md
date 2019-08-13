@@ -1,6 +1,6 @@
 ---
-title: Routing Rules
-weight: 4
+title: Schema Routing Rules
+aliases: ['/docs/schema-management/routing-rules/']
 ---
 
 The Vitess routing rules feature is a powerful mechanism for directing traffic to the right keyspaces, shards or tablet types.

@@ -2,11 +2,13 @@
 title: Tablet
 ---
 
-A *tablet* is a combination of a `mysqld` process and a corresponding `vttablet` process, usually running on the same machine.
+A *tablet* is a combination of a `mysqld` process and a corresponding `vttablet` process, usually running on the same machine. Each tablet is assigned a *tablet type*, which specifies what role it currently performs.
 
-Each tablet is assigned a *tablet type*, which specifies what role it currently performs.
+Queries are routed to a tablet via a [VTGate](../vtgate) server.
 
 ## Tablet Types
+
+See the user guide [VTTablet Modes](../../user-guides/vttablet-modes) for more information.
 
 * **master** - A *replica* tablet that happens to currently be the MySQL master for its shard.
 * **replica** - A MySQL slave that is eligible to be promoted to *master*. Conventionally, these are reserved for serving live, user-facing requests (like from the website's frontend).

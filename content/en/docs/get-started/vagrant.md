@@ -1,7 +1,7 @@
 ---
 title: Run Vitess with Vagrant
 description: Instructions for building Vitess on your machine for testing and development purposes using Vagrant
-weight: 3
+weight: 4
 featured: true
 aliases: ['/docs/tutorials/vagrant/']
 ---
@@ -76,7 +76,7 @@ make site_test
 
 ## Start a Vitess cluster
 
-After completing the instructions above to [build Vitess](#build-vitess-vagrant), you can use the example scripts in the GitHub repo to bring up a Vitess cluster on your local machine. These scripts use `etcd2` as the default [topology service](../../overview/concepts) plugin.
+After completing the instructions above to [build Vitess](#build-vitess-vagrant), you can use the example scripts in the GitHub repo to bring up a Vitess cluster on your local machine. These scripts use `etcd2` as the default [topology service](../../concepts/topology-service) plugin.
 
 1. **Start Cluster**
 

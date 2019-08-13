@@ -1,6 +1,6 @@
 ---
-title: VSchema User Guide
-weight: 2
+title: VSchema
+aliases: ['/docs/schema-management/vschema/']
 ---
 
 VSchema stands for Vitess Schema. In contrast to a traditional database schema that contains metadata about tables, a VSchema contains metadata about how tables are organized across keyspaces and shards. Simply put, it contains the information needed to make Vitess look like a single database server.
@@ -198,7 +198,7 @@ VSchema:
 }
 ```
 
-For a normal unsharded table, the VSchema only needs to know the table name.  No additional metadata is needed.
+For a normal unsharded table, the VSchema only needs to know the table name. No additional metadata is needed.
 
 ### Sharded Table With Simple Primary Vindex
 

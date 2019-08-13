@@ -2,7 +2,6 @@
 title: Run Vitess on Kubernetes
 weight: 1
 featured: true
-aliases: ['/docs/tutorials/kubernetes/']
 ---
 
 *The following example will use a simple commerce database to illustrate how Vitess can take you through the journey of scaling from a single database to a fully distributed and sharded cluster. This is a fairly common story, and it applies to many use cases beyond e-commerce.*

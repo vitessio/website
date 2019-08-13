@@ -182,7 +182,7 @@ pkill -f '(vtdataroot|VTDATAROOT)' # kill Vitess processes
 
 ##### Too many connections to MySQL, or other timeouts
 
-This error may mean your disk is too slow. If you don't have access to an SSD, you can try [testing against a ramdisk](https://github.com/vitessio/vitess/blob/master/doc/TestingOnARamDisk.md).
+This error may mean your disk is too slow. If you don't have access to an SSD, you can try testing on a RAM disk.
 
 ##### Connection refused to tablet, MySQL socket not found, etc.
 

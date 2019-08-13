@@ -1,7 +1,7 @@
 ---
 title: vtctl Reference
 noToc: true
-weight: 2
+weight: 9
 featured: true
 ---
 
@@ -1896,7 +1896,7 @@ Deletes the SourceShard record with the provided index. This is meant as an emer
 
 ### TabletExternallyReparented
 
-Changes metadata in the topology server to acknowledge a shard master change performed by an external tool. See the Reparenting guide for more information:https://github.com/vitessio/vitess/blob/master/doc/Reparenting.md#external-reparents.
+Changes metadata in the topology server to acknowledge a shard master change performed by an external tool. See [Reparenting](../../user-guides/reparenting/#external-reparenting) for more information.
 
 #### Example
 

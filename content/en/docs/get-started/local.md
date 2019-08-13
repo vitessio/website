@@ -1,7 +1,7 @@
 ---
 title: Run Vitess Locally
 description: Instructions for using Vitess on your machine for testing purposes
-weight: 3
+weight: 4
 featured: true
 aliases: ['/docs/tutorials/local/']
 ---
@@ -51,7 +51,7 @@ You are now ready to start your first cluster!
 
 ## Start a single keyspace cluster
 
-A [keyspace](../overview/concepts.md#keyspace) in Vitess is a logical database consisting of potentially multiple shards. For our first example, we are going to be using Vitess without sharding using a single keyspace. The file `101_initial_cluster.sh` is for example `1` phase `01`. Lets execute it now:
+A [keyspace](../../concepts/keyspace) in Vitess is a logical database consisting of potentially multiple shards. For our first example, we are going to be using Vitess without sharding using a single keyspace. The file `101_initial_cluster.sh` is for example `1` phase `01`. Lets execute it now:
 
 ``` sh
 cd examples/local
@@ -626,7 +626,7 @@ After celebrating your second successful resharding, you are now ready to clean 
 ./306_down_shard_0.sh
 ```
 
-In this script, we just stopped all tablet instances for shard 0. This will cause all those vttablet and mysqld processes to be stopped. But the shard metadata is still present. We can clean that up with this command (after all vttablets have been brought down):
+In this script, we just stopped all tablet instances for shard 0. This will cause all those vttablet and `mysqld` processes to be stopped. But the shard metadata is still present. We can clean that up with this command (after all vttablets have been brought down):
 
 ``` sh
 ./307_delete_shard_0.sh

@@ -1,13 +1,12 @@
 ---
 title: Schema Management
-description: More information about all things schema and VSchema
-weight: 6
+aliases: ['/docs/schema-management/']
 ---
 
 Using Vitess requires you to work with two different types of schemas:
 
 1. The MySQL database schema. This is the schema of the individual MySQL instances.
-2. The [VSchema](../schema-management/vschema), which describes all the keyspaces and how they're sharded.
+2. The [VSchema](../reference/vschema), which describes all the keyspaces and how they're sharded.
 
 The workflow for the `VSchema` is as follows:
 
@@ -124,7 +123,7 @@ In addition, Vitess applies the following rules when assessing the impact of a p
 * `ALTER` statements are only allowed if the table on the shard's master tablet has 100,000 rows or less.
 * For all other statements, the table on the shard's master tablet must have 2 million rows or less.
 
-If a schema change gets rejected because it affects too many rows, you can specify the flag `-allow_long_unavailability` to tell `ApplySchema` to skip this check. However, we do not recommend this. Instead, you should apply large schema changes by following the [schema swap](../schema-management/schema-swap) process.
+If a schema change gets rejected because it affects too many rows, you can specify the flag `-allow_long_unavailability` to tell `ApplySchema` to skip this check. However, we do not recommend this. Instead, you should apply large schema changes by using an external tool such as `gh-ost` or `pt-online-schema-change`.
 
 ### ApplyVSchema
 

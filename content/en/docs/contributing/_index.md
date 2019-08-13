@@ -57,7 +57,7 @@ Before diving into the Vitess codebase, make yourself familiar with the system a
 
 * Read the [What is Vitess](../overview/whatisvitess) page, in particular the architecture section.
 
-* Read the [Vitess concepts](../overview/concepts) and the [Sharding](../sharding) page.
+* Read the [Vitess concepts](../overview/concepts) and the [Sharding](../reference/sharding) page.
 
   * We also recommend to look at our [latest presentations](../resources/presentations). They contain many illustrations which help understanding how Vitess works in detail.
 

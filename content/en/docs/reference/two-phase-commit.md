@@ -1,6 +1,6 @@
 ---
-title: 2PC Overview
-weight: 4
+title: Two-Phase Commit
+aliases: ['/docs/launching/twopc/']
 ---
 
 Vitess 2PC allows you to perform atomic distributed commits. The feature is implemented using traditional MySQL transactions, and hence inherits the same guarantees. With this addition, Vitess can be configured to support the following three levels of atomicity:
@@ -15,7 +15,7 @@ Vitess 2PC allows you to perform atomic distributed commits. The feature is impl
 
 2PC transactions guarantee atomicity: either the whole transaction commits, or it's rolled back entirely. It does not guarantee Isolation (in the ACID sense). This means that a third party that performs cross-database reads can observe partial commits while a 2PC transaction is in progress.
 
-Guaranteeing ACID Isolation is very contentious and has high costs. Providing it by default would have made vitess impractical for the most common use cases.
+Guaranteeing ACID Isolation is very contentious and has high costs. Providing it by default would have made Vitess impractical for the most common use cases.
 
 ### Configuring VTGate
 

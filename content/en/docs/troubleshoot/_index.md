@@ -1,6 +1,8 @@
 ---
-title: Troubleshooting
-weight: 5
+title: Troubleshoot
+aliases: ['/docs/launching/troubleshooting/']
+description: Debug common issues with Vitess
+weight: 7
 ---
 
 If there is a problem in the system, one or many alerts would typically fire. If a problem was found through means other than an alert, then the alert system needs to be iterated upon.
@@ -28,12 +30,12 @@ Diagnosis 4: No particular transaction seems to be the culprit. Nothing seems to
 
 ## Master starts up read-only
 
-To prevent accidentally accepting writes, our default my.cnf settings tell MySQL to always start up read-only. If the master MySQL gets restarted, it will thus come back read-only until you intervene to confirm that it should accept writes. You can use the `SetReadWrite` command to do that.
+To prevent accidentally accepting writes, our default my.cnf settings tell MySQL to always start up read-only. If the master MySQL gets restarted, it will thus come back read-only until you intervene to confirm that it should accept writes. You can use the [`SetReadWrite`](../../reference/vtctl/#setreadwrite) command to do that.
 
-However, usually if something unexpected happens to the master, it's better to reparent to a different replica with `EmergencyReparentShard`. If you need to do planned maintenance on the master, it's best to first reparent to another replica with `PlannedReparentShard`.
+However, usually if something unexpected happens to the master, it's better to reparent to a different replica with [`EmergencyReparentShard`](../../reference/vtctl/#emergencyreparentshard). If you need to do planned maintenance on the master, it's best to first reparent to another replica with [`PlannedReparentShard`](../../reference/vtctl/#plannedreparentshard).
 
 ## Vitess sees the wrong tablet as master
 
-If you do a failover manually (not through Vitess), you'll need to tell Vitess which tablet corresponds to the new master MySQL. Until then, writes will fail since they'll be routed to a read-only replica (the old master). Use the [`TabletExternallyReparented`](link) command to tell Vitess the new master tablet for a shard.
+If you do a failover manually (not through Vitess), you'll need to tell Vitess which tablet corresponds to the new master MySQL. Until then, writes will fail since they'll be routed to a read-only replica (the old master). Use the [`TabletExternallyReparented`](../../reference/vtctl/#tabletexternallyreparented) command to tell Vitess the new master tablet for a shard.
 
 Tools like [Orchestrator](https://github.com/github/orchestrator) can be configured to call this automatically when a failover occurs. See our sample [orchestrator.conf.json](https://github.com/vitessio/vitess/blob/1129d69282bb738c94b8af661b984b6377a759f7/docker/orchestrator/orchestrator.conf.json#L131) for an example of this.
