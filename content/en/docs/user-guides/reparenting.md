@@ -7,8 +7,8 @@ weight: 5
 
 This document explains the types of reparenting that Vitess supports:
 
-* [Active reparenting](https://vitess.io/user-guide/reparenting/#active-reparenting) occurs when the Vitess toolchain manages the entire reparenting process.
-* [External reparenting](https://vitess.io/user-guide/reparenting/#external-reparenting) occurs when another tool handles the reparenting process, and the Vitess toolchain just updates its topology server, replication graph, and serving graph to accurately reflect master-slave relationships.
+* [Active reparenting](../reparenting/#active-reparenting) occurs when the Vitess toolchain manages the entire reparenting process.
+* [External reparenting](../reparenting/#external-reparenting) occurs when another tool handles the reparenting process, and the Vitess toolchain just updates its topology server, replication graph, and serving graph to accurately reflect master-slave relationships.
 
 **Note:** The `InitShardMaster` command defines the initial parenting relationships within a shard. That command makes the specified tablet the master and makes the other tablets in the shard slaves that replicate from that master.
 
@@ -19,13 +19,13 @@ This document explains the types of reparenting that Vitess supports:
 Vitess requires the use of global transaction identifiers ([GTIDs](https://dev.mysql.com/doc/refman/5.6/en/replication-gtids-concepts.html)) for its operations:
 
 * During active reparenting, Vitess uses GTIDs to initialize the replication process and then depends on the GTID stream to be correct when reparenting. (During external reparenting, Vitess assumes the external tool manages the replication process.)
-* During resharding, Vitess uses GTIDs for [filtered replication](https://vitess.io/user-guide/sharding/#filtered-replication), the process by which source tablet data is transferred to the proper destination tablets.
+* During resharding, Vitess uses GTIDs for [VReplication](../../reference/vreplication), the process by which source tablet data is transferred to the proper destination tablets.
 
 ### Semisynchronous replication
 
 Vitess does not depend on [semisynchronous replication](https://dev.mysql.com/doc/refman/5.6/en/replication-semisync.html) but does work if it is implemented. Larger Vitess deployments typically do implement semisynchronous replication.
 
-### [Active Reparenting](#active-reparenting)
+### Active Reparenting
 
 You can use the following `vtctl` commands to perform reparenting operations:
 
@@ -59,7 +59,7 @@ The `EmergencyReparentShard` command is used to force a reparent to a new master
 
 As such, this command does not rely on the current master at all to replicate data to the new master. Instead, it makes sure that the master-elect is the most advanced in replication within all of the available slaves.
 
-**Important**: Before calling this command, you must first identify the slave with the most advanced replication position as that slave must be designated as the new master. You can use the `[vtctl ShardReplicationPositions](https://vitess.io/reference/vtctl/#shardreplicationpositions)` command to determine the current replication positions of a shard's slaves.
+**Important**: Before calling this command, you must first identify the slave with the most advanced replication position as that slave must be designated as the new master. You can use the [`vtctl ShardReplicationPositions`](https://vitess.io/reference/vtctl/#shardreplicationpositions) command to determine the current replication positions of a shard's slaves.
 
 This command performs the following actions:
 
@@ -69,9 +69,9 @@ This command performs the following actions:
     - On the master-elect tablet, Vitess inserts an entry in a test table and then updates the `MasterAlias` record of the global Shard object.
     - In parallel on each slave, excluding the old master, Vitess sets the master and waits for the test entry to replicate to the slave tablet. (Slave tablets that had not been replicating before the command was called are left in their current state and do not start replication after the reparenting process.)
 
-## [External Reparenting](#external-reparenting)
+## External Reparenting
 
-External reparenting occurs when another tool handles the process of changing a shard's master tablet. After that occurs, the tool needs to call the `[vtctl TabletExternallyReparented](https://vitess.io/reference/vtctl/#tabletexternallyreparented)` command to ensure that the topology server, replication graph, and serving graph are updated accordingly.
+External reparenting occurs when another tool handles the process of changing a shard's master tablet. After that occurs, the tool needs to call the [`vtctl TabletExternallyReparented`](https://vitess.io/reference/vtctl/#tabletexternallyreparented) command to ensure that the topology server, replication graph, and serving graph are updated accordingly.
 
 That command performs the following operations:
 

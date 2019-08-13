@@ -1,12 +1,12 @@
 ---
-title: Contributing to Vitess
-description: We love contributors, here's how to take part
-weight: 9
+title: Contribute
+description: Get involved with Vitess development
+weight: 6
 ---
 
 You want to contribute to Vitess? That's awesome!
 
-In the past we have reviewed and accepted many external contributions. Examples are the Java JDBC driver, the PHP PDO driver or vtgate v3 improvements.
+In the past we have reviewed and accepted many external contributions. Examples are the Java JDBC driver, the PHP PDO driver or VTGate v3 improvements.
 
 We're looking forward to any contribution! Before you start larger contributions, make sure to reach out first and discuss your plans with us.
 
@@ -31,13 +31,9 @@ It's a lot of fun and demonstrates how simple it is to write Go code.
 
 ### Go Readability
 
-Internally at Google, code reviews are subject to an additional "readability" review.
-
-A readability reviewer ensures that the reviewee is writing idiomatic code and following the programming language's style guide.
-
 While there's no Go style guide, there is a set of recommendations in the Go community which add up to an implicit style guide. To make sure you're writing idiomatic Go code, please read the following documents:
 
-* Go Readablity slides: https://talks.golang.org/2014/readability.slide
+* Go Readability slides: https://talks.golang.org/2014/readability.slide
   * Talk about Go readability with many specific examples.
 * "Effective Go": https://golang.org/doc/effective_go.html
   * Recommendations for writing good Go code.
@@ -73,6 +69,6 @@ Before diving into the Vitess codebase, make yourself familiar with the system a
       -01, 01-02, ff-
     </details>
 
-* Go through the [Vitess Kubernetes tutorial](../tutorials/kubernetes).
+* Go through the [Vitess Kubernetes tutorial](../get-started/kubernetes).
 
   * While going through the tutorial, look back at the [architecture](../overview/whatisvitess/#architecture) and match the processes you start in Kubernetes with the boxes in the diagram.

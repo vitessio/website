@@ -3,6 +3,87 @@ title: Presentations and Videos
 weight: 1
 ---
 
+
+## Vitess Meetup 2019 @ Slack HQ
+
+**Vitess: New and Coming Soon!**
+
+Deepthi Sigireddi shares new features recently introduced in Vitess, and what's on the roadmap moving forward.
+
+<iframe src = "/ViewerJS/#../files/2019-deepthi-vitess-meetup.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
+
+**Deploying multi-cell Vitess**
+
+Rafael Chacon Vivas describes how Vitess is used in Slack.
+
+<iframe src = "/ViewerJS/#../files/2019-rafael-vitess-meetup.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
+
+**Vitess at Pinterest**
+
+David Weitzman provides an overview of how Vitess is used at Pinterest.
+
+{{< youtube id="1cWWlaqlia8" autoplay="false" >}}
+
+**No more Regrets**
+
+Sugu Sougoumarane demonstrates new features coming to VReplication.
+
+{{< youtube id="B1Nrtptjtcs" autoplay="false" >}}
+
+## Cloud Native Show 2019
+
+**Vitess at scale - how Nozzle.io runs MySQL on Kubernetes**
+
+Derek Perkins joins the Cloud Native show and explains how Nozzle uses Vitess.
+
+[Listen to Podcast](https://anchor.fm/cloud-native-show/episodes/Vitess-at-scale---how-Nozzle-io-runs-MySQL-on-Kubernetes-e4m5lo)
+
+## CNCF Webinar 2019
+
+**Vitess: Sharded MySQL on Kubernetes**
+
+Sugu Sougoumarane provides an overview of Vitess for Kubernetes users.
+
+{{< youtube id="E6H4bgJ3Z6c" autoplay="false" >}}
+
+## Kubecon China 2019
+
+**How JD.Com runs the World's Largest Vitess**
+
+Xuhaihua and Jin Ke Xie present on their experience operating the largest known Vitess cluster, two years in.
+
+{{< youtube id="qww4UVNG3Io" autoplay="false" >}}
+
+## RootConf 2019
+
+**OLTP or OLAP: why not both?**
+
+Jiten Vaidya from PlanetScale explains how you can use both OLTP and OLAP on Vitess.
+
+{{< youtube id="bhzJJF82mFc" autoplay="false" >}}
+
+## Kubecon 19 Barcelona
+
+**Vitess Deep Dive**
+
+Jiten Vaidya and Dan Kozlowski from PlanetScale deep dive on Vitess.
+
+{{< youtube id="OZl4HrB9p-8" autoplay="false" >}}
+
+## Percona Live Austin 2019
+
+**Vitess: Running Sharded MySQL on Kubernetes**
+
+Sugu Sougoumarane shows how you can run sharded MySQL on Kubernetes.
+
+{{< youtube id="v7oxiVmGXp4" autoplay="false" >}}
+
+**MySQL, Kubernetes, Business & Enterprise**
+
+David Cohen (Intel), Steve Shaw (Intel) and Jiten Vaidya (PlanetScale) discuss Open Source cloud native databases.
+
+[View Talk Abstract and Slides](https://www.percona.com/live/19/sessions/an-open-source-cloud-native-database-cndb)
+
 ## Velocity New York 2018
 
 **Smooth scaling: Slack’s journey toward a new database**
@@ -21,7 +102,7 @@ Ameet Kotkian, senior storage operations engineer at Slack, shows us how Slack u
 
 **Migrating to Vitess at (Slack) Scale**
 
-Slack is embarking on a major smigration of the mysql infrastructure at the core of our service to use Vitess' flexible sharding and management instead of our simple application-based shard routing and manual administration. This effort is driven by the need for an architecture that scales to meet the growing demands of our largest customers and features under the pressure to maintain a stable and performant service that executes billions of MySQL transactions per hour. This talk will present the driving motivations behind the change, why Vitess won out as the best option, and how we went about laying the groundwork for the switch. Finally, we will discuss some challenges and surprises (both good and bad) found during our initial migration efforts, and suggest some ways in which the Vitess ecosystem can improve that will aid future migration efforts.
+Slack is embarking on a major smigration of the MySQL infrastructure at the core of our service to use Vitess' flexible sharding and management instead of our simple application-based shard routing and manual administration. This effort is driven by the need for an architecture that scales to meet the growing demands of our largest customers and features under the pressure to maintain a stable and performant service that executes billions of MySQL transactions per hour. This talk will present the driving motivations behind the change, why Vitess won out as the best option, and how we went about laying the groundwork for the switch. Finally, we will discuss some challenges and surprises (both good and bad) found during our initial migration efforts, and suggest some ways in which the Vitess ecosystem can improve that will aid future migration efforts.
 
 Michael Demmer shows us how, at [Percona Live Europe 2017](https://www.percona.com/live/e17/sessions/migrating-to-vitess-at-slack-scale).
 

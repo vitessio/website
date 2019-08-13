@@ -15,7 +15,7 @@ Vitess 2PC allows you to perform atomic distributed commits. The feature is impl
 
 2PC transactions guarantee atomicity: either the whole transaction commits, or it's rolled back entirely. It does not guarantee Isolation (in the ACID sense). This means that a third party that performs cross-database reads can observe partial commits while a 2PC transaction is in progress.
 
-Guaranteeing ACID Isolation is very contentious and has high costs. Providing it by default would have made vitess impractical for the most common use cases.
+Guaranteeing ACID Isolation is very contentious and has high costs. Providing it by default would have made Vitess impractical for the most common use cases.
 
 ### Configuring VTGate
 
@@ -38,8 +38,6 @@ For the Go driver, you request the atomicity by adding it to the context using t
 ### Python driver
 
 For Python, the begin function of the cursor has an optional single_db flag. If the flag is True, then the request is for a single-db transaction. If False (or unspecified), then the following commit call's twopc flag decides if the commit is 2PC or Best Effort (multi).
-
-### Java & PHP (TODO)
 
 #### Adding support in a new driver
 

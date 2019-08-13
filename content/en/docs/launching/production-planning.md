@@ -13,7 +13,7 @@ Every MySQL instance that serves traffic requires one VTTablet, which is in turn
 
 The memory consumed by VTTablet depends on QPS and result size, but you can start off with the rule of thumb of requesting 1 GB/CPU.
 
-As for VTGate, double the total number of CPUs you’ve allocated for VTTablet. That should be approximately how much the VTGates are expected to consume. In terms of memory, you should again budget about 1 GB/CPU (needs verification).
+As for VTGate, double the total number of CPUs you’ve allocated for VTTablet. That should be approximately how much the VTGate servers are expected to consume. In terms of memory, you should again budget about 1 GB/CPU (needs verification).
 
 Vitess servers will use disk space for their logs. A smoothly running server should create very little log spam. However, log files can grow big very quickly if there are too many errors. It will be wise to run a log purger daemon if you’re concerned about filling up disk.
 
@@ -27,21 +27,21 @@ With the above numbers as starting point, the next step will be to set up benchm
 
 ### Mapping topology to hardware
 
-The different Vitess components have different resource requirements e.g. vtgate requires little disk in comparison to vttablet. Therefore, the components should be mapped to different machine classes for optimal resource usage. If you’re using a cluster manager (such as Kubernetes), the automatic scheduler will do this for you. Otherwise, you have to allocate physical machines and plan out how you’re going to map servers onto them.
+The different Vitess components have different resource requirements e.g. VTGate requires little disk in comparison to VTTablet. Therefore, the components should be mapped to different machine classes for optimal resource usage. If you’re using a cluster manager (such as Kubernetes), the automatic scheduler will do this for you. Otherwise, you have to allocate physical machines and plan out how you’re going to map servers onto them.
 
 Machine classes needed:
 
-#### MySQL + vttablet
+#### MySQL + VTTablet
 
 You’ll need database-class machines that are likely to have SSDs, and enough RAM to fit the MySQL working set in buffer cache. Make sure that there will be sufficient CPU left for VTTablet to run on them.
 
-The VTTablet provisioning will be dictated by the MySQL instances they run against. However, soon after launch, it’s recommended to shard these instances to a data size of 100-300 GB. This should also typically reduce the per-MySQL CPU usage to around 2-4 CPUS depending on the load pattern.
+The VTTablet provisioning will be dictated by the MySQL instances they run against. However, soon after launch, it’s recommended to shard these instances to a data size of 100-300 GB. This should also typically reduce the per-MySQL CPU usage to around 2-4 CPUs depending on the load pattern.
 
 #### VTGate
 
-For VTGates, you’ll need a class of machines that would be CPU heavy, but may be light on memory usage, and should require normal hard disks, for binary and logs only.
+For VTGate servers, you’ll need a class of machines that would be CPU heavy, but may be light on memory usage, and should require normal hard disks, for binary and logs only.
 
-It’s advisable to run more instances than there are machines. VTGates are happiest when they’re consuming between 2-4 CPUs. So, if your total requirement was 400 CPUs, and your VTGate class machine has 48 cores each, you’ll need about 10 such machines and you’ll be running about 10 VTGates per box.
+It’s advisable to run more instances than there are machines. VTGate servers are happiest when they’re consuming between 2-4 CPUs. So, if your total requirement was 400 CPUs, and your VTGate class machine has 48 cores each, you’ll need about 10 such machines and you’ll be running about 10 VTGate servers per box.
 
 You may have to add a few more app class machines to absorb any additional CPU and latency overheads.
 
@@ -63,6 +63,6 @@ Here is a short list of all the basic workflows Vitess supports:
 
 * [Failover](../../user-guides/upgrading/) / [Reparents](../../user-guides/reparenting/)
 * [Backup/Restore](../../user-guides/backup-and-restore)
-* [Schema Management](../../schema-management) / [Schema Swap](../../schema-management/schema-swap)
-* [Resharding](../../sharding/#resharding) / [Horizontal Resharding Tutorial](../../tutorials/local/)
+* [Schema Management](../../schema-management)
+* [Resharding](../../sharding/#resharding) / [Horizontal Resharding Tutorial](../../get-started/local/)
 * [Upgrading](../../user-guides/upgrading)

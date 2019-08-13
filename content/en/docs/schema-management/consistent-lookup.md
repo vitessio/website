@@ -3,7 +3,7 @@ title: Consistent Lookup Vindexes
 weight: 3
 ---
 
-As mentioned in the VSchema section, Vitess supports the concept of a lookup vindex, or what is also commonly known as a cross-shard index. It's implemented as a mysql table that maps a column value to the keyspace id. This is usually needed when someone needs to efficiently find a row using a where clause that does not contain the primary vindex.
+As mentioned in the VSchema section, Vitess supports the concept of a lookup vindex, or what is also commonly known as a cross-shard index. It's implemented as a MySQL table that maps a column value to the keyspace id. This is usually needed when someone needs to efficiently find a row using a where clause that does not contain the primary vindex.
 
 This lookup table can be sharded or unsharded. No matter which option one chooses, the lookup row is most likely not going to be in the same shard as the keyspace id it points to.
 
@@ -13,7 +13,7 @@ Consistent lookup vindexes use an alternate approach that makes use of careful l
 
 ## Modified guidance
 
-The guidance for implementing lookup vindexes has been to create a two-column table. The first column (from column) should match the type of the column of the main table that needs the vindex. The second column (to column) should be a `binary` or a `varbinary` large enough to accommodate the keyspace id.
+The guidance for implementing lookup vindexes has been to create a two-column table. The first column (from column) should match the type of the column of the main table that needs the vindex. The second column (to column) should be a `BINARY` or a `VARBINARY` large enough to accommodate the keyspace id.
 
 This guidance remains the same for unique lookup vindexes.
 

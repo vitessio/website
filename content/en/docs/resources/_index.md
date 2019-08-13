@@ -1,5 +1,5 @@
 ---
 title: Resources
-description: Additional reading to help you along
+description: Additional resources including Presentations and Roadmap
 weight: 11
 ---

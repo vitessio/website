@@ -1,7 +1,7 @@
 ---
 title: vtctl Reference
 noToc: true
-weight: 2
+weight: 9
 featured: true
 ---
 

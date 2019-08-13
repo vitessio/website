@@ -16,7 +16,8 @@ The workflow for the `VSchema` is as follows:
 
 This document describes the [`vtctl`](../reference/vtctl/) commands that you can use to [review](#reviewing-your-schema) or [update](#changing-your-schema) your schema in Vitess.
 
-Note that this functionality is not recommended for long-running schema changes. In such cases, we recommend to do a [schema swap](../schema-management/schema-swap) instead.
+Note that this functionality is not recommended for long-running schema changes. It is recommended to use a tool such as [`pt-online-schema-change`](https://www.percona.com/doc/percona-toolkit/LATEST/pt-online-schema-change.html) or [`gh-ost`](https://github.com/github/gh-ost) instead.
+
 
 ## Reviewing your schema
 
@@ -123,7 +124,7 @@ In addition, Vitess applies the following rules when assessing the impact of a p
 * `ALTER` statements are only allowed if the table on the shard's master tablet has 100,000 rows or less.
 * For all other statements, the table on the shard's master tablet must have 2 million rows or less.
 
-If a schema change gets rejected because it affects too many rows, you can specify the flag `-allow_long_unavailability` to tell `ApplySchema` to skip this check. However, we do not recommend this. Instead, you should apply large schema changes by following the [schema swap](../schema-management/schema-swap) process.
+If a schema change gets rejected because it affects too many rows, you can specify the flag `-allow_long_unavailability` to tell `ApplySchema` to skip this check. However, we do not recommend this. Instead, you should apply large schema changes by using an external tool such as `gh-ost` or `pt-online-schema-change`.
 
 ### ApplyVSchema
 
