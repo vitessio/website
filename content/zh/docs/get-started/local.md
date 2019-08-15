@@ -3,7 +3,6 @@ title: Run Vitess Locally
 description: Instructions for using Vitess on your machine for testing purposes
 weight: 3
 featured: true
-aliases: ['/docs/tutorials/local/']
 ---
 
 This guide covers installing Vitess locally for testing purposes, from pre-compiled binaries. We will launch 3 copies of `mysqld`, so it is recommended to have greater than 4GB RAM, as well as 20GB of available disk space.
@@ -51,7 +50,7 @@ You are now ready to start your first cluster!
 
 ## Start a single keyspace cluster
 
-A [keyspace](../overview/concepts.md#keyspace) in Vitess is a logical database consisting of potentially multiple shards. For our first example, we are going to be using Vitess without sharding using a single keyspace. The file `101_initial_cluster.sh` is for example `1` phase `01`. Lets execute it now:
+A [keyspace](../../concepts/keyspace) in Vitess is a logical database consisting of potentially multiple shards. For our first example, we are going to be using Vitess without sharding using a single keyspace. The file `101_initial_cluster.sh` is for example `1` phase `01`. Lets execute it now:
 
 ``` sh
 cd examples/local

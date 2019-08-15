@@ -1,6 +1,7 @@
 ---
 title: Backing Up and Restoring Data
 weight: 4
+aliases: ['/user-guide/backup-and-restore.html']
 ---
 
 This document explains how to create and restore data backups with
