@@ -9,7 +9,7 @@ This lookup table can be sharded or unsharded. No matter which option one choose
 
 Vitess allows the transparent population of these rows by assigning an owner table, which is the main table that requires this lookup. When a row is inserted into the main table, the lookup row for it is created in the lookup table. The lookup row is also deleted on a delete of the main row. These essentially result in distributed transactions, which require 2PC to guarantee atomicity.
 
-Consistent lookup vindexes use an alternate approach that make use of careful locking and transaction sequences to guarantee consistent, without using 2PC. This gives you the best of both worlds, where you get a consistent cross-shard vindex without paying the price of 2PC.
+Consistent lookup vindexes use an alternate approach that makes use of careful locking and transaction sequences to guarantee consistency, without using 2PC. This gives you the best of both worlds, where you get a consistent cross-shard vindex without paying the price of 2PC.
 
 ## Modified guidance
 
