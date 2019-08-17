@@ -1,13 +1,13 @@
 ---
-title: Build From Source
-description: Instructions for building Vitess on your machine for testing and development purposes
+title: 从源码构建
+description: 如何从本机构建、开发及测试Vitess
 weight: 1
 featured: true
 ---
 
-{{< info >}}
-If you run into issues or have questions, we recommend posting in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
 
+
+{{< info >}}
 如果您遇到问题或有疑问，我们建议您在我们的[Slack 频道](https://vitess.slack.com)上发帖，点击右上角的Slack图标加入。这是一个非常活跃的社区论坛，也是与其他用户互动的好地方。当然，你也可以加入微信群组**vitess中国**寻求帮助，这里的人们也很热心，时刻准备好回答您的任何问题。
 {{< /info >}}
 
@@ -267,3 +267,5 @@ http://localhost:15000
 ### 下一步的工作
 
 恭喜！您现在已启动并运行本地vitess群集。您可以按照以下步骤完成其他练习 [Run Vitess Locally](../../tutorials/local)。
+
+笔者在Mac上也尝试安装了一次Vitess，大家也可以参考下，附上链接如下 : [Vitess build on Mac](https://www.jianshu.com/p/fb1b1007a095)

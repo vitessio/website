@@ -76,7 +76,7 @@ Go之旅是一个基于浏览器的教程，它解释了Go编程语言的基本�
       -01, 01-02, ff-
     </details>
 
-* 详细了解 [Vitess Kubernetes tutorial](../tutorials/kubernetes) 部分。
+* 详细了解 [Vitess Kubernetes tutorial](../get-started/kubernetes) 部分。
 
   * 在阅读教程的同时，别忘了经常回顾 [架构部分](../overview/architecture/#architecture) ，想一想Kubernetes中的哪部分流程与架构图中的哪部分能够匹配上？
 
