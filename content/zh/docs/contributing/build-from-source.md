@@ -2,21 +2,26 @@
 title: Build From Source
 description: Instructions for building Vitess on your machine for testing and development purposes
 weight: 1
+featured: true
 ---
 
 {{< info >}}
 If you run into issues or have questions, we recommend posting in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
+
+如果您遇到问题或有疑问，我们建议您在我们的[Slack 频道](https://vitess.slack.com)上发帖，点击右上角的Slack图标加入。这是一个非常活跃的社区论坛，也是与其他用户互动的好地方。当然，你也可以加入微信群组**vitess中国**寻求帮助，这里的人们也很热心，时刻准备好回答您的任何问题。
 {{< /info >}}
 
-The following sections explain the process for manually building Vitess on Linux and macOS. If you are new to Vitess, it is recommended to start with the [local install](../../tutorials/local) guide instead.
+## 源码编译
 
-### Install Dependencies
+以下部分介绍了在Linux和macOS上手动构建Vitess的过程。如果您是Vitess的新手，建议先从[本地部署](../../tutorials/local) 指南开始。
 
-We currently test Vitess regularly on Ubuntu 14.04 (Trusty) and Debian 8 (Jessie). macOS 10.11 (El Capitan) and above should work as well. The installation instructions are [below](#macos).
+### 安装依赖
+
+我们目前正在Ubuntu 14.04（Trusty）和Debian 8（Jessie）上定期测试Vitess。 macOS 10.11（El Capitan）及以上版本也可以使用。安装说明[如下所示](#macos).
 
 #### Ubuntu and Debian
 
-In addition, Vitess requires the following software and libraries:
+ Vitess依赖如下软件和库:
 
 1.  [Install Go 1.11+](http://golang.org/doc/install).
 
@@ -28,9 +33,9 @@ sudo apt-get install mysql-server
 sudo yum install mysql-server
 ```
 
-_Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your installation method provides a choice._
+_Vitess支持MySQL 5.6+和MariaDB 10.0+。我们建议使用MySQL 5.7。_
 
-3.  Uninstall or disable [AppArmor](https://wiki.ubuntu.com/AppArmor). Some versions of MySQL come with default AppArmor configurations that the Vitess tools don't yet recognize. This causes various permission failures when Vitess initializes MySQL instances through the `mysqlctl` tool. This is an issue only in test environments. If AppArmor is necessary in production, you can configure the MySQL instances appropriately without going through `mysqlctl`.
+3.  卸载或者禁用 [AppArmor](https://wiki.ubuntu.com/AppArmor)。某些版本的MySQL带有Vitess工具尚未识别的默认AppArmor配置。当Vitess通过`mysqlctl`工具初始化MySQL实例时，这会导致各种权限失败。这仅在测试环境中存在问题。如果在生产中需要AppArmor，则可以在不通过`mysqlctl`的情况下适当地配置MySQL实例。
 
     ```sh
     sudo service apparmor stop
@@ -38,13 +43,13 @@ _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your in
     sudo update-rc.d -f apparmor remove
     ```
 
-    Reboot to be sure that AppArmor is fully disabled.
+    重新启动以确保完全禁用AppArmor。
 
-4.  Install [etcd v3.0+](https://github.com/coreos/etcd/releases). Remember to include `etcd` command on your path.
+4.  安装 [etcd v3.0+](https://github.com/coreos/etcd/releases). 请记住在您的路径中包含`etcd`命令。
 
-    We will use ectd for the [topology service](../../overview/concepts). Vitess also includes built-in support for [ZooKeeper](https://zookeeper.apache.org) and [Consul](https://www.consul.io/).
+    我们将使用ectd作为[拓扑服务](../../overview/concepts)。 Vitess还包括对[ZooKeeper](https://zookeeper.apache.org) 和 [Consul](https://www.consul.io/)的内置支持。
 
-5.  Install the following other tools needed to build and run Vitess:
+5.  安装构建和运行Vitess所需的以下工具：
 
     - make
     - automake
@@ -60,32 +65,31 @@ _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your in
     - curl
     - unzip
 
-    These can be installed with the following apt-get command:
-
+    可以使用以下apt-get命令安装它们
     ```sh
     $ sudo apt-get install make automake libtool python-dev python-virtualenv python-mysqldb libssl-dev g++ git pkg-config bison curl unzip
     ```
 
 #### Mac OS
 
-1.  [Install Homebrew](http://brew.sh/). If your `/usr/local` directory is not empty and you haven't yet used Homebrew, you need to run the following command:
+1.  [安装 Homebrew](http://brew.sh/)。如果您的`/usr/local`目录不为空且尚未使用Homebrew，则需要运行以下命令：
 
     ```sh
     sudo chown -R $(whoami):admin /usr/local
     ```
 
-2.  If [Xcode](https://developer.apple.com/xcode/) is installed (with Console tools, which should be bundled
-    automatically since version 7.1), all the dev dependencies should be satisfied in this step. If Xcode isn't present, you'll need to install [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/).
+2.  您可以通过安装[Xcode](https://developer.apple.com/xcode/)(推荐)或   [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/)来满足Vitess的依赖关系。如果没有安装Xcode，那么采用如下命令安装pkg-config
 
     ```sh
     brew install pkg-config
     ```
 
-3.  Install [etcd v3.0+](https://github.com/coreos/etcd/releases). Remember to include `etcd` command on your path.
+3.  安装 [etcd v3.0+](https://github.com/coreos/etcd/releases). 将`etcd` 命令放置在您的环境变量路径中。
 
-    We will use ectd for the [topology service](../../overview/concepts). Vitess also includes built-in support for [ZooKeeper](https://zookeeper.apache.org) and [Consul](https://www.consul.io/).
+    我们将使用ectd作为[拓扑服务](../../overview/concepts)。Vitess 同时还包括对 [ZooKeeper](https://zookeeper.apache.org) 和 [Consul](https://www.consul.io/) 的内置支持。
 
-5.  Run the following commands:
+
+4.  运行如下命令:
 
     ```sh
     brew install go ant automake libtool python git bison curl wget mysql57
@@ -95,7 +99,7 @@ _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your in
     pip install tox
     ```
 
-6.  The Vitess bootstrap script makes some checks for the go runtime, so it is recommended to have the following commands in your `~/.profile`, `~/.bashrc`, `~/.zshrc`, or `~/.bash_profile`:
+5.  Vitess引导程序脚本对go运行时环境进行了一些检查，因此建议在您在 `~/.profile`, `~/.bashrc`, `~/.zshrc`, 或者`~/.bash_profile`文件中包含如下命令:
 
     ```sh
     export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
@@ -103,17 +107,17 @@ _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your in
     export GOROOT=/usr/local/go
     ```
 
-7.  For the Vitess hostname resolving functions to work correctly, a new entry has to be added into the /etc/hosts file with the current LAN IP address of the computer (preferably IPv4) and the current hostname, which you get by typing the 'hostname' command in the terminal.
+6.   要使Vitess主机名能够正常解析，需要在/etc/hosts文件中添加一个新的映射关系，其中包含计算机的当前LAN IP地址（最好是IPv4）和当前主机名，您可以通过在终端键入'hostname'获得主机名。
+ 将如下命令放到 [强制使用 Go DNS 解析器](https://golang.org/doc/go1.5#net)  `~/.profile` 或者 `~/.bashrc` 或者 `~/.zshrc`文件中也是一个好主意:
 
-    It is also a good idea to put the following line to [force the Go DNS resolver](https://golang.org/doc/go1.5#net) in your `~/.profile` or `~/.bashrc` or `~/.zshrc`:
-
-    ```sh
+    
+```sh
     export GODEBUG=netdns=go
-    ```
+ ```
 
-## Build Vitess
+## 编译 Vitess
 
-1. Navigate to the directory where you want to download the Vitess source code and clone the Vitess Github repo. After doing so, navigate to the `src/vitess.io/vitess` directory.
+1. cd到你想cloen vitess源码的目录，clone之。完成后进入到 `src/vitess.io/vitess` 目录中。
 
     ```sh
     cd $WORKSPACE
@@ -122,29 +126,29 @@ _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your in
     cd src/vitess.io/vitess
     ```
 
-2. Set the `MYSQL_FLAVOR`:
+2. 设置 `MYSQL_FLAVOR`:
 ```sh
 # It is recommended to use MySQL56 even for MySQL 5.7 and 8.0. For MariaDB you can use MariaDB:
 export MYSQL_FLAVOR=MySQL56
 ```
 
-3. If your selected database installed in a location other than `/usr/bin`, set the `VT_MYSQL_ROOT` variable to the root directory of your MySQL installation:
+3. 如果你的MYSQL数据库安装在 `/usr/bin`之外的位置， 请将`VT_MYSQL_ROOT` v变量设置为Mysql安装的根目录:
 
     ```sh
-    # For generic tarballs on Linux
+    # 通过tar包安装的设置参考
     export VT_MYSQL_ROOT=/usr/local/mysql
 
-    # On macOS with Homebrew
+    # 通过Homebrew安装的设置参考
     export VT_MYSQL_ROOT=/usr/local/opt/mysql@5.7
     ```
 
-    Note that the command indicates that the `mysql` executable should be found at `/usr/local/opt/mysql@5.7/bin/mysql`.
+    请注意上述命令设置生效的前提 `mysql` 可执行文件在 `/usr/local/opt/mysql@5.7/bin/mysql`这里。
 
-4. Run `mysqld --version` and confirm that you are running MySQL 5.7.
+4. 运行 `mysqld --version` 确保你使用的是 MySQL 5.7版本。
 
-5. Build Vitess using the commands below. Note that the `bootstrap.sh` script needs to download some dependencies. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`).
+5. 使用以下命令构建Vitess。请注意，`bootstrap.sh`脚本需要下载一些依赖项。如果您的计算机需要代理才能访问Internet，则需要设置常用的环境变量 (e.g. `http_proxy`, `https_proxy`, `no_proxy`).
 
-    Run the boostrap.sh script:
+    运行 boostrap.sh 脚本:
 
     ```sh
     BUILD_TESTS=0 ./bootstrap.sh
@@ -163,57 +167,59 @@ export MYSQL_FLAVOR=MySQL56
     make build
     ```
 
-#### Common Build Issues
+#### 编译遇到问题怎么办
 
 {{< info >}}
-If you run into issues or have questions, we recommend posting in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
+如果您遇到问题或有疑问，我们建议您在我们的[Slack 频道](https://vitess.slack.com)上发帖，点击右上角的Slack图标加入。这是一个非常活跃的社区论坛，也是与其他用户互动的好地方。当然，你也可以加入微信群组**vitess中国**寻求帮助，这里的人们也很热心，时刻准备好回答您的任何问题。
 {{< /info >}}
 
-##### Python Errors
+##### Python 报错
 
-The end-to-end test suite currently requires Python 2.7. We are working on removing this dependency, but in the mean time you can run tests from within Docker. The MySQL 5.7 container provided includes the required dependencies:
+端到端测试套件目前需要Python 2.7。我们正在努力消除这种依赖关系，你也可以在Docker中运行测试。MySQL 5.7容器包含如下依赖项
 
 ```bash
 make docker_test flavor=mysql57
 ```
 
-##### Node already exists, port in use, etc.
+##### Node 已存在, port 报错
 
-A failed test can leave orphaned processes. If you use the default settings, you can use the following commands to identify and kill those processes:
+测试过程失败可能会导致一堆不相关的进程。如果使用默认设置，则可以使用以下命令识别并终止这些进程：
+
 
 ```sh
-pgrep -f -l '(vtdataroot|VTDATAROOT)' # list Vitess processes
-pkill -f '(vtdataroot|VTDATAROOT)' # kill Vitess processes
+pgrep -f -l '(vtdataroot|VTDATAROOT)' # 展示 Vitess 相关进程
+pkill -f '(vtdataroot|VTDATAROOT)' # 干掉 Vitess 相关进程
 ```
 
-##### Too many connections to MySQL, or other timeouts
+##### 太多建立到MySQL的连接, 其他超时报错
 
-This error may mean your disk is too slow. If you don't have access to an SSD, you can try [testing against a ramdisk](https://github.com/vitessio/vitess/blob/master/doc/TestingOnARamDisk.md).
+此错误可能意味着您的磁盘太慢。如果你用不起SSD，可以尝试[针对ramdisk进行测试](https://github.com/vitessio/vitess/blob/master/doc/TestingOnARamDisk.md).
 
-##### Connection refused to tablet, MySQL socket not found, etc.
+##### tablet连接拒绝， MySQL socket 找不到等问题
 
-These errors might indicate that the machine ran out of RAM and a server crashed when trying to allocate more RAM. Some of the heavier tests require up to 8GB RAM.
+这些错误可能表示当尝试分配更多RAM时，计算机耗尽RAM并且服务器崩溃。一些较重的测试需要高达8GB的RAM。
 
-##### Running out of disk space
 
-Some of the larger tests use up to 4GB of temporary space on disk.
+##### 硬盘资源耗尽
 
-##### Too Many Open Files
+一些较大的测试在磁盘上使用高达4GB的临时空间。
 
-Some Linux distributions ship with default file descriptor limits that are too low for database servers. This issue could show up as the database crashing with the message “too many open files”. Check the system-wide file-max setting as well as user-specific ulimit values. We recommend setting them above 100K to be safe. The exact procedure may vary depending on your Linux distribution.
+##### 文件打开过多
 
-## Starting a single keyspace cluster
+ome Linux发行版附带的默认文件描述符限制对于数据库服务器而言太低。此问题可能会显示为数据库因“太多打开文件”消息而崩溃。检查系统范围的file-max设置以及用户特定的ulimit值。我们建议将它们设置在100K以上是安全的。确切的过程可能因您的Linux发行版而异。
 
-You can quickly test out your Vitess build by using one of the included local examples. `101_initial_cluster.sh` starts an initial Vitess cluster with a single keyspace:
+## 启动单分片集群
+
+你可以使用本地测试脚本`101_initial_cluster.sh` 快速启动一个单分片Vitess集群，命令如下：
 
 ``` sh
 cd examples/local
 ./101_initial_cluster.sh
 ```
 
-### Verify cluster
+### 验证集群工作是否正常
 
-Once successful, you should see the following state:
+如果集群工作正常，您应该看到以下状态：
 
 ``` sh
 $ pgrep -fl vtdataroot
@@ -236,7 +242,7 @@ $ pgrep -fl vtdataroot
 10447 vtgate
 ```
 
-You should now be able to connect to the cluster using the following command:
+您现在应该可以使用以下命令连接到群集：
 
 ``` sh
 $ mysql -h 127.0.0.1 -P 15306
@@ -252,12 +258,12 @@ mysql> show tables;
 3 rows in set (0.01 sec)
 ```
 
-You can also browse to the vtctld console using the following URL:
+您还可以使用以下URL浏览到vtctld控制台：
 
 ```
 http://localhost:15000
 ```
 
-### Next steps
+### 下一步的工作
 
-Congratulations! You now have a local vitess cluster up and running. You can complete additional exercises by following along with [Run Vitess Locally](../../tutorials/local) guide.
+恭喜！您现在已启动并运行本地vitess群集。您可以按照以下步骤完成其他练习 [Run Vitess Locally](../../tutorials/local)。

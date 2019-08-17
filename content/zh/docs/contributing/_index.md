@@ -1,78 +1,83 @@
 ---
-title: Contribute
-description: Get involved with Vitess development
-weight: 6
+title: 贡献Vitess
+description: 我们热爱所有参与贡献的人，这篇文章将描述您如何参与到贡献Vitess中来
+weight: 9
 ---
 
-You want to contribute to Vitess? That's awesome!
+什么，听说您想对vitess作出贡献？这简直太棒了！
 
-In the past we have reviewed and accepted many external contributions. Examples are the Java JDBC driver, the PHP PDO driver or vtgate v3 improvements.
+过去的一段时间，我们审查并接受了许多外部贡献。比如Java JDBC驱动程序，PHP PDO驱动程序或以及vtgate v3改进。
 
-We're looking forward to any contribution! Before you start larger contributions, make sure to reach out first and discuss your plans with us.
+我们期待来自您的任何贡献！在您开始做出更大贡献之前，请务必先与我们联系，与我们一起讨论一下您的计划。
 
-This page describes for new contributors how to make yourself familiar with Vitess and the programming language Go.
+这个页面描述了新贡献者如何熟悉Vitess和编程语言Go。
 
-## Learning Go
 
-Vitess was one of the early adaptors of [Google's programming language Go](https://golang.org/).
+## 学习 Go
 
-We love it for its simplicity (e.g. compared to C++ or Java) and performance (e.g. compared to Python).
+Vitess是[谷歌编程语言Go](https://golang.org/)的早期吃螃蟹的人.
 
-Contributing to our server code will require you to learn Go. We recommend to read the following resources.
+与C++或Java比，我们喜欢它的简洁；与Python比，我们喜欢它的性能表现。
 
-### Go Tour
+如果您想对我们的服务器代码作出贡献，您需要对Go有一定了解。如果您并未有太多的Go经验，我们建议您阅读以下资源。
+
+### Go 之旅
 
 https://tour.golang.org/
 
-The Go tour is a browser based tutorial which explains the different concepts of the programming language.
-It's interactive i.e. you can change and run all examples on the right side.
-The later steps also have specific exercises which you're supposed to implement yourself.
-It's a lot of fun and demonstrates how simple it is to write Go code.
 
-### Go Readability
+Go之旅是一个基于浏览器的教程，它解释了Go编程语言的基本概念。
+它是交互式的，即您可以更改并运行右侧的所有示例。
+后面的步骤也有特定的练习，你可以尝试自己完成编码。
+渐进式的学习使您的学习过程变得很有趣，而且您会愈发的体会到编写Go代码是多么简单。
 
-Internally at Google, code reviews are subject to an additional "readability" review.
+### Go 可读性
 
-A readability reviewer ensures that the reviewee is writing idiomatic code and following the programming language's style guide.
+在Google内部，代码审核需要额外的“可读性”审核。
 
-While there's no Go style guide, there is a set of recommendations in the Go community which add up to an implicit style guide. To make sure you're writing idiomatic Go code, please read the following documents:
+可读性审阅者确保被审阅者编写惯用代码并遵循编程语言的样式指南。
 
-* Go Readablity slides: https://talks.golang.org/2014/readability.slide
-  * Talk about Go readability with many specific examples.
-* "Effective Go": https://golang.org/doc/effective_go.html
+虽然没有Go风格指南，但Go社区中有一系列建议，这些建议加起来就是隐式风格指南。为了确保您正在编写惯用风格的Go代码，请阅读以下文档：
+
+
+* Go 可读性幻灯片 https://talks.golang.org/2014/readability.slide
+  * 通过许多具体的例子来了解Go的可读性。
+* "高效的 Go": https://golang.org/doc/effective_go.html
   * Recommendations for writing good Go code.
-* Go Code Review Comments: https://github.com/golang/go/wiki/CodeReviewComments
-  * The closest thing to a style guide.
+* Go 代码审阅注释: https://github.com/golang/go/wiki/CodeReviewComments
+  * 最接近风格指南的参考资料。
 
-### Other Resources
+### 其他资源
 
-If you're unsure about Go's behavior or syntax, we recommend to look it up in the specification: https://golang.org/ref/spec
-It is well written and easy to understand.
+如果您不确定Go的行为或语法，我们建议您在规范中查找： https://golang.org/ref/spec
+它写得很好，易于理解
 
-### Appreciating Go
+### 欣赏 Go
 
-After using Go for several weeks, we hope that you'll start to love Go as much as we do.
+使用Go几周之后，我们希望您能像我们一样开始热爱Go。
 
-In our opinion, the song "Write in Go" from ScaleAbility, a Google acapella band, perfectly captures what's so special about Go. Watch it and enjoy that you learnt Go: www.youtube.com/watch?v=LJvEIjRBSDA
+在我们看来，谷歌acapella乐队ScaleAbility的歌曲“Write in Go”完美地捕捉了Go的特别之处。观看它，享受你学到的Go: www.youtube.com/watch?v=LJvEIjRBSDA
 
-## Learning Vitess
+## 学习 Vitess
 
-Before diving into the Vitess codebase, make yourself familiar with the system and run it yourself:
+在深入了解Vitess代码库之前，请务必先熟悉Vitess架构，并尝试本地跑起来Vitess:
 
-* Read the [What is Vitess](../overview/whatisvitess) page, in particular the architecture section.
+* 可以先看看[What is Vitess](../overview/whatisvitess) 页面, 尤其是架构部分要深入理解。
 
-* Read the [Vitess concepts](../overview/concepts) and the [Sharding](../reference/sharding) page.
+* 接下来学习[Vitess concepts](../overview/concepts) 部分和[Sharding](../sharding) 概念。
 
-  * We also recommend to look at our [latest presentations](../resources/presentations). They contain many illustrations which help understanding how Vitess works in detail.
+  * 我们建议您抽空看看 [latest presentations](../resources/presentations)。这些presentations包含了许多插图，有助于帮助您了解Vitess的详细工作原理。
 
-  * After studying the pages, try to answer the following question (click expand to see the answer):
+  * 在您完成了上述学习之后，尝试回答以下问题 (单击展开可以查看答案):
     <details>
       <summary>
-        Let's assume a keyspace with 256 range-based shards: What is the name of the first, the second and the last shard?
+        一个keyspace有256个基于范围的分片，请问第一个，第二个和最后一个分片的名称是什么？
       </summary>
       -01, 01-02, ff-
     </details>
 
-* Go through the [Vitess Kubernetes tutorial](../get-started/kubernetes).
+* 详细了解 [Vitess Kubernetes tutorial](../tutorials/kubernetes) 部分。
 
-  * While going through the tutorial, look back at the [architecture](../overview/whatisvitess/#architecture) and match the processes you start in Kubernetes with the boxes in the diagram.
+  * 在阅读教程的同时，别忘了经常回顾 [架构部分](../overview/architecture/#architecture) ，想一想Kubernetes中的哪部分流程与架构图中的哪部分能够匹配上？
+
+
