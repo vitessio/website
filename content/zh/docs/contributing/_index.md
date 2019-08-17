@@ -1,7 +1,7 @@
 ---
 title: 贡献Vitess
 description: 我们热爱所有参与贡献的人，这篇文章将描述您如何参与到贡献Vitess中来
-weight: 9
+weight: 6
 ---
 
 什么，听说您想对vitess作出贡献？这简直太棒了！
