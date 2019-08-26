@@ -5,11 +5,7 @@ featured: true
 aliases: ['/docs/tutorials/kubernetes/','/user-guide/sharding-kubernetes.html']
 ---
 
-*The following example will use a simple commerce database to illustrate how Vitess can take you through the journey of scaling from a single database to a fully distributed and sharded cluster. This is a fairly common story, and it applies to many use cases beyond e-commerce.*
-
-It’s 2019 and, no surprise to anyone, people are still buying stuff online. You recently attended the first half of a seminar on disruption in the tech industry and want to create a completely revolutionary e-commerce site. In classic tech postmodern fashion, you call your products widgets instead of a more meaningful identifier and it somehow fits.
-
-Naturally, you realize the need for a reliable transactional datastore. Because of the new generation of hipsters, you’re probably going to pull traffic away from the main industry players just because you’re not them. You’re smart enough to foresee the scalability you need, so you choose Vitess as your best scaling solution.
+As successful companies grow they often face a significant increases in the amount data housed in their transactional databases. This increase in data size can cause detrimental performance issues from query latency to managability. This tutorial demonstrates how Vitess can be used with Kubernetes to anticipate ultra growth and alleviate the performance issues found at scale by leveraging horizontal sharding with a distributed system.
 
 ### Prerequisites
 
@@ -30,7 +26,7 @@ The example settings have been tuned to run on Minikube. However, you should be 
 
 * Install the MySQL client. On Ubuntu: `apt-get install mysql-client`
 * Install vtctlclient
-    * Install go 1.11+
+    * Install go 1.12+
     * `go get vitess.io/vitess/go/cmd/vtctlclient`
     * vtctlclient will be installed at `$GOPATH/bin/`
 
@@ -44,7 +40,7 @@ Change to the helm example directory:
 cd examples/helm
 ```
 
-In this directory, you will see a group of yaml files. The first digit of each file name indicates the phase of example. The next two digits indicate the order in which to execute them. For example, ‘101_initial_cluster.yaml’ is the first file of the first phase. We shall execute that now:
+In this directory, you will see a group of yaml files. The first digit of each file name indicates the phase of example. The next two digits indicate the order in which to execute them. For example, `101_initial_cluster.yaml` is the first file of the first phase. We shall execute that now:
 
 ``` sh
 helm install ../../helm/vitess -f 101_initial_cluster.yaml
