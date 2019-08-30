@@ -1,59 +1,57 @@
 ---
-title: Run Vitess on Kubernetes
-weight: 1
+title: Kubernetes上跑Vitess
+weight: 3
 featured: true
 ---
 
-*The following example will use a simple commerce database to illustrate how Vitess can take you through the journey of scaling from a single database to a fully distributed and sharded cluster. This is a fairly common story, and it applies to many use cases beyond e-commerce.*
+*下面的示例将使用一个简单的commerce数据库来说明vitess如何将您从一个数据库扩展到一个完全分布式和分片的集群。这是一个相当常见的场景，它适用于电子商务之外的许多用例。*
 
-It’s 2019 and, no surprise to anyone, people are still buying stuff online. You recently attended the first half of a seminar on disruption in the tech industry and want to create a completely revolutionary e-commerce site. In classic tech postmodern fashion, you call your products widgets instead of a more meaningful identifier and it somehow fits.
+随着公司的发展壮大，他们经常会面临这样一个问题：交易数据库中的数据量显著增加。数据大小急剧增加可能导致查询延迟、可管理性变差等影响性能的问题。本教程演示了Vitess如何与Kubernetes一起使用，通过利用分布式系统的水平分片来缓解系统在大规模数据下的数据查询性能问题。
 
-Naturally, you realize the need for a reliable transactional datastore. Because of the new generation of hipsters, you’re probably going to pull traffic away from the main industry players just because you’re not them. You’re smart enough to foresee the scalability you need, so you choose Vitess as your best scaling solution.
+### 先决条件
 
-### Prerequisites
-
-Before we get started, let’s get a few things out of the way.
+在我们开始之前，让我们先了解一些事情。
 
 {{< info >}}
-The example settings have been tuned to run on Minikube. However, you should be able to try this on your own Kubernetes cluster. If you do, you may also want to remove some of the minikube specific resource settings (explained below).
+示例设置已调整为在Minikube上运行。但是，您应该可以在自己的Kubernetes集群上尝试此操作。如果这样做，您可能还想删除一些Minikube特定的资源设置（如下所述）。
 {{< /info >}}
 
-* [Download vitess](https://github.com/vitessio/vitess)
-* [Install Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
-* Start a minikube engine: `minikube start --cpus=4 --memory=5000`. Note the additional resource requirements. In order to go through all the use cases, many vttablet and mysql instances will be launched. These require more resources than the defaults used by minikube.
-* [Install etcd operator](https://github.com/coreos/etcd-operator/blob/master/doc/user/install_guide.md)
-* [Install helm](https://docs.helm.sh/using_helm/)
-* After installing, run `helm init`
+* [下载 Vitess](https://github.com/vitessio/vitess)
+* [安装 Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
+* 启动Minikube引擎：`minikube start --cpus = 4 --memory = 5000`。请注意其他资源要求。为了完成所有用例，将启动许多vttablet和MySQL实例。这些需要比Minikube使用的默认值更多的资源。
+* [安装 etcd 管理端](https://github.com/coreos/etcd-operator/blob/master/doc/user/install_guide.md)
+* [安装 helm](https://docs.helm.sh/using_helm/)
+* 完成安装后, 运行 `helm init`
 
-### Optional
+### 可选操作
 
-* Install mysql client. On Ubuntu: `apt-get install mysql-client`
-* Install vtctlclient
-    * Install go 1.11+
+* 在Ubuntu上安装Mysql客户端: `apt-get install mysql-client`
+* 安装 vtctlclient
+    * 安装 go 1.11+
     * `go get vitess.io/vitess/go/cmd/vtctlclient`
-    * vtctlclient will be installed at `$GOPATH/bin/`
+    * vtctlclient 将安装在目录 `$GOPATH/bin/`
 
-## Starting a single keyspace cluster
+## 启动单片keyspace集群
 
-So you searched keyspace on Google and got a bunch of stuff about NoSQL… what’s the deal? It took a few hours, but after diving through the ancient Vitess scrolls you figure out that in the NewSQL world, keyspaces and databases are essentially the same thing when unsharded. Finally, it’s time to get started.
+你google了一通keyspace，却发现了很多关于NoSQL的东西。这TM是怎么回事？虽然这会花费你几个小时的时间，但是在仔细翻看vitess的古老卷轴之后，你会发现，原来在未分片(单片)的情形下，在NewSQL的世界中，keyspaces和databases本质上就是一类东西。最后，是时候开始我们的旅程了。
 
-Change to the helm example directory:
-
+切换到helm示例目录:
 ``` sh
 cd examples/helm
 ```
 
-In this directory, you will see a group of yaml files. The first digit of each file name indicates the phase of example. The next two digits indicate the order in which to execute them. For example, ‘101_initial_cluster.yaml’ is the first file of the first phase. We shall execute that now:
+在此目录中，您将看到一组yaml文件。每个文件名的第一个数字表示示例的阶段。接下来的两位数字表示执行它们的顺序。例如'101_initial_cluster.yaml'是第一阶段的第一个文件。我们现在将执行:
 
 ``` sh
 helm install ../../helm/vitess -f 101_initial_cluster.yaml
 ```
 
-This will bring up the initial Vitess cluster with a single keyspace.
+这将创建一个带有单个keyspace空间的初始Vitess集群。
 
-### Verify cluster
 
-Once successful, you should see the following state:
+### 验证集群
+
+一旦成功，您应该看到以下状态：
 
 ``` sh
 ~/...vitess/helm/vitess/templates> kubectl get pods,jobs
@@ -73,7 +71,8 @@ jobs/commerce-apply-vschema-initial       1         1            14m
 jobs/zone1-commerce-0-init-shard-master   1         1            14m
 ```
 
-If you have installed the mysql client, you should now be able to connect to the cluster using the following command:
+
+如果已安装MySQL客户端，则现在应该可以使用以下命令连接到群集：
 
 ``` sh
 ~/...vitess/examples/helm> ./kmysql.sh
@@ -88,34 +87,37 @@ mysql> show tables;
 3 rows in set (0.01 sec)
 ```
 
-You can also browse to the vtctld console using the following command (Ubuntu):
+您还可以使用以下命令浏览vtctld控制台：（Ubuntu）
 
 ``` sh
 ./kvtctld.sh
 ```
 
-### Minikube Customizations
+### Minikube自定义
 
-The helm example is based on the `values.yaml` file provided as the default helm chart for Vitess. The following overrides have been performed in order to run under minikube:
+helm示例基于`values.yaml`文件（Vitess的默认的helm chart）。为了在Minikube下运行，已执行以下覆盖：
 
-* `resources`: have been nulled out. This instructs the Kubernetes environment to use whatever is available. Note, this is not recommended for a production environment. In such cases, you should start with the baseline values provided in `helm/vitess/values.yaml` and iterate from those.
-* etcd and vtgate replicas are set to 1. In a production environment, there should be 3-5 etcd replicas. The number of vtgates will need to scale up based on cluster size.
-* `mysqlProtocol.authType` is set to `none`. This should be changed to `secret` and the credentials should be stored as Kubernetes secrets.
-* A serviceType of `NodePort` is not recommended in production. You may choose not to expose these end points to anyone outside Kubernetes at all. Another option is to create Ingress controllers.
+* `resources`: 
+已经被淘汰了。这提示Kubernetes环境使用任何可用的东西。请注意，建议不要将其用于生产环境。在这种情况下，您应该将`helm/vitess/values.yaml`作为基线开始迭代。
 
-### Topology
+* etcd和VTGate副本设置为1。在生产环境中，应该有3-5个etcd副本。 VTGate服务器的数量需要根据群集大小进行扩展。
+* `mysqlProtocol.authType`设置为`none`。这应该改为`secret`，证书以Kubernetes的秘钥方式存储。
+* 在生产中不推荐使用`NodePort`的服务类型。您可以选择不将这些endpoints暴露给Kubernetes以外的任何系统。另一种选择是创建Ingress控制器。
 
-The helm chart specifies a single unsharded keyspace: `commerce`. Unsharded keyspaces have a single shard named `0`.
+### 拓扑
 
-NOTE: keyspace/shards are global entities of a cluster, independent of a cell. Ideally, you should list the keyspace/shards separately. For a cell, you should only have to specify which of those keyspace/shards are deployed in that cell. However, for simplicity, the existence of keyspace/shards are implicitly inferred from the fact that they are mentioned under each cell.
+helm chart指定一个非拆分的keyspace: `commerce`。非拆分的keyspace有一个单独的叫做
+`0`的分片。
 
-In this deployment, we are requesting two `replica` type tables and one `rdonly` type tablet. When deployed, one of the `replica` tablet types will automatically be elected as master. In the vtctld console, you should see one `master`, one `replica` and one `rdonly` vttablets.
+注意： keyspace/shards是一个集群的全局实体。和cell并无关系。理想情况下，你需要单独列出来keyspace/shards。对于cell来说，你只需要指定哪些keyspace/shards部署在cell之中。为了简单起见，我们可以简单的认为接下来提到的keyspace/shards在不同的cell里。
 
-The purpose of a replica tablet is for serving OLTP read traffic, whereas rdonly tablets are for serving analytics, or performing cluster maintenance operations like backups, or resharding. rdonly replicas are allowed to lag far behind the master because replication needs to be stopped to perform some of these functions.
+在这次部署中，我们启动两个`replica`角色的tablet和一个`rdonly`角色的tablet。部署后，其中一个`replica`角色的tablet自动被选为master。在vtctld控制台中，你应该看到一个`master`，一个`replica`和一个`rdonly` vttablets。
 
-In our use case, we are provisioning one rdonly replica per shard in order to perform resharding operations.
+设置replicat角色的tablet的目的是为OLTP提供读流量，rdonly角色的tablet是做分析使用，或者用于执行集群的日常维护工作，如备份、重新分片。rdonly副本容忍和主之间有较大延迟，因为上述维护工作需要暂停主从复制。
 
-### Schema
+在我们的用例中，我们为每个分片配置一个rdonly副本以执行重做分片操作。
+
+### 表结构
 
 ``` sql
 create table product(
@@ -138,15 +140,15 @@ create table corder(
 );
 ```
 
-The schema has been simplified to include only those fields that are significant to the example:
+为简化示例，我们只建少量几张表，每张表少量字段。能够说明流程就好：
 
-* The `product` table contains the product information for all of the products.
-* The `customer` table has a customer_id that has an auto-increment. A typical customer table would have a lot more columns, and sometimes additional detail tables.
-* The `corder` table (named so because `order` is an SQL reserved word) has an order_id auto-increment column. It also has foreign keys into customer(customer_id) and product(sku).
+*  `product` 表包含所有产品的产品信息。
+*  `customer` table有一个具有自动增量的customer_id。典型的customer表将包含更多列，有时还有更多详细信息表。
+*  `corder` 表 (这么命名这张表是因为 `order` 是SQL 保留字段) 有一个 order_id 自增列。它同样也是customer(customer_id) 和 product(sku)的外键。
 
 ### VSchema
 
-Since Vitess is a distributed system, a VSchema (Vitess schema) is usually required to describe how the keyspaces are organized.
+由于Vitess是一个分布式系统，因此通常需要VSchema (Vitess schema)来描述keyspaces的组织方式。
 
 ``` json
 {
@@ -158,21 +160,24 @@ Since Vitess is a distributed system, a VSchema (Vitess schema) is usually requi
 }
 ```
 
-With a single unsharded keyspace, the VSchema is very simple; it just lists all the tables in that keyspace.
+对于但分片的keyspace来说, VSchema非常简单; 它只是展示出keyspace的所有table。
 
-NOTE: In the case of a single unsharded keyspace, a VSchema is not strictly necessary because Vitess knows that there are no other keyspaces, and will therefore redirect all queries to the only one present.
+注意：在单分片keyspace情况下，VSchema不是严格意义上需要定义的，因为Vitess知道没有其他的keyspaces，所以会将所有的查询流量转发到当前的keyspace上。
 
 ## Vertical Split
 
-Due to a massive ingress of free-trade, single-origin yerba mate merchants to your website, hipsters are swarming to buy stuff from you. As more users flock to your website and app, the `customer` and `corder` tables start growing at an alarming rate. To keep up, you’ll want to separate those tables by moving `customer` and `corder` to their own keyspace. Since you only have as many products as there are types of yerba mate, you won’t need to shard the product table!
 
-Let us add some data into our tables to illustrate how the vertical split works.
+由于改革开放的深入，自贸区生意红红火火。单品马黛茶摆上了你网站的货架，尝鲜者蜂拥而至前来购买。
+随着越来越多的用户涌向你的网站和应用程序，`customer`和`corder`表开始以惊人的速度增长。为了跟上进度，您需要将`customer`和`corder` 移动到它们自己的keyspace中来分隔这些表。由于产品数量与马黛茶类型数量一致(不会有太多的马黛茶类型)，因此您无需对产品表进行分片。
+
+
+让我们在数据表中添加一些数据来说明垂直分割的工作原理.
 
 ``` sh
 ./kmysql.sh < ../common/insert_commerce_data.sql
 ```
 
-We can look at what we just inserted:
+我们可以看看刚插入的内容：
 
 ``` sh
 ./kmysql.sh --table < ../common/select_commerce_data.sql
@@ -207,23 +212,24 @@ COrder
 
 ```
 
-Notice that we are using keyspace `commerce/0` to select data from our tables.
+注意我们在使用 keyspace `commerce/0` 从我们的表中查询数据。
 
-### Create Keyspace
+### 创建 Keyspace
 
-For subsequent commands, it will be convenient to capture the name of the release and save into a variable:
+对于后续命令，可以方便地捕获发布的名称并保存到变量中：
 
 ``` sh
 export release=$(helm ls -q)
 ```
 
-For a vertical split, we first need to create a special `served_from` keyspace. This keyspace starts off as an alias for the `commerce` keyspace. Any queries sent to this keyspace will be redirected to `commerce`. Once this is created, we can vertically split tables into the new keyspace without having to make the app aware of this change:
+对于垂直拆分，我们首先需要创建一个特殊的`served_from`keyspace。该keyspace作为`commerce`keyspace的别名。发送到此keyspace的任何查询都将重定向到`commerce`。创建后，我们可以将表垂直拆分到新的keyspace，而无需让应用程序感知此更改：
 
 ``` sh
 helm upgrade $release ../../helm/vitess/ -f 201_customer_keyspace.yaml
 ```
 
-Looking into the yaml file, the only addition over the previous version is the following job:
+在查看yaml文件时，在以前的版本中唯一添加的是以下任务：
+
 
 ``` yaml
 jobs:
@@ -231,10 +237,9 @@ jobs:
     kind: "vtctlclient"
     command: "CreateKeyspace -served_from='master:commerce,replica:commerce,rdonly:commerce' customer"
 ```
+这会在拓扑中创建一个条目，指示必须将对master，replica或rdonly发送给`customer`的任何请求重定向到（来自）`commerce`。这些tablet的指定重定向将用于控制我们如何从`commerce`转换为`customer`。
 
-This creates an entry into the topology indicating that any requests to master, replica, or rdonly sent to `customer` must be redirected to (served from) `commerce`. These tablet type specific redirects will be used to control how we transition the cutover from `commerce` to `customer`.
-
-A successful completion of this job should show up as:
+此工作的成功完成应显示为：
 
 ``` sh
 NAME                                      DESIRED   SUCCESSFUL   AGE
@@ -243,13 +248,13 @@ jobs/vtctlclient-create-customer-ks       1         1            10s
 
 ### Customer Tablets
 
-Now you have to create vttablet instances to back this new keyspace onto which you’ll move the necessary tables:
+现在，您必须创建vtTablet实例来备份这个新的keyspace，您将在其中移动必要的表：
 
 ``` sh
 helm upgrade $release ../../helm/vitess/ -f 202_customer_tablets.yaml
 ```
 
-This yaml also makes a few additional changes:
+yaml文件有少量修改：
 
 ``` yaml
         - name: "commerce"
@@ -294,14 +299,14 @@ This yaml also makes a few additional changes:
               }
 ```
 
-The most significant change, of course, is the instantiation of vttablets for the new keyspace. Additionally:
+当然，最显著的变化是为新的keyspace实例化vtablet。此外：
 
-* You moved customer and corder from the commerce’s VSchema to customer’s VSchema. Note that the physical tables are still in commerce.
-* You requested that the schema for customer and corder be copied to customer using the `copySchema` directive.
+* 你将customer和corder从commerce的 VSchema中挪至customer的VSchema中。注意物理表仍然在commerce中。
+* 您请求使用`copySchema`指令将customer和corder的架构复制到customer。
 
-The move in the vschema should not be material yet because any queries sent to customer are still redirected to commerce, where all the data is still present.
+vschema中的改变没造成任何影响，因为发送给客户的任何查询仍然被重定向到commerce库上，在commerce库中所有的数据仍然存在。
 
-Upon completion of this step, there must be six running vttablet pods, and the following new jobs must have completed successfully:
+完成此步骤后，应该有六个正在运行的vtablet pods，并且必须成功完成以下新作业：
 
 ``` sh
 NAME                                      DESIRED   SUCCESSFUL   AGE
@@ -311,15 +316,14 @@ jobs/customer-copy-schema-0               1         1            5m
 jobs/zone1-customer-0-init-shard-master   1         1            5m
 ```
 
-### VerticalSplitClone
+### 垂直拆分克隆
 
-The next step:
+下一步：
 
 ``` sh
 helm upgrade $release ../../helm/vitess/ -f 203_vertical_split.yaml
 ```
-
-starts the process of migrating the data from commerce to customer. The new content on this file is:
+开始将数据从commerce迁移到customer的过程。此文件的新内容是：
 
 ``` yaml
 jobs:
@@ -329,14 +333,15 @@ jobs:
     command: "VerticalSplitClone -min_healthy_rdonly_tablets=1 -tables=customer,corder customer/0"
 ```
 
-For large tables, this job could potentially run for many days, and may be restarted if failed. This job performs the following tasks:
-
-* Dirty copy data from commerce’s customer and corder tables to customer’s tables.
-* Stop replication on commerce’s rdonly tablet and perform a final sync.
-* Start a filtered replication process from commerce->customer that keeps the customer’s tables in sync with those in commerce.
+对于大型表，此作业可能会运行很多天，如果失败，则可能会重新启动。此作业执行以下任务：
 
 
-NOTE: In production, you would want to run multiple sanity checks on the replication by running `SplitDiff` jobs multiple times before starting the cutover:
+* 从commerce库中的customer表和corder表脏拷贝数据到customer库中的表。
+* 停止在Commerce的RDOnly vttablet上的复制并执行最终同步。
+* 从commerce-> customer启动过滤复制过程，使customer库的表与commerce库中的表保持同步。
+
+注意：在生产环境中，你可能希望在开始切换之前多次运行`SplitDiff`作业，对复制执行多次健全性检查：
+
 
 ``` yaml
 jobs:
@@ -346,7 +351,7 @@ jobs:
     command: "VerticalSplitDiff -min_healthy_rdonly_tablets=1 customer/0"
 ```
 
-We can look at the results of VerticalSplitClone by examining the data in the customer keyspace. Notice that all data in the `customer` and `corder` tables has been copied over.
+我们可以通过检查keyspace中的数据来查看VerticalSplitClone的结果。请注意，`customer`和`corder` 表中的所有数据都已复制过来。
 
 ``` sh
 ./kmysql.sh --table < ../common/select_customer0_data.sql
@@ -374,23 +379,23 @@ COrder
 
 ```
 
-### Cut over
+### 切换
 
-Once you have verified that the customer and corder tables are being continuously updated from commerce, you can cutover the traffic. This is typically performed in three steps: `rdonly`, `replica` and `master`:
+一旦您确认customer和corder表正在从commerce库中不断更新，您就可以切断流量。这通常分三步执行：`rdonly`, `replica` 和 `master`:
 
-For rdonly and replica:
+切 rdonly 和 replica:
 
 ``` sh
 helm upgrade $release ../../helm/vitess/ -f 204_vertical_migrate_replicas.yaml
 ```
 
-For master:
+切 master:
 
 ``` sh
 helm upgrade $release ../../helm/vitess/ -f 205_vertical_migrate_master.yaml
 ```
 
-Once this is done, the `customer` and `corder` tables are no longer accessible in the `commerce` keyspace. You can verify this by trying to read from them.
+完成此操作后，`commerce`和`corder`表在`commerce`库中将不能访问。您可以尝试从中进行读取来验证这一点。
 
 ``` sh
 ./kmysql.sh --table < ../common/select_commerce_data.sql
@@ -399,17 +404,18 @@ Customer
 ERROR 1105 (HY000) at line 4: vtgate: http://vtgate-zone1-5ff9c47db6-7rmld:15001/: target: commerce.0.master, used tablet: zone1-1564760600 (zone1-commerce-0-replica-0.vttablet), vttablet: rpc error: code = FailedPrecondition desc = disallowed due to rule: enforce blacklisted tables (CallerID: userData1)
 ```
 
-The replica and rdonly cutovers are freely reversible. However, the master cutover is one-way and cannot be reversed. This is a limitation of vertical resharding, which will be resolved in the near future. For now, care should be taken so that no loss of data or availability occurs after the cutover completes.
+replica和rdonly可以回切，但，切主是单向的，不可反转。这是垂直拆分的限制。未来不久会解决这个问题。目前，应注意在转换完成后不会发生数据丢失或可用性丢失。
 
-### Clean up
+### 清理
 
-After celebrating your first successful ‘vertical resharding’, you will need to clean up the leftover artifacts:
+在庆祝您第一次成功的`垂直拆分`之后，您需要清理剩余的组件：
 
 ``` sh
 helm upgrade $release ../../helm/vitess/ -f 206_clean_commerce.yaml
 ```
 
-You can see the following DMLs in commerce:
+您可以看到commerce库上以下DML语句
+
 
 ``` sql
             postsplit: |-
@@ -417,7 +423,7 @@ You can see the following DMLs in commerce:
               drop table corder;
 ```
 
-Those tables are now being served from customer. So, they can be dropped from commerce.
+这些表由customer库提供，现在，它们应该从commerce中删除。
 
 ``` yaml
 jobs:
@@ -432,9 +438,9 @@ jobs:
     command: "SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 master"
 ```
 
-These ‘control’ records were added by the `MigrateServedFrom` command during the cutover to prevent the commerce tables from accidentally accepting writes. They can now be removed.
+这些‘控制’记录在切换期间`MigrateServedFrom`命令添加，以防止commerce表意外接受写入。现在可以删除它们。
 
-After this step, the `customer` and `corder` tables no longer exist in the `commerce` keyspace.
+在此步骤之后，`customer`和`corder`表不再存在于`commerce` 库中。
 
 ``` sh
 ./kmysql.sh --table < ../common/select_commerce_data.sql
@@ -443,23 +449,26 @@ Customer
 ERROR 1105 (HY000) at line 4: vtgate: http://vtgate-zone1-5ff9c47db6-7rmld:15001/: target: commerce.0.master, used tablet: zone1-1564760600 (zone1-commerce-0-replica-0.vttablet), vttablet: rpc error: code = InvalidArgument desc = table customer not found in schema (CallerID: userData1)
 ```
 
-## Horizontal sharding
+## 水平分片
 
-The DBAs you hired with massive troves of hipster cash are pinging you on Slack and are freaking out. With the amount of data that you’re loading up in your keyspaces, MySQL performance is starting to tank - it’s okay, you’re prepared for this! Although the query guardrails and connection pooling are cool features that Vitess can offer to a single unsharded keyspace, the real value comes into play with horizontal sharding.
+你花重金雇佣的DBA此时已经吓坏了，MYSQL性能在下降，他们想做点儿什么，又不知从何入手，只有不停的微信轰炸你：老板，Keyspace中的数据量已经越来越大了，QPS快抗不住了，咋整？！你微微一笑，小手一挥，别怕，咱有Vitess！咋整，水平拆呀！
+玩笑归玩笑，虽然Vitess为非拆分的单片keyspace提供查询保护和连接池功能，[不懂的看这里看这里](https://vitess.io/blog/2019-06-17-unsharded-vitess-benefits/)，但Vitess真正的价值在于水平分片。
 
-### Preparation
+### 准备工作
 
-Before starting the resharding process, you need to make some decisions and prepare the system for horizontal resharding. Important note, this is something that should have been done before starting the vertical split. However, this is a good time to explain what normally would have been decided upon earlier the process.
+在开始重新分片过程之前，您需要做出一些决定并准备系统以进行水平重新分片。重要提示，这是在开始垂直拆分之前应该完成的事情。但是，这是一个很好的你会来解释在这个过程的早期通常会决定什么。
 
 #### Sequences
 
-The first issue to address is the fact that customer and corder have auto-increment columns. This scheme does not work well in a sharded setup. Instead, Vitess provides an equivalent feature through sequences.
+要解决的第一个问题:customer和corder表都有自增列。然而，分片的情况下并不适用。vitess通过序列提供了一个等价的特性。
 
-The sequence table is an unsharded single row table that Vitess can use to generate monotonically increasing ids. The syntax to generate an id is: `select next :n values from customer_seq`. The vttablet that exposes this table is capable of serving a very large number of such ids because values are cached and served out of memory. The cache value is configurable.
+序列表是一个非拆分单行表，Vitess可以使用它来生成单调递增的id。生成id的语法是：
+`select next :n values from customer_seq`。 提供此表的vttablet能够为大量此类ID提供服务，因为值被缓存的，并且服务于内存之外。缓存值是可配置的。
 
-The VSchema allows you to associate a column of a table with the sequence table. Once this is done, an insert on that table transparently fetches an id from the sequence table, fills in the value, and routes the row to the appropriate shard. This makes the construct backward compatible to how mysql’s auto_increment column works.
+vschema允许您将表的列与序列表相关联。完成后，该表上的insert将透明地从sequence表中获取一个ID，填充该值，并将该行路由到适当的shard。此设计向后兼容mysql的`auto_increment`属性的工作方式。
 
-Since sequences are unsharded tables, they will be stored in the commerce database. The schema:
+由于序列是非拆分表，因此它们将存储在commerce数据库中。架构如下：
+
 
 ``` sql
 create table customer_seq(id int, next_id bigint, cache bigint, primary key(id)) comment 'vitess_sequence';
@@ -468,15 +477,15 @@ create table order_seq(id int, next_id bigint, cache bigint, primary key(id)) co
 insert into order_seq(id, next_id, cache) values(0, 1000, 100);
 ```
 
-Note the `vitess_sequence` comment in the create table statement. VTTablet will use this metadata to treat this table as a sequence.
+请注意create table语句中`vitess_sequence`注释。 VTTablet将使用此元数据将此表视为序列。
 
-* `id` is always 0
-* `next_id` is set to `1000`: the value should be comfortably greater than the auto_increment max value used so far.
-* `cache` specifies the number of values to cache before vttablet updates `next_id`.
+* `id` 总是 0
+* `next_id` 设置为 `1000`: 该值应该比目前使用的`auto_increment`最大值设置的大一些。
+* `cache` :`cache`指定在vttablet在更新`next_id`之前缓存的值的数量。
 
-Higher cache values are more performant. However, cached values are lost if a reparent happens. The new master will start off at the `next_id` that was saved by the old master.
+较高的缓存值会获取更高性能。但是，如果通过reparent切换主，那么缓存的值将丢失。新主将从旧主人写入表中的`next_id`值开始计算。
 
-The VTGates also need to know about the sequence tables. This is done by updating the vschema for commerce as follows:
+VTGate服务器知道谁是序列表。这是通过更新commerce库的VSchema来完成的，如下所示：
 
 ``` json
 {
@@ -493,25 +502,25 @@ The VTGates also need to know about the sequence tables. This is done by updatin
 ```
 #### Vindexes
 
-The next decision is about the sharding keys, aka Primary Vindexes. This is a complex decision that involves the following considerations:
+下一个决定是关于分片键，又称作主Vindex。关于Vindex你可以理解为一个方法，这个方法决定根据什么条件将一行数据放置到不同的分片中。如何选择分片键需要综合考虑才能得出结果，涉及以下考虑因素：
 
-* What are the highest QPS queries, and what are the where clauses for them?
-* Cardinality of the column; it must be high.
-* Do we want some rows to live together to support in-shard joins?
-* Do we want certain rows that will be in the same transaction to live together?
+* 什么是QPS最高的查询，以及它们的where子句是什么？
+* 列的[索引基数](https://blog.csdn.net/tiansidehao/article/details/78931765)，一定要分散
+* 你是否想要对模式建模，以便知道有些行在分片中可以进行join，而不需要跨越分片？
+* 你是否希望同一事务中的某些行能够在一个分片内聚合？
 
-Using the above considerations, in our use case, we can determine that:
+综上考虑，在我们的用例中，我们可以确定：
 
-* For the customer table, the most common where clause uses `customer_id`. So, it shall have a Primary Vindex.
-* Given that it has lots of users, its cardinality is also high.
-* For the corder table, we have a choice between `customer_id` and `order_id`. Given that our app joins `customer` with `corder` quite often on the `customer_id` column, it will be beneficial to choose `customer_id` as the Primary Vindex for the `corder` table as well.
-* Coincidentally, transactions also update `corder` tables with their corresponding `customer` rows. This further reinforces the decision to use `customer_id` as Primary Vindex.
+* 对于customer表，最常见的where子句使用`customer_id`。所以，它应该有一个主Vindex。
+* 鉴于它拥有大量用户，其索引基数也很高。
+* 对于corder表，我们可以选择`customer_id`和`order_id`。鉴于我们的应用程序经常在`customer_id`列上将`customer`与`corder`连接起来，选择`customer_id`作为`corder`表的主Vindex将是有益的。
+* 巧合的是，事务还会更新`corder`表及其对应的`customer`行。这进一步强化了将'customer_id`用作主Vindex的决定。
 
-NOTE: It may be worth creating a secondary lookup Vindex on `corder.order_id`. This is not part of the example. We will discuss this in the advanced section.
+注意：在`corder.order_id`上创建辅助查找Vindex可能是值得的。这不是示例的一部分。我们将在高级部分讨论这个问题。
 
-NOTE: For some use cases, `customer_id` may actually map to a `tenant_id`. In such cases, the cardinality of a tenant id may be too low. It’s also common that such systems have queries that use other high cardinality columns in their where clauses. Those should then be taken into consideration when deciding on a good Primary Vindex.
+注意：对于某些用例，`customer_id`实际上可能映射到`tenant_id`。在这种情况下，租户ID的基数可能太低。这种系统在其where子句中使用其他高基数列的查询也很常见。在决定采用哪列作为主Vindex时，应考虑这些因素。
 
-Putting it all together, we have the following VSchema for `customer`:
+总而言之，我们为`customer`提供了以下VSchema:
 
 ``` json
 {
@@ -550,21 +559,21 @@ Putting it all together, we have the following VSchema for `customer`:
 }
 ```
 
-Note that we have now marked the keyspace as sharded. Making this change will also change how Vitess treats this keyspace. Some complex queries that previously worked may not work anymore. This is a good time to conduct thorough testing to ensure that all the queries work. If any queries fail, you can temporarily revert the keyspace as unsharded. You can go back and forth until you have got all the queries working again.
+请注意，我们现在已将keyspace标记为分片。这种改变同样会改变Vitess处理这个keyspace的方式。以前工作的一些复杂查询可能不再起作用。这是进行全面测试以确保所有查询都有效的好时机。如果任何查询失败，您可以暂时将keyspace恢复为未分片(单片)。
 
-Since the primary vindex columns are `BIGINT`, we choose `hash` as the primary vindex, which is a pseudo-random way of distributing rows into various shards.
+由于主vindex列是`BIGINT`，我们选择`hash`作为主vindex，这是一种将行分配到各种分片的伪随机方式。
 
-NOTE: For `VARCHAR` columns, use `unicode_loose_md5`. For `VARBINARY`, use `binary_md5`.
+注意：对于`VARCHAR`列，请使用`unicode_loose_md5`。对于`VARBINARY`，使用`binary_md5`。
 
-NOTE: All vindexes in Vitess are plugins. If none of the predefined vindexes suit your needs, you can develop your own custom vindex.
+注意：Vitess中的所有vindex都是插件。如果预定义的vindexs都不符合您的需求，您可以开发自己的自定义vindex。
 
-Now that we have made all the important decisions, it’s time to apply these changes:
+既然我们做出了所有重要的决定，那么就应该应用这些变化：
 
 ``` sh
 helm upgrade $release ../../helm/vitess/ -f 301_customer_sharded.yaml
 ```
 
-The jobs to watch for:
+要注意的工作：
 
 ``` sh
 NAME                                      DESIRED   SUCCESSFUL   AGE
@@ -574,19 +583,20 @@ jobs/customer-apply-schema-sharded        1         1            19s
 jobs/customer-apply-vschema-sharded       1         1            19s
 ```
 
-### Create new shards
+### 创建新分片
 
-At this point, you have finalized your sharded vschema and vetted all the queries to make sure they still work. Now, it’s time to reshard.
+此时，您已完成分片VSchema并且检查了您业务的所有SQL以确保它们在多分片上仍然有效。现在，是时候开始水平拆分了。
 
-The resharding process works by splitting existing shards into smaller shards. This type of resharding is the most appropriate for Vitess. There are some use cases where you may want to spin up a new shard and add new rows in the most recently created shard. This can be achieved in Vitess by splitting a shard in such a way that no rows end up in the ‘new’ shard. However, it’s not natural for Vitess.
+水平分片过程的工作原理是将现有分片拆分为较小的分片。这种类型的重新分片最适合Vitess。在某些用例中，您可能希望启动新分片并在最近创建的分片中添加新行。Vitess也可以做到这一点，假设按数值进行分割（office_id）。将会有一个新的办公室编号205.目前，分片定义会将其插入到碎片4中，但尚未插入205的值。所以我们改变定义，说数字>=205要去一个新的分片，然后我们开始插入。这样，office_id大于205的就会去到我们新的分片中，只要我们提前设定好vindex方法。
 
-We have to create the new target shards:
+
+我们必须创建新的目标分片：
 
 ``` sh
 helm upgrade $release ../../helm/vitess/ -f 302_new_shards.yaml
 ```
 
-The change we are applying is:
+我们正在应用的变化是：
 
 ``` yaml
         - name: "customer"
@@ -621,38 +631,39 @@ The change we are applying is:
                 source: "customer/0"
 ```
 
-Shard 0 was already there. We have now added shards `-80` and `80-`. We’ve also added the `copySchema` directive which requests that the schema from shard 0 be copied into the new shards.
+Shard 0已经存在了。我们现在添加了分片`-80`和`80 -`。我们还添加了`copySchema`指令，该指令请求将分片0中的模式复制到新的分片中。
 
-#### Shard naming
 
-What is the meaning of `-80` and `80-`? The shard names have the following characteristics:
+#### 分片命名
 
-* They represent a range, where the left number is included, but the right is not.
-* Their notation is hexadecimal.
-* They are left justified.
-* A `-` prefix means: anything less than the RHS value.
-* A `-` postfix means: anything greater than or equal to the LHS value.
-* A plain `-` denotes the full keyrange.
+ `-80` 和 `80-`是什么玩意儿? 分片名字具有下列特征:
 
-What does this mean: `-80` == `00-80` == `0000-8000` == `000000-800000`
+* 表示一个范围，包括左边界，右边界不包括在内。
+* 十六进制
+* 左对齐
+* 左`-` 前缀表示: 任何小于右值的值
+* 右`-` 前缀: 任何大于或等于左值的值
+* 普通的 `-` 表示全部范围
 
-`80-` is not the same as `80-FF`. This is why:
+这是什么意思: `-80` == `00-80` == `0000-8000` == `000000-800000`
 
-`80-FF` == `8000-FF00`. Therefore `FFFF` will be out of the `80-FF` range.
+`80-` 和 `80-FF` 是不一样的。 这是因为：
 
-`80-` means: ‘anything greater than or equal to `0x80`
+`80-FF` == `8000-FF00`. 因此 `FFFF` 会超出 `80-FF` 范围.
 
-A `hash` vindex produces an 8-byte number. This means that all numbers less than `0x8000000000000000` will fall in shard `-80`. Any number with the highest bit set will be >= `0x8000000000000000`, and will therefore belong to shard `80-`.
+`80-` 意味着: 大于或等于`0x80`的任何值。
 
-This left-justified approach allows you to have keyspace ids of arbitrary length. However, the most significant bits are the ones on the left.
+`hash` vindex产生一个8字节的数。这意味着所有小于“0x8000000000000000”的数字都将落在分片`-80`中。任何具有最高位集的> =`0x8000000000000000`的数字，属于shard`80-`。
 
-For example an `md5` hash produces 16 bytes. That can also be used as a keyspace id.
+这种左对齐的方法允许您拥有任意长度的keyspace ID。但是，最重要的位是左边的位。
 
-A `varbinary` of arbitrary length can also be mapped as is to a keyspace id. This is what the `binary` vindex does.
+例如，“md5”哈希产生16个字节。也可以用作keyspace的ID。
 
-In the above case, we are essentially creating two shards: any keyspace id that does not have its leftmost bit set will go to `-80`. All others will go to `80-`.
+任意长度的`varbinary`也可以按原样映射到keyspace id。这就是`binary`vindex所做的。
 
-Applying the above change should result in the creation of six more vttablet pods, and the following new jobs:
+在上面的例子中，我们创建了两个shard：任何没有其最左边位集的keyspace id都将转到`-80`。其他人都会去“80-”。
+
+应用上述更改将导致创建另外六个vttablet pod，以及以下新作业：
 
 ``` sh
 NAME                                         DESIRED   SUCCESSFUL   AGE
@@ -661,7 +672,7 @@ jobs/customer-copy-schema-x-80               1         1            58m
 jobs/zone1-customer-80-x-init-shard-master   1         1            58m
 jobs/zone1-customer-x-80-init-shard-master   1         1            58m
 ```
-At this point, the tables have been created in the new shards but have no data yet.
+此时，表已在新分片中创建但尚未有数据。
 
 ``` sh
 ./kmysql.sh --table < ../common/select_customer-80_data.sql
@@ -676,13 +687,13 @@ COrder
 
 ### SplitClone
 
-The process for SplitClone is similar to VerticalSplitClone. It starts the horizontal resharding process:
+SplitClone的过程类似于VerticalSplitClone。它启动水平重新分割过程：
 
 ``` sh
 helm upgrade $release ../../helm/vitess/ -f 303_horizontal_split.yaml
 ```
 
-This starts the following job:
+这开始了以下工作：
 
 ``` yaml
 jobs:
@@ -692,20 +703,22 @@ jobs:
     command: "SplitClone -min_healthy_rdonly_tablets=1 customer/0"
 ```
 
-For large tables, this job could potentially run for many days, and can be restarted if failed. This job performs the following tasks:
+对于大表，此作业可能会运行很多天，如果失败可以重新启动。此作业执行以下任务：
 
-* Dirty copy data from customer/0 into the two new shards. But rows are split based on their target shards.
-* Stop replication on customer/0 rdonly tablet and perform a final sync.
-* Start a filtered replication process from customer/0 into the two shards by sending changes to one or the other shard depending on which shard the rows belong to.
+* 将customer/0的数据脏拷贝到两个新分片中。但行是根据目标分片拆分的。
+* 停止在customer/0 rdonly tablet上复制并执行最终同步。
+* 根据行所属的分片，向其中一个或另一个分片发送更改，从而启动从customer/0到两个碎片的过滤复制过程。开启过滤复制，Vitess会根据某行数据的路由字段数值根据路由算法计算出一个数值，如果此数值<-80,此行将落到第一个分片，如果此数值>-80，那么此行将去到另一个分片。
 
-Once `SplitClone` has completed, you should see this:
+
+一旦 `SplitClone` 完成， 你会看到如下信息:
 
 ``` sh
 NAME                                         DESIRED   SUCCESSFUL   AGE
 jobs/vtworker-horizontal-split               1         1            5m
 ```
 
-The horizontal counterpart to `VerticalSplitDiff` is `SplitDiff`. It can be used to validate the data integrity of the resharding process:
+与`VerticalSplitDiff`对应的操作是 `SplitDiff`。它可用于验证重新分片过程的数据完整性。
+
 
 ``` yaml
 jobs:
@@ -715,32 +728,32 @@ jobs:
     command: "SplitDiff -min_healthy_rdonly_tablets=1 customer/-80"
 ```
 
-Note that the last argument of SplitDiff is the target (smaller) shard. You will need to run one job for each target shard. Also, you cannot run them in parallel because they need to take an `rdonly` instance offline to perform the comparison.
+请注意，SplitDiff的最后一个参数是目标分片。您需要为每个目标分片运行一个作业。此外，您无法并行运行它们，因为它们需要`rdonly`实例从集群中摘掉（停止主从复制）才能执行比较。
 
-NOTE: This example does not actually run this command.
+注意：此示例实际上不运行此命令。
 
-NOTE: SplitDiff can be used to split shards as well as to merge them.
+注意：SplitDiff可用于分割分片以及合并分片。
 
-### Cut over
-Now that you have verified that the tables are being continuously updated from the source shard, you can cutover the traffic. This is typically performed in three steps: `rdonly`, `replica` and `master`:
+### 切换
+现在您已验证表中数据是从源分片持续更新的，您可以切换流量。这通常分三步执行：`rdonly`，`replica`和`master`：
 
-For rdonly and replica:
+切rdonly 和 replica:
 
 ``` sh
 helm upgrade $release ../../helm/vitess/ -f 304_migrate_replicas.yaml
 ```
 
-For master:
+切master:
 
 ``` sh
 helm upgrade $release ../../helm/vitess/ -f 305_migrate_master.yaml
 ```
 
-During the *master* migration, the original shard master will first stop accepting updates. Then the process will wait for the new shard masters to fully catch up on filtered replication before allowing them to begin serving. Since filtered replication has been following along with live updates, there should only be a few seconds of master unavailability.
+在*master*迁移期间，原始分片主先停写。接下来，程序将等待新的分片主追平过滤复制，然后再允许它们开始服务。由于源分片的replica mysql上的binlog被实时过滤复制消费到不同分片上，因此切主时的延迟应该不会太高，因此只会有几秒钟的主不可用性。
 
-The replica and rdonly cutovers are freely reversible. Unlike the Vertical Split, a horizontal split is also reversible. You just have to add a `-reverse_replication` flag while cutting over the master. This flag causes the entire resharding process to run in the opposite direction, allowing you to Migrate in the other direction if the need arises.
+replica和rdonly切换可以自由逆转。与垂直拆分不同，水平拆分也是可逆的。您只需在切主时添加一个`-reverse_replication`标志即可。你可以理解成建立反方向的过滤复制，如果带着这个标志，你发现用新片有问题的时候，你就可以随时切换回去，因为反向的过滤复制保证新旧分片上的数据是完全一致的。
 
-You should now be able to see the data that has been copied over to the new shards.
+现在应该可以看到复制到新分片上的数据了。
 
 ``` sh
 ./kmysql.sh --table < ../common/select_customer-80_data.sql
@@ -780,21 +793,23 @@ COrder
 +----------+-------------+----------+-------+
 ```
 
-### Clean up
+### 清理
 
-After celebrating your second successful resharding, you are now ready to clean up the leftover artifacts:
+在庆祝第二次成功水平拆分之后，您现在准备清理剩余的组件：
+
 
 ``` sh
 helm upgrade $release ../../helm/vitess/ -f 306_down_shard_0.yaml
 ```
 
-In this yaml, we just deleted shard 0. This will cause all those vttablet pods to be deleted. But the shard metadata is still present. We can clean that up with this command (after all vttablets have been brought down):
+在这个yaml中，我们只删除了分片0.这将导致所有这些vttablet pod被删除。但是分片元数据仍然存在。我们可以用这个命令清理它（在所有的vttablet进程退出之后）：
+
 
 ``` sh
 helm upgrade $release ../../helm/vitess/ -f 307_delete_shard_0.yaml
 ```
 
-This command runs the following job:
+此命令运行以下作业：
 
 ``` yaml
 jobs:
@@ -803,26 +818,26 @@ jobs:
     command: "DeleteShard -recursive customer/0"
 ```
 
-Beyond this, you will also need to manually delete the Persistent Volume Claims associated to this shard.
+除此之外，您还需要手动删除与此分片相关联PVC。PVC是k8s里的存储概念，[概念看这里](https://www.cnblogs.com/styshoo/p/6731425.html)
 
-And, as the final act, we remove the last executed job:
+而且，作为最后的操作，我们删除最后执行的工作：
 
 ``` sh
 helm upgrade $release ../../helm/vitess/ -f 308_final.yaml
 ```
 
-### Teardown (optional)
+### 拆除 (可选)
 
-You can delete the whole example if you are not proceeding to another exercise.
+如果您不继续进行其他练习，则可以删除整个示例。
 
 ``` sh
 helm delete $release
 ```
 
-You will need to delete the persistent volume claims too
+您还需要删除PVC
 
 ``` sh
 kubectl delete pvc $(kubectl get pvc | grep vtdataroot-zone1 | awk '{print $1}')
 ```
 
-Congratulations on completing this exercise!
+恭喜你完成这个练习！
