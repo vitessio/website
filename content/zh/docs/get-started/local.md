@@ -3,7 +3,6 @@ title: 本机运行Vitess
 description: 如何本机构建和测试Vitess
 weight: 4
 featured: true
-aliases: ['/docs/tutorials/local/']
 ---
 
 本指南涵盖了从预编译的二进制本地文件安装文件，进行本地测试。我们启3个mysqld。建议使用大于4GB的RAM，以及20GB的可用磁盘空间。
