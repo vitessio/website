@@ -3,7 +3,6 @@ title: 用Vagrant跑Vitess
 description: 使用Vagrant在机器上构建Vitess以进行测试和开发的说明
 weight: 4
 featured: true
-aliases: ['/docs/tutorials/vagrant/']
 ---
 
 [Vagrant](https://www.vagrantup.com/) 是一个在单个工作流程中构建和管理虚拟机环境的工具。通过易于使用的工作流程并专注于自动化，Vagrant降低了开发环境的设置时间，提高了生产力，并使“在我的机器上工作”成为历史。
