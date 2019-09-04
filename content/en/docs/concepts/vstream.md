@@ -9,6 +9,6 @@ VStream is a change notification system located on the VTGate. The VStream can b
 
 
 For reference, please refer to the diagram below:
-![VStream](../../../../static/img/diagrams/VStream.png)
+![VStream](../../../../static/img/diagrams/Vstream.png)
 
 Note: Please note that a VStream is distinct from a VStreamer. The former is located on the VTGate and the latter is located on the VTTablet.
