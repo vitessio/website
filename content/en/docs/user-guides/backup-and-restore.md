@@ -21,6 +21,7 @@ Currently, we have plugins for:
 * Google Cloud Storage
 * Amazon S3
 * Ceph
+* Xtrabackup
 
 Before you can back up or restore a tablet, you need to ensure that the
 tablet is aware of the Backup Storage system that you are using. To do so,
@@ -45,6 +46,7 @@ access to the location where you are storing backups.
           <li><code>gcs</code>: Google Cloud Storage.</li>
           <li><code>s3</code>: Amazon S3.</li>
           <li><code>ceph</code>: Ceph Object Gateway S3 API.</li>
+          <li><code>xtrabackup</code>: Percona Xtrabackup.</li>
         </ul>
       </td>
     </tr>
