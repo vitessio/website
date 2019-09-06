@@ -91,7 +91,8 @@ The following table lists the methods in each group and links to more detail abo
 <td>StreamExecute executes a streaming query based on shards. It depends on the query and bind variables to provide enough information in conjonction with the vindexes to route the query. Use this method if the query returns a large number of rows.</td>
 </tr>
 </table>
-##Range-based Sharding
+
+## Range-based Sharding
 ### ExecuteBatchKeyspaceIds
 
 ExecuteBatchKeyspaceIds executes the list of queries based on the specified keyspace ids.
@@ -293,7 +294,7 @@ StreamExecuteKeyspaceIds executes a streaming query based on keyspace ids. Use t
 | :-------- | :--------
 | <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream. As returned by Execute, len(fields) is always equal to len(row) (for each row in rows). As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
 
-##Transactions
+## Transactions
 ### Begin
 
 Begin a transaction.
@@ -392,7 +393,7 @@ Rollback a transaction.
 | Name |Description |
 | :-------- | :--------
 
-##Custom Sharding
+## Custom Sharding
 ### ExecuteBatchShards
 
 ExecuteBatchShards executes the list of queries on the specified shards.
@@ -486,7 +487,7 @@ StreamExecuteShards executes a streaming query based on shards. Use this method 
 | :-------- | :--------
 | <code>result</code> <br>[query.QueryResult](#query.queryresult)| QueryResult is returned by Execute and ExecuteStream. As returned by Execute, len(fields) is always equal to len(row) (for each row in rows). As returned by StreamExecute, the first QueryResult has the fields set, and subsequent QueryResult have rows set. And as Execute, len(QueryResult[0].fields) is always equal to len(row) (for each row in rows for each QueryResult in QueryResult[1:]). |
 
-##Map Reduce
+## Map Reduce
 ### SplitQuery
 
 Split a query into non-overlapping sub queries
@@ -549,7 +550,7 @@ Split a query into non-overlapping sub queries
 | <code>keyspace</code> <br>string| keyspace to target the query to. |
 | <code>shards</code> <br>list &lt;string&gt;| shards to target the query to. |
 
-##Topology
+## Topology
 ### GetSrvKeyspace
 
 GetSrvKeyspace returns a SrvKeyspace object (as seen by this vtgate). This method is provided as a convenient way for clients to take a look at the sharding configuration for a Keyspace. Looking at the sharding information should not be used for routing queries (as the information may change, use the Execute calls for that). It is convenient for monitoring applications for instance, or if using custom sharding.
@@ -574,7 +575,7 @@ GetSrvKeyspace returns a SrvKeyspace object (as seen by this vtgate). This metho
 | :-------- | :--------
 | <code>srv_keyspace</code> <br>[topodata.SrvKeyspace](#topodata.srvkeyspace)| SrvKeyspace is a rollup node for the keyspace itself. |
 
-##v3 API (alpha)
+## v3 API (alpha)
 ### Execute
 
 Execute tries to route the query to the right shard. It depends on the query and bind variables to provide enough information in conjonction with the vindexes to route the query.
