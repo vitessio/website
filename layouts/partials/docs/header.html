@@ -1,7 +1,7 @@
 {{ $docsSections := where site.Sections "Section" "docs" }}
 {{ $path         := .File.Path }}
 {{ $language     := .Language }}
-{{ $editUrl      := printf "https://github.com/vitessio/website/tree/master/content/%s/%s" $language $path }}
+{{ $editUrl      := printf "https://github.com/vitessio/website/blob/prod/content/%s/%s" $language $path }}
 <header class="docs-header">
   <p class="title is-size-1 is-size-2-mobile has-text-weight-light{{ if .Params.description }} is-spaced{{ end }}">
     {{ .Title }}
