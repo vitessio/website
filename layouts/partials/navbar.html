@@ -5,8 +5,10 @@
 {{ $social       := site.Params.social }}
 {{ $docs         := where site.Pages "Section" "docs" }}
 {{ $blogPosts    := where site.RegularPages "Section" "blog" }}
+{{ $hasBlogPosts := gt (len $blogPosts) 0 }}
 {{ $currentLang  := .Language.LanguageName }}
-{{ $translations := site.Home.AllTranslations }}
+{{ $translations := site.Home.Translations }}
+
 <nav class="navbar is-fixed-top is-dark">
   <div class="container">
     <div class="navbar-brand">
@@ -25,25 +27,6 @@
 
     <div class="navbar-menu">
       <div class="navbar-end">
-        <!--
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link has-text-weight-bold">
-            {{ $currentLang }}
-          </a>
-
-          <div class="navbar-dropdown">
-            {{ range $translations }}
-            {{ $lang := .Language.LanguageName }}
-            {{ $url  := .RelPermalink }}
-            <a class="navbar-item" href="{{ $url }}">
-              {{ $lang }}
-            </a>
-            {{ end }}
-          </div>
-        </div>
-        -->
-
-
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link has-text-weight-bold" href="{{ "/docs" | relLangURL }}">
             {{ T "docs" }}
@@ -60,6 +43,7 @@
           </div>
         </div>
 
+        {{ if $hasBlogPosts }}
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link has-text-weight-bold" href="{{ "/blog" | relLangURL }}">
             {{ T "blog" }}
@@ -79,10 +63,27 @@
             </a>
           </div>
         </div>
+        {{ end }}
 
         <a class="navbar-item has-text-weight-bold" href="{{ "/community" | relLangURL }}">
           {{ T "community" }}
         </a>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link has-text-weight-bold">
+            {{ $currentLang }}
+          </a>
+
+          <div class="navbar-dropdown">
+            {{ range $translations }}
+            {{ $lang := .Language.LanguageName }}
+            {{ $url  := .RelPermalink }}
+            <a class="navbar-item" href="{{ $url }}">
+              {{ $lang }}
+            </a>
+            {{ end }}
+          </div>
+        </div>
 
         <div class="navbar-item">
           {{ partial "social-buttons.html" (dict "footer" false "social" $social) }}
