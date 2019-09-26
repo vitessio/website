@@ -16,8 +16,8 @@ The following diagram represents all the RPCs we use in a Vitess cluster:
 
 There are two main categories:
 
-* Internal RPCs: they are used to connect Vitess components.
-* Externally visible RPCs: they are use by the app to talk to Vitess.
+* Internal RPCs: used to connect Vitess components.
+* Externally visible RPCs: used by the application to communicate with Vitess.
 
 A few features in the Vitess ecosystem depend on authentication, like Caller ID
 and table ACLs. We'll explore the Caller ID feature first.
