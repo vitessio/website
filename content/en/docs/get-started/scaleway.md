@@ -1,6 +1,6 @@
 ---
 title: Run Vitess on Scaleway
-weight: 4
+weight: 5
 ---
 
 This getting started guide describes how to deploy Vitess on Scaleway's Kubernetes Kapsule. It was developed for a workshop organized by Cloud Native Computing Paris, with Scaleway providing attendees with computing credit.
@@ -13,9 +13,9 @@ Before we get started for the day, please complete and configure the following:
 
 * Launch a 3-node Kapsule Cluster:
   * Make sure you choose Kubernetes 1.15 (there is a known issue in 1.16 with helm init).
-  * The nodes should be GPS1_XS.
+  * The nodes should be `GPS1_XS`.
 
-* Launch an Ubuntu VM of size DEV1-S. We will use this for installing the MySQL client, kubectl, helm, etcd-operator.
+* Launch an Ubuntu VM of size `DEV1-S`. We will use this for installing the MySQL client, kubectl, helm, etcd-operator.
   * Make sure you setup SSH keys correctly so you can log into this instance!
 
 * Install kubectl with `snap install kubectl --classic` and follow Scaleway's [configuration instructions](https://www.scaleway.com/en/docs/get-started-with-scaleway-kubernetes-kapsule/#-Connecting-to-a-Kubernetes-Cluster-via-kubectl). I recommend moving the config file to the default location (`mv kubeconfig-k8s-*.yaml $HOME/.kube/config`).
@@ -29,13 +29,14 @@ Before we get started for the day, please complete and configure the following:
   * `cd etcd-operator`
   * Follow [further instructions](https://github.com/coreos/etcd-operator/blob/master/doc/user/install_guide.md).
 
-* Install a mysql-client:
+* Install a mysql client:
   * `apt install mysql-client`
 
-* Clone Vitess:
+* Clone Sugu's Vitess branch. It contains a small fix so that `./kmysql.sh` and `./kvtctld.sh` use your Scaleway cluster and do not depend on Minikube. We hope to make this more portable in the future:
   * `cd ~`
-  * `git clone https://github.com/vitessio/vitess.git`
-  * `cd vitess/examples/helm`
+  * `git clone https://github.com/planetscale/vitess.git`
+  * `cd vitess`
+  * `git checkout ss-paris`
 
 ## Starting a single keyspace cluster
 
@@ -51,7 +52,7 @@ In this directory, you will see a group of yaml files. The first digit of each f
 helm install ../../helm/vitess -f 101_initial_cluster.yaml
 ```
 
-This will bring up the initial Vitess cluster with a single keyspace.
+This will bring up the initial Vitess cluster with a single keyspace. If you receive an error about _no available release name found_, it is a [known helm issue](https://github.com/helm/helm/issues/3055#issuecomment-356347732).
 
 ### Verify cluster
 
