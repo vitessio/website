@@ -15,7 +15,7 @@ However, the down side is that it is a little too strict, and may not work for a
 
 ## VTGate
 
-You can send a DDL directly to a VTGate just like you would send to a mysql instance. If the target is a sharded keyspace,
+You can send a DDL directly to a VTGate just like you would send to a MySQL instance. If the target is a sharded keyspace,
 then the DDL would be sprayed to all shards.
 
 If a specific shard fails you can target it directly using the `keyspace/shard` syntax to retry the apply just to that shard.
@@ -30,4 +30,4 @@ You can apply schema changes directly to MySQL. VTTablet will eventually notice 
 explicitly issue the vtctlclient `ReloadSchema` command to make it reload immediately.
 
 This approach can be extended to use schema deployment tools like `gh-ost` or `pt-online-schema-change`. Using these schema
-deployment tools is the recommended approach for large tables, becasue they incur no downtime.
+deployment tools is the recommended approach for large tables, because they incur no downtime.
