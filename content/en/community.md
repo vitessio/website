@@ -3,14 +3,26 @@ title: Vitess Community
 description: A guide to the Vitess ecosystem
 ---
 
-The Vitess community welcomes one and all. Join our Vitess Slack channel for general assistance and chatter, or contact us in these ways:
+Vitess is developed in the open. Here are some of the channels we use to communicate and contribute:
 
-* [Get in touch with Vitess maintainers](mailto:cncf-vitess-maintainers@lists.cncf.io)
-* [Follow us on Twitter](https://twitter.com/vitessio)
-* [Report a security vulnerability](mailto:cncf-vitess-maintainers@lists.cncf.io)
-* [Say hi on Slack](https://vitess.slack.com) (click [here](https://join.slack.com/t/vitess/shared_invite/enQtMzIxMDMyMzA0NzA1LTYxMjk2M2M2NjAwNGY0ODljY2E1MjBlZjRkMmZmNDVkZTBhNDUxNzNkOGM4YmEzNWEwOTE2NjJiY2QyZjZjYTE) if you need an account) 
+**Slack:** [Vitess Slack](https://join.slack.com/t/vitess/shared_invite/enQtMzIxMDMyMzA0NzA1LTYxMjk2M2M2NjAwNGY0ODljY2E1MjBlZjRkMmZmNDVkZTBhNDUxNzNkOGM4YmEzNWEwOTE2NjJiY2QyZjZjYTE) (recommended)
 
-### Vitess Monthly Meetings
+**Twitter:** [@vitessio](https://twitter.com/vitessio)
+
+**Stack Overflow:** [Vitess](https://stackoverflow.com/search?q=vitess)
+
+**Issue Tracker:** Use the GitHub issue tracker for [vitessio/vitess](https://github.com/vitessio/vitess/issues) (Vitess) or [vitessio/website](https://github.com/vitessio/website/issues) (Documentation).
+
+**Security Vulnerabilities:** [Contact Vitess maintainers](mailto:cncf-vitess-maintainers@lists.cncf.io)
+
+_Please do not ask individual project members for support. Use the channels above instead, where the whole community can help you and benefit from the solutions provided. If community support is insufficient for your situation, please refer to the Commercial Support section below._
+
+
+### Contributing
+
+We welcome your contribution to Vitess, whether they be documentation, a bug fix or new feature. For more information, see the [contributing guide](https://vitess.io/docs/contributing/).
+
+### Monthly Meetings
 
 On the third Thursday of the month (unless otherwise specified), the Vitess community holds a monthly meeting by video conference to discuss the state of Vitess. New features will be previewed or discussed, and everyone regardless of location and familiarity with Vitess is welcome to join.
 
@@ -22,43 +34,34 @@ To stay up to date on these monthly meetings and other meetups, click [here](htt
 
 **Dial-in details**: [Click to join Zoom call](https://slack.zoom.us/j/314170129)
 
-To join by phone: 
+To join by phone:
 
 * US: +16699006833,,314170129#  or +16465588656,,314170129#
 * International dial-in numbers [click here](../dialin)
 * Meeting ID (required to join the call): 314 170 129
 
-If you would like to submit a topic for discussion at the meeting, please [email us](mailto:cncf-vitess-maintainers@lists.cncf.io). 
- 
+If you would like to submit a topic for discussion at the meeting, please [email us](mailto:cncf-vitess-maintainers@lists.cncf.io).
+
 To review notes from past meetings, click [here](https://docs.google.com/document/d/1d8PcVD-ppnytRXZPOPvhRnnwei7-tYvgopD0UYzbAMs/edit).
 
-### Friends of Vitess
 
-Vitess is made better by the involvement of other projects we love. In no particular order, we are listing them here.
+### Project Governance
 
-* [Kubernetes](https://kubernetes.io/)
-* [Orchestrator](https://github.com/github/orchestrator)
-* [gRPC](https://grpc.io/)
-* [Grafana](https://grafana.com/) 
-* [Prometheus](https://prometheus.io/)
-* [etcd](https://coreos.com/etcd/)
-* [Consul](https://www.consul.io/)
-* [Zookeeper](https://zookeeper.apache.org/)
+Vitess is an independent open-source project and not controlled by any single company. To emphasize this we joined the [Cloud Native Computing Foundation](https://cncf.io/) in 2018.
 
-### Commercial Vitess Support
+Within the project, we make decisions [based on these rules](https://github.com/vitessio/vitess/blob/master/GOVERNANCE.md).
 
-If you need commercial assistance for open source Vitess, consider getting in touch with the following companies, listed in alphabetical order.
+### Code of Conduct
 
-#### PlanetScale
+To make Vitess a welcoming and harassment-free experience for everyone, we follow the [CNCF Code of Conduct](https://github.com/cncf/foundation/blob/master/code-of-conduct.md).
 
-[PlanetScale](https://planetscale.com) was founded in 2018 by the co-creators and maintainers of the Vitess open source project. They created and operated Vitess, an open source scaling and sharding solution for MySQL in 2010 to solve the data explosion at Youtube. They have worked on high scale systems at PayPal, Google, YouTube, and Dropbox. PlanetScale is venture-funded and based in Mountain View, California. We provide enterprise support for Vitess and also host a multi-cloud MySQL-compliant DBaaS based on Vitess.   
+### Commercial Support
 
-**Services Offered:**  
+This is a list of third-party companies and individuals who provide products or services related to Vitess. Vitess is an independent open source project which does not endorse any company. The list is provided in alphabetical order.
 
-* Database-as-a-Service
-* Professional Services
-* Vitess Operator for Kubernetes
-* Enterprise Support
-* Vitess Training
+* [PlanetScale](https://planetscale.com)
 
-If you provide services in the Vitess ecosystem and would like to be listed here, [let us know](mailto:cncf-vitess-maintainers@lists.cncf.io) or send us a pull request on this page.
+### Acknowledgements
+
+Vitess [was born at YouTube](https://vitess.io/docs/overview/history/) in 2010, and joined the CNCF in [February 2018](https://www.cncf.io/blog/2018/02/05/cncf-host-vitess/) as an incubation project.
+
