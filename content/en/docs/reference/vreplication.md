@@ -320,7 +320,7 @@ You can change any field of the stream by issuing a `VReplicationExec` with an
 `update` statement. You are required to specify the id of the row you intend to
 update. You can only update one row at a time.
 
-Typically, you can update the row and change the state to `Stopping` to stop a
+Typically, you can update the row and change the state to `Stopped` to stop a
 stream, or to `Running` to restart a stopped stream.
 
 You can also update the row to set a `stop_pos`, which will make the replication
