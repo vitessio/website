@@ -59,7 +59,7 @@ To make Vitess a welcoming and harassment-free experience for everyone, we follo
 
 This is a list of third-party companies and individuals who provide products or services related to Vitess. Vitess is an independent open source project which does not endorse any company. The list is provided in alphabetical order.
 
-1. [PlanetScale](https://planetscale.com)
+* [PlanetScale](https://planetscale.com)
 
 ### Acknowledgements
 
