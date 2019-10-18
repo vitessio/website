@@ -22,4 +22,4 @@ Here’s a [deck](../../files/2019-vitess-gosv.pdf) for you to find out more.
 
 For a VReplication demo with audio and a transcript, check out [Sugu’s talk at QCon San Francisco 2018](https://www.infoq.com/presentations/vitess) (scroll through to the ‘demo’ section). 
 
-For questions about VReplication and how it works, feel free to join the [Vitess community](https://vitess.slack.com) (click [here](https://vitess.slack.com/join/shared_invite/enQtMzIxMDMyMzA0NzA1LTBjYjY1M2I2Yjg5YmY3ODIwOTk0N2M1YzI4Y2ViODdiNmIxMDdiMDM5YWQ1ZTc0YmJhZDdiOTliMGVkNDY4MjM) to join).
+For questions about VReplication and how it works, feel free to join the [Vitess community](https://vitess.slack.com) (click [here](https://join.slack.com/t/vitess/shared_invite/enQtMzIxMDMyMzA0NzA1LTYxMjk2M2M2NjAwNGY0ODljY2E1MjBlZjRkMmZmNDVkZTBhNDUxNzNkOGM4YmEzNWEwOTE2NjJiY2QyZjZjYTE) to join).

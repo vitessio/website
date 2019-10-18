@@ -1,25 +1,25 @@
 ---
-title: GitHub Workflow
+title: GitHub 工作流程
 ---
 
-If you are new to Git and GitHub, we recommend to read this page. Otherwise, you may skip it.
+如果您是Git和GitHub的新手，我们建议您阅读此页面。否则，您可以跳过它。
 
-Our GitHub workflow is a so called triangular workflow:
+我们的GitHub工作流程是一个所谓的三角工作流程：
 
-<img src="https://cloud.githubusercontent.com/assets/1319791/8943755/5dcdcae4-354a-11e5-9f82-915914fad4f7.png" alt="visualization of the GitHub triangular workflow" style="width: 100%;"/>
+<img src="https://cloud.githubusercontent.com/assets/1319791/8943755/5dcdcae4-354a-11e5-9f82-915914fad4f7.png" alt="visualization of the GitHub triangular workflow " style="width: 100%;"/>
 
 *Image Source:* https://github.com/blog/2042-git-2-5-including-multiple-worktrees-and-triangular-workflows
 
-The Vitess code is hosted on GitHub (https://github.com/vitessio/vitess).
-This repository is called *upstream*.
-You develop and commit your changes in a clone of our upstream repository (shown as *local* in the image above).
-Then you push your changes to your forked repository (*origin*) and send us a pull request.
-Eventually, we will merge your pull request back into the *upstream* repository.
+
+
+这个托管的代码仓库我们称为*upstream*。
+您可以从我们的上游代码仓库克隆一份代码，并在其中开发和提交您的更改（在上图中显示为*local*）。然后将更改推送到您forked代码仓库（*origin*）并向我们发送pull请求
+。最后，我们将把你的pull请求合并回*upstream*代码仓库。
 
 ## Remotes
 
-Since you should have cloned the repository from your fork, the `origin` remote
-should look like this:
+您从您的fork代码仓库中clone一份代码, `origin` remote
+应该显示成这样:
 
 ```
 $ git remote -v
@@ -27,7 +27,7 @@ origin  git@github.com:<yourname>/vitess.git (fetch)
 origin  git@github.com:<yourname>/vitess.git (push)
 ```
 
-To help you keep your fork in sync with the main repo, add an `upstream` remote:
+为了帮助您保持fork仓与主仓同步，添加一个`upstream`远程
 
 ```
 $ git remote add upstream git@github.com:vitessio/vitess.git
@@ -38,33 +38,31 @@ upstream        git@github.com:vitessio/vitess.git (fetch)
 upstream        git@github.com:vitessio/vitess.git (push)
 ```
 
-Now to sync your local `master` branch, do this:
+同步你的本地`master`分支，执行以下操作：
 
 ```
 $ git checkout master
 (master) $ git pull upstream master
 ```
 
-Note: In the example output above we prefixed the prompt with `(master)` to
-stress the fact that the command must be run from the branch `master`.
+注意：在上面的示例输出中，我们使用`(master)`前缀提示符，
+强调命令必须从分支`master`运行。
 
-You can omit the `upstream master` from the `git pull` command when you let your
-`master` branch always track the main `vitessio/vitess` repository. To achieve
-this, run this command once:
+有一个小技巧，您可以不写`upstream master`，只运行`git pull`命令。前提是您设置了`master`分支跟踪到`vitessio/vitess`分支。如下命令所示：
 
 ```
 (master) $ git branch --set-upstream-to=upstream/master
 ```
 
-Now the following command syncs your local `master` branch as well:
+现在，以下命令同步您的本地`master`分支:
 
 ```
 (master) $ git pull
 ```
 
-## Topic Branches
+## 主题分支
 
-Before you start working on changes, create a topic branch:
+在开始处理更改之前，请创建主题分支：
 
 ```
 $ git checkout master
@@ -73,58 +71,54 @@ $ git checkout master
 (new-feature) $ # You are now in the new-feature branch.
 ```
 
-Try to commit small pieces along the way as you finish them, with an explanation
-of the changes in the commit message.
-Please see the [Code Review page](../code-reviews) for more guidance.
+尝试在完成它们的过程中分批次逐步提交，并在每次的提交更改时附上提交消息注明更改内容。
+有关更多指导，请参阅[代码审查页面](../code-reviews)。
 
-As you work in a package, you can run just
-the unit tests for that package by running `go test` from within that package.
+当你在一个包中做出修改的时候，你可以在该包中运行`go test`来进行单元测试验证您的修改是否有效。
 
-When you're ready to test the whole system, run the full test suite with `make
-test` from the root of the Git tree.
-If you haven't installed all dependencies for `make test`, you can rely on the Travis CI test results as well.
-These results will be linked on your pull request.
+当你准备测试整个系统的时候，从Git tree根目录运行整套测试体系，运行 `make
+test`  
 
-## Commiting your work
+如果尚未安装`make test`的所有依赖项，则还可以观察Travis CI测试结果。
+CI 在您提交pull request时候自动执行，你可以等待并观察CI是否顺利通过，如果有问题，CI会跑不过，您可以根据CI的错误提示定位问题，不方便的一点是CI的执行过程很长，您需要耐心等待。
 
-When running `git commit` use the `-s` option to add a Signed-off-by line.
-This is needed for [the Developer Certificate of Origin](https://github.com/apps/dco).
+## 交付你的工作
 
-## Sending Pull Requests
+运行`git commit`时，使用`-s`选项添加Signed-off-by行。
 
-Push your branch to the repository (and set it to track with `-u`):
+这是[the Developer Certificate of Origin](https://github.com/apps/dco)所必须的要求。
+
+## 发送 Pull 请求
+
+将您的分支推送到代码仓（并将其设置为使用`-u`进行跟踪):
 
 ```
 (new-feature) $ git push -u origin new-feature
 ```
 
-You can omit `origin` and `-u new-feature` parameters from the `git push`
-command with the following two Git configuration changes:
+您可以从`git push`中省略`origin`和`-u new-feature`参数,只需运行如下两个Git命令进行配置更改：
 
 ```
 $ git config remote.pushdefault origin
 $ git config push.default current
 ```
 
-The first setting saves you from typing `origin` every time. And with the second
-setting, Git assumes that the remote branch on the GitHub side will have the
-same name as your local branch.
+第一个设置可以避免每次输入`origin`。而第二个设置，Git假设GitHub端的远程分支
+与您的本地分支同名。
 
-After this change, you can run `git push` without arguments:
+在此更改之后，您可以运行不带参数的`git push`：
 
 ```
 (new-feature) $ git push
 ```
 
-Then go to the [repository page](https://github.com/vitessio/vitess) and it
-should prompt you to create a Pull Request from a branch you recently pushed.
-You can also [choose a branch manually]
-(https://github.com/vitessio/vitess/compare).
+转到[repository 页面](https://github.com/vitessio/vitess) ,将会提示您从最近推送的分支创建一个Pull请求。
+您也可以 [手动选择分支](https://github.com/vitessio/vitess/compare).
 
-## Addressing Changes
+## 解决变更
 
-If you need to make changes in response to the reviewer's comments, just make
-another commit on your branch and then push it again:
+
+如果您需要根据代码审阅者的建议进行代码修复，只需要在此分支上完成修改后再次提交，然后推送即可：
 
 ```
 $ git checkout new-feature
@@ -132,10 +126,10 @@ $ git checkout new-feature
 (new-feature) $ git push
 ```
 
-That is because a pull request always mirrors all commits from your topic branch which are not in the master branch.
+一个提交请求只反映出您所在主题分支的变化，和主分支无关。
 
-Once your pull request is merged:
+一旦您的提交请求被合并后：
 
-*  close the GitHub issue (if it wasn't automatically closed)
-*  delete your local topic branch (`git branch -d new-feature`)
+*  关闭GitHub问题（如果没有自动关闭）
+*  删除您的本地主题分支（`git branch -d new-feature`）
 

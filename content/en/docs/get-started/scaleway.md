@@ -1,38 +1,44 @@
 ---
-title: Run Vitess on Kubernetes
-weight: 3
-featured: true
-aliases: ['/docs/tutorials/kubernetes/','/user-guide/sharding-kubernetes.html']
+title: Run Vitess on Scaleway
+weight: 5
 ---
 
-As successful companies grow they often face a significant increases in the amount data housed in their transactional databases. This increase in data size can cause detrimental performance issues from query latency to managability. This tutorial demonstrates how Vitess can be used with Kubernetes to anticipate ultra growth and alleviate the performance issues found at scale by leveraging horizontal sharding with a distributed system.
+This getting started guide describes how to deploy Vitess on Scaleway's Kubernetes Kapsule. It was developed for a workshop organized by Cloud Native Computing Paris, with Scaleway providing attendees with computing credit.
 
 ### Prerequisites
 
-Before we get started, let’s get a few things out of the way.
+Before we get started for the day, please complete and configure the following:
 
-{{< info >}}
-The example settings have been tuned to run on Minikube. However, you should be able to try this on your own Kubernetes cluster. If you do, you may also want to remove some of the Minikube specific resource settings (explained below).
-{{< /info >}}
+* Go to [scaleway.com](https://www.scaleway.com/en/) and signup for an account. You will ned to click on an email activation link before you can deploy resources.
 
-* [Download Vitess](https://github.com/vitessio/vitess)
-* [Install Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
-* Start a Minikube engine: `minikube start --cpus=4 --memory=5000`. Note the additional resource requirements. In order to go through all the use cases, many vttablet and MySQL instances will be launched. These require more resources than the defaults used by Minikube.
-* [Install etcd operator](https://github.com/coreos/etcd-operator/blob/master/doc/user/install_guide.md)
-* [Install helm](https://docs.helm.sh/using_helm/)
-* After installing, run `helm init`
+* Launch a 3-node Kapsule Cluster:
+  * Make sure you choose Kubernetes 1.15 (there is a known issue in 1.16 with helm init).
+  * The nodes should be `GPS1_XS`.
 
-### Optional
+* Launch an Ubuntu VM of size `DEV1-S`. We will use this for installing the MySQL client, kubectl, helm, etcd-operator.
+  * Make sure you setup SSH keys correctly so you can log into this instance!
 
-* Install the MySQL client. On Ubuntu: `apt-get install mysql-client`
-* Install vtctlclient
-    * Install go 1.12+
-    * `go get vitess.io/vitess/go/cmd/vtctlclient`
-    * vtctlclient will be installed at `$GOPATH/bin/`
+* Install kubectl with `snap install kubectl --classic` and follow Scaleway's [configuration instructions](https://www.scaleway.com/en/docs/get-started-with-scaleway-kubernetes-kapsule/#-Connecting-to-a-Kubernetes-Cluster-via-kubectl). I recommend moving the config file to the default location (`mv kubeconfig-k8s-*.yaml $HOME/.kube/config`).
+
+* Install helm:
+  * `snap install helm --classic`
+  * `helm init`
+
+* Install etcd-operator:
+  * `git clone https://github.com/coreos/etcd-operator`
+  * `cd etcd-operator`
+  * Follow [further instructions](https://github.com/coreos/etcd-operator/blob/master/doc/user/install_guide.md).
+
+* Install a mysql client:
+  * `apt install mysql-client`
+
+* Clone Sugu's Vitess branch. It contains a small fix so that `./kmysql.sh` and `./kvtctld.sh` use your Scaleway cluster and do not depend on Minikube. We hope to make this more portable in the future:
+  * `cd ~`
+  * `git clone https://github.com/planetscale/vitess.git`
+  * `cd vitess`
+  * `git checkout ss-paris`
 
 ## Starting a single keyspace cluster
-
-So you searched keyspace on Google and got a bunch of stuff about NoSQL… what’s the deal? It took a few hours, but after diving through the ancient Vitess scrolls you figure out that in the NewSQL world, keyspaces and databases are essentially the same thing when unsharded. Finally, it’s time to get started.
 
 Change to the helm example directory:
 
@@ -46,7 +52,7 @@ In this directory, you will see a group of yaml files. The first digit of each f
 helm install ../../helm/vitess -f 101_initial_cluster.yaml
 ```
 
-This will bring up the initial Vitess cluster with a single keyspace.
+This will bring up the initial Vitess cluster with a single keyspace. If you receive an error about _no available release name found_, it is a [known helm issue](https://github.com/helm/helm/issues/3055#issuecomment-356347732).
 
 ### Verify cluster
 
@@ -85,20 +91,11 @@ mysql> show tables;
 3 rows in set (0.01 sec)
 ```
 
-You can also browse to the vtctld console using the following command (Ubuntu):
+You can also browse to the vtctld console using the following command:
 
 ``` sh
 ./kvtctld.sh
 ```
-
-### Minikube Customizations
-
-The helm example is based on the `values.yaml` file provided as the default helm chart for Vitess. The following overrides have been performed in order to run under Minikube:
-
-* `resources`: have been nulled out. This instructs the Kubernetes environment to use whatever is available. Note, this is not recommended for a production environment. In such cases, you should start with the baseline values provided in `helm/vitess/values.yaml` and iterate from those.
-* etcd and VTGate replicas are set to 1. In a production environment, there should be 3-5 etcd replicas. The number of VTGate servers will need to scale up based on cluster size.
-* `mysqlProtocol.authType` is set to `none`. This should be changed to `secret` and the credentials should be stored as Kubernetes secrets.
-* A serviceType of `NodePort` is not recommended in production. You may choose not to expose these end points to anyone outside Kubernetes at all. Another option is to create Ingress controllers.
 
 ### Topology
 

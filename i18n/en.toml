@@ -7,7 +7,7 @@ other = "More ..."
 other = "Kubernetes Quickstart"
 
 [build]
-other = "Manual Build"
+other = "Local Install"
 
 [documentation]
 other = "Documentation"
