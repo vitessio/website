@@ -288,3 +288,11 @@ In this script, we just stopped all tablet instances for shard 0. This will caus
 This command runs the following "`DeleteShard -recursive customer/0`".
 
 Beyond this, you will also need to manually delete the disk associated with this shard.
+
+## Next Steps
+
+Feel free to experiment with your Vitess cluster! When you are ready to teardown your example, execute:
+
+``` bash
+./401_teardown.sh
+```
