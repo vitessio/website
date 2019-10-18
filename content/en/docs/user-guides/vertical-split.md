@@ -173,3 +173,9 @@ ERROR 1105 (HY000) at line 4: vtgate: http://vtgate-zone1-5ff9c47db6-7rmld:15001
 ## Next Steps
 
 You can now proceed with [Horizontal Sharding](../../user-guides/horizontal-sharding).
+
+Or alternatively, if you would like to teardown your example:
+
+``` bash
+./401_teardown.sh
+```

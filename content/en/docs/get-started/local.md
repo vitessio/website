@@ -181,7 +181,7 @@ You can also browse to the vtctld console using the following URL:
 http://localhost:15000
 ```
 
-### Summary
+## Summary
 
 In this example, we deployed a single unsharded keyspace named `commerce`. Unsharded keyspaces have a single shard named `0`. The schema reflects a common ecommerce scenario:
 
@@ -211,17 +211,12 @@ The schema has been simplified to include only those fields that are significant
 * The `customer` table has a `customer_id` that has an `auto_increment`. A typical customer table would have a lot more columns, and sometimes additional detail tables.
 * The `corder` table (named so because `order` is an SQL reserved word) has an `order_id` auto-increment column. It also has foreign keys into `customer(customer_id)` and `product(sku)`.
 
-### Next Steps
+## Next Steps
 
-From here it is recommended to proceed with the following additional exercises (in order):
+You can now proceed with [Vertical Split](../../user-guides/vertical-split).
 
-* [Vertical Split](../../user-guides/vertical-split)
-* [Horizontal Sharding](../../user-guides/horizontal-sharding)
+Or alternatively, if you would like to teardown your example:
 
-### Teardown (optional)
-
-You can delete the whole example if you are not proceeding to another exercise:
-
-``` sh
+``` bash
 ./401_teardown.sh
 ```
