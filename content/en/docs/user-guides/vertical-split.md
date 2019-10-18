@@ -12,13 +12,13 @@ Due to a massive ingress of free-trade, single-origin yerba mate merchants to yo
 Let us add some data into our tables to illustrate how the vertical split works.
 
 ``` sql
-mysql -h 127.0.0.1 -P 15306 < ../common/insert_commerce_data.sql
+mysql < ../common/insert_commerce_data.sql
 ```
 
 We can look at what we just inserted:
 
 ``` sh
-mysql -h 127.0.0.1 -P 15306 --table < ../common/select_commerce_data.sql
+mysql --table < ../common/select_commerce_data.sql
 Using commerce/0
 Customer
 +-------------+--------------------+
@@ -97,7 +97,7 @@ NOTE: In production, you would want to run multiple sanity checks on the replica
 We can look at the results of VerticalSplitClone by examining the data in the customer keyspace. Notice that all data in the `customer` and `corder` tables has been copied over.
 
 ``` sh
-mysql -h 127.0.0.1 -P 15306 --table < ../common/select_customer0_data.sql
+mysql --table < ../common/select_customer0_data.sql
 Using customer/0
 Customer
 +-------------+--------------------+
@@ -124,7 +124,7 @@ COrder
 
 ## Cut over
 
-Once you have verified that the customer and corder tables are being continuously updated from commerce, you can cutover the traffic. This is typically performed in three steps: `rdonly`, `replica` and `master`:
+Once you have verified that the `customer` and `corder` tables are being continuously updated from commerce, you can cutover the traffic. This is typically performed in three steps: `rdonly`, `replica` and `master`:
 
 For rdonly and replica:
 
@@ -141,7 +141,7 @@ For master:
 Once this is done, the `customer` and `corder` tables are no longer accessible in the `commerce` keyspace. You can verify this by trying to read from them.
 
 ``` sql
-mysql -h 127.0.0.1 -P 15306 --table < ../common/select_commerce_data.sql
+mysql --table < ../common/select_commerce_data.sql
 Using commerce/0
 Customer
 ERROR 1105 (HY000) at line 4: vtgate: http://vtgate-zone1-5ff9c47db6-7rmld:15001/: target: commerce.0.master, used tablet: zone1-1564760600 (zone1-commerce-0-replica-0.vttablet), vttablet: rpc error: code = FailedPrecondition desc = disallowed due to rule: enforce blacklisted tables (CallerID: userData1)
@@ -164,7 +164,7 @@ The ‘control’ records were added by the `MigrateServedFrom` command during t
 After this step, the `customer` and `corder` tables no longer exist in the `commerce` keyspace.
 
 ``` sql
-mysql -h 127.0.0.1 -P 15306 --table < ../common/select_commerce_data.sql
+mysql --table < ../common/select_commerce_data.sql
 Using commerce/0
 Customer
 ERROR 1105 (HY000) at line 4: vtgate: http://vtgate-zone1-5ff9c47db6-7rmld:15001/: target: commerce.0.master, used tablet: zone1-1564760600 (zone1-commerce-0-replica-0.vttablet), vttablet: rpc error: code = InvalidArgument desc = table customer not found in schema (CallerID: userData1)

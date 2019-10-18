@@ -24,10 +24,10 @@ The VSchema allows you to associate a column of a table with the sequence table.
 Since sequences are unsharded tables, they will be stored in the commerce database. The schema:
 
 ``` sql
-create table customer_seq(id int, next_id bigint, cache bigint, primary key(id)) comment 'vitess_sequence';
-insert into customer_seq(id, next_id, cache) values(0, 1000, 100);
-create table order_seq(id int, next_id bigint, cache bigint, primary key(id)) comment 'vitess_sequence';
-insert into order_seq(id, next_id, cache) values(0, 1000, 100);
+CREATE TABLE customer_seq (id int, next_id bigint, cache bigint, primary key(id)) comment 'vitess_sequence';
+INSERT INTO customer_seq (id, next_id, cache) VALUES (0, 1000, 100);
+CREATE TABLE order_seq (id int, next_id bigint, cache bigint, primary key(id)) comment 'vitess_sequence';
+INSERT INTO order_seq (id, next_id, cache) VALUES (0, 1000, 100);
 ```
 
 Note the `vitess_sequence` comment in the create table statement. VTTablet will use this metadata to treat this table as a sequence.
@@ -36,7 +36,7 @@ Note the `vitess_sequence` comment in the create table statement. VTTablet will 
 * `next_id` is set to `1000`: the value should be comfortably greater than the `auto_increment` max value used so far.
 * `cache` specifies the number of values to cache before vttablet updates `next_id`.
 
-Higher cache values are more performant. However, cached values are lost if a reparent happens. The new master will start off at the `next_id` that was saved by the old master.
+Larger cache values perform better, but will exhaust the values quicker since during reparent operations the new master will start off at the `next_id` value.
 
 The VTGate servers also need to know about the sequence tables. This is done by updating the VSchema for commerce as follows:
 
@@ -175,11 +175,11 @@ Applying the above change should result in the creation of six more vttablet ins
 At this point, the tables have been created in the new shards but have no data yet.
 
 ``` sql
-mysql -h 127.0.0.1 -P 15306 --table < ../common/select_customer-80_data.sql
+mysql --table < ../common/select_customer-80_data.sql
 Using customer/-80
 Customer
 COrder
-mysql -h 127.0.0.1 -P 15306 --table < ../common/select_customer80-_data.sql
+mysql --table < ../common/select_customer80-_data.sql
 Using customer/80-
 Customer
 COrder
@@ -234,7 +234,7 @@ The replica and rdonly cutovers are freely reversible. Unlike the Vertical Split
 You should now be able to see the data that has been copied over to the new shards.
 
 ``` sh
-mysql -h 127.0.0.1 -P 15306 --table < ../common/select_customer-80_data.sql
+mysql --table < ../common/select_customer-80_data.sql
 Using customer/-80
 Customer
 +-------------+--------------------+
@@ -255,7 +255,7 @@ COrder
 |        5 |           5 | SKU-1002 |    30 |
 +----------+-------------+----------+-------+
 
-mysql -h 127.0.0.1 -P 15306 --table < ../common/select_customer80-_data.sql
+mysql --table < ../common/select_customer80-_data.sql
 Using customer/80-
 Customer
 +-------------+----------------+
@@ -291,7 +291,7 @@ Beyond this, you will also need to manually delete the disk associated with this
 
 ## Next Steps
 
-Feel free to experiment with your Vitess cluster! When you are ready to teardown your example, execute:
+Feel free to experiment with your Vitess cluster! Execute the following when you are ready to teardown your example:
 
 ``` bash
 ./401_teardown.sh
