@@ -6,7 +6,7 @@ featured: true
 aliases: ['/docs/tutorials/local/']
 ---
 
-This guide covers installing Vitess locally for testing purposes, from pre-compiled binaries. We will launch 3 copies of `mysqld`, so it is recommended to have greater than 4GB RAM, as well as 20GB of available disk space.
+This guide covers installing Vitess locally for testing purposes, from pre-compiled binaries. We will launch 3 copies of `mysqld` initially, and then many more as you work through the tutorial, so it is recommended to have greater than 4GB RAM, as well as 20GB of available disk space.
 
 ## Install Packages
 
