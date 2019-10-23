@@ -114,7 +114,7 @@ So l2vtgate came to exist, based on very similar concepts and interfaces:
   shard / tablet type). Internally, it uses a discoveryGateway, as usual.
 * vtgate connects to l2vtgate pools (using the l2VTGateGateway instead of the
   discoveryGateway). It has a map of which keyspace / shard / tablet type needs
-  to go to wich l2vtgate pool. At this point, vtgate doesn't maintain any health
+  to go to which l2vtgate pool. At this point, vtgate doesn't maintain any health
   information about the tablets, it lets l2vtgate handle it.
 
 Note l2vtgate is not an ideal solution as it is now. For instance, if there are

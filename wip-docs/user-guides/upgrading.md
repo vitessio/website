@@ -28,7 +28,7 @@ Please use this upgrade order (unless otherwise noted in the release notes):
 - vtgate
 - application code which links client libraries
 
-*vtctld* is listed first to make sure that you can still adminstrate Vitess - or if not find out as soon as possible.
+*vtctld* is listed first to make sure that you can still administer Vitess - or if not find out as soon as possible.
 
 ## Canary Testing
 

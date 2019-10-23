@@ -2,7 +2,7 @@
 
 # Introduction
 
-This document builds on top of [The V3 high level design](https://github.com/vitessio/vitess/blob/master/doc/V3HighLevelDesign.md). It discusses implemenation of subquery support in greater detail.
+This document builds on top of [The V3 high level design](https://github.com/vitessio/vitess/blob/master/doc/V3HighLevelDesign.md). It discusses implementation of subquery support in greater detail.
 
 
 
@@ -118,13 +118,13 @@ A partially correlated subquery is similar to the completely uncorrelated subque
 5. Finish analyzing b.
 6. Analyzing b will make it correlated to a (because of c).
 
-The `findOrigin` function can already peform this analysis.
+The `findOrigin` function can already perform this analysis.
 
 So, in the above case, c cannot be pulled out beyond b. If c was not correlated with a, then we have the opportunity to pull it out further.
 
 ### Generalizing pull-outs
 
-The pull-out algorithm can be generallized as follows:
+The pull-out algorithm can be generalized as follows:
 
 1. Compute the primitive the subquery depends on: subqueryFrom
 2. Compute the primitive the full expression depends on: subqueryTo
