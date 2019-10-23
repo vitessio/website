@@ -81,7 +81,7 @@ select a.col, a.id from a where a.id=:id
 select b.col from b where b.id2=:_a_id and b.col > :_a_col
 ```
 
-Joins can also be cascased:
+Joins can also be cascaded:
 
 `select a.col, b.col, c.col from a join b on b.i2=a.id join c on c.id3=b.id2 where a.id=:id`
 

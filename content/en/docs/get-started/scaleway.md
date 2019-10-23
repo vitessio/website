@@ -9,7 +9,7 @@ This getting started guide describes how to deploy Vitess on Scaleway's Kubernet
 
 Before we get started for the day, please complete and configure the following:
 
-* Go to [scaleway.com](https://www.scaleway.com/en/) and signup for an account. You will ned to click on an email activation link before you can deploy resources.
+* Go to [scaleway.com](https://www.scaleway.com/en/) and signup for an account. You will need to click on an email activation link before you can deploy resources.
 
 * Launch a 3-node Kapsule Cluster:
   * Make sure you choose Kubernetes 1.15 (there is a known issue in 1.16 with helm init).

@@ -212,7 +212,7 @@ A regular appserver will query the cache for the value it wants. It will get eit
 * As mentioned before, the shard range queried by the invalidation process should cover a round number of actual shards.
 * The invalidation process needs to know how to compare tokens. This is a bummer, I don’t see any way around it. We could simplify and only do the timestamp comparison part, but that would mean the cache is unused for up to an entire second upon changes. The appserver doesn’t need to compare, it gives the value to vtgate and let it do the work.
 
-To see a sample use of the Update Stream feature, look at the cache_invalidation.py integration test. It shows how to do the invalidaiton in python, and the application component.
+To see a sample use of the Update Stream feature, look at the cache_invalidation.py integration test. It shows how to do the invalidation in python, and the application component.
 
 ### Extension: Removing Duplicate Events
 
@@ -231,7 +231,7 @@ If there is no use case for it, let’s not do it.
 
 Let’s add a flag to the streaming query, that, if specified, asks for the changed columns as well as the PK.
 
-* If using SBR, and the flag is present, vttablet can just query the row at the time we get the event, and send it along. As already menti oned, the data may not be exactly up to date. It is however guaranteed to be newer than the Event Token, which might be good enough to put in a cache for instance.
+* If using SBR, and the flag is present, vttablet can just query the row at the time we get the event, and send it along. As already mentioned, the data may not be exactly up to date. It is however guaranteed to be newer than the Event Token, which might be good enough to put in a cache for instance.
 * If using RBR, we just get th* ata for free, just send it along.
 
 *Bottom Line*: Let’s try to go without this extension and see how it goes. We can implement the additional data when we fully support RBR.

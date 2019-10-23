@@ -1023,7 +1023,7 @@ CallerID is passed along RPCs to identify the originating client for a request. 
 | :-------- | :--------
 | <code>principal</code> <br>string| principal is the effective user identifier. It is usually filled in with whoever made the request to the appserver, if the request came from an automated job or another system component. If the request comes directly from the Internet, or if the Vitess client takes action on its own accord, it is okay for this field to be absent. |
 | <code>component</code> <br>string| component describes the running process of the effective caller. It can for instance be the hostname:port of the servlet initiating the database call, or the container engine ID used by the servlet. |
-| <code>subcomponent</code> <br>string| subcomponent describes a component inisde the immediate caller which is responsible for generating is request. Suggested values are a servlet name or an API endpoint name. |
+| <code>subcomponent</code> <br>string| subcomponent describes a component inside the immediate caller which is responsible for generating is request. Suggested values are a servlet name or an API endpoint name. |
 
 ### vtrpc.RPCError
 

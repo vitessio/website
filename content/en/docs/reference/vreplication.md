@@ -369,7 +369,7 @@ only as needed.
 It is possible that multiple streams can conflict with each other and cause
 deadlocks or lock waits. When such things happen, VReplication silently retries
 such transactions without reporting an error. It does increment a counter so
-that the frequency of such occurences can be tracked.
+that the frequency of such occurrences can be tracked.
 
 ### Automatic retries
 
