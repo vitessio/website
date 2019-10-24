@@ -44,7 +44,7 @@ Even if a MySQL is remote, you can still make vttablet perform some management f
 * `-master_connect_retry`: This value is give to mysql when it connects a slave to the master as the retry duration parameter.
 * `-enable_replication_reporter`: If this flag is set, then vttablet will transmit replica lag related information to the vtgates, which will allow it to balance load better. Additionally, enabling this will also cause vttablet to restart replication if it was stopped. However, it will do this only if -disable_active_reparents was not turned on.
 * `-enable_semi_sync`: This option will automatically enable semi-sync on new replicas as well as on any tablet that transitions into a replica type. This includes the demotion of a master to a replica.
-* `-heatbeat_enable` and `-heartbeat_interval_duration`: cause vttablet to write heartbeats to the sidecar database. This information is also used by the replication reporter to assess replica lag.
+* `-heatbeat_enable` and `-heartbeat interval duration`: cause vttablet to write heartbeats to the sidecar database. This information is also used by the replication reporter to assess replica lag.
 
 ## Typical vttablet command line flags
 

@@ -1,138 +1,105 @@
 ---
-title: Run Vitess Locally
-description: Instructions for using Vitess on your machine for testing purposes
-weight: 4
-featured: true
-aliases: ['/docs/tutorials/local/']
+title: Run Vitess on Scaleway
+weight: 5
 ---
 
-This guide covers installing Vitess locally for testing purposes, from pre-compiled binaries. We will launch 3 copies of `mysqld` initially, and then many more as you work through the tutorial, so it is recommended to have greater than 4GB RAM, as well as 20GB of available disk space.
+This getting started guide describes how to deploy Vitess on Scaleway's Kubernetes Kapsule. It was developed for a workshop organized by Cloud Native Computing Paris, with Scaleway providing attendees with computing credit.
 
-## Install Packages
+### Prerequisites
 
-PlanetScale provides [weekly builds](https://github.com/planetscale/vitess-releases/releases) of Vitess for 64-bit Linux.
+Before we get started for the day, please complete and configure the following:
 
-1. Download and extract the [latest `.tar.gz` release](https://github.com/planetscale/vitess-releases/releases) from GitHub.
-2. Install MySQL:
-```bash
-# Apt based
-sudo apt-get install mysql-server
-# Yum based
-sudo yum install mysql-server
-```
+* Go to [scaleway.com](https://www.scaleway.com/en/) and signup for an account. You will need to click on an email activation link before you can deploy resources.
 
-_Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your installation method provides a choice._
+* Launch a 3-node Kapsule Cluster:
+  * Make sure you choose Kubernetes 1.15 (there is a known issue in 1.16 with helm init).
+  * The nodes should be `GPS1_XS`.
 
-## Disable AppArmor
+* Launch an Ubuntu VM of size `DEV1-S`. We will use this for installing the MySQL client, kubectl, helm, etcd-operator.
+  * Make sure you setup SSH keys correctly so you can log into this instance!
 
-We recommend that you uninstall or disable AppArmor. Some versions of MySQL come with default AppArmor configurations that the Vitess tools don't yet recognize. This causes various permission failures when Vitess initializes MySQL instances through the mysqlctl tool. This is an issue only in test environments. If AppArmor is necessary in production, you can configure the MySQL instances appropriately without using `mysqlctl`:
+* Install kubectl with `snap install kubectl --classic` and follow Scaleway's [configuration instructions](https://www.scaleway.com/en/docs/get-started-with-scaleway-kubernetes-kapsule/#-Connecting-to-a-Kubernetes-Cluster-via-kubectl). I recommend moving the config file to the default location (`mv kubeconfig-k8s-*.yaml $HOME/.kube/config`).
 
-```bash
-sudo service apparmor stop
-sudo service apparmor teardown # safe to ignore if this errors
-sudo update-rc.d -f apparmor remove
-```
+* Install helm:
+  * `snap install helm --classic`
+  * `helm init`
 
-Reboot to be sure that AppArmor is fully disabled.
+* Install etcd-operator:
+  * `git clone https://github.com/coreos/etcd-operator`
+  * `cd etcd-operator`
+  * Follow [further instructions](https://github.com/coreos/etcd-operator/blob/master/doc/user/install_guide.md).
 
-## Configure Environment
+* Install a mysql client:
+  * `apt install mysql-client`
 
-Add the following to your `.bashrc` file. Make sure to replace `/path/to/extracted-tarball` with the actual path to where you extracted the latest release file:
+* Clone Sugu's Vitess branch. It contains a small fix so that `./kmysql.sh` and `./kvtctld.sh` use your Scaleway cluster and do not depend on Minikube. We hope to make this more portable in the future:
+  * `cd ~`
+  * `git clone https://github.com/planetscale/vitess.git`
+  * `cd vitess`
+  * `git checkout ss-paris`
 
-```bash
-export VTROOT=/path/to/extracted-tarball
-export VTTOP=$VTROOT
-export MYSQL_FLAVOR=MySQL56
-export VTDATAROOT=${HOME}/vtdataroot
-export PATH=${VTROOT}/bin:${PATH}
-```
+## Starting a single keyspace cluster
 
-You are now ready to start your first cluster!
-
-## Start a single keyspace cluster
-
-A [keyspace](../../concepts/keyspace) in Vitess is a logical database consisting of potentially multiple shards. For our first example, we are going to be using Vitess without sharding using a single keyspace. The file `101_initial_cluster.sh` is for example `1` phase `01`. Lets execute it now:
+Change to the helm example directory:
 
 ``` sh
-cd examples/local
-./101_initial_cluster.sh
+cd examples/helm
 ```
 
-You should see output similar to the following:
-
-```bash
-~/...vitess/examples/local> ./101_initial_cluster.sh
-enter zk2 env
-Starting zk servers...
-Waiting for zk servers to be ready...
-Started zk servers.
-Configured zk servers.
-enter zk2 env
-Starting vtctld...
-Access vtctld web UI at http://ryzen:15000
-Send commands with: vtctlclient -server ryzen:15999 ...
-enter zk2 env
-Starting MySQL for tablet zone1-0000000100...
-Starting MySQL for tablet zone1-0000000101...
-Starting MySQL for tablet zone1-0000000102...
-```
-
-You can also verify that the processes have started with `pgrep`:
+In this directory, you will see a group of yaml files. The first digit of each file name indicates the phase of example. The next two digits indicate the order in which to execute them. For example, `101_initial_cluster.yaml` is the first file of the first phase. We shall execute that now:
 
 ``` sh
-~/...vitess/examples/local> pgrep -fl vtdataroot
-5451 zksrv.sh
-5452 zksrv.sh
-5453 zksrv.sh
-5463 java
-5464 java
-5465 java
-5627 vtctld
-5762 mysqld_safe
-5767 mysqld_safe
-5799 mysqld_safe
-10162 mysqld
-10164 mysqld
-10190 mysqld
-10281 vttablet
-10282 vttablet
-10283 vttablet
-10447 vtgate
+helm install ../../helm/vitess -f 101_initial_cluster.yaml
 ```
 
-If you encounter any errors, such as ports already in use, you can kill the processes and start over:
+This will bring up the initial Vitess cluster with a single keyspace. If you receive an error about _no available release name found_, it is a [known helm issue](https://github.com/helm/helm/issues/3055#issuecomment-356347732).
 
-```bash
-pkill -f '(vtdataroot|VTDATAROOT)' # kill Vitess processes
-```
+### Verify cluster
 
-## Connecting to your Cluster
-
-You should now be able to connect to the cluster using the following command:
+Once successful, you should see the following state:
 
 ``` sh
-~/...vitess/examples/local> mysql -h 127.0.0.1 -P 15306
-Welcome to the MySQL monitor.  Commands end with ; or \g.
+~/...vitess/helm/vitess/templates> kubectl get pods,jobs
+NAME                               READY     STATUS    RESTARTS   AGE
+po/etcd-global-2cwwqfkf8d          1/1       Running   0          14m
+po/etcd-operator-9db58db94-25crx   1/1       Running   0          15m
+po/etcd-zone1-btv8p7pxsg           1/1       Running   0          14m
+po/vtctld-55c47c8b6c-5v82t         1/1       Running   1          14m
+po/vtgate-zone1-569f7b64b4-zkxgp   1/1       Running   2          14m
+po/zone1-commerce-0-rdonly-0       6/6       Running   0          14m
+po/zone1-commerce-0-replica-0      6/6       Running   0          14m
+po/zone1-commerce-0-replica-1      6/6       Running   0          14m
+
+NAME                                      DESIRED   SUCCESSFUL   AGE
+jobs/commerce-apply-schema-initial        1         1            14m
+jobs/commerce-apply-vschema-initial       1         1            14m
+jobs/zone1-commerce-0-init-shard-master   1         1            14m
+```
+
+If you have installed the the MySQL client, you should now be able to connect to the cluster using the following command:
+
+``` sh
+~/...vitess/examples/helm> ./kmysql.sh
 mysql> show tables;
-+-----------------------+
-| Tables_in_vt_commerce |
-+-----------------------+
-| corder                |
-| customer              |
-| product               |
-+-----------------------+
++--------------------+
+| Tables_in_commerce |
++--------------------+
+| corder             |
+| customer           |
+| product            |
++--------------------+
 3 rows in set (0.01 sec)
 ```
 
-You can also browse to the vtctld console using the following URL:
+You can also browse to the vtctld console using the following command:
 
 ``` sh
-http://localhost:15000
+./kvtctld.sh
 ```
 
 ### Topology
 
-In this example, we use a single unsharded keyspace: `commerce`. Unsharded keyspaces have a single shard named `0`.
+The helm chart specifies a single unsharded keyspace: `commerce`. Unsharded keyspaces have a single shard named `0`.
 
 NOTE: keyspace/shards are global entities of a cluster, independent of a cell. Ideally, you should list the keyspace/shards separately. For a cell, you should only have to specify which of those keyspace/shards are deployed in that cell. However, for simplicity, the existence of keyspace/shards are implicitly inferred from the fact that they are mentioned under each cell.
 
@@ -166,9 +133,10 @@ create table corder(
 ```
 
 The schema has been simplified to include only those fields that are significant to the example:
+
 * The `product` table contains the product information for all of the products.
-* The `customer` table has a `customer_id` that has an auto-increment. A typical customer table would have a lot more columns, and sometimes additional detail tables.
-* The `corder` table (named so because `order` is an SQL reserved word) has an `order_id` auto-increment column. It also has foreign keys into `customer(customer_id)` and `product(sku)`.
+* The `customer` table has a customer_id that has an auto-increment. A typical customer table would have a lot more columns, and sometimes additional detail tables.
+* The `corder` table (named so because `order` is an SQL reserved word) has an order_id auto-increment column. It also has foreign keys into customer(customer_id) and product(sku).
 
 ### VSchema
 
@@ -183,6 +151,7 @@ Since Vitess is a distributed system, a VSchema (Vitess schema) is usually requi
   }
 }
 ```
+
 With a single unsharded keyspace, the VSchema is very simple; it just lists all the tables in that keyspace.
 
 NOTE: In the case of a single unsharded keyspace, a VSchema is not strictly necessary because Vitess knows that there are no other keyspaces, and will therefore redirect all queries to the only one present.
@@ -193,14 +162,14 @@ Due to a massive ingress of free-trade, single-origin yerba mate merchants to yo
 
 Let us add some data into our tables to illustrate how the vertical split works.
 
-``` sql
-mysql -h 127.0.0.1 -P 15306 < ../common/insert_commerce_data.sql
+``` sh
+./kmysql.sh < ../common/insert_commerce_data.sql
 ```
 
 We can look at what we just inserted:
 
 ``` sh
-mysql -h 127.0.0.1 -P 15306 --table < ../common/select_commerce_data.sql
+./kmysql.sh --table < ../common/select_commerce_data.sql
 Using commerce/0
 Customer
 +-------------+--------------------+
@@ -229,44 +198,130 @@ COrder
 |        4 |           4 | SKU-1002 |    30 |
 |        5 |           5 | SKU-1002 |    30 |
 +----------+-------------+----------+-------+
+
 ```
 
 Notice that we are using keyspace `commerce/0` to select data from our tables.
 
 ### Create Keyspace
 
+For subsequent commands, it will be convenient to capture the name of the release and save into a variable:
+
+``` sh
+export release=$(helm ls -q)
+```
+
 For a vertical split, we first need to create a special `served_from` keyspace. This keyspace starts off as an alias for the `commerce` keyspace. Any queries sent to this keyspace will be redirected to `commerce`. Once this is created, we can vertically split tables into the new keyspace without having to make the app aware of this change:
 
 ``` sh
-./201_customer_keyspace.sh
+helm upgrade $release ../../helm/vitess/ -f 201_customer_keyspace.yaml
+```
+
+Looking into the yaml file, the only addition over the previous version is the following job:
+
+``` yaml
+jobs:
+  - name: "create-customer-ks"
+    kind: "vtctlclient"
+    command: "CreateKeyspace -served_from='master:commerce,replica:commerce,rdonly:commerce' customer"
 ```
 
 This creates an entry into the topology indicating that any requests to master, replica, or rdonly sent to `customer` must be redirected to (served from) `commerce`. These tablet type specific redirects will be used to control how we transition the cutover from `commerce` to `customer`.
+
+A successful completion of this job should show up as:
+
+``` sh
+NAME                                      DESIRED   SUCCESSFUL   AGE
+jobs/vtctlclient-create-customer-ks       1         1            10s
+```
 
 ### Customer Tablets
 
 Now you have to create vttablet instances to back this new keyspace onto which you’ll move the necessary tables:
 
 ``` sh
-./202_customer_tablets.sh
+helm upgrade $release ../../helm/vitess/ -f 202_customer_tablets.yaml
 ```
 
-The most significant change, this script makes is the instantiation of vttablets for the new keyspace. Additionally:
+This yaml also makes a few additional changes:
+
+``` yaml
+        - name: "commerce"
+          shards:
+            - name: "0"
+              tablets:
+                - type: "replica"
+                  vttablet:
+                    replicas: 2
+                - type: "rdonly"
+                  vttablet:
+                    replicas: 1
+          vschema:
+            vsplit: |-
+              {
+                "tables": {
+                  "product": {}
+                }
+              }
+        - name: "customer"
+          shards:
+            - name: "0"
+              tablets:
+                - type: "replica"
+                  vttablet:
+                    replicas: 2
+                - type: "rdonly"
+                  vttablet:
+                    replicas: 1
+              copySchema:
+                source: "commerce/0"
+                tables:
+                  - "customer"
+                  - "corder"
+          vschema:
+            vsplit: |-
+              {
+                "tables": {
+                  "customer": {},
+                  "corder": {}
+                }
+              }
+```
+
+The most significant change, of course, is the instantiation of vttablets for the new keyspace. Additionally:
 
 * You moved customer and corder from the commerce’s VSchema to customer’s VSchema. Note that the physical tables are still in commerce.
 * You requested that the schema for customer and corder be copied to customer using the `copySchema` directive.
 
 The move in the VSchema should not make a difference yet because any queries sent to customer are still redirected to commerce, where all the data is still present.
 
+Upon completion of this step, there must be six running vttablet pods, and the following new jobs must have completed successfully:
+
+``` sh
+NAME                                      DESIRED   SUCCESSFUL   AGE
+jobs/commerce-apply-vschema-vsplit        1         1            5m
+jobs/customer-apply-vschema-vsplit        1         1            5m
+jobs/customer-copy-schema-0               1         1            5m
+jobs/zone1-customer-0-init-shard-master   1         1            5m
+```
+
 ### VerticalSplitClone
 
 The next step:
 
 ``` sh
-./203_vertical_split.sh
+helm upgrade $release ../../helm/vitess/ -f 203_vertical_split.yaml
 ```
 
-starts the process of migrating the data from commerce to customer.
+starts the process of migrating the data from commerce to customer. The new content on this file is:
+
+``` yaml
+jobs:
+  - name: "vertical-split"
+    kind: "vtworker"
+    cell: "zone1"
+    command: "VerticalSplitClone -min_healthy_rdonly_tablets=1 -tables=customer,corder customer/0"
+```
 
 For large tables, this job could potentially run for many days, and may be restarted if failed. This job performs the following tasks:
 
@@ -274,12 +329,21 @@ For large tables, this job could potentially run for many days, and may be resta
 * Stop replication on commerce’s rdonly tablet and perform a final sync.
 * Start a filtered replication process from commerce->customer that keeps the customer’s tables in sync with those in commerce.
 
-NOTE: In production, you would want to run multiple sanity checks on the replication by running `SplitDiff` jobs multiple times before starting the cutover.
+
+NOTE: In production, you would want to run multiple sanity checks on the replication by running `SplitDiff` jobs multiple times before starting the cutover:
+
+``` yaml
+jobs:
+  - name: "vertical-split-diff"
+    kind: "vtworker"
+    cell: "zone1"
+    command: "VerticalSplitDiff -min_healthy_rdonly_tablets=1 customer/0"
+```
 
 We can look at the results of VerticalSplitClone by examining the data in the customer keyspace. Notice that all data in the `customer` and `corder` tables has been copied over.
 
 ``` sh
-mysql -h 127.0.0.1 -P 15306 --table < ../common/select_customer0_data.sql
+./kmysql.sh --table < ../common/select_customer0_data.sql
 Using customer/0
 Customer
 +-------------+--------------------+
@@ -311,19 +375,19 @@ Once you have verified that the customer and corder tables are being continuousl
 For rdonly and replica:
 
 ``` sh
-./204_vertical_migrate_replicas.sh
+helm upgrade $release ../../helm/vitess/ -f 204_vertical_migrate_replicas.yaml
 ```
 
 For master:
 
 ``` sh
-./205_vertical_migrate_master.sh
+helm upgrade $release ../../helm/vitess/ -f 205_vertical_migrate_master.yaml
 ```
 
 Once this is done, the `customer` and `corder` tables are no longer accessible in the `commerce` keyspace. You can verify this by trying to read from them.
 
-``` sql
-mysql -h 127.0.0.1 -P 15306 --table < ../common/select_commerce_data.sql
+``` sh
+./kmysql.sh --table < ../common/select_commerce_data.sql
 Using commerce/0
 Customer
 ERROR 1105 (HY000) at line 4: vtgate: http://vtgate-zone1-5ff9c47db6-7rmld:15001/: target: commerce.0.master, used tablet: zone1-1564760600 (zone1-commerce-0-replica-0.vttablet), vttablet: rpc error: code = FailedPrecondition desc = disallowed due to rule: enforce blacklisted tables (CallerID: userData1)
@@ -336,17 +400,38 @@ The replica and rdonly cutovers are freely reversible. However, the master cutov
 After celebrating your first successful ‘vertical resharding’, you will need to clean up the leftover artifacts:
 
 ``` sh
-./206_clean_commerce.sh
+helm upgrade $release ../../helm/vitess/ -f 206_clean_commerce.yaml
+```
+
+You can see the following DML statements in commerce:
+
+``` sql
+            postsplit: |-
+              drop table customer;
+              drop table corder;
 ```
 
 Those tables are now being served from customer. So, they can be dropped from commerce.
 
-The ‘control’ records were added by the `MigrateServedFrom` command during the cutover to prevent the commerce tables from accidentally accepting writes. They can now be removed.
+``` yaml
+jobs:
+  - name: "vclean1"
+    kind: "vtctlclient"
+    command: "SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 rdonly"
+  - name: "vclean2"
+    kind: "vtctlclient"
+    command: "SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 replica"
+  - name: "vclean3"
+    kind: "vtctlclient"
+    command: "SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 master"
+```
+
+These ‘control’ records were added by the `MigrateServedFrom` command during the cutover to prevent the commerce tables from accidentally accepting writes. They can now be removed.
 
 After this step, the `customer` and `corder` tables no longer exist in the `commerce` keyspace.
 
-``` sql
-mysql -h 127.0.0.1 -P 15306 --table < ../common/select_commerce_data.sql
+``` sh
+./kmysql.sh --table < ../common/select_commerce_data.sql
 Using commerce/0
 Customer
 ERROR 1105 (HY000) at line 4: vtgate: http://vtgate-zone1-5ff9c47db6-7rmld:15001/: target: commerce.0.master, used tablet: zone1-1564760600 (zone1-commerce-0-replica-0.vttablet), vttablet: rpc error: code = InvalidArgument desc = table customer not found in schema (CallerID: userData1)
@@ -400,7 +485,6 @@ The VTGate servers also need to know about the sequence tables. This is done by 
   }
 }
 ```
-
 #### Vindexes
 
 The next decision is about the sharding keys, aka Primary Vindexes. This is a complex decision that involves the following considerations:
@@ -419,7 +503,7 @@ Using the above considerations, in our use case, we can determine that:
 
 NOTE: It may be worth creating a secondary lookup Vindex on `corder.order_id`. This is not part of the example. We will discuss this in the advanced section.
 
-NOTE: For some use cases, `customer_id` may actually map to a tenant_id. In such cases, the cardinality of a tenant id may be too low. It’s also common that such systems have queries that use other high cardinality columns in their where clauses. Those should then be taken into consideration when deciding on a good Primary Vindex.
+NOTE: For some use cases, `customer_id` may actually map to a `tenant_id`. In such cases, the cardinality of a tenant id may be too low. It’s also common that such systems have queries that use other high cardinality columns in their where clauses. Those should then be taken into consideration when deciding on a good Primary Vindex.
 
 Putting it all together, we have the following VSchema for `customer`:
 
@@ -471,7 +555,17 @@ NOTE: All vindexes in Vitess are plugins. If none of the predefined vindexes sui
 Now that we have made all the important decisions, it’s time to apply these changes:
 
 ``` sh
-./301_customer_sharded.sh
+helm upgrade $release ../../helm/vitess/ -f 301_customer_sharded.yaml
+```
+
+The jobs to watch for:
+
+``` sh
+NAME                                      DESIRED   SUCCESSFUL   AGE
+jobs/commerce-apply-schema-seq            1         1            19s
+jobs/commerce-apply-vschema-seq           1         1            19s
+jobs/customer-apply-schema-sharded        1         1            19s
+jobs/customer-apply-vschema-sharded       1         1            19s
 ```
 
 ### Create new shards
@@ -483,10 +577,45 @@ The resharding process works by splitting existing shards into smaller shards. T
 We have to create the new target shards:
 
 ``` sh
-./302_new_shards.sh
+helm upgrade $release ../../helm/vitess/ -f 302_new_shards.yaml
 ```
 
-Shard 0 was already there. We have now added shards `-80` and `80-`. We’ve also added the `CopySchema` directive which requests that the schema from shard 0 be copied into the new shards.
+The change we are applying is:
+
+``` yaml
+        - name: "customer"
+          shards:
+            - name: "0"
+              tablets:
+                - type: "replica"
+                  vttablet:
+                    replicas: 2
+                - type: "rdonly"
+                  vttablet:
+                    replicas: 1
+            - name: "-80"
+              tablets:
+                - type: "replica"
+                  vttablet:
+                    replicas: 2
+                - type: "rdonly"
+                  vttablet:
+                    replicas: 1
+              copySchema:
+                source: "customer/0"
+            - name: "80-"
+              tablets:
+                - type: "replica"
+                  vttablet:
+                    replicas: 2
+                - type: "rdonly"
+                  vttablet:
+                    replicas: 1
+              copySchema:
+                source: "customer/0"
+```
+
+Shard 0 was already there. We have now added shards `-80` and `80-`. We’ve also added the `copySchema` directive which requests that the schema from shard 0 be copied into the new shards.
 
 #### Shard naming
 
@@ -517,16 +646,23 @@ A `varbinary` of arbitrary length can also be mapped as is to a keyspace id. Thi
 
 In the above case, we are essentially creating two shards: any keyspace id that does not have its leftmost bit set will go to `-80`. All others will go to `80-`.
 
-Applying the above change should result in the creation of six more vttablet instances.
+Applying the above change should result in the creation of six more vttablet pods, and the following new jobs:
 
+``` sh
+NAME                                         DESIRED   SUCCESSFUL   AGE
+jobs/customer-copy-schema-80-x               1         1            58m
+jobs/customer-copy-schema-x-80               1         1            58m
+jobs/zone1-customer-80-x-init-shard-master   1         1            58m
+jobs/zone1-customer-x-80-init-shard-master   1         1            58m
+```
 At this point, the tables have been created in the new shards but have no data yet.
 
-``` sql
-mysql -h 127.0.0.1 -P 15306 --table < ../common/select_customer-80_data.sql
+``` sh
+./kmysql.sh --table < ../common/select_customer-80_data.sql
 Using customer/-80
 Customer
 COrder
-mysql -h 127.0.0.1 -P 15306 --table < ../common/select_customer80-_data.sql
+./kmysql.sh --table < ../common/select_customer80-_data.sql
 Using customer/80-
 Customer
 COrder
@@ -537,10 +673,18 @@ COrder
 The process for SplitClone is similar to VerticalSplitClone. It starts the horizontal resharding process:
 
 ``` sh
-./303_horizontal_split.sh
+helm upgrade $release ../../helm/vitess/ -f 303_horizontal_split.yaml
 ```
 
-This starts the following job "SplitClone -min_healthy_rdonly_tablets=1 customer/0":
+This starts the following job:
+
+``` yaml
+jobs:
+  - name: "horizontal-split"
+    kind: "vtworker"
+    cell: "zone1"
+    command: "SplitClone -min_healthy_rdonly_tablets=1 customer/0"
+```
 
 For large tables, this job could potentially run for many days, and can be restarted if failed. This job performs the following tasks:
 
@@ -550,28 +694,40 @@ For large tables, this job could potentially run for many days, and can be resta
 
 Once `SplitClone` has completed, you should see this:
 
-The horizontal counterpart to `VerticalSplitDiff` is `SplitDiff`. It can be used to validate the data integrity of the resharding process "SplitDiff -min_healthy_rdonly_tablets=1 customer/-80":
+``` sh
+NAME                                         DESIRED   SUCCESSFUL   AGE
+jobs/vtworker-horizontal-split               1         1            5m
+```
 
-NOTE: This example does not actually run this command.
+The horizontal counterpart to `VerticalSplitDiff` is `SplitDiff`. It can be used to validate the data integrity of the resharding process:
+
+``` yaml
+jobs:
+  - name: "horizontal-split-diff"
+    kind: "vtworker"
+    cell: "zone1"
+    command: "SplitDiff -min_healthy_rdonly_tablets=1 customer/-80"
+```
 
 Note that the last argument of SplitDiff is the target (smaller) shard. You will need to run one job for each target shard. Also, you cannot run them in parallel because they need to take an `rdonly` instance offline to perform the comparison.
+
+NOTE: This example does not actually run this command.
 
 NOTE: SplitDiff can be used to split shards as well as to merge them.
 
 ### Cut over
-
 Now that you have verified that the tables are being continuously updated from the source shard, you can cutover the traffic. This is typically performed in three steps: `rdonly`, `replica` and `master`:
 
 For rdonly and replica:
 
 ``` sh
-./304_migrate_replicas.sh
+helm upgrade $release ../../helm/vitess/ -f 304_migrate_replicas.yaml
 ```
 
 For master:
 
 ``` sh
-./305_migrate_master.sh
+helm upgrade $release ../../helm/vitess/ -f 305_migrate_master.yaml
 ```
 
 During the *master* migration, the original shard master will first stop accepting updates. Then the process will wait for the new shard masters to fully catch up on filtered replication before allowing them to begin serving. Since filtered replication has been following along with live updates, there should only be a few seconds of master unavailability.
@@ -581,7 +737,7 @@ The replica and rdonly cutovers are freely reversible. Unlike the Vertical Split
 You should now be able to see the data that has been copied over to the new shards.
 
 ``` sh
-mysql -h 127.0.0.1 -P 15306 --table < ../common/select_customer-80_data.sql
+./kmysql.sh --table < ../common/select_customer-80_data.sql
 Using customer/-80
 Customer
 +-------------+--------------------+
@@ -602,7 +758,7 @@ COrder
 |        5 |           5 | SKU-1002 |    30 |
 +----------+-------------+----------+-------+
 
-mysql -h 127.0.0.1 -P 15306 --table < ../common/select_customer80-_data.sql
+./kmysql.sh --table < ../common/select_customer80-_data.sql
 Using customer/80-
 Customer
 +-------------+----------------+
@@ -623,23 +779,44 @@ COrder
 After celebrating your second successful resharding, you are now ready to clean up the leftover artifacts:
 
 ``` sh
-./306_down_shard_0.sh
+helm upgrade $release ../../helm/vitess/ -f 306_down_shard_0.yaml
 ```
 
-In this script, we just stopped all tablet instances for shard 0. This will cause all those vttablet and `mysqld` processes to be stopped. But the shard metadata is still present. We can clean that up with this command (after all vttablets have been brought down):
+In this yaml, we just deleted shard 0. This will cause all those vttablet pods to be deleted. But the shard metadata is still present. We can clean that up with this command (after all vttablets have been brought down):
 
 ``` sh
-./307_delete_shard_0.sh
+helm upgrade $release ../../helm/vitess/ -f 307_delete_shard_0.yaml
 ```
 
-This command runs the following "`DeleteShard -recursive customer/0`".
+This command runs the following job:
 
-Beyond this, you will also need to manually delete the disk associated with this shard.
+``` yaml
+jobs:
+  - name: "delete-shard0"
+    kind: "vtctlclient"
+    command: "DeleteShard -recursive customer/0"
+```
+
+Beyond this, you will also need to manually delete the Persistent Volume Claims associated to this shard.
+
+And, as the final act, we remove the last executed job:
+
+``` sh
+helm upgrade $release ../../helm/vitess/ -f 308_final.yaml
+```
 
 ### Teardown (optional)
 
-You can delete the whole example if you are not proceeding to another exercise:
+You can delete the whole example if you are not proceeding to another exercise.
 
 ``` sh
-./401_teardown.sh
+helm delete $release
 ```
+
+You will need to delete the persistent volume claims too
+
+``` sh
+kubectl delete pvc $(kubectl get pvc | grep vtdataroot-zone1 | awk '{print $1}')
+```
+
+Congratulations on completing this exercise!

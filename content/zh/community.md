@@ -8,7 +8,7 @@ The Vitess community welcomes one and all. Join our Vitess Slack channel for gen
 * [Get in touch with Vitess maintainers](mailto:cncf-vitess-maintainers@lists.cncf.io)
 * [Follow us on Twitter](https://twitter.com/vitessio)
 * [Report a security vulnerability](mailto:cncf-vitess-maintainers@lists.cncf.io)
-* [Say hi on Slack](https://vitess.slack.com) (click [here](https://join.slack.com/t/vitess/shared_invite/enQtMzIxMDMyMzA0NzA1LTYxMjk2M2M2NjAwNGY0ODljY2E1MjBlZjRkMmZmNDVkZTBhNDUxNzNkOGM4YmEzNWEwOTE2NjJiY2QyZjZjYTE)if you need an account) 
+* [Say hi on Slack](https://vitess.slack.com) (click [here](https://join.slack.com/t/vitess/shared_invite/enQtMzIxMDMyMzA0NzA1LTYxMjk2M2M2NjAwNGY0ODljY2E1MjBlZjRkMmZmNDVkZTBhNDUxNzNkOGM4YmEzNWEwOTE2NjJiY2QyZjZjYTE) if you need an account) 
 
 ### Vitess Monthly Meetings
 
