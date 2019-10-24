@@ -379,10 +379,12 @@ one at random.
 
 ### on\_ddl
 
-The source specification allows you to specify a value for on\_ddl. The values
-can be as follows:
+The source specification allows you to specify a value for `on_ddl`. This allows
+you to specify what to do with DDL SQL statements when they are encountered
+in the replication stream from the source. The values can be as follows:
 
-* `IGNORE`: Ignore all DDLs.
+* `IGNORE`: Ignore all DDLs (this is also the default, if a value for `on_ddl`
+  is not provided).
 * `STOP`: Stop when DDL is encountered. This allows you to make any necessary
   changes to the target. Once changes are made, updating the state to `Running`
   will cause VReplication to continue from just after the point where it
