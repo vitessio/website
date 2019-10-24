@@ -22,8 +22,15 @@ Currently, we have plugins for:
 * Amazon S3
 * Ceph
 
+Vitess also supports multiple ways to generate data backups. This is called a Backup engine, which is a [pluggable interface](https://github.com/vitessio/vitess/blob/master/go/vt/mysqlctl/backupengine.go)
+
+Currently, we have plugins for:
+
+* Builtin: Copy all the database files into specified storage. This is the default.
+* Percona Xtrabackup
+
 Before you can back up or restore a tablet, you need to ensure that the
-tablet is aware of the Backup Storage system and method that you are using.
+tablet is aware of the Backup Storage system and Backup engine that you are using.
 To do so, use the following command-line flags when starting a vttablet that has
 access to the location where you are storing backups.
 
@@ -45,6 +52,17 @@ access to the location where you are storing backups.
           <li><code>gcs</code>: Google Cloud Storage.</li>
           <li><code>s3</code>: Amazon S3.</li>
           <li><code>ceph</code>: Ceph Object Gateway S3 API.</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><code>backup_engine_implementation</code></td>
+      <td>Specifies the implementation of the Backup Engine to
+        use.<br><br>
+        Current options available are:
+        <ul>
+          <li><code>builtin</code>: Copy all the database files into specified storage. This is the default.</li>
+          <li><code>xtrabackup</code>: Percona Xtrabackup.</li>
         </ul>
       </td>
     </tr>
@@ -136,20 +154,13 @@ do this for all the instances it creates by adding `--scopes storage-rw` to the 
 
 ## Creating a backup
 
-Vitess supports multiple ways to generate data backups. This is called a Backup engine, which is a [pluggable interface](https://github.com/vitessio/vitess/blob/master/go/vt/mysqlctl/backupengine.go)
-
-Current, we have plugins for:
-
-* Builtin: Copy all the database files into specified storage. This is the default.
-* Percona Xtrabackup
-
 Run the following vtctl command to create a backup:
 
 ``` sh
-vtctl Backup <tablet-alias> -backup_engine_implementation=builtin
+vtctl Backup <tablet-alias>
 ```
 
-If `backup_engine_implementation` is `builtin`, in response to this command, the designated tablet performs the following
+If the engine is `builtin`, in response to this command, the designated tablet performs the following
 sequence of actions:
 
 1. Switches its type to `BACKUP`. After this step, the tablet is no
@@ -174,7 +185,7 @@ sequence of actions:
    be behind on replication, and not used by vtgate for serving until it catches
    up.
 
-If `backup_engine_implementation` is `xtrabackup`, we do not do any of the above. The tablet can
+If the engine is `xtrabackup`, we do not do any of the above. The tablet can
 continue to serve traffic while the backup is running.
 
 ## Restoring a backup
