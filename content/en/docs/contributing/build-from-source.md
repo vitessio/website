@@ -11,25 +11,17 @@ The following sections explain the process for manually building Vitess on Linux
 
 ### Install Dependencies
 
-We currently test Vitess regularly on Ubuntu 14.04 (Trusty) and Debian 8 (Jessie). macOS 10.11 (El Capitan) and above should work as well. The installation instructions are [below](#macos).
+Many of the Vitess developers use Ubuntu or macOS desktops. If you would like to extend this guide for `yum` based distributions, please [send us a pull request](https://github.com/vitessio/website).
 
 #### Ubuntu and Debian
 
 In addition, Vitess requires the following software and libraries:
 
-1.  [Install Go 1.11+](http://golang.org/doc/install).
+1.  [Install Go 1.12+](http://golang.org/doc/install).
 
-2. Install MySQL:
-```bash
-# Apt based
-sudo apt-get install mysql-server
-# Yum based
-sudo yum install mysql-server
-```
+The version included in your OS distribution may be older than this. You can check by running `go version`.
 
-_Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your installation method provides a choice._
-
-3.  Uninstall or disable [AppArmor](https://wiki.ubuntu.com/AppArmor). Some versions of MySQL come with default AppArmor configurations that the Vitess tools don't yet recognize. This causes various permission failures when Vitess initializes MySQL instances through the `mysqlctl` tool. This is an issue only in test environments. If AppArmor is necessary in production, you can configure the MySQL instances appropriately without going through `mysqlctl`.
+2.  We recommend that you uninstall or disable AppArmor since it may cause permission failures when Vitess initializes MySQL instances through the `mysqlctl` tool. This is an issue only in test environments. If AppArmor is necessary in production, you can configure the MySQL instances appropriately without using `mysqlctl`:
 
     ```sh
     sudo service apparmor stop
@@ -39,31 +31,20 @@ _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your in
 
     Reboot to be sure that AppArmor is fully disabled.
 
-4.  Install [etcd v3.0+](https://github.com/coreos/etcd/releases). Remember to include `etcd` command on your path.
-
-    We will use etcd for the [topology service](../../overview/concepts). Vitess also includes built-in support for [ZooKeeper](https://zookeeper.apache.org) and [Consul](https://www.consul.io/).
-
-5.  Install the following other tools needed to build and run Vitess:
-
-    - make
-    - automake
-    - libtool
-    - python-dev
-    - python-virtualenv
-    - python-mysqldb
-    - libssl-dev
-    - g++
-    - git
-    - pkg-config
-    - bison
-    - curl
-    - unzip
-
-    These can be installed with the following apt-get command:
+3.  Install dependencies required to build and run Vitess:
 
     ```sh
-    $ sudo apt-get install make automake libtool python-dev python-virtualenv python-mysqldb libssl-dev g++ git pkg-config bison curl unzip
+    # On Apt based systems
+    sudo apt-get install -y mysql-server mysql-client make unzip g++ etcd curl
     ```
+
+    **Notes:**
+    * Vitess currently has some tests written in Python, but this dependency can be avoided by running the tests in Docker (recommended).
+    * The `bootstrap.sh` script can also install Zookeeper for you, which requires additional dependencies. For this guide, we will use etcd instead and skip this step.
+
+4. [Install Docker](https://docs.docker.com/install/)
+
+Docker is required to run the Vitess testsuite. Should you decide to skip this step, you will still be able to compile and run Vitess.
 
 #### Mac OS
 
@@ -73,28 +54,17 @@ _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your in
     sudo chown -R $(whoami):admin /usr/local
     ```
 
-2.  If [Xcode](https://developer.apple.com/xcode/) is installed (with Console tools, which should be bundled
-    automatically since version 7.1), all the dev dependencies should be satisfied in this step. If Xcode isn't present, you'll need to install [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/).
-
-    ```sh
-    brew install pkg-config
-    ```
+2.  Install [Xcode](https://developer.apple.com/xcode/).
 
 3.  Install [etcd v3.0+](https://github.com/coreos/etcd/releases). Remember to include `etcd` command on your path.
 
-    We will use etcd for the [topology service](../../overview/concepts). Vitess also includes built-in support for [ZooKeeper](https://zookeeper.apache.org) and [Consul](https://www.consul.io/).
-
-5.  Run the following commands:
+4.  Run the following commands:
 
     ```sh
-    brew install go ant automake libtool python git bison curl wget mysql57
-    pip install --upgrade pip setuptools
-    pip install virtualenv
-    pip install MySQL-python
-    pip install tox
+    brew install go automake git curl wget mysql57
     ```
 
-6.  The Vitess bootstrap script makes some checks for the go runtime, so it is recommended to have the following commands in your `~/.profile`, `~/.bashrc`, `~/.zshrc`, or `~/.bash_profile`:
+5.  The Vitess bootstrap script makes some checks for the go runtime, so it is recommended to have the following commands in your `~/.profile`, `~/.bashrc`, `~/.zshrc`, or `~/.bash_profile`:
 
     ```sh
     export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
@@ -102,7 +72,7 @@ _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your in
     export GOROOT=/usr/local/go
     ```
 
-7.  For the Vitess hostname resolving functions to work correctly, a new entry has to be added into the /etc/hosts file with the current LAN IP address of the computer (preferably IPv4) and the current hostname, which you get by typing the 'hostname' command in the terminal.
+6.  For the Vitess hostname resolving functions to work correctly, a new entry has to be added into the /etc/hosts file with the current LAN IP address of the computer (preferably IPv4) and the current hostname, which you get by typing the 'hostname' command in the terminal.
 
     It is also a good idea to put the following line to [force the Go DNS resolver](https://golang.org/doc/go1.5#net) in your `~/.profile` or `~/.bashrc` or `~/.zshrc`:
 
@@ -120,41 +90,15 @@ _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your in
         src/vitess.io/vitess
     cd src/vitess.io/vitess
     ```
-
-2. Set the `MYSQL_FLAVOR`:
-```sh
-# It is recommended to use MySQL56 even for MySQL 5.7 and 8.0. For MariaDB you can use MariaDB:
-export MYSQL_FLAVOR=MySQL56
-```
-
-3. If your selected database installed in a location other than `/usr/bin`, set the `VT_MYSQL_ROOT` variable to the root directory of your MySQL installation:
-
-    ```sh
-    # For generic tarballs on Linux
-    export VT_MYSQL_ROOT=/usr/local/mysql
-
-    # On macOS with Homebrew
-    export VT_MYSQL_ROOT=/usr/local/opt/mysql@5.7
-    ```
-
-    Note that the command indicates that the `mysql` executable should be found at `/usr/local/opt/mysql@5.7/bin/mysql`.
-
-4. Run `mysqld --version` and confirm that you are running MySQL 5.7.
-
-5. Build Vitess using the commands below. Note that the `bootstrap.sh` script needs to download some dependencies. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`).
+2. Build Vitess using the commands below. Note that the `bootstrap.sh` script needs to download some dependencies. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`).
 
     Run the boostrap.sh script:
 
     ```sh
-    BUILD_TESTS=0 ./bootstrap.sh
-    ### example output:
-    # skipping zookeeper build
-    # go install golang.org/x/tools/cmd/cover ...
-    # Found MariaDB installation in ...
-    # creating git pre-commit hooks
-    #
-    # source dev.env in your shell before building
+    BUILD_PYTHON=0 BUILD_JAVA=0 ./bootstrap.sh
     ```
+
+    Build Vitess:
 
     ```sh
     # Remaining commands to build Vitess
@@ -201,62 +145,6 @@ Some of the larger tests use up to 4GB of temporary space on disk.
 
 Some Linux distributions ship with default file descriptor limits that are too low for database servers. This issue could show up as the database crashing with the message “too many open files”. Check the system-wide file-max setting as well as user-specific ulimit values. We recommend setting them above 100K to be safe. The exact procedure may vary depending on your Linux distribution.
 
-## Starting a single keyspace cluster
-
-You can quickly test out your Vitess build by using one of the included local examples. `101_initial_cluster.sh` starts an initial Vitess cluster with a single keyspace:
-
-``` sh
-cd examples/local
-./101_initial_cluster.sh
-```
-
-### Verify cluster
-
-Once successful, you should see the following state:
-
-``` sh
-$ pgrep -fl vtdataroot
-5451 zksrv.sh
-5452 zksrv.sh
-5453 zksrv.sh
-5463 java
-5464 java
-5465 java
-5627 vtctld
-5762 mysqld_safe
-5767 mysqld_safe
-5799 mysqld_safe
-10162 mysqld
-10164 mysqld
-10190 mysqld
-10281 vttablet
-10282 vttablet
-10283 vttablet
-10447 vtgate
-```
-
-You should now be able to connect to the cluster using the following command:
-
-``` sh
-$ mysql -h 127.0.0.1 -P 15306
-Welcome to the MySQL monitor.  Commands end with ; or \g.
-mysql> show tables;
-+-----------------------+
-| Tables_in_vt_commerce |
-+-----------------------+
-| corder                |
-| customer              |
-| product               |
-+-----------------------+
-3 rows in set (0.01 sec)
-```
-
-You can also browse to the vtctld console using the following URL:
-
-```
-http://localhost:15000
-```
-
 ### Next steps
 
-Congratulations! You now have a local Vitess cluster up and running. You can complete additional exercises by following along with [Run Vitess Locally](../../get-started/local) guide.
+Congratulations! You now have Vitess built locally. You can complete additional exercises by following along with [Run Vitess Locally](../../get-started/local) guide.
