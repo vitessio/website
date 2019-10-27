@@ -9,7 +9,7 @@ The vtexplain tool provides information about how Vitess will execute a statemen
 
 ## Prerequisites
 
-You'll need to build the `vtexplain` binary in your environment. To find instructions on how to build this binary please refer to the [Build From Source](../../contributing/build-from-source) guide.
+You will need to build the `vtexplain` binary in your environment. To find instructions on how to build this binary please refer to the [Build From Source](../../contributing/build-from-source) guide.
 
 ## Explaining a Query
 
@@ -114,9 +114,11 @@ The output shows the sequence of queries run.
 
 In this case, the query planner is a scatter query to all shards, and each line shows:
 
-(a) the logical sequence of the query (b) the keyspace/shard (c) the query that was executed
+1. the logical sequence of the query
+1. the keyspace/shard
+1. the query that was executed
 
-The fact that each query runs at time 1 shows that vitess executes these in parallel, and the limit `10001` is automatically added as a protection against large results.
+The fact that each query runs at time `1` shows that vitess executes these in parallel, and the limit `10001` is automatically added as a protection against large results.
 
 **Insert:**
 
@@ -136,15 +138,17 @@ INSERT INTO users (user_id, name) VALUES(1, 'john')
 ----------------------------------------------------------------------
 ```
 
-This example shows how Vitess handles an insert into a table with a secondary lookup vindex.
+This example shows how Vitess handles an insert into a table with a secondary lookup vindex:
 
-First, at time `1`, a transaction is opened on one shard to insert the row into the `users_name_idx table`. Then at time `2` a second transaction is opened on another shard with the actual insert into the users table, and finally each transaction is committed at time `3` and `4`.
+* At time `1`, a transaction is opened on one shard to insert the row into the `users_name_idx` table.
+* Then at time `2` a second transaction is opened on another shard with the actual insert into the `users` table.
+* Finally each transaction is committed at time `3` and `4`.
 
 **Configuration Options**
 
 The `--shards` option specifies the number of shards to simulate. vtexplain will always allocate an evenly divided key range to each.
 
-The `--replication-mode` option controls whether to simulate row based or statement based replication.
+The `--replication-mode` option controls whether to simulate row-based or statement-based replication.
 
 You can find more usage of `vtexplain` by executing the following command:
 

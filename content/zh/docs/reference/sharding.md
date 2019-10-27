@@ -93,7 +93,7 @@ Cool a hot tablet | For read access, add replicas or split shards. For write acc
 
 The cornerstone of resharding is replicating the right data. Vitess implements the following functions to support filtered replication, the process that ensures that the correct source tablet data is transferred to the proper destination tablets.
 
-1. The server process uses the primary vindex to compute the keyspace ID for every row coming throug the replication stream, and sends that row to the corresponding target shard.
+1. The server process uses the primary vindex to compute the keyspace ID for every row coming through the replication stream, and sends that row to the corresponding target shard.
 2. The target shard converts the row into the corresponding DML (Data Manipulation Language) and applies the statement.
 
 If using RBR, it's generally required that you have full image turned on. However, if your Primary Vindex is also part of the Primary key, it's not required, because every RBR event
