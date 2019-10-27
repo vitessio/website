@@ -13,13 +13,13 @@ This guide covers installing Vitess locally for testing purposes, from pre-compi
 PlanetScale provides [weekly builds](https://github.com/planetscale/vitess-releases/releases) of Vitess for 64-bit Linux.
 
 1. Download and extract the [latest `.tar.gz` release](https://github.com/planetscale/vitess-releases/releases) from GitHub.
-2. Install MySQL:
+2. Install MySQL and etcd:
 ```bash
 # Apt based
-sudo apt-get install mysql-server
+sudo apt-get install mysql-server etcd
 # Yum based
 sudo yum localinstall https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
-sudo yum install mysql-community-server
+sudo yum install mysql-community-server etcd
 ```
 
 _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your installation method provides a choice._
