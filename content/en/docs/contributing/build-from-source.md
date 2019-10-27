@@ -77,29 +77,30 @@ brew install go automake git curl wget mysql57 etcd
 
 ## Build Vitess
 
-1. Navigate to the directory where you want to download the Vitess source code and clone the Vitess GitHub repo. After doing so, navigate to the `src/vitess.io/vitess` directory.
+Navigate to the directory where you want to download the Vitess source code and clone the Vitess GitHub repo. After doing so, navigate to the `src/vitess.io/vitess` directory.
 
-    ```sh
-    cd $WORKSPACE
-    git clone https://github.com/vitessio/vitess.git \
-        src/vitess.io/vitess
-    cd src/vitess.io/vitess
-    ```
-2. Build Vitess using the commands below. Note that the `bootstrap.sh` script needs to download some dependencies. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`).
+```sh
+cd $WORKSPACE
+git clone https://github.com/vitessio/vitess.git \
+    src/vitess.io/vitess
+cd src/vitess.io/vitess
+```
 
-    Run the boostrap.sh script:
+Build Vitess using the commands below. Note that the `bootstrap.sh` script needs to download some dependencies. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`).
 
-    ```sh
-    BUILD_PYTHON=0 BUILD_JAVA=0 ./bootstrap.sh
-    ```
+Run the boostrap.sh script:
 
-    Build Vitess:
+```sh
+BUILD_PYTHON=0 BUILD_JAVA=0 ./bootstrap.sh
+```
 
-    ```sh
-    # Remaining commands to build Vitess
-    source ./dev.env
-    make build
-    ```
+Build Vitess:
+
+```sh
+# Remaining commands to build Vitess
+source ./dev.env
+make build
+```
 
 ## Common Build Issues
 
