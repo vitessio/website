@@ -1,27 +1,24 @@
 ---
-title: Build From Source
+title: Build on Ubuntu/Debian
 description: Instructions for building Vitess on your machine for testing and development purposes
+aliases: ['/docs/contributing/build-from-source/']
 ---
 
 {{< info >}}
 If you run into issues or have questions, we recommend posting in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
 {{< /info >}}
 
-The following sections explain the process for manually building Vitess on Linux and macOS. If you are new to Vitess, it is recommended to start with the [local install](../../get-started/local) guide instead.
+The following has been verified to work on __Ubuntu 19.10__. If you are new to Vitess, it is recommended to start with the [local install](../../get-started/local) guide instead.
+
+For installation on macOS see __TODO__. If you would like to extend this guide for `yum` based distributions, please [send us a pull request](https://github.com/vitessio/website).
 
 ## Install Dependencies
 
-Many of the Vitess developers use Ubuntu or macOS desktops. If you would like to extend this guide for `yum` based distributions, please [send us a pull request](https://github.com/vitessio/website).
-
-### Ubuntu and Debian
-
-In addition, Vitess requires the following software and libraries:
-
-#### Install Go 1.12+
+### Install Go 1.12+
 
 [Download and install](http://golang.org/doc/install) the latest version of Golang. For example, at writing:
 
-```sh
+```
 curl -O https://dl.google.com/go/go1.13.3.linux-amd64.tar.gz
 sudo tar -C /usr/local -xzf go1.13.3.linux-amd64.tar.gz
 ```
@@ -33,17 +30,17 @@ export PATH=$PATH:/usr/local/go/bin
 
 **Tip:** With Ubuntu 19.10 and later, you can also install the package `golang-go` via apt. Be careful doing this on older versions, as you may end up with an older version.
 
-#### Install Dependencies
+### Packages from apt repos
 
 Install dependencies required to build and run Vitess:
 
-```sh
+```
 sudo apt-get install -y mysql-server mysql-client make unzip g++ etcd curl
 ```
 
 The services `mysqld` and `etcd` should be shutdown, since `etcd` will conflict with the `etcd` started in the examples, and `mysqlctl` will start its own copies of `mysqld`:
 
-```sh
+```
 sudo service mysql stop
 sudo service etcd stop
 sudo systemctl disable mysql
@@ -51,53 +48,28 @@ sudo systemctl disable etcd
 ```
 
 **Notes:**
+
 * Vitess currently has some tests written in Python, but this dependency can be avoided by running the tests in Docker (recommended).
 * We will be using etcd as the topology service. The `bootstrap.sh` script can also install Zookeeper or Consul for you, which requires additional dependencies.
 
-## Disable mysqld AppArmor Profile
+### Disable mysqld AppArmor Profile
 
 The `mysqld` AppArmor profile will not allow Vitess to launch MySQL in any data directory by default. You will need to disable it:
 
-```sh
+```
 sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
 sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
 ```
 
 The following command should return an empty result:
 
-```sh
+```
 sudo aa-status | grep mysqld
 ```
 
-#### Install Docker
+### Install Docker
 
 [Install Docker](https://docs.docker.com/install/). This is only required to run the Vitess testsuite. Should you decide to skip this step, you will still be able to compile and run Vitess.
-
-### macOS
-
-#### Install Xcode
-
-[Install Xcode](https://developer.apple.com/xcode/).
-
-#### Install Homebrew
-
-[Install Homebrew](http://brew.sh/). If your `/usr/local` directory is not empty and you haven't yet used Homebrew, you need to run the following command:
-
-```sh
-sudo chown -R $(whoami):admin /usr/local
-```
-
-#### Install Dependencies
-
-Run the following command:
-
-```sh
-brew install go automake git curl wget mysql57 etcd
-```
-
-#### Install Docker
-
-[Install Docker](https://docs.docker.com/docker-for-mac/). This is only required to run the Vitess testsuite. Should you decide to skip this step, you will still be able to compile and run Vitess.
 
 ## Build Vitess
 
