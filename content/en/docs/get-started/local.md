@@ -219,6 +219,7 @@ create table corder (
 ```
 
 The schema has been simplified to include only those fields that are significant to the example:
+
 * The `product` table contains the product information for all of the products.
 * The `customer` table has a `customer_id` that has an `auto_increment`. A typical customer table would have a lot more columns, and sometimes additional detail tables.
 * The `corder` table (named so because `order` is an SQL reserved word) has an `order_id` auto-increment column. It also has foreign keys into `customer(customer_id)` and `product(sku)`.
