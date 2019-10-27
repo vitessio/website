@@ -8,12 +8,14 @@ aliases: ['/docs/tutorials/local/']
 
 This guide covers installing Vitess locally for testing purposes, from pre-compiled binaries. We will launch multiple copies of `mysqld`, so it is recommended to have greater than 4GB RAM, as well as 20GB of available disk space.
 
-## Install Packages
+## Download Vitess Package
 
-PlanetScale provides [weekly builds](https://github.com/planetscale/vitess-releases/releases) of Vitess for 64-bit Linux.
+PlanetScale provides weekly builds of Vitess for 64-bit Linux. Download and extract the [latest `.tar.gz` release](https://github.com/planetscale/vitess-releases/releases) from GitHub.
 
-1. Download and extract the [latest `.tar.gz` release](https://github.com/planetscale/vitess-releases/releases) from GitHub.
-2. Install MySQL and etcd:
+## Install MySQL and etcd
+
+Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your installation method provides a choice:
+
 ```bash
 # Apt based
 sudo apt-get -y install mysql-server etcd
@@ -21,8 +23,6 @@ sudo apt-get -y install mysql-server etcd
 sudo yum -y localinstall https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
 sudo yum -y install mysql-community-server etcd
 ```
-
-_Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your installation method provides a choice._
 
 The services `mysqld` and `etcd` should be shutdown, since `etcd` will conflict with the `etcd` started in the examples, and `mysqlctl` will start its own copies of `mysqld`:
 
