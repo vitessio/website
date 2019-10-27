@@ -5,4 +5,4 @@ weight: 4
 aliases: ['/user-guide/client-libraries.html']
 ---
 
-We recommend running through a [get started](../../get-started) on your favorite platform before running through user guides.
+We recommend running through a [get started](../get-started) on your favorite platform before running through user guides.
