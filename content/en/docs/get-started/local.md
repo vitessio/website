@@ -16,7 +16,7 @@ PlanetScale provides weekly builds of Vitess for 64-bit Linux. Download and extr
 
 Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your installation method provides a choice:
 
-```bash
+```
 # Apt based
 sudo apt-get -y install mysql-server etcd
 # Yum based
@@ -52,7 +52,7 @@ sudo aa-status | grep mysqld
 
 Add the following to your `.bashrc` file. Make sure to replace `/path/to/extracted-tarball` with the actual path to where you extracted the latest release file:
 
-```bash
+```
 export VTROOT=/path/to/extracted-tarball
 export VTTOP=$VTROOT
 export VTDATAROOT=${HOME}/vtdataroot
@@ -65,14 +65,14 @@ You are now ready to start your first cluster!
 
 A [keyspace](../../concepts/keyspace) in Vitess is a logical database consisting of potentially multiple shards. For our first example, we are going to be using Vitess without sharding using a single keyspace. The file `101_initial_cluster.sh` is for example `1` phase `01`. Lets execute it now:
 
-``` sh
+```
 cd examples/local
 ./101_initial_cluster.sh
 ```
 
 You should see output similar to the following:
 
-```bash
+```
 ~/...vitess/examples/local> ./101_initial_cluster.sh
 enter etcd2 env
 add /vitess/global
@@ -97,7 +97,7 @@ Starting vttablet for zone1-0000000102...
 
 You can also verify that the processes have started with `pgrep`:
 
-``` sh
+```
 ~/...vitess/examples/local> pgrep -fl vtdataroot
 26563 etcd
 26626 vtctld
@@ -117,7 +117,7 @@ _The exact list of processes will vary. For example, you may not see `mysqld_saf
 
 If you encounter any errors, such as ports already in use, you can kill the processes and start over:
 
-```bash
+```
 pkill -f '(vtdataroot|VTDATAROOT)' # kill Vitess processes
 ```
 
@@ -125,7 +125,7 @@ pkill -f '(vtdataroot|VTDATAROOT)' # kill Vitess processes
 
 You should now be able to connect to the VTGate server that was started in `101_initial_cluster.sh`. To connect to it with the `mysql` command line client:
 
-```bash
+```
 ~/...vitess/examples/local> mysql -h 127.0.0.1 -P 15306
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 1
@@ -152,7 +152,7 @@ mysql> show tables;
 
 It is recommended to configure the MySQL command line to default to these settings, as the user guides omit `-h 127.0.0.1 -P 15306` for brevity:
 
-```bash
+```
 cat << EOF > ~/.my.cnf
 [client]
 host=127.0.0.1
@@ -162,7 +162,7 @@ EOF
 
 Repeating the previous step, you should now be able to use the `mysql` client without any settings:
 
-```bash
+```
 ~/...vitess/examples/local> mysql
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 1
@@ -189,7 +189,7 @@ mysql> show tables;
 
 You can also browse to the vtctld console using the following URL:
 
-``` sh
+```
 http://localhost:15000
 ```
 
@@ -197,7 +197,7 @@ http://localhost:15000
 
 In this example, we deployed a single unsharded keyspace named `commerce`. Unsharded keyspaces have a single shard named `0`. The schema reflects a common ecommerce scenario:
 
-``` sql
+```
 create table product (
   sku varbinary(128),
   description varbinary(128),
@@ -229,6 +229,6 @@ You can now proceed with [Vertical Split](../../user-guides/vertical-split).
 
 Or alternatively, if you would like to teardown your example:
 
-``` bash
+```
 ./401_teardown.sh
 ```
