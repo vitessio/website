@@ -15,7 +15,7 @@ However, the down side is that it is a little too strict, and may not work for a
 
 ## VTGate
 
-You can send a DDL directly to a VTGate just like you would send to a mysql instance. If the target is a sharded keyspace,
+You can send a DDL directly to a VTGate just like you would send to a MySQL instance. If the target is a sharded keyspace,
 then the DDL would be sprayed to all shards.
 
 If a specific shard fails you can target it directly using the `keyspace/shard` syntax to retry the apply just to that shard.
