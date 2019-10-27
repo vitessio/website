@@ -16,25 +16,37 @@ PlanetScale provides [weekly builds](https://github.com/planetscale/vitess-relea
 2. Install MySQL and etcd:
 ```bash
 # Apt based
-sudo apt-get install mysql-server etcd
+sudo apt-get -y install mysql-server etcd
 # Yum based
-sudo yum localinstall https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
-sudo yum install mysql-community-server etcd
+sudo yum -y localinstall https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
+sudo yum -y install mysql-community-server etcd
 ```
 
 _Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your installation method provides a choice._
 
-## Disable AppArmor
+The services `mysqld` and `etcd` should be shutdown, since `etcd` will conflict with the `etcd` started in the examples, and `mysqlctl` will start its own copies of `mysqld`:
 
-We recommend that you uninstall or disable AppArmor since it may cause permission failures when Vitess initializes MySQL instances through the `mysqlctl` tool. This is an issue only in test environments. If AppArmor is necessary in production, you can configure the MySQL instances appropriately without using `mysqlctl`:
-
-```bash
-sudo service apparmor stop
-sudo service apparmor teardown # safe to ignore if this errors
-sudo update-rc.d -f apparmor remove
+```
+sudo service mysql stop
+sudo service etcd stop
+sudo systemctl disable mysql
+sudo systemctl disable etcd
 ```
 
-Reboot to be sure that AppArmor is fully disabled.
+## Disable AppArmor
+
+The `mysqld` AppArmor profile will not allow Vitess to launch MySQL in any data directory by default. You will need to disable it:
+
+```
+sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
+sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
+```
+
+The following command should return an empty result:
+
+```
+sudo aa-status | grep mysqld
+```
 
 ## Configure Environment
 
