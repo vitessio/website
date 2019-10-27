@@ -11,7 +11,29 @@ The following has been verified to work on __TODO__. If you are new to Vitess, i
 
 ## Install Dependencies
 
-[blah]
+### Install Xcode
+
+[Install Xcode](https://developer.apple.com/xcode/).
+
+### Install Homebrew
+
+[Install Homebrew](http://brew.sh/). If your `/usr/local` directory is not empty and you haven't yet used Homebrew, you need to run the following command:
+
+```
+sudo chown -R $(whoami):admin /usr/local
+```
+
+### Install Dependencies
+
+Run the following command:
+
+```sh
+brew install go automake git curl wget mysql57 etcd
+```
+
+#### Install Docker
+
+[Install Docker](https://docs.docker.com/docker-for-mac/). This is only required to run the Vitess testsuite. Should you decide to skip this step, you will still be able to compile and run Vitess.
 
 ## Build Vitess
 

@@ -10,8 +10,6 @@ If you run into issues or have questions, we recommend posting in our [Slack cha
 
 The following has been verified to work on __Ubuntu 19.10__. If you are new to Vitess, it is recommended to start with the [local install](../../get-started/local) guide instead.
 
-For installation on macOS see __TODO__. If you would like to extend this guide for `yum` based distributions, please [send us a pull request](https://github.com/vitessio/website).
-
 ## Install Dependencies
 
 ### Install Go 1.12+
