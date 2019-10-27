@@ -75,7 +75,7 @@ sudo aa-status | grep mysqld
 
 Navigate to the directory where you want to download the Vitess source code and clone the Vitess GitHub repo. After doing so, navigate to the `src/vitess.io/vitess` directory.
 
-```sh
+```
 mkdir -p ~/vitess
 cd ~/vitess
 git clone https://github.com/vitessio/vitess.git \
@@ -85,7 +85,7 @@ cd src/vitess.io/vitess
 
 Set environment variables that Vitess will require. It is recommended to put these in your `.bashrc`:
 
-```sh
+```
 # Additions to ~/.bashrc file
 
 # Add go PATH
@@ -100,13 +100,13 @@ export PATH=${VTROOT}/bin:${PATH}
 
 Run `bootstrap.sh` script to download additional dependencies. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`):
 
-```sh
+```
 BUILD_PYTHON=0 BUILD_JAVA=0 ./bootstrap.sh
 ```
 
 Build Vitess:
 
-```sh
+```
 # Remaining commands to build Vitess
 source ./dev.env
 make build
@@ -116,7 +116,7 @@ make build
 
 Run the included local example:
 
-```sh
+```
 cd examples/local
 ./101_initial_cluster.sh
 ```
@@ -170,7 +170,7 @@ You can continue the remaining parts of this example by following the [local](..
 
 To run the testsuite in Docker:
 
-```sh
+```
 make docker_test flavor=mysql57
 ```
 
@@ -207,19 +207,19 @@ mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
 
 The following command disables the AppArmor profile for `mysqld`:
 
-```sh
+```
 sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
 sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
 ```
 
 The following command should now return an empty result:
-```sh
+```
 sudo aa-status | grep mysqld
 ```
 
 If this doesn't work, you can try making sure all lurking processes are shutdown, and then restart the example again in the `/tmp` directory:
 
-```bash
+```
 for process in `pgrep -f '(vtdataroot|VTDATAROOT)'`; do 
  kill -9 $process
 done;
@@ -232,7 +232,7 @@ export VTDATAROOT=/tmp/vtdataroot
 
 The end-to-end test suite currently requires Python 2.7. We are working on removing this dependency, but in the mean time you can run tests from within Docker. The MySQL 5.7 container provided includes the required dependencies:
 
-```bash
+```
 make docker_test flavor=mysql57
 ```
 
@@ -246,7 +246,7 @@ cat: /dist/etcd/.installed_version: No such file or directory
 ```
 
 Make sure the following variables are defined:
-```sh
+```
 export VTROOT=~/vitess
 export VTTOP=~/vitess/src/vitess.io/vitess
 export VTDATAROOT=~/vitess/vtdataroot
@@ -264,7 +264,7 @@ mkdir: cannot create directory ‘/etcd’: Permission denied
 ```
 
 Make sure the following variables are defined:
-```sh
+```
 export VTROOT=~/vitess
 export VTTOP=~/vitess/src/vitess.io/vitess
 export VTDATAROOT=~/vitess/vtdataroot
