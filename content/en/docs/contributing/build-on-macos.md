@@ -31,9 +31,9 @@ Run the following command:
 brew install go automake git curl wget mysql57 etcd
 ```
 
-#### Install Docker
+### Install Docker
 
-[Install Docker](https://docs.docker.com/docker-for-mac/). This is only required to run the Vitess testsuite. Should you decide to skip this step, you will still be able to compile and run Vitess.
+Running the testsuite requires that you [install Docker](https://docs.docker.com/docker-for-mac/). Should you decide to skip this step, you will still be able to compile and run Vitess.
 
 ## Build Vitess
 

@@ -8,7 +8,7 @@ aliases: ['/docs/contributing/build-from-source/']
 If you run into issues or have questions, we recommend posting in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
 {{< /info >}}
 
-The following has been verified to work on __Ubuntu 19.10__. If you are new to Vitess, it is recommended to start with the [local install](../../get-started/local) guide instead.
+The following has been verified to work on __Ubuntu 19.10__ and __Debian 10__. If you are new to Vitess, it is recommended to start with the [local install](../../get-started/local) guide instead.
 
 ## Install Dependencies
 
@@ -33,7 +33,11 @@ export PATH=$PATH:/usr/local/go/bin
 Install dependencies required to build and run Vitess:
 
 ```
-sudo apt-get install -y mysql-server mysql-client make unzip g++ etcd curl
+# Ubuntu
+sudo apt-get install -y mysql-server mysql-client make unzip g++ etcd curl git
+
+# Debian
+sudo apt-get install -y default-mysql-server default-mysql-client make unzip g++ etcd curl wget
 ```
 
 The services `mysqld` and `etcd` should be shutdown, since `etcd` will conflict with the `etcd` started in the examples, and `mysqlctl` will start its own copies of `mysqld`:
@@ -67,7 +71,7 @@ sudo aa-status | grep mysqld
 
 ### Install Docker
 
-[Install Docker](https://docs.docker.com/install/). This is only required to run the Vitess testsuite. Should you decide to skip this step, you will still be able to compile and run Vitess.
+Running the testsuite requires that you [install Docker](https://docs.docker.com/install/). Should you decide to skip this step, you will still be able to compile and run Vitess.
 
 ## Build Vitess
 
