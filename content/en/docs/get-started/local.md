@@ -28,28 +28,34 @@ sudo yum -y localinstall https://dev.mysql.com/get/mysql57-community-release-el7
 sudo yum -y install mysql-community-server etcd
 ```
 
-The services `mysqld` and `etcd` should be shutdown, since `etcd` will conflict with the `etcd` started in the examples, and `mysqlctl` will start its own copies of `mysqld`:
+On apt-based distributions the services `mysqld` and `etcd` will need to be shutdown, since `etcd` will conflict with the `etcd` started in the examples, and `mysqlctl` will start its own copies of `mysqld`:
 
 ```
+# Debian and Ubuntu
 sudo service mysql stop
 sudo service etcd stop
 sudo systemctl disable mysql
 sudo systemctl disable etcd
 ```
 
-## Disable AppArmor
+## Disable AppArmor or SELinux
 
-The `mysqld` AppArmor profile will not allow Vitess to launch MySQL in any data directory by default. You will need to disable it:
+AppArmor/SELinux will not allow Vitess to launch MySQL in any data directory by default. You will need to disable it:
 
+__AppArmor__:
 ```
+# Debian and Ubuntu
 sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
 sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
-```
 
-The following command should return an empty result:
-
-```
+# The following command should return an empty result:
 sudo aa-status | grep mysqld
+```
+
+__SELinux__:
+```
+# CentOS
+sudo setenforce 0
 ```
 
 ## Configure Environment
