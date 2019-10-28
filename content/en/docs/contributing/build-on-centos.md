@@ -1,5 +1,5 @@
 ---
-title: Build on Ubuntu/Debian
+title: Build on CentOS
 description: Instructions for building Vitess on your machine for testing and development purposes
 aliases: ['/docs/contributing/build-from-source/']
 ---
@@ -8,7 +8,7 @@ aliases: ['/docs/contributing/build-from-source/']
 If you run into issues or have questions, we recommend posting in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
 {{< /info >}}
 
-The following has been verified to work on __Ubuntu 19.10__ and __Debian 10__. If you are new to Vitess, it is recommended to start with the [local install](../../get-started/local) guide instead.
+The following has been verified to work on __Centos 7__. If you are new to Vitess, it is recommended to start with the [local install](../../get-started/local) guide instead.
 
 ## Install Dependencies
 
@@ -26,27 +26,19 @@ Make sure to add go to your bashrc:
 export PATH=$PATH:/usr/local/go/bin
 ```
 
-**Tip:** With Ubuntu 19.10 and later, you can also install the package `golang-go` via apt. Be careful doing this on older versions, as you may end up with an older version.
+### Packages from CentOS repos
 
-### Packages from apt repos
-
-Install dependencies required to build and run Vitess:
+The MariaDB version included with CentOS 7 (5.5) is not supported by Vitess. First install the MySQL 5.7 repository from Oracle:
 
 ```
-# Ubuntu
-sudo apt-get install -y mysql-server mysql-client make unzip g++ etcd curl git wget
-
-# Debian
-sudo apt-get install -y default-mysql-server default-mysql-client make unzip g++ etcd curl wget
+sudo yum localinstall -y https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
+sudo yum install -y mysql-community-server
 ```
 
-The services `mysqld` and `etcd` should be shutdown, since `etcd` will conflict with the `etcd` started in the examples, and `mysqlctl` will start its own copies of `mysqld`:
+Install additional dependencies required to build and run Vitess:
 
 ```
-sudo service mysql stop
-sudo service etcd stop
-sudo systemctl disable mysql
-sudo systemctl disable etcd
+sudo yum install -y make unzip g++ etcd curl git wget
 ```
 
 **Notes:**
@@ -54,19 +46,12 @@ sudo systemctl disable etcd
 * Vitess currently has some tests written in Python, but this dependency can be avoided by running the tests in Docker (recommended).
 * We will be using etcd as the topology service. The `bootstrap.sh` script can also install Zookeeper or Consul for you, which requires additional dependencies.
 
-### Disable mysqld AppArmor Profile
+### Disable SELinux
 
-The `mysqld` AppArmor profile will not allow Vitess to launch MySQL in any data directory by default. You will need to disable it:
-
-```
-sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
-sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
-```
-
-The following command should return an empty result:
+SELinux will not allow Vitess to launch MySQL in any data directory by default. You will need to disable it:
 
 ```
-sudo aa-status | grep mysqld
+sudo setenforce 0
 ```
 
 ### Install Docker
@@ -125,6 +110,7 @@ cd examples/local
 You should see the following:
 ```
 $ ./101_initial_cluster.sh 
+[morgo@localhost local]$ ./101_initial_cluster.sh
 enter etcd2 env
 add /vitess/global
 add /vitess/zone1
@@ -132,20 +118,22 @@ add zone1 CellInfo
 etcd start done...
 enter etcd2 env
 Starting vtctld...
-Access vtctld web UI at http://ubuntu:15000
-Send commands with: vtctlclient -server ubuntu:15999 ...
+Access vtctld web UI at http://localhost:15000
+Send commands with: vtctlclient -server localhost:15999 ...
 enter etcd2 env
 Starting MySQL for tablet zone1-0000000100...
 Starting MySQL for tablet zone1-0000000101...
 Starting MySQL for tablet zone1-0000000102...
 Starting vttablet for zone1-0000000100...
-Access tablet zone1-0000000100 at http://ubuntu:15100/debug/status
+Access tablet zone1-0000000100 at http://localhost:15100/debug/status
 Starting vttablet for zone1-0000000101...
-Access tablet zone1-0000000101 at http://ubuntu:15101/debug/status
+Access tablet zone1-0000000101 at http://localhost:15101/debug/status
 Starting vttablet for zone1-0000000102...
-Access tablet zone1-0000000102 at http://ubuntu:15102/debug/status
-W1027 18:52:14.592776    6426 main.go:64] W1027 18:52:14.591918 reparent.go:182] master-elect tablet zone1-0000000100 is not the shard master, proceeding anyway as -force was used
-W1027 18:52:14.600737    6426 main.go:64] W1027 18:52:14.594334 reparent.go:188] master-elect tablet zone1-0000000100 is not a master in the shard, proceeding anyway as -force was used
+Access tablet zone1-0000000102 at http://localhost:15102/debug/status
+Waiting for tablets to be listening...
+Tablets up!
+W1028 09:30:40.634534    7333 main.go:64] W1028 15:30:40.630786 reparent.go:182] master-elect tablet zone1-0000000100 is not the shard master, proceeding anyway as -force was used
+W1028 09:30:40.634792    7333 main.go:64] W1028 15:30:40.631267 reparent.go:188] master-elect tablet zone1-0000000100 is not a master in the shard, proceeding anyway as -force was used
 New VSchema object:
 {
   "tables": {
@@ -162,7 +150,9 @@ New VSchema object:
 }
 If this is not what you expected, check the input data (as JSON parsing will skip unexpected fields).
 enter etcd2 env
-Access vtgate at http://ubuntu:15001/debug/status
+Waiting for vtgate to be up...
+vtgate is up!
+Access vtgate at http://localhost:15001/debug/status
 ```
 
 You can continue the remaining parts of this example by following the [local](../../get-started/local) get started guide.
@@ -193,7 +183,7 @@ Error:  105: Key already exists (/vitess/global) [6]
 
 ### MySQL Fails to Initialize
 
-This error is most likely the result of an AppArmor enforcing profile being present:
+This error is most likely the result of SELinux enabled:
 
 ```
 1027 18:28:23.462926   19486 mysqld.go:734] mysqld --initialize-insecure failed: /usr/sbin/mysqld: exit status 1, output: mysqld: [ERROR] Failed to open required defaults file: /home/morgo/vitess/vtdataroot/vt_0000000102/my.cnf
@@ -204,29 +194,6 @@ E1027 18:28:23.464117   19486 mysqlctl.go:254] failed init mysql: /usr/sbin/mysq
 mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
 E1027 18:28:23.464780   19483 mysqld.go:734] mysqld --initialize-insecure failed: /usr/sbin/mysqld: exit status 1, output: mysqld: [ERROR] Failed to open required defaults file: /home/morgo/vitess/vtdataroot/vt_0000000101/my.cnf
 mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
-```
-
-The following command disables the AppArmor profile for `mysqld`:
-
-```
-sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
-sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
-```
-
-The following command should now return an empty result:
-```
-sudo aa-status | grep mysqld
-```
-
-If this doesn't work, you can try making sure all lurking processes are shutdown, and then restart the example again in the `/tmp` directory:
-
-```
-for process in `pgrep -f '(vtdataroot|VTDATAROOT)'`; do 
- kill -9 $process
-done;
-
-export VTDATAROOT=/tmp/vtdataroot
-./101_initial_cluster.sh
 ```
 
 ### Python Errors
