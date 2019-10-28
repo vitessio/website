@@ -16,11 +16,11 @@ The following describes some of the major differences in SQL Syntax handling bet
 
 ### Join Queries
 
-Vitess supports `INNER JOIN` including cross-shard joins. `LEFT JOIN` and natural join are not yet supported in sharded keyspaces.
+Vitess supports `INNER JOIN` including cross-shard joins. `LEFT JOIN` is supported as long as long as there are not expressions that compare columns on the outer table to the inner table in sharded keyspaces.
 
 ### Aggregation
 
-Vitess supports a subset of `GROUP BY` operations, including cross-shard operations. The VTGate servers are capable of scatter-gather operations, but can only stream results. Thus, a query that performs a `GROUP BY colx ORDER BY coly` will refuse to execute as this requires the intermediate results to be materialized. 
+Vitess supports a subset of `GROUP BY` operations, including cross-shard operations. The VTGate servers are capable of scatter-gather operations, but can only stream results. Thus, a query that performs a `GROUP BY colx ORDER BY coly` may be refused if the intermediate result set is larger than VTGate's in-memory limit.
 
 ### Subqueries
 
@@ -30,9 +30,9 @@ Vitess supports a subset of subqueries. For example, a subquery combined with a 
 
 Vitess does not yet support Window Functions or Common Table Expressions.
 
-### Cross-shard Update
+### Cross-shard Transaction
 
-By default, Vitess does not support atomic modifications across shards. While Vitess can support this with the use of [Two-Phase Commit](../two-phase-commit), it is usually recommended to design the VSchema in such a way that cross-shard modifications are not required.
+By default, Vitess does not support transactions that span across shards. While Vitess can support this with the use of [Two-Phase Commit](../two-phase-commit), it is usually recommended to design the VSchema in such a way that cross-shard modifications are not required.
 
 ### OLAP Workload
 
