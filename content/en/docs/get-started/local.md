@@ -17,8 +17,12 @@ PlanetScale provides weekly builds of Vitess for 64-bit Linux. Download and extr
 Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your installation method provides a choice:
 
 ```
-# Apt based
-sudo apt-get -y install mysql-server etcd
+# Ubuntu based
+sudo apt install -y mysql-server etcd
+
+# Debian
+sudo apt install -y default-mysql-server default-mysql-client etcd
+
 # Yum based
 sudo yum -y localinstall https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
 sudo yum -y install mysql-community-server etcd
