@@ -7,7 +7,7 @@ description: Instructions for building Vitess on your machine for testing and de
 If you run into issues or have questions, we recommend posting in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
 {{< /info >}}
 
-The following has been verified to work on __TODO__. If you are new to Vitess, it is recommended to start with the [local install](../../get-started/local) guide instead.
+The following has been verified to work on macOS Mojave. If you are new to Vitess, it is recommended to start with the [local install](../../get-started/local) guide instead.
 
 ## Install Dependencies
 
@@ -15,21 +15,20 @@ The following has been verified to work on __TODO__. If you are new to Vitess, i
 
 [Install Xcode](https://developer.apple.com/xcode/).
 
-### Install Homebrew
+### Install Homebrew and Dependencies
 
-[Install Homebrew](http://brew.sh/). If your `/usr/local` directory is not empty and you haven't yet used Homebrew, you need to run the following command:
-
-```
-sudo chown -R $(whoami):admin /usr/local
-```
-
-### Install Dependencies
-
-Run the following command:
+[Install Homebrew](http://brew.sh/). From here you should be able to install:
 
 ```
-brew install go automake git curl wget mysql57 etcd
+brew install go automake git curl wget mysql@5.7 etcd
 ```
+
+Follow the step to add mysql@5.7 to your PATH:
+```
+echo 'export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"' >> ~/.bash_profile
+```
+
+Do not setup MySQL or etcd to restart at login.
 
 ### Install Docker
 
@@ -47,14 +46,9 @@ git clone https://github.com/vitessio/vitess.git \
 cd src/vitess.io/vitess
 ```
 
-Set environment variables that Vitess will require. It is recommended to put these in your `.bashrc`:
+Set environment variables that Vitess will require. It is recommended to put these in your `~/.bash_profile` file:
 
 ```
-# TODO: macOS no longer uses bash. Check what we should do here...
-
-# Add go PATH
-export PATH=$PATH:/usr/local/go/bin
-
 # Vitess
 export VTROOT=~/vitess
 export VTTOP=~/vitess/src/vitess.io/vitess
@@ -68,10 +62,22 @@ Run `bootstrap.sh` script to download additional dependencies. If your machine r
 BUILD_PYTHON=0 BUILD_JAVA=0 ./bootstrap.sh
 ```
 
+This may result in a warning about `$GOROOT` and an unsupported architecture. It is safe to ignore these errors for now:
+
+```
+morgans-mini:vitess morgo$ BUILD_PYTHON=0 BUILD_JAVA=0 ./bootstrap.sh
+WARNING: $GOROOT may not be compatible with the used go binary
+Please make sure 'go' comes from $GOROOT/bin
+go_env: /usr/local/Cellar/go/1.12.6/libexec
+go_bin: /usr/local/bin/go
+creating git hooks
+installing protoc 3.6.1
+ERROR: unsupported architecture
+```
+
 Build Vitess:
 
 ```
-# Remaining commands to build Vitess
 source ./dev.env
 make build
 ```
@@ -88,7 +94,47 @@ cd examples/local
 You should see the following:
 ```
 $ ./101_initial_cluster.sh 
-TODO: do a new paste here
+morgans-mini:local morgo$ ./101_initial_cluster.sh 
+enter etcd2 env
+add /vitess/global
+add /vitess/zone1
+add zone1 CellInfo
+Error:  client: response is invalid json. The endpoint is probably not valid etcd cluster endpoint
+Error:  client: response is invalid json. The endpoint is probably not valid etcd cluster endpoint
+etcd start done...
+enter etcd2 env
+Starting vtctld...
+Access vtctld web UI at http://morgans-mini.lan:15000
+Send commands with: vtctlclient -server morgans-mini.lan:15999 ...
+enter etcd2 env
+Starting MySQL for tablet zone1-0000000100...
+Starting MySQL for tablet zone1-0000000101...
+Starting MySQL for tablet zone1-0000000102...
+Starting vttablet for zone1-0000000100...
+Access tablet zone1-0000000100 at http://morgans-mini.lan:15100/debug/status
+Starting vttablet for zone1-0000000101...
+Access tablet zone1-0000000101 at http://morgans-mini.lan:15101/debug/status
+Starting vttablet for zone1-0000000102...
+Access tablet zone1-0000000102 at http://morgans-mini.lan:15102/debug/status
+W1027 20:11:49.555831   35859 main.go:64] W1028 02:11:49.555179 reparent.go:182] master-elect tablet zone1-0000000100 is not the shard master, proceeding anyway as -force was used
+W1027 20:11:49.556456   35859 main.go:64] W1028 02:11:49.556135 reparent.go:188] master-elect tablet zone1-0000000100 is not a master in the shard, proceeding anyway as -force was used
+New VSchema object:
+{
+  "tables": {
+    "corder": {
+
+    },
+    "customer": {
+
+    },
+    "product": {
+
+    }
+  }
+}
+If this is not what you expected, check the input data (as JSON parsing will skip unexpected fields).
+enter etcd2 env
+Access vtgate at http://morgans-mini.lan:15001/debug/status
 ```
 
 You can continue the remaining parts of this example by following the [local](../../get-started/local) get started guide.
