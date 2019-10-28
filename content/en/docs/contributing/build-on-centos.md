@@ -8,7 +8,7 @@ aliases: ['/docs/contributing/build-from-source/']
 If you run into issues or have questions, we recommend posting in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
 {{< /info >}}
 
-The following has been verified to work on __Centos 7__. If you are new to Vitess, it is recommended to start with the [local install](../../get-started/local) guide instead.
+The following has been verified to work on __CentOS 7__. If you are new to Vitess, it is recommended to start with the [local install](../../get-started/local) guide instead.
 
 ## Install Dependencies
 
