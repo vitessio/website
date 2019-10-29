@@ -1,4 +1,4 @@
----
+	---
 title: Backing Up and Restoring Data
 weight: 4
 aliases: ['/user-guide/backup-and-restore.html']
@@ -21,10 +21,16 @@ Currently, we have plugins for:
 * Google Cloud Storage
 * Amazon S3
 * Ceph
-* Xtrabackup
+
+Vitess also supports multiple ways to generate data backups. This is called a Backup engine, which is a [pluggable interface](https://github.com/vitessio/vitess/blob/master/go/vt/mysqlctl/backupengine.go)
+
+Currently, we have plugins for:
+
+* Builtin: Copy all the database files into specified storage. This is the default.
+* Percona Xtrabackup
 
 Before you can back up or restore a tablet, you need to ensure that the
-tablet is aware of the Backup Storage system and method that you are using.
+tablet is aware of the Backup Storage system and Backup engine that you are using.
 To do so, use the following command-line flags when starting a vttablet that has
 access to the location where you are storing backups.
 
@@ -119,6 +125,34 @@ access to the location where you are storing backups.
       <td>Indicates that, when started with an empty MySQL instance, the
         tablet should restore the most recent backup from the specified
         storage plugin.</td>
+    </tr>
+    <tr>
+      <td><code>xtrabackup_root_path</code></td>
+      <td>For the <code>xtrabackup</code> backup engine, directory location of the xtrabackup executable, e.g., /usr/bin</td>
+    </tr>
+    <tr>
+      <td><code>xtrabackup_backup_flags</code></td>
+      <td>For the <code>xtrabackup</code> backup engine, flags to pass to backup command. These should be space separated and will be added to the end of the command</td>
+    </tr>
+    <tr>
+      <td><code>xbstream_restore_flags</code></td>
+      <td>For the <code>xtrabackup</code> backup engine, flags to pass to xbstream command during restore. These should be space separated and will be added to the end of the command. These need to match the ones used for backup e.g. --compress / --decompress, --encrypt / --decrypt</td>
+    </tr>
+    <tr>
+      <td><code>xtrabackup_stream_mode</code></td>
+      <td>For the <code>xtrabackup</code> backup engine, which mode to use if streaming, valid values are <code>tar</code> and <code>xbstream</code>. Defaults to <code>tar</code></td>
+    </tr>
+    <tr>
+      <td><code>xtrabackup_user</code></td>
+      <td>For the <code>xtrabackup</code> backup engine, required user that xtrabackup will use to connect to the database server. This user must have all necessary privileges. For details, please refer to xtrabackup documentation.</td>
+    </tr>
+    <tr>
+      <td><code>xtrabackup_stripes</code></td>
+      <td>For the <code>xtrabackup</code> backup engine, if greater than 0, use data striping across this many destination files to parallelize data transfer and decompression</td>
+    </tr>
+    <tr>
+      <td><code>xtrabackup_stripe_block_size</code></td>
+      <td>For the <code>xtrabackup</code> backup engine, size in bytes of each block that gets sent to a given stripe before rotating to the next stripe</td>
     </tr>
   </tbody>
 </table>
