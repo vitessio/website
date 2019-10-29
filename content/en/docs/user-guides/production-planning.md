@@ -46,13 +46,13 @@ It’s advisable to run more instances than there are machines. VTGate servers a
 
 You may have to add a few more app class machines to absorb any additional CPU and latency overheads.
 
-## Lock service setup
+## Topology Service setup
 
-The Lock Service should be running, and both the global and local instances should be up. See the [Topology Service](../../user-guides/topology-service) document for more information.
+The Topology Service should be running, and both the global and local instances should be up. See the [Topology Service](../../user-guides/topology-service) document for more information.
 
-Each lock service implementation supports a couple configuration command line parameters, they need to be specified for each Vitess process.
+Each topology service implementation supports a couple configuration command line parameters, they need to be specified for each Vitess process.
 
-For sizing purposes, the Vitess processes do not access the lock service very much. Each *vtgate* process keeps a few watches on a few local nodes (`VSchema` and `SrvKeyspace`). Each *vttablet* process will keep its own Tablet record up to date, but it usually doesn't change. The *vtctld* process will access it a lot more, but only on demand to display web pages.
+For sizing purposes, the Vitess processes do not access the topology service very much. Each *vtgate* process keeps a few watches on a few local nodes (`VSchema` and `SrvKeyspace`). Each *vttablet* process will keep its own Tablet record up to date, but it usually doesn't change. The *vtctld* process will access it a lot more, but only on demand to display web pages.
 
 As mentioned previously, if the setup is only in one cell, the global and local instances can be combined. Just use different top-level directories.
 
@@ -62,7 +62,7 @@ Before running Vitess in production, please make yourself comfortable first with
 
 Here is a short list of all the basic workflows Vitess supports:
 
-* [Failover](../../user-guides/upgrading/) / [Reparents](../../user-guides/reparenting/)
+* [Reparents](../../user-guides/reparenting/)
 * [Backup/Restore](../../user-guides/backup-and-restore)
 * [Schema Management](../../schema-management)
 * [Resharding](../../sharding/#resharding) / [Horizontal Resharding Tutorial](../../get-started/local/)

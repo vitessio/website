@@ -9,7 +9,7 @@ aliases: ['/user-guide/reparenting.html','/user-guide/reparenting/']
 This document explains the types of reparenting that Vitess supports:
 
 * [Active reparenting](../reparenting/#active-reparenting) occurs when the Vitess toolchain manages the entire reparenting process.
-* [External reparenting](../reparenting/#external-reparenting) occurs when another tool handles the reparenting process, and the Vitess toolchain just updates its topology server, replication graph, and serving graph to accurately reflect master-slave relationships.
+* [External reparenting](../reparenting/#external-reparenting) occurs when another tool handles the reparenting process, and the Vitess toolchain just updates its topology service, replication graph, and serving graph to accurately reflect master-slave relationships.
 
 **Note:** The `InitShardMaster` command defines the initial parenting relationships within a shard. That command makes the specified tablet the master and makes the other tablets in the shard slaves that replicate from that master.
 
@@ -33,9 +33,9 @@ You can use the following `vtctl` commands to perform reparenting operations:
 * `PlannedReparentShard`
 * `EmergencyReparentShard`
 
-Both commands lock the Shard record in the global topology server. The two commands cannot run in parallel, nor can either command run in parallel with the `InitShardMaster` command.
+Both commands lock the Shard record in the global topology service. The two commands cannot run in parallel, nor can either command run in parallel with the `InitShardMaster` command.
 
-The two commands are both dependent on the global topology server being available, and they both insert rows in the topology server's `_vt.reparent_journal` table. As such, you can review your database's reparenting history by inspecting that table.
+The two commands are both dependent on the global topology service being available, and they both insert rows in the topology service's `_vt.reparent_journal` table. As such, you can review your database's reparenting history by inspecting that table.
 
 ### PlannedReparentShard: Planned reparenting
 
@@ -72,20 +72,20 @@ This command performs the following actions:
 
 ## External Reparenting
 
-External reparenting occurs when another tool handles the process of changing a shard's master tablet. After that occurs, the tool needs to call the [`vtctl TabletExternallyReparented`](https://vitess.io/reference/vtctl/#tabletexternallyreparented) command to ensure that the topology server, replication graph, and serving graph are updated accordingly.
+External reparenting occurs when another tool handles the process of changing a shard's master tablet. After that occurs, the tool needs to call the [`vtctl TabletExternallyReparented`](https://vitess.io/reference/vtctl/#tabletexternallyreparented) command to ensure that the topology service, replication graph, and serving graph are updated accordingly.
 
 That command performs the following operations:
 
-1. Locks the shard in the global topology server.
-2. Reads the `Shard` object from the global topology server.
+1. Locks the shard in the global topology service.
+2. Reads the `Shard` object from the global topology service.
 3. Reads all of the tablets in the replication graph for the shard. Vitess does allow partial reads in this step, which means that Vitess will proceed even if a data center is down as long as the data center containing the new master is available.
 4. Ensures that the new master's state is updated correctly and that the new master is not a MySQL slave of another server. It runs the MySQL `show slave status` command, ultimately aiming to confirm that the MySQL `reset slave` command already executed on the tablet.
-5. Updates, for each slave, the topology server record and replication graph to reflect the new master. If the old master does not return successfully in this step, Vitess changes its tablet type to spare to ensure that it does not interfere with ongoing operations.
+5. Updates, for each slave, the topology service record and replication graph to reflect the new master. If the old master does not return successfully in this step, Vitess changes its tablet type to spare to ensure that it does not interfere with ongoing operations.
 6. Updates the `Shard` object to specify the new master.
 
 The `TabletExternallyReparented` command fails in the following cases:
 
-* The global topology server is not available for locking and modification. In that case, the operation fails completely.
+* The global topology service is not available for locking and modification. In that case, the operation fails completely.
 
 Active reparenting might be a dangerous practice in any system that depends on external reparents. You can disable active reparents by starting `vtctld` with the `--disable_active_reparents` flag set to true. (You cannot set the flag after `vtctld` is started.)
 

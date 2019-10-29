@@ -43,8 +43,8 @@ Registers a local topology service in a new cell by creating the CellInfo with t
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| root | string | The root path the topology server is using for that cell. |
-| server_address | string | The address the topology server is using for that cell. |
+| root | string | The root path the topology service is using for that cell. |
+| server_address | string | The address the topology service is using for that cell. |
 
 
 #### Arguments
@@ -108,8 +108,8 @@ Updates the content of a CellInfo with the provided parameters. If a value is em
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| root | string | The root path the topology server is using for that cell. |
-| server_address | string | The address the topology server is using for that cell. |
+| root | string | The root path the topology service is using for that cell. |
+| server_address | string | The address the topology service is using for that cell. |
 
 
 #### Arguments
@@ -428,7 +428,7 @@ Removes the cell from the Cells list for all shards in the keyspace, and the Srv
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| force | Boolean | Proceeds even if the cell's topology server cannot be reached. The assumption is that you turned down the entire cell, and just need to update the global topo data. |
+| force | Boolean | Proceeds even if the cell's topology service cannot be reached. The assumption is that you turned down the entire cell, and just need to update the global topo data. |
 | recursive | Boolean | Also delete all tablets in that cell belonging to the specified keyspace. |
 
 
@@ -1716,7 +1716,7 @@ Removes the cell from the shard's Cells list.
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| force | Boolean | Proceeds even if the cell's topology server cannot be reached. The assumption is that you turned down the entire cell, and just need to update the global topo data. |
+| force | Boolean | Proceeds even if the cell's topology service cannot be reached. The assumption is that you turned down the entire cell, and just need to update the global topo data. |
 | recursive | Boolean | Also delete all tablets in that cell belonging to the specified shard. |
 
 
@@ -1896,7 +1896,7 @@ Deletes the SourceShard record with the provided index. This is meant as an emer
 
 ### TabletExternallyReparented
 
-Changes metadata in the topology server to acknowledge a shard master change performed by an external tool. See [Reparenting](../../user-guides/reparenting/#external-reparenting) for more information.
+Changes metadata in the topology service to acknowledge a shard master change performed by an external tool. See [Reparenting](../../user-guides/reparenting/#external-reparenting) for more information.
 
 #### Example
 
