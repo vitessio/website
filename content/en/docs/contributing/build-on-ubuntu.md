@@ -179,10 +179,6 @@ Running the full suite currently takes 2+ hours to complete.
 
 ## Common Build Issues
 
-{{< info >}}
-If you run into issues or have questions, we recommend posting in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
-{{< /info >}}
-
 ### Key Already Exists
 
 This error is because etcd was not cleaned up from the previous run of the example. You can manually fix this by running `./401_teardown.sh` and then start again:

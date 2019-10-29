@@ -23,7 +23,7 @@ The following has been verified to work on __macOS Mojave__. If you are new to V
 brew install go automake git curl wget mysql@5.7 etcd
 ```
 
-Follow the step to add mysql@5.7 to your PATH:
+Add `mysql@5.7` to your `PATH`:
 ```
 echo 'export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"' >> ~/.bash_profile
 ```
@@ -150,10 +150,6 @@ make docker_test flavor=mysql57
 Running the full suite currently takes 2+ hours to complete.
 
 ## Common Build Issues
-
-{{< info >}}
-If you run into issues or have questions, we recommend posting in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
-{{< /info >}}
 
 ### Key Already Exists
 
