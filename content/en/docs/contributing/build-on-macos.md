@@ -20,7 +20,7 @@ The following has been verified to work on __macOS Mojave__. If you are new to V
 [Install Homebrew](http://brew.sh/). From here you should be able to install:
 
 ```
-brew install go automake git curl wget mysql@5.7 etcd
+brew install go automake git curl wget mysql@5.7 etcd ant
 ```
 
 Add `mysql@5.7` to your `PATH`:
