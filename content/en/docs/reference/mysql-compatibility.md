@@ -14,6 +14,10 @@ Vitess provides `READ-COMMITTED` semantics when executing cross-shard queries. T
 
 The following describes some of the major differences in SQL Syntax handling between Vitess and MySQL. For a list of unsupported queries, check out the [test-suite cases](https://github.com/vitessio/vitess/blob/master/go/vt/vtgate/planbuilder/testdata/unsupported_cases.txt).
 
+### DDL                                                                      
+                                                                            
+Vitess supports MySQL DDL, and will send `ALTER TABLE` statements to each of the underlying tablet servers. For large tables it is recommended to use an external schema deployment tool and apply directly to MySQL. This is discussed further in [Applying MySQL Schema](../../user-guides/mysql-schema).
+
 ### Join Queries
 
 Vitess supports `INNER JOIN` including cross-shard joins. `LEFT JOIN` is supported as long as long as there are not expressions that compare columns on the outer table to the inner table in sharded keyspaces.
