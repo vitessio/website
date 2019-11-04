@@ -1,6 +1,6 @@
 ---
 title: Topology Service
-weight: 6
+aliases: ['/docs/user-guides/topology-service/']
 ---
 
 This document describes the Topology Service, a key part of the Vitess architecture. This service is exposed to all Vitess processes, and is used to store small pieces of configuration data about the Vitess cluster, and provide cluster-wide locks. It also supports watches, and master election.
@@ -364,7 +364,9 @@ We store the proto3 binary data for each object (as the v3 API allows us to stor
 binary data).  Note that this means that if you want to interact with etcd using 
 the `etcdctl` tool, you will have to tell it to use the v3 API, e.g.:
 
-```ETCDCTL_API=3 etcdctl get / --prefix --keys-only```
+```
+ETCDCTL_API=3 etcdctl get / --prefix --keys-only
+```
 
 ### Consul `consul` implementation
 
