@@ -62,12 +62,12 @@ See the [Transport Security Model](../../user-guides/transport-security-model) d
 
 ### Topology Service configuration  
 
-Vttablet, vtgate, vtctld need the right command line parameters to find the topology service. First the `topo_implementation` flag needs to be set to one of zk2, etcd2, or consul. Then they're all configured as follows:
+Vttablet, vtgate and vtctld need the right command line parameters to find the topology service. First the `topo_implementation` flag needs to be set to one of zk2, etcd2, or consul. Then they're all configured as follows:
 
 * The `topo_global_server_address` contains the server address / addresses of the global topology service.
 * The `topo_global_root` contains the directory / path to use.
 
-Note that the local cell for the tablet must exist and be configured properly in the Topology Service for vttablet to start. Local cells are configured inside the topology service, by using the vtctl AddCellInfo command. See the Topology Service documentation for more information.
+Note that the local cell for the tablet must exist and be configured properly in the Topology Service for vttablet to start. Local cells are configured inside the topology service, by using the `vtctl AddCellInfo` command. See the Topology Service documentation for more information.
 
 ## VTTablet
 

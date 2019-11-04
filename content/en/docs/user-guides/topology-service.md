@@ -3,16 +3,9 @@ title: Topology Service
 weight: 6
 ---
 
-This document describes the Topology Service, a key part of the Vitess
-architecture. This service is exposed to all Vitess processes, and is used to
-store small pieces of configuration data about the Vitess cluster, and provide
-cluster-wide locks. It also supports watches, and master election.
+This document describes the Topology Service, a key part of the Vitess architecture. This service is exposed to all Vitess processes, and is used to store small pieces of configuration data about the Vitess cluster, and provide cluster-wide locks. It also supports watches, and master election.
 
-Concretely, the Topology Service features are implemented by
-a [Lock Server](http://en.wikipedia.org/wiki/Distributed_lock_manager), referred
-to as Topology Service in Vitess. We use a plugin implementation and we 
-support multiple Topology Services (Zookeeper, etcd, Consul, …) as backends for the 
-service.
+Vitess uses a plugin implementation to support multiple backend technologies for the Topology Service (etcd, ZooKeeper, Consul). Concretely, the Topology Service handles two functions: it is both a [distributed lock manager](http://en.wikipedia.org/wiki/Distributed_lock_manager) and a repository for topology metadata. In earlier versions of Vitess, the Topology Serice was also referred to as the Lock Service.
 
 ## Requirements and usage
 
@@ -52,10 +45,7 @@ exception to that is if a reparent needs to be processed, it might not work). If
 a Local instance goes down, it only affects the local tablets in that instance
 (and then the cell is usually in bad shape, and should not be used).
 
-Furthermore, the Vitess processes will not use the Global nor the Local Topology
-Service to serve individual queries. They only use the Topology Service to get the
-topology information at startup and in the background, but never to directly
-serve queries.
+Vitess will not use the global or local topology service as part of serving individual queries. The Topology Service is only used to get the topology information at startup and in the background.
 
 ### Recovery
 
