@@ -49,7 +49,7 @@ SET workload='olap'
 
 ### Prepared Statements
 
-Starting with version 4.0, Vitess supports experimental support for prepared statements. Session-based statements to `PREPARE` and `EXECUTE` prepared statements are not supported.
+Starting with version 4.0, Vitess features experimental support for prepared statements. Session-based statements to `PREPARE` and `EXECUTE` prepared statements are not supported.
 
 ### Authentication Plugins
 
