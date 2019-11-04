@@ -45,6 +45,20 @@ By default, Vitess sets some intentional restrictions on the execution time and 
 SET workload='olap'
 ```
 
+## Network Protocol
+
+### Prepared Statements
+
+Starting with version 4.0, Vitess features experimental support for prepared statements. Session-based statements to `PREPARE` and `EXECUTE` prepared statements are not supported.
+
+### Authentication Plugins
+
+Vitess supports the `mysql_native_password` authentication plugin. Support for `caching_sha2_password` can be tracked in [#5399](https://github.com/vitessio/vitess/issues/5399).
+
+### Transport Security
+
+To configure VTGate to support `TLS` set `-mysql_server_ssl_cert` and `-mysql_server_ssl_key`. Client certificates can also be mandated by setting `-mysql_server_ssl_ca`. If there is no CA specified then TLS is optional.
+
 ## Session Scope
 
 Vitess uses a connection pool to fan-in connections from VTGate servers to Tablet servers. VTGate servers will refuse statements that make changes to the connection's session scope. This includes:
@@ -70,3 +84,4 @@ Vitess supports all of the data types available in MySQL. Using the `FLOAT` data
 ## Auto Increment
 
 Tables in sharded keyspaces do not support the `auto_increment`, as the values generated would be local only to each shard. [Vitess Sequences](../vitess-sequences) are provided as an alternative, which have very close semantics to `auto_increment`.
+
