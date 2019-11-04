@@ -1,6 +1,6 @@
 ---
 title: Transport Security Model
-weight: 7
+aliases: ['/docs/user-guides/transport-security-model/']
 ---
 
 Vitess exposes a few RPC services, and internally also uses RPCs. These RPCs may use secure transport options. This document explains how to use these features.
