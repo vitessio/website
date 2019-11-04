@@ -85,3 +85,24 @@ Vitess supports all of the data types available in MySQL. Using the `FLOAT` data
 
 Tables in sharded keyspaces do not support the `auto_increment`, as the values generated would be local only to each shard. [Vitess Sequences](../vitess-sequences) are provided as an alternative, which have very close semantics to `auto_increment`.
 
+## Extensions to MySQL Syntax
+
+### SHOW Statements
+
+Vitess supports a few additional options with the SHOW statement.
+
+* `SHOW keyspaces` -- A list of keyspaces available.
+* `SHOW vitess_tablets` -- Information about the current Vitess tablets such as the keyspace, key ranges, tablet type, hostname, and status.
+* `SHOW vitess_shards` -- A list of shards that are available.
+* `SHOW vschema tables` -- A list of tables available in the current keyspace's vschema.
+* `SHOW vschema vindexes` -- Information about the current keyspace's vindexes such as the keyspace, name, type, params, and owner.
+
+### USE Statements
+
+Support for selecting a shard and tablet type via the `USE` statement can be achived with the following (backticks are important):
+
+```sql
+-- `schemaName:shardKeyRange@tabletType`
+USE `schema:-80@rdonly`
+```
+
