@@ -29,5 +29,5 @@ If you have a specific question about the Roadmap, we recommend posting in our [
   - Support for Schema Changes
   - Backfill lookup indexes
   - Support for Data Migration
-- Topo Server: Reduce dependencies on the topo server. i.e. Vitess should be operable normally even if topo server is down for several hours. Topo server should be used only for passive discovery.
+- Topology Service: Reduce dependencies on the topology service. i.e. Vitess should be operable normally even if topology service is down for several hours. Topology service should be used only for passive discovery.
 - Support for PostgreSQL: Vitess should be able to support PostgreSQL for both storing data, and speaking the protocol in VTGate.

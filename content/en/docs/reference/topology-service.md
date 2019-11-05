@@ -1,18 +1,11 @@
 ---
 title: Topology Service
-weight: 6
+aliases: ['/docs/user-guides/topology-service/']
 ---
 
-This document describes the Topology Service, a key part of the Vitess
-architecture. This service is exposed to all Vitess processes, and is used to
-store small pieces of configuration data about the Vitess cluster, and provide
-cluster-wide locks. It also supports watches, and master election.
+This document describes the Topology Service, a key part of the Vitess architecture. This service is exposed to all Vitess processes, and is used to store small pieces of configuration data about the Vitess cluster, and provide cluster-wide locks. It also supports watches, and master election.
 
-Concretely, the Topology Service features are implemented by
-a [Lock Server](http://en.wikipedia.org/wiki/Distributed_lock_manager), referred
-to as Topology Server in Vitess. We use a plugin implementation and we 
-support multiple Lock Servers (Zookeeper, etcd, Consul, …) as backends for the 
-service.
+Vitess uses a plugin implementation to support multiple backend technologies for the Topology Service (etcd, ZooKeeper, Consul). Concretely, the Topology Service handles two functions: it is both a [distributed lock manager](http://en.wikipedia.org/wiki/Distributed_lock_manager) and a repository for topology metadata. In earlier versions of Vitess, the Topology Serice was also referred to as the Lock Service.
 
 ## Requirements and usage
 
@@ -20,21 +13,21 @@ The Topology Service is used to store information about the Keyspaces, the
 Shards, the Tablets, the Replication Graph, and the Serving Graph. We store
 small data structures (a few hundred bytes) per object.
 
-The main contract for the Topology Server is to be very highly available and
+The main contract for the Topology Service is to be very highly available and
 consistent. It is understood it will come at a higher latency cost and very low
 throughput.
 
-We never use the Topology Server as an RPC or queuing mechanism or as a storage 
-system for logs. We never depend on the Topology Server being responsive and 
+We never use the Topology Service as an RPC or queuing mechanism or as a storage 
+system for logs. We never depend on the Topology Service being responsive and 
 fast to serve every query.
 
-The Topology Server must also support a Watch interface, to signal when certain
+The Topology Service must also support a Watch interface, to signal when certain
 conditions occur on a node. This is used, for instance, to know when the Keyspace
 topology changes (e.g. for resharding).
 
 ### Global vs Local
 
-We differentiate two instances of the Topology Server: the Global instance, and
+We differentiate two instances of the Topology Service: the Global instance, and
 the per-cell Local instance:
 
 * The Global instance is used to store global data about the topology that
@@ -52,25 +45,22 @@ exception to that is if a reparent needs to be processed, it might not work). If
 a Local instance goes down, it only affects the local tablets in that instance
 (and then the cell is usually in bad shape, and should not be used).
 
-Furthermore, the Vitess processes will not use the Global nor the Local Topology
-Server to serve individual queries. They only use the Topology Server to get the
-topology information at startup and in the background, but never to directly
-serve queries.
+Vitess will not use the global or local topology service as part of serving individual queries. The Topology Service is only used to get the topology information at startup and in the background.
 
 ### Recovery
 
-If a Local Topology Server dies and is not recoverable, it can be wiped out. All
+If a Local Topology Service dies and is not recoverable, it can be wiped out. All
 the tablets in that cell then need to be restarted so they re-initialize their
 topology records (but they won’t lose any MySQL data).
 
-If the Global Topology Server dies and is not recoverable, this is more of a
+If the Global Topology Service dies and is not recoverable, this is more of a
 problem. All the Keyspace / Shard objects have to be recreated or be restored. 
 Then the cells should recover.
 
 ## Global data
 
 This section describes the data structures stored in the Global instance of the
-topology server.
+topology service.
 
 ### Keyspace
 
@@ -85,7 +75,7 @@ guarantee only one operation changes the Keyspace data concurrently.
 ### Shard
 
 A Shard contains a subset of the data for a Keyspace. The Shard record in the
-Global topology server contains:
+Global topology service contains:
 
 * the Master tablet alias for this shard (that has the MySQL master).
 * the sharding key range covered by this Shard inside the Keyspace.
@@ -109,7 +99,7 @@ the [VTGate V3](https://github.com/vitessio/vitess/blob/master/doc/VTGateV3Featu
 ## Local data
 
 This section describes the data structures stored in the Local instance (per
-cell) of the topology server.
+cell) of the topology service.
 
 ### Tablets
 
@@ -170,9 +160,9 @@ keyspaces in a single object.
 It can be rebuilt by running `vtctl RebuildVSchemaGraph`. It is automatically
 rebuilt when using `vtctl ApplyVSchema` (unless prevented by flags).
 
-## Workflows involving the Topology Server
+## Workflows involving the Topology Service
 
-The Topology Server is involved in many Vitess workflows.
+The Topology Service is involved in many Vitess workflows.
 
 When a Tablet is initialized, we create the Tablet record, and add the Tablet to
 the Replication Graph. If it is the master for a Shard, we update the global
@@ -201,7 +191,7 @@ will change the global Shard records, and the local SrvKeyspace records. A
 vertical split will change the global Keyspace records, and the local
 SrvKeyspace records.
 
-## Exploring the data in a Topology Server
+## Exploring the data in a Topology Service
 
 We store the proto3 serialized binary data for each object.
 
@@ -239,7 +229,7 @@ tab on the left side). It will display the various proto files, decoded.
 
 ## Implementations
 
-The Topology Server interfaces are defined in our code in `go/vt/topo/`,
+The Topology Service interfaces are defined in our code in `go/vt/topo/`,
 specific implementations are in `go/vt/topo/<name>`, and we also have
 a set of unit tests for it in `go/vt/topo/test`.
 
@@ -281,7 +271,7 @@ want to use servers `global_server1,global_server2` in path `/vitess/global`:
 # -topo_global_root /vitess/global
 ```
 
-Then to add a cell whose local topology servers `cell1_server1,cell1_server2`
+Then to add a cell whose local topology service `cell1_server1,cell1_server2`
 will store their data under the directory `/vitess/cell1`:
 
 ``` sh
@@ -342,7 +332,7 @@ want to use servers `http://global_server1,http://global_server2` in path
 TOPOLOGY="-topo_implementation etcd2 -topo_global_server_address http://global_server1,http://global_server2 -topo_global_root /vitess/global
 ```
 
-Then to add a cell whose local topology servers
+Then to add a cell whose local topology service
 `http://cell1_server1,http://cell1_server2` will store their data under the
 directory `/vitess/cell1`:
 
@@ -374,7 +364,9 @@ We store the proto3 binary data for each object (as the v3 API allows us to stor
 binary data).  Note that this means that if you want to interact with etcd using 
 the `etcdctl` tool, you will have to tell it to use the v3 API, e.g.:
 
-```ETCDCTL_API=3 etcdctl get / --prefix --keys-only```
+```
+ETCDCTL_API=3 etcdctl get / --prefix --keys-only
+```
 
 ### Consul `consul` implementation
 
@@ -396,7 +388,7 @@ want to use servers `global_server:global_port` with node path
 TOPOLOGY="-topo_implementation consul -topo_global_server_address global_server:global_port -topo_global_root vitess/global
 ```
 
-Then to add a cell whose local topology server
+Then to add a cell whose local topology service
 `cell1_server1:cell1_port` will store their data under the
 directory `vitess/cell1`:
 
@@ -440,7 +432,7 @@ the same server address and, very importantly, a *different* root node path.
 In that case, just running 3 servers for topology service quorum is probably
 sufficient. For instance, 3 etcd servers. And use their address for the local
 cell as well. Let's use a short cell name, like `local`, as the local data in
-that topology server will later on be moved to a different topology service,
+that topology service will later on be moved to a different topology service,
 which will have the real cell name.
 
 ### Extending to more cells

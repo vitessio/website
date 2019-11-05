@@ -10,7 +10,7 @@ Using Vitess requires you to work with two different types of schemas:
 
 The workflow for the `VSchema` is as follows:
 
-1. Apply the `VSchema` for each keyspace using the `ApplyVschema` command. This saves the VSchemas in the global topo server.
+1. Apply the `VSchema` for each keyspace using the `ApplyVschema` command. This saves the VSchemas in the global topology service.
 2. Execute `RebuildVSchemaGraph` for each cell (or all cells). This command propagates a denormalized version of the combined VSchema to all the specified cells. The main purpose for this propagation is to minimize the dependency of each cell from the global topology. The ability to push a change to only specific cells allows you to canary the change to make sure that it's good before deploying it everywhere.
 
 This document describes the [`vtctl`](../../reference/vtctl/) commands that you can use to [review](#reviewing-your-schema) or [update](#changing-your-schema) your schema in Vitess.
@@ -84,7 +84,7 @@ Vitess' schema modification functionality is designed the following goals in min
 * Require minimal human interaction.
 * Minimize errors by testing changes against a temporary database.
 * Guarantee very little downtime (or no downtime) for most schema updates.
-* Do not store permanent schema data in the topology server.
+* Do not store permanent schema data in the topology service.
 
 Note that, at this time, Vitess only supports [data definition statements](https://dev.mysql.com/doc/refman/5.6/en/sql-syntax-data-definition.html) that create, modify, or delete database tables. For instance, `ApplySchema` does not affect stored procedures or grants.
 
