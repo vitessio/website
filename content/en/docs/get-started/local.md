@@ -10,7 +10,7 @@ This guide covers installing Vitess locally for testing purposes, from pre-compi
 
 ## Download Vitess Package
 
-PlanetScale provides weekly builds of Vitess for 64-bit Linux. Download and extract the [latest `.tar.gz` release](https://github.com/planetscale/vitess-releases/releases) from GitHub.
+Download and extract the [latest `.tar.gz` release](https://github.com/vitessio/vitess/releases) from GitHub.
 
 ## Install MySQL and etcd
 
