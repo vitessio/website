@@ -3,6 +3,36 @@ title: Presentations and Videos
 weight: 1
 aliases: ['/resources/presentations.html']
 ---
+<!--
+## Utah Kubernetes Meetup
+
+Jiten Vaidya shows how you can extend Vitess to create Jurisdiction-aware database clusters.
+
+<iframe src = "/ViewerJS/#../files/2019-jiten-utah.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
+-->
+
+
+## CNCF Meetup Paris 2019
+
+Sugu Sougoumarane and Morgan Tocker present a 3hr Vitess workshop on Kubernetes.
+
+<iframe src = "/ViewerJS/#../files/2019-paris-cncf.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
+
+## Percona Live Europe 2019
+
+**My First 90 Days with Vitess**
+
+Morgan Tocker talks about his adventures in Vitess, after having come from a MySQL background.
+
+<iframe src = "/ViewerJS/#../files/2019-morgan-percona-eu.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
+
+<!--
+**Sharded MySQL on Kubernetes**
+
+Sugu Sougoumarane gives an overview of running sharded MySQL on Kubernetes.
+
+<iframe src = "/ViewerJS/#../files/2019-sugu-percona-eu.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
+-->
 
 
 ## Vitess Meetup 2019 @ Slack HQ
