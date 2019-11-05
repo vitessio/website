@@ -95,7 +95,7 @@ Vitess supports a few additional options with the SHOW statement.
 * `SHOW vitess_tablets` -- Information about the current Vitess tablets such as the keyspace, key ranges, tablet type, hostname, and status.
 * `SHOW vitess_shards` -- A list of shards that are available.
 * `SHOW vschema tables` -- A list of tables available in the current keyspace's vschema.
-* `SHOW vschema vindexes` -- Information about the current keyspace's vindexes such as the keyspace, name, type, params, and owner.
+* `SHOW vschema vindexes` -- Information about the current keyspace's vindexes such as the keyspace, name, type, params, and owner. Optionally supports an "ON" clause with a table name.
 
 ### USE Statements
 
