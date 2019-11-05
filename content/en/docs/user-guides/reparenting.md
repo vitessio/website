@@ -76,12 +76,11 @@ External reparenting occurs when another tool handles the process of changing a 
 
 That command performs the following operations:
 
-1. Locks the shard in the global topology server.
-2. Reads the `Shard` object from the global topology server.
-3. Reads all of the tablets in the replication graph for the shard. Vitess does allow partial reads in this step, which means that Vitess will proceed even if a data center is down as long as the data center containing the new master is available.
-4. Ensures that the new master's state is updated correctly and that the new master is not a MySQL slave of another server. It runs the MySQL `show slave status` command, ultimately aiming to confirm that the MySQL `reset slave` command already executed on the tablet.
-5. Updates, for each slave, the topology server record and replication graph to reflect the new master. If the old master does not return successfully in this step, Vitess changes its tablet type to spare to ensure that it does not interfere with ongoing operations.
-6. Updates the `Shard` object to specify the new master.
+1. Reads the Tablet from the local topology service.
+2. Reads the Shard object from the global topology service.
+3. If the Tablet type is not already `MASTER`, sets the tablet type to `MASTER`.
+4. The Shard record is updated asynchronously (if needed) with the current master alias.
+5. Any other tablets that still have their tablet type to `MASTER` will demote themselves to `REPLICA`.
 
 The `TabletExternallyReparented` command fails in the following cases:
 
