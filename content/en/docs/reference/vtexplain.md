@@ -1,6 +1,6 @@
 ---
 title: VTExplain
-weight: 3
+aliases: ['/docs/user-guides/vtexplain/']
 ---
 
 ## VTExplain Tool

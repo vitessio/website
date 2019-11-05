@@ -1,6 +1,6 @@
 ---
 title: VTTablet Modes
-weight: 2
+aliases: ['/docs/user-guides/vttablet-modes/']
 ---
 
 VTTablet can be configured to control MySQL at many levels. At the level with the most control, VTTablet can perform backups and restores, respond to reparenting commands coming through vtctld, automatically fix replication, and enforce semi-sync settings.

@@ -1,6 +1,6 @@
 ---
 title: Schema Management
-aliases: ['/docs/schema-management/']
+aliases: ['/docs/schema-management/','/docs/user-guides/schema-management/']
 ---
 
 Using Vitess requires you to work with two different types of schemas:
