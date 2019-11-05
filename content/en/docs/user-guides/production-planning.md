@@ -1,6 +1,6 @@
 ---
 title: Production Planning
-weight: 2
+weight: 1
 aliases: ['/docs/launching/production-planning/','/docs/launching/']
 ---
 
