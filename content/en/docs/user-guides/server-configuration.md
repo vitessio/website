@@ -21,11 +21,11 @@ Auto-dection works by searching for `mysqld` in the `$PATH`, as well as in the e
  
 ### Specifying Additional Configuration
 
-The automatically-included configuration does not configure some of the important configuration variables such as `innodb_buffer_pool_size` or `innodb_log_file_size`, since the best value will depend on your system resources.
+The goal of the automatically-included configuration is to configure only the required `mysqld` settings for Vitess to operate correctly. It does not configure settings such as `innodb_buffer_pool_size` or `innodb_log_file_size`, which will depend on your available system resources.
 
 To include a custom `my.cnf` file as part of the initialization of tablets, set the `$EXTRA_MY_CNF` environment variable to a list of colon-separated files. Each file must be an absolute path.
 
-In Kubernetes, you can use a ConfigMap to overwrite the entire $VTROOT/config/mycnf directory with your custom versions, rather than baking them into a custom container image.
+In Kubernetes, you can use a ConfigMap to overwrite the entire `$VTROOT/config/mycnf` directory with your custom versions, rather than baking them into a custom container image.
 
 ### Unsupported Configuration Changes
 
