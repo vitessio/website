@@ -62,17 +62,24 @@ Run `bootstrap.sh` script to download additional dependencies. If your machine r
 BUILD_PYTHON=0 BUILD_JAVA=0 ./bootstrap.sh
 ```
 
-This may result in a warning about `$GOROOT` and an unsupported architecture. It is safe to ignore these errors for now:
-
+This should result in output similar to the following:
 ```
 morgans-mini:vitess morgo$ BUILD_PYTHON=0 BUILD_JAVA=0 ./bootstrap.sh
-WARNING: $GOROOT may not be compatible with the used go binary
-Please make sure 'go' comes from $GOROOT/bin
-go_env: /usr/local/Cellar/go/1.12.6/libexec
-go_bin: /usr/local/bin/go
 creating git hooks
 installing protoc 3.6.1
-ERROR: unsupported architecture
+--2019-11-05 14:44:32--  https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protoc-3.6.1-osx-x86_64.zip
+Resolving github.com (github.com)... 140.82.114.4
+Connecting to github.com (github.com)|140.82.114.4|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+...
+...
+...
+2019-11-05 14:44:39 (20.1 MB/s) - ‘consul_1.4.0_darwin_amd64.zip’ saved [34526567/34526567]
+
+Archive:  consul_1.4.0_darwin_amd64.zip
+  inflating: consul                  
+
+bootstrap finished - run 'source dev.env' or 'source build.env' in your shell before building.
 ```
 
 Build Vitess:
