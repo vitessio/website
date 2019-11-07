@@ -15,15 +15,15 @@ When using [Unmanaged or Remote MySQL](../vttablet-modes#unmanaged-or-remote-mys
 
 ### Base Configuration
 
-Starting with Vitess 4.0, `mysqlctl` will auto-detect the version and flavor of MySQL you are using, and automatically include a known best configuration file in `config/mycnf/*`.
+Starting with Vitess 4.0, `mysqlctl` will auto-detect the version and flavor of MySQL you are using, and automatically-include a base configuration file in `config/mycnf/*`.
 
 Auto-dection works by searching for `mysqld` in the `$PATH`, as well as in the environment variable `$VT_MYSQL_ROOT`. If auto-detection fails, `mysqlctl` will apply version detection based on the `$MYSQL_FLAVOR` environment variable. Auto-detection will always take precedence over `$MYSQL_FLAVOR`.
  
 ### Specifying Additional Configuration
 
-The goal of the automatically-included configuration is to configure only the required `mysqld` settings for Vitess to operate correctly. It does not configure settings such as `innodb_buffer_pool_size` or `innodb_log_file_size`, which will depend on your available system resources.
+The automatically-included base configuration makes only the required settings changes for Vitess to operate correctly. It is recommended to configure InnoDB settings such as `innodb_buffer_pool_size` and `innodb_log_file_size` according to your available system resources.
 
-To include a custom `my.cnf` file as part of the initialization of tablets, set the `$EXTRA_MY_CNF` environment variable to a list of colon-separated files. Each file must be an absolute path. The program `mysqlctl` **will not** read MySQL configuration files from common locations such as `/etc/my.cnf` or `/etc/mysql/my.cnf`.
+`mysqlctl` **will not** read configuration files from common locations such as `/etc/my.cnf` or `/etc/mysql/my.cnf`. To include a custom `my.cnf` file as part of the initialization of tablets, set the `$EXTRA_MY_CNF` environment variable to a list of colon-separated files. Each file must be an absolute path.
 
 In Kubernetes, you can use a ConfigMap to overwrite the entire `$VTROOT/config/mycnf` directory with your custom versions, rather than baking them into a custom container image.
 
@@ -41,6 +41,7 @@ When specifying additional configuration changes to Vitess, please keep in mind 
 | `character-set\*`   | Vitess only supports `utf8` (and variants such as `utf8mb4`) | 
 | `gtid-mode`         | Vitess relies on GTIDs to track changes to topology. |
 | `gtid-strict-mode`/`enforce-gtid-consistency` | Vitess requires this setting to be unchanged. |
+| `sql-mode`          | Vitess can operate with non-default SQL modes, but VTGate will not allow you to change the sql-mode on a per-session basis. This can create compatibility issues for applications that require changes to this setting. |
 
 ### init\_db.sql
 
