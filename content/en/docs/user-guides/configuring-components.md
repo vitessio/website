@@ -1,6 +1,7 @@
 ---
-title: Server Configuration
-aliases: ['/docs/launching/server-configuration/']
+title: Configuring Components
+weight: 2
+aliases: ['/docs/launching/server-configuration/', '/docs/user-guides/server-configuration/']
 ---
 
 ## Managed MySQL
