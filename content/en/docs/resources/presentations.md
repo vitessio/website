@@ -3,14 +3,18 @@ title: Presentations and Videos
 weight: 1
 aliases: ['/resources/presentations.html']
 ---
-<!--
-## Utah Kubernetes Meetup
+
+## Highload 2019
+
+Sugu Sougoumarane presents an overview of Vitess at Highload in Moscow.
+
+<iframe src = "/ViewerJS/#../files/2019-sugu-moscow.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
+
+## Utah Kubernetes Meetup 2019
 
 Jiten Vaidya shows how you can extend Vitess to create Jurisdiction-aware database clusters.
 
 <iframe src = "/ViewerJS/#../files/2019-jiten-utah.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
--->
-
 
 ## CNCF Meetup Paris 2019
 
@@ -26,13 +30,11 @@ Morgan Tocker talks about his adventures in Vitess, after having come from a MyS
 
 <iframe src = "/ViewerJS/#../files/2019-morgan-percona-eu.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
 
-<!--
 **Sharded MySQL on Kubernetes**
 
-Sugu Sougoumarane gives an overview of running sharded MySQL on Kubernetes.
+Sugu Sougoumarane presents an overview of running sharded MySQL on Kubernetes.
 
 <iframe src = "/ViewerJS/#../files/2019-sugu-percona-eu.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
--->
 
 
 ## Vitess Meetup 2019 @ Slack HQ
