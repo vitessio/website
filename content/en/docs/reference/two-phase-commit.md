@@ -3,6 +3,10 @@ title: Two-Phase Commit
 aliases: ['/docs/launching/twopc/']
 ---
 
+{{< warning >}}
+Transaction commit is much slower when using 2PC. The authors of Vitess recommend that you design your VSchema so that cross-shard updates (and 2PC) are not required.
+{{< /warning >}}
+
 Vitess 2PC allows you to perform atomic distributed commits. The feature is implemented using traditional MySQL transactions, and hence inherits the same guarantees. With this addition, Vitess can be configured to support the following three levels of atomicity:
 
 1. **Single database**: At this level, only single database transactions are allowed. Any transaction that tries to go beyond a single database will be failed.
@@ -19,23 +23,32 @@ Guaranteeing ACID Isolation is very contentious and has high costs. Providing it
 
 ### Configuring VTGate
 
-The atomicity policy is controlled by the transaction_mode flag. The default value is multi, and will set it in multi-database mode. This is the same as the previous legacy behavior.
+The atomicity policy is controlled by the `transaction_mode` flag. The default value is multi, and will set it in multi-database mode. This is the same as the previous legacy behavior.
 
-To enforce single-database transactions, the VTGates can be started by specifying transaction_mode=single.
+To enforce single-database transactions, the VTGates can be started by specifying `transaction_mode=single`.
 
-To enable 2PC, the VTGates need to be started with transaction_mode=twopc. The VTTablets will require a few more flags, which will be explained below.
+To enable 2PC, the VTGates need to be started with `transaction_mode=twopc`. The VTTablets will require a few more flags, which will be explained below.
 
-The VTGate transaction_mode flag decides what to allow. The application can independently request a specific atomicity for each transaction. The request will be honored by VTGate only if it does not exceed what is allowed by the transaction_mode. For example, transaction_mode=single will only allow single-db transactions. On the other hand, transaction_mode=twopc will allow all three levels of atomicity.
+The VTGate `transaction_mode` flag decides what to allow. The application can independently request a specific atomicity for each transaction. The request will be honored by VTGate only if it does not exceed what is allowed by the `transaction_mode`. For example, `transaction_mode=single` will only allow single-db transactions. On the other hand, `transaction_mode=twopc` will allow all three levels of atomicity.
 
 ## Driver APIs
 
 The way to request atomicity from the application is driver-specific.
 
-### Go driver
+### MySQL Protocol
+
+Clients can set the transaction mode via a session-variable:
+```
+set transaction_mode='twopc';
+```
+
+### gRPC Clients
+
+#### Go driver
 
 For the Go driver, you request the atomicity by adding it to the context using the WithAtomicity function. For more details, please refer to the respective GoDocs.
 
-### Python driver
+#### Python driver
 
 For Python, the begin function of the cursor has an optional single_db flag. If the flag is True, then the request is for a single-db transaction. If False (or unspecified), then the following commit call's twopc flag decides if the commit is 2PC or Best Effort (multi).
 
@@ -55,7 +68,7 @@ With the above flags specified, every master VTTablet also turns into a watchdog
 
 ## Configuring MySQL
 
-The usual default values of MySQL are sufficient. However, it's important to verify that wait_timeout (28800) has not been changed. If this value was changed to be too short, then MySQL could prematurely kill a prepared transaction causing data loss.
+The usual default values of MySQL are sufficient. However, it's important to verify that `wait_timeout` (28800) has not been changed. If this value was changed to be too short, then MySQL could prematurely kill a prepared transaction causing data loss.
 
 ## Monitoring
 
