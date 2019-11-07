@@ -8,7 +8,7 @@ aliases: ['/resources/presentations.html']
 
 Sugu Sougoumarane presents an overview of Vitess at Highload in Moscow.
 
-<iframe src = "/ViewerJS/#../files/2019-sugu-moscow.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
+<iframe src = "/ViewerJS/#../files/2019-sugu-highload.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
 
 ## Utah Kubernetes Meetup 2019
 
