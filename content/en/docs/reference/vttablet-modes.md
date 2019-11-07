@@ -1,6 +1,6 @@
 ---
 title: VTTablet Modes
-weight: 2
+aliases: ['/docs/user-guides/vttablet-modes/']
 ---
 
 VTTablet can be configured to control MySQL at many levels. At the level with the most control, VTTablet can perform backups and restores, respond to reparenting commands coming through vtctld, automatically fix replication, and enforce semi-sync settings.
@@ -66,7 +66,7 @@ $TOPOLOGY_FLAGS
 
 `$alias` needs to be of the form: `<cell>-id`, and the cell should match one of the local cells that was created in the topology. The id can be left padded with zeroes: `cell-100` and `cell-000000100` are synonymous.
 
-Example `TOPOLOGY_FLAGS` for a lockserver like zookeeper:
+Example `TOPOLOGY_FLAGS` for a Topology Service like zookeeper:
 
 `-topo_implementation zk2 -topo_global_server_address localhost:21811,localhost:21812,localhost:21813 -topo_global_root /vitess/global`
 

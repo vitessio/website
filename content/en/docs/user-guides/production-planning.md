@@ -1,60 +1,32 @@
 ---
 title: Production Planning
-weight: 2
+weight: 1
 aliases: ['/docs/launching/production-planning/','/docs/launching/']
 ---
 
 ## Provisioning
 
-### Estimating total resources
+### General Recommendations
 
-Although Vitess helps you scale indefinitely, the various layers do consume CPU and memory. Currently, the cost of Vitess servers is dominated by the RPC framework which we use: gRPC (gRPC is a relatively young product). So, Vitess servers are expected to get more efficient over time as there are improvements in gRPC as well as the Go runtime. For now, you can use the following rules of thumb to budget resources for Vitess:
+Vitess components (excluding the `mysqld` server) tend to be CPU-bound processes. They use disk space for storing their logs, but do not store any intermediate results on disk, and tend not to be disk IO bound.
 
-Every MySQL instance that serves traffic requires one VTTablet, which is in turn expected to consume an equal amount of CPU. So, if MySQL consumes 8 CPUs, VTTablet is likely going to consume another 8.
+The memory requirements for VTGate and VTTablet servers will depend on QPS and result size, but a typical rule of thumb is to provision a baseline of 1GB per core. Typically it is 2-4 cores for each VTGate server, and the same number of cores to VTTablet as with `mysqld`.
 
-The memory consumed by VTTablet depends on QPS and result size, but you can start off with the rule of thumb of requesting 1 GB/CPU.
+The impact of network latency can be a major factor when migrating from MySQL to Vitess. A simple rule of thumb is to estimate 2ms of round trip latency added to each query. On the application side, if a significant time is spent making database calls, then you may have to run additional threads or workers to compensate for the delay, which may result in additional memory requirements.
 
-As for VTGate, double the total number of CPUs you’ve allocated for VTTablet. That should be approximately how much the VTGate servers are expected to consume. In terms of memory, you should again budget about 1 GB/CPU (needs verification).
+### Planning Shard Size
 
-Vitess servers will use disk space for their logs. A smoothly running server should create very little log spam. However, log files can grow big very quickly if there are too many errors. It will be wise to run a log purger daemon if you’re concerned about filling up disk.
+Vitess recommends provisioning shard sizes to approximately 250GB. This is not a hard-limit, and is driven primarily by the recovery time should an instance fail. With 250GB a full-recovery from backup is expected within less than 15 minutes.
 
-Vitess servers are also likely to add about 2 ms of round-trip latency per MySQL call. This may result in some hidden costs that may or may not be negligible. On the app side, if a significant time is spent making database calls, then you may have to run additional threads or workers to compensate for the delay, which may result in additional memory requirements.
+### Running Multiple Tablets Per Server
 
-The client driver CPU usage may be different from a normal MySQL driver. That may require you to allocate more CPU per app thread.
+Vitess encourages running multiple tablets (shards) per physical server. Typically the best way to do this is with Kubernetes, but `mysqlctl` also supports launching and managing multiple tablet servers if required.
 
-On the server side, this could result in longer running transactions, which could weigh down MySQL.
+Assuming tablets are kept to the recommended size of 250GB, they will require 2-4 cores for `mysqld` plus 2-4 cores for the VTTablet process.
 
-With the above numbers as starting point, the next step will be to set up benchmarks that generate production representative load. If you cannot afford this luxury, you may have to go into production with some over-provisioning, just in case.
+### Topology Service Provisioning
 
-### Mapping topology to hardware
-
-The different Vitess components have different resource requirements e.g. VTGate requires little disk in comparison to VTTablet. Therefore, the components should be mapped to different machine classes for optimal resource usage. If you’re using a cluster manager (such as Kubernetes), the automatic scheduler will do this for you. Otherwise, you have to allocate physical machines and plan out how you’re going to map servers onto them.
-
-Machine classes needed:
-
-#### MySQL + VTTablet
-
-You’ll need database-class machines that are likely to have SSDs, and enough RAM to fit the MySQL working set in buffer cache. Make sure that there will be sufficient CPU left for VTTablet to run on them.
-
-The VTTablet provisioning will be dictated by the MySQL instances they run against. However, soon after launch, it’s recommended to shard these instances to a data size of 100-300 GB. This should also typically reduce the per-MySQL CPU usage to around 2-4 CPUs depending on the load pattern.
-
-#### VTGate
-
-For VTGate servers, you’ll need a class of machines that would be CPU heavy, but may be light on memory usage, and should require normal hard disks, for binary and logs only.
-
-It’s advisable to run more instances than there are machines. VTGate servers are happiest when they’re consuming between 2-4 CPUs. So, if your total requirement was 400 CPUs, and your VTGate class machine has 48 cores each, you’ll need about 10 such machines and you’ll be running about 10 VTGate servers per box.
-
-You may have to add a few more app class machines to absorb any additional CPU and latency overheads.
-
-## Lock service setup
-
-The Lock Service should be running, and both the global and local instances should be up. See the [Topology Service](../../user-guides/topology-service) document for more information.
-
-Each lock service implementation supports a couple configuration command line parameters, they need to be specified for each Vitess process.
-
-For sizing purposes, the Vitess processes do not access the lock service very much. Each *vtgate* process keeps a few watches on a few local nodes (`VSchema` and `SrvKeyspace`). Each *vttablet* process will keep its own Tablet record up to date, but it usually doesn't change. The *vtctld* process will access it a lot more, but only on demand to display web pages.
-
-As mentioned previously, if the setup is only in one cell, the global and local instances can be combined. Just use different top-level directories.
+By design, Vitess tries to contact the topology service as little as possible. For estimating provisioning, you can typically use the minimum requirements recommended by your preferred Topology Service.
 
 ## Production testing
 
@@ -62,8 +34,8 @@ Before running Vitess in production, please make yourself comfortable first with
 
 Here is a short list of all the basic workflows Vitess supports:
 
-* [Failover](../../user-guides/upgrading/) / [Reparents](../../user-guides/reparenting/)
+* [Reparenting](../../user-guides/reparenting)
 * [Backup/Restore](../../user-guides/backup-and-restore)
 * [Schema Management](../../schema-management)
-* [Resharding](../../sharding/#resharding) / [Horizontal Resharding Tutorial](../../get-started/local/)
+* [Resharding](../../reference/sharding#resharding) / [Horizontal Sharding Tutorial](../../user-guides/horizonal-sharding)
 * [Upgrading](../../user-guides/upgrading)

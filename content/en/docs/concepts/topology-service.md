@@ -17,9 +17,9 @@ A Vitess cluster has one global topology service, and a local topology service i
 
 ## Global Topology
 
-The global topology stores Vitess-wide data that does not change frequently. Specifically, it contains data about keyspaces and shards as well as the master tablet alias for each shard.
+The global topology service stores Vitess-wide data that does not change frequently. Specifically, it contains data about keyspaces and shards as well as the master tablet alias for each shard.
 
-The global topology is used for some operations, including reparenting and resharding. By design, the global topology server is not used a lot.
+The global topology is used for some operations, including reparenting and resharding. By design, the global topology service is not used a lot.
 
 In order to survive any single cell going down, the global topology service should have nodes in multiple cells, with enough to maintain quorum in the event of a cell failure.
 
