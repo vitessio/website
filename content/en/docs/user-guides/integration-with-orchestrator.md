@@ -11,7 +11,7 @@ For the [Kubernetes](../../get-started/kubernetes) example, we provide a sample 
 
 ## Orchestrator configuration
 
-Orchestrator needs to know some things from the Vitess side, like the tablet aliases and whether semisync is enforced (with async fallback disabled). We pass this information by telling Orchestrator to execute certain queries that return local metadata from a non-replicated table, as seen in our sample [orchestrator.conf.json](https://github.com/vitessio/vitess/blob/master/docker/orchestrator/orchestrator.conf.json):
+Orchestrator needs to know some things from the Vitess side, like the tablet aliases and whether semisync is enforced with async fallback disabled. We pass this information by telling Orchestrator to execute certain queries that return local metadata from a non-replicated table, as seen in our sample [orchestrator.conf.json](https://github.com/vitessio/vitess/blob/master/docker/orchestrator/orchestrator.conf.json):
 
 ``` json
 "DetectClusterAliasQuery": "SELECT value FROM _vt.local_metadata WHERE name='ClusterAlias'",
@@ -20,11 +20,9 @@ Orchestrator needs to know some things from the Vitess side, like the tablet ali
 "DetectSemiSyncEnforcedQuery": "SELECT @@global.rpl_semi_sync_master_wait_no_slave AND @@global.rpl_semi_sync_master_timeout > 1000000",
 ```
 
-There is also one thing that Vitess needs to know from Orchestrator, which is the identity of the master for each shard, if a failover occurs.
+Vitess also needs to know the identity of the master for each shard. This is necessary in case of a failover.
 
-From our experience at YouTube, we believe that this signal is too critical for data integrity to rely on bottom-up detection such as asking each MySQL if it thinks it's the master. Instead, we rely on Orchestrator to be the source of truth, and expect it to send a top-down signal to Vitess.
-
-This signal is sent by ensuring the Orchestrator server has access to vtctlclient, which it then uses to send an RPC to vtctld, informing Vitess of the change in mastership via the [`TabletExternallyReparented`](../../reference/vtctl/#tabletexternallyreparented) command.
+It is important to ensure that orchestrator has access to `vtctlclient` so that orchestrator can trigger the change in topology via the [`TabletExternallyReparented`](../../reference/vtctl/#tabletexternallyreparented) command.
 
 ``` json
 "PostMasterFailoverProcesses": [
