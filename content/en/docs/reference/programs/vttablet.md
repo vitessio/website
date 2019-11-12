@@ -1,5 +1,5 @@
 ---
-title: VTTablet Modes
+title: VTTablet
 aliases: ['/docs/user-guides/vttablet-modes/']
 ---
 
