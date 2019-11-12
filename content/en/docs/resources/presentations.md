@@ -12,13 +12,13 @@ Sugu Sougoumarane presents an overview of Vitess at Highload in Moscow.
 
 ## Utah Kubernetes Meetup 2019
 
-Jiten Vaidya shows how you can extend Vitess to create Jurisdiction-aware database clusters.
+Jiten Vaidya shows how you can extend Vitess to create jurisdiction-aware database clusters.
 
 <iframe src = "/ViewerJS/#../files/2019-jiten-utah.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
 
 ## CNCF Meetup Paris 2019
 
-Sugu Sougoumarane and Morgan Tocker present a 3hr Vitess workshop on Kubernetes.
+Sugu Sougoumarane and Morgan Tocker present a three hour Vitess workshop on Kubernetes.
 
 <iframe src = "/ViewerJS/#../files/2019-paris-cncf.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
 
