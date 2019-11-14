@@ -165,13 +165,6 @@ If you have multiple unsharded keyspaces, you can still avoid defining a VSchema
 
 However, once the setup exceeds the above complexity, VSchemas become a necessity. Vitess has a [working demo](https://github.com/vitessio/vitess/tree/master/examples/demo) of VSchemas.
 
-### ApplyVSchema
-
-You can use the vtctlclient ApplyVSchema command to apply a VSchema:
-
-```
-ApplyVSchema {-vschema=<vschema> || -vschema_file=<vschema file> || -sql=<sql> || -sql_file=<sql file>} [-cells=c1,c2,...] [-skip_rebuild] [-dry-run] <keyspace>
-```
 
 The following sections document the various features highlighted with snippets pulled from the demo.
 
