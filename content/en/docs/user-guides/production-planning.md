@@ -11,9 +11,9 @@ aliases: ['/docs/launching/production-planning/','/docs/launching/']
 A highly available Vitess cluster requires the following components:
 
 * 2 VTGate Servers
-* A redundant Topology Service (i.e. 3x etcd servers)
-* 3x MySQL Servers with semi-sync replication enabled
-* 3x VTTablet processes
+* A redundant Topology Service (i.e. 3 etcd servers)
+* 3 MySQL Servers with semi-sync replication enabled
+* 3 VTTablet processes
 * A Vtctld process
 
 It is common practice to locate the VTTablet process and MySQL Servers on the same host, and Vitess uses the terminology _tablet_ to refer to both. The topology service in Vitess is pluggable, and you can use an existing etcd, ZooKeeper or Consul cluster to reduce the footprint required to deploy Vitess.
