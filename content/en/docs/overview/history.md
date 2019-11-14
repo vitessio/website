@@ -15,6 +15,5 @@ Vitess let YouTube remove that logic from the source code, introducing a proxy b
 
 ## Vitess becomes a CNCF project
 
-In [February 2018](https://www.cncf.io/blog/2018/02/05/cncf-host-vitess/) the Technical Oversight Committee (TOC) voted to accept Vitess as a CNCF incubation project. The [CNCF](https://www.cncf.io) serves as the vendor-neutral home for many of the fastest-growing open source projects, including Kubernetes, Prometheus, and Envoy.
-
+The [CNCF](https://www.cncf.io) serves as the vendor-neutral home for many of the fastest-growing open source projects. In [February 2018](https://www.cncf.io/blog/2018/02/05/cncf-host-vitess/) the Technical Oversight Committee (TOC) voted to accept Vitess as a CNCF incubation project. Vitess became the eighth CNCF project to graduate in [November 2019](https://www.cncf.io/announcement/2019/11/05/cloud-native-computing-foundation-announces-vitess-graduation/), joining Kubernetes, Prometheus, Envoy, CoreDNS, containerd, Fluentd, and Jaeger.
 
