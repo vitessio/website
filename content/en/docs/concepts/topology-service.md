@@ -5,7 +5,7 @@ description: Also known as the TOPO or lock service
 
 The [*Topology Service*](../../user-guides/topology-service) is a set of backend processes running on different servers. Those servers store topology data and provide a distributed locking service.
 
-Vitess uses a plug-in system to support various backends for storing topology data, which are assumed to provide a distributed, consistent key-value store. By default, our [local example](../../get-started/local) uses the ZooKeeper plugin, and the [Kubernetes example](../../get-started/kubernetes) uses etcd.
+Vitess uses a plug-in system to support various backends for storing topology data, which are assumed to provide a distributed, consistent key-value store. The default topology service plugin is `etcd2`.
 
 The topology service exists for several reasons:
 
