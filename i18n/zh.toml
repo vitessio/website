@@ -21,7 +21,7 @@ other = "Add your logo"
 
 # CNCF section
 [cncf]
-other = "Vitess is a [Cloud Native Computing Foundation](https://cncf.io) incubating project"
+other = "Vitess is a [Cloud Native Computing Foundation](https://cncf.io) graduated project"
 
 # Intro section
 [intro_vitess]
