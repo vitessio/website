@@ -63,5 +63,5 @@ This is a list of third-party companies and individuals who provide products or 
 
 ### Acknowledgements
 
-Vitess [was born at YouTube](https://vitess.io/docs/overview/history/) in 2010, and joined the CNCF in [February 2018](https://www.cncf.io/blog/2018/02/05/cncf-host-vitess/) as an incubation project.
+Vitess [was born at YouTube](https://vitess.io/docs/overview/history/) in 2010, and joined the CNCF in [February 2018](https://www.cncf.io/blog/2018/02/05/cncf-host-vitess/).
 
