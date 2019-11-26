@@ -14,7 +14,7 @@ fontawesomeversion = "5.7.2"
 [params.social]
 github        = "vitessio/vitess"
 twitter       = "vitessio"
-slack         = "https://join.slack.com/t/vitess/shared_invite/enQtMzIxMDMyMzA0NzA1LTYxMjk2M2M2NjAwNGY0ODljY2E1MjBlZjRkMmZmNDVkZTBhNDUxNzNkOGM4YmEzNWEwOTE2NjJiY2QyZjZjYTE"
+slack         = "https://vitess.io/slack"
 stackoverflow = "vitess"
 
 [params.blog]
