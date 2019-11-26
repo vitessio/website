@@ -5,7 +5,7 @@ description: A guide to the Vitess ecosystem
 
 Vitess is developed in the open. Here are some of the channels we use to communicate and contribute:
 
-**Slack:** [Vitess Slack](https://join.slack.com/t/vitess/shared_invite/enQtMzIxMDMyMzA0NzA1LTYxMjk2M2M2NjAwNGY0ODljY2E1MjBlZjRkMmZmNDVkZTBhNDUxNzNkOGM4YmEzNWEwOTE2NjJiY2QyZjZjYTE) (recommended)
+**Slack:** [Vitess Slack](https://vitess.io/slack) (recommended)
 
 **Twitter:** [@vitessio](https://twitter.com/vitessio)
 
