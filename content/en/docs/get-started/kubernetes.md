@@ -5,45 +5,49 @@ featured: true
 aliases: ['/docs/tutorials/kubernetes/','/user-guide/sharding-kubernetes.html']
 ---
 
-As successful companies grow they often face a significant increases in the amount data housed in their transactional databases. This increase in data size can cause detrimental performance issues from query latency to managability. This tutorial demonstrates how Vitess can be used with Kubernetes to anticipate ultra growth and alleviate the performance issues found at scale by leveraging horizontal sharding with a distributed system.
+This tutorial demonstrates how Vitess can be used with Minikube to deploy Vitess clusters.
+
+{{< warning >}}
+Kubernetes 1.16 is not yet supported. We are working on fixing this in [issue #5411](https://github.com/vitessio/vitess/issues/5411), and recommend that you use an older version of minikube (v1.2.0) until it is fixed.
+{{< /warning >}}
+
 
 ### Prerequisites
 
-Before we get started, let’s get a few things out of the way.
+Before we get started, let’s get a few things out of the way:
 
-{{< info >}}
-The example settings have been tuned to run on Minikube. However, you should be able to try this on your own Kubernetes cluster. If you do, you may also want to remove some of the Minikube specific resource settings (explained below).
-{{< /info >}}
-
-* [Download Vitess](https://github.com/vitessio/vitess)
-* [Install Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
-* Start a Minikube engine: `minikube start --cpus=4 --memory=5000`. Note the additional resource requirements. In order to go through all the use cases, many vttablet and MySQL instances will be launched. These require more resources than the defaults used by Minikube.
-* [Install etcd operator](https://github.com/coreos/etcd-operator/blob/master/doc/user/install_guide.md)
-* [Install helm](https://docs.helm.sh/using_helm/)
-* After installing, run `helm init`
-
-### Optional
-
-* Install the MySQL client. On Ubuntu: `apt-get install mysql-client`
-* Install vtctlclient
+1. [Install Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
+ Start a Minikube engine: `minikube start --cpus=4 --memory=5000`. Note the additional resource requirements. In order to go through all the use cases, many vttablet and MySQL instances will be launched. These require more resources than the defaults used by Minikube.
+2. [Install kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and ensure it is in your `$PATH`.
+3. [Install etcd operator](https://github.com/coreos/etcd-operator/blob/master/doc/user/install_guide.md):
+```
+git clone git@github.com:coreos/etcd-operator.git
+cd etcd-operator
+example/rbac/create_role.sh
+kubectl create -f example/deployment.yaml
+```
+4. [Install Helm 3.0](https://helm.sh/docs/intro/install/)
+5. Install the MySQL client locally. For example, on Ubuntu: `apt-get install mysql-client`
+6. Install vtctlclient locally:
     * Install go 1.12+
     * `go get vitess.io/vitess/go/cmd/vtctlclient`
-    * vtctlclient will be installed at `$GOPATH/bin/`
+    * vtctlclient will be installed at `$GOBIN` or `$GOPATH/bin/`
 
-## Starting a single keyspace cluster
+## Start a single keyspace cluster
 
 So you searched keyspace on Google and got a bunch of stuff about NoSQL… what’s the deal? It took a few hours, but after diving through the ancient Vitess scrolls you figure out that in the NewSQL world, keyspaces and databases are essentially the same thing when unsharded. Finally, it’s time to get started.
 
 Change to the helm example directory:
 
 ``` sh
-cd examples/helm
+git clone git@github.com:vitessio/vitess.git
+cd vitess/examples/helm
 ```
 
 In this directory, you will see a group of yaml files. The first digit of each file name indicates the phase of example. The next two digits indicate the order in which to execute them. For example, `101_initial_cluster.yaml` is the first file of the first phase. We shall execute that now:
 
 ``` sh
-helm install ../../helm/vitess -f 101_initial_cluster.yaml
+helm install --generate-name ../../helm/vitess -f 101_initial_cluster.yaml
 ```
 
 This will bring up the initial Vitess cluster with a single keyspace.
