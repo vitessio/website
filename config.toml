@@ -43,7 +43,7 @@ languageName = "中文 Chinese"
 weight = 2
 
 [languages.zh.params]
-description = "A database clustering system for horizontal scaling of MySQL"
+description = "Vitess是用于部署、扩展和管理大型MySQL实例集群的数据库解决方案。"
 language_alternatives = ["en"]
 
 # Features (English)
@@ -79,31 +79,31 @@ icon = "magic"
 
 # Features (Chinese)
 [[languages.zh.params.features]]
-title = "Scalability"
-description = "Vitess combines many important MySQL features with the scalability of a NoSQL database. Its built-in sharding features let you grow your database without adding sharding logic to your application."
+title = "扩展性"
+description = "Vitess集Mysql数据库的很多重要特性和NoSQL数据库的可扩展性于一体。其内建拆分分片功能使您能够对您的MySQL数据库集群无限水平扩展，同时无需为应用添加分片逻辑。"
 icon = "cubes"
 
 [[languages.zh.params.features]]
-title = "Performance"
-description = "Vitess automatically rewrites queries that hurt database performance. It also uses caching mechanisms to mediate queries and prevent duplicate queries from simultaneously reaching your database."
+title = "性能"
+description = "Vitess自动重写对数据库性能有损害的查询。它还使用缓存机制来调解查询，并防止重复查询同时到达您的数据库"
 icon = "fighter-jet"
 
 [[languages.zh.params.features]]
-title = "Manageability"
-description = "Vitess automatically handles functions like master failovers and backups. It uses a lock server to track and administer servers, letting your application be blissfully ignorant of database topology."
+title = "管理"
+description = "Vitess可以支持自动处理主故障转移和备份等功能。它使用分布式元数据服务来跟踪和管理服务器，使您的应用程序无需关心数据库拓扑变化。"
 icon = "tachometer-alt"
 
 [[languages.zh.params.features]]
-title = "Connection pooling"
-description = "Vitess eliminates the high-memory overhead of MySQL connections. Vitess servers easily handle thousands of connections at once."
+title = "连接池"
+description = "Vitess避免了MySQL连接的高内存开销。 Vitess服务器轻松地一次处理数千个连接。"
 icon = "share-alt"
 
 [[languages.zh.params.features]]
-title = "Shard management"
-description = "MySQL doesn't natively support sharding, but you will likely need it as your database grows. Vitess saves you from having to add sharding logic to your app and also enables live resharding with minimal read-only downtime."
+title = "分片管理"
+description = "MySQL本身并不提供拆分分片功能，但是您的业务数据量增大到一定程度是您是需要增加集群的。Vitess提供在线拆分功能，只需要很少的时间就完成新集群的切换，无需您在应用程序中添加任何拆分逻辑。"
 icon = "object-ungroup"
 
 [[languages.zh.params.features]]
-title = "Workflow"
-description = "Vitess keeps track of all of the metadata about your cluster configuration so that the cluster view is always up-to-date and consistent for different clients."
+title = "工作流"
+description = "Vitess会跟踪有关集群配置的所有元数据，以便集群拓扑始终是最新的，对不同的客户端保持一致。"
 icon = "magic"
