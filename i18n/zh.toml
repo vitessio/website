@@ -1,45 +1,45 @@
 # Miscellaneous
 [more]
-other = "More ..."
+other = "更多 ..."
 
 # Main page hero buttons
 [quickstart]
-other = "Kubernetes Quickstart"
+other = "Kubernetes 快速开始"
 
 [build]
-other = "Local Install"
+other = "本地安装"
 
 [documentation]
-other = "Documentation"
+other = "文档"
 
 # "Who uses" section
 [who_uses]
-other = "Who uses Vitess"
+other = "谁在用Vitess"
 
 [add_logo]
-other = "Add your logo"
+other = "添加您的logo"
 
 # CNCF section
 [cncf]
-other = "Vitess is a [Cloud Native Computing Foundation](https://cncf.io) graduated project"
+other = "Vitess 是 [Cloud Native Computing Foundation](https://cncf.io) 毕业项目"
 
 # Intro section
 [intro_vitess]
-other = "An introduction to Vitess"
+other = "Vitess介绍"
 
 # Navbar/footer links
 [docs]
-other = "Docs"
+other = "文档"
 
 [blog]
-other = "Blog"
+other = "博客"
 
 [community]
-other = "Community"
+other = "社区"
 
 # Footer
 [authors]
-other = "The Vitess authors"
+other = "Vitess作者"
 
 # Social media
 [github]
