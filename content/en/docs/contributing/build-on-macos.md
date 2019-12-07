@@ -36,14 +36,12 @@ Running the testsuite requires that you [install Docker](https://docs.docker.com
 
 ## Build Vitess
 
-Navigate to the directory where you want to download the Vitess source code and clone the Vitess GitHub repo. After doing so, navigate to the `src/vitess.io/vitess` directory.
+Navigate to the directory where you want to download the Vitess source code and clone the Vitess GitHub repo:
 
 ```
-mkdir -p ~/vitess
-cd ~/vitess
-git clone https://github.com/vitessio/vitess.git \
-    src/vitess.io/vitess
-cd src/vitess.io/vitess
+cd ~
+git clone https://github.com/vitessio/vitess.git
+cd vitess
 ```
 
 Set environment variables that Vitess will require. It is recommended to put these in your `~/.bash_profile` file:
@@ -51,54 +49,36 @@ Set environment variables that Vitess will require. It is recommended to put the
 ```
 # Vitess
 export VTROOT=~/vitess
-export VTTOP=~/vitess/src/vitess.io/vitess
-export VTDATAROOT=~/vitess/vtdataroot
 export PATH=${VTROOT}/bin:${PATH}
-```
-
-Run `bootstrap.sh` script to download additional dependencies. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`):
-
-```
-BUILD_PYTHON=0 BUILD_JAVA=0 ./bootstrap.sh
-```
-
-This should result in output similar to the following:
-```
-morgans-mini:vitess morgo$ BUILD_PYTHON=0 BUILD_JAVA=0 ./bootstrap.sh
-creating git hooks
-installing protoc 3.6.1
---2019-11-05 14:44:32--  https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protoc-3.6.1-osx-x86_64.zip
-Resolving github.com (github.com)... 140.82.114.4
-Connecting to github.com (github.com)|140.82.114.4|:443... connected.
-HTTP request sent, awaiting response... 302 Found
-...
-...
-...
-2019-11-05 14:44:39 (20.1 MB/s) - ‘consul_1.4.0_darwin_amd64.zip’ saved [34526567/34526567]
-
-Archive:  consul_1.4.0_darwin_amd64.zip
-  inflating: consul                  
-
-bootstrap finished - run 'source dev.env' or 'source build.env' in your shell before building.
 ```
 
 Build Vitess:
 
 ```
-source ./dev.env
 make build
 ```
 
 ## Testing your Binaries
 
-Run the included local example:
+The unit test requires that you first install some additional components via `make tools`. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`) first:
+
+```
+make tools
+make test
+```
+
+## Running the local example
+
+In addition to running tests, you can try running the [local example](../../get-started/local):
 
 ```
 cd examples/local
 ./101_initial_cluster.sh
 ```
 
+
 You should see the following:
+
 ```
 $ ./101_initial_cluster.sh 
 morgans-mini:local morgo$ ./101_initial_cluster.sh 
@@ -106,8 +86,6 @@ enter etcd2 env
 add /vitess/global
 add /vitess/zone1
 add zone1 CellInfo
-Error:  client: response is invalid json. The endpoint is probably not valid etcd cluster endpoint
-Error:  client: response is invalid json. The endpoint is probably not valid etcd cluster endpoint
 etcd start done...
 enter etcd2 env
 Starting vtctld...
@@ -146,16 +124,6 @@ Access vtgate at http://morgans-mini.lan:15001/debug/status
 
 You can continue the remaining parts of this example by following the [local](../../get-started/local) get started guide.
 
-### Full testsuite
-
-To run the testsuite in Docker:
-
-```
-make docker_test flavor=mysql57
-```
-
-Running the full suite currently takes 2+ hours to complete.
-
 ## Common Build Issues
 
 ### Key Already Exists
@@ -186,14 +154,12 @@ cat: /dist/etcd/.installed_version: No such file or directory
 Make sure the following variables are defined:
 ```
 export VTROOT=~/vitess
-export VTTOP=~/vitess/src/vitess.io/vitess
-export VTDATAROOT=~/vitess/vtdataroot
 export PATH=${VTROOT}/bin:${PATH}
 ```
 
 ### Cannot create dir /etcd
 
-This indicates that the environment variable `VTDATAROOT` is not defined, and you have not put the required vitess environment variables in your `.bashrc` file:
+This indicates that the environment variable `VTROOT` is not defined, and you have not put the required vitess environment variables in your `.bashrc` file:
 
 ```
 ./101_initial_cluster.sh
@@ -204,8 +170,6 @@ mkdir: cannot create directory ‘/etcd’: Permission denied
 Make sure the following variables are defined:
 ```
 export VTROOT=~/vitess
-export VTTOP=~/vitess/src/vitess.io/vitess
-export VTDATAROOT=~/vitess/vtdataroot
 export PATH=${VTROOT}/bin:${PATH}
 ```
 

@@ -43,8 +43,8 @@ sudo yum install -y make unzip g++ etcd curl git wget
 
 **Notes:**
 
-* Vitess currently has some tests written in Python, but this dependency can be avoided by running the tests in Docker (recommended).
-* We will be using etcd as the topology service. The `bootstrap.sh` script can also install Zookeeper or Consul for you, which requires additional dependencies.
+* We will be using etcd as the topology service. The command `make tools` can also install Zookeeper or Consul for you, which requires additional dependencies.
+* Vitess currently has some additional tests written in Python, but we will be skipping this step for simplicity.
 
 ### Disable SELinux
 
@@ -54,20 +54,14 @@ SELinux will not allow Vitess to launch MySQL in any data directory by default. 
 sudo setenforce 0
 ```
 
-### Install Docker
-
-Running the testsuite requires that you [install Docker](https://docs.docker.com/install/). Should you decide to skip this step, you will still be able to compile and run Vitess.
-
 ## Build Vitess
 
-Navigate to the directory where you want to download the Vitess source code and clone the Vitess GitHub repo. After doing so, navigate to the `src/vitess.io/vitess` directory.
+Navigate to the directory where you want to download the Vitess source code and clone the Vitess GitHub repo:
 
 ```
-mkdir -p ~/vitess
-cd ~/vitess
-git clone https://github.com/vitessio/vitess.git \
-    src/vitess.io/vitess
-cd src/vitess.io/vitess
+cd ~
+git clone https://github.com/vitessio/vitess.git
+cd vitess
 ```
 
 Set environment variables that Vitess will require. It is recommended to put these in your `.bashrc`:
@@ -80,32 +74,33 @@ export PATH=$PATH:/usr/local/go/bin
 
 # Vitess
 export VTROOT=~/vitess
-export VTTOP=~/vitess/src/vitess.io/vitess
-export VTDATAROOT=~/vitess/vtdataroot
 export PATH=${VTROOT}/bin:${PATH}
-```
-
-Run `bootstrap.sh` script to download additional dependencies. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`):
-
-```
-BUILD_PYTHON=0 BUILD_JAVA=0 ./bootstrap.sh
 ```
 
 Build Vitess:
 
 ```
-source ./dev.env
 make build
 ```
 
 ## Testing your Binaries
 
-Run the included local example:
+The unit test requires that you first install some additional components via `make tools`. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`) first:
+
+```
+make tools
+make test
+```
+
+## Running the local example
+
+In addition to running tests, you can try running the [local example](../../get-started/local):
 
 ```
 cd examples/local
 ./101_initial_cluster.sh
 ```
+
 
 You should see the following:
 ```
@@ -157,16 +152,6 @@ Access vtgate at http://localhost:15001/debug/status
 
 You can continue the remaining parts of this example by following the [local](../../get-started/local) get started guide.
 
-### Full testsuite
-
-To run the testsuite in Docker:
-
-```
-make docker_test flavor=mysql57
-```
-
-Running the full suite currently takes 2+ hours to complete.
-
 ## Common Build Issues
 
 ### Key Already Exists
@@ -192,14 +177,6 @@ E1027 18:28:23.464780   19483 mysqld.go:734] mysqld --initialize-insecure failed
 mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
 ```
 
-### Python Errors
-
-The end-to-end test suite currently requires Python 2.7. We are working on removing this dependency, but in the mean time you can run tests from within Docker. The MySQL 5.7 container provided includes the required dependencies:
-
-```
-make docker_test flavor=mysql57
-```
-
 ### No .installed_version file
 
 This error indicates that you have not put the required vitess environment variables in your `.bashrc` file:
@@ -212,14 +189,12 @@ cat: /dist/etcd/.installed_version: No such file or directory
 Make sure the following variables are defined:
 ```
 export VTROOT=~/vitess
-export VTTOP=~/vitess/src/vitess.io/vitess
-export VTDATAROOT=~/vitess/vtdataroot
 export PATH=${VTROOT}/bin:${PATH}
 ```
 
 ### Cannot create dir /etcd
 
-This indicates that the environment variable `VTDATAROOT` is not defined, and you have not put the required vitess environment variables in your `.bashrc` file:
+This indicates that the environment variable `VTROOT` is not defined, and you have not put the required vitess environment variables in your `.bashrc` file:
 
 ```
 ./101_initial_cluster.sh
@@ -230,8 +205,6 @@ mkdir: cannot create directory ‘/etcd’: Permission denied
 Make sure the following variables are defined:
 ```
 export VTROOT=~/vitess
-export VTTOP=~/vitess/src/vitess.io/vitess
-export VTDATAROOT=~/vitess/vtdataroot
 export PATH=${VTROOT}/bin:${PATH}
 ```
 
