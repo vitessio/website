@@ -20,7 +20,7 @@ The following has been verified to work on __macOS Mojave__. If you are new to V
 [Install Homebrew](http://brew.sh/). From here you should be able to install:
 
 ```
-brew install go automake git curl wget mysql@5.7 etcd
+brew install go@1.12 automake git curl wget mysql@5.7 etcd
 ```
 
 Add `mysql@5.7` to your `PATH`:
@@ -29,10 +29,6 @@ echo 'export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"' >> ~/.bash_profile
 ```
 
 Do not setup MySQL or etcd to restart at login.
-
-### Install Docker
-
-Running the testsuite requires that you [install Docker](https://docs.docker.com/docker-for-mac/). Should you decide to skip this step, you will still be able to compile and run Vitess.
 
 ## Build Vitess
 
@@ -60,69 +56,27 @@ make build
 
 ## Testing your Binaries
 
-The unit test requires that you first install some additional components via `make tools`. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`) first:
+The unit tests require that you first install a Java runtime. This is required for running ZooKeeper tests:
+
+```
+brew tap adoptopenjdk/openjdk
+brew cask install adoptopenjdk8
+brew cask info java
+```
+
+You will also need to install `ant`:
+```
+brew install ant
+```
+
+You can then install additional components from `make tools`. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`) first:
 
 ```
 make tools
 make test
 ```
 
-## Running the local example
-
-In addition to running tests, you can try running the [local example](../../get-started/local):
-
-```
-cd examples/local
-./101_initial_cluster.sh
-```
-
-
-You should see the following:
-
-```
-$ ./101_initial_cluster.sh 
-morgans-mini:local morgo$ ./101_initial_cluster.sh 
-enter etcd2 env
-add /vitess/global
-add /vitess/zone1
-add zone1 CellInfo
-etcd start done...
-enter etcd2 env
-Starting vtctld...
-Access vtctld web UI at http://morgans-mini.lan:15000
-Send commands with: vtctlclient -server morgans-mini.lan:15999 ...
-enter etcd2 env
-Starting MySQL for tablet zone1-0000000100...
-Starting MySQL for tablet zone1-0000000101...
-Starting MySQL for tablet zone1-0000000102...
-Starting vttablet for zone1-0000000100...
-Access tablet zone1-0000000100 at http://morgans-mini.lan:15100/debug/status
-Starting vttablet for zone1-0000000101...
-Access tablet zone1-0000000101 at http://morgans-mini.lan:15101/debug/status
-Starting vttablet for zone1-0000000102...
-Access tablet zone1-0000000102 at http://morgans-mini.lan:15102/debug/status
-W1027 20:11:49.555831   35859 main.go:64] W1028 02:11:49.555179 reparent.go:182] master-elect tablet zone1-0000000100 is not the shard master, proceeding anyway as -force was used
-W1027 20:11:49.556456   35859 main.go:64] W1028 02:11:49.556135 reparent.go:188] master-elect tablet zone1-0000000100 is not a master in the shard, proceeding anyway as -force was used
-New VSchema object:
-{
-  "tables": {
-    "corder": {
-
-    },
-    "customer": {
-
-    },
-    "product": {
-
-    }
-  }
-}
-If this is not what you expected, check the input data (as JSON parsing will skip unexpected fields).
-enter etcd2 env
-Access vtgate at http://morgans-mini.lan:15001/debug/status
-```
-
-You can continue the remaining parts of this example by following the [local](../../get-started/local) get started guide.
+In addition to running tests, you can try running the [local example](../../get-started/local).
 
 ## Common Build Issues
 
@@ -132,14 +86,6 @@ This error is because etcd was not cleaned up from the previous run of the examp
 ```
 Error:  105: Key already exists (/vitess/zone1) [6]
 Error:  105: Key already exists (/vitess/global) [6]
-```
-
-### Python Errors
-
-The end-to-end test suite currently requires Python 2.7. We are working on removing this dependency, but in the mean time you can run tests from within Docker. The MySQL 5.7 container provided includes the required dependencies:
-
-```
-make docker_test flavor=mysql57
 ```
 
 ### No .installed_version file

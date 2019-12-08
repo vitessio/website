@@ -17,8 +17,8 @@ The following has been verified to work on __CentOS 7__. If you are new to Vites
 [Download and install](http://golang.org/doc/install) the latest version of Golang. For example, at writing:
 
 ```
-curl -O https://dl.google.com/go/go1.13.3.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.13.3.linux-amd64.tar.gz
+curl -O https://dl.google.com/go/go1.12.14.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.12.14.linux-amd64.tar.gz
 ```
 
 Make sure to add go to your bashrc:
@@ -85,72 +85,20 @@ make build
 
 ## Testing your Binaries
 
-The unit test requires that you first install some additional components via `make tools`. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`) first:
+The unit tests require the following additional packages:
+
+```
+sudo yum install -y ant maven zip gcc
+```
+
+You can then install additional components from `make tools`. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`) first:
 
 ```
 make tools
 make test
 ```
 
-## Running the local example
-
-In addition to running tests, you can try running the [local example](../../get-started/local):
-
-```
-cd examples/local
-./101_initial_cluster.sh
-```
-
-
-You should see the following:
-```
-$ ./101_initial_cluster.sh 
-[morgo@localhost local]$ ./101_initial_cluster.sh
-enter etcd2 env
-add /vitess/global
-add /vitess/zone1
-add zone1 CellInfo
-etcd start done...
-enter etcd2 env
-Starting vtctld...
-Access vtctld web UI at http://localhost:15000
-Send commands with: vtctlclient -server localhost:15999 ...
-enter etcd2 env
-Starting MySQL for tablet zone1-0000000100...
-Starting MySQL for tablet zone1-0000000101...
-Starting MySQL for tablet zone1-0000000102...
-Starting vttablet for zone1-0000000100...
-Access tablet zone1-0000000100 at http://localhost:15100/debug/status
-Starting vttablet for zone1-0000000101...
-Access tablet zone1-0000000101 at http://localhost:15101/debug/status
-Starting vttablet for zone1-0000000102...
-Access tablet zone1-0000000102 at http://localhost:15102/debug/status
-Waiting for tablets to be listening...
-Tablets up!
-W1028 09:30:40.634534    7333 main.go:64] W1028 15:30:40.630786 reparent.go:182] master-elect tablet zone1-0000000100 is not the shard master, proceeding anyway as -force was used
-W1028 09:30:40.634792    7333 main.go:64] W1028 15:30:40.631267 reparent.go:188] master-elect tablet zone1-0000000100 is not a master in the shard, proceeding anyway as -force was used
-New VSchema object:
-{
-  "tables": {
-    "corder": {
-
-    },
-    "customer": {
-
-    },
-    "product": {
-
-    }
-  }
-}
-If this is not what you expected, check the input data (as JSON parsing will skip unexpected fields).
-enter etcd2 env
-Waiting for vtgate to be up...
-vtgate is up!
-Access vtgate at http://localhost:15001/debug/status
-```
-
-You can continue the remaining parts of this example by following the [local](../../get-started/local) get started guide.
+In addition to running tests, you can try running the [local example](../../get-started/local).
 
 ## Common Build Issues
 
