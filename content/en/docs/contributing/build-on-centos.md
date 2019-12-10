@@ -17,8 +17,8 @@ The following has been verified to work on __CentOS 7__. If you are new to Vites
 [Download and install](http://golang.org/doc/install) the latest version of Golang. For example, at writing:
 
 ```
-curl -O https://dl.google.com/go/go1.13.3.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.13.3.linux-amd64.tar.gz
+curl -O https://dl.google.com/go/go1.12.14.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.12.14.linux-amd64.tar.gz
 ```
 
 Make sure to add go to your bashrc:
@@ -43,8 +43,8 @@ sudo yum install -y make unzip g++ etcd curl git wget
 
 **Notes:**
 
-* Vitess currently has some tests written in Python, but this dependency can be avoided by running the tests in Docker (recommended).
-* We will be using etcd as the topology service. The `bootstrap.sh` script can also install Zookeeper or Consul for you, which requires additional dependencies.
+* We will be using etcd as the topology service. The command `make tools` can also install Zookeeper or Consul for you, which requires additional dependencies.
+* Vitess currently has some additional tests written in Python, but we will be skipping this step for simplicity.
 
 ### Disable SELinux
 
@@ -54,20 +54,14 @@ SELinux will not allow Vitess to launch MySQL in any data directory by default. 
 sudo setenforce 0
 ```
 
-### Install Docker
-
-Running the testsuite requires that you [install Docker](https://docs.docker.com/install/). Should you decide to skip this step, you will still be able to compile and run Vitess.
-
 ## Build Vitess
 
-Navigate to the directory where you want to download the Vitess source code and clone the Vitess GitHub repo. After doing so, navigate to the `src/vitess.io/vitess` directory.
+Navigate to the directory where you want to download the Vitess source code and clone the Vitess GitHub repo:
 
 ```
-mkdir -p ~/vitess
-cd ~/vitess
-git clone https://github.com/vitessio/vitess.git \
-    src/vitess.io/vitess
-cd src/vitess.io/vitess
+cd ~
+git clone https://github.com/vitessio/vitess.git
+cd vitess
 ```
 
 Set environment variables that Vitess will require. It is recommended to put these in your `.bashrc`:
@@ -80,92 +74,31 @@ export PATH=$PATH:/usr/local/go/bin
 
 # Vitess
 export VTROOT=~/vitess
-export VTTOP=~/vitess/src/vitess.io/vitess
-export VTDATAROOT=~/vitess/vtdataroot
 export PATH=${VTROOT}/bin:${PATH}
-```
-
-Run `bootstrap.sh` script to download additional dependencies. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`):
-
-```
-BUILD_PYTHON=0 BUILD_JAVA=0 ./bootstrap.sh
 ```
 
 Build Vitess:
 
 ```
-source ./dev.env
 make build
 ```
 
 ## Testing your Binaries
 
-Run the included local example:
+The unit tests require the following additional packages:
 
 ```
-cd examples/local
-./101_initial_cluster.sh
+sudo yum install -y ant maven zip gcc
 ```
 
-You should see the following:
-```
-$ ./101_initial_cluster.sh 
-[morgo@localhost local]$ ./101_initial_cluster.sh
-enter etcd2 env
-add /vitess/global
-add /vitess/zone1
-add zone1 CellInfo
-etcd start done...
-enter etcd2 env
-Starting vtctld...
-Access vtctld web UI at http://localhost:15000
-Send commands with: vtctlclient -server localhost:15999 ...
-enter etcd2 env
-Starting MySQL for tablet zone1-0000000100...
-Starting MySQL for tablet zone1-0000000101...
-Starting MySQL for tablet zone1-0000000102...
-Starting vttablet for zone1-0000000100...
-Access tablet zone1-0000000100 at http://localhost:15100/debug/status
-Starting vttablet for zone1-0000000101...
-Access tablet zone1-0000000101 at http://localhost:15101/debug/status
-Starting vttablet for zone1-0000000102...
-Access tablet zone1-0000000102 at http://localhost:15102/debug/status
-Waiting for tablets to be listening...
-Tablets up!
-W1028 09:30:40.634534    7333 main.go:64] W1028 15:30:40.630786 reparent.go:182] master-elect tablet zone1-0000000100 is not the shard master, proceeding anyway as -force was used
-W1028 09:30:40.634792    7333 main.go:64] W1028 15:30:40.631267 reparent.go:188] master-elect tablet zone1-0000000100 is not a master in the shard, proceeding anyway as -force was used
-New VSchema object:
-{
-  "tables": {
-    "corder": {
-
-    },
-    "customer": {
-
-    },
-    "product": {
-
-    }
-  }
-}
-If this is not what you expected, check the input data (as JSON parsing will skip unexpected fields).
-enter etcd2 env
-Waiting for vtgate to be up...
-vtgate is up!
-Access vtgate at http://localhost:15001/debug/status
-```
-
-You can continue the remaining parts of this example by following the [local](../../get-started/local) get started guide.
-
-### Full testsuite
-
-To run the testsuite in Docker:
+You can then install additional components from `make tools`. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`) first:
 
 ```
-make docker_test flavor=mysql57
+make tools
+make test
 ```
 
-Running the full suite currently takes 2+ hours to complete.
+In addition to running tests, you can try running the [local example](../../get-started/local).
 
 ## Common Build Issues
 
@@ -192,14 +125,6 @@ E1027 18:28:23.464780   19483 mysqld.go:734] mysqld --initialize-insecure failed
 mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
 ```
 
-### Python Errors
-
-The end-to-end test suite currently requires Python 2.7. We are working on removing this dependency, but in the mean time you can run tests from within Docker. The MySQL 5.7 container provided includes the required dependencies:
-
-```
-make docker_test flavor=mysql57
-```
-
 ### No .installed_version file
 
 This error indicates that you have not put the required vitess environment variables in your `.bashrc` file:
@@ -212,14 +137,12 @@ cat: /dist/etcd/.installed_version: No such file or directory
 Make sure the following variables are defined:
 ```
 export VTROOT=~/vitess
-export VTTOP=~/vitess/src/vitess.io/vitess
-export VTDATAROOT=~/vitess/vtdataroot
 export PATH=${VTROOT}/bin:${PATH}
 ```
 
 ### Cannot create dir /etcd
 
-This indicates that the environment variable `VTDATAROOT` is not defined, and you have not put the required vitess environment variables in your `.bashrc` file:
+This indicates that the environment variable `VTROOT` is not defined, and you have not put the required vitess environment variables in your `.bashrc` file:
 
 ```
 ./101_initial_cluster.sh
@@ -230,8 +153,6 @@ mkdir: cannot create directory ‘/etcd’: Permission denied
 Make sure the following variables are defined:
 ```
 export VTROOT=~/vitess
-export VTTOP=~/vitess/src/vitess.io/vitess
-export VTDATAROOT=~/vitess/vtdataroot
 export PATH=${VTROOT}/bin:${PATH}
 ```
 

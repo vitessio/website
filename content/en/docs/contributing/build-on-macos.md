@@ -20,30 +20,25 @@ The following has been verified to work on __macOS Mojave__. If you are new to V
 [Install Homebrew](http://brew.sh/). From here you should be able to install:
 
 ```
-brew install go automake git curl wget mysql@5.7 etcd
+brew install go@1.12 automake git curl wget mysql@5.7 etcd
 ```
 
-Add `mysql@5.7` to your `PATH`:
+Add `mysql@5.7` and `go@1.12` to your `PATH`:
 ```
 echo 'export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"' >> ~/.bash_profile
+echo 'export PATH="/usr/local/opt/go@1.12/bin:$PATH"' >> ~/.bash_profile
 ```
 
 Do not setup MySQL or etcd to restart at login.
 
-### Install Docker
-
-Running the testsuite requires that you [install Docker](https://docs.docker.com/docker-for-mac/). Should you decide to skip this step, you will still be able to compile and run Vitess.
-
 ## Build Vitess
 
-Navigate to the directory where you want to download the Vitess source code and clone the Vitess GitHub repo. After doing so, navigate to the `src/vitess.io/vitess` directory.
+Navigate to the directory where you want to download the Vitess source code and clone the Vitess GitHub repo:
 
 ```
-mkdir -p ~/vitess
-cd ~/vitess
-git clone https://github.com/vitessio/vitess.git \
-    src/vitess.io/vitess
-cd src/vitess.io/vitess
+cd ~
+git clone https://github.com/vitessio/vitess.git
+cd vitess
 ```
 
 Set environment variables that Vitess will require. It is recommended to put these in your `~/.bash_profile` file:
@@ -51,110 +46,38 @@ Set environment variables that Vitess will require. It is recommended to put the
 ```
 # Vitess
 export VTROOT=~/vitess
-export VTTOP=~/vitess/src/vitess.io/vitess
-export VTDATAROOT=~/vitess/vtdataroot
 export PATH=${VTROOT}/bin:${PATH}
-```
-
-Run `bootstrap.sh` script to download additional dependencies. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`):
-
-```
-BUILD_PYTHON=0 BUILD_JAVA=0 ./bootstrap.sh
-```
-
-This should result in output similar to the following:
-```
-morgans-mini:vitess morgo$ BUILD_PYTHON=0 BUILD_JAVA=0 ./bootstrap.sh
-creating git hooks
-installing protoc 3.6.1
---2019-11-05 14:44:32--  https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protoc-3.6.1-osx-x86_64.zip
-Resolving github.com (github.com)... 140.82.114.4
-Connecting to github.com (github.com)|140.82.114.4|:443... connected.
-HTTP request sent, awaiting response... 302 Found
-...
-...
-...
-2019-11-05 14:44:39 (20.1 MB/s) - ‘consul_1.4.0_darwin_amd64.zip’ saved [34526567/34526567]
-
-Archive:  consul_1.4.0_darwin_amd64.zip
-  inflating: consul                  
-
-bootstrap finished - run 'source dev.env' or 'source build.env' in your shell before building.
 ```
 
 Build Vitess:
 
 ```
-source ./dev.env
 make build
 ```
 
 ## Testing your Binaries
 
-Run the included local example:
+The unit tests require that you first install a Java runtime. This is required for running ZooKeeper tests:
 
 ```
-cd examples/local
-./101_initial_cluster.sh
+brew tap adoptopenjdk/openjdk
+brew cask install adoptopenjdk8
+brew cask info java
 ```
 
-You should see the following:
+You will also need to install `ant`:
 ```
-$ ./101_initial_cluster.sh 
-morgans-mini:local morgo$ ./101_initial_cluster.sh 
-enter etcd2 env
-add /vitess/global
-add /vitess/zone1
-add zone1 CellInfo
-Error:  client: response is invalid json. The endpoint is probably not valid etcd cluster endpoint
-Error:  client: response is invalid json. The endpoint is probably not valid etcd cluster endpoint
-etcd start done...
-enter etcd2 env
-Starting vtctld...
-Access vtctld web UI at http://morgans-mini.lan:15000
-Send commands with: vtctlclient -server morgans-mini.lan:15999 ...
-enter etcd2 env
-Starting MySQL for tablet zone1-0000000100...
-Starting MySQL for tablet zone1-0000000101...
-Starting MySQL for tablet zone1-0000000102...
-Starting vttablet for zone1-0000000100...
-Access tablet zone1-0000000100 at http://morgans-mini.lan:15100/debug/status
-Starting vttablet for zone1-0000000101...
-Access tablet zone1-0000000101 at http://morgans-mini.lan:15101/debug/status
-Starting vttablet for zone1-0000000102...
-Access tablet zone1-0000000102 at http://morgans-mini.lan:15102/debug/status
-W1027 20:11:49.555831   35859 main.go:64] W1028 02:11:49.555179 reparent.go:182] master-elect tablet zone1-0000000100 is not the shard master, proceeding anyway as -force was used
-W1027 20:11:49.556456   35859 main.go:64] W1028 02:11:49.556135 reparent.go:188] master-elect tablet zone1-0000000100 is not a master in the shard, proceeding anyway as -force was used
-New VSchema object:
-{
-  "tables": {
-    "corder": {
-
-    },
-    "customer": {
-
-    },
-    "product": {
-
-    }
-  }
-}
-If this is not what you expected, check the input data (as JSON parsing will skip unexpected fields).
-enter etcd2 env
-Access vtgate at http://morgans-mini.lan:15001/debug/status
+brew install ant
 ```
 
-You can continue the remaining parts of this example by following the [local](../../get-started/local) get started guide.
-
-### Full testsuite
-
-To run the testsuite in Docker:
+You can then install additional components from `make tools`. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`) first:
 
 ```
-make docker_test flavor=mysql57
+make tools
+make test
 ```
 
-Running the full suite currently takes 2+ hours to complete.
+In addition to running tests, you can try running the [local example](../../get-started/local).
 
 ## Common Build Issues
 
@@ -164,14 +87,6 @@ This error is because etcd was not cleaned up from the previous run of the examp
 ```
 Error:  105: Key already exists (/vitess/zone1) [6]
 Error:  105: Key already exists (/vitess/global) [6]
-```
-
-### Python Errors
-
-The end-to-end test suite currently requires Python 2.7. We are working on removing this dependency, but in the mean time you can run tests from within Docker. The MySQL 5.7 container provided includes the required dependencies:
-
-```
-make docker_test flavor=mysql57
 ```
 
 ### No .installed_version file
@@ -186,14 +101,12 @@ cat: /dist/etcd/.installed_version: No such file or directory
 Make sure the following variables are defined:
 ```
 export VTROOT=~/vitess
-export VTTOP=~/vitess/src/vitess.io/vitess
-export VTDATAROOT=~/vitess/vtdataroot
 export PATH=${VTROOT}/bin:${PATH}
 ```
 
 ### Cannot create dir /etcd
 
-This indicates that the environment variable `VTDATAROOT` is not defined, and you have not put the required vitess environment variables in your `.bashrc` file:
+This indicates that the environment variable `VTROOT` is not defined, and you have not put the required vitess environment variables in your `.bashrc` file:
 
 ```
 ./101_initial_cluster.sh
@@ -204,8 +117,6 @@ mkdir: cannot create directory ‘/etcd’: Permission denied
 Make sure the following variables are defined:
 ```
 export VTROOT=~/vitess
-export VTTOP=~/vitess/src/vitess.io/vitess
-export VTDATAROOT=~/vitess/vtdataroot
 export PATH=${VTROOT}/bin:${PATH}
 ```
 
