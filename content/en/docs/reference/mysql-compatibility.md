@@ -30,6 +30,10 @@ Vitess supports a subset of `GROUP BY` operations, including cross-shard operati
 
 Vitess supports a subset of subqueries. For example, a subquery combined with a `GROUP BY` operation is not supported.
 
+### Stored Procedures
+
+Vitess does not yet support MySQL Stored Procedures.
+
 ### Window Functions and CTEs
 
 Vitess does not yet support Window Functions or Common Table Expressions.
