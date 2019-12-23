@@ -20,7 +20,7 @@ The example settings have been tuned to run on Minikube. However, you should be 
 * Start a Minikube engine: `minikube start --cpus=4 --memory=5000`. Note the additional resource requirements. In order to go through all the use cases, many vttablet and MySQL instances will be launched. These require more resources than the defaults used by Minikube.
 * [Install etcd operator](https://github.com/coreos/etcd-operator/blob/master/doc/user/install_guide.md)
 * [Install helm](https://docs.helm.sh/using_helm/)
-* After installing, run `helm init`
+* After installing, run `helm init` (not required for helm 3.0)
 
 ### Optional
 
