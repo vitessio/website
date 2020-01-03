@@ -8,7 +8,7 @@ VTGate servers speak both gRPC and the MySQL server protocol. This allows you to
 
 ## Transaction Model
 
-Vitess provides `READ-COMMITTED` semantics when executing cross-shard queries. This differs to MySQL, which defaults to `REPEATABLE-READ`. 
+Vitess provides `READ COMMITTED` semantics when executing cross-shard queries. This differs to MySQL, which defaults to `REPEATABLE READ`.
 
 ## SQL Syntax
 
@@ -16,7 +16,7 @@ The following describes some of the major differences in SQL Syntax handling bet
 
 ### DDL                                                                      
                                                                             
-Vitess supports MySQL DDL, and will send `ALTER TABLE` statements to each of the underlying tablet servers. For large tables it is recommended to use an external schema deployment tool and apply directly to MySQL. This is discussed further in [Applying MySQL Schema](../../user-guides/mysql-schema).
+Vitess supports MySQL DDL, and will send `ALTER TABLE` statements to each of the underlying tablet servers. For large tables it is recommended to use an external schema deployment tool and apply directly to the underlying MySQL shard instances. This is discussed further in [Applying MySQL Schema](../user-guides/making-schema-changes/).
 
 ### Join Queries
 
@@ -38,13 +38,17 @@ Vitess does not yet support MySQL Stored Procedures.
 
 Vitess does not yet support Window Functions or Common Table Expressions.
 
-### Cross-shard Transaction
+### Killing running queries
+
+Vitess does not yet support killing running shard queries via the `KILL` command through VTGate. Vitess does have strict query timeouts for OLTP workloads (see below). If you need a query, you can connect to the underlying MySQL shard instance and run `KILL` from there.
+
+### Cross-shard Transactions
 
 By default, Vitess does not support transactions that span across shards. While Vitess can support this with the use of [Two-Phase Commit](../two-phase-commit), it is usually recommended to design the VSchema in such a way that cross-shard modifications are not required.
 
 ### OLAP Workload
 
-By default, Vitess sets some intentional restrictions on the execution time and number of rows that a query can return. This can be disabled by setting the workload to OLTP:
+By default, Vitess sets some intentional restrictions on the execution time and number of rows that a query can return. This default workload mode is called `OLTP`. This can be disabled by setting the workload to `OLAP`:
 ```sql
 SET workload='olap'
 ```
@@ -53,7 +57,7 @@ SET workload='olap'
 
 ### Prepared Statements
 
-Starting with version 4.0, Vitess features experimental support for prepared statements. Session-based statements to `PREPARE` and `EXECUTE` prepared statements are not supported.
+Starting with version 4.0, Vitess features experimental support for prepared statements via the MySQL protocol. Session-based commands using the `PREPARE` and `EXECUTE` SQL statements are not supported.
 
 ### Authentication Plugins
 
@@ -87,7 +91,7 @@ Vitess supports all of the data types available in MySQL. Using the `FLOAT` data
 
 ## Auto Increment
 
-Tables in sharded keyspaces do not support the `auto_increment`, as the values generated would be local only to each shard. [Vitess Sequences](../vitess-sequences) are provided as an alternative, which have very close semantics to `auto_increment`.
+Tables in sharded keyspaces do not support the `auto_increment` column attribute, as the values generated would be local only to each shard. [Vitess Sequences](../vitess-sequences) are provided as an alternative, which have very close semantics to `auto_increment`.
 
 ## Extensions to MySQL Syntax
 
@@ -110,3 +114,4 @@ Support for selecting a shard and tablet type via the `USE` statement can be ach
 USE `schema:-80@rdonly`
 ```
 
+A similar effect can be achieved by using a database name like `schema:-80@rdonly` in your MySQL application client connection string.
