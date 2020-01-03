@@ -9,15 +9,15 @@ Transaction commit is much slower when using 2PC. The authors of Vitess recommen
 
 Vitess 2PC allows you to perform atomic distributed commits. The feature is implemented using traditional MySQL transactions, and hence inherits the same guarantees. With this addition, Vitess can be configured to support the following three levels of atomicity:
 
-1. **Single database**: At this level, only single database transactions are allowed. Any transaction that tries to go beyond a single database will be failed.
+1. **Single database**: At this level, only single database transactions are allowed. Any transaction that tries to go beyond a single database will fail.
 2. **Multi database**: A transaction can span multiple databases, but the commit will be best effort. Partial commits are possible.
 3. **2PC**: This is the same as Multi-database, but the commit will be atomic.
 
-2PC commits are more expensive than multi-database because the system has to save away the statements before starting the commit process, and also clean them up after a successful commit. This is the reason why it's a separate option instead of being always on.
+2PC commits are more expensive than multi-database because the system has to save away the statements before starting the commit process, and also clean them up after a successful commit. This is the reason why it is a separate option instead of being always on.
 
 ## Isolation
 
-2PC transactions guarantee atomicity: either the whole transaction commits, or it's rolled back entirely. It does not guarantee Isolation (in the ACID sense). This means that a third party that performs cross-database reads can observe partial commits while a 2PC transaction is in progress.
+2PC transactions guarantee atomicity: either the whole transaction commits, or it is rolled back entirely. It does not guarantee Isolation (in the ACID sense). This means that a third party that performs cross-database reads can observe partial commits while a 2PC transaction is in progress.
 
 Guaranteeing ACID Isolation is very contentious and has high costs. Providing it by default would have made Vitess impractical for the most common use cases.
 
@@ -27,7 +27,7 @@ The atomicity policy is controlled by the `transaction_mode` flag. The default v
 
 To enforce single-database transactions, the VTGates can be started by specifying `transaction_mode=single`.
 
-To enable 2PC, the VTGates need to be started with `transaction_mode=twopc`. The VTTablets will require a few more flags, which will be explained below.
+To enable 2PC, the VTGates need to be started with `transaction_mode=twopc`. The VTTablets will require additional flags, which will be explained below.
 
 The VTGate `transaction_mode` flag decides what to allow. The application can independently request a specific atomicity for each transaction. The request will be honored by VTGate only if it does not exceed what is allowed by the `transaction_mode`. For example, `transaction_mode=single` will only allow single-db transactions. On the other hand, `transaction_mode=twopc` will allow all three levels of atomicity.
 
@@ -68,7 +68,7 @@ With the above flags specified, every master VTTablet also turns into a watchdog
 
 ## Configuring MySQL
 
-The usual default values of MySQL are sufficient. However, it's important to verify that `wait_timeout` (28800) has not been changed. If this value was changed to be too short, then MySQL could prematurely kill a prepared transaction causing data loss.
+The usual default values of MySQL are sufficient. However, it is important to verify that the `wait_timeout` (28800) has not been changed. If this value was changed to be too short, then MySQL could prematurely kill a prepared transaction causing data loss.
 
 ## Monitoring
 
@@ -83,14 +83,14 @@ The following errors are not expected to happen. If they do, it means that 2PC t
 
 ## Alertable failures
 
-The following failures are not urgent, but require someone to investigate:
+The following failures are not urgent, but require investigation:
 
-* **InternalErrors.WatchdogFail**: This counter is incremented if there are failures in the watchdog thread of VTTablet. This means that the watch dog is not able to alert VTGate of abandoned transactions.
+* **InternalErrors.WatchdogFail**: This counter is incremented if there are failures in the watchdog thread of VTTablet. This means that the watchdog is not able to alert VTGate of abandoned transactions.
 * **Unresolved.Prepares**: This is a gauge that is set based on the number of lingering Prepared transactions that have been alive for longer than 5x the abandon age. This usually means that a distributed transaction has repeatedly failed to resolve. A more serious condition is when the metadata for a distributed transaction has been lost and this Prepare is now permanently orphaned.
 
 ## Repairs
 
-If any of the alerts fire, it's time to investigate. Once you identify the dtid or the VTTablet that originated the alert, you can navigate to the /twopcz URL. This will display three lists:
+If any of the alerts fire, it is time to investigate. Once you identify the dtid or the VTTablet that originated the alert, you can navigate to the /twopcz URL. This will display three lists:
 
 * **Failed Transactions**: A transaction reaches this state if it failed to commit. The only action allowed for such transactions is that you can discard it. However, you can record the DMLs that were involved and have someone come up with a plan to repair the partial commit.
 * **Prepared Transactions**: Prepared transactions can be rolled back or committed. Prepared transactions must be remedied only if their root Distributed Transaction has been lost or resolved.
