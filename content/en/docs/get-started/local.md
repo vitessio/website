@@ -10,7 +10,11 @@ This guide covers installing Vitess locally for testing purposes, from pre-compi
 
 ## Download Vitess Package
 
-Download and extract the [latest `.tar.gz` release](https://github.com/vitessio/vitess/releases) from GitHub.
+Download and extract the [latest `.tar.gz` release](https://github.com/vitessio/vitess/releases) from GitHub. Use the following command to extract the file.
+
+```
+tar -zxvf latest-version.tar.gz
+```
 
 ## Install MySQL and etcd
 
@@ -19,13 +23,16 @@ Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your ins
 ```
 # Ubuntu based
 sudo apt install -y mysql-server etcd
+sudo apt install -y curl
 
 # Debian
 sudo apt install -y default-mysql-server default-mysql-client etcd
+sudo apt install -y curl
 
 # Yum based
 sudo yum -y localinstall https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
 sudo yum -y install mysql-community-server etcd
+sudo yum -y install curl
 ```
 
 On apt-based distributions the services `mysqld` and `etcd` will need to be shutdown, since `etcd` will conflict with the `etcd` started in the examples, and `mysqlctl` will start its own copies of `mysqld`:
@@ -60,7 +67,7 @@ sudo setenforce 0
 
 ## Configure Environment
 
-Add the following to your `.bashrc` file. Make sure to replace `/path/to/extracted-tarball` with the actual path to where you extracted the latest release file:
+Add the following to your `$Home/.bashrc` file. Make sure to replace `/path/to/extracted-tarball` with the actual path to where you extracted the latest release file:
 
 ```
 export VTROOT=/path/to/extracted-tarball
@@ -69,7 +76,7 @@ export VTDATAROOT=${HOME}/vtdataroot
 export PATH=${VTROOT}/bin:${PATH}
 ```
 
-You are now ready to start your first cluster!
+You are now ready to start your first cluster! Open a new terminal window before continuing.
 
 ## Start a Single Keyspace Cluster
 
@@ -128,7 +135,8 @@ _The exact list of processes will vary. For example, you may not see `mysqld_saf
 If you encounter any errors, such as ports already in use, you can kill the processes and start over:
 
 ```
-pkill -f '(vtdataroot|VTDATAROOT)' # kill Vitess processes
+pkill -9 -e -f '(vtdataroot|VTDATAROOT)' # kill Vitess processes
+rm -rf ${HOME}/vtdataroot
 ```
 
 ## Connect to Your Cluster
@@ -160,7 +168,7 @@ mysql> show tables;
 3 rows in set (0.01 sec)
 ```
 
-It is recommended to configure the MySQL command line to default to these settings, as the user guides omit `-h 127.0.0.1 -P 15306` for brevity:
+It is recommended to configure the MySQL command line to default to these settings, as the user guides omit `-h 127.0.0.1 -P 15306` for brevity. Enter the following into the command line:
 
 ```
 cat << EOF > ~/.my.cnf
@@ -205,7 +213,7 @@ http://localhost:15000
 
 ## Summary
 
-In this example, we deployed a single unsharded keyspace named `commerce`. Unsharded keyspaces have a single shard named `0`. The schema reflects a common ecommerce scenario:
+In this example, we deployed a single unsharded keyspace named `commerce`. Unsharded keyspaces have a single shard named `0`. The following schema reflects a common ecommerce scenario that was created by the script:
 
 ```
 create table product (
