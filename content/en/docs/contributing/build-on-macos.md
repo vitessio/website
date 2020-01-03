@@ -68,7 +68,7 @@ brew cask info java
 You will also need to install `ant` and `mvn`:
 ```
 brew install ant
-brew install mvn
+brew install ant mvn
 ```
 
 You can then install additional components from `make tools`. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`) first:
@@ -120,4 +120,3 @@ Make sure the following variables are defined:
 export VTROOT=~/vitess
 export PATH=${VTROOT}/bin:${PATH}
 ```
-
