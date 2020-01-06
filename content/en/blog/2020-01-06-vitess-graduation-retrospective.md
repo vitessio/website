@@ -6,11 +6,11 @@ tags: ['graduation', 'vitess graduation']
 title: "Vitess Graduation Retrospective"
 ---
 
-Last week, Vitess became the eighth CNCF project to reach graduation, joining a host of amazing projects such as Kubernetes, Prometheus, Envoy, CoreDNS, containerd, Fluentd, and Jaeger. To contextualize this milestone, I picked some tidbits from Sugu’s brain, allowing him to share internal perspective about how we got here, the hurdles we faced, and where we’re headed.
+Last November, Vitess became the eighth CNCF project to reach graduation, joining a host of amazing projects such as Kubernetes, Prometheus, Envoy, CoreDNS, containerd, Fluentd, and Jaeger. To contextualize this milestone, I picked some tidbits from the brain of Vitess co-creator, Sugu Sougoumarane, allowing him to share internal perspective about how we got here, the hurdles we faced, and where we’re headed.
 
 ### Incubation
 
-Considering that it was only last February when the CNCF agreed to host Vitess as an incubating project, Vitess has made efficient strides toward becoming the de-facto standard for horizontally scaling MySQL. Beyond horizontal scale, however, our main goal we had for Vitess on its acceptance to the CNCF was to spearhead the ability to run databases in Kubernetes. I’m very excited at the progress we’ve made as a community and these juxtaposed quotes from Slack principal engineer, Michael Demmer, show the evolution of the project firsthand:
+Considering that it was only the February of 2018 when the CNCF agreed to host Vitess as an incubating project, Vitess has made efficient strides toward becoming the de-facto standard for horizontally scaling MySQL. Beyond horizontal scale, however, our main goal for Vitess on its acceptance to the CNCF was to spearhead the ability to run databases in Kubernetes. I’m very excited at the progress we’ve made as a community and these juxtaposed quotes from Slack principal engineer, Michael Demmer, show the evolution of the project firsthand:
 
 | Michael Demmer on Vitess incubation (2/5/2018) | Michael Demmer on Vitess graduation (11/5/2019) |
 |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -26,7 +26,7 @@ After beginning incubation, there was some speculation around whether Vitess wou
 
 With the continued support of our open source maintainers and contributors, it slowly became obvious that Vitess had naturally reached the graduation requirements without directly trying. Sugu’s confidence continued into this period, as he believed that graduation was mostly a formality at this point. While many shared his confidence, the graduation process had changed since the last graduating project. 
 
-The formal process starts with a Pull Request on the TOC repository with answers to the Graduation Criteria. As mentioned before, the incubation criteria has evolved since February 2018 (and in some respects, some of the incubation criteria are harder to meet). To accommodate for this, we included answers for both versions of the criteria. After our requirements were verified, we were given a date to present to the TOC. Even after verification, we had one more test to pass; a due diligence checkup from a TOC member. 
+The formal process starts with a Pull Request on the TOC repository with answers to the Graduation Criteria. As mentioned before, the incubation criteria had evolved since February 2018 (and in some respects, some of the incubation criteria are harder to meet). To accommodate for this, we included answers for both versions of the criteria. After our requirements were verified, we were given a date to present to the TOC. Even after verification, we had one more test to pass; a due diligence checkup from a TOC member. 
 
 ### Due Diligence 
 
@@ -51,3 +51,5 @@ From both the bustling community and the development of the project, it’s fair
 While our feature offering has continued to serve the public well, we are aware that getting on board with the product is not as straightforward as we’d like it to be. One of our principal focuses going forward is making Vitess more and more approachable. On this topic, Sugu is hopeful for the future:
 
 > Bringing up a Vitess cluster shouldn’t be hard, and we’re going to make it extremely easy to do so. At the same time, making the migration path simpler for our users that want a drop-in replacement for MySQL will be pivotal to accelerating adoption.
+
+If you are interested in joining the ever-growing force of Vitess contributors, make sure to check out our [community Slack](https://vitess.io/slack] to get started!
