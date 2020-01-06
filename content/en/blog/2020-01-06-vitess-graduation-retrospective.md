@@ -6,13 +6,11 @@ tags: ['graduation', 'vitess graduation']
 title: "Vitess Graduation Retrospective"
 ---
 
-Last week, Vitess became the eighth CNCF project to reach graduation joining a host of amazing projects such as Kubernetes, Prometheus, Envoy, CoreDNS, containerd, Fluentd, and Jaeger. To contextualize this milestone, I picked some tidbits from Sugu’s brain, allowing him to share internal perspective about how we got here, and some of the hurdles along the way.
+Last week, Vitess became the eighth CNCF project to reach graduation, joining a host of amazing projects such as Kubernetes, Prometheus, Envoy, CoreDNS, containerd, Fluentd, and Jaeger. To contextualize this milestone, I picked some tidbits from Sugu’s brain, allowing him to share internal perspective about how we got here, the hurdles we faced, and where we’re headed.
 
 ### Incubation
 
-Considering that it was only last February when the CNCF agreed to host Vitess as an incubating project, Vitess has made efficient strides toward becoming the de-facto standard for storage on Kubernetes. While I could talk more about our progress as a project, I’ll let these side-by-side quotes from Michael Demmer, one of Slack’s principal engineers, speak for themselves.
-
-The main goal we had for Vitess on its acceptance to the CNCF was to spearhead the ability to run databases in Kubernetes. I’m very excited at the progress we’ve made as a community and these juxtaposed quotes from Slack principal engineer, Michael Demmer, show the evolution of the project firsthand:
+Considering that it was only last February when the CNCF agreed to host Vitess as an incubating project, Vitess has made efficient strides toward becoming the de-facto standard for horizontally scaling MySQL. Beyond horizontal scale, however, our main goal we had for Vitess on its acceptance to the CNCF was to spearhead the ability to run databases in Kubernetes. I’m very excited at the progress we’ve made as a community and these juxtaposed quotes from Slack principal engineer, Michael Demmer, show the evolution of the project firsthand:
 
 | Michael Demmer on Vitess incubation (2/5/2018) | Michael Demmer on Vitess graduation (11/5/2019) |
 |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -42,7 +40,7 @@ We started with an outline of common questions we assumed that individuals would
 
 | Vitess Project Stats (2/5/2018) | Vitess Project Stats (11/5/2019) |
 |----------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
-| * 105 contributors * 5413 GitHub stars * 15 releases * 13733 commits * 707 forks | * 187 contributors * 8961 GitHub stars * 24 releases * 17428 commits * 1179 forks |
+| <ul><li>105 contributors</li><li>5413 GitHub stars</li><li>15 releases</li><li>13733 commits</li><li>707 forks</li></ul> | <ul><li>187 contributors</li><li>8961 GitHub stars</li><li>24 releases</li><li>17428 commits</li><li>1179 forks</li></ul> |
 
 From both the bustling community and the development of the project, it’s fairly clear that Vitess is continuing to gain momentum. The number of Vitess adopters and people running on Kubernetes is on the rise, a correlation that we predict will remain positive. Vitess is now is a pioneer in showing that one can indeed run stateful workloads in Kubernetes, a statement that many are quick to dismiss. With major companies committing to fully migrating to Vitess, it has emerged as one of the most trusted storage solutions in the cloud native space. 
 
