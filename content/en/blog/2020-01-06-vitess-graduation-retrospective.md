@@ -52,4 +52,4 @@ While our feature offering has continued to serve the public well, we are aware 
 
 > Bringing up a Vitess cluster shouldn’t be hard, and we’re going to make it extremely easy to do so. At the same time, making the migration path simpler for our users that want a drop-in replacement for MySQL will be pivotal to accelerating adoption.
 
-If you are interested in joining the ever-growing force of Vitess contributors, make sure to check out our [community Slack](https://vitess.io/slack] to get started!
+If you are interested in joining the ever-growing force of Vitess contributors, make sure to check out our [community Slack](https://vitess.io/slack) to get started!
