@@ -5,39 +5,55 @@ featured: true
 aliases: ['/docs/tutorials/kubernetes/','/user-guide/sharding-kubernetes.html']
 ---
 
-As successful companies grow they often face a significant increases in the amount data housed in their transactional databases. This increase in data size can cause detrimental performance issues from query latency to managability. This tutorial demonstrates how Vitess can be used with Kubernetes to anticipate ultra growth and alleviate the performance issues found at scale by leveraging horizontal sharding with a distributed system.
+This tutorial demonstrates how Vitess can be used with Minikube to deploy Vitess clusters.
+
+{{< warning >}}
+Kubernetes 1.16 or Helm 3 are not yet supported. We are working on fixing this in [issue #5411](https://github.com/vitessio/vitess/issues/5411), but also depend on etcd-operator which will require changes to support these newer versions.
+{{< /warning >}}
+
 
 ### Prerequisites
 
-Before we get started, let’s get a few things out of the way.
+Before we get started, let’s get a few things out of the way:
 
-{{< info >}}
-The example settings have been tuned to run on Minikube. However, you should be able to try this on your own Kubernetes cluster. If you do, you may also want to remove some of the Minikube specific resource settings (explained below).
-{{< /info >}}
+1. [Install Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
+ Start a Minikube engine: `minikube start --kubernetes-version v1.15.0 --cpus=4 --memory=5000`. Note the additional resource requirements. In order to go through all the use cases, many vttablet and MySQL instances will be launched. These require more resources than the defaults used by Minikube.
+2. [Install kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and ensure it is in your `PATH`. For example on Linux:
+```
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.15.0/bin/linux/amd64/kubectl
+```
+3. [Install Helm 2](https://v2.helm.sh/):
+```
+wget https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz
+tar -xzf helm-v2.*
+# copy linux-amd64/helm into your path
+```
 
-* [Download Vitess](https://github.com/vitessio/vitess)
-* [Install Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
-* Start a Minikube engine: `minikube start --cpus=4 --memory=5000`. Note the additional resource requirements. In order to go through all the use cases, many vttablet and MySQL instances will be launched. These require more resources than the defaults used by Minikube.
-* [Install etcd operator](https://github.com/coreos/etcd-operator/blob/master/doc/user/install_guide.md)
-* [Install helm](https://docs.helm.sh/using_helm/)
-* After installing, run `helm init`
+After installing helm, run `helm init`.
 
-### Optional
+4. [Install etcd-operator](https://github.com/coreos/etcd-operator/):
+```
+git clone git@github.com:coreos/etcd-operator.git
+cd etcd-operator
+example/rbac/create_role.sh
+kubectl create -f example/deployment.yaml
+```
 
-* Install the MySQL client. On Ubuntu: `apt-get install mysql-client`
-* Install vtctlclient
+4. Install the MySQL client locally. For example, on Ubuntu: `apt-get install mysql-client`
+5. Install vtctlclient locally:
     * Install go 1.12+
     * `go get vitess.io/vitess/go/cmd/vtctlclient`
-    * vtctlclient will be installed at `$GOPATH/bin/`
+    * vtctlclient will be installed at `$GOBIN` or `$GOPATH/bin/`
 
-## Starting a single keyspace cluster
+## Start a single keyspace cluster
 
 So you searched keyspace on Google and got a bunch of stuff about NoSQL… what’s the deal? It took a few hours, but after diving through the ancient Vitess scrolls you figure out that in the NewSQL world, keyspaces and databases are essentially the same thing when unsharded. Finally, it’s time to get started.
 
 Change to the helm example directory:
 
 ``` sh
-cd examples/helm
+git clone git@github.com:vitessio/vitess.git
+cd vitess/examples/helm
 ```
 
 In this directory, you will see a group of yaml files. The first digit of each file name indicates the phase of example. The next two digits indicate the order in which to execute them. For example, `101_initial_cluster.yaml` is the first file of the first phase. We shall execute that now:
@@ -53,36 +69,51 @@ This will bring up the initial Vitess cluster with a single keyspace.
 Once successful, you should see the following state:
 
 ``` sh
-~/...vitess/helm/vitess/templates> kubectl get pods,jobs
-NAME                               READY     STATUS    RESTARTS   AGE
-po/etcd-global-2cwwqfkf8d          1/1       Running   0          14m
-po/etcd-operator-9db58db94-25crx   1/1       Running   0          15m
-po/etcd-zone1-btv8p7pxsg           1/1       Running   0          14m
-po/vtctld-55c47c8b6c-5v82t         1/1       Running   1          14m
-po/vtgate-zone1-569f7b64b4-zkxgp   1/1       Running   2          14m
-po/zone1-commerce-0-rdonly-0       6/6       Running   0          14m
-po/zone1-commerce-0-replica-0      6/6       Running   0          14m
-po/zone1-commerce-0-replica-1      6/6       Running   0          14m
+$ kubectl get pods,jobs
+NAME                                           READY   STATUS      RESTARTS   AGE
+pod/commerce-apply-schema-initial-5twrs        0/1     Completed   0          2m21s
+pod/commerce-apply-vschema-initial-z87rp       0/1     Completed   0          2m21s
+pod/etcd-1578351858-0                          1/1     Running     0          7m21s
+pod/etcd-global-mvbkhllcwz                     1/1     Running     0          2m21s
+pod/etcd-operator-866875d5dc-czhmf             1/1     Running     0          4m57s
+pod/etcd-zone1-x8khdmnbhk                      1/1     Running     0          2m21s
+pod/vtctld-66487b49f5-wdb68                    1/1     Running     2          2m21s
+pod/vtgate-zone1-5999cbcd49-x22f9              1/1     Running     2          2m21s
+pod/zone1-commerce-0-init-shard-master-9chrk   0/1     Completed   0          2m21s
+pod/zone1-commerce-0-rdonly-0                  5/6     Running     0          2m21s
+pod/zone1-commerce-0-replica-0                 5/6     Running     0          2m21s
+pod/zone1-commerce-0-replica-1                 6/6     Running     0          2m21s
 
-NAME                                      DESIRED   SUCCESSFUL   AGE
-jobs/commerce-apply-schema-initial        1         1            14m
-jobs/commerce-apply-vschema-initial       1         1            14m
-jobs/zone1-commerce-0-init-shard-master   1         1            14m
+NAME                                           COMPLETIONS   DURATION   AGE
+job.batch/commerce-apply-schema-initial        1/1           106s       2m21s
+job.batch/commerce-apply-vschema-initial       1/1           101s       2m21s
+job.batch/zone1-commerce-0-init-shard-master   1/1           104s       2m21s
 ```
 
 If you have installed the the MySQL client, you should now be able to connect to the cluster using the following command:
 
-``` sh
-~/...vitess/examples/helm> ./kmysql.sh
-mysql> show tables;
-+--------------------+
-| Tables_in_commerce |
-+--------------------+
-| corder             |
-| customer           |
-| product            |
-+--------------------+
-3 rows in set (0.01 sec)
+```
+$ ./kmysql.sh 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 2
+Server version: 5.7.9-Vitess Percona Server (GPL), Release 29, Revision 11ad961
+
+Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+vitess> SHOW DATABASES;
++-----------+
+| Databases |
++-----------+
+| commerce  |
++-----------+
+1 row in set (0.00 sec)
+
 ```
 
 You can also browse to the vtctld console using the following command (Ubuntu):
@@ -234,6 +265,7 @@ This creates an entry into the topology indicating that any requests to master, 
 A successful completion of this job should show up as:
 
 ``` sh
+$ kubectl get jobs
 NAME                                      DESIRED   SUCCESSFUL   AGE
 jobs/vtctlclient-create-customer-ks       1         1            10s
 ```
@@ -301,6 +333,7 @@ The move in the VSchema should not make a difference yet because any queries sen
 Upon completion of this step, there must be six running vttablet pods, and the following new jobs must have completed successfully:
 
 ``` sh
+$ kubectl get jobs
 NAME                                      DESIRED   SUCCESSFUL   AGE
 jobs/commerce-apply-vschema-vsplit        1         1            5m
 jobs/customer-apply-vschema-vsplit        1         1            5m
