@@ -22,17 +22,15 @@ Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your ins
 
 ```
 # Ubuntu based
-sudo apt install -y mysql-server etcd
-sudo apt install -y curl
+sudo apt install -y mysql-server etcd curl
 
 # Debian
-sudo apt install -y default-mysql-server default-mysql-client etcd
-sudo apt install -y curl
+sudo apt install -y default-mysql-server default-mysql-client etcd curl
 
 # Yum based
 sudo yum -y localinstall https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
-sudo yum -y install mysql-community-server etcd
-sudo yum -y install curl
+
+sudo yum -y install mysql-community-server etcd curl
 ```
 
 On apt-based distributions the services `mysqld` and `etcd` will need to be shutdown, since `etcd` will conflict with the `etcd` started in the examples, and `mysqlctl` will start its own copies of `mysqld`:
@@ -67,7 +65,7 @@ sudo setenforce 0
 
 ## Configure Environment
 
-Add the following to your `$Home/.bashrc` file. Make sure to replace `/path/to/extracted-tarball` with the actual path to where you extracted the latest release file:
+Add the following to your `$HOME/.bashrc` file. Make sure to replace `/path/to/extracted-tarball` with the actual path to where you extracted the latest release file:
 
 ```
 export VTROOT=/path/to/extracted-tarball
@@ -76,7 +74,7 @@ export VTDATAROOT=${HOME}/vtdataroot
 export PATH=${VTROOT}/bin:${PATH}
 ```
 
-You are now ready to start your first cluster! Open a new terminal window before continuing.
+You are now ready to start your first cluster! Open a new terminal window to ensure your `.bashrc` file changes take effect. 
 
 ## Start a Single Keyspace Cluster
 
@@ -168,7 +166,7 @@ mysql> show tables;
 3 rows in set (0.01 sec)
 ```
 
-It is recommended to configure the MySQL command line to default to these settings, as the user guides omit `-h 127.0.0.1 -P 15306` for brevity. Enter the following into the command line:
+It is recommended to configure the MySQL command line to default to these settings, as the user guides omit `-h 127.0.0.1 -P 15306` for brevity. Paste the following:
 
 ```
 cat << EOF > ~/.my.cnf
