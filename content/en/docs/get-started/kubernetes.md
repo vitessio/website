@@ -8,7 +8,7 @@ aliases: ['/docs/tutorials/kubernetes/','/user-guide/sharding-kubernetes.html']
 This tutorial demonstrates how Vitess can be used with Minikube to deploy Vitess clusters.
 
 {{< warning >}}
-Kubernetes 1.16 is not yet supported. We are working on fixing this in [issue #5411](https://github.com/vitessio/vitess/issues/5411).
+Kubernetes 1.16 or Helm 3 are not yet supported. We are working on fixing this in [issue #5411](https://github.com/vitessio/vitess/issues/5411), but also depend on etcd-operator which will require changes to support these newer versions.
 {{< /warning >}}
 
 
@@ -22,7 +22,15 @@ Before we get started, let’s get a few things out of the way:
 ```
 curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.15.0/bin/linux/amd64/kubectl
 ```
-3. [Install Helm 3.0](https://helm.sh/docs/intro/install/).
+3. [Install Helm 2](https://v2.helm.sh/):
+```
+wget https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz
+tar -xzf helm-v2.*
+# copy linux-amd64/helm into your path
+```
+
+After installing helm, run `helm init`.
+
 4. [Install etcd-operator](https://github.com/coreos/etcd-operator/):
 ```
 git clone git@github.com:coreos/etcd-operator.git
@@ -51,7 +59,7 @@ cd vitess/examples/helm
 In this directory, you will see a group of yaml files. The first digit of each file name indicates the phase of example. The next two digits indicate the order in which to execute them. For example, `101_initial_cluster.yaml` is the first file of the first phase. We shall execute that now:
 
 ``` sh
-helm install --generate-name ../../helm/vitess -f 101_initial_cluster.yaml
+helm install ../../helm/vitess -f 101_initial_cluster.yaml
 ```
 
 This will bring up the initial Vitess cluster with a single keyspace.
@@ -86,7 +94,7 @@ If you have installed the the MySQL client, you should now be able to connect to
 
 ```
 $ ./kmysql.sh 
-SHOW DATAWelcome to the MySQL monitor.  Commands end with ; or \g.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 2
 Server version: 5.7.9-Vitess Percona Server (GPL), Release 29, Revision 11ad961
 
@@ -234,7 +242,7 @@ Notice that we are using keyspace `commerce/0` to select data from our tables.
 For subsequent commands, it will be convenient to capture the name of the release and save into a variable:
 
 ``` sh
-export release=$(helm ls -q | tail -n1)
+export release=$(helm ls -q)
 ```
 
 For a vertical split, we first need to create a special `served_from` keyspace. This keyspace starts off as an alias for the `commerce` keyspace. Any queries sent to this keyspace will be redirected to `commerce`. Once this is created, we can vertically split tables into the new keyspace without having to make the app aware of this change:
