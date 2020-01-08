@@ -87,9 +87,8 @@ Set environment variables that Vitess will require. It is recommended to put the
 # Add go PATH
 export PATH=$PATH:/usr/local/go/bin
 
-# Vitess
-export VTROOT=~/vitess
-export PATH=${VTROOT}/bin:${PATH}
+# Vitess binaries
+export PATH=~/vitess/bin:${PATH}
 ```
 
 Build Vitess:
@@ -120,7 +119,7 @@ In addition to running tests, you can try running the [local example](../../get-
 
 ### Key Already Exists
 
-This error is because etcd was not cleaned up from the previous run of the example. You can manually fix this by running `./401_teardown.sh` and then start again:
+This error is because etcd was not cleaned up from the previous run of the example. You can manually fix this by running `./401_teardown.sh`, removing vtdataroot and then starting again:
 ```
 Error:  105: Key already exists (/vitess/zone1) [6]
 Error:  105: Key already exists (/vitess/global) [6]
@@ -162,36 +161,5 @@ done;
 
 export VTDATAROOT=/tmp/vtdataroot
 ./101_initial_cluster.sh
-```
-
-### No .installed_version file
-
-This error indicates that you have not put the required vitess environment variables in your `.bashrc` file:
-
-```
-enter etcd2 env
-cat: /dist/etcd/.installed_version: No such file or directory
-```
-
-Make sure the following variables are defined:
-```
-export VTROOT=~/vitess
-export PATH=${VTROOT}/bin:${PATH}
-```
-
-### Cannot create dir /etcd
-
-This indicates that the environment variable `VTROOT` is not defined, and you have not put the required vitess environment variables in your `.bashrc` file:
-
-```
-./101_initial_cluster.sh
-enter etcd2 env
-mkdir: cannot create directory ‘/etcd’: Permission denied
-```
-
-Make sure the following variables are defined:
-```
-export VTROOT=~/vitess
-export PATH=${VTROOT}/bin:${PATH}
 ```
 

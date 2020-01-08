@@ -8,14 +8,6 @@ aliases: ['/docs/tutorials/local/']
 
 This guide covers installing Vitess locally for testing purposes, from pre-compiled binaries. We will launch multiple copies of `mysqld`, so it is recommended to have greater than 4GB RAM, as well as 20GB of available disk space.
 
-## Download Vitess Package
-
-Download and extract the [latest `.tar.gz` release](https://github.com/vitessio/vitess/releases) from GitHub. Use the following command to extract the file.
-
-```
-tar -zxvf latest-version.tar.gz
-```
-
 ## Install MySQL and etcd
 
 Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your installation method provides a choice:
@@ -29,7 +21,6 @@ sudo apt install -y default-mysql-server default-mysql-client etcd curl
 
 # Yum based
 sudo yum -y localinstall https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
-
 sudo yum -y install mysql-community-server etcd curl
 ```
 
@@ -63,32 +54,39 @@ __SELinux__:
 sudo setenforce 0
 ```
 
-## Configure Environment
+## Install Vitess
 
-Add the following to your `$HOME/.bashrc` file. Make sure to replace `/path/to/extracted-tarball` with the actual path to where you extracted the latest release file:
+Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux. For example with Vitess 5.0:
 
 ```
-export VTROOT=/path/to/extracted-tarball
-export VTTOP=$VTROOT
-export VTDATAROOT=${HOME}/vtdataroot
-export PATH=${VTROOT}/bin:${PATH}
+tar -xzf vitess-5.20+20200204-17a806ae5.tar.gz
+cd vitess-5.20+20200204-17a806ae5
+sudo mkdir -p /usr/local/vitess
+sudo mv * /usr/local/vitess/
+```
+
+Make sure to add `/usr/local/vitess/bin` to the `PATH` environment variable. You can do this by adding the following to your `$HOME/.bashrc` file:
+
+```
+export PATH=/usr/local/vitess/bin:${PATH}
 ```
 
 You are now ready to start your first cluster! Open a new terminal window to ensure your `.bashrc` file changes take effect. 
 
 ## Start a Single Keyspace Cluster
 
-A [keyspace](../../concepts/keyspace) in Vitess is a logical database consisting of potentially multiple shards. For our first example, we are going to be using Vitess without sharding using a single keyspace. The file `101_initial_cluster.sh` is for example `1` phase `01`. Lets execute it now:
+Start by copying the local examples included with Vitess to your preferred location. For our first example we will deploy a [single unsharded keyspace](../../concepts/keyspace). The file `101_initial_cluster.sh` is for example `1` phase `01`. Lets execute it now:
 
 ```
-cd examples/local
+cp -r /usr/local/vitess/examples/local ~/my-vitess-example
+cd ~/my-vitess-example
 ./101_initial_cluster.sh
 ```
 
 You should see output similar to the following:
 
 ```
-~/...vitess/examples/local> ./101_initial_cluster.sh
+~/my-vitess-example> ./101_initial_cluster.sh
 enter etcd2 env
 add /vitess/global
 add /vitess/zone1
@@ -113,7 +111,7 @@ Starting vttablet for zone1-0000000102...
 You can also verify that the processes have started with `pgrep`:
 
 ```
-~/...vitess/examples/local> pgrep -fl vtdataroot
+~/my-vitess-example> pgrep -fl vtdataroot
 26563 etcd
 26626 vtctld
 26770 mysqld_safe
@@ -134,7 +132,7 @@ If you encounter any errors, such as ports already in use, you can kill the proc
 
 ```
 pkill -9 -e -f '(vtdataroot|VTDATAROOT)' # kill Vitess processes
-rm -rf ${HOME}/vtdataroot
+rm -rf vtdataroot
 ```
 
 ## Connect to Your Cluster
@@ -142,7 +140,7 @@ rm -rf ${HOME}/vtdataroot
 You should now be able to connect to the VTGate server that was started in `101_initial_cluster.sh`. To connect to it with the `mysql` command line client:
 
 ```
-~/...vitess/examples/local> mysql -h 127.0.0.1 -P 15306
+~/my-vitess-example> mysql -h 127.0.0.1 -P 15306
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 1
 Server version: 5.5.10-Vitess (Ubuntu)
@@ -179,7 +177,7 @@ EOF
 Repeating the previous step, you should now be able to use the `mysql` client without any settings:
 
 ```
-~/...vitess/examples/local> mysql
+~/my-vitess-example> mysql
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 1
 Server version: 5.5.10-Vitess (Ubuntu)
@@ -248,4 +246,5 @@ Or alternatively, if you would like to teardown your example:
 
 ```
 ./401_teardown.sh
+rm -rf vtdataroot
 ```
