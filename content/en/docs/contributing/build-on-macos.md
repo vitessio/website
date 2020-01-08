@@ -65,9 +65,9 @@ brew cask install adoptopenjdk8
 brew cask info java
 ```
 
-You will also need to install `ant` and `mvn`:
+You will also need to install `ant` and `maven`:
 ```
-brew install ant mvn
+brew install ant maven
 ```
 
 You can then install additional components from `make tools`. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`) first:
