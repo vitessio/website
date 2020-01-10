@@ -17,14 +17,7 @@
 
   <div class="navbar-menu">
     <div class="navbar-end">
-      <div class="navbar-item">
-        <p class="control has-icons-right">
-          <input class="input" type="search" id="search-bar" placeholder="{{ T "search" }}">
-          <span class="icon is-small is-right">
-            <i class="fas fa-sm fa-search"></i>
-          </span>
-        </p>
-      </div>
+      {{ partial "search-bar.html" . }}
 
       <a class="navbar-item has-text-weight-bold" href="{{ "/docs" | relLangURL }}">
         {{ T "docs" }}
