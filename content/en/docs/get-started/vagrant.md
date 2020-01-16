@@ -8,6 +8,9 @@ aliases: ['/docs/tutorials/vagrant/']
 
 [Vagrant](https://www.vagrantup.com/) is a tool for building and managing virtual machine environments in a single workflow. With an easy-to-use workflow and focus on automation, Vagrant lowers development environment setup time, increases production parity, and makes the "works on my machine" excuse a relic of the past.
 
+{{< warning >}}
+The [local build instructions for macOS](../../contributing/build-on-macos/) have improved signficantly over the last few months, and our Vagrant deployment has not kept up with all core-Vitess changes. We are currently [seeking a new maintainer](https://github.com/vitessio/vitess/issues/5723) for Vagrant. If we do not find a maintainer, we intend to deprecate support for Vagrant.
+{{< /warning >}}
 
 The following guide will show you how to build and run Vitess in your local environment using this tool. 
 
