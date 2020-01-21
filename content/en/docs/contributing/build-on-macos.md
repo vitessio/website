@@ -19,12 +19,13 @@ The following has been verified to work on __macOS Mojave__. If you are new to V
 
 [Install Homebrew](http://brew.sh/). From here you should be able to install:
 
-```
+```shell
 brew install go@1.12 automake git curl wget mysql@5.7 etcd
 ```
 
 Add `mysql@5.7` and `go@1.12` to your `PATH`:
-```
+
+```shell
 echo 'export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"' >> ~/.bash_profile
 echo 'export PATH="/usr/local/opt/go@1.12/bin:$PATH"' >> ~/.bash_profile
 ```
@@ -35,7 +36,7 @@ Do not setup MySQL or etcd to restart at login.
 
 Navigate to the directory where you want to download the Vitess source code and clone the Vitess GitHub repo:
 
-```
+```shell
 cd ~
 git clone https://github.com/vitessio/vitess.git
 cd vitess
@@ -43,7 +44,7 @@ cd vitess
 
 Set environment variables that Vitess will require. It is recommended to put these in your `~/.bash_profile` file:
 
-```
+```shell
 # Vitess
 export VTROOT=~/vitess
 export PATH=${VTROOT}/bin:${PATH}
@@ -51,7 +52,7 @@ export PATH=${VTROOT}/bin:${PATH}
 
 Build Vitess:
 
-```
+```shell
 make build
 ```
 
@@ -59,20 +60,21 @@ make build
 
 The unit tests require that you first install a Java runtime. This is required for running ZooKeeper tests:
 
-```
+```shell
 brew tap adoptopenjdk/openjdk
 brew cask install adoptopenjdk8
 brew cask info java
 ```
 
 You will also need to install `ant` and `maven`:
-```
+
+```shell
 brew install ant maven
 ```
 
 You can then install additional components from `make tools`. If your machine requires a proxy to access the Internet, you will need to set the usual environment variables (e.g. `http_proxy`, `https_proxy`, `no_proxy`) first:
 
-```
+```shell
 make tools
 make test
 ```
@@ -84,7 +86,8 @@ In addition to running tests, you can try running the [local example](../../get-
 ### Key Already Exists
 
 This error is because etcd was not cleaned up from the previous run of the example. You can manually fix this by running `./401_teardown.sh` and then start again:
-```
+
+```shell
 Error:  105: Key already exists (/vitess/zone1) [6]
 Error:  105: Key already exists (/vitess/global) [6]
 ```
@@ -93,13 +96,14 @@ Error:  105: Key already exists (/vitess/global) [6]
 
 This error indicates that you have not put the required vitess environment variables in your `.bashrc` file:
 
-```
+```shell
 enter etcd2 env
 cat: /dist/etcd/.installed_version: No such file or directory
 ```
 
 Make sure the following variables are defined:
-```
+
+```shell
 export VTROOT=~/vitess
 export PATH=${VTROOT}/bin:${PATH}
 ```
@@ -108,14 +112,15 @@ export PATH=${VTROOT}/bin:${PATH}
 
 This indicates that the environment variable `VTROOT` is not defined, and you have not put the required vitess environment variables in your `.bashrc` file:
 
-```
+```shell
 ./101_initial_cluster.sh
 enter etcd2 env
 mkdir: cannot create directory ‘/etcd’: Permission denied
 ```
 
 Make sure the following variables are defined:
-```
+
+```shell
 export VTROOT=~/vitess
 export PATH=${VTROOT}/bin:${PATH}
 ```
