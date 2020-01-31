@@ -53,15 +53,15 @@ END_OF_COMMAND
 Now we can test our new users:
 
 ```
-$ mysql -h 127.0.0.1 -u user1 -ppassword1 -e "select 1"
+$ mysql -h 127.0.0.1 -u myuser1 -ppassword1 -e "select 1"
 +---+
 | 1 |
 +---+
 | 1 |
 +---+
 
-$ mysql -h 127.0.0.1 -u user1 -pincorrect_password -e "select 1"
-ERROR 1045 (28000): Access denied for user 'user1'
+$ mysql -h 127.0.0.1 -u myuser1 -pincorrect_password -e "select 1"
+ERROR 1045 (28000): Access denied for user 'myuser1'
 ```
 
 ## Authorization
@@ -72,8 +72,8 @@ service to have access to theirs.
 
 Building on the authentication setup above and assuming your Vitess cluster already has 2 keyspaces
 setup:
-* `keyspace1` with a single table `t` that should only be accessed by `user1`
-* `keyspace2` with a single table `t` that should only be accessed by `user2`
+* `keyspace1` with a single table `t` that should only be accessed by `myuser1`
+* `keyspace2` with a single table `t` that should only be accessed by `myuser2`
 
 For the VTTablet configuration for `keyspace1`:
 ``` shell script
@@ -83,9 +83,9 @@ $ echo '
     {
       "name": "keyspace1acls",
       "table_names_or_prefixes": [""],
-      "readers": ["user1", "vitess"],
-      "writers": ["user1", "vitess"],
-      "admins": ["user1", "vitess"]
+      "readers": ["myuser1", "vitess"],
+      "writers": ["myuser1", "vitess"],
+      "admins": ["myuser1", "vitess"]
     }
   ]
 } > acls_for_keyspace1.json
@@ -101,9 +101,9 @@ $ echo '
     {
       "name": "keyspace2acls",
       "table_names_or_prefixes": [""],
-      "readers": ["user2", "vitess"],
-      "writers": ["user2", "vitess"],
-      "admins": ["user2", "vitess"]
+      "readers": ["myuser2", "vitess"],
+      "writers": ["myuser2", "vitess"],
+      "admins": ["myuser2", "vitess"]
     }
   ]
 } > acls_for_keyspace2.json
@@ -111,19 +111,19 @@ $ echo '
 $ vttablet -init_keyspace "keyspace2" -table-acl-config=acls_for_keyspace2.json ........
 ```
 
-With this setup, the `user1` and `user2` users can only access their respective keyspaces, but the `vitess`
+With this setup, the `myuser1` and `myuser2` users can only access their respective keyspaces, but the `vitess`
 user can access both.
 
 ```sh
-# Attempt to access keyspace1 with user2 credentials through vtgate
-$ mysql -h 127.0.0.1 -u user2 -ppassword2 -D keyspace1 -e "select * from t"
-ERROR 1045 (HY000) at line 1: vtgate: http://vtgate-zone1-7fbfd8cc47-tchbz:15001/: target: keyspace1.-80.master, used tablet: zone1-476565201 (zone1-keyspace1-x-80-replica-1.vttablet): vttablet: rpc error: code = PermissionDenied desc = table acl error: "user2" [] cannot run PASS_SELECT on table "t" (CallerID: user2)
-target: keyspace1.80-.master, used tablet: zone1-1289569200 (zone1-keyspace1-80-x-replica-0.vttablet): vttablet: rpc error: code = PermissionDenied desc = table acl error: "user2" [] cannot run PASS_SELECT o
+# Attempt to access keyspace1 with myuser2 credentials through vtgate
+$ mysql -h 127.0.0.1 -u myuser2 -ppassword2 -D keyspace1 -e "select * from t"
+ERROR 1045 (HY000) at line 1: vtgate: http://vtgate-zone1-7fbfd8cc47-tchbz:15001/: target: keyspace1.-80.master, used tablet: zone1-476565201 (zone1-keyspace1-x-80-replica-1.vttablet): vttablet: rpc error: code = PermissionDenied desc = table acl error: "myuser2" [] cannot run PASS_SELECT on table "t" (CallerID: myuser2)
+target: keyspace1.80-.master, used tablet: zone1-1289569200 (zone1-keyspace1-80-x-replica-0.vttablet): vttablet: rpc error: code = PermissionDenied desc = table acl error: "myuser2" [] cannot run PASS_SELECT o
 ```
 
-Whereas user1 is able to access its keyspace fine:
+Whereas myuser1 is able to access its keyspace fine:
 ```sh
-$ mysql -h 127.0.0.1 -u user1 -ppassword1 -D keyspace1 -e "select * from t"
+$ mysql -h 127.0.0.1 -u myuser1 -ppassword1 -D keyspace1 -e "select * from t"
 $
 ```
 
