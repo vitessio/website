@@ -9,7 +9,9 @@ The vtexplain tool provides information about how Vitess will execute a statemen
 
 ## Prerequisites
 
-You will need to build the `vtexplain` binary in your environment. To find instructions on how to build this binary please refer to the [Build From Source](../../contributing/build-from-source) guide.
+You can find a prebuilt binary version of the VTExplain tool in [the most recent release of Vitess](https://github.com/vitessio/vitess/releases/).
+
+You can also build the `vtexplain` binary in your environment. To find instructions on how to build this binary please refer to the [Build From Source](../../contributing/build-from-source) guide.
 
 ## Explaining a Query
 
