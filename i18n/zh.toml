@@ -53,3 +53,6 @@ other = "Slack"
 
 [stack_overflow]
 other = "Stack Overflow"
+
+[search]
+other = "Search"

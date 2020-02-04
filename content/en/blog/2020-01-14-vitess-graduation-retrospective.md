@@ -1,7 +1,7 @@
 ---
 author: "Abhi Vaidyanatha"
-date: 2020-01-06T09:07:21-08:00
-slug: "2020-01-06-vitess-graduation-retrospective"
+date: 2020-01-14T09:09:21-08:00
+slug: "2020-01-14-vitess-graduation-retrospective"
 tags: ['graduation', 'vitess graduation']
 title: "Vitess Graduation Retrospective"
 ---

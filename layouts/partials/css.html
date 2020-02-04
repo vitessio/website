@@ -6,9 +6,14 @@
 {{ $cssProdOpts  := (dict "includePaths" $includes "targetPath" $target "outputStyle" "compressed") }}
 {{ $cssOpts      := cond $inServerMode $cssDevOpts $cssProdOpts }}
 {{ $css          := resources.Get $style | resources.ExecuteAsTemplate $style . | toCSS $cssOpts }}
+{{ $isDoc        := eq .Section "docs" }}
 {{ if $inServerMode }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}">
 {{ else }}
 {{ $prodCss      := $css | fingerprint }}
 <link rel="stylesheet" href="{{ $prodCss.RelPermalink }}" integrity="{{ $prodCss.Data.Integrity }}">
+{{ end }}
+
+{{ if $isDoc }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css">
 {{ end }}
