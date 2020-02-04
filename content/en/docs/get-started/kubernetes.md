@@ -2,7 +2,7 @@
 title: Run Vitess on Kubernetes
 weight: 3
 featured: true
-aliases: ['/docs/tutorials/kubernetes/','/user-guide/sharding-kubernetes.html']
+aliases: ['/docs/tutorials/kubernetes/','/user-guide/sharding-kubernetes.html', '/docs/get-started/scaleway/']
 ---
 
 This tutorial demonstrates how Vitess can be used with Minikube to deploy Vitess clusters.

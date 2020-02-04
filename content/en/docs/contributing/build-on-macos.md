@@ -1,6 +1,7 @@
 ---
 title: Build on macOS
 description: Instructions for building Vitess on your machine for testing and development purposes
+aliases: ['/docs/get-started/vagrant/']
 ---
 
 {{< info >}}
