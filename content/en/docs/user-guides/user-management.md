@@ -4,8 +4,8 @@ weight: 11
 aliases: []
 ---
 
-Vitess uses its own mechanism for managing users and their permissions. So the `CREATE USER....` and `GRANT...` statements
-won't work if sent through VTGate.
+Vitess uses its own mechanism for managing users and their permissions through VTGate. As a result, the `CREATE USER....` and
+`GRANT...` statements will not work if sent through VTGate.
 
 ## Authentication
 
