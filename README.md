@@ -9,7 +9,7 @@ This repo houses the assets used to build the website at https://vitess.io.
 To run the website locally, you need to have the [Hugo](https://gohugo.io) static site generator installed (installation instructions [here](https://gohugo.io/getting-started/installing/)). Once Hugo is installed run the following:
 
 ```bash
-hugo server
+hugo server --buildDrafts --buildFuture
 ```
 
 This starts Hugo in local mode. You can see access the site at http://localhost:1313.
