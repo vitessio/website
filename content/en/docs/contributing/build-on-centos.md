@@ -94,7 +94,7 @@ You can then install additional components from `make tools`. If your machine re
 
 ```
 make tools
-make test
+make unit_test
 ```
 
 In addition to running tests, you can try running the [local example](../../get-started/local).
