@@ -12,6 +12,6 @@ Vitess tools and servers are designed to help you whether you start with a compl
 
 The diagram below illustrates Vitess' components:
 
-![Vitess Overview Architecture Diagram](../img/VitessOverview.png)
+{{< figure src="../img/architecture.png" >}}
 
 For additonal details on each of the components, see [Concepts](../../concepts).
