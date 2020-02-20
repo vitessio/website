@@ -41,9 +41,15 @@ Next, identify a [VSchema](../concepts/vschema) that contains the Vindexes for t
 **Note:** VTExplain requires a keyspace name for each keyspace in an input VSChema:
 
 ```
-"mainkeyspace": {
+"keyspace_name": {
     "_comment": "Keyspace definition goes here."
 }
+```
+
+If no keyspace name is present, VTExplain will return the following error:
+
+```
+ERROR: initVtgateExecutor: json: cannot unmarshal bool into Go value of type map[string]json.RawMessage
 ```
 
 ### Example VSchema
