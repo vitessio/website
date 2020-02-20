@@ -1,6 +1,5 @@
 ---
 title: VTExplain
-aliases: ['/docs/user-guides/vtexplain/']
 ---
 
 # Explaining a query
@@ -17,7 +16,9 @@ You can also build the `vtexplain` binary in your environment. To build this bin
 
 In order to explain a query, first identify the SQL schema for the source tables that the query will use.
 
-For this how-to, copy the following example schema, and save it to <!-- What directory should we use? --> as` schema.sql`:
+### Example SQL Schema
+
+The following example SQL schema creates two tables, `users` and `users_name_idx`, each of which contain the columns `user_id` and `name`, and define both columns as a composite primary key.
 
 ```
 CREATE TABLE users(
@@ -37,7 +38,17 @@ CREATE TABLE users_name_idx(
 
 Next, identify a [VSchema](../concepts/vschema) that contains the Vindexes for the source tables for the query.
 
-For this how-to, copy the following example VSchema, and save it to <!-- What directory? --> as `vschema.json`:
+**Note:** VTExplain requires a keyspace name for each keyspace in an input VSChema:
+
+```
+"mainkeyspace": {
+    "_comment": "Keyspace definition goes here."
+}
+```
+
+### Example VSchema
+
+The following example VSchema defines a single keyspace `mainkeyspace` and three Vindexes, and specifies vindexes for each column in the two tables `users` and `users_name_idx`.
 
 ```
 {
@@ -90,6 +101,8 @@ For this how-to, copy the following example VSchema, and save it to <!-- What di
   }
 }
 ```
+
+In the example above, the keyspace definition is a key-value pair, where the key is the keyspace name (`"mainkeyspace"`) and the value is the keyspace object, containing the keyspace definition.
 
 ## Run the VTExplain tool
 
