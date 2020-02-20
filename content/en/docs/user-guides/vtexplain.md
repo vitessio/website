@@ -54,7 +54,7 @@ ERROR: initVtgateExecutor: json: cannot unmarshal bool into Go value of type map
 
 ### Example VSchema
 
-The following example VSchema defines a single keyspace `mainkeyspace` and three Vindexes, and specifies vindexes for each column in the two tables `users` and `users_name_idx`.
+The following example VSchema defines a single keyspace `mainkeyspace` and three Vindexes, and specifies vindexes for each column in the two tables `users` and `users_name_idx`. The keyspace name `"mainkeyspace"` precedes the keyspace definition object.
 
 ```
 {
@@ -107,8 +107,6 @@ The following example VSchema defines a single keyspace `mainkeyspace` and three
   }
 }
 ```
-
-In the example above, the keyspace definition is a key-value pair, where the key is the keyspace name (`"mainkeyspace"`) and the value is the keyspace object, containing the keyspace definition.
 
 ## Run the VTExplain tool
 
