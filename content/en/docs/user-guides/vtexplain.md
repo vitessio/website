@@ -1,8 +1,8 @@
 ---
-title: VTExplain
+title: Explaining how Vitess executes a SQL statement
 ---
 
-# Explaining a query
+# Explaining how Vitess executes a SQL statement
 
 To learn how Vitess will execute a particular SQL statement, use the [VTexplain tool](../reference/vtexplain). This tool works similarly to the MySQL `EXPLAIN` statement.
 
@@ -12,7 +12,15 @@ You can find a prebuilt binary version of the VTExplain tool in [the most recent
 
 You can also build the `vtexplain` binary in your environment. To build this binary, refer to the [Build From Source](../../contributing/build-from-source) guide.
 
-## Identify a SQL schema for the source tables
+## Overview
+
+To explain how Vitess executes a SQL statement, follow these steps:
+
+1. Identify a SQL schema for the statement's source tables
+1. Identify a VSchema for the statement's source tables 
+1. Run the VTExplain tool
+
+## 1. Identify a SQL schema for the statement's source tables
 
 In order to explain a query, first identify the SQL schema for the source tables that the query will use.
 
@@ -34,7 +42,7 @@ CREATE TABLE users_name_idx(
 );
 ```
 
-## Identify a VSchema for the source tables
+## 2. Identify a VSchema for the statement's source tables
 
 Next, identify a [VSchema](../concepts/vschema) that contains the Vindexes for the source tables for the query.
 
@@ -108,7 +116,7 @@ The following example VSchema defines a single keyspace `mainkeyspace` and three
 }
 ```
 
-## Run the VTExplain tool
+## 3. Run the VTExplain tool
 
 To explain a query, pass the SQL schema and VSchema files as arguments to the `VTExplain` command.
 
