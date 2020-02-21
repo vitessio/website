@@ -4,7 +4,7 @@ title: Explaining how Vitess executes a SQL statement
 
 # Introduction 
 
-This document explains how to learn more about the way Vitess executes a particular SQL statement, use the [VTexplain tool](../reference/vtexplain). This tool works similarly to the MySQL `EXPLAIN` statement.
+This document explains how to learn more about the way Vitess executes a particular SQL statement using the [VTexplain tool](../reference/vtexplain). This tool works similarly to the MySQL `EXPLAIN` statement.
 
 ## Prerequisites
 
@@ -22,7 +22,7 @@ To explain how Vitess executes a SQL statement, follow these steps:
 
 ## 1. Identify a SQL schema for tables in the statement
 
-In order to explain a statement, first identify the SQL schema for the tables that the statement will use. This includes tables that a query targets and ones that a DML statement modifies.
+In order to explain a statement, first identify the SQL schema for the tables that the statement will use. This includes tables that a query targets and tables that a DML statement modifies.
 
 ### Example SQL Schema
 
@@ -44,7 +44,7 @@ CREATE TABLE users_name_idx(
 
 ## 2. Identify a VSchema for the statement's source tables
 
-Next, identify a [VSchema](../concepts/vschema) that contains the Vindexes for the tables in the statement.
+Next, identify a [VSchema](../concepts/vschema) that contains the [Vindexes](../reference/vindexes) for the tables in the statement.
 
 ### The VSchema must use a keyspace name.
 
