@@ -44,7 +44,7 @@ CREATE TABLE users_name_idx(
 
 ## 2. Identify a VSchema for the statement's source tables
 
-Next, identify a [VSchema](../concepts/vschema) that contains the [Vindexes](../reference/vindexes) for the tables in the statement.
+Next, identify a [VSchema](../../concepts/vschema) that contains the [Vindexes](../../reference/vindexes) for the tables in the statement.
 
 ### The VSchema must use a keyspace name.
 
