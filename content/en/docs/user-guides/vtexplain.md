@@ -180,5 +180,5 @@ The example above shows how Vitess handles an insert into a table with a seconda
 
 ## See also
 
-+ For detailed configuration options for VTExplain, see the [VTExplain syntax reference](../reference/vtexplain).
++ For detailed configuration options for VTExplain, see the [VTExplain syntax reference](../../reference/vtexplain).
 
