@@ -38,7 +38,7 @@ In Vitess, a keyspace id can be any binary string. For simplicity, let’s restr
 
 Now, all we have to do is provide a function that generates a keyspace id
 such that it remaps the mod function into this wider space. In the above
-case, it could be achieved with the following expression: `(user_id%4)&lt;&lt;62`.The keyranges assigned to the original shards will be as follows:
+case, it could be achieved with the following expression: `(user_id%4)<<62`.The keyranges assigned to the original shards will be as follows:
 
 | shard | keyranges |
 |-------|-----------|
@@ -55,7 +55,7 @@ Because of the expanded set of possible keyspace ids, many strategies can be ado
 
 Let's see what it takes to go from 4 to 8 shards. These can be represented as: `-20-40-60-80-A0-C0-E0-`.
 
-With this shard layout, a simple `user_id%8&lt;&lt;61` will not work. This is because the numbers produced by this function will not fall in the same shard range as the ones produced by the `mod 4` function. Here is an illustration:
+With this shard layout, a simple `user_id%8<<61` will not work. This is because the numbers produced by this function will not fall in the same shard range as the ones produced by the `mod 4` function. Here is an illustration:
 
 `user_id%4<<62`
 
