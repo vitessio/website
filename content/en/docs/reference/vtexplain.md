@@ -1,159 +1,91 @@
 ---
-title: VTExplain
-aliases: ['/docs/user-guides/vtexplain/']
+title: VTExplain tool reference
 ---
 
-## VTExplain Tool
+# Overview
 
-The vtexplain tool provides information about how Vitess will execute a statement (the Vitess version of MySQL "EXPLAIN").
+This document provides information about the options and syntax of the `VTExplain` tool.
 
-## Prerequisites
+For a user guide that describes how to use the `VTExplain` tool to explain how Vitess executes a particular SQL statement, see [Explaining how Vitess executes a SQL statement](../../user-guides/vtexplain).
 
-You can find a prebuilt binary version of the VTExplain tool in [the most recent release of Vitess](https://github.com/vitessio/vitess/releases/).
+## About VTExplain
 
-You can also build the `vtexplain` binary in your environment. To find instructions on how to build this binary please refer to the [Build From Source](../../contributing/build-from-source) guide.
+The `VTExplain` tool provides information about how Vitess will execute a particular SQL statement. `VTExplain` is analagous to the MySQL [`EXPLAIN`](https://dev.mysql.com/doc/refman/8.0/en/explain.html) tool.
 
-## Explaining a Query
-
-In order to explain a query you will need to first collect a sql schema for the various tables and a vschema json file containing a map of keyspace to the set of vindexes / tables in the vschema.
-
-For example, let's use the following:
-
-Schema:
+## Syntax
 
 ```
-CREATE TABLE users(
-  user_id bigint,
-  name varchar(128),
-  primary key(user_id)
-);
-
-CREATE TABLE users_name_idx(
-  user_id bigint,
-  name varchar(128),
-  primary key(name, user_id)
-);
+> vtexplain {-vschema|vschema-file} {-schema|-schema-file} -sql
 ```
 
-VSchema:
+## Options
 
-```
-{
-  "mainkeyspace": {
-    "sharded": true,
-    "vindexes": {
-      "hash": {
-        "type": "hash"
-      },
-      "md5": {
-        "type": "unicode_loose_md5",
-        "params": {},
-        "owner": ""
-      },
-      "users_name_idx": {
-        "type": "lookup_hash",
-        "params": {
-          "from": "name",
-          "table": "users_name_idx",
-          "to": "user_id"
-        },
-        "owner": "users"
-      }
-    },
-    "tables": {
-      "users": {
-        "column_vindexes": [
-          {
-            "column": "user_id",
-            "name": "hash"
-          },
-          {
-            "column": "name",
-            "name": "users_name_idx"
-          }
-        ],
-        "auto_increment": null
-      },
-      "users_name_idx": {
-        "type": "",
-        "column_vindexes": [
-          {
-            "column": "name",
-            "name": "md5"
-          }
-        ],
-        "auto_increment": null
-      }
-    }
-  }
-}
-```
+The `vtexplain` command takes the following options:
 
-These can be passed to vtexplain either on the command line or (more readily) through files.
+  -dbname string
+   	Optional database target to override normal routing (default "") 
+  -output-mode string
+    	Output in human-friendly text or json (default "text")
+  -normalize
+    	Whether to enable vtgate normalization (default false)
+  -shards int
+    	Number of shards to simulate per keyspace (default 2).`vtexplain` will always allocate an evenly divided key range to each.
+  -replication-mode string
+    	The replication mode to simulate: either ROW or STATEMENT (default "ROW"). 
+  -schema string
+    	The SQL table schema (default ""). Either `schema` or `schema-file` is required.
+  -schema-file string
+    	Identifies the file that contains the SQL table schema (default ""). Either `schema` or `schema-file` is required.
+  -sql string
+    	A list of semicolon-delimited SQL commands to analyze (default ""). Required.
+  -sql-file string
+    	Identifies the file that contains the SQL commands to analyze (default "")
+  -vschema string
+    	Identifies the VTGate routing schema (default ""). Either `-vschema` or `-vschema-file` is required.
+  -vschema-file string
+    	Identifies the VTGate routing schema file (default "")
+  -queryserver-config-passthrough-dmls
+    	query server pass through all dml statements without rewriting (default false)
 
-Then you can use the tool like this:
-
-**Select:**
-
-```
-vtexplain -shards 8 -vschema-file /tmp/vschema.json -schema-file /tmp/schema.sql -replication-mode "ROW" -output-mode text -sql "SELECT * from users"
-----------------------------------------------------------------------
-SELECT * from users
-
-1 mainkeyspace/-20: select * from users limit 10001
-1 mainkeyspace/20-40: select * from users limit 10001
-1 mainkeyspace/40-60: select * from users limit 10001
-1 mainkeyspace/60-80: select * from users limit 10001
-1 mainkeyspace/80-a0: select * from users limit 10001
-1 mainkeyspace/a0-c0: select * from users limit 10001
-1 mainkeyspace/c0-e0: select * from users limit 10001
-1 mainkeyspace/e0-: select * from users limit 10001
-
-----------------------------------------------------------------------
-```
-
-The output shows the sequence of queries run.
-
-In this case, the query planner is a scatter query to all shards, and each line shows:
-
-1. the logical sequence of the query
-1. the keyspace/shard
-1. the query that was executed
-
-The fact that each query runs at time `1` shows that vitess executes these in parallel, and the limit `10001` is automatically added as a protection against large results.
-
-**Insert:**
-
-```
-vtexplain -shards 128 -vschema-file /tmp/vschema.json -schema-file /tmp/schema.sql -replication-mode "ROW" -output-mode text -sql "INSERT INTO users (user_id, name) VALUES(1, 'john')"
-
-----------------------------------------------------------------------
-INSERT INTO users (user_id, name) VALUES(1, 'john')
-
-1 mainkeyspace/22-24: begin
-1 mainkeyspace/22-24: insert into users_name_idx(name, user_id) values ('john', 1) /* vtgate:: keyspace_id:22c0c31d7a0b489a16332a5b32b028bc */
-2 mainkeyspace/16-18: begin
-2 mainkeyspace/16-18: insert into users(user_id, name) values (1, 'john') /* vtgate:: keyspace_id:166b40b44aba4bd6 */
-3 mainkeyspace/22-24: commit
-4 mainkeyspace/16-18: commit
-
-----------------------------------------------------------------------
-```
-
-This example shows how Vitess handles an insert into a table with a secondary lookup vindex:
-
-* At time `1`, a transaction is opened on one shard to insert the row into the `users_name_idx` table.
-* Then at time `2` a second transaction is opened on another shard with the actual insert into the `users` table.
-* Finally each transaction is committed at time `3` and `4`.
-
-**Configuration Options**
-
-The `--shards` option specifies the number of shards to simulate. vtexplain will always allocate an evenly divided key range to each.
-
-The `--replication-mode` option controls whether to simulate row-based or statement-based replication.
-
-You can find more usage of `vtexplain` by executing the following command:
+To view a list of these options, execute the following command:
 
 ```
 vtexplain --help
 ```
+
+## Examples
+
+```
+vtexplain -vschema-file vschema.json -schema-file schema.sql  -sql "SELECT * FROM users"
+```
+
+The example above explains how Vitess would execute the query `SELECT * FROM users` using the VSchema contained in `vschema.json` and the database schema contained in `schema.sql`.
+
+```
+vtexplain -shards 128 -vschema-file /tmp/vschema.json -schema-file /tmp/schema.sql -replication-mode "ROW" -output-mode text -sql "INSERT INTO users (user_id, name) VALUES(1, 'john')"
+```
+
+The example above explains how Vitess would execute the query `INSERT INTO users (user_id, name) VALUES(1, 'john')`, simulating 128 shards and row-based replication, and specifying text-based output.
+
+## Limitations
+
+### The VSchema must use a keyspace name.
+
+VTExplain requires a keyspace name for each keyspace in an input VSChema:
+
+```
+"keyspace_name": {
+    "_comment": "Keyspace definition goes here."
+}
+```
+
+If no keyspace name is present, VTExplain will return the following error:
+
+```
+ERROR: initVtgateExecutor: json: cannot unmarshal bool into Go value of type map[string]json.RawMessage
+```
+
+## See also
+
++  [Explaining how Vitess executes a SQL statement](../../user-guides/vtexplain)    
+
