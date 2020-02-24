@@ -23,27 +23,38 @@ The `VTExplain` tool provides information about how Vitess will execute a partic
 The `vtexplain` command takes the following options:
 
 -dbname string
-: Optional database target to override normal routing (default "") 
+: Optional database target to override normal routing (default "")
+ 
 -output-mode string
 : Output in human-friendly text or json (default "text")
+
 -normalize
 : Whether to enable vtgate normalization (default false)
+
 -shards int
 : Number of shards to simulate per keyspace (default 2).`vtexplain` will always allocate an evenly divided key range to each.
+
 -replication-mode string
 : The replication mode to simulate: either ROW or STATEMENT (default "ROW"). 
+
 -schema string
 : The SQL table schema (default ""). Either `schema` or `schema-file` is required.
+
 -schema-file string
 : Identifies the file that contains the SQL table schema (default ""). Either `schema` or `schema-file` is required.
+
 -sql string
 : A list of semicolon-delimited SQL commands to analyze (default ""). Required.
+
 -sql-file string
 : Identifies the file that contains the SQL commands to analyze (default "")
+
 -vschema string
 : Identifies the VTGate routing schema (default ""). Either `-vschema` or `-vschema-file` is required.
+
 -vschema-file string
 : Identifies the VTGate routing schema file (default "")
+
 -queryserver-config-passthrough-dmls
 : query server pass through all dml statements without rewriting (default false)
 
