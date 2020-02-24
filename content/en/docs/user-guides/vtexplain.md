@@ -1,10 +1,10 @@
 ---
-title: VTExplain
+title: Explaining how Vitess executes a SQL statement
 ---
 
-# Explaining a query
+# Introduction 
 
-To learn how Vitess will execute a particular SQL statement, use the [VTexplain tool](../reference/vtexplain). This tool works similarly to the MySQL `EXPLAIN` statement.
+This document explains how to learn more about the way Vitess executes a particular SQL statement using the [VTexplain tool](../reference/vtexplain). This tool works similarly to the MySQL `EXPLAIN` statement.
 
 ## Prerequisites
 
@@ -12,13 +12,21 @@ You can find a prebuilt binary version of the VTExplain tool in [the most recent
 
 You can also build the `vtexplain` binary in your environment. To build this binary, refer to the [Build From Source](../../contributing/build-from-source) guide.
 
-## Identify a SQL schema for the source tables
+## Overview
 
-In order to explain a query, first identify the SQL schema for the source tables that the query will use.
+To explain how Vitess executes a SQL statement, follow these steps:
+
+1. Identify a SQL schema for the statement's source tables
+1. Identify a VSchema for the statement's source tables 
+1. Run the VTExplain tool
+
+## 1. Identify a SQL schema for tables in the statement
+
+In order to explain a statement, first identify the SQL schema for the tables that the statement will use. This includes tables that a query targets and tables that a DML statement modifies.
 
 ### Example SQL Schema
 
-The following example SQL schema creates two tables, `users` and `users_name_idx`, each of which contain the columns `user_id` and `name`, and define both columns as a composite primary key.
+The following example SQL schema creates two tables, `users` and `users_name_idx`, each of which contain the columns `user_id` and `name`, and define both columns as a composite primary key. The example statements in step 3 include these tables.
 
 ```
 CREATE TABLE users(
@@ -34,11 +42,13 @@ CREATE TABLE users_name_idx(
 );
 ```
 
-## Identify a VSchema for the source tables
+## 2. Identify a VSchema for the statement's source tables
 
-Next, identify a [VSchema](../concepts/vschema) that contains the Vindexes for the source tables for the query.
+Next, identify a [VSchema](../../concepts/vschema) that contains the [Vindexes](../../reference/vindexes) for the tables in the statement.
 
-**Note:** VTExplain requires a keyspace name for each keyspace in an input VSChema:
+### The VSchema must use a keyspace name.
+
+VTExplain requires a keyspace name for each keyspace in an input VSChema:
 
 ```
 "keyspace_name": {
@@ -108,7 +118,7 @@ The following example VSchema defines a single keyspace `mainkeyspace` and three
 }
 ```
 
-## Run the VTExplain tool
+## 3. Run the VTExplain tool
 
 To explain a query, pass the SQL schema and VSchema files as arguments to the `VTExplain` command.
 
@@ -139,7 +149,7 @@ In the example above, the output of `VTExplain` shows the sequence of queries th
 [Sequence number] [keyspace]/[shard]: [query]
 ```
 
-In this example, each query has sequence `1`, which shows that Vitess executes these in parallel. Vitess automatically adds the `LIMIT 10001` clause` to protect against large results.
+In this example, each query has sequence number `1`, which shows that Vitess executes these in parallel. Vitess automatically adds the `LIMIT 10001` clause` to protect against large results.
 
 ### Example: Explaining an INSERT query
 
@@ -161,14 +171,14 @@ INSERT INTO users (user_id, name) VALUES(1, 'john')
 ----------------------------------------------------------------------
 ```
 
-This example shows how Vitess handles an insert into a table with a secondary lookup Vindex:
+The example above shows how Vitess handles an insert into a table with a secondary lookup Vindex:
 
-+ At time `1`, Vitess opens a transaction on shard `11-24` to insert the row into the `users_name_idx` table.
-+ At time `2`, Vitess opens a second transaction on shard `16-18` to perform the actual insert into the `users` table.
-+ At time `3`, the first transaction commits.
-+ At time `4`, the second transaction commits.
++ At sequence number `1`, Vitess opens a transaction on shard `11-24` to insert the row into the `users_name_idx` table.
++ At sequence number `2`, Vitess opens a second transaction on shard `16-18` to perform the actual insert into the `users` table.
++ At sequence number `3`, the first transaction commits.
++ At sequence number `4`, the second transaction commits.
 
 ## See also
 
-+ For detailed configuration options for VTExplain, see the [VTExplain syntax reference](../reference/vtexplain).
++ For detailed configuration options for VTExplain, see the [VTExplain syntax reference](../../reference/vtexplain).
 
