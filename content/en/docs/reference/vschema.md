@@ -18,6 +18,10 @@ This difference is significant enough that we do not refer to the keyspace ID as
 
 Mapping to a `keyspace ID`, and then to a shard, gives us the flexibility to reshard the data with minimal disruption because the `keyspace ID` of each row remains unchanged through the process.
 
+## Vindexes
+
+The Vschema contains, among other things, the [Vindex](../vindexes) for any sharded tables. The Vindex tells Vitess where to find the shard that contains a particular row for a sharded table. Every VSchema must have at least one Vindex, called the [Primary Vindex](../vindexes/#the-primary-vindex), defined. The Primary Vindex is unique: given an input value, it produces a single keyspace ID, or value in the keyspace used to shard the table. The Primary Vindex is typically a functional Vindex: Vitess computes the keyspace ID as needed from a column in the sharded table.
+
 ## Sequences
 
 Auto-increment columns do not work very well for sharded tables. [Vitess sequences](../vitess-sequences) solve this problem. Sequence tables must be specified in the VSchema, and then tied to table columns. At the time of insert, if no value is specified for such a column, VTGate will generate a number for it using the sequence table.
