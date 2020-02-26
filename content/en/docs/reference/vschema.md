@@ -45,19 +45,9 @@ Vitess allows you to create an unsharded table and deploy it into all shards of 
 
 Typically, such a table has a canonical source in an unsharded keyspace, and the copies in the sharded keyspace are kept up-to-date through VReplication.
 
+## Configuration
 
-
-
-
-
-
-
-
-
-
-
-
-The following sections document the various features highlighted with snippets pulled from the demo.
+The configuration of your VSchema reflects the desired sharding configuration for your database, including whether or not your tables are sharded and whether you want to implement a secondary Vindex. 
 
 ### Unsharded Table
 
