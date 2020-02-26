@@ -158,7 +158,7 @@ VSchema:
 
 ### Specifying A Secondary Vindex
 
-The following snippet shows how to configure a [Secondary Vindex](../vindexes/secondary-vindexes) that is backed by a lookup table. In this case, the lookup table is configured to be in the unsharded lookup keyspace:
+The following snippet shows how to configure a [Secondary Vindex](../vindexes/#secondary-vindexes) that is backed by a lookup table. In this case, the lookup table is configured to be in the unsharded lookup keyspace:
 
 Schema:
 
