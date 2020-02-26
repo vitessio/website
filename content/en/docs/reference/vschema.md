@@ -3,9 +3,22 @@ title: VSchema
 aliases: ['/docs/schema-management/vschema/']
 ---
 
+## VSchemas describe how to shard data
+
 VSchema stands for Vitess Schema. In contrast to a traditional database schema that contains metadata about tables, a VSchema contains metadata about how tables are organized across keyspaces and shards. Simply put, it contains the information needed to make Vitess look like a single database server.
 
 For example, the VSchema will contain the information about the sharding key for a sharded table. When the application issues a query with a WHERE clause that references the key, the VSchema information will be used to route the query to the appropriate shard.
+
+## Sharded keyspaces require a VSchema
+
+A VSchema is needed to tie together all the databases that Vitess manages. For a very trivial setup where there is only one unsharded keyspace, there is no need to specify a VSchema because Vitess will know that there is no other place to route a query.
+
+If you have multiple unsharded keyspaces, you can still avoid defining a VSchema in one of two ways:
+
+1. Connect to a keyspace and all queries are sent to it.
+2. Connect to Vitess without specifying a keyspace, but use qualified names for tables, like `keyspace.table` in your queries.
+
+However, once the setup exceeds the above complexity, VSchemas become a necessity. Vitess has a [working demo](https://github.com/vitessio/vitess/tree/master/examples/demo) of VSchemas.
 
 ## Sharding Model
 
@@ -32,16 +45,16 @@ Vitess allows you to create an unsharded table and deploy it into all shards of 
 
 Typically, such a table has a canonical source in an unsharded keyspace, and the copies in the sharded keyspace are kept up-to-date through VReplication.
 
-## VSchema
 
-A VSchema is needed to tie together all the databases that Vitess manages. For a very trivial setup where there is only one unsharded keyspace, there is no need to specify a VSchema because Vitess will know that there is no other place to route a query.
 
-If you have multiple unsharded keyspaces, you can still avoid defining a VSchema in one of two ways:
 
-1. Connect to a keyspace and all queries are sent to it.
-2. Connect to Vitess without specifying a keyspace, but use qualified names for tables, like `keyspace.table` in your queries.
 
-However, once the setup exceeds the above complexity, VSchemas become a necessity. Vitess has a [working demo](https://github.com/vitessio/vitess/tree/master/examples/demo) of VSchemas.
+
+
+
+
+
+
 
 
 The following sections document the various features highlighted with snippets pulled from the demo.
