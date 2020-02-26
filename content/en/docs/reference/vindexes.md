@@ -3,16 +3,6 @@ title: Vindexes
 aliases: ['/docs/schema-management/consistent-lookup/']
 ---
 
-
-
-
-
-
-
-
-
-
-
 ## A Vindex maps column values to keyspace IDs
 
 A Vindex provides a way to map a column value to a `keyspace ID`. This mapping can be used to identify the location of a row. A variety of vindexes are available to choose from with different trade-offs, and you can choose one that best suits your needs.
