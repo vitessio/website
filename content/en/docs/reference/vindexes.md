@@ -3,23 +3,6 @@ title: Vindexes
 aliases: ['/docs/schema-management/consistent-lookup/']
 ---
 
-Vitess supports the concept of a lookup vindex, or what is also commonly known as a cross-shard index. It's implemented as a mysql table that maps a column value to the keyspace id. This is usually needed when someone needs to efficiently find a row using a where clause that does not contain the primary vindex.
-
-This lookup table can be sharded or unsharded. No matter which option one chooses, the lookup row is most likely not going to be in the same shard as the keyspace id it points to.
-
-Vitess allows the transparent population of these rows by assigning an owner table, which is the main table that requires this lookup. When a row is inserted into the main table, the lookup row for it is created in the lookup table. The lookup row is also deleted on a delete of the main row. These essentially result in distributed transactions, which require 2PC to guarantee atomicity.
-
-Consistent lookup vindexes use an alternate approach that makes use of careful locking and transaction sequences to guarantee consistency without using 2PC. This gives you the best of both worlds, where you get a consistent cross-shard vindex without paying the price of 2PC.
-
-## Modified guidance
-
-The guidance for implementing lookup vindexes has been to create a two-column table. The first column (from column) should match the type of the column of the main table that needs the vindex. The second column (to column) should be a `BINARY` or a `VARBINARY` large enough to accommodate the keyspace id.
-
-This guidance remains the same for unique lookup vindexes.
-
-For non-unique lookup vindexes, it's recommended that the lookup table consist of multiple columns: The first column continues to be the input for computing the keyspace ids. Beyond this, additional columns are needed to uniquely identify the owner row. This should typically be the primary key of the owner table. But it can be any other column that can be combined with the 'from column' to uniquely identify the owner row. The last column remains the keyspace id like before.
-
-For example, if a user table had `(user_id, email)`, where `user_id` was the primary key and `email` needed a non-unique lookup vindex, the lookup table would have the following columns `(email, user_id, keyspace_id)`.
 
 
 
@@ -30,15 +13,17 @@ For example, if a user table had `(user_id, email)`, where `user_id` was the pri
 
 
 
+## A Vindex maps column values to keyspace IDs
 
-
-## Vindex
+A Vindex provides a way to map a column value to a `keyspace ID`. This mapping can be used to identify the location of a row. A variety of vindexes are available to choose from with different trade-offs, and you can choose one that best suits your needs.
 
 The Sharding Key is a concept that was introduced by NoSQL datastores. It is based on the fact that there is only one access path to the data, which is the Key. However, relational databases are more versatile about the data and their relationships. So, sharding a database by only designating a sharding key is often insufficient.
 
 If one were to draw an analogy, the indexes in a database would be the equivalent of the key in a NoSQL datastore, except that databases allow you to define multiple indexes per table, and there are many types of indexes. Extending this analogy to a sharded database results in different types of cross-shard indexes. In Vitess, these are called Vindexes.
 
-Simplistically stated, a Vindex provides a way to map a column value to a `keyspace ID`. This mapping can be used to identify the location of a row. A variety of vindexes are available to choose from with different trade-offs, and you can choose one that best suits your needs.
+
+
+## Advantages
 
 Vindexes offer many flexibilities:
 
@@ -76,14 +61,19 @@ A Functional Vindex is one where the column value to keyspace ID mapping is pre-
 
 Typically, the Primary Vindex is Functional. In some cases, it is the identity function where the input value yields itself as the keyspace id. However, one could also choose other algorithms like hashing or mod functions.
 
-A Lookup Vindex is usually backed by a lookup table. This is analogous to the traditional database index, except that it is cross-shard. At the time of insert, the computed keyspace ID of the row is stored in the lookup table against the column value.
+Vitess supports the concept of a lookup vindex, or what is also commonly known as a cross-shard index. It's implemented as a mysql table that maps a column value to the keyspace id. This is usually needed when someone needs to efficiently find a row using a where clause that does not contain the primary vindex. At the time of insert, the computed keyspace ID of the row is stored in the lookup table against the column value.
+                                                              ### Lookup vindex types
 
-### Lookup vindex types
+This lookup table can be sharded or unsharded. No matter which option one chooses, the lookup row is most likely not going to be in the same shard as the keyspace id it points to.
+                                                              #### Shared Vindexes
 
-#### Shared Vindexes
+Vitess allows the transparent population of these rows by assigning an owner table, which is the main table that requires this lookup. When a row is inserted into the main table, the lookup row for it is created in the lookup table. The lookup row is also deleted on a delete of the main row. These essentially result in distributed transactions, which require 2PC to guarantee atomicity.
+                                                              There are currently two vindex types for consistent lookup:
 
-There are currently two vindex types for consistent lookup:
-                                                              Relational databases encourage normalization, which lets you split data into different tables to avoid duplication in the case of one-to-many relationships. In such cases, a key is shared between the two tables to indicate that the rows are related, aka `Foreign Key`.
+Consistent lookup vindexes use an alternate approach that makes use of careful locking and transaction sequences to guarantee consistency without using 2PC. This gives you the best of both worlds, where you get a consistent cross-shard vindex without paying the price of 2PC.
+
+Relational databases encourage normalization, which lets you split data into different tables to avoid duplication in the case of one-to-many relationships. In such cases, a key is shared between the two tables to indicate that the rows are related, aka `Foreign Key`.
+
 * `consistent_lookup_unique`
 * `consistent_lookup`
 
@@ -93,13 +83,23 @@ An existing `lookup_unique` vindex can be trivially switched to a `consistent_lo
 
 As for a `lookup`, you can change it to a `consistent_lookup` only if the from columns can uniquely identify the owner row. Without this, many potentially valid inserts would fail.Functional Vindexes can be also be shared. However, there is no concept of ownership because the column to keyspace ID mapping is pre-established.
 
+### Lookup Vindex guidance
+
+The guidance for implementing lookup vindexes has been to create a two-column table. The first column (from column) should match the type of the column of the main table that needs the vindex. The second column (to column) should be a `BINARY` or a `VARBINARY` large enough to accommodate the keyspace id.
+
+This guidance remains the same for unique lookup vindexes.
+
+For non-unique lookup vindexes, it's recommended that the lookup table consist of multiple columns: The first column continues to be the input for computing the keyspace ids. Beyond this, additional columns are needed to uniquely identify the owner row. This should typically be the primary key of the owner table. But it can be any other column that can be combined with the 'from column' to uniquely identify the owner row. The last column remains the keyspace id like before.
+
+For example, if a user table had `(user_id, email)`, where `user_id` was the primary key and `email` needed a non-unique lookup vindex, the lookup table would have the following columns `(email, user_id, keyspace_id)`.
+
 ### Orthogonality
 
 The previously described properties are mostly orthogonal. Combining them gives rise to the following valid categories:
 
-* **Functional Unique**: This is the most popular category because it is the one best suited to be a Primary Vindex.
-* **Functional NonUnique**: There are currently no use cases that need this category.
-* **Lookup Unique Owned**: This gets used for optimizing high QPS queries that do not use the Primary Vindex columns in their WHERE clause. There is a price to pay: You incur an extra write to the lookup table for insert and delete operations, and an extra lookup for read operations. However, it is worth it if you do not want these high QPS queries to be sent to all shards.
+ * **Functional Unique**: This is the most popular category because it is the one best suited to be a Primary Vindex.
+ * **Functional NonUnique**: There are currently no use cases that need this category.
+ * **Lookup Unique Owned**: This gets used for optimizing high QPS queries that do not use the Primary Vindex columns in their WHERE clause. There is a price to pay: You incur an extra write to the lookup table for insert and delete operations, and an extra lookup for read operations. However, it is worth it if you do not want these high QPS queries to be sent to all shards.
 * **Lookup Unique Unowned**: This category is used as an optimization as described in the Shared Vindexes section.
 * **Lookup NonUnique Owned**: This gets used for high QPS queries on columns that are non-unique.
 * **Lookup NonUnique Unowned**: You would rarely have to use this category because it is unlikely that you will be using a column as foreign key that is not unique within a shard. But it is theoretically possible.
