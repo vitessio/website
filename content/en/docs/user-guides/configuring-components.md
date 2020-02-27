@@ -6,9 +6,9 @@ aliases: ['/docs/launching/server-configuration/', '/docs/user-guides/server-con
 
 ## Managed MySQL
 
-The following describes the requirements for Vitess when fully managing MySQL with `mysqlctl` (see [VTTablet Modes](../vttablet-modes#managed-mysql)).
+The following describes the requirements for Vitess when fully managing MySQL with `mysqlctl` (see [VTTablet Modes](../../reference/vttablet-modes#managed-mysql)).
 
-When using [Unmanaged or Remote MySQL](../vttablet-modes#unmanaged-or-remote-mysql) instead, the requirement is only that the server speak the MySQL protocol.
+When using [Unmanaged or Remote MySQL](../../reference/vttablet-modes#unmanaged-or-remote-mysql) instead, the requirement is only that the server speak the MySQL protocol.
 
 ### Version and Flavor
 

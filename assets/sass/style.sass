@@ -2,8 +2,8 @@
 {{ $fontAwesomeUrl     := printf "https://use.fontawesome.com/releases/v%s/css/all.css" $fontAwesomeVersion }}
 @charset "utf-8"
 
-@import url({{ $fontAwesomeUrl }})
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700)
+@import url("{{ $fontAwesomeUrl }}")
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700")
 
 // Vitess colors
 $vitess-orange: #f16626
