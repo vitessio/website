@@ -2,3 +2,7 @@ node_modules/
 public/
 resources/
 !content/en/docs/resources
+
+# Link checker
+bin/
+tmp/

@@ -48,8 +48,8 @@ Before running Vitess in production, you should become comfortable with the diff
 
 Here is a short list of all the basic workflows Vitess supports:
 
-* [Reparenting](../../user-guides/reparenting)
-* [Backup/Restore](../../user-guides/backup-and-restore)
+* [Reparenting](../reparenting)
+* [Backup/Restore](../backup-and-restore)
 * [Schema Management](../../schema-management)
-* [Resharding](../../reference/sharding#resharding) / [Horizontal Sharding Tutorial](../../user-guides/horizonal-sharding)
-* [Upgrading](../../user-guides/upgrading)
+* [Resharding](../../reference/sharding#resharding) / [Horizontal Sharding Tutorial](../horizontal-sharding)
+* [Upgrading](../upgrading)

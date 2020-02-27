@@ -92,7 +92,7 @@ The [ApplySchema](../../reference/vtctl/#applyvschema) command applies a schema 
 
 When the `ApplySchema` action actually applies a schema change to the specified keyspace, it performs the following steps:
 
-1. It finds shards that belong to the keyspace, including newly added shards if a [resharding event](../../sharding/#resharding) has taken place.
+1. It finds shards that belong to the keyspace, including newly added shards if a [resharding event](../sharding/#resharding) has taken place.
 2. It validates the SQL syntax and determines the impact of the schema change. If the scope of the change is too large, Vitess rejects it. See the [permitted schema changes](#permitted-schema-changes) section for more detail.
 3. It employs a pre-flight check to ensure that a schema update will succeed before the change is actually applied to the live database. In this stage, Vitess copies the current schema into a temporary database, applies the change there to validate it, and retrieves the resulting schema. By doing so, Vitess verifies that the change succeeds without actually touching live database tables.
 4. It applies the SQL command on the master tablet in each shard.

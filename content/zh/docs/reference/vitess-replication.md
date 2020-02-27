@@ -36,7 +36,7 @@ Also, Vitess adds comments to the rewritten statements that identify the primary
 
 ## Vitess Schema Swap
 
-Within YouTube, we also use a combination of statement based replication and backups to apply long-running schema changes without disrupting ongoing operations. See the [schema swap](../../schema-management/schema-swap) tutorial for a detailed example.
+Within YouTube, we also use a combination of statement based replication and backups to apply long-running schema changes without disrupting ongoing operations. See the [schema swap](../schema-management/schema-swap) tutorial for a detailed example.
 
 This operation, which is called **schema swap**, works as follows:
 

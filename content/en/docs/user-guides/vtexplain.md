@@ -4,7 +4,7 @@ title: Explaining how Vitess executes a SQL statement
 
 # Introduction 
 
-This document explains how to learn more about the way Vitess executes a particular SQL statement using the [VTexplain tool](../reference/vtexplain). This tool works similarly to the MySQL `EXPLAIN` statement.
+This document explains how to learn more about the way Vitess executes a particular SQL statement using the [VTexplain tool](../../reference/vtexplain). This tool works similarly to the MySQL `EXPLAIN` statement.
 
 ## Prerequisites
 
