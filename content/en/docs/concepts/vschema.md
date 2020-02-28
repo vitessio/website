@@ -7,7 +7,7 @@ aliases: ['/docs/schema-management/vschema/', '/docs/reference/vschema/']
 
 VSchema stands for Vitess Schema. In contrast to a traditional database schema that contains metadata about tables, a VSchema contains metadata about how tables are organized across [keyspaces](../keyspace) and [shards](../shard). It contains the information needed to make Vitess look like a single database server.
 
-For example, the VSchema will contain the information about the [Vindex](../vindex) for a sharded table. When the application issues a query with a WHERE clause that references the key, the VSchema information will be used to route the query to the appropriate shard.
+The VSchema contains information about the [Vindex](../vindex) for a sharded table. When the application issues a query with a `WHERE` clause that references the key, Vitess uses the Vindex that the VSchema specifies for that table to route the query to the appropriate shard.
 
 ## Sharded keyspaces require a VSchema
 
