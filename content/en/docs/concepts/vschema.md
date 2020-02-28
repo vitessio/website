@@ -5,9 +5,9 @@ aliases: ['/docs/schema-management/vschema/', '/docs/reference/vschema/']
 
 ## VSchemas describe how to shard data
 
-VSchema stands for Vitess Schema. In contrast to a traditional database schema that contains metadata about tables, a VSchema contains metadata about how tables are organized across [keyspaces](../keyspace) and shards. Simply put, it contains the information needed to make Vitess look like a single database server.
+VSchema stands for Vitess Schema. In contrast to a traditional database schema that contains metadata about tables, a VSchema contains metadata about how tables are organized across [keyspaces](../keyspace) and [shards](../shard). It contains the information needed to make Vitess look like a single database server.
 
-For example, the VSchema will contain the information about the sharding key for a sharded table. When the application issues a query with a WHERE clause that references the key, the VSchema information will be used to route the query to the appropriate shard.
+For example, the VSchema will contain the information about the [Vindex](../vindex) for a sharded table. When the application issues a query with a WHERE clause that references the key, the VSchema information will be used to route the query to the appropriate shard.
 
 ## Sharded keyspaces require a VSchema
 
@@ -37,7 +37,7 @@ The Vschema contains the [Vindex](../vindexes) for any sharded tables. The Vinde
 
 ## Sequences
 
-Auto-increment columns do not work very well for sharded tables. [Vitess sequences](../vitess-sequences) solve this problem. Sequence tables must be specified in the VSchema, and then tied to table columns. At the time of insert, if no value is specified for such a column, VTGate will generate a number for it using the sequence table.
+Auto-increment columns do not work very well for sharded tables. [Vitess sequences](../reference/vitess-sequences) solve this problem. Sequence tables must be specified in the VSchema, and then tied to table columns. At the time of insert, if no value is specified for such a column, VTGate will generate a number for it using the sequence table.
 
 ## Reference tables
 
