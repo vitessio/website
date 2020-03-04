@@ -16,6 +16,7 @@ html, body
   +flex
   flex-direction: row
   height: 100vh
+  align-items: stretch
 
   .docs-navbar
     position: sticky
@@ -113,14 +114,13 @@ html, body
         h2, h3, h4, h5, h6
           color: $vitess-orange
 
-        table, .highlight
-          -webkit-box-shadow: 1px 1px 5px 1px rgba(0,0,0,0.1)
-          box-shadow: 1px 1px 5px 1px rgba(0,0,0,0.1)
-
       .docs-header
         padding-bottom: 1rem
         margin-bottom: 2rem
         border-bottom: 1px solid $grey-lighter
+
+      .card-content
+        padding: 0 0 1.5rem 0
 
   .docs-toc
     flex: 0 0 15%
