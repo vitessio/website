@@ -3,6 +3,10 @@ title: Vertical Split
 weight: 6
 ---
 
+{{< warning >}}
+In Vitess 6, Vertical Split became obsolete with the introduction of [Table Migration](../table-migration/)! It is recommended to skip this guide, and continue on with the [Table Migration user guide](../table-migration) instead.
+{{< /warning >}}
+
 {{< info >}}
 This guide follows on from [get started with a local deployment](../../get-started/local). It assumes that the `./101_initial_cluster.sh` script has been executed, and you have a running Vitess cluster.
 {{< /info >}}

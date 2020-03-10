@@ -240,7 +240,7 @@ The schema has been simplified to include only those fields that are significant
 
 ## Next Steps
 
-You can now proceed with [Vertical Split](../../user-guides/vertical-split).
+You can now proceed with [Table Migration](../../user-guides/table-migration).
 
 Or alternatively, if you would like to teardown your example:
 
