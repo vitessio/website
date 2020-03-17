@@ -9,7 +9,7 @@ This guide follows on from [get started with a local deployment](../../get-start
 
 Table migration is a new [VReplication](../../concepts/vreplication) workflow in Vitess 6, and obsoletes Vertical Split from earlier releases.
 
-This feature enables you to move a subset of tables between keyspaces without downtime. For example, after [initially deploying Vitess](../../get-started/local) your single commerce schema may grow so large that it needs to be split into multiple key spaces.
+This feature enables you to move a subset of tables between keyspaces without downtime. For example, after [initially deploying Vitess](../../get-started/local) your single commerce schema may grow so large that it needs to be split into multiple keyspaces.
 
 As a stepping stone towards horizontally sharding (splitting a single table across multiple servers), it usually makes sense to split from having a single monolithic keyspace (`commerce`) to having multiple keyspaces (`commerce` and `customer`) that match your access pattern. For example, in our ecommerce system we know that `customer` and `corder` tables are closely related and growing at a high rate just by themselves.
 
@@ -61,8 +61,13 @@ In this scenario, we are going to split the `commerce` keyspace into `commerce` 
 
 We could have equally decided to keep the `Customer` and `COrder` tables in the `commerce` keyspace, and created a new keyspace to move our `Product` table into. Which makes more sense often depends on the specifics of your environment. If the `Product` table is much larger, it will take more time to migrate, but in doing so you might also be able to migrate to newer hardware which has more headroom before you need to perform additional operations such as sharding. Similarly, if the `Customer` and `COrder` tables are updated at a more frequent rate, then this could also increase the migration time.
 
+### Impact to Production Traffic
+
 Another consideration in planning which tables to migrate is the modification rate. Internally a table migration is comprised of both a table copy and a subscription to all changes made to the table. Vitess uses batching to improve the performance of both table copying and applying subscription changes, but you should expect that tables with lighter modification rates to migrate faster.
 
+During the active migration, table migration will copy data from replicas instead of the master server. This helps ensure that the production impact from an active table migration is minimal.
+
+During the `MigrateWrites` phase of the migration, Vitess will briefly unavailable. For most instance this unavailability is approximately the length of the longest running transaction, as Vitess needs to coordinate moving sessions across to the new location.
 
 ## Create new tablets
 
@@ -90,6 +95,7 @@ A [VSchema](../../concepts/VSchema) tells VTGate how to route queries to the und
 
 ```
 # TODO: can we do this without the json files??
+# @sugu suggested we use the ALTER syntax for vschema if it can work here.
 vtctlclient -server localhost:15999 ApplyVSchema -vschema_file vschema_commerce_vsplit.json commerce
 vtctlclient -server localhost:15999 ApplyVSchema -vschema_file vschema_customer_vsplit.json customer
 ```
@@ -116,7 +122,8 @@ TODO:
 
 ## Phase 1: Migrate Reads
 
-Once the migration is complete, the first step in making the changes live is to migrate reads (SELECT statements) to read from the new keyspace. Other statements will continue to read from the `commerce` keyspace. By staging this as two operations, Vitess allows you to canary the changes and reduce the risks associated with migrations. For example, you may have a different configuration of hardware or software on the new keyspace.
+Once the migration is complete, the first step in making the changes live is to migrate SELECT statements
+to read from the new keyspace. Other statements will continue to route to the `commerce` keyspace. By staging this as two operations, Vitess allows you to canary the changes and reduce the risks associated with migrations. For example, you may have a different configuration of hardware or software on the new keyspace.
 
 ```
 # 203:
@@ -171,6 +178,7 @@ TODO
 ```
 
 After this step is complete, you should see the following error:
+
 ```
 TODO
 ```
@@ -178,7 +186,7 @@ TODO
 
 ## Next Steps
 
-Congratulations! You've sucessfully migrated tables between keyspaces. The next step to try out is to shard one of your keyspaces in [New Guide](new-guide-here).
+Congratulations! You've sucessfully migrated tables between keyspaces. The next step to try out is to shard one of your keyspaces in [Table Resharding](../table-resharding).
 
 Alternatively, if you would like to teardown your example:
 

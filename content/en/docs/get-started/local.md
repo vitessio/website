@@ -56,7 +56,7 @@ sudo setenforce 0
 
 ## Install Vitess
 
-Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux. For example with Vitess 5.0:
+Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux. For example with Vitess 5:
 
 ```
 tar -xzf vitess-5.20+20200204-17a806ae5.tar.gz

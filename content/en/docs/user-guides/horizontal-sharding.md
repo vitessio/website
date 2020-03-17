@@ -3,6 +3,10 @@ title: Horizontal Sharding
 weight: 7
 ---
 
+{{< warning >}}
+In Vitess 6, Horizontal Sharding became obsolete with the introduction of Table Resharding! It is recommended to skip this guide, and continue on with the [table resharding user guide](../table-resharding) instead.
+{{< /warning >}}
+
 {{< info >}}
 This guide follows on from [Vertical Split](../../user-guides/vertical-split) and [Get Started with a Local deployment](../../get-started/local). It assumes that several scripts have been executed, and you have a running Vitess cluster.
 {{< /info >}}
