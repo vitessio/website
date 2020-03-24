@@ -4,7 +4,7 @@ weight: 7
 ---
 
 {{< info >}}
-This guide follows on from [Table Migration](../../user-guides/table-migration) and [Get Started with a Local deployment](../../get-started/local). It assumes that several scripts have been executed, and you have a running Vitess cluster.
+This guide follows on from [Move Tables](../../user-guides/move-tables) and [Get Started with a Local deployment](../../get-started/local). It assumes that several scripts have been executed, and you have a running Vitess cluster.
 {{< /info >}}
 
 ## Preparation

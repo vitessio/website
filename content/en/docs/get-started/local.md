@@ -240,7 +240,7 @@ The schema has been simplified to include only those fields that are significant
 
 ## Next Steps
 
-You can now proceed with [Table Migration](../../user-guides/table-migration).
+You can now proceed with [Move Tables](../../user-guides/move-tables).
 
 Or alternatively, if you would like to teardown your example:
 
