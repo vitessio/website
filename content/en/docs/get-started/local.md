@@ -87,24 +87,32 @@ You should see output similar to the following:
 
 ```
 ~/my-vitess-example> ./101_initial_cluster.sh
-enter etcd2 env
+$ ./101_initial_cluster.sh 
 add /vitess/global
 add /vitess/zone1
 add zone1 CellInfo
 etcd start done...
-enter etcd2 env
 Starting vtctld...
-Access vtctld web UI at http://morgox1:15000
-Send commands with: vtctlclient -server morgox1:15999 ...
-enter etcd2 env
 Starting MySQL for tablet zone1-0000000100...
-Starting MySQL for tablet zone1-0000000101...
-Starting MySQL for tablet zone1-0000000102...
 Starting vttablet for zone1-0000000100...
-Access tablet zone1-0000000100 at http://morgox1:15100/debug/status
+HTTP/1.1 200 OK
+Date: Wed, 25 Mar 2020 17:32:45 GMT
+Content-Type: text/html; charset=utf-8
+
+Starting MySQL for tablet zone1-0000000101...
 Starting vttablet for zone1-0000000101...
-Access tablet zone1-0000000101 at http://morgox1:15101/debug/status
+HTTP/1.1 200 OK
+Date: Wed, 25 Mar 2020 17:32:53 GMT
+Content-Type: text/html; charset=utf-8
+
+Starting MySQL for tablet zone1-0000000102...
 Starting vttablet for zone1-0000000102...
+HTTP/1.1 200 OK
+Date: Wed, 25 Mar 2020 17:33:01 GMT
+Content-Type: text/html; charset=utf-8
+
+W0325 11:33:01.932674   16036 main.go:64] W0325 17:33:01.930970 reparent.go:185] master-elect tablet zone1-0000000100 is not the shard master, proceeding anyway as -force was used
+W0325 11:33:01.933188   16036 main.go:64] W0325 17:33:01.931580 reparent.go:191] master-elect tablet zone1-0000000100 is not a master in the shard, proceeding anyway as -force was used
 ..
 ```
 
@@ -112,18 +120,18 @@ You can also verify that the processes have started with `pgrep`:
 
 ```
 ~/my-vitess-example> pgrep -fl vtdataroot
-26563 etcd
-26626 vtctld
-26770 mysqld_safe
-26771 mysqld_safe
-26890 mysqld_safe
-29910 mysqld
-29925 mysqld
-29945 mysqld
-30035 vttablet
-30036 vttablet
-30037 vttablet
-30218 vtgate
+14119 etcd
+14176 vtctld
+14251 mysqld_safe
+14720 mysqld
+14787 vttablet
+14885 mysqld_safe
+15352 mysqld
+15396 vttablet
+15492 mysqld_safe
+15959 mysqld
+16006 vttablet
+16112 vtgate
 ```
 
 _The exact list of processes will vary. For example, you may not see `mysqld_safe` listed._
@@ -143,7 +151,7 @@ You should now be able to connect to the VTGate server that was started in `101_
 ~/my-vitess-example> mysql -h 127.0.0.1 -P 15306
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 1
-Server version: 5.5.10-Vitess (Ubuntu)
+Server version: 5.7.9-Vitess (Ubuntu)
 
 Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.
 
@@ -179,8 +187,8 @@ Repeating the previous step, you should now be able to use the `mysql` client wi
 ```
 ~/my-vitess-example> mysql
 Welcome to the MySQL monitor.  Commands end with ; or \g.
-Your MySQL connection id is 1
-Server version: 5.5.10-Vitess (Ubuntu)
+Your MySQL connection id is 2
+Server version: 5.7.9-Vitess (Ubuntu)
 
 Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.
 

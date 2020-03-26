@@ -75,6 +75,7 @@ The first step in our MoveTables operation is to deploy new tablets for our `cus
 
 ```
 cd examples/local
+source ./env.sh
 
 for i in 200 201 202; do
  CELL=zone1 TABLET_UID=$i ./scripts/mysqlctl-up.sh
@@ -86,7 +87,6 @@ Once the tablets have started, we can force the first tablet to be the master:
 
 ```
 vtctlclient -server localhost:15999 InitShardMaster -force customer/0 zone1-200
-
 ```
 
 ## Set the VSchema
