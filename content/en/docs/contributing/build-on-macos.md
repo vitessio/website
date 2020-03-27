@@ -21,14 +21,14 @@ The following has been verified to work on __macOS Mojave__. If you are new to V
 [Install Homebrew](http://brew.sh/). From here you should be able to install:
 
 ```shell
-brew install go@1.12 automake git curl wget mysql@5.7 etcd
+brew install go@1.13 automake git curl wget mysql@5.7 etcd
 ```
 
-Add `mysql@5.7` and `go@1.12` to your `PATH`:
+Add `mysql@5.7` and `go@1.13` to your `PATH`:
 
 ```shell
 echo 'export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"' >> ~/.bash_profile
-echo 'export PATH="/usr/local/opt/go@1.12/bin:$PATH"' >> ~/.bash_profile
+echo 'export PATH="/usr/local/opt/go@1.13/bin:$PATH"' >> ~/.bash_profile
 ```
 
 Do not setup MySQL or etcd to restart at login.

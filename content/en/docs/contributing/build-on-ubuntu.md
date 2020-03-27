@@ -12,21 +12,19 @@ The following has been verified to work on __Ubuntu 19.10__ and __Debian 10__. I
 
 ## Install Dependencies
 
-### Install Go 1.12+
+### Install Go 1.13+
 
-[Download and install](http://golang.org/doc/install) the latest version of Golang. For example, at writing:
+[Download and install](http://golang.org/doc/install) Golang 1.13. For example, at writing:
 
 ```
-curl -O https://dl.google.com/go/go1.12.14.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.12.14.linux-amd64.tar.gz
+curl -O https://dl.google.com/go/go1.13.9.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.13.9.linux-amd64.tar.gz
 ```
 
 Make sure to add go to your bashrc:
 ```
 export PATH=$PATH:/usr/local/go/bin
 ```
-
-**Tip:** With Ubuntu 19.10 and later, you can also install the package `golang-go` via apt. Be careful doing this on older versions, as you may end up with an older version.
 
 ### Packages from apt repos
 
