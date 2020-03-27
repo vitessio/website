@@ -1,10 +1,10 @@
 ---
 title: Horizontal Sharding
-weight: 7
+weight: 99
 ---
 
 {{< warning >}}
-In Vitess 6, Horizontal Sharding became obsolete with the introduction of Table Resharding! It is recommended to skip this guide, and continue on with the [table resharding user guide](../table-resharding) instead.
+In Vitess 6, Horizontal Sharding became obsolete with the introduction of Resharding! It is recommended to skip this guide, and continue on with the [resharding user guide](../resharding) instead.
 {{< /warning >}}
 
 {{< info >}}
