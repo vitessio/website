@@ -12,21 +12,19 @@ The following has been verified to work on __Ubuntu 19.10__ and __Debian 10__. I
 
 ## Install Dependencies
 
-### Install Go 1.12+
+### Install Go 1.13+
 
-[Download and install](http://golang.org/doc/install) the latest version of Golang. For example, at writing:
+[Download and install](http://golang.org/doc/install) Golang 1.13. For example, at writing:
 
 ```
-curl -O https://dl.google.com/go/go1.12.14.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.12.14.linux-amd64.tar.gz
+curl -O https://dl.google.com/go/go1.13.9.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.13.9.linux-amd64.tar.gz
 ```
 
 Make sure to add go to your bashrc:
 ```
 export PATH=$PATH:/usr/local/go/bin
 ```
-
-**Tip:** With Ubuntu 19.10 and later, you can also install the package `golang-go` via apt. Be careful doing this on older versions, as you may end up with an older version.
 
 ### Packages from apt repos
 
@@ -87,9 +85,8 @@ Set environment variables that Vitess will require. It is recommended to put the
 # Add go PATH
 export PATH=$PATH:/usr/local/go/bin
 
-# Vitess
-export VTROOT=~/vitess
-export PATH=${VTROOT}/bin:${PATH}
+# Vitess binaries
+export PATH=~/vitess/bin:${PATH}
 ```
 
 Build Vitess:
@@ -110,7 +107,7 @@ You can then install additional components from `make tools`. If your machine re
 
 ```
 make tools
-make test
+make unit_test
 ```
 
 In addition to running tests, you can try running the [local example](../../get-started/local).
@@ -120,7 +117,7 @@ In addition to running tests, you can try running the [local example](../../get-
 
 ### Key Already Exists
 
-This error is because etcd was not cleaned up from the previous run of the example. You can manually fix this by running `./401_teardown.sh` and then start again:
+This error is because etcd was not cleaned up from the previous run of the example. You can manually fix this by running `./401_teardown.sh`, removing vtdataroot and then starting again:
 ```
 Error:  105: Key already exists (/vitess/zone1) [6]
 Error:  105: Key already exists (/vitess/global) [6]
@@ -162,36 +159,5 @@ done;
 
 export VTDATAROOT=/tmp/vtdataroot
 ./101_initial_cluster.sh
-```
-
-### No .installed_version file
-
-This error indicates that you have not put the required vitess environment variables in your `.bashrc` file:
-
-```
-enter etcd2 env
-cat: /dist/etcd/.installed_version: No such file or directory
-```
-
-Make sure the following variables are defined:
-```
-export VTROOT=~/vitess
-export PATH=${VTROOT}/bin:${PATH}
-```
-
-### Cannot create dir /etcd
-
-This indicates that the environment variable `VTROOT` is not defined, and you have not put the required vitess environment variables in your `.bashrc` file:
-
-```
-./101_initial_cluster.sh
-enter etcd2 env
-mkdir: cannot create directory ‘/etcd’: Permission denied
-```
-
-Make sure the following variables are defined:
-```
-export VTROOT=~/vitess
-export PATH=${VTROOT}/bin:${PATH}
 ```
 

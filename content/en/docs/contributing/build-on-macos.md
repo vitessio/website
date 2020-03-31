@@ -1,6 +1,7 @@
 ---
 title: Build on macOS
 description: Instructions for building Vitess on your machine for testing and development purposes
+aliases: ['/docs/get-started/vagrant/']
 ---
 
 {{< info >}}
@@ -20,14 +21,14 @@ The following has been verified to work on __macOS Mojave__. If you are new to V
 [Install Homebrew](http://brew.sh/). From here you should be able to install:
 
 ```shell
-brew install go@1.12 automake git curl wget mysql@5.7 etcd
+brew install go@1.13 automake git curl wget mysql@5.7 etcd
 ```
 
-Add `mysql@5.7` and `go@1.12` to your `PATH`:
+Add `mysql@5.7` and `go@1.13` to your `PATH`:
 
 ```shell
 echo 'export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"' >> ~/.bash_profile
-echo 'export PATH="/usr/local/opt/go@1.12/bin:$PATH"' >> ~/.bash_profile
+echo 'export PATH="/usr/local/opt/go@1.13/bin:$PATH"' >> ~/.bash_profile
 ```
 
 Do not setup MySQL or etcd to restart at login.
@@ -44,10 +45,9 @@ cd vitess
 
 Set environment variables that Vitess will require. It is recommended to put these in your `~/.bash_profile` file:
 
-```shell
-# Vitess
-export VTROOT=~/vitess
-export PATH=${VTROOT}/bin:${PATH}
+```
+# Vitess binaries
+export PATH=~/vitess/bin:${PATH}
 ```
 
 Build Vitess:
@@ -76,7 +76,7 @@ You can then install additional components from `make tools`. If your machine re
 
 ```shell
 make tools
-make test
+make unit_test
 ```
 
 In addition to running tests, you can try running the [local example](../../get-started/local).
@@ -85,43 +85,9 @@ In addition to running tests, you can try running the [local example](../../get-
 
 ### Key Already Exists
 
-This error is because etcd was not cleaned up from the previous run of the example. You can manually fix this by running `./401_teardown.sh` and then start again:
-
-```shell
+This error is because etcd was not cleaned up from the previous run of the example. You can manually fix this by running `./401_teardown.sh`, removing vtdataroot and then starting again:
+```
 Error:  105: Key already exists (/vitess/zone1) [6]
 Error:  105: Key already exists (/vitess/global) [6]
-```
-
-### No .installed_version file
-
-This error indicates that you have not put the required vitess environment variables in your `.bashrc` file:
-
-```shell
-enter etcd2 env
-cat: /dist/etcd/.installed_version: No such file or directory
-```
-
-Make sure the following variables are defined:
-
-```shell
-export VTROOT=~/vitess
-export PATH=${VTROOT}/bin:${PATH}
-```
-
-### Cannot create dir /etcd
-
-This indicates that the environment variable `VTROOT` is not defined, and you have not put the required vitess environment variables in your `.bashrc` file:
-
-```shell
-./101_initial_cluster.sh
-enter etcd2 env
-mkdir: cannot create directory ‘/etcd’: Permission denied
-```
-
-Make sure the following variables are defined:
-
-```shell
-export VTROOT=~/vitess
-export PATH=${VTROOT}/bin:${PATH}
 ```
 

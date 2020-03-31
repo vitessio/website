@@ -5,7 +5,7 @@ $tan: #f5993a
 
 html, body
   overflow: auto
- 
+
 =flex
   display: flex
 
@@ -16,6 +16,7 @@ html, body
   +flex
   flex-direction: row
   height: 100vh
+  align-items: stretch
 
   .docs-navbar
     position: sticky
@@ -46,19 +47,19 @@ html, body
 
         .docs-section
           & + .docs-section
-            margin-top: 1.25rem
+            margin-top: .75rem
 
           .docs-section-title
-            font-size: 1.3rem
+            font-size: 1.2rem
             color: $grey-lighter
             line-height: 100%
-            
+
             &.is-active
               color: $primary
 
           .docs-section-list
             margin-left: .3rem
-            border-left: 2px solid $grey
+            border-left: 1px solid $grey
 
             ul
               margin-top: .75rem
@@ -77,7 +78,7 @@ html, body
                 &.is-active
                   a
                     color: $tan
-      
+
   .docs-article
     flex: 1 1 auto
     overflow: auto
@@ -100,9 +101,26 @@ html, body
         li .highlight, ol li
           margin-bottom: 1rem
 
+        h1
+          font-size: 1.802rem
+        h2
+          font-size: 1.602rem
+        h3
+          font-size: 1.424rem
+        h4
+          font-size: 1.266rem
+        h5
+          font-size: 1.125rem
+        h2, h3, h4, h5, h6
+          color: $vitess-orange
+
       .docs-header
         padding-bottom: 1rem
         margin-bottom: 2rem
+        border-bottom: 1px solid $grey-lighter
+
+      .card-content
+        padding: 0 0 1.5rem 0
 
   .docs-toc
     flex: 0 0 15%
@@ -126,21 +144,21 @@ html, body
         &:hover
           color: $primary
 
-      ul
+      #TableOfContents
         ul
           li
             font-size: 1rem
-            line-height: 120%
+            line-height: 1.2rem
 
             & + li
-              margin-top: .5rem
+              margin-top: .75rem
 
             ul
               margin: .5rem 0 0 1rem
 
               li
-                font-size: .8rem
+                font-size: 0.8rem
 
                 & + li
-                  margin-top: .5rem
-                  line-height: 125%
+                  margin-top: .75rem
+                  line-height: 1.2rem

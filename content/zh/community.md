@@ -23,7 +23,7 @@ On the third Thursday of the month (unless otherwise specified), the Vitess comm
 To join by phone: 
 
 * US: +16699006833,,314170129#  or +16465588656,,314170129#
-* International dial-in numbers [click here](../dialin)
+* International dial-in numbers [click here](/dialin)
 * Meeting ID (required to join the call): 314 170 129
 
 If you would like to submit a topic for discussion at the meeting, please [email us](mailto:cncf-vitess-maintainers@lists.cncf.io). 
