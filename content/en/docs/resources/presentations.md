@@ -8,7 +8,7 @@ aliases: ['/resources/presentations.html']
 
 Lizz van Dijk demonstrates how to migrate from a regular MySQL release to Vitess.
 
-[Video available on YouTube](https://www.youtube.com/watch?v=W8VbiXo39Ik)
+{{< youtube id="W8VbiXo39Ik" autoplay="false" >}}
 
 ## MySQL Pre-FOSDEM Day 2020
 
