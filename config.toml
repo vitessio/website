@@ -107,3 +107,7 @@ icon = "object-ungroup"
 title = "工作流"
 description = "Vitess会跟踪有关集群配置的所有元数据，以便集群拓扑始终是最新的，对不同的客户端保持一致。"
 icon = "magic"
+
+[markup.goldmark.renderer]
+unsafe = true
+

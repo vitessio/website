@@ -4,35 +4,35 @@ weight: 8
 aliases: ['/user-guide/backup-and-restore.html']
 ---
 
-This document explains how to create and restore data backups with
-Vitess. Vitess uses backups for two purposes:
+This document explains how to create and restore data backups with Vitess. Vitess uses backups for two purposes:
 
 * Provide a point-in-time backup of the data on a tablet.
 * Bootstrap new tablets in an existing shard.
 
 ## Prerequisites
 
-Vitess stores data backups on a Backup Storage service, which is a
-[pluggable interface](https://github.com/vitessio/vitess/blob/master/go/vt/mysqlctl/backupstorage/interface.go).
+Vitess supports pluggable interfaces for both [Backup Storage Services](https://github.com/vitessio/vitess/blob/master/go/vt/mysqlctl/backupstorage/interface.go) and [Backup Engines](https://github.com/vitessio/vitess/blob/master/go/vt/mysqlctl/backupengine.go).
 
-Currently, we have plugins for:
+Before backing up or restore a tablet, you need to ensure that the
+tablet is aware of the Backup Storage system and Backup engine that you are using.
+To do so, use the following command-line flags when starting a vttablet that has
+access to the location where you are storing backups.
+
+### Backup Storage Services
+
+Currently, Vitess has plugins for:
 
 * A network-mounted path (e.g. NFS)
 * Google Cloud Storage
 * Amazon S3
 * Ceph
 
-Vitess also supports multiple ways to generate data backups. This is called a Backup engine, which is a [pluggable interface](https://github.com/vitessio/vitess/blob/master/go/vt/mysqlctl/backupengine.go)
+### Backup Engines
 
-Currently, we have plugins for:
+The engine is the techology used for generating the backup. Currently Vitess has plugins for:
 
-* Builtin: Copy all the database files into specified storage. This is the default.
-* Percona Xtrabackup
-
-Before you can back up or restore a tablet, you need to ensure that the
-tablet is aware of the Backup Storage system and Backup engine that you are using.
-To do so, use the following command-line flags when starting a vttablet that has
-access to the location where you are storing backups.
+* Builtin: Shutdown an instance and copy all the database files (default)
+* XtraBackup: An online backup using Percona's XtraBackup
 
 <table class="responsive">
   <thead>
