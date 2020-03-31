@@ -10,7 +10,7 @@ Backup and Restore are integrated features provided by tablets managed by Vitess
 
 Vitess supports pluggable interfaces for both [Backup Storage Services](https://github.com/vitessio/vitess/blob/master/go/vt/mysqlctl/backupstorage/interface.go) and [Backup Engines](https://github.com/vitessio/vitess/blob/master/go/vt/mysqlctl/backupengine.go).
 
-Before backing up or restore a tablet, you need to ensure that the tablet is aware of the Backup Storage system and Backup engine that you are using. To do so, use the following command-line flags when starting a vttablet that has access to the location where you are storing backups.
+Before backing up or restoring a tablet, you need to ensure that the tablet is aware of the Backup Storage system and Backup engine that you are using. To do so, use the following command-line flags when starting a vttablet that has access to the location where you are storing backups.
 
 ### Backup Storage Services
 
