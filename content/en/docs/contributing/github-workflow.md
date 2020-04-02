@@ -6,11 +6,11 @@ If you are new to Git and GitHub, we recommend to read this page. Otherwise, you
 
 Our GitHub workflow is a so called triangular workflow:
 
-<img src="https://cloud.githubusercontent.com/assets/1319791/8943755/5dcdcae4-354a-11e5-9f82-915914fad4f7.png" alt="visualization of the GitHub triangular workflow" style="width: 100%;"/>
 
-*Image Source:* https://github.com/blog/2042-git-2-5-including-multiple-worktrees-and-triangular-workflows
+![visualization of the GitHub triangular workflow](/img/git-workflow.png)
+_[Image Source](https://github.com/blog/2042-git-2-5-including-multiple-worktrees-and-triangular-workflows)_
 
-The Vitess code is hosted on GitHub (https://github.com/vitessio/vitess).
+The Vitess code is [hosted on GitHub](https://github.com/vitessio/vitess).
 This repository is called *upstream*.
 You develop and commit your changes in a clone of our upstream repository (shown as *local* in the image above).
 Then you push your changes to your forked repository (*origin*) and send us a pull request.
@@ -118,8 +118,7 @@ After this change, you can run `git push` without arguments:
 
 Then go to the [repository page](https://github.com/vitessio/vitess) and it
 should prompt you to create a Pull Request from a branch you recently pushed.
-You can also [choose a branch manually]
-(https://github.com/vitessio/vitess/compare).
+You can also [choose a branch manually](https://github.com/vitessio/vitess/compare).
 
 ## Addressing Changes
 
