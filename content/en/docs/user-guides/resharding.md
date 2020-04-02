@@ -15,11 +15,116 @@ Using our example commerce and customer keyspaces, lets work through the two mos
 
 ### Sequences
 
+The first issue to address is the fact that customer and corder have auto-increment columns. This scheme does not work well in a sharded setup. Instead, Vitess provides an equivalent feature through sequences.
+
+The sequence table is an unsharded single row table that Vitess can use to generate monotonically increasing ids. The syntax to generate an id is: `select next :n values from customer_seq`. The vttablet that exposes this table is capable of serving a very large number of such ids because values are cached and served out of memory. The cache value is configurable.
+
+The VSchema allows you to associate a column of a table with the sequence table. Once this is done, an insert on that table transparently fetches an id from the sequence table, fills in the value, and routes the row to the appropriate shard. This makes the construct backward compatible to how MySQL's `auto_increment` property works.
+
+Since sequences are unsharded tables, they will be stored in the commerce database. The schema:
+
+``` sql
+CREATE TABLE customer_seq (id int, next_id bigint, cache bigint, primary key(id)) comment 'vitess_sequence';
+INSERT INTO customer_seq (id, next_id, cache) VALUES (0, 1000, 100);
+CREATE TABLE order_seq (id int, next_id bigint, cache bigint, primary key(id)) comment 'vitess_sequence';
+INSERT INTO order_seq (id, next_id, cache) VALUES (0, 1000, 100);
+```
+
+Note the `vitess_sequence` comment in the create table statement. VTTablet will use this metadata to treat this table as a sequence.
+
+* `id` is always 0
+* `next_id` is set to `1000`: the value should be comfortably greater than the `auto_increment` max value used so far.
+* `cache` specifies the number of values to cache before vttablet updates `next_id`.
+
+Larger cache values perform better, but will exhaust the values quicker since during reparent operations the new master will start off at the `next_id` value.
+
+The VTGate servers also need to know about the sequence tables. This is done by updating the VSchema for commerce as follows:
+
+``` json
+{
+  "tables": {
+    "customer_seq": {
+      "type": "sequence"
+    },
+    "order_seq": {
+      "type": "sequence"
+    },
+    "product": {}
+  }
+}
+```
+
 ### Vindexes
+
+The next decision is about the sharding keys, aka Primary Vindexes. This is a complex decision that involves the following considerations:
+
+* What are the highest QPS queries, and what are the where clauses for them?
+* Cardinality of the column; it must be high.
+* Do we want some rows to live together to support in-shard joins?
+* Do we want certain rows that will be in the same transaction to live together?
+
+Using the above considerations, in our use case, we can determine that:
+
+* For the customer table, the most common where clause uses `customer_id`. So, it shall have a Primary Vindex.
+* Given that it has lots of users, its cardinality is also high.
+* For the corder table, we have a choice between `customer_id` and `order_id`. Given that our app joins `customer` with `corder` quite often on the `customer_id` column, it will be beneficial to choose `customer_id` as the Primary Vindex for the `corder` table as well.
+* Coincidentally, transactions also update `corder` tables with their corresponding `customer` rows. This further reinforces the decision to use `customer_id` as Primary Vindex.
+
+There are a couple of other considerations out of scope for now, but worth mentioning:
+
+* It may also be worth creating a secondary lookup Vindex on `corder.order_id`.
+* Sometimes the `customer_id` is really a `tenant_id` (i.e. your application is a SaaS, which serves tenants that themselves have customers). One key consideration here is that the sharding by the `tenant_id` can lead to unbalanced shards. You may also need to consider sharding by the tenant's `customer_id`.
+
+Putting it all together, we have the following VSchema for `customer`:
+
+``` json
+{
+  "sharded": true,
+  "vindexes": {
+    "hash": {
+      "type": "hash"
+    }
+  },
+  "tables": {
+    "customer": {
+      "column_vindexes": [
+        {
+          "column": "customer_id",
+          "name": "hash"
+        }
+      ],
+      "auto_increment": {
+        "column": "customer_id",
+        "sequence": "customer_seq"
+      }
+    },
+    "corder": {
+      "column_vindexes": [
+        {
+          "column": "customer_id",
+          "name": "hash"
+        }
+      ],
+      "auto_increment": {
+        "column": "order_id",
+        "sequence": "order_seq"
+      }
+    }
+  }
+}
+```
+
+Note that we have now marked the keyspace as sharded. Making this change will also change how Vitess treats this keyspace. Some complex queries that previously worked may not work anymore. This is a good time to conduct thorough testing to ensure that all the queries work. If any queries fail, you can temporarily revert the keyspace as unsharded. You can go back and forth until you have got all the queries working again.
+
+Since the primary vindex columns are `BIGINT`, we choose `hash` as the primary vindex, which is a pseudo-random way of distributing rows into various shards. For other data types:
+
+* For `VARCHAR` columns, use `unicode_loose_md5`.
+* For `VARBINARY`, use `binary_md5`.
+* Vitess uses a plugin system to define vindexes. If none of the predefined vindexes suit your needs, you can develop your own custom vindex.
 
 ## Apply VSchema
 
-Apply vschema:
+Now that we have made all the important decisions, it’s time to apply these changes:
 
 ```
 # Example 301_customer_sharded.sh
@@ -101,6 +206,8 @@ COrder
 
 ## Start the Reshard
 
+This process starts the reshard opration. It occurs online, and will not block any read or write operations to your database:
+
 ```
 source ./env.sh
 
@@ -115,6 +222,8 @@ sleep 2
 ```
 
 ## Switch Reads
+
+Once the reshard is complete, the first step is to switch read operations to occur at the new location. By switching read operations first, we are able to verify that the new tablet servers are healthy and able to respond to requests:
 
 ```
 # Example 304_switch_reads.sh
@@ -137,6 +246,8 @@ vtctlclient \
 ```
 
 ## Switch Writes
+
+After reads have been switched, and the health of the system has been verified, it's time to switch writes. The usage is very similar to switching reads:
 
 ```
 # Example 305_switch_writes.sh
@@ -189,7 +300,6 @@ COrder
 |        4 |           4 | SKU-1002 |    30 |
 +----------+-------------+----------+-------+
 ```
-
 
 ## Cleanup
 

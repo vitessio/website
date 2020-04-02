@@ -71,7 +71,7 @@ During the `SwitchWrites` phase of the MoveTables operation, Vitess may be brief
 
 ## Create new tablets
 
-The first step in our MoveTables operation is to deploy new tablets for our `customer` keyspace. By convention, we are going to use the UIDs 200-202 as the `commerce` keyspace previously used `100-102`:
+The first step in our MoveTables operation is to deploy new tablets for our `customer` keyspace. By convention, we are going to use the UIDs 200-202 as the `commerce` keyspace previously used `100-102`. Once the tablets have started, we can `-force` the first tablet to be the master:
 
 ```sh
 # Example 201_customer_tablets.sh
@@ -82,28 +82,19 @@ for i in 200 201 202; do
  CELL=zone1 TABLET_UID=$i ./scripts/mysqlctl-up.sh
  CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
 done
-```
 
-Once the tablets have started, we can force the first tablet to be the master:
-
-```sh
 vtctlclient -server localhost:15999 InitShardMaster -force customer/0 zone1-200
-```
-
-### Set the VSchema
-
-A [VSchema](../../concepts/VSchema) tells VTGate how to route queries to the underlying tablet servers. In our case, we need to tell VTGate that the `customer` keyspace will now contain the tables `customer` and `corder`. The `commerce` keyspace will continue to hold just the `Product` table:
-
-```sh
-# TODO: can we do this without the json files??
-# @sugu suggested we use the ALTER syntax for vschema if it can work here.
 vtctlclient -server localhost:15999 ApplyVSchema -vschema_file vschema_commerce_vsplit.json commerce
 vtctlclient -server localhost:15999 ApplyVSchema -vschema_file vschema_customer_vsplit.json customer
 ```
 
+The last two commands here set the VSchema. In our case, we need to tell VTGate that the `customer` keyspace will now contain the tables `customer` and `corder`. The `commerce` keyspace will continue to hold just the `Product` table.
+
 __Note:__ This change does not change the actual routing yet. We will use a _switch_ directive to achieve that shortly.
 
 ## Start the Move
+
+In this step we will initiate the MoveTables, which copies tables from the commerce keyspace into customer. This operation does not block any database activity; the MoveTables operation is performed online:
 
 ```sh
 # Example 202_move_tables.sh
@@ -119,14 +110,9 @@ vtctlclient \
 sleep 2
 ```
 
-TODO:
-- does this session need to stay alive for the migration to work?
-- if so, how do we resume if it failed?
-- if now, how do we monitor the progress of the migration?
-
 ## Phase 1: Switch Reads
 
-Once the move is complete, the first step in making the changes live is to _switch_ `SELECT` statements to read from the new keyspace. Other statements will continue to route to the `commerce` keyspace. By staging this as two operations, Vitess allows you to canary the changes and reduce the risks associated with changes. For example, you may have a different configuration of hardware or software on the new keyspace.
+Once the MoveTables operation is complete, the first step in making the changes live is to _switch_ `SELECT` statements to read from the new keyspace. Other statements will continue to route to the `commerce` keyspace. By staging this as two operations, Vitess allows you to canary the changes and reduce the risks associated with changes. For example, you may have a different configuration of hardware or software on the new keyspace.
 
 ```sh
 # Example 203_switch_reads.sh
@@ -147,12 +133,6 @@ vtctlclient \
  -tablet_type=replica \
  customer.commerce2customer
 
-```
-
-Here is a quick example to show reads and writes being sent to the two different locations:
-
-```
-# TODO
 ```
 
 ## Phase 2: Switch Writes
@@ -202,6 +182,7 @@ After this step is complete, you should see the following error:
 mysql -h 127.0.0.1 -P 15306 --table < ../common/select_commerce_data.sql
 ```
 
+This confirms that the data has been correctly cleaned up.
 
 ## Next Steps
 
