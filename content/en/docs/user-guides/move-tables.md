@@ -84,8 +84,8 @@ for i in 200 201 202; do
 done
 
 vtctlclient -server localhost:15999 InitShardMaster -force customer/0 zone1-200
-vtctlclient -server localhost:15999 ApplyVSchema -vschema_file vschema_commerce_vsplit.json commerce
-vtctlclient -server localhost:15999 ApplyVSchema -vschema_file vschema_customer_vsplit.json customer
+vtctlclient -server localhost:15999 ApplyVSchema -vschema '{ "tables": { "product": {} } }' commerce
+vtctlclient -server localhost:15999 ApplyVSchema -vschema '{ "tables": { "customer": {}, "corder": {} } }' customer
 ```
 
 The last two commands here set the VSchema. In our case, we need to tell VTGate that the `customer` keyspace will now contain the tables `customer` and `corder`. The `commerce` keyspace will continue to hold just the `Product` table.

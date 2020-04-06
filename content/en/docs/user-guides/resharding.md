@@ -114,8 +114,6 @@ Putting it all together, we have the following VSchema for `customer`:
 }
 ```
 
-Note that we have now marked the keyspace as sharded. Making this change will also change how Vitess treats this keyspace. Some complex queries that previously worked may not work anymore. This is a good time to conduct thorough testing to ensure that all the queries work. If any queries fail, you can temporarily revert the keyspace as unsharded. You can go back and forth until you have got all the queries working again.
-
 Since the primary vindex columns are `BIGINT`, we choose `hash` as the primary vindex, which is a pseudo-random way of distributing rows into various shards. For other data types:
 
 * For `VARCHAR` columns, use `unicode_loose_md5`.
@@ -124,7 +122,7 @@ Since the primary vindex columns are `BIGINT`, we choose `hash` as the primary v
 
 ## Apply VSchema
 
-Now that we have made all the important decisions, it’s time to apply these changes:
+Applying the new VSchema instructs Vitess that the keyspace is sharded, which may prevent some complex queries. If is a good idea to [validate this](../vtexplain) before proceeding with this step. If you do notice that certain queries start failing you can always revert temporaily by restoring the old VSchema. Make sure you fix all of the queries before proceeding to the Reshard process.
 
 ```
 # Example 301_customer_sharded.sh
@@ -139,7 +137,7 @@ vtctlclient -server localhost:15999 ApplyVSchema -vschema_file vschema_customer_
 
 At this point, you have finalized your sharded VSchema and vetted all the queries to make sure they still work. Now, it’s time to reshard.
 
-The resharding process works by splitting existing shards into smaller shards. This type of resharding is the most appropriate for Vitess. There are some use cases where you may want topin up a new shard and add new rows in the most recently created shard. This can be achieved in Vitess by splitting a shard in such a way that no rows end up in the ‘new’ shard. However, it's not natural for Vitess. We have to create the new target shards:
+The resharding process works by splitting existing shards into smaller shards. This type of resharding is the most appropriate for Vitess. There are some use cases where you may want to bring up a new shard and add new rows in the most recently created shard. This can be achieved in Vitess by splitting a shard in such a way that no rows end up in the ‘new’ shard. However, it's not natural for Vitess. We have to create the new target shards:
 
 ```
 # Example 302_new_shards.sh
@@ -189,7 +187,7 @@ A `varbinary` of arbitrary length can also be mapped as is to a keyspace id. Thi
 
 In the above case, we are essentially creating two shards: any keyspace id that does not have its leftmost bit set will go to `-80`. All others will go to `80-`.
 
-Applying the above change should result in the creation of six more vttablet instances.
+Applying the above change should result in the creation of six more vttablet instances; one master, one replica and one rdonly tablet for each of the two shards.
 
 At this point, the tables have been created in the new shards but have no data yet.
 
