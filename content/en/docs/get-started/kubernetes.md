@@ -7,11 +7,6 @@ aliases: ['/docs/tutorials/kubernetes/','/user-guide/sharding-kubernetes.html', 
 
 This tutorial demonstrates how Vitess can be used with Minikube to deploy Vitess clusters.
 
-{{< warning >}}
-Kubernetes 1.16 or Helm 3 are not yet supported. We are working on fixing this in [issue #5411](https://github.com/vitessio/vitess/issues/5411), but also depend on etcd-operator which will require changes to support these newer versions.
-{{< /warning >}}
-
-
 ### Prerequisites
 
 Before we get started, let’s get a few things out of the way:
@@ -30,23 +25,12 @@ Before we get started, let’s get a few things out of the way:
     curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.15.0/bin/linux/amd64/kubectl
     ```
 
-1. Install [Helm 2](https://v2.helm.sh/):
+1. Install [Helm 3](https://helm.sh/):
 
     ```bash
-    wget https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz
-    tar -xzf helm-v2.*
+    wget https://get.helm.sh/helm-v3.0.3-linux-amd64.tar.gz
+    tar -xzf helm-v3.*
     # copy linux-amd64/helm into your path
-    ```
-
-    After installing helm, run `helm init`.
-
-1. [Install etcd-operator](https://github.com/coreos/etcd-operator/):
-
-    ```bash
-    git clone git@github.com:coreos/etcd-operator.git
-    cd etcd-operator
-    example/rbac/create_role.sh
-    kubectl create -f example/deployment.yaml
     ```
 
 1. Install the MySQL client locally. For example, on Ubuntu:
@@ -75,7 +59,7 @@ cd vitess/examples/helm
 In this directory, you will see a group of yaml files. The first digit of each file name indicates the phase of example. The next two digits indicate the order in which to execute them. For example, `101_initial_cluster.yaml` is the first file of the first phase. We shall execute that now:
 
 ```sh
-helm install ../../helm/vitess -f 101_initial_cluster.yaml
+helm install vitess ../../helm/vitess -f 101_initial_cluster.yaml
 ```
 
 This will bring up the initial Vitess cluster with a single keyspace.
@@ -261,16 +245,10 @@ Notice that we are using keyspace `commerce/0` to select data from our tables.
 
 ### Create Keyspace
 
-For subsequent commands, it will be convenient to capture the name of the release and save into a variable:
-
-```sh
-export release=$(helm ls -q)
-```
-
 For a vertical split, we first need to create a special `served_from` keyspace. This keyspace starts off as an alias for the `commerce` keyspace. Any queries sent to this keyspace will be redirected to `commerce`. Once this is created, we can vertically split tables into the new keyspace without having to make the app aware of this change:
 
 ```sh
-helm upgrade $release ../../helm/vitess/ -f 201_customer_keyspace.yaml
+helm upgrade vitess ../../helm/vitess/ -f 201_customer_keyspace.yaml
 ```
 
 Looking into the yaml file, the only addition over the previous version is the following job:
@@ -297,7 +275,7 @@ jobs/vtctlclient-create-customer-ks       1         1            10s
 Now you have to create vttablet instances to back this new keyspace onto which you’ll move the necessary tables:
 
 ```sh
-helm upgrade $release ../../helm/vitess/ -f 202_customer_tablets.yaml
+helm upgrade vitess ../../helm/vitess/ -f 202_customer_tablets.yaml
 ```
 
 This yaml also makes a few additional changes:
@@ -368,7 +346,7 @@ jobs/zone1-customer-0-init-shard-master   1         1            5m
 The next step:
 
 ```sh
-helm upgrade $release ../../helm/vitess/ -f 203_vertical_split.yaml
+helm upgrade vitess ../../helm/vitess/ -f 203_vertical_split.yaml
 ```
 
 starts the process of migrating the data from commerce to customer. The new content on this file is:
@@ -433,13 +411,13 @@ Once you have verified that the customer and corder tables are being continuousl
 For `rdonly` and `replica`:
 
 ```sh
-helm upgrade $release ../../helm/vitess/ -f 204_vertical_migrate_replicas.yaml
+helm upgrade vitess ../../helm/vitess/ -f 204_vertical_migrate_replicas.yaml
 ```
 
 For `master`:
 
 ```sh
-helm upgrade $release ../../helm/vitess/ -f 205_vertical_migrate_master.yaml
+helm upgrade vitess ../../helm/vitess/ -f 205_vertical_migrate_master.yaml
 ```
 
 Once this is done, the `customer` and `corder` tables are no longer accessible in the `commerce` keyspace. You can verify this by trying to read from them.
@@ -458,7 +436,7 @@ The replica and rdonly cutovers are freely reversible. However, the master cutov
 After celebrating your first successful ‘vertical resharding’, you will need to clean up the leftover artifacts:
 
 ```sh
-helm upgrade $release ../../helm/vitess/ -f 206_clean_commerce.yaml
+helm upgrade vitess ../../helm/vitess/ -f 206_clean_commerce.yaml
 ```
 
 You can see the following DML statements in commerce:
@@ -614,7 +592,7 @@ NOTE: All vindexes in Vitess are plugins. If none of the predefined vindexes sui
 Now that we have made all the important decisions, it’s time to apply these changes:
 
 ```sh
-helm upgrade $release ../../helm/vitess/ -f 301_customer_sharded.yaml
+helm upgrade vitess ../../helm/vitess/ -f 301_customer_sharded.yaml
 ```
 
 The jobs to watch for:
@@ -636,7 +614,7 @@ The resharding process works by splitting existing shards into smaller shards. T
 We have to create the new target shards:
 
 ```sh
-helm upgrade $release ../../helm/vitess/ -f 302_new_shards.yaml
+helm upgrade vitess ../../helm/vitess/ -f 302_new_shards.yaml
 ```
 
 The change we are applying is:
@@ -732,7 +710,7 @@ COrder
 The process for `SplitClone` is similar to `VerticalSplitClone`. It starts the horizontal resharding process:
 
 ```sh
-helm upgrade $release ../../helm/vitess/ -f 303_horizontal_split.yaml
+helm upgrade vitess ../../helm/vitess/ -f 303_horizontal_split.yaml
 ```
 
 This starts the following job:
@@ -781,13 +759,13 @@ Now that you have verified that the tables are being continuously updated from t
 For rdonly and replica:
 
 ```sh
-helm upgrade $release ../../helm/vitess/ -f 304_migrate_replicas.yaml
+helm upgrade vitess ../../helm/vitess/ -f 304_migrate_replicas.yaml
 ```
 
 For master:
 
 ```sh
-helm upgrade $release ../../helm/vitess/ -f 305_migrate_master.yaml
+helm upgrade vitess ../../helm/vitess/ -f 305_migrate_master.yaml
 ```
 
 During the *master* migration, the original shard master will first stop accepting updates. Then the process will wait for the new shard masters to fully catch up on filtered replication before allowing them to begin serving. Since filtered replication has been following along with live updates, there should only be a few seconds of master unavailability.
@@ -839,13 +817,13 @@ COrder
 After celebrating your second successful resharding, you are now ready to clean up the leftover artifacts:
 
 ```sh
-helm upgrade $release ../../helm/vitess/ -f 306_down_shard_0.yaml
+helm upgrade vitess ../../helm/vitess/ -f 306_down_shard_0.yaml
 ```
 
 In this YAML file, we just deleted shard 0. This will cause all those vttablet pods to be deleted. But the shard metadata is still present. We can clean that up with this command (after all vttablets have been brought down):
 
 ```sh
-helm upgrade $release ../../helm/vitess/ -f 307_delete_shard_0.yaml
+helm upgrade vitess ../../helm/vitess/ -f 307_delete_shard_0.yaml
 ```
 
 This command runs the following job:
@@ -862,7 +840,7 @@ Beyond this, you will also need to manually delete the Persistent Volume Claims 
 And, as the final act, we remove the last executed job:
 
 ```sh
-helm upgrade $release ../../helm/vitess/ -f 308_final.yaml
+helm upgrade vitess ../../helm/vitess/ -f 308_final.yaml
 ```
 
 ### Teardown (optional)
@@ -870,7 +848,7 @@ helm upgrade $release ../../helm/vitess/ -f 308_final.yaml
 You can delete the whole example if you are not proceeding to another exercise.
 
 ```sh
-helm delete $release
+helm delete vt
 ```
 
 You will need to delete the persistent volume claims too
