@@ -4,12 +4,12 @@ weight: 7
 ---
 
 {{< info >}}
-This guide follows on from [MoveTables](../../user-guides/move-tables) and [Get Started with a Local deployment](../../get-started/local). It assumes that several scripts have been executed, and you have a running Vitess cluster.
+This guide follows on from [MoveTables](../../user-guides/move-tables) and [Get Started with a Local deployment](../../get-started/local). It assumes that several scripts have been executed, and that you have a running Vitess cluster.
 {{< /info >}}
 
 ## Preparation
 
-Resharding enables you to both _initially shard_ and reshard tables so that your keyspace is partitioned across several underlying [tablets](../../concept/tablet). A sharded keyspace has some additional restrictions on both [query syntax](../../reference/mysql-compatibility) and features such as `auto_increment`, so it is helpful to plan out a reshard operation diligently. However, you can always _reshard again_ if your sharding scheme turns out to be suboptimal.
+[Resharding](../../concepts/shard) enables you to both _initially shard_ and reshard tables so that your keyspace is partitioned across several underlying [tablets](../../concepts/tablet). A sharded keyspace has some additional restrictions on both [query syntax](../../reference/mysql-compatibility) and features such as `auto_increment`, so it is helpful to plan out a reshard operation diligently. However, you can always _reshard again_ if your sharding scheme turns out to be suboptimal.
 
 Using our example commerce and customer keyspaces, lets work through the two most common issues.
 
@@ -17,7 +17,7 @@ Using our example commerce and customer keyspaces, lets work through the two mos
 
 The first issue to address is the fact that customer and corder have auto-increment columns. This scheme does not work well in a sharded setup. Instead, Vitess provides an equivalent feature through sequences.
 
-The sequence table is an unsharded single row table that Vitess can use to generate monotonically increasing ids. The syntax to generate an id is: `select next :n values from customer_seq`. The vttablet that exposes this table is capable of serving a very large number of such ids because values are cached and served out of memory. The cache value is configurable.
+The sequence table is an unsharded single row table that Vitess can use to generate monotonically increasing IDs. The syntax to generate an id is: `select next :n values from customer_seq`. The vttablet that exposes this table is capable of serving a very large number of such IDs because values are cached and served out of memory. The cache value is configurable.
 
 The VSchema allows you to associate a column of a table with the sequence table. Once this is done, an insert on that table transparently fetches an id from the sequence table, fills in the value, and routes the row to the appropriate shard. This makes the construct backward compatible to how MySQL's `auto_increment` property works.
 
@@ -36,7 +36,7 @@ Note the `vitess_sequence` comment in the create table statement. VTTablet will 
 * `next_id` is set to `1000`: the value should be comfortably greater than the `auto_increment` max value used so far.
 * `cache` specifies the number of values to cache before vttablet updates `next_id`.
 
-Larger cache values perform better, but will exhaust the values quicker since during reparent operations the new master will start off at the `next_id` value.
+Larger cache values perform better, but will exhaust the values quicker, since during reparent operations the new master will start off at the `next_id` value.
 
 The VTGate servers also need to know about the sequence tables. This is done by updating the VSchema for commerce as follows:
 
@@ -56,16 +56,16 @@ The VTGate servers also need to know about the sequence tables. This is done by 
 
 ### Vindexes
 
-The next decision is about the sharding keys, aka Primary Vindexes. This is a complex decision that involves the following considerations:
+The next decision is about the sharding keys, or Primary Vindexes. This is a complex decision that involves the following considerations:
 
-* What are the highest QPS queries, and what are the where clauses for them?
+* What are the highest QPS queries, and what are the `WHERE` clauses for them?
 * Cardinality of the column; it must be high.
 * Do we want some rows to live together to support in-shard joins?
 * Do we want certain rows that will be in the same transaction to live together?
 
 Using the above considerations, in our use case, we can determine that:
 
-* For the customer table, the most common where clause uses `customer_id`. So, it shall have a Primary Vindex.
+* For the customer table, the most common `WHERE` clause uses `customer_id`. So, it shall have a Primary Vindex.
 * Given that it has lots of users, its cardinality is also high.
 * For the corder table, we have a choice between `customer_id` and `order_id`. Given that our app joins `customer` with `corder` quite often on the `customer_id` column, it will be beneficial to choose `customer_id` as the Primary Vindex for the `corder` table as well.
 * Coincidentally, transactions also update `corder` tables with their corresponding `customer` rows. This further reinforces the decision to use `customer_id` as Primary Vindex.
@@ -73,7 +73,7 @@ Using the above considerations, in our use case, we can determine that:
 There are a couple of other considerations out of scope for now, but worth mentioning:
 
 * It may also be worth creating a secondary lookup Vindex on `corder.order_id`.
-* Sometimes the `customer_id` is really a `tenant_id` (i.e. your application is a SaaS, which serves tenants that themselves have customers). One key consideration here is that the sharding by the `tenant_id` can lead to unbalanced shards. You may also need to consider sharding by the tenant's `customer_id`.
+* Sometimes the `customer_id` is really a `tenant_id`. For example, your application is a SaaS, which serves tenants that themselves have customers. One key consideration here is that the sharding by the `tenant_id` can lead to unbalanced shards. You may also need to consider sharding by the tenant's `customer_id`.
 
 Putting it all together, we have the following VSchema for `customer`:
 
@@ -122,7 +122,7 @@ Since the primary vindex columns are `BIGINT`, we choose `hash` as the primary v
 
 ## Apply VSchema
 
-Applying the new VSchema instructs Vitess that the keyspace is sharded, which may prevent some complex queries. If is a good idea to [validate this](../vtexplain) before proceeding with this step. If you do notice that certain queries start failing you can always revert temporaily by restoring the old VSchema. Make sure you fix all of the queries before proceeding to the Reshard process.
+Applying the new VSchema instructs Vitess that the keyspace is sharded, which may prevent some complex queries. It is a good idea to [validate this](../vtexplain) before proceeding with this step. If you do notice that certain queries start failing, you can always revert temporaily by restoring the old VSchema. Make sure you fix all of the queries before proceeding to the Reshard process.
 
 ```
 # Example 301_customer_sharded.sh
@@ -158,34 +158,7 @@ vtctlclient -server localhost:15999 InitShardMaster -force customer/-80 zone1-30
 vtctlclient -server localhost:15999 InitShardMaster -force customer/80- zone1-400
 ```
 
-### Shard naming
-
-What is the meaning of `-80` and `80-`? The shard names have the following characteristics:
-
-* They represent a range, where the left number is included, but the right is not.
-* Their notation is hexadecimal.
-* They are left justified.
-* A `-` prefix means: anything less than the RHS value.
-* A `-` postfix means: anything greater than or equal to the LHS value.
-* A plain `-` denotes the full keyrange.
-
-What does this mean: `-80` == `00-80` == `0000-8000` == `000000-800000`
-
-`80-` is not the same as `80-FF`. This is why:
-
-`80-FF` == `8000-FF00`. Therefore `FFFF` will be out of the `80-FF` range.
-
-`80-` means: ‘anything greater than or equal to `0x80`
-
-A `hash` vindex produces an 8-byte number. This means that all numbers less than `0x8000000000000000` will fall in shard `-80`. Any number with the highest bit set will be >= `0x8000000000000000`, and will therefore belong to shard `80-`.
-
-This left-justified approach allows you to have keyspace ids of arbitrary length. However, the most significant bits are the ones on the left.
-
-For example an `md5` hash produces 16 bytes. That can also be used as a keyspace id.
-
-A `varbinary` of arbitrary length can also be mapped as is to a keyspace id. This is what the `binary` vindex does.
-
-In the above case, we are essentially creating two shards: any keyspace id that does not have its leftmost bit set will go to `-80`. All others will go to `80-`.
+## Sanity Check
 
 Applying the above change should result in the creation of six more vttablet instances; one master, one replica and one rdonly tablet for each of the two shards.
 
@@ -313,7 +286,7 @@ done
 
 ```
 
-In this script, we just stopped all tablet instances for shard 0. This will cause all those vttablet and `mysqld` processes to be stopped. But the shard metadata is still present. We can clean that up with this command (after all vttablets have been brought down):
+In this script, we just stopped all tablet instances for shard 0. This will cause all those vttablet and `mysqld` processes to be stopped. But the shard metadata is still present. After Vitess brings down all vttablets, we can clean that up with this command:
 
 ``` sh
 # Examples 307_delete_shard_0.sh
@@ -322,7 +295,6 @@ vtctlclient -server localhost:15999 DeleteShard -recursive customer/0
 ```
 
 Beyond this, you will also need to manually delete the disk associated with this shard.
-
 
 ## Next Steps
 

@@ -4,16 +4,16 @@ weight: 6
 ---
 
 {{< info >}}
-This guide follows on from [get started with a local deployment](../../get-started/local). It assumes that the `./101_initial_cluster.sh` script has been executed, and you have a running Vitess cluster.
+This guide follows on from [get started with a local deployment](../../get-started/local). It assumes that the `./101_initial_cluster.sh` script has been executed, and that you have a running Vitess cluster.
 {{< /info >}}
 
-MoveTables is a new [VReplication](../../concepts/vreplication) workflow in Vitess 6, and obsoletes Vertical Split from earlier releases.
+[MoveTables](../../concepts/move-tables) is a new VReplication workflow in Vitess 6, and obsoletes Vertical Split from earlier releases.
 
-This feature enables you to move a subset of tables between keyspaces without downtime. For example, after [initially deploying Vitess](../../get-started/local) your single commerce schema may grow so large that it needs to be split into multiple keyspaces.
+This feature enables you to move a subset of tables between keyspaces without downtime. For example, after [Initially deploying Vitess](../../get-started/local), your single commerce schema may grow so large that it needs to be split into multiple keyspaces.
 
-As a stepping stone towards horizontally sharding (splitting a single table across multiple servers), it usually makes sense to split from having a single monolithic keyspace (`commerce`) to having multiple keyspaces (`commerce` and `customer`) that match your access pattern. For example, in our ecommerce system we know that `customer` and `corder` tables are closely related and growing at a high rate just by themselves.
+As a stepping stone towards splitting a single table across multiple servers (sharding), it usually makes sense to first split from having a single monolithic keyspace (`commerce`) to having multiple keyspaces (`commerce` and `customer`). For example, in our ecommerce system we know that `customer` and `corder` tables are closely related and growing at a high rate just by themselves.
 
-Lets start by simulating this situation by loading sample data:
+Let's start by simulating this situation by loading sample data:
 
 ```sql
 mysql < ../common/insert_commerce_data.sql
@@ -59,16 +59,6 @@ Notice that we are using keyspace `commerce/0` to select data from our tables.
 
 In this scenario, we are going to split the `commerce` keyspace into `commerce` and `customer` keyspaces. The tables `Customer` and `COrder` will be moved into the newly created keyspace, and the `Product` table will remain in the `commerce` keyspace. This operation is online, which means that it does not block either read or write operations to the tables, __except__ for a small window during the final cut-over.
 
-We could have equally decided to keep the `Customer` and `COrder` tables in the `commerce` keyspace, and created a new keyspace to move our `Product` table into. Which makes more sense often depends on the specifics of your environment. If the `Product` table is much larger, it will take more time to move, but in doing so you might also be able to migrate to newer hardware which has more headroom before you need to perform additional operations such as sharding. Similarly, if the `Customer` and `COrder` tables are updated at a more frequent rate, then this could also increase the move time.
-
-### Impact to Production Traffic
-
-Another consideration in planning which tables to move is the modification rate. Internally a MoveTables operation is comprised of both a table copy and a subscription to all changes made to the table. Vitess uses batching to improve the performance of both table copying and applying subscription changes, but you should expect that tables with lighter modification rates to move faster.
-
-During the active move process, data is copied from replicas instead of the master server. This helps ensure minimal production traffic impact.
-
-During the `SwitchWrites` phase of the MoveTables operation, Vitess may be briefly unavailable. This unavailability is usually a few seconds, but will be higher in the event that your system has a high replication delay.
-
 ## Create new tablets
 
 The first step in our MoveTables operation is to deploy new tablets for our `customer` keyspace. By convention, we are going to use the UIDs 200-202 as the `commerce` keyspace previously used `100-102`. Once the tablets have started, we can `-force` the first tablet to be the master:
@@ -112,7 +102,7 @@ sleep 2
 
 ## Phase 1: Switch Reads
 
-Once the MoveTables operation is complete, the first step in making the changes live is to _switch_ `SELECT` statements to read from the new keyspace. Other statements will continue to route to the `commerce` keyspace. By staging this as two operations, Vitess allows you to canary the changes and reduce the risks associated with changes. For example, you may have a different configuration of hardware or software on the new keyspace.
+Once the MoveTables operation is complete, the first step in making the changes live is to _switch_ `SELECT` statements to read from the new keyspace. Other statements will continue to route to the `commerce` keyspace. By staging this as two operations, Vitess allows you to test the changes and reduce the associated risks. For example, you may have a different configuration of hardware or software on the new keyspace.
 
 ```sh
 # Example 203_switch_reads.sh
@@ -163,7 +153,7 @@ mysql --table < ../common/select_commerce_data.sql
 
 ## Cleanup
 
-The final step is to remove the data from the original keyspace. As well as freeing space on the original tablets, this is an important step to eliminate potential future confusions. If you have a misconfiguration down the line and accidentally route queries for the  `customer` and `corder` tables to `commerce`, it is much better to return a table not found error, rather than return stale data:
+The final step is to remove the data from the original keyspace. As well as freeing space on the original tablets, this is an important step to eliminate potential future confusions. If you have a misconfiguration down the line and accidentally route queries for the  `customer` and `corder` tables to `commerce`, it is much better to return a "table not found" error, rather than return stale data:
 
 ```sh
 # Example 205_clean_commerce.sh

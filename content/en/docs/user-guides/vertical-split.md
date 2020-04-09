@@ -8,7 +8,7 @@ In Vitess 6, Vertical Split became obsolete with the introduction of MoveTables!
 {{< /warning >}}
 
 {{< info >}}
-This guide follows on from [get started with a local deployment](../../get-started/local). It assumes that the `./101_initial_cluster.sh` script has been executed, and you have a running Vitess cluster.
+This guide follows on from [get started with a local deployment](../../get-started/local). It assumes that the `./101_initial_cluster.sh` script has been executed, and that you have a running Vitess cluster.
 {{< /info >}}
 
 Vertical Split enables you to move a subset of tables to their own keyspace. Continuing on from the ecommerce example started in the get started guide, as your database continues to grow, you may decide to separate the `customer` and `corder` tables from the `product` table.  Let us add some data into our tables to illustrate how the vertical split works. Paste the following: 

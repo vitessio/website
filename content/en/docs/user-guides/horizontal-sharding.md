@@ -8,7 +8,7 @@ In Vitess 6, Horizontal Sharding became obsolete with the introduction of Reshar
 {{< /warning >}}
 
 {{< info >}}
-This guide follows on from [Vertical Split](../../user-guides/vertical-split) and [Get Started with a Local deployment](../../get-started/local). It assumes that several scripts have been executed, and you have a running Vitess cluster.
+This guide follows on from [Vertical Split](../../user-guides/vertical-split) and [Get Started with a Local deployment](../../get-started/local). It assumes that several scripts have been executed, and that you have a running Vitess cluster.
 {{< /info >}}
 
 The DBAs you hired with massive troves of hipster cash are pinging you on Slack and are freaking out. With the amount of data that you’re loading up in your keyspaces, MySQL performance is starting to tank - it’s okay, you’re prepared for this! Although the query guardrails and connection pooling are cool features that Vitess can offer to a single unsharded keyspace, the real value comes into play with horizontal sharding.
