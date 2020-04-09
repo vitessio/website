@@ -21,7 +21,7 @@ The sequence table is an unsharded single row table that Vitess can use to gener
 
 The VSchema allows you to associate a column of a table with the sequence table. Once this is done, an insert on that table transparently fetches an id from the sequence table, fills in the value, and routes the row to the appropriate shard. This makes the construct backward compatible to how MySQL's `auto_increment` property works.
 
-Since sequences are unsharded tables, they will be stored in the commerce database. The schema:
+Since sequences are unsharded tables, they will be stored in the commerce database. Here is the schema:
 
 ``` sql
 CREATE TABLE customer_seq (id int, next_id bigint, cache bigint, primary key(id)) comment 'vitess_sequence';

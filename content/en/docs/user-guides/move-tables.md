@@ -61,7 +61,7 @@ In this scenario, we are going to split the `commerce` keyspace into `commerce` 
 
 ## Create new tablets
 
-The first step in our MoveTables operation is to deploy new tablets for our `customer` keyspace. By convention, we are going to use the UIDs 200-202 as the `commerce` keyspace previously used `100-102`. Once the tablets have started, we can `-force` the first tablet to be the master:
+The first step in our MoveTables operation is to deploy new tablets for our `customer` keyspace. By convention, we are going to use the UIDs 200-202 as the `commerce` keyspace previously used `100-102`. Once the tablets have started, we can force the first tablet to be the master using the `-force` flag:
 
 ```sh
 # Example 201_customer_tablets.sh
