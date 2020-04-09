@@ -248,7 +248,7 @@ The schema has been simplified to include only those fields that are significant
 
 ## Next Steps
 
-You can now proceed with [MoveTables](../../user-guides/move-tables).
+You can now proceed with [Vertical Split](../../user-guides/vertical-split).
 
 Or alternatively, if you would like to teardown your example:
 
