@@ -111,18 +111,20 @@ job.batch/commerce-apply-vschema-initial       1/1           109s       2m44s
 job.batch/zone1-commerce-0-init-shard-master   1/1           115s       2m44s
 ```
 
-### Connect to your cluster
+## Setup Aliases
 
-You should now be able to connect to the cluster with the MySQL client. To save time, we will first add an alias so that _mysql_ first sets up the required networking:
+For ease-of-use, Vitess provides aliases for `mysql` and `vclient`. This script also sets up all the required networking:
 
-```sh
+```bash
 source alias.source
-vmysql
 ```
 
-That should open the MySQL monitor shell:
+### Connect to your cluster
+
+You should now be able to connect to the VTGate Server in your cluster with the MySQL client:
 
 ```text
+~/my-vitess-example> mysql
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 1
 Server version: 5.7.9-Vitess Percona Server (GPL), Release 29, Revision 11ad961

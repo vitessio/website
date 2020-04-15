@@ -135,10 +135,10 @@ helm upgrade vitess ../../helm/vitess/ -f 301_customer_sharded.yaml
 ``` sh
 # Example 301_customer_sharded.sh
 
-vtctlclient -server localhost:15999 ApplySchema -sql-file create_commerce_seq.sql commerce
-vtctlclient -server localhost:15999 ApplyVSchema -vschema_file vschema_commerce_seq.json commerce
-vtctlclient -server localhost:15999 ApplySchema -sql-file create_customer_sharded.sql customer
-vtctlclient -server localhost:15999 ApplyVSchema -vschema_file vschema_customer_sharded.json customer
+vclient ApplySchema -sql-file create_commerce_seq.sql commerce
+vclient ApplyVSchema -vschema_file vschema_commerce_seq.json commerce
+vclient ApplySchema -sql-file create_customer_sharded.sql customer
+vclient ApplyVSchema -vschema_file vschema_customer_sharded.json customer
 ```
 
 ## Create new shards
@@ -170,8 +170,8 @@ for i in 400 401 402; do
  SHARD=80- CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
 done
 
-vtctlclient -server localhost:15999 InitShardMaster -force customer/-80 zone1-300
-vtctlclient -server localhost:15999 InitShardMaster -force customer/80- zone1-400
+vclient InitShardMaster -force customer/-80 zone1-300
+vclient InitShardMaster -force customer/80- zone1-400
 ```
 
 ## Sanity Check
@@ -195,82 +195,31 @@ COrder
 
 This process starts the reshard opration. It occurs online, and will not block any read or write operations to your database:
 
-#### Using Kubernetes (Helm)
-
-```sh
-helm upgrade vitess ../../helm/vitess/ -f 303_reshard.yaml
-```
-
-#### Using a Local Deployment
-
 ``` sh
 # 303_reshard.sh
 
-source ./env.sh
-
-vtctlclient \
-    -server localhost:15999 \
-    -log_dir "$VTDATAROOT"/tmp \
-    -alsologtostderr \
-    Reshard \
-    customer.cust2cust "0" "-80,80-"
-
-sleep 2
+vclient Reshard customer.cust2cust '0' '-80,80-'
 ```
 
 ## Switch Reads
 
 Once the reshard is complete, the first step is to switch read operations to occur at the new location. By switching read operations first, we are able to verify that the new tablet servers are healthy and able to respond to requests:
 
-#### Using Kubernetes (Helm)
-
-```sh
-helm upgrade vitess ../../helm/vitess/ -f 304_switch_reads.yaml
-```
-
-#### Using a Local Deployment
-
 ``` sh
 # Example 304_switch_reads.sh
 
-vtctlclient \
- -server localhost:15999 \
- -log_dir "$VTDATAROOT"/tmp \
- -alsologtostderr \
- SwitchReads \
- -tablet_type=rdonly \
- customer.cust2cust
-
-vtctlclient \
- -server localhost:15999 \
- -log_dir "$VTDATAROOT"/tmp \
- -alsologtostderr \
- SwitchReads \
- -tablet_type=replica \
- customer.cust2cust
+vclient SwitchReads -tablet_type=rdonly customer.cust2cust
+vclient SwitchReads -tablet_type=replica customer.cust2cust
 ```
 
 ## Switch Writes
 
 After reads have been switched, and the health of the system has been verified, it's time to switch writes. The usage is very similar to switching reads:
 
-#### Using Kubernetes (Helm)
-
-```sh
-helm upgrade vitess ../../helm/vitess/ -f 305_switch_writes.yaml
-```
-
-#### Using a Local Deployment
-
 ``` sh
 # Example 305_switch_writes.sh
 
-vtctlclient \
- -server localhost:15999 \
- -log_dir "$VTDATAROOT"/tmp \
- -alsologtostderr \
- SwitchWrites \
- customer.cust2cust
+vclient SwitchWrites customer.cust2cust
 ```
 
 You should now be able to see the data that has been copied over to the new shards:
@@ -338,18 +287,11 @@ done
 
 In this script, we just stopped all tablet instances for shard 0. This will cause all those vttablet and `mysqld` processes to be stopped. But the shard metadata is still present. After Vitess brings down all vttablets, we can clean that up with this command:
 
-#### Using Kubernetes (Helm)
-
-```sh
-helm upgrade vitess ../../helm/vitess/ -f 307_delete_shard_0.yaml
-```
-
-#### Using a Local Deployment
-
 ``` sh
 # Examples 307_delete_shard_0.sh
 
-vtctlclient -server localhost:15999 DeleteShard -recursive customer/0
+vclient DeleteShard -recursive customer/0
+
 ```
 
 Beyond this, you will also need to manually delete the disk associated with this shard.

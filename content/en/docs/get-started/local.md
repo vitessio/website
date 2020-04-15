@@ -143,46 +143,27 @@ pkill -9 -e -f '(vtdataroot|VTDATAROOT)' # kill Vitess processes
 rm -rf vtdataroot
 ```
 
-## Connect to Your Cluster
+## Setup Aliases
 
-You should now be able to connect to the VTGate server that was started in `101_initial_cluster.sh`. To connect to it with the `mysql` command line client:
+For ease-of-use, Vitess provides aliases for `mysql` and `vclient`:
 
-```sh
-~/my-vitess-example> mysql -h 127.0.0.1 -P 15306
-Welcome to the MySQL monitor.  Commands end with ; or \g.
-Your MySQL connection id is 1
-Server version: 5.7.9-Vitess (Ubuntu)
-
-Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.
-
-Oracle is a registered trademark of Oracle Corporation and/or its
-affiliates. Other names may be trademarks of their respective
-owners.
-
-Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
-mysql> show tables;
-+-----------------------+
-| Tables_in_vt_commerce |
-+-----------------------+
-| corder                |
-| customer              |
-| product               |
-+-----------------------+
-3 rows in set (0.01 sec)
+```bash
+source alias.source
 ```
 
-It is recommended to configure the MySQL command line to default to these settings, as the user guides omit `-h 127.0.0.1 -P 15306` for brevity. Paste the following:
+The output of this command looks like:
 
-```sh
-cat << EOF > ~/.my.cnf
-[client]
-host=127.0.0.1
-port=15306
-EOF
+```bash
+~/my-vitess-example> source alias.source
+Setting alias mysql to mysql -h 127.0.0.1 -P 15306
+Setting alias vclient to vtctlclient -server localhost:15999 -log_dir /tmp -alsologtostderr
 ```
 
-Repeating the previous step, you should now be able to use the `mysql` client without any settings:
+Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql` or close your session.
+
+## Connect to your cluster
+
+You should now be able to connect to the VTGate server that was started in `101_initial_cluster.sh`:
 
 ```bash
 ~/my-vitess-example> mysql
@@ -248,7 +229,7 @@ The schema has been simplified to include only those fields that are significant
 
 ## Next Steps
 
-You can now proceed with [Vertical Split](../../user-guides/vertical-split).
+You can now proceed with [MoveTables](../../user-guides/move-tables).
 
 Or alternatively, if you would like to teardown your example:
 

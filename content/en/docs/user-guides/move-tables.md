@@ -102,12 +102,8 @@ for i in 200 201 202; do
  CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
 done
 
-vtctlclient -server localhost:15999 InitShardMaster -force customer/0 zone1-200
-vtctlclient -server localhost:15999 ApplyVSchema -vschema '{ "tables": { "product": {} } }' commerce
-vtctlclient -server localhost:15999 ApplyVSchema -vschema '{ "tables": { "customer": {}, "corder": {} } }' customer
+vclient InitShardMaster -force customer/0 zone1-200
 ```
-
-The last two commands here set the VSchema. In our case, we need to tell VTGate that the `customer` keyspace will now contain the tables `customer` and `corder`. The `commerce` keyspace will continue to hold just the `Product` table.
 
 __Note:__ This change does not change the actual routing yet. We will use a _switch_ directive to achieve that shortly.
 
@@ -115,79 +111,21 @@ __Note:__ This change does not change the actual routing yet. We will use a _swi
 
 In this step we will initiate the MoveTables, which copies tables from the commerce keyspace into customer. This operation does not block any database activity; the MoveTables operation is performed online:
 
-#### Using Kubernetes (Helm)
-
-```sh
-helm upgrade vitess ../../helm/vitess/ -f 202_move_tables.yaml
-```
-
-The move operation is a job. You can track its progress with:
-
-```sh
-$ kubectl get jobs
-NAME                                 COMPLETIONS   DURATION   AGE
-vtctlclient-move-tables              1/1           2s         25s
-zone1-commerce-0-init-shard-master   1/1           100s       19m
-zone1-customer-0-init-shard-master   1/1           17s        2m59s
-```
-
-#### Using a Local Deployment
-
 ```sh
 # Example 202_move_tables.sh
 
-vtctlclient \
-    -server localhost:15999 \
-    -log_dir "$VTDATAROOT"/tmp \
-    -alsologtostderr \
-    MoveTables \
-    -workflow=commerce2customer \
-    commerce customer customer,corder
-
-sleep 2
+vclient MoveTables -workflow=commerce2customer commerce customer '{"customer":{}, "corder":{}}'
 ```
 
 ## Phase 1: Switch Reads
 
 Once the MoveTables operation is complete, the first step in making the changes live is to _switch_ `SELECT` statements to read from the new keyspace. Other statements will continue to route to the `commerce` keyspace. By staging this as two operations, Vitess allows you to test the changes and reduce the associated risks. For example, you may have a different configuration of hardware or software on the new keyspace.
 
-#### Using Kubernetes (Helm)
-
-```sh
-helm upgrade vitess ../../helm/vitess/ -f 203_switch_reads.yaml
-```
-
-The switch operation is a job. You can track its progress with:
-
-```sh
-$ kubectl get jobs
-NAME                                 COMPLETIONS   DURATION   AGE
-vtctlclient-mswitch1                 1/1           3s         33s
-vtctlclient-mswitch2                 1/1           5s         33s
-zone1-commerce-0-init-shard-master   1/1           95s        4m12s
-zone1-customer-0-init-shard-master   1/1           17s        85s
-```
-
-#### Using a Local Deployment
-
 ```sh
 # Example 203_switch_reads.sh
 
-vtctlclient \
- -server localhost:15999 \
- -log_dir "$VTDATAROOT"/tmp \
- -alsologtostderr \
- SwitchReads \
- -tablet_type=rdonly \
- customer.commerce2customer
-
-vtctlclient \
- -server localhost:15999 \
- -log_dir "$VTDATAROOT"/tmp \
- -alsologtostderr \
- SwitchReads \
- -tablet_type=replica \
- customer.commerce2customer
+vclient SwitchReads -tablet_type=rdonly customer.commerce2customer
+vclient SwitchReads -tablet_type=replica customer.commerce2customer
 
 ```
 
@@ -195,23 +133,10 @@ vtctlclient \
 
 After the reads have been _switched_, and you have verified that the system is operating as expected, it is time to _switch_ the write operations. The command to execute the switch is very similar to switching reads:
 
-#### Using Kubernetes (Helm)
-
-```sh
-helm upgrade vitess ../../helm/vitess/ -f 204_switch_writes.yaml
-```
-
-#### Using a Local Deployment
-
 ```sh
 # Example 204_switch_writes.sh
 
-vtctlclient \
- -server localhost:15999 \
- -log_dir "$VTDATAROOT"/tmp \
- -alsologtostderr \
- SwitchWrites \
- customer.commerce2customer
+vclient SwitchWrites customer.commerce2customer
 
 ```
 
@@ -229,22 +154,13 @@ mysql --table < ../common/select_commerce_data.sql
 
 The final step is to remove the data from the original keyspace. As well as freeing space on the original tablets, this is an important step to eliminate potential future confusions. If you have a misconfiguration down the line and accidentally route queries for the  `customer` and `corder` tables to `commerce`, it is much better to return a "table not found" error, rather than return stale data:
 
-#### Using Kubernetes (Helm)
-
-```sh
-helm upgrade vitess ../../helm/vitess/ -f 205_clean_commerce.yaml
-```
-
-#### Using a Local Deployment
-
 ```sh
 # Example 205_clean_commerce.sh
 
-vtctlclient -server localhost:15999 ApplySchema -sql-file drop_commerce_tables.sql commerce
-vtctlclient -server localhost:15999 SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 rdonly
-vtctlclient -server localhost:15999 SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 replica
-vtctlclient -server localhost:15999 SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 master
-
+vclient SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 rdonly
+vclient SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 replica
+vclient SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 master
+vclient ApplyRoutingRules -rules='{}'
 ```
 
 After this step is complete, you should see the following error:
