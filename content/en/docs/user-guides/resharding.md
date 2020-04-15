@@ -133,12 +133,10 @@ helm upgrade vitess ../../helm/vitess/ -f 301_customer_sharded.yaml
 #### Using a Local Deployment
 
 ``` sh
-# Example 301_customer_sharded.sh
-
-vclient ApplySchema -sql-file create_commerce_seq.sql commerce
-vclient ApplyVSchema -vschema_file vschema_commerce_seq.json commerce
-vclient ApplySchema -sql-file create_customer_sharded.sql customer
-vclient ApplyVSchema -vschema_file vschema_customer_sharded.json customer
+vtctlclient ApplySchema -sql-file create_commerce_seq.sql commerce
+vtctlclient ApplyVSchema -vschema_file vschema_commerce_seq.json commerce
+vtctlclient ApplySchema -sql-file create_customer_sharded.sql customer
+vtctlclient ApplyVSchema -vschema_file vschema_customer_sharded.json customer
 ```
 
 ## Create new shards
@@ -156,10 +154,6 @@ helm upgrade vitess ../../helm/vitess/ -f 302_new_shards.yaml
 #### Using a Local Deployment
 
 ``` sh
-# Example 302_new_shards.sh
-
-source ./env.sh
-
 for i in 300 301 302; do
  CELL=zone1 TABLET_UID=$i ./scripts/mysqlctl-up.sh
  SHARD=-80 CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
@@ -170,8 +164,8 @@ for i in 400 401 402; do
  SHARD=80- CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
 done
 
-vclient InitShardMaster -force customer/-80 zone1-300
-vclient InitShardMaster -force customer/80- zone1-400
+vtctlclient InitShardMaster -force customer/-80 zone1-300
+vtctlclient InitShardMaster -force customer/80- zone1-400
 ```
 
 ## Sanity Check
@@ -196,9 +190,7 @@ COrder
 This process starts the reshard opration. It occurs online, and will not block any read or write operations to your database:
 
 ``` sh
-# 303_reshard.sh
-
-vclient Reshard customer.cust2cust '0' '-80,80-'
+vtctlclient Reshard customer.cust2cust '0' '-80,80-'
 ```
 
 ## Switch Reads
@@ -206,10 +198,8 @@ vclient Reshard customer.cust2cust '0' '-80,80-'
 Once the reshard is complete, the first step is to switch read operations to occur at the new location. By switching read operations first, we are able to verify that the new tablet servers are healthy and able to respond to requests:
 
 ``` sh
-# Example 304_switch_reads.sh
-
-vclient SwitchReads -tablet_type=rdonly customer.cust2cust
-vclient SwitchReads -tablet_type=replica customer.cust2cust
+vtctlclient SwitchReads -tablet_type=rdonly customer.cust2cust
+vtctlclient SwitchReads -tablet_type=replica customer.cust2cust
 ```
 
 ## Switch Writes
@@ -217,9 +207,7 @@ vclient SwitchReads -tablet_type=replica customer.cust2cust
 After reads have been switched, and the health of the system has been verified, it's time to switch writes. The usage is very similar to switching reads:
 
 ``` sh
-# Example 305_switch_writes.sh
-
-vclient SwitchWrites customer.cust2cust
+vtctlclient SwitchWrites customer.cust2cust
 ```
 
 You should now be able to see the data that has been copied over to the new shards:
@@ -276,22 +264,16 @@ helm upgrade vitess ../../helm/vitess/ -f 306_down_shard_0.yaml
 #### Using a Local Deployment
 
 ``` sh
-# Examples 306_down_shard_0.sh
-
 for i in 200 201 202; do
  CELL=zone1 TABLET_UID=$i ./scripts/vttablet-down.sh
  CELL=zone1 TABLET_UID=$i ./scripts/mysqlctl-down.sh
 done
-
 ```
 
 In this script, we just stopped all tablet instances for shard 0. This will cause all those vttablet and `mysqld` processes to be stopped. But the shard metadata is still present. After Vitess brings down all vttablets, we can clean that up with this command:
 
 ``` sh
-# Examples 307_delete_shard_0.sh
-
-vclient DeleteShard -recursive customer/0
-
+vtctlclient DeleteShard -recursive customer/0
 ```
 
 Beyond this, you will also need to manually delete the disk associated with this shard.

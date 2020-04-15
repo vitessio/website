@@ -93,16 +93,12 @@ job.batch/zone1-customer-0-init-shard-master   1/1           17s        89s
 #### Using a Local Deployment
 
 ```sh
-# Example 201_customer_tablets.sh
-
-source ./env.sh
-
 for i in 200 201 202; do
  CELL=zone1 TABLET_UID=$i ./scripts/mysqlctl-up.sh
  CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
 done
 
-vclient InitShardMaster -force customer/0 zone1-200
+vtctlclient InitShardMaster -force customer/0 zone1-200
 ```
 
 __Note:__ This change does not change the actual routing yet. We will use a _switch_ directive to achieve that shortly.
@@ -112,9 +108,7 @@ __Note:__ This change does not change the actual routing yet. We will use a _swi
 In this step we will initiate the MoveTables, which copies tables from the commerce keyspace into customer. This operation does not block any database activity; the MoveTables operation is performed online:
 
 ```sh
-# Example 202_move_tables.sh
-
-vclient MoveTables -workflow=commerce2customer commerce customer '{"customer":{}, "corder":{}}'
+vtctlclient MoveTables -workflow=commerce2customer commerce customer '{"customer":{}, "corder":{}}'
 ```
 
 ## Phase 1: Switch Reads
@@ -122,11 +116,8 @@ vclient MoveTables -workflow=commerce2customer commerce customer '{"customer":{}
 Once the MoveTables operation is complete, the first step in making the changes live is to _switch_ `SELECT` statements to read from the new keyspace. Other statements will continue to route to the `commerce` keyspace. By staging this as two operations, Vitess allows you to test the changes and reduce the associated risks. For example, you may have a different configuration of hardware or software on the new keyspace.
 
 ```sh
-# Example 203_switch_reads.sh
-
-vclient SwitchReads -tablet_type=rdonly customer.commerce2customer
-vclient SwitchReads -tablet_type=replica customer.commerce2customer
-
+vtctlclient SwitchReads -tablet_type=rdonly customer.commerce2customer
+vtctlclient SwitchReads -tablet_type=replica customer.commerce2customer
 ```
 
 ## Phase 2: Switch Writes
@@ -134,10 +125,7 @@ vclient SwitchReads -tablet_type=replica customer.commerce2customer
 After the reads have been _switched_, and you have verified that the system is operating as expected, it is time to _switch_ the write operations. The command to execute the switch is very similar to switching reads:
 
 ```sh
-# Example 204_switch_writes.sh
-
-vclient SwitchWrites customer.commerce2customer
-
+vtctlclient SwitchWrites customer.commerce2customer
 ```
 
 We can then verify that both reads and writes go to the new keyspace:
@@ -155,12 +143,10 @@ mysql --table < ../common/select_commerce_data.sql
 The final step is to remove the data from the original keyspace. As well as freeing space on the original tablets, this is an important step to eliminate potential future confusions. If you have a misconfiguration down the line and accidentally route queries for the  `customer` and `corder` tables to `commerce`, it is much better to return a "table not found" error, rather than return stale data:
 
 ```sh
-# Example 205_clean_commerce.sh
-
-vclient SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 rdonly
-vclient SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 replica
-vclient SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 master
-vclient ApplyRoutingRules -rules='{}'
+vtctlclient SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 rdonly
+vtctlclient SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 replica
+vtctlclient SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 master
+vtctlclient ApplyRoutingRules -rules='{}'
 ```
 
 After this step is complete, you should see the following error:

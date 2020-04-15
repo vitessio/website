@@ -113,11 +113,13 @@ job.batch/zone1-commerce-0-init-shard-master   1/1           115s       2m44s
 
 ## Setup Aliases
 
-For ease-of-use, Vitess provides aliases for `mysql` and `vclient`. This script also sets up all the required networking:
+For ease-of-use, Vitess provides aliases for `mysql` and `vtctlclient`. This script also sets up all the required networking:
 
 ```bash
 source alias.source
 ```
+
+Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctlclient` or close your session.
 
 ### Connect to your cluster
 
