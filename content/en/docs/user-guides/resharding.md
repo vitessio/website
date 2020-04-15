@@ -4,7 +4,7 @@ weight: 7
 ---
 
 {{< info >}}
-This guide follows on from [MoveTables](../../user-guides/move-tables) and [Get Started with a Local deployment](../../get-started/local). It assumes that several scripts have been executed, and that you have a running Vitess cluster.
+This guide follows on from the Get Started guides. Please make sure that you have either a [Kubernetes (helm)](../../get-started/kubernetes) or [local](../../get-started/local) installation ready.
 {{< /info >}}
 
 ## Preparation
@@ -124,6 +124,14 @@ Since the primary vindex columns are `BIGINT`, we choose `hash` as the primary v
 
 Applying the new VSchema instructs Vitess that the keyspace is sharded, which may prevent some complex queries. It is a good idea to [validate this](../vtexplain) before proceeding with this step. If you do notice that certain queries start failing, you can always revert temporaily by restoring the old VSchema. Make sure you fix all of the queries before proceeding to the Reshard process.
 
+#### Using Kubernetes (Helm)
+
+```sh
+helm upgrade vitess ../../helm/vitess/ -f 301_customer_sharded.yaml
+```
+
+#### Using a Local Deployment
+
 ``` sh
 # Example 301_customer_sharded.sh
 
@@ -138,6 +146,14 @@ vtctlclient -server localhost:15999 ApplyVSchema -vschema_file vschema_customer_
 At this point, you have finalized your sharded VSchema and vetted all the queries to make sure they still work. Now, it’s time to reshard.
 
 The resharding process works by splitting existing shards into smaller shards. This type of resharding is the most appropriate for Vitess. There are some use cases where you may want to bring up a new shard and add new rows in the most recently created shard. This can be achieved in Vitess by splitting a shard in such a way that no rows end up in the ‘new’ shard. However, it's not natural for Vitess. We have to create the new target shards:
+
+#### Using Kubernetes (Helm)
+
+```sh
+helm upgrade vitess ../../helm/vitess/ -f 302_new_shards.yaml
+```
+
+#### Using a Local Deployment
 
 ``` sh
 # Example 302_new_shards.sh
@@ -179,7 +195,17 @@ COrder
 
 This process starts the reshard opration. It occurs online, and will not block any read or write operations to your database:
 
+#### Using Kubernetes (Helm)
+
+```sh
+helm upgrade vitess ../../helm/vitess/ -f 303_reshard.yaml
+```
+
+#### Using a Local Deployment
+
 ``` sh
+# 303_reshard.sh
+
 source ./env.sh
 
 vtctlclient \
@@ -195,6 +221,14 @@ sleep 2
 ## Switch Reads
 
 Once the reshard is complete, the first step is to switch read operations to occur at the new location. By switching read operations first, we are able to verify that the new tablet servers are healthy and able to respond to requests:
+
+#### Using Kubernetes (Helm)
+
+```sh
+helm upgrade vitess ../../helm/vitess/ -f 304_switch_reads.yaml
+```
+
+#### Using a Local Deployment
 
 ``` sh
 # Example 304_switch_reads.sh
@@ -219,6 +253,14 @@ vtctlclient \
 ## Switch Writes
 
 After reads have been switched, and the health of the system has been verified, it's time to switch writes. The usage is very similar to switching reads:
+
+#### Using Kubernetes (Helm)
+
+```sh
+helm upgrade vitess ../../helm/vitess/ -f 305_switch_writes.yaml
+```
+
+#### Using a Local Deployment
 
 ``` sh
 # Example 305_switch_writes.sh
@@ -276,6 +318,14 @@ COrder
 
 After celebrating your second successful resharding, you are now ready to clean up the leftover artifacts:
 
+#### Using Kubernetes (Helm)
+
+```sh
+helm upgrade vitess ../../helm/vitess/ -f 306_down_shard_0.yaml
+```
+
+#### Using a Local Deployment
+
 ``` sh
 # Examples 306_down_shard_0.sh
 
@@ -288,6 +338,14 @@ done
 
 In this script, we just stopped all tablet instances for shard 0. This will cause all those vttablet and `mysqld` processes to be stopped. But the shard metadata is still present. After Vitess brings down all vttablets, we can clean that up with this command:
 
+#### Using Kubernetes (Helm)
+
+```sh
+helm upgrade vitess ../../helm/vitess/ -f 307_delete_shard_0.yaml
+```
+
+#### Using a Local Deployment
+
 ``` sh
 # Examples 307_delete_shard_0.sh
 
@@ -295,11 +353,3 @@ vtctlclient -server localhost:15999 DeleteShard -recursive customer/0
 ```
 
 Beyond this, you will also need to manually delete the disk associated with this shard.
-
-## Next Steps
-
-Feel free to experiment with your Vitess cluster! Execute the following when you are ready to teardown your example:
-
-``` bash
-./401_teardown.sh
-```

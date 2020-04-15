@@ -12,7 +12,7 @@ This guide covers installing Vitess locally for testing purposes, from pre-compi
 
 Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your installation method provides a choice:
 
-```
+```sh
 # Ubuntu based
 sudo apt install -y mysql-server etcd curl
 
@@ -26,7 +26,7 @@ sudo yum -y install mysql-community-server etcd curl
 
 On apt-based distributions the services `mysqld` and `etcd` will need to be shutdown, since `etcd` will conflict with the `etcd` started in the examples, and `mysqlctl` will start its own copies of `mysqld`:
 
-```
+```sh
 # Debian and Ubuntu
 sudo service mysql stop
 sudo service etcd stop
@@ -39,7 +39,7 @@ sudo systemctl disable etcd
 AppArmor/SELinux will not allow Vitess to launch MySQL in any data directory by default. You will need to disable it:
 
 __AppArmor__:
-```
+```sh
 # Debian and Ubuntu
 sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
 sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
@@ -49,7 +49,7 @@ sudo aa-status | grep mysqld
 ```
 
 __SELinux__:
-```
+```sh
 # CentOS
 sudo setenforce 0
 ```
@@ -58,7 +58,7 @@ sudo setenforce 0
 
 Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux. For example with Vitess 5:
 
-```
+```sh
 tar -xzf vitess-5.20+20200204-17a806ae5.tar.gz
 cd vitess-5.20+20200204-17a806ae5
 sudo mkdir -p /usr/local/vitess
@@ -67,7 +67,7 @@ sudo mv * /usr/local/vitess/
 
 Make sure to add `/usr/local/vitess/bin` to the `PATH` environment variable. You can do this by adding the following to your `$HOME/.bashrc` file:
 
-```
+```sh
 export PATH=/usr/local/vitess/bin:${PATH}
 ```
 
@@ -77,7 +77,7 @@ You are now ready to start your first cluster! Open a new terminal window to ens
 
 Start by copying the local examples included with Vitess to your preferred location. For our first example we will deploy a [single unsharded keyspace](../../concepts/keyspace). The file `101_initial_cluster.sh` is for example `1` phase `01`. Lets execute it now:
 
-```
+```sh
 cp -r /usr/local/vitess/examples/local ~/my-vitess-example
 cd ~/my-vitess-example
 ./101_initial_cluster.sh
@@ -85,7 +85,7 @@ cd ~/my-vitess-example
 
 You should see output similar to the following:
 
-```
+```text
 ~/my-vitess-example> ./101_initial_cluster.sh
 $ ./101_initial_cluster.sh 
 add /vitess/global
@@ -118,7 +118,7 @@ W0325 11:33:01.933188   16036 main.go:64] W0325 17:33:01.931580 reparent.go:191]
 
 You can also verify that the processes have started with `pgrep`:
 
-```
+```bash
 ~/my-vitess-example> pgrep -fl vtdataroot
 14119 etcd
 14176 vtctld
@@ -138,7 +138,7 @@ _The exact list of processes will vary. For example, you may not see `mysqld_saf
 
 If you encounter any errors, such as ports already in use, you can kill the processes and start over:
 
-```
+```sh
 pkill -9 -e -f '(vtdataroot|VTDATAROOT)' # kill Vitess processes
 rm -rf vtdataroot
 ```
@@ -147,7 +147,7 @@ rm -rf vtdataroot
 
 You should now be able to connect to the VTGate server that was started in `101_initial_cluster.sh`. To connect to it with the `mysql` command line client:
 
-```
+```sh
 ~/my-vitess-example> mysql -h 127.0.0.1 -P 15306
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 1
@@ -174,7 +174,7 @@ mysql> show tables;
 
 It is recommended to configure the MySQL command line to default to these settings, as the user guides omit `-h 127.0.0.1 -P 15306` for brevity. Paste the following:
 
-```
+```sh
 cat << EOF > ~/.my.cnf
 [client]
 host=127.0.0.1
@@ -184,7 +184,7 @@ EOF
 
 Repeating the previous step, you should now be able to use the `mysql` client without any settings:
 
-```
+```bash
 ~/my-vitess-example> mysql
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 2
@@ -211,7 +211,7 @@ mysql> show tables;
 
 You can also browse to the vtctld console using the following URL:
 
-```
+```text
 http://localhost:15000
 ```
 
@@ -219,7 +219,7 @@ http://localhost:15000
 
 In this example, we deployed a single unsharded keyspace named `commerce`. Unsharded keyspaces have a single shard named `0`. The following schema reflects a common ecommerce scenario that was created by the script:
 
-```
+```sql
 create table product (
   sku varbinary(128),
   description varbinary(128),
@@ -252,7 +252,7 @@ You can now proceed with [Vertical Split](../../user-guides/vertical-split).
 
 Or alternatively, if you would like to teardown your example:
 
-```
+```bash
 ./401_teardown.sh
 rm -rf vtdataroot
 ```
