@@ -5,6 +5,10 @@ featured: true
 aliases: ['/docs/tutorials/kubernetes/','/user-guide/sharding-kubernetes.html', '/docs/get-started/scaleway/']
 ---
 
+{{< info >}}
+This guide now requires Kubernetes 1.16 or greater. Please read our FAQ when deploying these helm charts using [managed Kubernetes from your Public Cloud provider](../../faq/helm).
+{{< /info >}}
+
 This tutorial demonstrates how Vitess can be used with Minikube to deploy Vitess clusters.
 
 ### Prerequisites
@@ -14,7 +18,7 @@ Before we get started, let’s get a few things out of the way:
 1. Install [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) and start a Minikube engine:
 
     ```bash
-    minikube start --cpus=4 --memory=8000
+    minikube start --kubernetes-version=1.17.0 --cpus=4 --memory=8000
     ```
 
     Note the additional resource requirements. In order to go through all the use cases, many vttablet and MySQL instances will be launched. These require more resources than the defaults used by Minikube.
