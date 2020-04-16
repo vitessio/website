@@ -9,6 +9,10 @@ The new Vitess helm charts require Kubernetes 1.16 or later. Currently this requ
 
 ![Selecting Kubernetes 1.16 in GKE](/img/gke.png)
 
-## How can I deploy in EKS or AKS?
+## How can I deploy in AKS?
 
-EKS and AKS do not currently support Kubernetes 1.16 or later, which is now a requirement for running Vitess Helm charts. We are currently evaluating republishing an earlier version of the helm charts (which will only work in Kubernetes 1.15 and earlier). If this affects you, please connect with us on Vitess slack.
+As of writing, the default Kubernetes version is 1.15. To deploy on AKS, make sure you select Kubernetes 1.16 or greater.
+
+## How can I deploy in EKS?
+
+EKS does not currently support Kubernetes 1.16 or later, which is now a requirement for running Vitess Helm charts. We are currently evaluating republishing an earlier version of the helm charts (which will only work in Kubernetes 1.15 and earlier). If this affects you, please connect with us on Vitess slack.
