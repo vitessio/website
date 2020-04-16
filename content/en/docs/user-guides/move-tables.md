@@ -4,7 +4,7 @@ weight: 6
 ---
 
 {{< info >}}
-This guide follows on from [get started with a local deployment](../../get-started/local). It assumes that the `./101_initial_cluster.sh` script has been executed, and that you have a running Vitess cluster.
+This guide follows on from the Get Started guides. Please make sure that you have either a [Kubernetes (helm)](../../get-started/kubernetes) or [local](../../get-started/local) installation ready.
 {{< /info >}}
 
 [MoveTables](../../concepts/move-tables) is a new VReplication workflow in Vitess 6, and obsoletes Vertical Split from earlier releases.
@@ -63,22 +63,43 @@ In this scenario, we are going to split the `commerce` keyspace into `commerce` 
 
 The first step in our MoveTables operation is to deploy new tablets for our `customer` keyspace. By convention, we are going to use the UIDs 200-202 as the `commerce` keyspace previously used `100-102`. Once the tablets have started, we can force the first tablet to be the master using the `-force` flag:
 
+#### Using Kubernetes (Helm)
+
 ```sh
-# Example 201_customer_tablets.sh
+helm upgrade vitess ../../helm/vitess/ -f 201_customer_tablets.yaml
+```
 
-source ./env.sh
+After a few minutes the pods should appear running:
 
+```sh
+$ kubectl get pods,jobs
+NAME                                           READY   STATUS      RESTARTS   AGE
+pod/vtctld-6f955957bb-jp2t2                    1/1     Running     0          18m
+pod/vtgate-zone1-86b7cb87d6-nsmw4              1/1     Running     3          18m
+pod/zone1-commerce-0-init-shard-master-d5vj4   0/1     Completed   0          18m
+pod/zone1-commerce-0-replica-0                 6/6     Running     0          18m
+pod/zone1-commerce-0-replica-1                 6/6     Running     0          18m
+pod/zone1-commerce-0-replica-2                 6/6     Running     0          18m
+pod/zone1-customer-0-init-shard-master-xhzsr   0/1     Completed   0          89s
+pod/zone1-customer-0-replica-0                 6/6     Running     0          89s
+pod/zone1-customer-0-replica-1                 6/6     Running     0          89s
+pod/zone1-customer-0-replica-2                 6/6     Running     0          89s
+
+NAME                                           COMPLETIONS   DURATION   AGE
+job.batch/zone1-commerce-0-init-shard-master   1/1           100s       18m
+job.batch/zone1-customer-0-init-shard-master   1/1           17s        89s
+```
+
+#### Using a Local Deployment
+
+```sh
 for i in 200 201 202; do
  CELL=zone1 TABLET_UID=$i ./scripts/mysqlctl-up.sh
  CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
 done
 
-vtctlclient -server localhost:15999 InitShardMaster -force customer/0 zone1-200
-vtctlclient -server localhost:15999 ApplyVSchema -vschema '{ "tables": { "product": {} } }' commerce
-vtctlclient -server localhost:15999 ApplyVSchema -vschema '{ "tables": { "customer": {}, "corder": {} } }' customer
+vtctlclient InitShardMaster -force customer/0 zone1-200
 ```
-
-The last two commands here set the VSchema. In our case, we need to tell VTGate that the `customer` keyspace will now contain the tables `customer` and `corder`. The `commerce` keyspace will continue to hold just the `Product` table.
 
 __Note:__ This change does not change the actual routing yet. We will use a _switch_ directive to achieve that shortly.
 
@@ -87,17 +108,7 @@ __Note:__ This change does not change the actual routing yet. We will use a _swi
 In this step we will initiate the MoveTables, which copies tables from the commerce keyspace into customer. This operation does not block any database activity; the MoveTables operation is performed online:
 
 ```sh
-# Example 202_move_tables.sh
-
-vtctlclient \
-    -server localhost:15999 \
-    -log_dir "$VTDATAROOT"/tmp \
-    -alsologtostderr \
-    MoveTables \
-    -workflow=commerce2customer \
-    commerce customer customer,corder
-
-sleep 2
+vtctlclient MoveTables -workflow=commerce2customer commerce customer '{"customer":{}, "corder":{}}'
 ```
 
 ## Phase 1: Switch Reads
@@ -105,24 +116,8 @@ sleep 2
 Once the MoveTables operation is complete, the first step in making the changes live is to _switch_ `SELECT` statements to read from the new keyspace. Other statements will continue to route to the `commerce` keyspace. By staging this as two operations, Vitess allows you to test the changes and reduce the associated risks. For example, you may have a different configuration of hardware or software on the new keyspace.
 
 ```sh
-# Example 203_switch_reads.sh
-
-vtctlclient \
- -server localhost:15999 \
- -log_dir "$VTDATAROOT"/tmp \
- -alsologtostderr \
- SwitchReads \
- -tablet_type=rdonly \
- customer.commerce2customer
-
-vtctlclient \
- -server localhost:15999 \
- -log_dir "$VTDATAROOT"/tmp \
- -alsologtostderr \
- SwitchReads \
- -tablet_type=replica \
- customer.commerce2customer
-
+vtctlclient SwitchReads -tablet_type=rdonly customer.commerce2customer
+vtctlclient SwitchReads -tablet_type=replica customer.commerce2customer
 ```
 
 ## Phase 2: Switch Writes
@@ -130,15 +125,7 @@ vtctlclient \
 After the reads have been _switched_, and you have verified that the system is operating as expected, it is time to _switch_ the write operations. The command to execute the switch is very similar to switching reads:
 
 ```sh
-# Example 204_switch_writes.sh
-
-vtctlclient \
- -server localhost:15999 \
- -log_dir "$VTDATAROOT"/tmp \
- -alsologtostderr \
- SwitchWrites \
- customer.commerce2customer
-
+vtctlclient SwitchWrites customer.commerce2customer
 ```
 
 We can then verify that both reads and writes go to the new keyspace:
@@ -156,20 +143,17 @@ mysql --table < ../common/select_commerce_data.sql
 The final step is to remove the data from the original keyspace. As well as freeing space on the original tablets, this is an important step to eliminate potential future confusions. If you have a misconfiguration down the line and accidentally route queries for the  `customer` and `corder` tables to `commerce`, it is much better to return a "table not found" error, rather than return stale data:
 
 ```sh
-# Example 205_clean_commerce.sh
-
-vtctlclient -server localhost:15999 ApplySchema -sql-file drop_commerce_tables.sql commerce
-vtctlclient -server localhost:15999 SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 rdonly
-vtctlclient -server localhost:15999 SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 replica
-vtctlclient -server localhost:15999 SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 master
-
+vtctlclient SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 rdonly
+vtctlclient SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 replica
+vtctlclient SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 master
+vtctlclient ApplyRoutingRules -rules='{}'
 ```
 
 After this step is complete, you should see the following error:
 
 ```sh
 # Expected to fail!
-mysql -h 127.0.0.1 -P 15306 --table < ../common/select_commerce_data.sql
+mysql --table < ../common/select_commerce_data.sql
 ```
 
 This confirms that the data has been correctly cleaned up.
@@ -177,9 +161,3 @@ This confirms that the data has been correctly cleaned up.
 ## Next Steps
 
 Congratulations! You've sucessfully moved tables between keyspaces. The next step to try out is to shard one of your keyspaces in [Resharding](../resharding).
-
-Alternatively, if you would like to teardown your example:
-
-``` bash
-./401_teardown.sh
-```

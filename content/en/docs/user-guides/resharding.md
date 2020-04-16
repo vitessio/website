@@ -4,7 +4,7 @@ weight: 7
 ---
 
 {{< info >}}
-This guide follows on from [MoveTables](../../user-guides/move-tables) and [Get Started with a Local deployment](../../get-started/local). It assumes that several scripts have been executed, and that you have a running Vitess cluster.
+This guide follows on from the Get Started guides. Please make sure that you have either a [Kubernetes (helm)](../../get-started/kubernetes) or [local](../../get-started/local) installation ready.
 {{< /info >}}
 
 ## Preparation
@@ -124,13 +124,19 @@ Since the primary vindex columns are `BIGINT`, we choose `hash` as the primary v
 
 Applying the new VSchema instructs Vitess that the keyspace is sharded, which may prevent some complex queries. It is a good idea to [validate this](../vtexplain) before proceeding with this step. If you do notice that certain queries start failing, you can always revert temporaily by restoring the old VSchema. Make sure you fix all of the queries before proceeding to the Reshard process.
 
-``` sh
-# Example 301_customer_sharded.sh
+#### Using Kubernetes (Helm)
 
-vtctlclient -server localhost:15999 ApplySchema -sql-file create_commerce_seq.sql commerce
-vtctlclient -server localhost:15999 ApplyVSchema -vschema_file vschema_commerce_seq.json commerce
-vtctlclient -server localhost:15999 ApplySchema -sql-file create_customer_sharded.sql customer
-vtctlclient -server localhost:15999 ApplyVSchema -vschema_file vschema_customer_sharded.json customer
+```sh
+helm upgrade vitess ../../helm/vitess/ -f 301_customer_sharded.yaml
+```
+
+#### Using a Local Deployment
+
+``` sh
+vtctlclient ApplySchema -sql-file create_commerce_seq.sql commerce
+vtctlclient ApplyVSchema -vschema_file vschema_commerce_seq.json commerce
+vtctlclient ApplySchema -sql-file create_customer_sharded.sql customer
+vtctlclient ApplyVSchema -vschema_file vschema_customer_sharded.json customer
 ```
 
 ## Create new shards
@@ -139,11 +145,15 @@ At this point, you have finalized your sharded VSchema and vetted all the querie
 
 The resharding process works by splitting existing shards into smaller shards. This type of resharding is the most appropriate for Vitess. There are some use cases where you may want to bring up a new shard and add new rows in the most recently created shard. This can be achieved in Vitess by splitting a shard in such a way that no rows end up in the ‘new’ shard. However, it's not natural for Vitess. We have to create the new target shards:
 
+#### Using Kubernetes (Helm)
+
+```sh
+helm upgrade vitess ../../helm/vitess/ -f 302_new_shards.yaml
+```
+
+#### Using a Local Deployment
+
 ``` sh
-# Example 302_new_shards.sh
-
-source ./env.sh
-
 for i in 300 301 302; do
  CELL=zone1 TABLET_UID=$i ./scripts/mysqlctl-up.sh
  SHARD=-80 CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
@@ -154,8 +164,8 @@ for i in 400 401 402; do
  SHARD=80- CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
 done
 
-vtctlclient -server localhost:15999 InitShardMaster -force customer/-80 zone1-300
-vtctlclient -server localhost:15999 InitShardMaster -force customer/80- zone1-400
+vtctlclient InitShardMaster -force customer/-80 zone1-300
+vtctlclient InitShardMaster -force customer/80- zone1-400
 ```
 
 ## Sanity Check
@@ -180,16 +190,7 @@ COrder
 This process starts the reshard opration. It occurs online, and will not block any read or write operations to your database:
 
 ``` sh
-source ./env.sh
-
-vtctlclient \
-    -server localhost:15999 \
-    -log_dir "$VTDATAROOT"/tmp \
-    -alsologtostderr \
-    Reshard \
-    customer.cust2cust "0" "-80,80-"
-
-sleep 2
+vtctlclient Reshard customer.cust2cust '0' '-80,80-'
 ```
 
 ## Switch Reads
@@ -197,23 +198,8 @@ sleep 2
 Once the reshard is complete, the first step is to switch read operations to occur at the new location. By switching read operations first, we are able to verify that the new tablet servers are healthy and able to respond to requests:
 
 ``` sh
-# Example 304_switch_reads.sh
-
-vtctlclient \
- -server localhost:15999 \
- -log_dir "$VTDATAROOT"/tmp \
- -alsologtostderr \
- SwitchReads \
- -tablet_type=rdonly \
- customer.cust2cust
-
-vtctlclient \
- -server localhost:15999 \
- -log_dir "$VTDATAROOT"/tmp \
- -alsologtostderr \
- SwitchReads \
- -tablet_type=replica \
- customer.cust2cust
+vtctlclient SwitchReads -tablet_type=rdonly customer.cust2cust
+vtctlclient SwitchReads -tablet_type=replica customer.cust2cust
 ```
 
 ## Switch Writes
@@ -221,14 +207,7 @@ vtctlclient \
 After reads have been switched, and the health of the system has been verified, it's time to switch writes. The usage is very similar to switching reads:
 
 ``` sh
-# Example 305_switch_writes.sh
-
-vtctlclient \
- -server localhost:15999 \
- -log_dir "$VTDATAROOT"/tmp \
- -alsologtostderr \
- SwitchWrites \
- customer.cust2cust
+vtctlclient SwitchWrites customer.cust2cust
 ```
 
 You should now be able to see the data that has been copied over to the new shards:
@@ -276,30 +255,25 @@ COrder
 
 After celebrating your second successful resharding, you are now ready to clean up the leftover artifacts:
 
-``` sh
-# Examples 306_down_shard_0.sh
+#### Using Kubernetes (Helm)
 
+```sh
+helm upgrade vitess ../../helm/vitess/ -f 306_down_shard_0.yaml
+```
+
+#### Using a Local Deployment
+
+``` sh
 for i in 200 201 202; do
  CELL=zone1 TABLET_UID=$i ./scripts/vttablet-down.sh
  CELL=zone1 TABLET_UID=$i ./scripts/mysqlctl-down.sh
 done
-
 ```
 
 In this script, we just stopped all tablet instances for shard 0. This will cause all those vttablet and `mysqld` processes to be stopped. But the shard metadata is still present. After Vitess brings down all vttablets, we can clean that up with this command:
 
 ``` sh
-# Examples 307_delete_shard_0.sh
-
-vtctlclient -server localhost:15999 DeleteShard -recursive customer/0
+vtctlclient DeleteShard -recursive customer/0
 ```
 
 Beyond this, you will also need to manually delete the disk associated with this shard.
-
-## Next Steps
-
-Feel free to experiment with your Vitess cluster! Execute the following when you are ready to teardown your example:
-
-``` bash
-./401_teardown.sh
-```
