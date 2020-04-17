@@ -187,22 +187,3 @@ select next value from my_sequence;
 select next 5 values from my_sequence;
 
 ```
-
-## TO-DO List
-
-### DDL Support
-
-We want to add DDL support for sequences, as previously mentioned:
-
-``` sql
-CREATE SEQUENCE my_sequence;
-
-ALTER SEQUENCE my_sequence ...;
-
-DROP SEQUENCE my_sequence;
-
-SHOW CREATE SEQUENCE my_sequence;
-```
-
-But for now, the Sequence backing table has to be created and managed using the
-usual schema management features, with the right column definitions and table comment.
