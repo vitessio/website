@@ -1,6 +1,7 @@
 baseURL = "https://vitess.io"
 canonifyurls = true
 disableKinds = ["taxonomy", "taxonomyTerm"]
+googleAnalytics = "UA-163836834-1"
 
 # Syntax highlighting settings
 pygmentsCodeFences = true
