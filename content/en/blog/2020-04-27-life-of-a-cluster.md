@@ -79,7 +79,7 @@ The last parameter “zone1” is the name of the cell, which is required by the
 You can verify this information by browsing the Topology in vtctld:
 
 <figure>
-  <img src="/files/2020-life-cluster/cell-in-topo.png"/>
+  <img src="/files/2020-life-cluster/cell-in-topo.png" width=100% height=auto />
 </figure>
 
 Note: In the local example, we’re using the `vtctl` tool to create the local cell. This is because we are creating the local cell before bringing up vtctld. However, this is not necessary. You can create the local cell after bringing up vtctld.
@@ -132,13 +132,13 @@ VTGate does not communicate with vtctld.
 A vtgate that comes up successfully will show all the vttablets it has discovered in its `/debug/status` page under the `Health Check Cache` section.
 
 <figure>
-  <img src="/files/2020-life-cluster/healthy-tablets.png"/>
+  <img src="/files/2020-life-cluster/healthy-tablets.png" width=100% height=auto />
 </figure>
 
 If vtgates cannot connect one of the vttablets it discovered to from the topo, or if the vttablet is unhealthy, it will be shown in red in the `Health Check Cache`, and a corresponding error message will be displayed next to it:
 
 <figure>
-  <img src="/files/2020-life-cluster/partially-healthy-tablets.png"/>
+  <img src="/files/2020-life-cluster/partially-healthy-tablets.png" width=100% height=auto />
 </figure>
 
 ## Understanding Keyspaces and Shards
@@ -210,7 +210,7 @@ Additionally, the vttablet will create a “tablet record” in the cell’s top
 However, visiting the vtgate page at this time will show all these tablets as unhealthy:
 
 <figure>
-  <img src="/files/2020-life-cluster/unhealthy-tablets.png"/>
+  <img src="/files/2020-life-cluster/unhealthy-tablets.png" width=100% height=auto />
 </figure>
 
 One final step is needed to get them started.
