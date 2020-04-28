@@ -213,3 +213,22 @@ However, visiting the vtgate page at this time will show all these tablets as un
   <img src="/files/2020-life-cluster/unhealthy-tablets.png"/>
 </figure>
 
+One final step is needed to get them started.
+
+### Starting InitShardMaster
+
+The InitShardMaster step initializes the quorum by electing a master and setting up replication for the replicas. Additionally, a database is created to store the data for the keyspace-shard. The command is as follows:
+
+```
+vtctlclient InitShardMaster -force commerce/0 zone1-100
+```
+
+NOTE: If you have semi-sync enabled and did not set up at least three replicas, InitiShardMaster could hang indefinitely. Even if it succeeds, future operations that perform failovers could cause this shard to go into a deadlocked state. The local example sets up only two replicas mainly to minimize resource usage.
+
+After this step, visiting the `/debug/status` page on vtgate should show these tablets as green.
+
+Congratulations! You have successfully brought up a Vitess cluster.
+
+## What’s next
+
+The above steps explain in detail the “101” step of the example. Following this, you will need to upload a schema and a VSchema. This will be covered in a different user guide.
