@@ -81,3 +81,56 @@ You can verify this information by browsing the Topology in vtctld:
 <figure>
   <img src="/files/2020-life-cluster/cell-in-topo.png"/>
 </figure>
+
+Note: In the local example, we’re using the `vtctl` tool to create the local cell. This is because we are creating the local cell before bringing up vtctld. However, this is not necessary. You can create the local cell after bringing up vtctld.
+
+At this point, we have officially created an empty Vitess cluster.
+
+## Configuring VTGate
+
+Although the local example brings up vtgate last, this is not necessary. You can bring up vtgate before creating any keyspaces or bringing up vttablets. VTGate will discover them as they are brought up.
+
+In addition to the topo parameters, vtgate requires a `cell` to operate in. A vtgate’s main job is to forward requests to the vttablets in the local cell. However, vtgates can go cross-cell in two situations:
+
+1. vtgate receives queries to the master, and the master is not in the current cell.
+1. vtgate was configured to go to other cells in case no local vttablets were available.
+
+For sending master queries across cells, you must specify an additional `cells_to_watch` flag. This will make the vtgates watch those additional cells, and will help them keep track of the masters in those cells.
+
+The `cells_to_watch` flag is a required parameter and must at least include the current cell. This is an issue we’ll fix soon: https://github.com/vitessio/vitess/issues/6126.
+
+Going cross-cell for non-master requests is an advanced use case that requires setting up cell aliases, which will not be covered here.
+
+The `port` flag is mandatory for vtgate.
+
+For those who wish to use the Java or Go grpc clients to vtgate, you must also configure `grpc_port` and specify the service map as `service_map='grpc-vtgateservice'`.
+
+For those who wish to use the mysql protocol, you must specify a `mysql_server_port` and a `mysql_auth_server_impl` for configuring authentication.
+
+Here is a sample vtgate invocation:
+
+```
+vtgate \
+  -topo_implementation=etcd2 \
+  -topo_global_server_address=localhost:2379 \
+  -topo_global_root=/vitess/global \
+  -cell=zone1 \
+  -cells_to_watch=zone1 \
+  -port=15001 \
+  -grpc_port=15991 \
+  -service_map='grpc-vtgateservice' \
+  -mysql_server_port=$mysql_server_port \
+  -mysql_auth_server_impl=none
+```
+
+The reason why the local example brings up vtgate last is because vtgate polls the TopoServer for changes. Bringing it up last allows vtgate to find all the vttablets that were brought up, and immediately ready itself to send requests to them. This polling frequency is controlled by the `tablet_refresh_interval` whose default value is one minute. This means that it may take up to one minute for vtgate to discover a new vttablet that has come up. This interval can be lowered. However, one must be careful to ensure that too many vtgates don’t overwhelm the TopoServer.
+
+VTGate uses the global topo to get the topo addresses of the cells it has to watch. For this reason, you do not need to specify the topo addresses for the individual cells.
+
+VTGate does not communicate with vtctld.
+
+A vtgate that comes up successfully will show all the vttablets it has discovered in its `/debug/status` page under the `Health Check Cache` section.
+
+<figure>
+  <img src="/files/2020-life-cluster/healthy-tablets.png"/>
+</figure>
