@@ -134,3 +134,82 @@ A vtgate that comes up successfully will show all the vttablets it has discovere
 <figure>
   <img src="/files/2020-life-cluster/healthy-tablets.png"/>
 </figure>
+
+If vtgates cannot connect one of the vttablets it discovered to from the topo, or if the vttablet is unhealthy, it will be shown in red in the `Health Check Cache`, and a corresponding error message will be displayed next to it:
+
+<figure>
+  <img src="/files/2020-life-cluster/partially-healthy-tablets.png"/>
+</figure>
+
+## Understanding Keyspaces and Shards
+
+You can create keyspaces and shards using vtctlclient commands. However, they are not necessary because these are implicitly created as you bring up the vttablets.
+
+It’s important to be aware of the relationship between the global topo and the cell-specific topo. The canonical information for keyspaces and shards is created in the global topo. This information is then pushed to the cell-specific topos through rebuild commands like `RebuildKeyspaceGraph` and `RebuildVSchemaGraph`. These commands are implicitly issued on your behalf whenever applicable. But there are situations where you’ll have to issue them manually. For example, if you create a new cell, you’ll have to issue these commands to copy the data into the new cell.
+
+There are use cases where you may want to experimentally deploy changes to only some cells. Separating information from the global topo and local cells makes those experiments possible without affecting the entire deployment.
+
+Tools like vtgate and vttablet consume information from the local copy of the topo.
+
+An unsharded keyspace typically has a single shard named `0` or `-`. A sharded keyspace has shards named after the keyranges assigned to it, like `-80` and `80-`. The following section describes the process of bringing up vttablets for a single shard.
+
+## Configuring VTTablets
+
+For the sake of durability, we generally recommend that you bring up a quorum of vttablets coupled with their MySQL instances. It’s recommended that you bring up at least three vttablets, with semi-sync replication enabled. To bring up each node, perform the following steps:
+
+### 1. Starting MySQL
+In order to bring up mysql, you may use the mysqlctl convenience wrapper. This tool is capable of bringing up multiple isolated mysql instances within a single machine, and preconfiguring them for easy connectivity from a vttablet.
+
+The necessary arguments to a mysqlctl are the `tablet_uid` and `mysql_port`. This tablet UID should be supplied as `tablet-path` when invoking vttablet. Here’s a sample invocation:
+
+```
+mysqlctl -tablet_uid zone1-100 -mysql_port 17100 init
+```
+
+Ensure that MySQL came up successfully. Because the full initialization of MySQL will be done after the vttablets come up, expect to see errors like these in the log file:
+
+```
+2020-04-27T00:38:02.040081Z 2 [Note] Aborted connection 2 to db: 'unconnected' user: 'root' host: 'localhost' (Got an error reading communication packets)
+```
+
+The MySQL instance that was brought up has no identity related to keyspace or shard at this moment. These will be assigned in the following steps.
+
+### Starting VTTablets
+
+VTTablet needs the topo and cell flags. Additionally, it needs the following flags:
+
+* `tablet-path`: This should be the same as the `tablet-uid` that was supplied to the mysqlctl command.
+* `init_keyspace`: The keyspace that the tablet is going to serve. This will cause a keyspace to be created if one is not present.
+* `init_shard`: The shard that the tablet is going to serve. This will cause a shard to be created if one is not present.
+* `init_tablet_type`: This will typically be `REPLICA`. You may use other tablet types like “RDONLY”. Those tablet types will be deprecated in favor of newer ways to achieve their functionality. Note that you are not allowed to start a tablet as a `MASTER`.
+* `enable_semi_sync`: The recommended value for this is `TRUE`. You will need to bring up at least three vttablets for this setting to work correctly.
+* `port`, `grpc_port`, and `-service_map 'grpc-queryservice,grpc-tabletmanager’`
+
+You will typically need additional parameters for setting up backups and automatic restores, which we’ll not cover here. Here is a typical example:
+
+```
+vttablet \
+  -topo_implementation=etcd2 \
+  -topo_global_server_address=localhost:2379 \
+  -topo_global_root=/vitess/global \
+  -cell=zone1 \
+  -tablet-path=zone1-100 \
+  -init_keyspace=commerce \
+  -init_shard=0 \
+  -init_tablet_type=replica \
+  -enable_semi_sync=true \
+  -port=15100 \
+  -grpc_port=16100 \
+  -service_map 'grpc-queryservice,grpc-tabletmanager’ \
+```
+
+Bringing up the first vttablet will cause the keyspace and shard to be created in the global topo. Also, this action will cause a topology rebuild that will ensure that this information is propagated to the current cell.
+
+Additionally, the vttablet will create a “tablet record” in the cell’s topo, which will be observed by the vtgates. The vtgate will then make a connection to the vttablet and will establish a health check stream. This is what causes the tablet to show up in vtgates `Health Check Cache` section.
+
+However, visiting the vtgate page at this time will show all these tablets as unhealthy:
+
+<figure>
+  <img src="/files/2020-life-cluster/unhealthy-tablets.png"/>
+</figure>
+
