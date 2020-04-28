@@ -6,7 +6,7 @@ tags: ['vitess', 'vitess cluster', 'vitess troubleshooting', 'vitess getting sta
 title: "Life of a Vitess Cluster"
 ---
 
-This post goes into the details of what goes on behind the scenes when a cluster is brought up. This can be used both as a learning tool and troubleshooting guide. We assume that you have downloaded and installed all the necessary binaries before proceeding further.
+This post goes into the details of what goes on behind the scenes when a cluster is brought up, for example using [helm](../../docs/get-started/kubernetes) or the [local installation guide](../../docs/get-started/local). This can be used both as a learning tool and troubleshooting guide. We assume that you have downloaded and installed all the necessary binaries before proceeding further.
 
 Vitess is a very flexible system that is capable of running in a variety of environments. The local example does oversimplify things a bit. However, you will need to take more things into consideration when taking Vitess into production.
 
