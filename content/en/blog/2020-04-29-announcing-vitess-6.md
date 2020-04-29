@@ -32,4 +32,3 @@ In addition to this, the end-to-end testsuite is now [fully migrated to Golang](
 There is a slightly higher number of incompatible changes than in prior releases, so we encourage you to spend a moment reading the [release notes](https://github.com/vitessio/vitess/releases/tag/v6.0.20-20200429).
 
 Please download Vitess 6, and take it for a spin!
-
