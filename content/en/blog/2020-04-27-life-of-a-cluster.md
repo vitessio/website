@@ -70,9 +70,11 @@ vtctlclient AddCellInfo -root=/vitess/zone1 -server_address=<address> zone1
 
 NOTE: vtctlclient does not need a topo global root, because it only talks to vtctld, and vtctld already has that value.
 
-The ‘-root’ flag is different from topo_global_root. All information specific to the cell will be stored under `/vitess/zone1`.
+The ‘-root’ flag is different from topo_global_root. All information specific to the cell will be stored under `/vitess/zone1`. The metadata about the cell (the fact that zone1 data is in `/vitess/zone1`) is stored in the global topo. Vitess binaries fetch this information from the global topo before switching to use the cell topo.
 
 For higher fault tolerance, you can set up and specify a different TopoServer to serve the local cell. If isolation of failure zones is not important, you could just reuse the main TopoServer as long as you ensure that the root paths don’t conflict.
+
+For the best fault tolerance, you'll need to setup the global topo server such that its nodes are distributed across multiple zones. The nodes of the local topo server should be within the cell itself.
 
 The last parameter “zone1” is the name of the cell, which is required by the subsequent tools.
 
@@ -166,6 +168,17 @@ The necessary arguments to a mysqlctl are the `tablet_uid` and `mysql_port`. Thi
 mysqlctl -tablet_uid zone1-100 -mysql_port 17100 init
 ```
 
+There is a common pitfall to watch out for: If you see an error like this in the mysqlctl logs, you may need to disable AppArmor:
+
+```
+I0429 01:16:25.648506       1 mysqld.go:454] Waiting for mysqld socket file (/vtdataroot/tabletdata/mysql.sock) to be ready...
+I0429 01:16:25.656153       1 mysqld.go:399] Mysqld.Start(1588122985) stderr: mysqld: [ERROR] Could not open required defaults file: /vtdataroot/tabletdata/my.cnf
+I0429 01:16:25.656180       1 mysqld.go:399] Mysqld.Start(1588122985) stderr: mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
+I0429 01:16:25.657249       1 mysqld.go:418] Mysqld.Start(1588122985) exit: exit status 1
+```
+
+Note that disabling AppArmor once may not be enoug. Many software installs or upgrades automatically install it back. You may have to disable it again if this happens.
+
 Ensure that MySQL came up successfully. Because the full initialization of MySQL will be done after the vttablets come up, expect to see errors like these in the log file:
 
 ```
@@ -200,7 +213,7 @@ vttablet \
   -enable_semi_sync=true \
   -port=15100 \
   -grpc_port=16100 \
-  -service_map 'grpc-queryservice,grpc-tabletmanager’ \
+  -service_map 'grpc-queryservice,grpc-tabletmanager’
 ```
 
 Bringing up the first vttablet will cause the keyspace and shard to be created in the global topo. Also, this action will cause a topology rebuild that will ensure that this information is propagated to the current cell.
