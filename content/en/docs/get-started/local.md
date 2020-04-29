@@ -59,8 +59,8 @@ sudo setenforce 0
 Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux. For example with Vitess 6:
 
 ```sh
-## TODO: Include a link to Vitess 6 binary.
-## For now, you will need to compile your own from source.
+tar -xzf vitess-6.0.20-20200429-f7fa695.tar.gz
+cd vitess-6.0.20-20200429-f7fa695
 sudo mkdir -p /usr/local/vitess
 sudo mv * /usr/local/vitess/
 ```
