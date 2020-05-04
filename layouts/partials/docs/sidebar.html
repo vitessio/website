@@ -2,6 +2,7 @@
 {{ $docsSections   := where site.Sections "Section" "docs" }}
 {{ $currentSection := .CurrentSection.Name }}
 {{ $currentUrl     := .RelPermalink }}
+{{$currentSubSection := ""}}
 <div class="docs-menu">
   <header class="docs-menu-header">
     <a href="{{ site.BaseURL }}">
@@ -19,6 +20,12 @@
     </div>
 
     {{ range .Sections }}
+
+    {{ if or (or (eq $currentSection "Features") (eq $currentSection "Programs")) }}
+      {{ $currentSubSection = $currentSection }}
+      {{ $currentSection = "Reference"}}
+    {{ end }}
+
     {{ $isCurrentSection := eq $currentSection .Name }}
 
     <div class="docs-section">
@@ -30,7 +37,7 @@
       <div class="docs-section-list">
         <ul>
           {{ range .Pages }}
-          {{ $isCurrentPage := eq $currentUrl .RelPermalink }}
+          {{ $isCurrentPage := (or (eq $currentUrl .RelPermalink) (eq .Title $currentSubSection)) }}
           <li{{ if $isCurrentPage }} class="is-active"{{ end }}>
             <a href="{{ .RelPermalink }}">
               {{ .Title }}

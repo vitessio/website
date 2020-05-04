@@ -1,5 +1,5 @@
 ---
-title: MySQL Replication
+title: Replication
 weight: 5
 aliases: ['/docs/reference/row-based-replication/','/docs/reference/vitess-replication/']
 ---

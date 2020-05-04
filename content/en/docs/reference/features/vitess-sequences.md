@@ -1,5 +1,5 @@
 ---
-title: Vitess Sequences
+title: Sequences
 weight: 3
 ---
 

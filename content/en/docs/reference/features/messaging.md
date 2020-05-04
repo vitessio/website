@@ -1,5 +1,5 @@
 ---
-title: Vitess Messaging
+title: Messaging
 aliases: ['/docs/advanced/messaging/']
 ---
 
