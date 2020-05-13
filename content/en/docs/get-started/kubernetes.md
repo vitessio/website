@@ -17,8 +17,6 @@ Before we get started, let’s get a few things out of the way:
     minikube start
     ```
 
-    Note the additional resource requirements. In order to go through all the use cases, many vttablet and MySQL instances will be launched. These require more resources than the defaults used by Minikube.
-
 1. Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and ensure it is in your `PATH`. For example, on Linux:
 
     ```bash
