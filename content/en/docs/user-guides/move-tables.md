@@ -74,20 +74,20 @@ After a few minutes the pods should appear running:
 ```sh
 $ kubectl get pods,jobs
 NAME                                           READY   STATUS      RESTARTS   AGE
-pod/vtctld-6f955957bb-jp2t2                    1/1     Running     0          18m
-pod/vtgate-zone1-86b7cb87d6-nsmw4              1/1     Running     3          18m
-pod/zone1-commerce-0-init-shard-master-d5vj4   0/1     Completed   0          18m
-pod/zone1-commerce-0-replica-0                 6/6     Running     0          18m
-pod/zone1-commerce-0-replica-1                 6/6     Running     0          18m
-pod/zone1-commerce-0-replica-2                 6/6     Running     0          18m
-pod/zone1-customer-0-init-shard-master-xhzsr   0/1     Completed   0          89s
-pod/zone1-customer-0-replica-0                 6/6     Running     0          89s
-pod/zone1-customer-0-replica-1                 6/6     Running     0          89s
-pod/zone1-customer-0-replica-2                 6/6     Running     0          89s
+pod/vtctld-58bd955948-pgz7k                    1/1     Running     0          5m36s
+pod/vtgate-zone1-c7444bbf6-t5xc6               1/1     Running     3          5m36s
+pod/zone1-commerce-0-init-shard-master-gshz9   0/1     Completed   0          5m35s
+pod/zone1-commerce-0-replica-0                 2/2     Running     0          5m35s
+pod/zone1-commerce-0-replica-1                 2/2     Running     0          5m35s
+pod/zone1-commerce-0-replica-2                 2/2     Running     0          5m35s
+pod/zone1-customer-0-init-shard-master-7w7rm   0/1     Completed   0          84s
+pod/zone1-customer-0-replica-0                 2/2     Running     0          84s
+pod/zone1-customer-0-replica-1                 2/2     Running     0          84s
+pod/zone1-customer-0-replica-2                 2/2     Running     0          84s
 
 NAME                                           COMPLETIONS   DURATION   AGE
-job.batch/zone1-commerce-0-init-shard-master   1/1           100s       18m
-job.batch/zone1-customer-0-init-shard-master   1/1           17s        89s
+job.batch/zone1-commerce-0-init-shard-master   1/1           90s        5m36s
+job.batch/zone1-customer-0-init-shard-master   1/1           23s        84s
 ```
 
 #### Using a Local Deployment
@@ -138,16 +138,12 @@ mysql --table < ../common/select_customer0_data.sql
 mysql --table < ../common/select_commerce_data.sql
 ```
 
-## Cleanup
+## Drop Sources
 
 The final step is to remove the data from the original keyspace. As well as freeing space on the original tablets, this is an important step to eliminate potential future confusions. If you have a misconfiguration down the line and accidentally route queries for the  `customer` and `corder` tables to `commerce`, it is much better to return a "table not found" error, rather than return stale data:
 
 ```sh
-vtctlclient SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 rdonly
-vtctlclient SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 replica
-vtctlclient SetShardTabletControl -blacklisted_tables=customer,corder -remove commerce/0 master
-vtctlclient ApplySchema -sql-file drop_commerce_tables.sql commerce
-vtctlclient ApplyRoutingRules -rules='{}'
+vtctlclient DropSources customer.commerce2customer
 ```
 
 After this step is complete, you should see the following error:

@@ -14,7 +14,7 @@ Before we get started, let’s get a few things out of the way:
 1. Install [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) and start a Minikube engine:
 
     ```bash
-    minikube start --cpus=4 --memory=4000
+    minikube start
     ```
 
     Note the additional resource requirements. In order to go through all the use cases, many vttablet and MySQL instances will be launched. These require more resources than the defaults used by Minikube.
@@ -96,19 +96,19 @@ You can check the state of your cluster with `kubectl get pods,jobs`. After a fe
 ```sh
 $ kubectl get pods,jobs
 NAME                                           READY   STATUS      RESTARTS   AGE
-pod/commerce-apply-schema-initial-c9hrm        0/1     Completed   0          95s
-pod/commerce-apply-vschema-initial-tgk5h       0/1     Completed   0          95s
-pod/vtctld-58bd955948-56b77                    1/1     Running     0          95s
-pod/vtgate-zone1-c7444bbf6-25t7m               1/1     Running     3          95s
-pod/zone1-commerce-0-init-shard-master-7fzg9   0/1     Completed   0          95s
-pod/zone1-commerce-0-replica-0                 0/2     Running     0          95s
-pod/zone1-commerce-0-replica-1                 0/2     Running     0          95s
-pod/zone1-commerce-0-replica-2                 0/2     Running     0          95s
+pod/commerce-apply-schema-initial-vlc6k        0/1     Completed   0          2m42s
+pod/commerce-apply-vschema-initial-9wb2k       0/1     Completed   0          2m42s
+pod/vtctld-58bd955948-pgz7k                    1/1     Running     0          2m43s
+pod/vtgate-zone1-c7444bbf6-t5xc6               1/1     Running     3          2m43s
+pod/zone1-commerce-0-init-shard-master-gshz9   0/1     Completed   0          2m42s
+pod/zone1-commerce-0-replica-0                 2/2     Running     0          2m42s
+pod/zone1-commerce-0-replica-1                 2/2     Running     0          2m42s
+pod/zone1-commerce-0-replica-2                 2/2     Running     0          2m42s
 
 NAME                                           COMPLETIONS   DURATION   AGE
-job.batch/commerce-apply-schema-initial        1/1           87s        95s
-job.batch/commerce-apply-vschema-initial       1/1           81s        95s
-job.batch/zone1-commerce-0-init-shard-master   1/1           85s        95s
+job.batch/commerce-apply-schema-initial        1/1           94s        2m43s
+job.batch/commerce-apply-vschema-initial       1/1           87s        2m43s
+job.batch/zone1-commerce-0-init-shard-master   1/1           90s        2m43s
 ```
 
 ## Setup Port-forward
