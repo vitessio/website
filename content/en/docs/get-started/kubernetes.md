@@ -14,10 +14,8 @@ Before we get started, let’s get a few things out of the way:
 1. Install [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) and start a Minikube engine:
 
     ```bash
-    minikube start --cpus=4 --memory=8000
+    minikube start
     ```
-
-    Note the additional resource requirements. In order to go through all the use cases, many vttablet and MySQL instances will be launched. These require more resources than the defaults used by Minikube.
 
 1. Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and ensure it is in your `PATH`. For example, on Linux:
 
@@ -28,7 +26,7 @@ Before we get started, let’s get a few things out of the way:
 1. Install [Helm 3](https://helm.sh/):
 
     ```bash
-    wget https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+    wget https://get.helm.sh/helm-v3.2.1-linux-amd64.tar.gz
     tar -xzf helm-v3.*
     # copy linux-amd64/helm into your path
     ```
@@ -96,27 +94,31 @@ You can check the state of your cluster with `kubectl get pods,jobs`. After a fe
 ```sh
 $ kubectl get pods,jobs
 NAME                                           READY   STATUS      RESTARTS   AGE
-pod/commerce-apply-schema-initial-2pbzn        0/1     Completed   0          2m44s
-pod/commerce-apply-vschema-initial-mfhvl       0/1     Completed   0          2m44s
-pod/vtctld-6f955957bb-67bq7                    1/1     Running     0          2m44s
-pod/vtgate-zone1-86b7cb87d6-vckzw              1/1     Running     3          2m44s
-pod/zone1-commerce-0-init-shard-master-dh727   0/1     Completed   0          2m44s
-pod/zone1-commerce-0-replica-0                 5/6     Running     0          2m44s
-pod/zone1-commerce-0-replica-1                 5/6     Running     0          2m44s
-pod/zone1-commerce-0-replica-2                 5/6     Running     0          2m44s
+pod/commerce-apply-schema-initial-vlc6k        0/1     Completed   0          2m42s
+pod/commerce-apply-vschema-initial-9wb2k       0/1     Completed   0          2m42s
+pod/vtctld-58bd955948-pgz7k                    1/1     Running     0          2m43s
+pod/vtgate-zone1-c7444bbf6-t5xc6               1/1     Running     3          2m43s
+pod/zone1-commerce-0-init-shard-master-gshz9   0/1     Completed   0          2m42s
+pod/zone1-commerce-0-replica-0                 2/2     Running     0          2m42s
+pod/zone1-commerce-0-replica-1                 2/2     Running     0          2m42s
+pod/zone1-commerce-0-replica-2                 2/2     Running     0          2m42s
 
 NAME                                           COMPLETIONS   DURATION   AGE
-job.batch/commerce-apply-schema-initial        1/1           118s       2m44s
-job.batch/commerce-apply-vschema-initial       1/1           109s       2m44s
-job.batch/zone1-commerce-0-init-shard-master   1/1           115s       2m44s
+job.batch/commerce-apply-schema-initial        1/1           94s        2m43s
+job.batch/commerce-apply-vschema-initial       1/1           87s        2m43s
+job.batch/zone1-commerce-0-init-shard-master   1/1           90s        2m43s
 ```
 
-## Setup Aliases
+## Setup Port-forward
 
-For ease-of-use, Vitess provides aliases for `mysql` and `vtctlclient`. This script also sets up all the required networking:
+For ease-of-use, Vitess provides a script to port-forward from kubernetes to your local machine. This script also recommends setting up aliases for `mysql` and `vtctlclient`:
 
 ```bash
-source alias.source
+./pf.sh &
+sleep 5
+
+alias vtctlclient="vtctlclient -server=localhost:15999"
+alias mysql="mysql -h 127.0.0.1 -P 15306"
 ```
 
 Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctlclient` or close your session.
@@ -146,12 +148,6 @@ mysql> SHOW DATABASES;
 | commerce  |
 +-----------+
 1 row in set (0.00 sec)
-```
-
-You can also browse to the vtctld console using the following command (Ubuntu):
-
-``` sh
-./kvtctld.sh
 ```
 
 ### Summary
@@ -193,12 +189,7 @@ Or alternatively, if you would like to teardown your example:
 
 ```sh
 helm delete vitess
+kubectl delete pvc -l "app=vitess"
+kubectl delete vitesstoponodes --all
 ```
-
-You will need to delete the persistent volume claims too
-
-```sh
-kubectl delete pvc $(kubectl get pvc | grep vtdataroot-zone1 | awk '{print $1}')
-```
-
 Congratulations on completing this exercise!
