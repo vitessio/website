@@ -1,7 +1,12 @@
 {{ $isDocsPage := eq .Section "docs" }}
+{{ $showGa     := eq hugo.Environment "production" }}
 <!DOCTYPE html>
 <html>
   <head>
+    {{ if $showGa }}
+    {{ template "_internal/google_analytics.html" . }}
+    {{ end }}
+
     {{ partial "meta.html" . }}
     <title>
       {{ block "title" . }}{{ site.Title }} | {{ site.Params.description }}{{ end }}
@@ -16,7 +21,7 @@
     {{ if not $isDocsPage }}
     {{ partial "footer.html" . }}
     {{ end }}
-    
+
     {{ partial "javascript.html" . }}
   </body>
 </html>

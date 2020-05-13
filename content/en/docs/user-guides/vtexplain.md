@@ -1,5 +1,6 @@
 ---
 title: Explaining how Vitess executes a SQL statement
+weight: 98
 ---
 
 # Introduction 

@@ -12,16 +12,13 @@ If you have a specific question about the Roadmap, we recommend posting in our [
 
 ## Short Term
 
-- VReplication
-  - Improve the resharding workflow (flexibility, speed and reliability)
-  - Materialized Views
-  - VStream (unified stream of events across shards and sharding events)
 - Support for Point in Time Recovery
-- Remove python dependency when running the testsuite (tests should be pure Go).
-- Reduce the time required to execute the test suite (evaluate alternatives to Travis CI if it makes sense to switch.)
-- Adopt a [consistent release cycle](https://github.com/vitessio/enhancements/blob/master/veps/vep-1.md) for new GAs of Vitess
 - Improve Documentation
 - Improve Usability
+- Support more MySQL Syntax (improve compatibility as a drop-in replacement)
+- VReplication
+  - Support "Dry Run"
+- Componentize Tablet Server (lift restriction on one-tablet per MySQL schema)
 
 ## Medium Term
 

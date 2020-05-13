@@ -107,11 +107,17 @@ Vitess supports a few additional options with the SHOW statement.
 
 ### USE Statements
 
-Support for selecting a shard and tablet type via the `USE` statement can be achived with the following (backticks are important):
+Vitess allows you to select a keyspace using the MySQL `USE` statement, and corresponding binary API used by client libraries. SQL statements can refer to a table in another keyspace by using the standard _dot_ notation:
 
 ```sql
--- `schemaName:shardKeyRange@tabletType`
-USE `schema:-80@rdonly`
+SELECT * FROM my_other_keyspace.table;
 ```
 
-A similar effect can be achieved by using a database name like `schema:-80@rdonly` in your MySQL application client connection string.
+Vitess extends this functionality further by allowing you to select a specific shard and tablet-type within a `USE` statement (backticks are important):
+
+```sql
+-- `KeyspaceName:shardKeyRange@tabletType`
+USE `mykeyspace:-80@rdonly`
+```
+
+A similar effect can be achieved by using a database name like `mykeyspace:-80@rdonly` in your MySQL application client connection string.
