@@ -14,14 +14,13 @@ This guide follows on from [get started with a local deployment](../../get-start
 Vertical Split enables you to move a subset of tables to their own keyspace. Continuing on from the ecommerce example started in the get started guide, as your database continues to grow, you may decide to separate the `customer` and `corder` tables from the `product` table.  Let us add some data into our tables to illustrate how the vertical split works. Paste the following: 
 
 ``` sql
-mysql < ../common/insert_commerce_data.sql
+mysql commerce < ../common/insert_commerce_data.sql
 ```
 
 We can look at what we just inserted:
 
 ``` sh
-mysql --table < ../common/select_commerce_data.sql
-Using commerce/0
+mysql commerce/0 --table < ../common/select_commerce_data.sql
 Customer
 +-------------+--------------------+
 | customer_id | email              |
@@ -99,8 +98,7 @@ NOTE: In production, you would want to run multiple sanity checks on the replica
 We can look at the results of VerticalSplitClone by examining the data in the customer keyspace. Notice that all data in the `customer` and `corder` tables has been copied over.
 
 ``` sh
-mysql --table < ../common/select_customer0_data.sql
-Using customer/0
+mysql customer/0 --table < ../common/select_customer_data.sql
 Customer
 +-------------+--------------------+
 | customer_id | email              |
@@ -142,9 +140,8 @@ For master:
 
 Once this is done, the `customer` and `corder` tables are no longer accessible in the `commerce` keyspace. You can verify this by trying to read from them.
 
-``` sql
-mysql --table < ../common/select_commerce_data.sql
-Using commerce/0
+```bash
+$ mysql commerce/0 --table < ../common/select_commerce_data.sql
 Customer
 ERROR 1105 (HY000) at line 4: vtgate: http://vtgate-zone1-5ff9c47db6-7rmld:15001/: target: commerce.0.master, used tablet: zone1-1564760600 (zone1-commerce-0-replica-0.vttablet), vttablet: rpc error: code = FailedPrecondition desc = disallowed due to rule: enforce blacklisted tables (CallerID: userData1)
 ```
@@ -166,8 +163,7 @@ The ‘control’ records were added by the `MigrateServedFrom` command during t
 After this step, the `customer` and `corder` tables no longer exist in the `commerce` keyspace.
 
 ``` sql
-mysql --table < ../common/select_commerce_data.sql
-Using commerce/0
+mysql commerce/0 --table < ../common/select_commerce_data.sql
 Customer
 ERROR 1105 (HY000) at line 4: vtgate: http://vtgate-zone1-5ff9c47db6-7rmld:15001/: target: commerce.0.master, used tablet: zone1-1564760600 (zone1-commerce-0-replica-0.vttablet), vttablet: rpc error: code = InvalidArgument desc = table customer not found in schema (CallerID: userData1)
 ```

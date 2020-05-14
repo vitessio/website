@@ -1,13 +1,13 @@
 ---
-title: Run Vitess on Kubernetes
+title: Kubernetes Helm Chart
 weight: 3
 featured: true
-aliases: ['/docs/tutorials/kubernetes/','/user-guide/sharding-kubernetes.html', '/docs/get-started/scaleway/']
+aliases: ['/docs/tutorials/kubernetes/','/user-guide/sharding-kubernetes.html', '/docs/get-started/scaleway/','/docs/get-started/kubernetes/']
 ---
 
-This tutorial demonstrates how Vitess can be used with Minikube to deploy Vitess clusters.
+This tutorial demonstrates how Vitess can be used with Minikube to deploy Vitess clusters using Helm.
 
-### Prerequisites
+## Prerequisites
 
 Before we get started, let’s get a few things out of the way:
 
