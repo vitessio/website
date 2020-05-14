@@ -183,7 +183,7 @@ We can then verify that both reads and writes go to the new keyspace:
 mysql customer --table < ../common/select_customer_data.sql
 
 # Expected to Fail!
-mysql commerce --table < ../common/select_commerce_data.sql
+mysql commerce/0 --table < ../common/select_commerce_data.sql
 ```
 
 ## Drop Sources

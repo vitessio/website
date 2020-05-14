@@ -132,7 +132,12 @@ helm upgrade vitess ../../helm/vitess/ -f 301_customer_sharded.yaml
 
 ### Using Operator
 
-TODO...
+```bash
+vtctlclient ApplySchema -sql="$(cat create_commerce_seq.sql)" commerce
+vtctlclient ApplyVSchema -vschema="$(cat vschema_commerce_seq.json)" commerce
+vtctlclient ApplySchema -sql="$(cat create_customer_sharded.sql)" customer
+vtctlclient ApplyVSchema -vschema="$(cat vschema_customer_sharded.json)" customer
+```
 
 ### Using a Local Deployment
 
