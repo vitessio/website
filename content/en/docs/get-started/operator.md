@@ -10,34 +10,36 @@ PlanetScale provides a [Kubernetes Operator for Vitess](https://github.com/plane
 
 Before we get started, let’s get a few things out of the way:
 
-1. Install [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) and start a Minikube engine:
+1. Install [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) and start a Minikube engine. We recommend using Kubernetes 1.14, as this is a common denominator across public clouds:
 
-    ```bash
-    minikube start --kubernetes-version=v1.14.9
-    ```
+	```bash
+	minikube start --kubernetes-version=v1.14.10 --cpus=8 --memory=11000 --disk-size=50g
+	```
 
-We recommend using Kubernetes 1.14 for now, as this version is available as a common denominator across public clouds.
+	If you do not have a machine with 11GB of memory to spare, you could also consider using GKE instead. An equivalent setup can be deployed from the Cloud Shell with:
 
-1. Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and ensure it is in your `PATH`. For example, on Linux:
+	```bash
+	gcloud container clusters create vitess --cluster-version 1.14 --zone us-east1-b --num-nodes 5
+	```
 
-    ```bash
-    curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.14.9/bin/linux/amd64/kubectl
-    ```
+2. Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and ensure it is in your `PATH`. For example, on Linux:
 
-1. Install the MySQL client locally. For example, on Ubuntu:
+	```bash
+	curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.14.9/bin/linux/amd64/kubectl
+	```
 
-    ```bash
-    apt install mysql-client
-    ```
+3. Install the MySQL client locally. For example, on Ubuntu:
 
-1. Install vtctlclient locally:
+	```bash
+	apt install mysql-client
+	```
 
-If you are familiar with Go development, the easiest way to do this is:
-```bash
-go get vitess.io/vitess/go/cmd/vtctlclient
-```
+4. Install vtctlclient locally. If you are familiar with Go development, the easiest way to do this is:
+	```bash
+	go get vitess.io/vitess/go/cmd/vtctlclient
+	```
 
-If not, you can also [download the latest Vitess release](https://github.com/vitessio/vitess/releases) and extract `vtctlclient` from it.
+	You can also [download the latest Vitess release](https://github.com/vitessio/vitess/releases) and extract `vtctlclient` from it.
 
 ## Install the Operator
 
@@ -81,12 +83,14 @@ vitess-operator-8454d86687-4wfnc                 1/1     Running   0          2m
 
 ## Setup Port-forward
 
+{{< warning >}}
+The port-forward will only forward to a specific pod. Currently, `kubectl` does not automatically terminate a port-forward as the pod dissapears due to apply/upgrade operations. You will need to manually restart the port-forward.
+{{</ warning >}}
+
 For ease-of-use, Vitess provides a script to port-forward from Kubernetes to your local machine. This script also recommends setting up aliases for `mysql` and `vtctlclient`:
 
 ```bash
 ./pf.sh &
-sleep 5
-
 alias vtctlclient="vtctlclient -server=localhost:15999"
 alias mysql="mysql -h 127.0.0.1 -P 15306 -u user"
 ```

@@ -110,6 +110,13 @@ example-zone1-vtgate-bc6cde92-6bd99c6888-csnkj   1/1     Running   2          8m
 vitess-operator-8454d86687-4wfnc                 1/1     Running   0          22m
 ```
 
+Make sure that you restart the port-forward after launching the pods has completed:
+
+```bash
+killall kubectl
+./pf.sh &
+```
+
 ### Using a Local Deployment
 
 ```bash
@@ -158,25 +165,11 @@ vtctlclient SwitchReads -tablet_type=replica customer.commerce2customer
 
 After the reads have been _switched_, and you have verified that the system is operating as expected, it is time to _switch_ the write operations. The command to execute the switch is very similar to switching reads:
 
-```
-@@@@@@ TODO: getting a connection reset by peer on operator @@@@ 
-morgo@morgox1:~/vitess/examples/operator$ vtctlclient SwitchWrites customer.commerce2customer
-Handling connection for 15999
-E0514 07:57:49.244881   13539 portforward.go:385] error copying from local connection to remote stream: read tcp4 127.0.0.1:15999->127.0.0.1:34758: read: connection reset by peer
-
-Repeating the command says writes have been switched, but they haven't.
-```
-
 ```bash
 vtctlclient SwitchWrites customer.commerce2customer
 ```
 
-```
 We can then verify that both reads and writes go to the new keyspace:
-
-@@@@@@@@@@@@@@@@ TODO: won't work with operator yet. @@@@@@@@@@@@@@@@@@
-@@@@@@@ The step that is expected to work fails and vice versa @@@@@@@
-```
 
 ```sh
 # Works

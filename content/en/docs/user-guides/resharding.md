@@ -166,6 +166,13 @@ helm upgrade vitess ../../helm/vitess/ -f 302_new_shards.yaml
 kubectl apply -f 302_new_shards.yaml
 ```
 
+Make sure that you restart the port-forward after you have verified with `kubectl get pods` that this operation has completed:
+
+```bash
+killall kubectl
+./pf.sh &
+```
+
 ### Using a Local Deployment
 
 ``` sh
@@ -276,6 +283,13 @@ helm upgrade vitess ../../helm/vitess/ -f 306_down_shard_0.yaml
 
 ```bash
 kubectl apply -f 306_down_shard_0.yaml
+```
+
+Make sure that you restart the port-forward after you have verified with `kubectl get pods` that this operation has completed:
+
+```bash
+killall kubectl
+./pf.sh &
 ```
 
 ### Using a Local Deployment
