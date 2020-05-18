@@ -17,13 +17,13 @@ Before we get started, let’s get a few things out of the way:
     minikube start
     ```
 
-1. Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and ensure it is in your `PATH`. For example, on Linux:
+2. Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and ensure it is in your `PATH`. For example, on Linux:
 
     ```bash
     curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
     ```
 
-1. Install [Helm 3](https://helm.sh/):
+3. Install [Helm 3](https://helm.sh/):
 
     ```bash
     wget https://get.helm.sh/helm-v3.2.1-linux-amd64.tar.gz
@@ -31,20 +31,20 @@ Before we get started, let’s get a few things out of the way:
     # copy linux-amd64/helm into your path
     ```
 
-1. Install the MySQL client locally. For example, on Ubuntu:
+4. Install the MySQL client locally. For example, on Ubuntu:
 
     ```bash
     apt install mysql-client
     ```
 
-1. Install vtctlclient locally:
+5. Install vtctlclient locally:
 
-If you are familiar with Go development, the easiest way to do this is:
-```bash
-go get vitess.io/vitess/go/cmd/vtctlclient
-```
+    If you are familiar with Go development, the easiest way to do this is:
+    ```bash
+    go get vitess.io/vitess/go/cmd/vtctlclient
+    ```
+    If not, you can also [download the latest Vitess release](https://github.com/vitessio/vitess/releases) and extract `vtctlclient` from it.
 
-If not, you can also [download the latest Vitess release](https://github.com/vitessio/vitess/releases) and extract `vtctlclient` from it.
 
 ## Start a single keyspace cluster
 
