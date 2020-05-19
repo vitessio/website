@@ -4,7 +4,7 @@ weight: 6
 ---
 
 {{< info >}}
-This guide follows on from the Get Started guides. Please make sure that you have either a [Kubernetes (helm)](../../get-started/kubernetes) or [local](../../get-started/local) installation ready.
+This guide follows on from the Get Started guides. Please make sure that you have a [Helm](../../get-started/helm), [Operator](../../get-started/operator) or [local](../../get-started/local) installation ready.
 {{< /info >}}
 
 [MoveTables](../../concepts/move-tables) is a new VReplication workflow in Vitess 6, and obsoletes Vertical Split from earlier releases.
@@ -22,7 +22,11 @@ mysql < ../common/insert_commerce_data.sql
 We can look at what we just inserted:
 
 ```sh
+# On helm and local installs:
 mysql --table < ../common/select_commerce_data.sql
+# With operator:
+mysql --table < select_commerce_data.sql
+
 Using commerce/0
 Customer
 +-------------+--------------------+
@@ -63,15 +67,15 @@ In this scenario, we are going to split the `commerce` keyspace into `commerce` 
 
 The first step in our MoveTables operation is to deploy new tablets for our `customer` keyspace. By convention, we are going to use the UIDs 200-202 as the `commerce` keyspace previously used `100-102`. Once the tablets have started, we can force the first tablet to be the master using the `-force` flag:
 
-#### Using Kubernetes (Helm)
+### Using Helm
 
-```sh
+```bash
 helm upgrade vitess ../../helm/vitess/ -f 201_customer_tablets.yaml
 ```
 
 After a few minutes the pods should appear running:
 
-```sh
+```bash
 $ kubectl get pods,jobs
 NAME                                           READY   STATUS      RESTARTS   AGE
 pod/vtctld-58bd955948-pgz7k                    1/1     Running     0          5m36s
@@ -90,9 +94,39 @@ job.batch/zone1-commerce-0-init-shard-master   1/1           90s        5m36s
 job.batch/zone1-customer-0-init-shard-master   1/1           23s        84s
 ```
 
-#### Using a Local Deployment
+### Using Operator
 
-```sh
+```bash
+kubectl apply -f 201_customer_tablets.yaml
+```
+
+After a few minutes the pods should appear running:
+
+```bash
+$ kubectl get pods
+NAME                                             READY   STATUS    RESTARTS   AGE
+example-etcd-faf13de3-1                          1/1     Running   0          8m11s
+example-etcd-faf13de3-2                          1/1     Running   0          8m11s
+example-etcd-faf13de3-3                          1/1     Running   0          8m11s
+example-vttablet-zone1-1250593518-17c58396       3/3     Running   1          2m20s
+example-vttablet-zone1-2469782763-bfadd780       3/3     Running   1          7m57s
+example-vttablet-zone1-2548885007-46a852d0       3/3     Running   1          7m47s
+example-vttablet-zone1-3778123133-6f4ed5fc       3/3     Running   1          2m20s
+example-zone1-vtctld-1d4dcad0-59d8498459-kdml8   1/1     Running   1          8m11s
+example-zone1-vtgate-bc6cde92-6bd99c6888-csnkj   1/1     Running   2          8m11s
+vitess-operator-8454d86687-4wfnc                 1/1     Running   0          22m
+```
+
+Make sure that you restart the port-forward after launching the pods has completed:
+
+```bash
+killall kubectl
+./pf.sh &
+```
+
+### Using a Local Deployment
+
+```bash
 for i in 200 201 202; do
  CELL=zone1 TABLET_UID=$i ./scripts/mysqlctl-up.sh
  CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
@@ -107,15 +141,29 @@ __Note:__ This change does not change the actual routing yet. We will use a _swi
 
 In this step we will initiate the MoveTables, which copies tables from the commerce keyspace into customer. This operation does not block any database activity; the MoveTables operation is performed online:
 
-```sh
+```bash
 vtctlclient MoveTables -workflow=commerce2customer commerce customer '{"customer":{}, "corder":{}}'
+```
+
+## Validate Correctness
+
+We can use VDiff to checksum the two sources and confirm they are consistent:
+
+```bash
+vtctlclient VDiff customer.commerce2customer
+```
+
+You should see output similar to the following:
+```bash
+Summary for corder: {ProcessedRows:5 MatchingRows:5 MismatchedRows:0 ExtraRowsSource:0 ExtraRowsTarget:0}
+Summary for customer: {ProcessedRows:5 MatchingRows:5 MismatchedRows:0 ExtraRowsSource:0 ExtraRowsTarget:0}
 ```
 
 ## Phase 1: Switch Reads
 
 Once the MoveTables operation is complete, the first step in making the changes live is to _switch_ `SELECT` statements to read from the new keyspace. Other statements will continue to route to the `commerce` keyspace. By staging this as two operations, Vitess allows you to test the changes and reduce the associated risks. For example, you may have a different configuration of hardware or software on the new keyspace.
 
-```sh
+```bash
 vtctlclient SwitchReads -tablet_type=rdonly customer.commerce2customer
 vtctlclient SwitchReads -tablet_type=replica customer.commerce2customer
 ```
@@ -124,18 +172,8 @@ vtctlclient SwitchReads -tablet_type=replica customer.commerce2customer
 
 After the reads have been _switched_, and you have verified that the system is operating as expected, it is time to _switch_ the write operations. The command to execute the switch is very similar to switching reads:
 
-```sh
+```bash
 vtctlclient SwitchWrites customer.commerce2customer
-```
-
-We can then verify that both reads and writes go to the new keyspace:
-
-```sh
-# Works
-mysql --table < ../common/select_customer0_data.sql
-
-# Expected to Fail!
-mysql --table < ../common/select_commerce_data.sql
 ```
 
 ## Drop Sources
