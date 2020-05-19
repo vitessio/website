@@ -178,11 +178,13 @@ Applying the above change should result in the creation of six more vttablet ins
 
 At this point, the tables have been created in the new shards but have no data yet.
 
-```bash
-$ mysql customer/-80 --table < ../common/select_customer_data.sql
+``` sql
+mysql --table < ../common/select_customer-80_data.sql
+Using customer/-80
 Customer
 COrder
-$ mysql customer/80- --table < ../common/select_customer_data.sql
+mysql --table < ../common/select_customer80-_data.sql
+Using customer/80-
 Customer
 COrder
 ```
@@ -235,8 +237,9 @@ The replica and rdonly cutovers are freely reversible. Unlike the Vertical Split
 
 You should now be able to see the data that has been copied over to the new shards.
 
-```bash
-$ mysql customer/-80 --table < ../common/select_customer_data.sql
+``` sh
+mysql --table < ../common/select_customer-80_data.sql
+Using customer/-80
 Customer
 +-------------+--------------------+
 | customer_id | email              |
@@ -256,7 +259,8 @@ COrder
 |        5 |           5 | SKU-1002 |    30 |
 +----------+-------------+----------+-------+
 
-$ mysql customer/80- --table < ../common/select_customer_data.sql
+mysql --table < ../common/select_customer80-_data.sql
+Using customer/80-
 Customer
 +-------------+----------------+
 | customer_id | email          |

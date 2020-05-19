@@ -16,13 +16,14 @@ As a stepping stone towards splitting a single table across multiple servers (sh
 Let's start by simulating this situation by loading sample data:
 
 ```sql
-mysql commerce < ../common/insert_commerce_data.sql
+mysql < ../common/insert_commerce_data.sql
 ```
 
 We can look at what we just inserted:
 
 ```sh
-mysql commerce --table < ../common/select_commerce_data.sql
+mysql --table < ../common/select_commerce_data.sql
+Using commerce/0
 Customer
 +-------------+--------------------+
 | customer_id | email              |
@@ -51,6 +52,8 @@ COrder
 |        5 |           5 | SKU-1002 |    30 |
 +----------+-------------+----------+-------+
 ```
+
+Notice that we are using keyspace `commerce/0` to select data from our tables.
 
 ## Planning to Move Tables
 
@@ -173,10 +176,10 @@ We can then verify that both reads and writes go to the new keyspace:
 
 ```sh
 # Works
-mysql customer --table < ../common/select_customer_data.sql
+mysql --table < ../common/select_customer0_data.sql
 
 # Expected to Fail!
-mysql commerce/0 --table < ../common/select_commerce_data.sql
+mysql --table < ../common/select_commerce_data.sql
 ```
 
 ## Drop Sources
@@ -191,7 +194,7 @@ After this step is complete, you should see the following error:
 
 ```sh
 # Expected to fail!
-mysql commerce/0 --table < ../common/select_commerce_data.sql
+mysql --table < ../common/select_commerce_data.sql
 ```
 
 This confirms that the data has been correctly cleaned up.
