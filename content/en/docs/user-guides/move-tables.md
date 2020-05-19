@@ -22,7 +22,11 @@ mysql < ../common/insert_commerce_data.sql
 We can look at what we just inserted:
 
 ```sh
+# On helm and local installs:
 mysql --table < ../common/select_commerce_data.sql
+# With operator:
+mysql --table < select_commerce_data.sql
+
 Using commerce/0
 Customer
 +-------------+--------------------+
@@ -170,16 +174,6 @@ After the reads have been _switched_, and you have verified that the system is o
 
 ```bash
 vtctlclient SwitchWrites customer.commerce2customer
-```
-
-We can then verify that both reads and writes go to the new keyspace:
-
-```sh
-# Works
-mysql --table < ../common/select_customer0_data.sql
-
-# Expected to Fail!
-mysql --table < ../common/select_commerce_data.sql
 ```
 
 ## Drop Sources

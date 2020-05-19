@@ -190,29 +190,15 @@ vtctlclient InitShardMaster -force customer/-80 zone1-300
 vtctlclient InitShardMaster -force customer/80- zone1-400
 ```
 
-## Sanity Check
-
-Applying the above change should result in the creation of six more vttablet instances; one master, one replica and one rdonly tablet for each of the two shards.
-
-At this point, the tables have been created in the new shards but have no data yet.
-
-```bash
-mysql --table < ../common/select_customer-80_data.sql
-Using customer/-80
-Customer
-COrder
-mysql --table < ../common/select_customer80-_data.sql
-Using customer/80-
-Customer
-COrder
-```
-
 ## Start the Reshard
 
 This process starts the reshard opration. It occurs online, and will not block any read or write operations to your database:
 
 ```bash
+# With Helm and Local Installation
 vtctlclient Reshard customer.cust2cust '0' '-80,80-'
+# With Operator
+vtctlclient Reshard customer.cust2cust '-' '-80,80-'
 ```
 
 ## Switch Reads
@@ -287,13 +273,6 @@ helm upgrade vitess ../../helm/vitess/ -f 306_down_shard_0.yaml
 
 ```bash
 kubectl apply -f 306_down_shard_0.yaml
-```
-
-Make sure that you restart the port-forward after you have verified with `kubectl get pods` that this operation has completed:
-
-```bash
-killall kubectl
-./pf.sh &
 ```
 
 ### Using a Local Deployment
