@@ -5,15 +5,15 @@ description: Details for dialing in to the monthly meeting
 
 We use Zoom for our monthly meeting. You can dial-in by phone from these countries with the following details.
 
-Using the Zoom app on mobile or web: [click here](https://slack.zoom.us/j/314170129)
+Using the Zoom app on mobile or web: [click here](https://zoom.us/j/8695363767?pwd=dmJ4V0h3aEhyei90VnMzYXlxRUZGdz09)
  
-Meeting ID: 314 170 129 
+Meeting ID: 8695363767
 
 **Joining by phone:**
 
 Or iPhone one-tap :
 
- US: +16699006833,,314170129#  or +16465588656,,314170129#
+ US: +16699006833,,8695363767# or +16465588656,,8695363767#
 
 **Or other phone:**
 
