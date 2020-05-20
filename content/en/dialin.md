@@ -5,7 +5,7 @@ description: Details for dialing in to the monthly meeting
 
 We use Zoom for our monthly meeting. You can dial-in by phone from these countries with the following details.
 
-Using the Zoom app on mobile or web: [click here](https://zoom.us/my/cncfvitessproject)
+Using the Zoom app on mobile or web: [click here](https://zoom.us/j/8695363767?pwd=dmJ4V0h3aEhyei90VnMzYXlxRUZGdz09)
  
 Meeting ID: 8695363767
 
