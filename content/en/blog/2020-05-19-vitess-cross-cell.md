@@ -7,7 +7,7 @@ title: "Vitess: The Cross Cell Connection"
 ---
 
 This post explains about how VTGate handles cross-cell operations and how to configure CellAlias for cross cell read operations.
-If you are new to Vitess, it is recommended to [read this blog post](./2020-04-27-life-of-a-cluster) to get more familiar with the various components and its configuration in Vitess.
+If you are new to Vitess, it is recommended to [read this blog post](./2020-04-27-life-of-a-cluster) to get more familiar with the various components and their configuration in Vitess.
 
 To understand CellAlias, first let's get familiar with what a cell means in Vitess. A cell is a group of servers and network infrastructure collocated in an area, and isolated from failures in other cells. It is typically either a full data center or a subset of a data center, sometimes called a zone or availability zone. Vitess gracefully handles cell-level failures, such as when a cell is cut off the network.
 By default Vitess limits cross cell traffic by only routing the writes to a master if it does not reside in the current cell. Vitess will always prefer the replicas in the current cell for all read operations.
@@ -16,7 +16,7 @@ However in some cases it may be necessary to route read operations to different 
 
 ## CellAlias
 
-A CellAlias defines a group of cells within which replica/rdonly traffic can be routed across cells. By default, Vitess does not allow traffic between replicas that are part of different cells. Between cells that are not in the same group (alias), only master traffic can be routed.
+A CellAlias defines a group of cells within which replica/rdonly traffic can be routed across cells. By default, Vitess does not allow replica traffic between different cells. Between cells that are not in the same group (alias), only master traffic can be routed.
 
 Here is a sample command for creating a CellAlias:
 
@@ -30,7 +30,7 @@ vtctl \
   cellglobal
 ```
 
-Here `zone1` an `zone2` are two cells in different datacenters and `cellglobal` is the alias name.
+Here `zone1` and `zone2` are two cells in different datacenters and `cellglobal` is the alias name.
 
 ## Configuring VTGate
 
@@ -59,5 +59,4 @@ vtgate \
 2. By default VTGate sends all queries(reads and writes) to the master.
 3. Replica reads can be performed by first issuing a `use ks@replica` where `ks` should be replaced by your keyspace name.
 4. VTGate will always prefer tables that are in the same cell over tablets in other cells despite the CellAlias.
-5. VTGate caches the CellAliases from the Topology Server, so if an alias is created/updated after the VTGate instance has been started then VTGate must be reloaded to fetch the CellAlias. This behaviour is similar to adding/removing new cells where the VTGate instances need to be restarted to udpate the `-cells_to_watch` values.
-
+5. VTGate caches the CellAliases from the Topology Server, so if an alias is created/updated after the VTGate instance has been started then VTGate must be restarted to fetch the CellAlias. This behaviour is similar to adding/removing new cells where the VTGate instances need to be restarted to udpate the `-cells_to_watch` values.
