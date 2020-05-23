@@ -1,7 +1,7 @@
 ---
 author: "Pratik Gupta"
-date: 2020-05-22T11:20:00
-slug: "2020-05-22-vitess-cross-cell"
+date: 2020-05-26T11:20:00
+slug: "2020-05-26-vitess-cross-cell"
 tags: ['vitess', 'vitess cluster', 'vitess cross-cell', 'vitess getting started']
 title: "Vitess: The Cross Cell Connection"
 ---
@@ -58,5 +58,5 @@ vtgate \
 1. VTGate will always be able to route to a master in a different cell (which is part of cells_to_watch) even without a cellAlias. the cellAlias requirement is only for replicas.
 2. By default VTGate sends all queries(reads and writes) to the master.
 3. Replica reads can be performed by first issuing a `use ks@replica` where `ks` should be replaced by your keyspace name.
-4. VTGate will always prefer tables that are in the same cell over tablets in other cells despite the CellAlias.
+4. VTGate will always prefer tablets that are in the same cell over tablets in other cells despite the CellAlias.
 5. VTGate caches the CellAliases from the Topology Server, so if an alias is created/updated after the VTGate instance has been started then VTGate must be restarted to fetch the CellAlias. This behaviour is similar to adding/removing new cells where the VTGate instances need to be restarted to udpate the `-cells_to_watch` values.
