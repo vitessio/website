@@ -52,7 +52,7 @@ And we use it thus:
 	    "name": "region_vdx"
         },
 ```
-This vindex uses a byte mapping of countries provided in a JSON file and combines that with the id column in the customer table to compute the keyspace_id. In this example, we are using 1 byte. You can use 1 or 2 bytes. With 2 bytes, 65536 distinct location can be supported. The byte value of the country(or other location identifier) is prefixed to a hash value computed from the id to produce the keyspace_id.
+This vindex uses a byte mapping of countries provided in a JSON file and combines that with the id column in the customer table to compute the keyspace_id. In this example, we are using 1 byte. You can use 1 or 2 bytes. With 2 bytes, 65536 distinct locations can be supported. The byte value of the country(or other location identifier) is prefixed to a hash value computed from the id to produce the keyspace_id.
 
 The lookup table is used to store the id to keyspace_id mapping. We connect it to the customer table as follows:
 We first define a lookup vindex:
@@ -283,7 +283,7 @@ mysql> select id,hex(keyspace_id) from customer_lookup;
 +----+--------------------+
 4 rows in set (0.00 sec)
 ```
-We can see that only data from US and Canada exists in this shard.
+You can see that only data from US and Canada exists in this shard.
 Repeat this for the other shards (40-80, 80-c0 and c0-) and see that each shard contains 4 rows in customer table and the 4 corresponding rows in the lookup table.
 
 You can now teardown your example:
