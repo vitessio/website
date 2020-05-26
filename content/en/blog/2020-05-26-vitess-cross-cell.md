@@ -7,7 +7,7 @@ title: "Vitess: The Cross Cell Connection"
 ---
 
 This post explains about how VTGate handles cross-cell operations and how to configure CellAlias for cross-cell read operations.
-If you are new to Vitess, it is recommended to [read this blog post](./2020-04-27-life-of-a-cluster) to get more familiar with the various components and their configuration in Vitess.
+If you are new to Vitess, it is recommended to [read this blog post](../2020-04-27-life-of-a-cluster) to get more familiar with the various components and their configuration in Vitess.
 
 To understand CellAlias, first let's get familiar with what a cell means in Vitess. A cell is a group of servers and network infrastructure collocated in an area, and isolated from failures in other cells. It is typically either a full data center or a subset of a data center, sometimes called a zone or availability zone. Vitess gracefully handles cell-level failures, such as when a cell is cut off the network.
 By default Vitess limits cross-cell traffic by only routing the writes to a master if it does not reside in the current cell. Vitess will always prefer the replicas in the current cell for all read operations.
