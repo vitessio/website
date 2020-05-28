@@ -6,7 +6,7 @@ title: Unmanaged Tablet
 This guide follows on from the [local](../../get-started/local) installation guide.
 {{< /info >}}
 
-This guide uses the Vitess components vtctld, Topology Service and VTGate which have already been started in the local installation guide. It assumed that you have an existing MySQL Server setup that you would like to add to Vitess as a new keyspace, which we will call `legacy`. The same set of steps can be used to create a tablet that uses Amazon RDS, Aurora, or Google CloudSQL.
+This guide uses the Vitess components vtctld, Topology Service and VTGate which have already been started in the local installation guide. It assumes that you have an existing MySQL Server setup that you would like to add to Vitess as a new keyspace, which we will call `legacy`. The same set of steps can be used to create a tablet that uses Amazon RDS, Aurora, or Google CloudSQL.
 
 ## Ensure all components are up
 
