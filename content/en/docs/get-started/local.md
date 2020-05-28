@@ -1,5 +1,5 @@
 ---
-title: Run Vitess Locally
+title: Local Install
 description: Instructions for using Vitess on your machine for testing purposes
 weight: 4
 featured: true
@@ -59,8 +59,8 @@ sudo setenforce 0
 Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux. For example with Vitess 6:
 
 ```sh
-tar -xzf vitess-6.0.20-20200429-f7fa695.tar.gz
-cd vitess-6.0.20-20200429-f7fa695
+tar -xzf vitess-6.0.20-20200508-147bc5a.tar.gz
+cd vitess-6.0.20-20200508-147bc5a
 sudo mkdir -p /usr/local/vitess
 sudo mv * /usr/local/vitess/
 ```

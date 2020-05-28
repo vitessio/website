@@ -4,7 +4,7 @@ weight: 7
 ---
 
 {{< info >}}
-This guide follows on from the Get Started guides. Please make sure that you have either a [Kubernetes (helm)](../../get-started/kubernetes) or [local](../../get-started/local) installation ready.
+This guide follows on from the Get Started guides. Please make sure that you have a [Helm](../../get-started/helm), [Operator](../../get-started/operator) or [local](../../get-started/local) installation ready.
 {{< /info >}}
 
 ## Preparation
@@ -124,13 +124,22 @@ Since the primary vindex columns are `BIGINT`, we choose `hash` as the primary v
 
 Applying the new VSchema instructs Vitess that the keyspace is sharded, which may prevent some complex queries. It is a good idea to [validate this](../vtexplain) before proceeding with this step. If you do notice that certain queries start failing, you can always revert temporaily by restoring the old VSchema. Make sure you fix all of the queries before proceeding to the Reshard process.
 
-#### Using Kubernetes (Helm)
+### Using Helm
 
-```sh
+```bash
 helm upgrade vitess ../../helm/vitess/ -f 301_customer_sharded.yaml
 ```
 
-#### Using a Local Deployment
+### Using Operator
+
+```bash
+vtctlclient ApplySchema -sql="$(cat create_commerce_seq.sql)" commerce
+vtctlclient ApplyVSchema -vschema="$(cat vschema_commerce_seq.json)" commerce
+vtctlclient ApplySchema -sql="$(cat create_customer_sharded.sql)" customer
+vtctlclient ApplyVSchema -vschema="$(cat vschema_customer_sharded.json)" customer
+```
+
+### Using a Local Deployment
 
 ``` sh
 vtctlclient ApplySchema -sql-file create_commerce_seq.sql commerce
@@ -145,13 +154,26 @@ At this point, you have finalized your sharded VSchema and vetted all the querie
 
 The resharding process works by splitting existing shards into smaller shards. This type of resharding is the most appropriate for Vitess. There are some use cases where you may want to bring up a new shard and add new rows in the most recently created shard. This can be achieved in Vitess by splitting a shard in such a way that no rows end up in the ‘new’ shard. However, it's not natural for Vitess. We have to create the new target shards:
 
-#### Using Kubernetes (Helm)
+### Using Helm
 
 ```sh
 helm upgrade vitess ../../helm/vitess/ -f 302_new_shards.yaml
 ```
 
-#### Using a Local Deployment
+### Using Operator
+
+```bash
+kubectl apply -f 302_new_shards.yaml
+```
+
+Make sure that you restart the port-forward after you have verified with `kubectl get pods` that this operation has completed:
+
+```bash
+killall kubectl
+./pf.sh &
+```
+
+### Using a Local Deployment
 
 ``` sh
 for i in 300 301 302; do
@@ -168,36 +190,22 @@ vtctlclient InitShardMaster -force customer/-80 zone1-300
 vtctlclient InitShardMaster -force customer/80- zone1-400
 ```
 
-## Sanity Check
-
-Applying the above change should result in the creation of six more vttablet instances; one master, one replica and one rdonly tablet for each of the two shards.
-
-At this point, the tables have been created in the new shards but have no data yet.
-
-``` sql
-mysql --table < ../common/select_customer-80_data.sql
-Using customer/-80
-Customer
-COrder
-mysql --table < ../common/select_customer80-_data.sql
-Using customer/80-
-Customer
-COrder
-```
-
 ## Start the Reshard
 
 This process starts the reshard opration. It occurs online, and will not block any read or write operations to your database:
 
-``` sh
+```bash
+# With Helm and Local Installation
 vtctlclient Reshard customer.cust2cust '0' '-80,80-'
+# With Operator
+vtctlclient Reshard customer.cust2cust '-' '-80,80-'
 ```
 
 ## Switch Reads
 
 Once the reshard is complete, the first step is to switch read operations to occur at the new location. By switching read operations first, we are able to verify that the new tablet servers are healthy and able to respond to requests:
 
-``` sh
+```bash
 vtctlclient SwitchReads -tablet_type=rdonly customer.cust2cust
 vtctlclient SwitchReads -tablet_type=replica customer.cust2cust
 ```
@@ -206,14 +214,14 @@ vtctlclient SwitchReads -tablet_type=replica customer.cust2cust
 
 After reads have been switched, and the health of the system has been verified, it's time to switch writes. The usage is very similar to switching reads:
 
-``` sh
+```bash
 vtctlclient SwitchWrites customer.cust2cust
 ```
 
 You should now be able to see the data that has been copied over to the new shards:
 
 
-``` sh
+```bash
 mysql --table < ../common/select_customer-80_data.sql
 Using customer/-80
 Customer
@@ -255,13 +263,19 @@ COrder
 
 After celebrating your second successful resharding, you are now ready to clean up the leftover artifacts:
 
-#### Using Kubernetes (Helm)
+### Using Helm
 
 ```sh
 helm upgrade vitess ../../helm/vitess/ -f 306_down_shard_0.yaml
 ```
 
-#### Using a Local Deployment
+### Using Operator
+
+```bash
+kubectl apply -f 306_down_shard_0.yaml
+```
+
+### Using a Local Deployment
 
 ``` sh
 for i in 200 201 202; do
