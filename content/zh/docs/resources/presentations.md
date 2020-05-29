@@ -1,7 +1,7 @@
 ---
 title: Presentations and Videos
+description: Presentations and Videos
 weight: 1
-aliases: ['/resources/presentations.html']
 ---
 
 ## CNCF Webinar 2020
