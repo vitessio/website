@@ -1,38 +1,36 @@
 	---
 title: Backup and Restore
-weight: 8
+weight: 9
 aliases: ['/user-guide/backup-and-restore.html']
 ---
 
-This document explains how to create and restore data backups with
-Vitess. Vitess uses backups for two purposes:
+Backup and Restore are integrated features provided by tablets managed by Vitess. As well as using _backups_ for data integrity, Vitess will also create and restore backups for provisioning new tablets in an existing shard.
 
-* Provide a point-in-time backup of the data on a tablet.
-* Bootstrap new tablets in an existing shard.
+## Concepts
 
-## Prerequisites
+Vitess supports pluggable interfaces for both [Backup Storage Services](https://github.com/vitessio/vitess/blob/master/go/vt/mysqlctl/backupstorage/interface.go) and [Backup Engines](https://github.com/vitessio/vitess/blob/master/go/vt/mysqlctl/backupengine.go).
 
-Vitess stores data backups on a Backup Storage service, which is a
-[pluggable interface](https://github.com/vitessio/vitess/blob/master/go/vt/mysqlctl/backupstorage/interface.go).
+Before backing up or restoring a tablet, you need to ensure that the tablet is aware of the Backup Storage system and Backup engine that you are using. To do so, use the following command-line flags when starting a vttablet that has access to the location where you are storing backups.
 
-Currently, we have plugins for:
+### Backup Storage Services
+
+Currently, Vitess has plugins for:
 
 * A network-mounted path (e.g. NFS)
 * Google Cloud Storage
 * Amazon S3
 * Ceph
 
-Vitess also supports multiple ways to generate data backups. This is called a Backup engine, which is a [pluggable interface](https://github.com/vitessio/vitess/blob/master/go/vt/mysqlctl/backupengine.go)
+### Backup Engines
 
-Currently, we have plugins for:
+The engine is the techology used for generating the backup. Currently Vitess has plugins for:
 
-* Builtin: Copy all the database files into specified storage. This is the default.
-* Percona Xtrabackup
+* Builtin: Shutdown an instance and copy all the database files (default)
+* XtraBackup: An online backup using Percona's XtraBackup
 
-Before you can back up or restore a tablet, you need to ensure that the
-tablet is aware of the Backup Storage system and Backup engine that you are using.
-To do so, use the following command-line flags when starting a vttablet that has
-access to the location where you are storing backups.
+## VTTablet Configuration
+
+The following options can be used to configure VTTablet for backups:
 
 <table class="responsive">
   <thead>
@@ -168,6 +166,23 @@ Engine.
 For this to work, the GCE instances must have been created with the [scope](https://cloud.google.com/compute/docs/authentication#using) that grants read-write access to Cloud Storage. When using Container Engine, you can
 do this for all the instances it creates by adding `--scopes storage-rw` to the `gcloud container clusters create` command.
 
+### Backup Frequency
+
+We recommend to take backups regularly e.g. you should set up a cron job for it.
+
+To determine the proper frequency for creating backups, consider the amount of time that you keep replication logs and allow enough time to investigate and fix problems in the event that a backup operation fails.
+
+For example, suppose you typically keep four days of replication logs and you create daily backups. In that case, even if a backup fails, you have at least a couple of days from the time of the failure to investigate and fix the problem.
+
+### Concurrency
+
+The back-up and restore processes simultaneously copy and either compress or decompress multiple files to increase throughput. You can control the concurrency using command-line flags:
+
+* The vtctl [Backup](../../reference/vtctl#backup) command uses the `-concurrency` flag.
+* vttablet uses the `-restore_concurrency` flag.
+
+If the network link is fast enough, the concurrency matches the CPU usage of the process during the backup or restore process.
+
 ## Creating a backup
 
 Run the following vtctl command to create a backup:
@@ -268,31 +283,10 @@ Specifically, make sure that the following additional vttablet parameters are se
 The bootstrapped tablet will restore the data from the backup and then apply
 changes, which occurred after the backup, by restarting replication.
 
+## Backing up Topology Server
 
-## Backup Frequency
+The Topology Server stores metadata (and not tablet data). It is recommended to create a backup using the method described by the underlying plugin:
 
-We recommend to take backups regularly e.g. you should set up a cron
-job for it.
-
-To determine the proper frequency for creating backups, consider
-the amount of time that you keep replication logs and allow enough
-time to investigate and fix problems in the event that a backup
-operation fails.
-
-For example, suppose you typically keep four days of replication logs
-and you create daily backups. In that case, even if a backup fails,
-you have at least a couple of days from the time of the failure to
-investigate and fix the problem.
-
-## Concurrency
-
-The back-up and restore processes simultaneously copy and either
-compress or decompress multiple files to increase throughput. You
-can control the concurrency using command-line flags:
-
-* The vtctl [Backup](../../reference/vtctl#backup) command uses the
-  `-concurrency` flag.
-* vttablet uses the `-restore_concurrency` flag.
-
-If the network link is fast enough, the concurrency matches the CPU
-usage of the process during the backup or restore process.
+* [etcd](https://etcd.io/docs/v3.4.0/op-guide/recovery/)
+* [ZooKeeper](http://zookeeper.apache.org/doc/r3.6.0/zookeeperAdmin.html#sc_dataFileManagement)
+* [Consul](https://www.consul.io/docs/commands/snapshot.html)

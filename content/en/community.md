@@ -26,24 +26,23 @@ We welcome your contribution to Vitess, whether they be documentation, a bug fix
 
 On the third Thursday of the month (unless otherwise specified), the Vitess community holds a monthly meeting by video conference to discuss the state of Vitess. New features will be previewed or discussed, and everyone regardless of location and familiarity with Vitess is welcome to join.
 
-To stay up to date on these monthly meetings and other meetups, click [here](https://calendar.google.com/calendar/embed?src=planetscale.com_21541iv1dn67m0jd023lql4dak%40group.calendar.google.com&ctz=America%2FLos_Angeles) to add them to your calendar.
+To stay up to date on these meetings, subscribe to the [CNCF Public Events calendar](https://www.cncf.io/community/calendar/).
 
 **Date**: 3rd Thursday of every month
 
 **Time**: 08.00 a.m. PST
 
-**Dial-in details**: [Click to join Zoom call](https://slack.zoom.us/j/314170129)
+**Dial-in details**: [Click to join Zoom call](https://zoom.us/j/8695363767?pwd=dmJ4V0h3aEhyei90VnMzYXlxRUZGdz09)
 
 To join by phone:
 
-* US: +16699006833,,314170129#  or +16465588656,,314170129#
+* US: +16699006833,,8695363767#  or +16465588656,,8695363767#
 * International dial-in numbers [click here](../dialin)
-* Meeting ID (required to join the call): 314 170 129
+* Meeting ID (required to join the call): 8695363767
 
-If you would like to submit a topic for discussion at the meeting, please [email us](mailto:cncf-vitess-maintainers@lists.cncf.io).
+If you would like to submit a topic for discussion at the meeting, please [email the maintainers team](mailto:cncf-vitess-maintainers@lists.cncf.io), or reply to the call-for-agenda-items on the Vitess Slack a few days before the call.
 
-To review notes from past meetings, click [here](https://docs.google.com/document/d/1d8PcVD-ppnytRXZPOPvhRnnwei7-tYvgopD0UYzbAMs/edit).
-
+[Notes and agenda items from past meetings](https://docs.google.com/document/d/1XLUdKePtj9aZD0E2Nlr3VRk1NIaSBgeIvXUj13y5CFk/edit)
 
 ### Project Governance
 

@@ -1,5 +1,5 @@
 ---
-title: Architecture 
+title: Architecture
 weight: 2
 featured: true
 ---
@@ -12,6 +12,6 @@ Vitess tools and servers are designed to help you whether you start with a compl
 
 The diagram below illustrates Vitess' components:
 
-![Vitess Overview Architecture Diagram](../img/VitessOverview.png)
+![Architecture Diagram](../img/architecture.svg)
 
 For additonal details on each of the components, see [Concepts](../../concepts).

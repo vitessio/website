@@ -17,6 +17,8 @@
 
   <div class="navbar-menu">
     <div class="navbar-end">
+      {{ partial "search-bar.html" . }}
+
       <a class="navbar-item has-text-weight-bold" href="{{ "/docs" | relLangURL }}">
         {{ T "docs" }}
       </a>

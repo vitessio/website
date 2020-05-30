@@ -3,12 +3,24 @@ title: VStream
 ---
 
 
-VStream is a change notification system located on the VTGate. The VStream can be thought of as an UpdateStream customized for use within Vitess. As with the update stream, VTTablets can subscribe to a VStream to receive events. The VStream can pull events from a VStreamer which in turn pulls events from the binlog. This would allow for efficient execution of processes such as VReplication where a subscriber can indirectly receive and apply events from the binlog. A user can apply filtering rules to a VStream to obtain in depth information about what is going on under the hood at a given keyspace, shard, and position.
-
-
+VStream is a change notification service accessible via VTGate. The purpose of
+VStream is to provide equivalent information to the MySQL binary logs from the
+underlying MySQL shards of the Vitess cluster.  gRPC clients, including Vitess
+components like VTTablets, can subscribe to a VStream to receive change events
+from other shards.  The VStream pulls events from one or more VStreamer
+instances on VTTablet instances, which in turn pulls events from the binary
+log of the underlying MySQL instance.  This allows for efficient execution of
+functions such as VReplication where a subscriber can indirectly receive
+events from the binary logs of one or more MySQL instance shards, and then
+apply it to a target instance. An user can leverage VStream to obtain in-depth
+information about data change events for given Vitess keyspace, shard, and
+position.  A single VStream can also consolidate change events from multiple
+shards in a keyspace, making it a convenient tool to feed a CDC (Change Data
+Capture) process downstream from your Vitess datastore.
 
 
 For reference, please refer to the diagram below:
-![VStream](../img/Vstream.png)
 
-Note: Please note that a VStream is distinct from a VStreamer. The former is located on the VTGate and the latter is located on the VTTablet.
+![VStream diagram](../img/VStream.svg)
+
+Note: A VStream is distinct from a VStreamer. The former is located on the VTGate and the latter is located on the VTTablet.

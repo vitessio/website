@@ -1,6 +1,19 @@
+{{ $isDoc        := eq .Section "docs" }}
 {{ $jsFiles := site.Params.assets.js }}
 {{ range $jsFiles }}
 {{ $path := printf "js/%s.js" . }}
 {{ $js := resources.Get $path | minify | fingerprint }}
 <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
+{{ end }}
+
+{{ if $isDoc }}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+<script type="text/javascript">
+docsearch({
+  apiKey: '1d13fc4b241cae42000f422300df8931',
+  indexName: 'vitess',
+  inputSelector: '#search-bar',
+  debug: false
+});
+</script>
 {{ end }}
