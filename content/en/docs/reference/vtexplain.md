@@ -6,7 +6,7 @@ title: VTExplain command line tool
 
 This document provides information about the options and syntax of the `VTExplain` tool.
 
-For a user guide that describes how to use the `VTExplain` tool to explain how Vitess executes a particular SQL statement, see [Explaining how Vitess executes a SQL statement](../../user-guides/vtexplain).
+To learn more about the way Vitess executes a particular SQL statement using the `VTexplain` tool, see the doument [Explaining how Vitess executes a SQL statement](../../user-guides/vtexplain).
 
 ## About VTExplain
 
