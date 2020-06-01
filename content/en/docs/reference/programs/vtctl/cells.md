@@ -9,23 +9,33 @@ The following `vtctl` commands are available for administering Cells.
 
 ### AddCellInfo
 
-`AddCellInfo  [-server_address <addr>] [-root <root>] <cell>`
+```
+AddCellInfo  [-server_address <addr>] [-root <root>] <cell>
+```
 
 ### UpdateCellInfo
 
-`UpdateCellInfo  [-server_address <addr>] [-root <root>] <cell>`
+```
+UpdateCellInfo  [-server_address <addr>] [-root <root>] <cell>
+```
 
 ### DeleteCellInfo
 
-`DeleteCellInfo  [-force] <cell>`
+```
+DeleteCellInfo  [-force] <cell>
+```
 
 ### GetCellInfoNames
 
-`GetCellInfoNames  `
+```
+GetCellInfoNames
+```
 
 ### GetCellInfo
 
-`GetCellInfo  <cell>`
+```
+GetCellInfo  <cell>
+```
 
 ## See Also
 

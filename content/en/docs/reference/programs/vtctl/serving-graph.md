@@ -9,19 +9,27 @@ The following `vtctl` commands are available for administering the Serving Graph
 
 ### GetSrvKeyspaceNames
 
-`GetSrvKeyspaceNames  <cell>`
+```
+GetSrvKeyspaceNames  <cell>
+```
 
 ### GetSrvKeyspace
 
-`GetSrvKeyspace  <cell> <keyspace>`
+```
+GetSrvKeyspace  <cell> <keyspace>
+```
 
 ### GetSrvVSchema
 
-`GetSrvVSchema  <cell>`
+```
+GetSrvVSchema  <cell>
+```
 
 ### DeleteSrvVSchema
 
-`DeleteSrvVSchema  <cell>`
+```
+DeleteSrvVSchema  <cell>
+```
 
 
 ## See Also

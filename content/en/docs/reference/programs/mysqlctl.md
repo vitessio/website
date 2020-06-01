@@ -87,7 +87,7 @@ The following global parameters apply to `mysqlctl`:
 | app_pool_size | int | Size of the connection pool for app connections (default 40) |
 | backup_engine_implementation | string | Specifies which implementation to use for creating new backups (builtin or xtrabackup). Restores will always be done with whichever engine created a given backup. (default "builtin") |
 | backup_storage_block_size | int | if backup_storage_compress is true, backup_storage_block_size sets the byte size for each block while compressing (default is 250000). (default 250000) |
-| backup_storage_compress | ? | if set, the backup files will be compressed (default is true). Set to false for instance if a backup_storage_hook is specified and it compresses the data. (default true) |
+| backup_storage_compress | boolean | if set, the backup files will be compressed (default is true). Set to false for instance if a backup_storage_hook is specified and it compresses the data. (default true) |
 | backup_storage_hook | string | if set, we send the contents of the backup files through this hook. |
 | backup_storage_implementation | string | which implementation to use for the backup storage feature |
 | backup_storage_number_blocks | int | if backup_storage_compress is true, backup_storage_number_blocks sets the number of blocks that can be processed, at once, before the writer blocks, during compression (default is 2). It should be equal to the number of CPUs available for compression (default 2) |
@@ -136,16 +136,16 @@ The following global parameters apply to `mysqlctl`:
 | grpc_server_initial_conn_window_size | int | grpc server initial connection window size |
 | grpc_server_initial_window_size | int | grpc server initial window size |
 | grpc_server_keepalive_enforcement_policy_min_time | duration | grpc server minimum keepalive time (default 5m0s) |
-| grpc_server_keepalive_enforcement_policy_permit_without_stream | ? |  grpc server permit client keepalive pings even when there are no active streams (RPCs) |
+| grpc_server_keepalive_enforcement_policy_permit_without_stream | boolean |  grpc server permit client keepalive pings even when there are no active streams (RPCs) |
 | jaeger-agent-host | string | host and port to send spans to. if empty, no tracing will be done |
 | keep_logs | duration | keep logs for this long (using ctime) (zero to keep forever) |
 | keep_logs_by_mtime | duration | keep logs for this long (using mtime) (zero to keep forever) |
 | lameduck-period | duration | keep running at least this long after SIGTERM before stopping (default 50ms) |
 | log_backtrace_at | value | when logging hits line file:N, emit a stack trace |
-| log_dir string | ? | If non-empty, write log files in this directory |
-| log_err_stacks | ? | log stack traces for errors |
+| log_dir | string | If non-empty, write log files in this directory |
+| log_err_stacks | boolean | log stack traces for errors |
 | log_rotate_max_size | uint | size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800) |
-| logtostderr | ? | log to standard error instead of files |
+| logtostderr | boolean | log to standard error instead of files |
 | master_connect_retry | duration | how long to wait in between slave -> connection attempts. Only precise to the second. (default 10s) |
 | mem-profile-rate | int | profile every n bytes allocated (default 524288) |
 | mutex-profile-fraction | int | profile every n mutex contention events (see runtime.SetMutexProfileFraction) |
@@ -182,8 +182,8 @@ The following global parameters apply to `mysqlctl`:
 | topo_implementation | string | the topology implementation to use |
 | tracer | string | tracing service to use (default "noop") |
 | tracing-sampling-rate | float | sampling rate for the probabilistic jaeger sampler (default 0.1) |
-| v value | ? | log level for V logs |
-| version | ? | print binary version |
+| v | value | log level for V logs |
+| version | boolean | print binary version |
 | vmodule | value | comma-separated list of pattern=N settings for file-filtered logging |
 | xbstream_restore_flags | string | flags to pass to xbstream command during restore. These should be space separated and will be added to the end of the command. These need to match the ones used for backup e.g. --compress / --decompress, --encrypt / --decrypt |
 | xtrabackup_backup_flags | string | flags to pass to backup command. These should be space separated and will be added to the end of the command |

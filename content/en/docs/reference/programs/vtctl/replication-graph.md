@@ -9,7 +9,9 @@ The following `vtctl` commands are available for administering the Replication G
 
 ### GetShardReplication
 
-`GetShardReplication  <cell> <keyspace/shard>`
+```
+GetShardReplication  <cell> <keyspace/shard>
+```
 
 ## See Also
 

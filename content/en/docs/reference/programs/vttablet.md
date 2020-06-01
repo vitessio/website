@@ -3,7 +3,7 @@ title: vttablet
 aliases: ['/docs/user-guides/vttablet-modes/']
 ---
 
-A VTTablet server _controls_ a running MySQL server. VTTablet supports two types of deployments:
+A VTTablet server _controls_ a running MySQL server. VTTablet supports two primary types of deployments:
 
 * Managed MySQL (most common)
 * Unmanaged or Remote MySQL
@@ -15,7 +15,7 @@ In addition to these deployment types, a partially managed VTTablet is also poss
 
 ### Managed MySQL
 
-In this mode ..
+In this mode, Vitess actively manages MySQL:
 
 ```bash
 export TOPOLOGY_FLAGS="-topo_implementation etcd2 -topo_global_server_address localhost:2379 -topo_global_root /vitess/global"
@@ -34,19 +34,37 @@ $TOPOLOGY_FLAGS
 
 `$alias` needs to be of the form: `<cell>-id`, and the cell should match one of the local cells that was created in the topology. The id can be left padded with zeroes: `cell-100` and `cell-000000100` are synonymous.
 
-
 ### Unmanaged or Remote MySQL
 
+In this mode, an external MySQL can be used such as RDS, Aurora, CloudSQL:
 
-Can be used with Aurora, Amazon RDS, CloudSQL:
+```bash
+mkdir -p $VTDATAROOT/vt_0000000401
+vttablet \
+ $TOPOLOGY_FLAGS \
+ -logtostderr \
+ -log_queries_to_file $VTDATAROOT/tmp/vttablet_0000000401_querylog.txt \
+ -tablet-path "zone1-0000000401" \
+ -init_keyspace legacy \
+ -init_shard 0 \
+ -init_tablet_type replica \
+ -port 15401 \
+ -grpc_port 16401 \
+ -service_map 'grpc-queryservice,grpc-tabletmanager,grpc-updatestream' \
+ -pid_file $VTDATAROOT/vt_0000000401/vttablet.pid \
+ -vtctld_addr http://localhost:15000/ \
+ -db_host 127.0.0.1 \
+ -db_port 5726 \
+ -db_app_user msandbox \
+ -db_app_password msandbox \
+ -init_db_name_override legacy \
+ -init_populate_metadata &
 
-...
+sleep 10
+vtctlclient InitShardMaster -force legacy/0 zone1-401
+```
 
-
-### Partially managed MySQL
-
-Need to understand the use case?
-
+See [Unmanaged Tablet](../../../user-guides/unmanaged-tablet) for the full guide.
 
 
 ## Options

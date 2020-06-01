@@ -9,7 +9,7 @@ The following `vtctl` commands are available for administering Cell Aliases.
 
 ### AddCellsAlias
 
-```bash
+```
 AddCellsAlias  [-cells <cell,cell2...>] <alias>
 ```
 

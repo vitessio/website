@@ -8,21 +8,34 @@ The following `vtctl` commands are available for administering Resharding Thrott
 ## Commands
 
 ### ThrottlerMaxRates
- `ThrottlerMaxRates  -server <vtworker or vttablet>`
+
+```
+ThrottlerMaxRates  -server <vtworker or vttablet>
+```
 
 ### ThrottlerSetMaxRate
- `ThrottlerSetMaxRate  -server <vtworker or vttablet> <rate>`
+
+```
+ThrottlerSetMaxRate  -server <vtworker or vttablet> <rate>
+```
 
 ### GetThrottlerConfiguration
- `GetThrottlerConfiguration  -server <vtworker or vttablet> [<throttler name>]`
+
+```
+GetThrottlerConfiguration  -server <vtworker or vttablet> [<throttler name>]
+```
 
 ### UpdateThrottlerConfiguration
- `UpdateThrottlerConfiguration  -server <vtworker or vttablet> [-copy_zero_values] "<configuration protobuf text>" [<throttler name>]`
+
+```
+UpdateThrottlerConfiguration  -server <vtworker or vttablet> [-copy_zero_values] "<configuration protobuf text>" [<throttler name>]
+```
 
 ### ResetThrottlerConfiguration
- `ResetThrottlerConfiguration  -server <vtworker or vttablet> [<throttler name>]`
 
-
+```
+ResetThrottlerConfiguration  -server <vtworker or vttablet> [<throttler name>]
+```
 
 
 ## See Also

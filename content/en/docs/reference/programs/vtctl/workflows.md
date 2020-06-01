@@ -8,27 +8,42 @@ The following `vtctl` commands are available for administering workflows.
 ## Commands
 
 ### WorkflowCreate
- `WorkflowCreate  [-skip_start] <factoryName> [parameters...]`
+
+```
+WorkflowCreate  [-skip_start] <factoryName> [parameters...]
+```
 
 ### WorkflowStart
- `WorkflowStart  <uuid>`
+
+```
+WorkflowStart  <uuid>
+```
 
 ### WorkflowStop
- `WorkflowStop  <uuid>`
+
+```
+WorkflowStop  <uuid>
+```
 
 ### WorkflowDelete
- `WorkflowDelete  <uuid>`
+```
+WorkflowDelete  <uuid>
+```
 
 ### WorkflowWait
- `WorkflowWait  <uuid>`
+```
+WorkflowWait  <uuid>
+```
 
 ### WorkflowTree
- `WorkflowTree  `
+```
+WorkflowTree  
+```
 
 ### WorkflowAction
- `WorkflowAction  <path> <name>`
-
-
+```
+WorkflowAction  <path> <name>
+```
 
 
 ## See Also
