@@ -1,6 +1,7 @@
 ---
 title: Sequences
 weight: 3
+aliases: ['/docs/reference/vitess-sequences/']
 ---
 
 This document describes the Vitess Sequences feature, and how to use it.

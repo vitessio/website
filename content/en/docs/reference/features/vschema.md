@@ -1,6 +1,6 @@
 ---
 title: VSchema
-aliases: ['/docs/schema-management/vschema/']
+aliases: ['/docs/schema-management/vschema/','/docs/reference/vschema/']
 ---
 
 ## VSchemas describe how to shard data

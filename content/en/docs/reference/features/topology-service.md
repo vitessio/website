@@ -1,6 +1,6 @@
 ---
 title: Topology Service
-aliases: ['/docs/user-guides/topology-service/']
+aliases: ['/docs/user-guides/topology-service/','/docs/reference/topology-service/']
 ---
 
 This document describes the Topology Service, a key part of the Vitess architecture. This service is exposed to all Vitess processes, and is used to store small pieces of configuration data about the Vitess cluster, and provide cluster-wide locks. It also supports watches, and master election.

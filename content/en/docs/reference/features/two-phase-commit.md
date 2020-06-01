@@ -1,6 +1,6 @@
 ---
 title: Two-Phase Commit
-aliases: ['/docs/launching/twopc/']
+aliases: ['/docs/launching/twopc/','/docs/reference/two-phase-commit/']
 ---
 
 {{< warning >}}

@@ -2,7 +2,7 @@
 title: Sharding
 description: Shard widely, shard often.
 weight: 5
-aliases: ['/docs/sharding/','/user-guide/sharding.html']
+aliases: ['/docs/sharding/','/user-guide/sharding.html','/docs/reference/sharding/']
 ---
 
 Sharding is a method of horizontally partitioning a database to store data across two or more database servers. This document explains how sharding works in Vitess and the types of sharding that Vitess supports.

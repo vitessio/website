@@ -1,5 +1,6 @@
 ---
 title: vtexplain
+aliases: ['/docs/reference/vtexplain/']
 ---
 
 `vtexplain` is a command line tool which provides information on how Vitess plans to execute a particular query. It can be used to validate queries for compatibility with Vitess.

@@ -1,7 +1,7 @@
 ---
 title: Replication
 weight: 5
-aliases: ['/docs/reference/row-based-replication/','/docs/reference/vitess-replication/']
+aliases: ['/docs/reference/row-based-replication/','/docs/reference/vitess-replication/','/docs/reference/mysql-replication/']
 ---
 
 {{< warning >}}

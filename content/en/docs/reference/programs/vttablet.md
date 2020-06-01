@@ -1,6 +1,6 @@
 ---
 title: vttablet
-aliases: ['/docs/user-guides/vttablet-modes/']
+aliases: ['/docs/user-guides/vttablet-modes/','/docs/reference/vttablet-modes/']
 ---
 
 A VTTablet server _controls_ a running MySQL server. VTTablet supports two primary types of deployments:
