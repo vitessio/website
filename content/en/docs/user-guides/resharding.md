@@ -122,7 +122,7 @@ Since the primary vindex columns are `BIGINT`, we choose `hash` as the primary v
 
 ## Apply VSchema
 
-Applying the new VSchema instructs Vitess that the keyspace is sharded, which may prevent some complex queries. It is a good idea to [validate this](../vtexplain) before proceeding with this step. If you do notice that certain queries start failing, you can always revert temporaily by restoring the old VSchema. Make sure you fix all of the queries before proceeding to the Reshard process.
+Applying the new VSchema instructs Vitess that the keyspace is sharded, which may prevent some complex queries. It is a good idea to [validate this](../vtexplain) before proceeding with this step. If you do notice that certain queries start failing, you can always revert temporarily by restoring the old VSchema. Make sure you fix all of the queries before proceeding to the Reshard process.
 
 ### Using Helm
 
@@ -192,7 +192,7 @@ vtctlclient InitShardMaster -force customer/80- zone1-400
 
 ## Start the Reshard
 
-This process starts the reshard opration. It occurs online, and will not block any read or write operations to your database:
+This process starts the reshard operation. It occurs online, and will not block any read or write operations to your database:
 
 ```bash
 # With Helm and Local Installation
@@ -201,9 +201,23 @@ vtctlclient Reshard customer.cust2cust '0' '-80,80-'
 vtctlclient Reshard customer.cust2cust '-' '-80,80-'
 ```
 
+## Validate Correctness
+
+After the reshard is complete, we can use VDiff to check data integrity and ensure our source and target shards are consistent:
+
+```bash
+vtctlclient VDiff customer.cust2cust
+```
+
+You should see output similar to the following:
+```bash
+Summary for customer: {ProcessedRows:5 MatchingRows:5 MismatchedRows:0 ExtraRowsSource:0 ExtraRowsTarget:0}
+Summary for corder: {ProcessedRows:5 MatchingRows:5 MismatchedRows:0 ExtraRowsSource:0 ExtraRowsTarget:0}
+```
+
 ## Switch Reads
 
-Once the reshard is complete, the first step is to switch read operations to occur at the new location. By switching read operations first, we are able to verify that the new tablet servers are healthy and able to respond to requests:
+After validating for correctness, the next step is to switch read operations to occur at the new location. By switching read operations first, we are able to verify that the new tablet servers are healthy and able to respond to requests:
 
 ```bash
 vtctlclient SwitchReads -tablet_type=rdonly customer.cust2cust
