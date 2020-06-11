@@ -1,10 +1,10 @@
 ---
-title: Kubernetes Operator
+title: Vitess Operator for Kubernetes
 weight: 3
 featured: true
 ---
 
-PlanetScale provides a [Kubernetes Operator for Vitess](https://github.com/planetscale/vitess-operator), released under the Apache 2.0 license. The following steps show how to get started using Minikube:
+PlanetScale provides a [Vitess Operator for Kubernetes](https://github.com/planetscale/vitess-operator), released under the Apache 2.0 license. The following steps show how to get started using Minikube:
 
 ## Prerequisites
 
