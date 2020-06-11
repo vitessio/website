@@ -36,7 +36,7 @@ mysqlctl \
 
 ### reinit_config
 
-Regenerate new configuration files for an existing `mysqld` instance. This could be helpful to revert configuration changes, or to pick up changes made to the bundled config in newer Vitess versions:
+Regenerate new configuration files for an existing `mysqld` instance. This could be helpful to revert configuration changes, or to pick up changes made to the bundled config in newer Vitess versions. For example:
 
 ```bash
 export VTDATAROOT=/tmp
@@ -125,7 +125,7 @@ The following global parameters apply to `mysqlctl`:
 | grpc_enable_tracing | boolean | Enable GRPC tracing |
 | grpc_initial_conn_window_size | int | grpc initial connection window size |
 | grpc_initial_window_size | int | grpc initial window size |
-| grpc_keepalive_time | duration | After a duration of this time if the client doesn't see any activity it pings the server to see if the transport is still alive. (default 10s) |
+| grpc_keepalive_time | duration | After a duration of this time, if the client doesn't see any activity, it pings the server to see if the transport is still alive. (default 10s) | 
 | grpc_keepalive_timeout | duration | After having pinged for keepalive check, the client waits for a duration of Timeout and if no activity is seen even after that the connection is closed. (default 10s) |
 | grpc_key | string | key to use, requires grpc_cert, enables TLS |
 | grpc_max_connection_age | duration | Maximum age of a client connection before GoAway is sent. (default 2562047h47m16.854775807s) |
@@ -133,10 +133,10 @@ The following global parameters apply to `mysqlctl`:
 | grpc_max_message_size | int | Maximum allowed RPC message size. Larger messages will be rejected by gRPC with the error 'exceeding the max size'. (default 16777216) |
 | grpc_port | int | Port to listen on for gRPC calls |
 | grpc_prometheus | boolean | Enable gRPC monitoring with Prometheus |
-| grpc_server_initial_conn_window_size | int | grpc server initial connection window size |
-| grpc_server_initial_window_size | int | grpc server initial window size |
-| grpc_server_keepalive_enforcement_policy_min_time | duration | grpc server minimum keepalive time (default 5m0s) |
-| grpc_server_keepalive_enforcement_policy_permit_without_stream | boolean |  grpc server permit client keepalive pings even when there are no active streams (RPCs) |
+| grpc_server_initial_conn_window_size | int | gRPC server initial connection window size |
+| grpc_server_initial_window_size | int | gRPC server initial window size |
+| grpc_server_keepalive_enforcement_policy_min_time | duration | gRPC server minimum keepalive time (default 5m0s) |
+| grpc_server_keepalive_enforcement_policy_permit_without_stream | boolean |  gRPC server permit client keepalive pings even when there are no active streams (RPCs) |
 | jaeger-agent-host | string | host and port to send spans to. if empty, no tracing will be done |
 | keep_logs | duration | keep logs for this long (using ctime) (zero to keep forever) |
 | keep_logs_by_mtime | duration | keep logs for this long (using mtime) (zero to keep forever) |
@@ -154,7 +154,7 @@ The following global parameters apply to `mysqlctl`:
 | mysql_auth_static_reload_interval | duration | Ticker to reload credentials |
 | mysql_clientcert_auth_method | string | client-side authentication method to use. Supported values: mysql_clear_password, dialog. (default "mysql_clear_password") |
 | mysql_port | int | mysql port (default 3306) |
-| mysql_server_flush_delay | duration | Delay after which buffered response will flushed to client. (default 100ms) |
+| mysql_server_flush_delay | duration | Delay after which buffered response will be flushed to the client. (default 100ms) |
 | mysql_socket | string | path to the mysql socket |
 | mysqlctl_client_protocol | string | the protocol to use to talk to the mysqlctl server (default "grpc") |
 | mysqlctl_mycnf_template | string | template file to use for generating the my.cnf file during server init |
