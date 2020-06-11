@@ -1,6 +1,6 @@
 ---
 title: Vindexes
-aliases: ['/docs/schema-management/consistent-lookup/']
+aliases: ['/docs/schema-management/consistent-lookup/','/docs/reference/vindexes/']
 ---
 
 ## A Vindex maps column values to keyspace IDs

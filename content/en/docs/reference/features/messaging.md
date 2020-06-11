@@ -1,6 +1,6 @@
 ---
-title: Vitess Messaging
-aliases: ['/docs/advanced/messaging/']
+title: Messaging
+aliases: ['/docs/advanced/messaging/','/docs/reference/messaging/']
 ---
 
 Vitess messaging gives the application an easy way to schedule and manage work

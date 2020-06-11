@@ -3,7 +3,7 @@
 </h3>
 
 <ul>
-  {{ range .Pages }}
+  {{ range where .Pages "Params.series" "!=" "vtctl" }}
   <li>
     <a href="{{ .RelPermalink }}">
       {{ .Title }}

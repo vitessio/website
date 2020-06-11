@@ -1,6 +1,6 @@
 ---
 title: VReplication
-aliases: ['/docs/advanced/vreplication/','/user-guide/update-stream/']
+aliases: ['/docs/advanced/vreplication/','/user-guide/update-stream/','/docs/reference/vreplication/']
 ---
 
 VReplication is a core component of Vitess that can be used to compose
