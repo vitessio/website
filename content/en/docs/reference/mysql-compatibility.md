@@ -20,7 +20,7 @@ Vitess supports MySQL DDL, and will send `ALTER TABLE` statements to each of the
 
 ### Join Queries
 
-Vitess supports `INNER JOIN` including cross-shard joins. `LEFT JOIN` is supported as long as long as there are not expressions that compare columns on the outer table to the inner table in sharded keyspaces.
+Vitess supports `INNER JOIN` including cross-shard joins. `LEFT JOIN` is supported as long as there are not expressions that compare columns on the outer table to the inner table in sharded keyspaces.
 
 ### Aggregation
 
