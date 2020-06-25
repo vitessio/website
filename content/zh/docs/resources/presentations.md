@@ -27,7 +27,7 @@ KubeCon有关Vitess的演示:
 * [Geo-partitioning with Vitess](https://kccncna19.sched.com/event/UagI/geo-partitioning-with-vitess-deepthi-sigireddi-jitendra-vaidya-planetscale) - Deepthi Sigireddi & Jitendra Vaidya, PlanetScale
 * [Gone in 60 Minutes: Migrating 20 TB from AKS to GKE in an Hour with Vitess](https://kccncna19.sched.com/event/UaYn/gone-in-60-minutes-migrating-20-tb-from-aks-to-gke-in-an-hour-with-vitess-derek-perkins-nozzle) - Derek Perkins, Nozzle
 
-Vitess was also featured during the [CNCF project updates keynote](https://www.youtube.com/watch?v=two3TzF9mVY&feature=youtu.be&t=105)!
+Vitess也出现在[CNCF](https://www.youtube.com/watch?v=two3TzF9mVY&feature=youtu.be&t=105)的主题演讲中!
 
 ## Highload 2019
 
@@ -37,13 +37,13 @@ Sugu Sougoumarane 在莫斯科的Highload会议介绍Vitess。
 
 ## Utah Kubernetes Meetup 2019
 
-Jiten Vaidya shows how you can extend Vitess to create jurisdiction-aware database clusters.
+Jiten Vaidya展示了如何扩展Vitess来创建 jurisdiction-aware数据库集群。
 
 {{< pdf src="/ViewerJS/#../files/2019-jiten-utah.pdf" >}}
 
 ## CNCF Meetup Paris 2019
 
-Sugu Sougoumarane and Morgan Tocker present a three hour Vitess workshop on Kubernetes.
+Sugu Sougoumarane和Morgan Tocker主持了一个关于如何在Kubernetes上使用Vitess的三个小时的演讲。
 
 {{< pdf src="/ViewerJS/#../files/2019-paris-cncf.pdf" >}}
 
@@ -51,14 +51,14 @@ Sugu Sougoumarane and Morgan Tocker present a three hour Vitess workshop on Kube
 
 **My First 90 Days with Vitess**
 
-Morgan Tocker talks about his adventures in Vitess, after having come from a MySQL background.
+Morgan Tocker 讲述了他与Vitess的经历。
 
 {{< pdf src="/ViewerJS/#../files/2019-morgan-percona-eu.pdf" >}}
 
 
 **Sharded MySQL on Kubernetes**
 
-Sugu Sougoumarane presents an overview of running sharded MySQL on Kubernetes.
+Sugu Sougoumarane介绍了如何在Kubernetes上运行切分MySQL。
 
 {{< pdf src="/ViewerJS/#../files/2019-sugu-percona-eu.pdf" >}}
 
@@ -66,7 +66,7 @@ Sugu Sougoumarane presents an overview of running sharded MySQL on Kubernetes.
 
 **Vitess: New and Coming Soon!**
 
-Deepthi Sigireddi shares new features recently introduced in Vitess, and what's on the roadmap moving forward.
+Deepthi Sigireddi分享了Vitess的新特性，以及未来的路线图。
 
 {{< pdf src="/ViewerJS/#../files/2019-deepthi-vitess-meetup.pdf" >}}
 
@@ -150,13 +150,19 @@ David Cohen (Intel), Steve Shaw (Intel) 和 Jiten Vaidya (PlanetScale) 讨论开
 
 **Smooth scaling: Slack’s journey toward a new database**
 
-Slack has experienced tremendous growth for a young company, serving over nine million weekly active customers. But with great growth comes greater growth pains. Slack’s rapid growth over the last few years outpaced the scaling capacity of its original sharded MySQL database, which negatively impacted the company’s customers and engineers.
 
-Ameet Kotian explains how a small team of engineers embarked on a journey for the right database solution, which eventually led them to Vitess, a powerful open source database cluster solution for MySQL. Vitess combines the features of MySQL with the scalability of a NoSQL database. It has been serving Youtube’s traffic for numerous years and has a strong community.
+1230/5000
 
-Although Vitess meets a lot of Slack’s needs, it’s not an out-of-the-box solution. Ameet shares how the journey to Vitess was planned and executed, with little customer impact, in the face of piling operational challenges, such as AWS issues, MySQL replication, automatic failovers, deployments strategies, and so forth. Ameet also covers Vitess’s architecture, trade-offs, and what the future of Vitess looks like at Slack.
+作为一个年轻的公司，Slack经历了巨大的增长，每周服务超过900万活跃客户。但随着经济的增长，随之而来的是更大的增长痛苦。Slack在过去几年的快速增长超过了其原始的sharded MySQL数据库的扩展能力，这对公司的客户和工程师造成了负面影响。
 
-Ameet Kotkian, senior storage operations engineer at Slack, shows us how Slack uses Vitess.
+
+Ameet Kotian解释了一小群工程师是如何开始寻找正确的数据库解决方案的，最终他们找到了Vitess，一个强大的MySQL开源数据库集群解决方案。Vitess结合了MySQL的特性和NoSQL数据库的可伸缩性。它多年来一直为Youtube提供流量服务，并拥有强大的社区。
+
+
+尽管Vitess满足了Slack的很多需求，但它并不是一个开箱即用的解决方案。Ameet分享了在面对堆叠操作挑战(如AWS问题、MySQL复制、自动故障转移、部署策略等)时，如何在几乎不影响客户的情况下计划和执行Vitess的旅程。Ameet还涵盖了Vitess的架构、权衡，以及在Slack下Vitess的未来会是什么样子。
+
+
+Slack的高级存储操作工程师Ameet Kotkian向我们展示了Slack是如何使用Vitess的。
 
 <iframe src = "/ViewerJS/#../files/20181002-ameet-velocity-slides.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
 
@@ -164,21 +170,21 @@ Ameet Kotkian, senior storage operations engineer at Slack, shows us how Slack u
 
 **Migrating to Vitess at (Slack) Scale**
 
-Slack is embarking on a major migration of the MySQL infrastructure at the core of our service to use Vitess' flexible sharding and management instead of our simple application-based shard routing and manual administration. This effort is driven by the need for an architecture that scales to meet the growing demands of our largest customers and features under the pressure to maintain a stable and performant service that executes billions of MySQL transactions per hour. This talk will present the driving motivations behind the change, why Vitess won out as the best option, and how we went about laying the groundwork for the switch. Finally, we will discuss some challenges and surprises (both good and bad) found during our initial migration efforts, and suggest some ways in which the Vitess ecosystem can improve that will aid future migration efforts.
+Slack正在对MySQL基础设施进行重大迁移，以使用Vitess灵活的分片和管理，而不是我们简单的基于应用程序的分片路由和手动管理。这种努力是由架构的需求驱动的，该架构可扩展以满足我们最大客户不断增长的需求，并在压力下保持稳定和高性能的服务，每小时执行数十亿的MySQL事务。这次演讲将展示变革背后的动机，为什么Vitess胜出成为最佳选择，以及我们如何为变革奠定基础。最后，我们将讨论在我们最初的迁移工作中发现的一些挑战和意外(好的和坏的)，并提出一些改进Vitess生态系统的方法，以帮助未来的迁移工作。
 
-Michael Demmer shows us how, at [Percona Live Europe 2017](https://www.percona.com/live/e17/sessions/migrating-to-vitess-at-slack-scale).
+Michael Demmer在[Percona Live Europe 2017](https://www.percona.com/live/e17/sessions/migrating-to-vitess-at-slack-scale)告诉我们他们是如何迁移到Vitess。
 
 {{< pdf src="/ViewerJS/#../files/2017-demmer-percona.pdf" >}}
 
 ## Vitess Deep Dive sessions
 
-Start with session 1 and work your way through the playlist. This series focuses on the V3 engine of VTGate.
+这些视频介绍了VTGate的V3引擎。
 
 {{< youtube id="6yOjF7qhmyY" autoplay="false" >}}
 
 ## Percona Live 2016
 
-[Sugu](https://github.com/sougou)和[Anthony](https://github.com/enisoc) showed what it looks like to use Vitess now that Keyspace IDs can be completely hidden from the application. They gave a live demo of resharding the Guestbook sample app, which now knows nothing about shards, and explained how new features in VTGate make all of this possible.
+[Sugu](https://github.com/sougou)和[Anthony](https://github.com/enisoc) showed what it looks like to use Vitess now that Keyspace IDs can be completely hidden from the application. 他们现场演示了如何重新分片一个留声簿应用程序，并解释了VTGate的新功能是如何实现这一点的。
 
 {{< pdf src="/ViewerJS/#../files/percona-2016.pdf" >}}
 
@@ -186,28 +192,25 @@ Start with session 1 and work your way through the playlist. This series focuses
 
 Vitess队员[Anthony Yeh](https://github.com/enisoc)'s talk at
 the [January 2016 CoreOS Meetup](http://www.meetup.com/coreos/events/228233948/)
-discussed challenges and techniques for running distributed databases
-within Kubernetes, followed by a deep dive into the design trade-offs
-of the [Vitess on Kubernetes](https://github.com/vitessio/vitess/tree/master/examples/kubernetes)
-deployment templates.
+讨论了在Kubernetes中运行分布式数据库的挑战和技术，然后深入探讨了[Vitess在Kubernetes](https://github.com/vitessio/vitess/tree/master/examples/kubernetes)部署模板上的设计权衡。
 
 {{< pdf src="/ViewerJS/#../files/coreos-meetup-2016-01-27.pdf" >}}
 
 ## Oracle OpenWorld 2015
 
-Vitess队员[Anthony Yeh](https://github.com/enisoc)'s talk at Oracle OpenWorld 2015 focused on what the [Cloud Native Computing](http://cncf.io) paradigm means when applied to MySQL in the cloud. The talk also included a deep dive into [transparent, live resharding](../../sharding), one of the key
-features of Vitess that makes it well-adapted for a Cloud Native environment.
+Vitess队员[Anthony Yeh](https://github.com/enisoc)'s talk at Oracle OpenWorld 2015 focused on what the [Cloud Native Computing](http://cncf.io) paradigm means when applied to MySQL in the cloud.这次演讲还包括了对[transparent, live resharding](../../sharding)的深入探讨，这是关键之一
+Vitess的特性使其能够很好地适应原生云的环境.
 
 {{< pdf src="/ViewerJS/#../files/openworld-2015-vitess.pdf" >}}
 
 ## Percona Live 2015
 
-Vitess队员[Anthony Yeh](https://github.com/enisoc)'s talk at Percona Live 2015 provided an overview of Vitess as well as an explanation of how Vitess has evolved to live in a containerized world with Kubernetes and Docker.
+Vitess队员[Anthony Yeh](https://github.com/enisoc)'s 2015年Percona Live上的演讲提供了Vitess的概述 2015年Percona Live提供了Vitess的概述，并解释了Vitess是如何与Kubernetes和Docker一起生活在一个集装箱化的世界里。
 
 {{< pdf src="/ViewerJS/#../files/percona-2015-vitess-and-kubernetes.pdf" >}}
 
 ## Google I/O 2014 - Scaling with Go: YouTube's Vitess
 
-Vitess队员Sugu Sougoumarane](https://github.com/sougou) talks about how Vitess solved YouTube's scalability problems as well as about tips and techniques used to scale with Go.<br><br>
+Vitess队员Sugu Sougoumarane](https://github.com/sougou) 谈论Vitess如何解决YouTube的可伸缩性问题，以及如何使用Go实现更好的可伸缩性的技巧。<br><br>
 
 {{< youtube id="midJ6b1LkA0" autoplay="false" >}}
