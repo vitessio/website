@@ -6,7 +6,7 @@ featured: true
 aliases: ['/docs/tutorials/local-docker/']
 ---
 
-This guide illustrates how to run a local testing Vitess setup via Docker. The Vitess environment is identical to the [local setup](../local-docker/), but without having to install software on one's host other than Docker.
+This guide illustrates how to run a local testing Vitess setup via Docker. The Vitess environment is identical to the [local setup](../local/), but without having to install software on one's host other than Docker.
 
 ## Check out the vitessio/vitess repository
 
