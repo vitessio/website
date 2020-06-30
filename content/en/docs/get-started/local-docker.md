@@ -6,187 +6,52 @@ featured: true
 aliases: ['/docs/tutorials/local-docker/']
 ---
 
-This guide covers installing Vitess locally for testing purposes, from pre-compiled binaries. We will launch multiple copies of `mysqld`, so it is recommended to have greater than 4GB RAM, as well as 20GB of available disk space.
+This guide illustrates how to run a local testing Vitess setup via Docker. The Vitess environment is identical to the [local setup](../local-docker/), but without having to install software on one's host other than Docker.
 
-## Install MySQL and etcd
+## Check out the vitessio/vitess repository
 
-Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your installation method provides a choice:
+Clone the GitHub repository via:
 
-```sh
-# Ubuntu based
-sudo apt install -y mysql-server etcd curl
+- SSH: `git clone git@github.com:vitessio/vitess.git`, or:
+- HTTP: `git clone https://github.com/vitessio/vitess.git`
 
-# Debian
-sudo apt install -y default-mysql-server default-mysql-client etcd curl
-
-# Yum based
-sudo yum -y localinstall https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
-sudo yum -y install mysql-community-server etcd curl
+```shell
+cd vitess
 ```
 
-On apt-based distributions the services `mysqld` and `etcd` will need to be shutdown, since `etcd` will conflict with the `etcd` started in the examples, and `mysqlctl` will start its own copies of `mysqld`:
+## Build the docker image
 
-```sh
-# Debian and Ubuntu
-sudo service mysql stop
-sudo service etcd stop
-sudo systemctl disable mysql
-sudo systemctl disable etcd
+In your shell, execute:
+
+```shell
+make docker_local
 ```
 
-## Disable AppArmor or SELinux
+This creates a docker image named `vitess/local` (aka `vitess/local:latest`)
 
-AppArmor/SELinux will not allow Vitess to launch MySQL in any data directory by default. You will need to disable it:
+## Run the docker image
 
-__AppArmor__:
-```sh
-# Debian and Ubuntu
-sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
-sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
+Execute: 
 
-# The following command should return an empty result:
-sudo aa-status | grep mysqld
+```shell
+./docker/local/run.sh
 ```
 
-__SELinux__:
-```sh
-# CentOS
-sudo setenforce 0
-```
+This will set up a MySQL replication topology, as well as `etcd`, `vtctld` and `vtgate` services. 
 
-## Install Vitess
+- `vtgate` listens on [http://127.0.0.1:15001/debug/status](http://127.0.0.1:15001/debug/status) 
+- `vtctld` listens on [http://127.0.0.1:15000/debug/status](http://127.0.0.1:15000/debug/status) 
+- Control panel is available at [http://localhost:15000/app/](http://localhost:15000/app/)
 
-Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux. For example with Vitess 6:
+From within the docker shell, aliases are set up for your convenience. Try th efollowing `mysql` commands to connect to various tablets:
 
-```sh
-tar -xzf vitess-6.0.20-20200508-147bc5a.tar.gz
-cd vitess-6.0.20-20200508-147bc5a
-sudo mkdir -p /usr/local/vitess
-sudo mv * /usr/local/vitess/
-```
+- `mysql commerce`
+- `mysql commerce@master`
+- `mysql commerce@replica`
+- `mysql commerce@rdonly`
 
-Make sure to add `/usr/local/vitess/bin` to the `PATH` environment variable. You can do this by adding the following to your `$HOME/.bashrc` file:
+You will find that Vitess runs a single keyspace, single shart cluster.
 
-```sh
-export PATH=/usr/local/vitess/bin:${PATH}
-```
-
-You are now ready to start your first cluster! Open a new terminal window to ensure your `.bashrc` file changes take effect. 
-
-## Start a Single Keyspace Cluster
-
-Start by copying the local examples included with Vitess to your preferred location. For our first example we will deploy a [single unsharded keyspace](../../concepts/keyspace). The file `101_initial_cluster.sh` is for example `1` phase `01`. Lets execute it now:
-
-```sh
-cp -r /usr/local/vitess/examples/local ~/my-vitess-example
-cd ~/my-vitess-example
-./101_initial_cluster.sh
-```
-
-You should see output similar to the following:
-
-```text
-~/my-vitess-example> ./101_initial_cluster.sh
-$ ./101_initial_cluster.sh 
-add /vitess/global
-add /vitess/zone1
-add zone1 CellInfo
-etcd start done...
-Starting vtctld...
-Starting MySQL for tablet zone1-0000000100...
-Starting vttablet for zone1-0000000100...
-HTTP/1.1 200 OK
-Date: Wed, 25 Mar 2020 17:32:45 GMT
-Content-Type: text/html; charset=utf-8
-
-Starting MySQL for tablet zone1-0000000101...
-Starting vttablet for zone1-0000000101...
-HTTP/1.1 200 OK
-Date: Wed, 25 Mar 2020 17:32:53 GMT
-Content-Type: text/html; charset=utf-8
-
-Starting MySQL for tablet zone1-0000000102...
-Starting vttablet for zone1-0000000102...
-HTTP/1.1 200 OK
-Date: Wed, 25 Mar 2020 17:33:01 GMT
-Content-Type: text/html; charset=utf-8
-
-W0325 11:33:01.932674   16036 main.go:64] W0325 17:33:01.930970 reparent.go:185] master-elect tablet zone1-0000000100 is not the shard master, proceeding anyway as -force was used
-W0325 11:33:01.933188   16036 main.go:64] W0325 17:33:01.931580 reparent.go:191] master-elect tablet zone1-0000000100 is not a master in the shard, proceeding anyway as -force was used
-..
-```
-
-You can also verify that the processes have started with `pgrep`:
-
-```bash
-~/my-vitess-example> pgrep -fl vtdataroot
-14119 etcd
-14176 vtctld
-14251 mysqld_safe
-14720 mysqld
-14787 vttablet
-14885 mysqld_safe
-15352 mysqld
-15396 vttablet
-15492 mysqld_safe
-15959 mysqld
-16006 vttablet
-16112 vtgate
-```
-
-_The exact list of processes will vary. For example, you may not see `mysqld_safe` listed._
-
-If you encounter any errors, such as ports already in use, you can kill the processes and start over:
-
-```sh
-pkill -9 -e -f '(vtdataroot|VTDATAROOT)' # kill Vitess processes
-rm -rf vtdataroot
-```
-
-## Setup Aliases
-
-For ease-of-use, Vitess provides aliases for `mysql` and `vtctlclient`:
-
-```bash
-source ./env.sh
-```
-
-Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctlclient` or close your session.
-
-## Connect to your cluster
-
-You should now be able to connect to the VTGate server that was started in `101_initial_cluster.sh`:
-
-```bash
-~/my-vitess-example> mysql
-Welcome to the MySQL monitor.  Commands end with ; or \g.
-Your MySQL connection id is 2
-Server version: 5.7.9-Vitess (Ubuntu)
-
-Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.
-
-Oracle is a registered trademark of Oracle Corporation and/or its
-affiliates. Other names may be trademarks of their respective
-owners.
-
-Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
-mysql> show tables;
-+-----------------------+
-| Tables_in_vt_commerce |
-+-----------------------+
-| corder                |
-| customer              |
-| product               |
-+-----------------------+
-3 rows in set (0.00 sec)
-```
-
-You can also browse to the vtctld console using the following URL:
-
-```text
-http://localhost:15000
-```
 
 ## Summary
 
@@ -223,9 +88,5 @@ The schema has been simplified to include only those fields that are significant
 
 You can now proceed with [MoveTables](../../user-guides/move-tables).
 
-Or alternatively, if you would like to teardown your example:
+Exiting the docker shell terminates and destroys the vitess cluster.
 
-```bash
-./401_teardown.sh
-rm -rf vtdataroot
-```
