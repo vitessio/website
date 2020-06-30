@@ -1,5 +1,5 @@
 ---
-title: Local setup via docker
+title: Local Install via Docker
 description: Instructions for using Vitess on your machine for testing purposes
 weight: 4
 featured: true
