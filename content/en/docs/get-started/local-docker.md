@@ -1,14 +1,12 @@
 ---
-title: Local Install
+title: Local setup via docker
 description: Instructions for using Vitess on your machine for testing purposes
 weight: 4
 featured: true
-aliases: ['/docs/tutorials/local/']
+aliases: ['/docs/tutorials/local-docker/']
 ---
 
 This guide covers installing Vitess locally for testing purposes, from pre-compiled binaries. We will launch multiple copies of `mysqld`, so it is recommended to have greater than 4GB RAM, as well as 20GB of available disk space.
-
-A [docker setup](../local-docker/) is also available, which requires no dependencies on your local host.
 
 ## Install MySQL and etcd
 
