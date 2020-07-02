@@ -72,7 +72,7 @@ Validates that all nodes that are reachable from this shard are consistent.
 
 ### ShardReplicationPositions
 
-Shows the replication status of each slave machine in the shard graph. In this case, the status refers to the replication lag between the master vttablet and the slave vttablet. In Vitess, data is always written to the master vttablet first and then replicated to all slave vttablets. Output is sorted by tablet type, then replication position. Use ctrl-C to interrupt command and see partial result if needed.
+Shows the replication status of each replica machine in the shard graph. In this case, the status refers to the replication lag between the master vttablet and the replica vttablet. In Vitess, data is always written to the master vttablet first and then replicated to all replica vttablets. Output is sorted by tablet type, then replication position. Use ctrl-C to interrupt command and see partial result if needed.
 
 #### Example
 
@@ -132,17 +132,15 @@ Sets the TabletControl record for a shard and type. Only use this for an emergen
 * <code>&lt;keyspace/shard&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables as well as the shard associated with the command. The keyspace must be identified by a string that does not contain whitespace, while the shard is typically identified by a string in the format <code>&lt;range start&gt;-&lt;range end&gt;</code>.
 * <code>&lt;tablet type&gt;</code> &ndash; Required. The vttablet's role. Valid values are:
 
-    * <code>backup</code> &ndash; A slaved copy of data that is offline to queries other than for backup purposes
-    * <code>batch</code> &ndash; A slaved copy of data for OLAP load patterns (typically for MapReduce jobs)
+    * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
+    * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
     * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
-    * <code>experimental</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
+    * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
     * <code>master</code> &ndash; A primary copy of data
-    * <code>rdonly</code> &ndash; A slaved copy of data for OLAP load patterns
-    * <code>replica</code> &ndash; A slaved copy of data ready to be promoted to master
+    * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
+    * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to master
     * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
-    * <code>schema_apply</code> &ndash; A slaved copy of data that had been serving query traffic but that is now applying a schema change. Following the change, the tablet will revert to its serving type.
-    * <code>snapshot_source</code> &ndash; A slaved copy of data where mysqld is <b>not</b> running and where Vitess is serving data files to clone slaves. Use this command to enter this mode: <pre>vtctl Snapshot -server-mode ...</pre> Use this command to exit this mode: <pre>vtctl SnapshotSourceEnd ...</pre>
-    * <code>spare</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
+    * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
 
 
 #### Errors
@@ -316,7 +314,7 @@ Removes a backup for the BackupStorage.
 
 ### InitShardMaster
 
-Sets the initial master for a shard. Will make all other tablets in the shard slaves of the provided master. WARNING: this could cause data loss on an already replicating shard. PlannedReparentShard or EmergencyReparentShard should be used instead.
+Sets the initial master for a shard. Will make all other tablets in the shard replicas of the provided master. WARNING: this could cause data loss on an already replicating shard. PlannedReparentShard or EmergencyReparentShard should be used instead.
 
 #### Example
 
@@ -327,7 +325,7 @@ Sets the initial master for a shard. Will make all other tablets in the shard sl
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | force | Boolean | will force the reparent even if the provided tablet is not a master or the shard master |
-| wait_slave_timeout | Duration | time to wait for slaves to catch up in reparenting |
+| wait_slave_timeout | Duration | time to wait for replicas to catch up in reparenting |
 
 
 #### Arguments
@@ -355,7 +353,7 @@ Reparents the shard to the new master, or away from old master. Both old and new
 | avoid_master | string | alias of a tablet that should not be the master, i.e. reparent to any other tablet if this one is the master |
 | keyspace_shard | string | keyspace/shard of the shard that needs to be reparented |
 | new_master | string | alias of a tablet that should be the new master |
-| wait_slave_timeout | Duration | time to wait for slaves to catch up in reparenting |
+| wait_slave_timeout | Duration | time to wait for replicas to catch up in reparenting |
 
 
 #### Errors
@@ -378,7 +376,7 @@ Reparents the shard to the new master. Assumes the old master is dead and not re
 | :-------- | :--------- | :--------- |
 | keyspace_shard | string | keyspace/shard of the shard that needs to be reparented |
 | new_master | string | alias of a tablet that should be the new master |
-| wait_slave_timeout | Duration | time to wait for slaves to catch up in reparenting |
+| wait_slave_timeout | Duration | time to wait for replicas to catch up in reparenting |
 
 
 #### Errors

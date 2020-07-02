@@ -206,7 +206,7 @@ The following global options apply to `vttablet`:
 | -log_queries_to_file | string | Enable query logging to the specified file |
 | -log_rotate_max_size | uint | size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800) |
 | -logtostderr |  | log to standard error instead of files |
-| -master_connect_retry | duration | how long to wait in between slave -> connection attempts. Only precise to the second. (default 10s) |
+| -master_connect_retry | duration | how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s) |
 | -mem-profile-rate | int | profile every n bytes allocated (default 524288) |
 | -min_number_serving_vttablets | int | the minimum number of vttablets that will be continue to be used even with low replication lag (default 2) |
 | -mutex-profile-fraction | int | profile every n mutex contention events (see runtime.SetMutexProfileFraction) |
@@ -224,7 +224,6 @@ The following global options apply to `vttablet`:
 | -mycnf_relay_log_info_path | string | mysql relay log info path |
 | -mycnf_relay_log_path | string | mysql relay log path |
 | -mycnf_server_id | int | mysql server id of the server (if specified, mycnf-file will be ignored) |
-| -mycnf_slave_load_tmp_dir | string | slave load tmp directory |
 | -mycnf_slow_log_path | string | mysql slow query log path |
 | -mycnf_socket_file | string | mysql socket file |
 | -mycnf_tmp_dir | string | mysql tmp directory |

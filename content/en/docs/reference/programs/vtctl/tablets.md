@@ -38,17 +38,15 @@ Initializes a tablet in the topology.
 * <code>&lt;tablet alias&gt;</code> &ndash; Required. A Tablet Alias uniquely identifies a vttablet. The argument value is in the format <code>&lt;cell name&gt;-&lt;uid&gt;</code>.
 * <code>&lt;tablet type&gt;</code> &ndash; Required. The vttablet's role. Valid values are:
 
-    * <code>backup</code> &ndash; A slaved copy of data that is offline to queries other than for backup purposes
-    * <code>batch</code> &ndash; A slaved copy of data for OLAP load patterns (typically for MapReduce jobs)
+    * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
+    * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
     * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
-    * <code>experimental</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
+    * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
     * <code>master</code> &ndash; A primary copy of data
-    * <code>rdonly</code> &ndash; A slaved copy of data for OLAP load patterns
-    * <code>replica</code> &ndash; A slaved copy of data ready to be promoted to master
+    * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
+    * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to master
     * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
-    * <code>schema_apply</code> &ndash; A slaved copy of data that had been serving query traffic but that is now applying a schema change. Following the change, the tablet will revert to its serving type.
-    * <code>snapshot_source</code> &ndash; A slaved copy of data where mysqld is <b>not</b> running and where Vitess is serving data files to clone slaves. Use this command to enter this mode: <pre>vtctl Snapshot -server-mode ...</pre> Use this command to exit this mode: <pre>vtctl SnapshotSourceEnd ...</pre>
-    * <code>spare</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
+    * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
 
 
 #### Errors
@@ -228,17 +226,15 @@ Changes the db type for the specified tablet, if possible. This command is used 
 * <code>&lt;tablet alias&gt;</code> &ndash; Required. A Tablet Alias uniquely identifies a vttablet. The argument value is in the format <code>&lt;cell name&gt;-&lt;uid&gt;</code>.
 * <code>&lt;tablet type&gt;</code> &ndash; Required. The vttablet's role. Valid values are:
 
-    * <code>backup</code> &ndash; A slaved copy of data that is offline to queries other than for backup purposes
-    * <code>batch</code> &ndash; A slaved copy of data for OLAP load patterns (typically for MapReduce jobs)
+    * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
+    * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
     * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
-    * <code>experimental</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
+    * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
     * <code>master</code> &ndash; A primary copy of data
-    * <code>rdonly</code> &ndash; A slaved copy of data for OLAP load patterns
-    * <code>replica</code> &ndash; A slaved copy of data ready to be promoted to master
+    * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
+    * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to master
     * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
-    * <code>schema_apply</code> &ndash; A slaved copy of data that had been serving query traffic but that is now applying a schema change. Following the change, the tablet will revert to its serving type.
-    * <code>snapshot_source</code> &ndash; A slaved copy of data where mysqld is <b>not</b> running and where Vitess is serving data files to clone slaves. Use this command to enter this mode: <pre>vtctl Snapshot -server-mode ...</pre> Use this command to exit this mode: <pre>vtctl SnapshotSourceEnd ...</pre>
-    * <code>spare</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
+    * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
 
 #### Errors
 
@@ -462,7 +458,7 @@ Stops mysqld and restores the data from the latest backup.
 
 ### ReparentTablet
 
-Reparent a tablet to the current master in the shard. This only works if the current slave position matches the last known reparent action.
+Reparent a tablet to the current master in the shard. This only works if the current replication position matches the last known reparent action.
 
 #### Example
 

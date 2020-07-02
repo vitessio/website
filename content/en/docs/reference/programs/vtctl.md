@@ -280,7 +280,7 @@ The following global options apply to `vtctl`:
 | -log_err_stacks | | log stack traces for errors |
 | -log_rotate_max_size | uint | size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800) |
 | -logtostderr | | log to standard error instead of files |
-| -master_connect_retry | duration | how long to wait in between slave -> connection attempts. Only precise to the second. (default 10s) |
+| -master_connect_retry | duration | how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s) |
 | -mem-profile-rate | int | profile every n bytes allocated (default 524288) |
 | -min_number_serving_vttablets | int | the minimum number of vttablets that will be continue to be used even with low replication lag (default 2) |
 | -mutex-profile-fraction | int | profile every n mutex contention events (see runtime.SetMutexProfileFraction) |

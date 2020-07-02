@@ -100,7 +100,7 @@ Reloads the schema on all the tablets in a keyspace.
 
 ### ValidateSchemaShard
 
-Validates that the master schema matches all of the slaves.
+Validates that the master schema matches all of the replicas.
 
 #### Example
 
@@ -148,7 +148,7 @@ Validates that the master schema from shard 0 matches the schema on all of the o
 
 ### ApplySchema
 
-Applies the schema change to the specified keyspace on every master, running in parallel on all shards. The changes are then propagated to slaves via replication. If -allow_long_unavailability is set, schema changes affecting a large number of rows (and possibly incurring a longer period of unavailability) will not be rejected.
+Applies the schema change to the specified keyspace on every master, running in parallel on all shards. The changes are then propagated to replicas via replication. If -allow_long_unavailability is set, schema changes affecting a large number of rows (and possibly incurring a longer period of unavailability) will not be rejected.
 
 #### Example
 
@@ -161,7 +161,7 @@ Applies the schema change to the specified keyspace on every master, running in 
 | allow_long_unavailability | Boolean | Allow large schema changes which incur a longer unavailability of the database. |
 | sql | string | A list of semicolon-delimited SQL commands |
 | sql-file | string | Identifies the file that contains the SQL commands |
-| wait_slave_timeout | Duration | The amount of time to wait for slaves to receive the schema change via replication. |
+| wait_slave_timeout | Duration | The amount of time to wait for replicas to receive the schema change via replication. |
 
 
 #### Arguments
@@ -187,7 +187,7 @@ Copies the schema from a source shard's master (or a specific tablet) to a desti
 | exclude_tables | string | Specifies a comma-separated list of tables to exclude. Each is either an exact match, or a regular expression of the form /regexp/ |
 | include-views | Boolean | Includes views in the output |
 | tables | string | Specifies a comma-separated list of tables to copy. Each is either an exact match, or a regular expression of the form /regexp/ |
-| wait_slave_timeout | Duration | The amount of time to wait for slaves to receive the schema change via replication. |
+| wait_slave_timeout | Duration | The amount of time to wait for replicas to receive the schema change via replication. |
 
 
 #### Arguments
@@ -201,7 +201,7 @@ Copies the schema from a source shard's master (or a specific tablet) to a desti
 
 ### ValidateVersionShard
 
-Validates that the master version matches all of the slaves.
+Validates that the master version matches all of the replicas.
 
 #### Example
 
@@ -249,7 +249,7 @@ Displays the permissions for a tablet.
 
 ### ValidatePermissionsShard
 
-Validates that the master permissions match all the slaves.
+Validates that the master permissions match all the replicas.
 
 #### Example
 

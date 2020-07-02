@@ -42,9 +42,9 @@ GetSchema test-000000100
 
 ### ValidateSchemaShard
 
-The [`ValidateSchemaShard`](../../reference/vtctl/#validateschemashard) command confirms that for a given keyspace, all of the slave tablets in a specified shard have the same schema as the master tablet in that shard. When you call `ValidateSchemaShard`, you specify both the keyspace and the shard that you are validating.
+The [`ValidateSchemaShard`](../../reference/vtctl/#validateschemashard) command confirms that for a given keyspace, all of the replica tablets in a specified shard have the same schema as the master tablet in that shard. When you call `ValidateSchemaShard`, you specify both the keyspace and the shard that you are validating.
 
-The following command confirms that the master and slave tablets in shard `0` all have the same schema for the `user` keyspace:
+The following command confirms that the master and replica tablets in shard `0` all have the same schema for the `user` keyspace:
 
 ``` sh
 ValidateSchemaShard user/0
@@ -88,7 +88,7 @@ Vitess' schema modification functionality is designed the following goals in min
 
 Note that, at this time, Vitess only supports [data definition statements](https://dev.mysql.com/doc/refman/5.6/en/sql-syntax-data-definition.html) that create, modify, or delete database tables. For instance, `ApplySchema` does not affect stored procedures or grants.
 
-The [ApplySchema](../../reference/vtctl/#applyvschema) command applies a schema change to the specified keyspace on every master tablet, running in parallel on all shards. Changes are then propagated to slaves via replication. The command format is: `ApplySchema {-sql=<sql> || -sql_file=<filename>} <keyspace>`
+The [ApplySchema](../../reference/vtctl/#applyvschema) command applies a schema change to the specified keyspace on every master tablet, running in parallel on all shards. Changes are then propagated to replicas via replication. The command format is: `ApplySchema {-sql=<sql> || -sql_file=<filename>} <keyspace>`
 
 When the `ApplySchema` action actually applies a schema change to the specified keyspace, it performs the following steps:
 
