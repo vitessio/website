@@ -88,7 +88,7 @@ Vitess' schema modification functionality is designed the following goals in min
 
 Note that, at this time, Vitess only supports [data definition statements](https://dev.mysql.com/doc/refman/5.6/en/sql-syntax-data-definition.html) that create, modify, or delete database tables. For instance, `ApplySchema` does not affect stored procedures or grants.
 
-The [ApplySchema](../../reference/vtctl/#applyvschema) command applies a schema change to the specified keyspace on every master tablet, running in parallel on all shards. Changes are then propagated to replicas via replication. The command format is: `ApplySchema {-sql=<sql> || -sql_file=<filename>} <keyspace>`
+The [ApplySchema](../../reference/vtctl/#applyvschema) command applies a schema change to the specified keyspace on every master tablet, running in parallel on all shards. Changes are then propagated to replicas. The command format is: `ApplySchema {-sql=<sql> || -sql_file=<filename>} <keyspace>`
 
 When the `ApplySchema` action actually applies a schema change to the specified keyspace, it performs the following steps:
 
