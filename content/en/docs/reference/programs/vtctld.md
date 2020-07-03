@@ -112,7 +112,7 @@ vtctld \
 | -log_err_stacks | boolean | log stack traces for errors |
 | -log_rotate_max_size | uint | size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800) |
 | -logtostderr | boolean | log to standard error instead of files |
-| -master_connect_retry | duration | how long to wait in between slave -> connection attempts. Only precise to the second. (default 10s) |
+| -master_connect_retry | duration | how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s) |
 | -mem-profile-rate | int | profile every n bytes allocated (default 524288) |
 | -min_number_serving_vttablets | int | the minimum number of vttablets that will be continue to be used even with low replication lag (default 2) |
 | -mutex-profile-fraction | int | profile every n mutex contention events (see runtime.SetMutexProfileFraction) |
@@ -173,12 +173,12 @@ vtctld \
 | -schema_change_check_interval | int | this value decides how often we check schema change dir, in seconds (default 60) |
 | -schema_change_controller | string | schema change controller is responsible for finding schema changes and responding to schema change events |
 | -schema_change_dir | string | directory contains schema changes for all keyspaces. Each keyspace has its own directory and schema changes are expected to live in '$KEYSPACE/input' dir. e.g. test_keyspace/input/*sql, each sql file represents a schema change |
-| -schema_change_slave_timeout | duration | how long to wait for slaves to receive the schema change (default 10s) |
+| -schema_change_slave_timeout | duration | how long to wait for replicas to receive the schema change (default 10s) |
 | -schema_change_user | string | The user who submits this schema change. |
 | -schema_swap_admin_query_timeout | duration | timeout for SQL queries used to save and retrieve meta information for schema swap process (default 30s) |
 | -schema_swap_backup_concurrency | int | number of simultaneous compression/checksum jobs to run for seed backup during schema swap (default 4) |
 | -schema_swap_delay_between_errors | duration | time to wait after a retryable error happened in the schema swap process (default 1m0s) |
-| -schema_swap_reparent_timeout | duration | timeout to wait for slaves when doing reparent during schema swap (default 30s) |
+| -schema_swap_reparent_timeout | duration | timeout to wait for replicas when doing reparent during schema swap (default 30s) |
 | -security_policy | string | the name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only) |
 | -service_map | value | comma separated list of services to enable (or disable if prefixed with '-') Example: grpc-vtworker |
 | -sql-max-length-errors | int | truncate queries in error logs to the given length (default unlimited) |

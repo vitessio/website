@@ -2,9 +2,9 @@
 title: Shard
 ---
 
-A *shard* is a division within a keyspace. A shard typically contains one MySQL master and many MySQL slaves.
+A *shard* is a division within a keyspace. A shard typically contains one MySQL master and many MySQL replicas.
 
-Each MySQL instance within a shard has the same data (excepting some replication lag). The slaves can serve read-only traffic (with eventual consistency guarantees), execute long-running data analysis tools, or perform administrative tasks (backup, restore, diff, etc.).
+Each MySQL instance within a shard has the same data (excepting some replication lag). The replicas can serve read-only traffic (with eventual consistency guarantees), execute long-running data analysis tools, or perform administrative tasks (backup, restore, diff, etc.).
 
 An unsharded keyspace has effectively one shard. Vitess names the shard `0` by convention. When sharded, a keyspace has `N` shards with non-overlapping data.
 
