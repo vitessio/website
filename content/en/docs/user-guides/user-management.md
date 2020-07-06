@@ -139,4 +139,4 @@ Note the use above of the following parameters:
  * `-queryserver-config-strict-table-acl`:  only allow queries that pass table acl checks to ensure we do not allow other users.  You will typically need to pass this parameter for the ACLs to be successfully enforced, unless you strictly limit the universe of potential users at the VTGate authentication level.
 
 The following option may be useful:
-  * `-queryserver-config-enable-table-acl-dry-run`:  Only emit metrics when an ACL denies a request, but let the actual request pass through successfully.  This allows you to test and verify ACL changes without running the risk of breakage.
+  * `-queryserver-config-enable-table-acl-dry-run`:  Only emits to the [TableACLPseudoDenied](configuring-components.md#tableaclallowed-tableacldenied-tableaclpseudodenied) metric when an ACL denies a request, but let the actual request pass through successfully.  This allows you to test and verify ACL changes without running the risk of breakage.
