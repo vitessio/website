@@ -1091,7 +1091,7 @@ Applies the schema change to the specified keyspace on every master, running in 
 
 #### Example
 
-<pre class="command-example">ApplySchema [-allow_long_unavailability] [-wait_slave_timeout=10s] {-sql=&lt;sql&gt; || -sql-file=&lt;filename&gt;} &lt;keyspace&gt;</pre>
+<pre class="command-example">ApplySchema [-allow_long_unavailability] [-wait_replicas_timeout=10s] {-sql=&lt;sql&gt; || -sql-file=&lt;filename&gt;} &lt;keyspace&gt;</pre>
 
 #### Flags
 
@@ -1100,7 +1100,7 @@ Applies the schema change to the specified keyspace on every master, running in 
 | allow_long_unavailability | Boolean | Allow large schema changes which incur a longer unavailability of the database. |
 | sql | string | A list of semicolon-delimited SQL commands |
 | sql-file | string | Identifies the file that contains the SQL commands |
-| wait_slave_timeout | Duration | The amount of time to wait for slaves to receive the schema change via replication. |
+| wait_replicas_timeout | Duration | The amount of time to wait for slaves to receive the schema change via replication. |
 
 
 #### Arguments
@@ -1146,7 +1146,7 @@ Copies the schema from a source shard's master (or a specific tablet) to a desti
 
 #### Example
 
-<pre class="command-example">CopySchemaShard [-tables=&lt;table1&gt;,&lt;table2&gt;,...] [-exclude_tables=&lt;table1&gt;,&lt;table2&gt;,...] [-include-views] [-wait_slave_timeout=10s] {&lt;source keyspace/shard&gt; || &lt;source tablet alias&gt;} &lt;destination keyspace/shard&gt;</pre>
+<pre class="command-example">CopySchemaShard [-tables=&lt;table1&gt;,&lt;table2&gt;,...] [-exclude_tables=&lt;table1&gt;,&lt;table2&gt;,...] [-include-views] [-wait_replicas_timeout=10s] {&lt;source keyspace/shard&gt; || &lt;source tablet alias&gt;} &lt;destination keyspace/shard&gt;</pre>
 
 #### Flags
 
@@ -1155,7 +1155,7 @@ Copies the schema from a source shard's master (or a specific tablet) to a desti
 | exclude_tables | string | Specifies a comma-separated list of tables to exclude. Each is either an exact match, or a regular expression of the form /regexp/ |
 | include-views | Boolean | Includes views in the output |
 | tables | string | Specifies a comma-separated list of tables to copy. Each is either an exact match, or a regular expression of the form /regexp/ |
-| wait_slave_timeout | Duration | The amount of time to wait for slaves to receive the schema change via replication. |
+| wait_replicas_timeout | Duration | The amount of time to wait for slaves to receive the schema change via replication. |
 
 
 #### Arguments
@@ -1578,7 +1578,7 @@ Reparents the shard to the new master. Assumes the old master is dead and not re
 | :-------- | :--------- | :--------- |
 | keyspace_shard | string | keyspace/shard of the shard that needs to be reparented |
 | new_master | string | alias of a tablet that should be the new master |
-| wait_slave_timeout | Duration | time to wait for slaves to catch up in reparenting |
+| wait_replicas_timeout | Duration | time to wait for slaves to catch up in reparenting |
 
 
 #### Errors
@@ -1611,14 +1611,14 @@ Sets the initial master for a shard. Will make all other tablets in the shard sl
 
 #### Example
 
-<pre class="command-example">InitShardMaster [-force] [-wait_slave_timeout=&lt;duration&gt;] &lt;keyspace/shard&gt; &lt;tablet alias&gt;</pre>
+<pre class="command-example">InitShardMaster [-force] [-wait_replicas_timeout=&lt;duration&gt;] &lt;keyspace/shard&gt; &lt;tablet alias&gt;</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | force | Boolean | will force the reparent even if the provided tablet is not a master or the shard master |
-| wait_slave_timeout | Duration | time to wait for slaves to catch up in reparenting |
+| wait_replicas_timeout | Duration | time to wait for slaves to catch up in reparenting |
 
 
 #### Arguments
@@ -1677,7 +1677,7 @@ Reparents the shard to the new master, or away from old master. Both old and new
 | avoid_master | string | alias of a tablet that should not be the master, i.e. reparent to any other tablet if this one is the master |
 | keyspace_shard | string | keyspace/shard of the shard that needs to be reparented |
 | new_master | string | alias of a tablet that should be the new master |
-| wait_slave_timeout | Duration | time to wait for slaves to catch up in reparenting |
+| wait_replicas_timeout | Duration | time to wait for slaves to catch up in reparenting |
 
 
 #### Errors
