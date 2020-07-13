@@ -318,14 +318,14 @@ Sets the initial master for a shard. Will make all other tablets in the shard re
 
 #### Example
 
-<pre class="command-example">InitShardMaster [-force] [-wait_slave_timeout=&lt;duration&gt;] &lt;keyspace/shard&gt; &lt;tablet alias&gt;</pre>
+<pre class="command-example">InitShardMaster [-force] [-wait_replicas_timeout=&lt;duration&gt;] &lt;keyspace/shard&gt; &lt;tablet alias&gt;</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | force | Boolean | will force the reparent even if the provided tablet is not a master or the shard master |
-| wait_slave_timeout | Duration | time to wait for replicas to catch up in reparenting |
+| wait_replicas_timeout | Duration | time to wait for replicas to catch up in reparenting |
 
 
 #### Arguments
@@ -353,7 +353,7 @@ Reparents the shard to the new master, or away from old master. Both old and new
 | avoid_master | string | alias of a tablet that should not be the master, i.e. reparent to any other tablet if this one is the master |
 | keyspace_shard | string | keyspace/shard of the shard that needs to be reparented |
 | new_master | string | alias of a tablet that should be the new master |
-| wait_slave_timeout | Duration | time to wait for replicas to catch up in reparenting |
+| wait_replicas_timeout | Duration | time to wait for replicas to catch up in reparenting |
 
 
 #### Errors
@@ -376,7 +376,7 @@ Reparents the shard to the new master. Assumes the old master is dead and not re
 | :-------- | :--------- | :--------- |
 | keyspace_shard | string | keyspace/shard of the shard that needs to be reparented |
 | new_master | string | alias of a tablet that should be the new master |
-| wait_slave_timeout | Duration | time to wait for replicas to catch up in reparenting |
+| wait_replicas_timeout | Duration | time to wait for replicas to catch up in reparenting |
 
 
 #### Errors
