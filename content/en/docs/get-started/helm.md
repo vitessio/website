@@ -1,9 +1,10 @@
 ---
-title: Kubernetes Helm Chart
-weight: 3
+title: Helm Chart (deprecated)
+weight: 4
 featured: true
-aliases: ['/docs/tutorials/kubernetes/','/user-guide/sharding-kubernetes.html', '/docs/get-started/scaleway/','/docs/get-started/kubernetes/']
 ---
+
+This tutorial is deprecated. We recommend that you use the [Operator](operator) instead.
 
 This tutorial demonstrates how Vitess can be used with Minikube to deploy Vitess clusters using Helm.
 

@@ -1,7 +1,8 @@
 ---
 title: Vitess Operator for Kubernetes
-weight: 3
+weight: 1
 featured: true
+aliases: ['/docs/tutorials/kubernetes/','/user-guide/sharding-kubernetes.html', '/docs/get-started/scaleway/','/docs/get-started/kubernetes/']
 ---
 
 PlanetScale provides a [Vitess Operator for Kubernetes](https://github.com/planetscale/vitess-operator), released under the Apache 2.0 license. The following steps show how to get started using Minikube:
