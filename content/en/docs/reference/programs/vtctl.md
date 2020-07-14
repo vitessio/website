@@ -18,9 +18,12 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 | [DeleteTablet](../vtctl/tablets#deletetablet) | `DeleteTablet [-allow_master] <tablet alias> ...` |
 | [SetReadOnly](../vtctl/tablets#setreadonly) | `SetReadOnly <tablet alias>` |
 | [SetReadWrite](../vtctl/tablets#setreadwrite) | `SetReadWrite <tablet alias>` |
-| [StartSlave](../vtctl/tablets#startslave) | `StartSlave <tablet alias>` |
-| [StopSlave](../vtctl/tablets#stopslave) | `StopSlave <tablet alias>` |
-| [ChangeSlaveType](../vtctl/tablets#changeslavetype) | `ChangeSlaveType [-dry-run] <tablet alias> <tablet type>` |
+| [StartReplication](../vtctl/tablets#startreplication) `StartReplication <tablet alias>` |
+| [StartSlave](../vtctl/tablets#startreplication) | `DEPRECATED -- Use StartReplication <tablet alias>` |
+| [StopReplication](../vtctl/tablets#stopreplication) `StopReplication <tablet alias>` |
+| [StopSlave](../vtctl/tablets#stopreplication) | `DEPRECATED -- Use StopReplication <tablet alias>` |
+| [ChangeTabletType](../vtctl/tablets#changetablettype) `ChangeTabletType [-dry-run] <tablet alias> <tablet type>` |
+| [ChangeSlaveType](../vtctl/tablets#changetablettype) | `DEPRECATED -- Use ChangeTabletType [-dry-run] <tablet alias> <tablet type>` |
 | [Ping](../vtctl/tablets#ping) | `Ping <tablet alias>` |
 | [RefreshState](../vtctl/tablets#refreshstate) | `RefreshState <tablet alias>` |
 | [RefreshStateByShard](../vtctl/tablets#refreshstatebyshard) | `RefreshStateByShard [-cells=c1,c2,...] <keyspace/shard>` |

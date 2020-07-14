@@ -172,13 +172,13 @@ Sets the tablet as read-write.
 * the <code>&lt;tablet alias&gt;</code> argument is required for the <code>&lt;SetReadWrite&gt;</code> command This error occurs if the command is not called with exactly one argument.
 * failed reading tablet %v: %v
 
-### StartSlave
+### StartReplication
 
 Starts replication on the specified tablet.
 
 #### Example
 
-<pre class="command-example">StartSlave &lt;tablet alias&gt;</pre>
+<pre class="command-example">StartReplication &lt;tablet alias&gt;</pre>
 
 #### Arguments
 
@@ -186,16 +186,16 @@ Starts replication on the specified tablet.
 
 #### Errors
 
-* action <code>&lt;StartSlave&gt;</code> requires <code>&lt;tablet alias&gt;</code> This error occurs if the command is not called with exactly one argument.
+* action <code>&lt;StartReplication&gt;</code> requires <code>&lt;tablet alias&gt;</code> This error occurs if the command is not called with exactly one argument.
 * failed reading tablet %v: %v
 
-### StopSlave
+### StopReplication
 
 Stops replication on the specified tablet.
 
 #### Example
 
-<pre class="command-example">StopSlave &lt;tablet alias&gt;</pre>
+<pre class="command-example">StopReplication &lt;tablet alias&gt;</pre>
 
 #### Arguments
 
@@ -203,16 +203,16 @@ Stops replication on the specified tablet.
 
 #### Errors
 
-* action <code>&lt;StopSlave&gt;</code> requires <code>&lt;tablet alias&gt;</code> This error occurs if the command is not called with exactly one argument.
+* action <code>&lt;StopReplication&gt;</code> requires <code>&lt;tablet alias&gt;</code> This error occurs if the command is not called with exactly one argument.
 * failed reading tablet %v: %v
 
-### ChangeSlaveType
+### ChangeTabletType
 
 Changes the db type for the specified tablet, if possible. This command is used primarily to arrange replicas, and it will not convert a master.<br><br>NOTE: This command automatically updates the serving graph.<br><br>
 
 #### Example
 
-<pre class="command-example">ChangeSlaveType [-dry-run] &lt;tablet alias&gt; &lt;tablet type&gt;</pre>
+<pre class="command-example">ChangeTabletType [-dry-run] &lt;tablet alias&gt; &lt;tablet type&gt;</pre>
 
 #### Flags
 
@@ -238,7 +238,7 @@ Changes the db type for the specified tablet, if possible. This command is used 
 
 #### Errors
 
-* the <code>&lt;tablet alias&gt;</code> and <code>&lt;db type&gt;</code> arguments are required for the <code>&lt;ChangeSlaveType&gt;</code> command This error occurs if the command is not called with exactly 2 arguments.
+* the <code>&lt;tablet alias&gt;</code> and <code>&lt;db type&gt;</code> arguments are required for the <code>&lt;ChangeTabletType&gt;</code> command This error occurs if the command is not called with exactly 2 arguments.
 * failed reading tablet %v: %v
 * invalid type transition %v: %v -&gt;</code> %v
 

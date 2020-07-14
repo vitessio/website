@@ -185,6 +185,6 @@ In that case, you can manually reset the tablet's master to the
 current shard master using the
 <code>[vtctl ReparentTablet]({% link reference/vtctl.md %}#reparenttablet)</code>
 command. You can then restart replication on the tablet if it was stopped
-by calling the <code>[vtctl StartSlave]({% link reference/vtctl.md %}#startslave)</code>
+by calling the <code>[vtctl StartReplication]({% link reference/vtctl.md %}#startreplication)</code>
 command.
 
