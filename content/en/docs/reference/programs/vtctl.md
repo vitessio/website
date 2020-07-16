@@ -18,9 +18,12 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 | [DeleteTablet](../vtctl/tablets#deletetablet) | `DeleteTablet [-allow_master] <tablet alias> ...` |
 | [SetReadOnly](../vtctl/tablets#setreadonly) | `SetReadOnly <tablet alias>` |
 | [SetReadWrite](../vtctl/tablets#setreadwrite) | `SetReadWrite <tablet alias>` |
-| [StartSlave](../vtctl/tablets#startslave) | `StartSlave <tablet alias>` |
-| [StopSlave](../vtctl/tablets#stopslave) | `StopSlave <tablet alias>` |
-| [ChangeSlaveType](../vtctl/tablets#changeslavetype) | `ChangeSlaveType [-dry-run] <tablet alias> <tablet type>` |
+| [StartReplication](../vtctl/tablets#startreplication) | `StartReplication <tablet alias>` |
+| [StartSlave](../vtctl/tablets#startreplication) | `DEPRECATED -- Use StartReplication <tablet alias>` |
+| [StopReplication](../vtctl/tablets#stopreplication) | `StopReplication <tablet alias>` |
+| [StopSlave](../vtctl/tablets#stopreplication) | `DEPRECATED -- Use StopReplication <tablet alias>` |
+| [ChangeTabletType](../vtctl/tablets#changetablettype) | `ChangeTabletType [-dry-run] <tablet alias> <tablet type>` |
+| [ChangeSlaveType](../vtctl/tablets#changetablettype) | `DEPRECATED -- Use ChangeTabletType [-dry-run] <tablet alias> <tablet type>` |
 | [Ping](../vtctl/tablets#ping) | `Ping <tablet alias>` |
 | [RefreshState](../vtctl/tablets#refreshstate) | `RefreshState <tablet alias>` |
 | [RefreshStateByShard](../vtctl/tablets#refreshstatebyshard) | `RefreshStateByShard [-cells=c1,c2,...] <keyspace/shard>` |
@@ -56,8 +59,8 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 | [ListBackups](../vtctl/shards#listbackups) | `ListBackups <keyspace/shard>` |
 | [BackupShard](../vtctl/shards#backupshard) | `BackupShard [-allow_master=false] <keyspace/shard>` |
 | [RemoveBackup](../vtctl/shards#removebackup) | `RemoveBackup <keyspace/shard> <backup name>` |
-| [InitShardMaster](../vtctl/shards#initshardmaster) | `InitShardMaster [-force] [-wait_slave_timeout=<duration>] <keyspace/shard> <tablet alias>` |
-| [PlannedReparentShard](../vtctl/shards#plannedreparentshard) | `PlannedReparentShard -keyspace_shard=<keyspace/shard> [-new_master=<tablet alias>] [-avoid_master=<tablet alias>] [-wait_slave_timeout=<duration>]` |
+| [InitShardMaster](../vtctl/shards#initshardmaster) | `InitShardMaster [-force] [-wait_replicas_timeout=<duration>] <keyspace/shard> <tablet alias>` |
+| [PlannedReparentShard](../vtctl/shards#plannedreparentshard) | `PlannedReparentShard -keyspace_shard=<keyspace/shard> [-new_master=<tablet alias>] [-avoid_master=<tablet alias>] [-wait_replicas_timeout=<duration>]` |
 | [EmergencyReparentShard](../vtctl/shards#emergencyreparentshard) | `EmergencyReparentShard -keyspace_shard=<keyspace/shard> -new_master=<tablet alias>` |
 | [TabletExternallyReparented](../vtctl/shards#tabletexternallyreparented) | `TabletExternallyReparented <tablet alias>` |
 
@@ -111,8 +114,8 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 | [ReloadSchemaKeyspace](../vtctl/schema-version-permissions#reloadschemakeyspace) | `ReloadSchemaKeyspace  [-concurrency=10] [-include_master=false] <keyspace>` |
 | [ValidateSchemaShard](../vtctl/schema-version-permissions#validateschemashard) | `ValidateSchemaShard  [-exclude_tables=''] [-include-views] <keyspace/shard>` |
 | [ValidateSchemaKeyspace](../vtctl/schema-version-permissions#validateschemakeyspace) | `ValidateSchemaKeyspace  [-exclude_tables=''] [-include-views] <keyspace name>` |
-| [ApplySchema](../vtctl/schema-version-permissions#applyschema) | `ApplySchema  [-allow_long_unavailability] [-wait_slave_timeout=10s] {-sql=<sql> || -sql-file=<filename>} <keyspace>` |
-| [CopySchemaShard](../vtctl/schema-version-permissions#copyschemashard) | `CopySchemaShard  [-tables=<table1>,<table2>,...] [-exclude_tables=<table1>,<table2>,...] [-include-views] [-skip-verify] [-wait_slave_timeout=10s] {<source keyspace/shard> || <source tablet alias>} <destination keyspace/shard>` |
+| [ApplySchema](../vtctl/schema-version-permissions#applyschema) | `ApplySchema  [-allow_long_unavailability] [-wait_replicas_timeout=10s] {-sql=<sql> || -sql-file=<filename>} <keyspace>` |
+| [CopySchemaShard](../vtctl/schema-version-permissions#copyschemashard) | `CopySchemaShard  [-tables=<table1>,<table2>,...] [-exclude_tables=<table1>,<table2>,...] [-include-views] [-skip-verify] [-wait_replicas_timeout=10s] {<source keyspace/shard> || <source tablet alias>} <destination keyspace/shard>` |
 | [ValidateVersionShard](../vtctl/schema-version-permissions#validateversionshard) | `ValidateVersionShard  <keyspace/shard>` |
 | [ValidateVersionKeyspace](../vtctl/schema-version-permissions#validateversionkeyspace) | `ValidateVersionKeyspace  <keyspace name>` |
 | [GetPermissions](../vtctl/schema-version-permissions#getpermissions) | `GetPermissions  <tablet alias>` |
