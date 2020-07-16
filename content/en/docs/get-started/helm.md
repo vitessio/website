@@ -1,6 +1,6 @@
 ---
 title: Helm Chart (deprecated)
-weight: 4
+weight: 6
 featured: true
 ---
 

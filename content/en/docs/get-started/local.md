@@ -1,7 +1,7 @@
 ---
 title: Local Install
 description: Instructions for using Vitess on your machine for testing purposes
-weight: 2
+weight: 4
 featured: true
 aliases: ['/docs/tutorials/local/']
 ---

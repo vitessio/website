@@ -1,6 +1,6 @@
 ---
 title: Vitess Operator for Kubernetes
-weight: 1
+weight: 3
 featured: true
 aliases: ['/docs/tutorials/kubernetes/','/user-guide/sharding-kubernetes.html', '/docs/get-started/scaleway/','/docs/get-started/kubernetes/']
 ---
