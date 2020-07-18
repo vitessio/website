@@ -4,7 +4,7 @@ weight: 7
 ---
 
 {{< info >}}
-This guide follows on from the Get Started guides. Please make sure that you have a [Helm](../../get-started/helm), [Operator](../../get-started/operator) or [local](../../get-started/local) installation ready.
+This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../get-started/operator), [local](../../get-started/local) or [Helm](../../get-started/helm) installation ready.
 {{< /info >}}
 
 ## Preparation
