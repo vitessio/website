@@ -109,7 +109,7 @@ Vindexes have costs. For routing a query, the Vindex with the lowest cost is cho
 
 Vindex Type | Cost
 ----------- | ----
-Indentity | 0
+Identity | 0
 Functional | 1
 Lookup Unique | 10
 Lookup NonUnique | 20
