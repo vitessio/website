@@ -1,6 +1,6 @@
 ---
-title: VIndexes
-description: Frequently Asked Questions about VIndexes
+title: Vindexes
+description: Frequently Asked Questions about Vindexes
 ---
 
 
