@@ -1,7 +1,7 @@
 ---
 title: Overview
 description: High-level information about Vitess
-weight: 1
+weight: 2
 aliases: ['/docs/overview/scalingwithvitess/','/user-guide/introduction.html']
 ---
 
