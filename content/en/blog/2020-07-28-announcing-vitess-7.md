@@ -32,4 +32,4 @@ a tutorial for region-based sharding, and one for a local docker installation.
 
 There is a short list of incompatible changes in this release. We encourage you to spend a moment reading the [release notes](https://github.com/vitessio/vitess/releases/tag/v7.0.0).
 
-Please download Vitess 7 and take it for a spin!
+Please download Vitess 7 and try it out!
