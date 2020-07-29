@@ -30,6 +30,6 @@ To restore dump files created by `mysqldump`, you can just replay it against a V
 
 Alternatively, you can use a slight modification of the `go-mydumper` tool to export logical dumps of a Vitess keyspace. `go-mydumper` has the advantage of being multi-threaded, and so can run faster on a database that has many tables.  For a database with just one or a handful of large tables, `go-mydumper` may not be that much faster than `mysqldump`.
 
-For information on the Vitess-compatible fork of `go-mydumper` see https://github.com/aquarapid/go-mydumper . Examples and instructions are available in the [README.md](https://github.com/aquarapid/go-mydumper/README.md) in that repo.  You will need to be able to compile golang binaries to use this tool.
+For information on the Vitess-compatible fork of `go-mydumper` see https://github.com/aquarapid/go-mydumper . Examples and instructions are available in the [README.md](https://github.com/aquarapid/go-mydumper/blob/jacques_vitess/README.md) in that repo.  You will need to be able to compile golang binaries to use this tool.
 
 `go-mydumper` creates multiple files for each backup.  To restore a backup, you can use the `mysql` commandline client, but using the `myloader` tool as described in the `go-mydumper` repo above is easier and can be faster, since the loader is also multithreaded.
