@@ -24,7 +24,7 @@ mysqldump  --lock-tables=off --set-gtid-purged=OFF --no-tablespaces commerce > c
 
 Note that if you are using the `mysqldump` binary from MySQL 8.0, this will not work, since the newer version of `mysqldump` sends additional commands to the server, which are not yet supported by Vitess.
 
-To restore dump files created by `mysqldump`, you can just replay it against a Vitess server (or potentially a normal MySQL server) using the `mysql` commandline client.
+To restore dump files created by `mysqldump`, replay it against a Vitess server or other MySQL server using the `mysql` command line client.
 
 ### go-mydumper
 
