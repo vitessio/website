@@ -5,7 +5,7 @@ weight: 8
 
 Since [VTGate](../../concepts/vtgate/) supports the MySQL protocol, in many cases it is possible to use existing client utilities when connecting to Vitess. This includes using logical dump tools such as `mysqldump`, in certain cases.
 
-This guide provides instructions on the required options when using these tools against a VTGate server for the purposes of exporting data from Vitess. It is recommended to follow the [Backup and Restore](../backup-and-restore/) guide for regular backups, since this method is performed directly on the tablet servers and is more efficient and safer databases of any significant size.  Keep in mind that Vitess also does not implement all the locking constructs across a sharded database that is necessary to do a consistent logical backup using these tools if the database is being written to while the backup is running. As a result these methods are typically not suitable for production backups.
+This guide provides instructions on the required options when using these tools against a VTGate server for the purposes of exporting data from Vitess. It is recommended to follow the [Backup and Restore](../backup-and-restore/) guide for regular backups, since this method is performed directly on the tablet servers and is more efficient and safer for databases of any significant size. These methods are typically not suitable for production backups, because Vitess  does not implement all the locking constructs across a sharded database that are necessary to do a consistent logical backup while writing to the database. 
 
 ### mysqldump
 
