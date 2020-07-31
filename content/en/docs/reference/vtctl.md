@@ -1734,7 +1734,7 @@ Lists all tablets in the specified shard.
 
 ### PlannedReparentShard
 
-Reparents the shard to the new master, or away from old master. Both old and new master need to be up and running.
+Reparents the shard to the new master, or away from old master. Both old and new master need to be up and running. If the `new_master` flag is not provided, Vitess will try to automatically choose a replica to promote to master, avoiding any replicas specified in the `avoid_master` flag, if provided.  Note that Vitess **will not consider any replicas outside the cell the current master is in for promotion**, therefore you **must** pass the `new_master` flag if you need to promote a replica in a different cell from the master.  In the automated selection mode Vitess will prefer the most advanced replica for promotion, to minimize failover time.
 
 #### Example
 
@@ -1744,7 +1744,7 @@ Reparents the shard to the new master, or away from old master. Both old and new
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| avoid_master | string | alias of a tablet that should not be the master, i.e. reparent to any other tablet if this one is the master |
+| avoid_master | string | alias of a tablet that should not be the master, i.e. reparent to any replica other than this one |
 | keyspace_shard | string | keyspace/shard of the shard that needs to be reparented |
 | new_master | string | alias of a tablet that should be the new master |
 | wait_slave_timeout | Duration | time to wait for slaves to catch up in reparenting |
