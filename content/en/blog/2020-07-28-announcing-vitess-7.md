@@ -1,8 +1,8 @@
 ---
 author: 'Deepthi Sigireddi'
-date: 2020-07-28T00:00:00-08:00
+date: 2020-07-28
 slug: '2020-07-28-announcing-vitess-7'
-tags: ['Guides']
+tags: ['release']
 title: 'Announcing Vitess 7'
 ---
 
