@@ -6,3 +6,4 @@ resources/
 # Link checker
 bin/
 tmp/
+.idea
