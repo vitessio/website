@@ -5,6 +5,9 @@ aliases: ['/docs/recovery/pitr','/docs/reference/pitr/']
 
 ## Point in time recovery
 
+### Support Databases
+- MySQL 5.7
+
 ### Introduction
 
 The Point in Time Recovery feature in Vitess enables recovery of data to a past point in time. There can be multiple recovery requests active at the same time. It is possible to recover across sharding actions, i.e. you can recover to a time when there were two shards even though at present there are four.
@@ -16,6 +19,7 @@ The Point in Time Recovery feature in Vitess enables recovery of data to a past 
 ### Preconditions
 - There should be a vitess backup taken before the desired point in time.
 - There should be continuous binlogs available from the backup time to the desired point in time.
+- As of now, this feature is tested with [ripple](https://github.com/google/mysql-ripple) as the binlog server.
 
 ### Usage
 
