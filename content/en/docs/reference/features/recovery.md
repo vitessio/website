@@ -5,7 +5,7 @@ aliases: ['/docs/recovery/pitr','/docs/reference/pitr/']
 
 ## Point in time recovery
 
-### Support Databases
+### Supported Databases
 - MySQL 5.7
 
 ### Introduction
