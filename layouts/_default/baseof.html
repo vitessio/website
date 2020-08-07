@@ -12,6 +12,8 @@
       {{ block "title" . }}{{ site.Title }} | {{ site.Params.description }}{{ end }}
     </title>
     {{ partial "css.html" . }}
+    {{ partial "javascript.html" . }}
+
   </head>
   <body class="page{{ if not $isDocsPage }} has-navbar-fixed-top{{ end }}">
     <main class="main">
@@ -22,6 +24,5 @@
     {{ partial "footer.html" . }}
     {{ end }}
 
-    {{ partial "javascript.html" . }}
   </body>
 </html>

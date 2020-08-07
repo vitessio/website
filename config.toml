@@ -9,7 +9,7 @@ pygmentsUseClasses = false
 pygmentsStyle = "fruity"
 
 [params.assets]
-js = ["jquery-3.3.1", "jquery-ui-1.12.1", "jquery.tocify-1.9.0", "app"]
+js = ["jquery.tocify-1.9.0", "app"]
 fontawesomeversion = "5.7.2"
 
 [params.social]
