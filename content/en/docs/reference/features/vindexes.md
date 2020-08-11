@@ -167,7 +167,7 @@ xxhash | Functional Unique | xxHash64 hash | Yes | No | 1 | Any |
 
 Consistent lookup vindexes, as described above, are a new category of Vindexes that are meant to replace the existing lookup Vindexes implementation. For the time being, they have a different name to allow for users to switch back and forth.
 
-Custom vindexes can also be created as needed. At the moment there is no formal plugin system for custom vindexes, but the interface is well-defined, and thus custom implementations including code performing arbitary lookups in other systems can be accomodated.
+Custom Vindexes can also be created as needed. At the moment there is no formal plugin system for custom Vindexes, but the interface is well-defined, and thus custom implementations including code performing arbitary lookups in other systems can be accomodated.
 
 \
 \
