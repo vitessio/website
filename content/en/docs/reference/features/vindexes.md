@@ -114,7 +114,7 @@ However, it is generally not recommended to use a Lookup Vindex as a Primary Vin
 
 #### Cost
 
-Vindexes have costs. For routing a query, the applicable Vindex with the lowest cost is chosen. The current general costs for the different Vindex Types are:
+Vindexes have costs. For routing a query, the applicable Vindex with the lowest cost is chosen. The current general costs for the different Vindex Types are as follows:
 
 Vindex Type | Cost
 ----------- | ----
