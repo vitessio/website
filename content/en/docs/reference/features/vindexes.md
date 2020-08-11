@@ -165,7 +165,7 @@ reverse\_bits | Functional Unique | Bit reversal | Yes | Yes | 1 | 64 bit or sma
 unicode\_loose\_md5 | Functional Unique | Case-insensitive (UCA level 1) MD5 hash | Yes | No | 1 | String or binary types |
 xxhash | Functional Unique | xxHash64 hash | Yes | No | 1 | Any |
 
-Consistent lookup vindexes, as described above, are a new category of vindexes that are meant to replace the existing lookup vindexes implementation. For the time being, they have a different name to allow for users to switch back and forth.
+Consistent lookup vindexes, as described above, are a new category of Vindexes that are meant to replace the existing lookup Vindexes implementation. For the time being, they have a different name to allow for users to switch back and forth.
 
 Custom vindexes can also be created as needed. At the moment there is no formal plugin system for custom vindexes, but the interface is well-defined, and thus custom implementations including code performing arbitary lookups in other systems can be accomodated.
 
