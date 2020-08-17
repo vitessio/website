@@ -67,6 +67,8 @@ In this example, we are using 1 byte to represent a country code. You can use 1 
 This will be primary vindex on the `customer` table. As such, it is sufficient for resharding, inserts and selects.
 However, we don't yet support updates and deletes using a multi-column vindex.
 In order for those to work, we need to create a lookup vindex that can used to find the correct rows by id.
+The lookup vindex also makes querying by id efficient. Without it, queries that provided id but not country will scatter to all shards.
+
 
 To do this, we will use the new vreplication workflow `CreateLookupVindex`. This workflow will create the lookup table and a lookup vindex. It will also associate the lookup vindex with the `customer` table.
 
