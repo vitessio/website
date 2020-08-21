@@ -57,11 +57,19 @@ vttablet \
  -db_port 5726 \
  -db_app_user msandbox \
  -db_app_password msandbox \
+ -db_dba_user msandbox \
+ -db_dba_password msandbox \
+ -db_repl_user msandbox \
+ -db_repl_password msandbox \
+ -db_filtered_user msandbox \
+ -db_filtered_password msandbox \
+ -db_allprivs_user msandbox \
+ -db_allprivs_password msandbox \
  -init_db_name_override legacy \
  -init_populate_metadata &
 
 sleep 10
-vtctlclient InitShardMaster -force legacy/0 zone1-401
+vtctlclient TabletExternallyReparented zone1-401
 ```
 
 See [Unmanaged Tablet](../../../user-guides/unmanaged-tablet) for the full guide.
