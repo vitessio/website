@@ -50,7 +50,7 @@ From within the docker shell, aliases are set up for your convenience. Try th ef
 - `mysql commerce@replica`
 - `mysql commerce@rdonly`
 
-You will find that Vitess runs a single keyspace, single shart cluster.
+You will find that Vitess runs a single keyspace, single shard cluster.
 
 
 ## Summary
