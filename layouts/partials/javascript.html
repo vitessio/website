@@ -1,13 +1,10 @@
 {{ $isDoc        := eq .Section "docs" }}
 {{ $jsFiles := site.Params.assets.js }}
 {{ range $jsFiles }}
-  {{ $path := printf "js/%s.js" . }}
-  {{ $js := resources.Get $path | fingerprint }}
-  <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
+{{ $path := printf "js/%s.js" . }}
+{{ $js := resources.Get $path | minify | fingerprint }}
+<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
 {{ end }}
-
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 {{ if $isDoc }}
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
