@@ -67,34 +67,8 @@ In this scenario, we are going to split the `commerce` keyspace into `commerce` 
 
 The first step in our MoveTables operation is to deploy new tablets for our `customer` keyspace. By convention, we are going to use the UIDs 200-202 as the `commerce` keyspace previously used `100-102`. Once the tablets have started, we can force the first tablet to be the master using the `-force` flag:
 
-### Using Helm
-
-```bash
-helm upgrade vitess ../../helm/vitess/ -f 201_customer_tablets.yaml
-```
-
-After a few minutes the pods should appear running:
-
-```bash
-$ kubectl get pods,jobs
-NAME                                           READY   STATUS      RESTARTS   AGE
-pod/vtctld-58bd955948-pgz7k                    1/1     Running     0          5m36s
-pod/vtgate-zone1-c7444bbf6-t5xc6               1/1     Running     3          5m36s
-pod/zone1-commerce-0-init-shard-master-gshz9   0/1     Completed   0          5m35s
-pod/zone1-commerce-0-replica-0                 2/2     Running     0          5m35s
-pod/zone1-commerce-0-replica-1                 2/2     Running     0          5m35s
-pod/zone1-commerce-0-replica-2                 2/2     Running     0          5m35s
-pod/zone1-customer-0-init-shard-master-7w7rm   0/1     Completed   0          84s
-pod/zone1-customer-0-replica-0                 2/2     Running     0          84s
-pod/zone1-customer-0-replica-1                 2/2     Running     0          84s
-pod/zone1-customer-0-replica-2                 2/2     Running     0          84s
-
-NAME                                           COMPLETIONS   DURATION   AGE
-job.batch/zone1-commerce-0-init-shard-master   1/1           90s        5m36s
-job.batch/zone1-customer-0-init-shard-master   1/1           23s        84s
-```
-
-### Using Operator
+{{< tabs name="new-tablets-tabs" >}} 
+{{% tab name="Operator" %}}
 
 ```bash
 kubectl apply -f 201_customer_tablets.yaml
@@ -124,8 +98,9 @@ killall kubectl
 ./pf.sh &
 ```
 
-### Using a Local Deployment
+{{% /tab %}}
 
+{{% tab name="Local deployment" %}}
 ```bash
 for i in 200 201 202; do
  CELL=zone1 TABLET_UID=$i ./scripts/mysqlctl-up.sh
@@ -136,6 +111,36 @@ vtctlclient InitShardMaster -force customer/0 zone1-200
 ```
 
 __Note:__ This change does not change the actual routing yet. We will use a _switch_ directive to achieve that shortly.
+{{% /tab %}}
+{{% tab name="Helm" %}}
+
+```bash
+helm upgrade vitess ../../helm/vitess/ -f 201_customer_tablets.yaml
+```
+
+After a few minutes the pods should appear running:
+
+```bash
+$ kubectl get pods,jobs
+NAME                                           READY   STATUS      RESTARTS   AGE
+pod/vtctld-58bd955948-pgz7k                    1/1     Running     0          5m36s
+pod/vtgate-zone1-c7444bbf6-t5xc6               1/1     Running     3          5m36s
+pod/zone1-commerce-0-init-shard-master-gshz9   0/1     Completed   0          5m35s
+pod/zone1-commerce-0-replica-0                 2/2     Running     0          5m35s
+pod/zone1-commerce-0-replica-1                 2/2     Running     0          5m35s
+pod/zone1-commerce-0-replica-2                 2/2     Running     0          5m35s
+pod/zone1-customer-0-init-shard-master-7w7rm   0/1     Completed   0          84s
+pod/zone1-customer-0-replica-0                 2/2     Running     0          84s
+pod/zone1-customer-0-replica-1                 2/2     Running     0          84s
+pod/zone1-customer-0-replica-2                 2/2     Running     0          84s
+
+NAME                                           COMPLETIONS   DURATION   AGE
+job.batch/zone1-commerce-0-init-shard-master   1/1           90s        5m36s
+job.batch/zone1-customer-0-init-shard-master   1/1           23s        84s
+```
+
+{{% /tab %}}
+{{< /tabs >}}
 
 ## Start the Move
 
