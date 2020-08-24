@@ -1,4 +1,3 @@
-/** Table of contents **/
 const tocifyOptions = {
   context: '.is-docs-content',
   selectors: 'h2,h3',
@@ -71,4 +70,3 @@ $(function() {
   showAndHideTitle();
   linkClickOffset();
 });
-

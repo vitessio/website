@@ -124,31 +124,29 @@ Since the primary vindex columns are `BIGINT`, we choose `hash` as the primary v
 
 Applying the new VSchema instructs Vitess that the keyspace is sharded, which may prevent some complex queries. It is a good idea to [validate this](../vtexplain) before proceeding with this step. If you do notice that certain queries start failing, you can always revert temporarily by restoring the old VSchema. Make sure you fix all of the queries before proceeding to the Reshard process.
 
-{{< tabs name="apply-vschema-tabs" >}} 
-{{% tab name="Operator" %}}
+### Using Helm
+
+```bash
+helm upgrade vitess ../../helm/vitess/ -f 301_customer_sharded.yaml
+```
+
+### Using Operator
+
 ```bash
 vtctlclient ApplySchema -sql="$(cat create_commerce_seq.sql)" commerce
 vtctlclient ApplyVSchema -vschema="$(cat vschema_commerce_seq.json)" commerce
 vtctlclient ApplySchema -sql="$(cat create_customer_sharded.sql)" customer
 vtctlclient ApplyVSchema -vschema="$(cat vschema_customer_sharded.json)" customer
 ```
-{{% /tab %}}
 
-{{% tab name="Local deployment" %}}
-```sh
+### Using a Local Deployment
+
+``` sh
 vtctlclient ApplySchema -sql-file create_commerce_seq.sql commerce
 vtctlclient ApplyVSchema -vschema_file vschema_commerce_seq.json commerce
 vtctlclient ApplySchema -sql-file create_customer_sharded.sql customer
 vtctlclient ApplyVSchema -vschema_file vschema_customer_sharded.json customer
 ```
-{{% /tab %}}
-{{% tab name="Helm" %}}
-```bash
-helm upgrade vitess ../../helm/vitess/ -f 301_customer_sharded.yaml
-```
-{{% /tab %}}
-{{< /tabs >}}
-
 
 ## Create new shards
 
@@ -156,8 +154,14 @@ At this point, you have finalized your sharded VSchema and vetted all the querie
 
 The resharding process works by splitting existing shards into smaller shards. This type of resharding is the most appropriate for Vitess. There are some use cases where you may want to bring up a new shard and add new rows in the most recently created shard. This can be achieved in Vitess by splitting a shard in such a way that no rows end up in the ‘new’ shard. However, it's not natural for Vitess. We have to create the new target shards:
 
-{{< tabs name="new-shards-tabs" >}} 
-{{% tab name="Operator" %}}
+### Using Helm
+
+```sh
+helm upgrade vitess ../../helm/vitess/ -f 302_new_shards.yaml
+```
+
+### Using Operator
+
 ```bash
 kubectl apply -f 302_new_shards.yaml
 ```
@@ -168,8 +172,9 @@ Make sure that you restart the port-forward after you have verified with `kubect
 killall kubectl
 ./pf.sh &
 ```
-{{% /tab %}}
-{{% tab name="Local deployment" %}}
+
+### Using a Local Deployment
+
 ``` sh
 for i in 300 301 302; do
  CELL=zone1 TABLET_UID=$i ./scripts/mysqlctl-up.sh
@@ -184,13 +189,6 @@ done
 vtctlclient InitShardMaster -force customer/-80 zone1-300
 vtctlclient InitShardMaster -force customer/80- zone1-400
 ```
-{{% /tab %}}
-{{% tab name="Helm" %}}
-```sh
-helm upgrade vitess ../../helm/vitess/ -f 302_new_shards.yaml
-```
-{{% /tab %}}
-{{< /tabs >}}
 
 ## Start the Reshard
 
@@ -279,13 +277,19 @@ COrder
 
 After celebrating your second successful resharding, you are now ready to clean up the leftover artifacts:
 
-{{< tabs name="cleanup-tabs" >}} 
-{{% tab name="Operator" %}}
+### Using Helm
+
+```sh
+helm upgrade vitess ../../helm/vitess/ -f 306_down_shard_0.yaml
+```
+
+### Using Operator
+
 ```bash
 kubectl apply -f 306_down_shard_0.yaml
 ```
-{{% /tab %}}
-{{% tab name="Local deployment" %}}
+
+### Using a Local Deployment
 
 ``` sh
 for i in 200 201 202; do
@@ -301,10 +305,3 @@ vtctlclient DeleteShard -recursive customer/0
 ```
 
 Beyond this, you will also need to manually delete the disk associated with this shard.
-{{% /tab %}}
-{{% tab name="Helm" %}}
-```sh
-helm upgrade vitess ../../helm/vitess/ -f 306_down_shard_0.yaml
-```
-{{% /tab %}}
-{{< /tabs >}}
