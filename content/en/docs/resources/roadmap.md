@@ -26,6 +26,7 @@ If you have a specific question about the Roadmap, we recommend posting in our [
 
 ## Medium Term
 
+- Vttablet to manage more than one MySQL schema
 - Rewrite of vtctld UI including visualization of VReplication
 - VReplication throttling
 - Binlog server
