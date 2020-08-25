@@ -12,19 +12,22 @@ If you have a specific question about the Roadmap, we recommend posting in our [
 
 ## Short Term
 
-- Support for Point in Time Recovery
 - Improve Documentation
 - Improve Usability
 - Support more MySQL Syntax (improve compatibility as a drop-in replacement)
+  - Certify popular frameworks like Ruby on Rails, Hibernate etc.
+- Vitess-native unplanned failovers
+- Pluggable durability policies
+- Nightly benchmarking (regression testing)
+- Schema changes through vitess
+  - gh-ost and pt-osc integration
 - VReplication
-  - Support "Dry Run"
-- Componentize Tablet Server (lift restriction on one-tablet per MySQL schema)
+  - VExec tool for management
 
 ## Medium Term
 
-- VReplication
-  - Support for Schema Changes
-  - Backfill lookup indexes
-  - Support for Data Migration
+- Rewrite of vtctld UI including visualization of VReplication
+- VReplication throttling
+- Binlog server
 - Topology Service: Reduce dependencies on the topology service. i.e. Vitess should be operable normally even if topology service is down for several hours. Topology service should be used only for passive discovery.
 - Support for PostgreSQL: Vitess should be able to support PostgreSQL for both storing data, and speaking the protocol in VTGate.
