@@ -410,9 +410,10 @@ Some of the important VTGate and VTTablet flags for modifying query serving beha
 
 VTGate:
 * `cells_to_watch`: which cell vtgate is in and will monitor tablets from. Cross-cell master access needs multiple cells here.
-* `tablet_types_to_wait`: VTGate waits for at least one serving tablet per tablet type specified here during startup, before listening to the serving port, so that VTGate does not start up serving errors. It should match a subset of the available tablet types VTGate connects to (master, replica, rdonly). The default is empty, i.e. VTGate will not wait for any serving tablets to start up.
-* `discovery_low_replication_lag (default: 30s)`: when replication lags of all VTTablet in a particular shard and tablet type are less than or equal the flag (in seconds), VTGate does not filter them by replication lag and uses all to balance traffic.
-* `-min_number_serving_vttablets (default: 2)`: when replication lag exceeds `degraded_threshold`, but not `unhealthy_threshold` (see below), keep serving from at least this many replica tablets per shard. This threshold also applies separately to the minimum number of serving rdonly tablets per shard.
+* `tablet_types_to_wait`: VTGate waits for at least one serving tablet per tablet type specified here during startup, before listening to the serving port, so that VTGate does not start up serving errors. It should match a subset of the available tablet types VTGate connects to (master, replica, rdonly). The default is empty, i.e. VTGate will not wait for any serving tablets to start listening.
+* `discovery_low_replication_lag (default: 30s)`: when replication lags of all VTTablet instances in a particular shard and of a specific tablet type are less than or equal this value, VTGate does not filter the tablets by replication lag and uses all to balance traffic.
+* `discovery_high_replication_lag_minimum_serving (default: 2h)`: the replication lag that is considered too high when applying the `min_number_serving_vttablets` threshold
+* `min_number_serving_vttablets (default: 2)`: when replication lag exceeds `discovery_low_replication_lag`, but not `discovery_high_replication_lag_minimum_serving`, keep serving from at least this many replica tablets per shard. This threshold also applies separately to the minimum number of serving rdonly tablets per shard.
 * `transaction_mode (default: multi)`: default write transaction mode to allow:
   * `single`: disallow multi-db transactions
   * `multi`: allow multi-db transactions with best effort commit
