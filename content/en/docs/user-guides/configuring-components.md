@@ -406,13 +406,25 @@ Load-balancer in front of vtgate to scale up (not covered by Vitess). Stateless,
 
 ### Parameters
 
+Some of the important VTGate and VTTablet flags for modifying query serving behavior:
+
+VTGate:
 * `cells_to_watch`: which cell vtgate is in and will monitor tablets from. Cross-cell master access needs multiple cells here.
-* `tablet_types_to_wait`: VTGate waits for at least one serving tablet per tablet type specified here during startup, before listening to the serving port. So VTGate does not serve error. It should match the available tablet types VTGate connects to (master, replica, rdonly).
-* `discovery_low_replication_lag`: when replication lags of all VTTablet in a particular shard and tablet type are less than or equal the flag (in seconds), VTGate does not filter them by replication lag and uses all to balance traffic.
-* `degraded_threshold (30s)`: a tablet will publish itself as degraded if replication lag exceeds this threshold. This will cause VTGates to choose more up-to-date servers over this one. If all servers are degraded, VTGate resorts to serving from all of them.
-* `unhealthy_threshold (2h)`: a tablet will publish itself as unhealthy if replication lag exceeds this threshold.
-* `transaction_mode (multi)`: single: disallow multi-db transactions, multi: allow multi-db transactions with best effort commit, twopc: allow multi-db transactions with 2pc commit.
-* `normalize_queries (false)`: Turning this flag on will cause vtgate to rewrite queries with bind vars. This is beneficial if the app doesn't itself send normalized queries.
+* `tablet_types_to_wait`: VTGate waits for at least one serving tablet per tablet type specified here during startup, before listening to the serving port, so that VTGate does not start up serving errors. It should match a subset of the available tablet types VTGate connects to (master, replica, rdonly). The default is empty, i.e. VTGate will not wait for any serving tablets to start listening.
+* `discovery_low_replication_lag (default: 30s)`: when replication lags of all VTTablet instances in a particular shard and of a specific tablet type are less than or equal this value, VTGate does not filter the tablets by replication lag and uses all to balance traffic.
+* `discovery_high_replication_lag_minimum_serving (default: 2h)`: the replication lag that is considered too high when applying the `min_number_serving_vttablets` threshold
+* `min_number_serving_vttablets (default: 2)`: when replication lag exceeds `discovery_low_replication_lag`, but not `discovery_high_replication_lag_minimum_serving`, keep serving from at least this many replica tablets per shard. This threshold also applies separately to the minimum number of serving rdonly tablets per shard.
+* `transaction_mode (default: multi)`: default write transaction mode to allow:
+  * `single`: disallow multi-db transactions
+  * `multi`: allow multi-db transactions with best effort commit
+  * `twopc`: allow multi-db transactions with 2pc commit.
+
+  Note that `transaction_mode` does not affect read-only transactions.
+* `normalize_queries (default: true)`: Turning this flag on will cause vtgate to rewrite queries with bind vars. This is beneficial if the app doesn't itself send normalized queries.
+
+VTTablet:
+* `unhealthy_threshold (default: 2h)`: a replicating tablet (e.g. tablet type replica or rdonly) will publish itself as unhealthy if replication lag exceeds this threshold.
+* `degraded_threshold (30s)`: a replicating tablet (e.g. tablet type replica or rdonly) will publish itself as degraded if replication lag exceeds this threshold. This will cause VTGates to choose more up-to-date servers over this one. If all servers are degraded, VTGate resorts to serving from all of them. Also note the potential impact of the `-min_number_serving_vttablets` above.
 
 ### Monitoring
 
