@@ -61,7 +61,7 @@ Notice that we are using keyspace `commerce/0` to select data from our tables.
 
 ## Planning to Move Tables
 
-In this scenario, we are going to `customer` keyspace to the `commerce` keyspace we already have.  This new keyspace will be backed by its own set of mysqld instances. We will then move the tables `customer` and `corder` from the `commerce` keyspace into the newly created `customer`. The `product` table will remain in the `commerce` keyspace. This operation happens online, which means that it does not block either read or write operations to the tables, __except__ for a small window during the final cut-over.
+In this scenario, we are going to add the `customer` keyspace to the `commerce` keyspace we already have.  This new keyspace will be backed by its own set of mysqld instances. We will then move the tables `customer` and `corder` from the `commerce` keyspace into the newly created `customer`. The `product` table will remain in the `commerce` keyspace. This operation happens online, which means that it does not block either read or write operations to the tables, __except__ for a small window during the final cut-over.
 
 ## Show our current tablets
 
@@ -228,7 +228,7 @@ Basically what the `MoveTables` operation has done is to create routing rules to
 
 ## Monitoring Progress (optional)
 
-In this example there are only a few rows in the tables, so the `MoveTables` operation only takes seconds. If the tables were large, you may need to monitor the progress of the operation.  There is simple way to get a percentage complete status, but you can estimate the progress by running the following against the master tablet of the target keyspace:
+In this example there are only a few rows in the tables, so the `MoveTables` operation only takes seconds. If the tables were large, you may need to monitor the progress of the operation.  There is no simple way to get a percentage complete status, but you can estimate the progress by running the following against the master tablet of the target keyspace:
 
 ```sh
 $ vtctlclient VReplicationExec zone1-0000000200 "select * from _vt.copy_state"

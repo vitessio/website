@@ -8,7 +8,7 @@ MoveTables is a new workflow based on VReplication. It enables you to relocate t
 
 It is recommended to keep tables that need to join on each other in the same keyspace, so typical candidates for a MoveTables operation are a set of tables which logically group together or are otherwise isolated.
 
-If you have multiple groups of tables as candidates, which makes the most sense to move may depend on the specifics of your environment. For example, a larger table will take more time to move, but in doing so you might be able utilitize additional or newer hardware which has more headroom before you need to perform additional operations such as sharding.
+If you have multiple groups of tables as candidates, which makes the most sense to move may depend on the specifics of your environment. For example, a larger table will take more time to move, but in doing so you might be able to utilitize additional or newer hardware which has more headroom before you need to perform additional operations such as sharding.
 
 Similarly, tables that are updated at a more frequent rate could increase the move time.
 
