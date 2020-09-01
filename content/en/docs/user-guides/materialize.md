@@ -9,7 +9,7 @@ This guide follows on from the Get Started guides. Please make sure that you hav
 
 **Materialize** is a new VReplication workflow in Vitess 6.  It can be used as a more general way to achieve something similar to [MoveTables](../../concepts/move-tables), or as a way to generate materialized views of a table (or set of tables) in the same or different keyspace from the source table (or set of tables).  In general, it can be used to create and maintain continually updated materialized views in Vitess, without having to resort to manual or trigger-based population of the view content.
 
-Since `Materialize` uses VReplication, the view can be kept up-to-date very close to real-time, which enables use-cases like creating copies of the same table sharded different ways for the purposes of certain sets queries that would otherwise be prohibitively expensive on the original table.  `Materialize` is also flexible enough to allow for you to pre-create the schema and vschema for the copied table, allowing you to, for example, maintain a copy of a table without some of the source table's MySQL indexes.  Alternatively, you could use `Materialize` to do certain schema changes (e.g. change the type of a table column) without having to use other tools like [gh-ost](https://github.com/github/gh-ost).
+Since `Materialize` uses VReplication, the view can be kept up-to-date very close to real-time, which enables use-cases like creating copies of the same table sharded different ways for the purposes of certain types of queries that would otherwise be prohibitively expensive on the original table.  `Materialize` is also flexible enough to allow for you to pre-create the schema and vschema for the copied table, allowing you to, for example, maintain a copy of a table without some of the source table's MySQL indexes.  Alternatively, you could use `Materialize` to do certain schema changes (e.g. change the type of a table column) without having to use other tools like [gh-ost](https://github.com/github/gh-ost).
 
 In our example, we will be using `Materialize` to perform something similar to the [MoveTables](../../user-guides/move-tables) user guide, which will cover just the basics of what is possible using `Materialize`.
 
@@ -66,7 +66,7 @@ In this scenario, we are going to make two copies of the `corder` table **in the
 
 ## Create the destination tables
 
-In the case where we using `Materialize` to copy tables between keyspaces, we can use the `"create_ddl": "copy"` option in the `Materialize` `json_spec` `table_settings` to create the target table for us (similar to what `MoveTables` does).  However, in our case where we are using `Materilize` with a target table name different from the source table name, we need to manually create the target tables.  Let's go ahead and do that:
+In the case where we using `Materialize` to copy tables between keyspaces, we can use the `"create_ddl": "copy"` option in the `Materialize` `json_spec` `table_settings` to create the target table for us (similar to what `MoveTables` does).  However, in our case where we are using `Materialize` with a target table name different from the source table name, we need to manually create the target tables.  Let's go ahead and do that:
 
 ```sql
 $ mysql -A
@@ -168,7 +168,7 @@ $ echo "select * from corder_view_redacted;" | mysql --table commerce
 +----------+-------------+----------+
 ```
 
-Again, we can add a column to the source table, and see it replicated into the target table:
+Again, we can add a row to the source table, and see it replicated into the target table:
 
 ```
 $ echo "insert into corder (order_id, customer_id, sku, price) values (7, 7, 'SKU-1002', 30);" | mysql commerce
