@@ -4,12 +4,12 @@ weight: 9
 ---
 
 {{< info >}}
-This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../get-started/operator), [local](../../get-started/local) or [Helm](../../get-started/helm) installation ready.  Make sure are at the point where you have the sharded keyspace called `customer` setup.
+This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../get-started/operator), [local](../../get-started/local) or [Helm](../../get-started/helm) installation ready.  Make sure you are at the point where you have the sharded keyspace called `customer` setup.
 {{< /info >}}
 
 **CreateLookupVindex** is a new VReplication workflow in Vitess 6.  It is used to create **and** backfill a lookup Vindex automatically for a table that already exists, and may have a significant amount of data in it already.
 
-Internally, the `CreateLookupVindex` process uses VReplication for the backfill process, until the lookup Vindex is "in sync", after which the normal process for adding/deleting/updating rows in the lookup Vindex flows via the usual transactional flow when updating the "owner" table for the Vindex.
+Internally, the `CreateLookupVindex` process uses VReplication for the backfill process, until the lookup Vindex is "in sync". Then the normal process for adding/deleting/updating rows in the lookup Vindex via the usual transactional flow when updating the "owner" table for the Vindex takes over.
 
 In this guide, we will walk through the process of using the `CreateLookupVindex` workflow, and give some insight into what happens underneath the covers.
 
@@ -40,7 +40,7 @@ will create that automatically based on the type of the column you are
 creating the Vindex column on, etc.
 
 In the context of the regular `customer` database that is part of the Vitess
-examples we started earlier, lets add some rows into the `customer.corder`
+examples we started earlier, let's add some rows into the `customer.corder`
 table, and then look at an example `<json_spec>`:
 
 ```sql
@@ -136,11 +136,9 @@ Note that this skewed distribution is completely coincidental, for larger
 numbers of rows, we would expect the distribution to be approximately even
 for a `hash` index.
 
-Now lets say we want to add a lookup Vindex on the `sku` column.
+Now let's say we want to add a lookup Vindex on the `sku` column.
 We can use a `consistent_lookup` or `consistent_lookup_unique`
-Vindex type.  In our example we will use `consistent_lookup_unique`,
-although that probably does not make much sense for a SKU column,
-where there might be many rows for the same SKU value.
+Vindex type.  In our example we will use `consistent_lookup_unique`.
 
 Here is our example `<json_spec>`:
 
@@ -174,7 +172,7 @@ $ cat lookup_vindex.json
 
 Note that as mentioned above, we do not have to tell Vitess about
 how to shard the actual backing table for the lookup Vindex or
-any schema to create that it will do it automatically.  Now, let us
+any schema to create as it will do it automatically.  Now, let us
 actually execute the `CreateLookupVindex` command:
 
 ```sh
@@ -190,8 +188,9 @@ population will fail.
 Now, in our case, the table is tiny, so the copy will be instant, but
 in a real-world case this might take hours.  To monitor the process,
 we can use the usual VReplication commands.  However, the VReplication
-status commands needs to operate on individual tablets, so we need to check
-which tablets we have in our environment:
+status commands needs to operate on individual tablets. Let's check
+which tablets we have in our environment, so we know which tablets to
+issue commands against:
 
 ```sh
 $ vtctlclient -server localhost:15999 ListAllTablets | grep customer
@@ -211,7 +210,7 @@ source tablets `zone1-0000000302` and `zone1-0000000402`.
 tablet, for a total of 4 streams in this case.
 
 Lets observe the VReplication streams that got created using the
-`vtctlclient VReplicationExec` command.  First lets look at the streams
+`vtctlclient VReplicationExec` command.  First let's look at the streams
 to the first master tablet `zone1-0000000300`:
 
 ```sql
@@ -281,7 +280,7 @@ $ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000300 "select 
 +----------+------------+--------+
 ```
 
-(in this case this table is empty, because the copy has finished already).
+(In this case this table is empty, because the copy has finished already).
 
 We can verify the result of the backfill by looking at the `customer` 
 keyspace again in the MySQL client:
@@ -323,16 +322,16 @@ mysql> select sku, hex(keyspace_id) from corder_lookup;
 +-----------+------------------+
 ```
 
-Basically, exactly what we expected.  Now, we can clean up the VReplication
-streams.  Note these commands will clean up all VReplication streams on
-these tablets, you may want to filter by `id` if there are other streams
-running:
+Basically, this shows exactly what we expected.  Now, we can clean up the
+VReplication streams.  Note these commands will clean up all VReplication
+streams on these tablets. You may want to filter by `id` if there are other
+streams running:
 
 ```sh
-$ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000300 "delete from _vt.vreplication" 
+$ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000300 "delete from _vt.vreplication"
 +
 +
-$ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000400 "delete from _vt.vreplication" 
+$ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000400 "delete from _vt.vreplication"
 +
 +
 ```
@@ -380,9 +379,9 @@ mysql> explain format=vitess select * from corder where price = 103;
 1 row in set (0.00 sec)
 ```
 
-that also scatters, as expected.
+That also scatters, as expected.
 
-Now, lets try a lookup on the `sku` column, which we have created our lookup
+Now, let's try a lookup on the `sku` column, which we have created our lookup
 Vindex on:
 
 ```sql
@@ -398,7 +397,7 @@ mysql> explain format=vitess select * from corder where sku = "Product_1";
 As expected, we can see it is not scattering anymore, which it would have
 before we did `CreateLookupVindex`.
 
-Lastly, lets ensure that the lookup Vindex is being updated appropriately
+Lastly, let's ensure that the lookup Vindex is being updated appropriately
 when we insert and delete rows:
 
 ```sql
