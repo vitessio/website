@@ -149,7 +149,7 @@ While we can also see and manipulate the underlying VReplication streams
 created by `Materialize`; there are commands to show, stop, start
 and delete the operations associated with a Materialize workflow.
 For example, once we have started the `Materialize` command above,
-we can observe the status of there VReplication stream doing the
+we can observe the status of the VReplication stream doing the
 materialization via the `vtctlclient Workflow` command:
 
 ```sh
