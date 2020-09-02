@@ -4,7 +4,7 @@ weight: 8
 ---
 
 {{< info >}}
-This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../get-started/operator), [local](../../get-started/local) or [Helm](../../get-started/helm) installation ready.
+This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../get-started/operator), [local](../../get-started/local) or [Helm](../../get-started/helm) installation ready.  Make sure you have only run the "101" step of the examples, for example `101_initial_cluster.sh` in the [local](../../get-started/local) example. Also ensure you have setup the aliases, for example `101_initial_cluster.sh` in the [local](../../get-started/local) example.
 {{< /info >}}
 
 **Materialize** is a new VReplication workflow in Vitess 6.  It can be used as a more general way to achieve something similar to [MoveTables](../../concepts/move-tables), or as a way to generate materialized views of a table (or set of tables) in the same or different keyspace from the source table (or set of tables).  In general, it can be used to create and maintain continually updated materialized views in Vitess, without having to resort to manual or trigger-based population of the view content.
@@ -143,10 +143,122 @@ $ echo "select * from corder_view;" | mysql --table commerce
 
 Note that the target table is just a normal table, there is nothing that prevents you from writing to it directly. While you might not want to do that in this "view" use-case, in certain other use-cases, it might be completely acceptable to write to the table, as long as you don't end up altering or removing rows in a fashion that would break the "replication" part of VReplication (e.g. removing a row in the target table directly that is later updated in the source table).
 
+## Viewing the workflow while in progress
+
+While we can also see and manipulate the underlying VReplication streams
+created by `Materialize`; there are commands to show, stop, start
+and delete the operations associated with a Materialize workflow.
+For example, once we have started the `Materialize` command above,
+we can observe the status of there VReplication stream doing the
+materialization via the `vtctlclient Workflow` command:
+
+```sh
+$ vtctlclient Workflow commerce.copy_corder_1 show
+{
+    "Workflow": "copy_corder_1",
+    "SourceLocation": {
+        "Keyspace": "commerce",
+        "Shards": [
+            "0"
+        ]
+    },
+    "TargetLocation": {
+        "Keyspace": "commerce",
+        "Shards": [
+            "0"
+        ]
+    },
+    "MaxVReplicationLag": 1599019410,
+    "ShardStatuses": {
+        "0/zone1-0000000100": {
+            "MasterReplicationStatuses": [
+                {
+                    "Shard": "0",
+                    "Tablet": "zone1-0000000100",
+                    "ID": 4,
+                    "Bls": {
+                        "keyspace": "commerce",
+                        "shard": "0",
+                        "filter": {
+                            "rules": [
+                                {
+                                    "match": "corder_view",
+                                    "filter": "select * from corder"
+                                }
+                            ]
+                        }
+                    },
+                    "Pos": "MySQL56/c0d82d27-ecd0-11ea-9840-001e677affd5:1-97978",
+                    "StopPos": "",
+                    "State": "Copying",
+                    "MaxReplicationLag": 9223372036854775807,
+                    "DBName": "vt_commerce",
+                    "TransactionTimestamp": 0,
+                    "TimeUpdated": 1599019408,
+                    "Message": "",
+                    "CopyState": [
+                        {
+                            "Table": "corder_view",
+                            "LastPK": "fields:<name:\"order_id\" type:INT64 > rows:<lengths:5 values:\"37014\" >"
+                        }
+                    ]
+                }
+            ],
+            "TabletControls": null,
+            "MasterIsServing": true
+        }
+    }
+}
+```
+
+Note the state of `Copying`, this will transition to `Running` when the
+bulk copying of rows is complete.
+
+We can now also use the stop/start commands to temporarily stop the
+materialization workflow.  E.g. `stop`:
+
+```sh
+$ vtctlclient Workflow commerce.copy_corder_1 stop
++------------------+--------------+
+|      Tablet      | RowsAffected |
++------------------+--------------+
+| zone1-0000000100 |            1 |
++------------------+--------------+
+```
+
+And `start` to start the workflow again and continue the materialization:
+
+```sh
+$ vtctlclient Workflow commerce.copy_corder_1 start
++------------------+--------------+
+|      Tablet      | RowsAffected |
++------------------+--------------+
+| zone1-0000000100 |            1 |
++------------------+--------------+
+```
+
+Eventually, when the copy is done, or we have materialized the data, and
+do not want to continue the copy of new source rows, we can delete the
+workflow via:
+
+```
+$ vtctlclient Workflow commerce.copy_corder_1 delete
++------------------+--------------+
+|      Tablet      | RowsAffected |
++------------------+--------------+
+| zone1-0000000100 |            1 |
++------------------+--------------+
+```
+
+Note that deleting the workflow will not drop the target table for the
+`Materialize` workflow, or any of the data already copied.  The data
+in the target table will remain as it was at the moment the workflow
+was deleted (or previously stopped).
+
 
 ## Start the Materialize (redacted copy)
 
-Now, we can perform the copy to the `corder_view_redacted` table we already created.  Note that we created this table without a price column;  we will not be copying that column.
+Now, we can perform the copy to the `corder_view_redacted` table we created earlier.  Note that we created this table without a price column;  we will not be copying that column.
 
 ```bash
 $ vtctlclient Materialize '{"workflow": "copy_corder_2", "source_keyspace": "commerce", "target_keyspace": "commerce", "table_settings": [{"target_table": "corder_view_redacted", "source_expression": "select order_id, customer_id, sku from corder"}]}'
@@ -209,7 +321,11 @@ It is important to use the `vtctlclient VReplicationExec` command to inspect thi
 
 ## Cleanup
 
-You can also use the `VReplicationExec` command to temporarily stop the replication streams for the VReplication streams that make up the `Materialize` process.  For example, to stop both streams, you can do:
+As seen earlier, you can easily use the `vtctlclient Workflow ... delete`
+command to clean up a materialize operation.  If you like, you can also
+instead use the `VReplicationExec` command to temporarily stop the replication
+streams for the VReplication streams that make up the `Materialize` process.
+For example, to stop both streams, you can do:
 
 ```
 $ vtctlclient VReplicationExec zone1-0000000100 'update _vt.vreplication set state = "Stopped" where id in (1,2)'
