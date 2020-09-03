@@ -238,7 +238,7 @@ $ vtctlclient VReplicationExec zone1-0000000200 "select * from _vt.copy_state"
 +----------+------------+--------+
 ```
 
-In the above case the copy is already complete, but if it was still ongoing, there would be details about the last PK (primary key) copied by the VReplication copy process.  You could use information about the last copied PK along with the max PK and data distribution of the source table to estimate progess.
+In the above case the copy is already complete, but if it was still ongoing, there would be details about the last PK (primary key) copied by the VReplication copy process.  You could use information about the last copied PK along with the max PK and data distribution of the source table to estimate progress.
 
 ## Validate Correctness (optional)
 
