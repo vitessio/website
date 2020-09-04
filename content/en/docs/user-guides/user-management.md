@@ -45,8 +45,8 @@ EOF
 Then we can load this into VTGate with:
 ```sh
 vtgate $(cat <<END_OF_COMMAND
-    -mysql_auth_server_impl="static"
-    -mysql_auth_server_static_file="users.json"
+    -mysql_auth_server_impl=static
+    -mysql_auth_server_static_file=users.json
     ...
     ...
     ...
@@ -67,7 +67,6 @@ $ mysql -h 127.0.0.1 -u myuser1 -ppassword1 -e "select 1"
 $ mysql -h 127.0.0.1 -u myuser1 -pincorrect_password -e "select 1"
 ERROR 1045 (28000): Access denied for user 'myuser1'
 ```
-
 
 ## Password format
 
@@ -97,8 +96,9 @@ JSON authentication file would look something like this instead:
 In the static authentication JSON file, the `UserData` string is **not**
 the username;  the username is the string key for the list.  The `UserData`
 string does **not** need to correspond to the username, and is used by the
-authorization mechanism (TODO link) when referring to a user.  It is usually
-however simpler if you make the `UserData` string and the username the same.
+[authorization mechanism](../authorization) when referring to a user.  It is
+usually however simpler if you make the `UserData` string and the username
+the same.
 
 The `UserData` feature can be leveraged to create multiple users that are
 equivalent to the authorization layer (i.e. multiple users having the same
@@ -133,7 +133,7 @@ An example could be:
 
 This feature also allows different `UserData` strings
 to be associated with a user depending on the password used.  This can
-be used in concert with the authorization (TODO link) mechanism to
+be used in concert with the [authorization mechanism](../authorization) to
 migrate an application gracefully from one set of ACLs (or no ACLs)
 to another set of ACLs, by just changing the password used by the
 application.
@@ -142,4 +142,11 @@ In the example above, the username `vitess` has **two different** passwords
 that would be allowed, each resulting in different `UserData` strings
 (`vitess_old` or `vitess_new`) being passed to the VTTablet layer that can
 be used for authorization/ACL enforcement.
+
+## Other authentication methods
+
+Other than the static authentication file method above, other authentication
+mechanisms are also provided:
+ * LDAP-based authentication
+ * TLS client certificate-based authentication
 

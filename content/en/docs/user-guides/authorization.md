@@ -17,7 +17,6 @@ characteristics:
  * Individual users can be assigned 3 levels of permissions:
    * Read (corresponding to read DML, e.g. `SELECT`)
    * Write (corresponding to write DML, e.g. `INSERT`, `UPDATE`, `DELETE`)
-   * TODO:  what about pseudo DDL, like TRUNCATE?
    * Admin (corresponding to DDL, e.g. `ALTER TABLE`)
  * Permissions are applied on a specified set of tables, which can be
    enumerated or specified by regex.
@@ -40,7 +39,7 @@ behavior of ACLs.  Let's review these:
    allowed to pass, even if the ACL determined it should
    be blocked.  Used for testing ACL policies. Default is `false`.
  * `-queryserver-config-strict-table-acl`: Set to `true` to enforce table ACL
-   checking.  Needs to be enabled for your ACLs to have any effect.
+   checking.  **Needs to be enabled for your ACLs to have any effect.**
    Any users that are not specified in an ACL policy will be denied.
    Default is `false`.
  * `-queryserver-config-acl-exempt-acl`:  Allows you to specify the name
@@ -86,33 +85,31 @@ file with the following example to explain the format:
 ```
 
 Notes:
- * `name`: This is the name of the ACL (`aclname` in the example above) is 
-   what needs to be specified in `-queryserver-config-acl-exempt-acl`, 
+ * `name`: This is the name of the ACL (`aclname` in the example above) is
+   what needs to be specified in `-queryserver-config-acl-exempt-acl`,
    if you need to exempt a specific ACL from enforcement.
  * `table_names_or_prefixes`:  A list of strings and/or regexes that allow
    a rule to target a specific table or set of tables.  Use `%` as in the
-   example to specify all tables.  This list is additive, e.g. if you specify
-   a regex of `%`, the ACL will be applied to all tables, regardless of the
-   other names/regexes in the list.  TODO: regex format
-   TODO: What is the enforcement order?
- * `readers`:  A list of VTGate users (TODO: link to spec, note that it is
-   the principal name that is used) that are allowed to read the tables
-   targeted by this ACL rule. Typically allows `SELECT`.
+   example to specify all tables.  Note that only the SQL `%` "regex"
+   wildcard is supported here at the moment.
+ * `readers`:  A list of VTGate users, specified by their [UserData](../user-management.md#user-data)
+   field in the authentication specification, that are allowed to read the
+   tables targeted by this ACL rule. Typically allows `SELECT`.
  * `writers`:  A list of VTGate users that are allowed to write to the tables
    targeted by this ACL rule. Typically allows `INSERT`, `UPDATE` and `DELETE`.
  * `admins`:  A list of VTGate users that are allowed admin privileges on
    the tables targeted by this ACL rule.  Typically allows DDL privileges,
-   e.g. `ALTER TABLE`.  TODO:  Truncate?
+   e.g. `ALTER TABLE`. Note that this also includes some commands that might
+   be thought of as DML, which are really DDL, like `TRUNCATE`)
  * Note that `writers` privilege does not imply `readers` privilege, and `admins`
    privilege does not imply `readers` or `writers`.  You need to therefore
    add your users to each list explicitly if you want them to have that
    level of access.
- * You should specify multiple ACL rules if you want to grant different levels
-   of access privileges to different sets of users or targeting different
-   sets of tables.
-
-
-TODO:  https://github.com/vitessio/vitess/blob/master/go/vt/vttablet/endtoend/main_test.go#L174
+ * You cannot use multiple ACL rules to target the same (sub)set of tables.
+   Therefore the tablenames specified by `table_names_or_prefixes`
+   (or expanded by regexes) need to be non-overlapping between ACL rules.
+   Additionally, you cannot have duplicate tablenames or overlapping regexes
+   in the `table_names_or_prefixes` list in a single ACL rule.
 
 
 ## Example
