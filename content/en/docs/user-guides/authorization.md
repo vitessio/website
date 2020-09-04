@@ -34,7 +34,7 @@ behavior of ACLs.  Let's review these:
    users.
  * `-queryserver-config-enable-table-acl-dry-run`:  Set to `true` to check the
    table ACL at runtime, and emit only emit the
-   [TableACLPseudoDenied](../configuring-components.md#tableaclallowed-tableacldenied-tableaclpseudodenied)
+   [TableACLPseudoDenied](../configuring-components/#tableaclallowed-tableacldenied-tableaclpseudodenied)
    metric if a request would have been blocked. The request is then
    allowed to pass, even if the ACL determined it should
    be blocked.  Used for testing ACL policies. Default is `false`.
@@ -92,7 +92,7 @@ Notes:
    a rule to target a specific table or set of tables.  Use `%` as in the
    example to specify all tables.  Note that only the SQL `%` "regex"
    wildcard is supported here at the moment.
- * `readers`:  A list of VTGate users, specified by their [UserData](../user-management.md#user-data)
+ * `readers`:  A list of VTGate users, specified by their [UserData](../user-management/#userdata)
    field in the authentication specification, that are allowed to read the
    tables targeted by this ACL rule. Typically allows `SELECT`.
  * `writers`:  A list of VTGate users that are allowed to write to the tables
