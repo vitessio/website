@@ -31,5 +31,9 @@ You can apply schema changes directly to the underlying MySQL shard master insta
 and update itself (this is controlled by the `-queryserver-config-schema-reload-time` parameter and defaults to 1800 seconds).
 You can also explicitly issue the `vtctlclient` `ReloadSchema` command to make it reload immediately.
 
-This approach can be extended to use schema deployment tools like `gh-ost` or `pt-online-schema-change`. Using these schema
-deployment tools is the recommended approach for large tables, because they incur no downtime.
+This approach can be extended to use schema deployment tools like `gh-ost` or
+`pt-online-schema-change`. Using these schema deployment tools is the
+recommended approach for large tables, because they incur no downtime.
+Note that an experimental direct integration with these tools exists
+in Vitess, and is due for release in the near future (see
+[roadmap](../../resources/roadmap/))

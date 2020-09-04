@@ -4,23 +4,37 @@ weight: 1
 aliases: ['/docs/reference/mysql-server-protocol/']
 ---
 
-VTGate servers speak both gRPC and the MySQL server protocol. This allows you to connect to Vitess as if it were a MySQL Server without any changes to application code. This document refers to known compatibility issues where Vitess differs from MySQL.
+VTGate servers speak both gRPC and the MySQL server protocol. The MySQL server protocol support allows you to connect to Vitess as if it were a MySQL Server without changes to application code. This document refers to known compatibility issues where Vitess differs from MySQL.
 
 ## Transaction Model
 
-Vitess provides `READ COMMITTED` semantics when executing cross-shard queries. This differs to MySQL, which defaults to `REPEATABLE READ`.
+Vitess provides `READ COMMITTED` semantics when executing cross-shard queries.
+This differs to MySQL, which defaults to `REPEATABLE READ`. If this difference
+matters to you, you can get `READ COMMITTED` semantics by placing the table(s)
+for which it is important its own unsharded keyspace.
 
 ## SQL Syntax
 
-The following describes some of the major differences in SQL Syntax handling between Vitess and MySQL. For a list of unsupported queries, check out the [test-suite cases](https://github.com/vitessio/vitess/blob/master/go/vt/vtgate/planbuilder/testdata/unsupported_cases.txt).
+The following describes some of the major differences in SQL Syntax handling
+between Vitess and MySQL. For a list of unsupported queries, check out the
+[test-suite cases](https://github.com/vitessio/vitess/blob/master/go/vt/vtgate/planbuilder/testdata/unsupported_cases.txt).
+When reviewing these test cases, be aware that many of the incompabilities
+only apply to cases where some/all of the tables involved are sharded. In
+general, it might be possible to work around potential issues by either
+isolating certain tables in an unsharded keyspace, or by just avoiding
+the problematic SQL construct.
 
-### DDL                                                                      
-                                                                            
-Vitess supports MySQL DDL, and will send `ALTER TABLE` statements to each of the underlying tablet servers. For large tables it is recommended to use an external schema deployment tool and apply directly to the underlying MySQL shard instances. This is discussed further in [Applying MySQL Schema](../../user-guides/making-schema-changes).
+### DDL
+Vitess supports MySQL DDL, and will send `ALTER TABLE` statements to each
+of the underlying tablet servers. For large tables it is recommended to
+use an external schema deployment tool and apply directly to the underlying
+MySQL shard instances. This is discussed further in [Applying MySQL Schema](../../user-guides/making-schema-changes).
 
 ### Join Queries
 
-Vitess supports `INNER JOIN` including cross-shard joins. `LEFT JOIN` is supported as long as there are not expressions that compare columns on the outer table to the inner table in sharded keyspaces.
+Vitess supports `INNER JOIN` including cross-shard joins. `LEFT JOIN` is
+supported as long as there are not expressions that compare columns on the
+outer table to the inner table in sharded keyspaces.
 
 ### Aggregation
 
@@ -33,6 +47,13 @@ Vitess supports a subset of subqueries. For example, a subquery combined with a 
 ### Stored Procedures
 
 Vitess does not yet support MySQL Stored Procedures.
+
+### Foreign Keys
+
+Foreign keys are supported in Vitess, but can only be enforced within a single
+shard.  As with all large MySQL databases, if your database is of signficant
+scale, it is considered best practice to use foreign keys sparingly,
+if at all.
 
 ### Window Functions and CTEs
 
@@ -48,20 +69,39 @@ By default, Vitess does not support transactions that span across shards. While 
 
 ### OLAP Workload
 
-By default, Vitess sets some intentional restrictions on the execution time and number of rows that a query can return. This default workload mode is called `OLTP`. This can be disabled by setting the workload to `OLAP`:
+By default, Vitess sets some intentional restrictions on the execution time
+and number of rows that a query can return. These restrictions are set
+low by default, and can be adjusted, but are there to improve the reliability
+and operability of your database environment.  You should therefore not
+blindly raise the row or execution time limits without due consideration
+and/or adding additional guardrails.
+
+This default workload mode of Vitess that enforces these restrictions
+is called `OLTP`. This can be disabled by setting the workload to `OLAP`, e.g.:
 ```sql
 SET workload='olap'
 ```
+
+You would typically use `OLAP` workload mode for tasks that need to
+pull a lot of data out of Vitess, like ETL tasks.  However, it should
+be noted that `OLAP` workload mode is intended to be
+used only with queries that can be streamed from backend servers, and
+therefore have significantly more compatibility restrictions than
+the default `OLTP` workload mode.
 
 ## Network Protocol
 
 ### Prepared Statements
 
-Starting with version 4.0, Vitess features experimental support for prepared statements via the MySQL protocol. Session-based commands using the `PREPARE` and `EXECUTE` SQL statements are not supported.
+Starting with version 4.0, Vitess features experimental support for prepared
+statements via the MySQL protocol. Session-based commands using the `PREPARE`
+and `EXECUTE` SQL statements are not supported.
 
 ### Authentication Plugins
 
-Vitess supports the `mysql_native_password` authentication plugin. Support for `caching_sha2_password` can be tracked in [#5399](https://github.com/vitessio/vitess/issues/5399).
+Vitess supports the `mysql_native_password` authentication plugin.
+Support for `caching_sha2_password` can be tracked in
+[#5399](https://github.com/vitessio/vitess/issues/5399).
 
 ### Transport Security
 
@@ -121,3 +161,17 @@ USE `mykeyspace:-80@rdonly`
 ```
 
 A similar effect can be achieved by using a database name like `mykeyspace:-80@rdonly` in your MySQL application client connection string.
+
+Lastly, it is possible to directly specify a `keyspace_id` in a database name
+instead of the shard specifier.  This allows for advanced use-cases where you
+are doing manual data placement between shards, and want your query to address
+a specific part of the keyspace range, without having to specify a specific
+shard (which would require knowledge of the current shard configuration). A
+use-case might be where you need to access a legacy table that was sharded
+before you started using Vitess, and you do not have a Vindex to direct
+queries to it appropriately.  This format looks like this:
+
+```sql
+-- `KeyspaceName[keyspace_id_value]@tabletType`
+USE `mykeyspace[0000000000000001]@rdonly`
+```
