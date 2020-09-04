@@ -34,7 +34,7 @@ behavior of ACLs.  Let's review these:
    users.
  * `-queryserver-config-enable-table-acl-dry-run`:  Set to `true` to check the
    table ACL at runtime, and emit only emit the
-   [TableACLPseudoDenied](configuring-components.md#tableaclallowed-tableacldenied-tableaclpseudodenied)
+   [TableACLPseudoDenied](../configuring-components.md#tableaclallowed-tableacldenied-tableaclpseudodenied)
    metric if a request would have been blocked. The request is then
    allowed to pass, even if the ACL determined it should
    be blocked.  Used for testing ACL policies. Default is `false`.
