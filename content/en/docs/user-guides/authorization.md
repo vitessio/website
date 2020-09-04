@@ -25,7 +25,7 @@ characteristics:
 ## VTTablet parameters for table ACLs
 
 Note that the Vitess authorization via ACLs are applied at the VTTablet
-level, not VTGate, as authentication is.
+level, as opposed to on VTGate, where authentication is enforced.
 There are a number of VTTablet commandline parameters that control the
 behavior of ACLs.  Let's review these:
  * `-enforce-tableacl-config`:  Set this to true to ensure VTTablet will not
@@ -33,13 +33,14 @@ behavior of ACLs.  Let's review these:
    catch misconfigurations resulting in blanket access to authenticated
    users.
  * `-queryserver-config-enable-table-acl-dry-run`:  Set to `true` to check the
-   table ACL at runtime, and emit only emit the
+   table ACL at runtime, and only emit the
    [TableACLPseudoDenied](../configuring-components/#tableaclallowed-tableacldenied-tableaclpseudodenied)
    metric if a request would have been blocked. The request is then
    allowed to pass, even if the ACL determined it should
-   be blocked.  Used for testing ACL policies. Default is `false`.
+   be blocked.  This can be used for testing new or updated ACL policies.
+   Default is `false`.
  * `-queryserver-config-strict-table-acl`: Set to `true` to enforce table ACL
-   checking.  **Needs to be enabled for your ACLs to have any effect.**
+   checking.  **This needs to be enabled for your ACLs to have any effect.**
    Any users that are not specified in an ACL policy will be denied.
    Default is `false`.
  * `-queryserver-config-acl-exempt-acl`:  Allows you to specify the name
@@ -85,7 +86,7 @@ file with the following example to explain the format:
 ```
 
 Notes:
- * `name`: This is the name of the ACL (`aclname` in the example above) is
+ * `name`: This is the name of the ACL (`aclname` in the example above) and is
    what needs to be specified in `-queryserver-config-acl-exempt-acl`,
    if you need to exempt a specific ACL from enforcement.
  * `table_names_or_prefixes`:  A list of strings and/or regexes that allow
