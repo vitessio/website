@@ -42,7 +42,7 @@ $ cat > users.json << EOF
 EOF
 ```
 
-Then we can load this into VTGate with:
+Then we can load this into VTGate with the additional commandline parameters:
 ```sh
 vtgate $(cat <<END_OF_COMMAND
     -mysql_auth_server_impl=static
@@ -90,6 +90,26 @@ JSON authentication file would look something like this instead:
   ]
 }
 ```
+
+You can extract a `mysql_native_password` hash from an existing MySQL
+install by looking at the `authentication_string` column of the relevant
+user's row in the `mysql.user` table. An alternate way to generate this
+hash is to SHA1 the cleartext password string twice, e.g. doing it in
+MySQL for the cleartext password `password`:
+
+```mysql
+mysql> SELECT UPPER(SHA1(UNHEX(SHA1("password")))) as hash;
++------------------------------------------+
+| hash                                     |
++------------------------------------------+
+| 2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19 |
++------------------------------------------+
+1 row in set (0.01 sec)
+```
+
+So, you would use `*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19` as the
+`MysqlNativePassword` hash value for the cleartext password `password`.
+
 
 ## UserData
 
