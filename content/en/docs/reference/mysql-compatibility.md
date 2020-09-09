@@ -67,15 +67,9 @@ Vitess supports the `mysql_native_password` authentication plugin. Support for `
 
 To configure VTGate to support `TLS` set `-mysql_server_ssl_cert` and `-mysql_server_ssl_key`. Client certificates can also be mandated by setting `-mysql_server_ssl_ca`. If there is no CA specified then TLS is optional.
 
-## Session Scope
+## Temporary Tables
 
-Vitess uses a connection pool to fan-in connections from VTGate servers to Tablet servers. VTGate servers will refuse statements that make changes to the connection's session scope. This includes:
-
-* `SET SESSION var=x`
-* `CREATE TEMPORARY TABLE`
-* `SET @var=x`
-
-The exception to this, is that Vitess maintains a whitelist statements that MySQL connectors may use when they first connect to Vitess. Vitess will ignore these noisy statements when it knows it is safe to do so.
+Vitess does not support the use of temporary tables.
 
 ## Character Set and Collation
 

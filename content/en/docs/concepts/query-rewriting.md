@@ -21,13 +21,13 @@ This means that it's not safe to store any state in the session - we can't be su
 One if the things that is kept in the session state when working with MySQL are the user defined variables. 
 You can assign values to it using SET:
 
-```
+```sql
 SET @my_user_variable = 'foobar'
 ```
 
 And later they can be queries using for example SELECT:
 
-```
+```sql
 > SELECT @my_user_variable;
 +-------------------+
 | @my_user_variable |
@@ -43,11 +43,15 @@ The second query is also not sent down - trivial queries such as this one is act
 If we try a more complicated query that requires data from MySQL, vtgate will rewrite the query before sending it down.
 If we were to write something like :
 
-```WHERE col = @my_user_variable```, 
+```sql
+WHERE col = @my_user_variable
+```
 
 what MySQL will see is 
 
-```WHERE col = 'foobar'```. 
+```sql
+WHERE col = 'foobar'
+```
 
 This way, no sesssion state is needed to evaluate the query in MySQL.
 
@@ -228,6 +232,7 @@ Herer follows a list of all the system variables that is handled by Vitess, and 
 |sql_auto_is_null", boolean:|CheckAndIgnore| 
 |time_zone|CheckAndIgnore|
 |version_tokens_session|CheckAndIgnore|
+
 **Related Vitess Documentation**
 
 * [VTGate](../vtgate)
