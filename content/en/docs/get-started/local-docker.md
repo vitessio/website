@@ -43,14 +43,14 @@ This will set up a MySQL replication topology, as well as `etcd`, `vtctld` and `
 - `vtctld` listens on [http://127.0.0.1:15000/debug/status](http://127.0.0.1:15000/debug/status) 
 - Control panel is available at [http://localhost:15000/app/](http://localhost:15000/app/)
 
-From within the docker shell, aliases are set up for your convenience. Try th efollowing `mysql` commands to connect to various tablets:
+From within the docker shell, aliases are set up for your convenience. Try the following `mysql` commands to connect to various tablets:
 
 - `mysql commerce`
 - `mysql commerce@master`
 - `mysql commerce@replica`
 - `mysql commerce@rdonly`
 
-You will find that Vitess runs a single keyspace, single shart cluster.
+You will find that Vitess runs a single keyspace, single shard cluster.
 
 
 ## Summary
