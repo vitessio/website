@@ -49,7 +49,7 @@ own binlogs, which is the default Vitess configuration). You can use
 [Ripple](https://github.com/google/mysql-ripple) as a binlog server, although
 there are other options;  and you could use an existing MySQL server as well.
 
-If you use Ripple, you need to set that up yourself, and ensure you take
+If you use Ripple, you will need to configure it yourself, and ensure you take
 care of the following:
  - You should have a highly available binlog server setup. If the binlog
    server goes down, you need to ensure that it is back up and able
@@ -77,11 +77,11 @@ $ vtctlclient -server <vtctld_host>:<vtctld_port> CreateKeyspace -keyspace_type=
  Here:
  - `originalks` is the base keyspace, i.e. the keyspace we took a backup of,
  and are trying to recover.
- - `snapshot_time` is the timestamp of the point in time we want to recover
+ - `snapshot_time` is the timestamp of the point in time to we want to recover
  to. Note the use of the `Z` in the timestamp, indicating it is expressed
  in UTC.
- - `restoreks` is the name of recovery keyspace, i.e. the keyspace we
- are restoring our backup to.
+ - `restoreks` is the name of recovery keyspace, i.e. the keyspace to which
+ we are restoring our backup.
 
  Next, you can launch the vttablet, which as part of vttablet's normal
  initialization procedure will look for a backup to restore. It will
@@ -90,7 +90,7 @@ $ vtctlclient -server <vtctld_host>:<vtctld_port> CreateKeyspace -keyspace_type=
  to restore the last backup earlier than the timestamp provided for the
  specific shard the vttablet is in.
 
- Here are the command line arguments for vttablet that it uses in this
+ Here are the command line arguments vttablet uses in this
  process.  You may already be using some of these as part of your
  normal vttablet initialization parameters (e.g. if you are using the
  Vitess K8s operator):
@@ -102,16 +102,16 @@ $ vtctlclient -server <vtctld_host>:<vtctld_port> CreateKeyspace -keyspace_type=
  to the keyspace name.
  - `-init_shard 0` - here `0` is the shard name (or range) which we want
  to recover.
- - `-binlog_host x.x.x.x` - hostname or IP address of binlog server
- - `-binlog_port XXXX` - TCP port of binlog server
- - `-binlog_user XXXX` - username to access binlog server
- - `-binlog_password YYYY` - password to access binlog server
- - `-pitr_gtid_lookup_timeout duration` - See below for details
+ - `-binlog_host x.x.x.x` - hostname or IP address of binlog server.
+ - `-binlog_port XXXX` - TCP port of binlog server.
+ - `-binlog_user XXXX` - username to access binlog server.
+ - `-binlog_password YYYY` - password to access binlog server.
+ - `-pitr_gtid_lookup_timeout duration` - See below for details.
 
-And then, depending on your backup storage implementation, you use a
+And then, depending on your backup storage implementation, you can use a
 variety of flags:
  - `-backup_storage_implementation file` - for plain file backup type.
- If you use this option, you will also need to specify
+ If you use this option, you will also need to specify:
    - `-file_backup_storage_root` - with a path pointing to your backup
  storage location.
  - `-backup_storage_implementation s3` - for backing up to S3. If you
@@ -119,7 +119,7 @@ variety of flags:
    - `-s3_backup_aws_region`
    - `-s3_backup_storage_bucket`
    - `-s3_backup_storage_root`
- - There are other `-backup_storage_implementation` options like `gcs` and
+ - There are more `-backup_storage_implementation` options like `gcs` and
   others.
 
 You will also probably want to use other flags for backup and restore like:
@@ -127,9 +127,8 @@ You will also probably want to use other flags for backup and restore like:
  take online backups. Without this flag, the mysql instance on the replica
  being backed up will be shut down during the backup.
  - `-backup_storage_compress true` - gzip compress the backup (default is
- true)
-You need to be consistent in your use of these flags for backup and restore,
-of course.
+ true).
+You need to be consistent in your use of these flags for backup and restore.
 
 Once the restore of the last backup earlier than the `snapshot_time` timestamp
 is completed, the vttablet proceeds to use the `binlog_*` parameters to
