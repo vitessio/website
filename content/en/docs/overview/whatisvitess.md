@@ -12,7 +12,7 @@ Vitess is a database solution for deploying, scaling and managing large clusters
 
 Vitess includes compliant JDBC and Go database drivers using a native query protocol. Additionally, it implements the MySQL server protocol which is compatible with virtually any other language.
 
-Vitess has been serving all YouTube database traffic since 2011, and has now been adopted by many enterprises for their production needs.
+Vitess served all YouTube database traffic for over five years. Many enterprises have now adopted Vitess for their production needs.
 
 ## Features
 
