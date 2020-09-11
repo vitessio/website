@@ -2,14 +2,8 @@
 title: MoveTables
 description: Move one or more tables between keyspaces without downtime
 aliases: ['/docs/advanced/movetables','/docs/reference/movetables']
-weight: 2
+weight: 20
 ---
-
-<div class="ug-link">
-
-[User Guide](/docs/user-guides/move-tables/)
-
-</div>
 
 ### Command
 
@@ -84,6 +78,7 @@ One of
 </div>
 
 ### Examples
+Coming soon ...
 
 
 ### A MoveTables Workflow
@@ -102,7 +97,24 @@ Once you select the set of tables to move from one keyspace to another you need 
 
 #### Adopting Vitess
 
+For those wanting to try out Vitess for the first time MoveTables provides an easy way to route part of their workload
+to Vitess with the ability of migrating back without any risk. You point a vttablet to your existing MySQL installation, 
+spin up a unsharded Vitess cluster and use a MoveTables workflow to start serving some tables from Vitess. You can also go
+further and use a Reshard workflow to experiment with a sharded version of your database.
+
+See [user guide](docs/user-guides/unmanaged-tablet/#move-legacytable-to-the-commerce-keyspace) for detailed steps
+
 #### Horizontal Sharding
+
+For existing Vitess users you can easily move one or more tables to another keyspace, either for balancing load or
+as a preparation to sharding your tables.
+
+See [user guide](/docs/user-guides/move-tables/) which describes hwo MoveTables works in the local example provided
+in the Vitess repo.
+
+#### More Reading
+
+* [MoveTables in practice](docs/concepts/move-tables/)
 
 
 

@@ -2,7 +2,7 @@
 title: Overview
 description: VReplication features, design and options in a nutshell
 aliases: ['/docs/advanced/vreplication/','/docs/reference/vreplication/']
-weight: 1
+weight: 10
 ---
 
 VReplication is a core component of Vitess that can be used to compose
