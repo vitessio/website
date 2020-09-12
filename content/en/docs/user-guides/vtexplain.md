@@ -49,7 +49,7 @@ Next, identify a [VSchema](../../concepts/vschema) that contains the [Vindexes](
 
 ### The VSchema must use a keyspace name.
 
-VTExplain requires a keyspace name for each keyspace in an input VSChema:
+VTExplain requires a keyspace name for each keyspace in an input VSchema:
 
 ```
 "keyspace_name": {
@@ -174,7 +174,7 @@ INSERT INTO users (user_id, name) VALUES(1, 'john')
 
 The example above shows how Vitess handles an insert into a table with a secondary lookup Vindex:
 
-+ At sequence number `1`, Vitess opens a transaction on shard `11-24` to insert the row into the `users_name_idx` table.
++ At sequence number `1`, Vitess opens a transaction on shard `22-24` to insert the row into the `users_name_idx` table.
 + At sequence number `2`, Vitess opens a second transaction on shard `16-18` to perform the actual insert into the `users` table.
 + At sequence number `3`, the first transaction commits.
 + At sequence number `4`, the second transaction commits.
