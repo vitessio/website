@@ -38,9 +38,15 @@ The following parameters apply to `mysqlctl`:
 | -sql-file | string | Identifies the file that contains the SQL commands to analyze (default "") |
 | -vschema | string | Identifies the VTGate routing schema (default "") |
 | -vschema-file | string | Identifies the VTGate routing schema file (default "") |
+| -ks-shard-map | string | Identifies the shard keyranges for unevenly-sharded keyspaces (default "") |
+| -ks-shard-map-file | string | Identifies the shard keyranges file (default "") |
 | -dbname | string | Optional database target to override normal routing (default "") |
 | -queryserver-config-passthrough-dmls |  | query server pass through all dml statements without rewriting (default false) |
 
+<br>
+
+Please note that `-ks-shard-map` and `ks-shard-map-file` will supercede `-shards`.
+If you attempt to `vtexplain` on a keyspace that is included in the keyspace shard map, the shards as defined in the mapping will be used and `-shards` will be ignored.
 
 ## Limitations
 
