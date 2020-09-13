@@ -49,7 +49,7 @@ Next, identify a [VSchema](../../concepts/vschema) that contains the [Vindexes](
 
 ### The VSchema must use a keyspace name.
 
-VTExplain requires a keyspace name for each keyspace in an input VSChema:
+VTExplain requires a keyspace name for each keyspace in an input VSchema:
 
 ```
 "keyspace_name": {
@@ -174,10 +174,120 @@ INSERT INTO users (user_id, name) VALUES(1, 'john')
 
 The example above shows how Vitess handles an insert into a table with a secondary lookup Vindex:
 
-+ At sequence number `1`, Vitess opens a transaction on shard `11-24` to insert the row into the `users_name_idx` table.
++ At sequence number `1`, Vitess opens a transaction on shard `22-24` to insert the row into the `users_name_idx` table.
 + At sequence number `2`, Vitess opens a second transaction on shard `16-18` to perform the actual insert into the `users` table.
 + At sequence number `3`, the first transaction commits.
 + At sequence number `4`, the second transaction commits.
+
+### Example: Explaining an uneven keyspace
+
+In previous examples, we used the `-shards` flag to set up an evenly-sharded keyspace, where each shard covers the same fraction of the keyrange.
+`VTExplain` also supports receiving a JSON mapping of shard ranges to see how Vitess would handle a query against an arbitrarly-sharded keyspace.
+
+To do this, we first create a JSON file containing a mapping of keyspace names to shardrange maps.
+The shardrange map has the same structure as the output of running `vtctl FindAllShardsInKeyspace <keyspace>`.
+
+```
+{
+  "mainkeyspace": {
+    "-80": {
+      "master_alias": {
+        "cell": "test",
+        "uid": 00000000100
+      },
+      "master_term_start_time": {
+        "seconds": 1599828375,
+        "nanoseconds": 664404881
+      },
+      "key_range": {
+        "end": "gA=="
+      },
+      "is_master_serving": true
+    },
+    "80-90": {
+      "master_alias": {
+        "cell": "test",
+        "uid": 00000000200
+      },
+      "master_term_start_time": {
+        "seconds": 1599828344,
+        "nanoseconds": 868327074
+      },
+      "key_range": {
+        "start": "gA==",
+        "end": "kA=="
+      },
+      "is_master_serving": true
+    },
+    "90-a0": {
+      "master_alias": {
+        "cell": "test",
+        "uid": 00000000300
+      },
+      "master_term_start_time": {
+        "seconds": 1599828405,
+        "nanoseconds": 152120945
+      },
+      "key_range": {
+        "start": "kA==",
+        "end": "oA=="
+      },
+      "is_master_serving": true
+    },
+    "a0-e8": {
+      "master_alias": {
+        "cell": "test",
+        "uid": 00000000400
+      },
+      "master_term_start_time": {
+        "seconds": 1599828183,
+        "nanoseconds": 911677983
+      },
+      "key_range": {
+        "start": "oA==",
+        "end": "6A=="
+      },
+      "is_master_serving": true
+    },
+    "e8-": {
+      "master_alias": {
+        "cell": "test",
+        "uid": 00000000500
+      },
+      "master_term_start_time": {
+        "seconds": 1599827865,
+        "nanoseconds": 770606551
+      },
+      "key_range": {
+        "start": "6A=="
+      },
+      "is_master_serving": true
+    }
+}
+```
+
+After having saved that to a file called `shardmaps.json`:
+
+```
+vtexplain -vschema-file vschema.json -schema-file schema.sql -ks-shard-map shardmaps.json -replication-mode "ROW" -output-mode text -sql "SELECT * FROM users; SELECT * FROM users WHERE id IN (10, 17, 42, 1000);"
+----------------------------------------------------------------------
+SELECT * FROM users
+
+1 mainkeyspace/-80: select * from users limit 10001
+1 mainkeyspace/80-90: select * from users limit 10001
+1 mainkeyspace/90-a0: select * from users limit 10001
+1 mainkeyspace/a0-e8: select * from users limit 10001
+1 mainkeyspace/e8-: select * from users limit 10001
+
+----------------------------------------------------------------------
+SELECT * FROM users WHERE id IN (10, 17, 42, 100000)
+
+1 mainkeyspace/-80: select * from users where id in (10, 17, 42) limit 10001
+1 mainkeyspace/80-90: select * from users where id in (100000) limit 10001
+
+----------------------------------------------------------------------
+```
+
 
 ## See also
 
