@@ -35,7 +35,7 @@ We use unit tests both to test the code and to describe it for other developers.
   * Attempt to cover every corner case the change introduces. 
   The thumb rule is: if it can happen in production, it must be covered.
 * Integration tests should ensure that the feature works end-to-end. 
-It must cover all the important use cases of the feature.
+They must cover all the important use cases of the feature.
 * A separate pull request into `vitessio/website` that updates the documentation is required if the feature changes or adds to existing behavior.
 
 ### Bug fixes
