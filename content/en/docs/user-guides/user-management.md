@@ -10,7 +10,7 @@ Vitess uses its own mechanism for managing users and their permissions through
 
 ## Authentication
 
-The Vitess VTGate component takes care of authentication for requests so you
+The Vitess VTGate component takes care of authentication for requests so we
 will need to add any users that should have access to the Keyspaces via the
 command-line options to VTGate.
 
@@ -169,4 +169,3 @@ Other than the static authentication file method above, other authentication
 mechanisms are also provided:
  * LDAP-based authentication
  * TLS client certificate-based authentication
-
