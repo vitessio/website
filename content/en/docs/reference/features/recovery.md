@@ -41,13 +41,13 @@ $ vtctlclient -server <vtctld_host>:<vtctld_port> Backup zone1-101
 Here `zone1-101` is the tablet alias of a replica tablet in the shard that you
 want to back up.  Note that you can also use `vtctlclient BackupShard` to just
 specify a keyspace and shard, and have Vitess choose the tablet to run the
-backup on for you, instead of having to specify the tablet alias explicitly.
+backup for you, instead of having to specify the tablet alias explicitly.
 
 To maintain continuous binlogs, you need to have a binlog server pointing to
 the master (or a replica, assuming that the replica is also maintaining its
 own binlogs, which is the default Vitess configuration). You can use
 [Ripple](https://github.com/google/mysql-ripple) as a binlog server, although
-there are other options;  and you could use an existing MySQL server as well.
+there are other options; and you could use an existing MySQL server as well.
 
 If you use Ripple, you will need to configure it yourself, and ensure you take
 care of the following:
@@ -99,7 +99,9 @@ $ vtctlclient -server <vtctld_host>:<vtctld_port> CreateKeyspace -keyspace_type=
  - `-init_db_name_override vt_originalks` - here `vt_originalks` is the
  name of the original underlying database for the keyspace that you backed
  up and want to restore.  Usually, this takes the form of `vt_` prepended
- to the keyspace name.
+ to the keyspace name. However, the original underlying database could
+ also have been using an `-init_db_name_override` directive of its own,
+ and this value should then be set to match that.
  - `-init_shard 0` - here `0` is the shard name (or range) which we want
  to recover.
  - `-binlog_host x.x.x.x` - hostname or IP address of binlog server.
@@ -135,7 +137,7 @@ is completed, the vttablet proceeds to use the `binlog_*` parameters to
 connect to the binlog server and then apply all binlog events from the time
 of the backup until the timestamp provided.
 
-Since the last backup for each shard making up the keyspace are taken at
+Since the last backup for each shard making up the keyspace could be taken at
 different points in time, the amount of time that it takes to apply these events
 may differ between restores of different shards in the keyspace.
 
@@ -146,8 +148,8 @@ default the timeout for this operation is one minute (1m). This can be changed
 by setting the vttablet `-pitr_gtid_lookup_timeout` flag.
 
 VTGate will automatically exclude tablets belonging to snapshot keyspaces from
-query routing unless they are specifically addressed using `USE originalks`
-or by using queries of the form `SELECT ... FROM originalks.table`.
+query routing unless they are specifically addressed using `USE restoreks`
+or by using queries of the form `SELECT ... FROM restoreks.table`.
 
 The base keyspace's vschema will be copied over to the new snapshot keyspace
 as a default. If desired this can be overwritten by the user. Care needs to
