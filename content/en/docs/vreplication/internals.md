@@ -1,6 +1,6 @@
 ---
 title: Life of a stream
-aliases: ['/docs/advanced/vr-internals','/docs/reference/vr-internals']
+aliases: ['/docs/vreplication/vr-internals']
 weight: 100
 ---
 
