@@ -1,8 +1,8 @@
 ---
 title: Reshard
 description: Move one or more tables between keyspaces without downtime
-aliases: ['/docs/advanced/reshard','/docs/reference/reshard']
-weight: 60
+aliases: ['/docs/vreplication/reshard']
+weight: 21
 ---
 
 ### Command

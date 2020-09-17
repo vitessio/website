@@ -1,7 +1,7 @@
 ---
 title: SwitchReads
 description: Route reads to target keyspace in a vreplication workflow
-aliases: ['/docs/advanced/switchreads','/docs/reference/switchreads']
+aliases: ['/docs/vreplication/switchreads']
 weight: 30
 ---
 

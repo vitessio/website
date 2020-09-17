@@ -1,7 +1,7 @@
 ---
 title: MoveTables
 description: Move one or more tables between keyspaces without downtime
-aliases: ['/docs/advanced/movetables','/docs/reference/movetables']
+aliases: ['/docs/vreplication/movetables']
 weight: 20
 ---
 

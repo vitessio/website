@@ -1,7 +1,7 @@
 ---
 title: Life of a stream
 aliases: ['/docs/vreplication/vr-internals']
-weight: 100
+weight: 1000
 ---
 
 ### Introduction

@@ -1,7 +1,7 @@
 ---
 title: Overview
 description: VReplication features, design and options in a nutshell
-aliases: ['/docs/advanced/vreplication/','/docs/reference/vreplication/']
+aliases: ['/docs/vreplication/vreplication']
 weight: 10
 ---
 

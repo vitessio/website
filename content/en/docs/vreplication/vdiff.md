@@ -1,7 +1,7 @@
 ---
 title: VDiff
 description: Compare the source and target tables in a workflow to ensure data integrity
-aliases: ['/docs/advanced/vdiff','/docs/reference/vdiff']
+aliases: ['/docs/vreplication/vdiff']
 weight: 25
 ---
 

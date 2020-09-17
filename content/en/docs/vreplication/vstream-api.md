@@ -1,7 +1,7 @@
 ---
 title: The VStream API
-aliases: ['/docs/advanced/vstream-api','/docs/reference/vstream-api']
-weight: 100
+aliases: ['/docs/vreplication/vstream-api']
+weight: 2000
 ---
 
 The VStream API is a grpc API provided by VTGate. It lets you stream events for one or more

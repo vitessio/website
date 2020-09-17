@@ -1,7 +1,7 @@
 ---
 title: SwitchWrites
 description: Route writes to target keyspace in a vreplication workflow
-aliases: ['/docs/advanced/switchwrites','/docs/reference/switchwrites']
+aliases: ['/docs/vreplication/switchwrites']
 weight: 40
 ---
 
@@ -48,6 +48,15 @@ is cancelled: the workflow is set to Running so that replication continues.
 SwitchWrites, by default, starts a reverse replication stream with the current target as the source, replicating
 back to the original source. This enables a quick and simple rollback. This reverse workflow name is that
 of the original workflow concatenated with \_reverse.
+</div>
+
+#### -dry-run 
+**optional**\
+**default** false
+
+<div class="cmd">
+You can do a dry run where no actual action is taken but the command logs all the actions that would be taken
+by SwitchReads.
 </div>
 
 #### keyspace.workflow 
