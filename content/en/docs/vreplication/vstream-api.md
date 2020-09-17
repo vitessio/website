@@ -9,7 +9,7 @@ tables in Vitess in a shard-aware and customized way. You can think of it as a f
 
 Here is a high-level design of how VStream works:
 
-![VStream Design](../../img/VStream.svg)
+![VStream Design](../img/VStream.svg)
 
 VStreams can work in one of two modes:
 
