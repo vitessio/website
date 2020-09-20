@@ -13,7 +13,8 @@ Workflow  [-dry_run] <keyspace[.workflow]> <action>
 
 ### Description
 
-Workflow is a convenience command that some common functions associated with a workflow.  
+Workflow is a convenience command for useful actions on a workflow that you can use instead of 
+actually specifying a query to VExec.
 
 ### Parameters
 
@@ -33,22 +34,19 @@ by SwitchReads.
 Name of target keyspace and the associated workflow to SwitchWrites for.
 </div>
 
-
 #### action 
 **mandatory**
 
 <div class="cmd">
 action is one of
 
-* *stop* sets the state of the workflow to Stopped, no further vreplication will happen until restarted
-* *start* starts a Stopped workflows
+* *stop* sets the state of the workflow to Stopped: no further vreplication will happen until workflow is restarted
+* *start* restarts a Stopped workflows
 * *delete* removes the entries for this workflow in \_vt.vreplication
 * *show* returns a JSON object with details about the associated shards and also with all the columns
     from the \_vt.vreplication table
-* *list-all* returns a list of all running workflows in a keyspace
+* *list-all* returns a comma separated list of all running workflows in a keyspace
 </div>
-
-
 
 #### Example
 ```

@@ -1,6 +1,6 @@
 ---
 title: SwitchReads
-description: Route reads to target keyspace in a vreplication workflow
+description: Route reads to target keyspace
 aliases: ['/docs/vreplication/switchreads']
 weight: 30
 ---
@@ -14,8 +14,8 @@ SwitchReads  [-cells=<cells>] [-reverse] [-dry-run]
 
 ### Description
 
-SwitchReads is used to switch reads for tables in a MoveTables workflow or for entire keyspace to the target keyspace in a
-Reshard workflow.
+SwitchReads is used to switch reads for tables in a MoveTables workflow or for entire keyspace 
+to the target keyspace in a Reshard workflow.
 
 ### Parameters
 
@@ -56,7 +56,7 @@ by SwitchReads.
 **mandatory**
 
 <div class="cmd">
-On type of tablets should be reads be switched to the target keyspace. One of replica or rdonly. rdonly
+On which type of tablets should be reads be switched to the target keyspace. One of replica or rdonly. rdonly
 tables should be switched first before replica tablets. 
 </div>
 

@@ -99,6 +99,8 @@ VReplication performs the following essential functions:
   equivalence of tables, which will allow VTGate to compute the most optimal
   plans given the available options.
 
+<a name="exec"></a>
+
 ## VReplicationExec
 
 The `VReplicationExec` command is used to manage vreplication streams.

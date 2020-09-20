@@ -25,29 +25,27 @@ in the workflow. Internally it calls VReplicationExec for running the query.
 **default** false
 
 <div class="cmd">
-You can do a dry run where no actual action is taken but the command logs all the actions that would be taken
-by SwitchReads.
+You can do a dry run where no actual action is taken but the command logs the queries and the tablets
+ on which the query would be run.
+by VExec.
 </div>
 
 #### keyspace.workflow 
 **mandatory**
 
 <div class="cmd">
-Name of target keyspace and the associated workflow to SwitchWrites for.
+Name of target keyspace and the associated workflow
 </div>
-
 
 #### sql query 
 **mandatory**
 
 <div class="cmd">
-Sql query which will be run: validations are done to ensure that queries can be run only against vreplication tables.
+Sql query to be run: validations are done to ensure that queries can be run only against vreplication tables.
 A limited set of queries are allowed. 
 </div>
 
-
-
 #### Example
 ```
-vtctlclient  VExec keyspace1.wf2 'select * from _vt.vreplication'
+vtctlclient VExec keyspace1.wf2 'select * from _vt.vreplication'
 ```

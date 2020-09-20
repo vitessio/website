@@ -1,6 +1,6 @@
 ---
 title: Reshard
-description: Move one or more tables between keyspaces without downtime
+description: split or merge shards in a keyspace
 aliases: ['/docs/vreplication/reshard']
 weight: 21
 ---
@@ -11,7 +11,6 @@ weight: 21
 Reshard  [-skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>
 
 ```
-
 
 ### Description
 
@@ -32,14 +31,14 @@ before calling reshard.
 **mandatory**
 
 <div class="cmd">
-Name of target keyspace and the associated workflow name to create for this Reshard workflow.
+Name of keyspace being sharded and the associated workflow name, used in later commands to refer back to this reshard.
 </div>
 
 #### source_shards 
 **mandatory**
 
 <div class="cmd">
-Comma separated shard names to reshard to.
+Comma separated shard names to reshard from.
 </div>
 
 #### target_shards
@@ -48,3 +47,15 @@ Comma separated shard names to reshard to.
 <div class="cmd">
 Comma separated shard names to reshard to.
 </div>
+
+
+### A Reshard Workflow
+
+Once you decide on the new resharding strategy for a keyspace, you need to initiate a VReplication workflow as follows:
+
+1. Initiate the migration using Reshard
+2. Monitor the workflow using [Workflow](../workflow) or [VExec](../vexec)
+3. Confirm that data has been copied over correctly using [VDiff](../vdiff)
+4. Start the cutover by routing all reads from your application to those tables using [SwitchReads](../switchreads)
+5. Complete the cutover by routing all writes using [SwitchWrites](../switchwrites)
+6. Optionally cleanup the source tables using [DropSources](../dropsources)

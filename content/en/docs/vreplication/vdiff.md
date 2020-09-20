@@ -1,6 +1,6 @@
 ---
 title: VDiff
-description: Compare the source and target tables in a workflow to ensure data integrity
+description: Compare the source and target in a workflow to ensure integrity
 aliases: ['/docs/vreplication/vdiff']
 weight: 25
 ---
@@ -17,7 +17,7 @@ VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=replica]
 VDiff does a row by row comparison of all tables associated with the workflow, diffing the
 source keyspace and the target keyspace and reporting counts of missing/extra/unmatched rows.
 
-It is highly recommended that this be done before you finalize a workflow with SwitchWrites.
+It is highly recommended that you do this before you finalize a workflow with SwitchWrites.
 
 ### Parameters
 
@@ -51,7 +51,7 @@ One or more from MASTER,REPLICA,RDONLY.<br><br>
 **default** 30s
 
 <div class="cmd">
-VDiff finds the current position of the source master and then wants for the target replication to reach
+VDiff finds the current position of the source master and then waits for the target replication to reach
 that position for _filtered_replication_wait_time_. If the target is much behind the source or if there is 
 a high write qps on the source then this time will need to be increased.
 </div>
@@ -79,4 +79,5 @@ Summary for customer: {ProcessedRows:11 MatchingRows:11 MismatchedRows:0 ExtraRo
  takes more than an hour and you use vtctlclient then it will hit the grpc/http default timeout of 1 hour. 
  In that case you can use vtctl (the bundled vctlclient + vtctld) instead.
  * There is no throttling, so you might see an increased lag in the replica used as the source.
-VReplication and VDiff performance improvements as well as freno-style throttling support are on the roadmap!
+ 
+_VReplication and VDiff performance improvements as well as freno-style throttling support are on the roadmap!_
