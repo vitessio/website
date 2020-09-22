@@ -66,7 +66,7 @@ The following options can be used to configure VTTablet for backups:
     </tr>
     <tr>
       <td><code>backup_storage_hook</code></td>
-      <td>If set, the contents of every file to backup is sent to a hook. The
+      <td>If set, the content of every file to backup is sent to a hook. The
         hook receives the data for each file on stdin. It should echo the
         transformed data to stdout. Anything the hook prints to stderr will
         be printed in the vttablet logs.<br>
@@ -176,9 +176,9 @@ For example, suppose you typically keep four days of replication logs and you cr
 
 ### Concurrency
 
-The back-up and restore processes simultaneously copy and either compress or decompress multiple files to increase throughput. You can control the concurrency using command-line flags:
+The backup and restore processes simultaneously copy and either compress or decompress multiple files to increase throughput. You can control the concurrency using command-line flags:
 
-* The vtctl [Backup](../../reference/vtctl#backup) command uses the `-concurrency` flag.
+* The vtctl [Backup](https://vitess.io/docs/reference/programs/vtctl/tablets/#backup) command uses the `-concurrency` flag.
 * vttablet uses the `-restore_concurrency` flag.
 
 If the network link is fast enough, the concurrency matches the CPU usage of the process during the backup or restore process.
@@ -195,9 +195,9 @@ If the engine is `builtin`, in response to this command, the designated tablet p
 sequence of actions:
 
 1. Switches its type to `BACKUP`. After this step, the tablet is no
-   longer used by vtgate to serve any query.
+   longer used by VTGate to serve any query.
 
-1. Stops replication, get the current replication position (to be saved in the
+1. Stops replication, gets the current replication position (to be saved in the
    backup along with the data).
 
 1. Shuts down its mysqld process.
@@ -213,7 +213,7 @@ sequence of actions:
    original type, if applicable).
 
 1. Switches its type back to its original type. After this, it will most likely
-   be behind on replication, and not used by vtgate for serving until it catches
+   be behind on replication, and not used by VTGate for serving until it catches
    up.
 
 If the engine is `xtrabackup`, we do not do any of the above. The tablet can
@@ -253,14 +253,14 @@ vttablet ... -backup_storage_implementation=file \
 
 **vtctl** provides two commands for managing backups:
 
-* [ListBackups](../../reference/vtctl#listbackups) displays the
+* [ListBackups](https://vitess.io/docs/reference/programs/vtctl/shards/#listbackups) displays the
     existing backups for a keyspace/shard in chronological order.
 
     ``` sh
     vtctl ListBackups <keyspace/shard>
     ```
 
-* [RemoveBackup](../../reference/vtctl#removebackup) deletes a
+* [RemoveBackup](https://vitess.io/docs/reference/programs/vtctl/shards/#removebackup) deletes a
     specified backup for a keyspace/shard.
 
     ``` sh
