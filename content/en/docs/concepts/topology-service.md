@@ -13,7 +13,7 @@ The topology service exists for several reasons:
 * It enables Vitess to discover tablets, so it knows where to route queries.
 * It stores Vitess configuration provided by the database administrator that is needed by many different servers in the cluster, and that must persist between server restarts.
 
-A Vitess cluster has one global topology service, and a local topology service in each cell. Since *cluster* is an overloaded term, and one Vitess cluster is distinguished from another by the fact that each has its own global topology service, we refer to each Vitess cluster as a **toposphere**.
+A Vitess cluster has one global topology service, and a local topology service in each cell.
 
 ## Global Topology
 
