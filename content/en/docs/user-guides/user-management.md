@@ -1,18 +1,21 @@
 ---
-title: User and Permission Management
+title: User Management
 weight: 11
 aliases: []
 ---
 
-Vitess uses its own mechanism for managing users and their permissions through VTGate. As a result, the `CREATE USER....` and
+Vitess uses its own mechanism for managing users and their permissions through
+ VTGate. As a result, the `CREATE USER....` and
 `GRANT...` statements will not work if sent through VTGate.
 
 ## Authentication
 
-The Vitess VTGate component takes care of authentication for requests so you will need to add any users that should have access
-to the Keyspaces via the command-line options to VTGate.
+The Vitess VTGate component takes care of authentication for requests so we
+will need to add any users that should have access to the Keyspaces via the
+command-line options to VTGate.
 
-The simplest way to configure users is using a `static` auth method and we can define the users in a JSON formatted file or string.
+The simplest way to configure users is using a `static` auth method and we
+can define the users in a JSON formatted file or string.
 
 ```sh
 $ cat > users.json << EOF
@@ -39,11 +42,11 @@ $ cat > users.json << EOF
 EOF
 ```
 
-Then we can load this into VTGate with:
+Then we can load this into VTGate with the additional commandline parameters:
 ```sh
 vtgate $(cat <<END_OF_COMMAND
-    -mysql_auth_server_impl="static"
-    -mysql_auth_server_static_file="users.json"
+    -mysql_auth_server_impl=static
+    -mysql_auth_server_static_file=users.json
     ...
     ...
     ...
@@ -65,78 +68,104 @@ $ mysql -h 127.0.0.1 -u myuser1 -pincorrect_password -e "select 1"
 ERROR 1045 (28000): Access denied for user 'myuser1'
 ```
 
-## Authorization
+## Password format
 
-Authorization in Vitess is enforced on a table-level by the underlying
-VTTablets, and not by VTGate, as with authentication.  As an example,
-say we have two services that want to run in their own keyspace and do
-not want any other service to have access to their keyspace.
+In the above example we used plaintext passwords.  Vitess supports the
+MySQL [mysql_native_password](https://dev.mysql.com/doc/refman/8.0/en/native-pluggable-authentication.html)
+hash format, and you should always specify your passwords using this
+in a non-test or external environment.  Vitess does not yet support the
+[caching_sha2_password](https://dev.mysql.com/doc/refman/8.0/en/caching-sha2-pluggable-authentication.html)
+format that became the default for MySQL in 8.0.
 
-Building on the authentication setup above and assuming your Vitess
-cluster already has 2 keyspaces setup:
-* `keyspace1` with a single table `t` that should only be accessed by `myuser1`
-* `keyspace2` with a single table `t` that should only be accessed by `myuser2`
+To use a `mysql_native_password` hash, your user section in your static
+JSON authentication file would look something like this instead:
 
-For the VTTablet configuration for `keyspace1`:
-```sh
-$ cat > acls_for_keyspace1.json << EOF
+```json
 {
-  "table_groups": [
+  "vitess": [
     {
-      "name": "keyspace1acls",
-      "table_names_or_prefixes": ["%"],
-      "readers": ["myuser1", "vitess"],
-      "writers": ["myuser1", "vitess"],
-      "admins": ["myuser1", "vitess"]
+      "UserData": "vitess",
+      "MysqlNativePassword": "*9E128DA0C64A6FCCCDCFBDD0FC0A2C967C6DB36F"
     }
   ]
 }
-EOF
-
-$ vttablet -init_keyspace "keyspace1" -table-acl-config=acls_for_keyspace1.json -enforce-tableacl-config -queryserver-config-strict-table-acl ........
 ```
 
-Note that the `%` specifier for `table_names_or_prefixes` translates to
-"all tables".
+You can extract a `mysql_native_password` hash from an existing MySQL
+install by looking at the `authentication_string` column of the relevant
+user's row in the `mysql.user` table. An alternate way to generate this
+hash is to SHA1 the cleartext password string twice, e.g. doing it in
+MySQL for the cleartext password `password`:
 
-Do the same thing for `keyspace2`:
-```sh
-$ cat > acls_for_keyspace2.json << EOF
+```mysql
+mysql> SELECT UPPER(SHA1(UNHEX(SHA1("password")))) as hash;
++------------------------------------------+
+| hash                                     |
++------------------------------------------+
+| 2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19 |
++------------------------------------------+
+1 row in set (0.01 sec)
+```
+
+So, you would use `*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19` as the
+`MysqlNativePassword` hash value for the cleartext password `password`.
+
+
+## UserData
+
+In the static authentication JSON file, the `UserData` string is **not**
+the username;  the username is the string key for the list.  The `UserData`
+string does **not** need to correspond to the username, and is used by the
+[authorization mechanism](../authorization) when referring to a user.  It is
+usually however simpler if you make the `UserData` string and the username
+the same.
+
+The `UserData` feature can be leveraged to create multiple users that are
+equivalent to the authorization layer (i.e. multiple users having the same
+`UserData` strings), but are different in the authentication layer (i.e.
+have different usernames and passwords).
+
+## Multiple passwords
+
+A very convenient feature of the VTGate authorization is that, as can be
+seen in the example JSON authentication files, you have a **list** of
+`UserData` and `Password`/`MysqlNativePassword` pairs associated with
+a user.  You can optionally leverage this to assign multiple different
+passwords to a single user, and VTGate will allow a user to authenticate
+with any of the defined passwords.  This makes password rotation 
+much easier;  and less likely to require or cause downtime.
+
+An example could be:
+```json
 {
-  "table_groups": [
+  "vitess": [
     {
-      "name": "keyspace2acls",
-      "table_names_or_prefixes": [""],
-      "readers": ["myuser2", "vitess"],
-      "writers": ["myuser2", "vitess"],
-      "admins": ["myuser2", "vitess"]
+      "UserData": "vitess_old",
+      "MysqlNativePassword": "*9E128DA0C64A6FCCCDCFBDD0FC0A2C967C6DB36F"
+    },
+    {
+      "UserData": "vitess_new",
+      "MysqlNativePassword": "*B3AD996B12F211BEA47A7C666CC136FB26DC96AF"
     }
   ]
 }
-EOF
-
-$ vttablet -init_keyspace "keyspace2" -table-acl-config=acls_for_keyspace2.json -enforce-tableacl-config -queryserver-config-strict-table-acl ........
 ```
 
-With this setup, the `myuser1` and `myuser2` users can only access their respective keyspaces, but the `vitess`
-user can access both.
+This feature also allows different `UserData` strings
+to be associated with a user depending on the password used.  This can
+be used in concert with the [authorization mechanism](../authorization) to
+migrate an application gracefully from one set of ACLs (or no ACLs)
+to another set of ACLs, by just changing the password used by the
+application.
 
-```sh
-# Attempt to access keyspace1 with myuser2 credentials through vtgate
-$ mysql -h 127.0.0.1 -u myuser2 -ppassword2 -D keyspace1 -e "select * from t"
-ERROR 1045 (HY000) at line 1: vtgate: http://vtgate-zone1-7fbfd8cc47-tchbz:15001/: target: keyspace1.-80.master, used tablet: zone1-476565201 (zone1-keyspace1-x-80-replica-1.vttablet): vttablet: rpc error: code = PermissionDenied desc = table acl error: "myuser2" [] cannot run PASS_SELECT on table "t" (CallerID: myuser2)
-target: keyspace1.80-.master, used tablet: zone1-1289569200 (zone1-keyspace1-80-x-replica-0.vttablet): vttablet: rpc error: code = PermissionDenied desc = table acl error: "myuser2" [] cannot run PASS_SELECT on table "t" (CallerID: myuser2)
-```
+In the example above, the username `vitess` has **two different** passwords
+that would be allowed, each resulting in different `UserData` strings
+(`vitess_old` or `vitess_new`) being passed to the VTTablet layer that can
+be used for authorization/ACL enforcement.
 
-Whereas myuser1 is able to access its keyspace fine:
-```sh
-$ mysql -h 127.0.0.1 -u myuser1 -ppassword1 -D keyspace1 -e "select * from t"
-$
-```
+## Other authentication methods
 
-Note the use above of the following parameters:
- * `-enforce-tableacl-config`:  Fail to start VTTablet if there are no ACLs successfully configured.  This ensures ACL misconfigurations are caught at startup.
- * `-queryserver-config-strict-table-acl`:  only allow queries that pass table acl checks to ensure we do not allow other users.  You will typically need to pass this parameter for the ACLs to be successfully enforced, unless you strictly limit the universe of potential users at the VTGate authentication level.
-
-The following option may be useful:
-  * `-queryserver-config-enable-table-acl-dry-run`:  Only emits to the [TableACLPseudoDenied](configuring-components.md#tableaclallowed-tableacldenied-tableaclpseudodenied) metric when an ACL denies a request, but let the actual request pass through successfully.  This allows you to test and verify ACL changes without running the risk of breakage.
+Other than the static authentication file method above, other authentication
+mechanisms are also provided:
+ * LDAP-based authentication
+ * TLS client certificate-based authentication
