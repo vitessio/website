@@ -5,7 +5,7 @@ weight: 98
 
 # Introduction 
 
-This document explains how to learn more about the way Vitess executes a particular SQL statement using the [VTexplain tool](../../reference/vtexplain). This tool works similarly to the MySQL `EXPLAIN` statement.
+This document covers the way Vitess executes a particular SQL statement using the [VTExplain tool](../../reference/vtexplain). This tool works similarly to the MySQL `EXPLAIN` statement.
 
 ## Prerequisites
 
@@ -15,11 +15,13 @@ You can also build the `vtexplain` binary in your environment. To build this bin
 
 ## Overview
 
-To explain how Vitess executes a SQL statement, follow these steps:
+To successfully analyze your SQL queries and determine how Vitess executes each statement, follow these steps:
 
 1. Identify a SQL schema for the statement's source tables
 1. Identify a VSchema for the statement's source tables 
 1. Run the VTExplain tool
+
+If you have a large number of queries you would like to analyze for issues, based on a Vschema you’ve created for your database, you can read through a detailed scripted example [here](../../user-guides/vtexplain-in-bulk).
 
 ## 1. Identify a SQL schema for tables in the statement
 
@@ -150,7 +152,7 @@ In the example above, the output of `VTExplain` shows the sequence of queries th
 [Sequence number] [keyspace]/[shard]: [query]
 ```
 
-In this example, each query has sequence number `1`, which shows that Vitess executes these in parallel. Vitess automatically adds the `LIMIT 10001` clause` to protect against large results.
+In this example, each query has sequence number `1`, which shows that Vitess executes these in parallel. Vitess automatically adds the `LIMIT 10001` clause to protect against large results.
 
 ### Example: Explaining an INSERT query
 

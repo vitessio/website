@@ -64,9 +64,4 @@ If no keyspace name is present, VTExplain will return the following error:
 
 ```
 ERROR: initVtgateExecutor: json: cannot unmarshal bool into Go value of type map[string]json.RawMessage
-```
-
-## See also
-
-+  [Explaining how Vitess executes a SQL statement](../../../user-guides/vtexplain)    
-
+```  
