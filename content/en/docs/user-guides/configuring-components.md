@@ -430,7 +430,7 @@ VTTablet:
 
 #### /debug/status
 
-This is the landing page for a VTGate, which can gives you a status on how a particular server is doing. Of particular interest there is the list of tablets this vtgate process is connected to, as this is the list of tablets that can potentially serve queries.
+This is the landing page for a VTGate, which gives you the status of how a particular server is doing. Of particular interest there is the list of tablets this vtgate process is connected to, as this is the list of tablets that can potentially serve queries.
 
 #### /debug/vars
 

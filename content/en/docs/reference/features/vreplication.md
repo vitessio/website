@@ -17,11 +17,11 @@ many features. It can be used for the following use cases:
   This view will be kept up-to-date in real time. One can also materialize
   reference tables onto all shards and have Vitess perform efficient
   local joins with those materialized tables.
-* **Realtime rollups**; The materialization expression can include aggregation
+* **Realtime rollups**: The materialization expression can include aggregation
   expressions in which case, Vitess will create a rolled up version of the
   source table which can be used for realtime analytics.
 * **Backfilling lookup vindexes**: VReplication can be used to backfill a
-  newly created lookup vindex. Workflows can be built manage the switching
+  newly created lookup vindex. Workflows can be built to manage the switching
   from a backfill mode to the vindex itself keeping it up-to-date.
 * **Schema deployment**: We can use VReplication to recreate the workflow
   performed by gh-ost and thereby support zero-downtime schema deployments
