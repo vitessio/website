@@ -1,11 +1,11 @@
 ---
-title: Explaining how to analyze SQL statements in bulk
+title: Analyzing SQL statements in bulk
 weight: 98
 ---
 
 # Introduction 
 
-This document covers the way our [VTexplain tool](../../reference/vtexplain) can be used to evaluate how Vitess executes many SQL statements. 
+This document covers the way our [VTexplain tool](../../reference/vtexplain) can be used to evaluate how Vitess executes multiple SQL statements. 
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ You can also build the `vtexplain` binary in your environment. To build this bin
 
 ## Overview
 
-To successfully analyze many SQL queries and determine how Vitess executes each statement, follow these steps:
+To analyze multiple SQL queries and determine how Vitess executes each statement, follow these steps:
 
 1. Gather the queries from your current production database
 1. Filter out specific queries
@@ -28,11 +28,11 @@ To successfully analyze many SQL queries and determine how Vitess executes each 
 
 ## 1. Gather the queries from your current production database
 
-These queries should be most, if not all, of the queries that are sent to your current production database tracked over an extended period of time. You may need to track your sent queries for days or weeks depending on your setup. You will need to normalize the queries you will be analyzing. To do this you can use any MySAL monitoring tool like VividCortex, Monyog or PMM.
+These queries should be most, if not all, of the queries that are sent to your current production database tracked over an extended period of time. You may need to track your sent queries for days or weeks depending on your setup. You will need to normalize the queries you will be analyzing. To do this, you can use any MySAL monitoring tool, like VividCortex, Monyog, or PMM.
 
 ## 2. Filter out specific queries
 
-Queries that are not supported or are coming from other sources should be removed from your normalized list. A few examples of queries to remove are:
+Remove from your list any unsupported queries or queries from non-application sources. The following are examples of queries to remove are:
 
 * LOCK/UNLOCK TABLES  -  These are likely coming from schema management tools, which you wouldn't want run against vtgate
 * FLUSH/PURGE LOGS  - These are likely coming from management scripts
@@ -162,13 +162,13 @@ Once you have your full output in vtexplain.output you can use grep for ERROR to
 
 The following query is scattered across both shards, and then aggregated by vtgate.
 
-```
-$ vtexplain -schema-file schema.sql -vschema-file vschema.json -shards 2 -sql 'SELECT * from user;'
+``` shell
+$ vtexplain -schema-file schema.sql -vschema-file vschema.json -shards 2 -sql 'SELECT * FROM user;'
 ----------------------------------------------------------------------
-SELECT * from user
+SELECT * FROM user
 
-1 ks1/-80: select * from user limit 10001
-1 ks1/80-: select * from user limit 10001
+1 ks1/-80: SELECT * FROM user limit 10001
+1 ks1/80-: SELECT * FROM user limit 10001
 ----------------------------------------------------------------------
 ```
 
@@ -176,10 +176,10 @@ SELECT * from user
 
 The following query produces an error because the AVG function isn't supported for scatter queries across multiple shards.
 
-```
+``` shell
 $ vtexplain -schema-file schema.sql -vschema-file vschema.json -shards
-2 -sql 'SELECT avg(balance) from user;'
-ERROR: vtexplain execute error in 'SELECT avg(balance) from user':
+2 -sql 'SELECT avg(balance) FROM user;'
+ERROR: vtexplain execute error in 'SELECT avg(balance) FROM user':
 unsupported: in scatter query: complex aggregate expression
 ```
 
@@ -187,11 +187,11 @@ unsupported: in scatter query: complex aggregate expression
 
 The following query only targets a single shard because the query supplies the sharding key.
 
-```
-$ vtexplain -schema-file schema.sql -vschema-file vschema.json -shards 2 -sql 'SELECT * from user where user_id = 100;'
+``` shell
+$ vtexplain -schema-file schema.sql -vschema-file vschema.json -shards 2 -sql 'SELECT * FROM user WHERE user_id = 100;'
 ----------------------------------------------------------------------
-SELECT * from user where user_id = 100
+SELECT * FROM user WHERE user_id = 100
 
-1 ks1/80-: select * from user where user_id = 100 limit 10001
+1 ks1/80-: SELECT * FROM user WHERE user_id = 100 limit 10001
 ----------------------------------------------------------------------
 ```
