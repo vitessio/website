@@ -77,13 +77,13 @@ VReplication performs the following essential functions:
   statement should be simple enough that the materialized table can
   be kept up-to-date from the data coming from the binlog. For
   example, joins are not supported.
-* Correctness verification (to be implemented): VReplication can
+* Correctness verification: VReplication can
   verify that the target table is an exact representation of
   the select statement from the source by capturing consistent
   snapshots of the source and target and comparing them against each
   other. This step can be done without the need to create special
   snapshot replicas.
-* Journaling (to be implemented): If there is any kind of traffic
+* Journaling: If there is any kind of traffic
   cut-over where we start writing to a different table than we used
   to before, VReplication will save the current binlog positions
   into a journal table. This can be used by other streams to resume
