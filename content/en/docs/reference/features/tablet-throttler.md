@@ -56,7 +56,7 @@ Thus, the aggregated interval can be off, by default, by some `500ms`. This make
 The throttler allows clients/apps to `check` for throttle advice. The check is a `HTTP` request, `HEAD` or `GET` method. Throttler returns a HTTP response code as an answer:
 
 - `200` (OK): Application may write to data store. This is the desired response.
-- `404` (Not Found): Unknown metric name. This can take place immediately upon startup or immediately after failover.
+- `404` (Not Found): Unknown metric name. This can take place immediately upon startup or immediately after failover, and should resovle within 10 seconds.
 - `417` (Expectation Failed): Requesting application is explicitly forbidden to write. Tablet throttler does not implement this at this time.
 - `429` (Too Many Requests): Do not write. A normal, expected state indicating there is replication lag. This is the hint for apps/clients to withhold writes.
 - `500` (Internal Server Error): Internal error. Do not write.
@@ -65,14 +65,16 @@ Normally, apps will see either `200` or `429`. An app should only ever proceed t
 
 The throttler chooses the response by comparing the replication lag with a pre-defined _threshold_. If the lag is lower than the threshold, response can be `200` (OK). I fthe lag is higher than the threshold, response would be `429` (Too Many Requests).
 
-Throttler only collects and evaluates lag on `REPLICA` tablets. It ignores any lag on other tables, such as `RDONLY`. It requires at least one `REPLICA` tablets or else it responds with `500` code.
+Throttler only collects and evaluates lag on predefined types of tbles. These are, by default, `REPLICA` tablets. See configuration, following.
 
+When the throttler sees no relevant replicas in the shard, the behavior is to allow writes (respond with `HTTP 200 OK`).
 
 ## Configuration
 
 The default threshold is `1sec` and is set upon tablet startup.
 
-Use `vttablet -throttle_threshold` command line flag to set a different value, e.g. `-throttle_threshold=0.5s` for a half second.
+- Use `vttablet -throttle_threshold` command line flag to set a different value, e.g. `-throttle_threshold=0.5s` for a half second.
+- Use `vttablet -throttle_tablet_types="replica,rdonly"` to set the tablet types which are queried for lag and considered by the throttler. `replica` is always implicitly included, and you may add any other tablet type. Any type not specified is ignored by the throttler.
 
 ## API & usage
 
