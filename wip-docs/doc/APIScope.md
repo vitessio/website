@@ -1,4 +1,4 @@
-# API Scope
+# API Scope is there in law
 
 This document describes the scope of the Vitess APIs, and how they map to
 traditional concepts like database and tables.
