@@ -22,7 +22,7 @@ To analyze multiple SQL queries and determine how Vitess executes each statement
 1. Populate fake values for your queries
 1. Run the VTexplain tool via a script
 1. Add your SQL schema
-1. Add your VSchema
+1. Add your VSchema to the output file
 1. Run the VTexplain tool and capture the output
 1. Check your output for errors
 
@@ -34,13 +34,13 @@ These queries should be most, if not all, of the queries that are sent to your c
 
 Remove from your list any unsupported queries or queries from non-application sources. The following are examples of queries to remove are:
 
-* LOCK/UNLOCK TABLES  -  These are likely coming from schema management tools, which you wouldn't want run against vtgate
-* FLUSH/PURGE LOGS  - These are likely coming from management scripts
-* performance_schema queries  -  This is not supported by Vitess 
-* BEGIN/COMMIT  -  These are supported, but not as stand-alone queries in vtexplain
+* LOCK/UNLOCK TABLES  -  These likely come from schema management tools, which VTGate obviates.
+* FLUSH/PURGE LOGS  - Vitess performs its own log management.
+* performance_schema queries  -  These queries are not supported by Vitess.
+* BEGIN/COMMIT  -  Vitess supports these statements, but VTExplain does not.
 
-An example pipeline to filter out these specific queries is:
-```
+The following is an example pipeline to filter out these specific queries:
+```shell
 cat queries.txt \
  | grep -v performance_schema \
  | grep -v information_schema \
@@ -60,9 +60,9 @@ cat queries.txt \
 
 ## 3. Populate fake values for your queries
 
-Once the queries are normalized in prepared statement style you will need to generate a populate fake values in order for VTExplain to run properly. An example pipeline you can run to do this is:
+Once the queries are normalized in prepared statement style, populate fake values to allow VTExplain to run properly. The following is an example pipeline you can run to populate fake values:
 
-```
+```shell
 cat queries.txt \
  | perl -p -e 's#\? = \?#1 = 1#g' \
  | perl -p -e 's#= \?#="1"#g' \
@@ -92,9 +92,9 @@ cat queries.txt \
 
 ## 4. Run the VTExplain tool via a script
 
-In order to analyze every query in your list you likely will want to run a script to do this. We have an example python script below that assumes a sharded setup with 4 shards that you will need to adjust to match your individual requirements:
+In order to analyze every query in your list, create and run a script. The following is an example Python script that assumes a sharded database with 4 shards. You can adjust this script to match your individual requirements.
 
-```
+```shell
 $ cat testfull.py
 for line in open("queries_for_vtexplain.txt", "r").readlines():
     sql = line.strip()
@@ -103,11 +103,11 @@ x
 $ python testfull.py > run_vtexplain.sh
 ```
 
-## 5. Add your SQL schema
+## 5. Add your SQL schema to the output file
 
-You will need to add your proposed SQL schema to the file created by the script (e.g. schema.sql). A very simple example SQL schema is below. You will need to create one that matches your needs.
+Add your proposed SQL schema to the file created by the script (e.g. schema.sql). The following is an example SQL schema:
 
-```
+```shell
 $ cat schema.sql
 CREATE TABLE `user` (
   `user_id` bigint(20) NOT NULL,
@@ -120,9 +120,9 @@ CREATE TABLE `user` (
 
 ## 6. Add your VSchema
 
-You will need to add your VSchema to the file created by the script (e.g. schema.json). A very simple example VSchema to match the SQL schema is below. You will need to create one that matches your needs.
+Add your VSchema to the file created by the script: in this example, the file is named `schema.json`. The following is an example VSchema to match the example SQL schema above.
 
-```
+```shell
 $ cat vschema.json
 {
     "ks1": {
@@ -150,19 +150,19 @@ $ cat vschema.json
 
 This step will generate the output you need to analyze to determine what queries may have issues with your proposed VSchema. It may take a long time to finish if you have a number of queries.
 
-```
+```shell
 $ sh -x run_vtexplain.sh 2> vtexplain.output
 ```
 
 ## 7. Check your output
 
-Once you have your full output in vtexplain.output you can use grep for ERROR to review any issues found.
+Once you have your full output in vtexplain.output, use `grep` to search for the string "ERROR" to review any issues that VTExplain found.
 
 ### Example: Scatted across shards
 
-The following query is scattered across both shards, and then aggregated by vtgate.
+In the following example, VTGate scatters the example query across both shards, and then aggregates the query results.
 
-``` shell
+```shell
 $ vtexplain -schema-file schema.sql -vschema-file vschema.json -shards 2 -sql 'SELECT * FROM user;'
 ----------------------------------------------------------------------
 SELECT * FROM user
@@ -172,22 +172,22 @@ SELECT * FROM user
 ----------------------------------------------------------------------
 ```
 
-### Example: Error
+### Example: Query returns an error
 
-The following query produces an error because the AVG function isn't supported for scatter queries across multiple shards.
+The following query produces an error because Vitess does not support the `AVG` function for scatter queries across multiple shards.
 
-``` shell
+```shell
 $ vtexplain -schema-file schema.sql -vschema-file vschema.json -shards
-2 -sql 'SELECT avg(balance) FROM user;'
+2 -sql 'SELECT AVG(balance) FROM user;'
 ERROR: vtexplain execute error in 'SELECT avg(balance) FROM user':
 unsupported: in scatter query: complex aggregate expression
 ```
 
-### Example: Single shard
+### Example: Targeting a single shard
 
 The following query only targets a single shard because the query supplies the sharding key.
 
-``` shell
+```shell
 $ vtexplain -schema-file schema.sql -vschema-file vschema.json -shards 2 -sql 'SELECT * FROM user WHERE user_id = 100;'
 ----------------------------------------------------------------------
 SELECT * FROM user WHERE user_id = 100
