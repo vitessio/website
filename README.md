@@ -1,10 +1,10 @@
-# The Vitess website
+# The Vitess Website
 
 This repo houses the assets used to build the website at https://vitess.io.
 
 > **NOTE**: This repo uses `prod` as the default branch rather than the usual `master`. Make sure to rebase against the `prod` branch if you have existing work branched from `master`. See [issue #210](https://github.com/vitessio/website/issues/210) for an explanation of why this was done.
 
-## Running the site locally
+## How to run the site locally?
 
 To run the website locally, you need to have the [Hugo](https://gohugo.io) static site generator installed (installation instructions [here](https://gohugo.io/getting-started/installing/)). Once Hugo is installed run the following:
 
