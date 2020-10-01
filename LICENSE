@@ -6,7 +6,7 @@
 
    1. Definitions.
 
-      "License" shall mean the terms and conditions for use, reproduction,
+      "License" shall mean the terms and conditions for use, reproduction
       and distribution as defined by Sections 1 through 9 of this document.
 
       "Licensor" shall mean the copyright owner or entity authorized by
@@ -29,7 +29,7 @@
 
       "Object" form shall mean any form resulting from mechanical
       transformation or translation of a Source form, including but
-      not limited to compiled object code, generated documentation,
+      not limited to compiled object code, generated documentation
       and conversions to other media types.
 
       "Work" shall mean the work of authorship, whether in Source or
@@ -57,7 +57,7 @@
       and issue tracking systems that are managed by, or on behalf of, the
       Licensor for the purpose of discussing and improving the Work, but
       excluding communication that is conspicuously marked or otherwise
-      designated in writing by the copyright owner as "Not a Contribution."
+      designated in writing by the copyright owner as "Not a Contribution.
 
       "Contributor" shall mean Licensor and any individual or Legal Entity
       on behalf of whom a Contribution has been received by Licensor and
@@ -66,8 +66,8 @@
    2. Grant of Copyright License. Subject to the terms and conditions of
       this License, each Contributor hereby grants to You a perpetual,
       worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      copyright license to reproduce, prepare Derivative Works of,
-      publicly display, publicly perform, sublicense, and distribute the
+      copyright license to reproduce, prepare Derivative Works of
+      publicly display, publicly perform, sublicense and distribute the
       Work and such Derivative Works in Source or Object form.
 
    3. Grant of Patent License. Subject to the terms and conditions of
