@@ -3,7 +3,7 @@ title: Query Rewriting
 ---
 
 Vitess works hard to create an illusion of the user having a single connection to a single database. 
-In reality, a single query might have to interact with multiple databases, sometimes using multiple connection to the same database. 
+In reality, a single query might have to interact with multiple databases, sometimes using multiple connections to the same database.
 Here we'll go over what Vitess does and how it might impact you.
 
 ### Query splitting
@@ -18,8 +18,8 @@ This means that it's not safe to store any state in the session - we can't be su
 
 ### User-Defined Variables
 
-One if the things that is kept in the session state when working with MySQL are the user defined variables. 
-You can assign values to it using SET:
+User defined variables are one of the things kept in the session state when working with MySQL.
+You can assign values to them using SET:
 
 ```sql
 SET @my_user_variable = 'foobar'
@@ -36,9 +36,9 @@ And later they can be queries using for example SELECT:
 +-------------------+
 ```
 
-If you execute these queries against a vtgate, that first `SET` query is not sent to MySQL.
-Instead, it is evaluated in the VTGATE, and it will keep this state for you.
-The second query is also not sent down - trivial queries such as this one is actually fully executed on VTGATE.
+If you execute these queries against a VTGate, that first `SET` query is not sent to MySQL.
+Instead, it is evaluated in the VTGate, and VTGate will keep this state for you.
+The second query is also not sent down. Trivial queries such as this one are actually fully executed on VTGate.
 
 If we try a more complicated query that requires data from MySQL, vtgate will rewrite the query before sending it down.
 If we were to write something like :
@@ -53,7 +53,7 @@ what MySQL will see is
 WHERE col = 'foobar'
 ```
 
-This way, no sesssion state is needed to evaluate the query in MySQL.
+This way, no session state is needed to evaluate the query in MySQL.
 
 ### Server System Variables
 
@@ -77,7 +77,7 @@ There are a few special functions that Vitess handles without delegating to MySQ
 
 ### Reference
 
-Herer follows a list of all the system variables that is handled by Vitess, and how they are handled.
+Here follows a list of all the system variables that are handled by Vitess and how they are handled.
 
 | *System variable*  | *Handled* |
 |---|---|
