@@ -105,39 +105,6 @@ Outputs a JSON structure that contains information about the Keyspace.</pre>
 
 Outputs a sorted list of all keyspaces.
 
-
-### MigrateServedFrom
-
-Makes the &lt;destination keyspace/shard&gt; serve the given type. This command also rebuilds the serving graph.
-
-#### Example
-
-<pre class="command-example">MigrateServedFrom [-cells=c1,c2,...] [-reverse] &lt;destination keyspace/shard&gt; &lt;served tablet type&gt;</pre>
-
-#### Flags
-
-| Name | Type | Definition |
-| :-------- | :--------- | :--------- |
-| cells | string | Specifies a comma-separated list of cells to update |
-| filtered_replication_wait_time | Duration | Specifies the maximum time to wait, in seconds, for filtered replication to catch up on master migrations |
-| reverse | Boolean | Moves the served tablet type backward instead of forward. Use in case of trouble |
-
-
-#### Arguments
-
-* <code>&lt;destination keyspace/shard&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables as well as the shard associated with the command. The keyspace must be identified by a string that does not contain whitespace, while the shard is typically identified by a string in the format <code>&lt;range start&gt;-&lt;range end&gt;</code>.
-* <code>&lt;served tablet type&gt;</code> &ndash; Required. The vttablet's role. Valid values are:
-
-    * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
-    * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
-    * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
-    * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
-    * <code>master</code> &ndash; A primary copy of data
-    * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
-    * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to master
-    * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
-    * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
-
 #### Errors
 
 * the <code>&lt;destination keyspace/shard&gt;</code> and <code>&lt;served tablet type&gt;</code> arguments are both required for the <code>&lt;MigrateServedFrom&gt;</code> command This error occurs if the command is not called with exactly 2 arguments.
@@ -361,8 +328,7 @@ Makes the &lt;destination keyspace/shard&gt; serve the given type. This command 
 
 #### Example
 
-<pre class="command-example">MigrateServedFrom [-cells=c1,c2,...] [-reverse] &lt;destination keyspace/shard&gt; &lt;served tablet type&gt;
-Makes the &lt;destination keyspace/shard&gt; serve the given type. This command also rebuilds the serving graph.</pre>
+<pre class="command-example">MigrateServedFrom [-cells=c1,c2,...] [-reverse] &lt;destination keyspace/shard&gt; &lt;served tablet type&gt;</pre>
 
 #### Flags
 
