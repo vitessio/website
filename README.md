@@ -12,7 +12,7 @@ To run the website locally, you need to have the [Hugo](https://gohugo.io) stati
 hugo server --buildDrafts --buildFuture
 ```
 
-This starts Hugo in local mode. You can see access the site at http://localhost:1313.
+This starts Hugo in local mode. You can see access to the site at http://localhost:1313.
 
 You will also need to either:
 
