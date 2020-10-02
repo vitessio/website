@@ -24,7 +24,7 @@ The three different methods are:
 
 ## Method 1: “Stop-the-world”:
 
-The simplest method to migrate data is to do a ‘dump and restore’ or ‘stop-the-world’. We recommend using ‘Go my dumper’.  To execute this method you would follow these steps:
+The simplest method to migrate data is to do a ‘dump and restore’ or ‘stop-the-world’. We recommend using [‘go-mydumper’](https://github.com/aquarapid/go-mydumper). To execute this method you would follow these steps:
 1. Stop writing to the source MySQL database
 1. Take a logical dump of the database, usually via mysqldump or equivalent,
 1. Apply some simple transformations on the output
