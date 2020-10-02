@@ -1,4 +1,4 @@
-# The Vitess website
+# The Vitess website - An Amazing Project
 
 This repo houses the assets used to build the website at https://vitess.io.
 
