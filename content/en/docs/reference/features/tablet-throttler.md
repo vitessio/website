@@ -71,9 +71,11 @@ When the throttler sees no relevant replicas in the shard, the behavior is to al
 
 ## Configuration
 
-The default threshold is `1sec` and is set upon tablet startup.
 
-- Use `vttablet -throttle_threshold` command line flag to set a different value, e.g. `-throttle_threshold=0.5s` for a half second.
+- throttler is currently disabled by default. Use `-enable-lag-throttler` to enable the throttler.
+  When the throttler is disabled, it still serves `/throttler/check` API and responds with `HTTP 200 OK` to all requests.
+  When the throttler is enabled, it implicitly also runs heartbeat injections.
+- Use `vttablet -throttle_threshold` command line flag to set a lag threshold value, e.g. `-throttle_threshold=0.5s` for a half second. The default threshold is `1sec` and is set upon tablet startup.
 - Use `vttablet -throttle_tablet_types="replica,rdonly"` to set the tablet types which are queried for lag and considered by the throttler. `replica` is always implicitly included, and you may add any other tablet type. Any type not specified is ignored by the throttler.
 
 ## API & usage
