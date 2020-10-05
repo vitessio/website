@@ -346,15 +346,17 @@ Do not override the following flags: `alter, pid, plugin, dry-run, execute, new-
 
 ## Throttling
 
-Schema migrations use the tablet throttler, which is a cooperative throttler service based on replication lag. The tablet throttler automatically detectes topology `REPLICA` tablets and adapts to changes in the topology.
+Schema migrations use the tablet throttler, which is a cooperative throttler service based on replication lag. The tablet throttler automatically detectes topology `REPLICA` tablets and adapts to changes in the topology. See [Tablet throttler](../../../reference/features/tablet-throttler/).
+
+**NOTE** that at this time the tablet throttler is an experimental feature and is opt in. Enable it with `vttablet`'s `-enable-lag-throttler` flag. If the tablet throttler is disabled, schema migrations will not throttle on replication lag.
 
 ## Table cleanup
 
 Both `gh-ost` and `pt-online-schema-change` leave artifacts behind. Whether successful or failed, either the original table or the _ghost_ table are left still populated at the end of the migration. Vitess explicitly configures both tools to not drop those tables. The reason is that in MySQL, a `DROP TABLE` operation can be dangerous in production as it commonly locks the buffer pool for a substantial period.
 
-Vitess has work in progress to automate the cleanup, or _garbage collection_ of those tables.
+Artifact tables are identifiable via `SELECT artifacts FROM _vt.schema_migrations` in a `VExec` command, see below.
 
-Meanwhile, Vitess does keep track of artifact tables. You may `SELECT artifacts FROM _vt.schema_migrations` in a `VExec` command, see below.
+Vitess automatically cleans up those tables as soon as a migration completes (either successful or failed). You will normally not need to do anything.
 
 ## VExec commands for greater control and visibility
 
