@@ -3,29 +3,29 @@ title: Query Rewriting
 ---
 
 Vitess works hard to create an illusion of the user having a single connection to a single database. 
-In reality, a single query might have to interact with multiple databases, sometimes using multiple connections to the same database.
+In reality, a single query might interact with multiple databases and may use multiple connections to the same database.
 Here we'll go over what Vitess does and how it might impact you.
 
 ### Query splitting
 
-A complicated query with a cross shard join might need to first fetch information from a tablet keeping vindex lookup tables, use this information to query two different shards for more data, and then join the incoming results into a single result that the user receives. 
+A complicated query with a cross shard join might need to first fetch information from a tablet keeping vindex lookup tables. Then use this information to query two different shards for more data and subsequently join the incoming results into a single result that the user receives.
 The queries that MySQL gets are often just pieces of the original query, and the final result will get assembled at the vtgate level.
 
 ### Connection Pooling
 
 When a tablet talks with a MySQL to execute a query on behalf of a user, it does not use a dedicated connection per user, and instead will share the underlying connection between users. 
-This means that it's not safe to store any state in the session - we can't be sure we'll continue executing queries on the same connection, and we can't be sure if this connection will be used by other users later on.
+This means that it's not safe to store any state in the session as you can't be sure it will continue executing queries on the same connection, and you can't be sure if this connection will be used by other users later on.
 
 ### User-Defined Variables
 
-User defined variables are one of the things kept in the session state when working with MySQL.
+User defined variables are kept in the session state when working with MySQL.
 You can assign values to them using SET:
 
 ```sql
 SET @my_user_variable = 'foobar'
 ```
 
-And later they can be queries using for example SELECT:
+And later there can be queries using for example SELECT:
 
 ```sql
 > SELECT @my_user_variable;
@@ -36,18 +36,18 @@ And later they can be queries using for example SELECT:
 +-------------------+
 ```
 
-If you execute these queries against a VTGate, that first `SET` query is not sent to MySQL.
+If you execute these queries against a VTGate, the first `SET` query is not sent to MySQL.
 Instead, it is evaluated in the VTGate, and VTGate will keep this state for you.
 The second query is also not sent down. Trivial queries such as this one are actually fully executed on VTGate.
 
-If we try a more complicated query that requires data from MySQL, vtgate will rewrite the query before sending it down.
-If we were to write something like :
+If we try a more complicated query that requires data from MySQL, VTGate will rewrite the query before sending it down.
+If we were to write something like:
 
 ```sql
 WHERE col = @my_user_variable
 ```
 
-what MySQL will see is 
+What MySQL will see is:
 
 ```sql
 WHERE col = 'foobar'
@@ -64,8 +64,7 @@ Vitess handles system variables in one of four different ways:
   * *Check and fail if not already set*. These are settings that should not change, but Vitess will allow SET statements that try to set the variable to whatever it already is.
   * *Not supported*. For these settings, attempting to change them will always result in an error.
   * *Vitess aware*. These are settings that change Vitess' behaviour, and are not sent down to MySQL
-  * *Reserved connection*. For some settings, it makes sense to allow them to be set, but it also means that we can't use a shared connection for this user. 
-  What this means is that every connection done on this users behalf will need to first have these system variables set, and then keep the connection dedicated. Connection pooling is important for the performance of Vitess, and reserved connections can't be pooled, so this should not be the normal way to run applications on Vitess. Just make sure that the global variable is set to the same value the application will set it to, and Vitess can use connection pooling.
+  * *Reserved connection*. For some settings, it makes sense to allow them to be set, but it also means that we can't use a shared connection for this user. What this means is that every connection done on this users behalf will need to first have these system variables set, and then keep the connection dedicated. Connection pooling is important for the performance of Vitess, and reserved connections can't be pooled, so this should not be the normal way to run applications on Vitess. Just make sure that the global variable is set to the same value the application will set it to, and Vitess can use connection pooling.
 
 ### Special functions
 
@@ -77,7 +76,7 @@ There are a few special functions that Vitess handles without delegating to MySQ
 
 ### Reference
 
-Here follows a list of all the system variables that are handled by Vitess and how they are handled.
+Here is a list of all the system variables that are handled by Vitess and how they are handled.
 
 | *System variable*  | *Handled* |
 |---|---|
