@@ -313,8 +313,8 @@ Vitess automatically creates a MySQL account for the migration, with a randomly 
 Vitess takes care of setting up the necessary command line flags. It automatically creates a hooks directory and populates it with hooks that report `gh-ost`'s progress back to Vitess. You may supply additional flags for your migration as part of the `ALTER` statement. Examples:
 
 - `ALTER WITH 'gh-ost' '--max-load Threads_running=200' TABLE demo MODIFY id BIGINT`
-- `ALTER WITH 'pt-osc' '--critical-load Threads_running=500 --critical-load-hibernate-seconds=60' --default-retries=512 TABLE demo MODIFY id BIGINT`
-- `ALTER WITH 'pt-osc' '--allow-nullable-unique-key --chunk-size 200' TABLE demo MODIFY id BIGINT`
+- `ALTER WITH 'gh-ost' '--critical-load Threads_running=500 --critical-load-hibernate-seconds=60' --default-retries=512 TABLE demo MODIFY id BIGINT`
+- `ALTER WITH 'gh-ost' '--allow-nullable-unique-key --chunk-size 200' TABLE demo MODIFY id BIGINT`
 
 Do not override the following flags: `alter, database, table, execute, max-lag, force-table-names, serve-socket-file, hooks-path, hooks-hint-token, panic-flag-file`.
 
