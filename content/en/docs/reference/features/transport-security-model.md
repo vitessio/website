@@ -46,11 +46,59 @@ When using gRPC transport, Vitess can use the usual TLS security features. Pleas
   - `xxxx_grpc_ca`: list of server cert signers to trust. I.E. the client will only connect to servers presenting a cert signed by one of the CAs in this file.
   - `xxxx_grpc_server_name`: common name of the server cert to trust. Instead of the hostname used to connect or IP SAN if using an IP to connect.
   - `xxxx_grpc_cert`, `xxxx_grpc_key`: client side cert and key to use in cases when the server requires client authentication.
-* Other clients can take similar parameters, in various ways. Please view each client's parameters for more information.
+  * Other clients can take similar parameters, in various ways. Please view each client's parameters for more information.
 
 With these options, it is possible to use TLS-secured connections for all parts of the gRPC system. This enables the server side to authenticate the client, and/or the client to authenticate the server.
 
 This is not enabled by default, as usually the different Vitess servers will run on a private network. It is also important to note, that in a Cloud environment, for example, usually all local traffic is already secured between VMs.
+
+### Options for vtctld
+  | Name | Type | Definition |
+| :-------- | :--------- | :--------- |
+| -tablet_grpc_ca | string | the server ca to use to validate servers when connecting |
+| -tablet_grpc_cert | string | the cert to use to connect |
+| -tablet_grpc_key  | string | the key to use to connect |
+| -tablet_grpc_server_name  | string | the server name to use to validate server certificate |
+| -tablet_manager_grpc_ca  | string | the server ca to use to validate servers when connecting |
+| -tablet_manager_grpc_cert  | string | the cert to use to connect |
+| -tablet_manager_grpc_key  | string | the key to use to connect |
+| -tablet_manager_grpc_server_name  | string | the server name to use to validate server certificate |
+| -throttler_client_grpc_ca  | string | the server ca to use to validate servers when connecting |
+| -throttler_client_grpc_cert | string | the cert to use to connect |
+| -throttler_client_grpc_key  | string | the key to use to connect |
+| -throttler_client_grpc_server_name  | string | the server name to use to validate server certificate |
+| -vtgate_grpc_ca  | string | the server ca to use to validate servers when connecting |
+| -vtgate_grpc_cert | string | the cert to use to connect |
+| -vtgate_grpc_key  | string | the key to use to connect |
+| -vtgate_grpc_server_name  | string | the server name to use to validate server certificate |
+| -vtworker_client_grpc_ca  | string | the server ca to use to validate servers when connecting |
+| -vtworker_client_grpc_cert | string | the cert to use to connect |
+| -vtworker_client_grpc_key  | string | the key to use to connect |
+| -vtworker_client_grpc_server_name  | string | the server name to use to validate server certificate |
+
+### Options for vtgate
+  | Name | Type | Definition |
+| :-------- | :--------- | :--------- |
+| -tablet_grpc_ca | string | the server ca to use to validate servers when connecting |
+| -tablet_grpc_cert | string | the cert to use to connect |
+| -tablet_grpc_key  | string | the key to use to connect |
+| -tablet_grpc_server_name  | string | the server name to use to validate server certificate |
+
+### Options for vttablet
+  | Name | Type | Definition |
+| :-------- | :--------- | :--------- |
+| -binlog_player_grpc_ca | string | the server ca to use to validate servers when connecting |
+| -binlog_player_grpc_cert | string | the cert to use to connect |
+| -binlog_player_grpc_key  | string | the key to use to connect |
+| -binlog_player_grpc_server_name  | string | the server name to use to validate server certificate |
+| -tablet_grpc_ca | string | the server ca to use to validate servers when connecting |
+| -tablet_grpc_cert | string | the cert to use to connect |
+| -tablet_grpc_key  | string | the key to use to connect |
+| -tablet_grpc_server_name  | string | the server name to use to validate server certificate |
+| -tablet_manager_grpc_ca  | string | the server ca to use to validate servers when connecting |
+| -tablet_manager_grpc_cert  | string | the cert to use to connect |
+| -tablet_manager_grpc_key  | string | the key to use to connect |
+| -tablet_manager_grpc_server_name  | string | the server name to use to validate server certificate |
 
 ### Certificates and Caller ID
 
