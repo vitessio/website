@@ -26,7 +26,7 @@ various factors:
  - Whether you are attempting to hack around some of the MySQL `DROP TABLE`
    performance problems using hard links
 
-As a result it is typical to avoid direct `DROP TABLE` statements and to follow
+It is common practice to avoid direct `DROP TABLE` statements and to follow
 a more elaborate table lifecycle.
 
 # Vitess table lifecycle
