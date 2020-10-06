@@ -1,6 +1,6 @@
 ---
 title: Horizontal Sharding
-weight: 99
+weight: 1
 ---
 
 {{< warning >}}

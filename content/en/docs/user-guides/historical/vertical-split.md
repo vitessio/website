@@ -1,6 +1,6 @@
 ---
 title: Vertical Split
-weight: 99 
+weight: 2 
 ---
 
 {{< warning >}}

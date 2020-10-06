@@ -1,6 +1,6 @@
 	---
 title: Backup and Restore
-weight: 10
+weight: 2
 aliases: ['/user-guide/backup-and-restore.html']
 ---
 

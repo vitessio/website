@@ -1,6 +1,6 @@
 ---
 title: Upgrading Vitess
-weight: 4
+weight: 1
 aliases: ['/docs/user-guides/upgrading/']
 ---
 

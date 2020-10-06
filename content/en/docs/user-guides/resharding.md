@@ -1,6 +1,6 @@
 ---
 title: Resharding
-weight: 7
+weight: 29
 ---
 
 {{< info >}}
