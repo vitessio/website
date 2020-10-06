@@ -4,7 +4,7 @@ weight: 2
 aliases: ['/docs/user-guides/managed-online-schema-changes/']
 ---
 
-**Note:** this feature is **EXPERIMENTAL**
+**Note:** this feature is **EXPERIMENTAL**. Also, the syntax for online-DDL is **subject to change**.
 
 Vitess offers managed, online schema migrations, via [gh-ost](https://github.com/github/gh-ost) and [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html). As a quick breakdown:
 
@@ -16,6 +16,8 @@ Vitess offers managed, online schema migrations, via [gh-ost](https://github.com
 - Vitess provides the user the mechanism to show migration status, cancel or retry migrations, based on the job ID
 
 ## Syntax
+
+**Note:** while this feature is experimental the syntax is subject to change.
 
 We assume we have a keyspace (schema) called `commerce`, with a table called `demo`, that has the following definition:
 
