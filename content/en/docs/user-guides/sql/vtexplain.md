@@ -1,6 +1,6 @@
 ---
 title: Analyzing a SQL statement
-weight: 11
+weight: 1
 ---
 
 # Introduction 

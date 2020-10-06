@@ -1,6 +1,6 @@
 ---
 title: Authorization
-weight: 14
+weight: 2
 ---
 
 A common question is how to enforce fine-grained access control in Vitess.

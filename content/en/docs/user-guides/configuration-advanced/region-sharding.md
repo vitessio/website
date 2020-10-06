@@ -1,6 +1,6 @@
 ---
 title: Region-based Sharding
-weight: 30
+weight: 10
 ---
 
 {{< info >}}

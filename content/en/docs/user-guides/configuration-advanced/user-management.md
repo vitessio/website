@@ -1,6 +1,6 @@
 ---
 title: User Management
-weight: 13
+weight: 1
 aliases: []
 ---
 

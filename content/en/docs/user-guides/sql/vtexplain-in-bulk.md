@@ -1,6 +1,6 @@
 ---
 title: Analyzing SQL statements in bulk
-weight: 12
+weight: 2
 ---
 
 # Introduction 

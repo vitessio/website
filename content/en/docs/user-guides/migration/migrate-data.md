@@ -1,6 +1,6 @@
 ---
 title: Migrating data into Vitess
-weight: 3
+weight: 1
 ---
 
 # Introduction 

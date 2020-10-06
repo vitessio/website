@@ -1,6 +1,6 @@
 	---
 title: Exporting data from Vitess
-weight: 5
+weight: 7
 ---
 
 Since [VTGate](../../concepts/vtgate/) supports the MySQL protocol, in many

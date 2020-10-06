@@ -1,6 +1,6 @@
 ---
 title: Materialize
-weight: 28
+weight: 3
 ---
 
 {{< info >}}

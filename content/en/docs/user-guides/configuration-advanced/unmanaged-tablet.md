@@ -1,6 +1,6 @@
 ---
 title: Unmanaged Tablet
-weight: 37
+weight: 12
 ---
 
 {{< info >}}
