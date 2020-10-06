@@ -1,8 +1,7 @@
 ---
 title: VExec
 description: Wrapper on VReplicationExec to run query on all participating masters
-aliases: ['/docs/vreplication/vexec']
-weight: 110
+weight: 120
 ---
 
 ### Command

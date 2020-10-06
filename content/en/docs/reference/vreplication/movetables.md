@@ -1,8 +1,7 @@
 ---
 title: MoveTables
 description: Move tables between keyspaces without downtime
-aliases: ['/docs/vreplication/movetables']
-weight: 20
+weight: 10
 ---
 
 ### Command

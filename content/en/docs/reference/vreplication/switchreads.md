@@ -1,7 +1,6 @@
 ---
 title: SwitchReads
 description: Route reads to target keyspace
-aliases: ['/docs/vreplication/switchreads']
 weight: 30
 ---
 

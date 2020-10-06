@@ -1,8 +1,7 @@
 ---
 title: Workflow
 description: Wrapper on VExec to perform common actions on a workflow
-aliases: ['/docs/vreplication/workflow']
-weight: 120
+weight: 110
 ---
 
 ### Command

@@ -1,8 +1,7 @@
 ---
 title: VDiff
 description: Compare the source and target in a workflow to ensure integrity
-aliases: ['/docs/vreplication/vdiff']
-weight: 25
+weight: 20
 ---
 
 ### Command

@@ -1,8 +1,7 @@
 ---
 title: Reshard
 description: split or merge shards in a keyspace
-aliases: ['/docs/vreplication/reshard']
-weight: 21
+weight: 60
 ---
 
 ### Command

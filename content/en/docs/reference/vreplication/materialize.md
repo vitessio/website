@@ -1,8 +1,7 @@
 ---
 title: Materialize
 description: 
-aliases: ['/docs/vreplication/materialize']
-weight: 22
+weight: 70
 ---
 
 ### Command

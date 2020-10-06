@@ -1,8 +1,7 @@
 ---
 title: SwitchWrites
 description: Route writes to target keyspace in a vreplication workflow
-aliases: ['/docs/vreplication/switchwrites']
-weight: 40
+weight: 50
 ---
 
 ### Command

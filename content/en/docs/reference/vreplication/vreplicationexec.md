@@ -1,8 +1,7 @@
 ---
 title: VReplicationExec
 description: Low level command to run a query on vreplication related tables
-aliases: ['/docs/vreplication/vreplicationexec']
-weight: 100
+weight: 190
 ---
 
 ### Command

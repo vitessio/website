@@ -1,8 +1,7 @@
 ---
 title: DropSources
 description: Cleans up after a MoveTables and Reshard workflow
-aliases: ['/docs/vreplication/dropsources']
-weight: 50
+weight: 60
 ---
 
 ### Command
