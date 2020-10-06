@@ -14,9 +14,9 @@ The following diagram represents all the RPCs we use in a Vitess cluster via gRP
 There are two main categories:
 
 * Internal RPCs: They are used to connect Vitess components.
-* Externally visible RPCs: They are used by the app to talk to Vitess. Note that not it is not necessary to use this gRPC interface. It is still possible to instead use the MySQL protocol to VTGate, which is not covered in this document.
+* Externally visible RPCs: They are used by the app to talk to Vitess. Note that it is not necessary to use this gRPC interface. It is still possible to instead use the MySQL protocol to VTGate, which is not covered in this document.
 
-A few features in the Vitess ecosystem depend on authentication including: Caller ID and table ACLs.
+A few features in the Vitess ecosystem depend on authentication including Caller ID and table ACLs.
 
 ## Caller ID
 
@@ -25,12 +25,12 @@ Caller ID is a feature provided by the Vitess stack to identify the source of qu
 * Immediate Caller ID: It represents the secure client identity when it enters the Vitess side:
   - It is a single string representing the user connecting to Vitess (VTGate).
   - It is authenticated by the transport layer used.
-  - It is can be used by the Vitess TableACL feature.
+  - It can be used by the Vitess TableACL feature.
 * Effective Caller ID: It provides detailed information on the individual caller process:
-  - It contains more information about the caller: principal, component, or sub-component.
+  - It contains more information about the caller: principal, component, and sub-component.
   - It is provided by the application layer.
   - It is not authenticated.
-  - It is exposed in query logs. Enabling it to be used to debug issues like the source of a slow query.
+  - It is exposed in query logs. Enabling it can be useful for debugging issues like the source of a slow query.
 
 ## gRPC Transport
 
@@ -54,7 +54,7 @@ This is not enabled by default, as usually the different Vitess servers will run
 
 ### Certificates and Caller ID
 
-Additionally, if a client uses a certificate to connect to Vitess (VTGate) via gRPC, the common name of that certificate is passed to vttablet as the Immediate Caller ID. It can then be used by table ACLs, to grant read, write or admin access to individual tables. This should be used if different clients should have different access to Vitess tables.
+Additionally, if a client uses a certificate to connect to Vitess (VTGate) via gRPC, the common name of that certificate is passed to vttablet as the Immediate Caller ID. It can then be used by table ACLs to grant read, write or admin access to individual tables. This should be used if different clients should have different access to Vitess tables.
 
 ### Caller ID Override
 
