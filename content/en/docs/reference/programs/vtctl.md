@@ -258,7 +258,7 @@ The following global options apply to `vtctl`:
 | -grpc_ca | string | ca to use, requires TLS, and enforces client cert check |
 | -grpc_cert | string | certificate to use, requires grpc_key, enables TLS |
 | -grpc_compression | string | how to compress gRPC, default: nothing, supported: snappy |
-| -grpc_enable_tracing | Enable GRPC tracing |
+| -grpc_enable_tracing | | Enable GRPC tracing |
 | -grpc_initial_conn_window_size | int | grpc initial connection window size |
 | -grpc_initial_window_size | int | grpc initial window size |
 | -grpc_keepalive_time | duration | After a duration of this time if the client doesn't see any activity it pings the server to see if the transport is still alive. (default 10s) |
