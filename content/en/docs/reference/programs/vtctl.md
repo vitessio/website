@@ -208,7 +208,8 @@ The following global options apply to `vtctl`:
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| -alsologtostderr | | log to standard error as well as files| -app_idle_timeout | duration | Idle timeout for app connections (default 1m0s) |
+| -alsologtostderr | | log to standard error as well as files|
+| -app_idle_timeout | duration | Idle timeout for app connections (default 1m0s) |
 | -app_pool_size | int | Size of the connection pool for app connections (default 40) |
 | -azblob_backup_account_key_file | string | Path to a file containing the Azure Storage account key; if this flag is unset, the environment variable VT_AZBLOB_ACCOUNT_KEY will be used as the key itself (NOT a file path) |
 | -azblob_backup_account_name | string | Azure Storage Account name for backups; if this flag is unset, the environment variable VT_AZBLOB_ACCOUNT_NAME will be used |
@@ -217,11 +218,13 @@ The following global options apply to `vtctl`:
 | -azblob_backup_storage_root | string | Root prefix for all backup-related Azure Blobs; this should exclude both initial and trailing '/' (e.g. just 'a/b' not '/a/b/') |
 | -backup_engine_implementation | string | Specifies which implementation to use for creating new backups (builtin or xtrabackup). Restores will always be done with whichever engine created a given backup. (default "builtin") |
 | -backup_storage_block_size | int | if backup_storage_compress is true, backup_storage_block_size sets the byte size for each block while compressing (default is 250000). (default 250000) |
-| -backup_storage_compress | | if set, the backup files will be compressed (default is true). Set to false for instance if a backup_storage_hook is specified and it compresses the data. (default true)| -backup_storage_hook | string | if set, we send the contents of the backup files through this hook. |
+| -backup_storage_compress | | if set, the backup files will be compressed (default is true). Set to false for instance if a backup_storage_hook is specified and it compresses the data. (default true)|
+| -backup_storage_hook | string | if set, we send the contents of the backup files through this hook. |
 | -backup_storage_implementation | string | which implementation to use for the backup storage feature |
 | -backup_storage_number_blocks | int | if backup_storage_compress is true, backup_storage_number_blocks sets the number of blocks that can be processed, at once, before the writer blocks, during compression (default is 2). It should be equal to the number of CPUs available for compression (default 2) |
 | -binlog_player_protocol | string | the protocol to download binlogs from a vttablet (default "grpc") |
-| -binlog_use_v3_resharding_mode | | True iff the binlog streamer should use V3-style sharding, which doesn't require a preset sharding key column. (default true)| -ceph_backup_storage_config | string | Path to JSON config file for ceph backup storage (default "ceph_backup_config.json") |
+| -binlog_use_v3_resharding_mode | | True iff the binlog streamer should use V3-style sharding, which doesn't require a preset sharding key column. (default true)|
+|-ceph_backup_storage_config | string | Path to JSON config file for ceph backup storage (default "ceph_backup_config.json") |
 | -consul_auth_static_file | string | JSON File to read the topos/tokens from. |
 | -cpu_profile | string | write cpu profile to file |
 | -datadog-agent-host | string | host to send spans to. if empty, no tracing will be done |
@@ -244,7 +247,8 @@ The following global options apply to `vtctl`:
 | -enable_queries | | if set, allows vtgate and vttablet queries. May have security implications, as the queries will be run from this process. |
 | -enable_transaction_limit | | If true, limit on number of transactions open at the same time will be enforced for all users. User trying to open a new transaction after exhausting their limit will receive an error immediately, regardless of whether there are available slots or not. |
 | -enable_transaction_limit_dry_run | | If true, limit on number of transactions open at the same time will be tracked for all users, but not enforced. |
-| -enforce_strict_trans_tables | | If true, vttablet requires MySQL to run with STRICT_TRANS_TABLES or STRICT_ALL_TABLES on. It is recommended to not turn this flag off. Otherwise MySQL may alter your supplied values before saving them to the database. (default true)| -file_backup_storage_root | string | root directory for the file backup storage |
+| -enforce_strict_trans_tables | | If true, vttablet requires MySQL to run with STRICT_TRANS_TABLES or STRICT_ALL_TABLES on. It is recommended to not turn this flag off. Otherwise MySQL may alter your supplied values before saving them to the database. (default true)|
+|-file_backup_storage_root | string | root directory for the file backup storage |
 | -gcs_backup_storage_bucket | string | Google Cloud Storage bucket to use for backups |
 | -gcs_backup_storage_root | string | root prefix for all backup-related object names |
 | -grpc_auth_mode | string | Which auth plugin implementation to use (eg: static) |
@@ -269,7 +273,8 @@ The following global options apply to `vtctl`:
 | -grpc_server_initial_window_size | int | grpc server initial window size |
 | -grpc_server_keepalive_enforcement_policy_min_time | duration | grpc server minimum keepalive time (default 5m0s) |
 | -grpc_server_keepalive_enforcement_policy_permit_without_stream | | grpc server permit client keepalive pings even when there are no active streams (RPCs) |
-| -heartbeat_enable | | If true, vttablet records (if master) or checks (if replica) the current time of a replication heartbeat in the table _vt.heartbeat. The result is used to inform the serving state of the vttablet via healthchecks.| -heartbeat_interval | duration | How frequently to read and write replication heartbeat. (default 1s) |
+| -heartbeat_enable | | If true, vttablet records (if master) or checks (if replica) the current time of a replication heartbeat in the table _vt.heartbeat. The result is used to inform the serving state of the vttablet via healthchecks.|
+|-heartbeat_interval | duration | How frequently to read and write replication heartbeat. (default 1s) |
 | -hot_row_protection_concurrent_transactions | int | Number of concurrent transactions let through to the txpool/MySQL for the same hot row. Should be > 1 to have enough 'ready' transactions in MySQL and benefit from a pipelining effect. (default 5) |
 | -hot_row_protection_max_global_queue_size | int | Global queue limit across all row (ranges). Useful to prevent that the queue can grow unbounded. (default 1000) |
 | -hot_row_protection_max_queue_size | int | Maximum number of BeginExecute RPCs which will be queued for the same row (range). (default 20) |
@@ -397,7 +402,8 @@ The following global options apply to `vtctl`:
 | -transaction_shutdown_grace_period | int | how long to wait (in seconds) for transactions to complete during graceful shutdown. |
 | -twopc_abandon_age | float | time in seconds. Any unresolved transaction older than this time will be sent to the coordinator to be resolved. |
 | -twopc_coordinator_address | string | address of the (VTGate) process(es) that will be used to notify of abandoned transactions. |
-| -twopc_enable | if the flag is on, 2pc is enabled. Other 2pc flags must be supplied.| -tx-throttler-config | string | The configuration of the transaction throttler as a text formatted throttlerdata.Configuration protocol buffer message (default "target_replication_lag_sec: 2\nmax_replication_lag_sec: 10\ninitial_rate: 100\nmax_increase: 1\nemergency_decrease: 0.5\nmin_duration_between_increases_sec: 40\nmax_duration_between_increases_sec: 62\nmin_duration_between_decreases_sec: 20\nspread_backlog_across_sec: 20\nage_bad_rate_after_sec: 180\nbad_rate_increase: 0.1\nmax_rate_approach_threshold: 0.9\n") |
+| -twopc_enable | if the flag is on, 2pc is enabled. Other 2pc flags must be supplied.|
+| -tx-throttler-config | string | The configuration of the transaction throttler as a text formatted throttlerdata.Configuration protocol buffer message (default "target_replication_lag_sec: 2\nmax_replication_lag_sec: 10\ninitial_rate: 100\nmax_increase: 1\nemergency_decrease: 0.5\nmin_duration_between_increases_sec: 40\nmax_duration_between_increases_sec: 62\nmin_duration_between_decreases_sec: 20\nspread_backlog_across_sec: 20\nage_bad_rate_after_sec: 180\nbad_rate_increase: 0.1\nmax_rate_approach_threshold: 0.9\n") |
 | -tx-throttler-healthcheck-cells | value | A comma-separated list of cells. Only tabletservers running in these cells will be monitored for replication lag by the transaction throttler. |
 | -v | value | log level for V logs |
 | -version | | print binary version |
