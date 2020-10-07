@@ -5,7 +5,7 @@ weight: 11
 aliases: ['/docs/schema-management/schema-changes/', '/docs/user-guides/schema-changes/']
 ---
 
-The following section illustrate the problem space of schema changes and the various approaches you may use with Vitess.
+This user guide describes the problem space of schema changes and the various approaches you may use with Vitess.
 
 Quick links:
 
@@ -16,9 +16,9 @@ Some background on schema changes follows.
 
 ## The schema change problem
 
-Schema change is one of the oldest problems in MySQL. With accelerated development and deployment flows, engineer find they need to deploy schema changes sometimes on a daily basis. With the growth of data this task becomes more and more difficult. A direct MySQL `ALTER TABLE` statement is a blocking (no reads nor writes are possible on the migrated table) and resource heavy operation; variants of `ALTER TABLE` include `InnoDB` [Online DDL](https://dev.mysql.com/doc/refman/5.7/en/innodb-online-ddl-operations.html), which allows for some concurrency on a `primary` (aka `master`) server, but still blocking on replicas, leading to unacceptable replication lags once the statement hits the replicas.
+Schema change is one of the oldest problems in MySQL. With accelerated development and deployment flows, engineers find they need to deploy schema changes sometimes on a daily basis. With the growth of data this task becomes more and more difficult. A direct MySQL `ALTER TABLE` statement is a blocking (no reads nor writes are possible on the migrated table) and resource heavy operation; variants of `ALTER TABLE` include `InnoDB` [Online DDL](https://dev.mysql.com/doc/refman/5.7/en/innodb-online-ddl-operations.html), which allows for some concurrency on a `primary` (aka `master`) server, but still blocking on replicas, leading to unacceptable replication lags once the statement hits the replicas.
 
-`ALTER TABLE` operations are greedy, consume as much CPU/Disk IO as needed, are uninterruptible and uncontrollable. Once the operation began, it must run to completion; aborting an `ALTER TABLE` may be more expensive than letting it run through, depending on the progress the migration has made.
+`ALTER TABLE` operations are greedy, consume as much CPU/Disk IO as needed, are uninterruptible and uncontrollable. Once the operation has begun, it must run to completion; aborting an `ALTER TABLE` may be more expensive than letting it run through, depending on the progress the migration has made.
 
 Direct `ALTER TABLE` is fine in development or possibly staging environments, where datasets are either small, or where table locking is acceptable.
 
@@ -28,7 +28,7 @@ Busy production systems tend to use either of these two approaches, to make sche
 
 - Using online schema change tools, such as [gh-ost](https://github.com/github/gh-ost) and [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html). These tools _emulate_ an `ALTER TABLE` statement by creating a _ghost_ table in the new desired format, and slowly working through copying data from the existing table, while also applying ongoing changes throughout the migration.
   Online schema change tools can be throttled on high load, and can be interrupted at will.
-- Run the migration independently on replicas; when all replicas have the new schema, demote the `primary` and promote a `replica` as the new `primary`; then, at leisure, run the migration on the demoted server. Two consideratoin to using this approach are:
+- Run the migration independently on replicas; when all replicas have the new schema, demote the `primary` and promote a `replica` as the new `primary`; then, at leisure, run the migration on the demoted server. Two considerations if using this approach are:
   - Each migration requires a failover (aka successover, aka planned reparent).
   - Total wall clock time is higher since we run the same migration in sequence on different servers.
 
@@ -38,7 +38,7 @@ The cycle of schema changes, from idea to production, is complex, involves multi
 
 1. Design: the developer designs a change, tests locally
 2. Publish: the developer calls for review of their changes (e.g. on a Pull Request)
-3. Review: developer's cooleagues and database engineers to check the changes and their impact
+3. Review: developer's colleagues and database engineers to check the changes and their impact
 4. Formalize: what is the precise `ALTER TABLE` statement to be executed? If running with `gh-ost` or `pt-online-schema-change`, what are the precise command line flags?
 5. Locate: where does this change need to go? Which keyspace/cluster? Is this cluster sharded? What are the shards?
   Having located the affecetd MySQL clusters, which is the `primary` server per cluster?

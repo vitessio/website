@@ -112,10 +112,10 @@ We highlight how Vitess manages migrations internally, and explain what states a
 - `vtctld` resolves the relevant shards, and the `primary` tablet for each shard.
 - `vtctld` pushes the request to all relevant `primary` tablets.
 - If not all shards confirm receipt, `vtctld` periodically keeps retrying pushing the request to the shards until all approve.
-- Internally, tablet's persist the request on a designated table in the `_vt` schema. **Do not** manipulate that table directly as that would cause inconsistencies.
+- Internally, tablets persist the request in a designated table in the `_vt` schema. **Do not** manipulate that table directly as that can cause inconsistencies.
 - A shard's `primary` tablet owns running the migration. It is independent of other shards. It will schedule the migration to run when possible. A tablet will not run two migrations at the same time.
 - A migration is first created in `queued` state.
-- If the tablet sees queued migration, and assuming there's no reason to hold up, it picks the oldest requested migration in `queued` state, and moves it to `ready` state.
+- If the tablet sees queued migration, and assuming there's no reason to wait, it picks the oldest requested migration in `queued` state, and moves it to `ready` state.
 - Tablet then prepares for the migration. It creates a MySQL account with a random password, to be used by this migration only. It creates the command line invocation, and extra scripts if possible.
 - The tablet then runs the migration. Whether `gh-ost` or `pt-online-schema-change`, it first runs in _dry run_ mode, and, if successful, in actual _execute_ mode. The migration is then in `running` state.
 - The migration will either run to completion, fail, or be interrupted. If successful, it transitions into `complete` state, which is the end of the road for that migration. If failed or interrupted, it transitions to `failed` state. The user may choose to _retry_ failed migrations (see below).
@@ -249,7 +249,7 @@ $ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
 
 The user may retry running a migration. If the migration is in `failed` or in `cancelled` state, Vitess will re-run the migration, with exact same arguments as previously intended. If the migration is in any other state, `retry` does nothing.
 
-It is not possible to retry a migration and with new variables. e.g. if the user initially runs `ALTER WITH 'gh-ost' '--max-load Threads_running=200' TABLE demo MODIFY id BIGINT` and the migration failed, it is not possible to retry with `'--max-load Threads_running=500'`.
+It is not possible to retry a migration with different options. e.g. if the user initially runs `ALTER WITH 'gh-ost' '--max-load Threads_running=200' TABLE demo MODIFY id BIGINT` and the migration failed, it is not possible to retry with `'--max-load Threads_running=500'`.
 
 Continuing the above example, where we cancelled a migration while running, we now retry it:
 
@@ -320,7 +320,7 @@ Vitess takes care of setting up the necessary command line flags. It automatical
 
 Do not override the following flags: `alter, database, table, execute, max-lag, force-table-names, serve-socket-file, hooks-path, hooks-hint-token, panic-flag-file`.
 
-`gh-ost` throtlling is done via Vitess's own tablet throttler, based on replication lag. 
+`gh-ost` throttling is done via Vitess's own tablet throttler, based on replication lag. 
 
 
 ## Using pt-online-schema-change
@@ -343,7 +343,7 @@ Vitess tracks the state of the `pt-osc` migration. If it fails, Vitess makes sur
 
 Do not override the following flags: `alter, pid, plugin, dry-run, execute, new-table-name, [no-]drop-new-table, [no-]drop-old-table`.
 
-`pt-osc` throtlling is done via Vitess's own tablet throttler, based on replication lag, and via a `pt-online-schema-change` plugin. 
+`pt-osc` throttling is done via Vitess's own tablet throttler, based on replication lag, and via a `pt-online-schema-change` plugin. 
 
 
 ## Throttling
