@@ -320,7 +320,7 @@ Vitess takes care of setting up the necessary command line flags. It automatical
 
 Do not override the following flags: `alter, database, table, execute, max-lag, force-table-names, serve-socket-file, hooks-path, hooks-hint-token, panic-flag-file`.
 
-`gh-ost` throttling is done via Vitess's own tablet throttler, based on replication lag. 
+`gh-ost` throttling is done via Vitess's own tablet throttler, based on replication lag.
 
 
 ## Using pt-online-schema-change
@@ -343,7 +343,7 @@ Vitess tracks the state of the `pt-osc` migration. If it fails, Vitess makes sur
 
 Do not override the following flags: `alter, pid, plugin, dry-run, execute, new-table-name, [no-]drop-new-table, [no-]drop-old-table`.
 
-`pt-osc` throttling is done via Vitess's own tablet throttler, based on replication lag, and via a `pt-online-schema-change` plugin. 
+`pt-osc` throttling is done via Vitess's own tablet throttler, based on replication lag, and via a `pt-online-schema-change` plugin.
 
 
 ## Throttling
