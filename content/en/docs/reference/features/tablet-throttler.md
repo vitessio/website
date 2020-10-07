@@ -7,7 +7,7 @@ VTTablet runs a cooperative throttling service, that probes the shard's MySQL to
 
 ## Why throttler
 
-Vitess uses MySQL with asynchronous or semi-synchronous replication. In these modes, each shard has a primary that applies changes and logs them to the binary log. The replicas for that shard will get binary log entires from the primary, potentially acknowledge them (if semi-synchronous replication is enabled), and apply them. A running replica normally applies the entires as soon as possile, unless it is stopped or configured to delay. However, if the replica is busy (e.g. by serving traffic), then it may not have the resources (disk IO, CPU) to apply events in a timely fashion, and can therefore start lagging.
+Vitess uses MySQL with asynchronous or semi-synchronous replication. In these modes, each shard has a primary that applies changes and logs them to the binary log. The replicas for that shard will get binary log entries from the primary, potentially acknowledge them (if semi-synchronous replication is enabled), and apply them. A running replica normally applies the entires as soon as possile, unless it is stopped or configured to delay. However, if the replica is busy (e.g. by serving traffic), then it may not have the resources (disk IO, CPU) to apply events in a timely fashion, and can therefore start lagging.
 
 Maintaining low replication lag is important in production:
 
@@ -27,7 +27,7 @@ This is where a throttler gets in. A throttler can tell "replication lag is low,
 
 Applications are expected to break down their tasks into small sub-tasks (e.g. instead of deleting `1,000,000` rows, only delete `50` at a time), and check in with the throttler in-between.
 
-The throttler is intended for use only by application such as the above mass write cases. It should not be used for ongoing, normal OLTP queries.
+The throttler is intended for use only for operations such as the above mass write cases. It should not be used for ongoing, normal OLTP queries.
 
 ## Throttler overview
 
@@ -62,7 +62,7 @@ The throttler allows clients/apps to `check` for throttle advice. The check is a
 
 Normally, apps will see either `200` or `429`. An app should only ever proceed to write to the database when it receives a `200` response code.
 
-The throttler chooses the response by comparing the replication lag with a pre-defined _threshold_. If the lag is lower than the threshold, response can be `200` (OK). I the lag is higher than the threshold, response would be `429` (Too Many Requests).
+The throttler chooses the response by comparing the replication lag with a pre-defined _threshold_. If the lag is lower than the threshold, response can be `200` (OK). If the lag is higher than the threshold, response would be `429` (Too Many Requests).
 
 The throttler only collects and evaluates lag on a set of predefined tablet types. By default, this tablet type set is `REPLICA`. See configuration, below.
 
@@ -124,7 +124,7 @@ $ curl -s http://tablet1:15100/throttler/status | jq .
 Notable:
 
 - `"IsLeader": true` indicates this tablet is active, is the `primary`, and is running probes
-- `"IsDormant": false,` means an app has recently issues a `check`, and the throttler is probing for lag at high frequency.
+- `"IsDormant": false,` means an app has recently issued a `check`, and the throttler is probing for lag at high frequency.
 
 On a `REPLICA` tablet:
 
