@@ -315,7 +315,7 @@ The following global options apply to `vtctl`:
 | -queryserver-config-message-conn-pool-prefill-parallelism | int | DEPRECATED: Unused. |
 | -queryserver-config-message-conn-pool-size | int | DEPRECATED |
 | -queryserver-config-message-postpone-cap | int | query server message postpone cap is the maximum number of messages that can be postponed at any given time. Set this number to substantially lower than transaction cap, so that the transaction pool isn't exhausted by the message subsystem. (default 4) |
-| -queryserver-config-passthrough-dmls | query server pass through all dml statements without rewriting |
+| -queryserver-config-passthrough-dmls | | query server pass through all dml statements without rewriting |
 | -queryserver-config-pool-prefill-parallelism | int | query server read pool prefill parallelism, a non-zero value will prefill the pool using the specified parallism. |
 | -queryserver-config-pool-size | int | query server read pool size, connection pool is used by regular queries (non streaming, not in a transaction) (default 16) |
 | -queryserver-config-query-cache-size | int | query server query cache size, maximum number of queries to be cached. vttablet analyzes every incoming query and generate a query plan, these plans are being cached in a lru cache. This config controls the capacity of the lru cache. (default 5000) |
@@ -402,7 +402,7 @@ The following global options apply to `vtctl`:
 | -transaction_shutdown_grace_period | int | how long to wait (in seconds) for transactions to complete during graceful shutdown. |
 | -twopc_abandon_age | float | time in seconds. Any unresolved transaction older than this time will be sent to the coordinator to be resolved. |
 | -twopc_coordinator_address | string | address of the (VTGate) process(es) that will be used to notify of abandoned transactions. |
-| -twopc_enable | if the flag is on, 2pc is enabled. Other 2pc flags must be supplied.|
+| -twopc_enable | | if the flag is on, 2pc is enabled. Other 2pc flags must be supplied.|
 | -tx-throttler-config | string | The configuration of the transaction throttler as a text formatted throttlerdata.Configuration protocol buffer message (default "target_replication_lag_sec: 2\nmax_replication_lag_sec: 10\ninitial_rate: 100\nmax_increase: 1\nemergency_decrease: 0.5\nmin_duration_between_increases_sec: 40\nmax_duration_between_increases_sec: 62\nmin_duration_between_decreases_sec: 20\nspread_backlog_across_sec: 20\nage_bad_rate_after_sec: 180\nbad_rate_increase: 0.1\nmax_rate_approach_threshold: 0.9\n") |
 | -tx-throttler-healthcheck-cells | value | A comma-separated list of cells. Only tabletservers running in these cells will be monitored for replication lag by the transaction throttler. |
 | -v | value | log level for V logs |
