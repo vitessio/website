@@ -105,13 +105,18 @@ A `HEAD` request is sufficient. A `GET` request also provides a `JSON` output. F
 
 In the first two above examples we can see that the tablet is configured to throttle at `1sec`
 
-Tablet also provides `/throttler/status` endpoint. This is useful for monitoring/management purposes. Examples:
+Tablet also provides `/throttler/status` endpoint. This is useful for monitoring and management purposes. 
 
-On a `primary`, healthy tablet:
+**Example: Healthy primary tablet**
+
+The following command gets throttler status on a tablet hosted on `tablet1`, serving on port `15100`.
 
 ```shell
 $ curl -s http://tablet1:15100/throttler/status | jq .
 ```
+
+This API call returns the following JSON object:
+
 ```json
 {
   "Keyspace": "commerce",
@@ -129,7 +134,6 @@ $ curl -s http://tablet1:15100/throttler/status | jq .
 
 ```
 
-Notable:
 
 `"IsLeader": true` indicates this tablet is active, is the `primary`, and is running probes.
 `"IsDormant": false,` means that an application has recently issued a `check`, and the throttler is probing for lag at high frequency.
