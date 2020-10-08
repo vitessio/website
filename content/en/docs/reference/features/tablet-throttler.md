@@ -3,31 +3,31 @@ title: Tablet throttler
 aliases: ['/docs/user-guides/tablet-throttler/','/docs/reference/tablet-throttler/']
 ---
 
-VTTablet runs a cooperative throttling service, that probes the shard's MySQL topology and observes replication lag on servers. This throttler is derived from GitHub's [freno](https://github.com/github/freno).
+VTTablet runs a cooperative throttling service. This service probes the shard's MySQL topology and observes replication lag on servers. This throttler is derived from GitHub's [freno](https://github.com/github/freno).
 
 ## Why throttler
 
-Vitess uses MySQL with asynchronous or semi-synchronous replication. In these modes, each shard has a primary that applies changes and logs them to the binary log. The replicas for that shard will get binary log entries from the primary, potentially acknowledge them (if semi-synchronous replication is enabled), and apply them. A running replica normally applies the entires as soon as possile, unless it is stopped or configured to delay. However, if the replica is busy (e.g. by serving traffic), then it may not have the resources (disk IO, CPU) to apply events in a timely fashion, and can therefore start lagging.
+Vitess uses MySQL with asynchronous or semi-synchronous replication. In these modes, each shard has a primary instance that applies changes and logs them to the binary log. The replicas for that shard will get binary log entries from the primary, potentially acknowledge them (if semi-synchronous replication is enabled), and apply them. A running replica normally applies the entries as soon as possible, unless it is stopped or configured to delay. However, if the replica is busy, then it may not have the resources to apply events in a timely fashion, and can therefore start lagging. For example, if the replica is serving traffic, it may lack the necessary disk I/O or CPU to avoid lagging behind the primary.
 
-Maintaining low replication lag is important in production:
+Maintaining low replication lag is important in production for two reasons:
 
-- A lagging replica may not be representative of the data on the primary. Reads from the replica reflect data that is not consistent with the primary's. This is noticeable on web services following read-after-write from the replica, and this then can produce results not reflecting the write.
-- An up-to-date replica makes for a good failover experience. If all replicas are lagging, then a failover process must choose between waiting for a replica to catch up, or losing data.
+- A lagging replica may not be representative of the data on the primary. Reads from the replica reflect data that is not consistent with the data on the primary. This is noticeable on web services following read-after-write from the replica, and this can produce results not reflecting the write.
+- An up-to-date replica makes for a good failover experience. If all replicas are lagging, then a failover process must choose between waiting for a replica to catch up or losing data.
 
-Some common database operations include mass writes to the database:
+Some common database operations include mass writes to the database, including the following:
 
-- Online schema migrations, duplicating entire tables.
-- Mass population of columns (e.g. following a `ADD COLUMN` migration, populate the new column with derived value).
-- Purging of old data.
-- Purging of tables as part of safe table `DROP` operation.
+- Online schema migrations duplicating entire tables
+- Mass population of columns, such as populating the new column with derived values following an `ADD COLUMN` migration
+- Purging of old data
+- Purging of tables as part of safe table `DROP` operation
 
 These operations can easily incur replication lag. However, these operations are typically not time-limited. It is possible to rate-limit them to reduce database load.
 
-This is where a throttler gets in. A throttler can tell "replication lag is low, cluster is healthy, go ahead and do some work" or it may say "replication lag is high, please hold your next operation".
+This is where a throttler becomes useful. A throttler can detect when replication lag is low, a cluster is healthy, and operations can proceed. It can also detect when replication lag is high and advise applications to hold the next operation.
 
-Applications are expected to break down their tasks into small sub-tasks (e.g. instead of deleting `1,000,000` rows, only delete `50` at a time), and check in with the throttler in-between.
+Applications are expected to break down their tasks into small sub-tasks. For example, instead of deleting `1,000,000` rows, an application should only delete `50` at a time. Between these sub-tasks, the application should check in with the throttler.
 
-The throttler is intended for use only for operations such as the above mass write cases. It should not be used for ongoing, normal OLTP queries.
+The throttler is only intended for use with operations such as the above mass write cases. It should not be used for ongoing, normal OLTP queries.
 
 ## Throttler overview
 
@@ -123,14 +123,17 @@ $ curl -s http://tablet1:15100/throttler/status | jq .
 
 Notable:
 
-- `"IsLeader": true` indicates this tablet is active, is the `primary`, and is running probes
-- `"IsDormant": false,` means an app has recently issued a `check`, and the throttler is probing for lag at high frequency.
+`"IsLeader": true` indicates this tablet is active, is the `primary`, and is running probes.
+`"IsDormant": false,` means that an application has recently issued a `check`, and the throttler is probing for lag at high frequency.
 
 On a `REPLICA` tablet:
 
 ```shell
 $ curl -s http://tablet2:15100/throttler/status | jq .
 ```
+
+This API call returns the following JSON object:
+
 ```json
 {
   "Keyspace": "commerce",
@@ -148,4 +151,3 @@ $ curl -s http://tablet2:15100/throttler/status | jq .
 
 - [freno](https://github.com/github/freno) project page
 - [Mitigating replication lag and reducing read load with freno](https://github.blog/2017-10-13-mitigating-replication-lag-and-reducing-read-load-with-freno/), a GitHub Engineering blog post
-
