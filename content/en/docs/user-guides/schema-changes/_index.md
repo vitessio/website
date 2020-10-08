@@ -41,7 +41,7 @@ The cycle of schema changes, from idea to production, is complex, involves multi
 3. Review: developer's colleagues and database engineers to check the changes and their impact
 4. Formalize: what is the precise `ALTER TABLE` statement to be executed? If running with `gh-ost` or `pt-online-schema-change`, what are the precise command line flags?
 5. Locate: where does this change need to go? Which keyspace/cluster? Is this cluster sharded? What are the shards?
-  Having located the affecetd MySQL clusters, which is the `primary` server per cluster?
+  Having located the affected MySQL clusters, which is the `primary` server per cluster?
 6. Schedule: is there an already running migration on the relevant keyspace/cluster(s)?
 7. Execute: invoke the command. In the time we waited, did the identity of `primary` servers change?
 8. Audit/control: is the migration in progress? Do we need to abort for some reason?
@@ -62,12 +62,12 @@ In [managed, online schema changes](../managed-online-schema-changes/) the user 
 
 ### Locate
 
-For a given table in a given keyspace, Vitess knowns at all times:
+For a given table in a given keyspace, Vitess knows at all times:
 
 - In which shards (MySQL clusters) the table is found
 - Which is the `primary` server per shard.
 
-When using either managed schema changes, or dircet schema changes via `vtctl` or `vtgate`, Vitess resolves the discovery of the affected servers automatically, and this is hidden from the user.
+When using either managed schema changes, or direct schema changes via `vtctl` or `vtgate`, Vitess resolves the discovery of the affected servers automatically, and this is hidden from the user.
 
 ### Schedule
 
@@ -75,7 +75,7 @@ In managed, online schema changes, Vitess owns and tracks all pending and active
 
 ### Execute
 
-In managed, online schema changes, Vitess owns the execution of `gh-ost` or `pt-online-schema-change`. While these ru nin the background, Vitess keeps track of the migratoin state.
+In managed, online schema changes, Vitess owns the execution of `gh-ost` or `pt-online-schema-change`. While these run in the background, Vitess keeps track of the migratoin state.
 
 In direct schema changes via `vtctl` or `vtgate`, Vitess issues a synchronous `ALTER TABLE` statement on the relevant shards.
 
@@ -91,14 +91,14 @@ Vitess runs automated cut-overs. The migration will complete as soon as it's abl
 
 In the case of managed, online schema changes via `pt-online-schema-change`, Vitess will ensure to drop the triggers in case the tool failed to do so for whatever reason.
 
-_Coming shortly_, Vitess will auotmtically garbage-collect the "old" tables, artifacts of `gh-ost` and `pt-online-schema-change`. It will drop those tables in an incremental, non blocking method.
+Vitess automatically garbage-collects the "old" tables, artifacts of `gh-ost` and `pt-online-schema-change`. It drops those tables in an incremental, non blocking method.
 
 ## The various approaches
 
-Vitess allowed a variety of approaches to schema changes, from fully automated to fully owned by the user.
+Vitess allows a variety of approaches to schema changes, from fully automated to fully owned by the user.
 
 - Managed, online schema changes are _experimental_ at this time, but are Vitess's way forward
-- Direct, blocking ALTERs are generlaly impracticle in production given that they can block writes for substantial times.
+- Direct, blocking ALTERs are generally impractical in production given that they can block writes for substantial lengths of time.
 - User controlled migrations are allowed, and under the user's responsibility.
 
 See breakdown in [managed, online schema changes](../managed-online-schema-changes/) and in [unmanaged schema changes](../unmanaged-schema-changes/).

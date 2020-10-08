@@ -4,7 +4,7 @@ weight: 3
 aliases: ['/docs/schema-management/unmanaged-schema-changes/', '/docs/user-guides/unmanaged-schema-changes/']
 ---
 
-Vitess offers multiple approaches to running unmanaged schema changes. Below, we review each of thse approaches.
+Vitess offers multiple approaches to running unmanaged schema changes. Below, we review each of these approaches.
 
 We assume we have a keyspace (schema) called `commerce`, with a table called `demo`, that has the following definition:
 
@@ -35,7 +35,7 @@ CREATE TABLE `demo` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB
 ```
-In the above, we run a direct, synchronous, blocking `ALTER TABLE` statement. Knowing the table is in `commerce` keyspace, Vitess autodetects the relevant shards, and then autodetecs which is the `primary` server in each shard. It then directly invokes the `ALTER TABLE` statement on all shards (concurrently), and the `vtctlclient` command only returns when all are complete.
+In the above, we run a direct, synchronous, blocking `ALTER TABLE` statement. Knowing the table is in `commerce` keyspace, Vitess autodetects the relevant shards, and then autodetects which is the `primary` server in each shard. It then directly invokes the `ALTER TABLE` statement on all shards (concurrently), and the `vtctlclient` command only returns when all are complete.
 
 Vitess will run some validations:
 
@@ -53,7 +53,7 @@ E0908 10:35:53.478462 3711762 main.go:67] remote error: rpc error: code = Unknow
 }
 ```
 
-Vitess was able to determine that the migration is invalid because a column named `status` already exists. The statement never made it to the MySQL servers. These checks are not thorough, though cover common scenarios.
+Vitess was able to determine that the migration is invalid because a column named `status` already exists. The statement never made it to the MySQL servers. These checks are not thorough, though they cover common scenarios.
 
 If the table is large, then `ApplySchema` will reject the statement, try to protect the user from blocking their production servers. You may override that by supplying `-allow_long_unavailability` as follows:
 
@@ -74,7 +74,7 @@ mysql> ALTER TABLE demo ADD COLUMN sample INT;
 Query OK, 0 rows affected (0.04 sec)
 ```
 
-Just like in the previous example, Vitess will find out what the affected shards are, what the identity is of each shard's `primary`, then invoke the statment on all shards.
+Just like in the previous example, Vitess will find out what the affected shards are, what the identity is of each shard's `primary`, then invoke the statement on all shards.
 
 You may apply the change to specific shards by connecting directly to those shards:
 

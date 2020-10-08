@@ -8,12 +8,12 @@ aliases: ['/docs/user-guides/managed-online-schema-changes/']
 
 Vitess offers managed, online schema migrations, via [gh-ost](https://github.com/github/gh-ost) and [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html). As a quick breakdown:
 
-- Vitess recognized a special `ALTER TABLE` syntax that indicates on online schema hcnage request.
-- Vitess responds to on online schema change request with a job ID
+- Vitess recognizes a special `ALTER TABLE` syntax that indicates an online schema change request.
+- Vitess responds to an online schema change request with a job ID
 - Vitess resolves affected shards
 - A shard's `primary` tablet schedules the migration to run when possible
 - The tablets run migrations via `gh-ost` or `pt-online-schema-change`
-- Vitess provides the user the mechanism to show migration status, cancel or retry migrations, based on the job ID
+- Vitess provides the user a mechanism to view migration status, cancel or retry migrations, based on the job ID
 
 ## Syntax
 
