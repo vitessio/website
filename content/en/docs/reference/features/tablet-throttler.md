@@ -138,7 +138,9 @@ This API call returns the following JSON object:
 `"IsLeader": true` indicates this tablet is active, is the `primary`, and is running probes.
 `"IsDormant": false,` means that an application has recently issued a `check`, and the throttler is probing for lag at high frequency.
 
-On a `REPLICA` tablet:
+**Example: replica tablet**
+
+The following command gets throttler status on a tablet hosted on `tablet2`, serving on port `15100`.
 
 ```shell
 $ curl -s http://tablet2:15100/throttler/status | jq .
