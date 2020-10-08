@@ -163,6 +163,7 @@ region\_experimental | Functional Unique | Multi-column prefix-based hash for us
 region\_json | Functional Unique | Multi-column prefix-based hash combined with a JSON map for key-to-region mapping, for use in geo-partitioning | Yes | No | 1 | String and numeric type |
 reverse\_bits | Functional Unique | Bit reversal | Yes | Yes | 1 | 64 bit or smaller numeric or equivalent type |
 unicode\_loose\_md5 | Functional Unique | Case-insensitive (UCA level 1) MD5 hash | Yes | No | 1 | String or binary types |
+unicode\_loose\_xxhash | Functional Unique | Case-insensitive (UCA level 1) xxHash64 hash | Yes | No | 1 | String or binary types |
 xxhash | Functional Unique | xxHash64 hash | Yes | No | 1 | Any |
 
 Consistent lookup vindexes, as described above, are a new category of Vindexes that are meant to replace the existing lookup Vindexes implementation. For the time being, they have a different name to allow for users to switch back and forth.
