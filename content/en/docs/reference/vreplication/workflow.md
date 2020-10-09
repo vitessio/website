@@ -39,17 +39,17 @@ Name of target keyspace and the associated workflow to SwitchWrites for.
 <div class="cmd">
 action is one of
 
-* *stop* sets the state of the workflow to Stopped: no further vreplication will happen until workflow is restarted
-* *start* restarts a Stopped workflows
-* *delete* removes the entries for this workflow in \_vt.vreplication
-* *show* returns a JSON object with details about the associated shards and also with all the columns
+* **stop**: sets the state of the workflow to Stopped: no further vreplication will happen until workflow is restarted
+* **start**: restarts a Stopped workflows
+* **delete**: removes the entries for this workflow in \_vt.vreplication
+* **show**: returns a JSON object with details about the associated shards and also with all the columns
     from the \_vt.vreplication table
-* *list-all* returns a comma separated list of all running workflows in a keyspace
+* **listall**: returns a comma separated list of all running workflows in a keyspace
 </div>
 
 #### Example
 ```
 vtctlclient  Workflow keyspace1.wf2 stop
 vtctlclient  Workflow keyspace1.wf2 show
-vtctlclient  Workflow keyspace1 list-all
+vtctlclient  Workflow keyspace1 listall
 ```
