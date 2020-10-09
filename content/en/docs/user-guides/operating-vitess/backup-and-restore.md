@@ -230,7 +230,7 @@ to restore a backup to that tablet.
 * If the flag is absent, Vitess does not try to restore a backup to the
   tablet. This is the equivalent of starting a new tablet in a new shard.
 
-As noted in the [Prerequisites](#prerequisites) section, the flag is
+As noted in the [Configuration](#vttablet-configuration) section, the flag is
 generally enabled all of the time for all of the tablets in a shard.
 By default, if Vitess cannot find a backup in the Backup Storage system,
 the tablet will start up empty. This behavior allows you to bootstrap a new

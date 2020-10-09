@@ -37,4 +37,4 @@ Please see "SQL Syntax" under [MySQL Compatibility](../../reference/mysql-compat
 
 ## If I have a log of all queries from my app. Is there a way I can try them against Vitess to see how they’ll work?
 
-Yes. The [vtexplain](../../user-guides/vtexplain) tool can be used to preview how your queries will be executed by Vitess. It can also be used to try different sharding scenarios before deciding on one.
+Yes. The [vtexplain](../../user-guides/sql/vtexplain) tool can be used to preview how your queries will be executed by Vitess. It can also be used to try different sharding scenarios before deciding on one.

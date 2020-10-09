@@ -4,11 +4,11 @@ weight: 10
 ---
 
 {{< info >}}
-This guide follows on from the Get Started guides. Please make sure that you have a [local](../../get-started/local) installation ready. You should also have already gone through the [MoveTables](../move-tables) and [Resharding](../resharding) tutorials.
+This guide follows on from the Get Started guides. Please make sure that you have a [local](../docs/get-started/local) installation ready. You should also have already gone through the [MoveTables](../migration/move-tables) and [Resharding](../configuration-advanced/resharding) tutorials.
 {{< /info >}}
 
 ## Preparation
-Having gone through the Resharding tutorial, you should be familiar with [VSchema](../../concepts/vschema) and [Vindexes](../../reference/vindexes).
+Having gone through the Resharding tutorial, you should be familiar with [VSchema](../docs/concepts/vschema) and [Vindexes](../docs/reference/vindexes).
 In this tutorial, we will perform resharding on an existing keyspace using a location-based vindex. We will create 4 shards (-40, 40-80, 80-c0, c0-).
 The location will be denoted by a `country` column.
 

@@ -4,11 +4,11 @@ weight: 2
 ---
 
 {{< warning >}}
-In Vitess 6, Vertical Split became obsolete with the introduction of MoveTables! It is recommended to skip this guide, and continue on with the [MoveTables user guide](../move-tables) instead.
+In Vitess 6, Vertical Split became obsolete with the introduction of MoveTables! It is recommended to skip this guide, and continue on with the [MoveTables user guide](../migration/move-tables) instead.
 {{< /warning >}}
 
 {{< info >}}
-This guide follows on from [get started with a local deployment](../../get-started/local). It assumes that the `./101_initial_cluster.sh` script has been executed, and that you have a running Vitess cluster.
+This guide follows on from [get started with a local deployment](../docs/get-started/local). It assumes that the `./101_initial_cluster.sh` script has been executed, and that you have a running Vitess cluster.
 {{< /info >}}
 
 Vertical Split enables you to move a subset of tables to their own keyspace. Continuing on from the ecommerce example started in the get started guide, as your database continues to grow, you may decide to separate the `customer` and `corder` tables from the `product` table.  Let us add some data into our tables to illustrate how the vertical split works. Paste the following: 
@@ -174,7 +174,7 @@ ERROR 1105 (HY000) at line 4: vtgate: http://vtgate-zone1-5ff9c47db6-7rmld:15001
 
 ## Next Steps
 
-You can now proceed with [Horizontal Sharding](../../user-guides/horizontal-sharding).
+You can now proceed with [Horizontal Sharding](../../user-guides/historical/horizontal-sharding).
 
 Or alternatively, if you would like to teardown your example:
 

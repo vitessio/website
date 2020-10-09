@@ -447,4 +447,4 @@ This confirms that the data has been correctly cleaned up.  Note that the `DropS
 
 ## Next Steps
 
-Congratulations! You've sucessfully moved tables between keyspaces. The next step to try out is to shard one of your keyspaces in [Resharding](../resharding).
+Congratulations! You've sucessfully moved tables between keyspaces. The next step to try out is to shard one of your keyspaces in [Resharding](../configuration-advanced/resharding).
