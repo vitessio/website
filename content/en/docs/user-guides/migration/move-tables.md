@@ -4,12 +4,12 @@ weight: 2
 ---
 
 {{< info >}}
-This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../get-started/operator), [local](../../get-started/local) or [Helm](../../get-started/helm) installation ready after the `101_initial_cluster` step, and making sure you have setup aliases and port-forwarding (if necessary).
+This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../docs/get-started/operator), [local](../docs/get-started/local) or [Helm](../docs/get-started/helm) installation ready after the `101_initial_cluster` step, and making sure you have setup aliases and port-forwarding (if necessary).
 {{< /info >}}
 
-[MoveTables](../../concepts/move-tables) is a new VReplication workflow in Vitess 6 and later, and obsoletes Vertical Split from earlier releases.
+[MoveTables](../docs/concepts/move-tables) is a new VReplication workflow in Vitess 6 and later, and obsoletes Vertical Split from earlier releases.
 
-This feature enables you to move a subset of tables between keyspaces without downtime. For example, after [Initially deploying Vitess](../../get-started/local), your single commerce schema may grow so large that it needs to be split into multiple keyspaces.
+This feature enables you to move a subset of tables between keyspaces without downtime. For example, after [Initially deploying Vitess](../docs/get-started/local), your single commerce schema may grow so large that it needs to be split into multiple keyspaces.
 
 As a stepping stone towards splitting a single table across multiple servers (sharding), it usually makes sense to first split from having a single monolithic keyspace (`commerce`) to having multiple keyspaces (`commerce` and `customer`). For example, in our hypothetical ecommerce system we may know that `customer` and `corder` tables are closely related and both growing quickly.
 
