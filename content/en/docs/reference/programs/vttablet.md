@@ -72,7 +72,7 @@ sleep 10
 vtctlclient TabletExternallyReparented zone1-401
 ```
 
-See [Unmanaged Tablet](../../../user-guides/unmanaged-tablet) for the full guide.
+See [Unmanaged Tablet](../../../user-guides/configuration-advanced/unmanaged-tablet) for the full guide.
 
 
 ## Options
