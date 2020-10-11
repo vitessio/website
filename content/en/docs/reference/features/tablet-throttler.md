@@ -5,7 +5,7 @@ aliases: ['/docs/user-guides/tablet-throttler/','/docs/reference/tablet-throttle
 
 VTTablet runs a cooperative throttling service. This service probes the shard's MySQL topology and observes replication lag on servers. This throttler is derived from GitHub's [freno](https://github.com/github/freno).
 
-_Note: the Vitess documentation is transitioning the term "Master" (with regard to MySQL replicaiton) to "Primary". this document reflects this transition._
+_Note: the Vitess documentation is transitioning from the term "Master" (with regard to MySQL replicaiton) to "Primary". this document reflects this transition._
 
 ## Why throttler: maintaining low replication lag
 
