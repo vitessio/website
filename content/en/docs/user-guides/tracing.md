@@ -64,7 +64,9 @@ Now that you have the Vitess components setup, you can start instrumenting your 
 
 ### Inspecting trace spans in the Jaeger web UI
 
-This is beyond the scope of this guide. However, in general, if you have set everything above up correctly and you have instrumented and executed some queries appropriately, you can now access the Jager web UI to look at the spans recorded. If you are using the local docker container version of Jaeger, you can access the web UI in your browser at http://localhost:16686/. You should be able to search for and find spans based on the `trace-id` or `span-id` with which your query/queries were instrumented. Once you find a query, you will be able to see the trace events emitted by different
+This is beyond the scope of this guide. However, in general, if you have set everything above up correctly and you have instrumented and executed some queries appropriately, you can now access the Jager web UI to look at the spans recorded. If you are using the local docker container version of Jaeger, you can access the web UI in your browser at http://localhost:16686/. 
+
+You should be able to search for and find spans based on the `trace-id` or `span-id` with which your query/queries were instrumented. Once you find a query, you will be able to see the trace events emitted by different
 parts of the code as the query moves through vtgate and the vttablet(s) involved in the query. An example would look something like this:
 
 ![](../trace1.png)
