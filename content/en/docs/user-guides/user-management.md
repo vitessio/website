@@ -1,5 +1,5 @@
 ---
-title: User Management
+title: User Management and Authentication
 weight: 11
 aliases: []
 ---
