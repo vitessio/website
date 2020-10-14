@@ -1,15 +1,15 @@
 ---
 title: Tracing
-weight: 13
+weight: 100
 ---
 
 # Vitess tracing
 
-Vitess allows you to generate Jaeger / OpenTracing compatible trace events from the Vitess major server components: vtgate, vttablet, and vtctld. To sync these trace events you need an OpenTracing compatible server (e.g. Jaeger). Vitess can send tracing events to this server in the Jaeger compact Thrift protocol wire format which is usually UDP on port 6381.
+Vitess allows you to generate Jaeger / OpenTracing compatible trace events from the Vitess major server components: `vtgate`, `vttablet`, and `vtctld`. To sync these trace events you need an OpenTracing compatible server (e.g. Jaeger). Vitess can send tracing events to this server in the Jaeger compact Thrift protocol wire format which is usually UDP on port 6381.
 
 ## Configuring tracing
 
-The first step of configuring tracing is to make sure you have tracing collectors properly setup. The tracing collectors must be located where they can be reached from the various Vitess components on which you want to configure tracing.  We will not cover the entire setup process in this guide. The guide will cover the minimal config for testing/running locally, using the Jaeger docker container running on `localhost`.
+The first step of configuring tracing is to make sure you have tracing collectors properly setup. The tracing collectors must be located where they can be reached from the various Vitess components on which you want to configure tracing.  We will not cover the entire setup process in this guide. The guide will cover the minimal config for testing/running locally, using the Jaeger docker container running on `localhost`. You can read more about Jaeger [here](https://www.jaegertracing.io/docs/1.20/features/).
 
 ### Running Jaeger in docker
 
@@ -29,11 +29,11 @@ $ docker run -d --name jaeger \
   jaegertracing/all-in-one:1.20
 ```
 
-Note that you don't really need to expose all these ports, Vitess only cares about port 6831 (the UDP compact Thrift Jaeger protocol listener) and port 16686 (for the Jaeger web UI).
+Note that you don't need to expose all these ports, Vitess only cares about port 6831 (the UDP compact Thrift Jaeger protocol listener). You will also need port 16686 for the Jaeger web UI to browse the spans reported.
 
 ### Configuring tracing for vtgate, vttablet and vtctld
 
-Now that you have the Jaeger server running, you can add the necessary startup options to vtgate, vttablet and vtctld. This will enable you to send trace spans to the server.  The commandline options for doing this are the same across vtgate, vttablet and vtctld. Add the following options for a tracing agent running on the `localhost`:
+Now that you have the Jaeger server running, you can add the necessary startup options to `vtgate`, `vttablet` and `vtctld`. This will enable you to send trace spans to the server.  The commandline options for doing this are the same across `vtgate`, `vttablet` and `vtctld`. Add the following options for a tracing agent running on the `localhost`:
 
 ``` shell
 -tracer opentracing-jaeger -jaeger-agent-host 127.0.0.1:6831 -tracing-sampling-rate 0.0 
@@ -59,15 +59,15 @@ Now that you have the Vitess components setup, you can start instrumenting your 
     /*VT_SPAN_CONTEXT=<base64 value>*/ SELECT * from product;
     ```
     There are additional notes here:
-    * The underlying tracing libraries are very particular about the base64 value, so if you have any formatting problems (including trailing spaces between the base64 value and the closing of the comment); you will get many caught panic warnings in your vtgate logs.
-    * When testing with, for example, the `mysql` CLI tool, make sure you are using the `-c` (or `--comments` flag), since the default is `--skip-comments`, which will never send your comments to the server (vtgate).
+    * The underlying tracing libraries are very particular about the base64 value, so if you have any formatting problems (including trailing spaces between the base64 value and the closing of the comment); you will get many warnings in your `vtgate` logs.
+    * When testing with, for example, the `mysql` CLI tool, make sure you are using the `-c` (or `--comments` flag), since the default is `--skip-comments`, which will never send your comments to the server (`vtgate`).
 
 ### Inspecting trace spans in the Jaeger web UI
 
 This is beyond the scope of this guide. However, in general, if you have set everything above up correctly and you have instrumented and executed some queries appropriately, you can now access the Jager web UI to look at the spans recorded. If you are using the local docker container version of Jaeger, you can access the web UI in your browser at http://localhost:16686/. 
 
 You should be able to search for and find spans based on the `trace-id` or `span-id` with which your query/queries were instrumented. Once you find a query, you will be able to see the trace events emitted by different
-parts of the code as the query moves through vtgate and the vttablet(s) involved in the query. An example would look something like this:
+parts of the code as the query moves through `vtgate` and the `vttablet(s)` involved in the query. An example would look something like this:
 
 ![](../trace1.png)
 
