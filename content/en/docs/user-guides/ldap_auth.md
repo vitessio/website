@@ -94,41 +94,41 @@ as follows:
 Not all these options are necessary in all configurations. Here are what
 each key/value option represents:
 
-  * `LdapServer` : hostname/IP and port to access the LDAP server via
+  * **LdapServer** : hostname/IP and port to access the LDAP server via
     using [STARTTLS](https://www.digitalocean.com/community/tutorials/how-to-encrypt-openldap-connections-using-starttls).
     Note that as mentioned above, this needs to match the server
     TLS certificate presented by the LDAP server.  Required.
-  * `LdapCert` : Path to the local file that contains the PEM format
+  * **LdapCert** : Path to the local file that contains the PEM format
     TLS client certificate that we want to present to the LDAP server.
     Optional unless we use client-certificates with the LDAP server.
     If we are using this option, `LdapKey` is also required.
-  * `LdapKey` : Path to the local file that contains the PEM format
+  * **LdapKey** : Path to the local file that contains the PEM format
     TLS private key for the client certificate we want to present to
     the LDAP server. Optional unless we use client-certificates with
     the LDAP server. If we are using this option, `LdapCert` is also required.
-  * `LdapCA` : Path to the local file that contains the PEM format TLS CA
+  * **LdapCA** : Path to the local file that contains the PEM format TLS CA
     certificate to verify the TLS server certificate presented by the LDAP
     server against.  Required.
-  * `User` : DN of the LDAP user we will be authenticating to the LDAP server
-    to read information like group membership. Required, unless we are
+  * **User** : DN of the LDAP user we will be authenticating to the LDAP server
+    to read information such as group membership. Required, unless we are
     using LDAP client certificates to authenticate to the LDAP server.
     If we are using this option, `Password` option is also required.
-  * `Password` : Cleartext password for the LDAP user specified above in
+  * **Password** : Cleartext password for the LDAP user specified above in
     `User`.  Required, unless we are using LDAP client certificates to 
     authenticate to the LDAP server.  If we are using this option, 
     `User` option is also required.
-  * `GroupQuery` : LDAP base DN to start the group membership query
+  * **GroupQuery** : LDAP base DN to start the group membership query
     from to establish the group the `User` specified (or implied
     via the client certificate) is a member of.  The group membership
-    query itself is hardcoded to `(memberUid=%s)` where `%s` is the
-    authenticating username.  Required.
-  * `UserDnPattern` : LDAP DN pattern to autofill with MySQL username
+    query itself is hardcoded to the LDAP query filter of `(memberUid=%s)`
+     where `%s` is the authenticating username.  Required.
+  * **UserDnPattern** : LDAP DN pattern to autofill with MySQL username
     passed during MySQL client authentication to `vtgate`.  This DN
     is then used along with the password provided to `vtgate` to
     attempt to bind to the LDAP server with.  If the bind is sucessful,
     we know that the password provided to `vtgate` was valid.
     Required.
-  * `RefreshSeconds` : Number of seconds that we should cache individual LDAP
+  * **RefreshSeconds** : Number of seconds that we should cache individual LDAP
     credentials for in-memory at the `vtgate`. This is used to reduce load on
     the LDAP for high traffic MySQL servers, and to also avoid short LDAP
     server outages causing Vitess/`vtgate` authentication outages. Default
@@ -147,7 +147,7 @@ operation against the LDAP server as you are testing.
 
 Once you have constructured the above file, you will need to remove any
 options that references static authentication from your `vtgate` commandline
-like:
+such as:
   * `-mysql_auth_server_static_file`
   * `-mysql_auth_server_static_string`
   * `-mysql_auth_static_reload_interval`
