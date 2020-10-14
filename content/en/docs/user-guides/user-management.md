@@ -1,6 +1,6 @@
 ---
 title: User Management and Authentication
-weight: 11
+weight: 12
 aliases: []
 ---
 
@@ -167,5 +167,5 @@ be used for authorization/ACL enforcement.
 
 Other than the static authentication file method above, other authentication
 mechanisms are also provided:
- * LDAP-based authentication
+ * [LDAP-based authentication](./ldap_auth)
  * TLS client certificate-based authentication

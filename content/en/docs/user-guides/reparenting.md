@@ -1,6 +1,6 @@
 ---
 title: Reparenting
-weight: 12
+weight: 15
 aliases: ['/user-guide/reparenting.html','/user-guide/reparenting/']
 ---
 
