@@ -44,12 +44,12 @@ action is one of
 * **delete**: removes the entries for this workflow in \_vt.vreplication
 * **show**: returns a JSON object with details about the associated shards and also with all the columns
     from the \_vt.vreplication table
-* **listall**: returns a comma separated list of all running workflows in a keyspace
+* **listall**: returns a comma separated list of all *running* workflows in a keyspace
 </div>
 
 #### Example
 ```
-vtctlclient  Workflow keyspace1.wf2 stop
-vtctlclient  Workflow keyspace1.wf2 show
+vtctlclient  Workflow keyspace1.workflow1 stop
+vtctlclient  Workflow keyspace1.workflow1 show
 vtctlclient  Workflow keyspace1 listall
 ```

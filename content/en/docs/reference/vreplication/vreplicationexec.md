@@ -12,7 +12,7 @@ VReplicationExec [-json] <tablet alias> <sql command>
 
 ### Description
 
-The VReplicationExec command is used to manage vreplication streams. More details are [here](../vreplication#exec)
+The VReplicationExec command is used to view or manage vreplication streams. More details are [here](../vreplication#exec). You would typically use one of the higher-level commands like the [WorkFlow](../workflow) command accomplish the same task.
 
 ### Parameters
 
@@ -35,7 +35,7 @@ cell-uid (see example below).
 **mandatory**
 
 <div class="cmd">
-Sql query which will be run: validations are done to ensure that queries can be run only against vreplication tables.
+SQL query which will be run: validations are done to ensure that queries can be run only against vreplication tables.
 A limited set of queries are allowed. 
 </div>
 

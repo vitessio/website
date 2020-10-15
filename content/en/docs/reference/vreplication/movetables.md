@@ -42,7 +42,7 @@ cells should be used to pick a tablet for selecting data from the source keyspac
 
 <div class="cmd">
 A comma separated list of tablet types that are used while picking a tablet for sourcing data.
-One or more from MASTER,REPLICA,RDONLY.<br><br>
+One or more from MASTER, REPLICA, RDONLY.<br><br>
 
 ###### Uses
 

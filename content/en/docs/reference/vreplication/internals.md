@@ -78,6 +78,7 @@ We have two tables t1 and t2 and this is how the copy state proceeds: Each has 2
 
 If we follow this we get:
 
+```
 T1: select * from t1 where pk > 0 limit 10. GTID: 100, Last PK 10
 
    send rows to target
@@ -85,6 +86,7 @@ T1: select * from t1 where pk > 0 limit 10. GTID: 100, Last PK 10
 T2: select * from t1 where pk > 10 limit 10  GTID: 110, Last PK 20
 
    send rows to target
+```
 
 Gotcha: however we see that 10 new txs have occurred since T1. Some of these can potentially modify the rows
 returned from the query at T1. Hence if we just return the rows from T2 (which have only rows from pk 11 to 20)  
@@ -93,6 +95,7 @@ we will have an inconsistent state on the target: the updates to rows with PK be
 This means that we need to first stream the events between 100 to 110 for PK between 1 and 10 first
 and then do the second select:
 
+```
 T1: select * from t1 where pk > 0 limit 10. GTID: 100, Last PK 10
 
    send rows to target
@@ -104,15 +107,16 @@ T2: replicate from 100 to current position (110 from previous example),
 T3: select * from t1 where pk > 10 limit 10  GTID: 112, Last PK 20
 
    send rows to target
+```
 
 Another gotcha!: Note that at T3 when we selected the pks from 11 to 20 the gtid position has moved further! This happened because of transactions that were applied between T2 and T3. So if we just applied the rows from T3 we would still have an inconsistent state, if transactions 111 and 112 affected the rows from pks 1 to 10.
 
 This leads us to the following flow:
 
-T1: select * from t1 where pk > 0 limit 10. GTID: 100, Last PK 10 \
+```
+T1: select * from t1 where pk > 0 limit 10. GTID: 100, Last PK 10
 
    send rows to target
-
 
 T2: replicate from 100 to current position (110 from previous example),
 
@@ -125,6 +129,7 @@ T4: replicate from 111 to 112
    only pass events for pks 1 to 10
 
 T5: Send rows for pks 11 to 20 to target
+```
 
 This flow actually works!
 

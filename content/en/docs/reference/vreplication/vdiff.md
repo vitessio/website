@@ -42,7 +42,7 @@ VDiff will choose a tablet from this cell to diff the source table(s) with the t
 
 <div class="cmd">
 A comma separated list of tablet types that are used while picking a tablet for sourcing data.
-One or more from MASTER,REPLICA,RDONLY.<br><br>
+One or more from MASTER, REPLICA, RDONLY.<br><br>
 </div>
 
 #### -filtered_replication_wait_time 

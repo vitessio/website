@@ -40,11 +40,11 @@ Name of target keyspace and the associated workflow
 **mandatory**
 
 <div class="cmd">
-Sql query to be run: validations are done to ensure that queries can be run only against vreplication tables.
+SQL query to be run: validations are done to ensure that queries can be run only against vreplication tables.
 A limited set of queries are allowed. 
 </div>
 
 #### Example
 ```
-vtctlclient VExec keyspace1.wf2 'select * from _vt.vreplication'
+vtctlclient VExec keyspace1.workflow1 'select * from _vt.vreplication'
 ```
