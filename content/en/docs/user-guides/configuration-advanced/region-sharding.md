@@ -4,7 +4,7 @@ weight: 10
 ---
 
 {{< info >}}
-This guide follows on from the Get Started guides. Please make sure that you have a [local](../../../get-started/local) installation ready. You should also have already gone through the [MoveTables](../migration/move-tables) and [Resharding](../configuration-advanced/resharding) tutorials.
+This guide follows on from the Get Started guides. Please make sure that you have a [local](../../../get-started/local) installation ready. You should also have already gone through the [MoveTables](../../migration/move-tables) and [Resharding](../../configuration-advanced/resharding) tutorials.
 {{< /info >}}
 
 ## Preparation

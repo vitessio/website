@@ -21,7 +21,7 @@ To successfully analyze your SQL queries and determine how Vitess executes each 
 1. Identify a VSchema for the statement's source tables 
 1. Run the VTExplain tool
 
-If you have a large number of queries you want to analyze for issues, based on a Vschema you’ve created for your database, you can read through a detailed scripted example [here](../../user-guides/sql/vtexplain-in-bulk).
+If you have a large number of queries you want to analyze for issues, based on a Vschema you’ve created for your database, you can read through a detailed scripted example [here](../vtexplain-in-bulk).
 
 ## 1. Identify a SQL schema for tables in the statement
 

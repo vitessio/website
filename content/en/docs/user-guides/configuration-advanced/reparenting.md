@@ -8,8 +8,8 @@ aliases: ['/user-guide/reparenting.html','/user-guide/reparenting/']
 
 This document explains the types of reparenting that Vitess supports:
 
-* [Active reparenting](../configuration-advanced/reparenting/#active-reparenting) occurs when Vitess manages the entire reparenting process.
-* [External reparenting](../configuration-advanced/reparenting/#external-reparenting) occurs when another tool handles the reparenting process, and Vitess just updates its topology service, replication graph, and serving graph to accurately reflect master-replica relationships.
+* [Active reparenting](../../configuration-advanced/reparenting/#active-reparenting) occurs when Vitess manages the entire reparenting process.
+* [External reparenting](../../configuration-advanced/reparenting/#external-reparenting) occurs when another tool handles the reparenting process, and Vitess just updates its topology service, replication graph, and serving graph to accurately reflect master-replica relationships.
 
 **Note:** The `InitShardMaster` command defines the initial parenting relationships within a shard. That command makes the specified tablet the master and makes the other tablets in the shard replicas that replicate from that master.
 

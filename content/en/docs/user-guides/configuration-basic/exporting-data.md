@@ -10,7 +10,7 @@ certain cases.
 
 This guide provides instructions on the required options when using these tools
 against a VTGate server for the purposes of exporting data from Vitess. It is
-recommended to follow the [Backup and Restore](../operating-vitess/backup-and-restore/) guide
+recommended to follow the [Backup and Restore](../../operating-vitess/backup-and-restore/) guide
 for regular backups, since this method is performed directly on the tablet
 servers and is more efficient and safer for databases of any significant size.
 The dump methods that follow are typically not suitable for production backups,

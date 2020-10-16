@@ -11,7 +11,7 @@ This guide follows on from the Get Started guides. Please make sure that you hav
 
 Since `Materialize` uses VReplication, the view can be kept up-to-date very close to real-time, which enables use-cases like creating copies of the same table sharded different ways for the purposes of certain types of queries that would otherwise be prohibitively expensive on the original table.  `Materialize` is also flexible enough to allow for you to pre-create the schema and vschema for the copied table, allowing you to, for example, maintain a copy of a table without some of the source table's MySQL indexes.  Alternatively, you could use `Materialize` to do certain schema changes (e.g. change the type of a table column) without having to use other tools like [gh-ost](https://github.com/github/gh-ost).
 
-In our example, we will be using `Materialize` to perform something similar to the [MoveTables](../../user-guides/migration/move-tables) user guide, which will cover just the basics of what is possible using `Materialize`.
+In our example, we will be using `Materialize` to perform something similar to the [MoveTables](../move-tables) user guide, which will cover just the basics of what is possible using `Materialize`.
 
 
 Let's start by simulating this situation by loading sample data:
@@ -62,7 +62,7 @@ Note that we are using keyspace `commerce/0` to select data from our tables.
 
 ## Planning to use Materialize
 
-In this scenario, we are going to make two copies of the `corder` table **in the same keyspace** using a different tablenames of `corder_view` and `corder_view_redacted`.  The first copy will be identical to the source table, but for the `corder_view_redacted` copy, we will use the opportunity to drop the `price` column from the copy.  Since we are doing the `Materialize` to the same keyspace, we do not need to create a new keyspace or tablets as we did for the [MoveTables](../../user-guides/migration/move-tables) user guide.
+In this scenario, we are going to make two copies of the `corder` table **in the same keyspace** using a different tablenames of `corder_view` and `corder_view_redacted`.  The first copy will be identical to the source table, but for the `corder_view_redacted` copy, we will use the opportunity to drop the `price` column from the copy.  Since we are doing the `Materialize` to the same keyspace, we do not need to create a new keyspace or tablets as we did for the [MoveTables](../move-tables) user guide.
 
 ## Create the destination tables
 

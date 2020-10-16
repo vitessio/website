@@ -4,7 +4,7 @@ weight: 2
 ---
 
 {{< warning >}}
-In Vitess 6, Vertical Split became obsolete with the introduction of MoveTables! It is recommended to skip this guide, and continue on with the [MoveTables user guide](../migration/move-tables) instead.
+In Vitess 6, Vertical Split became obsolete with the introduction of MoveTables! It is recommended to skip this guide, and continue on with the [MoveTables user guide](../../migration/move-tables) instead.
 {{< /warning >}}
 
 {{< info >}}
