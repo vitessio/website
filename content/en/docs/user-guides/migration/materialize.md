@@ -1,17 +1,17 @@
 ---
 title: Materialize
-weight: 8
+weight: 3
 ---
 
 {{< info >}}
-This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../get-started/operator), [local](../../get-started/local) or [Helm](../../get-started/helm) installation ready.  Make sure you have only run the "101" step of the examples, for example `101_initial_cluster.sh` in the [local](../../get-started/local) example. The commands in this guide also assumes you have setup the shell aliases from the example, e.g. `env.sh` in the [local](../../get-started/local) example.
+This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../../get-started/operator), [local](../../../get-started/local) or [Helm](../../../get-started/helm) installation ready.  Make sure you have only run the "101" step of the examples, for example `101_initial_cluster.sh` in the [local](../../../get-started/local) example. The commands in this guide also assumes you have setup the shell aliases from the example, e.g. `env.sh` in the [local](../../../get-started/local) example.
 {{< /info >}}
 
-**Materialize** is a new VReplication workflow in Vitess 6.  It can be used as a more general way to achieve something similar to [MoveTables](../../concepts/move-tables), or as a way to generate materialized views of a table (or set of tables) in the same or different keyspace from the source table (or set of tables).  In general, it can be used to create and maintain continually updated materialized views in Vitess, without having to resort to manual or trigger-based population of the view content.
+**Materialize** is a new VReplication workflow in Vitess 6.  It can be used as a more general way to achieve something similar to [MoveTables](../../../concepts/move-tables), or as a way to generate materialized views of a table (or set of tables) in the same or different keyspace from the source table (or set of tables).  In general, it can be used to create and maintain continually updated materialized views in Vitess, without having to resort to manual or trigger-based population of the view content.
 
 Since `Materialize` uses VReplication, the view can be kept up-to-date very close to real-time, which enables use-cases like creating copies of the same table sharded different ways for the purposes of certain types of queries that would otherwise be prohibitively expensive on the original table.  `Materialize` is also flexible enough to allow for you to pre-create the schema and vschema for the copied table, allowing you to, for example, maintain a copy of a table without some of the source table's MySQL indexes.  Alternatively, you could use `Materialize` to do certain schema changes (e.g. change the type of a table column) without having to use other tools like [gh-ost](https://github.com/github/gh-ost).
 
-In our example, we will be using `Materialize` to perform something similar to the [MoveTables](../../user-guides/move-tables) user guide, which will cover just the basics of what is possible using `Materialize`.
+In our example, we will be using `Materialize` to perform something similar to the [MoveTables](../move-tables) user guide, which will cover just the basics of what is possible using `Materialize`.
 
 
 Let's start by simulating this situation by loading sample data:
@@ -62,7 +62,7 @@ Note that we are using keyspace `commerce/0` to select data from our tables.
 
 ## Planning to use Materialize
 
-In this scenario, we are going to make two copies of the `corder` table **in the same keyspace** using a different tablenames of `corder_view` and `corder_view_redacted`.  The first copy will be identical to the source table, but for the `corder_view_redacted` copy, we will use the opportunity to drop the `price` column from the copy.  Since we are doing the `Materialize` to the same keyspace, we do not need to create a new keyspace or tablets as we did for the [MoveTables](../../user-guides/move-tables) user guide.
+In this scenario, we are going to make two copies of the `corder` table **in the same keyspace** using a different tablenames of `corder_view` and `corder_view_redacted`.  The first copy will be identical to the source table, but for the `corder_view_redacted` copy, we will use the opportunity to drop the `price` column from the copy.  Since we are doing the `Materialize` to the same keyspace, we do not need to create a new keyspace or tablets as we did for the [MoveTables](../move-tables) user guide.
 
 ## Create the destination tables
 
@@ -99,7 +99,6 @@ $ vtctlclient ReloadSchemaKeyspace commerce
 ```
 
 And now we can proceed to the `Materialize` step(s).
-
 
 ## Start the Materialize (first copy)
 
@@ -241,7 +240,7 @@ Eventually, when the copy is done, or we have materialized the data, and
 do not want to continue the copy of new source rows, we can delete the
 workflow via:
 
-```
+```sh
 $ vtctlclient Workflow commerce.copy_corder_1 delete
 +------------------+--------------+
 |      Tablet      | RowsAffected |
@@ -266,7 +265,7 @@ $ vtctlclient Materialize '{"workflow": "copy_corder_2", "source_keyspace": "com
 
 Again, looking the target table will show all the source table rows, this time without the `sku` column:
 
-```
+```sh
 $ echo "select * from corder_view_redacted;" | mysql --table commerce
 +----------+-------------+----------+
 | order_id | customer_id | sku      |
@@ -282,7 +281,7 @@ $ echo "select * from corder_view_redacted;" | mysql --table commerce
 
 Again, we can add a row to the source table, and see it replicated into the target table:
 
-```
+```sh
 $ echo "insert into corder (order_id, customer_id, sku, price) values (7, 7, 'SKU-1002', 30);" | mysql commerce
 $ echo "select * from corder_view_redacted;" | mysql --table commerce
 +----------+-------------+----------+
@@ -302,7 +301,7 @@ $ echo "select * from corder_view_redacted;" | mysql --table commerce
 
 As with `MoveTables`, a VReplication stream was formed for each of the `Materialize` workflows we executed.  We can see these by inspecting the VReplication table on the target keyspace master tablet, e.g. in this case:
 
-```
+```sh
 $ vtctlclient VReplicationExec zone1-0000000100 'select * from _vt.vreplication'
 +----+---------------+---------------------------------------------+----------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------+-------------+
 | id |   workflow    |                   source                    |                        pos                         | stop_pos |       max_tps       | max_replication_lag | cell | tablet_types | time_updated | transaction_timestamp |  state  | message |   db_name   |
@@ -327,7 +326,7 @@ instead use the `VReplicationExec` command to temporarily stop the replication
 streams for the VReplication streams that make up the `Materialize` process.
 For example, to stop both streams, you can do:
 
-```
+```sh
 $ vtctlclient VReplicationExec zone1-0000000100 'update _vt.vreplication set state = "Stopped" where id in (1,2)'
 +
 +
@@ -349,7 +348,7 @@ Any changes to the source tables will now not be applied to the target tables un
 
 Lastly, you can clean up the `Materialize` process by just using `VReplicationExec` to delete the rows in the `_vt.vreplication` table.  This will do the necessary runtime cleanup as well. E.g.:
 
-```
+```sh
 $ vtctlclient VReplicationExec zone1-0000000100 'delete from  _vt.vreplication where id in (1,2)'
 +
 +

@@ -23,4 +23,4 @@ During the `SwitchWrites` phase of the MoveTables operation, Vitess may be brief
 
 **Related Vitess Documentation**
 
-* [MoveTables User Guide](../../user-guides/move-tables)
+* [MoveTables User Guide](../../user-guides/migration/move-tables)

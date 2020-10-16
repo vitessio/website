@@ -1,17 +1,17 @@
 ---
 title: Analyzing SQL statements in bulk
-weight: 9
+weight: 2
 ---
 
 # Introduction 
 
-This document covers the way the [VTexplain tool](../../reference/vtexplain) can be used to evaluate if Vitess is compatible with a list of SQL statements. Enabling the evaluation of if queries from an existing application that accesses a MySQL database are generally Vitess-compatible. If there are any issues identified they can be used to target any necessary application changes needed for a successful migration from MySQL to Vitess.
+This document covers the way the [VTexplain tool](../../../reference/vtexplain) can be used to evaluate if Vitess is compatible with a list of SQL statements. Enabling the evaluation of if queries from an existing application that accesses a MySQL database are generally Vitess-compatible. If there are any issues identified they can be used to target any necessary application changes needed for a successful migration from MySQL to Vitess.
 
 ## Prerequisites
 
 You can find a prebuilt binary version of the VTexplain tool in [the most recent release of Vitess](https://github.com/vitessio/vitess/releases/).
 
-You can also build the `vtexplain` binary in your environment. To build this binary, refer to the [Build From Source](../../contributing/build-from-source) guide.
+You can also build the `vtexplain` binary in your environment. To build this binary, refer to the [Build From Source](../../../contributing/build-from-source) guide.
 
 ## Overview
 
@@ -188,6 +188,7 @@ SELECT * FROM user
 ```
 
 This is not an error, but illustrates a few things about the query:
+
  * The query of this type will be scattered across all 4 the shards, given the schema and VSchema.
  * The phases of the scatter operation will occur in parallel. This is because the number `1` on the left-hand-side of the output indicates the ordering of the operations in time. The same number indicates parallel processing.
  * The implicit Vitess row limit of 10000 rows is also seen, even though that was not present in the original query.

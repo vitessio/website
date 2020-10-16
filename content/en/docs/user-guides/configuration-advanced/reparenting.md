@@ -1,6 +1,6 @@
 ---
 title: Reparenting
-weight: 15
+weight: 3
 aliases: ['/user-guide/reparenting.html','/user-guide/reparenting/']
 ---
 
@@ -8,8 +8,8 @@ aliases: ['/user-guide/reparenting.html','/user-guide/reparenting/']
 
 This document explains the types of reparenting that Vitess supports:
 
-* [Active reparenting](../reparenting/#active-reparenting) occurs when Vitess manages the entire reparenting process.
-* [External reparenting](../reparenting/#external-reparenting) occurs when another tool handles the reparenting process, and Vitess just updates its topology service, replication graph, and serving graph to accurately reflect master-replica relationships.
+* [Active reparenting](../../configuration-advanced/reparenting/#active-reparenting) occurs when Vitess manages the entire reparenting process.
+* [External reparenting](../../configuration-advanced/reparenting/#external-reparenting) occurs when another tool handles the reparenting process, and Vitess just updates its topology service, replication graph, and serving graph to accurately reflect master-replica relationships.
 
 **Note:** The `InitShardMaster` command defines the initial parenting relationships within a shard. That command makes the specified tablet the master and makes the other tablets in the shard replicas that replicate from that master.
 
@@ -20,7 +20,7 @@ This document explains the types of reparenting that Vitess supports:
 Vitess requires the use of global transaction identifiers ([GTIDs](https://dev.mysql.com/doc/refman/5.6/en/replication-gtids-concepts.html)) for its operations:
 
 * During active reparenting, Vitess uses GTIDs to initialize the replication process and then depends on the GTID stream to be correct when reparenting. (During external reparenting, Vitess assumes the external tool manages the replication process.)
-* During resharding, Vitess uses GTIDs for [VReplication](../../reference/vreplication), the process by which source tablet data is transferred to the proper destination tablets.
+* During resharding, Vitess uses GTIDs for [VReplication](../../../reference/vreplication), the process by which source tablet data is transferred to the proper destination tablets.
 
 ### Semisynchronous replication
 
@@ -60,7 +60,7 @@ The `EmergencyReparentShard` command is used to force a reparent to a new master
 
 As such, this command does not rely on the current master at all to replicate data to the new master. Instead, it makes sure that the master-elect is the most advanced in replication within all of the available replicas.
 
-**Important**: Before calling this command, you must first identify the replica with the most advanced replication position as that replica must be designated as the new master. You can use the [`vtctl ShardReplicationPositions`](../../reference/vtctl/#shardreplicationpositions) command to determine the current replication positions of a shard's replicas.
+**Important**: Before calling this command, you must first identify the replica with the most advanced replication position as that replica must be designated as the new master. You can use the [`vtctl ShardReplicationPositions`](../../../reference/vtctl/#shardreplicationpositions) command to determine the current replication positions of a shard's replicas.
 
 This command performs the following actions:
 
@@ -72,7 +72,7 @@ This command performs the following actions:
 
 ## External Reparenting
 
-External reparenting occurs when another tool handles the process of changing a shard's master tablet. After that occurs, the tool needs to call the [`vtctl TabletExternallyReparented`](../../reference/vtctl/#tabletexternallyreparented) command to ensure that the topology service, replication graph, and serving graph are updated accordingly.
+External reparenting occurs when another tool handles the process of changing a shard's master tablet. After that occurs, the tool needs to call the [`vtctl TabletExternallyReparented`](../../../reference/vtctl/#tabletexternallyreparented) command to ensure that the topology service, replication graph, and serving graph are updated accordingly.
 
 That command performs the following operations:
 

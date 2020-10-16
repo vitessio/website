@@ -1,9 +1,10 @@
 ---
-title: LDAP authentication for vtgate
-weight: 13
+title: LDAP authentication
+weight: 8
 ---
 
 Currently, Vitess supports two ways to authenticate to `vtgate` via the MySQL protocol:
+
   * **Static** : You provide a static configuration file to `vtgate` with user names and plaintext passwords or `mysql_native_password` password hashes.  This file can be reloaded without restarting `vtgate`. Further details can be found [here](../user-management).
   * **LDAP** : You provide the necessary details of an upstream LDAP server, along with credentials and configuration, to query it. Using this information, the LDAP passwords for a user can then be used to authenticate the same user against `vtgate`. You can also integrate with LDAP groups to allow ACLs to be managed using information from the LDAP server.
 
@@ -12,6 +13,7 @@ In this guide, we will examine the capabilities of the `vtgate` LDAP integration
 ## Requirements
 
 There are a few requirements that are necessary for the `vtgate` LDAP integration to work:
+
  * The communication between `vtgate` and the LDAP server has to be encrypted.
  * Encrypted communication to LDAP has to be via LDAP over TLS (STARTTLS) and not via LDAP over SSL (LDAPS). The latter is not a standardized protocol and is not supported by Vitess. Ensure that your LDAP server and the LDAP URI (hostname/port) that you provide supports STARTTLS.
  * The application MySQL protocol connections to `vtgate` that use LDAP usernames/passwords need to use TLS. This is required because of the next point, but can be bypassed. We strongly **DO NOT** recommend doing this.
@@ -29,9 +31,9 @@ To configure `vtgate` to integrate with LDAP you will have to perform various ta
     * Your LDAP server setup for STARTTLS
     * Obtained the LDAP URI to connect to the LDAP server
     * The CA certificate, that your LDAP server TLS certificate is signed by, in PEM format
-    * Make sure that you are accessing the LDAP server via a hostname or IP SAN that is defined in your LDAP server TLS certficate. If not, you will not be able to use your LDAP server as-is from `vtgate`.
+    * Make sure that you are accessing the LDAP server via a hostname or IP SAN that is defined in your LDAP server TLS certificate. If not, you will not be able to use your LDAP server as-is from `vtgate`.
 
-Once you have your prerequisites above ready, you can now construct your JSON configuration file for `vtgate` using the commandline parameter `-mysql_ldap_auth_config_file`. The content of this file is a JSON format object with string key/value members as follows:
+Once you have your prerequisites above ready, you can now construct your JSON configuration file for `vtgate` using the command line parameter `-mysql_ldap_auth_config_file`. The content of this file is a JSON format object with string key/value members as follows:
 
 ```shell
 {
@@ -63,7 +65,8 @@ Note that `vtgate` only does very basic validation of the values passed here and
 
 For debugging this, it is useful to have access to the logs from your LDAP server that you are pointing to. The logs would preferably be at trace or debug level, so that you can see each LDAP bind and search operation against the LDAP server as you are testing.
 
-Once you have constructured the above file, you will need to remove any options that references static authentication from your `vtgate` commandline such as:
+Once you have constructed the above file, you will need to remove any options that references static authentication from your `vtgate` command line such as:
+
   * `-mysql_auth_server_static_file`
   * `-mysql_auth_server_static_string`
   * `-mysql_auth_static_reload_interval`
