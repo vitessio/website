@@ -1,0 +1,13 @@
+<h3>
+  Pages in this section
+</h3>
+
+<ul>
+  {{ range where .RegularPages "Params.series" "!=" "vtctl" }}
+  <li>
+    <a href="{{ .RelPermalink }}">
+      {{ .Title }}
+    </a>
+  </li>
+  {{ end }}
+</ul>
