@@ -1,18 +1,20 @@
 ---
 title: Region-based Sharding
-weight: 8
+weight: 10
 ---
 
 {{< info >}}
-This guide follows on from the Get Started guides. Please make sure that you have a [local](../../get-started/local) installation ready. You should also have already gone through the [MoveTables](../move-tables) and [Resharding](../resharding) tutorials.
+This guide follows on from the Get Started guides. Please make sure that you have a [local](../../../get-started/local) installation ready. You should also have already gone through the [MoveTables](../migration/move-tables) and [Resharding](../configuration-advanced/resharding) tutorials.
 {{< /info >}}
 
 ## Preparation
-Having gone through the Resharding tutorial, you should be familiar with [VSchema](../../concepts/vschema) and [Vindexes](../../reference/vindexes).
+
+Having gone through the Resharding tutorial, you should be familiar with [VSchema](../../../concepts/vschema) and [Vindexes](../../../reference/vindexes).
 In this tutorial, we will perform resharding on an existing keyspace using a location-based vindex. We will create 4 shards (-40, 40-80, 80-c0, c0-).
 The location will be denoted by a `country` column.
 
 ## Schema
+
 We will create one table in the unsharded keyspace to start with.
 ```text
 CREATE TABLE customer (
@@ -184,11 +186,13 @@ mysql> show tables;
 ```
 
 ## Insert some data into the cluster
+
 ```bash
 ~/my-vitess-example> mysql < insert_customers.sql
 ```
 
 ## Examine the data we just inserted
+
 ```bash
 ~/my-vitess-example> mysql --table < show_initial_data.sql
 ```
@@ -217,6 +221,7 @@ mysql> show tables;
 ```
 
 ## Prepare for resharding
+
 Now that we have some data in our unsharded cluster, let us go ahead and perform the setup needed for resharding.
 The initial vschema is unsharded and simply lists the customer table (see script output above).
 We are going to first apply the sharding vschema to the cluster from `main_vschema_sharded.json`
@@ -432,6 +437,7 @@ I0817 08:07:55.467790   15280 main.go:64] I0817 15:07:55.466993 reparent.go:274]
 ```
 
 ## Perform Resharding
+
 Once the tablets are up, we can go ahead with the resharding.
 ```bash
 ./203_reshard.sh
@@ -467,6 +473,7 @@ vtctlclient VReplicationExec zone1-0000000200 'select * from _vt.vreplication'
 We have a running stream on tablet 200 (shard `-40`) that will keep it up-to-date with the source shard (`0`)
 
 ## Cutover
+
 Once the copy process is complete, we can start cutting-over traffic.
 This is done in 2 steps, `SwitchReads` and `SwitchWrites`. Note that the commands are named for the tablet_types and not user operations.
 `Reads` is used for replica/rdonly, and `Writes` for master. Read operations on master will not be affected by a `SwitchReads`.
@@ -528,6 +535,7 @@ mysql> select id, hex(keyspace_id) from customer_lookup;
 ```
 
 ## Drop source
+
 Once resharding is complete, we can teardown the source shard
 ```bash
 ./206_down_shard_0.sh
@@ -536,6 +544,7 @@ Once resharding is complete, we can teardown the source shard
 What we have now is a sharded keyspace. The original unsharded keyspace no longer exists.
 
 ## Teardown
+
 Once you are done playing with the example, you can tear it down completely.
 
 ```bash

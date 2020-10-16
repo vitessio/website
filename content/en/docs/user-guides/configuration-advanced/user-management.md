@@ -1,7 +1,6 @@
 ---
 title: User Management and Authentication
-weight: 12
-aliases: []
+weight: 5
 ---
 
 Vitess uses its own mechanism for managing users and their permissions through

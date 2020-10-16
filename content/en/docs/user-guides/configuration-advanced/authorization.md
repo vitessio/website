@@ -1,6 +1,6 @@
 ---
 title: Authorization
-weight: 14
+weight: 2 
 ---
 
 A common question is how to enforce fine-grained access control in Vitess.
@@ -14,6 +14,7 @@ The MySQL GRANT system is very extensive, and we have not reimplemented
 all of this functionality in Vitess.  What we have done is to enable you
 to provide authorization via table-level ACLs, with a few basic
 characteristics:
+
  * Individual users can be assigned 3 levels of permissions:
    * Read (corresponding to read DML, e.g. `SELECT`)
    * Write (corresponding to write DML, e.g. `INSERT`, `UPDATE`, `DELETE`)
@@ -21,20 +22,20 @@ characteristics:
  * Permissions are applied on a specified set of tables, which can be
    enumerated or specified by regex.
 
-
 ## VTTablet parameters for table ACLs
 
 Note that the Vitess authorization via ACLs are applied at the VTTablet
 level, as opposed to on VTGate, where authentication is enforced.
 There are a number of VTTablet command line parameters that control the
 behavior of ACLs.  Let's review these:
+
  * `-enforce-tableacl-config`:  Set this to `true` to ensure VTTablet will not
    start unless there is a valid ACL configuration. This is used to
    catch misconfigurations resulting in blanket access to authenticated
    users.
  * `-queryserver-config-enable-table-acl-dry-run`:  Set to `true` to check the
    table ACL at runtime, and only emit the
-   [TableACLPseudoDenied](../configuring-components/#tableaclallowed-tableacldenied-tableaclpseudodenied)
+   [TableACLPseudoDenied](../configuration-basic/configuring-components/#monitoring)
    metric if a request would have been blocked. The request is then
    allowed to pass, even if the ACL determined it should
    be blocked.  This can be used for testing new or updated ACL policies.
@@ -55,7 +56,6 @@ behavior of ACLs.  Let's review these:
    Note that even if you do not set this parameter, you can always force
    VTTablet to reload the ACL config file from disk by sending a SIGHUP
    signal to your VTTablet process.
-
 
 ## Format of the table ACL config file
 
@@ -86,6 +86,7 @@ file with the following example to explain the format:
 ```
 
 Notes:
+
  * `name`: This is the name of the ACL (`aclname` in the example above) and is
    what needs to be specified in `-queryserver-config-acl-exempt-acl`,
    if you need to exempt a specific ACL from enforcement.
@@ -93,7 +94,7 @@ Notes:
    a rule to target a specific table or set of tables.  Use `%` as in the
    example to specify all tables.  Note that only the SQL `%` "regex"
    wildcard is supported here at the moment.
- * `readers`:  A list of VTGate users, specified by their [UserData](../user-management/#userdata)
+ * `readers`:  A list of VTGate users, specified by their [UserData](../configuration-advanced/user-management/#userdata)
    field in the authentication specification, that are allowed to read the
    tables targeted by this ACL rule. Typically allows `SELECT`.
  * `writers`:  A list of VTGate users that are allowed to write to the tables
@@ -112,10 +113,10 @@ Notes:
    Additionally, you cannot have duplicate tablenames or overlapping regexes
    in the `table_names_or_prefixes` list in a single ACL rule.
 
-
 ## Example
 
 Let's assume your Vitess cluster already has two keyspaces setup:
+
  * `keyspace1` with a single table `t` that should only be accessed by `myuser1`
  * `keyspace2` with a single table `t` that should only be accessed by `myuser2`
 

@@ -1,12 +1,12 @@
 ---
 title: Upgrading Vitess
-weight: 9
+weight: 1
 aliases: ['/docs/user-guides/upgrading/']
 ---
 
-This document highlights things to look after when upgrading a Vitess production installation to a newer Vitess release.
+This document highlights things to be aware of when upgrading a Vitess production installation to a newer Vitess release.
 
-Generally speaking, upgrading Vitess is a safe and easy process because it is explicitly designed for it. This is because in YouTube we follow the practice of releasing new versions often (usually from the tip of the Git master branch).
+Generally speaking, upgrading Vitess is a safe and easy process because it is explicitly designed for it. This is because at YouTube we followed the practice of releasing new versions often (usually from the tip of the Git master branch).
 
 ## Compatibility
 

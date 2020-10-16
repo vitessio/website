@@ -72,7 +72,7 @@ sleep 10
 vtctlclient TabletExternallyReparented zone1-401
 ```
 
-See [Unmanaged Tablet](../../../user-guides/unmanaged-tablet) for the full guide.
+See [Unmanaged Tablet](../../../user-guides/configuration-advanced/unmanaged-tablet) for the full guide.
 
 
 ## Options
@@ -80,7 +80,7 @@ See [Unmanaged Tablet](../../../user-guides/unmanaged-tablet) for the full guide
 The following global options apply to `vttablet`:
 
 | Name | Type | Definition |
-| :-------- | :--------- | :--------- |
+| :-------------------------------------------------- | :--------- | :-------------------------------------------------------------------------------------- |
 | -alsologtostderr | boolean | log to standard error as well as files |
 | -app_idle_timeout | duration | Idle timeout for app connections (default 1m0s) |
 | -app_pool_size | int | Size of the connection pool for app connections (default 40) |

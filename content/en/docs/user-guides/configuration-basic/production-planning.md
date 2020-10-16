@@ -18,7 +18,7 @@ A highly available Vitess cluster requires the following components:
 
 It is common practice to locate the VTTablet process and MySQL Servers on the same host, and Vitess uses the terminology _tablet_ to refer to both. The topology service in Vitess is pluggable, and you can use an existing etcd, ZooKeeper or Consul cluster to reduce the footprint required to deploy Vitess.
 
-_For development environments, it is possible to deploy with a lower number of these components. See `101_initial_cluster.sh` from the [Run Vitess Locally](../../get-started/local) guide for an example._
+_For development environments, it is possible to deploy with a lower number of these components. See `101_initial_cluster.sh` from the [Run Vitess Locally](../../../get-started/local) guide for an example._
 
 ### General Recommendations
 
@@ -48,8 +48,8 @@ Before running Vitess in production, you should become comfortable with the diff
 
 Here is a short list of all the basic workflows Vitess supports:
 
-* [Reparenting](../reparenting)
-* [Backup/Restore](../backup-and-restore)
-* [Schema Management](../../schema-management)
-* [Resharding](../../reference/sharding#resharding) / [Horizontal Sharding Tutorial](../horizontal-sharding)
-* [Upgrading](../upgrading)
+* [Reparenting](../configuration-advanced/reparenting)
+* [Backup/Restore](../operating-vitess/backup-and-restore)
+* [Schema Management](../../../schema-management)
+* [Resharding](../../../reference/sharding#resharding) / [Horizontal Sharding Tutorial](../historical/horizontal-sharding)
+* [Upgrading](../operating-vitess/upgrading-vitess)

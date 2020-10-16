@@ -1,6 +1,6 @@
 ---
 title: CreateLookupVindex
-weight: 9
+weight: 11
 ---
 
 {{< info >}}
@@ -16,7 +16,6 @@ In this guide, we will walk through the process of using the `CreateLookupVindex
 `vtctlclient CreateLookupVindex` has the following syntax:
 
 `CreateLookupVindex  [-cell=<cell>] [-tablet_types=<source_tablet_types>] <keyspace> <json_spec>`
-
 
  * `<json_spec>`:  Use the lookup Vindex specified in `<json_spec>` along with
 VReplication to populate/backfill the lookup Vindex from the source table.
@@ -180,6 +179,7 @@ $ vtctlclient -server localhost:15999 CreateLookupVindex -tablet_types=RDONLY cu
 ```
 
 Note:
+
  * We are specifying a tablet_type of `RDONLY`; meaning it is going to
 run the VReplication streams from tablets of the `RDONLY` type **only**.
 If tablets of this type cannot be found, in a shard, the lookup Vindex
@@ -203,6 +203,7 @@ zone1-0000000402 customer 80- rdonly localhost:15402 localhost:17402 [] <null>
 ```
 
 i.e. now we can see what will happen:
+
   * VReplication streams will be setup from the master tablets
 `zone1-0000000300` and `zone1-0000000400`; pulling data from the `RDONLY`
 source tablets `zone1-0000000302` and `zone1-0000000402`.
@@ -335,7 +336,6 @@ $ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000400 "delete 
 +
 +
 ```
-
 
 Next, to confirm the lookup Vindex is doing what we think it should, we can
 use the Vitess MySQL explain format, e.g.:

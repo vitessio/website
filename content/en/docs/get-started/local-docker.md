@@ -86,7 +86,7 @@ The schema has been simplified to include only those fields that are significant
 
 ## Next Steps
 
-You can now proceed with [MoveTables](../../user-guides/move-tables).
+You can now proceed with [MoveTables](../../user-guides/migration/move-tables).
 
 Exiting the docker shell terminates and destroys the vitess cluster.
 
