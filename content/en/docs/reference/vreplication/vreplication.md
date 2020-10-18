@@ -18,19 +18,19 @@ many features. It can be used for the following use cases:
   This view will be kept up-to-date in real time. One can also materialize
   reference tables onto all shards and have Vitess perform efficient
   local joins with those materialized tables.
-* **Realtime rollups**; The materialization expression can include aggregation
+* **Realtime rollups**: The materialization expression can include aggregation
   expressions in which case, Vitess will create a rolled up version of the
   source table which can be used for realtime analytics.
 * **Backfilling lookup vindexes**: VReplication can be used to backfill a
-  newly created lookup vindex. Workflows can be built manage the switching
+  newly created lookup vindex. Workflows can be built to manage the switching
   from a backfill mode to the vindex itself keeping it up-to-date.
-* **Schema deployment**: We can use VReplication to recreate the workflow
+* **Schema deployment**: VReplication can be used to recreate the workflow
   performed by gh-ost and thereby support zero-downtime schema deployments
   in Vitess natively.
 * **Data migration**: VReplication can be setup to migrate data from an
   existing system into Vitess. The replication could also be reversed after
-  a cutover giving you the option to rollback a migration if something went
-  wrong.
+  a cutover giving you the option to rollback a migration cutover if something
+  went wrong, without losing the writes to the migration target.
 * **Change notification**: The streamer component of VReplication can be
   used for the application or a systems operator to subscribe to change
   notification and use it to keep downstream systems up-to-date with the
@@ -38,54 +38,54 @@ many features. It can be used for the following use cases:
 
 The VReplication feature itself is a fairly low level one that is
 expected to be used as a building block for the above use cases. However,
-it's still possible to directly issue commands to do some of the
+it is still possible to directly issue commands to perform some of the
 activities.
 
 ## Feature description
 
-VReplication works as a stream or combination of streams. Each stream
+VReplication works as a stream or set of streams. Each stream
 establishes a replication from a source keyspace/shard into a target
 keyspace/shard.
 
 A given stream can replicate multiple tables. For each table, you can
-specify a `select` statement that represents both the transformation
-rule and the filtering rule. The select expressions specify the
-transformation, and the where clause specifies the filtering.
+specify a `SELECT` statement that represents both the transformation
+rule and the filtering rule. The `SELECT` expressions specify the
+transformation, and the `WHERE` clause specifies the filtering.
 
-The select expressions can be any non-aggregate MySQL expression, or
-they can also be `count` or `sum` as aggregate expressions. Aggregate
-expressions combined with the corresponding `group by` clauses will
+The `SELECT` expressions can be any non-aggregate MySQL expression, or
+they can also be `COUNT` or `SUM` as aggregate expressions. Aggregate
+expressions combined with the corresponding `GROUP BY` clauses will
 allow you to materialize real-time rollups of the source table, which
 can be used for analytics. The target table can have a different name
 from the source.
 
 For a sharded system like Vitess, multiple VReplication streams
-may be needed to achieve the necessary goals. This is because there
-will be multiple source shards as well as destination shards, and
+may be needed to achieve the objective. This is because there
+can be multiple source shards and multiple destination shards, and
 the relationship between them may not be one to one.
 
 VReplication performs the following essential functions:
 
 * Copy data from the source to the destination table in a consistent
-  fashion. For large data, this copy can be long-running. It can be
+  fashion. For a large table, this copy can be long-running. It can be
   interrupted and resumed. If interrupted, VReplication can keep
-  the copied portion up-to-date with respect to the source, and it
-  can resume the copy process
-  at a point that's consistent with the current replication position.
+  the copied portion up-to-date with respect to the source, and it can
+  resume the copy process at a point that is consistent with the
+  current replication position.
 * After copying is finished, it can continuously replicate the data
   from the source to destination.
-* The copying rule can be expressed as a `select` statement. The
+* The copying rule can be expressed as a `SELECT` statement. The
   statement should be simple enough that the materialized table can
   be kept up-to-date from the data coming from the binlog. For
-  example, joins are not supported.
+  example, joins in the `SELECT` statement are not supported.
 * Correctness verification (to be implemented): VReplication can
   verify that the target table is an exact representation of
-  the select statement from the source by capturing consistent
+  the `SELECT` statement from the source by capturing consistent
   snapshots of the source and target and comparing them against each
   other. This step can be done without the need to create special
   snapshot replicas.
-* Journaling: If there is any kind of traffic
-  cut-over where we start writing to a different table than we used
+* Journaling: If there is any kind of traffic cut-over where we
+  start writing to a different table than we used
   to before, VReplication will save the current binlog positions
   into a journal table. This can be used by other streams to resume
   replication from the new source.
@@ -102,14 +102,15 @@ VReplication performs the following essential functions:
 
 ## VReplicationExec
 
-The `VReplicationExec` command is used to manage vreplication streams.
-The commands are issued as SQL statements. For example, a `select`
-can be used to see the current list of streams. An `insert` can
-be used to create one, etc. By design, the metadata for vreplication
-streams are stored in a `vreplication` table in the `vt` database.
-VReplication uses the 'pull' model. This means that a stream is
+The `VReplicationExec` command is a low-level command used to manage
+VReplication streams.  The commands are issued as SQL statements. For
+example, a `SELECT` can be used to see the current list of streams. An
+`INSERT` can be used to create one, etc. By design, the metadata for
+vreplication streams are stored in a table called `vreplication` in the `_vt`
+sidecar database. VReplication uses a 'pull' model. This means that a stream is
 created on the target side, and the target pulls the data by finding
-the appropriate source.
+the appropriate source. As a result, this metadata is stored on the
+target shard.
 
 The table schema is as follows:
 
@@ -145,7 +146,7 @@ Here's an example of the command to list all existing streams for
 a given tablet.
 
 ```
-lvtctl.sh VReplicationExec 'tablet-100' 'select * from _vt.vreplication'
+vtctlclient -server localhost:15999 VReplicationExec 'tablet-100' 'select * from _vt.vreplication'
 ```
 
 ### Creating a stream
@@ -158,7 +159,7 @@ involved:
   strings as values.
 * One of the strings in the SQL statement is a string encoded protobuf,
   which can contain quotes.
-* One of the parameters within the protobuf is an SQL select expression
+* One of the parameters within the protobuf is an SQL `SELECT` expression
   for the materialized view.
 
 However, you can use [vreplgen.go](https://github.com/vitessio/contrib/blob/master/vreplgen/vreplgen.go) to generate a fully escaped bash command.
@@ -167,7 +168,9 @@ Alternately, you can use a python program. Here's an example:
 
 ```python
 cmd = [
-  './lvtctl.sh',
+  'vtctlclient',
+  '-server',
+  'localhost:15999',
   'VReplicationExec',
   'test-200',
   """insert into _vt.vreplication
@@ -176,10 +179,11 @@ cmd = [
 ]
 ```
 
-The first argument to the command is the master tablet id of the target keyspace/shard.
+The first argument to the command is the master tablet id of the target
+keyspace/shard for the VReplication stream.
 
-The second argument is the SQL command. To start a new stream, you need an insert statement.
-The parameters are as follows:
+The second argument is the SQL command. To start a new stream, you need
+an insert statement.  The parameters are as follows:
 
 * `db_name`: This name must match the name of the MySQL database. In the future, this
   will not be required, and will be automatically filled in by the vttablet.
@@ -191,12 +195,12 @@ The parameters are as follows:
 * `max_replication_lag`: 99999, reserved.
 * `tablet_types`: specifies a comma separated list of tablet types to replicate from.
   If empty, the default tablet type specified by the `-vreplication_tablet_type`
-  command line flag is used.
+  command line flag is used, which in turn defaults to 'REPLICA'.
 * `time_updated`: 0, reserved.
 * `transaction_timestamp`: 0, reserved.
-* `state`: 'Running' or 'Stopped'.
+* `state`: 'Init', 'Copying', 'Running', 'Stopped', 'Error'.
 * `cell`: is an optional parameter that specifies the cell from which the stream
-  can be sourced.
+  can be sourced. If no cell is specified, the default is the local/current cell.
 
 #### The source field
 
@@ -242,8 +246,8 @@ Here are some examples of proto encodings:
 keyspace:"lookup" shard:"0" filter:<rules:<match:"uproduct" filter:"select * from product" > >
 ```
 
-Meaning: replicate all columns and rows of product from `lookup/0.product`
-into the `uproduct` table in target keyspace.
+Meaning: copy and replicate all columns and rows of product from the source
+table `lookup/0.product` to the `uproduct` table in target keyspace.
 
 ```
 keyspace:"user" shard:"-80" filter:<rules:<match:"morder" filter:"select * from uorder where in_keyrange(mname, \\'unicode_loose_md5\\', \\'-80\\')" > >
@@ -260,11 +264,12 @@ therefore be:
 keyspace:"user" shard:"-80" filter:<rules:<match:"morder" filter:"select * from uorder where in_keyrange(mname, 'unicode_loose_md5', '-80')" > >
 ```
 
-Meaning: replicate all columns of `user/-80.uorder` where `unicode_loose_md5(mname)`
-is within `-80` keyrange, into `morder`.
+Meaning: copy and replicate all columns of the source table `user/-80.uorder`
+where `unicode_loose_md5(mname)` is within `-80` keyrange, to the `morder`
+table in the the target keyspace.
 
 This particular stream generally wouldn't make sense in isolation. This would typically
-be one of four streams that combine together to create a materialized view of `uorder`
+be one of a set of four streams that combine to create a materialized view of `uorder`
 from the `user` keyspace into the target (`merchant`) keyspace, but sharded by using
 `mname` as the primary vindex. The vindex used would be `unicode_loose_md5` which should
 also match the primary vindex of other tables in the target keyspace.
@@ -279,22 +284,23 @@ keyspace using the expression: `select pid, count(*) as kount, sum(price) as amo
 This represents only one stream from source shard `-80`. Presumably, there will be one
 more for the other `-80` shard.
 
-#### The 'select' features
+#### The 'SELECT' features
 
-The select statement has the following features (and restrictions):
+The `SELECT` statement has the following features (and restrictions):
 
-* The Select expressions can be any deterministic MySQL expression.
-  Subqueries are not supported. Among aggregate expressions, only
+* The `SELECT` expressions can be any deterministic MySQL expression.
+  Subqueries and joins are not supported. Among aggregate expressions, only
   `count(*)` and `sum(col)` are supported.
 * The where clause can only contain the `in_keyrange` construct. It
   has two forms:
   * `in_keyrange('-80')`: The row's source keyrange matched against `-80`.
-  * `in_keyrange(col, 'hash', '-80')`: The keyrange is computed using
-    `hash(col)` and matched against `-80`.
-* `group by`: can be specified if using aggregations. The group by
+  * `in_keyrange(col, 'vindex_func', '-80')`: The keyrange is computed using
+    the specified Vindex function as `vindex_func(col)` and matched against
+    `-80`.
+* `GROUP BY`: can be specified if using aggregations. The `GROUP BY`
   expressions are expected to cover the non-aggregated columns just
   like regular SQL requires.
-* No other constructs like `order by`, `limit`, joins, etc. are allowed.
+* No other constructs like `ORDER BY`, `LIMIT`, etc. are allowed.
 
 #### The pos field
 
@@ -306,22 +312,23 @@ start the replication.
 For large tables, this is done in chunks. After each chunk is copied, replication
 is resumed until it's caught up. VReplication ensures that only changes that affect
 existing rows are applied. Following this another chunk is copied, and so on,
-until all tables are completed. After that, replication runs indefinitely.
+until all tables are completed. After that, replication runs indefinitely until
+the VReplication stream is stopped or deleted.
 
-#### It's a shared row
+#### It is a shared row
 
-The vreplication row is shared between the operator and Vreplication itself.
-Once the row is created, the VReplication stream
-updates various fields of the row to save and report on its own status. For example, the
-`pos` field is continuously updated as it makes forward progress.
+The `vreplication` table row is shared between the operator and Vreplication
+itself.  Once the row is created, the VReplication stream
+updates various fields of the row to save and report on its own status. For
+example, the `pos` field is continuously updated as it makes forward progress.
 
-While copying, the `state` field is updated as `Init` or `Copying`.
+While copying, the `state` field will be `Init` or `Copying`.
 
 ### Updating a stream
 
 You can change any field of the stream by issuing a `VReplicationExec` with an
-`update` statement. You are required to specify the id of the row you intend to
-update. You can only update one row at a time.
+SQL `UPDATE` statement. You are required to specify the id of the row you
+intend to update. You can only update one row at a time.
 
 Typically, you can update the row and change the state to `Stopped` to stop a
 stream, or to `Running` to restart a stopped stream.
@@ -331,9 +338,10 @@ stop once it reaches the specified position.
 
 ### Deleting a stream
 
-You can delete a stream by issuing a `delete` statement. This will stop the replication
+You can delete a stream by issuing a `DELETE` statement. This will stop the replication
 and delete the row. This statement is destructive. All data about the replication
-state will be permanently deleted.
+state will be permanently deleted. Note that the target table will be left as-is,
+potentially partially copied, and needs to be cleaned up separately, if desired.
 
 ## Other properties of VReplication
 
