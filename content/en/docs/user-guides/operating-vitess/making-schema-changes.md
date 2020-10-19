@@ -1,6 +1,6 @@
 ---
 title: Making Schema Changes
-weight: 11
+weight: 3
 aliases: ['/docs/schema-management/mysql-schema/', '/docs/user-guides/mysql-schema/']
 ---
 

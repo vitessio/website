@@ -5,7 +5,7 @@ aliases: ['/docs/reference/vtexplain/']
 
 `vtexplain` is a command line tool which provides information on how Vitess plans to execute a particular query. It can be used to validate queries for compatibility with Vitess.
 
-For a user guide that describes how to use the `vtexplain` tool to explain how Vitess executes a particular SQL statement, see [Explaining how Vitess executes a SQL statement](https://vitess.io/docs/user-guides/vtexplain/).
+For a user guide that describes how to use the `vtexplain` tool to explain how Vitess executes a particular SQL statement, see [Analyzing a SQL statement](../../user-guides/sql/vtexplain/).
 
 ## Example Usage
 

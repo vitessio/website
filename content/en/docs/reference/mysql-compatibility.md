@@ -16,7 +16,7 @@ The following describes some of the major differences in SQL Syntax handling bet
 
 ### DDL                                                                      
 
-Vitess supports MySQL DDL, and will send `ALTER TABLE` statements to each of the underlying tablet servers. For large tables it is recommended to use an external schema deployment tool and apply directly to the underlying MySQL shard instances. This is discussed further in [Applying MySQL Schema](../../user-guides/making-schema-changes).
+Vitess supports MySQL DDL, and will send `ALTER TABLE` statements to each of the underlying tablet servers. For large tables it is recommended to use an external schema deployment tool and apply directly to the underlying MySQL shard instances. This is discussed further in [Applying MySQL Schema](../../user-guides/operating-vitess/making-schema-changes).
 
 ### Join Queries
 

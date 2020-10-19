@@ -18,7 +18,7 @@ Vitess strongly recommends the use of Semi-synchronous replication for High Avai
 
 * Tablets of type rdonly will not send semi-sync ACKs. This is intentional because rdonly tablets are not eligible to be promoted to master, so Vitess avoids the case where a rdonly tablet is the single best candidate for election at the time of master failure.
 
-These behaviors combine to give you the property that, in case of master failure, there is at least one other replica that has every transaction that was ever reported to clients as having completed. You can then ([manually](../vtctl/#emergencyreparentshard), or [using Orchestrator](../../user-guides/integration-with-orchestrator/) to pick the replica that is farthest ahead in GTID position and promote that to be the new master.
+These behaviors combine to give you the property that, in case of master failure, there is at least one other replica that has every transaction that was ever reported to clients as having completed. You can then ([manually](../vtctl/#emergencyreparentshard), or [using Orchestrator](../../user-guides/configuration-advanced/integration-with-orchestrator/) to pick the replica that is farthest ahead in GTID position and promote that to be the new master.
 
 Thus, you can survive sudden master failure without losing any transactions that were reported to clients as completed. In MySQL 5.7+, this guarantee is strengthened slightly to preventing loss of any transactions that were ever **committed** on the original master, eliminating so-called [phantom reads](http://bugs.mysql.com/bug.php?id=62174).
 
