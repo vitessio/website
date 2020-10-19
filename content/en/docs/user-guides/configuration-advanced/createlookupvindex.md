@@ -4,7 +4,7 @@ weight: 11
 ---
 
 {{< info >}}
-This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../get-started/operator), [local](../../get-started/local) or [Helm](../../get-started/helm) installation ready.  Make sure you are at the point where you have the sharded keyspace called `customer` setup.
+This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../../get-started/operator), [local](../../../get-started/local) or [Helm](../../../get-started/helm) installation ready.  Make sure you are at the point where you have the sharded keyspace called `customer` setup.
 {{< /info >}}
 
 **CreateLookupVindex** is a new VReplication workflow in Vitess 6.  It is used to create **and** backfill a lookup Vindex automatically for a table that already exists, and may have a significant amount of data in it already.

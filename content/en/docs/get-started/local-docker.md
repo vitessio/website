@@ -1,7 +1,7 @@
 ---
 title: Local Install via Docker
 description: Instructions for using Vitess on your machine for testing purposes
-weight: 5
+weight: 1
 featured: true
 aliases: ['/docs/tutorials/local-docker/']
 ---

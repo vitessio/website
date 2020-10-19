@@ -6,9 +6,9 @@ aliases: ['/docs/launching/server-configuration/', '/docs/user-guides/server-con
 
 ## Managed MySQL
 
-The following describes the requirements for Vitess when fully managing MySQL with `mysqlctl` (see [VTTablet Modes](../../reference/vttablet-modes#managed-mysql)).
+The following describes the requirements for Vitess when fully managing MySQL with `mysqlctl` (see [VTTablet Modes](../../../reference/programs/vttablet#managed-mysql)).
 
-When using [Unmanaged or Remote MySQL](../../reference/vttablet-modes#unmanaged-or-remote-mysql) instead, the requirement is only that the server speak the MySQL protocol.
+When using [Unmanaged or Remote MySQL](../../../reference/programs/vttablet#unmanaged-or-remote-mysql) instead, the requirement is only that the server speak the MySQL protocol.
 
 ### Version and Flavor
 
@@ -58,9 +58,9 @@ Vitess servers write to log files, and they are rotated when they reach a maximu
 
 Vitess supports both MySQL protocol and gRPC for communication between client and Vitess and uses gRPC for communication between Vitess servers. By default, Vitess does not use SSL.
 
-Also, even without using SSL, we allow the use of an application-provided CallerID object. It allows unsecure but easy to use authorization using Table ACLs.
+Also, even without using SSL, we allow the use of an application-provided CallerID object. It allows unsecured but easy to use authorization using Table ACLs.
 
-See the [Transport Security Model](../../user-guides/transport-security-model) document for more information on how to setup both of these features, and what command line parameters exist.
+See the [TLS](https://github.com/aquarapid/vitess_examples/blob/master/tls/securing_vitess.md) example for more information on how to set up both of these features, and what command line parameters exist.
 
 ### Topology Service configuration  
 
