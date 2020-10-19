@@ -13,7 +13,7 @@ Yes. You can start vttablet with the `-init_db_name_override` command line optio
 
 ### How do I connect to vtgate using MySQL protocol?
 
-If you look at the legacy example [vtgate-up.sh](https://github.com/vitessio/vitess/blob/master/examples/legacy_local/scripts/vtgate-up.sh) script, you'll see the following lines:
+If you look at the example [vtgate-up.sh](https://github.com/vitessio/vitess/blob/master/examples/legacy_local/scripts/vtgate-up.sh) script, you'll see the following lines:
 
 ```shell
 -mysql_server_port $mysql_server_port \
@@ -21,7 +21,7 @@ If you look at the legacy example [vtgate-up.sh](https://github.com/vitessio/vit
 -mysql_auth_server_static_file "./mysql_auth_server_static_creds.json" \
 ```
 
-In this legacy example, vtgate accepts MySQL connections on port 15306 and the authentication info is stored in the json file. So, you should be able to connect to it using the following command:
+In this example, vtgate accepts MySQL connections on port 15306 and the authentication info is stored in the json file. So, you should be able to connect to it using the following command:
 
 ```shell
 mysql -h 127.0.0.1 -P 15306 -u mysql_user --password=mysql_password

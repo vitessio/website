@@ -96,4 +96,3 @@ Vitess provides the following tools to help manage range-based shards:
 
 * The [vtctl](../../vtctl) command-line tool supports functions for managing keyspaces, shards, tablets, and more.
 * Client APIs account for sharding operations.
-* The [MapReduce framework](https://github.com/vitessio/vitess/tree/d8764de783d61ca8a637b76a44d1cefbef75b935/java/hadoop/src/main/java/io/vitess/hadoop) fully utilizes key ranges to read data as quickly as possible, concurrently from all shards and all replicas.
