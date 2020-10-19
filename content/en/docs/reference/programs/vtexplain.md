@@ -5,7 +5,7 @@ aliases: ['/docs/reference/vtexplain/']
 
 `vtexplain` is a command line tool which provides information on how Vitess plans to execute a particular query. It can be used to validate queries for compatibility with Vitess.
 
-For a user guide that describes how to use the `vtexplain` tool to explain how Vitess executes a particular SQL statement, see [Analyzing a SQL statement](../../user-guides/sql/vtexplain/).
+For a user guide that describes how to use the `vtexplain` tool to explain how Vitess executes a particular SQL statement, see [Analyzing a SQL statement](../../../user-guides/sql/vtexplain/).
 
 ## Example Usage
 
@@ -27,7 +27,7 @@ vtexplain -shards 128 -vschema-file vschema.json -schema-file schema.sql -replic
 The following parameters apply to `mysqlctl`:
 
 | Name | Type | Definition |
-| :-------- | :--------- | :--------- |
+| :-------------------- | :--------- | :---------------------------------------------------- |
 | -output-mode | string | Output in human-friendly text or json (default "text") |
 | -normalize |  | Whether to enable vtgate normalization (default false) |
 | -shards | int | Number of shards per keyspace (default 2) |

@@ -30,7 +30,7 @@ To analyze multiple SQL queries and determine how, or if, Vitess executes each s
 
 These queries should be most, if not all, of the queries that are sent to your current MySQL database over an extended period of time. You may need to record your queries for days or weeks depending on the nature of your application(s) and workload. You will need to normalize the queries you will be analyzing. Depending on the scope and complexity of your applications you may have a few hundred to thousands of distinct normalized queries. To obtain normalized queries you can use common MySQL monitoring tools like VividCortex, Monyog or PMM.
 
-It is also possible to use the MySQL [general query log](https://dev.mysql.com/doc/refman/8.0/en/query-log.html)feature to capture raw queries and then normalize it using post-processing.
+It is also possible to use the MySQL [general query log](https://dev.mysql.com/doc/refman/8.0/en/query-log.html) feature to capture raw queries and then normalize it using post-processing.
 
 ## 2. Filter out specific queries
 
