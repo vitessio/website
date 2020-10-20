@@ -15,7 +15,7 @@ Vitess provides `READ COMMITTED` semantics when executing cross-shard queries. T
 The following describes some of the major differences in SQL Syntax handling between Vitess and MySQL. For a list of unsupported queries, check out the [test-suite cases](https://github.com/vitessio/vitess/blob/master/go/vt/vtgate/planbuilder/testdata/unsupported_cases.txt).
 
 ### DDL                                                                      
-                                                                            
+
 Vitess supports MySQL DDL, and will send `ALTER TABLE` statements to each of the underlying tablet servers. For large tables it is recommended to use an external schema deployment tool and apply directly to the underlying MySQL shard instances. This is discussed further in [Applying MySQL Schema](../../user-guides/operating-vitess/making-schema-changes).
 
 ### Join Queries
@@ -52,6 +52,22 @@ By default, Vitess sets some intentional restrictions on the execution time and 
 ```sql
 SET workload='olap'
 ```
+
+### SELECT ... INTO Statement
+
+The `SELECT ... INTO` form of `SELECT` in MySQL enables a query result to be stored in variables or written to a file. Vitess supports `SELECT ... INTO DUMFILE` and `SELECT ... INTO OUTFILE` constructs for unsharded keyspaces but does not support storing results in variable. Moreover, the position of `INTO` must be towards the end of the query and not in the middle. An example of a correct query is as follows:
+```sql
+SELECT * FROM <tableName> INTO OUTFILE 'x.txt' FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '\t' LINES TERMINATED BY '\n'
+```
+For sharded keyspaces this statement can still be used but only after specifying the exact shard with a [USE Statement](#use-statements).
+
+### LOAD DATA Statement
+
+`LOAD DATA` is the complement of `SELECT ... INTO OUTFILE` that reads rows from a text file into a table at a very high speed. Just like `SELECT ... INTO` statement, `LOAD DATA` is also supported in unsharded keyspaces. An example of a correct query is as follows:
+```sql
+LOAD DATA INFILE 'x.txt' INTO REPLACE TABLE <tableName> FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '\t' LINES TERMINATED BY '\n'
+```
+For sharded keyspaces this statement can still be used but only after specifying the exact shard with a [USE Statement](#use-statements).
 
 ## Network Protocol
 
