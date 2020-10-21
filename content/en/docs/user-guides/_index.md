@@ -2,7 +2,6 @@
 title: User Guides
 description: Task-based guides for common usage scenarios
 weight: 4
-skip_sections: true
 aliases: ['/user-guide/client-libraries.html', '/docs/user-guides/']
 ---
 
