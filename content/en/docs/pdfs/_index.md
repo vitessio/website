@@ -1,5 +1,5 @@
 ---
-title: Vitess Documentation PDFs
+title: Legacy Docs
 description: PDFs of vitess.io/docs at the time of previous versions
 weight: 25
 ---
