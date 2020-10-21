@@ -3,10 +3,9 @@
   {{ $numSections := len .Sections}}
   {{ if le $numSections 3 }} <!-- 3 sections fill  -->
     {{ $maxPages = 16 }}
-  {{else if eq $numSections 7}}
+  {{else if $numSections eq 7}}
       {{ $maxPages = 16 }}
-  {{ end }}
-  {{ $maxPages := 3 }}
+  {{ else $maxPages := 3 }}
   {{ range .Sections }}
   {{ $sectionUrl := .RelPermalink }}
   {{ $numPages := len .Pages }}
