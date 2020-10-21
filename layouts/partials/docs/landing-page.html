@@ -2,9 +2,7 @@
 <div class="columns is-2 is-multiline is-desktop is-landingpage">
   {{ $numSections := len .Sections}}
   {{ $maxPages := 3 }}
-  {{ if le $numSections 3 }} <!-- 3 sections fill  -->
-    {{ $maxPages = 16 }}
-  {{ else le $numSections 7 }} <!-- 3 sections fill  -->
+  {{ if le $numSections 3 || le $numSections 7 }} <!-- 3 sections fill  -->
     {{ $maxPages = 16 }}
   {{ end }}
   {{ range .Sections }}
