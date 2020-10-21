@@ -1,12 +1,12 @@
 <!-- Main docs page -->
 <div class="columns is-2 is-multiline is-desktop is-landingpage">
   {{ $numSections := len .Sections}}
-  {{ $maxPages := 3 }}
   {{ if le $numSections 3 }} <!-- 3 sections fill  -->
     {{ $maxPages = 16 }}
-  {{else if $numSections 7}}
+  {{else if eq $numSections 7}}
       {{ $maxPages = 16 }}
   {{ end }}
+  {{ $maxPages := 3 }}
   {{ range .Sections }}
   {{ $sectionUrl := .RelPermalink }}
   {{ $numPages := len .Pages }}
