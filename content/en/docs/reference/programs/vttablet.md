@@ -80,7 +80,7 @@ See [Unmanaged Tablet](../../../user-guides/configuration-advanced/unmanaged-tab
 The following global options apply to `vttablet`:
 
 | Name | Type | Definition |
-| :-------------------------------------------------- | :--------- | :-------------------------------------------------------------------------------------- |
+| :------------------------------------ | :--------- | :----------------------------------------------------------------------------------------- |
 | -alsologtostderr | boolean | log to standard error as well as files |
 | -app_idle_timeout | duration | Idle timeout for app connections (default 1m0s) |
 | -app_pool_size | int | Size of the connection pool for app connections (default 40) |
@@ -255,7 +255,7 @@ The following global options apply to `vttablet`:
 | -port | int | port for the server |
 | -purge_logs_interval | duration | how often try to remove old logs (default 1h0m0s) |
 | -query-log-stream-handler | string | URL handler for streaming queries log (default "/debug/querylog") |
-| -querylog-filter-tag | string | string that must be present in the query for it to be logged |
+| -querylog-filter-tag | string | string that must be present in the query as a comment for the query to be logged, works for both vtgate and vttablet |
 | -querylog-format | string | format for query logs ("text" or "json") (default "text") |
 | -queryserver-config-acl-exempt-acl | string | an acl that exempt from table acl checking (this acl is free to access any vitess tables). |
 | -queryserver-config-enable-table-acl-dry-run |  | If this flag is enabled, tabletserver will emit monitoring metrics and let the request pass regardless of table acl check results |
@@ -357,7 +357,7 @@ The following global options apply to `vttablet`:
 | -twopc_abandon_age | float | time in seconds. Any unresolved transaction older than this time will be sent to the coordinator to be resolved. |
 | -twopc_coordinator_address | string | address of the (VTGate) process(es) that will be used to notify of abandoned transactions. |
 | -twopc_enable |  | if the flag is on, 2pc is enabled. Other 2pc flags must be supplied. |
-| -tx-throttler-config | string | The configuration of the transaction throttler as a text formatted throttlerdata.Configuration protocol buffer message (default "target_replication_lag_sec: 2\nmax_replication_lag_sec: 10\ninitial_rate: 100\nmax_increase: 1\nemergency_decrease: 0.5\nmin_duration_between_increases_sec: 40\nmax_duration_between_increases_sec: 62\nmin_duration_between_decreases_sec: 20\nspread_backlog_across_sec: 20\nage_bad_rate_after_sec: 180\nbad_rate_increase: 0.1\nmax_rate_approach_threshold: 0.9\n") |
+| -tx-throttler-config | string | The configuration of the transaction throttler as a text formatted throttlerdata.Configuration protocol buffer message (default "target_replication_lag_sec: 2 max_replication_lag_sec: 10 initial_rate: 100 max_increase: 1 emergency_decrease: 0.5 min_duration_between_increases_sec: 40 max_duration_between_increases_sec: 62 min_duration_between_decreases_sec: 20 spread_backlog_across_sec: 20 age_bad_rate_after_sec: 180 bad_rate_increase: 0.1 max_rate_approach_threshold: 0.9 ") |
 | -tx-throttler-healthcheck-cells | value | A comma-separated list of cells. Only tabletservers running in these cells will be monitored for replication lag by the transaction throttler. |
 | -unhealthy_threshold | duration | replication lag  after which a replica is considered unhealthy (default 2h0m0s) |
 | -use_super_read_only |  | Set super_read_only flag when performing planned failover. |

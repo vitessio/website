@@ -32,7 +32,7 @@ vtgate \
 The following global options apply to `vtgate`:
 
 | Name | Type | Definition |
-| :-------- | :--------- | :--------- |
+| :------------------------------------ | :--------- | :----------------------------------------------------------------------------------------- |
 | -allowed_tablet_types | value | Specifies the tablet types this vtgate is allowed to route queries to |
 | -alsologtostderr | boolean | log to standard error as well as files |
 | -buffer_drain_concurrency | int | Maximum number of requests retried simultaneously. More concurrency will increase the load on the MASTER vttablet when draining the buffer. (default 1) |
@@ -129,7 +129,7 @@ The following global options apply to `vtgate`:
 | -port | int | port for the server |
 | -proxy_protocol | boolean | Enable HAProxy PROXY protocol on MySQL listener socket |
 | -purge_logs_interval | duration | how often try to remove old logs (default 1h0m0s) |
-| -querylog-filter-tag | string | string that must be present in the query for it to be logged |
+| -querylog-filter-tag | string | string that must be present in the query as a comment for the query to be logged, works for both vtgate and vttablet |
 | -querylog-format | string | format for query logs ("text" or "json") (default "text") |
 | -redact-debug-ui-queries | boolean | redact full queries and bind variables from debug UI |
 | -remote_operation_timeout | duration | time to wait for a remote operation (default 30s) |
