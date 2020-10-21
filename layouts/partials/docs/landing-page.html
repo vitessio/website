@@ -4,8 +4,7 @@
   {{ $maxPages := 3 }}
   {{ if le $numSections 3 }} <!-- 3 sections fill  -->
     {{ $maxPages = 16 }}
-  {{ end }}
-  {{ if le $numSections 7 }} <!-- 3 sections fill  -->
+  {{ else le $numSections 7 }} <!-- 3 sections fill  -->
     {{ $maxPages = 16 }}
   {{ end }}
   {{ range .Sections }}
