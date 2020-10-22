@@ -14,7 +14,7 @@ Compatibility (MySQL, frameworks)
 Our ongoing work to make sure that Vitess accepts all queries that MySQL accepts. In particular, work has focused on SET and information_schema queries. Reserved connections are still not on by default, and you might need to enable it to see all queries and frameworks well supported.
 
 We are proud to announce that we have initial support for:
-* Wordpress
+* WordPress
 * MySQL Workbench
 * SQLAlchemy
 * Mycli
@@ -22,7 +22,7 @@ We are proud to announce that we have initial support for:
 * Ruby on Rails - ActiveRecord
 * JVM - JDBC and Hibernate
 * Django 
-* Javascript-land -  TypeORM and Sequelize
+* JavaScript -  TypeORM and Sequelize
 * PyMySQL
 * Rust MySQL
 
