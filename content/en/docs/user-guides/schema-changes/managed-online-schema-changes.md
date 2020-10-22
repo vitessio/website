@@ -17,7 +17,7 @@ Vitess offers managed, online schema migrations, via [gh-ost](https://github.com
 
 ## Syntax
 
-**Note:** while this feature is experimental the syntax is subject to change.
+**Note:** the syntax is subject to change while this feature is in _experimental_ state.
 
 We assume we have a keyspace (schema) called `commerce`, with a table called `demo`, that has the following definition:
 
@@ -294,6 +294,23 @@ $ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
 | test-0000000301 | 80-c0 | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:37:33 |                     | running          |
 +-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
 ```
+
+## Auto retry after failure
+
+Vitess keeps track of:
+
+- which `vttablet` initiated the migration
+- how many times a migration has been retried
+- whether a migration failed due to a `vttablet` failure (as is the case in a failover scenario)
+
+Vitess will auto-retry a failed migration when:
+
+- The migration failed due to a `vttablet` failure, and
+- it has not been retried (this is a temporary restriction)
+
+The migration will be transitioned into `queued` state, as if the user requested a `retry` operation. Note that this takes place on a per-shard basis.
+
+The primary use case is a primary failure and failover. The newly promoted tablet will be able to retry the migration that broke during the previous primary failure. To clarify, the migration will start anew, as at this time there is no mechanism to resume a broken migration.
 
 ## gh-ost and pt-online-schema-change
 
