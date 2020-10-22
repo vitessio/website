@@ -5,7 +5,7 @@ slug: '2020-10-27-announcing-vitess-8'
 tags: ['release']
 title: 'Announcing Vitess 8'
 ---
-On behalf of the Vitess maintainers’ team, I am pleased to announce the general availability of Vitess 8.
+On behalf of the Vitess maintainers’ team, I am pleased to announce the general availability of [Vitess 8](https://github.com/vitessio/vitess/releases/tag/v8.0.0).
 
 ## Major Themes
 In this release, we have continued to make important improvements to the Vitess project with over 200 PRs in several areas. Some of the major bug fixes and changes in behaviors are documented in the Release Notes. Please read them carefully and report any issues via GitHub. We would like to highlight the following themes for this release. 
@@ -44,5 +44,5 @@ We continue to add integration of popular open-source tools and utilities on top
 
 There is a shortlist of incompatible changes in this release. We encourage you to spend a moment reading the release notes.
 
-Please download [Vitess](https://github.com/vitessio/vitess)  8 and try it out!
+Please download [Vitess 8](https://github.com/vitessio/vitess/releases/tag/v8.0.0) and try it out!
 
