@@ -21,7 +21,7 @@ The following has been verified to work on __macOS Mojave__. If you are new to V
 [Install Homebrew](http://brew.sh/). From here you should be able to install:
 
 ```shell
-brew install go@1.13 automake git curl wget mysql@5.7 etcd
+brew install go@1.13 automake git curl wget mysql@5.7
 ```
 
 Add `mysql@5.7` and `go@1.13` to your `PATH`:
@@ -30,6 +30,8 @@ Add `mysql@5.7` and `go@1.13` to your `PATH`:
 echo 'export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"' >> ~/.bash_profile
 echo 'export PATH="/usr/local/opt/go@1.13/bin:$PATH"' >> ~/.bash_profile
 ```
+
+Do not install etcd via brew otherwise it will not be the version that is supported. Let it be installed when running make build.
 
 Do not setup MySQL or etcd to restart at login.
 
@@ -63,7 +65,7 @@ The unit tests require that you first install a Java runtime. This is required f
 ```shell
 brew tap adoptopenjdk/openjdk
 brew cask install adoptopenjdk8
-brew cask info java
+brew info java
 ```
 
 You will also need to install `ant` and `maven`:
@@ -91,3 +93,8 @@ Error:  105: Key already exists (/vitess/zone1) [6]
 Error:  105: Key already exists (/vitess/global) [6]
 ```
 
+### /tmp/mysql.sock Already In Use
+This error occurs because mysql is serving on the same port that vttgate requires. To solve this issue stop mysql service. If you have installed mysql via brew as specified above you should run:
+```shell
+brew services stop mysql@5.7
+```
