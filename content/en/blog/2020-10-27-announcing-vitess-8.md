@@ -15,17 +15,28 @@ In this release, we have continued to make important improvements to the Vitess 
 Our ongoing work to make sure that Vitess accepts all queries that MySQL accepts. In particular, work has focused on SET and information_schema queries. Reserved connections are still not on by default, and you might need to enable it to see all queries and frameworks well supported.
 
 We are proud to announce that we have initial support for:
-* WordPress
-* MySQL Workbench
-* SQLAlchemy
-* Mycli
-* Gorm
-* Ruby on Rails - ActiveRecord
-* JVM - JDBC and Hibernate
-* Django 
-* JavaScript - TypeORM and Sequelize
-* PyMySQL
-* Rust MySQL
+* PHP
+  * WordPress
+  * Mysqli
+* JavaScript
+  * TypeORM
+  * Sequelize
+* Python
+  * Django
+  * PyMySQL
+  * SQLAlchemy
+* Ruby
+  * Rails/ActiveRecord
+* Java
+  * JDBC
+  * Hibernate
+* Rust
+  * MySQL
+  * mysql_async
+  * rustx
+* Tooling
+  * MySQL Workbench
+  * Mycli
 
 ### Migration
 Performance and error metrics and improved logging related to VReplication workflows have been added for more visibility into operational issues. Additional vtctld commands VExec and Workflow allow easier inspection and manipulation of VReplication streams. 
