@@ -27,15 +27,32 @@
       {{ if $isCurrentSection }}
       <div class="docs-section-list">
         <ul>
-          {{ range .Pages }}
-          {{ $isCurrentPage := (or (eq $currentUrl .RelPermalink) (eq .Title $currentSubSection)) }}
-          <li{{ if $isCurrentPage }} class="is-active"{{ end }}>
-            <a href="{{ .RelPermalink }}">
-              {{ .Title }}
-            </a>
-          </li>
+          {{ $is := $page.IsMenuCurrent "main" . }}
+          {{ $has := $page.HasMenuCurrent "main" . }}
+          {{ if .HasChildren }} 
+            <li>
+              <a href="{{ .URL }}">
+                {{ .Name }}
+                {{ if $is }}[Is]{{ end }}
+                {{ if $has }}[Has]{{ end }}
+                {{ if .HasChildren }}[Children]{{ end }}
+              </a>
+                <!-- If the menu item has children, include this partial template again (recursively) -->
+                {{ partial "menu_recursive.html" (dict "menu" .Children "page" $page "site" $site) }}
+            </li>
+          {{ else }}
+            <li>
+              <a href="{{ .URL }}">
+                {{ .Name }}
+                {{ if $is }}[Is]{{ end }}
+                {{ if $has }}[Has]{{ end }}
+                {{ if .HasChildren }}[Children]{{ end }}
+              </a>
+            </li>
           {{ end }}
+        {{ end }}
         </ul>
+
       </div>
       {{ end }}
     </div>

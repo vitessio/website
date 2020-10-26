@@ -6,7 +6,7 @@
 {{ define "main" }}
 <div class="docs-wrapper">
   <div class="docs-sidebar is-hidden-touch">
-    {{ partial "docs/sidebar.html" . }}
+    {{ partial "docs/sidebar.html" (dict "menu" .Site.Menus.main "page" . "site" .Site) }}
   </div>
 
   <div class="docs-article">
