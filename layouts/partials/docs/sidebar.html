@@ -27,7 +27,6 @@
     {{ if or (or (eq $currentSection "Configuration") (eq $currentSection "Migration") (eq $currentSection "Advanced Configuration") (eq $currentSection "SQL Statement Analysis") (eq $currentSection "Operational") (eq $currentSection "Legacy") (eq $currentSection "Making Schema Changes")) }}
       {{ $currentSubSection = $currentSection }}
       {{ $currentSection = "User Guides"}}
-    {{ end }}
 
     {{ $isCurrentSection := eq $currentSection .Name }}
 
