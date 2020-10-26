@@ -19,15 +19,6 @@
       </a>
     </div>
 
-    {{ range .Sections }}
-
-    {{ if or (or (eq $currentSection "Features") (eq $currentSection "Programs") (eq $currentSection "VReplication") (eq $currentSection "Configuration")) }}
-      {{ $currentSubSection = eq $currentSection .Name }}
-
-    {{ end }}
-
-    {{ $isCurrentSection := eq $currentSection .Name }}
-
     <div class="docs-section">
       <a class="docs-section-title{{ if $isCurrentSection }} is-active{{ end }}" href="{{ .RelPermalink }}">
         {{ .Name }}
