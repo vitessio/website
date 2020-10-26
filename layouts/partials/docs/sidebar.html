@@ -27,8 +27,8 @@
     {{ else if or (or (eq $currentSection "Configuration") (eq $currentSection "Migration") (eq $currentSection "Advanced Configuration") (eq $currentSection "SQL Statement Analysis") (eq $currentSection "Operational") (eq $currentSection "Legacy") (eq $currentSection "Making Schema Changes")) }}
       {{ $currentSubSection = $currentSection }}
       {{ $currentSection = "User Guides"}}
-
-    {{ $isCurrentSection := eq $currentSection .Name }}
+    {{ else }}
+      {{ $isCurrentSection := eq $currentSection .Name }}
 
     <div class="docs-section">
       <a class="docs-section-title{{ if $isCurrentSection }} is-active{{ end }}" href="{{ .RelPermalink }}">
