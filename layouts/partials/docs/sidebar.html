@@ -23,7 +23,7 @@
 
     {{ if or (or (eq $currentSection "Features") (eq $currentSection "Programs") (eq $currentSection "VReplication") (eq $currentSection "Configuration")) }}
       {{ $currentSubSection = $currentSection }}
-      {{ $currentSection = eq $currentSection .Name }}
+      {{ $currentSection = $currentSection .Name }}
     {{ end }}
 
     {{ $isCurrentSection := eq $currentSection .Name }}
