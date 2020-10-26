@@ -21,7 +21,7 @@
 
     {{ range .Sections }}
 
-    {{ if or (or (eq $currentSection "Features") (eq $currentSection "Programs")) }}
+    {{ if or (or (eq $currentSection "Features") (eq $currentSection "Programs")) (eq $currentSection "VReplication")) }}
       {{ $currentSubSection = $currentSection }}
       {{ $currentSection = "Reference"}}
     {{ end }}
