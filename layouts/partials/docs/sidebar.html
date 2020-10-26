@@ -22,8 +22,8 @@
     {{ range .Sections }}
 
     {{ if or (or (eq $currentSection "Features") (eq $currentSection "Programs") (eq $currentSection "VReplication") (eq $currentSection "Configuration")) }}
-      {{ $currentSubSection = $currentSection }}
-      {{ $currentSection = $currentSection .Name }}
+      {{ $currentSubSection = eq $currentSection .Name }}
+
     {{ end }}
 
     {{ $isCurrentSection := eq $currentSection .Name }}
