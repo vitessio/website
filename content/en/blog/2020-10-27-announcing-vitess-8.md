@@ -33,7 +33,7 @@ We are proud to announce that we have initial support for:
 * Rust
   * MySQL
   * mysql_async
-  * rustx
+  * SQLx
 * Tooling
   * MySQL Workbench
   * Mycli
