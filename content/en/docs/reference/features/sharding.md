@@ -94,5 +94,5 @@ Cool a hot tablet | For read access, add replicas or split shards. For write acc
 
 Vitess provides the following tools to help manage range-based shards:
 
-* The [vtctl](../../vtctl) command-line tool supports functions for managing keyspaces, shards, tablets, and more.
+* The [vtctl](../../../programs/vtctl) command-line tool supports functions for managing keyspaces, shards, tablets, and more.
 * Client APIs account for sharding operations.
