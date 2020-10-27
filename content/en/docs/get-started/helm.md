@@ -4,7 +4,7 @@ weight: 6
 featured: true
 ---
 
-This tutorial is deprecated. We recommend that you use the [Operator](operator) instead.
+This tutorial is deprecated. We recommend that you use the [Operator](../operator) instead.
 
 This tutorial demonstrates how Vitess can be used with Minikube to deploy Vitess clusters using Helm.
 

@@ -21,7 +21,7 @@ The Helm charts now default to using Kubernetes as the [Topology Service](https:
 This change also unlocked the adoption of Helm 3 and support for a wider range of Kubernetes versions, making installing Vitess much easier.
 
 ### General Availability of VReplication-based Workflows
-While VReplication made its appearance in Vitess 4, it has now been promoted from experimental to general availability and the documentation now points to [MoveTables](https://vitess.io/docs/user-guides/move-tables/) and [Resharding](https://vitess.io/docs/user-guides/resharding/).
+While VReplication made its appearance in Vitess 4, it has now been promoted from experimental to general availability and the documentation now points to [MoveTables](https://vitess.io/docs/user-guides/migration/move-tables/) and [Resharding](https://vitess.io/docs/user-guides/advanced-configuration/resharding/).
 
 These workflows require significantly fewer steps than their predecessors (Vertical Split Clone and Horizontal Sharding), of which we intend to deprecate at some point in the future.
 
