@@ -1,7 +1,7 @@
 ---
 title: Upgrading Vitess
 weight: 1
-aliases: ['/docs/user-guides/upgrading/']
+aliases: ['/docs/user-guides/upgrading/', '/user-guide/upgrading-vitess/']
 ---
 
 This document highlights things to be aware of when upgrading a Vitess production installation to a newer Vitess release.

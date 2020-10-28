@@ -1,6 +1,7 @@
 ---
 title: LDAP authentication
 weight: 8
+aliases: ['/user-guide/ldap_auth/'] 
 ---
 
 Currently, Vitess supports two ways to authenticate to `vtgate` via the MySQL protocol:

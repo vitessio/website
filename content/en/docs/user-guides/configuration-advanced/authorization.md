@@ -1,6 +1,7 @@
 ---
 title: Authorization
-weight: 2 
+weight: 2
+aliases: ['/user-guide/authorization/'] 
 ---
 
 A common question is how to enforce fine-grained access control in Vitess.

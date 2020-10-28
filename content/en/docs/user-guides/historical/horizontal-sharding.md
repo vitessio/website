@@ -1,6 +1,7 @@
 ---
 title: Horizontal Sharding
 weight: 1
+aliases: ['/user-guide/horizontal-sharding/'] 
 ---
 
 {{< warning >}}

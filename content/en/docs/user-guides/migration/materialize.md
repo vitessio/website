@@ -1,6 +1,7 @@
 ---
 title: Materialize
 weight: 3
+aliases: ['/user-guide/materialize/'] 
 ---
 
 {{< info >}}
