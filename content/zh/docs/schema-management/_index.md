@@ -3,6 +3,9 @@ title: Schema Management
 description: More information about all things schema and VSchema
 weight: 6
 ---
+{{< info >}}
+因为这些文档不维护，所以它们是旧的。
+{{< /info >}}
 
 Using Vitess requires you to work with two different types of schemas:
 
