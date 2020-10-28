@@ -1,7 +1,7 @@
 ---
 title: Vertical Split
 weight: 2
-aliases: ['/user-guide/vertical-split/'] 
+aliases: ['/user-guides/vertical-split/'] 
 ---
 
 {{< warning >}}

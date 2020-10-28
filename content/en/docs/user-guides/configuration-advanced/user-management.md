@@ -1,7 +1,7 @@
 ---
 title: User Management and Authentication
 weight: 5
-aliases: ['/user-guide/user-management/'] 
+aliases: ['/user-guides/user-management/'] 
 ---
 
 Vitess uses its own mechanism for managing users and their permissions through

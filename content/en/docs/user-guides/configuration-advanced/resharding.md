@@ -1,7 +1,7 @@
 ---
 title: Resharding
 weight: 1
-aliases: ['/user-guide/resharding/'] 
+aliases: ['/user-guides/resharding/'] 
 ---
 
 {{< info >}}

@@ -1,7 +1,7 @@
 ---
 title: Making Schema Changes
 weight: 3
-aliases: ['/docs/schema-management/mysql-schema/', '/docs/user-guides/mysql-schema/', '/user-guide/making-schema-changes/']
+aliases: ['/docs/schema-management/mysql-schema/', '/docs/user-guides/mysql-schema/', '/user-guides/making-schema-changes/']
 ---
 
 For applying schema changes for MySQL instances managed by Vitess, there are a few options.

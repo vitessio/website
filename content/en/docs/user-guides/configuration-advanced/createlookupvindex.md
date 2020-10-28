@@ -1,7 +1,7 @@
 ---
 title: CreateLookupVindex
 weight: 11
-aliases: ['/user-guide/createlookupvindex/'] 
+aliases: ['/user-guides/createlookupvindex/'] 
 ---
 
 {{< info >}}

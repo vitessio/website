@@ -1,7 +1,7 @@
 ---
 title: Exporting data from Vitess
 weight: 8
-aliases: ['/user-guide/exporting-data/'] 
+aliases: ['/user-guides/exporting-data/'] 
 ---
 
 Since [VTGate](../../../concepts/vtgate/) supports the MySQL protocol, in many

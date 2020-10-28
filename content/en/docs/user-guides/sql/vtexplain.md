@@ -1,7 +1,7 @@
 ---
 title: Analyzing a SQL statement
 weight: 1
-aliases: ['/user-guide/vtexplain/'] 
+aliases: ['/user-guides/vtexplain/'] 
 ---
 
 # Introduction 

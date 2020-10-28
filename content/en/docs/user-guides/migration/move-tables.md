@@ -1,7 +1,7 @@
 ---
 title: MoveTables
 weight: 2
-aliases: ['/user-guide/move-tables/'] 
+aliases: ['/user-guides/move-tables/'] 
 ---
 
 {{< info >}}

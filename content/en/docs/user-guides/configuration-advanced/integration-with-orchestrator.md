@@ -1,7 +1,7 @@
 ---
 title: Integration with Orchestrator
 weight: 4
-aliases: ['/user-guide/integration-with-orchestrator/'] 
+aliases: ['/user-guides/integration-with-orchestrator/'] 
 ---
 
 [Orchestrator](https://github.com/github/orchestrator) is a tool for managing MySQL replication topologies, including automated failover. It can detect master failure and initiate a recovery in a matter of seconds.

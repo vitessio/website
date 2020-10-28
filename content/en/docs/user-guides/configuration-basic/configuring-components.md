@@ -1,7 +1,7 @@
 ---
 title: Configuring Components
 weight: 2
-aliases: ['/docs/launching/server-configuration/', '/docs/user-guides/server-configuration/', '/user-guide/configuring-components/']
+aliases: ['/docs/launching/server-configuration/', '/docs/user-guides/server-configuration/', '/user-guides/configuring-components/']
 ---
 
 ## Managed MySQL

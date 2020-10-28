@@ -1,7 +1,7 @@
 ---
 title: Analyzing SQL statements in bulk
 weight: 2
-aliases: ['/user-guide/vtexplain-in-bulk/'] 
+aliases: ['/user-guides/vtexplain-in-bulk/'] 
 ---
 
 # Introduction 
