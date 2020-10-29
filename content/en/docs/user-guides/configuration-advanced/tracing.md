@@ -1,7 +1,7 @@
 ---
 title: Tracing
 weight: 14
-aliases: ['/user-guides/tracing/'] 
+aliases: ['/docs/user-guides/tracing/'] 
 ---
 
 # Vitess tracing

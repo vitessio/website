@@ -1,7 +1,7 @@
 ---
 title: Reparenting
 weight: 3
-aliases: ['/user-guides/reparenting/']
+aliases: ['/docs/user-guides/reparenting/']
 ---
 
 **Reparenting** is the process of changing a shard's master tablet from one host to another or changing a replica tablet to have a different master. Reparenting can be initiated manually or it can occur automatically in response to particular database conditions. As examples, you might reparent a shard or tablet during a maintenance exercise or automatically trigger reparenting when a master tablet dies.
