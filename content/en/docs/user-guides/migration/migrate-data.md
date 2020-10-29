@@ -1,6 +1,7 @@
 ---
 title: Migrating data into Vitess
 weight: 1
+aliases: ['/docs/user-guides/migrate-data/'] 
 ---
 
 # Introduction 

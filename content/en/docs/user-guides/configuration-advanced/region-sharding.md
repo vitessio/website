@@ -1,6 +1,7 @@
 ---
 title: Region-based Sharding
 weight: 10
+aliases: ['/docs/user-guides/region-sharding/'] 
 ---
 
 {{< info >}}
