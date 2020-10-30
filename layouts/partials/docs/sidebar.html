@@ -9,54 +9,43 @@
       <img class="docs-menu-logo" src="{{ $logoUrl }}">
     </a>
   </header>
-
-  <aside class="docs-menu-bar">
-    {{ range $docsSections }}
-    {{ $isCurrentPage := eq .RelPermalink $currentUrl }}
-    <div class="docs-section">
-      <a class="docs-section-title{{ if $isCurrentPage }} is-active{{ end }}" href="{{ .RelPermalink }}">
-        {{ .Title }}
-      </a>
-    </div>
-
-    <div class="docs-section">
-      <a class="docs-section-title{{ if $isCurrentSection }} is-active{{ end }}" href="{{ .RelPermalink }}">
-        {{ .Name }}
-      </a>
-
-      {{ if $isCurrentSection }}
-      <div class="docs-section-list">
-        <ul>
-          {{ $is := $page.IsMenuCurrent "main" . }}
-          {{ $has := $page.HasMenuCurrent "main" . }}
-          {{ if .HasChildren }} 
-            <li>
-              <a href="{{ .URL }}">
-                {{ .Name }}
-                {{ if $is }}[Is]{{ end }}
-                {{ if $has }}[Has]{{ end }}
-                {{ if .HasChildren }}[Children]{{ end }}
-              </a>
-                <!-- If the menu item has children, include this partial template again (recursively) -->
-                {{ partial "menu_recursive.html" (dict "menu" .Children "page" $page "site" $site) }}
-            </li>
-          {{ else }}
-            <li>
-              <a href="{{ .URL }}">
-                {{ .Name }}
-                {{ if $is }}[Is]{{ end }}
-                {{ if $has }}[Has]{{ end }}
-                {{ if .HasChildren }}[Children]{{ end }}
-              </a>
-            </li>
-          {{ end }}
+  
+<!-- sidebar start -->
+<aside>
+    <ul>
+        {{ $currentPage := . }}
+        {{ range .Site.Menus.main }}
+            {{ if .HasChildren }}
+                <li class="{{ if $currentPage.HasMenuCurrent "main" . }}active{{ end }}">
+                    <a href="#">
+                        {{ .Pre }}
+                        <span>{{ .Name }}</span>
+                    </a>
+                </li>
+                <ul class="sub-menu">
+                    {{ range .Children }}
+                        <li class="{{ if $currentPage.IsMenuCurrent "main" . }}active{{ end }}">
+                            <a href="{{ .URL }}">{{ .Name }}</a>
+                        </li>
+                    {{ end }}
+                </ul>
+            {{ else }}
+                <li>
+                    <a href="{{ .URL }}">
+                        {{ .Pre }}
+                        <span>{{ .Name }}</span>
+                    </a>
+                </li>
+            {{ end }}
         {{ end }}
-        </ul>
+        <li>
+            <a href="#" target="_blank">Hardcoded Link 1</a>
+        </li>
+        <li>
+            <a href="#" target="_blank">Hardcoded Link 2</a>
+        </li>
+    </ul>
+</aside>
 
-      </div>
-      {{ end }}
-    </div>
-    {{ end }}
-    {{ end }}
-  </aside>
+
 </div>
