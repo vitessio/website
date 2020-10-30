@@ -131,4 +131,4 @@ The [`ApplyVSchema`](../../../reference/programs/vtctl/#applyvschema) command ap
 
 ### RebuildVSchemaGraph
 
-The [`RebuildVSchemaGraph`](../../../programs/vtctl/#rebuildvschemagraph) command propagates the global VSchema to a specific cell or the list of specified cells.
+The [`RebuildVSchemaGraph`](../../../reference/programs/vtctl/#rebuildvschemagraph) command propagates the global VSchema to a specific cell or the list of specified cells.
