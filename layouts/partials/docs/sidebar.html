@@ -32,8 +32,8 @@
       {{ if $isCurrentSection }}
       <div class="docs-section-list">   
         <ul>
-            {{ $currentPage := . }}
-            {{ range $docsSections }}
+            {{ $currentPage := (or (eq $currentUrl .RelPermalink) (eq .Title $currentSubSection)) }}
+            {{ range .Pages }}
               {{ if .HasChildren }}
                   <li class="{{ if $currentPage.HasMenuCurrent "docs" . }}active{{ end }}">
                       <a href="#">
