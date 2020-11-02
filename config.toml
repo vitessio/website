@@ -2,7 +2,12 @@ baseURL = "https://vitess.io"
 canonifyurls = true
 disableKinds = ["taxonomy", "taxonomyTerm"]
 googleAnalytics = "UA-163836834-1"
-sectionPagesMenu = "main"
+
+## Sidebar menu
+[menu]
+  [[menu.main]]
+    identifier = "docs"
+    url = "/docs/"
 
 # Syntax highlighting settings
 pygmentsCodeFences = true
