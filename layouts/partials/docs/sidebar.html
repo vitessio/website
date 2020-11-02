@@ -3,6 +3,7 @@
 {{ $currentSection := .CurrentSection.Name }}
 {{ $currentUrl     := .RelPermalink }}
 {{$currentSubSection := ""}}
+
 <div class="docs-menu">
   <header class="docs-menu-header">
     <a href="{{ site.BaseURL }}">
@@ -10,25 +11,29 @@
     </a>
   </header>
 
-<div class="docs-section">
-  <a class="docs-section-title{{ if $isCurrentPage }} is-active{{ end }}" href="{{ .RelPermalink }}">
-    {{ .Title }}
-  </a>
-</div>
+  <aside class="docs-menu-bar">
+    {{ range $docsSections }}
+    {{ $isCurrentPage := eq .RelPermalink $currentUrl }}
+     <div class="docs-section">
+      <a class="docs-section-title{{ if $isCurrentPage }} is-active{{ end }}" href="{{ .RelPermalink }}">
+        {{ .Title }}
+      </a>
+    </div>
 
-<div class="docs-section">
-  <a class="docs-section-title{{ if $isCurrentSection }} is-active{{ end }}" href="{{ .RelPermalink }}">
-    {{ .Name }}
-  </a>
-</div>
+    {{ range .Sections }}
+    {{ $isCurrentSection := eq $currentSection .Name }}
 
-  {{ if $isCurrentSection }}
-  <div class="docs-section-list">
-  <!-- sidebar start -->
-  <aside> 
+    <div class="docs-section">
+      <a class="docs-section-title{{ if $isCurrentSection }} is-active{{ end }}" href="{{ .RelPermalink }}">
+        {{ .Name }}
+      </a>
+    </div>
+
+      {{ if $isCurrentSection }}
+      <div class="docs-section-list">   
         <ul>
-          {{ $isCurrentPage := eq .RelPermalink $currentUrl }}
-          {{ range $docsSections }}
+            {{ $currentPage := . }}
+            {{ range .Site.Menus.main }}
               {{ if .HasChildren }}
                   <li class="{{ if $currentPage.HasMenuCurrent "main" . }}active{{ end }}">
                       <a href="#">
@@ -51,9 +56,11 @@
                       </a>
                   </li>
               {{ end }}
-          {{ end }}
+            {{ end }}
          </ul>
-  </div>
-  {{ end }}
+      </div>
+      {{ end }}
+    {{ end }}
+    {{ end }}
   </aside>
 </div>
