@@ -5,7 +5,7 @@ aliases: ['/docs/user-guides/resharding/']
 ---
 
 {{< info >}}
-This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../../get-started/operator), [local](../../../get-started/local) or [Helm](../../../get-started/helm) installation ready. It also assumes that the [MoveTables](https://vitess.io/docs/user-guides/migration/move-tables/) user guide has been followed.
+This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../../get-started/operator), [local](../../../get-started/local) or [Helm](../../../get-started/helm) installation ready. It also assumes that the [MoveTables](../../migration/move-tables/) user guide has been followed.
 {{< /info >}}
 
 ## Preparation
