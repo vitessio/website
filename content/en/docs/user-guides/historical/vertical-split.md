@@ -5,7 +5,7 @@ aliases: ['/docs/user-guides/vertical-split/']
 ---
 
 {{< warning >}}
-In Vitess 6, Vertical Split became obsolete with the introduction of MoveTables! It is recommended to skip this guide, and continue on with the [MoveTables user guide](../../migration/move-tables) instead.
+In Vitess 6, Vertical Split became obsolete with the introduction of MoveTables! It is recommended to skip this guide, and continue on with the [MoveTables user guide](../../migration/move-tables) instead. If you continue please note that all scripts referenced are now contained in a different repo called ['legacy_local'](https://github.com/vitessio/vitess/tree/master/examples/legacy_local).
 {{< /warning >}}
 
 {{< info >}}
