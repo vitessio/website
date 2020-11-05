@@ -1,7 +1,7 @@
 ---
 title: MySQL Compatibility
 weight: 1
-aliases: ['/docs/reference/mysql-server-protocol/']
+aliases: ['/docs/reference/mysql-server-protocol/'] ['/docs/reference/mysql-compatibility/']
 ---
 
 VTGate servers speak both gRPC and the MySQL server protocol. This allows you to connect to Vitess as if it were a MySQL Server without any changes to application code. This document refers to known compatibility issues where Vitess differs from MySQL.
