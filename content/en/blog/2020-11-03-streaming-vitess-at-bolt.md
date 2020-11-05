@@ -20,6 +20,7 @@ One of the most important features that Vitess provides is its built-in sharding
 Figure 1 below illustrates how back-end services interact with Vitess. At a high level, services connect to stateless VTGate instances through a load balancer. Each VTGate has the Vitess cluster's topology cached in its memory and redirects queries to the correct shards and the correct VTTablet (and its underlying MySQL instance) within the shards. More on VTTablet is written below.
 
 ![N|Solid](https://miro.medium.com/max/700/0*LdC3F7KMvK4G7KFy)
+
 Figure 1. Vitess architecture. Reference: https://www.planetscale.com/vitess
 
 Other useful features provided by Vitess are:
@@ -61,7 +62,9 @@ VTGate exposes a gRPC service called VStream. It is a server-side streaming serv
 Behind the scene, as shown in Figure 2, VStream reads change events from multiple VTTablets - one [VTTablet](https://vitess.io/docs/reference/programs/vttablet/) per shard. Therefore, it doesn't send duplicates from multiple VTTablets for a given shard. Each VTTablet is a proxy to its MySQL instance. A typical topology would include one master VTTablet and its corresponding MySQL instance, and multiple replica VTTablets, each of which is the proxy of its own replica MySQL instance. A VTTablet gets change events from its underlying MySQL instance and sends the change events back to VTGate, which in turn sends the change events back to VStream's gRPC client.
 
 When subscribing to the VStream service, the client can specify a VGTID and [Tablet Type](https://vitess.io/docs/concepts/tablet/#tablet-types) (e.g. MASTER, REPLICA). The VGTID tells the position from which VStream starts to send change events. Essentially, VGTID includes a list of (keyspace, shard, shard GTID) tuples. The Tablet Type tells which MySQL instance (primary or replica) in each shard do we read change events from.
+
 ![N|Solid](https://miro.medium.com/max/700/0*OIeDfbv2EqGVgEec)
+
 Figure 2. VStream architecture. Reference: https://vitess.io/docs/concepts/vstream
 
 Some advantages of using VStream gRPC are:
@@ -87,17 +90,20 @@ At a high level, as you can see below, connector instances are created in Kafka 
 As shown in Figure 3, each connector captures change events from all shards in a specific keyspace. If the keyspace is not sharded, the connector can still capture change events from the only shard in the keyspace. When it's the first time that the connector starts, it reads from the current VGTID position of all shards in the keyspace. Because it subscribes to all shards, it continuously captures change events from all shards and sends them to Kafka. It automatically supports the Vitess Reshard operation, there is no data loss, nor duplication.
 
 ![N|Solid](https://miro.medium.com/max/700/0*PRCv_c8wcqGZWf4N)
+
 Figure 3. Each connector subscribes to all shards of a specific keyspace
 
 #### Option 2:
 As shown in Figure 4, each connector instance captures change events from a specific keyspace/shard pair. The connector instance gets the initial (the current) VGTID position of the keyspace/shard pair from VTCtld gRPC, which is another Vitess component. Each connector instance, independently, uses the VGTID it gets to subscribe to VStream gRPC and continuously capture change events from VStream and sends them to Kafka. To support the Vitess Reshard operation, you would need more manual operations.
 
 ![N|Solid](https://miro.medium.com/max/700/0*Ae66tfbW0nwvXfDP)
+
 Figure 4. Each connector subscribes to one shard of a specific keyspace
 
 Internally, each connector task uses a gRPC thread to constantly receive change events from VStream and puts the events into an internal blocking queue. The connector task thread polls events out of the queue and sends them to Kafka, as can be seen in Figure 5.
 
 ![N|Solid](https://miro.medium.com/max/678/0*kgiUQXqCDmJ7y68j)
+
 Figure 5. How each connector task works internally
 
 ### Replication Challenges
