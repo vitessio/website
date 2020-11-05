@@ -5,7 +5,6 @@ slug: '2020-11-03-streaming-vitess-at-bolt'
 tags: ['Vitess','MySQL','Debezium','Kafka','CDC','Change Data Capture','Apache']
 title: 'Streaming Vitess at Bolt'
 ---
-# Streaming Vitess at Bolt
 ![N|Solid](https://miro.medium.com/max/700/1*ZvdFNRq9XxJzQZ7hMOREVg.png)
 
 Traditionally, MySQL has been used to power most of the backend services at Bolt. We've designed our schemas in a way that they're sharded into different MySQL clusters. Each MySQL cluster contains a subset of data and consists of one primary and multiple replication nodes.
