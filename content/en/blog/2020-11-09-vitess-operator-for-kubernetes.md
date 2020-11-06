@@ -20,7 +20,7 @@ In this blog, I would like to uncover our newly announced [Vitess Operator for K
 * Run sample database implementation (Optional). 
 
 #### Install the Vitess Operator
-```sh
+```sh linenums="1"
 $ gcloud container clusters create vitess-k8s-operator --cluster-version 1.14 --zone us-east1-b --enable-autoscaling --min-nodes 8 --max-nodes 12
 Creating cluster vitess-k8s-operator in us-east1-b... Cluster is being health-checked (master is healthy)...done.
 Created [https://container.googleapis.com/v1/projects/planetscale-dev/zones/us-east1-b/clusters/vitess-k8s-operator].
