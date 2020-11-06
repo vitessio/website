@@ -7,7 +7,7 @@ title: 'Vitess Operator for Kubernetes'
 
 ---
 ### Introduction 
-<para>In this blog, I would like to uncover our newly announced [Vitess Operator for Kubernetes](https://github.com/planetscale/vitess-operator). This post demonstrates the sample implementation of [Vitess](https://vitess.io/) in Kubernetes topology. I also explore common DBA tasks by demonstrating how they are handled in the Vitess ecosystem. Vitess, out of the box, comes with a lot of tools and utilities that one has to either incorporate or develop to manage MySQL topology. Let’s take a look at the capabilities of Vitess in these areas and demonstrate how they are performed under the operator realm. </para>
+In this blog, I would like to uncover our newly announced [Vitess Operator for Kubernetes](https://github.com/planetscale/vitess-operator). This post demonstrates the sample implementation of [Vitess](https://vitess.io/) in Kubernetes topology. I also explore common DBA tasks by demonstrating how they are handled in the Vitess ecosystem. Vitess, out of the box, comes with a lot of tools and utilities that one has to either incorporate or develop to manage MySQL topology. Let’s take a look at the capabilities of Vitess in these areas and demonstrate how they are performed under the operator realm. 
 #### Prerequisites 
 * GKE Account 
 * Kubectl 
@@ -20,15 +20,16 @@ title: 'Vitess Operator for Kubernetes'
 * Run sample database implementation (Optional). 
 
 #### Install the Vitess Operator
-```shell
-$ gcloud container clusters create vitess-k8s-operator --cluster-version 1.14 --zone us-east1-b --enable-autoscaling --min-nodes 8 --max-nodes 12
+```js
+var wrap = require('word-wrap');
+warp('$ gcloud container clusters create vitess-k8s-operator --cluster-version 1.14 --zone us-east1-b --enable-autoscaling --min-nodes 8 --max-nodes 12
 Creating cluster vitess-k8s-operator in us-east1-b... Cluster is being health-checked (master is healthy)...done.
 Created [https://container.googleapis.com/v1/projects/planetscale-dev/zones/us-east1-b/clusters/vitess-k8s-operator].
 To inspect the contents of your cluster, go to: https://console.cloud.google.com/kubernetes/workload_/gcloud/us-east1-b/vitess-k8s-operator?project=planetscale-dev
 kubeconfig entry generated for vitess-k8s-operator.
 
 NAME                 LOCATION    MASTER_VERSION  MASTER_IP      MACHINE_TYPE   NODE_VERSION    NUM_NODES  STATUS
-vitess-k8s-operator  us-east1-b  1.14.10-gke.50  35.237.26.125  n1-standard-1  1.14.10-gke.50  3          RUNNING
+vitess-k8s-operator  us-east1-b  1.14.10-gke.50  35.237.26.125  n1-standard-1  1.14.10-gke.50  3          RUNNING');
 ```
 ```
 $ cd vitess/examples/operator
