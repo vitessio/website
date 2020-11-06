@@ -7,6 +7,8 @@ title: 'Streaming Vitess at Bolt'
 ---
 ![N|Solid](https://miro.medium.com/max/700/1*ZvdFNRq9XxJzQZ7hMOREVg.png)
 
+Previously posted on [link](https://medium.com/bolt-labs/streaming-vitess-at-bolt-f8ea93211c3f) at Nov 3, 2020. 
+
 Traditionally, MySQL has been used to power most of the backend services at Bolt. We've designed our schemas in a way that they're sharded into different MySQL clusters. Each MySQL cluster contains a subset of data and consists of one primary and multiple replication nodes.
 
 Once data is persisted to the database, we use the [Debezium MySQL Connector](https://debezium.io/documentation/reference/connectors/mysql.html) to [capture data change](https://www.confluent.io/blog/how-bolt-adopted-cdc-with-confluent-for-real-time-data-and-analytics/) events and send them to Kafka. This gives us an easy and reliable way to communicate changes between back-end microservices.
