@@ -394,7 +394,15 @@ zone1-2548885007 commerce - replica 10.100.5.32:15000 10.100.5.32:3306 []
 $ kubectl exec --stdin --tty -c percona-toolkit example-vttablet-zone1-2469782763-bfadd780  -- bash
 ```
 ```
-bash-4.4$ pt-online-schema-change --socket /vt/socket/mysql.sock --user=vt_dba h=localhost,D=vt_commerce,t=corder --critical-load threads_running=10000000000 --max-load threads_running:20 --tries create_triggers:10000:1,drop_triggers:10000:1,swap_tables:10000:1,update_foreign_keys:10000:1,copy_rows:10000:1 --set-vars lock_wait_timeout=5 --pause-file=/tmp/pause-osc --alter="MODIFY order_id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT" --recursion-method=none --execute
+bash-4.4$ pt-online-schema-change --socket /vt/socket/mysql.sock \
+--user=vt_dba h=localhost,D=vt_commerce,t=corder \
+--critical-load threads_running=10000000000 \
+--max-load threads_running:20 \
+--tries create_triggers:10000:1,drop_triggers:10000:1,swap_tables:10000:1,update_foreign_keys:10000:1,copy_rows:10000:1 \
+--set-vars lock_wait_timeout=5 \
+--pause-file=/tmp/pause-osc \
+--alter="MODIFY order_id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT" \
+--recursion-method=none --execute
 No slaves found.  See --recursion-method if host example-vttablet-zone1-2469782763-bfadd780 has slaves.
 Not checking slave lag because no slaves were found and --check-slave-lag was not specified.
 Operation, tries, wait:
