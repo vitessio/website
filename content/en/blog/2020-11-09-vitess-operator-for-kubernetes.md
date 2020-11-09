@@ -25,7 +25,8 @@ In this blog, I would like to uncover our newly announced [Vitess Operator for K
 $ gcloud container clusters create vitess-k8s-operator --cluster-version 1.14 --zone us-east1-b --enable-autoscaling --min-nodes 8 --max-nodes 12
 Creating cluster vitess-k8s-operator in us-east1-b... Cluster is being health-checked (master is healthy)...done.
 Created [https://container.googleapis.com/v1/projects/planetscale-dev/zones/us-east1-b/clusters/vitess-k8s-operator].
-To inspect the contents of your cluster, go to: https://console.cloud.google.com/kubernetes/workload_/gcloud/us-east1-b/vitess-k8s-operator?project=planetscale-dev
+To inspect the contents of your cluster, go to: 
+https://console.cloud.google.com/kubernetes/workload_/gcloud/us-east1-b/vitess-k8s-operator?project=planetscale-dev
 kubeconfig entry generated for vitess-k8s-operator.
 
 NAME                 LOCATION    MASTER_VERSION  MASTER_IP      MACHINE_TYPE   NODE_VERSION    NUM_NODES  STATUS
@@ -137,12 +138,14 @@ Created service account [my-backup-service-account].
 ```
 Grant the service account access to the bucket gsutil iam ch
 ```
-$ gsutil iam ch serviceAccount:my-backup-service-account@planetscale-dev.iam.gserviceaccount.com:objectViewer,objectCreator,objectAdmin gs://my-vitess-operator-backup-bucket
+$ gsutil iam ch serviceAccount:my-backup-service-account@planetscale-dev.iam.gserviceaccount.com:objectViewer,objectCreator,objectAdmin \
+gs://my-vitess-operator-backup-bucket
 ```
 Create and download a key for the service account
 ```
 $ gcloud iam service-accounts keys create ~/gcs_key.json --iam-account my-backup-service-account@planetscale-dev.iam.gserviceaccount.com
-created key [ccd65b5a198298f9ca07ee6ab901a2492ea142c7] of type [json] as [/Users/askdba/gcs_key.json] for [my-backup-service-account@planetscale-dev.iam.gserviceaccount.com]
+created key [ccd65b5a198298f9ca07ee6ab901a2492ea142c7] of type [json] as [/Users/askdba/gcs_key.json] 
+for [my-backup-service-account@planetscale-dev.iam.gserviceaccount.com]
 ```
 Upload the service account key as a k8s Secret
 ```
