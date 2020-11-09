@@ -7,7 +7,11 @@ title: 'Vitess Operator for Kubernetes'
 
 ---
 ### Introduction 
-<p>In this blog, I would like to uncover our newly announced [Vitess Operator for Kubernetes](https://github.com/planetscale/vitess-operator). This post demonstrates the sample implementation of [Vitess](https://vitess.io/) in Kubernetes topology. I also explore common DBA tasks by demonstrating how they are handled in the Vitess ecosystem. Vitess, out of the box, comes with a lot of tools and utilities that one has to either incorporate or develop to manage MySQL topology. Let’s take a look at the capabilities of Vitess in these areas and demonstrate how they are performed under the operator realm.</p>  
+In this blog, I would like to uncover our newly announced [Vitess Operator for Kubernetes](https://github.com/planetscale/vitess-operator). This post demonstrates the sample implementation of [Vitess](https://vitess.io/) in Kubernetes topology. 
+I also explore common DBA tasks by demonstrating how they are handled in the Vitess ecosystem. 
+Vitess, out of the box, comes with a lot of tools and utilities that one has to either incorporate or develop to manage MySQL topology. 
+Let’s take a look at the capabilities of Vitess in these areas and demonstrate how they are performed under the operator realm.
+
 #### Prerequisites 
 * GKE Account 
 * Kubectl 
