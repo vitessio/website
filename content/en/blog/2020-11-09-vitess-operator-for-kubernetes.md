@@ -203,7 +203,8 @@ If we had configured backups in the VitessCluster before the initial deployment,
 ```
 $ kubectl logs example-commerce-x-x-vtbackup-init-c6db73c9
 ERROR: logging before flag.Parse: E0928 12:08:20.897936       1 syslogger.go:122] can't connect to syslog
-E0928 12:08:21.075860       1 vtbackup.go:177] Can't take backup: refusing to upload initial backup of empty database: the shard commerce/- already has at least one tablet that may be serving (zone1-2469782763); you must take a backup from a live tablet instead
+E0928 12:08:21.075860       1 vtbackup.go:177] Can't take backup: refusing to upload initial backup of empty database: the shard commerce/- 
+already has at least one tablet that may be serving (zone1-2469782763); you must take a backup from a live tablet instead
 ```
 This means we need to take a backup manually to initialize backup storage:
 ```
@@ -253,7 +254,8 @@ zone1-2469782763 commerce - master 10.100.1.37:15000 10.100.1.37:3306 []
 zone1-2548885007 commerce - replica 10.100.4.17:15000 10.100.4.17:3306 []
 
 $ vtctlclient -logtostderr RestoreFromBackup zone1-2548885007
-I0928 15:28:04.783441   80378 main.go:64] I0928 12:28:04.172914 backup.go:247] I0928 12:28:04.172087 xtrabackupengine.go:398] Restore: returning replication position 3d370970-0182-11eb-9c3b-767b9aee7c34:1-9,3d3e599f-0182-11eb-88a6-a69501e63cc3:1-3
+I0928 15:28:04.783441   80378 main.go:64] I0928 12:28:04.172914 backup.go:247] I0928 12:28:04.172087 xtrabackupengine.go:398] 
+Restore: returning replication position 3d370970-0182-11eb-9c3b-767b9aee7c34:1-9,3d3e599f-0182-11eb-88a6-a69501e63cc3:1-3
 I0928 15:28:04.783449   80378 main.go:64] I0928 12:28:04.173170 backup.go:247] I0928 12:28:04.172126 backup.go:308] Restore: starting mysqld for mysql_upgrade
 I0928 15:28:07.271912   80378 main.go:64] I0928 12:28:07.177696 backup.go:247] I0928 12:28:07.176828 backup.go:315] Restore: running mysql_upgrade
 I0928 15:28:08.752154   80378 main.go:64] I0928 12:28:08.657377 backup.go:247] I0928 12:28:08.656674 backup.go:326] Restore: populating local_metadata
