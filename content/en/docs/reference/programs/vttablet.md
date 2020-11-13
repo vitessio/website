@@ -353,7 +353,7 @@ The following global options apply to `vttablet`:
 | -transaction_limit_by_subcomponent |  | Include CallerID.subcomponent when considering who the user is for the purpose of transaction limit. |
 | -transaction_limit_by_username |  | Include VTGateCallerID.username when considering who the user is for the purpose of transaction limit. (default true) |
 | -transaction_limit_per_user | float | Maximum number of transactions a single user is allowed to use at any time, represented as fraction of -transaction_cap. (default 0.4) |
-| -transaction_shutdown_grace_period | int | how long to wait (in seconds) for transactions to complete during graceful shutdown. |
+| -shutdown_grace_period | float | how long to wait (in seconds) for queries and transactions to complete during graceful shutdown. |
 | -twopc_abandon_age | float | time in seconds. Any unresolved transaction older than this time will be sent to the coordinator to be resolved. |
 | -twopc_coordinator_address | string | address of the (VTGate) process(es) that will be used to notify of abandoned transactions. |
 | -twopc_enable |  | if the flag is on, 2pc is enabled. Other 2pc flags must be supplied. |
