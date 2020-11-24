@@ -64,6 +64,7 @@ vitess-operator-7f9c9d58f6-q5zlf                     1/1     Running     0      
 As you can see Vitess is completely built over unsharded keyspace with one “Primary(Master)” and one “Replica” comes with a fully managed cluster. 
 
 ### Step 1 -  Set portforwards:
+
 ```
 $ cat pf.sh ; ./pf.sh &
 #!/bin/sh
@@ -176,6 +177,7 @@ default-character-set = utf8mb4
 ```
 
 ### Step 4 - Install MySQL Client Connector
+
 ```
 $ pip install mysqlclient
 Collecting mysqlclient
@@ -243,10 +245,12 @@ Django version 3.1.2, using settings 'weatherapp.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
-### Step 8 - Go to  Django Admin page at http://127.0.0.1:8000/admin 
+### Step 8 - Go to  Django Admin page 
+
+Point your browser to http://127.0.0.1:8000/admin 
 
 <Insert Image> 
-You may continue to build the application from this point on with an example [here](https://www.digitalocean.com/community/tutorials/how-to-build-a-weather-app-in-django). 
+You may continue to build the application from this point on with an examplehi (https://www.digitalocean.com/community/tutorials/how-to-build-a-weather-app-in-django). 
 
 ### Conclusion 
 
@@ -254,5 +258,7 @@ Vitess is a very powerful sharding framework that comes with a built-in control 
 
 ### References 
 [How To Make a Django Blog App and Connect it to MySQL](https://www.digitalocean.com/community/tutorials/how-to-create-a-django-app-and-connect-it-to-a-database)
+
 [Getting Started With Django: Build A Weather App](https://www.digitalocean.com/community/tutorials/how-to-build-a-weather-app-in-django)
+
 [Django MySQL Notes](https://docs.djangoproject.com/en/3.1/ref/databases/#mysql-notes)
