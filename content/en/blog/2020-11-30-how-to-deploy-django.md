@@ -5,19 +5,19 @@ slug: '2020-11-30-how-to-deploy-django.md'
 tags: ['Vitess','MySQL','kubernetes','operator','cloud','GKE','sharding']
 title: 'How to deploy Django Application with Vitess Kubernetes Operator?`
 ---
-Django is a popular framework for Python application developers to turn their ideas into products super fast. It is fully loaded with extra packages and makes many tasks easy such as authorization and content administration. It’s also versatile, secure, and scalable just like Vitess. Django also supports a number of databases including MySQL one of which Vitess is allowing a scalable database without ever having to change the application code. So let’s take a look at how to combine forces of two great free and opensource frameworks. 
+Django is a popular framework for Python application developers to turn their ideas into products super fast. It is fully loaded with extra packages and makes many tasks easy such as authorization and content administration. It’s also versatile, secure, and scalable just like Vitess. Django also supports a number of [databases](https://docs.djangoproject.com/en/3.1/ref/databases/) including MySQL one of which Vitess is allowing a scalable database without ever having to change the application code. So let’s take a look at how to combine forces of two great free and opensource frameworks. 
 
-First of all, we’d like to build the backend of this architecture pointing to the Vitess cluster. We’ll use the Vitess Operator (link). You can see the details of the implementation here Vitess Operator for Kubernetes
+First of all, we’d like to build the backend of this architecture pointing to the Vitess cluster. We’ll use the [Vitess Operator](https://vitess.io/docs/get-started/operator/). You can see the details of the implementation here [Vitess Operator for Kubernetes](https://vitess.io/blog/2020-11-09-vitess-operator-for-kubernetes/)
 
 ### Prerequisites
 
 * Python environment locally (3.X) 
 * Kubernetes access (minikube, GKE)
-* Support for Django ORM via Vitess 
+* Support for Django ORM via [Vitess](https://github.com/vitessio/vitess/blob/d234083743d1cc9757ef673bf89be1a4a299b0b0/support/django/README.md) 
 
 For this example, we’re using GKE that I have access to the Kubernetes cluster already created. You can also do this via minikube locally. 
 
-Once the operator launched with an example backend database let’s just call it a “weatherapp”. We will create an initial weather database using the operator. 
+Once the operator launched with an [example](https://github.com/askdba/vitess_frameworks/blob/main/django/operator/operator.yaml) backend database let’s just call it a “weatherapp”. We will create an initial weather database using the operator. 
 Following section consists of steps including:
 Creating Vitess Operator pod
 Building Vitess Cluster Components (1x primary tablet, 1x replica tablet, 3x etcd pods, 1x vtgate,1x vtctld, 1x vitessbackup)  
@@ -43,7 +43,7 @@ $ kubectl get pods
 NAME                               READY   STATUS    RESTARTS   AGE
 vitess-operator-7f9c9d58f6-q5zlf   1/1     Running   0          20s
 ```
-We will initialize this cluster with a sample database called ‘weatherapp’ and user/password to access them will be embedded in the configuration file. We are basically creating a database which is analogous to a keyspace in Vitess. 
+We will initialize this cluster with a sample database called ‘weatherapp’ and user/password to access them will be embedded in the configuration [file](https://github.com/askdba/vitess_frameworks/blob/main/django/operator/101_initial_cluster.yaml.django). We are basically creating a database which is analogous to a keyspace in Vitess. 
 
 ```
 $ kubectl apply -f 101_initial_cluster.yaml.django
@@ -160,7 +160,7 @@ ALLOWED_HOSTS = ['127.0.0.1']
 ...
 ```
 
-Copy customs_db_backends directory to your project directory. You can clone Vitess project to a local directory.
+Copy customs_db_backends directory to your project directory. You can clone [Vitess](https://github.com/vitessio/vitess/blob/d234083743d1cc9757ef673bf89be1a4a299b0b0/support/django/README.md) project to a local directory.
 
 ```
 $ cp -r ~/vitess/support/django/custom_db_backends .
@@ -245,7 +245,7 @@ Quit the server with CONTROL-C.
 ### Step 8 - Go to  Django Admin page at http://127.0.0.1:8000/admin 
 
 <Insert Image> 
-You may continue to build the application from this point on with an example here. 
+You may continue to build the application from this point on with an example [here](https://www.digitalocean.com/community/tutorials/how-to-build-a-weather-app-in-django). 
 
 ### Conclusion 
 
