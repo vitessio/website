@@ -4,20 +4,23 @@ weight: 2
 aliases: ['/docs/user-guides/managed-online-schema-changes/']
 ---
 
-**Note:** this feature is **EXPERIMENTAL**. Also, the syntax for online-DDL is **subject to change**.
+**Note:** this feature is **EXPERIMENTAL**. The syntax for online DDL statements is **subject to change**.
 
 Vitess offers managed, online schema migrations, via [gh-ost](https://github.com/github/gh-ost) and [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html). As a quick breakdown:
 
-- Vitess recognizes a special `ALTER TABLE` syntax that indicates an online schema change request.
-- Vitess responds to an online schema change request with a job ID
-- Vitess resolves affected shards
-- A shard's `primary` tablet schedules the migration to run when possible
-- The tablets run migrations via `gh-ost` or `pt-online-schema-change`
-- Vitess provides the user a mechanism to view migration status, cancel or retry migrations, based on the job ID
+- Using the standard MySQL `ALTER TABLE` syntax.
+- With either `@@ddl_strategy` session variable set, or `-ddl_strategy` command line flag. 
+- Vitess responds to an online schema change request with a job ID.
+- Vitess resolves affected shards.
+- A shard's `primary` tablet schedules the migration to run when possible.
+- The tablets run migrations via `gh-ost` or `pt-online-schema-change`.
+- Vitess provides the user a mechanism to view migration status, cancel or retry migrations, based on the job ID.
 
 ## Syntax
 
 **Note:** the syntax is subject to change while this feature is in _experimental_ state.
+
+Use the standard MySQL `ALTER TABLE` syntax to run online DDL. Whether your schema migration runs synchronously (the default MySQL behavior) or asynchronously (aka online), is determined by the value of command line flags or a session variable.
 
 We assume we have a keyspace (schema) called `commerce`, with a table called `demo`, that has the following definition:
 
@@ -29,29 +32,40 @@ CREATE TABLE `demo` (
 ) ENGINE=InnoDB
 ```
 
-The following syntax is valid and is interpreted by Vitess as an online schema change request:
-
+Consider the following schema migration statement:
 ```sql
-ALTER WITH 'gh-ost' TABLE demo modify id bigint unsigned;
-ALTER WITH 'gh-ost' '--max-load="Threads_running=200"' TABLE demo modify id bigint unsigned;
-ALTER WITH 'pt-osc' TABLE demo ADD COLUMN created_timestamp TIMESTAMP NOT NULL;
-ALTER WITH 'pt-osc' '--null-to-not-null' TABLE demo ADD COLUMN created_timestamp TIMESTAMP NOT NULL;
+ALTER TABLE demo MODIFY id bigint UNSIGNED;
 ```
 
-`gh-ost` and `pt-osc` are the only supported values. Any other value is a syntax error. Specifics about `gh-ost` and `pt-online-schema-change` follow later on.
+This statement can be executed as:
 
-You may use this syntax either with `vtctlclient` or via `vtgate`
+- a `gh-ost`, managed online migration
+- a `pt-online-schema-change`, managed online migration
+- a synchronous, [unmanaged schema change](../unmanaged-schema-changes/)
+
+`gh-ost` and `pt-online-schema-change` (abbreviated as `pt-osc`) are the supported online DDL methods. Specifics about `gh-ost` and `pt-online-schema-change` follow later on.
+
+How the migration is executed depends on your `ddl_strategy` configuration, and how you run your query: via `vtctl/vtctlclient` or `VTGate`. Details follow.
+
+## ddl_strategy
+
+You will set either `@@ddl_strategy` session variable, or `-ddl_strategy` command line flag, to control your schema migration strategy, and specifically, to enable and configure online DDL. Details follow in next sections. Some initial examples:
+
+- Empty value (`''`) means the migration is synchronous, not an online DDL.
+- The value `"gh-ost"` instructs Vitess to run an online DDL via `gh-ost`.
+- The value `"pt-osc"` instructs Vitess to run an online DDL via `pt-online-schema-change`.
+- You may specify arguments for your tool of choice, e.g. `"gh-ost --max-load Threads_running=200"`. Details follow.
 
 ## ApplySchema
 
-Invocation is similar to direct DDL statements. However, the response is different:
+You may use `vtctl` or `vtctlclient` (the two are interchangeable for the purpose of this document) to apply schema changes. The `ApplySchema` command supports both synchronous and online schema migrations. To run an online schema migration you will supply the `-ddl_strategy` command line flag:
 
 ```shell
-$ vtctlclient ApplySchema -sql "ALTER WITH 'gh-ost' TABLE demo modify id bigint unsigned" commerce
+$ vtctlclient ApplySchema -ddl_strategy "gh-ost" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
 a2994c92_f1d4_11ea_afa3_f875a4d24e90
 ```
 
-When the user indicates online schema change (aka online DDL), `vtctl` registers an online-DDL request with global `topo`. This generates a job ID for tracking. `vtctl` does not try to resolve the shards nor the `primary` tablets. The command returns immediately, without waiting for the migration(s) to start. It prints out the job ID (`a2994c92_f1d4_11ea_afa3_f875a4d24e90` in the above)
+Notice how `ApplySchema` responds to an online DDL request with a UUID output. When the user indicates online schema change (aka online DDL), `vtctl` registers an online-DDL request with global `topo`. This generates a job ID for tracking. `vtctl` does not try to resolve the shards nor the `primary` tablets. The command returns immediately, without waiting for the migration(s) to start. It prints out the job ID (`a2994c92_f1d4_11ea_afa3_f875a4d24e90` in the above)
 
 If we immediately run `SHOW CREATE TABLE`, we are likely to still see the old schema:
 ```sql
@@ -64,18 +78,18 @@ CREATE TABLE `demo` (
 ) ENGINE=InnoDB
 ```
 
-We discuss how the migration jobs get scheduled and executed shortly. We will use the job ID for tracking.
+That's because the migration is to be processed and executed in the future. We discuss how the migration jobs get scheduled and executed shortly. We will use the job ID for tracking.
 
-`ApplySchema` will have vitess run some validations:
+`ApplySchema` will have Vitess run some validations:
 
 ```shell
-$ vtctlclient ApplySchema -sql "ALTER WITH 'gh-ost' TABLE demo add column status int" commerce
+$ vtctlclient ApplySchema -ddl_strategy "gh-ost" -sql "ALTER TABLE demo add column status int" commerce
 E0908 16:17:07.651284 3739130 main.go:67] remote error: rpc error: code = Unknown desc = schema change failed, ExecuteResult: {
   "FailedShards": null,
   "SuccessShards": null,
   "CurSQLIndex": 0,
   "Sqls": [
-    "ALTER WITH 'gh-ost' TABLE demo add column status int"
+    "ALTER TABLE demo add column status int"
   ],
   "ExecutorErr": "rpc error: code = Unknown desc = TabletManager.PreflightSchema on zone1-0000000100 error: /usr/bin/mysql: exit status 1, output: ERROR 1060 (42S21) at line 3: Duplicate column name 'status'\n: /usr/bin/mysql: exit status 1, output: ERROR 1060 (42S21) at line 3: Duplicate column name 'status'\n",
   "TotalTimeSpent": 144283260
@@ -86,13 +100,21 @@ Vitess was able to determine that the migration is invalid because a column name
 
 ## VTGate
 
-You may run online DDL directly from VTGate. For example:
+When connected to `VTGate`, your schema migration strategy is determined by:
+
+- `-ddl_strategy` command line flag, or:
+- `@@ddl_strategy` session variable.
+
+As a simple example, you may control the execution of a migration as follows:
 
 ```shell
 $ mysql -h 127.0.0.1 -P 15306 commerce
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 
-mysql> ALTER WITH 'pt-osc' TABLE demo ADD COLUMN sample INT;
+mysql> SET @@ddl_strategy='pt-osc';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> ALTER TABLE demo ADD COLUMN sample INT;
 +--------------------------------------+
 | uuid                                 |
 +--------------------------------------+
@@ -101,8 +123,15 @@ mysql> ALTER WITH 'pt-osc' TABLE demo ADD COLUMN sample INT;
 1 row in set (0.00 sec)
 ```
 
-Just like in the previous example, `VTGate` identifies that this is an online schema change request, and persists it in global `topo`, returning a job ID for tracking. Migration does not start immediately.
+Just like in the `ApplySchema` example, `VTGate` identifies that this is an online schema change request, and persists it in global `topo`, returning a job ID for tracking. Migration does not start immediately.
 
+`@@ddl_strategy` behaves like a MySQL session variable, though is only recognized by `VTGate`. Setting `@@ddl_strategy` only applies to that same connection and does not affect other connections. You may subsequently set `@@ddl_strategy` to different value.
+
+The initial value for `@@ddl_strategy` is derived from the `vtgate -ddl_strategy` command line flag. Examples:
+
+- If you run `vtgate` without `-ddl_strategy`, then `@@ddl_strategy` is empty, which implies schema migrations are synchronous. You will need to `set @@ddl_strategy='gh-ost'` to run followup `ALTER TABLE` statements via `gh-ost`.
+- If you run `vtgate -ddl_strategy "gh-ost"`, then `@@ddl_strategy` defaults to `'gh-ost'` in each new session. Any `ALTER TABLE` will run via `gh-ost`. You may `set @@ddl_strategy='pt-osc'` to make migrations run through `pt-online-schema-change`, or `set @@ddl_strategy=''` to run migrations synchronously.
+ 
 ## Migration flow and states
 
 We highlight how Vitess manages migrations internally, and explain what states a migration goes through.
@@ -121,7 +150,7 @@ We highlight how Vitess manages migrations internally, and explain what states a
 - The migration will either run to completion, fail, or be interrupted. If successful, it transitions into `complete` state, which is the end of the road for that migration. If failed or interrupted, it transitions to `failed` state. The user may choose to _retry_ failed migrations (see below).
 - The user is able to _cancel_ a migration (details below). If the migration hasn't started yet, it transitions to `cancelled` state. If the migration is `running`, then it is interrupted, and is expected to transition into `failed` state.
 
-By way of illustration, suppose a migration is now in `running` state, and is expected to keep on running for the next few hours. The user may initiate a new `ALTER WITH 'gh-ost' TABLE...` statement. It will persist in global `topo`. `vtctld` will pick it up and advertise it to the relevant tablets. Each will persist the migration request in `queued` state. None will run the migration yet, since another migration is already in progress. In due time, and when the executing migration completes (whether successfully or not), and assuming no other migrations are `queued`, the `primary` tablets, each in its own good time, will execute the new migration. 
+By way of illustration, suppose a migration is now in `running` state, and is expected to keep on running for the next few hours. The user may initiate a new `ALTER TABLE...` statement. It will persist in global `topo`. `vtctld` will pick it up and advertise it to the relevant tablets. Each will persist the migration request in `queued` state. None will run the migration yet, since another migration is already in progress. In due time, and when the executing migration completes (whether successfully or not), and assuming no other migrations are `queued`, the `primary` tablets, each in its own good time, will execute the new migration. 
 
 At this time, the user is responsible to track the state of all migrations. VTTablet does not report back to `vtctld`. This may change in the future.
 
@@ -249,7 +278,7 @@ $ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
 
 The user may retry running a migration. If the migration is in `failed` or in `cancelled` state, Vitess will re-run the migration, with exact same arguments as previously intended. If the migration is in any other state, `retry` does nothing.
 
-It is not possible to retry a migration with different options. e.g. if the user initially runs `ALTER WITH 'gh-ost' '--max-load Threads_running=200' TABLE demo MODIFY id BIGINT` and the migration failed, it is not possible to retry with `'--max-load Threads_running=500'`.
+It is not possible to retry a migration with different options. e.g. if the user initially runs `ALTER TABLE demo MODIFY id BIGINT` with `@@ddl_strategy='gh-ost --max-load Threads_running=200'` and the migration fails, retrying it will use exact same options. It is not possible to retry with `@@ddl_strategy='gh-ost --max-load Threads_running=500'`.
 
 Continuing the above example, where we cancelled a migration while running, we now retry it:
 
@@ -329,11 +358,11 @@ To be able to run online schema migrations via `gh-ost`:
 
 Vitess automatically creates a MySQL account for the migration, with a randomly generated password. The account is destroyed at the end of the migration.
 
-Vitess takes care of setting up the necessary command line flags. It automatically creates a hooks directory and populates it with hooks that report `gh-ost`'s progress back to Vitess. You may supply additional flags for your migration as part of the `ALTER` statement. Examples:
+Vitess takes care of setting up the necessary command line flags. It automatically creates a hooks directory and populates it with hooks that report `gh-ost`'s progress back to Vitess. You may supply additional flags for your migration as part of `@@ddl_strategy` session variable (using `VTGate`) or `-ddl_strategy` command line flag (using `vtctl`). Examples:
 
-- `ALTER WITH 'gh-ost' '--max-load Threads_running=200' TABLE demo MODIFY id BIGINT`
-- `ALTER WITH 'gh-ost' '--critical-load Threads_running=500 --critical-load-hibernate-seconds=60' --default-retries=512 TABLE demo MODIFY id BIGINT`
-- `ALTER WITH 'gh-ost' '--allow-nullable-unique-key --chunk-size 200' TABLE demo MODIFY id BIGINT`
+- `set @@ddl_strategy='gh-ost --max-load Threads_running=200';`
+- `set @@ddl_strategy='gh-ost --max-load Threads_running=200 --critical-load Threads_running=500 --critical-load-hibernate-seconds=60 --default-retries=512';`
+- `vtctl -ddl_strategy "gh-ost --allow-nullable-unique-key --chunk-size 200" ApplySchema ...`
 
 Do not override the following flags: `alter, database, table, execute, max-lag, force-table-names, serve-socket-file, hooks-path, hooks-hint-token, panic-flag-file`.
 
@@ -350,11 +379,11 @@ Do not override the following flags: `alter, database, table, execute, max-lag, 
 
 Vitess automatically creates a MySQL account for the migration, with a randomly generated password. The account is destroyed at the end of the migration.
 
-Vitess takes care of supplying the command line flags, the DSN, the username & password. It also sets up `PLUGINS` used to communicate migration progress back to the tablet. You may supply additional flags for your migration as part of the `ALTER` statement. Examples:
+Vitess takes care of supplying the command line flags, the DSN, the username & password. It also sets up `PLUGINS` used to communicate migration progress back to the tablet. You may supply additional flags for your migration as part of `@@ddl_strategy` session variable (using `VTGate`) or `-ddl_strategy` command line flag (using `vtctl`). Examples:
 
-- `ALTER WITH 'pt-osc' '--null-to-not-null' TABLE demo MODIFY id BIGINT`
-- `ALTER WITH 'pt-osc' '--max-load Threads_running=200' TABLE demo MODIFY id BIGINT`
-- `ALTER WITH 'pt-osc' '--alter-foreign-keys-method auto --chunk-size 200' TABLE demo MODIFY id BIGINT`
+- `set @@ddl_strategy='pt-osc --null-to-not-null';`
+- `set @@ddl_strategy='pt-osc --max-load Threads_running=200';`
+- `vtctl -ddl_strategy "pt-osc --alter-foreign-keys-method auto --chunk-size 200" ApplySchema ...`
 
 Vitess tracks the state of the `pt-osc` migration. If it fails, Vitess makes sure to drop the migration triggers. Vitess keeps track of the migration even if the tablet itself restarts for any reason. Normally that would terminate the migration; vitess will cleanup the triggers if so, or will happily let the migration run to completion if not.
 
@@ -365,7 +394,7 @@ Do not override the following flags: `alter, pid, plugin, dry-run, execute, new-
 
 ## Throttling
 
-Schema migrations use the tablet throttler, which is a cooperative throttler service based on replication lag. The tablet throttler automatically detectes topology `REPLICA` tablets and adapts to changes in the topology. See [Tablet throttler](../../../reference/features/tablet-throttler/).
+Schema migrations use the tablet throttler, which is a cooperative throttler service based on replication lag. The tablet throttler automatically detects topology `REPLICA` tablets and adapts to changes in the topology. See [Tablet throttler](../../../reference/features/tablet-throttler/).
 
 **NOTE** that at this time the tablet throttler is an experimental feature and is opt in. Enable it with `vttablet`'s `-enable-lag-throttler` flag. If the tablet throttler is disabled, schema migrations will not throttle on replication lag.
 
@@ -388,7 +417,7 @@ For schema migrations, Vitess allows operations on the virtual table `_vt.schema
   - `artifacts`: tables created by the migration. This can be used to determine which tables need cleanup.
   - `alter`: the exact `alter` statement used by the migration
   - `options`: any options passed by the user (e.g. `--max-load=Threads_running=200`)
-  - Various timestamps indicating the migratoin progress
+  - Various timestamps indicating the migration progress
   Aggregate functions do not work as expected and should be avoided. `LIMIT` and `OFFSET` are not supported.
 - `UPDATE`: you may directly update the status of a migration. You may only change status into `cancel` or `retry`, which Vitess interprets similarly to a `vtctlclient OnlineDDL cancel/retry` command. However, you get greater control as you may filter on a specific `shard`.
 - `DELETE`: unsupported
