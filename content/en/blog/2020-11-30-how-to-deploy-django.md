@@ -249,6 +249,11 @@ Quit the server with CONTROL-C.
 
 Point your browser to http://127.0.0.1:8000/admin 
 
+<figure>
+    <img src="/files/django_blog/admin00.png"/>
+    <img src="/files/django_blog/admin01.png"/>
+</figure>
+
 You may continue to build the application from this point on with an example [here](https://www.digitalocean.com/community/tutorials/how-to-build-a-weather-app-in-django). 
 
 ### Conclusion 
