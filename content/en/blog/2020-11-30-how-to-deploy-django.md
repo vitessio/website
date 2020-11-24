@@ -250,7 +250,7 @@ Quit the server with CONTROL-C.
 Point your browser to http://127.0.0.1:8000/admin 
 
 <Insert Image> 
-You may continue to build the application from this point on with an examplehi (https://www.digitalocean.com/community/tutorials/how-to-build-a-weather-app-in-django). 
+You may continue to build the application from this point on with an example [here](https://www.digitalocean.com/community/tutorials/how-to-build-a-weather-app-in-django). 
 
 ### Conclusion 
 
@@ -258,7 +258,5 @@ Vitess is a very powerful sharding framework that comes with a built-in control 
 
 ### References 
 [How To Make a Django Blog App and Connect it to MySQL](https://www.digitalocean.com/community/tutorials/how-to-create-a-django-app-and-connect-it-to-a-database)
-
 [Getting Started With Django: Build A Weather App](https://www.digitalocean.com/community/tutorials/how-to-build-a-weather-app-in-django)
-
 [Django MySQL Notes](https://docs.djangoproject.com/en/3.1/ref/databases/#mysql-notes)
