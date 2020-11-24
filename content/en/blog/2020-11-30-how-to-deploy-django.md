@@ -1,9 +1,10 @@
 ﻿---
 author: 'Alkin Tezuysal'
 date: 2020-11-30
-slug: '2020-11-30-how-to-deploy-django.md'
+slug: '2020-11-30-how-to-deploy-django'
 tags: ['Vitess','MySQL','kubernetes','operator','cloud','GKE','sharding']
 title: 'How to deploy Django Application with Vitess Kubernetes Operator?`
+
 ---
 Django is a popular framework for Python application developers to turn their ideas into products super fast. It is fully loaded with extra packages and makes many tasks easy such as authorization and content administration. It’s also versatile, secure, and scalable just like Vitess. Django also supports a number of [databases](https://docs.djangoproject.com/en/3.1/ref/databases/) including MySQL one of which Vitess is allowing a scalable database without ever having to change the application code. So let’s take a look at how to combine forces of two great free and opensource frameworks. 
 
