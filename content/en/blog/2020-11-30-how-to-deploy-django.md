@@ -6,9 +6,9 @@ tags: ['Vitess','MySQL','kubernetes','operator','cloud','GKE','sharding']
 title: 'How to deploy Django Application with Vitess Kubernetes Operator'
 
 ---
-Django is a popular framework for Python application developers to turn their ideas into products super fast. It is fully loaded with extra packages and makes many tasks easy such as authorization and content administration. It’s also versatile, secure, and scalable just like Vitess. Django also supports a number of [databases](https://docs.djangoproject.com/en/3.1/ref/databases/) including MySQL one of which Vitess is allowing a scalable database architecture without ever having to change the application code. So let’s take a look at how to combine forces of two open source frameworks. 
+Django is a popular framework for Python application developers to turn their ideas into products super fast. It is fully loaded with extra packages and makes many tasks easy such as authorization and content administration. It’s also versatile, secure, and scalable just like Vitess. Django also supports a number of [databases](https://docs.djangoproject.com/en/3.1/ref/databases/) including MySQL, one of which scales Vitess without ever having to change the application code. Let’s take a look at how to combine the strenghts of two open source frameworks. 
 
-First of all, we’d like to build the backend of this architecture pointing to the Vitess cluster. We’ll use the [Vitess Operator](https://vitess.io/docs/get-started/operator/). You can see the details of the implementation here [Vitess Operator for Kubernetes](https://vitess.io/blog/2020-11-09-vitess-operator-for-kubernetes/)
+First of all, we built the backend of this architecture pointing to the Vitess cluster. We’ll use the [Vitess operator](https://vitess.io/docs/get-started/operator/). You can see the details of the implementation on the blog post [*Vitess Operator for Kubernetes*](https://vitess.io/blog/2020-11-09-vitess-operator-for-kubernetes/).
 
 ### Prerequisites
 
@@ -16,13 +16,12 @@ First of all, we’d like to build the backend of this architecture pointing to 
 * Kubernetes access (minikube, GKE)
 * Support for Django ORM via [Vitess](https://github.com/vitessio/vitess/blob/d234083743d1cc9757ef673bf89be1a4a299b0b0/support/django/README.md) 
 
-For this example, we’re using GKE that I have access to the Kubernetes cluster already created. You can also do this via minikube locally. 
+For this example, we’re using GKE and the Kubernetes cluster already created. You can also do this via minikube locally. 
 
-Once the operator launched with an [example](https://github.com/askdba/vitess_frameworks/blob/main/django/operator/operator.yaml) backend database let’s just call it a “weatherapp”. We will create an initial weather database using the operator. 
-Following section consists of steps including:
-Creating Vitess Operator pod
-Building Vitess Cluster Components (1x primary tablet, 1x replica tablet, 3x etcd pods, 1x vtgate,1x vtctld, 1x vitessbackup)  
-Creating ‘weatherapp’ database schema and users. 
+Once the operator launches with an [example](https://github.com/askdba/vitess_frameworks/blob/main/django/operator/operator.yaml) backend database, let’s call it a “weatherapp”,we will create an initial weather database using the operator. 
+The following section includes these steps:
+(1) creating a Vitess Operator pod and (2) building Vitess Cluster Components (1x primary tablet, 1x replica tablet, 3x etcd pods, 1x vtgate,1x vtctld, 1x vitessbackup)  
+Create the ‘weatherapp’ database schema and users. 
 
 ```
 $ kubectl apply -f operator.yaml
@@ -44,7 +43,7 @@ $ kubectl get pods
 NAME                               READY   STATUS    RESTARTS   AGE
 vitess-operator-7f9c9d58f6-q5zlf   1/1     Running   0          20s
 ```
-We will initialize this cluster with a sample database called ‘weatherapp’ and user/password to access them will be embedded in the configuration [file](https://github.com/askdba/vitess_frameworks/blob/main/django/operator/101_initial_cluster.yaml.django). We are basically creating a database which is analogous to a keyspace in Vitess. 
+Initialize this cluster with a sample database called ‘weatherapp’ and user/password to access it will be embedded in the configuration [file](https://github.com/askdba/vitess_frameworks/blob/main/django/operator/101_initial_cluster.yaml.django). We are basically creating a database which is analogous to a keyspace in Vitess. 
 
 ```
 $ kubectl apply -f 101_initial_cluster.yaml.django
@@ -61,7 +60,7 @@ example-zone1-vtctld-1d4dcad0-67bfd56b8b-4dr9s       1/1     Running     2      
 example-zone1-vtgate-bc6cde92-59b88bc8d8-6wz86       1/1     Running     2          94s
 vitess-operator-7f9c9d58f6-q5zlf                     1/1     Running     0          4m30s
 ```
-As you can see Vitess is completely built over unsharded keyspace with one “Primary(Master)” and one “Replica” comes with a fully managed cluster. 
+As you can see Vitess is completely built over an unsharded keyspace with one “Primary (Master)” and one “Replica” and is a fully managed cluster. 
 
 ### Step 1 -  Set portforwards:
 
@@ -116,9 +115,9 @@ mysql> show databases;
 1 row in set (0.16 sec)
 ```
 
-#### Step 3 - Setup application environment
+### Step 3 - Setup application environment
 
-From this point on we go back to building Django application now that we have setup Vitess Cluster with MySQL backend. We will build a Django project using django-admin command
+At this point we go back to building the Django application now that we have set up the Vitess cluster with a MySQL backend. We  build a Django project using the django-admin command.
 
 ```
 $ mkdir my_weather_app
@@ -218,7 +217,7 @@ Running migrations:
 
 ### Step 6 - Create an admin user
 
-Next, create an administrative user to access the Django Admin Interface.
+Create an administrative user to access the Django Admin interface.
 ```
 $ python manage.py createsuperuser
 Username (leave blank to use 'askdba'): askdba
