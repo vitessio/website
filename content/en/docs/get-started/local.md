@@ -64,7 +64,7 @@ Download the [latest binary release](https://github.com/vitessio/vitess/releases
 tar -xzf vitess-6.0.20-20200508-147bc5a.tar.gz
 cd vitess-6.0.20-20200508-147bc5a
 sudo mkdir -p /usr/local/vitess
-sudo mv * /usr/local/vitess/
+sudo cp -r * /usr/local/vitess/
 ```
 
 Make sure to add `/usr/local/vitess/bin` to the `PATH` environment variable. You can do this by adding the following to your `$HOME/.bashrc` file:
