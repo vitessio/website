@@ -4,6 +4,7 @@ date: 2020-07-28
 slug: '2020-07-28-announcing-vitess-7'
 tags: ['release']
 title: 'Announcing Vitess 7'
+description: 'We are pleased to announce the general availability of Vitess 7. Highlights include replica transactions, savepoint support, and per-session system variables.'
 ---
 
 On behalf of the Vitess maintainers team, I am pleased to announce the general availability of Vitess 7.
