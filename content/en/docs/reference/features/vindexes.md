@@ -111,6 +111,26 @@ Of the above categories, `Functional Unique` and `Lookup Unique Unowned` Vindexe
 
 However, it is generally not recommended to use a Lookup Vindex as a Primary Vindex because it is too slow for resharding. If absolutely unavoidable, it is recommended to add a `keyspace ID` column to the tables that need this level of control of the row-to-shard mapping. While resharding, Vitess can use that column to efficiently compute the target shard. Vitess can also be configured to auto-populate that column on inserts. This is done using the reverse map feature explained [below](#insert).
 
+### Defining Vindexes
+
+Vindexes are defined in the [VSchema](../vschema/) inside the `Vindexes` section of every keyspace. The `column_vindexes` section of each table in that keyspace may refer to the Vindex by name. Here is an example:
+
+``` json
+    "name_keyspace_idx": {
+      "type": "lookup",
+      "params": {
+        "table": "name_keyspace_idx",
+        "from": "name",
+        "to": "keyspace_id"
+      },
+      "owner": "user"
+    }
+```
+
+In the above case, the name of the vindex is `name_keyspace_idx`. It is of type `lookup`, and it is owned by the `user` table.
+
+Every Vindex has an optional `params` section that contains a map of string key-value pairs. The keys and values defer depending on the vindex type and are explained below.
+
 ### How Vindexes are used
 
 #### Cost
@@ -159,28 +179,43 @@ Note: You can have `NULL` values for the primary vindex column, as long as that 
 
 Vitess provides the following predefined Vindexes:
 
-| Name | Type | Description | Primary | Reversible | Nullable | Cost | Data types |
-| :--------------------- | ---- | ----------------------- | ------- | -------- | --------- | ---- | ---------- |
-| binary | Functional Unique | Identity | Yes | Yes | Yes | 0 | Any |
-| binary\_md5 | Functional Unique | MD5 hash | Yes | No | Yes | 1 | Any |
-| consistent\_lookup | Lookup NonUnique | Lookup table non-unique values | No | No | Yes [only if](../vindexes/#ignore-nulls) | 20 | Any |
-| consistent\_lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | No | Yes [only if](../vindexes/#ignore-nulls) | 10 | Any |
-| hash | Functional Unique | DES null-key hash | Yes | Yes | No | 1 | 64 bit or smaller numeric or equivalent type |
-| lookup | Lookup NonUnique | Lookup table non-unique values | No | No | Yes [only if](../vindexes/#ignore-nulls) | 20 | Any |
-| lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | No | Yes [only if](../vindexes/#ignore-nulls) | 10 | Any |
-| null | Functional Unique | Always map to keyspace ID 0 | Yes | No | Yes | 100 | Any |
-| numeric | Functional Unique | Identity | Yes | Yes | No | 0 | 64 bit or smaller numeric or equivalent type |
-| numeric\_static\_map | Functional Unique | JSON file statically mapping input string values to keyspace IDs | Yes | No | No | 1 | Any |
-| region\_experimental | Functional Unique | Multi-column prefix-based hash for use in geo-partitioning | Yes | No | No | 1 | String and numeric type |
-| region\_json | Functional Unique | Multi-column prefix-based hash combined with a JSON map for key-to-region mapping, for use in geo-partitioning | Yes | No | No | 1 | String and numeric type |
-| reverse\_bits | Functional Unique | Bit reversal | Yes | Yes | No | 1 | 64 bit or smaller numeric or equivalent type |
-| unicode\_loose\_md5 | Functional Unique | Case-insensitive (UCA level 1) MD5 hash | Yes | No | Yes | 1 | String or binary types |
-| unicode\_loose\_xxhash | Functional Unique | Case-insensitive (UCA level 1) xxHash64 hash | Yes | No | Yes | 1 | String or binary types |
-| xxhash | Functional Unique | xxHash64 hash | Yes | No | Yes | 1 | Any |
+Name | Type | Description | Primary | Multi-column | Reversible | Nullable | Cost | Data types |
+---- | ---- | ----------- | ------- | ------------ | ---------- | -------- | ---- | ---------- |
+binary | Functional Unique | Identity | Yes | No | Yes | Yes | 0 | Any |
+binary\_md5 | Functional Unique | MD5 hash | Yes | No | No | Yes | 1 | Any |
+consistent\_lookup | Lookup NonUnique | Lookup table non-unique values | No | Identify Row | No | Yes [only if](../vindexes/#ignore-nulls) | 20 | Any |
+consistent\_lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | Identify Row | No | Yes [only if](../vindexes/#ignore-nulls) | 10 | Any |
+hash | Functional Unique | DES null-key hash | Yes | No | Yes | No | 1 | 64 bit or smaller numeric or equivalent type |
+lookup | Lookup NonUnique | Lookup table non-unique values | No | Identify Row | No | Yes [only if](../vindexes/#ignore-nulls) | 20 | Any |
+lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | Identify Row | No | Yes [only if](../vindexes/#ignore-nulls) | 10 | Any |
+null | Functional Unique | Always map to keyspace ID 0 | Yes | No | No | Yes | 100 | Any |
+numeric | Functional Unique | Identity | Yes | No | Yes | No | 0 | 64 bit or smaller numeric or equivalent type |
+numeric\_static\_map | Functional Unique | JSON file statically mapping input string values to keyspace IDs | Yes | No | No | No | 1 | Any |
+region\_experimental | Functional Unique | Multi-column prefix-based hash for use in geo-partitioning | Yes | No | No | No | 1 | String and numeric type |
+region\_json | Functional Unique | Multi-column prefix-based hash combined with a JSON map for key-to-region mapping, for use in geo-partitioning | Yes | No | No | No | 1 | String and numeric type |
+reverse\_bits | Functional Unique | Bit reversal | Yes | No | Yes | No | 1 | 64 bit or smaller numeric or equivalent type |
+unicode\_loose\_md5 | Functional Unique | Case-insensitive (UCA level 1) MD5 hash | Yes | No | No | Yes | 1 | String or binary types |
+unicode\_loose\_xxhash | Functional Unique | Case-insensitive (UCA level 1) xxHash64 hash | Yes | No | No | Yes | 1 | String or binary types |
+xxhash | Functional Unique | xxHash64 hash | Yes | No | No | Yes | 1 | Any |
 
 Consistent lookup vindexes, as described above, are a new category of Vindexes that are meant to replace the existing lookup Vindexes implementation. For the time being, they have a different name to allow for users to switch back and forth.
 
-Custom Vindexes can also be created as needed. At the moment there is no formal plugin system for custom Vindexes, but the interface is well-defined, and thus custom implementations including code performing arbitrary lookups in other systems can be accommodated.
+Lookup Vindexes support the following parameters:
+
+* `table`: The backing table for the lookup vindex. It is recommended that the table name be qualified by its keyspace.
+* `from`: The list of "from" columns. The first column is used for routing, and the rest of the columns are used for identifying the owner row.
+* `to`: The name of the "to" keyspace\_id column.
+* `autocommit` (false): if true, vindex entries are updated in their own autocommit transaction. This is useful if values never get remapped to different values. For example, if the input column comes from an auto-increment value.
+* `write_only` (false): if true, the vindex is kept updated, but a lookup will return all shards if the key is not found. This mode is used while the vindex is being populated and backfilled.
+* `ignore_nulls` (false): if true, null values in input columns do not create entries in the lookup table. Otherwise, a null input results in an error.
+
+The `numeric_static_map` vindex requires a `json_path` parameter. The file must contain a json that maps input values to keyspace ids.
+
+The `region_experimental` vindex is an experimental vindex that uses the first one or two bytes of the input value as prefix for keyspace id. The rest of the bits are hashed. This allows you to group users of the same region within the same group of shards. The vindex requires a `region_bytes` parameter that specifies if the prefix is one or two bytes.
+
+The `region_json` vindex requires an additional `region_map` file name that is used to compute the region from the country. The `region_bytes` is presumed to contain country codes.
+
+Custom Vindexes can also be created as needed. At the moment there is no formal plugin system for custom Vindexes, but the interface is well-defined, and thus custom implementations including code performing arbitary lookups in other systems can be accomodated.
 
 \
 \
