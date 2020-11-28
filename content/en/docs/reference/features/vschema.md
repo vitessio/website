@@ -7,7 +7,7 @@ aliases: ['/docs/schema-management/vschema/','/docs/reference/vschema/']
 
 VSchema stands for Vitess Schema. It is an abstraction layer that presents a unified view of the underlying keyspaces and shards, and gives the semblance of a single MySQL server.
 
-For example, the VSchema will contain the information about the sharding key for a sharded table. When the application issues a query with a WHERE clause that references the key, the VSchema information will be used to route the query to the appropriate shard.
+For example, VSchema will contain the information about the sharding key for a sharded table. When the application issues a query with a WHERE clause that references the key, the VSchema information will be used to route the query to the appropriate shard.
 
 ## Architecture
 
@@ -17,7 +17,7 @@ The VSchema is specified on a per-keyspace basis. Additionally, a separate set o
 
 ## Database Access Model
 
-A Vitess Keyspace is the logical equivalent to a MySQL database. The usual syntax used to access databases in mysql work in Vitess as well. For example, you can connect to a specific database by specifying the database name in the connection parameter. You can also change the database you are connected to through the `use` statement. While connected to a database, you can access a table from a different keyspace by qualifying the table name in your query, like `select & from other_keyspace.table`.
+A Vitess Keyspace is the logical equivalent to a MySQL database. The usual syntax used to access databases in mysql work in Vitess as well. For example, you can connect to a specific database by specifying the database name in the connection parameter. You can also change the database you are connected to through the `use` statement. While connected to a database, you can access a table from a different keyspace by qualifying the table name in your query, like `select * from other_keyspace.table`.
 
 ### Tablet Types
 
@@ -82,6 +82,8 @@ You can use the following commands for maintaining the VSchema:
 * `RebuildVSchemaGraph [-cells=c1,c2,...]`
 * `GetSrvVSchema <cell>`
 * `DeleteSrvVSchema <cell>`
+
+In order to verify that a VTGate has loaded SrvVSchema correctly, you can visit the `/debug/vschema` URL on the VTGate's http port.
 
 ### Unsharded Table
 
@@ -303,11 +305,11 @@ The examples/demo also shows more tricks you can perform:
 * `music_extra` defines an additional Functional Vindex called `keyspace_id` which the demo auto-populates using the reverse mapping capability.
 * There is also a `name_info` table that showcases a case-insensitive Vindex `unicode_loose_md5`.
 
-## RoutingRules
+## Routing Rules
 
-The RoutingRules section of the VSchema can be used to dynamically route traffic of a tablet to a different table than originally referenced in the query. This feature is used by the `MoveTables` workflow allowing you to change the application independently of when the actual traffic is moved from the old source table to the new target table.
+The `RoutingRules` section of the VSchema can be used to dynamically route traffic of a tablet to a different table than originally referenced in the query. This feature is used by the `MoveTables` workflow allowing you to change the application independently of when the actual traffic is moved from the old source table to the new target table.
 
-Here is an example of RoutingRules
+Here is an example of `RoutingRules`
 
 ``` json
 {
