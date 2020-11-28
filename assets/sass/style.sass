@@ -193,5 +193,26 @@ figure
   &.is-active
     position: fixed
 
-.navbar-item-search
-  padding-left: 0
+// Display the search input above other nav links for the mobile navbar,
+// plus fixes for the DocSearch widget to prevent clipping on mobile.
++until($navbar-breakpoint)
+	.navbar-menu.is-active
+		display: flex
+		flex-direction: column-reverse
+
+  #search-bar
+    display: block
+
+  .algolia-autocomplete
+    display: block !important
+
+    .ds-dropdown-menu
+      max-width: 100vw
+      min-width: fit-content
+
+
+// Snug up the search input + social icons for the full-width navbar  
++from($navbar-breakpoint)
+	.navbar-item-search
+		padding-left: 0
+	
