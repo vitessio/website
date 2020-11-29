@@ -5,7 +5,7 @@
 <nav class="navbar docs-navbar is-dark">
   <div class="navbar-brand">
     <a class="navbar-item is-hidden-desktop" href="{{ site.BaseURL }}">
-      <img src="{{ $logoUrl }}" alt="Vitess logo" style="height:42px;width:39px">
+      <img src="{{ $logoUrl }}" alt="Vitess logo" height="42">
     </a>
 
     <a role="button" class="navbar-burger burger">
@@ -16,6 +16,7 @@
   </div>
 
   <div class="navbar-menu">
+	{{ partial "search-bar.html" . }}
     <div class="navbar-end">
 
       <a class="navbar-item has-text-weight-bold" href="{{ "/docs" | relLangURL }}">
@@ -34,7 +35,5 @@
         {{ partial "social-buttons.html" (dict "footer" false "social" $social) }}
       </div>
 	</div>
-	
-	{{ partial "search-bar.html" . }}
   </div>
 </nav>
