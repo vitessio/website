@@ -88,7 +88,9 @@
         <div class="navbar-item">
           {{ partial "social-buttons.html" (dict "footer" false "social" $social) }}
         </div>
-      </div>
+	  </div>
+	  
+	  {{ partial "search-bar.html" . }}
     </div>
   </div>
 </nav>
