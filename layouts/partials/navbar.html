@@ -26,6 +26,8 @@
     </div>
 
     <div class="navbar-menu">
+		{{ partial "search-bar.html" . }}
+		
       <div class="navbar-end">
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link has-text-weight-bold" href="{{ "/docs" | relLangURL }}">
@@ -89,8 +91,6 @@
           {{ partial "social-buttons.html" (dict "footer" false "social" $social) }}
         </div>
 	  </div>
-	  
-	  {{ partial "search-bar.html" . }}
     </div>
   </div>
 </nav>

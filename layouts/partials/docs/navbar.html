@@ -16,6 +16,7 @@
   </div>
 
   <div class="navbar-menu">
+	{{ partial "search-bar.html" . }}
     <div class="navbar-end">
 
       <a class="navbar-item has-text-weight-bold" href="{{ "/docs" | relLangURL }}">
@@ -34,7 +35,5 @@
         {{ partial "social-buttons.html" (dict "footer" false "social" $social) }}
       </div>
 	</div>
-	
-	{{ partial "search-bar.html" . }}
   </div>
 </nav>
