@@ -119,7 +119,8 @@ mysql> show databases;
 
 ### Step 3 - Setup application environment
 
-At this point we go back to building the Django application now that we have set up the Vitess cluster with a MySQL backend. We  build a Django project using the django-admin command.
+Now that we have set up the Vitess cluster with a MySQL backend, we can proceed to building the Django application. We will build a Django project using the django-admin command.
+
 
 ```
 $ mkdir my_weather_app
