@@ -8,8 +8,7 @@ title: 'How to deploy a Django Application with the Vitess Kubernetes Operator'
 ---
 Django is a popular framework for Python application developers. It includes packages which make tasks like authorization and content administration easier. Django supports a number of [databases](https://docs.djangoproject.com/en/3.1/ref/databases/) including MySQL which makes it possible to run a Django application over Vitess without having to change the application code. Let’s take a look at how to combine the strengths of these two open source frameworks. 
 
-
-First of all, we built this example using Vitess operator. We’ll use the [Vitess operator](https://vitess.io/docs/get-started/operator/). You can see the details of the implementation on the blog post [*Vitess Operator for Kubernetes*](https://vitess.io/blog/2020-11-09-vitess-operator-for-kubernetes/).
+We built this example using Vitess operator. We’ll use the [Vitess operator](https://vitess.io/docs/get-started/operator/). You can see the details of the implementation in the blog post [*Vitess Operator for Kubernetes*](https://vitess.io/blog/2020-11-09-vitess-operator-for-kubernetes/).
 
 ### Prerequisites
 
@@ -19,7 +18,8 @@ First of all, we built this example using Vitess operator. We’ll use the [Vite
 
 For this example, we’re using GKE with an existing Kubernetes cluster. You can also do this via minikube locally. 
 
-Once the operator launches with an [example](https://github.com/askdba/vitess_frameworks/blob/main/django/operator/operator.yaml) backend database, let’s call it a “weatherapp”,we will create an initial weather database using the operator. 
+The Django example we are using is the ["weather app"](https://github.com/askdba/vitess_frameworks/tree/main/django/my_weather_app). We first launch the vitess operator using the provided [configuration](https://github.com/askdba/vitess_frameworks/blob/main/django/operator/operator.yaml).
+
 The following section includes these steps:
 (1) creating a Vitess Operator pod and (2) building Vitess Cluster Components (1x primary tablet, 1x replica tablet, 3x etcd pods, 1x vtgate,1x vtctld, 1x vitessbackup)  
 Create the ‘weatherapp’ database schema and users. 
