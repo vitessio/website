@@ -22,9 +22,8 @@ The Django example we are using is the ["weather app"](https://github.com/askdba
 
 The following section includes these steps:
 * Creating a Vitess Operator pod 
-* Building Vitess Cluster Components (1x primary tablet, 1x replica tablet, 3x etcd pods, 1x vtgate,1x vtctld, 1x vitessbackup)  
-
-Create the ‘weatherapp’ database schema and users. 
+* Building Vitess Cluster Components (1x primary tablet, 1x replica tablet, 3x etcd pods, 1x vtgate, 1x vtctld, 1x vitessbackup)  
+* Create the ‘weatherapp’ database schema and users. 
 
 ```
 $ kubectl apply -f operator.yaml
