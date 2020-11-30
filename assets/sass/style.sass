@@ -221,3 +221,17 @@ figure
 
   &:hover
     opacity: 1
+
+// When jumping to anchor links, we need to account for the height of the sticky navbar.
+// Otherwise, the anchored header will be occluded by the navbar. 
+// See https://css-tricks.com/hash-tag-links-padding/
+$navbar-anchor-offset: calc(#{$navbar-height} + 16px)
+
+h1, h2, h3, h4, h5, h6
+  &:before
+    display: block
+    content: ' '
+    margin-top: calc(-1 * #{$navbar-anchor-offset})
+    height: $navbar-anchor-offset
+    visibility: hidden
+    pointer-events: none
