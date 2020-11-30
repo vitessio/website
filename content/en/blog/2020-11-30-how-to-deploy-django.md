@@ -8,7 +8,7 @@ title: 'How to deploy a Django Application with the Vitess Kubernetes Operator'
 ---
 Django is a popular framework for Python application developers to turn their ideas into products super fast. It is fully loaded with extra packages and makes many tasks easy such as authorization and content administration. It’s also versatile, secure, and scalable just like Vitess. Django also supports a number of [databases](https://docs.djangoproject.com/en/3.1/ref/databases/) including MySQL, one of which scales Vitess without ever having to change the application code. Let’s take a look at how to combine the strenghts of two open source frameworks. 
 
-First of all, we built the backend of this architecture pointing to the Vitess cluster. We’ll use the [Vitess operator](https://vitess.io/docs/get-started/operator/). You can see the details of the implementation on the blog post [*Vitess Operator for Kubernetes*](https://vitess.io/blog/2020-11-09-vitess-operator-for-kubernetes/).
+First of all, we built this example using Vitess operator. We’ll use the [Vitess operator](https://vitess.io/docs/get-started/operator/). You can see the details of the implementation on the blog post [*Vitess Operator for Kubernetes*](https://vitess.io/blog/2020-11-09-vitess-operator-for-kubernetes/).
 
 ### Prerequisites
 
@@ -16,7 +16,7 @@ First of all, we built the backend of this architecture pointing to the Vitess c
 * Kubernetes access (minikube, GKE)
 * Support for Django ORM via [Vitess](https://github.com/vitessio/vitess/blob/d234083743d1cc9757ef673bf89be1a4a299b0b0/support/django/README.md) 
 
-For this example, we’re using GKE and the Kubernetes cluster already created. You can also do this via minikube locally. 
+For this example, we’re using GKE with an existing Kubernetes cluster. You can also do this via minikube locally. 
 
 Once the operator launches with an [example](https://github.com/askdba/vitess_frameworks/blob/main/django/operator/operator.yaml) backend database, let’s call it a “weatherapp”,we will create an initial weather database using the operator. 
 The following section includes these steps:
