@@ -61,7 +61,8 @@ example-zone1-vtctld-1d4dcad0-67bfd56b8b-4dr9s       1/1     Running     2      
 example-zone1-vtgate-bc6cde92-59b88bc8d8-6wz86       1/1     Running     2          94s
 vitess-operator-7f9c9d58f6-q5zlf                     1/1     Running     0          4m30s
 ```
-As you can see Vitess is completely built over an unsharded keyspace with one “Primary (Master)” and one “Replica” and is a fully managed cluster. 
+As you can see this brings up a fully functional managed Vitess cluster with an unsharded keyspace consisting of one “Primary (Master)” and one “Replica”. 
+
 
 ### Step 1 -  Set portforwards:
 
@@ -118,7 +119,8 @@ mysql> show databases;
 
 ### Step 3 - Setup application environment
 
-At this point we go back to building the Django application now that we have set up the Vitess cluster with a MySQL backend. We  build a Django project using the django-admin command.
+Now that we have set up the Vitess cluster with a MySQL backend, we can proceed to building the Django application. We will build a Django project using the django-admin command.
+
 
 ```
 $ mkdir my_weather_app
@@ -190,7 +192,8 @@ Successfully installed mysqlclient-2.0.1
 
 ### Step 5 - Build Django Framework over Vitess cluster
 
-At this stage, we’re ready to run the migration to initial Django metadata. 
+At this stage, we’re ready to run the migrations to create initial Django metadata. 
+
 ```
 $ python manage.py migrate
 Operations to perform:
@@ -255,7 +258,8 @@ Point your browser to [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin)
     <figcaption><div class="figure-title">User/Role Management Screen</figcaption>
 </figure>
 
-You may continue to build the application from this point on with an example [here](https://www.digitalocean.com/community/tutorials/how-to-build-a-weather-app-in-django). 
+You may continue to build the application from this point by following this [example](https://www.digitalocean.com/community/tutorials/how-to-build-a-weather-app-in-django). 
+
 
 ### Conclusion 
 
