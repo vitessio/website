@@ -257,7 +257,8 @@ Point your browser to [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin)
     <figcaption><div class="figure-title">User/Role Management Screen</figcaption>
 </figure>
 
-You may continue to build the application from this point on with an example [here](https://www.digitalocean.com/community/tutorials/how-to-build-a-weather-app-in-django). 
+You may continue to build the application from this point by following this [example](https://www.digitalocean.com/community/tutorials/how-to-build-a-weather-app-in-django). 
+
 
 ### Conclusion 
 
