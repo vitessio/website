@@ -67,7 +67,7 @@ wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
 tar -xzf ${file}
 cd ${file/.tar.gz/}
 sudo mkdir -p /usr/local/vitess
-sudo mv * /usr/local/vitess/
+sudo cp -r * /usr/local/vitess/
 ```
 
 Make sure to add `/usr/local/vitess/bin` to the `PATH` environment variable. You can do this by adding the following to your `$HOME/.bashrc` file:
