@@ -192,7 +192,8 @@ Successfully installed mysqlclient-2.0.1
 
 ### Step 5 - Build Django Framework over Vitess cluster
 
-At this stage, we’re ready to run the migration to initial Django metadata. 
+At this stage, we’re ready to run the migrations to create initial Django metadata. 
+
 ```
 $ python manage.py migrate
 Operations to perform:
