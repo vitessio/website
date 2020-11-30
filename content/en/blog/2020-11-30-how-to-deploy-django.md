@@ -162,7 +162,7 @@ ALLOWED_HOSTS = ['127.0.0.1']
 ...
 ```
 
-Copy customs_db_backends directory to your project directory. You can clone [Vitess](https://github.com/vitessio/vitess/blob/d234083743d1cc9757ef673bf89be1a4a299b0b0/support/django/README.md) project to a local directory.
+Copy customs_db_backends directory to your project directory. You can clone [Vitess](https://github.com/vitessio/vitess/tree/master) project to a local directory.
 
 ```
 $ cp -r ~/vitess/support/django/custom_db_backends .
