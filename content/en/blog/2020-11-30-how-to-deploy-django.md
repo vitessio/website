@@ -61,7 +61,8 @@ example-zone1-vtctld-1d4dcad0-67bfd56b8b-4dr9s       1/1     Running     2      
 example-zone1-vtgate-bc6cde92-59b88bc8d8-6wz86       1/1     Running     2          94s
 vitess-operator-7f9c9d58f6-q5zlf                     1/1     Running     0          4m30s
 ```
-As you can see Vitess is completely built over an unsharded keyspace with one “Primary (Master)” and one “Replica” and is a fully managed cluster. 
+As you can see this brings up a fully functional managed Vitess cluster with an unsharded keyspace consisting of one “Primary (Master)” and one “Replica”. 
+
 
 ### Step 1 -  Set portforwards:
 
