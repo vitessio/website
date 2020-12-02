@@ -86,7 +86,7 @@ Vitess' schema modification functionality is designed the following goals in min
 * Guarantee very little downtime (or no downtime) for most schema updates.
 * Do not store permanent schema data in the topology service.
 
-Note that, at this time, Vitess only supports [data definition statements](https://dev.mysql.com/doc/refman/5.6/en/sql-syntax-data-definition.html) that create, modify, or delete database tables. For instance, `ApplySchema` does not affect stored procedures or grants.
+Note that, at this time, Vitess only supports [data definition statements](https://dev.mysql.com/doc/refman/5.6/en/sql-data-definition-statements.html) that create, modify, or delete database tables. For instance, `ApplySchema` does not affect stored procedures or grants.
 
 The [ApplySchema](../../../reference/programs/vtctl/#applyvschema) command applies a schema change to the specified keyspace on every master tablet, running in parallel on all shards. Changes are then propagated to replicas. The command format is: `ApplySchema {-sql=<sql> || -sql_file=<filename>} <keyspace>`
 
