@@ -5,31 +5,37 @@ weight:
 
 ## Overview
 
-This draft guide input provides Aurora/MySQL creation instructions and adds new files to vitess examples/local to demonstrate vttablet with Aurora.  
-High level:
-        Log in to AWS console
-        Create vitess-tuned parameter groups (2)
-        Create the Auroroa cluster and instance (single)
-        Add new "external" scripts to ../example/local and ../examples/local/scripts
-        Prepare the database for vitess with a special db_init script
-        Run the main script and connect through vitess
+This guide provides instructions on how to create a vttablet for an external database located within Aurora.  
 
-Details:
+The general steps to follow are below:
 
-1. To accommodate specific vitess needs, we create two new parameter groups.  They are copied from default ones.
-    Beware they are both named the same but of two "Types": 
-      a) One at the Cluster level:
-         Cloned from cluster parameter group type (DB cluster Parameter groups): default.aurora-mysql5.7,
-         and named (for example): auroratest-cluster-mysql57
+1. Log in to your AWS console
+2. Create a Vitess tuned parameter group 
+3. Create the Aurora cluster and instance
+4. Configure your VPC and security groups
+5. Prepare the RDS database for Vitess
+6. Run the Vitess RDS script 
+7. Connect to Vitess  
 
-         Edit this new parameter group for the following parameters:
-             binlog_format:               ROW
-             gtid_mode:                   ON
-             enforce_gtid_consistency:    ON
-             sql_mode                     STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION
+## 1. Log in to your AWS console
 
+You will need to use your AWS account user credentials on the [Sign in page](https://signin.aws.amazon.com/console).
 
-      b) One at the DB instance level:
+ ## 2. Create a Vitess tuned parameter group
+
+You will then need to create two new parameter groups for Vitess. One at the cluster level and the other at the database instance level. Both parameters are named the same but are two different types. They can be copied from default ones. 
+
+### Cluster level
+         
+From the cluster parameter group type you will want to clone: default.aurora-mysql5.7 and can name it something similar to: auroratest-cluster-mysql57
+You will need to edit and save your new parameter group with the following parameter changes:
+
+* binlog_format: ROW
+* gtid_mode: ON
+* enforce_gtid_consistency: ON
+* sql_mode: STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION
+
+### Database instance level
          Cloned from "instance" parameter group type (Parameter groups):         default.aurora-mysql5.7
          and named (for example): auroratest-db-mysql57
 
@@ -66,10 +72,6 @@ Details:
         All remaining configuration parameters can be left to defaults.   You may wish to enable Log exports
 
 
-3. Modify examples/local with the additional following files
-        external_aurora.sh*
-        init_vt_external_aurora.sql
-        vttablet-external-aurora-up.sh  IMPORTANT: make sure to place this in the ..examples/local/scripts subdirectory
 
 
 4. Run the script init_vt_external_aurora.sql directly on the aurora instance, to instantiate the default vitess accounts e.g.,:

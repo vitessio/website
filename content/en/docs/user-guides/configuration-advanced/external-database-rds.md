@@ -10,20 +10,21 @@ This guide provides instructions on how to create a vttablet for an external dat
 The general steps to follow are below:
 
 1. Log in to your AWS console
-2. Create a vitess-tuned parameter group 
-3. Create the RDS cluster and instance (single)
-4. Prepare the database for vitess with a special db_init script
-5. Run the main script  
-6. Connect to Vitess  
+2. Create a Vitess tuned parameter group 
+3. Create the RDS cluster and instance
+4. Configure your VPC and security groups
+5. Prepare the RDS database for Vitess
+6. Run the Vitess RDS script 
+7. Connect to Vitess  
 
 ## 1. Log in to your AWS console
 
-
+You will need to use your AWS account user credentials on the [Sign in page](https://signin.aws.amazon.com/console).
  
  ## 2. Create a Vitess tuned parameter group
   
-To accommodate specific vitess needs, you will need to create a new parameter group. This can be copied from a default one. 
-The default to clone from is: default.mysql5.7 and can be named similarly to: rdstest-external-mysql57
+You will then need to create a new parameter group for Vitess. This can be copied from a default one. 
+The default you want to clone from is: default.mysql5.7 and can be named similarly to: rdstest-external-mysql57
 You will need to edit and save your new parameter group with the following parameter changes:
 
 * binlog_format: ROW
@@ -31,9 +32,9 @@ You will need to edit and save your new parameter group with the following param
 * enforce_gtid_consistency: ON
 * sql_mode: STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION
 
-## 3. Create an RDS instance 
+## 3. Create an RDS cluster and instance 
 
-You will need to crate an RDS instance with the following configuration choices:
+You will need to create an RDS cluster and instance with the following configuration choices:
 
 * Method: Standard Create
 * Engine Option: MySQL
@@ -58,45 +59,61 @@ You will need to crate an RDS instance with the following configuration choices:
 * DB parameter group:  Your custom DB parameter group, e.g., example: rdstest-external-mysql57
 * Option Group: default
  
- All remaining configuration parameters can be left at their defaults and you may want to enable Log exports
+ All remaining configuration parameters can be left at their defaults and you may want to enable log exports.
  
+## 4. Configure your VPC and security groups
+
 You will need to configure your VPC as follows:
-            
+
+```sh             
 planetscale
-                default
+default
+```
+
 You will also need to make sure that one of the security groups has added the following:    
-                    Type            Protocol    Port range    Source    
-                    ------------    --------    ----------    ------    
-                    MYSQL/Aurora    TCP         3306          0.0.0.0/0 
 
++-------------------+-------+-----------+-------------+
+|Type | Protocol | Port range | Source |    
++-------------------+-------+-----------+-------------+ 
+| MYSQL/Aurora | TCP | 3306 | 0.0.0.0/0 
++-------------------+-------+-----------+-------------+ 
 
-## 4. Run the script init_vt_external_rds.sql directly on the rds instance, to instantiate the default vitess accounts e.g.,:
-        mysql --host <host string> --port 3306 --user=admin --password=********* -D rdstest1 < init_vt_external_rds.sql
+## 4. Prepare the RDS database for Vitess
 
-        and, for completeness, create the demo application tables:
-        mysql --host <host string> --port 3306 --user=admin --password=********* -D rdstest1 < create_commerce_schema.sql
+Run the script init_vt_external_rds.sql directly on your RDS instance to create the default Vitess accounts. This script is found in the [/examples/local](https://github.com/vitessio/vitess/tree/master/examples/local) GitHub repository for Vitess:
 
+```sh       
+mysql --host <host string> --port 3306 --user=admin --password=********* -D rdstest1 < init_vt_external_rds.sql
+```
 
+Then create the example application tables:
 
-## 5. Execute the main script:
-        ./external_rds.sh
+```sh
+mysql --host <host string> --port 3306 --user=admin --password=********* -D rdstest1 < create_commerce_schema.sql
+```
 
-   and expect the following output:
-        calling mkdir /Users/chrisr/temp/vt/vtdataroot/vt_0000000500
-        add /vitess/global
-        add /vitess/zone1
-        add zone1 CellInfo
-        etcd start done...
-        Starting vtctld...
-        running ./scripts/vttablet-external-rds-up.sh
-        Starting vttablet for zone1-0000000500...
-        with VTDATAROOT=/Users/chrisr/temp/vt/vtdataroot
-        HTTP/1.1 200 OK
-        Date: Fri, 10 Apr 2020 21:38:18 GMT
-        Content-Type: text/html; charset=utf-8
-        
-        creating vschema
-        New VSchema object:
+## 5. Execute the Vitess RDS script
+
+Run the following script found in the [/examples/local](https://github.com/vitessio/vitess/tree/master/examples/local) GitHub repository for Vitess:
+
+./external_rds.sh
+
+After you have run the script you should expect output similar to the following:
+
+```sh
+calling mkdir /Users/chrisr/temp/vt/vtdataroot/vt_0000000500
+add /vitess/global
+add /vitess/zone1
+add zone1 CellInfo
+etcd start done...
+Starting vtctld...
+running ./scripts/vttablet-external-rds-up.sh
+Starting vttablet for zone1-0000000500...
+with VTDATAROOT=/Users/chrisr/temp/vt/vtdataroot
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=utf-8  
+creating vschema
+New VSchema object:
         {
           "tables": {
             "corder": {
@@ -110,12 +127,19 @@ You will also need to make sure that one of the security groups has added the fo
             }
           }
         }
-        If this is not what you expected, check the input data (as JSON parsing will skip unexpected fields).
-        starting vtgate
-        Waiting for vtgate to be up...
-        vtgate is up!
-        Access vtgate at http://Mars.local:15001/debug/status
+ ```
+ 
+You can also check the input data to confirm the scripts completion:
 
+ ```sh
+starting vtgate
+Waiting for vtgate to be up...
+vtgate is up!
+Access vtgate at http://Mars.local:15001/debug/status
+ ```
 
-## 6. Connect to vitess:
-        mysql -A -f 127.0.0.1 -P 3306 -umysql_user -pmysql_password -D rdstest1
+## 6. Connect to Vitess
+
+```sh
+mysql -A -f 127.0.0.1 -P 3306 -umysql_user -pmysql_password -D rdstest1
+ ```
