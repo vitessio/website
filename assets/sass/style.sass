@@ -228,7 +228,7 @@ figure
 $navbar-anchor-offset: calc(#{$navbar-height} + 16px)
 
 h1, h2, h3, h4, h5, h6
-  &:before
+  &.anchored-header[id]:before
     display: block
     content: ' '
     margin-top: calc(-1 * #{$navbar-anchor-offset})
