@@ -173,7 +173,7 @@ vtctld \
 | -schema_change_check_interval | int | this value decides how often we check schema change dir, in seconds (default 60) |
 | -schema_change_controller | string | schema change controller is responsible for finding schema changes and responding to schema change events |
 | -schema_change_dir | string | directory contains schema changes for all keyspaces. Each keyspace has its own directory and schema changes are expected to live in '$KEYSPACE/input' dir. e.g. test_keyspace/input/*sql, each sql file represents a schema change |
-| -schema_change_slave_timeout | duration | how long to wait for replicas to receive the schema change (default 10s) |
+| -schema_change_replicas_timeout | duration | how long to wait for replicas to receive the schema change (default 10s) |
 | -schema_change_user | string | The user who submits this schema change. |
 | -schema_swap_admin_query_timeout | duration | timeout for SQL queries used to save and retrieve meta information for schema swap process (default 30s) |
 | -schema_swap_backup_concurrency | int | number of simultaneous compression/checksum jobs to run for seed backup during schema swap (default 4) |
