@@ -1,6 +1,7 @@
 ---
 title: vtctl Cell Aliases Command Reference
 series: vtctl
+docs_nav_title: Cell Aliases
 ---
 
 The following `vtctl` commands are available for administering Cell Aliases.

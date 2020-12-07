@@ -2,6 +2,7 @@
 title: Older Version Docs
 description: PDFs of vitess.io/docs at the time of previous versions
 weight: 25
+docs_nav_disable_expand: true
 ---
 
 To view a PDF of the state of the Vitess Documentation for previous versions of Vitess please follow the links below:

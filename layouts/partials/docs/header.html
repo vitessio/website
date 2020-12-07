@@ -24,7 +24,7 @@
         {{/* No breadcrumb if the current page is the first and only breadcrumb */}}
         {{ if not (and .p1.Parent.IsHome $isCurrentPage) }}
           <li {{ if eq .p1 .p2}}class="is-active"{{end}}>
-            <a href="{{ .p1.Permalink }}">{{ .p1.Title }}</a>
+            <a href="{{ .p1.Permalink }}">{{ or .p1.Params.docs_nav_title .p1.Title }}</a>
           </li>
         {{end}}
       {{ end }}

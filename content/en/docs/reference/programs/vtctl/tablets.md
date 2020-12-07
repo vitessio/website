@@ -1,6 +1,7 @@
 ---
 title: vtctl Tablet Command Reference
 series: vtctl
+docs_nav_title: Tablets
 ---
 
 The following `vtctl` commands are available for administering tablets.

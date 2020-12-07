@@ -1,6 +1,7 @@
 ---
 title: vtctl Schema, Version, Permissions Command Reference
 series: vtctl
+docs_nav_title: Schema Versions & Permissions
 ---
 
 The following `vtctl` commands are available for administering Schema, Versions and Permissions.
