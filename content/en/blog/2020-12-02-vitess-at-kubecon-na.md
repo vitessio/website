@@ -3,7 +3,7 @@ author: 'Deepthi Sigireddi'
 date: 2020-12-08
 slug: '2020-12-08-vitess-at-kubecon-na'
 tags: ['Vitess','MySQL','conference']
-title: 'Vitess at Kubecon CloudNativeCon North America 2020 (Virtual)'
+title: 'Kubecon+CloudNativeCon NA 2020'
 description: 'Vitess presence at Kubecon CloudNativeCon North America 2020 (Virtual) '
 ---
 The Vitess team had a successful presence at Kubecon + CloudNativeCon North America 2020. This year's event was in a virtual format.
