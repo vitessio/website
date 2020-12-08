@@ -78,7 +78,7 @@ You will also need to make sure that one of the security groups has added the fo
 | MYSQL/Aurora | TCP | 3306 | 0.0.0.0/0 
 +-------------------+-------+-----------+-------------+ 
 
-## 4. Prepare the RDS database for Vitess
+## 5. Prepare the RDS database for Vitess
 
 Run the script init_vt_external_rds.sql directly on your RDS instance to create the default Vitess accounts. This script is found in the [/examples/local](https://github.com/vitessio/vitess/tree/master/examples/local) GitHub repository for Vitess:
 
@@ -92,7 +92,7 @@ Then create the example application tables:
 mysql --host <host string> --port 3306 --user=admin --password=********* -D rdstest1 < create_commerce_schema.sql
 ```
 
-## 5. Execute the Vitess RDS script
+## 6. Execute the Vitess RDS script
 
 Run the following script found in the [/examples/local](https://github.com/vitessio/vitess/tree/master/examples/local) GitHub repository for Vitess:
 
@@ -101,7 +101,7 @@ Run the following script found in the [/examples/local](https://github.com/vites
 After you have run the script you should expect output similar to the following:
 
 ```sh
-calling mkdir /Users/chrisr/temp/vt/vtdataroot/vt_0000000500
+calling mkdir /Users/user/temp/vt/vtdataroot/vt_0000000500
 add /vitess/global
 add /vitess/zone1
 add zone1 CellInfo
@@ -109,24 +109,24 @@ etcd start done...
 Starting vtctld...
 running ./scripts/vttablet-external-rds-up.sh
 Starting vttablet for zone1-0000000500...
-with VTDATAROOT=/Users/chrisr/temp/vt/vtdataroot
+with VTDATAROOT=/Users/user/temp/vt/vtdataroot
 HTTP/1.1 200 OK
 Content-Type: text/html; charset=utf-8  
 creating vschema
 New VSchema object:
-        {
-          "tables": {
-            "corder": {
+{
+    "tables": {
+    "corder": {
         
-            },
-            "customer": {
+    },
+    "customer": {
         
-            },
-            "product": {
+    },
+    "product": {
         
-            }
-          }
-        }
+    }
+  }
+}
  ```
  
 You can also check the input data to confirm the scripts completion:
@@ -138,7 +138,7 @@ vtgate is up!
 Access vtgate at http://Mars.local:15001/debug/status
  ```
 
-## 6. Connect to Vitess
+## 7. Connect to Vitess
 
 ```sh
 mysql -A -f 127.0.0.1 -P 3306 -umysql_user -pmysql_password -D rdstest1
