@@ -1,7 +1,7 @@
 ---
 author: 'Deepthi Sigireddi'
-date: 2020-12-07
-slug: '2020-12-07-vitess-at-kubecon-na'
+date: 2020-12-08
+slug: '2020-12-08-vitess-at-kubecon-na'
 tags: ['Vitess','MySQL','conference']
 title: 'Vitess at Kubecon CloudNativeCon North America 2020 (Virtual)'
 description: 'Vitess presence at Kubecon CloudNativeCon North America 2020 (Virtual) '
@@ -24,16 +24,19 @@ First, Priyanka Sharma, CNCF GM spoke about [how HubSpot uses Vitess and Kuberne
     <img src="/files/2020-kubecon-na/ps-2020-na-keynote-vitess.png"/>
     <figcaption><div class="figure-title">Vitess + Kubernetes @ HubSpot</div></figcaption>
 </figure>
+
 Then, Constance Caramanolis, Conference Co-Chair, featured Vitess in the [Project Updates Keynote](https://www.youtube.com/watch?v=uNpZA5fz5o8).
 <figure>
     <img src="/files/2020-kubecon-na/cc-2020-na-keynote-vitess.png"/>
-    <figcaption><div class="figure-title">Vitess + Kubernetes @ HubSpot</div></figcaption>
+    <figcaption><div class="figure-title">Vitess Project Update</div></figcaption>
 </figure>
-Constance also featured Slack's Vitess Story as an End-User Story.
+
+Constance also featured Slack's Vitess migration as an End-User Story.
 <figure>
     <img src="/files/2020-kubecon-na/cc-2020-na-keynote-slack.png"/>
     <figcaption><div class="figure-title">Vitess @ Slack</div></figcaption>
 </figure>
+
 Guido Iaquinti and Rafael Chacon of Slack spoke about how they [migrated their MySQL Clusters into Vitess](https://www.youtube.com/watch?v=k51L0xdClGQ).
 We wrapped up the day with the [Vitess Maintainer talk](https://www.youtube.com/watch?v=Nqzhgzg5WCw) which featured demos from a number of our maintainers.
 
