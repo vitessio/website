@@ -1,6 +1,6 @@
 ---
 title: Resharding
-weight: 1
+weight: 4
 aliases: ['/docs/user-guides/resharding/'] 
 ---
 

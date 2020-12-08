@@ -1,6 +1,6 @@
 ---
 title: LDAP authentication
-weight: 8
+weight: 2
 aliases: ['/docs/user-guides/ldap_auth/'] 
 ---
 
