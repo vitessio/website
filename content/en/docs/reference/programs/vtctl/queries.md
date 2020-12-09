@@ -1,6 +1,7 @@
 ---
 title: vtctl Query Command Reference
 series: vtctl
+docs_nav_title: Queries
 ---
 
 The following `vtctl` commands are available for administering queries.

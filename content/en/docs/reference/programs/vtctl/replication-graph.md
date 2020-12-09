@@ -1,6 +1,7 @@
 ---
 title: vtctl Replication Graph Command Reference
 series: vtctl
+docs_nav_title: Replication Graph
 ---
 
 The following `vtctl` commands are available for administering the Replication Graph.

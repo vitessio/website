@@ -1,6 +1,7 @@
 ---
 title: vtctl Topo Command Reference
 series: vtctl
+docs_nav_title: Topology Service
 ---
 
 The following `vtctl` commands are available for administering Topology Services.

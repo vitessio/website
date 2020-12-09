@@ -1,6 +1,7 @@
 ---
 title: vtctl Resharding Throttler Command Reference
 series: vtctl
+docs_nav_title: Resharding Throttler
 ---
 
 The following `vtctl` commands are available for administering Resharding Throttler.

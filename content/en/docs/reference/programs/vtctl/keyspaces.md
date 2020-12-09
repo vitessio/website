@@ -1,6 +1,7 @@
 ---
 title: vtctl Keyspace Command Reference
 series: vtctl
+docs_nav_title: Keyspaces
 ---
 
 The following `vtctl` commands are available for administering Keyspaces.
