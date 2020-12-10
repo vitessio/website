@@ -274,6 +274,49 @@ $ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
 ```
 
 
+## Cancelling all keyspace migrations
+
+The user may cancel all migrations in a keyspace. A migration is cancellable if it is in `queued`, `ready` or `running` states, as described previously. It is a high impact operation and should be used with care.
+
+The syntax to cancelling all keyspace migrations is:
+
+```
+vtctlclient OnlineDDL cancel-all
+```
+
+Example:
+
+```shell
+$ vtctlclient OnlineDDL commerce show all
++------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
+|      Tablet      | shard | mysql_schema | mysql_table |            migration_uuid            | strategy | started_timestamp | completed_timestamp | migration_status |
++------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
+| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c581994_353a_11eb_8b72_f875a4d24e90 | gh-ost   |                   |                     | queued           |
+| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c6420c9_353a_11eb_8b72_f875a4d24e90 | gh-ost   |                   |                     | queued           |
+| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c7040df_353a_11eb_8b72_f875a4d24e90 | gh-ost   |                   |                     | queued           |
+| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c7c0572_353a_11eb_8b72_f875a4d24e90 | gh-ost   |                   |                     | queued           |
+| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c87f7cd_353a_11eb_8b72_f875a4d24e90 | gh-ost   |                   |                     | queued           |
++------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
+
+$  vtctlclient OnlineDDL commerce cancel-all
++------------------+--------------+
+|      Tablet      | RowsAffected |
++------------------+--------------+
+| zone1-0000000100 |            5 |
++------------------+--------------+
+
+ vtctlclient OnlineDDL commerce show all
++------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
+|      Tablet      | shard | mysql_schema | mysql_table |            migration_uuid            | strategy | started_timestamp | completed_timestamp | migration_status |
++------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
+| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c581994_353a_11eb_8b72_f875a4d24e90 | gh-ost   |                   |                     | cancelled        |
+| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c6420c9_353a_11eb_8b72_f875a4d24e90 | gh-ost   |                   |                     | cancelled        |
+| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c7040df_353a_11eb_8b72_f875a4d24e90 | gh-ost   |                   |                     | cancelled        |
+| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c7c0572_353a_11eb_8b72_f875a4d24e90 | gh-ost   |                   |                     | cancelled        |
+| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c87f7cd_353a_11eb_8b72_f875a4d24e90 | gh-ost   |                   |                     | cancelled        |
++------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
+```
+
 ## Retrying a migration
 
 The user may retry running a migration. If the migration is in `failed` or in `cancelled` state, Vitess will re-run the migration, with exact same arguments as previously intended. If the migration is in any other state, `retry` does nothing.
