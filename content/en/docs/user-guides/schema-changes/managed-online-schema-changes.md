@@ -8,17 +8,22 @@ aliases: ['/docs/user-guides/managed-online-schema-changes/']
 
 Vitess offers managed, online schema migrations, via [gh-ost](https://github.com/github/gh-ost) and [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html). As a quick breakdown:
 
-- Using the standard MySQL `ALTER TABLE` syntax.
+- Using the standard MySQL `CREATE TABLE`, `ALTER TABLE` and `DROP TABLE` syntax.
 - With either `@@ddl_strategy` session variable set, or `-ddl_strategy` command line flag. 
 - Vitess responds to an online schema change request with a job ID.
 - Vitess resolves affected shards.
 - A shard's `primary` tablet schedules the migration to run when possible.
-- The tablets run migrations via `gh-ost` or `pt-online-schema-change`.
+- Tablets will independently run schema migrations:
+  - `ALTER TABLE` statements run via `gh-ost` or `pt-online-schema-change`.
+  - `CREATE TABLE` statements run directly.
+  - `DROP TABLE` statements run directly (WIP for lazy `DROP TABLE`).
 - Vitess provides the user a mechanism to view migration status, cancel or retry migrations, based on the job ID.
 
 ## Syntax
 
 **Note:** the syntax is subject to change while this feature is in _experimental_ state.
+
+### ALTER TABLE
 
 Use the standard MySQL `ALTER TABLE` syntax to run online DDL. Whether your schema migration runs synchronously (the default MySQL behavior) or asynchronously (aka online), is determined by the value of command line flags or a session variable.
 
@@ -47,13 +52,21 @@ This statement can be executed as:
 
 How the migration is executed depends on your `ddl_strategy` configuration, and how you run your query: via `vtctl/vtctlclient` or `VTGate`. Details follow.
 
+### CREATE TABLE
+
+Use the standard MySQL `CREATE TABLE` syntax. The query goes through the same [#migration-flow-and-states](migration flow) as `ALTER TABLE` does. The tablets eventually run the query directly on the MySQL backends.
+
+### DROP TABLE
+
+Use the standard MySQL `DROP TABLE` syntax. The query goes through the same [#migration-flow-and-states](migration flow) as `ALTER TABLE` does. The tablets eventually run the query directly on the MySQL backends.
+
 ## ddl_strategy
 
 You will set either `@@ddl_strategy` session variable, or `-ddl_strategy` command line flag, to control your schema migration strategy, and specifically, to enable and configure online DDL. Details follow in next sections. Some initial examples:
 
 - Empty value (`''`) means the migration is synchronous, not an online DDL.
-- The value `"gh-ost"` instructs Vitess to run an online DDL via `gh-ost`.
-- The value `"pt-osc"` instructs Vitess to run an online DDL via `pt-online-schema-change`.
+- The value `"gh-ost"` instructs Vitess to run an `ALTER TABLE` online DDL via `gh-ost`.
+- The value `"pt-osc"` instructs Vitess to run an `ALTER TABLE` online DDL via `pt-online-schema-change`.
 - You may specify arguments for your tool of choice, e.g. `"gh-ost --max-load Threads_running=200"`. Details follow.
 
 ## ApplySchema
@@ -65,7 +78,9 @@ $ vtctlclient ApplySchema -ddl_strategy "gh-ost" -sql "ALTER TABLE demo MODIFY i
 a2994c92_f1d4_11ea_afa3_f875a4d24e90
 ```
 
-Notice how `ApplySchema` responds to an online DDL request with a UUID output. When the user indicates online schema change (aka online DDL), `vtctl` registers an online-DDL request with global `topo`. This generates a job ID for tracking. `vtctl` does not try to resolve the shards nor the `primary` tablets. The command returns immediately, without waiting for the migration(s) to start. It prints out the job ID (`a2994c92_f1d4_11ea_afa3_f875a4d24e90` in the above)
+Notice how `ApplySchema` responds to an online DDL request with a UUID output. When the user indicates online schema change (aka online DDL), `vtctl` registers an online-DDL request with global `topo`. This generates a job ID for tracking. `vtctl` does not try to resolve the shards nor the `primary` tablets. The command returns immediately, without waiting for the migration(s) to start.
+
+The command prints a job ID for each of the DDL statements. In the above we issue a single DDL statemnt, and `vtctl` responds with a single job ID (`a2994c92_f1d4_11ea_afa3_f875a4d24e90`)
 
 If we immediately run `SHOW CREATE TABLE`, we are likely to still see the old schema:
 ```sql
@@ -145,10 +160,15 @@ We highlight how Vitess manages migrations internally, and explain what states a
 - A shard's `primary` tablet owns running the migration. It is independent of other shards. It will schedule the migration to run when possible. A tablet will not run two migrations at the same time.
 - A migration is first created in `queued` state.
 - If the tablet sees queued migration, and assuming there's no reason to wait, it picks the oldest requested migration in `queued` state, and moves it to `ready` state.
-- Tablet then prepares for the migration. It creates a MySQL account with a random password, to be used by this migration only. It creates the command line invocation, and extra scripts if possible.
-- The tablet then runs the migration. Whether `gh-ost` or `pt-online-schema-change`, it first runs in _dry run_ mode, and, if successful, in actual _execute_ mode. The migration is then in `running` state.
-- The migration will either run to completion, fail, or be interrupted. If successful, it transitions into `complete` state, which is the end of the road for that migration. If failed or interrupted, it transitions to `failed` state. The user may choose to _retry_ failed migrations (see below).
-- The user is able to _cancel_ a migration (details below). If the migration hasn't started yet, it transitions to `cancelled` state. If the migration is `running`, then it is interrupted, and is expected to transition into `failed` state.
+- For `ALTER TABLE` statements:
+  - Tablet prepares for the migration. It creates a MySQL account with a random password, to be used by this migration only. It creates the command line invocation, and extra scripts if possible.
+  - The tablet then runs the migration. Whether `gh-ost` or `pt-online-schema-change`, it first runs in _dry run_ mode, and, if successful, in actual _execute_ mode. The migration is then in `running` state.
+  - The migration will either run to completion, fail, or be interrupted. If successful, it transitions into `complete` state, which is the end of the road for that migration. If failed or interrupted, it transitions to `failed` state. The user may choose to _retry_ failed migrations (see below).
+  - The user is able to _cancel_ a migration (details below). If the migration hasn't started yet, it transitions to `cancelled` state. If the migration is `running`, then it is interrupted, and is expected to transition into `failed` state.
+- For `CREATE TABLE` statements:
+  - Tablet runs the statement directly on the MySQL backend
+- For `DROP TABLE` statements:
+  - Tablet runs the statement directly on the MySQL backend (WIP for lazy drops)
 
 By way of illustration, suppose a migration is now in `running` state, and is expected to keep on running for the next few hours. The user may initiate a new `ALTER TABLE...` statement. It will persist in global `topo`. `vtctld` will pick it up and advertise it to the relevant tablets. Each will persist the migration request in `queued` state. None will run the migration yet, since another migration is already in progress. In due time, and when the executing migration completes (whether successfully or not), and assuming no other migrations are `queued`, the `primary` tablets, each in its own good time, will execute the new migration. 
 
@@ -162,62 +182,62 @@ At this time, there are no automated retries. For example, a failover on a shard
 You may track the status of a single migration, of all or recent migrations, or of migrations in a specific state. Examples:
 
 ```shell
-$ vtctlclient OnlineDDL commerce show ab3ffdd5_f25c_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000201 | 40-80 | vt_commerce  | demo        | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:24:33 | 2020-09-09 05:24:34 | complete         |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-| test-0000000401 | c0-   | vt_commerce  | demo        | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-| test-0000000101 |   -40 | vt_commerce  | demo        | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+-$ vtctlclient OnlineDDL commerce show ab3ffdd5_f25c_11ea_bab4_0242c0a8b007
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:24:33 | 2020-09-09 05:24:34 | complete         |
+| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
+| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
+| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
 
 $ vtctlclient OnlineDDL commerce show 8a797518_f25c_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000401 | c0-   | vt_commerce  | demo        | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | running          |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 | 2020-09-09 05:23:33 | complete         |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | running          |
-| test-0000000101 |   -40 | vt_commerce  | demo        | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | running          |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | running          |
+| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 | 2020-09-09 05:23:33 | complete         |
+| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | running          |
+| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | running          |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
 
 $ vtctlclient OnlineDDL commerce show 8a797518_f25c_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000401 | c0-   | vt_commerce  | demo        | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000101 |   -40 | vt_commerce  | demo        | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 | 2020-09-09 05:23:33 | complete         |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | failed           |
+| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | failed           |
+| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | failed           |
+| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 | 2020-09-09 05:23:33 | complete         |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
 
 $ vtctlclient OnlineDDL commerce show recent
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000201 | 40-80 | vt_commerce  | demo        | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 | 2020-09-09 05:23:33 | complete         |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:24:33 | 2020-09-09 05:24:34 | complete         |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-| test-0000000401 | c0-   | vt_commerce  | demo        | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-| test-0000000401 | c0-   | vt_commerce  | demo        | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000401 | c0-   | vt_commerce  | demo        | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-| test-0000000101 |   -40 | vt_commerce  | demo        | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-| test-0000000101 |   -40 | vt_commerce  | demo        | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000101 |   -40 | vt_commerce  | demo        | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
+| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 | 2020-09-09 05:23:33 | complete         |
+| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:24:33 | 2020-09-09 05:24:34 | complete         |
+| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
+| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | failed           |
+| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
+| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
+| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | failed           |
+| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
+| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
+| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | failed           |
+| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
 
 $ vtctlclient OnlineDDL commerce show failed
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000401 | c0-   | vt_commerce  | demo        | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000101 |   -40 | vt_commerce  | demo        | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | failed           |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | failed           |
+| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | failed           |
+| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 05:23:32 |                     | failed           |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
 ```
 
 The syntax for tracking migrations is: 
@@ -243,14 +263,14 @@ Example:
 
 ```shell
 $ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | running          |
-| test-0000000101 |   -40 | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | running          |
-| test-0000000401 | c0-   | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | running          |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | running          |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | running          |
+| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | running          |
+| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | running          |
+| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | running          |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
 
 $ vtctlclient OnlineDDL commerce cancel 2201058f_f266_11ea_bab4_0242c0a8b007
 +-----------------+--------------+
@@ -263,14 +283,14 @@ $ vtctlclient OnlineDDL commerce cancel 2201058f_f266_11ea_bab4_0242c0a8b007
 +-----------------+--------------+
 
 $ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000401 | c0-   | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | failed           |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | failed           |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | failed           |
-| test-0000000101 |   -40 | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | failed           |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | failed           |
+| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | failed           |
+| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | failed           |
+| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | failed           |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
 ```
 
 
@@ -327,14 +347,14 @@ Continuing the above example, where we cancelled a migration while running, we n
 
 ```shell
 $ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000401 | c0-   | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | failed           |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | failed           |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | failed           |
-| test-0000000101 |   -40 | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | failed           |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | failed           |
+| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | failed           |
+| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | failed           |
+| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:32:31 |                     | failed           |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
 
 $ vtctlclient OnlineDDL commerce retry 2201058f_f266_11ea_bab4_0242c0a8b007
 +-----------------+--------------+
@@ -347,24 +367,24 @@ $ vtctlclient OnlineDDL commerce retry 2201058f_f266_11ea_bab4_0242c0a8b007
 +-----------------+--------------+
 
 $ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table |            migration_uuid            | strategy | started_timestamp | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
-| test-0000000201 | 40-80 | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   |                   |                     | queued           |
-| test-0000000101 |   -40 | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   |                   |                     | queued           |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   |                   |                     | queued           |
-| test-0000000401 | c0-   | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   |                   |                     | queued           |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+-------------------+---------------------+------------------+
+|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy | started_timestamp | completed_timestamp | migration_status |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+-------------------+---------------------+------------------+
+| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   |                   |                     | queued           |
+| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   |                   |                     | queued           |
+| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   |                   |                     | queued           |
+| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   |                   |                     | queued           |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+-------------------+---------------------+------------------+
 
 $ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000101 |   -40 | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:37:33 |                     | running          |
-| test-0000000401 | c0-   | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:37:33 |                     | running          |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:37:33 |                     | running          |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:37:33 |                     | running          |
-+-----------------+-------+--------------+-------------+--------------------------------------+----------+---------------------+---------------------+------------------+
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:37:33 |                     | running          |
+| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:37:33 |                     | running          |
+| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:37:33 |                     | running          |
+| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | gh-ost   | 2020-09-09 06:37:33 |                     | running          |
++-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
 ```
 
 ## Auto retry after failure
@@ -437,7 +457,7 @@ Do not override the following flags: `alter, pid, plugin, dry-run, execute, new-
 
 ## Throttling
 
-Schema migrations use the tablet throttler, which is a cooperative throttler service based on replication lag. The tablet throttler automatically detects topology `REPLICA` tablets and adapts to changes in the topology. See [Tablet throttler](../../../reference/features/tablet-throttler/).
+`gh-ost` and `pt-online-schema-change` schema migrations use the tablet throttler, which is a cooperative throttler service based on replication lag. The tablet throttler automatically detects topology `REPLICA` tablets and adapts to changes in the topology. See [Tablet throttler](../../../reference/features/tablet-throttler/).
 
 **NOTE** that at this time the tablet throttler is an experimental feature and is opt in. Enable it with `vttablet`'s `-enable-lag-throttler` flag. If the tablet throttler is disabled, schema migrations will not throttle on replication lag.
 
