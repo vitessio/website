@@ -11,10 +11,16 @@ html, body
 =h-center
   justify-content: center
 
+// Bit of a hacky full-width container override for the docs page,
+// since bulma.io doesn't appear to have a helper for this.
+.navbar-container-docs
+  max-width: 100%
+  padding: 0 8px 0 24px
+
 .docs-wrapper
   +flex
   flex-direction: row
-  height: 100vh
+  height: calc(100vh - #{$navbar-height})
   align-items: stretch
 
 .docs-navbar
