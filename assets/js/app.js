@@ -53,12 +53,6 @@ function fixUponScroll() {
   }
 }
 
-function showAndHideTitle() {
-  if (elementExists('.docs-article')) {
-    
-  }
-}
-
 function tableOfContents(options) {
   $('#tableOfContents').tocify(options);
 }
@@ -96,6 +90,5 @@ $(function() {
   navbarBurgerToggle();
   fixUponScroll();
   tableOfContents(tocifyOptions);
-  showAndHideTitle();
   linkClickOffset();
 });
