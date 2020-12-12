@@ -193,6 +193,39 @@ figure
   &.is-active
     position: fixed
 
+.hotkey:before
+  border: solid 1px $grey-light
+  border-radius: 4px
+  color: $grey-light
+  content: attr(data-hotkey)
+  display: block
+  font-weight: bold
+  height: 1.6em
+  text-align: center
+  width: 1.6em
+
+input.has-hotkey
+  padding-right: 1.6em
+
+#search-bar-container
+  position: relative
+
+#search-bar-container .icon
+  color: $grey-light
+  
+#search-bar-container.search-has-focus #search-bar-hotkey
+  display: none
+
+#search-bar-hotkey
+  margin-top: -0.8em
+  position: absolute
+  right: 6px
+  top: 50%
+
+input#search-bar::-webkit-search-cancel-button
+  position: absolute
+  right: 10px
+
 +until($navbar-breakpoint)
   #search-bar
     display: block

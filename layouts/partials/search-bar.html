@@ -1,8 +1,9 @@
 <div class="navbar-item navbar-item-search">
-  <p class="control has-icons-left">
-    <input class="input" type="search" id="search-bar" placeholder="{{ T "search" }}">
+  <p class="control has-icons-left" id="search-bar-container">
     <span class="icon is-small is-left">
       <i class="fas fa-sm fa-search"></i>
     </span>
+    <input class="input has-hotkey" type="search" id="search-bar" placeholder="{{ T "search" }}">
+    <span class="hotkey" id="search-bar-hotkey" data-hotkey="/"></span>
   </p>
 </div>

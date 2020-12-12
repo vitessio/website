@@ -85,6 +85,17 @@ const onGlobalKeydown = (e) => {
 }
 
 $(function() {
+  const searchBar = document.querySelector('input#search-bar')
+  searchBar.addEventListener('focus', e => {
+    const c = document.querySelector('#search-bar-container')
+    c.classList.add('search-has-focus')
+  })
+
+  searchBar.addEventListener('blur', e => {
+    const c = document.querySelector('#search-bar-container')
+    c.classList.remove('search-has-focus')
+  })
+
   document.addEventListener('keydown', onGlobalKeydown)
 
   navbarBurgerToggle();
