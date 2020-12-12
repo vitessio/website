@@ -63,7 +63,36 @@ function tableOfContents(options) {
   $('#tableOfContents').tocify(options);
 }
 
+const focusSearchInput = (keydownEvent) => {
+  // Don't propagate keydown event since that'll add a "/" character to the search input.
+  keydownEvent.preventDefault()
+  const searchBar = document.querySelector('input#search-bar')
+  if (searchBar && typeof searchBar.focus === 'function') {
+    searchBar.focus()
+  }
+}
+
+const HOTKEYS = {
+  "/": focusSearchInput,
+}
+
+const onGlobalKeydown = (e) => {
+  const target = e.target || e.srcElement;
+  const { tagName } = target;
+
+  // Don't apply hotkeys to any keypress event from an editable element, like an input.
+  // Inspired by https://github.com/jaywcjlove/hotkeys <3
+  const isContentEditable = target.isContentEditable || ((tagName === 'INPUT' || tagName === 'TEXTAREA' || tagName === 'SELECT') && !target.readOnly)
+  if (isContentEditable) return;
+
+  if (e.key in HOTKEYS && typeof HOTKEYS[e.key] === 'function') {
+    HOTKEYS[e.key](e)
+  }
+}
+
 $(function() {
+  document.addEventListener('keydown', onGlobalKeydown)
+
   navbarBurgerToggle();
   fixUponScroll();
   tableOfContents(tocifyOptions);
