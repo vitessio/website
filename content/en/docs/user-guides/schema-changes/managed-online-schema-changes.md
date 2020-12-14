@@ -64,7 +64,7 @@ Use the standard MySQL `DROP TABLE` syntax. The query goes through the same [#mi
 
 You will set either `@@ddl_strategy` session variable, or `-ddl_strategy` command line flag, to control your schema migration strategy, and specifically, to enable and configure online DDL. Details follow in next sections. Some initial examples:
 
-- The value `"direct"`, meaning not an online DDL. The empty value (`''`) is also interpreted as `direct`.
+- The value `"direct"`, meaning not an online DDL. The empty value (`""`) is also interpreted as `direct`.
 - The value `"gh-ost"` instructs Vitess to run an `ALTER TABLE` online DDL via `gh-ost`.
 - The value `"pt-osc"` instructs Vitess to run an `ALTER TABLE` online DDL via `pt-online-schema-change`.
 - You may specify arguments for your tool of choice, e.g. `"gh-ost --max-load Threads_running=200"`. Details follow.
