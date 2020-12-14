@@ -64,7 +64,7 @@ Use the standard MySQL `DROP TABLE` syntax. The query goes through the same [#mi
 
 You will set either `@@ddl_strategy` session variable, or `-ddl_strategy` command line flag, to control your schema migration strategy, and specifically, to enable and configure online DDL. Details follow in next sections. Some initial examples:
 
-- Empty value (`''`) means the migration is synchronous, not an online DDL.
+- The value `"direct"`, meaning not an online DDL. The empty value (`''`) is also interpreted as `direct`.
 - The value `"gh-ost"` instructs Vitess to run an `ALTER TABLE` online DDL via `gh-ost`.
 - The value `"pt-osc"` instructs Vitess to run an `ALTER TABLE` online DDL via `pt-online-schema-change`.
 - You may specify arguments for your tool of choice, e.g. `"gh-ost --max-load Threads_running=200"`. Details follow.
@@ -144,8 +144,8 @@ Just like in the `ApplySchema` example, `VTGate` identifies that this is an onli
 
 The initial value for `@@ddl_strategy` is derived from the `vtgate -ddl_strategy` command line flag. Examples:
 
-- If you run `vtgate` without `-ddl_strategy`, then `@@ddl_strategy` is empty, which implies schema migrations are synchronous. You will need to `set @@ddl_strategy='gh-ost'` to run followup `ALTER TABLE` statements via `gh-ost`.
-- If you run `vtgate -ddl_strategy "gh-ost"`, then `@@ddl_strategy` defaults to `'gh-ost'` in each new session. Any `ALTER TABLE` will run via `gh-ost`. You may `set @@ddl_strategy='pt-osc'` to make migrations run through `pt-online-schema-change`, or `set @@ddl_strategy=''` to run migrations synchronously.
+- If you run `vtgate` without `-ddl_strategy`, then `@@ddl_strategy` defaults to `'direct'`, which implies schema migrations are synchronous. You will need to `set @@ddl_strategy='gh-ost'` to run followup `ALTER TABLE` statements via `gh-ost`.
+- If you run `vtgate -ddl_strategy "gh-ost"`, then `@@ddl_strategy` defaults to `'gh-ost'` in each new session. Any `ALTER TABLE` will run via `gh-ost`. You may `set @@ddl_strategy='pt-osc'` to make migrations run through `pt-online-schema-change`, or `set @@ddl_strategy='direct'` to run migrations synchronously.
  
 ## Migration flow and states
 
