@@ -8,9 +8,9 @@ aliases: ['/docs/user-guides/faq/']
 
 ## Where can I ask questions about Vitess?
 
-Our most popular channel and the one we recommend for asking question you may have is over our Slack located [here](https://vitess.io/slack). 
+Our most popular channel and the one we recommend for asking questions you may have is our Slack located [here](https://vitess.io/slack). 
 
-We have a number of other channels that can be used as well listed [here](https://vitess.io/community/). 
+We have a number of other options that can be used as well listed [here](https://vitess.io/community/). 
 
 Please do note that we request that you do not ask individual project members for support. Instead please use these channels where the whole community can help you and benefit from the solutions provided. Thanks!
 
@@ -29,7 +29,7 @@ There are many channels available and we encourage you to join as many or as few
 
 We always enjoy having new contributors to Vitess. Just be sure to read the information [here](https://vitess.io/docs/contributing/) to start.
 
-If you are already familiar with Vitess and you'd like information on how to file a Pull Request or submit an issue request check out the following links:
+If you are already familiar with Vitess and you'd like information on how to file a Pull Request or submit an Issue request check out the following links:
 
 * [Pull Requests](https://vitess.io/docs/contributing/github-workflow/#sending-pull-requests)
 * [Issue](https://vitess.io/docs/contributing/github-workflow/#submitting-issues)
