@@ -3,12 +3,6 @@
 {{ $currentRelPermalink := .RelPermalink }}
 
 <div class="docs-menu">
-  <header class="docs-menu-header">
-    <a href="{{ site.BaseURL }}">
-      <img class="docs-menu-logo" width="50" src="{{ $logoUrl }}">
-    </a>
-  </header>
-
   {{ template "navlist" (dict "entries" $docsSections.Sections "currentRelPermalink" $currentRelPermalink ) }}
 </div>
 
