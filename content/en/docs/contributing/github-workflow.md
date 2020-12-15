@@ -138,3 +138,9 @@ Once your pull request is merged:
 *  close the GitHub issue (if it wasn't automatically closed)
 *  delete your local topic branch (`git branch -d new-feature`)
 
+## Submitting Issues
+
+If you have a significant change to add, you need to [create an issue](https://github.com/vitessio/vitess/issues) prior to creating a Pull Request. This issue should be used to explain what you're planning to work on, to track progress, and design decisions.
+
+Or if you'd like to report a bug you've found within Vitess you can also create an issue. 
+
