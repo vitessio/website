@@ -1,5 +1,4 @@
 {{ $cncfLogo := "img/logos/cncf.png" | relURL }}
-{{ $cncfLogo1 := $cncfLogo.Fit "300x200" }}
 <section class="section has-text-centered">
   <p class="title is-size-4 is-size-5-mobile">
     {{ T "cncf" | markdownify }}
@@ -7,5 +6,5 @@
 
   <br />
 
-  <img class="is-cncf-logo" src="{{ $cncfLogo1 }}">
+  <img class="is-cncf-logo" src="{{ $cncfLogo }}" width="300" height="200">
 </section>
