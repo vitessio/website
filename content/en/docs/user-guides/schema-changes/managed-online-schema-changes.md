@@ -60,6 +60,13 @@ Use the standard MySQL `CREATE TABLE` syntax. The query goes through the same [#
 
 Use the standard MySQL `DROP TABLE` syntax. The query goes through the same [#migration-flow-and-states](migration flow) as `ALTER TABLE` does. The tablets eventually run the query directly on the MySQL backends.
 
+### Statement transformations
+
+Vitess may modify your queries to qualify for online DDL statement. Modifications include:
+
+- A multi-table `DROP` statement is replaced by multiple `DROP` statements, each operating on a single table (and each tracked by its own job ID).
+- A `CREATE INDEX` statement is replaced by the equivalent `ALTER TABLE` statement.
+
 ## ddl_strategy
 
 You will set either `@@ddl_strategy` session variable, or `-ddl_strategy` command line flag, to control your schema migration strategy, and specifically, to enable and configure online DDL. Details follow in next sections. Some initial examples:
