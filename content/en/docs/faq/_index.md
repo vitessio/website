@@ -36,9 +36,11 @@ If you are already familiar with Vitess and you'd like information on how to fil
 
 ## What are good videos to watch to get started learning about Vitess?
 
-PlanetScale hosts a number of videos that can be watched to start learning about Vitess. The full list of hosted videos can be found [here](https://www.planetscale.com/resources).
+We have a number of [recorded presentations and videos](https://vitess.io/docs/resources/presentations/) that can be watched to start learning about Vitess.
 
-For a curated list please check out a PlanetScale blog post [here](https://www.planetscale.com/blog/videos-intro-to-vitess-its-powerful-capabilities-and-how-to-get-started).
+PlanetScale also hosts a [number of videos](https://www.planetscale.com/resources) on Vitess.
+
+* For a curated list please check out a PlanetScale blog post [here](https://www.planetscale.com/blog/videos-intro-to-vitess-its-powerful-capabilities-and-how-to-get-started).
 
 ## Where can I read additional FAQs?
 
