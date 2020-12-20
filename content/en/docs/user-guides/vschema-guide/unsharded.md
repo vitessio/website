@@ -1,6 +1,6 @@
 ---
 title: Unsharded Keyspace
-weight: 2
+weight: 3
 ---
 
 We are going to start with configuring the `product` table in the unsharded keyspace `product`. The schema file should be as follows:
