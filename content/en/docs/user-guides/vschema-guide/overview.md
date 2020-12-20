@@ -19,7 +19,7 @@ To illustrate the various features of the VSchema, we will make use of the [demo
 
 Alternatively, you can also connect to vitess using a mysql client: `mysql -h 127.0.0.1 -P 12348`.
 
-The demo models a set of tables that are similar to those presented in the [Getting Starged](../../../get-started/local) guide, but with more focus on the VSchema.
+The demo models a set of tables that are similar to those presented in the [Getting Started](../../../get-started/local) guide, but with more focus on the VSchema.
 
 Note that the demo brings up a test process called vtcombo (instead of a real vitess cluster), which is functionally equivalent to all the components of vitess, but within a single process.
 
