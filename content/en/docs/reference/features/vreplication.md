@@ -1,5 +1,6 @@
 ---
 title: VReplication
+weight: 2
 aliases: ['/docs/advanced/vreplication/','/user-guide/update-stream/','/docs/reference/vreplication/']
 ---
 

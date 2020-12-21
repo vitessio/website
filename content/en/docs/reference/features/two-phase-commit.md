@@ -1,5 +1,6 @@
 ---
 title: Two-Phase Commit
+weight: 11
 aliases: ['/docs/launching/twopc/','/docs/reference/two-phase-commit/']
 ---
 

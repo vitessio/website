@@ -1,5 +1,6 @@
 ---
 title: Transport Security Model
+weight: 12
 aliases: ['/docs/user-guides/transport-security-model/','/docs/reference/transport-security-model/']
 ---
 

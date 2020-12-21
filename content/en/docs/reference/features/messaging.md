@@ -1,5 +1,6 @@
 ---
 title: Messaging
+weight: 18
 aliases: ['/docs/advanced/messaging/','/docs/reference/messaging/']
 ---
 

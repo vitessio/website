@@ -1,5 +1,6 @@
 ---
 title: Point In Time Recovery
+weight: 17
 aliases: ['/docs/recovery/pitr','/docs/reference/pitr/']
 ---
 
