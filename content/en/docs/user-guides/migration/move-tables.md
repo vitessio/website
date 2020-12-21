@@ -16,7 +16,7 @@ As a stepping stone towards splitting a single table across multiple servers (sh
 
 Let's start by simulating this situation by loading sample data:
 
-```sql
+```sh
 mysql < ../common/insert_commerce_data.sql
 ```
 
