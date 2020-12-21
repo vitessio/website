@@ -70,7 +70,7 @@ In this scenario, we are going to add the `customer` keyspace to the `commerce` 
 ## Show our current tablets
 
 ```sh
-$ echo "show vitess_tablets;" | mysql --table
+$ mysql --table --execute="show vitess_tablets"
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
 | Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname  | MasterTermStartTime  |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
@@ -162,7 +162,7 @@ vtctlclient ReloadSchemaKeyspace customer
 ## Show our old and new tablets
 
 ```sh
-$ echo "show vitess_tablets;" | mysql --table
+$ mysql --table --execute="show vitess_tablets"
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
 | Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname  | MasterTermStartTime  |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
