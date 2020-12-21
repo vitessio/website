@@ -69,9 +69,6 @@ mysql> select * from customer;
 1 row in set (0.00 sec)
 
 mysql> use `customer:80-`;
-Reading table information for completion of table and column names
-You can turn off this feature to get a quicker startup with -A
-
 Database changed
 mysql> select * from customer;
 +-------------+-------+
