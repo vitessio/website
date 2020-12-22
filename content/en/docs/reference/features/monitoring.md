@@ -39,5 +39,4 @@ Connecting Vitess to a push-based metrics system can be useful if you’re alrea
 
 The existing methods for integrating metrics are not supported in a Kubernetes environment by the Vitess team yet, but are on the roadmap for the future. However, it should be possible to get the Prometheus backend working with Kubernetes. 
 
-In the meantime, if you run into issues or have questions, please post on our [forum](https://groups.google.com/forum/#!forum/vitess).
-
+In the meantime, if you run into issues or have questions, please post on our [Slack](https://vitess.io/slack).

@@ -1,5 +1,6 @@
 ---
 title: VSchema
+weight: 9
 aliases: ['/docs/schema-management/vschema/','/docs/reference/vschema/']
 ---
 
