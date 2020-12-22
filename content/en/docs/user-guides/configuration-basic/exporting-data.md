@@ -36,6 +36,12 @@ For example to export the `commerce` keyspace using the `mysqldump` binary from 
 $ mysqldump  --lock-tables=off --set-gtid-purged=OFF --no-tablespaces commerce > commerce.sql
 ```
 
+To do the same, but from Percona 8.0:
+
+```sh
+$ mysqldump  --lock-tables=off --add-locks=false --set-gtid-purged=OFF --no-tablespaces --add-drop-table=false -h x.x.x.x -u db_username -p db_name 
+```
+
 **NOTE:** You will be limited by the Vitess row limits in the size of the
 tables that you can dump using this method.  The default Vitess row limit is
 determined by the VTTablet option `-queryserver-config-max-result-size`
