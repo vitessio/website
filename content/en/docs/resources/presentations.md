@@ -16,6 +16,12 @@ Lizz van Dijk presents an introduction to Vitess for MySQL users.
 
 <iframe src = "/ViewerJS/#../files/2020-lizz-prefosdem.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
 
+## QCon 2019
+
+Sugu Sougoumarane gives an overview of the salient features of Vitess.
+
+[Video and Slides](https://www.infoq.com/presentations/vitess/)
+
 ## KubeCon San Diego 2019
 
 KubeCon featured several Vitess talks, including:
