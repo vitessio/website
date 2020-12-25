@@ -15,7 +15,7 @@ Since `corder` rows will need to have their own unique identifier, we also need 
 
 ```sql
 create table corder_seq(id bigint, next_id bigint, cache bigint, primary key(id)) comment 'vitess_sequence';
-insert into corder_seq(id, next_id, cache) values(0, 1, 2);
+insert into corder_seq(id, next_id, cache) values(0, 1, 3);
 ```
 
 VSchema:
