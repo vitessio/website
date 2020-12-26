@@ -2,6 +2,7 @@
 title: Overview
 weight: 2
 ---
+
 One of the goals for vitess is to provide a unified view for a large number of mysql clusters distributed across multiple data centers and regions.
 
 Vitess achieves this goal by allowing the application to connect to any VTGate server, and that server gives you the semblance of being connected to a single mysql server. The metadata that maps the logical view to the physical mysql servers is stored in the topology.
@@ -15,6 +16,7 @@ The topo also stores a VSchema for each keyspace. For an unsharded keyspace, the
 This guide explains how to build vschemas for vitess keyspaces.
 
 ### Demo
+
 To illustrate the various features of the VSchema, we will make use of the [demo app](https://github.com/vitessio/vitess/tree/master/examples/demo). After installing Vitess, you can launch this demo by running `go run demo.go`. Following this, you can visit http://localhost:8000 to view the tables, issue arbitrary queries, and view their effects.
 
 Alternatively, you can also connect to vitess using a mysql client: `mysql -h 127.0.0.1 -P 12348`.
@@ -24,3 +26,9 @@ The demo models a set of tables that are similar to those presented in the [Gett
 Note that the demo brings up a test process called vtcombo (instead of a real vitess cluster), which is functionally equivalent to all the components of vitess, but within a single process.
 
 You can also use the demo app to follow along the steps of this user guide. If so, you can start by emptying out the files under `schema/product` and `schema/customer`, and incrementally making the changes presented in the steps that follow.
+
+### VSchema DDL
+
+The demo describes the VSchema JSON syntax. Many of the changes can be executed by issuing special DDL commands that Vitess understands. Wherever applicable, we have provided the equivalent DDL construct you could apply if you were running a live system. All the DDLs are also listed in the `vschema_ddls.sql` file.
+
+It is generally recommeded that you get familiar with the JSON syntax as it will be useful for troubleshooting if something does not work as intended.

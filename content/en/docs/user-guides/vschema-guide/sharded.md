@@ -48,6 +48,14 @@ In the above section, we are instantiating a vindex named `hash` from the vindex
 
 The `column_vindexes` section is a list. This is because a table can have multiple vindexes. If so, the first vindex in the list must be the Primary Vindex. More information about vindexes can be found in the [Vindex Reference](../../../reference/features/vindexes).
 
+Alternate VSchema DDL:
+
+```sql
+alter vschema on customer.customer add vindex hash(customer_id) using hash;
+```
+
+The DDL creates the `hash` vindex under the `vindexes` section, the `customer` table under the `tables` section, and associates the `customer_id` column to `hash`. For sharded keyspaces, the only way to create a table is using the above construct. This is because a primary vindex is mandatory for sharded tables.
+
 {{< info >}}
 Every sharded table must have a Primary Vindex. A Primary Vindex must be instantiated from a vindex type that is Unique. `hash`, `unicode_loose_md5` and `binary_md5` are unique vindex types.
 {{< /info >}}

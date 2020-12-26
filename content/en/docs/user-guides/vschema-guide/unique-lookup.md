@@ -66,6 +66,13 @@ Finally, we must associate `customer.corder_id` with the lookup vindex:
 
 Note that `corder_id` comes after `customer_id` implying that `customer_id` is the Primary Vindex for this table.
 
+Alternate VSchema DDL:
+
+```sql
+alter vschema add table product.corder_keyspace_idx;
+alter vschema on customer.corder add vindex corder_keyspace_idx(corder_id) using consistent_lookup_unique with owner=`corder`, table=`product.corder_keyspace_idx`, from=`corder_id`, to=`keyspace_id`;
+```
+
 {{< info >}}
 An owned lookup vindex (even if unique) cannot be a Primary Vindex because it creates an association against a keyspace id after one has been assigned to the row. The job of computing the keyspace id must therefore be performed by a different unique vindex.
 {{< /info >}}

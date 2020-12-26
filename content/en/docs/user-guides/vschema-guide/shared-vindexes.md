@@ -44,6 +44,14 @@ VSchema:
     }
 ```
 
+Alternate VSchema DDL:
+
+```sql
+alter vschema on customer.corder add vindex hash(customer_id);
+alter vschema add sequence product.corder_seq;
+alter vschema on customer.corder add auto_increment corder_id using product.corder_seq;
+```
+
 Inserting into `corder` yields the following results:
 
 ```text

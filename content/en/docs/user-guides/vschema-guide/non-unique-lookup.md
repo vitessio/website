@@ -94,6 +94,13 @@ Finally, we tie the associated columns in `corder` to the vindex:
     }
 ```
 
+Alternate VSchema DDL:
+
+```sql
+alter vschema on customer.oname_keyspace_idx add vindex unicode_loose_md5(oname) using unicode_loose_md5;
+alter vschema on customer.corder add vindex oname_keyspace_idx(oname,corder_id) using consistent_lookup with owner=`corder`, table=`customer.oname_keyspace_idx`, from=`oname,corder_id`, to=`keyspace_id`;
+```
+
 We can now look at the effects of this change:
 
 ```text

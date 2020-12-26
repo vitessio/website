@@ -57,6 +57,13 @@ However, this is insufficient to emulate mysql’s auto-increment behavior. To a
       }
 ```
 
+Alternate VSchema DDL:
+
+```sql
+alter vschema add sequence product.customer_seq;
+alter vschema on customer.customer add auto_increment customer_id using product.customer_seq;
+```
+
 With this, you can insert into `customer` without specifying the `customer_id`:
 
 ```text

@@ -26,6 +26,12 @@ The json states that the keyspace is not sharded. The product table is specified
 
 For unsharded keyspaces, no additional metadata is needed for regular tables. So, their entry is empty.
 
+Alternate VSchema DDL:
+
+```sql
+alter vschema add table product.product;
+```
+
 {{< info >}}
 If `product` is the only keyspace in the cluster, a vschema is unnecessary. Vitess treats single keyspace clusters as a special case and optimistically forwards all queries to that keyspace even if there is no table metadata present in the vschema. But it is best practice to provide a full vschema to avoid future complications.
 {{< /info >}}

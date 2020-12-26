@@ -47,6 +47,14 @@ In the VSchema, there is no need to create a vindex because we are going to reus
     }
 ```
 
+Alternate VSchema DDL:
+
+```sql
+alter vschema add sequence product.corder_event_seq;
+alter vschema on customer.corder_event add vindex corder_keyspace_idx(corder_id);
+alter vschema on customer.corder_event add auto_increment corder_event_id using product.corder_event_seq;
+```
+
 We can now insert rows in `corder_event` against rows in `corder`:
 
 ```text
@@ -103,6 +111,14 @@ Modify the table VSchema:
       }
     }
 ```
+
+Alternate VSchema DDL:
+
+```sql
+alter vschema on customer.corder_event add vindex `binary`(keyspace_id) using `binary`;
+```
+
+Note that `binary` needs to be backticked because it is a keyword.
 
 After these modifications, we can now observe that the `keyspace_id` column is getting automatically populated:
 
