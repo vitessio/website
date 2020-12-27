@@ -1,6 +1,6 @@
 ---
 title: Non-Unique Lookup Vindexes
-weight: 8
+weight: 9
 ---
 
 The `oname` column in `corder` can contain duplicate values. There may be a need in the application to frequently search by this column:

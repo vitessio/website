@@ -1,6 +1,6 @@
 ---
 title: Shared Vindexes and Foreign Keys
-weight: 6
+weight: 7
 ---
 
 Let us now look at creating the `corder` table that will contain orders placed by the customers. It will be beneficial to group the rows of the orders in the same shard as that of the customer that placed the orders. Doing things this way will allow for simpler join queries between `customer` and `corder`. There will also be transactional benefits: any transaction that also updates the customer row along with an order will be a single shard transaction.

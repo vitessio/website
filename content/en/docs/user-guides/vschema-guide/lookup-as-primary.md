@@ -1,6 +1,6 @@
 ---
 title: Lookup as Primary Vindex
-weight: 9
+weight: 10
 ---
 
 It is likely that a customer order goes through a life cycle of events. This would best be represented in a separate `corder_event` table that will contain a `corder_id` column as a foreign key into `corder.corder_id`. It would also be beneficial to co-locate the event rows with their associated order.

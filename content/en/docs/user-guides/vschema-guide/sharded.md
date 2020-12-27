@@ -1,6 +1,6 @@
 ---
 title: Sharded Keyspace
-weight: 4
+weight: 5
 ---
 
 A sharded keyspace allows you to split a large database into smaller parts by distributing the rows of each table into different shards. In Vitess, each shard is assigned a `keyrange`. Every row has a keyspace id, and this value decides the shard in which the row lives. For key-value stores, the keyspace id is dictated by the value of the key, also known as the sharding key. In vitess, this is known as the Primary Vindex. But it differs from a sharding key in the following ways:

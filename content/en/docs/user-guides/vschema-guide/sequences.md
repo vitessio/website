@@ -1,6 +1,6 @@
 ---
 title: Sequences
-weight: 5
+weight: 6
 ---
 
 The sharded `customer` table we created did not have an auto-increment column. The vitess Sequence feature can be used to emulate the same behavior as mysql’s auto-increment. A Vitess sequence is a single row unsharded tablet that keeps track of ids issued so far. Additionally, a configurable number of values can be cached by vttablet to minimize round trips into mysql.

@@ -1,6 +1,6 @@
 ---
 title: Unique Lookup Vindexes
-weight: 7
+weight: 8
 ---
 
 Certain application features may require you to point-select orders by their id with a query like this:
