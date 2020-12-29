@@ -1,5 +1,5 @@
 ---
-title: MoveTables V2
+title: MoveTables
 description: Move tables between keyspaces without downtime
 weight: 10
 ---
@@ -17,7 +17,6 @@ MoveTables  -v2 <options> <action> <workflow identifier>
 MoveTables is used to start a workflow to move one or more tables from an external database or an existing Vitess keyspace into a new Vitess keyspace. The target keyspace can be unsharded or sharded.
 
 MoveTables is used typically for migrating data into Vitess or to implement vertical sharding. You might use the former when you first start using Vitess and the latter if you want to distribute your load across servers.
-
 
 ### Parameters
 
@@ -48,7 +47,7 @@ All workflows are identified by `targetKeyspace`.`workflow` where `targetKeyspac
 1. Monitor the workflow using [Show](../show) or [Progress](../progress)<br/>
 `MoveTables Show <targetKs.workflow>` _*or*_ <br/>
 `MoveTables Progress <targetKs.workflow>`<br/>
-1. Confirm that data has been copied over correctly using [VDiff](../vdiff)
+1. Confirm that data has been copied over correctly using [VDiff](../../vdiff)
 1. Cutover to the target keyspace with [SwitchTraffic](../switchtraffic) <br/>
 `MoveTables SwitchTraffic <targetKs.workflow>`
 1. Cleanup vreplication artifacts and source tables [Complete](../complete) <br/>
@@ -60,9 +59,7 @@ All workflows are identified by `targetKeyspace`.`workflow` where `targetKeyspac
 #### Adopting Vitess
 
 For those wanting to try out Vitess for the first time MoveTables provides an easy way to route part of their workload
-to Vitess with the ability of migrating back at any time without any risk. You point a vttablet to your existing MySQL installation,
-spin up a unsharded Vitess cluster and use a MoveTables workflow to start serving some tables from Vitess. You can also go
-further and use a Reshard workflow to experiment with a sharded version of a part of your database.
+to Vitess with the ability of migrating back at any time without any risk. You point a vttablet to your existing MySQL installation, spin up a unsharded Vitess cluster and use a MoveTables workflow to start serving some tables from Vitess. You can also go further and use a Reshard workflow to experiment with a sharded version of a part of your database.
 
 See [user guide](../../../../../docs/user-guides/configuration-advanced/unmanaged-tablet/#move-legacytable-to-the-commerce-keyspace) for detailed steps
 
@@ -71,8 +68,7 @@ See [user guide](../../../../../docs/user-guides/configuration-advanced/unmanage
 For existing Vitess users you can easily move one or more tables to another keyspace, either for balancing load or
 as a preparation to sharding your tables.
 
-See [user guide](../../../../../docs/user-guides/migration/move-tables/) which describes how MoveTables works in the local example provided
-in the Vitess repo.
+See [user guide](../../../../../docs/user-guides/migration/move-tables/) which describes how MoveTables works in the local example provided in the Vitess repo.
 
 #### More Reading
 * [MoveTables in practice](../../../../../docs/concepts/move-tables/)

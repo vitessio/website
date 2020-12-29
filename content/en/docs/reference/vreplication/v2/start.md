@@ -1,7 +1,7 @@
 ---
 title: Start
 description: Initiate a workflow
-weight: 10
+weight: 30
 ---
 ##### _Experimental_
 This documentation is for a new (v2) set of vtctld commands. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
@@ -9,13 +9,17 @@ This documentation is for a new (v2) set of vtctld commands. See [RFC](https://g
 ### Command
 
 ```
-MoveTables -v2 [-source <sourceKs>] [-tables <tableSpecs>] [-cells <cells>] [-tablet_types <source_tablet_types>]
+MoveTables -v2 [-source=<sourceKs>] [-tables=<tableSpecs>] [-cells=<cells>] [-tablet_types=<source_tablet_types>]
           Start <targetKs.workflow>
+
+Reshard -v2 [-source_shards=<source_shards>] [-target_shards=<target_shards>] [-cells=<cells>]
+    [-tablet_types=<source_tablet_types>]  [-skip_schema_copy] Start <keyspace.workflow>
+
 ```
 
 ### Description
 
-`MoveTables Start` initiates a new workflow. The workflow name should not clash with that of an existing workflow.
+`MoveTables/Reshard Start` initiates a new workflow. The workflow name should not clash with that of an existing workflow.
 
 ### Parameters
 
@@ -42,7 +46,7 @@ _Or_
   * tables being moved are not yet present in the target's vschema
 
   Example: `MoveTables -source=commerce -tables='{"t1":{"column_vindexes": [{"column": "id", "name": "hash"}]}}}' Start customer.commerce2customer`
-  
+
 </div>
 
 #### -cells
@@ -72,4 +76,30 @@ One or more from MASTER, REPLICA, RDONLY.<br><br>
 
 * To reduce load on master tablets by using REPLICAs or RDONLYs
 * Reducing lags by pointing to MASTER
+</div>
+
+#### source_shards
+**mandatory**
+
+<div class="cmd">
+Comma separated shard names to reshard from.
+
+Example: `Reshard -source_shards=0 -target_shards=-80,80- Start customer.reshard1to2`
+
+</div>
+
+#### target_shards
+**mandatory**
+
+<div class="cmd">
+Comma separated shard names to reshard to.
+</div>
+
+#### -skip_schema_copy
+**optional**\
+**default** false
+
+<div class="cmd">
+If true the source schema is copied to the target shards. If false, you need to create the tables
+before calling reshard.
 </div>
