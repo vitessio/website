@@ -18,7 +18,7 @@ MoveTables/Reshard -v2 [-keep_data] Abort <targetKs.workflow>
 
 ### Parameters
 
-a#### -keep_data
+#### -keep_data
 **optional**\
 **default** false
 

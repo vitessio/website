@@ -41,7 +41,7 @@ All workflows are identified by `targetKeyspace`.`workflow` where `targetKeyspac
 ### The most basic Reshard Workflow lifecycle
 
 1. Initiate the migration using [Start](../start)<br/>
-`Reshard -source_shards=<source_shards> -target_shards=<target_shards> -tables=<tableSpecs> Start <keyspace.workflow>`
+`Reshard -source_shards=<source_shards> -target_shards=<target_shards> Start <keyspace.workflow>`
 1. Monitor the workflow using [Show](../show) or [Progress](../progress)<br/>
 `Reshard Show <keyspace.workflow>` _*or*_ <br/>
 `Reshard Progress <keyspace.workflow>`<br/>

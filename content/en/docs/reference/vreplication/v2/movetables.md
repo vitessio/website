@@ -16,14 +16,14 @@ MoveTables  -v2 <options> <action> <workflow identifier>
 
 MoveTables is used to start a workflow to move one or more tables from an external database or an existing Vitess keyspace into a new Vitess keyspace. The target keyspace can be unsharded or sharded.
 
-MoveTables is used typically for migrating data into Vitess or to implement vertical sharding. You might use the former when you first start using Vitess and the latter if you want to distribute your load across servers.
+MoveTables is typically used for migrating data into Vitess or to implement vertical sharding. You might use the former when you first start using Vitess and the latter if you want to distribute your load across servers without sharding tables.
 
 ### Parameters
 
 #### action
 
 <div class="cmd">
-MoveTables is an "umbrella" command. The `action` sub-command defines the operation on the workflow.
+MoveTables is an "umbrella" command. The *action* sub-command defines the operation on the workflow.
 </div>
 
 #### options

@@ -57,7 +57,7 @@ the command will error out. For setups with high write qps you may need to incre
 **default** true
 
 <div class="cmd">
-SwitchTraffic for master tablet types, by default, starts a reverse replication stream with the current target as the source, replicating back to the original source. This enables a quick and simple rollback using ReverseTraffic. This reverse workflow name is that of the original workflow concatenated with \_reverse.
+SwitchTraffic for master tablet types, by default, starts a reverse replication stream with the current target as the source, replicating back to the original source. This enables a quick and simple rollback using ReverseTraffic. This reverse workflow name is that of the original workflow concatenated with _reverse.
 
 If set to false these reverse replication streams will not be created and you will not be able to rollback once you have switched write traffic over to the target.
 </div>

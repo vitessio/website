@@ -9,11 +9,12 @@ This documentation is for a new (v2) set of vtctld commands. See [RFC](https://g
 ### Command
 
 ```
-MoveTables -v2 [-source=<sourceKs>] [-tables=<tableSpecs>] [-cells=<cells>] [-tablet_types=<source_tablet_types>]
-          Start <targetKs.workflow>
+MoveTables -v2 [-source=<sourceKs>] [-tables=<tableSpecs>] [-cells=<cells>]
+  [-tablet_types=<source_tablet_types>] Start <targetKs.workflow>
 
-Reshard -v2 [-source_shards=<source_shards>] [-target_shards=<target_shards>] [-cells=<cells>]
-    [-tablet_types=<source_tablet_types>]  [-skip_schema_copy] Start <keyspace.workflow>
+Reshard -v2 [-source_shards=<source_shards>] [-target_shards=<target_shards>]
+  [-cells=<cells>] [-tablet_types=<source_tablet_types>]  [-skip_schema_copy]
+  Start <keyspace.workflow>
 
 ```
 
@@ -25,12 +26,14 @@ Reshard -v2 [-source_shards=<source_shards>] [-target_shards=<target_shards>] [-
 
 #### -source
 **mandatory**
+**MoveTables only**
 <div class="cmd">
 Name of existing keyspace (the source keyspace) that contains the tables to be moved.
 </div>
 
 #### table_specs
 **mandatory**
+**MoveTables only**
 <div class="cmd">
 _Either_
 
@@ -80,6 +83,7 @@ One or more from MASTER, REPLICA, RDONLY.<br><br>
 
 #### source_shards
 **mandatory**
+**Reshard only**
 
 <div class="cmd">
 Comma separated shard names to reshard from.
@@ -90,6 +94,7 @@ Example: `Reshard -source_shards=0 -target_shards=-80,80- Start customer.reshard
 
 #### target_shards
 **mandatory**
+**Reshard only**
 
 <div class="cmd">
 Comma separated shard names to reshard to.
@@ -98,6 +103,7 @@ Comma separated shard names to reshard to.
 #### -skip_schema_copy
 **optional**\
 **default** false
+**Reshard only**
 
 <div class="cmd">
 If true the source schema is copied to the target shards. If false, you need to create the tables

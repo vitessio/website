@@ -32,6 +32,8 @@ Usually the source data (tables or shards) are deleted by Complete. If this flag
 **default** false
 
 <div class="cmd">
-The rename_tables flag is applicable only for MoveTables. Tables are renamed instead of being deleted. Currently the new name is _&lt;table_name&gt;. (We plan to change this to use the logic used by `ptosc` using the template _&lt;table_name&gt;_old. The new naming convention has the additional benefit that vreplication will automatically ignore such tables from getting resharded or streamed by the VStream API)
+The rename_tables flag is applicable only for MoveTables. Tables are renamed instead of being deleted. Currently the new name is _&lt;table_name&gt;.
+<br/><br/>
+(We plan to change this to use the logic used by `ptosc` using the template _&lt;table_name&gt;_old. The new naming convention has the additional benefit that vreplication will automatically ignore such tables from getting resharded or streamed by the VStream API)
 
 </div>
