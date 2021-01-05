@@ -21,9 +21,9 @@ of [Vitess v2.0.0](https://github.com/youtube/vitess/releases). Some highlights 
   * Java and Go clients use the new HTTP/2-based [gRPC](http://www.grpc.io/) framework.
 * Can now run on top of MySQL 5.6, in addition to MariaDB 10.0.
 * New administrative dashboard built on AngularJS.
-* Built-in backup/restore</span>](http://vitess.io/user-guide/backup-and-restore.html), designed to plug into blob stores like [Google Cloud Storage](https://cloud.google.com/storage/).
-* GTID-based [reparenting](http://vitess.io/user-guide/reparenting.html) for reversible, routine failovers.
-* Simpler [schema changes](http://vitess.io/user-guide/schema-management.html).
+* [Built-in backup/restore</span>](https://vitess.io/docs/user-guides/operating-vitess/backup-and-restore/) designed to plug into blob stores like [Google Cloud Storage](https://cloud.google.com/storage/).
+* GTID-based [reparenting](https://vitess.io/docs/user-guides/configuration-advanced/reparenting/) for reversible, routine failovers.
+* Simpler [schema changes](https://vitess.io/docs/reference/features/schema-management/).
 
 We've also been hard at work adding lots more [documentation](http://vitess.io/user-guide/introduction.html). In particular, the rest of this post will explore one of our new walkthroughs that demonstrates transparent [resharding](http://vitess.io/user-guide/sharding.html#resharding) of a live database - that is, changing the number of shards without any code changes or noticeable downtime for the application.
 

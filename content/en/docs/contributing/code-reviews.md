@@ -19,7 +19,7 @@ In order to avoid disruption, the following concerns need to be kept in mind:
 Every GitHub pull request must go through a code review and get approved before it will be merged into the master branch.
 
 Every pull request should meet the following requirements:
-* Use the [Pull Request Template](https://github.com/vitessio/vitess/blob/master/.github/PULL_REQUEST_TEMPLATE/pull_request_template.md) 
+* Use the [Pull Request Template](https://github.com/vitessio/vitess/blob/master/.github/pull_request_template.md)
 * Adhere to the [Go coding guidelines](https://golang.org/doc/effective_go.html) and watch out for these [common errors](https://github.com/golang/go/wiki/CodeReviewComments).
 * Contain a description message that is as detailed as possible. Here is a great example https://github.com/vitessio/vitess/pull/6543.
 * Pass all CI tests that run on PRs.

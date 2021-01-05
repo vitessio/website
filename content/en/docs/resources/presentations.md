@@ -194,8 +194,9 @@ Vitess team member [Anthony Yeh](https://github.com/enisoc)'s talk at
 the [January 2016 CoreOS Meetup](http://www.meetup.com/coreos/events/228233948/)
 discussed challenges and techniques for running distributed databases
 within Kubernetes, followed by a deep dive into the design trade-offs
-of the [Vitess on Kubernetes](https://github.com/vitessio/vitess/tree/master/examples/kubernetes)
-deployment templates.
+of the Vitess on Kubernetes deployment templates.
+
+Please note the Vitess on Kubernetes deployment templates were removed as of February 27, 2020.
 
 {{< pdf src="/ViewerJS/#../files/coreos-meetup-2016-01-27.pdf" >}}
 
