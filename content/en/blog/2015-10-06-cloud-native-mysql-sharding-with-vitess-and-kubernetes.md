@@ -38,29 +38,21 @@ values, which we call [keyspace IDs](http://vitess.io/overview/concepts.html#key
 
 **Transparent Resharding**
 
-If you want to follow along with the new [resharding walkthrough](http://vitess.io/user-guide/sharding-kubernetes.html), you'll need to first bring up the cluster as described in the [unsharded guide](http://vitess.io/getting-started/). Both guides use the same [sample app](https://github.com/youtube/vitess/tree/master/examples/kubernetes/guestbook), which is a Guestbook that supports multiple, numbered pages.
-
-![Guestbook page 72 screenshot](../images/2015-10-06-cloud-native-mysql-sharding-with-vitess-and-kubernetes-vitess%2B5.png)
+If you want to follow along with the new [resharding walkthrough](http://vitess.io/user-guide/sharding-kubernetes.html), you'll need to first bring up the cluster as described in the [unsharded guide](http://vitess.io/getting-started/). 
 
 In the [sample app code](https://github.com/youtube/vitess/blob/master/examples/kubernetes/guestbook/main.py), you'll see a `get\_keyspace\_id()` function that transforms a given page number to the set of all 8-byte sequences, establishing the mapping we need for consistent hashing. In the unsharded case, these values are stored but not used. When we introduce sharding, page numbers will be evenly distributed (on average) across all the shards we create, allowing the app to scale to support arbitrary amounts of pages.
 
 Before resharding, you'll see a single [custom shard](http://vitess.io/user-guide/sharding.html#custom-sharding) named "0" in the Vitess dashboard. This is what an unsharded [keyspace](http://vitess.io/overview/concepts.html#keyspace) looks like.
 
-![Guestbook dashboard screenshot](../images/2015-10-06-cloud-native-mysql-sharding-with-vitess-and-kubernetes-vitess%2B1.png)
-
 As you begin the [resharding walkthrough](http://vitess.io/user-guide/sharding-kubernetes.html),you'll bring up two new shards for the same keyspace. During resharding, the new shards will run alongside the old one, but they'll remain idle (Vitess will not route any app traffic to them) until you're ready to migrate. In the dashboard, you'll see all three shards, but only shard "0" is currently active.
-
-![Guestbook test_keyspace image](../images/2015-10-06-cloud-native-mysql-sharding-with-vitess-and-kubernetes-vitess%2B2.png)
 
 Next, you'll run a few Vitess commands to [copy the schema and data](http://vitess.io/user-guide/sharding-kubernetes.html#copy-data-from-original-shard) from the original shard. The key to live migration is that once the initial snapshot copy is done, Vitess will automatically begin replicating fresh updates on the original shard to the new shards. We call this [filtered replication](http://vitess.io/user-guide/sharding.html#filtered-replication), since it distributes DMLs only to the shards to which they apply. Vitess also includes tools that compare the original and copied data sets, row-by-row, to [verify data
 integrity](http://vitess.io/user-guide/sharding-kubernetes.html#check-copied-data-integrity).
 
 Once you've verified the copy, and filtered replication has caught up to real-time updates, you can run the [migrate command](http://vitess.io/user-guide/sharding-kubernetes.html#switch-over-to-the-new-shards) which tells Vitess to atomically shift app traffic from the old shards to the new ones. It does this by disabling writes on the old masters, waiting for the new masters to receive the last events over filtered replication, and then enabling writes on the new masters. Since the process is automated, this typically only causes about a second of write unavailability.
 
-Now you can[tear down the old shard](http://vitess.io/user-guide/sharding-kubernetes.html#remove-the-original-shard),
+Now you can [tear down the old shard](http://vitess.io/user-guide/sharding-kubernetes.html#remove-the-original-shard),
 and verify that only the new ones show up in the dashboard.
-
-![Guestbook dashboard image verify new shards](../images/2015-10-06-cloud-native-mysql-sharding-with-vitess-and-kubernetes-vitess%2B4.png)
 
 Note that we never had to tell the app that we were changing from one shard to two. The resharding process was completely transparent to the app, since Vitess automatically reroutes queries on-the-fly as the migration progresses.
 
@@ -73,13 +65,9 @@ The promise of sharding is that it allows you to scale write throughput linearly
 Below you can see preliminary results for scaling write throughput by adding more shards in Vitess running on [Google Container Engine](https://cloud.google.com/container-engine/). For this benchmark, we pointed YCSB at the [load balancer](http://kubernetes.io/v1.0/docs/user-guide/services.html#type-loadbalancer) for our Vitess cluster and told it to send a lot of INSERT statements.
 Vitess took care of routing statements to the various shards.
 
-[![](../images/thumbnails/2015-10-06-cloud-native-mysql-sharding-with-vitess-and-kubernetes-vitess%2B3.png)](../images/2015-10-06-cloud-native-mysql-sharding-with-vitess-and-kubernetes-vitess%2B3.png)
-
 The max throughput (QPS) for a given number of shards is the point at which round-trip write latency became degraded, which we define as &gt;15ms on average or &gt;50ms for the worst 1% of queries (99th percentile).
 
 We also ran YCSB's "read mostly" workload (95% reads, 5% writes) to show how Vitess can scale read traffic by adding replicas. The max throughput here is the point at which round-trip read latency became degraded, which we define as &gt;5ms on average or &gt;20ms for the worst 1% of queries.
-
-![Guestbook image](../images/2015-10-06-cloud-native-mysql-sharding-with-vitess-and-kubernetes-vitess%2B6.png)
 
 There's still a lot of room to improve the benchmarks (for example, by tuning the performance of MySQL itself). However, these preliminary results show that the returns don't diminish as you scale. And since you're scaling horizontally, you're not limited by the size of a single machine.
 
