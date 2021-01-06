@@ -8,7 +8,7 @@ A VTTablet server _controls_ a running MySQL server. VTTablet supports two prima
 * Managed MySQL (most common)
 * Unmanaged or Remote MySQL
 
-In addition to these deployment types, a partially managed VTTablet is also possible by setting `-disable_active_reparents`.
+In addition to these deployment types, a partially managed VTTablet is also possible by setting `-disable_active_reparents`. 
 
 
 ## Example Usage
@@ -73,6 +73,16 @@ vtctlclient TabletExternallyReparented zone1-401
 ```
 
 See [Unmanaged Tablet](../../../user-guides/configuration-advanced/unmanaged-tablet) for the full guide.
+
+### Partially managed MySQL
+
+Even if a MySQL is remote, you can still make vttablet perform some management functions. They are as follows:
+
+* `-disable_active_reparents`: If this flag is set, then any reparent or replica commands will not be allowed. These are InitShardMaster, PlannedReparent, PlannedReparent, EmergencyReparent, and ReparentTablet. In this mode, you should use the TabletExternallyReparented command to inform vitess of the current master.
+* `-master_connect_retry`: This value is give to mysql when it connects a replica to the master as the retry duration parameter.
+* `-enable_replication_reporter`: If this flag is set, then vttablet will transmit replica lag related information to the vtgates, which will allow it to balance load better. Additionally, enabling this will also cause vttablet to restart replication if it was stopped. However, it will do this only if -disable_active_reparents was not turned on.
+* `-enable_semi_sync`: This option will automatically enable semi-sync on new replicas as well as on any tablet that transitions into a replica type. This includes the demotion of a master to a replica.
+* `-heartbeat_enable` and `-heartbeat interval duration`: cause vttablet to write heartbeats to the sidecar database. This information is also used by the replication reporter to assess replica lag.
 
 
 ## Options
@@ -383,3 +393,10 @@ The following global options apply to `vttablet`:
 | -xtrabackup_stripes | uint | If greater than 0, use data striping across this many destination files to parallelize data transfer and decompression |
 | -xtrabackup_user | string | User that xtrabackup will use to connect to the database server. This user must have all necessary privileges. For details, please refer to xtrabackup documentation. |
 
+### Key Options
+
+* -restore_from_backup: The default value for this flag is false. If set to true, and the my.cnf file was successfully loaded, then vttablet can perform automatic restores as follows:
+
+	* If started against a mysql instance that has no data files, it will search the list of backups for the latest one, and initiate a restore. After this, it will point the mysql to the current master and wait for replication to catch up. Once replication is caught up to the specified tolerance limit, it will advertise itself as serving. This will cause the vtgates to add it to the list of healthy tablets to serve queries from.
+	* If this flag is true, but my.cnf was not loaded, then vttablet will fatally exit with an error message.
+	* You can additionally control the level of concurrency for a restore with the `-restore_concurrency` flag. This is typically useful in cloud environments to prevent the restore process from becoming a 'noisy' neighbor by consuming all available disk IOPS.
