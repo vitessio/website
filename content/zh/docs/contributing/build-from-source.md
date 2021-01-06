@@ -23,7 +23,7 @@ featured: true
 
  Vitess依赖如下软件和库:
 
-1.  [Install Go 1.11+](http://golang.org/doc/install).
+1.  [Install Go 1.15+](http://golang.org/doc/install).
 
 2. Install MySQL:
 ```bash
