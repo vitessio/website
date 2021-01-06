@@ -7,9 +7,9 @@ Let us now look at creating the `corder` table that will contain orders placed b
 
 To make this happen in Vitess, all you have to do is specify that `corder.customer_id` uses the `hash` vindex, which is the same one used by `customer.customer_id`.
 
-This is one situation where a Primary Vindex conceptually differs from a traditional database Primary Key. Whereas a Primary Key makes a row unique, a vitess Primary Vindex only yields a Unique value. But multiple rows with the same Primary Vindex value can exist.
+This is one situation where a Primary Vindex conceptually differs from a traditional database Primary Key. Whereas a Primary Key makes a row unique, a Vitess Primary Vindex only yields a Unique value. But multiple rows with the same Primary Vindex value can exist.
 
-In other words, the Primary Vindex column need not be the primary key, or unique within mysql. This is convenient for the `corder` table because we want customers to place multiple orders. In this case, all orders placed by a customer will have the same `customer_id`. The Primary Vindex for those will yield the same keyspace id as that of the customer. Therefore, all the rows for that customer’s orders will end up in the same shard along with the customer row.
+In other words, the Primary Vindex column need not be the primary key, or unique within MySQL. This is convenient for the `corder` table because we want customers to place multiple orders. In this case, all orders placed by a customer will have the same `customer_id`. The Primary Vindex for those will yield the same keyspace id as that of the customer. Therefore, all the rows for that customer’s orders will end up in the same shard along with the customer row.
 
 Since `corder` rows will need to have their own unique identifier, we also need to create a separate sequence for it in the product keyspace.
 
@@ -140,7 +140,7 @@ mysql> select c.uname, o.oname, p.pname from customer c join corder o on c.custo
 5 rows in set (0.01 sec)
 ```
 
-Although the underlying work performed by vitess is not visible here, you can see it in the bottom right panel if using the demo app. Alternatively, you can also stream this information with the following command:
+Although the underlying work performed by Vitess is not visible here, you can see it in the bottom right panel if using the demo app. Alternatively, you can also stream this information with the following command:
 
 ```text
 curl localhost:12345/debug/querylog
@@ -151,7 +151,7 @@ curl localhost:12345/debug/querylog
 
 More generically stated: If a table has a foreign key into another table, then Vitess can ensure that the related rows live in the same shard by making them share a common Unique Vindex.
 
-In cases where you choose to group rows based on their foreign key relationships, you have the option to enforce those constraints within each shard at the mysql level. You can also configure cascade deletes as needed. However, overuse of foreign key constraints is generally discouraged in MySQL.
+In cases where you choose to group rows based on their foreign key relationships, you have the option to enforce those constraints within each shard at the MySQL level. You can also configure cascade deletes as needed. However, overuse of foreign key constraints is generally discouraged in MySQL.
 
 Foreign key constraints across shards or keyspaces are not supported in Vitess. For example, you cannot specify a foreign key between `corder.product_id` and `product.product_id`.
 
@@ -169,4 +169,4 @@ To enforce global uniqueness for a row in a sharded table, you have to have:
 
 A Primary Vindex coupled with a Primary Key constraint makes a row globally unique.
 
-A Unique Vindex can also be specified for a non-unique column. In such cases, it is likely that you will be using that column in a where clause, and will require a secondary non-unique index on it at the mysql level.
+A Unique Vindex can also be specified for a non-unique column. In such cases, it is likely that you will be using that column in a where clause, and will require a secondary non-unique index on it at the MySQL level.

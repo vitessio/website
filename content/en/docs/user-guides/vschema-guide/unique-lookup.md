@@ -9,7 +9,7 @@ Certain application features may require you to point-select orders by their id 
 select * from corder where corder_id=1;
 ```
 
-However, issuing this query to vitess will cause it to scatter this query across all shards because there is no way to know which shard contains that order id. This would be inefficient if the QPS of this query or the number of shards is too high.
+However, issuing this query to Vitess will cause it to scatter this query across all shards because there is no way to know which shard contains that order id. This would be inefficient if the QPS of this query or the number of shards is too high.
 
 Vitess supports the concept of lookup vindexes, also known as cross-shard indexes. You can instruct Vitess to create and manage a lookup vindex for the `corder_id` column. Such a vindex needs to maintain a mapping from `corder_id` to the `keyspace_id` of the row, which will be stored in a lookup table.
 
@@ -48,9 +48,9 @@ We can now instantiate the Lookup Vindex in the VSchema of the `customer` keyspa
   * The `from` and `to` fields must reference the column names of the lookup table.
 * The `owner` field indicates that `corder` is responsible for populating the lookup table and keeping it up-to-date. This means that an insert into `corder` will result in a corresponding lookup row being inserted in the lookup table, etc. Lookup vindexes can also be shared, but they can have only one owner each. We will later see an example about how to share lookup vindexes.
 
-{{ info }}
+{{< info >}}
 Since `corder_keyspace_idx` and `corder` are in different keyspaces, any change that affects the lookup column results in a distributed transaction between the `customer` shard and the `product` keyspace. Usually, a two-phase commit (2PC) protocol would need to be used for the distributed transaction. However, the `consistent` lookup vindex utilizes a special algorithm that orders the commits in such a way that a commit failure resulting in partial commits does not result in inconsistent data. This avoids the extra overheads associated with 2PC.
-{{ /info }}
+{{< /info >}}
 
 Finally, we must associate `customer.corder_id` with the lookup vindex:
 
@@ -108,7 +108,7 @@ Vindexes that do have a one-to-one correspondence between the input value and ke
 
 Creating a lookup vindex after the main table already contains rows does not automatically backfill the lookup table for the existing entries. Only newer inserts cause automatic population of the lookup table. This backfill can be set up using the `CreateLookupVindex` command covered below.
 
-### Check List
+### Checklist
 
 Creating a unique lookup Vindex is an elaborate process. It is good to use the following checklist if this is done manually:
 * Create the lookup table as sharded or unsharded. Make the `from` column the primary key.
@@ -125,7 +125,7 @@ Creating a unique lookup Vindex is an elaborate process. It is good to use the f
 vtctld supports the [CreateLookupVindex](../../configuration-advanced/createlookupvindex) command that can perform all the above steps as well as the backfill.
 
 {{< warning >}}
-This will not work against the `vtcombo` based demo app because it does not support vreplication. You can only try this against a real vitess cluster.
+This will not work against the `vtcombo` based demo app because it does not support vreplication. You can only try this against a real Vitess cluster.
 {{< /warning >}}
 
 Save the following json into a file, say `corder_keyspace_idx.json`:

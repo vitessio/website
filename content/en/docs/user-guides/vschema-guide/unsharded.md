@@ -9,7 +9,7 @@ We are going to start with configuring the `product` table in the unsharded keys
 create table product(product_id bigint auto_increment, pname varchar(128), primary key(product_id));
 ```
 
-`product_id` is the primary key for product, and it is also configured to use mysql’s `auto_increment` feature that allows you to automatically generate unique values for it.
+`product_id` is the primary key for product, and it is also configured to use MySQL’s `auto_increment` feature that allows you to automatically generate unique values for it.
 
 We also need to create a VSchema for the `product` keyspace and specify that `product` is a table in the keyspace:
 
@@ -39,7 +39,7 @@ If `product` is the only keyspace in the cluster, a vschema is unnecessary. Vite
 Bringing up the cluster will allow you to access the `product` table. You can now insert rows into the table:
 
 ```text
-~/...vitess/examples/demo> mysql -h 127.0.0.1 -P 12348
+$ mysql -h 127.0.0.1 -P 12348
 [snip]
 mysql> insert into product(pname) values ('monitor'), ('keyboard');
 Query OK, 2 rows affected (0.00 sec)
@@ -53,11 +53,11 @@ mysql> select * from product;
 +------------+----------+
 2 rows in set (0.00 sec)
 ```
-The insert does not specify values for `product_id`, because we are relying on mysql’s `auto_increment` feature to populate it.
+The insert does not specify values for `product_id`, because we are relying on MySQL’s `auto_increment` feature to populate it.
 
-You will notice that we did not connect to the `product` database or issue a `use` statement to select it. This is the ‘unspecified’ mode supported by vitess. As long as a table name can be uniquely identified from the vschemas, vitess will automatically direct the query to the correct keyspace.
+You will notice that we did not connect to the `product` database or issue a `use` statement to select it. This is the ‘unspecified’ mode supported by Vitess. As long as a table name can be uniquely identified from the vschemas, Vitess will automatically direct the query to the correct keyspace.
 
-You can also connect or specify keyspaces as if they were mysql databases. The following constructs are valid:
+You can also connect or specify keyspaces as if they were MySQL databases. The following constructs are valid:
 
 ```text
 mysql> select * from product.product;

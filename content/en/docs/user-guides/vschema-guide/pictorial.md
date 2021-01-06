@@ -3,7 +3,7 @@ title: Pictorial Summary
 weight: 12
 ---
 
-The following two diagrams highlight some of the relationships that exist between VSchema elements and the mysql tables.
+The following two diagrams highlight some of the relationships that exist between VSchema elements and the MySQL tables.
 
 ### product and customer
 

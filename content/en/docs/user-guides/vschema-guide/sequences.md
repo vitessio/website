@@ -3,7 +3,7 @@ title: Sequences
 weight: 6
 ---
 
-The sharded `customer` table we created did not have an auto-increment column. The vitess Sequence feature can be used to emulate the same behavior as mysql’s auto-increment. A Vitess sequence is a single row unsharded tablet that keeps track of ids issued so far. Additionally, a configurable number of values can be cached by vttablet to minimize round trips into mysql.
+The sharded `customer` table we created did not have an auto-increment column. The Vitess Sequence feature can be used to emulate the same behavior as MySQL’s auto-increment. A Vitess sequence is a single row unsharded tablet that keeps track of ids issued so far. Additionally, a configurable number of values can be cached by vttablet to minimize round trips into MySQL.
 
 We will create the sequence table in the unsharded `product` keyspace as follows:
 
@@ -48,7 +48,7 @@ mysql> select next 1 values from customer_seq;
 
 The construct returns the first of the N values generated.
 
-However, this is insufficient to emulate mysql’s auto-increment behavior. To achieve this, we have to inform the VSchema that the `customer_id` column should use this sequence to generate values if no value is specified. This is done by adding the following section to the `customer` table:
+However, this is insufficient to emulate MySQL’s auto-increment behavior. To achieve this, we have to inform the VSchema that the `customer_id` column should use this sequence to generate values if no value is specified. This is done by adding the following section to the `customer` table:
 
 ```json
       "auto_increment": {

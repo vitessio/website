@@ -24,7 +24,7 @@ However, if you reach a point where the data is starting to grow, sharding may b
 
 ### Moving Tables
 
-Typically, the first step you may perform is to split your database by moving some tables on to other databases. In vitess parlance, we call this as splitting off keyspaces. The [MoveTables](../../migration/move-tables) workflow allows you to perform this with minimal impact to the application.
+Typically, the first step you may perform is to split your database by moving some tables on to other databases. In Vitess parlance, we call this as splitting off keyspaces. The [MoveTables](../../migration/move-tables) workflow allows you to perform this with minimal impact to the application.
 
 ### Resharding
 
