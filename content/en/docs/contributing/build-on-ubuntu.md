@@ -12,7 +12,7 @@ The following has been verified to work on __Ubuntu 19.10__ and __Debian 10__. I
 
 ## Install Dependencies
 
-### Install Go 1.13+
+### Install Go 1.15+
 
 [Download and install](http://golang.org/doc/install) Golang 1.15. For example, at writing:
 
