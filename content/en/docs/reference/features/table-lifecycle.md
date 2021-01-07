@@ -78,4 +78,4 @@ Vitess internally uses the above table lifecycle for [online, managed schema mig
 
 When using an online `ddl_strategy`, a `DROP TABLE` is a [managed schema migration](../../../user-guides/schema-changes/managed-online-schema-changes/). It is internally replaced by a `RENAME TABLE` statement, renaming it into a `HOLD` state (e.g. `_vt_HOLD_6ace8bcef73211ea87e9f875a4d24e90_20210915120000`). It will then participate in the table lifecycle mechanism. If `table_gc_lifecycle` does not include the `hold` state, the table proceeds to transition to next included state. 
 
-
+A multi-table `DROP TABLE` statement is converted to multiple single-table `DROP TABLE` statements, each to then convert to a `RENAME TABLE` statement.
