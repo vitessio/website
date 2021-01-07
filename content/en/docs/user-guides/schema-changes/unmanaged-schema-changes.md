@@ -1,7 +1,7 @@
 ---
 title: Unmanaged Schema Changes
 weight: 3
-aliases: ['/docs/schema-management/unmanaged-schema-changes/', '/docs/user-guides/unmanaged-schema-changes/']
+aliases: ['/docs/user-guides/operating-vitess/making-schema-changes', '/docs/schema-management/unmanaged-schema-changes/', '/docs/user-guides/unmanaged-schema-changes/']
 ---
 
 Vitess offers multiple approaches to running unmanaged schema changes. Below, we review each of these approaches.
