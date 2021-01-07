@@ -12,13 +12,13 @@ The following has been verified to work on __CentOS 7__. If you are new to Vites
 
 ## Install Dependencies
 
-### Install Go 1.13+
+### Install Go 1.15+
 
-[Download and install](http://golang.org/doc/install) Golang 1.13. For example, at writing:
+[Download and install](http://golang.org/doc/install) Golang 1.15. For example, at writing:
 
 ```
-curl -O https://dl.google.com/go/go1.13.9.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.13.9.linux-amd64.tar.gz
+curl -O https://golang.org/dl/go1.15.6.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.15.6.linux-amd64.tar.gz
 ```
 
 Make sure to add go to your bashrc:
