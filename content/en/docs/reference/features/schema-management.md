@@ -1,5 +1,6 @@
 ---
 title: Schema Management
+weight: 16
 aliases: ['/docs/schema-management/','/docs/user-guides/schema-management/','/docs/reference/schema-management/']
 ---
 

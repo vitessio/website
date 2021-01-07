@@ -1,5 +1,6 @@
 ---
 title: Topology Service
+weight: 20
 aliases: ['/docs/user-guides/topology-service/','/docs/reference/topology-service/']
 ---
 

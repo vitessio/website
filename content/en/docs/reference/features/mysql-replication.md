@@ -1,6 +1,6 @@
 ---
 title: Replication
-weight: 5
+weight: 9
 aliases: ['/docs/reference/row-based-replication/','/docs/reference/vitess-replication/','/docs/reference/mysql-replication/']
 ---
 

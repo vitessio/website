@@ -1,7 +1,7 @@
 ---
 title: Sharding
 description: Shard widely, shard often.
-weight: 5
+weight: 1
 aliases: ['/docs/sharding/','/user-guide/sharding.html','/docs/reference/sharding/']
 ---
 
