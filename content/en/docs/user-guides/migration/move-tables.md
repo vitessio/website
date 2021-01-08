@@ -16,15 +16,18 @@ As a stepping stone towards splitting a single table across multiple servers (sh
 
 Let's start by simulating this situation by loading sample data:
 
-```sql
-mysql < ../common/insert_commerce_data.sql
+```sh
+# On helm and local installs:
+mysql < /usr/local/vitess/examples/common/insert_commerce_data.sql
+# With operator:
+mysql --table < insert_commerce_data.sql
 ```
 
 We can look at what we just inserted:
 
 ```sh
 # On helm and local installs:
-mysql --table < ../common/select_commerce_data.sql
+mysql --table < /usr/local/vitess/examples/common/select_commerce_data.sql
 # With operator:
 mysql --table < select_commerce_data.sql
 
@@ -67,7 +70,7 @@ In this scenario, we are going to add the `customer` keyspace to the `commerce` 
 ## Show our current tablets
 
 ```sh
-$ echo "show vitess_tablets;" | mysql --table
+$ mysql --table --execute="show vitess_tablets"
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
 | Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname  | MasterTermStartTime  |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
@@ -159,7 +162,7 @@ vtctlclient ReloadSchemaKeyspace customer
 ## Show our old and new tablets
 
 ```sh
-$ echo "show vitess_tablets;" | mysql --table
+$ mysql --table --execute="show vitess_tablets"
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
 | Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname  | MasterTermStartTime  |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
