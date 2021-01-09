@@ -190,3 +190,5 @@ $ vtctlclient -server <vtctld_grpc_port> CreateLookupVindex -tablet_types=REPLIC
 ```
 
 The workflow will automatically create the necessary Primary Vindex entries for `oname_keyspace_idx` knowing that it is sharded.
+
+After the backfill is done, you should clean up the workflow. More detailed instructions are available in the  [CreateLookupVindex Reference](../../configuration-advanced/createlookupvindex)
