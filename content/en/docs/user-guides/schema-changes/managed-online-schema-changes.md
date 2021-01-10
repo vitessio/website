@@ -58,7 +58,7 @@ Use the standard MySQL `CREATE TABLE` syntax. The query goes through the same [m
 
 ### DROP TABLE
 
-Use the standard MySQL `DROP TABLE` syntax. The query goes through the same [migration flow](#migration-flow-and-states) as `ALTER TABLE` does. Tables are not immediately dropped. Instead, they are renamed into special names, recognizable by the table lifecycle mechanism, then to slowly and safely transition through lifecycle states into finally getting dropped.
+Use the standard MySQL `DROP TABLE` syntax. The query goes through the same [migration flow](#migration-flow-and-states) as `ALTER TABLE` does. Tables are not immediately dropped. Instead, they are renamed into special names, recognizable by the table lifecycle mechanism, to then slowly and safely transition through lifecycle states into finally getting dropped.
 
 ### Statement transformations
 
@@ -177,7 +177,7 @@ We highlight how Vitess manages migrations internally, and explain what states a
 - For `DROP TABLE` statements:
   - A multi-table `DROP TABLE` statement is converted to multiple single-table `DROP TABLE` statements
   - Each `DROP TABLE` is internally replaced with a `RENAME TABLE`
-  - Table is renamed into special name, identified by the [Table Lifecycle](../../../reference/features/table-lifecycle/) mechanism
+  - Table is renamed using a special naming convention, identified by the [Table Lifecycle](../../../reference/features/table-lifecycle/) mechanism
   - As result, a single `DROP TABLE` statement may generate multiple distinct migrations with distinct migration UUIDs.
 
 By way of illustration, suppose a migration is now in `running` state, and is expected to keep on running for the next few hours. The user may initiate a new `ALTER TABLE...` statement. It will persist in global `topo`. `vtctld` will pick it up and advertise it to the relevant tablets. Each will persist the migration request in `queued` state. None will run the migration yet, since another migration is already in progress. In due time, and when the executing migration completes (whether successfully or not), and assuming no other migrations are `queued`, the `primary` tablets, each in its own good time, will execute the new migration. 

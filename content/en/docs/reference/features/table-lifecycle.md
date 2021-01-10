@@ -63,7 +63,7 @@ All subsets end with a `drop`, even if not explicitly mentioned. Thus, `"purge"`
 
 ## Stateless flow by table name hints
 
-Vitess does not track the state of table lifecycle. The process is stateless thanks to an encoding schema in the table names. Examples:
+Vitess does not track the state of the table lifecycle. The process is stateless thanks to an encoding scheme in the table names. Examples:
 
 - The table `_vt_HOLD_6ace8bcef73211ea87e9f875a4d24e90_20210915120000` is held until `2021-09-15 12:00:00`. The data remains intact.
 - The table `_vt_PURGE_6ace8bcef73211ea87e9f875a4d24e90_20210915123000` is at the state where it is being purged, or queued to be purged. Once it's fully purged (zero rows remain), it transitions to the next stage.
