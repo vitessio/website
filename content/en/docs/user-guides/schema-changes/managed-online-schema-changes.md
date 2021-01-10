@@ -4,9 +4,9 @@ weight: 2
 aliases: ['/docs/user-guides/managed-online-schema-changes/']
 ---
 
-**Note:** this feature is **EXPERIMENTAL**. The syntax for online DDL statements is **subject to change**.
+**Note:** this feature is **EXPERIMENTAL**.
 
-Vitess offers managed, online schema migrations, via [gh-ost](https://github.com/github/gh-ost) and [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html). As a quick breakdown:
+Vitess offers managed, online schema migrations, via [gh-ost](https://github.com/github/gh-ost) and [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html) for `ALTER TABLE` statements, and via [table lifecycle](../../../reference/features/table-lifecycle/) for `DROP TABLE` statements. As a quick breakdown:
 
 - Using the standard MySQL `CREATE TABLE`, `ALTER TABLE` and `DROP TABLE` syntax.
 - With either `@@ddl_strategy` session variable set, or `-ddl_strategy` command line flag. 
@@ -16,7 +16,7 @@ Vitess offers managed, online schema migrations, via [gh-ost](https://github.com
 - Tablets will independently run schema migrations:
   - `ALTER TABLE` statements run via `gh-ost` or `pt-online-schema-change`.
   - `CREATE TABLE` statements run directly.
-  - `DROP TABLE` statements run directly (WIP for lazy `DROP TABLE`).
+  - `DROP TABLE` statements run [safely and lazily](../../../reference/features/table-lifecycle/).
 - Vitess provides the user a mechanism to view migration status, cancel or retry migrations, based on the job ID.
 
 ## Syntax
@@ -54,11 +54,11 @@ How the migration is executed depends on your `ddl_strategy` configuration, and 
 
 ### CREATE TABLE
 
-Use the standard MySQL `CREATE TABLE` syntax. The query goes through the same [#migration-flow-and-states](migration flow) as `ALTER TABLE` does. The tablets eventually run the query directly on the MySQL backends.
+Use the standard MySQL `CREATE TABLE` syntax. The query goes through the same [migration flow](#migration-flow-and-states) as `ALTER TABLE` does. The tablets eventually run the query directly on the MySQL backends.
 
 ### DROP TABLE
 
-Use the standard MySQL `DROP TABLE` syntax. The query goes through the same [#migration-flow-and-states](migration flow) as `ALTER TABLE` does. The tablets eventually run the query directly on the MySQL backends.
+Use the standard MySQL `DROP TABLE` syntax. The query goes through the same [migration flow](#migration-flow-and-states) as `ALTER TABLE` does. Tables are not immediately dropped. Instead, they are renamed into special names, recognizable by the table lifecycle mechanism, to then slowly and safely transition through lifecycle states into finally getting dropped.
 
 ### Statement transformations
 
@@ -175,7 +175,10 @@ We highlight how Vitess manages migrations internally, and explain what states a
 - For `CREATE TABLE` statements:
   - Tablet runs the statement directly on the MySQL backend
 - For `DROP TABLE` statements:
-  - Tablet runs the statement directly on the MySQL backend (WIP for lazy drops)
+  - A multi-table `DROP TABLE` statement is converted to multiple single-table `DROP TABLE` statements
+  - Each `DROP TABLE` is internally replaced with a `RENAME TABLE`
+  - Table is renamed using a special naming convention, identified by the [Table Lifecycle](../../../reference/features/table-lifecycle/) mechanism
+  - As result, a single `DROP TABLE` statement may generate multiple distinct migrations with distinct migration UUIDs.
 
 By way of illustration, suppose a migration is now in `running` state, and is expected to keep on running for the next few hours. The user may initiate a new `ALTER TABLE...` statement. It will persist in global `topo`. `vtctld` will pick it up and advertise it to the relevant tablets. Each will persist the migration request in `queued` state. None will run the migration yet, since another migration is already in progress. In due time, and when the executing migration completes (whether successfully or not), and assuming no other migrations are `queued`, the `primary` tablets, each in its own good time, will execute the new migration. 
 
