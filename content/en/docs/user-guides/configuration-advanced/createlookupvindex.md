@@ -5,7 +5,7 @@ aliases: ['/docs/user-guides/createlookupvindex/']
 ---
 
 {{< info >}}
-This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../../get-started/operator), [local](../../../get-started/local) or [Helm](../../../get-started/helm) installation ready.  Make sure you are at the point where you have the sharded keyspace called `customer` setup.
+This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../../get-started/operator) or [local](../../../get-started/local) installation ready.  Make sure you are at the point where you have the sharded keyspace called `customer` setup.
 {{< /info >}}
 
 **CreateLookupVindex** is a new VReplication workflow in Vitess 6.  It is used to create **and** backfill a lookup Vindex automatically for a table that already exists, and may have a significant amount of data in it already.
@@ -324,18 +324,13 @@ mysql> select sku, hex(keyspace_id) from corder_lookup;
 +-----------+------------------+
 ```
 
-Basically, this shows exactly what we expected.  Now, we can clean up the
-VReplication streams.  Note these commands will clean up all VReplication
-streams on these tablets. You may want to filter by `id` if there are other
-streams running:
+Basically, this shows exactly what we expected.  Now, we have to clean-up
+the artifacts of the backfill. The `ExternalizeVindex` command will delete 
+the vreplication streams and also clear the `write_only` flag from the
+vindex indicating that it is not backfilling any more.
 
 ```sh
-$ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000300 "delete from _vt.vreplication"
-+
-+
-$ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000400 "delete from _vt.vreplication"
-+
-+
+$ vtctlclient -server localhost:15999 ExternalizeVindex customer.corder_lookup
 ```
 
 Next, to confirm the lookup Vindex is doing what we think it should, we can
@@ -475,3 +470,6 @@ mysql> select sku, hex(keyspace_id) from corder_lookup;
 We added a new row to the `corder` table, and now we have a new row in the
 lookup table.
 
+### ExternalizeVindex
+
+Once the backfill is done, 

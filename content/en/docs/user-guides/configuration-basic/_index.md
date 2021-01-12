@@ -1,5 +1,5 @@
 ---
 title: Configuration
 description: User guides covering basic configuration concepts
-weight: 1
+weight: 2
 ---
