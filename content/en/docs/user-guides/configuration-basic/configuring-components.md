@@ -1,6 +1,6 @@
 ---
 title: Configuring Components
-weight: 2
+weight: 17
 aliases: ['/docs/launching/server-configuration/', '/docs/user-guides/server-configuration/', '/docs/user-guides/configuring-components/']
 ---
 
