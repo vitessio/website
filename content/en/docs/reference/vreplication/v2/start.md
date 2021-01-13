@@ -62,7 +62,7 @@ cells should be used to pick a tablet for selecting data from the source keyspac
 
 ###### Uses
 
-* Improve performance by using picking a tablet in cells in network proximity with the target
+* Improve performance by picking a tablet in cells in network proximity with the target
 * To reduce bandwidth costs by skipping cells which are in different availability zones
 * Select cells where replica lags are lower
 </div>

@@ -63,7 +63,7 @@ to Vitess with the ability of migrating back at any time without any risk. You p
 
 See [user guide](../../../../../docs/user-guides/configuration-advanced/unmanaged-tablet/#move-legacytable-to-the-commerce-keyspace) for detailed steps
 
-#### Horizontal Sharding
+#### Vertical Sharding
 
 For existing Vitess users you can easily move one or more tables to another keyspace, either for balancing load or
 as a preparation to sharding your tables.
