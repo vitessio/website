@@ -20,7 +20,7 @@ Reshard -v2 [-source_shards=<source_shards>] [-target_shards=<target_shards>]
 
 ### Description
 
-`MoveTables/Reshard Start` initiates a new workflow. The workflow name should not clash with that of an existing workflow.
+`MoveTables/Reshard Start` initiates a new workflow. The workflow name should not conflict with that of an existing workflow.
 
 ### Parameters
 

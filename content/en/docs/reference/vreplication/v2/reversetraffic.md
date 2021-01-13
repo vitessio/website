@@ -14,7 +14,7 @@ MoveTables/Reshard -v2 [-tablet_types <tablet_types_csv>] [-cells <cells>] Rever
 
 ### Description
 
-`ReverseTraffic` switches traffic in the reverse direction for the tablet_types specified. The traffic should have been previous switched forward using SwitchTraffic for the cells/tablet_types specified.
+`ReverseTraffic` switches traffic in the reverse direction for the tablet_types specified. The traffic should have been previously switched forward using SwitchTraffic for the cells/tablet_types specified.
 
 ### Parameters
 
