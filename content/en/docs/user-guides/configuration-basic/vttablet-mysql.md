@@ -59,7 +59,7 @@ When specifying additional configuration changes to Vitess, please keep in mind 
 | `gtid-mode`         | Vitess relies on GTIDs to track changes to topology. |
 | `gtid-strict-mode`/`enforce-gtid-consistency` | Vitess requires this setting to be unchanged. |
 
-Support was recently added to override `sql_mode`. However, we recommend keeping `STRICT_TRANS_TABLES` or replacing it with`STRICT_ALL_TABLES`. Without one of these settings, mysql could truncate values at the time of writing, and this can mismatch with decisions made by the sharding logic and lead to data corruption. VTTablet ensures that one of these  values is set. If absolutely necessary, you can override this check by setting `-enable_strict_mode=false` while invoking vttablet.
+Support was recently added to override `sql_mode`. However, we recommend keeping `STRICT_TRANS_TABLES` or replacing it with`STRICT_ALL_TABLES`. Without one of these settings, mysql could truncate values at the time of writing, and this can mismatch with decisions made by the sharding logic and lead to data corruption. VTTablet ensures that one of these  values is set. If absolutely necessary, you can override this check by setting `-enforce_strict_trans_tables=false` while invoking vttablet.
 
 ### init\_db.sql
 
