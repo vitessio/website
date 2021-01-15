@@ -45,9 +45,19 @@ Vitess will automatically detect the flavor of MySQL and will adjust its behavio
 Backups will need to be shared across vttablet instances and multiple cells. You need to plan and allocate shared storage that must be accessible from all cells. Depending on the choice made, you will need to prepare a group of command line arguments to include with the vitess components to launch. Here is an example:
 
 ```text
---backup_storage_implementation file -file_backup_storage_root <mounted_path_dir>
+-backup_storage_implementation file -file_backup_storage_root <mounted_path_dir>
 ```
 
 Please refer to the [Backup and Restore](../../operating-vitess/backup-and-restore) guide for instructions on how to configure other storage options.
 
 To avoid repetition we will use `<backup_flags>` in our examples to signify the above flags.
+
+## Logging
+
+Vitess servers write to log files, and they are rotated when they reach a maximum size. It’s recommended that you run at INFO level logging. The information printed in the log files come in handy for troubleshooting. You can limit the disk usage by running cron jobs that periodically purge or archive them.
+
+All vitess servers accept a `-log_dir` as argument and will create the log files in that specified directory. For example:
+
+```text
+-log_dir=${VTDATAROOT}/tmp
+```

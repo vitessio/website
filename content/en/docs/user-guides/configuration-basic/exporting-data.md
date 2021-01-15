@@ -1,6 +1,6 @@
 ---
 title: Exporting data from Vitess
-weight: 18
+weight: 17
 aliases: ['/docs/user-guides/exporting-data/'] 
 ---
 
@@ -38,7 +38,7 @@ $ mysqldump  --lock-tables=off --set-gtid-purged=OFF --no-tablespaces commerce >
 
 **NOTE:** You will be limited by the Vitess row limits in the size of the
 tables that you can dump using this method.  The default Vitess row limit is
-determined by the VTTablet option `-queryserver-config-max-result-size`
+determined by the vttablet option `-queryserver-config-max-result-size`
 and defaults to 10000 rows.  So for an unsharded database, you will not be
 able to dump tables with more than 10000 rows, or N x 10000 rows if the table
 is fully sharded across N shards.  Note that you should not blindly raise your
