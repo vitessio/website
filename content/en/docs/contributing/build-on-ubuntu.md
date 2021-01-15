@@ -23,7 +23,16 @@ sudo tar -C /usr/local -xzf go1.15.6.linux-amd64.tar.gz
 
 Make sure to add go to your bashrc:
 ```
+# Additions to ~/.bashrc file
+
+# Add go PATH
 export PATH=$PATH:/usr/local/go/bin
+
+# Add GOROOT
+export GOROOT=/usr/local/go/
+
+# Add GOPATH
+export GOPATH=/home/<user>/go
 ```
 
 ### Packages from apt repos
@@ -82,8 +91,8 @@ Set environment variables that Vitess will require. It is recommended to put the
 ```
 # Additions to ~/.bashrc file
 
-# Add go PATH
-export PATH=$PATH:/usr/local/go/bin
+#VTDATAROOT
+export VTDATAROOT=/tmp/vtdataroot
 
 # Vitess binaries
 export PATH=~/vitess/bin:${PATH}
