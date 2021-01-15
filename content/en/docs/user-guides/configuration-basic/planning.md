@@ -26,7 +26,7 @@ In this guide, we will be covering the case where the MySQL instances are manage
 
 ## Provisioning
 
-Some high level decisions have to be made about the number of cells you plan to deploy on. This will loosely tie into how many replicas you intend to run per MySQL primary; You are likely to deploy at least one replica per cell.
+Some high level decisions have to be made about the number of cells you plan to deploy on. This will loosely tie into how many replicas you intend to run per MySQL primary. You are likely to deploy at least one replica per cell.
 
 Vitess resource consumption is mostly driven by QPS, but there may be variations depending on your use case. As a starting point, you can use a thumb rule of provisioning about 1 CPU for every 1000QPS. This CPU will be divided between MySQL, vttablets and vtgates, about 1/3 each. As for memory, you can start with approximately 1GB per CPU provisioned for Vitess components. MySQL memory will be largely guided by the buffer pool size, which may take some trial and error or prior experience to tune.
 
@@ -35,7 +35,7 @@ Resources for other servers like the toposerver, vtctld and vtorc are minimal. T
 ## Environment variables
 
 Setting up a few environment variables upfront will improve the manageability of the system:
-* `VTDATAROOT`: Setting up this value will make vitess create all data files under this directory. If not specified, the default value is `/vt`.
+* `VTDATAROOT`: Setting up this value will make vitess create the mysql data files under this directory. Other vitess binaries will also use this variable to locate such files as needed. If not specified, the default value is `/vt`. Typically, no other files get stored under this directory. However, many idiomatic deployments tend to reuse this as root directory for other purposes like log files, etc.
 * `VT_MYSQL_ROOT`: Informs Vitess about where to find the `mysqld` binary. If this is not specified, Vitess will try to find `mysqld` in the current `PATH`.
 
 Vitess will automatically detect the flavor of MySQL and will adjust its behavior accordingly. You can override this behavior by specifying an explicit flavor with the `-db_flavor` command line argument to the various components.

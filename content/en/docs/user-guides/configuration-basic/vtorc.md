@@ -37,7 +37,7 @@ vtorc <topo_flags> \
   -config orc_config.json \
   -orc_web_dir ${VTROOT}/web/orchestrator
  ```
-`orc_web_dir` must point at the contents of the orchestrator web files. The source can be found [here](https://github.com/vitessio/vitess/tree/master/config/orchestrator).
+`orc_web_dir` must point at the contents of the orchestrator web files. The source can be found [here](https://github.com/vitessio/vitess/tree/master/web/orchestrator).
 
 Bringing up `vtorc` should immediately cause a primary to be elected among the vttablets that have come up.
 

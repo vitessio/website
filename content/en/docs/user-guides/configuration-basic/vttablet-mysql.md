@@ -136,7 +136,7 @@ There are some additional parameters that we recommend setting:
 * `enable_replication_reporter`: Enabling this flag will make vttablet send its replication lag information to the vtgates, and they will use this information to avoid sending queries to replicas that are lagged beyond a threshold.
 * `unhealthy_threshold`: If `enable_replication_reporter` is enabled, and the replication lag exceeds this threshold, then vttablet stops serving queries. This value is meant to match the vtgate `discovery_high_replication_lag_minimum_serving` flag.
 * `degraded_threshold`: This flag does not change vttablet’s behavior. This threshold is used to report a warning in the status page if the replication lag exceeds this threshold. This value is meant to match the vtgate `discovery_low_replication_lag` flag.
-* `restore_from_backup`: This flag informs vttablet to automatically restore data from the latest backup. Once this task completes, vttablet will point itself at the current primary to catch up on replication. When then falls below the specified threshold, vtgate will automatically start sending queries to the tablet.
+* `restore_from_backup`: This flag informs vttablet to automatically restore data from the latest backup. Once this task completes, vttablet will point itself at the current primary to catch up on replication. When that falls below the specified threshold, vtgate will automatically start sending queries to the tablet.
 * `queryserver-config-pool-size`:This value should be set to the max number of simultaneous queries you want MySQL to run. This should typically be around 2-3x the number of allocated CPUs. Around 4-16. There is not much harm in going higher with this value, but you may see no additional benefits. This pool gets used if the workload is set to `oltp`, which is the default.
 * `queryserver-config-transaction-cap`: This value should be set to how many concurrent transactions you wish to allow. This should be a function of transaction rate and transaction length. Typical values are in the low 100s.
 * `queryserver-config-stream-pool-size`: This value is relevant only if you plan to run streaming queries using the `workload=’olap’` setting. This value depends on how many simultaneous streaming queries you plan to run. Typical values are similar to `queryserver-config-pool-size`.
@@ -193,7 +193,8 @@ The next step is to bring up the rest of the vttablet-mysql pairs on other machi
 You can find out the current state of all vttablets with the following command:
 
 ```sh
-$ zone1-0000000100 commerce 0 master sougou-lap1:15100 sougou-lap1:17100 [] 2021-01-02T22:27:11Z
+$ vtctlclient ListAllTablets
+zone1-0000000100 commerce 0 master sougou-lap1:15100 sougou-lap1:17100 [] 2021-01-02T22:27:11Z
 zone1-0000000101 commerce 0 replica sougou-lap1:15101 sougou-lap1:17101 [] <null>
 zone1-0000000102 commerce 0 rdonly sougou-lap1:15102 sougou-lap1:17102 [] <null>
 ```
