@@ -14,7 +14,7 @@ MoveTables  -v2 <options> <action> <workflow identifier>
 
 ### Description
 
-MoveTables is used to start a workflow to move one or more tables from an external database or an existing Vitess keyspace into a new Vitess keyspace. The target keyspace can be unsharded or sharded.
+MoveTables is used to start and manage workflows to move one or more tables from an external database or an existing Vitess keyspace into a new Vitess keyspace. The target keyspace can be unsharded or sharded.
 
 MoveTables is typically used for migrating data into Vitess or to implement vertical sharding. You might use the former when you first start using Vitess and the latter if you want to distribute your load across servers without sharding tables.
 
@@ -30,7 +30,7 @@ MoveTables is an "umbrella" command. The *action* sub-command defines the operat
 <div class="cmd">
 Each `action` has additional options/parameters that can be used to modify its behavior.
 
-`actions` are common to both MoveTables and Reshard v2 workflows. Only the `start` action has different parameters, all other actions have common options and semantics. These actions are documented separately.
+`actions` are common to both MoveTables and Reshard v2 workflows. Only the `create` action has different parameters, all other actions have common options and semantics. These actions are documented separately.
 </div>
 
 #### workflow identifier
@@ -42,8 +42,8 @@ All workflows are identified by `targetKeyspace`.`workflow` where `targetKeyspac
 
 ### The most basic MoveTables Workflow lifecycle
 
-1. Initiate the migration using [Start](../start)<br/>
-`MoveTables -source=<sourceKs> -tables=<tableSpecs> Start <targetKs.workflow>`
+1. Initiate the migration using [Create](../create)<br/>
+`MoveTables -source=<sourceKs> -tables=<tableSpecs> Sreate <targetKs.workflow>`
 1. Monitor the workflow using [Show](../show) or [Progress](../progress)<br/>
 `MoveTables Show <targetKs.workflow>` _*or*_ <br/>
 `MoveTables Progress <targetKs.workflow>`<br/>

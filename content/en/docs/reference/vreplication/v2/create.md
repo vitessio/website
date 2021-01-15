@@ -1,5 +1,5 @@
 ---
-title: Start
+title: Create
 description: Initiate a workflow
 weight: 30
 ---
@@ -10,17 +10,17 @@ This documentation is for a new (v2) set of vtctld commands. See [RFC](https://g
 
 ```
 MoveTables -v2 [-source=<sourceKs>] [-tables=<tableSpecs>] [-cells=<cells>]
-  [-tablet_types=<source_tablet_types>] Start <targetKs.workflow>
+  [-tablet_types=<source_tablet_types>] Create <targetKs.workflow>
 
 Reshard -v2 [-source_shards=<source_shards>] [-target_shards=<target_shards>]
   [-cells=<cells>] [-tablet_types=<source_tablet_types>]  [-skip_schema_copy]
-  Start <keyspace.workflow>
+  Create <keyspace.workflow>
 
 ```
 
 ### Description
 
-`MoveTables/Reshard Start` initiates a new workflow. The workflow name should not conflict with that of an existing workflow.
+`MoveTables/Reshard Create` sets up and creates a new workflow. The workflow name should not conflict with that of an existing workflow.
 
 ### Parameters
 
@@ -41,14 +41,14 @@ _Either_
   * if target keyspace is unsharded OR
   * if target keyspace is sharded AND the tables being moved are already defined in the target's vschema
 
-  Example: `MoveTables -source=commerce -tables=customer,corder Start customer.commerce2customer`
+  Example: `MoveTables -source=commerce -tables=customer,corder Create customer.commerce2customer`
 
 _Or_
 * the JSON table section of the vschema for associated tables
   * if target keyspace is sharded AND
   * tables being moved are not yet present in the target's vschema
 
-  Example: `MoveTables -source=commerce -tables='{"t1":{"column_vindexes": [{"column": "id", "name": "hash"}]}}}' Start customer.commerce2customer`
+  Example: `MoveTables -source=commerce -tables='{"t1":{"column_vindexes": [{"column": "id", "name": "hash"}]}}}' Create customer.commerce2customer`
 
 </div>
 
@@ -88,7 +88,7 @@ One or more from MASTER, REPLICA, RDONLY.<br><br>
 <div class="cmd">
 Comma separated shard names to reshard from.
 
-Example: `Reshard -source_shards=0 -target_shards=-80,80- Start customer.reshard1to2`
+Example: `Reshard -source_shards=0 -target_shards=-80,80- Create customer.reshard1to2`
 
 </div>
 

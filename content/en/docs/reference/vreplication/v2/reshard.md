@@ -14,7 +14,7 @@ Reshard  -v2 <options> <action> <workflow identifier>
 
 ### Description
 
-Reshard is used to start a workflow to horizontally shard an existing keyspace. The source keyspace can be unsharded or sharded.
+Reshard is used to create and manage workflows to horizontally shard an existing keyspace. The source keyspace can be unsharded or sharded.
 
 ### Parameters
 
@@ -28,7 +28,7 @@ Reshard is an "umbrella" command. The `action` sub-command defines the operation
 <div class="cmd">
 Each `action` has additional options/parameters that can be used to modify its behavior.
 
-`actions` are common to both MoveTables and Reshard v2 workflows. Only the `start` action has different parameters, all other actions have common options and semantics. These actions are documented separately.
+`actions` are common to both MoveTables and Reshard v2 workflows. Only the `create` action has different parameters, all other actions have common options and semantics. These actions are documented separately.
 </div>
 
 #### workflow identifier
@@ -40,8 +40,8 @@ All workflows are identified by `targetKeyspace`.`workflow` where `targetKeyspac
 
 ### The most basic Reshard Workflow lifecycle
 
-1. Initiate the migration using [Start](../start)<br/>
-`Reshard -source_shards=<source_shards> -target_shards=<target_shards> Start <keyspace.workflow>`
+1. Initiate the migration using [Create](../create)<br/>
+`Reshard -source_shards=<source_shards> -target_shards=<target_shards> Create <keyspace.workflow>`
 1. Monitor the workflow using [Show](../show) or [Progress](../progress)<br/>
 `Reshard Show <keyspace.workflow>` _*or*_ <br/>
 `Reshard Progress <keyspace.workflow>`<br/>
