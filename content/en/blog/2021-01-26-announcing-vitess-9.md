@@ -4,7 +4,7 @@ date: 2021-01-26
 slug: '2020-01-26-announcing-vitess-9'
 tags: ['release','Vitess','MySQL','kubernetes','operator','cloud','GKE','sharding']
 title: 'Announcing Vitess 9'
-description: 'We are pleased to announce the general availability of Vitess 9. 
+description: 'We are pleased to announce the general availability of Vitess 9.'
 ---
 On behalf of the Vitess maintainers team, I am pleased to announce the general availability of [Vitess 9](https://github.com/vitessio/vitess/releases/tag/v9.0.0).
 
