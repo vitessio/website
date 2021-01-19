@@ -24,16 +24,16 @@ with the -dry_run parameter first and reads its output so that you know which ac
 
 ### Parameters
 
-#### -rename_tables 
+#### -rename_tables
 **optional**\
 **default** all
 
 <div class="cmd">
 Only applies for a MoveTables workflow. Instead of deleting the tables in the source it renames them
-     by prefixing the tablename with an _ (underscore).
+using the template _&lt;tableName&gt;_old, the same scheme followed by pt-osc
 </div>
 
-#### -dry-run 
+#### -dry-run
 **optional**\
 **default** false
 
@@ -42,10 +42,9 @@ You can do a dry run where no actual action is taken but the command logs all th
 by SwitchReads.
 </div>
 
-#### keyspace.workflow 
+#### keyspace.workflow
 **mandatory**
 
 <div class="cmd">
 Name of target keyspace and the associated workflow to run VDiff on.
 </div>
-
