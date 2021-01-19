@@ -6,9 +6,13 @@ aliases: ['/docs/launching/server-configuration/', '/docs/user-guides/server-con
 
 ## Tools
 
-Vitess provides integrations with a variety of popular monitoring tools: Prometheus, InfluxDB and Datadog. The core infrastructure uses go's `expvar` package to export real-time variables visible as a JSON structure by browsing to `/debug/vars`. The exported variables are CamelCase names. These names are algorithmically converted to the appropriate naming standards that the monitoring tools expect. In the sections below, we will be describing the variables as seen in the `/debug/vars` page.
+Vitess provides integrations with a variety of popular monitoring tools: Prometheus, InfluxDB and Datadog. The core infrastructure uses go's `expvar` package to export real-time variables visible as a JSON object served by the `/debug/vars` URL. The exported variables are CamelCase names. These names are algorithmically converted to the appropriate naming standards for each monitoring tool. In the sections below, we will be describing the variables as seen in the `/debug/vars` page.
 
 The two critical Vitess processes to monitor are vttablet and vtgate. Additionally, we recommend that you setup monitoring for the underlying mysql instances as commonly recommended in the mysql community.
+
+Beyond what the tools export, it is important to also monitor system resource usage: CPU, memory, network and disk usage.
+
+There is a [popular mixin](https://github.com/vitessio/vitess/tree/master/vitess-mixin) contributed by [Slack](https://slack.com) that is based on how they monitor Vitess internally. It can be used as a starting point if you intend to use Prometheus and Grafana.
 
 Beyond the monitoring variables, the Vitess processes export additional information about their status on other URL paths. Some of those pages are for human consumption, and others are machine-readable meant for building automation.
 
@@ -16,11 +20,11 @@ Beyond the monitoring variables, the Vitess processes export additional informat
 
 ### /debug/status
 
-This page has a variety of human-readable information about the current vttablet. You can look at this page to get a general overview of what’s going on. It also has links to various other diagnostic URLs below.
+This page has a variety of human-readable information about the current vttablet and contains links to all the other URLs. You can look at this page to get a general overview of what is going on.
 
 ### /debug/vars
 
-The following sections describe the various sub-objects of the JSON object exported by `/debug/vars`:
+The following sections describe the various sub-objects of the JSON object exported by `/debug/vars`. These variables can be found at the top level of the JSON object:
 
 #### Queries
 
@@ -52,6 +56,14 @@ Vitess has a structured way of exporting certain performance stats. The most com
 
 The histograms are broken out into query categories. In the above case, `Select` is the only category, which measures all SELECT statements. An entry like `"500000": 1133195` means that `1133195` queries took under `500000` nanoseconds to execute.
 
+The numbers are cumulative. For example, if you wish to count how many queries took between `500000ns` and `1000000ns`, the answer would be `1138196-1133195`, which is `1`.
+
+Later below, we will be convering variables that break out these queries into further categories. However, we do not generate histograms for them because the number of values generated will be too big.
+
+The thresholds are hard-coded. However, if you are integrating with an extermal tool like Prometheus, it will have its own thresholds.
+
+The counters increment for the lifetime of the vttablet, and all values are updated in real-time.
+
 `Queries.Histograms.Select.Count` is the total count in the `Select` category.
 
 `Queries.Histograms.Select.Time` is the total time in the `Select` category.
@@ -66,13 +78,14 @@ Use this variable to track:
 
 * QPS
 * Latency
-* Per-category QPS. For replicas, the only category will be PASS\_SELECT, but there will be more for masters.
+* Per-category QPS. For replicas, the only category will be `Select`, but there will be more for masters.
 * Per-category latency
 * Per-category tail latency
+* Per-category cost: This value is calculated as QPS\*Latency. If the latency of a high QPS query goes up, it is likely causing more harm than the latency increase of an occasional query.
 
 #### Results
 
-``` json
+```json
   "Results": {
     "0": 0,
     "1": 0,
@@ -90,17 +103,21 @@ Use this variable to track:
   }
 ```  
 
-Results is a simple histogram with no timing info. It gives you a histogram view of the number of rows returned per query.
+Results is a simple histogram with no timing info. It gives you a histogram view of the number of rows returned per query. This does not include rows affected from write queries.
+
+`Count` is expected to be the same as the `TotalCount` of the `Queries` histogram.
+
+`Total` is the total number of rows returned so far.
 
 #### Mysql
 
 Mysql is a histogram variable like Queries, except that it reports MySQL execution times. The categories are "Exec" and “ExecStream”.
 
-In the past, the exec time difference between vttablet and MySQL used to be substantial. With the newer versions of Go, the vttablet exec time has been predominantly been equal to the mysql exec time, conn pool wait time and consolidations waits. In other words, this variable has not shown much value recently. However, it’s good to track this variable initially, until it’s determined that there are no other factors causing a big difference between MySQL performance and vttablet performance.
+The vttablet queries exec time is roughly equal to the sum of the mysql exec time, conn pool waits and consolidation waits.
 
 #### Transactions
 
-Transactions is a histogram variable that tracks transactions. The categories are "Completed" and “Aborted”.
+`Transactions` is a histogram variable that tracks transactions. The categories are "Completed" and “Aborted”. Since these are histograms, they include count as well as timings.
 
 #### Waits
 
@@ -121,7 +138,7 @@ This variable used to report connection pool waits, but a refactor moved those v
 
 Errors are reported under different categories. It’s beneficial to track each category separately as it will be more helpful for troubleshooting. Right now, there are four categories. The category list may vary as Vitess evolves.
 
-Plotting errors/query can sometimes be useful for troubleshooting.
+Errors/Query is a useful stat to track.
 
 VTTablet also exports an InfoErrors variable that tracks inconsequential errors that don’t signify any kind of problem with the system. For example, a dup key on insert is considered normal because apps tend to use that error to instead update an existing row. So, no monitoring is needed for that variable.
 
@@ -140,7 +157,7 @@ VTTablet also exports an InfoErrors variable that tracks inconsequential errors 
   },
 ```
 
-An internal error is an unexpected situation in code that may possibly point to a bug. Such errors may not cause outages, but even a single error needs be escalated for root cause analysis.
+An internal error is an unexpected situation in code that may possibly point to a bug. Such errors may not cause outages, but even a single error needs to be escalated for root cause analysis.
 
 #### Kills
 
@@ -152,7 +169,7 @@ An internal error is an unexpected situation in code that may possibly point to 
   },
 ```
 
-Kills reports the queries, transactions and reserved connections killed by vttablet due to timeout. It’s a very important variable to look at during outages.
+Kills reports the queries, transactions and reserved connections killed by vttablet due to timeout. It is a very important variable to look at during incidents.
 
 #### TransactionPool\* and FoundRowsPool\*
 
@@ -233,7 +250,7 @@ This URL prints out a JSON object that lists the state of all the variables that
 
 #### /querylogz, /debug/querylog, /txlogz, /debug/txlog
 
-* /debug/querylog is a never-ending stream of currently executing queries with verbose information about each query. This URL can generate a lot of data because it streams every query processed by vttablet. The details are as per this function: https://github.com/vitessio/vitess/blob/master/go/vt/vttablet/tabletserver/tabletenv/logstats.go#L202
+* /debug/querylog is a continuous stream of verbose execution info as each query is executed. This URL can generate a lot of data because it streams every query processed by vttablet. The details are as per this function: https://github.com/vitessio/vitess/blob/master/go/vt/vttablet/tabletserver/tabletenv/logstats.go#L202
 * /querylogz is a limited human readable version of /debug/querylog. It prints the next 300 queries by default. The limit can be specified with a limit=N parameter on the URL.
 * /txlogz is like /querylogz, but for transactions.
 * /debug/txlog is the JSON counterpart to /txlogz.
@@ -283,15 +300,19 @@ This is the main histogram variable to track for vtgates. It gives you a break u
 
 It shows the number of tablet connections for query/healthcheck per keyspace, shard, and tablet type.
 
-#### /debug/health
+### TopologyWatcherErrors and TopologyWatcherOperations
+
+These two variables track events related to how vtgate watches the topology. It is particularly important to monitor the error count. This can act as an early warning sign if a vtgate is not able to refresh the list of tablets from the topo.
+
+### /debug/health
 
 This URL prints out a simple "ok" or “not ok” string that can be used to check if the server is healthy.
 
-#### /debug/querylogz, /debug/querylog, /debug/queryz, /debug/query\_plans
+### /debug/querylogz, /debug/querylog, /debug/queryz, /debug/query\_plans
 
 These URLs are similar to the ones exported by vttablet, but apply to the current vtgate instance.
 
-#### /debug/vschema
+### /debug/vschema
 
 This URL shows the vschema as loaded by vtgate.
 
