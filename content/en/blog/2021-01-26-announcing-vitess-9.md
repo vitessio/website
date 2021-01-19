@@ -31,7 +31,7 @@ There has been a significant push towards streamlining Online Schema Changes.
 * Better auditing: A migration is now associated with a context as well as the identity of the issuing vttablet.
 * Better managed: It’s possible to list migrations by context, to cancel all pending migrations. Vitess will automatically retry migrations that fail due to a failover.
 * More statements: Online DDL now also works for `CREATE` and `DROP` statements. This allows us to group together migrations with the same context.
-* Safe, lazy and managed `DROP`s: Online DDL `DROP` statements are converted to `RENAME` statements, which send the tables to the lifecycle mechanism: tables are held for safekeeping for a period of time, then slowly and safely purged and dropped, without risking database lockdown. A multi-table `DROP statement is exploded into distinct single-table operations.
+* Safe, lazy and managed `DROP`s: Online DDL `DROP` statements are converted to `RENAME` statements, which send the tables to the lifecycle mechanism: tables are held for safekeeping for a period of time, then slowly and safely purged and dropped, without risking database lockdown. A multi-table `DROP` statement is exploded into distinct single-table operations.
 
 As always, please validate any new features in your test environments before using them in production.
 
