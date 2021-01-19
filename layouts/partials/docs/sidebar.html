@@ -1,54 +1,55 @@
-{{ $logoUrl        := "img/logos/vitess.png" | relURL }}
-{{ $docsSections   := where site.Sections "Section" "docs" }}
-{{ $currentSection := .CurrentSection.Name }}
-{{ $currentUrl     := .RelPermalink }}
-{{$currentSubSection := ""}}
+{{ $logoUrl := "img/logos/vitess.png" | relURL }}
+{{ $docsSections := index (where site.Sections "Section" "docs") 0 }}
+{{ $currentRelPermalink := .RelPermalink }}
+
 <div class="docs-menu">
-  <header class="docs-menu-header">
-    <a href="{{ site.BaseURL }}">
-      <img class="docs-menu-logo" src="{{ $logoUrl }}">
-    </a>
-  </header>
-
-  <aside class="docs-menu-bar">
-    {{ range $docsSections }}
-    {{ $isCurrentPage := eq .RelPermalink $currentUrl }}
-    <div class="docs-section">
-      <a class="docs-section-title{{ if $isCurrentPage }} is-active{{ end }}" href="{{ .RelPermalink }}">
-        {{ .Title }}
-      </a>
-    </div>
-
-    {{ range .Sections }}
-
-    {{ if or (or (eq $currentSection "Features") (eq $currentSection "Programs")) }}
-      {{ $currentSubSection = $currentSection }}
-      {{ $currentSection = "Reference"}}
-    {{ end }}
-
-    {{ $isCurrentSection := eq $currentSection .Name }}
-
-    <div class="docs-section">
-      <a class="docs-section-title{{ if $isCurrentSection }} is-active{{ end }}" href="{{ .RelPermalink }}">
-        {{ .Name }}
-      </a>
-
-      {{ if $isCurrentSection }}
-      <div class="docs-section-list">
-        <ul>
-          {{ range .Pages }}
-          {{ $isCurrentPage := (or (eq $currentUrl .RelPermalink) (eq .Title $currentSubSection)) }}
-          <li{{ if $isCurrentPage }} class="is-active"{{ end }}>
-            <a href="{{ .RelPermalink }}">
-              {{ .Title }}
-            </a>
-          </li>
-          {{ end }}
-        </ul>
-      </div>
-      {{ end }}
-    </div>
-    {{ end }}
-    {{ end }}
-  </aside>
+  {{ template "navlist" (dict "entries" $docsSections.Sections "currentRelPermalink" $currentRelPermalink ) }}
 </div>
+
+{{/*
+  The "navlist" template recursively renders nested lists to any depth.
+  It is called with two parameters, "currentRelPermalink" and "entries",
+  described inline below.
+
+  The structure of the sidebar matches the structure of `content/docs` (for English)
+  or `content/xx/docs` (for other languages). This means that sidebar structure and
+  content will vary between languages.
+*/}}
+{{ define "navlist" }}
+  {{/* `currentRelPermalink` is the RelPermalink of the current content page. */}}
+  {{ $currentRelPermalink := .currentRelPermalink}}
+  {{/* `entries` is a list of Pages */}}
+  {{ $entries := .entries }}
+
+  <ul class="docs-navlist">
+    {{ range $entries }}
+      {{ $isActive := eq $currentRelPermalink .RelPermalink }}
+      {{ $activeClass := cond $isActive "active" "" }}
+
+      {{ $isExpanded := in $currentRelPermalink .RelPermalink }}
+      {{ $expandedClass := cond $isExpanded "expanded" "" }}
+
+      {{/* 'docs_nav_disable_expand' is (currently only) used to hide the caret on the "Older Version Docs" link */}}
+      {{/* We can remove it with a better versioning system: see https://github.com/vitessio/website/issues/625 */}}
+      {{ $isExpandable := and .IsSection (not .Params.docs_nav_disable_expand) }}
+      {{ $expandableClass := cond $isExpandable "expandable" "" }}
+
+      <li class="{{ $expandedClass }} {{ $activeClass }}">
+        <a href="{{ .Permalink }}">
+          <span class="navlist-tile">{{ or .Params.docs_nav_title .Title }}</span>
+          {{ if $isExpandable }}
+              <svg viewBox="0 0 749 1102" class="navlist-caret">
+                <path d="M749 551l-551 551L0 904l353-353L0 198 198 0z"></path>
+              </svg>
+          {{ end }}
+        </a>
+
+        {{ if $isExpanded }}
+          {{ if gt (len .Pages) 0 }}
+            {{ template "navlist" (dict "entries" .Pages "currentRelPermalink" $currentRelPermalink ) }}
+          {{ end }}
+        {{ end }}
+      </li>
+    {{ end }}
+  </ul>
+{{ end }}

@@ -1,7 +1,7 @@
 	---
 title: Backup and Restore
 weight: 2
-aliases: ['/user-guide/backup-and-restore.html']
+aliases: ['/docs/user-guides/backup-and-restore/']
 ---
 
 Backup and Restore are integrated features provided by tablets managed by Vitess. As well as using _backups_ for data integrity, Vitess will also create and restore backups for provisioning new tablets in an existing shard.

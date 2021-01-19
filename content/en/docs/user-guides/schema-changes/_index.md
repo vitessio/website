@@ -2,7 +2,7 @@
 title: Making Schema Changes
 description:
 weight: 11
-aliases: ['/docs/schema-management/schema-changes/', '/docs/user-guides/schema-changes/']
+aliases: ['/docs/schema-management/mysql-schema/', '/docs/user-guides/mysql-schema/', '/docs/user-guides/making-schema-changes/', '/docs/schema-management/schema-changes/', '/docs/user-guides/schema-changes/']
 ---
 
 This user guide describes the problem space of schema changes and the various approaches you may use with Vitess.

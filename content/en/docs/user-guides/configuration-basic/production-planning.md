@@ -1,7 +1,7 @@
 ---
 title: Production Planning
 weight: 1
-aliases: ['/docs/launching/production-planning/','/docs/launching/']
+aliases: ['/docs/launching/production-planning/','/docs/launching/', '/docs/user-guides/production-planning']
 ---
 
 ## Provisioning

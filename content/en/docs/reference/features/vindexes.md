@@ -1,5 +1,6 @@
 ---
 title: Vindexes
+weight: 10
 aliases: ['/docs/schema-management/consistent-lookup/','/docs/reference/vindexes/']
 ---
 

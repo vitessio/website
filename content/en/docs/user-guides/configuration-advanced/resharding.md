@@ -1,10 +1,11 @@
 ---
 title: Resharding
-weight: 1
+weight: 4
+aliases: ['/docs/user-guides/resharding/'] 
 ---
 
 {{< info >}}
-This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../../get-started/operator), [local](../../../get-started/local) or [Helm](../../../get-started/helm) installation ready.
+This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../../get-started/operator), [local](../../../get-started/local) or [Helm](../../../get-started/helm) installation ready. It also assumes that the [MoveTables](../../migration/move-tables/) user guide has been followed.
 {{< /info >}}
 
 ## Preparation
@@ -135,8 +136,8 @@ helm upgrade vitess ../../helm/vitess/ -f 301_customer_sharded.yaml
 ```bash
 vtctlclient ApplySchema -sql="$(cat create_commerce_seq.sql)" commerce
 vtctlclient ApplyVSchema -vschema="$(cat vschema_commerce_seq.json)" commerce
-vtctlclient ApplySchema -sql="$(cat create_customer_sharded.sql)" customer
 vtctlclient ApplyVSchema -vschema="$(cat vschema_customer_sharded.json)" customer
+vtctlclient ApplySchema -sql="$(cat create_customer_sharded.sql)" customer
 ```
 
 ### Using a Local Deployment
@@ -144,8 +145,8 @@ vtctlclient ApplyVSchema -vschema="$(cat vschema_customer_sharded.json)" custome
 ``` sh
 vtctlclient ApplySchema -sql-file create_commerce_seq.sql commerce
 vtctlclient ApplyVSchema -vschema_file vschema_commerce_seq.json commerce
-vtctlclient ApplySchema -sql-file create_customer_sharded.sql customer
 vtctlclient ApplyVSchema -vschema_file vschema_customer_sharded.json customer
+vtctlclient ApplySchema -sql-file create_customer_sharded.sql customer
 ```
 
 ## Create new shards

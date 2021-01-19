@@ -6,7 +6,9 @@ This repo houses the assets used to build the website at https://vitess.io.
 
 ## Running the site locally
 
-To run the website locally, you need to have the [Hugo](https://gohugo.io) static site generator installed (installation instructions [here](https://gohugo.io/getting-started/installing/)). Once Hugo is installed run the following:
+To run the website locally, you need to have the [Hugo](https://gohugo.io) static site generator installed (installation instructions [here](https://gohugo.io/getting-started/installing/)). Installing the Hugo version in [netlify.toml](./netlify.toml) is recommended.
+
+Once Hugo is installed run the following:
 
 ```bash
 hugo server --buildDrafts --buildFuture

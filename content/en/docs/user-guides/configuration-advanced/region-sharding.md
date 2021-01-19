@@ -1,6 +1,7 @@
 ---
 title: Region-based Sharding
 weight: 10
+aliases: ['/docs/user-guides/region-sharding/'] 
 ---
 
 {{< info >}}
@@ -282,7 +283,7 @@ Once the vindex is available, we have to `Externalize` it for it to be usable.
 Putting this all together, we run the script that combines the above steps.
 
 ```sh
-./201_initial_cluster.sh
+./201_main_sharded.sh
 ```
 Once this is complete, we can view the new vschema. Note that it now includes both region_vdx and a lookup vindex.
 ```text

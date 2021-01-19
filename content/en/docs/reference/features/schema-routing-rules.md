@@ -1,5 +1,6 @@
 ---
 title: Schema Routing Rules
+weight: 15
 aliases: ['/docs/schema-management/routing-rules/','/docs/reference/schema-routing-rules/']
 ---
 

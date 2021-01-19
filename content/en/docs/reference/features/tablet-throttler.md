@@ -1,5 +1,6 @@
 ---
 title: Tablet throttler
+weight: 21
 aliases: ['/docs/user-guides/tablet-throttler/','/docs/reference/tablet-throttler/']
 ---
 

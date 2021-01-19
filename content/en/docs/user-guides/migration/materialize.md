@@ -1,6 +1,7 @@
 ---
 title: Materialize
 weight: 3
+aliases: ['/docs/user-guides/materialize/'] 
 ---
 
 {{< info >}}
@@ -17,18 +18,21 @@ In our example, we will be using `Materialize` to perform something similar to t
 Let's start by simulating this situation by loading sample data:
 
 ```sql
-mysql < ../common/insert_commerce_data.sql
+# On helm and local installs:
+mysql < /usr/local/vitess/examples/common/insert_commerce_data.sql
+# With operator:
+mysql --table < insert_commerce_data.sql
 ```
 
 We can look at what we just inserted:
 
 ```sh
 # On helm and local installs:
-mysql --table < ../common/select_commerce_data.sql
+mysql --table < /usr/local/vitess/examples/common/select_commerce_data.sql
 # With operator:
 mysql --table < select_commerce_data.sql
 
-Using commerce/0
+Using commerce
 Customer
 +-------------+--------------------+
 | customer_id | email              |
@@ -58,7 +62,7 @@ COrder
 +----------+-------------+----------+-------+
 ```
 
-Note that we are using keyspace `commerce/0` to select data from our tables.
+Note that we are using keyspace `commerce` to select data from our tables.
 
 ## Planning to use Materialize
 

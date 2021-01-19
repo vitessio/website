@@ -1,13 +1,14 @@
 ---
 title: Unmanaged Tablet
 weight: 15
+aliases: ['/docs/user-guides/unmanaged-tablet/'] 
 ---
 
 {{< info >}}
 This guide follows on from the [local](../../../get-started/local) installation guide.
 {{< /info >}}
 
-This guide uses the Vitess components vtctld, Topology Service and VTGate which have already been started in the local installation guide. It assumes that you have an existing MySQL Server setup that you would like to add to Vitess as a new keyspace, which we will call `legacy`. The same set of steps can be used to create a tablet that uses Amazon RDS, Aurora, or Google CloudSQL.
+This guide uses the Vitess components vtctld, Topology Service and VTGate which have already been started in the local installation guide. It assumes that you have an existing MySQL Server setup that you would like to add to Vitess as a new keyspace, which we will call `legacy`. The same set of steps can be used to create a tablet that uses Amazon RDS, AWS Aurora, or Google CloudSQL.
 
 ## Ensure all components are up
 
@@ -81,6 +82,9 @@ vttablet \
  -init_db_name_override legacy \
  -init_populate_metadata &
 ```
+
+Note that if your tablet is using a MySQL instance type where you do not have `SUPER` privileges to the database 
+(e.g. AWS RDS, AWS Aurora or Google CloudSQL), you should omit the `-init_populate_metadata` flag. The `-init_populate_metadata` flag should only be enabled if the cluster is being managed through Vitess.
 
 You should be able to see debug information written to screen confirming Vitess can reach the unmanaged server. A common problem is that you may need to change the authentication plugin to `mysql_native_password` (MySQL 8.0).
 

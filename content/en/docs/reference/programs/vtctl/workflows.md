@@ -1,6 +1,7 @@
 ---
 title: vtctl Workflow Command Reference
 series: vtctl
+docs_nav_title: Workflows
 ---
 
 The following `vtctl` commands are available for administering workflows.

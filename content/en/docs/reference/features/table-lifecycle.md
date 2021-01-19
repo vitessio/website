@@ -1,11 +1,12 @@
 ---
 title: Table lifecycle
+weight: 22
 aliases: ['/docs/user-guides/table-lifecycle/','/docs/reference/table-lifecycle/']
 ---
 
 Vitess manages a table lifecycle flow, an abstraction and automation for a `DROP TABLE` operation.
 
-# Problems with DROP TABLE
+## Problems with DROP TABLE
 
 Vitess inherits the same issues that MySQL has with `DROP TABLE`.  Doing a direct
 `DROP TABLE my_table` in production can be a risky operation. In busy environments
@@ -29,7 +30,7 @@ various factors:
 It is common practice to avoid direct `DROP TABLE` statements and to follow
 a more elaborate table lifecycle.
 
-# Vitess table lifecycle
+## Vitess table lifecycle
 
 The lifecycle offered by Vitess consists of the following stages or some subset:
 
@@ -47,7 +48,7 @@ To understand the flow better, consider the following breakdown:
 - `drop`: an actual `DROP TABLE` is imminent
 - _removed_: table is dropped. When using InnoDB and `innodb_file_per_table` this means the `.ibd` data file backing the table is removed, and disk space is reclaimed.
 
-# Lifecycle subsets and configuration
+## Lifecycle subsets and configuration
 
 Different environments and users have different requirements and workflows. For example:
 
@@ -61,10 +62,21 @@ Vitess will always work the steps in this order: `hold -> purge -> evac -> drop`
 
 All subsets end with a `drop`, even if not explicitly mentioned. Thus, `"purge"` is interpreted as `"purge,drop"`.
 
-# Automated lifecycle
+## Stateless flow by table name hints
+
+Vitess does not track the state of the table lifecycle. The process is stateless thanks to an encoding scheme in the table names. Examples:
+
+- The table `_vt_HOLD_6ace8bcef73211ea87e9f875a4d24e90_20210915120000` is held until `2021-09-15 12:00:00`. The data remains intact.
+- The table `_vt_PURGE_6ace8bcef73211ea87e9f875a4d24e90_20210915123000` is at the state where it is being purged, or queued to be purged. Once it's fully purged (zero rows remain), it transitions to the next stage.
+- The table `_vt_EVAC_6ace8bcef73211ea87e9f875a4d24e90_20210918093000` is held until `2021-09-18 09:30:00`
+- The table `_vt_DROP_6ace8bcef73211ea87e9f875a4d24e90_20210921170000` is eligible to be dropped on `2021-09-21 17:00:00`
+
+## Automated lifecycle
 
 Vitess internally uses the above table lifecycle for [online, managed schema migrations](../../../user-guides/schema-changes/managed-online-schema-changes/). Online schema migration tools `gh-ost` and `pt-online-schema-change` create artifact tables or end with leftover tables: Vitess automatically collects those tables. The artifact or leftover tables are immediate moved to `purge` state. Depending on `-table_gc_lifecycle`, they may spend time in this state, getting purged, or immediately transitioned to the next state.
 
-# User-facing DROP TABLE lifecycle
+## User-facing DROP TABLE lifecycle
 
-Table lifecycle is not yet available directly to the application user. Vitess will introduce a special syntax to allow users to indicate they want Vitess to manage a table's lifecycle.
+When using an online `ddl_strategy`, a `DROP TABLE` is a [managed schema migration](../../../user-guides/schema-changes/managed-online-schema-changes/). It is internally replaced by a `RENAME TABLE` statement, renaming it into a `HOLD` state (e.g. `_vt_HOLD_6ace8bcef73211ea87e9f875a4d24e90_20210915120000`). It will then participate in the table lifecycle mechanism. If `table_gc_lifecycle` does not include the `hold` state, the table proceeds to transition to next included state. 
+
+A multi-table `DROP TABLE` statement is converted to multiple single-table `DROP TABLE` statements, each to then convert to a `RENAME TABLE` statement.

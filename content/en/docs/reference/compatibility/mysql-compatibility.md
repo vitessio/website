@@ -1,7 +1,7 @@
 ---
 title: MySQL Compatibility
 weight: 1
-aliases: ['/docs/reference/mysql-server-protocol/']
+aliases: ['/docs/reference/mysql-server-protocol/', '/docs/reference/mysql-compatibility/']
 ---
 
 VTGate servers speak both gRPC and the MySQL server protocol. This allows you to connect to Vitess as if it were a MySQL Server without any changes to application code. This document refers to known compatibility issues where Vitess differs from MySQL.
@@ -16,7 +16,7 @@ The following describes some of the major differences in SQL Syntax handling bet
 
 ### DDL                                                                      
 
-Vitess supports MySQL DDL, and will send `ALTER TABLE` statements to each of the underlying tablet servers. For large tables it is recommended to use an external schema deployment tool and apply directly to the underlying MySQL shard instances. This is discussed further in [Applying MySQL Schema](../../user-guides/operating-vitess/making-schema-changes).
+Vitess supports MySQL DDL, and will send `ALTER TABLE` statements to each of the underlying tablet servers. For large tables it is recommended to use an external schema deployment tool and apply directly to the underlying MySQL shard instances. This is discussed further in [Applying MySQL Schema](../../../user-guides/operating-vitess/making-schema-changes).
 
 ### Join Queries
 
@@ -44,7 +44,7 @@ Vitess does not yet support killing running shard queries via the `KILL` command
 
 ### Cross-shard Transactions
 
-By default, Vitess does not support transactions that span across shards. While Vitess can support this with the use of [Two-Phase Commit](../two-phase-commit), it is usually recommended to design the VSchema in such a way that cross-shard modifications are not required.
+By default, Vitess does not support transactions that span across shards. While Vitess can support this with the use of [Two-Phase Commit](../../features/two-phase-commit), it is usually recommended to design the VSchema in such a way that cross-shard modifications are not required.
 
 ### OLAP Workload
 
@@ -101,7 +101,7 @@ Vitess supports all of the data types available in MySQL. Using the `FLOAT` data
 
 ## Auto Increment
 
-Tables in sharded keyspaces do not support the `auto_increment` column attribute, as the values generated would be local only to each shard. [Vitess Sequences](../vitess-sequences) are provided as an alternative, which have very close semantics to `auto_increment`.
+Tables in sharded keyspaces do not support the `auto_increment` column attribute, as the values generated would be local only to each shard. [Vitess Sequences](../../features/vitess-sequences) are provided as an alternative, which have very close semantics to `auto_increment`.
 
 ## Extensions to MySQL Syntax
 

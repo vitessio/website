@@ -7,3 +7,6 @@ resources/
 bin/
 tmp/
 .idea
+
+# File generated when running npm install 
+package-lock.json

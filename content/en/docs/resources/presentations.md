@@ -16,16 +16,22 @@ Lizz van Dijk presents an introduction to Vitess for MySQL users.
 
 <iframe src = "/ViewerJS/#../files/2020-lizz-prefosdem.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
 
+## QCon 2019
+
+Sugu Sougoumarane gives an overview of the salient features of Vitess.
+
+[Video and Slides](https://www.infoq.com/presentations/vitess/)
+
 ## KubeCon San Diego 2019
 
 KubeCon featured several Vitess talks, including:
 
-* [Scaling Resilient Systems: A Journey into Slack's Database Service](https://kccncna19.sched.com/event/UaWu/scaling-resilient-systems-a-journey-into-slacks-database-service-rafael-chacon-guido-iaquinti-slack) - Rafael Chacon & Guido Iaquinti, Slack
-* [How to Migrate a MySQL Database to Vitess](https://kccncna19.sched.com/event/UaiN/how-to-migrate-a-mysql-database-to-vitess-sugu-sougoumarane-morgan-tocker-planetscale) - Sugu Sougoumarane & Morgan Tocker, PlanetScale
-* [Building a Database as a Service on Kubernetes](https://kccncna19.sched.com/event/Uabw/building-a-database-as-a-service-on-kubernetes-abhi-vaidyanatha-lucy-burns-planetscale) - Abhi Vaidyanatha & Lucy Burns, PlanetScale
-* [Vitess: Stateless Storage in the Cloud](https://kccncna19.sched.com/event/UaeD/vitess-stateless-storage-in-the-cloud-sugu-sougoumarane-planetscale) - Sugu Sougoumarane, PlanetScale
-* [Geo-partitioning with Vitess](https://kccncna19.sched.com/event/UagI/geo-partitioning-with-vitess-deepthi-sigireddi-jitendra-vaidya-planetscale) - Deepthi Sigireddi & Jitendra Vaidya, PlanetScale
-* [Gone in 60 Minutes: Migrating 20 TB from AKS to GKE in an Hour with Vitess](https://kccncna19.sched.com/event/UaYn/gone-in-60-minutes-migrating-20-tb-from-aks-to-gke-in-an-hour-with-vitess-derek-perkins-nozzle) - Derek Perkins, Nozzle
+* [Scaling Resilient Systems: A Journey into Slack's Database Service](https://youtu.be/aTItjMJE17c) - Rafael Chacon & Guido Iaquinti, Slack
+* [How to Migrate a MySQL Database to Vitess](https://youtu.be/OCS45iy5v1M) - Sugu Sougoumarane & Morgan Tocker, PlanetScale
+* [Building a Database as a Service on Kubernetes](https://youtu.be/469NOldFOgw) - Abhi Vaidyanatha & Lucy Burns, PlanetScale
+* [Vitess: Stateless Storage in the Cloud](https://youtu.be/z63dtNj6ctY) - Sugu Sougoumarane, PlanetScale
+* [Geo-partitioning with Vitess](https://youtu.be/-Hz6LFJu1cY) - Deepthi Sigireddi & Jitendra Vaidya, PlanetScale
+* [Gone in 60 Minutes: Migrating 20 TB from AKS to GKE in an Hour with Vitess](https://youtu.be/KpygSD-v_ws) - Derek Perkins, Nozzle
 
 Vitess was also featured during the [CNCF project updates keynote](https://www.youtube.com/watch?v=two3TzF9mVY&feature=youtu.be&t=105)!
 
@@ -188,8 +194,9 @@ Vitess team member [Anthony Yeh](https://github.com/enisoc)'s talk at
 the [January 2016 CoreOS Meetup](http://www.meetup.com/coreos/events/228233948/)
 discussed challenges and techniques for running distributed databases
 within Kubernetes, followed by a deep dive into the design trade-offs
-of the [Vitess on Kubernetes](https://github.com/vitessio/vitess/tree/master/examples/kubernetes)
-deployment templates.
+of the Vitess on Kubernetes deployment templates.
+
+Please note the Vitess on Kubernetes deployment templates were removed as of February 27, 2020.
 
 {{< pdf src="/ViewerJS/#../files/coreos-meetup-2016-01-27.pdf" >}}
 

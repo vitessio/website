@@ -1,7 +1,7 @@
 ---
 title: Unmanaged Schema Changes
 weight: 3
-aliases: ['/docs/schema-management/unmanaged-schema-changes/', '/docs/user-guides/unmanaged-schema-changes/']
+aliases: ['/docs/user-guides/operating-vitess/making-schema-changes', '/docs/schema-management/unmanaged-schema-changes/', '/docs/user-guides/unmanaged-schema-changes/']
 ---
 
 Vitess offers multiple approaches to running unmanaged schema changes. Below, we review each of these approaches.
@@ -18,7 +18,7 @@ CREATE TABLE `demo` (
 
 ## ApplySchema
 
-`ApplySchema` is a `vtctlclient` command that can be used to apply a schema change to a keyspace. The main advantage of using this tool is that it performs some sanity checks about the schema before applying it.
+`ApplySchema` is a `vtctlclient` command that can be used to apply a schema change to a keyspace. The main advantage of using this tool is that it performs some sanity checks about the schema before applying it. However, a downside is that it can be a little too strict and may not work for all use cases.
 
 Consider the following examples:
 
@@ -64,7 +64,7 @@ $ vtctlclient ApplySchema -allow_long_unavailability -sql "ALTER TABLE demo modi
 
 ## VTGate
 
-You may run DDL directly from VTGate. For example:
+You may run DDL directly from VTGate just like you would send to a MySQL instance. For example:
 
 ```shell
 $ mysql -h 127.0.0.1 -P 15306 commerce
@@ -86,9 +86,9 @@ mysql> ALTER TABLE demo ADD COLUMN sample INT;
 Query OK, 0 rows affected (0.04 sec)
 ```
 
-In the above we connect to VTGate via the `mysql` command line client, but of course you may connect with any standard MySQL client or from your applicaiton.
+In the above we connect to VTGate via the `mysql` command line client, but of course you may connect with any standard MySQL client or from your application.
 
-This approach is not recommended for changing large tables.
+Please do note that if VTGate does not recognize a DDL syntax, the statement will get rejected and that this approach is not recommended for changing large tables.
 
 ## Directly to MySQL
 
@@ -102,4 +102,6 @@ You can also explicitly issue the `vtctlclient` `ReloadSchema` command to make i
 $ vtctlclient ReloadSchema zone1-0000000100
 ```
 
-Users will likely want to deploy schema changes via `gh-ost` or `pt-online-schema-change`, which do not block the table. Vitess offers [managed, online schema changes](../managed-online-schema-changes/) where it automates the invocation and execution of these tools.
+Users will likely want to deploy schema changes via `gh-ost` or `pt-online-schema-change`, which do not block the table. Vitess offers [managed, online schema changes](../managed-online-schema-changes/) where it automates the invocation and execution of these tools. Using these schema
+deployment tools can be a better approach for large tables, because they should incur no downtime.
+

@@ -8,7 +8,7 @@ A VTTablet server _controls_ a running MySQL server. VTTablet supports two prima
 * Managed MySQL (most common)
 * Unmanaged or Remote MySQL
 
-In addition to these deployment types, a partially managed VTTablet is also possible by setting `-disable_active_reparents`.
+In addition to these deployment types, a partially managed VTTablet is also possible by setting `-disable_active_reparents`. 
 
 
 ## Example Usage
@@ -36,43 +36,19 @@ $TOPOLOGY_FLAGS
 
 ### Unmanaged or Remote MySQL
 
-In this mode, an external MySQL can be used such as RDS, Aurora, CloudSQL:
-
-```bash
-mkdir -p $VTDATAROOT/vt_0000000401
-vttablet \
- $TOPOLOGY_FLAGS \
- -logtostderr \
- -log_queries_to_file $VTDATAROOT/tmp/vttablet_0000000401_querylog.txt \
- -tablet-path "zone1-0000000401" \
- -init_keyspace legacy \
- -init_shard 0 \
- -init_tablet_type replica \
- -port 15401 \
- -grpc_port 16401 \
- -service_map 'grpc-queryservice,grpc-tabletmanager,grpc-updatestream' \
- -pid_file $VTDATAROOT/vt_0000000401/vttablet.pid \
- -vtctld_addr http://localhost:15000/ \
- -db_host 127.0.0.1 \
- -db_port 5726 \
- -db_app_user msandbox \
- -db_app_password msandbox \
- -db_dba_user msandbox \
- -db_dba_password msandbox \
- -db_repl_user msandbox \
- -db_repl_password msandbox \
- -db_filtered_user msandbox \
- -db_filtered_password msandbox \
- -db_allprivs_user msandbox \
- -db_allprivs_password msandbox \
- -init_db_name_override legacy \
- -init_populate_metadata &
-
-sleep 10
-vtctlclient TabletExternallyReparented zone1-401
-```
+In this mode, an external MySQL can be used such as AWS RDS, AWS Aurora, Google CloudSQL; or just an existing (vanilla) MySQL installation.
 
 See [Unmanaged Tablet](../../../user-guides/configuration-advanced/unmanaged-tablet) for the full guide.
+
+### Partially managed MySQL
+
+Even if a MySQL is remote, you can still make vttablet perform some management functions. They are as follows:
+
+* `-disable_active_reparents`: If this flag is set, then any reparent or replica commands will not be allowed. These are InitShardMaster, PlannedReparent, PlannedReparent, EmergencyReparent, and ReparentTablet. In this mode, you should use the TabletExternallyReparented command to inform vitess of the current master.
+* `-master_connect_retry`: This value is give to mysql when it connects a replica to the master as the retry duration parameter.
+* `-enable_replication_reporter`: If this flag is set, then vttablet will transmit replica lag related information to the vtgates, which will allow it to balance load better. Additionally, enabling this will also cause vttablet to restart replication if it was stopped. However, it will do this only if -disable_active_reparents was not turned on.
+* `-enable_semi_sync`: This option will automatically enable semi-sync on new replicas as well as on any tablet that transitions into a replica type. This includes the demotion of a master to a replica.
+* `-heartbeat_enable` and `-heartbeat interval duration`: cause vttablet to write heartbeats to the sidecar database. This information is also used by the replication reporter to assess replica lag.
 
 
 ## Options
@@ -80,7 +56,7 @@ See [Unmanaged Tablet](../../../user-guides/configuration-advanced/unmanaged-tab
 The following global options apply to `vttablet`:
 
 | Name | Type | Definition |
-| :-------------------------------------------------- | :--------- | :-------------------------------------------------------------------------------------- |
+| :------------------------------------ | :--------- | :----------------------------------------------------------------------------------------- |
 | -alsologtostderr | boolean | log to standard error as well as files |
 | -app_idle_timeout | duration | Idle timeout for app connections (default 1m0s) |
 | -app_pool_size | int | Size of the connection pool for app connections (default 40) |
@@ -255,7 +231,7 @@ The following global options apply to `vttablet`:
 | -port | int | port for the server |
 | -purge_logs_interval | duration | how often try to remove old logs (default 1h0m0s) |
 | -query-log-stream-handler | string | URL handler for streaming queries log (default "/debug/querylog") |
-| -querylog-filter-tag | string | string that must be present in the query for it to be logged |
+| -querylog-filter-tag | string | string that must be present in the query as a comment for the query to be logged, works for both vtgate and vttablet |
 | -querylog-format | string | format for query logs ("text" or "json") (default "text") |
 | -queryserver-config-acl-exempt-acl | string | an acl that exempt from table acl checking (this acl is free to access any vitess tables). |
 | -queryserver-config-enable-table-acl-dry-run |  | If this flag is enabled, tabletserver will emit monitoring metrics and let the request pass regardless of table acl check results |
@@ -353,11 +329,11 @@ The following global options apply to `vttablet`:
 | -transaction_limit_by_subcomponent |  | Include CallerID.subcomponent when considering who the user is for the purpose of transaction limit. |
 | -transaction_limit_by_username |  | Include VTGateCallerID.username when considering who the user is for the purpose of transaction limit. (default true) |
 | -transaction_limit_per_user | float | Maximum number of transactions a single user is allowed to use at any time, represented as fraction of -transaction_cap. (default 0.4) |
-| -transaction_shutdown_grace_period | int | how long to wait (in seconds) for transactions to complete during graceful shutdown. |
+| -shutdown_grace_period | float | how long to wait (in seconds) for queries and transactions to complete during graceful shutdown. |
 | -twopc_abandon_age | float | time in seconds. Any unresolved transaction older than this time will be sent to the coordinator to be resolved. |
 | -twopc_coordinator_address | string | address of the (VTGate) process(es) that will be used to notify of abandoned transactions. |
 | -twopc_enable |  | if the flag is on, 2pc is enabled. Other 2pc flags must be supplied. |
-| -tx-throttler-config | string | The configuration of the transaction throttler as a text formatted throttlerdata.Configuration protocol buffer message (default "target_replication_lag_sec: 2\nmax_replication_lag_sec: 10\ninitial_rate: 100\nmax_increase: 1\nemergency_decrease: 0.5\nmin_duration_between_increases_sec: 40\nmax_duration_between_increases_sec: 62\nmin_duration_between_decreases_sec: 20\nspread_backlog_across_sec: 20\nage_bad_rate_after_sec: 180\nbad_rate_increase: 0.1\nmax_rate_approach_threshold: 0.9\n") |
+| -tx-throttler-config | string | The configuration of the transaction throttler as a text formatted throttlerdata.Configuration protocol buffer message (default "target_replication_lag_sec: 2 max_replication_lag_sec: 10 initial_rate: 100 max_increase: 1 emergency_decrease: 0.5 min_duration_between_increases_sec: 40 max_duration_between_increases_sec: 62 min_duration_between_decreases_sec: 20 spread_backlog_across_sec: 20 age_bad_rate_after_sec: 180 bad_rate_increase: 0.1 max_rate_approach_threshold: 0.9 ") |
 | -tx-throttler-healthcheck-cells | value | A comma-separated list of cells. Only tabletservers running in these cells will be monitored for replication lag by the transaction throttler. |
 | -unhealthy_threshold | duration | replication lag  after which a replica is considered unhealthy (default 2h0m0s) |
 | -use_super_read_only |  | Set super_read_only flag when performing planned failover. |
@@ -383,3 +359,10 @@ The following global options apply to `vttablet`:
 | -xtrabackup_stripes | uint | If greater than 0, use data striping across this many destination files to parallelize data transfer and decompression |
 | -xtrabackup_user | string | User that xtrabackup will use to connect to the database server. This user must have all necessary privileges. For details, please refer to xtrabackup documentation. |
 
+### Key Options
+
+* -restore_from_backup: The default value for this flag is false. If set to true, and the my.cnf file was successfully loaded, then vttablet can perform automatic restores as follows:
+
+	* If started against a mysql instance that has no data files, it will search the list of backups for the latest one, and initiate a restore. After this, it will point the mysql to the current master and wait for replication to catch up. Once replication is caught up to the specified tolerance limit, it will advertise itself as serving. This will cause the vtgates to add it to the list of healthy tablets to serve queries from.
+	* If this flag is true, but my.cnf was not loaded, then vttablet will fatally exit with an error message.
+	* You can additionally control the level of concurrency for a restore with the `-restore_concurrency` flag. This is typically useful in cloud environments to prevent the restore process from becoming a 'noisy' neighbor by consuming all available disk IOPS.

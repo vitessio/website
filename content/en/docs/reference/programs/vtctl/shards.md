@@ -1,6 +1,7 @@
 ---
 title: vtctl Shard Command Reference
 series: vtctl
+docs_nav_title: Shards
 ---
 
 The following `vtctl` commands are available for administering shards.
@@ -400,7 +401,7 @@ Reparents the shard to the new master. Assumes the old master is dead and not re
 
 ### TabletExternallyReparented
 
-Changes metadata in the topology service to acknowledge a shard master change performed by an external tool. See [Reparenting](../../user-guides/reparenting/#external-reparenting) for more information.
+Changes metadata in the topology service to acknowledge a shard master change performed by an external tool. See [Reparenting](../../../../user-guides/configuration-advanced/reparenting/#external-reparenting) for more information.
 
 #### Example
 

@@ -1,6 +1,7 @@
 ---
 title: vtctl Cell Command Reference
 series: vtctl
+docs_nav_title: Cells
 ---
 
 The following `vtctl` commands are available for administering Cells.

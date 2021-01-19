@@ -11,7 +11,7 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 ### Tablets
 
 | Name | Example Usage |
-| :-------- | :--------- |
+| :-------- | :--------------- |
 | [InitTablet](../vtctl/tablets#inittablet) | `InitTablet [-allow_update] [-allow_different_shard] [-allow_master_override] [-parent] [-db_name_override=<db name>] [-hostname=<hostname>] [-mysql_port=<port>] [-port=<port>] [-grpc_port=<port>] [-tags=tag1:value1,tag2:value2] -keyspace=<keyspace> -shard=<shard> <tablet alias> <tablet type>` |
 | [GetTablet](../vtctl/tablets#gettablet) | `GetTablet <tablet alias>` |
 | [UpdateTabletAddrs](../vtctl/tablets#updatetabletaddrs) | `UpdateTabletAddrs [-hostname <hostname>] [-ip-addr <ip addr>] [-mysql-port <mysql port>] [-vt-port <vt port>] [-grpc-port <grpc port>] <tablet alias>` |
@@ -19,11 +19,8 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 | [SetReadOnly](../vtctl/tablets#setreadonly) | `SetReadOnly <tablet alias>` |
 | [SetReadWrite](../vtctl/tablets#setreadwrite) | `SetReadWrite <tablet alias>` |
 | [StartReplication](../vtctl/tablets#startreplication) | `StartReplication <tablet alias>` |
-| [StartSlave](../vtctl/tablets#startreplication) | `DEPRECATED -- Use StartReplication <tablet alias>` |
 | [StopReplication](../vtctl/tablets#stopreplication) | `StopReplication <tablet alias>` |
-| [StopSlave](../vtctl/tablets#stopreplication) | `DEPRECATED -- Use StopReplication <tablet alias>` |
 | [ChangeTabletType](../vtctl/tablets#changetablettype) | `ChangeTabletType [-dry-run] <tablet alias> <tablet type>` |
-| [ChangeSlaveType](../vtctl/tablets#changetablettype) | `DEPRECATED -- Use ChangeTabletType [-dry-run] <tablet alias> <tablet type>` |
 | [Ping](../vtctl/tablets#ping) | `Ping <tablet alias>` |
 | [RefreshState](../vtctl/tablets#refreshstate) | `RefreshState <tablet alias>` |
 | [RefreshStateByShard](../vtctl/tablets#refreshstatebyshard) | `RefreshStateByShard [-cells=c1,c2,...] <keyspace/shard>` |
@@ -41,7 +38,7 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 ### Shards
 
 | Name | Example Usage |
-| :-------- | :--------- |
+| :-------- | :--------------- |
 | [CreateShard](../vtctl/shards#createshard) | `CreateShard [-force] [-parent] <keyspace/shard>` |
 | [GetShard](../vtctl/shards#getshard) | `GetShard <keyspace/shard>` |
 | [ValidateShard](../vtctl/shards#validateshard) | `ValidateShard [-ping-tablets] <keyspace/shard>` |
@@ -67,7 +64,7 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 ### Keyspaces
 
 | Name | Example Usage |
-| :-------- | :--------- |
+| :-------- | :--------------- |
 | [CreateKeyspace](../vtctl/keyspaces#createkeyspace) | `CreateKeyspace  [-sharding_column_name=name] [-sharding_column_type=type] [-served_from=tablettype1:ks1,tablettype2:ks2,...] [-force] [-keyspace_type=type] [-base_keyspace=base_keyspace] [-snapshot_time=time] <keyspace name>` |
 | [DeleteKeyspace](../vtctl/keyspaces#deletekeyspace) | `DeleteKeyspace  [-recursive] <keyspace>` |
 | [RemoveKeyspaceCell](../vtctl/keyspaces#removekeyspacesell) | `RemoveKeyspaceCell  [-force] [-recursive] <keyspace> <cell>` |
@@ -98,7 +95,7 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 ### Generic
 
 | Name | Example Usage |
-| :-------- | :--------- |
+| :-------- | :--------------- |
 | [Validate](../vtctl/generic#validate) | `Validate [-ping-tablets]` |
 | [ListAllTablets](../vtctl/generic#listalltablets) | `ListAllTablets <cell name1>, <cell name2>, ...` |
 | [ListTablets](../vtctl/generic#listtablets) | `ListTablets <tablet alias> ...` |
@@ -107,7 +104,7 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 ### Schema, Version, Permissions
 
 | Name | Example Usage |
-| :-------- | :--------- |
+| :-------- | :--------------- |
 | [GetSchema](../vtctl/schema-version-permissions#getschema) | `GetSchema  [-tables=<table1>,<table2>,...] [-exclude_tables=<table1>,<table2>,...] [-include-views] <tablet alias>` |
 | [ReloadSchema](../vtctl/schema-version-permissions#reloadschema) | `ReloadSchema  <tablet alias>` |
 | [ReloadSchemaShard](../vtctl/schema-version-permissions#reloadschemashard) | `ReloadSchemaShard  [-concurrency=10] [-include_master=false] <keyspace/shard>` |
@@ -130,7 +127,7 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 ### Serving Graph
 
 | Name | Example Usage |
-| :-------- | :--------- |
+| :-------- | :--------------- |
 | [GetSrvKeyspaceNames](../vtctl/serving-graph#getsrvkeyspacenames) | `GetSrvKeyspaceNames  <cell>` |
 | [GetSrvKeyspace](../vtctl/serving-graph#getsrvkeyspace) | `GetSrvKeyspace  <cell> <keyspace>` |
 | [GetSrvVSchema](../vtctl/serving-graph#getsrvsvchema) | `GetSrvVSchema  <cell>` |
@@ -139,13 +136,13 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 ### Replication Graph
 
 | Name | Example Usage |
-| :-------- | :--------- |
+| :-------- | :--------------- |
 | [GetShardReplication](../vtctl/replication-graph#getshardreplication) | `GetShardReplication  <cell> <keyspace/shard>` |
 
 ### Cells
 
 | Name | Example Usage |
-| :-------- | :--------- |
+| :-------- | :--------------- |
 | [AddCellInfo](../vtctl/cells#addcellinfo) | `AddCellInfo  [-server_address <addr>] [-root <root>] <cell>` |
 | [UpdateCellInfo](../vtctl/cells#updatecellinfo) | `UpdateCellInfo  [-server_address <addr>] [-root <root>] <cell>` |
 | [DeleteCellInfo](../vtctl/cells#deletecellinfo) | `DeleteCellInfo  [-force] <cell>` |
@@ -155,7 +152,7 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 ### CellsAliases
 
 | Name | Example Usage |
-| :-------- | :--------- |
+| :-------- | :--------------- |
 | [AddCellsAlias](../vtctl/cell-aliases#addcellsalias) | `AddCellsAlias  [-cells <cell,cell2...>] <alias>` |
 | [UpdateCellsAlias](../vtctl/cell-aliases#updatecellsalias) | `UpdateCellsAlias  [-cells <cell,cell2,...>] <alias>` |
 | [DeleteCellsAlias](../vtctl/cell-aliases#deletecellsalias) | `DeleteCellsAlias  <alias>` |
@@ -164,7 +161,7 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 ### Queries
 
 | Name | Example Usage |
-| :-------- | :--------- |
+| :-------- | :--------------- |
 | [VtGateExecute](../vtctl/queries#vtgateexecute) | `VtGateExecute  -server <vtgate> [-bind_variables <JSON map>] [-keyspace <default keyspace>] [-tablet_type <tablet type>] [-options <proto text options>] [-json] <sql>` |
 | [VtTabletExecute](../vtctl/queries#vttabletexecute) | `VtTabletExecute  [-username <TableACL user>] [-transaction_id <transaction_id>] [-options <proto text options>] [-json] <tablet alias> <sql>` |
 | [VtTabletBegin](../vtctl/queries#vttabletbegin) | `VtTabletBegin  [-username <TableACL user>] <tablet alias>` |
@@ -175,7 +172,7 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 ### Resharding Throttler
 
 | Name | Example Usage |
-| :-------- | :--------- |
+| :-------- | :--------------- |
 | [ThrottlerMaxRates](../vtctl/resharding-throttler#throttlermaxrates) | `ThrottlerMaxRates  -server <vtworker or vttablet>` |
 | [ThrottlerSetMaxRate](../vtctl/resharding-throttler#throttlersetmaxrate) | `ThrottlerSetMaxRate  -server <vtworker or vttablet> <rate>` |
 | [GetThrottlerConfiguration](../vtctl/resharding-throttler#getthrottlerconfiguration) | `GetThrottlerConfiguration  -server <vtworker or vttablet> [<throttler name>]` |
@@ -185,14 +182,14 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 ### Topo
 
 | Name | Example Usage |
-| :-------- | :--------- |
+| :-------- | :--------------- |
 | [TopoCat](../vtctl/topo#topocat) | `TopoCat  [-cell <cell>] [-decode_proto] [-decode_proto_json] [-long] <path> [<path>...]` |
 | [TopoCp](../vtctl/topo#topocp) | `TopoCp  [-cell <cell>] [-to_topo] <src> <dst>` |
 
 ### Workflows
 
 | Name | Example Usage |
-| :-------- | :--------- |
+| :-------- | :--------------- |
 | [WorkflowCreate](../vtctl/workflows#workflowcreate) | `WorkflowCreate  [-skip_start] <factoryName> [parameters...]` |
 | [WorkflowStart](../vtctl/workflows#workflowstart) | `WorkflowStart  <uuid>` |
 | [WorkflowStop](../vtctl/workflows#workflowstop) | `WorkflowStop  <uuid>` |
@@ -207,8 +204,8 @@ The following global options apply to `vtctl`:
 
 
 | Name | Type | Definition |
-| :-------- | :--------- | :--------- |
-| -alsologtostderr | | log to standard error as well as files|
+| :------------------------------------ | :--------- | :----------------------------------------------------------------------------------------- |
+| -alsologtostderr | | log to standard error as well as files |
 | -app_idle_timeout | duration | Idle timeout for app connections (default 1m0s) |
 | -app_pool_size | int | Size of the connection pool for app connections (default 40) |
 | -azblob_backup_account_key_file | string | Path to a file containing the Azure Storage account key; if this flag is unset, the environment variable VT_AZBLOB_ACCOUNT_KEY will be used as the key itself (NOT a file path) |
@@ -305,7 +302,7 @@ The following global options apply to `vtctl`:
 | -pool_hostname_resolve_interval | duration | if set force an update to all hostnames and reconnect if changed, defaults to 0 (disabled) |
 | -purge_logs_interval | duration | how often try to remove old logs (default 1h0m0s) |
 | -query-log-stream-handler | string | URL handler for streaming queries log (default "/debug/querylog") |
-| -querylog-filter-tag | string | string that must be present in the query for it to be logged |
+| -querylog-filter-tag | string | string that must be present in the query as a comment for the query to be logged, works for both vtgate and vttablet |
 | -querylog-format | string | format for query logs ("text" or "json") (default "text") |
 | -queryserver-config-acl-exempt-acl | string | an acl that exempt from table acl checking (this acl is free to access any vitess tables). |
 | -queryserver-config-enable-table-acl-dry-run | | If this flag is enabled, tabletserver will emit monitoring metrics and let the request pass regardless of table acl check results |
@@ -403,7 +400,7 @@ The following global options apply to `vtctl`:
 | -twopc_abandon_age | float | time in seconds. Any unresolved transaction older than this time will be sent to the coordinator to be resolved. |
 | -twopc_coordinator_address | string | address of the (VTGate) process(es) that will be used to notify of abandoned transactions. |
 | -twopc_enable | | if the flag is on, 2pc is enabled. Other 2pc flags must be supplied.|
-| -tx-throttler-config | string | The configuration of the transaction throttler as a text formatted throttlerdata.Configuration protocol buffer message (default "target_replication_lag_sec: 2\nmax_replication_lag_sec: 10\ninitial_rate: 100\nmax_increase: 1\nemergency_decrease: 0.5\nmin_duration_between_increases_sec: 40\nmax_duration_between_increases_sec: 62\nmin_duration_between_decreases_sec: 20\nspread_backlog_across_sec: 20\nage_bad_rate_after_sec: 180\nbad_rate_increase: 0.1\nmax_rate_approach_threshold: 0.9\n") |
+| -tx-throttler-config | string | The configuration of the transaction throttler as a text formatted throttlerdata.Configuration protocol buffer message (default "target_replication_lag_sec: 2 max_replication_lag_sec: 10 initial_rate: 100 max_increase: 1 emergency_decrease: 0.5 min_duration_between_increases_sec: 40 max_duration_between_increases_sec: 62 min_duration_between_decreases_sec: 20 spread_backlog_across_sec: 20 age_bad_rate_after_sec: 180 bad_rate_increase: 0.1 max_rate_approach_threshold: 0.9 ") |
 | -tx-throttler-healthcheck-cells | value | A comma-separated list of cells. Only tabletservers running in these cells will be monitored for replication lag by the transaction throttler. |
 | -v | value | log level for V logs |
 | -version | | print binary version |
@@ -434,4 +431,3 @@ The following global options apply to `vtctl`:
 | -xtrabackup_stripe_block_size | uint | Size in bytes of each block that gets sent to a given stripe before rotating to the next stripe (default 102400) |
 | -xtrabackup_stripes | uint | If greater than 0, use data striping across this many destination files to parallelize data transfer and decompression |
 | -xtrabackup_user | string | User that xtrabackup will use to connect to the database server. This user must have all necessary privileges. For details, please refer to xtrabackup documentation. |
-

@@ -1,5 +1,4 @@
 $docs-sidebar-logo-width: 30%
-$docs-sidebar-margin: 1.75rem
 $docs-sidebar-header-margin-bottom: 2rem
 $tan: #f5993a
 
@@ -12,156 +11,156 @@ html, body
 =h-center
   justify-content: center
 
+// Bit of a hacky full-width container override for the docs page,
+// since bulma.io doesn't appear to have a helper for this.
+.navbar-container-docs
+  max-width: 100%
+  padding: 0 8px 0 24px
+
 .docs-wrapper
   +flex
   flex-direction: row
-  height: 100vh
+  height: calc(100vh - #{$navbar-height})
   align-items: stretch
 
-  .docs-navbar
-    position: sticky
-    top: 0
+.docs-navbar
+  position: sticky
+  top: 0
 
-  .docs-sidebar
-    +flex
-    +h-center
-    background-color: $dark
-    flex: 0 0 15%
-    border-right: 1px solid lighten($dark, 10%)
-    overflow: scroll
+.docs-sidebar
+  +flex
+  +h-center
+  background-color: $dark
+  flex: 0 0 15%
+  border-right: 1px solid lighten($dark, 10%)
+  overflow: auto
 
-    .docs-menu
-      width: 100%
-      margin: $docs-sidebar-margin
+.docs-menu
+  width: 100%
+  margin: 24px 0 24px 0
 
-      .docs-menu-header
-        margin-bottom: $docs-sidebar-header-margin-bottom
+.docs-menu-header
+  margin-bottom: $docs-sidebar-header-margin-bottom
 
-        .docs-menu-logo
-          width: $docs-sidebar-logo-width
-          margin: 0 auto
-          display: block
+.docs-menu-logo
+    margin: 0 auto
+    display: block
 
-      .docs-menu-bar
-        padding-bottom: 5rem
+.docs-menu > .docs-navlist > li > a
+  font-size: 1.2rem
 
-        .docs-section
-          & + .docs-section
+.docs-navlist ul > li
+  border-left: solid 1px rgba(255, 255, 255, 0.1)
+  margin-left: 16px
+
+.docs-navlist li
+  position: relative
+
+.docs-navlist li a
+  color: $grey-lighter
+  display: block
+  font-size: 0.9rem
+  padding: 8px 24px 8px 16px
+
+  &:hover
+    background: rgba(255, 255, 255, 0.05)
+
+.docs-navlist li.active > a 
+  color: $tan
+
+.navlist-caret
+  height: 10px
+  margin-top: -5px
+  position: absolute
+  right: 16px
+  top: 22px
+  fill: rgba(255, 255, 255, 0.25)
+
+li.expanded > a > .navlist-caret
+  transform: rotate(90deg)
+
+.docs-article
+  flex: 1 1 auto
+  overflow: auto
+
+  .docs-content
+    margin: 2rem 2.5rem
+
+    +touch
+      margin: 1.5rem
+
+    padding-bottom: 5rem
+
+    .content
+      +desktop
+        width: 80%
+
+      p a, li a
+        font-weight: 700
+
+      li .highlight, ol li
+        margin-bottom: 1rem
+
+      h1
+        font-size: 1.802rem
+      h2
+        font-size: 1.602rem
+      h3
+        font-size: 1.424rem
+      h4
+        font-size: 1.266rem
+      h5
+        font-size: 1.125rem
+      h2, h3, h4, h5, h6
+        color: $vitess-orange
+
+    .docs-header
+      padding-bottom: 1rem
+      margin-bottom: 2rem
+
+    .card-content
+      padding: 0 0 1.5rem 0
+
+.docs-toc
+  flex: 0 0 15%
+  background-color: $white-bis
+  overflow: auto
+  border-left: 1px solid $grey-light
+
+  &-container
+    margin: 1rem
+
+  &-title
+    color: $dark
+    font-size: 1.25rem
+
+  &-menu
+    margin: 1.5rem 0
+
+    a
+      color: $dark
+
+      &:hover
+        color: $primary
+
+    #TableOfContents
+      ul
+        li
+          font-size: 1rem
+          line-height: 1.2rem
+
+          & + li
             margin-top: .75rem
 
-          .docs-section-title
-            font-size: 1.2rem
-            color: $grey-lighter
-            line-height: 100%
+          ul
+            margin: .5rem 0 0 1rem
 
-            &.is-active
-              color: $primary
+            li
+              font-size: 0.8rem
 
-          .docs-section-list
-            margin-left: .3rem
-            border-left: 1px solid $grey
-
-            ul
-              margin-top: .75rem
-
-              li
-                font-size: 1rem
-                margin-left: 1rem
-                line-height: 120%
-
-                a
-                  color: $grey-lighter
-
-                & + li
-                  margin-top: .8rem
-
-                &.is-active
-                  a
-                    color: $tan
-
-  .docs-article
-    flex: 1 1 auto
-    overflow: auto
-
-    .docs-content
-      margin: 2rem 2.5rem
-
-      +touch
-        margin: 1.5rem
-
-      padding-bottom: 5rem
-
-      .content
-        +desktop
-          width: 80%
-
-        p a, li a
-          font-weight: 700
-
-        li .highlight, ol li
-          margin-bottom: 1rem
-
-        h1
-          font-size: 1.802rem
-        h2
-          font-size: 1.602rem
-        h3
-          font-size: 1.424rem
-        h4
-          font-size: 1.266rem
-        h5
-          font-size: 1.125rem
-        h2, h3, h4, h5, h6
-          color: $vitess-orange
-
-      .docs-header
-        padding-bottom: 1rem
-        margin-bottom: 2rem
-        border-bottom: 1px solid $grey-lighter
-
-      .card-content
-        padding: 0 0 1.5rem 0
-
-  .docs-toc
-    flex: 0 0 15%
-    background-color: $white-bis
-    overflow: auto
-    border-left: 1px solid $grey-light
-
-    &-container
-      margin: 1rem
-
-    &-title
-      color: $dark
-      font-size: 1.25rem
-
-    &-menu
-      margin: 1.5rem 0
-
-      a
-        color: $dark
-
-        &:hover
-          color: $primary
-
-      #TableOfContents
-        ul
-          li
-            font-size: 1rem
-            line-height: 1.2rem
-
-            & + li
-              margin-top: .75rem
-
-            ul
-              margin: .5rem 0 0 1rem
-
-              li
-                font-size: 0.8rem
-
-                & + li
-                  margin-top: .75rem
-                  line-height: 1.2rem
+              & + li
+                margin-top: .75rem
+                line-height: 1.2rem
 
 
 
@@ -171,4 +170,3 @@ html, body
   margin-left: 30px;
   background-color: #f7f7f7;
   margin-bottom: 10px;
-
