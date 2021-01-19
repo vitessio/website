@@ -32,7 +32,9 @@ Vitess supports a subset of subqueries. For example, a subquery combined with a 
 
 ### Stored Procedures
 
-Vitess does not yet support MySQL Stored Procedures.
+Calling stored procedures using `CALL` is supported for unsharded keyspaces, or if you directly target a specific shard.
+
+`CREATE PROCEDURE` however is not supported - you have to create the procedure directly on the underlying MySQL servers and not through Vitess.
 
 ### Window Functions and CTEs
 
