@@ -1,6 +1,6 @@
 ---
 title: Exporting data from Vitess
-weight: 17
+weight: 18
 aliases: ['/docs/user-guides/exporting-data/'] 
 ---
 
