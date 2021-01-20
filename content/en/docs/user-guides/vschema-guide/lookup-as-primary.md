@@ -76,7 +76,7 @@ In Vitess, it is insufficient for a table to only have a Lookup Vindex. This is 
 
 To overcome this limitation, we must add a column with a non-lookup vindex, also known as Functional Vindex to the table. By rule, the Primary Vindex computes the keyspace id of the row. This means that the value of the column should also be such that it yields the same keyspace id.
 
-A Reversible Vindex is one that can back-compute the column value from a given keyspace id. If such a vindex is used for this new column, then Vitess will automatically perform this work and fill the correct value for it. The list of vindex properties, like Functional, Reversible, etc. are listed in the [Vindexes Reference](../../../features/vindexes).
+A Reversible Vindex is one that can back-compute the column value from a given keyspace id. If such a vindex is used for this new column, then Vitess will automatically perform this work and fill the correct value for it. The list of vindex properties, like Functional, Reversible, etc. are listed in the [Vindexes Reference](../../../reference/features/vindexes).
 
 In other words, adding a column with a vindex that is both Functional and Reversible allows Vitess to auto-fill the values, thereby avoiding any impact to the application logic.
 
