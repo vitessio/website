@@ -3,7 +3,7 @@ title: vtorc (experimental)
 weight: 10
 ---
 
-`vtorc` is a fork of the [Orchestrator](https://github.com/openark/orchestrator) customized to run as a vitess component. It is available as an experimental feature. It still needs thorough testing, and more features need to be added.
+`vtorc` is a fork of the [Orchestrator](https://github.com/openark/orchestrator) customized to run as a Vitess component. It is available as an experimental feature. It still needs thorough testing, and more features need to be added.
 
 In order to configure `vtorc`, you have to make the following changes to `vttablet`:
 

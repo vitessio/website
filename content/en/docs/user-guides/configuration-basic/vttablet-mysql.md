@@ -5,17 +5,17 @@ weight: 8
 
 Let us assume that we want to bring up a single unsharded keyspace. The first step is to identify the number of replicas (including the primary) we would like to deploy. We should also make a decision about how to distribute them across the cells.
 
-Vitess requires you to assign a globally unique id (tablet UID) to every vttablet. This has to be an unsigned 32-bit integer. This is a legacy requirement derived from the fact that the mysql server id (also an unsigned 32-bit integer) used to be the same as the tablet uid. This is not the case any more.
+Vitess requires you to assign a globally unique id (tablet UID) to every vttablet. This has to be an unsigned 32-bit integer. This is a legacy requirement derived from the fact that the MySQL server id (also an unsigned 32-bit integer) used to be the same as the tablet uid. This is not the case any more.
 
-In terms of mapping these components to machines, vitess allows you to run multiple of these on the same machine. If this is the case, you will need to assign non-conflicting ports for these servers to listen on.
+In terms of mapping these components to machines, Vitess allows you to run multiple of these on the same machine. If this is the case, you will need to assign non-conflicting ports for these servers to listen on.
 
-VTTablet and MySQL are meant to be brought up as a pair within the same machine. By default, vttablet will connect to its mysql over a unix socket.
+VTTablet and MySQL are meant to be brought up as a pair within the same machine. By default, vttablet will connect to its MySQL over a unix socket.
 
-Let us look at the steps to bring up the first pair for an unsharded keyspace `commerce` in zone1 and a tablet uid of 100.
+Let us look at the steps to bring up the first pair for an unsharded keyspace `commerce` in cell1 and a tablet uid of 100.
 
 ## Starting MySQL
 
-`mysqlctl` is a convenience wrapper that can bring up and initialize a fresh mysql server, and isolate all associated files within directories that are tied to the unique UID. This makes it easy to bring up multiple mysql instances on the same machine.
+`mysqlctl` is a convenience wrapper that can bring up and initialize a fresh MySQL server, and isolate all associated files within directories that are tied to the unique UID. This makes it easy to bring up multiple MySQL instances on the same machine.
 
 The necessary arguments to a `mysqlctl` are the `tablet_uid` and `mysql_port`. Here is a sample invocation:
 
@@ -59,7 +59,7 @@ When specifying additional configuration changes to Vitess, please keep in mind 
 | `gtid-mode`         | Vitess relies on GTIDs to track changes to topology. |
 | `gtid-strict-mode`/`enforce-gtid-consistency` | Vitess requires this setting to be unchanged. |
 
-Support was recently added to override `sql_mode`. However, we recommend keeping `STRICT_TRANS_TABLES` or replacing it with`STRICT_ALL_TABLES`. Without one of these settings, mysql could truncate values at the time of writing, and this can mismatch with decisions made by the sharding logic and lead to data corruption. VTTablet ensures that one of these  values is set. If absolutely necessary, you can override this check by setting `-enforce_strict_trans_tables=false` while invoking vttablet.
+Support was recently added to override `sql_mode`. However, we recommend keeping `STRICT_TRANS_TABLES` or replacing it with`STRICT_ALL_TABLES`. Without one of these settings, MySQL could truncate values at the time of writing, and this can mismatch with decisions made by the sharding logic and lead to data corruption. VTTablet ensures that one of these  values is set. If absolutely necessary, you can override this check by setting `-enforce_strict_trans_tables=false` while invoking vttablet.
 
 ### init\_db.sql
 
@@ -80,7 +80,7 @@ Disabling AppArmor once may not be enough. Many software installs or upgrades au
 
 ### Verify MySQL
 
-You can verify that mysql came up successfully by connecting to it from the command line client:
+You can verify that MySQL came up successfully by connecting to it from the command line client:
 
 ```sh
 $ mysql -S ${VTDATAROOT}/vt_0000000100/mysql.sock -u vt_dba
@@ -121,10 +121,10 @@ When starting vttablet, the following additional flag must be specified:
 ```
 ## Starting vttablet
 
-VTTablet should be brought up on the same machine as the mysql instance. It needs the following flags:
+VTTablet should be brought up on the same machine as the MySQL instance. It needs the following flags:
 * <topo_flags> and <backup_flags>.
-* `cell`: the cell in which vttablet is being brought up. Example: `zone1`.
-* `tablet-path`: This should be the cell name followed by a `-` and the tablet UID used for `mysqlctl`. Example: `zone1-100`.
+* `cell`: the cell in which vttablet is being brought up. Example: `cell1`.
+* `tablet-path`: This should be the cell name followed by a `-` and the tablet UID used for `mysqlctl`. Example: `cell1-100`.
 * `init_keyspace`: The keyspace that the tablet is going to serve. This will cause a keyspace to be created if one is not present.
 * `init_shard`: The shard that the tablet is going to serve. This will cause a shard to be created if one is not present.
 * `init_tablet_type`: This will typically be REPLICA. You may use other tablet types like “RDONLY”. Those tablet types will be deprecated in favor of newer ways to achieve their functionality. Note that you are not allowed to start a tablet as a MASTER.
@@ -132,7 +132,7 @@ VTTablet should be brought up on the same machine as the mysql instance. It need
 
 There are some additional parameters that we recommend setting:
 
-* `enable_semi_sync`: The recommended value for this is TRUE. You will need to bring up at least three vttablets for this setting to work correctly. This flag will be deprecated once `vtorc` takes over the management of mysql instances.
+* `enable_semi_sync`: The recommended value for this is TRUE. You will need to bring up at least three vttablets for this setting to work correctly. This flag will be deprecated once `vtorc` takes over the management of MySQL instances.
 * `enable_replication_reporter`: Enabling this flag will make vttablet send its replication lag information to the vtgates, and they will use this information to avoid sending queries to replicas that are lagged beyond a threshold.
 * `unhealthy_threshold`: If `enable_replication_reporter` is enabled, and the replication lag exceeds this threshold, then vttablet stops serving queries. This value is meant to match the vtgate `discovery_high_replication_lag_minimum_serving` flag.
 * `degraded_threshold`: This flag does not change vttablet’s behavior. This threshold is used to report a warning in the status page if the replication lag exceeds this threshold. This value is meant to match the vtgate `discovery_low_replication_lag` flag.
@@ -149,8 +149,8 @@ Here is a typical vttablet invocation:
 ```text
 vttablet <topo_flags> <backup_flags> \
   -log_dir=${VTDATAROOT}/tmp \
-  -cell=zone1 \
-  -tablet-path=zone1-100 \
+  -cell=cell1 \
+  -tablet-path=cell1-100 \
   -init_keyspace=commerce \
   -init_shard=0 \
   -init_tablet_type=replica \
@@ -166,10 +166,10 @@ vttablet <topo_flags> <backup_flags> \
 ```
 
 {{< info >}}
-It is important to set mysql’s `max_connections` property to be 50%-100% higher than the total number of connections in the various pools. This is because Vitess may have to kill connections and open new ones. MySQL accounting has a delay in how it counts closed connections, which may cause its view of the number of connections to exceed the ones currently open by Vitess. For example, in the above example, the `max_connections` settings should be around 800.
+It is important to set MySQL’s `max_connections` property to be 50%-100% higher than the total number of connections in the various pools. This is because Vitess may have to kill connections and open new ones. MySQL accounting has a delay in how it counts closed connections, which may cause its view of the number of connections to exceed the ones currently opened by Vitess. For example, in the above example, the `max_connections` settings should be around 800.
 {{< /info >}}
 
-It is normal to see errors like these in the log file until mysql instances have been initialized and a vttablet has been elected as primary:
+It is normal to see errors like these in the log file until MySQL instances have been initialized and a vttablet has been elected as primary:
 
 ```text
 2020-04-27T00:38:02.040081Z 2 [Note] Aborted connection 2 to db: 'unconnected' user: 'root' host: 'localhost' (Got an error reading communication packets)
@@ -178,7 +178,7 @@ It is normal to see errors like these in the log file until mysql instances have
 Starting the first vttablet against a keyspace and shard performs the following actions:
 
 * Create a keyspace and shard in the global topo if these did not exist before.
-* Perform a [RebuildKeyspaceGraph](../../../programs/vtctl/keyspaces/#rebuildkeyspacegraph) to deploy the global topo to the current cell (zone1).
+* Perform a [RebuildKeyspaceGraph](../../../programs/vtctl/keyspaces/#rebuildkeyspacegraph) to deploy the global topo to the current cell (cell1).
 * Create a tablet record, which will allow vtgates to discover it.
 * No restore action will be performed because this is the first time vttablet is coming up and no backups exist yet.
 
@@ -186,7 +186,7 @@ The vttablet will be unhealthy because the database for the keyspace has not bee
 
 ![unhealthy-tablet](../img/unhealthy-tablet.png)
 
-The next step is to bring up the rest of the vttablet-mysql pairs on other machines or different ports of the same machine.
+The next step is to bring up the rest of the vttablet-MySQL pairs on other machines or different ports of the same machine.
 
 ## Tablet Records
 
@@ -194,23 +194,23 @@ You can find out the current state of all vttablets with the following command:
 
 ```sh
 $ vtctlclient ListAllTablets
-zone1-0000000100 commerce 0 master sougou-lap1:15100 sougou-lap1:17100 [] 2021-01-02T22:27:11Z
-zone1-0000000101 commerce 0 replica sougou-lap1:15101 sougou-lap1:17101 [] <null>
-zone1-0000000102 commerce 0 rdonly sougou-lap1:15102 sougou-lap1:17102 [] <null>
+cell1-0000000100 commerce 0 master sougou-lap1:15100 sougou-lap1:17100 [] 2021-01-02T22:27:11Z
+cell1-0000000101 commerce 0 replica sougou-lap1:15101 sougou-lap1:17101 [] <null>
+cell1-0000000102 commerce 0 rdonly sougou-lap1:15102 sougou-lap1:17102 [] <null>
 ```
 
 This information is extracted from the “tablet record” in the cell specific topo. You can also browse to this information in vtctld either from the Dashboard or from the Topology tab.
 
 ![vtctld-tablet-list](../img/vtctld-tablet-list.png)
 
-You can move a vttablet+mysql pair to a new host after shutting them down on the current host. Bringing up the new pair with the same UID will update the tablet record with the new address and ports. This will be noticed by the vtgates and they will adjust their traffic accordingly. However, you must not move a tablet to another cell.
+You can move a vttablet-MySQL pair to a new host after shutting them down on the current host. Bringing up the new pair with the same UID will update the tablet record with the new address and ports. This will be noticed by the vtgates and they will adjust their traffic accordingly. However, you must not move a tablet to another cell.
 
-Gracefully bringing down a vttablet will remove the address information from the tablet record thereby informing the vtgates that it should not attempt to send any more traffic to the tablets.
+Gracefully bringing down a vttablet will remove the address information from the tablet record thereby informing the vtgates that they should not attempt to send any more traffic to the tablets.
 
-If a vttablet crashes, the address info will remain in the topo. However, vtgates will notice that the tablet is not reachable and will remember it as unhealthy. They will keep attempting to contact the tablet until it comes backu up as healthy.
+If a vttablet crashes, the address info will remain in the topo. However, vtgates will notice that the tablet is not reachable and will remember it as unhealthy. They will keep attempting to contact the tablet until it comes back up as healthy.
 
 It is recommended that you delete the tablet record if you intend to bring down a vttablet permanently. The command to delete a tablet is:
 
 ```text
-vtctlclient DeleteTablet zone1-100
+vtctlclient DeleteTablet cell1-100
 ```

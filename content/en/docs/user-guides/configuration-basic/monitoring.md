@@ -4,11 +4,15 @@ weight: 16
 aliases: ['/docs/launching/server-configuration/', '/docs/user-guides/server-configuration/', '/docs/user-guides/configuring-components/']
 ---
 
+This section describes how to monitor Vitess components. Additionally, we recommend that you also add the necessary monitoring and alerting for the TopoServers as well as the MySQL instances running with each vttablet.
+
 ## Tools
 
-Vitess provides integrations with a variety of popular monitoring tools: Prometheus, InfluxDB and Datadog. The core infrastructure uses go's `expvar` package to export real-time variables visible as a JSON object served by the `/debug/vars` URL. The exported variables are CamelCase names. These names are algorithmically converted to the appropriate naming standards for each monitoring tool. In the sections below, we will be describing the variables as seen in the `/debug/vars` page.
+Vitess provides integrations with a variety of popular monitoring tools: Prometheus, InfluxDB and Datadog. The core infrastructure uses go's `expvar` package to export real-time variables visible as a JSON object served by the `/debug/vars` URL. The exported variables are CamelCase names. These names are algorithmically converted to the appropriate naming standards for each monitoring tool. For example, Prometheus uses a [snake case conversion algorithm](https://github.com/vitessio/vitess/blob/e259a08f017d9f1b5984fcaac5c54e26d1c7c31d/go/stats/prometheusbackend/prometheusbackend.go#L95-L116). In this case, the Prometheus exporter would convert the `Queries.Histograms.Select.500000` variable to `vttablet_queries_bucket{plan_type="Select",le="0.0005"}`.
 
-The two critical Vitess processes to monitor are vttablet and vtgate. Additionally, we recommend that you setup monitoring for the underlying mysql instances as commonly recommended in the mysql community.
+In the sections below, we will be describing the variables as seen in the `/debug/vars` page.
+
+The two critical Vitess processes to monitor are vttablet and vtgate. Additionally, we recommend that you setup monitoring for the underlying MySQL instances as commonly recommended in the MySQL community.
 
 Beyond what the tools export, it is important to also monitor system resource usage: CPU, memory, network and disk usage.
 
@@ -52,13 +56,42 @@ Vitess has a structured way of exporting certain performance stats. The most com
     "TotalCount": 1138342,
     "TotalTime": 387710449887
   },
-```  
+```
 
 The histograms are broken out into query categories. In the above case, `Select` is the only category, which measures all SELECT statements. An entry like `"500000": 1133195` means that `1133195` queries took under `500000` nanoseconds to execute.
 
+Here is the full list of categories [expanded from the source](https://github.com/vitessio/vitess/blob/e259a08f017d9f1b5984fcaac5c54e26d1c7c31d/go/vt/vttablet/tabletserver/planbuilder/plan.go#L79-L102):
+
+```
+Select
+SelectLock
+Nextval
+SelectImpossible
+Insert
+InsertMessage
+Update
+UpdateLimit
+Delete
+DeleteLimit
+DDL
+Set
+OtherRead
+OtherAdmin
+SelectStream
+MessageStream
+Savepoint
+Release
+RollbackSavepoint
+ShowTables
+Load
+Flush
+LockTables
+UnlockTables
+```
+
 The numbers are cumulative. For example, if you wish to count how many queries took between `500000ns` and `1000000ns`, the answer would be `1138196-1133195`, which is `1`.
 
-Later below, we will be convering variables that break out these queries into further categories. However, we do not generate histograms for them because the number of values generated will be too big.
+Later below, we will be covering variables that break out these queries into further sub-categories like per-table, etc. However, we do not generate histograms for them because the number of values generated would be too big.
 
 The thresholds are hard-coded. However, if you are integrating with an extermal tool like Prometheus, it will have its own thresholds.
 
@@ -113,7 +146,7 @@ Results is a simple histogram with no timing info. It gives you a histogram view
 
 Mysql is a histogram variable like Queries, except that it reports MySQL execution times. The categories are "Exec" and “ExecStream”.
 
-The vttablet queries exec time is roughly equal to the sum of the mysql exec time, conn pool waits and consolidation waits.
+The vttablet queries exec time is roughly equal to the sum of the MySQL exec time, `ConnPoolWaitTime` and `Waits.Consolidations`.
 
 #### Transactions
 
@@ -194,7 +227,7 @@ There are a few variables with the above prefixes that report the status of the 
 
 The choice of which pool gets used depends on whether the application connected with the `CLIENT_FOUND_ROWS` flag or not.
 
-* `WaitCount` will give you how often the transaction pool gets full that causes new transactions to wait.
+* `WaitCount` will give you how often the transaction pool gets full, which causes new transactions to wait.
 * `WaitTime`/`WaitCount` will tell you the average wait time.
 * `Available` is a gauge that tells you the number of available connections in the pool in real-time. `Capacity-Available` is the number of connections in use. Note that this number could be misleading if the traffic is spiky.
 
@@ -209,7 +242,7 @@ There are other internal pools used by vttablet that are not very consequential.
 
 #### `TableACLAllowed`, `TableACLDenied`, `TableACLPseudoDenied`
 
-The above three variables table acl stats broken out by table, plan and user.
+The above three variables are table acl stats. They are broken out by table, plan and user.
 
 #### `QueryPlanCacheSize`
 
@@ -225,7 +258,7 @@ These variables are yet another view of Queries, but broken out by user, table a
 
 #### /debug/health
 
-This URL prints out a simple "ok" or “not ok” string that can be used to check if the server is healthy. The health check makes sure mysqld connections work, and replication is configured (though not necessarily running) if not master.
+This URL prints out a simple "ok" or “not ok” string that can be used to check if the server is healthy. The health check makes sure mysqld connections work, and replication is configured (though not necessarily running) if not on master.
 
 #### /debug/status\_details
 
@@ -243,7 +276,7 @@ This URL prints out a JSON object that lists the state of all the variables that
 
 #### /queryz, /debug/query\_stats, /debug/tablet\_plans, /livequeryz
 
-* /queryz is a human-readable version of /debug/query\_stats. If a graph shows a table as a possible source of problems, this is the next place to look at to see if a specific query is the root cause.
+* /queryz is a human-readable version of /debug/query\_stats. If a graph shows a table as a possible source of problems, this is the next place to look to see if a specific query is the root cause. This is list is sorted in descending order of query latency. If the value is greater than 100 milliseconds, it's color-coded red. If it is greater than 10 milliseconds, it is color coded yellow. Otherwise, it is color coded gray.
 * /debug/query\_stats is a JSON view of the per-query stats. This information is pulled in real-time from the query cache. The per-table stats in /debug/vars are a roll-up of this information.
 * /debug/table\_plans is a more static view of the query cache. It just shows how vttablet will process or rewrite the input query.
 * /livequeryz lists the currently running queries. You have the option to kill any of them from this page.
@@ -283,6 +316,9 @@ Alerting is built on top of the variables you monitor. Before setting up alerts,
 * Any internal error
 * Traffic out of balance among replicas
 * Qps/core too high
+* High replication lag
+* Errant transactions
+* Primary is in read-only mode
 
 ## VTGate
 

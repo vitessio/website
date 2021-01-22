@@ -11,4 +11,4 @@ There are use cases where you may want to experimentally deploy changes to only 
 
 Tools like vtgate and vttablet consume information from the local copy of the topo.
 
-An unsharded keyspace typically has a single shard named `0` or` -`. A sharded keyspace has shards named after the keyranges assigned to it, like `-80` and `80-`.
+An unsharded keyspace typically has a single shard named `0` or` -`. A sharded keyspace has shards named after the keyranges assigned to it, like `-80` and `80-`. Please refer to the section on [shard naming](../../../concepts/shard/#shard-naming) for more info on how shards are named.

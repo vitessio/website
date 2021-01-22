@@ -3,7 +3,7 @@ title: Creating a cell
 weight: 6
 ---
 
-A Vitess [cell](../../../concepts/cell) is a logical grouping of servers that typically maps to an availability zone, region, or data center. The purpose of a cell is to provide isolation. The loss of one cell should not disrupt other cells. To fulfil this, Vitess allows you to configure separate cell specific topo servers. There is no need to distribute the servers of a cell specific toposerver to other cells. However, it is recommended that you bring up more than one instance in order to survive individual server failures.
+A Vitess [cell](../../../concepts/cell) is a logical grouping of servers that typically maps to an availability zone, region, or data center. The purpose of a cell is to provide isolation. The loss of one cell should not disrupt other cells. To fulfil this, Vitess allows you to configure separate cell-specific topo servers. There is no need to distribute the servers of a cell-specific toposerver to other cells. However, it is recommended that you bring up more than one instance in order to survive individual server failures.
 
 Even if you do not want a multi-cell deployment, you still need to create at least one cell before bringing up the rest of the Vitess servers. If you do not plan to deploy multiple cells, you can reuse the global toposerver as the cell-specific one also.
 
@@ -11,17 +11,17 @@ You can use the `vtctlclient` alias to create one:
 
 ```sh
 vtctlclient AddCellInfo \
-  -root /vitess/zone1 \
+  -root /vitess/cell1 \
   -server_address <cell_topo_address> \
-  zone1
+  cell1
 ```
 
 Note that the cell topo has its own root path. If reusing the same toposerver, you must ensure that they don’t overlap.
 
-The cell information is saved in the global toposerver. Vitess takes care of deploying the necessary information from the global topo to the cell specific topos. Vitess binaries fetch the cell information from the global topo before switching to use the cell topo.
+The cell information is saved in the global toposerver. Vitess takes care of deploying the necessary information from the global topo to the cell-specific topos. Vitess binaries fetch the cell information from the global topo before switching to use the cell topo.
 
 {{< info >}}
-You will only need to specify the topo global root for launching the vitess servers. The cell-specific information including its root path will be automatically loaded from the cell info.
+You will only need to specify the topo global root for launching the Vitess servers. The cell-specific information including its root path will be automatically loaded from the cell info.
 {{< /info >}}
 
 ## Mapping cells to zones and regions
@@ -30,7 +30,7 @@ Most public clouds offer a hierarchy of failure boundaries. Regions are data cen
 
 There is also a cost to transferring data between zones and regions, and these costs can come into play when making decisions about how to layout the topology.
 
-The general recommendation for vitess is to map each cell to a zone. The main advantage of this approach is that it minimizes cross-zone data transfers to the extent possible, thereby minimizing cost.
+The general recommendation for Vitess is to map each cell to a zone. The main advantage of this approach is that it minimizes cross-zone data transfers to the extent possible, thereby minimizing cost.
 
 If an application must be deployed across regions, then you can create more cells in the newer region, one for each zone.
 
@@ -40,19 +40,19 @@ For example, let us say that you plan to deploy in three zones and decided to us
 
 If you intend to use more than one region for the sake of survivability, then it is recommended that you use at least three regions. This will allow you to deploy a balanced quorum of servers for the global topo.
 
-If you have deployed in multiple regions and would like the flexibility of queries to go cross-cell within a region, you can create [cell aliases](../../../programs/vtctl/cell-aliases). These aliases will indicate to the vtgates that it can send requests to the vttablets of a different cell if a no local vttablet is available.
+If you have deployed in multiple regions and would like the flexibility of queries that go cross-cell within a region, you can create [cell aliases](../../../programs/vtctl/cell-aliases). These aliases will indicate to the vtgates that they can send requests to the vttablets of a different cell if a no local vttablet is available.
 
 ## Checklist
 
 * Ensure that vtctlds come up successfully. If there is a failure, check the log files for any errors.
-* Ensure that you can browse to the http port of vtctld. The dashboard should appear, and you should be able to browse under the `Topology` tab and verify that the cell information is as you created it.
-* If you configured a separate cell specific topo, ensure that you can connect to it using the parameters in the cell information.
-* Ensure that the cell specific topos are reachable from other cells.
+* Ensure that you can browse to the http port of vtctld. The dashboard should appear, after which you should be able to browse under the `Topology` tab and verify that the cell information is as you created it.
+* If you configured a separate cell-specific topo, ensure that you can connect to it using the parameters in the cell information.
+* Ensure that the cell-specific topos are reachable from other cells.
 
 Browsing to the cell information should look like this screenshot:
 
 ![cell-in-topo](../img/cell-in-topo.png)
 
 {{< info >}}
-Clicking on the `zone1` link will fail because metadata under that path will be created only when we bring up cell specific vitess components.
+Clicking on the `cell1` link will fail because metadata under that path will be created only when we bring up cell-specific Vitess components.
 {{< /info >}}
