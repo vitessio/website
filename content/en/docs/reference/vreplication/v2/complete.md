@@ -14,7 +14,7 @@ MoveTables/Reshard -v2 [-keep_data] [-rename_tables] Complete <targetKs.workflow
 
 ### Description
 
-`Complete` is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state in the side-car \_vt database, routing rules and blacklisted tables (for MoveTables) from the topo. Also, by default, the target tables (or target shards) are dropped.
+`Complete` is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state in the side-car \_vt database, routing rules and blacklisted tables (for MoveTables) from the topo. Also, by default, the source tables (or source shards) are dropped.
 
 ### Parameters
 
