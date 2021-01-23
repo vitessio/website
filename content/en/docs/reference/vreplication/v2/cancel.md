@@ -24,6 +24,6 @@ MoveTables/Reshard -v2 [-keep_data] Cancel <targetKs.workflow>
 
 <div class="cmd">
 
-Usually, the target data (tables or shards) are deleted by Cancel. If this flag is used, for MoveTables, target tables will not be deleted and, for Reshard, target shards will not be dropped.
+Usually, the target data (tables or shards) are deleted by Cancel. If this flag is used with MoveTables, target tables will not be deleted and, with Reshard, target shards will not be dropped.
 
 </div>
