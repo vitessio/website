@@ -9,12 +9,14 @@ This documentation is for a new (v2) set of vtctld commands. See [RFC](https://g
 ### Command
 
 ```
-MoveTables/Reshard -v2 [-keep_data] [-rename_tables] Complete <targetKs.workflow>
+MoveTables/Reshard -v2 [-keep_data] [-rename_tables] [-dry_run]
+  Complete <targetKs.workflow>
 ```
 
 ### Description
+**Alert: This is a destructive command**
 
-`Complete` is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state in the side-car \_vt database, routing rules and blacklisted tables (for MoveTables) from the topo. Also, by default, the source tables (or source shards) are dropped.
+`Complete` is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state in the side-car \_vt database, routing rules, and blacklisted tables (for MoveTables) from the topo. Also, by default, the source tables (or source shards) are dropped.
 
 ### Parameters
 
@@ -23,7 +25,8 @@ MoveTables/Reshard -v2 [-keep_data] [-rename_tables] Complete <targetKs.workflow
 **default** false
 
 <div class="cmd">
-Usually the source data (tables or shards) are deleted by Complete. If this flag is used, for MoveTables, source tables will not be deleted, for Reshard, source shards will not be dropped.
+
+Usually, the source data (tables or shards) are deleted by Complete. If this flag is used, for MoveTables, source tables will not be deleted, for Reshard, source shards will not be dropped.
 
 </div>
 
@@ -32,8 +35,18 @@ Usually the source data (tables or shards) are deleted by Complete. If this flag
 **default** false
 
 <div class="cmd">
-The rename_tables flag is applicable only for MoveTables. Tables are renamed instead of being deleted. Currently the new name is _&lt;table_name&gt;.
-<br/><br/>
-(We plan to change this to use the logic used by `pt-online-schema-change` using the template _&lt;table_name&gt;_old. The new naming convention has the additional benefit that vreplication will automatically ignore such tables from getting resharded or streamed by the VStream API)
 
+The rename_tables flag is applicable only for MoveTables. Tables are renamed instead of being deleted. Currently the new name is _&lt;table_name&gt;_old.
+
+We use the same renaming logic used by `pt-online-schema-change`. Such tables are automatically skipped by vreplication if they exist on the source.
+
+</div>
+
+#### -dry-run
+**optional**\
+**default** false
+
+<div class="cmd">
+You can do a dry run where no actual action is taken but the command logs all the actions that would be taken
+by Complete.
 </div>

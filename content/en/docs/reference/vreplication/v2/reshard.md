@@ -21,20 +21,26 @@ Reshard is used to create and manage workflows to horizontally shard an existing
 #### action
 
 <div class="cmd">
+
 Reshard is an "umbrella" command. The `action` sub-command defines the operation on the workflow.
+
 </div>
 
 #### options
 <div class="cmd">
+
 Each `action` has additional options/parameters that can be used to modify its behavior.
 
-`actions` are common to both MoveTables and Reshard v2 workflows. Only the `create` action has different parameters, all other actions have common options and semantics. These actions are documented separately.
+`actions` are common to both MoveTables and Reshard v2 workflows. Only the `create` action has different parameters, all other actions have common options and similar semantics. These actions are documented separately.
+
 </div>
 
 #### workflow identifier
 
 <div class="cmd">
-All workflows are identified by `targetKeyspace`.`workflow` where `targetKeyspace` is the name of the keyspace to which the tables are being moved to. `workflow` is a name you assign to the MoveTables workflow to identify it.
+
+All workflows are identified by `targetKeyspace.workflow` where `targetKeyspace` is the name of the keyspace to which the tables are being moved. `workflow` is a name you assign to the Reshard workflow to identify it.
+
 </div>
 
 
@@ -48,5 +54,5 @@ All workflows are identified by `targetKeyspace`.`workflow` where `targetKeyspac
 1. Confirm that data has been copied over correctly using [VDiff](../../vdiff)
 1. Cutover to the target keyspace with [SwitchTraffic](../switchtraffic) <br/>
 `Reshard SwitchTraffic <keyspace.workflow>`
-1. Cleanup vreplication artifacts and source shards [Complete](../complete) <br/>
+1. Cleanup vreplication artifacts and source shards with [Complete](../complete) <br/>
 `Reshard Complete <keyspace.workflow>`
