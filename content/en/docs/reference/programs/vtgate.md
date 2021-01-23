@@ -54,7 +54,7 @@ The following global options apply to `vtgate`:
 | -emit_stats | boolean | true iff we should emit stats to push-based monitoring/stats backends |
 | -enable_buffer | boolean | Enable buffering (stalling) of master traffic during failovers. |
 | -enable_buffer_dry_run | boolean | Detect and log failover events, but do not actually buffer requests. |
-| -enable_system_settings | boolean | Enables the system settings to be changed per session at the database connection level. |
+| -enable_system_settings | boolean | Enables the system settings to be changed per session at the database connection level. Override with @@enable_system_settings session variable. |
 | -gate_query_cache_size | int | gate server query cache size, maximum number of queries to be cached. vtgate analyzes every incoming query and generate a query plan, these plans are being cached in a lru cache. This config controls the capacity of the lru cache. (default 10000) |
 | -gateway_implementation | string | The implementation of gateway (default "discoverygateway") |
 | -gateway_initial_tablet_timeout | duration | At startup, the gateway will wait up to that duration to get one tablet per keyspace/shard/tablettype (default 30s) |
