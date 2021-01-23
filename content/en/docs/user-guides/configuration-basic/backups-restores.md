@@ -12,11 +12,11 @@ vtctlclient Backup cell1-101
 ```
 
 {{< warning >}}
-If you are not using an online backup method like xtrabackup. The `Backup` command will shut down the MySQL instance to perform the operation. The instance will be unavailable until the backup is finished, the restarted MySQL instance is pointed back at the primary and caught up on replication.
+If you are not using an online backup method like xtrabackup, the `Backup` command will shut down the MySQL instance to perform the operation. The instance will be unavailable until the backup is finished, the restarted MySQL instance is pointed back at the primary and caught up on replication.
 {{< /warning >}}
 
 {{< info >}}
-It is recommended that you also periodically backup your binlogs. Vitess currently does not support this ability.
+It is recommended that you also periodically backup your binlogs. Vitess does not natively support this ability. You will need to set this up yourself.
 {{< /info >}}
 
 Once a backup is taken, bringing up a subsequent vttablet-MySQL pair will cause it to restore from the backup instead of starting with a fresh MySQL instance. This will make it catch up from the beginning of time. You should see the following messages in the vttablet logs:

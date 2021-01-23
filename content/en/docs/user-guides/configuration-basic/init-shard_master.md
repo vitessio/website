@@ -15,6 +15,8 @@ vtctlclient \
   cell1-100
 ```
 
+Until this command is run, you may also see errors like this in the vttablet logs: `Cannot start query service: Unknown database 'vt_xxx'`. This is because the database will be created only after a primary is elected.
+
 If you have semi-sync enabled and did not set up at least three replicas, InitiShardMaster could hang indefinitely. Even if it succeeds, future operations that perform failovers could cause this shard to go into a deadlocked state.
 
 After this step, visiting the `/debug/status` page on the vttablets should show all the tablets as healthy:
