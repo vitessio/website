@@ -10,7 +10,8 @@ This documentation is for a new (v2) set of vtctld commands. See [RFC](https://g
 
 ```
 MoveTables -v2 [-source=<sourceKs>] [-tables=<tableSpecs>] [-cells=<cells>]
-  [-tablet_types=<source_tablet_types>] Create <targetKs.workflow>
+  [-tablet_types=<source_tablet_types>] [-all] [-exclude=<tables>]
+  Create <targetKs.workflow>
 
 Reshard -v2 [-source_shards=<source_shards>] [-target_shards=<target_shards>]
   [-cells=<cells>] [-tablet_types=<source_tablet_types>]  [-skip_schema_copy]
@@ -26,18 +27,20 @@ Reshard -v2 [-source_shards=<source_shards>] [-target_shards=<target_shards>]
 
 #### -source
 **mandatory**
+
 **MoveTables only**
 <div class="cmd">
 Name of existing keyspace (the source keyspace) that contains the tables to be moved.
 </div>
 
 #### table_specs
-**mandatory**
+**optional**  one of `table_specs` or `-all` needs to be specified
+
 **MoveTables only**
 <div class="cmd">
 _Either_
 
-* a comma separated list of tables
+* a comma-separated list of tables
   * if target keyspace is unsharded OR
   * if target keyspace is sharded AND the tables being moved are already defined in the target's vschema
 
@@ -57,13 +60,13 @@ _Or_
 **default** local cell
 
 <div class="cmd">
-A comma separated list of cell names or cell aliases. This list is used by VReplication to determine which
+A comma-separated list of cell names or cell aliases. This list is used by VReplication to determine which
 cells should be used to pick a tablet for selecting data from the source keyspace.<br><br>
 
 ###### Uses
 
 * Improve performance by picking a tablet in cells in network proximity with the target
-* To reduce bandwidth costs by skipping cells which are in different availability zones
+* To reduce bandwidth costs by skipping cells that are in different availability zones
 * Select cells where replica lags are lower
 </div>
 
@@ -72,21 +75,44 @@ cells should be used to pick a tablet for selecting data from the source keyspac
 **default** replica
 
 <div class="cmd">
-A comma separated list of tablet types that are used while picking a tablet for sourcing data.
+A comma-separated list of tablet types that are used while picking a tablet for sourcing data.
 One or more from MASTER, REPLICA, RDONLY.<br><br>
 
 ###### Uses
 
-* To reduce load on master tablets by using REPLICAs or RDONLYs
+* To reduce the load on master tablets by using REPLICAs or RDONLYs
 * Reducing lags by pointing to MASTER
 </div>
 
+
+#### -all
+**optional** cannot specify `table_specs` if `-all` is specified
+
+**MoveTables only**
+<div class="cmd">
+
+Move all tables from the source keyspace.
+
+</div>
+
+#### -exclude
+**optional** only applies if `-all` is specified
+
+**MoveTables only**
+<div class="cmd">
+
+If moving all tables, specifies tables to be skipped.
+
+</div>
+
+
 #### source_shards
 **mandatory**
+
 **Reshard only**
 
 <div class="cmd">
-Comma separated shard names to reshard from.
+Comma-separated shard names to reshard from.
 
 Example: `Reshard -source_shards=0 -target_shards=-80,80- Create customer.reshard1to2`
 
@@ -94,15 +120,17 @@ Example: `Reshard -source_shards=0 -target_shards=-80,80- Create customer.reshar
 
 #### target_shards
 **mandatory**
+
 **Reshard only**
 
 <div class="cmd">
-Comma separated shard names to reshard to.
+Comma-separated shard names to reshard to.
 </div>
 
 #### -skip_schema_copy
 **optional**\
 **default** false
+
 **Reshard only**
 
 <div class="cmd">
