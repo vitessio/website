@@ -130,7 +130,6 @@ The following global options apply to `vtgate`:
 | -onterm_timeout | duration | wait no more than this for OnTermSync handlers before stopping (default 10s) |
 | -opentsdb_uri | string | URI of opentsdb /api/put method |
 | -pid_file | string | If set, the process will write its pid to the named file, and delete it on graceful shutdown. |
-| -planner_version | string | Sets the default planner to use when the session has not changed it. Valid values are: V3, V4 and V4Greedy. All V4 versions should be considered experimental! |
 | -port | int | port for the server |
 | -proxy_protocol | boolean | Enable HAProxy PROXY protocol on MySQL listener socket |
 | -purge_logs_interval | duration | how often try to remove old logs (default 1h0m0s) |
