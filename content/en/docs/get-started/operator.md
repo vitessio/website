@@ -64,6 +64,10 @@ In this directory, you will see a group of yaml files. The first digit of each f
 kubectl apply -f 101_initial_cluster.yaml
 ```
 
+{{< info >}}
+We have supplied an example yaml for bringing up Vitess with the experimental [vtorc](../../user-guides/configuration-basic/vtorc) component. You can try this out by using the following command: `kubectl apply -f vtorc_example.yaml`. Once `vtorc` is officially released, the examples will be updated accordingly.
+{{< /info >}}
+
 ### Verify cluster
 
 You can check the state of your cluster with `kubectl get pods`. After a few minutes, it should show that all pods are in the status of running:
