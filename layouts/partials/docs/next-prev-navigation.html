@@ -1,0 +1,20 @@
+
+    {{ if or (.PrevInSection) (.NextInSection) }}
+    <div>
+
+    <div style="float:left;">
+      {{ if .NextInSection }}
+          <a class="button has-background-black has-text-grey-light is-size-6 is-size-6-mobile" href={{ .NextInSection.Permalink }}>
+            <b class="has-text-orange"><<</b>&nbsp;
+      {{ .NextInSection.Name }}</a>
+      {{ end }}
+    </div>
+
+    <div style="float:right">
+       {{ if .PrevInSection }}
+            <a class="button has-background-black has-text-grey-light is-size-6 is-size-6-mobile" href={{ .PrevInSection.Permalink }}>{{ .PrevInSection.Name }}&nbsp;<b class="has-text-orange">>></b></a>
+       {{ end }}
+
+    </div>
+    <div style="clear:both;"/>
+    {{ end }}
