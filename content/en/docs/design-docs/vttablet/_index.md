@@ -1,6 +1,6 @@
 ---
 title: VTTablet
-description: VTTablet Related Documents
+description: VTTablet related documents
 weight: 2
-aliases: ['/docs/design/misc/']
+aliases: ['/docs/design/vttablet/']
 ---
