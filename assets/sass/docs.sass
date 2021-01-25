@@ -65,7 +65,7 @@ html, body
   &:hover
     background: rgba(255, 255, 255, 0.05)
 
-.docs-navlist li.active > a 
+.docs-navlist li.active > a
   color: $tan
 
 .navlist-caret
@@ -93,7 +93,7 @@ li.expanded > a > .navlist-caret
 
     .content
       +desktop
-        width: 80%
+        width: 100%
 
       p a, li a
         font-weight: 700
@@ -166,7 +166,13 @@ li.expanded > a > .navlist-caret
 
 // used atm in vreplication commands reference
 .cmd
-  padding: 10px;
-  margin-left: 30px;
-  background-color: #f7f7f7;
-  margin-bottom: 10px;
+  padding: 10px
+  margin-left: 30px
+  background-color: #f7f7f7
+  margin-bottom: 10px
+
+// used to display text in prev/next navigation buttons for articles
+.limit-text
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
