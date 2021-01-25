@@ -95,7 +95,7 @@ For non-unique lookup Vindexes, the lookup table should consist of multiple colu
 For example, if a user table had the columns `(user_id, email)`, where `user_id` was the primary key and `email` needed a non-unique lookup vindex, the lookup table would have the columns `(email, user_id, keyspace_id)`.
 
 
-### Indepedence
+### Independence
 
 The previously described properties are mostly independent of each other. Combining them gives rise to the following valid categories:
 
@@ -169,7 +169,7 @@ xxhash | Functional Unique | xxHash64 hash | Yes | No | 1 | Any |
 
 Consistent lookup vindexes, as described above, are a new category of Vindexes that are meant to replace the existing lookup Vindexes implementation. For the time being, they have a different name to allow for users to switch back and forth.
 
-Custom Vindexes can also be created as needed. At the moment there is no formal plugin system for custom Vindexes, but the interface is well-defined, and thus custom implementations including code performing arbitary lookups in other systems can be accomodated.
+Custom Vindexes can also be created as needed. At the moment there is no formal plugin system for custom Vindexes, but the interface is well-defined, and thus custom implementations including code performing arbitrary lookups in other systems can be accommodated.
 
 \
 \
