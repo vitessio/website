@@ -32,11 +32,15 @@ Vitess supports a subset of subqueries. For example, a subquery combined with a 
 
 ### Stored Procedures
 
-Calling stored procedures using `CALL` is supported for unsharded keyspaces, or if you directly target a specific shard. This includes returning multiple results from a single.
+Calling stored procedures using `CALL` is supported for unsharded keyspaces, or if you directly target a specific shard. They can return no results.
 
-OUT variables are not yet supported.
+Only IN parameters are supported.
 
-`CREATE PROCEDURE` however is not supported - you have to create the procedure directly on the underlying MySQL servers and not through Vitess.
+If you use transactions, the transaction state cannot change between calls - if there is a transaction open at the beginning of the CALL, a transaction must still be open after the procedure has run.
+
+Likewise, if there is no transaction open, the procedure should not leave an open transaction after itself.
+
+`CREATE PROCEDURE` is not supported - you have to create the procedure directly on the underlying MySQL servers and not through Vitess.
 
 ### Window Functions and CTEs
 
