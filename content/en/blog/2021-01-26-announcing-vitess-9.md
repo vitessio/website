@@ -13,7 +13,7 @@ In this release, we have focused on making Vitess more stable after the successf
 
 ### Compatibility (MySQL, frameworks)
 
-Our ongoing work is to make sure that Vitess accepts all queries that MySQL does. We continually focus on `SET` and `information_schema` queries in this release as well as other common and complex queries. Several parts of the query serving module have been refactored to facilitate further compatibility enhancements. 
+Our ongoing work is to make sure that Vitess accepts all queries that MySQL does. We continued to focus on `SET` and `information_schema` queries in this release as well as other common and complex queries. Several parts of the query serving module have been refactored to facilitate further compatibility enhancements. 
 
 Please note that reserved connections are still not on by default, and you should plan to test it first in a test environment, to ensure that all your queries and frameworks are supported, before enabling it in production.
 
