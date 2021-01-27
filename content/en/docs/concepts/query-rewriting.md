@@ -66,6 +66,9 @@ Vitess handles system variables in one of four different ways:
   * *Vitess aware*. These are settings that change Vitess' behaviour, and are not sent down to MySQL
   * *Reserved connection*. For some settings, it makes sense to allow them to be set, but it also means that we can't use a shared connection for this user. What this means is that every connection done on this users behalf will need to first have these system variables set, and then keep the connection dedicated. Connection pooling is important for the performance of Vitess, and reserved connections can't be pooled, so this should not be the normal way to run applications on Vitess. Just make sure that the global variable is set to the same value the application will set it to, and Vitess can use connection pooling.
 
+In addition to this, Vitess makes sure that @@version includes both the emulated MySQL version and the Vitess version, such as: `5.7.9-vitess-10.0.0-SNAPSHOT`. This value can be changed by using the vtgate flag `-mysql_server_version`.
+
+
 ### Special functions
 
 There are a few special functions that Vitess handles without delegating to MySQL.

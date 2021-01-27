@@ -16,5 +16,5 @@ When an alert fires, you have the following sources of information to perform yo
 
 ### Find Vitess build running 
 ```
-select @@vitess_version;
+select @@version;
 ```
