@@ -93,7 +93,6 @@ Here is a list of all the system variables that are handled by Vitess and how th
 |workload|VitessAware|
 |charset|VitessAware|
 |names|VitessAware|
-|enable_system_settings|VitessAware|
 |big_tables| NoOp |
 |bulk_insert_buffer_size| NoOp |
 |debug| NoOp |

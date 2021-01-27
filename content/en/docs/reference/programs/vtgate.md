@@ -47,12 +47,14 @@ The following global options apply to `vtgate`:
 | -cpu_profile | string | write cpu profile to file |
 | -datadog-agent-host | string | host to send spans to. if empty, no tracing will be done |
 | -datadog-agent-port | string | port to send spans to. if empty, no tracing will be done |
+| -ddl_strategy | string | Set default strategy for DDL statements. Override with @@ddl_strategy session variable. |
 | -default_tablet_type | value | The default tablet type to set for queries, when one is not explicitly selected (default MASTER) |
 | -discovery_high_replication_lag_minimum_serving | duration | the replication lag that is considered too high when selecting the minimum num vttablets for serving (default 2h0m0s) |
 | -discovery_low_replication_lag | duration | the replication lag that is considered low enough to be healthy (default 30s) |
 | -emit_stats | boolean | true iff we should emit stats to push-based monitoring/stats backends |
 | -enable_buffer | boolean | Enable buffering (stalling) of master traffic during failovers. |
 | -enable_buffer_dry_run | boolean | Detect and log failover events, but do not actually buffer requests. |
+| -enable_system_settings | boolean | Enables the system settings to be changed per session at the database connection level. Override with @@enable_system_settings session variable. |
 | -gate_query_cache_size | int | gate server query cache size, maximum number of queries to be cached. vtgate analyzes every incoming query and generate a query plan, these plans are being cached in a lru cache. This config controls the capacity of the lru cache. (default 10000) |
 | -gateway_implementation | string | The implementation of gateway (default "discoverygateway") |
 | -gateway_initial_tablet_timeout | duration | At startup, the gateway will wait up to that duration to get one tablet per keyspace/shard/tablettype (default 30s) |
@@ -88,12 +90,14 @@ The following global options apply to `vtgate`:
 | -lameduck-period | duration | keep running at least this long after SIGTERM before stopping (default 50ms) |
 | -legacy_replication_lag_algorithm | boolean | use the legacy algorithm when selecting the vttablets for serving (default true) |
 | -log_backtrace_at | value | when logging hits line file:N, emit a stack trace |
+| -lock_heartbeat_time | duration | If there is lock function used. This will keep the lock connection active by using this heartbeat. (default 5 seconds) |
 | -log_dir | string | If non-empty, write log files in this directory |
 | -log_err_stacks | boolean | log stack traces for errors |
 | -log_queries_to_file | string | Enable query logging to the specified file |
 | -log_rotate_max_size | uint | size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800) |
 | -logtostderr | boolean | log to standard error instead of files |
 | -max_memory_rows | int | Maximum number of rows that will be held in memory for intermediate results as well as the final result. (default 300000) |
+| -max_payload_size | int | The threshold for query payloads in bytes. A payload greater than this threshold will result in a failure to handle the query. |
 | -mem-profile-rate | int | profile every n bytes allocated (default 524288) |
 | -message_stream_grace_period | duration | the amount of time to give for a vttablet to resume if it ends a message stream, usually because of a reparent. (default 30s) |
 | -min_number_serving_vttablets | int | the minimum number of vttablets that will be continue to be used even with low replication lag (default 2) |
@@ -184,4 +188,4 @@ The following global options apply to `vtgate`:
 | -vtctld_addr | string | address of a vtctld instance |
 | -vtgate-config-terse-errors | boolean | prevent bind vars from escaping in returned errors |
 | -warn_memory_rows | int | Warning threshold for in-memory results. A row count higher than this amount will cause the VtGateWarnings.ResultsExceeded counter to be incremented. (default 30000) |
-
+| -warn_payload_size | int | The warning threshold for query payloads in bytes. A payload greater than this threshold will cause the VtGateWarnings.WarnPayloadSizeExceeded counter to be incremented. |
