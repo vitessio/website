@@ -38,8 +38,8 @@ As always, please validate any new features in your test environments before usi
 ### Documentation
 Two new user guides have been created for new adopters of Vitess:
 
-* [VSchema and Query Serving](https://deploy-preview-664--vitess.netlify.app/docs/user-guides/vschema-guide/)
-* [Running Vitess in Production](https://deploy-preview-664--vitess.netlify.app/docs/user-guides/configuration-basic/)
+* [VSchema and Query Serving](https://vitess.io/docs/user-guides/vschema-guide/)
+* [Running Vitess in Production](https://vitess.io/docs/user-guides/configuration-basic/)
 
 
 
