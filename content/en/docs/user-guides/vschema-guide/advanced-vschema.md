@@ -9,7 +9,7 @@ With the exception of Multi-Column Vindexes, advanced VSchema Properties do not 
 
 Multi-Column Vindexes are useful in the following two use cases:
 
-* Grouping customers by their regions so they can be hosted in specific geographical locations. This may be required for compliance, and also to achieve better performance.
+* Grouping customers by their regions so they can be hosted in specific geographical locations. This may be required for compliance and also to achieve better performance.
 * For a multi-tenant system, grouping all rows of a tenant in a separate set of shards. This limits the fan out of queries if searching only for rows that are related to a single tenant.
 
 In both cases the leading column is the region or tenant, and is used to form the first few bits of the `keyspace_id`. The second column is used for the bits that follow. Since Vitess shards by keyrange, this approach will naturally group all rows of a region or tenant within the same shard, or within a group of consecutive shards. Since each shard is its own MySQL cluster, these can then be deployed to different regions as needed.
@@ -28,7 +28,7 @@ The downside of this approach is that it is harder to migrate an id to a differe
 
 ## Reference Tables
 
-Sharded databases often need the ability to join their tables with smaller “reference” tables. For example, the `product` table could be seen as a reference table. Other use cases are tables that map static information like zipcode to city, etc.
+Sharded databases often need the ability to join their tables with smaller “reference” tables. For example, the `product` table could be seen as a reference table. Other use cases are tables that map static information like zip code to city, etc.
 
 Joining against these tables across keyspaces results in cross-shard joins that may not be very efficient or fast.
 
