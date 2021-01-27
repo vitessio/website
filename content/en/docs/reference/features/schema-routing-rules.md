@@ -44,6 +44,7 @@ Routing rules can be specified using JSON format. Here's an example:
 ```
 
 The above JSON specifies the following rules:
+
 * If you sent a query accessing `t` for an `rdonly` instance, then it would be sent to table `t` in the `target` keyspace.
 * If you sent a query accessing `target.t` for anything other than `rdonly`, it would be sent `t` in the `source` keyspace.
 * If you sent a query accessing `t` without any qualification, it would be sent to `t` in the `source` keyspace.

@@ -67,6 +67,7 @@ Vitess allows for the transparent population of these lookup table rows by assig
 Consistent lookup vindexes use an alternate approach that makes use of careful locking and transaction sequences to guarantee consistency without using 2PC. This gives the best of both worlds, with the benefit of a consistent cross-shard vindex without paying the price of 2PC.
 
 There are currently two vindex types in Vitess for consistent lookup:
+
 * `consistent_lookup_unique`
 * `consistent_lookup`
 
@@ -118,11 +119,11 @@ However, it is generally not recommended to use a Lookup Vindex as a Primary Vin
 Vindexes have costs. For routing a query, the applicable Vindex with the lowest cost is chosen. The current general costs for the different Vindex Types are as follows:
 
 Vindex Type | Cost
------------ | ----
-Identity | 0
-Functional | 1
-Lookup Unique | 10
-Lookup NonUnique | 20
+| ----------- | ---- |
+| Identity | 0 |
+| Functional | 1 |
+| Lookup Unique | 10 |
+| Lookup NonUnique | 20 |
 
 #### Select
 
@@ -148,24 +149,24 @@ If the table owns lookup vindexes, then the rows to be deleted are first read an
 
 Vitess provides the following predefined Vindexes:
 
-Name | Type | Description | Primary | Reversible | Cost | Data types |
----- | ---- | ----------- | ------- | ---------- | ---- | ---------- |
-binary | Functional Unique | Identity | Yes | Yes | 0 | Any |
-binary\_md5 | Functional Unique | MD5 hash | Yes | No | 1 | Any |
-consistent\_lookup | Lookup NonUnique | Lookup table non-unique values | No | No | 20 | Any |
-consistent\_lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | No | 10 | Any |
-hash | Functional Unique | DES null-key hash | Yes | Yes | 1 | 64 bit or smaller numeric or equivalent type |
-lookup | Lookup NonUnique | Lookup table non-unique values | No | No | 20 | Any |
-lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | No | 10 | Any |
-null | Functional Unique | Always map to keyspace ID 0 | Yes | No | 100 | Any |
-numeric | Functional Unique | Identity | Yes | Yes | 0 | 64 bit or smaller numeric or equivalent type |
-numeric\_static\_map | Functional Unique | JSON file statically mapping input string values to keyspace IDs | Yes | No | 1 | Any |
-region\_experimental | Functional Unique | Multi-column prefix-based hash for use in geo-partitioning | Yes | No | 1 | String and numeric type |
-region\_json | Functional Unique | Multi-column prefix-based hash combined with a JSON map for key-to-region mapping, for use in geo-partitioning | Yes | No | 1 | String and numeric type |
-reverse\_bits | Functional Unique | Bit reversal | Yes | Yes | 1 | 64 bit or smaller numeric or equivalent type |
-unicode\_loose\_md5 | Functional Unique | Case-insensitive (UCA level 1) MD5 hash | Yes | No | 1 | String or binary types |
-unicode\_loose\_xxhash | Functional Unique | Case-insensitive (UCA level 1) xxHash64 hash | Yes | No | 1 | String or binary types |
-xxhash | Functional Unique | xxHash64 hash | Yes | No | 1 | Any |
+| Name | Type | Description | Primary | Reversible | Cost | Data types |
+| :--------------------- | ---- | ----------------------- | ------- | ---------- | ---- | ---------- |
+| binary | Functional Unique | Identity | Yes | Yes | 0 | Any |
+| binary\_md5 | Functional Unique | MD5 hash | Yes | No | 1 | Any |
+| consistent\_lookup | Lookup NonUnique | Lookup table non-unique values | No | No | 20 | Any |
+| consistent\_lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | No | 10 | Any |
+| hash | Functional Unique | DES null-key hash | Yes | Yes | 1 | 64 bit or smaller numeric or equivalent type |
+| lookup | Lookup NonUnique | Lookup table non-unique values | No | No | 20 | Any |
+| lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | No | 10 | Any |
+| null | Functional Unique | Always map to keyspace ID 0 | Yes | No | 100 | Any |
+| numeric | Functional Unique | Identity | Yes | Yes | 0 | 64 bit or smaller numeric or equivalent type |
+| numeric\_static\_map | Functional Unique | JSON file statically mapping input string values to keyspace IDs | Yes | No | 1 | Any |
+| region\_experimental | Functional Unique | Multi-column prefix-based hash for use in geo-partitioning | Yes | No | 1 | String and numeric type |
+| region\_json | Functional Unique | Multi-column prefix-based hash combined with a JSON map for key-to-region mapping, for use in geo-partitioning | Yes | No | 1 | String and numeric type |
+| reverse\_bits | Functional Unique | Bit reversal | Yes | Yes | 1 | 64 bit or smaller numeric or equivalent type |
+| unicode\_loose\_md5 | Functional Unique | Case-insensitive (UCA level 1) MD5 hash | Yes | No | 1 | String or binary types |
+| unicode\_loose\_xxhash | Functional Unique | Case-insensitive (UCA level 1) xxHash64 hash | Yes | No | 1 | String or binary types |
+| xxhash | Functional Unique | xxHash64 hash | Yes | No | 1 | Any |
 
 Consistent lookup vindexes, as described above, are a new category of Vindexes that are meant to replace the existing lookup Vindexes implementation. For the time being, they have a different name to allow for users to switch back and forth.
 
@@ -175,9 +176,9 @@ Custom Vindexes can also be created as needed. At the moment there is no formal 
 \
 There are also the following legacy (deprecated) Vindexes. **Do not use these**:
 
-Name | Type | Primary | Reversible | Cost
----- | ---- | ------- | ---------- | ----
-lookup\_hash | Lookup NonUnique | No | No | 20
-lookup\_hash\_unique | Lookup Unique | If unowned | No | 10
-lookup\_unicodeloosemd5\_hash | Lookup NonUnique | No | No | 20
-lookup\_unicodeloosemd5\_hash\_unique | Lookup Unique | If unowned | No | 10
+| Name | Type | Primary | Reversible | Cost |
+| ---- | ---- | ------- | ---------- | ---- |
+| lookup\_hash | Lookup NonUnique | No | No | 20 |
+| lookup\_hash\_unique | Lookup Unique | If unowned | No | 10 |
+| lookup\_unicodeloosemd5\_hash | Lookup NonUnique | No | No | 20 |
+| lookup\_unicodeloosemd5\_hash\_unique | Lookup Unique | If unowned | No | 10 |

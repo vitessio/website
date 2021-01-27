@@ -15,6 +15,7 @@ insert into customer_seq(id, next_id, cache) values(0, 1, 3);
 Note the special comment `vitess_sequence`. This instructs vttablet that this is a special table.
 
 The table needs to be pre-populated with a single row where:
+
 * `id` must always be 0
 * `next_id` should be set to the next (starting) value of the sequence
 * `cache` is the number of values to cache before updating the table for the next value. This value should be set to a fairly large number like 1000. We have set the value to `3` mainly to demonstrate how the feature works.

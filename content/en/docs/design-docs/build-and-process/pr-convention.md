@@ -18,6 +18,7 @@ There's a clear need of improving GitHub naming conventions for the following se
 The most problematic area we see is the Pull Request Naming Convention hence we'd like to come up with guidelines and once agreed by maintainers provide a Template that will help streamline the above areas.
 
 For Issue Templates please refer to this [section](https://github.com/vitessio/vitess/tree/master/.github/ISSUE_TEMPLATE).
+
 ### Solution
 
 The suggested solution would be creating general guidelines for this naming convention update.
@@ -67,7 +68,8 @@ Example:
 - Each paragraph capitalized
 - Example and/or Reproduce steps
 
-```Overview of the Issue
+```
+Overview of the Issue
 The query sent down from VTGate to Vttablet does not replace the where clause of the information schema queries for table_schema = 'keyspace' to table_schema = 'databasename'
 
 Reproduction Steps

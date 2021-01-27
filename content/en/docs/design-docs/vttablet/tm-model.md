@@ -36,6 +36,7 @@ In the case of flows that designate who the master is, the topo is the authority
 ### Exception 2: VTTablet startup
 
 When a vttablet starts up, it will treat the following info from the topo as authoritative:
+
 * Keyspace
 * Shard
 * Tablet Type

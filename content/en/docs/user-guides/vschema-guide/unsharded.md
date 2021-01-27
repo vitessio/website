@@ -33,7 +33,7 @@ alter vschema add table product.product;
 ```
 
 {{< info >}}
-If `product` is the only keyspace in the cluster, a vschema is unnecessary. Vitess treats single keyspace clusters as a special case and optimistically forwards all queries to that keyspace even if there is no table metadata present in the vschema. But it is best practice to provide a full vschema to avoid future complications.
+If `product` is the only keyspace in the cluster, a vschema is unnecessary. Vitess treats single keyspace clusters as a special case and optimistically forwards all queries to that keyspace even if there is no table metadata present in the vschema. But it is a best practice to provide a full vschema to avoid future complications.
 {{< /info >}}
 
 Bringing up the cluster will allow you to access the `product` table. You can now insert rows into the table:

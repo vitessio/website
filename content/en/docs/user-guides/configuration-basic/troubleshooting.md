@@ -22,6 +22,7 @@ The first step to troubleshooting is to have an established baseline. It is reco
 ## Query Serving
 
 Most of the focus of Vitess monitoring centers around the cost of a query. Although not always true, we use the following rules of thumb to get a rough estimate:
+
 * In MySQL, the time taken by a query roughly translates to its actual cost. More often than not, the limiting factor is the number of disk IOPS.
 * In Vitess components, the payload contributes to the cost. The limiting factor is most often the CPU, followed by memory.
 * The cost of parsing and analyzing the input query has started to become significant. This is typically driven by the size and complexity of the query.
@@ -123,6 +124,7 @@ If the data has diverged, you have to make a decision about which one is authori
 A number of reasons can cause a vtgate to not send queries to a replica vttablet. The first step is to visit the `/debug/status` page of vtgate and look at the `Health Check Cache` section.
 
 If the vttablet entry is present, but is color coded red and displays an error message, it means that vtgate is seeing the vttablet as unhealthy. Once you fix the error that causes the problem, traffic should resume to the vttablet. There can be many reasons for the unhealthiness:
+
 * vttablet may not be reachable: troubleshoot connectivity from the vtgate machine to the vttablet, make sure firewall rules allow access, ports are reachable, etc.
 * vttablet is reporting itself as unhealthy: Fix the root cause. For example, the MySQL may be lagging too much, or vttablet may have trouble connecting to the MySQL instance, etc.
 

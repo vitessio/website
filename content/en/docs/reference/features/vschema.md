@@ -78,6 +78,7 @@ The configuration of your VSchema reflects the desired sharding configuration fo
 ### Commands
 
 You can use the following commands for maintaining the VSchema:
+
 * `GetVSchema <keyspace>`
 * `ApplyVSchema {-vschema=<vschema> || -vschema_file=<vschema file> || -sql=<sql> || -sql_file=<sql file>} [-cells=c1,c2,...] [-skip_rebuild] [-dry-run] <keyspace>`
 * `RebuildVSchemaGraph [-cells=c1,c2,...]`
@@ -264,6 +265,7 @@ Currently, these steps have to be currently performed manually. However, extende
 ### The columns field
 
 For a table, you can specify an additional columns field. This can be used for two purposes:
+
 * Specifying that a column contains text. If so, the VTGate planner can rewrite queries to leverage mysql’s collation where possible.
 * If the full list of columns is specified, then VTGate can resolve columns to their tables where needed, and also authoritative expand column lists, like in the case of a `select *` or `insert` statements with no column list.
 
@@ -366,5 +368,6 @@ If the `to_tables` have special characters that need escaping, you can use the m
 ### Commands
 
 You can use the following commands to maintain routing rules:
+
 * `GetRoutingRules`
 * `ApplyRoutingRules {-rules=<rules> || -rules_file=<rules_file>} [-cells=c1,c2,...] [-skip_rebuild] [-dry-run]`

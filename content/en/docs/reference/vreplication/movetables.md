@@ -89,6 +89,7 @@ _Either_
   Example: `MoveTables -workflow=commerce2customer commerce customer customer,corder`
 
 _Or_
+
 * the JSON table section of the vschema for associated tables
   * if target keyspace is sharded AND
   * tables being moved are not yet present in the target's vschema
@@ -148,4 +149,5 @@ See [user guide](../../../../../docs/user-guides/migration/move-tables/) which d
 in the Vitess repo.
 
 #### More Reading
+
 * [MoveTables in practice](../../../../../docs/concepts/move-tables/)

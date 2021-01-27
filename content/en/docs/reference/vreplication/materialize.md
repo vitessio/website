@@ -51,5 +51,6 @@ Once you decide on your materialization requirements, you need to initiate a VRe
 
 There are special commands to perform common materialization tasks and you should prefer them
 to using Materialize directly.
+
 * If you just want to copy tables to a different keyspace use [MoveTables](../movetables).
 * If you want to change sharding strategies use [Reshard](../reshard) instead

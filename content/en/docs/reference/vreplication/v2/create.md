@@ -47,6 +47,7 @@ _Either_
   Example: `MoveTables -source=commerce -tables=customer,corder Create customer.commerce2customer`
 
 _Or_
+
 * the JSON table section of the vschema for associated tables
   * if target keyspace is sharded AND
   * tables being moved are not yet present in the target's vschema

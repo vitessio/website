@@ -31,6 +31,7 @@ Reserve Pool
 VTTablet will have a new pool named reserved pool. Connections in the reserved pool are tied to a specific session and are closed when the session is closed.
 
 QueryService interface changes:
+
 * ReserveExecute: Reserve a connection, execute the set statements, and the query.
 * ReserveBeginExecute: Reserve a connection, execute the set statements, move the reserve connection to active transaction pool and execute begin and the query.
 * ReserveRelease: This closes the reserved connection and also rollback the transaction if it is in an open state.
@@ -46,31 +47,31 @@ A connection with the vttablet is reserved when a query is sent from the client 
 Storing the changed setting in the session enables VTGate to apply settings to any new connection that is opened with different shards.
 
 State | Reserved | Transaction | Recorded SETs
--- | -- | -- | --
-clear | F | F | F
-remember-sets | F | F | T
-reserved | T | F | T
-inTx | F | T | F
-reserved-inTx | T | T | T
+| -- | -- | -- | -- |
+|clear | F | F | F |
+|remember-sets | F | F | T |
+|reserved | T | F | T |
+|inTx | F | T | F |
+|reserved-inTx | T | T | T |
 
 From State | Query | Vtgate Action | API on tablet | To State
--- | -- | -- | -- | --
-clear | SET system var | Record statement | No call | remember-sets
-remember-sets | SET system var | Record statement | No call | remember-sets
-reserved | SET system var | Record statement | Execute | reserved
-inTx | SET system var | Record statement | ReserveExecute | reserved-inTx
-reserved-inTx | SET system var | Record statement | Execute | reserved-inTx
-remember-sets | Query |   | ReserveExecute | reserved
-reserved | Query |   | Execute | reserved
-reserved-inTx | Query |   | Execute | reserved-inTx
-remember-sets | Begin + Query |   | ReserveBeginExecute | reserved-inTx
-reserved | Begin + Query |   | BeginExecute | reserved-inTx
-remember-sets | Commit/Rollback | No-op | No call | remember-sets
-reserved | Commit/Rollback | No-op | No call | reserved
-reserved-inTx | Commit/Rollback |   | Commit/Rollback | reserved
-remember-sets | Close Connection | Close Session | No call | clear
-reserved | Close Connection | Close Session | ReserveRelease | clear
-reserved-inTx | Close Connection | Close Session | ReserveRelease | clear
+| -- | -- | -- | -- | -- |
+| clear | SET system var | Record statement | No call | remember-sets |
+| remember-sets | SET system var | Record statement | No call | remember-sets |
+| reserved | SET system var | Record statement | Execute | reserved |
+| inTx | SET system var | Record statement | ReserveExecute | reserved-inTx |
+| reserved-inTx | SET system var | Record statement | Execute | reserved-inTx |
+| remember-sets | Query |   | ReserveExecute | reserved |
+| reserved | Query |   | Execute | reserved |
+| reserved-inTx | Query |   | Execute | reserved-inTx |
+| remember-sets | Begin + Query |   | ReserveBeginExecute | reserved-inTx |
+| reserved | Begin + Query |   | BeginExecute | reserved-inTx |
+| remember-sets | Commit/Rollback | No-op | No call | remember-sets |
+| reserved | Commit/Rollback | No-op | No call | reserved |
+| reserved-inTx | Commit/Rollback |   | Commit/Rollback | reserved |
+| remember-sets | Close Connection | Close Session | No call | clear |
+| reserved | Close Connection | Close Session | ReserveRelease | clear |
+| reserved-inTx | Close Connection | Close Session | ReserveRelease | clear |
 
 ## Release Plan
 The release plan would be to update vttablet < vtctl < vtgate in this particular order.

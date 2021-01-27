@@ -10,6 +10,7 @@ A sharded keyspace allows you to split a large database into smaller parts by di
 * The sharding function is pluggable, allowing for user-defined sharding schemes.
 
 Vitess provides many predefined vindex types. The most popular ones are:
+
 * `hash`: for numbers
 * `unicode_loose_md5`: for text columns
 * `binary_md5`: for binary columns
@@ -42,6 +43,7 @@ In the VSchema, we need to designate which column should be the Primary Vindex, 
 ```
 
 In the above section, we are instantiating a vindex named `hash` from the vindex type `hash`. Such instantiations are listed in the `vindexes` section of the vschema. The tables are expected to refer to the instantiated name. There are a few reasons why this additional level of indirection is necessary:
+
 * As we will see later, vindexes can be instantiated with different input parameters. In such cases, they have to have their own distinct names.
 * Vindexes can be shared by tables, and this has special meaning. We will cover this in a later section.
 * Vindexes can also be referenced as if they were tables and can be used to compute the keyspace id for a given input.

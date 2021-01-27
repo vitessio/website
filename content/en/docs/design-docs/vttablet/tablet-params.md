@@ -8,12 +8,14 @@ weight: 1
 This issue is an expansion of #5791, and covers the details of how we’ll use yaml to implement a hierarchy of parameters for initializing and customizing TabletServer components within a process.
 
 Using the yaml approach, we intend to solve the following problems:
+
 * Multiple tablet servers need to exist within a process.
 * Badly named command line parameters: The new yaml specifications will have simpler and easier to remember parameter names.
 * Sections for improved readability.
 * Unreasonable default values: The new specs will introduce a simplified approach that will save the user from tweaking too many variables without knowing their consequences.
 * Repetition: If multiple TabletServers have to share the same parameter values, they should not be repeated.
 * Backward compatibility: The system must be backward compatible.
+
 ## Proposed Approach
 We will introduce two new command-line options that will be specified like this:
 ```
@@ -160,6 +162,7 @@ There are also other global parameters. VTTablet has a total of 405 flags. We ma
 
 ## Implementation
 We'll use the unified tabletenv.TabletConfig data structure to load defaults as well as tablet-specific values. The following changes will be made:
+
 * TabletConfig will be changed to match the above specifications.
 * The existing flags will be changed to update the values in a global TabletConfig.
 * In case of type mismatch (like time.Duration vs a "Seconds" variable), an extra step will be performed after parsing to convert the flag variables into TabletConfig members.
