@@ -398,6 +398,10 @@ in the replication stream from the source. The values can be as follows:
 If a failover is performed on the target keyspace/shard, the new master will
 automatically resume VReplication from where the previous master left off.
 
+### Throttling
+
+VReplication throttles operation when the source or target appear to be overloaded, indicated by replication lag. See [throttling](../../vreplication/throttling)
+
 ## Monitoring and troubleshooting
 
 ### VTTablet /debug/status
