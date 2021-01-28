@@ -5,7 +5,7 @@ weight: 200
 
 ### Introduction
 
-The diagram above outlines how a VReplication workflow is performed. VReplication can be asked to start
+The diagram below outlines how a VReplication workflow is performed. VReplication can be asked to start
 from a specific GTID or from the start. When starting from a GTID the _replication_ mode is used
 where it streams events from the binlog.
 
