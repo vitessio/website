@@ -9,8 +9,8 @@ The Vitess Documentation currently posted should reflect the most recent code.
 
 To view a PDF of the state of the Vitess Documentation on the date of the general availability release for previous versions please follow the links below:
 
-- [Vitess Docs 9.0 on January 26, 2021](https://drive.google.com/file/d/18xPfVl-OpKX6QtjEUwFY_dU93Y-ZDPav/view?usp=sharing)
-- [Vitess Docs 8.0 on October 27, 2020](https://drive.google.com/file/d/1SMnw19uYYFl9vqYsbc67jIC-8VObfiwh/view?usp=sharing)
-- [Vitess Docs 7.0 on July 28, 2020](https://drive.google.com/file/d/1Uu5JU-tOzElRbLSnOS2ZaTE8BOI6DAWG/view?usp=sharing)
-- [Vitess Docs 6.0 on April 29, 2020](https://drive.google.com/file/d/1b3EwRxYc3uBfnCKDvMhLXWEZenvDYX2u/view?usp=sharing)
-- [Vitess Docs 5.0 on February 4, 2020](https://drive.google.com/file/d/1RaWnhR7C2RyaaXY6_82V8Kb03JjC5FCD/view?usp=sharing)
+- [Vitess Docs 9.0 on January 26, 2021](/static/files/version_pdfs/Vitess-Docs-9.0-01-26-2021.pdf)
+- [Vitess Docs 8.0 on October 27, 2020](/static/files/version_pdfs/Vitess-Docs-8.0-10-27-2020.pdf))
+- [Vitess Docs 7.0 on July 28, 2020](/static/files/version_pdfs/Vitess-Docs-7.0-07-28-2020.pdf))
+- [Vitess Docs 6.0 on April 29, 2020](/static/files/version_pdfs/Vitess-Docs-6.0-04-29-2020.pdf))
+- [Vitess Docs 5.0 on February 4, 2020](/static/files/version_pdfs/Vitess-Docs-5.0-02-04-2020.pdf))
