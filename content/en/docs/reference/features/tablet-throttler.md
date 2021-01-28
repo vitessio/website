@@ -69,7 +69,7 @@ Thus, the aggregated interval can be off, by default, by some `500ms`. This make
 
 ### Self health
 
-Each tablet to its own, runs a local health check against its backend database, again in the form of evaluating replication lag from `_vt.heartbeat`. Intervals are identical to the cluster health interval illustrated above.
+Each tablet runs a local health check against its backend database, again in the form of evaluating replication lag from `_vt.heartbeat`. Intervals are identical to the cluster health interval illustrated above.
 
 ### Response codes
 
