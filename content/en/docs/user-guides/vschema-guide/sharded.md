@@ -10,6 +10,7 @@ A sharded keyspace allows you to split a large database into smaller parts by di
 * The sharding function is pluggable, allowing for user-defined sharding schemes.
 
 Vitess provides many predefined vindex types. The most popular ones are:
+
 * `hash`: for numbers
 * `unicode_loose_md5`: for text columns
 * `binary_md5`: for binary columns
@@ -42,6 +43,7 @@ In the VSchema, we need to designate which column should be the Primary Vindex, 
 ```
 
 In the above section, we are instantiating a vindex named `hash` from the vindex type `hash`. Such instantiations are listed in the `vindexes` section of the vschema. The tables are expected to refer to the instantiated name. There are a few reasons why this additional level of indirection is necessary:
+
 * As we will see later, vindexes can be instantiated with different input parameters. In such cases, they have to have their own distinct names.
 * Vindexes can be shared by tables, and this has special meaning. We will cover this in a later section.
 * Vindexes can also be referenced as if they were tables and can be used to compute the keyspace id for a given input.
@@ -60,7 +62,7 @@ The DDL creates the `hash` vindex under the `vindexes` section, the `customer` t
 Every sharded table must have a Primary Vindex. A Primary Vindex must be instantiated from a vindex type that is Unique. `hash`, `unicode_loose_md5` and `binary_md5` are unique vindex types.
 {{< /info >}}
 
-The demo brings up the customer as two shards: `-80` and `80-`. For a `hash` vindex, input values of 1, 2 and 3 fall in the `-80` range, and 4 falls in the `80-` range. Restarting the demo with the updated configs should allow you to perform the following:
+The demo brings up the `customer` table as two shards: `-80` and `80-`. For a `hash` vindex, input values of 1, 2 and 3 fall in the `-80` range, and 4 falls in the `80-` range. Restarting the demo with the updated configs should allow you to perform the following:
 
 ```text
 mysql> insert into customer(customer_id,uname) values(1,'alice'),(4,'dan');
@@ -89,7 +91,7 @@ mysql> select * from customer;
 
 You will notice that we used a special shard targeting construct: `use customer:-80`. Vitess allows you to use this hidden database name to bypass its routing logic and directly send queries to a specific shard. Using this construct, we are able to verify that the rows went to different shards.
 
-At the time of insert, the Primary Vindex is used to compute and assign a keyspace id to each row. This keyspace id gets used to decide where the row will be stored. Although a keyspace id is not explicitly stored anywhere, it must be seen as an unchanging property of that row, as if there was an invisible column for it.
+At the time of insert, the Primary Vindex is used to compute and assign a keyspace id to each row. This keyspace id gets used to decide where the row will be stored. Although a keyspace id is not explicitly stored anywhere, it must be seen as an unchanging property of that row; as if there was an invisible column for it.
 
 Consequently, you cannot make changes to a row that can cause the keyspace id to change. Such a change will be supported in the future through a shard move operation. Trying to change the value of a Primary Vindex results in an error:
 

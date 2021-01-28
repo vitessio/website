@@ -9,6 +9,7 @@ Moreover, many users deploy directly from the master branch.
 It is very important the changes made by contributors do not break any existing workloads.
 
 In order to avoid disruption, the following concerns need to be kept in mind:
+
 * Does the change affect any external APIs? If so, make sure the change satisfies the [compatibility rules](https://github.com/vitessio/enhancements/blob/master/veps/vep-3.md).
 * Can the change introduce a performance regression? If so, it will be good to measure the impact using benchmarks.
 * If the change is substantial or is a breaking change, you must publish the proposal as an issue with a title like `RFC: Changing behavior of feature xxx`. Following this, sufficient time has to be given for others to give feedback. A breaking change must still satisfy the compatibility rules.
@@ -19,6 +20,7 @@ In order to avoid disruption, the following concerns need to be kept in mind:
 Every GitHub pull request must go through a code review and get approved before it will be merged into the master branch.
 
 Every pull request should meet the following requirements:
+
 * Use the [Pull Request Template](https://github.com/vitessio/vitess/blob/master/.github/pull_request_template.md)
 * Adhere to the [Go coding guidelines](https://golang.org/doc/effective_go.html) and watch out for these [common errors](https://github.com/golang/go/wiki/CodeReviewComments).
 * Contain a description message that is as detailed as possible. Here is a great example https://github.com/vitessio/vitess/pull/6543.
@@ -48,6 +50,7 @@ While you are fixing the bug, it's valuable if you take the time to step back an
 It's often possible to infer that other similar problems in this or other parts of the code base can be prevented.
 
 Some additional points to keep in mind:
+
 *   Does this change match an existing design / bug?
 *   Is this change going to log too much? (Error logs should only happen when
     the component is in bad shape, not because of bad transient state or bad

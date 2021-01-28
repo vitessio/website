@@ -164,6 +164,7 @@ If a table has strong relationships with multiple other tables, and if performan
 ### Enforcing Uniqueness
 
 To enforce global uniqueness for a row in a sharded table, you have to have:
+
 * A Unique Vindex on the column
 * A Unique constraint at the MySQL level
 

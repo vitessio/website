@@ -33,6 +33,7 @@ Most plan ids were specific to SBR. After the refactor, the total number of plan
 
 ## Schema
 These changes greatly reduce our dependence on the schema. We only need to know the following info from a table:
+
 * Field info
 * PK columns
 * Table comments

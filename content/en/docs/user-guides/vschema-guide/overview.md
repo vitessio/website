@@ -25,7 +25,7 @@ The demo models a set of tables that are similar to those presented in the [Gett
 
 Note that the demo brings up a test process called vtcombo (instead of a real Vitess cluster), which is functionally equivalent to all the components of Vitess, but within a single process.
 
-You can also use the demo app to follow along the steps of this user guide. If so, you can start by emptying out the files under `schema/product` and `schema/customer`, and incrementally making the changes presented in the steps that follow.
+You can also use the demo app to follow the steps of this user guide. If so, you can start by emptying out the files under `schema/product` and `schema/customer`, and incrementally making the changes presented in the steps that follow.
 
 ### VSchema DDL
 

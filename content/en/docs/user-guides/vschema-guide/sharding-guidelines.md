@@ -10,7 +10,7 @@ The following guidelines are not set in stone. They mainly establish a framework
 There was a time when sharding used to be a line that one should avoid crossing for as long as possible. However, with Vitess considerably reducing the pain of sharding, we can look at leveraging some of its benefits much sooner than when a machine runs out of capacity:
 
 * Smaller blast radius: If a shard goes down, the outage affects a smaller percentage of the users.
-* Improved resource utilization: It is difficult to pack large instances of servers efficiently across machines. It is much easier to utilize the capacity of the existing hardware if the shard sizes were relatively small. Orchestration systems like Kubernetes further facilitate such utilization.
+* Improved resource utilization: It is difficult to pack large instances of servers efficiently across machines. It is much easier to utilize the capacity of the existing hardware if the shard sizes are relatively small. Orchestration systems like Kubernetes further facilitate such utilization.
 * Reduced contention: MySQL itself runs a lot better when instance sizes are small. There is less internal contention, replicas tend to keep up more easily with their master, etc.
 * Improved maintenance: Operations like schema deployment can happen in parallel across all shards and finish much sooner than usual.
 
@@ -74,6 +74,6 @@ In such cases, the [MoveTables](../../migration/move-tables) feature can be used
 
 Essentially, Vitess removes the fear of making the wrong sharding decision because you can always change your mind later.
 
-### Thumb Rule
+### Rule of Thumb
 
 Although a Vitess shard can grow to many terabytes, we have seen that 250GB is the sweet spot. If your data size approaches this limit, it is time to think about splitting your data.

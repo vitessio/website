@@ -77,4 +77,5 @@ as preparation for sharding your tables.
 See [user guide](../../../../../docs/user-guides/migration/move-tables/) which describes how MoveTables works in the local example provided in the Vitess repo.
 
 #### More Reading
+
 * [MoveTables in practice](../../../../../docs/concepts/move-tables/)

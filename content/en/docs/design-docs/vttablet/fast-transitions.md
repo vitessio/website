@@ -5,6 +5,7 @@ weight: 1
 ---
 
 This issue is in response to #6645. When vttablet transitions from master to non-master, the following problems can occur under different circumstances:
+
 * When a query is killed, it may take a long time for mysql to return the error if it has to do a lot of cleanup. This can delay a vttablet transition. Just closing the pools is not enough because the tablet shutdown also waits for all executing goroutines to return.
 * It is possible that the query timeout is much greater than the transaction timeout. In such cases, the query timeout must be reduced to match the transaction timeout. Otherwise, a running query can hold a transaction hostage and prevent a vttablet from transitioning.
 * The `transaction_shutdown_grace_period` must acquire a new meaning. It should be renamed to `shutdown_grace_period`, and must also apply to queries that are exceeding this time limit. This limit applies to all queries: streaming, oltp read, reserved, and in_transaction.
@@ -14,6 +15,7 @@ This issue is in response to #6645. When vttablet transitions from master to non
 Many approaches were discussed in #6645. Those approaches are all non-viable because they don't address all of the above concerns.
 
 To fix all these problems, some refactoring will need to be done. Here's the proposal:
+
 * The query killer (DBConn.Kill) will be changed to proactively close the connection. This will cause the execution to return immediately, thereby addressing the problem where slow kills delay a shutdown.
 * Change the query execution to use the minimum of the transaction timeout and query timeout, but only if the request is part of a transaction.
 * Build a list of all currently active queries by extending StreamQueryList. During a shutdown, the state manager will use this list to kill all active queries if shutdown_grace_period is hit. This, along with the Kill change, will cause all those executes to immediately return and the connections will be returned to their respective pools.

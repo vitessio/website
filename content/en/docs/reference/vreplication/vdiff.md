@@ -73,6 +73,7 @@ Summary for customer: {ProcessedRows:11 MatchingRows:11 MismatchedRows:0 ExtraRo
 ```
 
 ### Notes
+
  * You can follow the progress of the command by tailing the vtctld logs
  * VDiff can take very long (hours/days) for huge tables, so this needs to be taken into account. If VDiff
  takes more than an hour and you use vtctlclient then it will hit the grpc/http default timeout of 1 hour. 

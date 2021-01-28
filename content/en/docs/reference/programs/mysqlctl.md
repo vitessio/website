@@ -81,7 +81,7 @@ mysqlctl -tablet_uid 101 -alsologtostderr shutdown
 The following global parameters apply to `mysqlctl`:
 
 | Name | Type | Definition |
-| :-------- | :--------- | :--------- |
+| :-------------------------------- | :--------- | :--------- |
 | alsologtostderr | boolean | log to standard error as well as files |
 | app_idle_timeout | duration | Idle timeout for app connections (default 1m0s) |
 | app_pool_size | int | Size of the connection pool for app connections (default 40) |

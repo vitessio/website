@@ -8,6 +8,7 @@ weight: 1
 Vitess currently supports transactions through vtgate only on MASTER tablets. We would like to extend transaction support to REPLICA (or other tablet types).
 
 ### Use Case(s)
+
 * Consistent reads
 * Sqoop integration
 
