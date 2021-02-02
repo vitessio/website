@@ -40,7 +40,7 @@ For example, let us say that you plan to deploy in three zones and decided to us
 
 If you intend to use more than one region for the sake of survivability, then it is recommended that you use at least three regions. This will allow you to deploy a balanced quorum of servers for the global topo.
 
-If you have deployed in multiple regions and would like the flexibility of queries that go cross-cell within a region, you can create [cell aliases](../../../programs/vtctl/cell-aliases). These aliases will indicate to the vtgates that they can send requests to the vttablets of a different cell if a no local vttablet is available.
+If you have deployed in multiple regions and would like the flexibility of queries that go cross-cell within a region, you can create [cell aliases](../../../reference/programs/vtctl/cell-aliases). These aliases will indicate to the vtgates that they can send requests to the vttablets of a different cell if a no local vttablet is available.
 
 ## Checklist
 

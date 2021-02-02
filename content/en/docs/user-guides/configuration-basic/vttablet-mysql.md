@@ -179,7 +179,7 @@ It is normal to see errors like these in the log file until MySQL instances have
 Starting the first vttablet against a keyspace and shard performs the following actions:
 
 * Create a keyspace and shard in the global topo if these did not exist before.
-* Perform a [RebuildKeyspaceGraph](../../../programs/vtctl/keyspaces/#rebuildkeyspacegraph) to deploy the global topo to the current cell (cell1).
+* Perform a [RebuildKeyspaceGraph](../../../reference/programs/vtctl/keyspaces/#rebuildkeyspacegraph) to deploy the global topo to the current cell (cell1).
 * Create a tablet record, which will allow vtgates to discover it.
 * No restore action will be performed because this is the first time vttablet is coming up and no backups exist yet.
 

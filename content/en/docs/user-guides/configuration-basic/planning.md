@@ -1,6 +1,7 @@
 ---
 title: Planning
 weight: 3
+aliases: ['/docs/user-guides/configuration-basic/configuring-components/'] 
 ---
 
 This guide explains how to bring up and manage a Vitess cluster. We cover every individual component of Vitess and how they interact with each other. If you are deploying on Kubernetes, a lot of the wire-up is automatically handled by the operator. However, it is still important to know how the components work in order to be able to troubleshoot problems if they occur in production.

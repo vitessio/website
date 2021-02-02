@@ -145,7 +145,7 @@ it's just a convention. One could have used 128 bits or 32 bits, or whatever.
 
 hmm, OK so how then does one construct a `numeric_static_map`?
 the vitess repo contains a `numeric_static_map_test.json` where it is simply mapping some example primary keys to integers like 1 and 2, which if i'm reading this correctly, are the keyspace IDs
-im basically confused about how this map here translates to shards: https://github.com/vitessio/vitess/blob/master/data/test/vtgate/numeric_static_map_test.json
+im basically confused about how this map here translates to shards: https://github.com/vitessio/vitess/blob/master/go/vt/vtgate/vindexes/testdata/numeric_static_map_test.json
 
 ``{
    "1": 1,
