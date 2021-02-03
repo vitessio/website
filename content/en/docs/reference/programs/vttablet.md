@@ -177,8 +177,8 @@ The following global options apply to `vttablet`:
 | -init_tablet_type | string | (init parameter) the tablet type to use for this tablet. |
 | -init_tags | value | (init parameter) comma separated list of key:value pairs used to tag the tablet |
 | -init_timeout | duration | (init parameter) timeout to use for the init phase. (default 1m0s) |
-| -jaeger-agent-host | string | host and port to send spans to. if empty, no tracing will be done |
-| -keep_logs | duration | keep logs for this long (using ctime) (zero to keep forever) |
+| -jaeger-agent-host | string | host and port to send spans to. If empty, no tracing will be done |
+| -keep_logs | duration | keep logs for this long (using ctime) (zero to keep forever). Note ctime here means "change time" and can be essentially equivalent to mtime. Read [#5318](https://github.com/vitessio/vitess/issues/5318) |
 | -keep_logs_by_mtime | duration | keep logs for this long (using mtime) (zero to keep forever) |
 | -lameduck-period | duration | keep running at least this long after SIGTERM before stopping (default 50ms) |
 | -legacy_replication_lag_algorithm |  | use the legacy algorithm when selecting the vttablets for serving (default true) |

@@ -3,6 +3,9 @@ title: vtctl Workflow Command Reference
 series: vtctl
 docs_nav_title: Workflows
 ---
+{{< info >}}
+This covers older vtctl specific commands. For workflows associated with VReplication, you should only use the [Workflow commands](../../../vreplication/workflow/).
+{{< /info >}}
 
 The following `vtctl` commands are available for administering workflows.
 
