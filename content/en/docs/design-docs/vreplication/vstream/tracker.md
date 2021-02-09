@@ -14,6 +14,9 @@ All vstreams on a tablet share a common engine. Vstreams that are lagging might 
 
 In addition reloading schemas is an expensive operation. If there are multiple vstreams each of them will separately receive a DDL event resulting in multiple reloads for the same DDL.
 
+{{< info >}}
+It is important to note that this won't work when running from a replica unless you have at least one, possibly both, of the following flags active on your vttablet instances: `-watch_replication_stream` or `-track_schema_versions`. Neither of the two flags is active by default.
+{{< /info >}}
 
 ## Goals
 
