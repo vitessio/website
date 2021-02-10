@@ -8,6 +8,7 @@ weight: 1
 Supporting the advisory locking functions in MySQL is important, given that they are used by common applications and frameworks.
 
 ## Functions covered
+
  * __GET_LOCK()__
  * __IS_FREE_LOCK()__
  * __IS_USED_LOCK()__
@@ -17,6 +18,7 @@ Supporting the advisory locking functions in MySQL is important, given that they
 ## Restrictions
 
 Vitess will initially only support locking functions with these limitations:
+
  * Can only be used in SELECT queries
  * The queries can either have only the table `dual`, or have no `FROM` clause.
 

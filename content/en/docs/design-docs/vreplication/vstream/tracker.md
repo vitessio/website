@@ -1,19 +1,22 @@
 ---
 title: Schema Tracker
-description: Tracking schema changes in vstreams
+description: Tracking schema changes in Vstreams
 weight: 1
 ---
 
-# Tracking schema changes in vstreams
+# Tracking schema changes in Vstreams
 
 ## Motivation
 
-Currently, vstreams work with a single (the latest) database schema. On every DDL the schema engine reloads the schema from the database engine.
+Currently, Vstreams work with a single (the latest) database schema. On every DDL the schema engine reloads the schema from the database engine.
 
-All vstreams on a tablet share a common engine. Vstreams that are lagging might be seeing a newer (and hence incorrect) version of the schema in case ddls were applied in between.
+All Vstreams on a tablet share a common engine. Vstreams that are lagging might be seeing a newer (and hence incorrect) version of the schema in case ddls were applied in between.
 
-In addition reloading schemas is an expensive operation. If there are multiple vstreams each of them will separately receive a DDL event resulting in multiple reloads for the same DDL.
+In addition reloading schemas is an expensive operation. If there are multiple Vstreams each of them will separately receive a DDL event resulting in multiple reloads for the same DDL.
 
+{{< info >}}
+For full functionality, schema tracking relies on non-default Vitess vttablet options: `-watch_replication_stream` and `-track_schema_versions`. Specifically, performing a Vstream from a non-master tablet while concurrently making DDL changes to the keyspace without one or both of these tablet options will result in incorrect Vstream results. 
+{{< /info >}}
 
 ## Goals
 
@@ -22,7 +25,7 @@ In addition reloading schemas is an expensive operation. If there are multiple v
 
 ## Model
 
-We add a new schema_version table in _vt with columns, including, the gtid position, the schema as of that position, and the ddl that led to this schema. Inserting into this table generates a Version event in vstream.
+We add a new schema_version table in _vt with columns, including, the gtid position, the schema as of that position, and the ddl that led to this schema. Inserting into this table generates a Version event in Vstream.
 
 ## Actors
 
@@ -32,7 +35,7 @@ Schema engine gets the schema from the database and only keeps the last (latest)
 
 #### Replication watcher
 
-Replication watcher is a vstream that is started by the tabletserver. It notifies subscribers when it encounters a DDL
+Replication watcher is a Vstream that is started by the tabletserver. It notifies subscribers when it encounters a DDL
 
 #### Version Tracker
 
@@ -45,8 +48,7 @@ Version historian runs on both master and replica and handles DDL events. For a 
 ### Notes
 
 *   Schema Engine is an existing service
-*   Replication Watcher already exists and is used as an optional vstream that the user can run. It doesn’t do anything specific: it is used for the side-effect that a vstream loads the schema on a DDL, to proactively load the latest schema.
-
+*   Replication Watcher already exists and is used as an optional Vstream that the user can run. It doesn’t do anything specific: it is used for the side-effect that a Vstream loads the schema on a DDL, to proactively load the latest schema.
 
 ## Basic Flow for version tracking
 
@@ -54,21 +56,21 @@ Version historian runs on both master and replica and handles DDL events. For a 
 
 #### Version tracker:
 
-1. When the master comes up the replication watcher (a vstream) is started from the current GTID position. Tracker subscribes to the watcher.
+1. When the master comes up the replication watcher (a Vstream) is started from the current GTID position. Tracker subscribes to the watcher.
 1. Say, a DDL is applied
-1. The watcher vstream sees the DDL and
+1. The watcher Vstream sees the DDL and
     1. asks the schema engine to reload the schema, also providing the corresponding gtid position
     2. notifies the tracker  of a schema change
 1. Tracker stores its latest schema into the _vt.schema_version table associated with the given GTID and DDL
 
 
-#### Historian/VStreams:
+#### Historian/Vstreams:
 
 1. Historian warms its cache from the schema_version table when it loads
-2. When the tracker inserts the latest schema into _vt.schema_version table, the vstream converts it into a (new) Version event
-3. For every Version event the vstream registers it with the Historian
+2. When the tracker inserts the latest schema into _vt.schema_version table, the Vstream converts it into a (new) Version event
+3. For every Version event the Vstream registers it with the Historian
 4. On the Version event, the tracker loads the new row from the _vt.schema_version table
-5. When a vstream needs a new TableMap it asks the Historian for it along with the corresponding GTID.
+5. When a Vstream needs a new TableMap it asks the Historian for it along with the corresponding GTID.
 6. Historian looks up its cache for a schema version for that GTID. If not present just provides the latest schema it has received from the schema engine.
 
 
@@ -76,7 +78,6 @@ Version historian runs on both master and replica and handles DDL events. For a 
 
 1. Version tracker does not run: the tracker can only store versions on the master since it is writing to the database.
 2. Historian functionality is identical to that on the master.
-
 
 ## Flags
 
@@ -139,9 +140,9 @@ So now on the replica, at T4, the version historian will incorrectly provide the
 
 ### Situation 2
 
-If version tracking is turned off on the master for some time, correct versions may not be available to the historian which will always return the latest schema. This might result in an incorrect schema when a vstream is processing events in the past.
+If version tracking is turned off on the master for some time, correct versions may not be available to the historian which will always return the latest schema. This might result in an incorrect schema when a Vstream is processing events in the past.
 
 #### Possible new features around this functionality
 
-*   Schema tracking vstream client for notifications of all ddls
+*   Schema tracking Vstream client for notifications of all ddls
 *   Raw history of schema changes for auditing, root cause analysis, etc.

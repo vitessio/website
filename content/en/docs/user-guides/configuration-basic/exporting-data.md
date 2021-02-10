@@ -33,8 +33,11 @@ The default invocation of `mysqldump` attempts to execute statements which are [
 For example to export the `commerce` keyspace using the `mysqldump` binary from MySQL 5.7:
 
 ```sh
-$ mysqldump  --lock-tables=off --set-gtid-purged=OFF --no-tablespaces commerce > commerce.sql
+$ mysqldump  --set-gtid-purged=OFF --no-tablespaces commerce > commerce.sql
 ```
+{{< info >}}
+Vitess' support for LOCK and UNLOCK statements is currently syntax-only. As a result, Vitess will simply ignore LOCK and UNLOCK statements without taking any underlying action. It is therefore *unsafe* to perform a locking mysqldump against a database that is actively being written to, and you should pause writes completely while performing the dump; or be willing to deal with any data inconsistencies that result.
+{{< /info >}}
 
 **NOTE:** You will be limited by the Vitess row limits in the size of the
 tables that you can dump using this method.  The default Vitess row limit is
