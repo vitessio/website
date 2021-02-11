@@ -88,7 +88,7 @@ vitess-operator-8454d86687-4wfnc                 1/1     Running   0          2m
 ## Setup Port-forward
 
 {{< warning >}}
-The port-forward will only forward to a specific pod. Currently, `kubectl` does not automatically terminate a port-forward as the pod dissapears due to apply/upgrade operations. You will need to manually restart the port-forward.
+The port-forward will only forward to a specific pod. Currently, `kubectl` does not automatically terminate a port-forward as the pod disappears due to apply/upgrade operations. You will need to manually restart the port-forward.
 {{</ warning >}}
 
 For ease-of-use, Vitess provides a script to port-forward from Kubernetes to your local machine. This script also recommends setting up aliases for `mysql` and `vtctlclient`:
