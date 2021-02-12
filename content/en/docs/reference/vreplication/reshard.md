@@ -8,7 +8,6 @@ weight: 60
 
 ```
 Reshard [-cells=<cells>] [-tablet_types=<source_tablet_types>] [-skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>
-
 ```
 
 ### Description
@@ -31,6 +30,7 @@ Comma separated Cell(s) or CellAlias(es) to replicate from.
 <div class="cmd">
 Source tablet types to replicate from.
 </div>
+
 **Note:** If replicating from master, you must explicitly use `-tablet_types=master`.
 
 #### -skip_schema_copy 
