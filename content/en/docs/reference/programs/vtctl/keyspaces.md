@@ -241,7 +241,7 @@ Move table(s) to another keyspace, table_specs is a list of tables or the tables
 
 ### DropSources
 ```shell
-DropSources  [-dry_run] <keyspace.workflow>
+DropSources  [-dry_run] [-rename_tables] <keyspace.workflow>
 After a MoveTables or Resharding workflow cleanup unused artifacts like source tables, source shards and blacklists.
 ```
 
