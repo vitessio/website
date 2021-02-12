@@ -17,7 +17,7 @@ Reshard support horizontal sharding by letting you change the sharding ranges of
 ### Parameters
 
 #### -cells
-**mandatory**
+**optional**\
 
 <div class="cmd">
 Comma separated Cell(s) or CellAlias(es) to replicate from.
