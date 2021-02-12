@@ -7,8 +7,7 @@ weight: 60
 ### Command
 
 ```
-Reshard  [-skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>
-
+Reshard [-cells=<cells>] [-tablet_types=<source_tablet_types>] [-skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>
 ```
 
 ### Description
@@ -16,6 +15,23 @@ Reshard  [-skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>
 Reshard support horizontal sharding by letting you change the sharding ranges of your existing keyspace.
 
 ### Parameters
+
+#### -cells
+**optional**\
+
+<div class="cmd">
+Comma separated Cell(s) or CellAlias(es) to replicate from.
+</div>
+
+#### -tablet_types
+**optional**\
+**default** empty
+
+<div class="cmd">
+Source Vitess tablet_type, or comma separated list of tablet types, that should be used for choosing source tablet(s) for the reshard.
+</div>
+
+**Note:** If replicating from master, you must explicitly use `-tablet_types=master`. If not specified, it defaults to the tablet type(s) specified by the `-vreplication_tablet_type` VTTablet command line flag. `-vreplication_tablet_type` defaults to replica.
 
 #### -skip_schema_copy 
 **optional**\
