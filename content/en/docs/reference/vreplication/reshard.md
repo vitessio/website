@@ -7,7 +7,7 @@ weight: 60
 ### Command
 
 ```
-Reshard  [-skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>
+Reshard [-cells=<cells>] [-tablet_types=<source_tablet_types>] [-skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>
 
 ```
 
@@ -16,6 +16,22 @@ Reshard  [-skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>
 Reshard support horizontal sharding by letting you change the sharding ranges of your existing keyspace.
 
 ### Parameters
+
+#### -cells
+**mandatory**
+
+<div class="cmd">
+Comma separated Cell(s) or CellAlias(es) to replicate from.
+</div>
+
+#### -tablet_types
+**optional**\
+**default** replica,rdonly
+
+<div class="cmd">
+Source tablet types to replicate from.
+</div>
+**Note:** If replicating from master, you must explicitly use `-tablet_types=master`.
 
 #### -skip_schema_copy 
 **optional**\
