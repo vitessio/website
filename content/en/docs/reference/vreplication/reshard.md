@@ -25,13 +25,13 @@ Comma separated Cell(s) or CellAlias(es) to replicate from.
 
 #### -tablet_types
 **optional**\
-**default** replica,rdonly
+**default** empty
 
 <div class="cmd">
-Source tablet types to replicate from.
+Source Vitess tablet_type, or comma separated list of tablet types, that should be used for choosing source tablet(s) for the reshard.
 </div>
 
-**Note:** If replicating from master, you must explicitly use `-tablet_types=master`.
+**Note:** If replicating from master, you must explicitly use `-tablet_types=master`. If not specified, it defaults to the tablet type(s) specified by the `-vreplication_tablet_type` VTTablet command line flag. `-vreplication_tablet_type` defaults to replica.
 
 #### -skip_schema_copy 
 **optional**\
