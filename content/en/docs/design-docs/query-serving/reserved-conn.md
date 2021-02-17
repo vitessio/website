@@ -27,3 +27,7 @@ Once a session has been marked for reserved connections, it will stay as such un
 Temporary tables exist only in the context of a particular MySQL connection.
 If a user uses temporary tables, Vitess will mark the tablet where the temp table lives as needing a reserved connection. Unlike the reserved connection setting for system variables, this is only for a single vttablet, not all connections.
 It will continue to require a reserved connection for that tablet until the user disconnects - removing the temp table is not enough.
+
+
+### Shutting down reserved connections
+The same goes for all reserved connections. Once the vitess session that initiated the reserved connections disconnects, all reserved connections between the tablet and MySQL are terminated, and fresh, clean connections are returned to the connection pool.
