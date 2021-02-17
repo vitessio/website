@@ -17,7 +17,7 @@ Reserved connections are used when changing system variables, using temporary ta
 
 ### System variables and reserved connections
 If a user does change a system variable, the user connection will be marked as needing reserved connections, and for all sub-sequent calls to Vitess, connection pooling is turned off for this particular session.
-This only applies to some system settings. See more details [here](docs/design-docs/query-serving/set-stmt/)
+This only applies to some system settings. See more details [here](/docs/design-docs/query-serving/set-stmt/)
 Any queries to a tablet from this session will create a reserved connection on that tablet that is reserved for the user and no one else.
 
 Connection pooling is an important part of what makes Vitess fast, so using constructs that turn it off should only be done in rare circumstances.
@@ -28,7 +28,7 @@ Once a session has been marked for reserved connections, it will stay as such un
 
 ### Temporary tables and reserved connections
 Temporary tables exist only in the context of a particular MySQL connection.
-If a user uses temporary tables, Vitess will mark the session as needing a reserved connection. It will continue to require a reserved connection until the user disconnects - removing the temp table is not enough. More info can be found [here.](docs/reference/compatibility/mysql-compatibility/#temporary-tables)
+If a user uses temporary tables, Vitess will mark the session as needing a reserved connection. It will continue to require a reserved connection until the user disconnects - removing the temp table is not enough. More info can be found [here.](/docs/reference/compatibility/mysql-compatibility/#temporary-tables)
 
 ### GET_LOCK() and reserved connections
 The MySQL locking functions allows users to work with user level locks. Since the locks are tied to the connection, and freeing lock has to be done in the same connection as the lock was acquired, use of these functions will force a connection to become a reserved connection. This connection is also kept alive so it does not time out due to inactivity. More information can be found [here.](/docs/design-docs/query-serving/locking-functions/).
