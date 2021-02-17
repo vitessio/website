@@ -22,9 +22,11 @@ Vitess supports MySQL 5.7+ and MariaDB 10.3+. Homebrew will install latest tagge
 $ brew install vitess
 Updating Homebrew...
 ==> Auto-updated Homebrew!
-Updated 1 tap (homebrew/core).
-==> New Formulae
-waffle
+Updated 2 taps (homebrew/core and homebrew/cask).
+==> Updated Formulae
+Updated 19 formulae.
+==> Updated Casks
+Updated 1 cask.
 
 ==> Downloading https://homebrew.bintray.com/bottles/vitess-9.0.0.catalina.bottle.tar.gz
 Already downloaded: /Users/askdba/Library/Caches/Homebrew/downloads/45991b27589a191910e89a1ce529fcdaa694bb5f36b99f1b20146f8f0fc3ee6d--vitess-9.0.0.catalina.bottle.tar.gz
@@ -36,7 +38,7 @@ At this point Vitess binaries installed under default Homebrew install location 
 ## Start a Single Keyspace Cluster
 
 For testing purpases initiate following example;
-```
+```bash
 $ cd /usr/local/share/vitess/examples/local/
 $ ./101_initial_cluster.sh
 add /vitess/global
@@ -145,7 +147,7 @@ Setting up aliases changes `mysql` to always connect to Vitess for your current 
 You should now be able to connect to the VTGate server that was started in `101_initial_cluster.sh`:
 
 ```bash
-~/usr/local/share/vitess/examples/local> mysql
+/usr/local/share/vitess/examples/local> mysql
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 2
 Server version: 5.7.9-Vitess (Ubuntu)
