@@ -9,8 +9,9 @@ Vitess uses connection pooling to minimise the memory usage of the underlying My
 This means that different users connecting to a vtgate can be sharing a connected session to MySQL.
 To make this as invisible as possible to users, Vitess works hard removing all query constructs that would normally need to change the state in that connection.
 A simple example are user defined variables. When a user sets or evaluates an UDV, the vtgate will rewrite the query so that it doesn't actually do anything with user variables, and keep the state on the Vitess layer.
-For some things a user might want to do, this is not enough, and in those cases, Vitess will use something called reserved connections.
 
+For some things a user might want to do, this is not enough, and in those cases, Vitess will use something called reserved connections.
+This means a dedicated connection from a vttablet to the MySQL server.
 Reserved connections are used when changing system variables, or using temporary tables.
 
 ### System variables and reserved connections
