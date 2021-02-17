@@ -17,7 +17,7 @@ Reserved connections are used when changing system variables, using temporary ta
 
 ### System variables and reserved connections
 If a user does change a system variable, the user connection will be marked as needing reserved connections, and for all sub-sequent calls to Vitess, connection pooling is turned off for this particular session.
-This only applies to some system settings. See more details [here](/docs/design-docs/query-serving/set-stmt/)
+This only applies to some system settings. See more details [here.](/docs/design-docs/query-serving/set-stmt/)
 Any queries to a tablet from this session will create a reserved connection on that tablet that is reserved for the user and no one else.
 
 Connection pooling is an important part of what makes Vitess fast, so using constructs that turn it off should only be done in rare circumstances.
