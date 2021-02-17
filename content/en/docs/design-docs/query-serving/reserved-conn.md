@@ -31,4 +31,4 @@ It will continue to require a reserved connection for that tablet until the user
 
 
 ### Shutting down reserved connections
-The same goes for all reserved connections. Once the vitess session that initiated the reserved connections disconnects, all reserved connections between the tablet and MySQL are terminated, and fresh, clean connections are returned to the connection pool.
+Once the vtgate session that initiated the reserved connections disconnects, all reserved connections between the vttablets and MySQL are terminated, and fresh, clean connections are returned to the connection pool.
