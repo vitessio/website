@@ -215,6 +215,6 @@ You can now proceed with [MoveTables](../../user-guides/migration/move-tables).
 Or alternatively, if you would like to teardown your example:
 
 ```bash
-./401_teardown.sh
+pkill -9 -f '(vtdataroot|VTDATAROOT)' # kill Vitess processes
 rm -rf /usr/local/Cellar/vitess/9.0.0/share/vitess/examples/local/vtdataroot
 ```
