@@ -12,7 +12,7 @@ A simple example are user defined variables. When a user sets or evaluates an UD
 
 For some things a user might want to do, this is not enough, and in those cases, Vitess will use something called reserved connections.
 This means a dedicated connection from a vttablet to the MySQL server.
-Reserved connections are used when changing system variables, or using temporary tables.
+Reserved connections are used when changing system variables, using temporary tables, or when a user uses the `LOCK()` function to aquire advisory locks.
 
 ### System variables and reserved connections
 If a user does change a system variable, the user connection will be marked as needing reserved connections, and for all sub-sequent calls to Vitess, connection pooling is turned off for this particular session.
@@ -29,6 +29,10 @@ Temporary tables exist only in the context of a particular MySQL connection.
 If a user uses temporary tables, Vitess will mark the tablet where the temp table lives as needing a reserved connection. Unlike the reserved connection setting for system variables, this is only for a single vttablet, not all connections.
 It will continue to require a reserved connection for that tablet until the user disconnects - removing the temp table is not enough.
 
+### LOCK() and reserved connections
+The MySQL locking functions allows users to work with user level locks. Since the locks are tied to the connection, and freeing lock has to be done in the same connection as the lock was aquired, use of these functions will force a connection to become a reserved connection. This connection is also kept alive so it does not time out due to inactivity.
+
 
 ### Shutting down reserved connections
-Once the vtgate session that initiated the reserved connections disconnects, all reserved connections between the vttablets and MySQL are terminated, and fresh, clean connections are returned to the connection pool.
+Whenever a connection gets transformed into a reserved connection, a fresh, clean connections is returned to the connection pool to replace it.
+Once the vtgate session that initiated the reserved connections disconnects, all reserved connections between the vttablets and MySQL are terminated.
