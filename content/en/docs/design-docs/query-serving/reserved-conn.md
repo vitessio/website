@@ -28,7 +28,7 @@ Once a session has been marked for reserved connections, it will stay as such un
 Temporary tables exist only in the context of a particular MySQL connection.
 If a user uses temporary tables, Vitess will mark the session as needing a reserved connection. It will continue to require a reserved connection until the user disconnects - removing the temp table is not enough.
 
-### LOCK() and reserved connections
+### GET_LOCK() and reserved connections
 The MySQL locking functions allows users to work with user level locks. Since the locks are tied to the connection, and freeing lock has to be done in the same connection as the lock was acquired, use of these functions will force a connection to become a reserved connection. This connection is also kept alive so it does not time out due to inactivity.
 
 
