@@ -44,6 +44,7 @@ The operational overhead begins with the fact that a schema migration spans mult
 - Recovery: how do we proceed if migration failed? Is there an extra cleanup to be made?
 
 <img src="/files/blog-online-ddl-vitess/alter-table-how-to-discover.png" width="1024" height="auto" alt="With multiple clusters in production, some of which are sharded, what is the discovery mechanism for identifying the correct clusters, and those clusters' primaries, for applying schema changes?" />
+
 _With multiple clusters in production, some of which are sharded, what is the discovery mechanism for identifying the correct clusters, and those clusters' primaries, for applying schema changes?_
 
 ## Where Vitess fits in
@@ -61,6 +62,7 @@ Vitess’s architecture puts it in a unique position to address the majority of 
 - Vitess knows when a migration has failed and runs the appropriate cleanup, even if Vitess itself fails along with the migration. At this time Vitess offers a one-time auto-retry for a migration failure caused by a failover.
 
 <img src="/files/blog-online-ddl-vitess/alter-table-vitess-discovery.png" width="1024" height="auto" alt="Vitess knows where schemas are deployed, what shards exist, who the primaries are at any given time, and can apply DDLs on the correct database servers without user’s intervention." />
+
 _Vitess knows where schemas are deployed, what shards exist, who the primaries are at any given time, and can apply DDLs on the correct database servers without user’s intervention._
 
 ## What does it look like to the user?
@@ -76,14 +78,14 @@ The `ALTER TABLE` statement itself is completely normal, but responds differentl
 
 ## Where do we go from here?
 
-There’s many ways to proceed, short term and long term. Eventually, we’d want online DDL to work seamlessly across a resharding process. Also, it could work across a planned or unplanned reparent.
+There are many ways to proceed, short term and long term. Eventually, we’d want online DDL to work seamlessly across a resharding process. Also, it could work across a planned or unplanned reparent.
 
 Online DDL is labeled _experimental_ as we collect user feedback.
 
-Please see the documentation on the [Vitess wesbite](https://vitess.io/docs/user-guides/schema-changes/managed-online-schema-changes/)
+Please see the documentation on the [Vitess website](https://vitess.io/docs/user-guides/schema-changes/managed-online-schema-changes/)
 
 ## There’s more...
 
-Online DDL is not limited to `ALTER TABLE` statements. `DROP TABLE` statements suffer from locking issues, too. In a next blog post we will drill down into Vitess’ table lifecycle, a garbage collector for unused tables.
+Online DDL is not limited to `ALTER TABLE` statements. `DROP TABLE` statements suffer from locking issues, too. In a next blog post we will drill down into Vitess's table lifecycle, a garbage collector for unused tables.
 
  
