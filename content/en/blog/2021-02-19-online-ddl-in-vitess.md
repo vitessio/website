@@ -2,7 +2,7 @@
 author: 'Shlomi Noach'
 date: 2021-02-19
 slug: '2021-02-19-online-ddl-in-vitess'
-tags: ['DDL', 'schema migrations', 'operations']
+tags: ['Vitess','MySQL', 'DDL', 'schema migrations', 'operations', 'gh-ost', 'percona toolkit', 'pt-online-schema-change']
 title: 'Online DDL in Vitess'
 description: 'How Vitess solves the operational overhead of operating schema migrations'
 ---
