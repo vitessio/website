@@ -37,7 +37,7 @@ At this point Vitess binaries installed under default Homebrew install location 
 
 ## Start a Single Keyspace Cluster
 
-For testing purpases initiate following example;
+For testing purposes initiate following example;
 ```bash
 $ cd /usr/local/share/vitess/examples/local/
 $ ./101_initial_cluster.sh
