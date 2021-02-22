@@ -13,7 +13,7 @@ Let’s first give some background and explain why schema migrations are such an
 
 ## The relational model and the operational overhead
 
-The relational model is one of the longest surviving models in the software world, introduced decades ago and widely used until today. SQL is similarly old and solid, and you may find SQL or SQL-like languages even in non-relational databases. 
+The relational model is one of the longest surviving models in the software world, introduced decades ago and widely used until today. SQL is similarly old and solid, and you may find SQL or SQL-like languages even in non-relational databases.
 
 The relational model makes sense for many common use cases, and entities with attributes (tables and columns, respectively) map well to popular constructs like users, products, memberships, messages, etc., and SQL is expressive enough to be able to construct both simple and complex questions.
 
@@ -21,7 +21,7 @@ But historically, the relational model came with a price. While many database sy
 
 In the early days, it was common for database administrators (DBAs) to act like databases’ bodyguards. They would hold off “crazy requests” from developers. Requests for changes would go through lengthy procedures and paperwork.
 
-Thankfully these days are mostly behind us, and we work more collaboratively with continuous deployments and rapid development. Alas, the new change intensifies the problem. In the old days, you'd make a schema change once a month; maybe even once in a few months. You'd plan for this, literally ship a new version for this. Today, it's not uncommon for the busiest database deployments in the world to run multiple schema migrations _per day_. 
+Thankfully these days are mostly behind us, and we work more collaboratively with continuous deployments and rapid development. Alas, the new change intensifies the problem. In the old days, you'd make a schema change once a month; maybe even once in a few months. You'd plan for this, literally ship a new version for this. Today, it's not uncommon for the busiest database deployments in the world to run multiple schema migrations _per day_.
 
 Which re-introduces and intensifies the schema migration problem: the process is mostly outside the domain of the developers. It requires them to be database experts. With multiple migrations per day it requires them to collaborate and sync with other developers in ways that are not compatible with their development flow (e.g. it's completely unlike comparing and merging git branches). In small companies, you'll see developers just owning and running their migrations as they see fit, but that doesn't scale, and the larger the product and organization, the more there's a need for a more formal flow.
 
@@ -29,7 +29,7 @@ In the MySQL world, direct schema migrations are blocking, if not on the primary
 
 For developers, this is a loss of ownership. While they own the idea of adding a column to some table, they need to request assistance from external teams, and often wait without much visibility into the state of progress. This breaks their flow. Perhaps one of the greatest appeals of NoSQL databases is that they don’t impose this level of constraint over a developer’s flow.
 
-And for DBAs, schema migrations are a burden. An unexpected interruption from some developer to their own flow of work. 
+And for DBAs, schema migrations are a burden. An unexpected interruption from some developer to their own flow of work.
 
 ## Some operational complexity
 
@@ -39,7 +39,7 @@ The operational overhead begins with the fact that a schema migration spans mult
 - Discovery: where in production does this statement need to run? The developer may not be aware of how schemas are deployed across different clusters. What’s the discovery mechanism? And, given we found the correct cluster, which server acts as the _primary_ for that cluster? Is the data sharded? If so, how do we detect all of the shards?
 - Scheduling: is there already a migration running on desired clusters? Databases react poorly to concurrent migrations; better to run them in sequence. Do we need to wait? For how long? Will someone grab our slot if we go to sleep? Will we then lose another day of work?
 - Execution: do we need to log in to some server? Where are we expected to run our online schema migration tools? What command line flags should we pass?
-- Monitor: can we tell what the progress is? Can we make it visible for everyone to see? How do we inform interested parties when the migration is complete? 
+- Monitor: can we tell what the progress is? Can we make it visible for everyone to see? How do we inform interested parties when the migration is complete?
 - Cleanup: schema migration tools for MySQL leave artifacts behind: large tables that need to be dropped. Dropping tables is in itself a problem. How do we automate the cleanup for those artifacts?
 - Recovery: how do we proceed if migration failed? Is there an extra cleanup to be made?
 
@@ -87,5 +87,3 @@ Please see the documentation on the [Vitess website](https://vitess.io/docs/user
 ## There’s more...
 
 Online DDL is not limited to `ALTER TABLE` statements. `DROP TABLE` statements suffer from locking issues, too. In a next blog post we will drill down into Vitess's table lifecycle, a garbage collector for unused tables.
-
- 
