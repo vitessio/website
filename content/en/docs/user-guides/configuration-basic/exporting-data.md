@@ -39,6 +39,12 @@ $ mysqldump  --set-gtid-purged=OFF --no-tablespaces commerce > commerce.sql
 Vitess' support for LOCK and UNLOCK statements is currently syntax-only. As a result, Vitess will simply ignore LOCK and UNLOCK statements without taking any underlying action. It is therefore *unsafe* to perform a locking mysqldump against a database that is actively being written to, and you should pause writes completely while performing the dump; or be willing to deal with any data inconsistencies that result.
 {{< /info >}}
 
+To do the same, but from Percona 8.0:
+
+```sh
+$ mysqldump  --lock-tables=off --add-locks=false --set-gtid-purged=OFF --no-tablespaces --add-drop-table=false -h x.x.x.x -u db_username -p db_name 
+```
+
 **NOTE:** You will be limited by the Vitess row limits in the size of the
 tables that you can dump using this method.  The default Vitess row limit is
 determined by the vttablet option `-queryserver-config-max-result-size`
