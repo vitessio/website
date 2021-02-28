@@ -1,13 +1,13 @@
 ---
 title: Materialize
-description: 
+description:
 weight: 70
 ---
 
 ### Command
 
 ```
-Materialize <json_spec>
+Materialize [-cells=<cells>] [-tablet_types=<source_tablet_types>] <json_spec>
 ```
 
 ### Description
@@ -16,8 +16,40 @@ Materialize is a low level vreplication API that allows for generalized material
 can be copies, aggregations or views. The target tables are kept in sync in near-realtime.
 
 You can specify multiple tables to materialize using the json_spec parameter.
-  
+
 ### Parameters
+
+
+#### -cells
+**optional**\
+**default** local cell
+
+<div class="cmd">
+
+A comma-separated list of cell names or cell aliases. This list is used by VReplication to determine which
+cells should be used to pick a tablet for selecting data from the source keyspace.<br><br>
+
+###### Uses
+
+* Improve performance by using picking a tablet in cells in network proximity with the target
+* To reduce bandwidth costs by skipping cells that are in different availability zones
+* Select cells where replica lags are lower
+</div>
+
+#### -tablet_types
+**optional**\
+**default** replica
+
+<div class="cmd">
+
+A comma-separated list of tablet types that are used while picking a tablet for sourcing data.
+One or more from MASTER, REPLICA, RDONLY.<br><br>
+
+###### Uses
+
+* To reduce the load on master tablets by using REPLICAs or RDONLYs
+* Reducing lags by pointing to MASTER
+</div>
 
 #### JSON spec details
 <div class="cmd">
@@ -44,9 +76,9 @@ You can specify multiple tables to materialize using the json_spec parameter.
 
 #### Example
 ```
-Materialize '{"workflow": "product_sales", "source_keyspace": "commerce", "target_keyspace": "customer", 
-    "table_settings": [{"target_table": "sales_by_sku", 
-    "source_expression": "select sku, count(*), sum(price) from corder group by order_id"}], 
+Materialize '{"workflow": "product_sales", "source_keyspace": "commerce", "target_keyspace": "customer",
+    "table_settings": [{"target_table": "sales_by_sku",
+    "source_expression": "select sku, count(*), sum(price) from corder group by order_id"}],
     "cell": "zone1", "tablet_types": "REPLICA"}'
 ```
 

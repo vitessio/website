@@ -7,7 +7,7 @@ weight: 60
 ### Command
 
 ```
-DropSources  [-dry_run] [-rename_tables] <keyspace.workflow>
+DropSources  [-dry_run] [-rename_tables] [-keep_data] <keyspace.workflow>
 ```
 
 ### Description
@@ -40,6 +40,16 @@ using the template _&lt;tableName&gt;_old, the same scheme followed by pt-osc
 <div class="cmd">
 You can do a dry run where no actual action is taken but the command logs all the actions that would be taken
 by SwitchReads.
+</div>
+
+#### -keep_data
+**optional**\
+**default** false
+
+<div class="cmd">
+
+Usually, the source data (tables or shards) are deleted by Complete. If this flag is used, for MoveTables, source tables will not be deleted, for Reshard, source shards will not be dropped.
+
 </div>
 
 #### keyspace.workflow
