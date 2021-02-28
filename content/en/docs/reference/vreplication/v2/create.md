@@ -11,6 +11,7 @@ This documentation is for a new (v2) set of vtctld commands. See [RFC](https://g
 ```
 MoveTables -v2 [-source=<sourceKs>] [-tables=<tableSpecs>] [-cells=<cells>]
   [-tablet_types=<source_tablet_types>] [-all] [-exclude=<tables>]
+   [-auto_start] [-stop_after_copy]
   Create <targetKs.workflow>
 
 Reshard -v2 [-source_shards=<source_shards>] [-target_shards=<target_shards>]
@@ -85,6 +86,45 @@ One or more from MASTER, REPLICA, RDONLY.<br><br>
 * Reducing lags by pointing to MASTER
 </div>
 
+
+#### -auto_start
+
+**optional**
+**default** true
+
+<div class="cmd">
+
+Normally the workflow starts immediately after it is created. If this flag is set
+to false then the workflow is in a Stopped state until you explicitly start it.
+
+</div>
+
+###### Uses
+* allows updating the rows in `_vt.vreplication` after MoveTables has setup the
+streams. For example, you can add some filters to specific tables or change the
+projection clause to modify the values on the target. This
+provides an easier way to create simpler Materialize workflows by first using
+MoveTables with auto_start false, updating the BinlogSource as required by your
+Materialize and then start the workflow.
+* changing the `copy_state` and/or `pos` values to restart a broken MoveTables workflow
+from a specific point of time.
+
+#### -stop_after_copy
+
+**optional**
+**default** false
+
+<div class="cmd">
+
+If set, the workflow will stop once the Copy phase has been completed i.e. once
+all tables have been copied and VReplication decides that the lag
+is small enough to start replicating, the workflow state will be set to Stopped.
+
+###### Uses
+* If you just want a consistent snapshot of all the tables you can set this flag. The workflow
+will stop once the copy is done and you can then mark the workflow as `Complete`d
+
+</div>
 
 #### -all
 **optional** cannot specify `table_specs` if `-all` is specified
