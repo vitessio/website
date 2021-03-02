@@ -19,7 +19,7 @@ Shard names have the following characteristics:
 * A `-` postfix means: anything greater than or equal to the LHS value.
 * A plain `-` denotes the full keyrange.
 
-Thus: `-80` == `00-80` == `0000-8000` == `000000-800000` == `0000000000000000-8000000000000000'
+Thus: `-80` == `00-80` == `0000-8000` == `000000-800000` == `0000000000000000-8000000000000000`
 
 `80-` is not the same as `80-FF`. This is why:
 
