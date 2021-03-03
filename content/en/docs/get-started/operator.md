@@ -1,10 +1,11 @@
 ---
-title: Kubernetes Operator
+title: Vitess Operator for Kubernetes
 weight: 3
 featured: true
+aliases: ['/docs/tutorials/kubernetes/','/user-guide/sharding-kubernetes.html', '/docs/get-started/scaleway/','/docs/get-started/kubernetes/']
 ---
 
-PlanetScale provides a [Kubernetes Operator for Vitess](https://github.com/planetscale/vitess-operator), released under the Apache 2.0 license. The following steps show how to get started using Minikube:
+PlanetScale provides a [Vitess Operator for Kubernetes](https://github.com/planetscale/vitess-operator), released under the Apache 2.0 license. The following steps show how to get started using Minikube:
 
 ## Prerequisites
 
@@ -63,6 +64,10 @@ In this directory, you will see a group of yaml files. The first digit of each f
 kubectl apply -f 101_initial_cluster.yaml
 ```
 
+{{< info >}}
+We have supplied an example yaml for bringing up Vitess with the experimental [vtorc](../../user-guides/configuration-basic/vtorc) component. You can try this out by using the following command: `kubectl apply -f vtorc_example.yaml`. Once `vtorc` is officially released, the examples will be updated accordingly.
+{{< /info >}}
+
 ### Verify cluster
 
 You can check the state of your cluster with `kubectl get pods`. After a few minutes, it should show that all pods are in the status of running:
@@ -83,7 +88,7 @@ vitess-operator-8454d86687-4wfnc                 1/1     Running   0          2m
 ## Setup Port-forward
 
 {{< warning >}}
-The port-forward will only forward to a specific pod. Currently, `kubectl` does not automatically terminate a port-forward as the pod dissapears due to apply/upgrade operations. You will need to manually restart the port-forward.
+The port-forward will only forward to a specific pod. Currently, `kubectl` does not automatically terminate a port-forward as the pod disappears due to apply/upgrade operations. You will need to manually restart the port-forward.
 {{</ warning >}}
 
 For ease-of-use, Vitess provides a script to port-forward from Kubernetes to your local machine. This script also recommends setting up aliases for `mysql` and `vtctlclient`:
@@ -165,7 +170,7 @@ The schema has been simplified to include only those fields that are significant
 
 ## Next Steps
 
-You can now proceed with [MoveTables](../../user-guides/move-tables).
+You can now proceed with [MoveTables](../../user-guides/migration/move-tables).
 
 Or alternatively, if you would like to teardown your example:
 

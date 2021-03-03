@@ -3,6 +3,9 @@ title: User Guides
 description: Practical Guides for Most Scenarios
 weight: 3
 ---
+{{< info >}}
+因为这些文档不维护，所以它们是旧的。
+{{< /info >}}
 
 ## Platform support
 
@@ -37,7 +40,7 @@ validating its consistency across tablets in a shard or across all
 shards in a keyspace.
 
 In addition, Vitess supports
-[data definition statements](https://dev.mysql.com/doc/refman/5.6/en/sql-syntax-data-definition.html)
+[data definition statements](https://dev.mysql.com/doc/refman/5.6/en/sql-data-definition-statements.html)
 that create, modify, or delete database tables. Vitess executes
 schema changes on the master tablet within each shard, and those
 changes then propagate to slave tablets via replication. Vitess does

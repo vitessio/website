@@ -11,7 +11,7 @@ featured: true
 
 PlanetScale 提供 [每周构建](https://github.com/planetscale/vitess-releases/releases) 适用于64位Linux的Vitess。
 
-1. 从GitHub上下载解压 [最近发布的`.tar.gz`](https://github.com/planetscale/vitess-releases/releases) 。
+1. 从 GitHub 上下载解压 [最近发布的`.tar.gz`](https://github.com/planetscale/vitess-releases/releases) 。
 2. 安装 MySQL:
 ```bash
 # Apt based
@@ -48,14 +48,13 @@ export PATH=${VTROOT}/bin:${PATH}
 
 准备好开始您的第一个集群了吗？let's go !
 
-## 启动单个keyspace集群
+## 启动单个 Keyspace 集群
 
-A [keyspace](../../concepts/keyspace) in Vitess is a logical database consisting of potentially multiple shards. For our first example, we are going to be using Vitess without sharding using a single keyspace. The file `101_initial_cluster.sh` is for example `1` phase `01`. Lets execute it now:
+首先将 Vitess 中包含的本地示例复制到你喜欢的位置。对于第一个例子，我们将部署一个[单个不分片 keyspace](../../concepts/keyspace). 文件 `101_initial_cluster.sh` 是第`1`阶段的第`01`个例子。让我们现在执行它:
 
-vitess中的[keyspace](../../concepts/keyspace)是一个逻辑数据库，由潜在的多个分片组成。对于第一个示例，我们将使用单分片的vitess。文件'101_initial_cluster.sh'代表第'1'阶段第'01'个。让我们现在执行它：
-
-``` sh
-cd examples/local
+```sh
+cp -r /usr/local/vitess/examples/local ~/my-vitess-example
+cd ~/my-vitess-example
 ./101_initial_cluster.sh
 ```
 
@@ -189,7 +188,7 @@ create table corder(
 
 注意：在单分片keyspace情况下，VSchema不是严格意义上需要定义的，因为Vitess知道没有其他的keyspaces，所以会将所有的查询流量转发到当前的keyspace上。
 
-## Vertical Split
+## 垂直拆分
 
 由于改革开放的深入，自贸区生意红红火火。单品马黛茶摆上了你网站的货架，尝鲜者蜂拥而至前来购买。
 随着越来越多的用户涌向你的网站和应用程序，`customer`和`corder`表开始以惊人的速度增长。为了跟上进度，您需要将`customer`和`corder` 移动到它们自己的keyspace中来分隔这些表。由于产品数量与马黛茶类型数量一致(不会有太多的马黛茶类型)，因此您无需对产品表进行分片。
@@ -365,7 +364,7 @@ ERROR 1105 (HY000) at line 4: vtgate: http://vtgate-zone1-5ff9c47db6-7rmld:15001
 
 在开始重新分片过程之前，您需要做出一些决定并准备系统以进行水平重新分片。重要提示，这是在开始垂直拆分之前应该完成的事情。但是，这是一个很好的你会来解释在这个过程的早期通常会决定什么。
 
-#### Sequences
+#### 序列表
 
 要解决的第一个问题:customer和corder表都有自增列。然而，分片的情况下并不适用。vitess通过序列提供了一个等价的特性。
 

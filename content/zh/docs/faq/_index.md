@@ -4,6 +4,9 @@ description: Frequently Asked Questions about Vitess
 weight: 8
 featured: true
 ---
+{{< info >}}
+因为这些文档不维护，所以它们是旧的。
+{{< /info >}}
 
 ## Does the application need to know about the sharding scheme underneath Vitess?
 

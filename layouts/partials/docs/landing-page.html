@@ -1,9 +1,9 @@
 <!-- Main docs page -->
 <div class="columns is-2 is-multiline is-desktop is-landingpage">
+  {{ $maxPages := 10 }}
   {{ range .Sections }}
   {{ $sectionUrl := .RelPermalink }}
   {{ $numPages := len .Pages }}
-  {{ $maxPages := 3 }}
   <div class="column is-4">
     <div class="card is-shadowless">
       <div class="card-content content">

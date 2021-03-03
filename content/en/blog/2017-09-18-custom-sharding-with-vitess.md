@@ -119,7 +119,7 @@ The advantage of this approach is that it later allows us to change the vindex t
 
 The next obvious question is: why mod at all? What if we just used `ReverseBits(user_id)`? It turns out that this would also work. There was really no need to perform the mod in the first place. Once you’ve transitioned to using `ReverseBits`, you can shard at will from any number to any number. Over time, you can forget that you ever used mod-based sharding.
 
-The sample code for the above Custom Vindex is [available here](https://gist.github.com/sougou/96e40aa54526447ae0b24d50ae8ea4a8). This Vindex is handy enough that we will look at adding it to the Vitess list of predefined vindexes.
+This is now available as a predefined Vindex as [reverse_bits](https://github.com/vitessio/vitess/blob/master/go/vt/vtgate/vindexes/reverse_bits.go).
 
 Can you think of other ways to perform such migrations? Join us on our Slack channel to share your ideas. You can send an email to [vitess@googlegroups.com](mailto:vitess@googlegroups.com)
 to request an invite.

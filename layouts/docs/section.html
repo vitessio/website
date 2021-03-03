@@ -10,26 +10,26 @@
   </div>
 
   <div class="docs-article">
-    {{ partial "docs/navbar.html" . }}
+    {{ partial "navbar.html" . }}
     
     <article class="docs-content">
       {{ partial "docs/header.html" . }}
     
       <div class="content">
-        {{ if .Sections }}
-        {{ partial "docs/landing-page.html" . }}
+        {{ if eq .CurrentSection.Params.skip_sections true }}
+          {{ partial "docs/pages-in-section.html" . }}
+        {{ else if .Sections }}
+          {{ partial "docs/landing-page.html" . }}
+          {{ if .RegularPages }}
+            {{ partial "docs/regular-pages-in-section.html" . }}
+          {{ end }}
         {{ else }}
-        {{ partial "docs/pages-in-section.html" . }}
-
-        <hr class="has-background-grey" />
-
-        {{ .Content }}
+          {{ partial "docs/pages-in-section.html" . }}
+          {{ .Content }}
         {{ end }}
       </div>
     
     </article>
   </div>
-
-  {{ partial "docs/toc.html" . }}
 </div>
 {{ end }}

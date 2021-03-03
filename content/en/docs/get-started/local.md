@@ -1,12 +1,14 @@
 ---
 title: Local Install
 description: Instructions for using Vitess on your machine for testing purposes
-weight: 4
+weight: 2
 featured: true
 aliases: ['/docs/tutorials/local/']
 ---
 
 This guide covers installing Vitess locally for testing purposes, from pre-compiled binaries. We will launch multiple copies of `mysqld`, so it is recommended to have greater than 4GB RAM, as well as 20GB of available disk space.
+
+A [docker setup](../local-docker/) is also available, which requires no dependencies on your local host.
 
 ## Install MySQL and etcd
 
@@ -59,10 +61,13 @@ sudo setenforce 0
 Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux. For example with Vitess 6:
 
 ```sh
-tar -xzf vitess-6.0.20-20200508-147bc5a.tar.gz
-cd vitess-6.0.20-20200508-147bc5a
+version=6.0.20-20200818
+file=vitess-${version}-90741b8.tar.gz
+wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
+tar -xzf ${file}
+cd ${file/.tar.gz/}
 sudo mkdir -p /usr/local/vitess
-sudo mv * /usr/local/vitess/
+sudo cp -r * /usr/local/vitess/
 ```
 
 Make sure to add `/usr/local/vitess/bin` to the `PATH` environment variable. You can do this by adding the following to your `$HOME/.bashrc` file:
@@ -221,7 +226,7 @@ The schema has been simplified to include only those fields that are significant
 
 ## Next Steps
 
-You can now proceed with [MoveTables](../../user-guides/move-tables).
+You can now proceed with [MoveTables](../../user-guides/migration/move-tables).
 
 Or alternatively, if you would like to teardown your example:
 

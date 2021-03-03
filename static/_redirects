@@ -37,3 +37,7 @@
 /overview/*        /docs/overview/:splat
 /reference         /docs/reference
 /reference/*       /docs/reference/:splat
+
+# RSS URL Redirect
+/blog/rss          /blog/index.xml	 301
+

@@ -1,0 +1,17 @@
+{{ $pages := where .RegularPages "Params.series" "!=" "vtctl" }}
+
+{{ if gt (len $pages) 0 }}
+  <h3>
+    Pages in this section
+  </h3>
+
+  <ul>
+    {{ range $pages }}
+    <li>
+      <a href="{{ .RelPermalink }}">
+        {{ .Title }}
+      </a>
+    </li>
+    {{ end }}
+  </ul>
+{{ end }}

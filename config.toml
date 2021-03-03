@@ -2,6 +2,7 @@ baseURL = "https://vitess.io"
 canonifyurls = true
 disableKinds = ["taxonomy", "taxonomyTerm"]
 googleAnalytics = "UA-163836834-1"
+enableRobotsTXT = true
 
 # Syntax highlighting settings
 pygmentsCodeFences = true
@@ -20,6 +21,11 @@ stackoverflow = "vitess"
 
 [params.blog]
 subtitle = "Updates and insights from the **Vitess** team."
+
+[sitemap]
+changefreq = "monthly"
+filename = "sitemap.xml"
+priority = 0.5
 
 # Language settings
 DefaultContentLanguage = "en"

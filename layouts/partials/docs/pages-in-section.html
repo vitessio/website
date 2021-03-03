@@ -1,13 +1,19 @@
-<h3>
-  Pages in this section
-</h3>
+{{ $pages := where .Pages "Params.series" "!=" "vtctl" }}
 
-<ul>
-  {{ range .Pages }}
-  <li>
-    <a href="{{ .RelPermalink }}">
-      {{ .Title }}
-    </a>
-  </li>
-  {{ end }}
-</ul>
+{{ if gt (len $pages) 0 }}
+  <h3>
+    Pages in this section
+  </h3>
+
+  <ul>
+    {{ range $pages }}
+    <li>
+      <a href="{{ .RelPermalink }}">
+        {{ .Title }}
+      </a>
+    </li>
+    {{ end }}
+  </ul>
+
+  <hr class="has-background-grey" />
+{{ end }}
