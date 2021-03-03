@@ -435,7 +435,7 @@ Vitess takes care of setting up the necessary command line flags. It automatical
 
 - `set @@ddl_strategy='gh-ost --max-load Threads_running=200';`
 - `set @@ddl_strategy='gh-ost --max-load Threads_running=200 --critical-load Threads_running=500 --critical-load-hibernate-seconds=60 --default-retries=512';`
-- `vtctl -ddl_strategy "gh-ost --allow-nullable-unique-key --chunk-size 200" ApplySchema ...`
+- `vtctl ApplySchema -ddl_strategy "gh-ost --allow-nullable-unique-key --chunk-size 200" ...`
 
 Do not override the following flags: `alter, database, table, execute, max-lag, force-table-names, serve-socket-file, hooks-path, hooks-hint-token, panic-flag-file`.
 
@@ -456,7 +456,7 @@ Vitess takes care of supplying the command line flags, the DSN, the username & p
 
 - `set @@ddl_strategy='pt-osc --null-to-not-null';`
 - `set @@ddl_strategy='pt-osc --max-load Threads_running=200';`
-- `vtctl -ddl_strategy "pt-osc --alter-foreign-keys-method auto --chunk-size 200" ApplySchema ...`
+- `vtctl ApplySchema -ddl_strategy "pt-osc --alter-foreign-keys-method auto --chunk-size 200" ...`
 
 Vitess tracks the state of the `pt-osc` migration. If it fails, Vitess makes sure to drop the migration triggers. Vitess keeps track of the migration even if the tablet itself restarts for any reason. Normally that would terminate the migration; vitess will cleanup the triggers if so, or will happily let the migration run to completion if not.
 
