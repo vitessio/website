@@ -17,19 +17,15 @@ As a stepping stone towards splitting a single table across multiple servers (sh
 Let's start by simulating this situation by loading sample data:
 
 ```sh
-# On helm and local installs:
-mysql < /usr/local/vitess/examples/common/insert_commerce_data.sql
-# With operator:
-mysql --table < insert_commerce_data.sql
+# On helm, local and operator installs: 
+mysql --table < ../common/insert_commerce_data.sql
 ```
 
 We can look at what we just inserted:
 
 ```sh
-# On helm and local installs:
-mysql --table < /usr/local/vitess/examples/common/select_commerce_data.sql
-# With operator:
-mysql --table < select_commerce_data.sql
+# On helm, local and operator installs:
+mysql --table < ../common/select_commerce_data.sql
 
 Using commerce/0
 customer
