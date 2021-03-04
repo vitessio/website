@@ -85,7 +85,7 @@ Normally, apps will see either `200` or `429`. An app should only ever proceed t
 
 The throttler chooses the response by comparing the replication lag with a pre-defined _threshold_. If the lag is lower than the threshold, response can be `200` (OK). If the lag is higher than the threshold, the response would be `429` (Too Many Requests).
 
-The throttler only collects and evaluates lag on a set of predefined tablet types. By default, this tablet type set is `REPLICA`. See [Configuration](#Configuration).
+The throttler only collects and evaluates lag on a set of predefined tablet types. By default, this tablet type set is `REPLICA`. See [Configuration](#configuration).
 
 When the throttler sees no relevant replicas in the shard, it allows writes by responding with `HTTP 200 OK`.
 
