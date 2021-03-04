@@ -67,7 +67,7 @@ VReplication migrations enjoy the general features of VReplication:
 
 To be able to run online schema migrations via `gh-ost`:
 
-- If you're on Linux/amd64 architecture, and on `glibc` `2.3` or similar, there are no further dependencies. Vitess comes with a built-in `gh-ost` binary, that is compatible with your system.
+- If you're on Linux/amd64 architecture, and on `glibc` `2.3` or similar, there are no further dependencies. Vitess comes with a built-in `gh-ost` binary, that is compatible with your system. Note that the Vitess Docker images use this architecture, and `gh-ost` comes pre-bundled and compatible.
 - On other architectures:
   - Have `gh-ost` executable installed
   - Run `vttablet` with `-gh-ost-path=/full/path/to/gh-ost` flag
@@ -80,7 +80,7 @@ Vitess takes care of setting up the necessary command line flags. It automatical
 - `set @@ddl_strategy='gh-ost --max-load Threads_running=200 --critical-load Threads_running=500 --critical-load-hibernate-seconds=60 --default-retries=512';`
 - `vtctl -ddl_strategy "gh-ost --allow-nullable-unique-key --chunk-size 200" ApplySchema ...`
 
-Do not override the following flags: `alter, database, table, execute, max-lag, force-table-names, serve-socket-file, hooks-path, hooks-hint-token, panic-flag-file`.
+**Note:** Do not override the following flags: `alter, database, table, execute, max-lag, force-table-names, serve-socket-file, hooks-path, hooks-hint-token, panic-flag-file`. Overriding any of these may cause Vitess to lose control and track of the migration, or even to migrate the wrong table.
 
 `gh-ost` throttling is done via Vitess's own tablet throttler, based on replication lag.
 
@@ -124,13 +124,13 @@ There are pros and cons to using either of the strategies. Some notable differen
 
 #### Setup
 
-- Vreplication is part of Vitess
+- VReplication is part of Vitess
 - A `gh-ost` binary is embedded within the Vitess binary, compatible with `glibc 2.3` and `Linux/amd64`. The user may choose to use their own `gh-ost` binary, configured with `-gh-ost-path`.
 - `pt-online-schema-change` is not included in Vitess, and the user needs to set it up on tablet hosts.
 
 #### Load
 
-- `pt-online-schema-change` uses triggers to propagate changes. This method is traditionally known to generate high load on the server. Both VReplication and `gh-ost` tail the binary logs to capture changes, and thi sapproach is known to be more lightweight.
+- `pt-online-schema-change` uses triggers to propagate changes. This method is traditionally known to generate high load on the server. Both VReplication and `gh-ost` tail the binary logs to capture changes, and this approach is known to be more lightweight.
 - When throttled, `pt-online-schema-change` still runs trigger actions, whereas both VReplication and `gh-ost` cease transfer of data (they may keep minimal bookkeeping operations).
 
 #### Cut-over
