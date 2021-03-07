@@ -93,6 +93,8 @@ Vitess takes care of setting up the necessary command line flags. It automatical
 - Perl `libdbi` and `libdbd-mysql` modules installed. e.g. on Debian/Ubuntu, `sudo apt-get install libdbi-perl libdbd-mysql-perl`
 - Run `vttablet` with `-pt-osc-path=/full/path/to/pt-online-schema-change` flag.
 
+Note that on Vitess Docker images, `pt-online-schema-change` and dependencies are pre-installed.
+
 Vitess automatically creates a MySQL account for the migration, with a randomly generated password. The account is destroyed at the end of the migration.
 
 Vitess takes care of supplying the command line flags, the DSN, the username & password. It also sets up `PLUGINS` used to communicate migration progress back to the tablet. You may supply additional flags for your migration as part of `@@ddl_strategy` session variable (using `VTGate`) or `-ddl_strategy` command line flag (using `vtctl`). Examples:
@@ -127,6 +129,7 @@ There are pros and cons to using any of the strategies. Some notable differences
 - VReplication is part of Vitess
 - A `gh-ost` binary is embedded within the Vitess binary, compatible with `glibc 2.3` and `Linux/amd64`. The user may choose to use their own `gh-ost` binary, configured with `-gh-ost-path`.
 - `pt-online-schema-change` is not included in Vitess, and the user needs to set it up on tablet hosts.
+  - Note that on Vitess Docker images, `pt-online-schema-change` and dependencies _are_ pre-installed.
 
 #### Load
 
