@@ -109,7 +109,7 @@ Do not override the following flags: `alter, pid, plugin, dry-run, execute, new-
 
 ### Comparing the options
 
-There are pros and cons to using either of the strategies. Some notable differences:
+There are pros and cons to using any of the strategies. Some notable differences:
 
 #### General
 
