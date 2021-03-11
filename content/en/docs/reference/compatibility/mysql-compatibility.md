@@ -149,3 +149,17 @@ USE `mykeyspace:-80@rdonly`
 ```
 
 A similar effect can be achieved by using a database name like `mykeyspace:-80@rdonly` in your MySQL application client connection string.
+
+### Create/Drop Database
+
+Vitess does not support create and drop database queries. 
+
+But, to ease the database provisioning system, a pluggable option is added where the plugin will take care of creating the database or dropping the database and update the view of the Vitess with the new database. 
+
+The plugin should implement the interface defined below and place under the directory `go/vt/vtgate/engine/dbddl.go` and register itself by calling `DBDDLRegister(name string, plugin DBDDLPlugin)`
+```bigquery
+type DBDDLPlugin interface {
+	CreateDatabase(ctx context.Context, name string) error
+	DropDatabase(ctx context.Context, name string) error
+}
+```
