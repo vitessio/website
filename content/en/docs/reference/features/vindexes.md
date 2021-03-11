@@ -163,11 +163,11 @@ Vitess provides the following predefined Vindexes:
 | :--------------------- | ---- | ----------------------- | ------- | -------- | ------- | ---- | ---------- |
 | binary | Functional Unique | Identity | Yes | Yes | Yes | 0 | Any |
 | binary\_md5 | Functional Unique | MD5 hash | Yes | No | Yes | 1 | Any |
-| consistent\_lookup | Lookup NonUnique | Lookup table non-unique values | No | No | Yes [only in specific instances](../vindexes/#ignore-nulls) | 20 | Any |
-| consistent\_lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | No | Yes [only in specific instances](../vindexes/#ignore-nulls) | 10 | Any |
+| consistent\_lookup | Lookup NonUnique | Lookup table non-unique values | No | No | Yes [only if](../vindexes/#ignore-nulls) | 20 | Any |
+| consistent\_lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | No | Yes [only if](../vindexes/#ignore-nulls) | 10 | Any |
 | hash | Functional Unique | DES null-key hash | Yes | Yes | No | 1 | 64 bit or smaller numeric or equivalent type |
-| lookup | Lookup NonUnique | Lookup table non-unique values | No | No | Yes [only in specific instances](../vindexes/#ignore-nulls) | 20 | Any |
-| lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | No | Yes [only in specific instances](../vindexes/#ignore-nulls) | 10 | Any |
+| lookup | Lookup NonUnique | Lookup table non-unique values | No | No | Yes [only if](../vindexes/#ignore-nulls) | 20 | Any |
+| lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | No | Yes [only if](../vindexes/#ignore-nulls) | 10 | Any |
 | null | Functional Unique | Always map to keyspace ID 0 | Yes | No | Yes | 100 | Any |
 | numeric | Functional Unique | Identity | Yes | Yes | No | 0 | 64 bit or smaller numeric or equivalent type |
 | numeric\_static\_map | Functional Unique | JSON file statically mapping input string values to keyspace IDs | Yes | No | No | 1 | Any |
