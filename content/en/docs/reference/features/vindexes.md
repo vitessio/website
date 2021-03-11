@@ -160,7 +160,7 @@ Note: You can have `NULL` values for the primary vindex column, as long as that 
 Vitess provides the following predefined Vindexes:
 
 | Name | Type | Description | Primary | Reversible | Nullable | Cost | Data types |
-| :--------------------- | ---- | ----------------------- | ------- | -------- | ------- | ---- | ---------- |
+| :--------------------- | ---- | ----------------------- | ------- | -------- | --------- | ---- | ---------- |
 | binary | Functional Unique | Identity | Yes | Yes | Yes | 0 | Any |
 | binary\_md5 | Functional Unique | MD5 hash | Yes | No | Yes | 1 | Any |
 | consistent\_lookup | Lookup NonUnique | Lookup table non-unique values | No | No | Yes [only if](../vindexes/#ignore-nulls) | 20 | Any |
