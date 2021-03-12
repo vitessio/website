@@ -68,9 +68,9 @@ Vitess may modify your queries to qualify for online DDL statement. Modification
 
 ## ddl_strategy
 
-You will set either `@@ddl_strategy` session variable, or `-ddl_strategy` command line flag, to control your schema migration strategy, and specifically, to enable and configure online DDL. Details in [DDL Strategies](../ddl-strategies). As quick overview:
+You will set either `@@ddl_strategy` session variable, or `-ddl_strategy` command line flag, to control your schema migration strategy, and specifically, to enable and configure online DDL. Details in [DDL Strategies](../ddl-strategies). A quick overview:
 
-- The value `"direct"`, means not an online DDL. The empty value (`""`) is also interpreted as `direct`. A query is immediately pushed and applied on backend servers.
+- The value `"direct"`, means not an online DDL. The empty value (`""`) is also interpreted as `direct`. A query is immediately pushed and applied on backend servers. This is the default strategy.
 - The value `"online"` instructs Vitess to run an `ALTER TABLE` online DDL via `VReplication`.
 - The value `"gh-ost"` instructs Vitess to run an `ALTER TABLE` online DDL via `gh-ost`.
 - The value `"pt-osc"` instructs Vitess to run an `ALTER TABLE` online DDL via `pt-online-schema-change`.
@@ -188,6 +188,9 @@ At this time, the user is responsible to track the state of all migrations. VTTa
 
 At this time, there are no automated retries. For example, a failover on a shard causes the migration to fail, and Vitess will not try to re-run the migration on the new `primary`. It is the user's responsibility to issue a `retry`. This may change in the future.
 
+## Key Settings
+
+ * `retain_online_ddl_tables` - This determines how long vttablet should keep an old migrated table before purging it
 
 ## Tracking migrations
 
@@ -427,7 +430,7 @@ All three strategies: `online`, `gh-ost` and `pt-osc` utilize the tablet throttl
 
 - `online` strategy uses the throttler by the fact VReplication natively uses the throttler on both source and target ends (for both reads and writes)
 - `gh-ost` uses the throttler via `--throttle-http`, which is automatically provided by Vitess
-- `pt-osc` uses the throttler by replication lag plugin, automatically injected by vitess.
+- `pt-osc` uses the throttler by replication lag plugin, automatically injected by Vitess.
 
 **NOTE** that at this time (and subject to change) the tablet throttler is disabled by default. Enable it with `vttablet`'s `-enable-lag-throttler` flag. If the tablet throttler is disabled, schema migrations will not throttle on replication lag.
 

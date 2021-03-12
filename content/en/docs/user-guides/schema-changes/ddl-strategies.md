@@ -4,9 +4,9 @@ weight: 2
 aliases: ['/docs/user-guides/schema-changes/ddl-strategies/']
 ---
 
-Vitess supports both managed, online schema migrations (aka Online DDL) as well as unmanaged migrations. How vitess runs a schema migration depends on the _DDL strategy_. Vitess allows these strategies:
+Vitess supports both managed, online schema migrations (aka Online DDL) as well as unmanaged migrations. How Vitess runs a schema migration depends on the _DDL strategy_. Vitess allows these strategies:
 
-- `direct`: the direct apply of DDL to your database. This is not an online DDL. It is a synchronous and blocking operation.
+- `direct`: the direct apply of DDL to your database. This is not an online DDL. It is a synchronous and blocking operation. This is the default strategy. 
 - `online`: utilizes Vitess's built in [VReplication](../../../reference/vreplication/vreplication/) mechanism.
 - `gh-ost`: uses 3rd party GitHub's [gh-ost](https://github.com/github/gh-ost) tool.
 - `pt-osc`: uses 3rd party Percona's [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html) as part of [Percona Toolkit](https://www.percona.com/doc/percona-toolkit/3.0/index.html)
@@ -56,7 +56,7 @@ The `online` strategy invokes Vitess's built in [VReplication](../../../referenc
 
 VReplication migrations enjoy the general features of VReplication:
 
-- Seamless integration with vitess.
+- Seamless integration with Vitess.
 - Seamless use of the throttler mechanism.
 - Visibility into internal working and status of VReplication.
 - Recoverable after failover.
@@ -103,7 +103,7 @@ Vitess takes care of supplying the command line flags, the DSN, the username & p
 - `set @@ddl_strategy='pt-osc --max-load Threads_running=200';`
 - `vtctl ApplySchema -ddl_strategy "pt-osc --alter-foreign-keys-method auto --chunk-size 200" ...`
 
-Vitess tracks the state of the `pt-osc` migration. If it fails, Vitess makes sure to drop the migration triggers. Vitess keeps track of the migration even if the tablet itself restarts for any reason. Normally that would terminate the migration; vitess will cleanup the triggers if so, or will happily let the migration run to completion if not.
+Vitess tracks the state of the `pt-osc` migration. If it fails, Vitess makes sure to drop the migration triggers. Vitess keeps track of the migration even if the tablet itself restarts for any reason. Normally that would terminate the migration; Vitess will cleanup the triggers if so, or will happily let the migration run to completion if not.
 
 Do not override the following flags: `alter, pid, plugin, dry-run, execute, new-table-name, [no-]drop-new-table, [no-]drop-old-table`.
 
@@ -140,8 +140,12 @@ There are pros and cons to using any of the strategies. Some notable differences
 
 - Both `pt-online-schema-change` and `gh-ost` have an atomic cut-over: at the end of the migration, the tables are switched, and incoming queries are momentarily blocked, but not lost.
 - VReplication causes a brief outage at time of cut-over (subject to change): apps will not be able to _write_ to the original table during cut-over, and will return with error.
-- VReplication cut-over is only safe when all traffic comes through Vitess/VTGate (subject to change). Any DML query running on migrated table at time of cut-over, and which executes directly on the MySQL server without going through vitess, might lose its data.
+- VReplication cut-over is only safe when all traffic comes through Vitess/VTGate (subject to change). Any DML query running on migrated table at time of cut-over, and which executes directly on the MySQL server without going through Vitess, might lose its data.
 
 #### MySQL compatibility
 
 - `pt-online-schema-change` supports foreign keys. Neither `gh-ost` nor `VReplication` support foreign keys.
+
+#### External MySQL compatibility
+
+* If you run on Aurora or RDS you will need to use the `online` strategy. This is because both `pt-online-schema-change` and `gh-ost` try to create a new user and then attempt to grant the new user SUPER privileges. 
