@@ -155,7 +155,7 @@ A similar effect can be achieved by using a database name like `mykeyspace:-80@r
 Vitess does not support CREATE and DROP DATABASE queries out of the box.
 
 But, to make it possible to provision databases, a plugin mechanism exists. 
-The plugin has take care of creating or dropping the database, and update the topology & VSchema so that Vitess can start receiving queries for the new keyspace.
+The plugin has to take care of creating and dropping the database, and update the topology & VSchema so that Vitess can start receiving queries for the new keyspace.
 
 The plugin should implement the `DBDDLPlugin` interface, and be saved into a new file in the `go/vt/vtgate/engine/` directory.
 
@@ -167,5 +167,5 @@ type DBDDLPlugin interface {
 ```
 
 It must then register itself calling `DBDDLRegister`. 
-You can take a look at the `dbddl.go` in the engine package for an example of how it's done.
+You can take a look at the `dbddl_plugin.go` in the engine package for an example of how it's done.
 Finally, you need to add a command line flag to vtgate to have it use the new plugin: `-dbddl_plugin=myPluginName`
