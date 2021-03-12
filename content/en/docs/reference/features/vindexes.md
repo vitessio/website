@@ -146,10 +146,10 @@ If the table owns lookup vindexes, then the rows to be deleted are first read an
 
 #### Ignore Nulls
 
-There are situations where the from columns of a lookup vindex can be null. Such columns cannot be inserted in the lookup due to the uniqueness constraints of a lookup. There are two ways to deal with a `NULL` value in the `from` column of a lookup vindex:
+There are situations where the from columns of a lookup vindex can be `NULL`. Such columns cannot be inserted in the lookup backing table due to the uniqueness constraints of a lookup. There are two ways to deal with a `NULL` value in the from column of a lookup vindex:
 
-* Use a predefined vindex that supports the use of a `NULL` value. The table for predefined vindexes lists what types are and are not nullable.
-* Enable the `ignore_nulls` option. If the input value of any of the columns is null, vitess can skip the creation of the lookup row if `ignore_nulls` is enabled. 
+* Use a predefined vindex as the primary vindex of the backing table that supports the use of a `NULL` value. The table for [predefined vindexes](../vindexes/#predefined-vindexes) lists what types are and are not nullable.
+* Enable the `ignore_nulls` option. If the input value of any of the columns is null, Vitess can skip the creation of the lookup row if `ignore_nulls` is enabled. 
 
 {{< info >}}
 Note: You can have `NULL` values for the primary vindex column, as long as that vindex allows it (e.g. xxhash). However, you cannot have `NULL` values for the lookup input column, unless you have enabled `ignore_nulls`.
