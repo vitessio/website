@@ -140,7 +140,7 @@ There are pros and cons to using any of the strategies. Some notable differences
 
 - Both `pt-online-schema-change` and `gh-ost` have an atomic cut-over: at the end of the migration, the tables are switched, and incoming queries are momentarily blocked, but not lost.
 - VReplication causes a brief outage at time of cut-over (subject to change): apps will not be able to _write_ to the original table during cut-over, and will return with error.
-- VReplication cut-over is only safe when all traffic comes through Vitess/VTGate (subject to change). Any DML query running on migrated table at time of cut-over, and which executes directly on the MySQL server without going through Vitess, might loose its data.
+- VReplication cut-over is only safe when all traffic comes through Vitess/VTGate (subject to change). Any DML query running on migrated table at time of cut-over, and which executes directly on the MySQL server without going through Vitess, might lose its data.
 
 #### MySQL compatibility
 
