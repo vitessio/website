@@ -6,7 +6,7 @@ aliases: ['/docs/launching/server-configuration/', '/docs/user-guides/server-con
 # Ports and Network interactions in Vitess
 
 Many/most of these ports are fully configurable, but we are listing their
-defaults or  the defaults we use in examples here. Your
+defaults or the defaults we use in examples here. Your
 environment may differ considerably, depending on your configuration options
 for the various components:
 
