@@ -6,11 +6,11 @@ aliases: ['/docs/launching/server-configuration/', '/docs/user-guides/server-con
 # Ports and Network interactions in Vitess
 
 Many/most of these ports are fully configurable, but we are listing their
-defaults or by convention (e.g. from the examples) defaults here. Your
+defaults or  the defaults we use in examples here. Your
 environment may differ considerably, depending on your configuration options
 for the various components:
 
-  * Data path - e.g.:
+  * Data path - e.g.:~/vitess/vtdataroot
     * Main query path:
       * application -> vtgate
         * port 3306 or 15306 (MySQL)
@@ -20,11 +20,11 @@ for the various components:
       * vttablet -> MySQL
         * local socket (if MySQL is local)
         * port 3306 (if MySQL is remote)
-    * vttablet -> vttablet:  vreplication within or across shards
-      * port 16000 + vttablet UID (gRPC)
-    * MySQL -> MySQL:  within-shard replication
-      * port 3306 (MySQL protocol)
-  * Control or meta-data paths - e.g.:
+      * vttablet -> vttablet: vreplication within or across shards
+        * port 16000 + vttablet UID (gRPC)
+      * MySQL -> MySQL:  within-shard replication
+        * port 3306 (MySQL protocol)
+  * Control or meta-data paths - e.g.: ~/vitess/global
     * vtctld -> vttablet
       * port 16000 + vttablet UID (gRPC)
     * vtctlclient -> vtctld
