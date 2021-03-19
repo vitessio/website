@@ -1,5 +1,5 @@
 	---
-title: Backup and Restore
+title: Creating a Backup
 weight: 2
 aliases: ['/docs/user-guides/backup-and-restore/']
 ---
