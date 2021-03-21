@@ -190,7 +190,8 @@ At this time, there are no automated retries. For example, a failover on a shard
 
 ## Key Settings
 
- * `retain_online_ddl_tables` - This determines how long vttablet should keep an old migrated table before purging it
+ * `retain_online_ddl_tables` - This determines how long vttablet should keep an old migrated table before purging it. Unit: duration. Default: 24 hours. Example: `-retain_online_ddl_tables 48h`
+ * `migration_check_interval` - Interval between checks for submitted migrations. Unit: duration. Default: 1 hour. Example: `-migration_check_interval 30s`
 
 ## Tracking migrations
 
