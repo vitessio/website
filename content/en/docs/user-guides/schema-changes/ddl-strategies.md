@@ -144,8 +144,27 @@ There are pros and cons to using any of the strategies. Some notable differences
 
 #### MySQL compatibility
 
-- `pt-online-schema-change` supports foreign keys. Neither `gh-ost` nor `VReplication` support foreign keys.
+- `pt-online-schema-change` partially supports foreign keys. Neither `gh-ost` nor `VReplication` support foreign keys.
 
 #### External MySQL compatibility
 
 * If you run on Aurora or RDS you will need to use the `online` strategy. This is because both `pt-online-schema-change` and `gh-ost` try to create a new user and then attempt to grant the new user SUPER privileges. 
+
+## Vitess functionality comparison
+
+| Strategy | Managed | Online | Trackable | Declarative | Revertible          |
+|----------|---------|--------|-----------|-------------|---------------------|
+| `direct` | No      | MySQL* | No        | No          | No                  |
+| `pt-osc` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP`       |
+| `gh-ost` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP`       |
+| `online` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP,ALTER` |
+
+- **Managed**: whether Vitess schedules and operates the migration
+- **Online**:
+ - MySQL supports limited online ("In place") DDL and instant DDL. See [support chart](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html).
+ - `gh-ost`, `online` do not support foreign keys
+ - `pt-osc` has support for foreign keys (may apply collateral blocking operations)
+- **Trackable**: able to determine migration state (`ready`, `running`, `complete` etc)
+  - `gh-ost` also makes available _progress %_ and _ETA seconds_
+- **Declarative**: support `-declarative` flag
+- **Revertible**: online `online` strategy supports revertible `ALTER` statements (or `ALTER`s implied by `-declarative` migrations). All managed strategies supports revertible `CREATE` and `ALTER`.
