@@ -28,7 +28,8 @@ Required vttablet flags:
 
 Required for MySQL 8.0:
 
-* -xtrabackup_stream_mode xbstream 
+* -xtrabackup_stream_mode=xbstream
+* -xtrabackup_backup_flags=--no-server-version-check 
 
 ### Run the following vtctl command to create a backup:
 
@@ -64,29 +65,36 @@ sequence of actions:
 If the engine is `xtrabackup`, we do not do any of the above. The tablet can
 continue to serve traffic while the backup is running.
 
+## Common Errors and Resolutions
+
+### Error:
+E0310 08:15:45.336083  197442 main.go:72] remote error: rpc error: code = Unknown desc = TabletManager.Backup on zone1-0000000102 error: xtrabackupUser must be specified.: xtrabackupUser must be specified
+
+* Fix: Set vttablet flag [-xtrabackup_user](../#basic-vttablet-configuration)
+
+### Error:
+E0310 08:22:22.260044  200147 main.go:72] remote error: rpc error: code = Unknown desc = TabletManager.Backup on zone1-0000000102 error: unable to start backup: exec: "xtrabackup": executable file not found in $PATH: unable to start backup: exec: "xtrabackup": executable file not found in $PATH
+
+* Fixes:
+	* Ensure the xtrabackup binary is in the $PATH for the $USER running vttablet
+	* Alternatively, set -xtrabackup_root_path on vttablet provide path to xtrabackup/xbstream binaries via vttablet flag
+
+### Error: 
+I0310 12:34:47.900363  211809 backup.go:163] I0310 20:34:47.900004 xtrabackupengine.go:310] xtrabackup stderr: Invalid --stream argument: tar
+Streaming in tar format is no longer supported in 8.0; use xbstream instead
+
+* Fix: Set [-xtrabackup_stream_mode to xbstream](../#basic-vttablet-configuration) on vttablet 
+
 ## Restoring a backup
 
-When a tablet starts, Vitess checks the value of the
-`-restore_from_backup` command-line flag to determine whether
-to restore a backup to that tablet.
+When a tablet starts, Vitess checks the value of the `-restore_from_backup` command-line flag to determine whether to restore a backup to that tablet.
 
-* If the flag is present, Vitess tries to restore the most recent backup from
-  the Backup Storage system when starting the tablet.
-* If the flag is absent, Vitess does not try to restore a backup to the
-  tablet. This is the equivalent of starting a new tablet in a new shard.
+* If the flag is present, Vitess tries to restore the most recent backup from the Backup Storage system when starting the tablet.
+* If the flag is absent, Vitess does not try to restore a backup to the tablet. This is the equivalent of starting a new tablet in a new shard.
 
-As noted in the [Configuration](#vttablet-configuration) section, the flag is
-generally enabled all of the time for all of the tablets in a shard.
-By default, if Vitess cannot find a backup in the Backup Storage system,
-the tablet will start up empty. This behavior allows you to bootstrap a new
-shard before any backups exist.
+As noted in the [Configuration](#vttablet-configuration) section, the flag is generally enabled all of the time for all of the tablets in a shard. By default, if Vitess cannot find a backup in the Backup Storage system, the tablet will start up empty. This behavior allows you to bootstrap a new shard before any backups exist.
 
-If the `-wait_for_backup_interval` flag is set to a value greater than zero,
-the tablet will instead keep checking for a backup to appear at that interval.
-This can be used to ensure tablets launched concurrently while an initial backup
-is being seeded for the shard (e.g. uploaded from cold storage or created by
-another tablet) will wait until the proper time and then pull the new backup
-when it's ready.
+If the `-wait_for_backup_interval` flag is set to a value greater than zero, the tablet will instead keep checking for a backup to appear at that interval. This can be used to ensure tablets launched concurrently while an initial backup is being seeded for the shard (e.g. uploaded from cold storage or created by another tablet) will wait until the proper time and then pull the new backup when it's ready.
 
 ``` sh
 vttablet ... -backup_storage_implementation=file \
@@ -98,15 +106,13 @@ vttablet ... -backup_storage_implementation=file \
 
 **vtctl** provides two commands for managing backups:
 
-* [ListBackups](https://vitess.io/docs/reference/programs/vtctl/shards/#listbackups) displays the
-    existing backups for a keyspace/shard in chronological order.
+* [ListBackups](https://vitess.io/docs/reference/programs/vtctl/shards/#listbackups) displays the existing backups for a keyspace/shard in chronological order.
 
     ``` sh
     vtctl ListBackups <keyspace/shard>
     ```
 
-* [RemoveBackup](https://vitess.io/docs/reference/programs/vtctl/shards/#removebackup) deletes a
-    specified backup for a keyspace/shard.
+* [RemoveBackup](https://vitess.io/docs/reference/programs/vtctl/shards/#removebackup) deletes a specified backup for a keyspace/shard.
 
     ``` sh
     RemoveBackup <keyspace/shard> <backup name>
@@ -114,19 +120,15 @@ vttablet ... -backup_storage_implementation=file \
 
 ## Bootstrapping a new tablet
 
-Bootstrapping a new tablet is almost identical to restoring an existing tablet.
-The only thing you need to be cautious about is that the tablet specifies its
-keyspace, shard and tablet type when it registers itself at the topology.
-Specifically, make sure that the following additional vttablet parameters are set:
+Bootstrapping a new tablet is almost identical to restoring an existing tablet. The only thing you need to be cautious about is that the tablet specifies its keyspace, shard and tablet type when it registers itself at the topology. Specifically, make sure that the following additional vttablet parameters are set:
 
-``` 
+``` sh
     -init_keyspace <keyspace>
     -init_shard <shard>
     -init_tablet_type replica|rdonly
 ```
 
-The bootstrapped tablet will restore the data from the backup and then apply
-changes, which occurred after the backup, by restarting replication.
+The bootstrapped tablet will restore the data from the backup and then apply changes, which occurred after the backup, by restarting replication.
 
 ## Backing up Topology Server
 
