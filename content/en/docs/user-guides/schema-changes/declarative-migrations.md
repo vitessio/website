@@ -16,7 +16,7 @@ Declarative DDLs are expressed via:
 
 Altering tables in declarative DDL is done by issuing `CREATE TABLE` statements with the desired state. `ALTER` statements are not allowed.
 
-Declarative DDLs have the property of being idempotent. For example, a user may submit the same `CREATE TABLE` statement _twice_, one after another. If the 1st is successful, then the 2nd is a noop, and considered as implicitly successful. likewise, two `DROP TABLE` DDLs for same statement will each ensure the table does not exist. If the 1st is successful, then the 2nd has nothing to do and is implicitly successful.
+Declarative DDLs have the property of being idempotent. For example, a user may submit the same `CREATE TABLE` statement _twice_, one after another. If the 1st is successful, then the 2nd is a noop, and considered as implicitly successful. Likewise, two `DROP TABLE` DDLs for same statement will each ensure the table does not exist. If the 1st is successful, then the 2nd has nothing to do and is implicitly successful.
 
 ## Usage
 

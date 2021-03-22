@@ -6,8 +6,18 @@ aliases: ['/docs/user-guides/managed-online-schema-changes/']
 
 **Note:** this feature is **EXPERIMENTAL**.
 
-Vitess offers managed, online schema migrations (aka Online DDL), transparently to the user. Vitess supports `CREATE`, `ALTER` and `DROP` statements, all non-blocking, auto scheduled and auditable. As general overview:
+Vitess offers managed, online schema migrations (aka Online DDL), transparently to the user. Vitess Onine DDL offers:
 
+- Non-blocking migrations
+- Migrations are asyncronously auto-scheduled, queued and executed by tablets
+- Migration state is trackable
+- Migrations are cancellable
+- Migrations are retry-able
+- Lossless, [revertible migrations](../revertible-migrations/)
+- Support for [declarative migrations](../declarative-migrations/)
+
+
+As general overview:
 - User chooses a [strategy](../ddl-strategies) for online DDL (online DDL is opt in)
 - User submits one or more schema change queries, using the standard MySQL `CREATE TABLE`, `ALTER TABLE` and `DROP TABLE` syntax.
 - Vitess responds with a Job ID for each schema change query.
@@ -188,11 +198,20 @@ At this time, the user is responsible to track the state of all migrations. VTTa
 
 At this time, there are no automated retries. For example, a failover on a shard causes the migration to fail, and Vitess will not try to re-run the migration on the new `primary`. It is the user's responsibility to issue a `retry`. This may change in the future.
 
-## Key Settings
+## Configuration
 
- * `retain_online_ddl_tables` - This determines how long vttablet should keep an old migrated table before purging it. Unit: duration. Default: 24 hours. Example: `-retain_online_ddl_tables 48h`
- * `migration_check_interval` - Interval between checks for submitted migrations. Unit: duration. Default: 1 hour. Example: `-migration_check_interval 30s`
+- `-retain_online_ddl_tables`: (`vttablet`) determines how long vttablet should keep an old migrated table before purging it. Type: duration. Default: 24 hours.
 
+  Example: `vttablet -retain_online_ddl_tables 48h`
+
+- `-migration_check_interval`: (`vttablet`) interval between checks for submitted migrations. Type: duration. Default: 1 hour. 
+
+  Example: `vttablet -migration_check_interval 30s`
+
+- `-enable_online_ddl`: (`vtgate`) whether Online DDL operations are at all possible through `VTGate`. Type: boolean. Default: `true`
+
+  Example: `vtgate -enable_online_ddl=false` to disable access to Online DDL via `VTGate`.
+ 
 ## Tracking migrations
 
 You may track the status of a single migration, of all or recent migrations, or of migrations in a specific state. Examples:
@@ -272,7 +291,7 @@ The user may cancel a migration, as follows:
 The syntax to cancelling a migration is:
 
 ```
-vtctlclient OnlineDDL cancel <migration_id>
+vtctlclient OnlineDDL <keyspace> cancel <migration_id>
 ```
 
 Example:
@@ -475,7 +494,7 @@ Examples:
 
 $ vtctlclient VExec commerce.2201058f_f266_11ea_bab4_0242c0a8b007 "select * from _vt.schema_migrations"
 
-$ vtctlclient VExec commerce.91b5c953-e1e2-11ea-a097-f875a4d24e90 "update _vt.schema_migrations set migration_status='retry'
+$ vtctlclient VExec commerce.91b5c953-e1e2-11ea-a097-f875a4d24e90 "update _vt.schema_migrations set migration_status='retry'"
 
 $ vtctlclient VExec commerce.91b5c953-e1e2-11ea-a097-f875a4d24e90 "update _vt.schema_migrations set migration_status='retry' where shard='40-80'
 ```

@@ -4,7 +4,7 @@ weight: 2
 aliases: ['/docs/user-guides/revertible-migrations/']
 ---
 
-Vitess offers _revert_ for online schema migrations: the user may regret a table migration after completion, and roll back the tabe's schema to previous state _without loss of data_.
+Vitess offers _lossless revert_ for online schema migrations: the user may regret a table migration after completion, and roll back the tabe's schema to previous state _without loss of data_.
 
 Revertible migrations supported for:
 
@@ -29,8 +29,22 @@ Revertible migrations supported for:
   
   Vitess cannot know ahead of time whether a _revert_ is possible or not.
 
+## REVERT syntax
 
-## Usage
+Via SQL:
+
+```sql
+REVERT VITESS_MIGRATION '69b17887_8a62_11eb_badd_f875a4d24e90';
+```
+
+Via `vtctl`:
+```shell
+$ vtctlclient OnlineDDL commerce revert 69b17887_8a62_11eb_badd_f875a4d24e90
+```
+
+Both operations return a UUID for the revert migration. The user can track the revert migration to find its state.
+
+## Usage & walkthrough
 
 Consider the following annotated flow:
 ```sql
@@ -62,7 +76,8 @@ Create Table: CREATE TABLE `t` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 -- it is now possible to revert 6bc591b2_8a60_11eb_badd_f875a4d24e90, because it was the last successful migration on table t.
--- it is not possible to revert 3837e739_8a60_11eb_badd_f875a4d24e90, because while it was successful, it is not the last successful migration to run on table t t.
+-- it is not possible to revert 3837e739_8a60_11eb_badd_f875a4d24e90, because while it was successful, it is not the last
+-- successful migration to run on table t t.
 
 mysql> revert vitess_migration '6bc591b2_8a60_11eb_badd_f875a4d24e90';
 +--------------------------------------+
@@ -80,7 +95,8 @@ Create Table: CREATE TABLE `t` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
--- It is now possible to revert ead67f31_8a60_11eb_badd_f875a4d24e90 as it is the last successful migration to run on table t. Reverting ead67f31_8a60_11eb_badd_f875a4d24e90 affectively means restoring the changes made by 6bc591b2_8a60_11eb_badd_f875a4d24e90
+-- It is now possible to revert ead67f31_8a60_11eb_badd_f875a4d24e90 as it is the last successful migration to run on table t.
+-- Reverting ead67f31_8a60_11eb_badd_f875a4d24e90 affectively means restoring the changes made by 6bc591b2_8a60_11eb_badd_f875a4d24e90
 
 mysql> revert vitess_migration 'ead67f31_8a60_11eb_badd_f875a4d24e90';
 +--------------------------------------+
@@ -176,6 +192,7 @@ mysql> drop table t;
 +--------------------------------------+
 | 69b17887_8a62_11eb_badd_f875a4d24e90 |
 +--------------------------------------+
+-- Wait until migration is complete
 
 mysql> select * from t;
 ERROR 1146 (42S02): ... 
@@ -186,6 +203,8 @@ mysql> revert vitess_migration '69b17887_8a62_11eb_badd_f875a4d24e90';
 +--------------------------------------+
 | 9eb00275_8a62_11eb_badd_f875a4d24e90 |
 +--------------------------------------+
+-- Wait until migration is complete
+-- `t` was not really dropped, but renamed away. This REVERT reinstates it.
 
 mysql> select * from t;
 +----+---------------------+
@@ -194,21 +213,6 @@ mysql> select * from t;
 |  1 | 2021-03-21 18:26:47 |
 +----+---------------------+
 ```
-
-## REVERT syntax
-
-Via SQL:
-
-```sql
-REVERT VITESS_MIGRATION '<uuid-of-migration>';
-```
-
-Via `vtctl`:
-```shell
-$ vtctlclient OnlineDDL commerce revert 2201058f_f266_11ea_bab4_0242c0a8b007
-```
-
-Both operations return a UUID for the revert migration. The user can track the revert migration to find its state.
 
 ## Implementation details
 

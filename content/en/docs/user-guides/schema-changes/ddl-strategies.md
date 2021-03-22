@@ -161,10 +161,10 @@ There are pros and cons to using any of the strategies. Some notable differences
 
 - **Managed**: whether Vitess schedules and operates the migration
 - **Online**:
- - MySQL supports limited online ("In place") DDL and instant DDL. See [support chart](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html).
- - `gh-ost`, `online` do not support foreign keys
- - `pt-osc` has support for foreign keys (may apply collateral blocking operations)
+  - MySQL supports limited online ("In place") DDL and instant DDL. See [support chart](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html).
+  - `gh-ost`, `online` do not support foreign keys
+  - `pt-osc` has support for foreign keys (may apply collateral blocking operations)
 - **Trackable**: able to determine migration state (`ready`, `running`, `complete` etc)
   - `gh-ost` also makes available _progress %_ and _ETA seconds_
 - **Declarative**: support `-declarative` flag
-- **Revertible**: online `online` strategy supports revertible `ALTER` statements (or `ALTER`s implied by `-declarative` migrations). All managed strategies supports revertible `CREATE` and `ALTER`.
+- **Revertible**: `online` strategy supports revertible `ALTER` statements (or `ALTER`s implied by `-declarative` migrations). All managed strategies supports revertible `CREATE` and `ALTER`.
