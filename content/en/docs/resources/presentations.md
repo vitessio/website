@@ -4,6 +4,62 @@ weight: 1
 aliases: ['/resources/presentations.html']
 ---
 
+## Percona FOSS Talks 2021
+
+All Things Vitess, MySQL, and Sailing: AlkinTezuysal on Percona’s HOSS Talks FOSS!
+
+{{< youtube id="8e3IC-lAgXs" autoplay="false" >}}
+
+## FOSDEM 2021
+
+[Open Source Database Infrastructure with Vitess](http://bofh.nikhef.nl/events/FOSDEM/2021/D.mysql/vitess.webm) - Shlomi Noach, PlanetScale
+[How to shard MariaDB like a Pro?](http://bofh.nikhef.nl/events/FOSDEM/2021/D.mariadb/mariadb_shard.webm) - Alkin Tezuysal, PlanetScale
+
+## KubeCon NA 2020
+
+KubeCon featured several Vitess talks, including:
+
+* [Keynote: CNCF Projects Update](https://youtu.be/uNpZA5fz5o8) - CNCF
+* [Vitess: Introduction and New Features](https://youtu.be/Nqzhgzg5WCw) - Sugu Sougoumarane & Deepthi Sigireddi, PlanetScale
+* [Introduction to Vitess](https://youtu.be/Sny8rITrdvE) - Deepthi Sigireddi, PlanetScale
+* [Codename VIFL - How to Migrate MySQL Database Clusters to Vitess](https://youtu.be/k51L0xdClGQ) - Guido Iaquinti & Rafael Chacon , Slack
+
+## Perconalive Europe Online 2020
+
+Vitess Online Schema Migration Automation - Shlomi Noach, PlanetScale
+
+{{< youtube id="iQYZ0dRe7O8" autoplay="false" >}}
+
+## CNCF Webinars 2020 
+
+* [Transactional microservices with Vitess - coordination without state](https://youtu.be/FaFzrVqkueI) - Dan Kozlowski
+
+## Quarantine 2020 Database Talks, Carnegie Mellon University
+
+Query Planning for a Sharded System like Vitess - Sugu Sougoumarane - CTO,Planetscale
+
+{{< youtube id="TZb6m5ACIsA" autoplay="false" >}}
+
+## KubeCon Europe 2020
+
+KubeCon featured several Vitess talks, including:
+
+* [Vitess Intro: How to Migrate a MySQL Database to Vitess](https://youtu.be/WRNftOqRVVY) - Sugu Sougoumarane & Morgan Tocker
+* [Zero Downtime Data Relocation with Vitess](https://youtu.be/6--4bQKMNF4) -  Liz van Dijk & Deepthi Sigireddi, PlanetScale
+* [Multicloud Vitess over Network Service Mesh](https://youtu.be/NulLc7DxXg8) -  Tim Swanson, Cisco & John Watson, PlanetScale
+
+## Online Demo
+
+A demo of the new Vitess-native Orchestrator. Sugu Sougoumarane - CTO, PlanetScale 
+
+{{< youtube id="JVHi2oN3lxM" autoplay="false" >}}
+
+## Perconalive NA Online 2020
+
+Unbounded scale: Using Vitess for scaling write intensive workloads.  Morgan Tocker , Daniel Guzman Burgos
+
+{{< youtube id="kHPSp8coQ5g" autoplay="false" >}}
+
 ## CNCF Webinar 2020
 
 Lizz van Dijk demonstrates how to migrate from a regular MySQL release to Vitess.
