@@ -12,8 +12,8 @@ All Things Vitess, MySQL, and Sailing: AlkinTezuysal on Percona’s HOSS Talks F
 
 ## FOSDEM 2021
 
-[Open Source Database Infrastructure with Vitess](http://bofh.nikhef.nl/events/FOSDEM/2021/D.mysql/vitess.webm) - Shlomi Noach, PlanetScale
-[How to shard MariaDB like a Pro?](http://bofh.nikhef.nl/events/FOSDEM/2021/D.mariadb/mariadb_shard.webm) - Alkin Tezuysal, PlanetScale
+* [Open Source Database Infrastructure with Vitess](http://bofh.nikhef.nl/events/FOSDEM/2021/D.mysql/vitess.webm) - Shlomi Noach, PlanetScale
+* [How to shard MariaDB like a Pro?](http://bofh.nikhef.nl/events/FOSDEM/2021/D.mariadb/mariadb_shard.webm) - Alkin Tezuysal, PlanetScale
 
 ## KubeCon NA 2020
 
