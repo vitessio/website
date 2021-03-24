@@ -7,10 +7,7 @@ title: 'Code generation in Vitess'
 description: 'How to write nice code, and eat the cake too'
 ---
 
-[Cross posting from](http://systay.github.io/blog/2021/03/23/code-generation-in-vitess)
-
-# {{ page.title }}
-
+[Cross posting link](http://systay.github.io/blog/2021/03/23/code-generation-in-vitess)
 
 Golang is a wonderful language. It's simple, and most of the time not confusing or surprising.
 This makes it easy to jump into library code and start reading and quickly understand what's going on.
@@ -135,4 +132,4 @@ Then we change the generator, and wham! 642 rewriter methods have been updated.
 This would not really have been possible if we had to change those methods manually.
 
 Honorable mention:
-Most of this code is either written by, or heavily influenced by the latest rockstar to join the PlanetScale and Vitess ranks - [@vmg](http://github.com/vmg)G
+Most of this code is either written by, or heavily influenced by the latest rockstar to join the PlanetScale and Vitess ranks - [@vmg](http://github.com/vmg)
