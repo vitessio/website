@@ -4,6 +4,12 @@ weight: 1
 aliases: ['/resources/presentations.html']
 ---
 
+## Rawkode Live
+
+Introduction to Vitess.  Deepthi Sigireddi, Alkin Tezuysal - PlanetScale, David McKay @rawkode
+
+{{< youtube id="Cwpu0y119I0" autoplay="false" >}}
+
 ## Percona FOSS Talks 2021
 
 All Things Vitess, MySQL, and Sailing: Alkin Tezuysal on Percona’s HOSS Talks FOSS!
