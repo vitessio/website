@@ -6,7 +6,7 @@ aliases: ['/resources/presentations.html']
 
 ## Percona FOSS Talks 2021
 
-All Things Vitess, MySQL, and Sailing: AlkinTezuysal on Percona’s HOSS Talks FOSS!
+All Things Vitess, MySQL, and Sailing: Alkin Tezuysal on Percona’s HOSS Talks FOSS!
 
 {{< youtube id="8e3IC-lAgXs" autoplay="false" >}}
 
