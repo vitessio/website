@@ -20,7 +20,7 @@ Here follows a list of how we are using meta programming in Vitess.
 
 ### GRPC messages and endpoints
 
-Everyone uses code generation for protobuf, so that's very interesting to write about. Moving on.
+Everyone uses code generation for protobuf, so that's not very interesting to write about. Moving on.
 
 ### SQL Parser
 
