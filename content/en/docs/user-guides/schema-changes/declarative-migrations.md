@@ -1,10 +1,10 @@
 ---
 title: Declarative migrations
 weight: 2
-aliases: ['/docs/user-guides/declarative-migrations/']
+aliases: ['/docs/user-guides/schema-changes/declarative-migrations/']
 ---
 
-Vitess offers _declarative_ online schema migrations:
+Vitess's [managed schema changes](../managed-online-schema-changes/) offer _declarative_ online schema migrations:
 
 - The user may indicate a desired table schema and Vitess will make it so, whether the table exists or not, or
 - The user may indicate a table should not exist, and Vitess will make it so.
