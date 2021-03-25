@@ -1,10 +1,10 @@
 ---
 title: Revertible migrations
-weight: 2
+weight: 6
 aliases: ['/docs/user-guides/schema-changes/revertible-migrations/']
 ---
 
-Vitess's [managed schema changes](../managed-online-schema-changes/) offer _lossless revert_ for online schema migrations: the user may regret a table migration after completion, and roll back the tabe's schema to previous state _without loss of data_.
+Vitess's [managed schema changes](../managed-online-schema-changes/) offer _lossless revert_ for online schema migrations: the user may regret a table migration after completion, and roll back the table's schema to previous state _without loss of data_.
 
 Revertible migrations supported for:
 

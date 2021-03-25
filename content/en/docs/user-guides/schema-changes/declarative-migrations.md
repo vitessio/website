@@ -1,6 +1,6 @@
 ---
 title: Declarative migrations
-weight: 2
+weight: 5
 aliases: ['/docs/user-guides/schema-changes/declarative-migrations/']
 ---
 

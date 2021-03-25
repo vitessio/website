@@ -1,6 +1,6 @@
 ---
 title: Online DDL strategies
-weight: 2
+weight: 3
 aliases: ['/docs/user-guides/schema-changes/ddl-strategies/']
 ---
 
