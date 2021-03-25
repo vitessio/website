@@ -132,4 +132,4 @@ Then we change the generator, and wham! 642 rewriter methods have been updated.
 This would not really have been possible if we had to change those methods manually.
 
 Honorable mention:
-Most of this code is either written by, or heavily influenced by the latest rockstar to join the PlanetScale and Vitess ranks - [@vmg](http://github.com/vmg)
+Most of this code is either written by, or heavily influenced by the latest developer luminary to join the PlanetScale and Vitess ranks - [@vmg](http://github.com/vmg)
