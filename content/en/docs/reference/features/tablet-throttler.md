@@ -4,7 +4,7 @@ weight: 21
 aliases: ['/docs/user-guides/tablet-throttler/','/docs/reference/tablet-throttler/']
 ---
 
-VTTablet runs a cooperative throttling service. This service probes the shard's MySQL topology and observes health, measure by replication lag, or by other metric delivered by custom query, on servers. This throttler is derived from GitHub's [freno](https://github.com/github/freno).
+VTTablet runs a cooperative throttling service. This service probes the shard's MySQL topology and observes health, measure by replication lag, or by another metric delivered by custom query, on servers. This throttler is derived from GitHub's [freno](https://github.com/github/freno).
 
 _Note: the Vitess documentation is transitioning from the term "Master" (with regard to MySQL replication) to "Primary". this document reflects this transition._
 
@@ -93,7 +93,7 @@ When the throttler sees no relevant replicas in the shard, it allows writes by r
 
 The default behavior is to measure replication lag and throttle based on that lag. Vitess allows the user to use custom metrics and thresholds for throttling.
 
-Vitess only supports gauges for custom metrics: the user may define a query which returns a gauge value, an absolute metric by which Vitess can throttle. See #configuration, below.
+Vitess only supports gauges for custom metrics: the user may define a query which returns a gauge value, an absolute metric by which Vitess can throttle. See [#Configuration](#configuration), below.
 
 ## Configuration
 
@@ -102,7 +102,7 @@ Vitess only supports gauges for custom metrics: the user may define a query whic
   When the throttler is enabled, it implicitly also runs heartbeat injections.
 - Use the `vttablet` flag `-throttle_threshold` to set a lag threshold value. The default threshold is `1sec` and is set upon tablet startup. For example, to set a half-second lag threshold, use the flag `-throttle_threshold=0.5s`.
 - To set the tablet types that the throttler queries for lag, use the `vttablet` flag `-throttle_tablet_types="replica,rdonly"`. The default tablet type is `replica`; this type is always implicitly included in the tablet types list. You may add any other tablet type. Any type not specified is ignored by the throttler.
-- To override default lag evaluation, and measure a different metric, use `-throttle_metrics_query`. The query must be either of these forms:
+- To override the default lag evaluation, and measure a different metric, use `-throttle_metrics_query`. The query must be either of these forms:
   - `SHOW GLOBAL STATUS LIKE '<metric>'`
   - `SHOW GLOBAL VARIABLES LIKE '<metric>'`
   - `SELECT <single-column> FROM ...`, expecting single column, single row result
