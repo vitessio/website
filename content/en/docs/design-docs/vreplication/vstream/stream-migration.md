@@ -12,7 +12,7 @@ Stream migration logic within VReplication handles this transparently within VTG
 
 ### An illustration
 
-Here is a sample session using the scripts from the local example.
+Here is a sample session using the scripts from the [local example](/docs/get-started/local).
 
 Run the steps up to and including `205_clean_commerce.sh`. Now start a vstream api client in a separate terminal to stream events from the customer table in the customer keyspace, which is currently unsharded.
 
