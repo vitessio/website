@@ -51,13 +51,29 @@ It may become a challenge to keep a reference table correctly updated across all
 
 The VSchema allows you to specify the list of columns along with their types for every table. This allows Vitess to make optimization decisions where necessary.
 
-For example, specifying that a column contains text allows VTGate to request further collation specific information (`weight_string`) if additional sorting is needed after collecting results from all shards.
+For example, specifying that a column contains numeric data allows VTGate to not request further collation specific information (`weight_string`) if additional sorting is needed after collecting results from all shards.
 
-For example, issuing this query against `customer` would fail:
+For example, issuing this query against `customer` would add the `weight_string` column while sending the query to the vttablets:
 
-```text
-mysql> select customer_id, uname from customer order by uname;
-ERROR 1105 (HY000): vtgate: http://sougou-lap1:12345/: types are not comparable: VARCHAR vs VARCHAR
+```json
+Query - select integer_col from customer order by integer_col;
+Plan -
+{
+  "QueryType": "SELECT",
+  "Original": "select integer_col from customer order by integer_col",
+  "Instructions": {
+    "OperatorType": "Route",
+    "Variant": "SelectScatter",
+    "Keyspace": {
+      "Name": "customer",
+      "Sharded": true
+    },
+    "FieldQuery": "select integer_col, weight_string(integer_col) from `customer` where 1 != 1",
+    "OrderBy": "0 ASC",
+    "Query": "select integer_col, weight_string(integer_col) from `customer` order by integer_col asc",
+    "Table": "`customer`"
+  }
+}
 ```
 
 However, we can modify the VSchema as follows:
@@ -73,26 +89,33 @@ However, we can modify the VSchema as follows:
         "sequence": "product.customer_seq"
       },
       "columns": [{
-        "name": "uname",
-        "type": "VARCHAR"
+        "name": "integer_col",
+        "type": "INT16"
       }]
     }
 ```
 
-Re-issuing the same query will now succeed:
+Re-issuing the same query will now not use `weight_string`:
 
-```text
-mysql> select customer_id, uname from customer order by uname;
-+-------------+---------+
-| customer_id | uname   |
-+-------------+---------+
-|           1 | alice   |
-|           2 | bob     |
-|           3 | charlie |
-|           4 | dan     |
-|           5 | eve     |
-+-------------+---------+
-5 rows in set (0.00 sec)
+```json
+Query - select integer_col from customer order by integer_col;
+Plan -
+{
+  "QueryType": "SELECT",
+  "Original": "select integer_col from customer order by integer_col",
+  "Instructions": {
+    "OperatorType": "Route",
+    "Variant": "SelectScatter",
+    "Keyspace": {
+      "Name": "customer",
+      "Sharded": true
+    },
+    "FieldQuery": "select integer_col from `customer` where 1 != 1",
+    "OrderBy": "0 ASC",
+    "Query": "select integer_col from `customer` order by integer_col asc",
+    "Table": "`customer`"
+  }
+}
 ```
 
 Specifying columns against tables also allows VTGate to resolve ambiguous naming of columns against the right tables.

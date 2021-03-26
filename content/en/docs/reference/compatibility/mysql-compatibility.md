@@ -22,6 +22,10 @@ Vitess supports MySQL DDL, and will send `ALTER TABLE` statements to each of the
 
 Vitess supports `INNER JOIN` including cross-shard joins. `LEFT JOIN` is supported as long as there are not expressions that compare columns on the outer table to the inner table in sharded keyspaces.
 
+### Ordering
+
+Vitess supports the ordering for all the columns irrespective of the data type. However it further requests collation specific information (`weight_string`) from the underlying MySQL instance. This can be avoided for numeric columns which is discussed further in [Advanced VSchema Properties](../../../user-guides/vschema-guide/advanced-vschema/#column-list)
+
 ### Aggregation
 
 Vitess supports a subset of `GROUP BY` operations, including cross-shard operations. The VTGate servers are capable of scatter-gather operations, but can only stream results. Thus, a query that performs a `GROUP BY colx ORDER BY coly` may be refused if the intermediate result set is larger than VTGate's in-memory limit.
