@@ -8,6 +8,7 @@ weight: 20
 
 ```
 VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=replica]
+       [-limit=<max rows to diff>] [-table=<table list>] [-format=json]
        [-filtered_replication_wait_time=30s] <keyspace.workflow>
 ```
 
@@ -20,7 +21,7 @@ It is highly recommended that you do this before you finalize a workflow with Sw
 
 ### Parameters
 
-#### -source_cell 
+#### -source_cell
 **optional**\
 **default** all
 
@@ -28,7 +29,7 @@ It is highly recommended that you do this before you finalize a workflow with Sw
 VDiff will choose a tablet from this cell to diff the source table(s) with the target tables
 </div>
 
-#### -target_cell 
+#### -target_cell
 **optional**\
 **default** all
 
@@ -45,18 +46,62 @@ A comma separated list of tablet types that are used while picking a tablet for 
 One or more from MASTER, REPLICA, RDONLY.<br><br>
 </div>
 
-#### -filtered_replication_wait_time 
+#### -limit
+**optional**\
+**default** none
+
+<div class="cmd">
+Maximum number of rows to run vdiff on (across all tables specified).
+This limit is usually set while diffing a large table as a quick consistency check.
+</div>
+
+#### -tables
+**optional**\
+**default** all tables in the workflow
+
+<div class="cmd">
+A comma separated list of tables to run vdiff on.
+</div>
+
+#### -format
+**optional**\
+**default** unstructured text output
+
+<div class="cmd">
+Only other format supported is json
+</div>
+
+###### _Example:_
+
+```
+[{
+  "ProcessedRows": 5,
+  "MatchingRows": 5,
+  "MismatchedRows": 0,
+  "ExtraRowsSource": 0,
+  "ExtraRowsTarget": 0
+},{
+  "ProcessedRows": 3,
+  "MatchingRows": 3,
+  "MismatchedRows": 0,
+  "ExtraRowsSource": 0,
+  "ExtraRowsTarget": 0
+}]
+```
+</div>
+
+
+#### -filtered_replication_wait_time
 **optional**\
 **default** 30s
 
 <div class="cmd">
 VDiff finds the current position of the source master and then waits for the target replication to reach
-that position for _filtered_replication_wait_time_. If the target is much behind the source or if there is 
+that position for _filtered_replication_wait_time_. If the target is much behind the source or if there is
 a high write qps on the source then this time will need to be increased.
 </div>
 
-
-#### keyspace.workflow 
+#### keyspace.workflow
 **mandatory**
 
 <div class="cmd">
@@ -75,8 +120,8 @@ Summary for customer: {ProcessedRows:11 MatchingRows:11 MismatchedRows:0 ExtraRo
 ### Notes
  * You can follow the progress of the command by tailing the vtctld logs
  * VDiff can take very long (hours/days) for huge tables, so this needs to be taken into account. If VDiff
- takes more than an hour and you use vtctlclient then it will hit the grpc/http default timeout of 1 hour. 
+ takes more than an hour and you use vtctlclient then it will hit the grpc/http default timeout of 1 hour.
  In that case you can use vtctl (the bundled vctlclient + vtctld) instead.
  * There is no throttling, so you might see an increased lag in the replica used as the source.
- 
+
 _VReplication and VDiff performance improvements as well as freno-style throttling support are on the roadmap!_
