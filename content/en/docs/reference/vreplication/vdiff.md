@@ -69,7 +69,6 @@ A comma separated list of tables to run vdiff on.
 
 <div class="cmd">
 Only other format supported is json
-</div>
 
 ###### _Example:_
 
