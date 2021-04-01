@@ -152,12 +152,12 @@ There are pros and cons to using any of the strategies. Some notable differences
 
 ## Vitess functionality comparison
 
-| Strategy | Managed | Online | Trackable | Declarative | Revertible          |
-|----------|---------|--------|-----------|-------------|---------------------|
-| `direct` | No      | MySQL* | No        | No          | No                  |
-| `pt-osc` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP`       |
-| `gh-ost` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP`       |
-| `online` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP,ALTER` |
+| Strategy | Managed | Online | Trackable | Declarative | Revertible          | Traffic |
+|----------|---------|--------|-----------|-------------|---------------------|---------|
+| `direct` | No      | MySQL* | No        | No          | No                  | Any     |
+| `pt-osc` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP`       | Any     |
+| `gh-ost` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP`       | Any     |
+| `online` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP,ALTER` | Vitess  |
 
 - **Managed**: whether Vitess schedules and operates the migration
 - **Online**:
@@ -168,3 +168,4 @@ There are pros and cons to using any of the strategies. Some notable differences
   - `gh-ost` also makes available _progress %_ and _ETA seconds_
 - **Declarative**: support `-declarative` flag
 - **Revertible**: `online` strategy supports revertible `ALTER` statements (or `ALTER`s implied by `-declarative` migrations). All managed strategies supports revertible `CREATE` and `ALTER`.
+- **Traffic**: `online` migration cut-over uses Vitess specific blocking of traffic, and is therefore only safe when write traffic to the tables runs entirely through Vitess/VTGate. `gh-ost` and `pt-osc` use generic MySQL blocking/locking mechanisms, and it is safe to run some write traffic on the migrated table outside Vitess.
