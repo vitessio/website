@@ -6,7 +6,7 @@ aliases: ['/docs/user-guides/backup-and-restore/']
 
 ## Creating a backup
 
-The default backup implementation is ‘builtin’, however we strongly recommend using the xtrabackup engine given builtin’s lingering issues. Restores will always be done with whichever engine was used to create the backup.
+The default backup implementation is ‘builtin’, however we strongly recommend using the xtrabackup engine as it is more robust and allows for non-blocking backups. Restores will always be done with whichever engine was used to create the backup.
 
 ### Prerequisite
 
@@ -24,12 +24,11 @@ Required vttablet flags:
 
 * -backup_engine_implementation=xtrabackup
 * -xtrabackup_user string 
-	* The string should be the user that xtrabackup will use to connect to the database server. This user must have the necessary privileges.
+	* The string should be the user that xtrabackup will use to connect to the database server. This user must have the [necessary privileges](https://www.percona.com/doc/percona-xtrabackup/2.4/using_xtrabackup/privileges.html#permissions-and-privileges-needed).
 
 Required for MySQL 8.0:
 
 * -xtrabackup_stream_mode=xbstream
-* -xtrabackup_backup_flags=--no-server-version-check 
 
 ### Run the following vtctl command to create a backup:
 
@@ -37,53 +36,15 @@ Required for MySQL 8.0:
 vtctl Backup <tablet-alias>
 ```
 
-If the engine is `builtin`, in response to this command, the designated tablet performs the following
-sequence of actions:
+If the engine is `builtin`, replication will be stopped prior to shutting down mysqld for the backup.
 
-1. Switches its type to `BACKUP`. After this step, the tablet is no
-   longer used by VTGate to serve any query.
+If the engine is `xtrabackup`, the tablet can continue to serve traffic while the backup is running.
 
-1. Stops replication, gets the current replication position (to be saved in the
-   backup along with the data).
+### Run the following vtctl command to backup a specific shard:
 
-1. Shuts down its mysqld process.
-
-1. Copies the necessary files to the Backup Storage implementation that was
-   specified when the tablet was started. Note if this fails, we still keep
-   going, so the tablet is not left in an unstable state because of a storage
-   failure.
-
-1. Restarts mysqld.
-
-1. Restarts replication (with the right semi-sync flags corresponding to its
-   original type, if applicable).
-
-1. Switches its type back to its original type. After this, it will most likely
-   be behind on replication, and not used by VTGate for serving until it catches
-   up.
-
-If the engine is `xtrabackup`, we do not do any of the above. The tablet can
-continue to serve traffic while the backup is running.
-
-## Common Errors and Resolutions
-
-### Error:
-E0310 08:15:45.336083  197442 main.go:72] remote error: rpc error: code = Unknown desc = TabletManager.Backup on zone1-0000000102 error: xtrabackupUser must be specified.: xtrabackupUser must be specified
-
-* Fix: Set vttablet flag [-xtrabackup_user](../#basic-vttablet-configuration)
-
-### Error:
-E0310 08:22:22.260044  200147 main.go:72] remote error: rpc error: code = Unknown desc = TabletManager.Backup on zone1-0000000102 error: unable to start backup: exec: "xtrabackup": executable file not found in $PATH: unable to start backup: exec: "xtrabackup": executable file not found in $PATH
-
-* Fixes:
-	* Ensure the xtrabackup binary is in the $PATH for the $USER running vttablet
-	* Alternatively, set -xtrabackup_root_path on vttablet provide path to xtrabackup/xbstream binaries via vttablet flag
-
-### Error: 
-I0310 12:34:47.900363  211809 backup.go:163] I0310 20:34:47.900004 xtrabackupengine.go:310] xtrabackup stderr: Invalid --stream argument: tar
-Streaming in tar format is no longer supported in 8.0; use xbstream instead
-
-* Fix: Set [-xtrabackup_stream_mode to xbstream](../#basic-vttablet-configuration) on vttablet 
+``` sh
+vtctl BackupShard [-allow_master=false] <keyspace/shard>
+```
 
 ## Restoring a backup
 
@@ -118,6 +79,31 @@ vttablet ... -backup_storage_implementation=file \
     RemoveBackup <keyspace/shard> <backup name>
     ```
 
+You can also confirm your backup finished by viewing the files on disk. You will still need to test and verify these backups for completeness. Note that backups are stored by keyspace and shard under backup_storage_root:
+
+```sh
+~/vtdataroot/backups/commerce/0/2021-03-10.205419.zone1-0000000102:
+backup.xbstream.gz  MANIFEST
+```
+
+Each backup contains a manifest file with general information about the backup:
+
+```sh
+MySQL 8.0 xbstream Manifest
+{
+  "BackupMethod": "xtrabackup",
+  "Position": "MySQL56/c022ad67-81fc-11eb-aa0e-1c1bb572885f:1-50",
+  "BackupTime": "2021-03-11T00:01:37Z",
+  "FinishedTime": "2021-03-11T00:01:42Z",
+  "FileName": "backup.xbstream.gz",
+  "ExtraCommandLineParams": "--no-server-version-check",
+  "StreamMode": "xbstream",
+  "NumStripes": 0,
+  "StripeBlockSize": 102400,
+  "SkipCompress": false
+}
+```
+
 ## Bootstrapping a new tablet
 
 Bootstrapping a new tablet is almost identical to restoring an existing tablet. The only thing you need to be cautious about is that the tablet specifies its keyspace, shard and tablet type when it registers itself at the topology. Specifically, make sure that the following additional vttablet parameters are set:
@@ -129,6 +115,41 @@ Bootstrapping a new tablet is almost identical to restoring an existing tablet. 
 ```
 
 The bootstrapped tablet will restore the data from the backup and then apply changes, which occurred after the backup, by restarting replication.
+
+## Common Errors and Resolutions
+
+### No xtrabackup User passed to vttablet
+
+```sh
+E0310 08:15:45.336083  197442 main.go:72] remote error: rpc error: code = Unknown desc = TabletManager.Backup on zone1-0000000102 error: xtrabackupUser must be specified.: xtrabackupUser must be specified
+```
+Fix: Set vttablet flag [-xtrabackup_user](../#basic-vttablet-configuration)
+
+### xtrabackup binary not found in path
+
+```sh
+E0310 08:22:22.260044  200147 main.go:72] remote error: rpc error: code = Unknown desc = TabletManager.Backup on zone1-0000000102 error: unable to start backup: exec: "xtrabackup": executable file not found in $PATH: unable to start backup: exec: "xtrabackup": executable file not found in $PATH
+```
+Fixes:
+
+	* Ensure the xtrabackup binary is in the $PATH for the $USER running vttablet
+	* Alternatively, set -xtrabackup_root_path on vttablet provide path to xtrabackup/xbstream binaries via vttablet flag
+
+### Tar format no longer supported in 8.0
+
+```sh
+I0310 12:34:47.900363  211809 backup.go:163] I0310 20:34:47.900004 xtrabackupengine.go:310] xtrabackup stderr: Invalid --stream argument: tar
+Streaming in tar format is no longer supported in 8.0; use xbstream instead
+```
+Fix: Set [-xtrabackup_stream_mode to xbstream](../#basic-vttablet-configuration) on vttablet 
+
+### Unsupported mysql server version
+
+```sh
+I0310 12:49:32.279729  215835 backup.go:163] I0310 20:49:32.279435 xtrabackupengine.go:310] xtrabackup stderr: Error: Unsupported server version 8.0.23-0ubuntu0.20.04.1.
+I0310 12:49:32.279773  215835 backup.go:163] I0310 20:49:32.279485 xtrabackupengine.go:310] xtrabackup stderr: Please upgrade PXB, if a new version is available. To continue with risk, use the option --no-server-version-check.
+```
+To continue with risk: Set -xtrabackup_backup_flags=--no-server-version-check. Note this occurs when your MySQL server version is technically unsupported by `xtrabackup`.
 
 ## Backing up Topology Server
 
