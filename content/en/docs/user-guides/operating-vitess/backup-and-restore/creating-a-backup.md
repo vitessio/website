@@ -120,14 +120,14 @@ The bootstrapped tablet will restore the data from the backup and then apply cha
 
 ### No xtrabackup User passed to vttablet
 
-```sh
+```
 E0310 08:15:45.336083  197442 main.go:72] remote error: rpc error: code = Unknown desc = TabletManager.Backup on zone1-0000000102 error: xtrabackupUser must be specified.: xtrabackupUser must be specified
 ```
 Fix: Set vttablet flag [-xtrabackup_user](../#basic-vttablet-configuration)
 
 ### xtrabackup binary not found in path
 
-```sh
+```
 E0310 08:22:22.260044  200147 main.go:72] remote error: rpc error: code = Unknown desc = TabletManager.Backup on zone1-0000000102 error: unable to start backup: exec: "xtrabackup": executable file not found in $PATH: unable to start backup: exec: "xtrabackup": executable file not found in $PATH
 ```
 Fixes:
@@ -137,7 +137,7 @@ Fixes:
 
 ### Tar format no longer supported in 8.0
 
-```sh
+```
 I0310 12:34:47.900363  211809 backup.go:163] I0310 20:34:47.900004 xtrabackupengine.go:310] xtrabackup stderr: Invalid --stream argument: tar
 Streaming in tar format is no longer supported in 8.0; use xbstream instead
 ```
@@ -145,7 +145,7 @@ Fix: Set [-xtrabackup_stream_mode to xbstream](../#basic-vttablet-configuration)
 
 ### Unsupported mysql server version
 
-```sh
+```
 I0310 12:49:32.279729  215835 backup.go:163] I0310 20:49:32.279435 xtrabackupengine.go:310] xtrabackup stderr: Error: Unsupported server version 8.0.23-0ubuntu0.20.04.1.
 I0310 12:49:32.279773  215835 backup.go:163] I0310 20:49:32.279485 xtrabackupengine.go:310] xtrabackup stderr: Please upgrade PXB, if a new version is available. To continue with risk, use the option --no-server-version-check.
 ```
