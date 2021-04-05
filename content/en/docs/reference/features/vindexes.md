@@ -129,7 +129,7 @@ Vindexes are defined in the [VSchema](../vschema/) inside the `Vindexes` section
 
 In the above case, the name of the vindex is `name_keyspace_idx`. It is of type `lookup`, and it is owned by the `user` table.
 
-Every Vindex has an optional `params` section that contains a map of string key-value pairs. The keys and values defer depending on the vindex type and are explained below.
+Every Vindex has an optional `params` section that contains a map of string key-value pairs. The keys and values differ depending on the vindex type and are explained below.
 
 ### How Vindexes are used
 
@@ -191,14 +191,16 @@ lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | Ident
 null | Functional Unique | Always map to keyspace ID 0 | Yes | No | No | Yes | 100 | Any |
 numeric | Functional Unique | Identity | Yes | No | Yes | No | 0 | 64 bit or smaller numeric or equivalent type |
 numeric\_static\_map | Functional Unique | JSON file statically mapping input string values to keyspace IDs | Yes | No | No | No | 1 | Any |
-region\_experimental | Functional Unique | Multi-column prefix-based hash for use in geo-partitioning | Yes | No | No | No | 1 | String and numeric type |
-region\_json | Functional Unique | Multi-column prefix-based hash combined with a JSON map for key-to-region mapping, for use in geo-partitioning | Yes | No | No | No | 1 | String and numeric type |
+region\_experimental | Functional Unique | Multi-column prefix-based hash for use in geo-partitioning | Yes | Yes | No | No | 1 | String and numeric type |
+region\_json | Functional Unique | Multi-column prefix-based hash combined with a JSON map for key-to-region mapping, for use in geo-partitioning | Yes | Yes | No | No | 1 | String and numeric type |
 reverse\_bits | Functional Unique | Bit reversal | Yes | No | Yes | No | 1 | 64 bit or smaller numeric or equivalent type |
 unicode\_loose\_md5 | Functional Unique | Case-insensitive (UCA level 1) MD5 hash | Yes | No | No | Yes | 1 | String or binary types |
 unicode\_loose\_xxhash | Functional Unique | Case-insensitive (UCA level 1) xxHash64 hash | Yes | No | No | Yes | 1 | String or binary types |
 xxhash | Functional Unique | xxHash64 hash | Yes | No | No | Yes | 1 | Any |
 
 Consistent lookup vindexes, as described above, are a new category of Vindexes that are meant to replace the existing lookup Vindexes implementation. For the time being, they have a different name to allow for users to switch back and forth.
+
+Under the Multi-column heading, an `Identify Row` comment indicates that the Vindex only uses the first column to map to the keyspace id(s). The rest of the columns are used to identify the owner row.
 
 Lookup Vindexes support the following parameters:
 
