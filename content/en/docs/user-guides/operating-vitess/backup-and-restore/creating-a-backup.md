@@ -125,7 +125,7 @@ E0310 08:15:45.336083  197442 main.go:72] remote error: rpc error: code = Unknow
 ```
 Fix: Set vttablet flag [-xtrabackup_user](../#basic-vttablet-configuration)
 
-### xtrabackup binary not found in path
+### xtrabackup binary not found in $PATH
 
 ```
 E0310 08:22:22.260044  200147 main.go:72] remote error: rpc error: code = Unknown desc = TabletManager.Backup on zone1-0000000102 error: unable to start backup: exec: "xtrabackup": executable file not found in $PATH: unable to start backup: exec: "xtrabackup": executable file not found in $PATH
