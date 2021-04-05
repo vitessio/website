@@ -1,6 +1,6 @@
 	---
 title: Backup and Restore
-weight: 2
+weight: 1
 aliases: ['/docs/user-guides/backup-and-restore/']
 ---
 
@@ -125,20 +125,20 @@ The following options can be used to configure VTTablet for backups:
         storage plugin.</td>
     </tr>
     <tr>
+      <td><code>xbstream_restore_flags</code></td>
+      <td>String<br>Flags to pass to xbstream command during restore. These should be space separated and will be added to the end of the command. These need to match the ones used for backup e.g. --compress / --decompress, --encrypt / --decrypt</td>
+    </tr>
+    <tr>
       <td><code>xtrabackup_root_path</code></td>
       <td>For the <code>xtrabackup</code> backup engine, directory location of the xtrabackup executable, e.g., /usr/bin</td>
     </tr>
     <tr>
       <td><code>xtrabackup_backup_flags</code></td>
-      <td>For the <code>xtrabackup</code> backup engine, flags to pass to backup command. These should be space separated and will be added to the end of the command</td>
-    </tr>
-    <tr>
-      <td><code>xbstream_restore_flags</code></td>
-      <td>For the <code>xtrabackup</code> backup engine, flags to pass to xbstream command during restore. These should be space separated and will be added to the end of the command. These need to match the ones used for backup e.g. --compress / --decompress, --encrypt / --decrypt</td>
+      <td>String<br>For the <code>xtrabackup</code> backup engine, flags to pass to backup command. These should be space separated and will be added to the end of the command.</td>
     </tr>
     <tr>
       <td><code>xtrabackup_stream_mode</code></td>
-      <td>For the <code>xtrabackup</code> backup engine, which mode to use if streaming, valid values are <code>tar</code> and <code>xbstream</code>. Defaults to <code>tar</code></td>
+      <td>String<br>For the <code>xtrabackup</code> backup engine, which mode to use if streaming, valid values are <code>tar</code> and <code>xbstream</code>. Defaults to <code>tar</code>.</td>
     </tr>
     <tr>
       <td><code>xtrabackup_user</code></td>
@@ -146,12 +146,16 @@ The following options can be used to configure VTTablet for backups:
     </tr>
     <tr>
       <td><code>xtrabackup_stripes</code></td>
-      <td>For the <code>xtrabackup</code> backup engine, if greater than 0, use data striping across this many destination files to parallelize data transfer and decompression</td>
+      <td>Unit<br>For the <code>xtrabackup</code> backup engine, if greater than 0, use data striping across this many destination files to parallelize data transfer and decompression.</td>
     </tr>
     <tr>
       <td><code>xtrabackup_stripe_block_size</code></td>
-      <td>For the <code>xtrabackup</code> backup engine, size in bytes of each block that gets sent to a given stripe before rotating to the next stripe</td>
+      <td>Unit<br>For the <code>xtrabackup</code> backup engine, size in bytes of each block that gets sent to a given stripe before rotating to the next stripe.Defaults to <code>102400</code>.</td>
     </tr>
+    <tr>
+      <td><code>xtrabackup_prepare_flags</code></td>
+      <td>String<br>Flags to pass to prepare command. These should be space separated and will be added to the end of the command.</td>
+    </tr> 
   </tbody>
 </table>
 
@@ -182,111 +186,3 @@ The backup and restore processes simultaneously copy and either compress or deco
 * vttablet uses the `-restore_concurrency` flag.
 
 If the network link is fast enough, the concurrency matches the CPU usage of the process during the backup or restore process.
-
-## Creating a backup
-
-Run the following vtctl command to create a backup:
-
-``` sh
-vtctl Backup <tablet-alias>
-```
-
-If the engine is `builtin`, in response to this command, the designated tablet performs the following
-sequence of actions:
-
-1. Switches its type to `BACKUP`. After this step, the tablet is no
-   longer used by VTGate to serve any query.
-
-1. Stops replication, gets the current replication position (to be saved in the
-   backup along with the data).
-
-1. Shuts down its mysqld process.
-
-1. Copies the necessary files to the Backup Storage implementation that was
-   specified when the tablet was started. Note if this fails, we still keep
-   going, so the tablet is not left in an unstable state because of a storage
-   failure.
-
-1. Restarts mysqld.
-
-1. Restarts replication (with the right semi-sync flags corresponding to its
-   original type, if applicable).
-
-1. Switches its type back to its original type. After this, it will most likely
-   be behind on replication, and not used by VTGate for serving until it catches
-   up.
-
-If the engine is `xtrabackup`, we do not do any of the above. The tablet can
-continue to serve traffic while the backup is running.
-
-## Restoring a backup
-
-When a tablet starts, Vitess checks the value of the
-`-restore_from_backup` command-line flag to determine whether
-to restore a backup to that tablet.
-
-* If the flag is present, Vitess tries to restore the most recent backup from
-  the Backup Storage system when starting the tablet.
-* If the flag is absent, Vitess does not try to restore a backup to the
-  tablet. This is the equivalent of starting a new tablet in a new shard.
-
-As noted in the [Configuration](#vttablet-configuration) section, the flag is
-generally enabled all of the time for all of the tablets in a shard.
-By default, if Vitess cannot find a backup in the Backup Storage system,
-the tablet will start up empty. This behavior allows you to bootstrap a new
-shard before any backups exist.
-
-If the `-wait_for_backup_interval` flag is set to a value greater than zero,
-the tablet will instead keep checking for a backup to appear at that interval.
-This can be used to ensure tablets launched concurrently while an initial backup
-is being seeded for the shard (e.g. uploaded from cold storage or created by
-another tablet) will wait until the proper time and then pull the new backup
-when it's ready.
-
-``` sh
-vttablet ... -backup_storage_implementation=file \
-             -file_backup_storage_root=/nfs/XXX \
-             -restore_from_backup
-```
-
-## Managing backups
-
-**vtctl** provides two commands for managing backups:
-
-* [ListBackups](https://vitess.io/docs/reference/programs/vtctl/shards/#listbackups) displays the
-    existing backups for a keyspace/shard in chronological order.
-
-    ``` sh
-    vtctl ListBackups <keyspace/shard>
-    ```
-
-* [RemoveBackup](https://vitess.io/docs/reference/programs/vtctl/shards/#removebackup) deletes a
-    specified backup for a keyspace/shard.
-
-    ``` sh
-    RemoveBackup <keyspace/shard> <backup name>
-    ```
-
-## Bootstrapping a new tablet
-
-Bootstrapping a new tablet is almost identical to restoring an existing tablet.
-The only thing you need to be cautious about is that the tablet specifies its
-keyspace, shard and tablet type when it registers itself at the topology.
-Specifically, make sure that the following additional vttablet parameters are set:
-
-``` 
-    -init_keyspace <keyspace>
-    -init_shard <shard>
-    -init_tablet_type replica|rdonly
-```
-
-The bootstrapped tablet will restore the data from the backup and then apply
-changes, which occurred after the backup, by restarting replication.
-
-## Backing up Topology Server
-
-The Topology Server stores metadata (and not tablet data). It is recommended to create a backup using the method described by the underlying plugin:
-
-* [etcd](https://etcd.io/docs/v3.4.0/op-guide/recovery/)
-* [ZooKeeper](http://zookeeper.apache.org/doc/r3.6.0/zookeeperAdmin.html#sc_dataFileManagement)
-* [Consul](https://www.consul.io/docs/commands/snapshot.html)
