@@ -1,7 +1,7 @@
 ---
 title: Vstream
 description: Change notification service accessible via VTGate
-aliases: ['/user-guide/update-stream/'] 
+aliases: ['/docs/user-guide/update-stream/'] 
 weight: 5
 ---
 
