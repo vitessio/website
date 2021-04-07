@@ -36,6 +36,8 @@ I think I heard that Vitess lets you listen to a stream of db updates, similar t
 
 found https://vitess.io/user-guide/update-stream/
 
+* Note update stream has been replaced by VStream
+
 **sougou [10:57 AM]**
 
 yup :slightly_smiling_face:

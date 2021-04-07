@@ -1,6 +1,7 @@
 ---
 title: Schema Tracker
 description: Tracking schema changes in Vstreams
+aliases: ["/user-guide/update-stream"]
 weight: 1
 ---
 
@@ -15,7 +16,7 @@ All Vstreams on a tablet share a common engine. Vstreams that are lagging might 
 In addition reloading schemas is an expensive operation. If there are multiple Vstreams each of them will separately receive a DDL event resulting in multiple reloads for the same DDL.
 
 {{< info >}}
-For full functionality, schema tracking relies on non-default Vitess vttablet options: `-watch_replication_stream` and `-track_schema_versions`. Specifically, performing a Vstream from a non-master tablet while concurrently making DDL changes to the keyspace without one or both of these tablet options will result in incorrect Vstream results. 
+For full functionality, schema tracking relies on non-default Vitess vttablet options: `-watch_replication_stream` and `-track_schema_versions`. Specifically, performing a Vstream from a non-master tablet while concurrently making DDL changes to the keyspace without one or both of these tablet options will result in incorrect Vstream results.
 {{< /info >}}
 
 ## Goals
@@ -25,7 +26,7 @@ For full functionality, schema tracking relies on non-default Vitess vttablet op
 
 ## Model
 
-We add a new schema_version table in _vt with columns, including, the gtid position, the schema as of that position, and the ddl that led to this schema. Inserting into this table generates a Version event in Vstream.
+We add a new schema_version table in \_vt with columns, including, the gtid position, the schema as of that position, and the ddl that led to this schema. Inserting into this table generates a Version event in Vstream.
 
 ## Actors
 
@@ -47,8 +48,8 @@ Version historian runs on both master and replica and handles DDL events. For a 
 
 ### Notes
 
-*   Schema Engine is an existing service
-*   Replication Watcher already exists and is used as an optional Vstream that the user can run. It doesn’t do anything specific: it is used for the side-effect that a Vstream loads the schema on a DDL, to proactively load the latest schema.
+- Schema Engine is an existing service
+- Replication Watcher already exists and is used as an optional Vstream that the user can run. It doesn’t do anything specific: it is used for the side-effect that a Vstream loads the schema on a DDL, to proactively load the latest schema.
 
 ## Basic Flow for version tracking
 
@@ -59,20 +60,18 @@ Version historian runs on both master and replica and handles DDL events. For a 
 1. When the master comes up the replication watcher (a Vstream) is started from the current GTID position. Tracker subscribes to the watcher.
 1. Say, a DDL is applied
 1. The watcher Vstream sees the DDL and
-    1. asks the schema engine to reload the schema, also providing the corresponding gtid position
-    2. notifies the tracker  of a schema change
-1. Tracker stores its latest schema into the _vt.schema_version table associated with the given GTID and DDL
-
+   1. asks the schema engine to reload the schema, also providing the corresponding gtid position
+   2. notifies the tracker of a schema change
+1. Tracker stores its latest schema into the \_vt.schema_version table associated with the given GTID and DDL
 
 #### Historian/Vstreams:
 
 1. Historian warms its cache from the schema_version table when it loads
-2. When the tracker inserts the latest schema into _vt.schema_version table, the Vstream converts it into a (new) Version event
+2. When the tracker inserts the latest schema into \_vt.schema_version table, the Vstream converts it into a (new) Version event
 3. For every Version event the Vstream registers it with the Historian
-4. On the Version event, the tracker loads the new row from the _vt.schema_version table
+4. On the Version event, the tracker loads the new row from the \_vt.schema_version table
 5. When a Vstream needs a new TableMap it asks the Historian for it along with the corresponding GTID.
 6. Historian looks up its cache for a schema version for that GTID. If not present just provides the latest schema it has received from the schema engine.
-
 
 #### Replica
 
@@ -86,7 +85,7 @@ Version historian runs on both master and replica and handles DDL events. For a 
 Schema version snapshots are stored only on the master. This is done when the Replication Watcher gets a DDL event resulting in a SchemaUpdated(). There are two independent flows here:
 
 1. Replication Watcher is running
-2. Schema snapshots are saved to _vt.schema_version when SchemaUpdated is called
+2. Schema snapshots are saved to \_vt.schema_version when SchemaUpdated is called
 
 Point 2 is performed only when the flag TrackSchemaVersions is enabled. This implies that #1 also has to happen when TrackSchemaVersions is enabled independently of the WatchReplication flag
 
@@ -95,16 +94,16 @@ However if the WatchReplication flag is enabled but TrackSchemaVersions is disab
 So the logic is:
 
 1. WatchReplication==true \
-=> Replication Watcher is running
+   => Replication Watcher is running
 
 2. TrackSchemaVersions==false  
-=> SchemaUpdated is a noop
+   => SchemaUpdated is a noop
 
 3. TrackSchemaVersions=true  
-=> Replication Watcher is running \
-=> SchemaUpdated is handled
+   => Replication Watcher is running \
+   => SchemaUpdated is handled
 
-The Historian behavior is identical to that of the replica: of course if versions are not stored in _vt.schema_versions it will always provide the latest version of the scheme.
+The Historian behavior is identical to that of the replica: of course if versions are not stored in \_vt.schema_versions it will always provide the latest version of the scheme.
 
 ### Replica
 
@@ -113,10 +112,10 @@ Schema versions are never stored on replicas, so SchemaUpdated is always a Noop.
 So the logic is:
 
 1. WatchReplication==true \
-=> Replication Watcher is running
+   => Replication Watcher is running
 
-2. TrackSchemaVersions==false || true  //noop \
-=> Historian tries to get appropriate schema version
+2. TrackSchemaVersions==false || true //noop \
+   => Historian tries to get appropriate schema version
 
 ## Caveat
 
@@ -144,5 +143,5 @@ If version tracking is turned off on the master for some time, correct versions 
 
 #### Possible new features around this functionality
 
-*   Schema tracking Vstream client for notifications of all ddls
-*   Raw history of schema changes for auditing, root cause analysis, etc.
+- Schema tracking Vstream client for notifications of all ddls
+- Raw history of schema changes for auditing, root cause analysis, etc.
