@@ -17,7 +17,7 @@ A naive extension of the current mechanism is to stream from the starting positi
 Note that with vstream copy the client vstream will not faithfully reproduce the events from the binlog. The aim is to be eventually (and rapidly) consistent with the current database snapshot. This improves performance since we will be merging multiple row updates into a single transaction.
 Once we have caught up (i.e. the replication lag is small) binlog events will again be directly streamed similar to the current implementation.
 
-### Current API
+### Previous API
 
 Clients create vstreams by grpc-ing to VTGate using the Vstream API call. In golang:
 
