@@ -150,7 +150,7 @@ David Cohen (Intel), Steve Shaw (Intel) 和 Jiten Vaidya (PlanetScale) 讨论开
 
 Ameet Kotian 讲述了几名工程师如何开始寻找正确的数据库解决方案的故事。最终他们找到了 Vitess，一个强大的 MySQL 开源数据库集群解决方案。Vitess 结合了 MySQL 的特性和 NoSQL 数据库的可伸缩性。它多年来一直为 Youtube 提供流量服务，并拥有强大的社区。
 
-尽管 Vitess 满足了 Slack 的很多需求，但它并不是一个开箱即用的解决方案。Ameet 分享了在面对成堆的运营挑战(如 AWS 问题、MySQL 复制、自动故障转移、部署策略等)时，如何在几乎不影响客户的情况下计划和执行 Vitess 的旅程。Ameet 还涵盖了 Vitess 的架构、权衡，以及在 Slack 下 Vitess 的未来会是什么样子。
+尽管 Vitess 满足了 Slack 的很多需求，但它并不是一个开箱即用的解决方案。Ameet 分享了在面对成堆的运营挑战(如 AWS 问题、MySQL 复制、自动故障转移、部署策略等)时，如何在尽量不影响客户业务的情况下，如何测试和落地 Vitess 之旅。Ameet 还谈到了 Vitess 的整体架构，设计上的取舍和权衡，以及 Vitess 在 Slack 的特殊业务场景下，未来会成长成的样子。
 
 Slack 的高级存储运营工程师 Ameet Kotkian 向我们展示了 Slack 是如何使用 Vitess 的。
 
