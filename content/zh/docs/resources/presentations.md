@@ -81,7 +81,7 @@ David Weitzman 介绍 Pinterest 如何使用 Vitess.
 
 {{< youtube id="1cWWlaqlia8" autoplay="false" >}}
 
-**不必再后悔**
+**不再留下遗憾**
 
 Sugu Sougoumarane 演示 VReplication 的最新功能.
 
@@ -107,7 +107,7 @@ Sugu Sougoumarane 为 Kubernetes 使用者介绍 Vitess。
 
 **京东如何运营全球最大的 Vitess 集群**
 
-Xuhaihua 和 Jin Ke Xie 分享了他们两年来在运行世界上最大的 Vitess 数据库集群中学到的经验。
+X 许海华和谢金科分享了两年多来，京东运行世界上最大规模 Vitess 数据库集群的心得和体会。
 
 {{< youtube id="qww4UVNG3Io" autoplay="false" >}}
 
