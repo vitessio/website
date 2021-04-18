@@ -1,7 +1,7 @@
 ---
 title: Migrate
 description: Move tables from an external cluster
-weight: 11
+weight: 12
 ---
 ##### _Experimental_
 This documentation is for a new (v2) set of vtctld commands. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
