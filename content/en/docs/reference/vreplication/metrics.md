@@ -9,69 +9,89 @@ VReplication exports several metrics using the expvars interface. These are avai
 ## Target Metrics
 
 #### VReplicationCopyLoopCount, VReplicationCopyLoopCountTotal
+
 During the copy phase we run one loop of bulk copy for approximately an hour at a time before running catchup. _VReplicationCopyLoopCount_ counts the number of times this loop has run for each stream and _VReplicationCopyLoopCountTotal_ the total across all streams.
 
 #### VReplicationCopyRowCount, VReplicationCopyRowCountTotal
+
 _VReplicationCopyRowCount_ counts the number of rows copied during the copy phase per stream and _VReplicationCopyRowCountTotal_ the total across all streams.
 
 #### VReplicationErrors
+
 _VReplicationErrors_ counts the number of times errors occurred during vreplication. Errors are keyed
 with the type of error.
 
 #### VReplicationHeartbeat
+
 _VReplicationHeartbeat_ records, for each stream, the timestamp sent by the last heartbeat event for that stream.
 
 #### VReplicationMessages
+
 _VReplicationMessages_ contains a stack of the last N (currently 3) messages of a vreplication stream.
 
 #### VReplicationMessages
+
 _VReplicationMessages_ contains a stack of the last N (currently 3) messages of a vreplication stream.
 
 #### VReplicationPhaseTimings, VReplicationPhaseTimingsCounts, VReplicationPhaseTimingsTotal
+
 This metric relates to the times each phase is run during the lifetime of a stream.
 _VReplicationPhaseTimings_ counts the total time taken by the runs,
 VReplicationPhaseTimingsCounts the number of runs and _VReplicationPhaseTimingsTotals_ the total
 runs across all streams.
 
 #### VReplicationQPS
+
 _VReplicationQPS_ is a list of QPS values for each loop of each phase of the workflow.
 
 #### VReplicationQueryCount, VReplicationQueryCountTotal
+
 _VReplicationQueryCount_ is the total number of queries in each phase of a workflow. _VReplicationQueryCountTotal_ is the total queries across all phases and workflows.
 
 #### VReplicationSecondsBehindMaster, VReplicationSecondsBehindMasterMax, VReplicationSecondsBehindMasterTotal
+
 These metrics show the replication lag of the target stream with respect to the source stream. _VReplicationSecondsBehindMaster_ shows the current replication lag and _VReplicationSecondsBehindMasterMax_ has the maximum lag in this stream. Note that these values are only valid during the replication phase of a workflow.
 
 #### VReplicationSource
+
 Shows the keyspace and shard of the source from which this target stream is replicating
 
 #### VReplicationSourceTablet
+
 Shows the tablet from which this stream is currently replicating
 
 #### VReplicationStreamCount
+
 The number of streams running on this target
 
 #### VReplicationStreamState
+
 This shows the state of each stream.
 
 ## Source Metrics
 
 #### VStreamPacketSize
+
 The value of the `vstream_packet_size` flag specified for this tablet
 
 #### VStreamerErrors
+
 The number of errors per category across workflows
 
 #### VStreamersEndedWithErrors
+
 The total number of errors that caused a stream to stall
 
 #### VStreamerEventsStreamed
+
 The total number of events streamed by this vttablet across all workflows
 
 #### VStreamerNumPackets
+
 The total number of packets sent by this vttablet across all workflows
 
 #### VStreamersCreated
+
 The total number of vstreamer created during the lifetime of this tablet
 
 <hr style="border-top: 2px dashed brown">
