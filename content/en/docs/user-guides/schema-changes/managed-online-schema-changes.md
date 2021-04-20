@@ -6,8 +6,18 @@ aliases: ['/docs/user-guides/managed-online-schema-changes/']
 
 **Note:** this feature is **EXPERIMENTAL**.
 
-Vitess offers managed, online schema migrations (aka Online DDL), transparently to the user. Vitess supports `CREATE`, `ALTER` and `DROP` statements, all non-blocking, auto scheduled and auditable. As general overview:
+Vitess offers managed, online schema migrations (aka Online DDL), transparently to the user. Vitess Onine DDL offers:
 
+- Non-blocking migrations
+- Migrations are asyncronously auto-scheduled, queued and executed by tablets
+- Migration state is trackable
+- Migrations are cancellable
+- Migrations are retry-able
+- Lossless, [revertible migrations](../revertible-migrations/)
+- Support for [declarative migrations](../declarative-migrations/)
+
+
+As general overview:
 - User chooses a [strategy](../ddl-strategies) for online DDL (online DDL is opt in)
 - User submits one or more schema change queries, using the standard MySQL `CREATE TABLE`, `ALTER TABLE` and `DROP TABLE` syntax.
 - Vitess responds with a Job ID for each schema change query.
@@ -23,9 +33,11 @@ Vitess offers managed, online schema migrations (aka Online DDL), transparently 
 
 The standard MySQL syntax for `CREATE`, `ALTER` and `DROP` is supported.
 
+
+
 ### ALTER TABLE
 
-Use the standard MySQL `ALTER TABLE` syntax to run online DDL. Whether your schema migration runs synchronously (the default MySQL behavior) or asynchronously (aka online), is determined by the value of command line flags or a session variable.
+Use the standard MySQL `ALTER TABLE` syntax to run online DDL. Whether your schema migration runs synchronously (the default MySQL behavior) or asynchronously (aka online), is determined by `ddl_strategy`.
 
 We assume we have a keyspace (schema) called `commerce`, with a table called `demo`, that has the following definition:
 
@@ -78,84 +90,51 @@ You will set either `@@ddl_strategy` session variable, or `-ddl_strategy` comman
 
 `CREATE` and `DROP` statements run in the same way for `"online"`, `"gh-ost"` and `"pt-osc"` strategies, and we consider them all to be _online_.
 
-## ApplySchema
+## Running, tracking and controlling Online DDL
 
-You may use `vtctl` or `vtctlclient` (the two are interchangeable for the purpose of this document) to apply schema changes. The `ApplySchema` command supports both synchronous and online schema migrations. To run an online schema migration you will supply the `-ddl_strategy` command line flag:
+Vitess provides two interfaces to interacting with Online DDL:
+
+- SQL commands, via `VTGate`
+- Command line interface, via `vtctl`
+
+Supported interactions are:
+
+- [Running migrations](../audit-and-control/#running-migrations) (submitting Online DDL requests)
+- [Tracking migrations](../audit-and-control/#tracking-migrations)
+- [Cancelling a migration](../audit-and-control/#cancelling-a-migration)
+- [Cancelling all pending migrations](../audit-and-control/#cancelling-all-keyspace-migrations)
+- [Retrying a migration](../audit-and-control/#retrying-a-migration)
+- [Reverting a migration](../audit-and-control/#reverting-a-migration)
+
+See [Audit and Control](../audit-and-control/) for a detailed breakdown. As quick examples:
+
+#### Executing an Online DDL via VTGate/SQL
+
+```sql
+mysql> set @@ddl_strategy='online';
+
+mysql> alter table corder add column ts timestamp not null default current_timestamp;
++--------------------------------------+
+| uuid                                 |
++--------------------------------------+
+| bf4598ab_8d55_11eb_815f_f875a4d24e90 |
++--------------------------------------+
+
+mysql> drop table customer;
++--------------------------------------+
+| uuid                                 |
++--------------------------------------+
+| 6848c1a4_8d57_11eb_815f_f875a4d24e90 |
++--------------------------------------+
+```
+
+#### Executing an Online DDL via vtctl/ApplySchema
 
 ```shell
 $ vtctlclient ApplySchema -ddl_strategy "online" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
 a2994c92_f1d4_11ea_afa3_f875a4d24e90
 ```
 
-Notice how `ApplySchema` responds to an online DDL request with a UUID output. When the user indicates online schema change (aka online DDL), `vtctl` registers an online-DDL request with global `topo`. This generates a job ID for tracking. `vtctl` does not try to resolve the shards nor the `primary` tablets. The command returns immediately, without waiting for the migration(s) to start.
-
-The command prints a job ID for each of the DDL statements. In the above we issue a single DDL statemnt, and `vtctl` responds with a single job ID (`a2994c92_f1d4_11ea_afa3_f875a4d24e90`)
-
-If we immediately run `SHOW CREATE TABLE`, we are likely to still see the old schema:
-```sql
-SHOW CREATE TABLE demo;
-
-CREATE TABLE `demo` (
-  `id` int NOT NULL,
-  `status` varchar(32) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB
-```
-
-That's because the migration is to be processed and executed in the future. We discuss how the migration jobs get scheduled and executed shortly. We will use the job ID for tracking.
-
-`ApplySchema` will have Vitess run some validations:
-
-```shell
-$ vtctlclient ApplySchema -ddl_strategy "gh-ost" -sql "ALTER TABLE demo add column status int" commerce
-E0908 16:17:07.651284 3739130 main.go:67] remote error: rpc error: code = Unknown desc = schema change failed, ExecuteResult: {
-  "FailedShards": null,
-  "SuccessShards": null,
-  "CurSQLIndex": 0,
-  "Sqls": [
-    "ALTER TABLE demo add column status int"
-  ],
-  "ExecutorErr": "rpc error: code = Unknown desc = TabletManager.PreflightSchema on zone1-0000000100 error: /usr/bin/mysql: exit status 1, output: ERROR 1060 (42S21) at line 3: Duplicate column name 'status'\n: /usr/bin/mysql: exit status 1, output: ERROR 1060 (42S21) at line 3: Duplicate column name 'status'\n",
-  "TotalTimeSpent": 144283260
-}
-```
-
-Vitess was able to determine that the migration is invalid because a column named `status` already exists. `vtctld` generates no job ID, and does not persist any migration request.
-
-## VTGate
-
-When connected to `VTGate`, your schema migration strategy is determined by:
-
-- `-ddl_strategy` command line flag, or:
-- `@@ddl_strategy` session variable.
-
-As a simple example, you may control the execution of a migration as follows:
-
-```shell
-$ mysql -h 127.0.0.1 -P 15306 commerce
-Welcome to the MySQL monitor.  Commands end with ; or \g.
-
-mysql> SET @@ddl_strategy='pt-osc';
-Query OK, 0 rows affected (0.00 sec)
-
-mysql> ALTER TABLE demo ADD COLUMN sample INT;
-+--------------------------------------+
-| uuid                                 |
-+--------------------------------------+
-| fa2fb689_f1d5_11ea_859e_f875a4d24e90 |
-+--------------------------------------+
-1 row in set (0.00 sec)
-```
-
-Just like in the `ApplySchema` example, `VTGate` identifies that this is an online schema change request, and persists it in global `topo`, returning a job ID for tracking. Migration does not start immediately.
-
-`@@ddl_strategy` behaves like a MySQL session variable, though is only recognized by `VTGate`. Setting `@@ddl_strategy` only applies to that same connection and does not affect other connections. You may subsequently set `@@ddl_strategy` to different value.
-
-The initial value for `@@ddl_strategy` is derived from the `vtgate -ddl_strategy` command line flag. Examples:
-
-- If you run `vtgate` without `-ddl_strategy`, then `@@ddl_strategy` defaults to `'direct'`, which implies schema migrations are synchronous. You will need to `set @@ddl_strategy='gh-ost'` to run followup `ALTER TABLE` statements via `gh-ost`.
-- If you run `vtgate -ddl_strategy "gh-ost"`, then `@@ddl_strategy` defaults to `'gh-ost'` in each new session. Any `ALTER TABLE` will run via `gh-ost`. You may `set @@ddl_strategy='pt-osc'` to make migrations run through `pt-online-schema-change`, or `set @@ddl_strategy='direct'` to run migrations synchronously.
- 
 ## Migration flow and states
 
 We highlight how Vitess manages migrations internally, and explain what states a migration goes through.
@@ -188,220 +167,20 @@ At this time, the user is responsible to track the state of all migrations. VTTa
 
 At this time, there are no automated retries. For example, a failover on a shard causes the migration to fail, and Vitess will not try to re-run the migration on the new `primary`. It is the user's responsibility to issue a `retry`. This may change in the future.
 
-## Key Settings
+## Configuration
 
- * `retain_online_ddl_tables` - This determines how long vttablet should keep an old migrated table before purging it
+- `-retain_online_ddl_tables`: (`vttablet`) determines how long vttablet should keep an old migrated table before purging it. Type: duration. Default: 24 hours.
 
-## Tracking migrations
+  Example: `vttablet -retain_online_ddl_tables 48h`
 
-You may track the status of a single migration, of all or recent migrations, or of migrations in a specific state. Examples:
+- `-migration_check_interval`: (`vttablet`) interval between checks for submitted migrations. Type: duration. Default: 1 hour. 
 
-```shell
--$ vtctlclient OnlineDDL commerce show ab3ffdd5_f25c_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:24:33 | 2020-09-09 05:24:34 | complete         |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+  Example: `vttablet -migration_check_interval 30s`
 
-$ vtctlclient OnlineDDL commerce show 8a797518_f25c_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | running          |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 | 2020-09-09 05:23:33 | complete         |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | running          |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | running          |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+- `-enable_online_ddl`: (`vtgate`) whether Online DDL operations are at all possible through `VTGate`. Type: boolean. Default: `true`
 
-$ vtctlclient OnlineDDL commerce show 8a797518_f25c_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 | 2020-09-09 05:23:33 | complete         |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-
-$ vtctlclient OnlineDDL commerce show recent
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 | 2020-09-09 05:23:33 | complete         |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:24:33 | 2020-09-09 05:24:34 | complete         |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-
-$ vtctlclient OnlineDDL commerce show failed
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-```
-
-The syntax for tracking migrations is: 
-```
-vtctlclient OnlineDDL <keyspace> show <migration_id|all|recent|queued|ready|running|complete|failed|cancelled>
-```
-
-## Cancelling a migration
-
-The user may cancel a migration, as follows:
-
-- If the migration hasn't started yet (it is `queued` or `ready`), then it is removed from queue and will not be executed.
-- If the migration is `running`, then it is forcibly interrupted. The migration is expected to transition to `failed` state.
-- In all other cases, cancelling a migration has no effect.
-
-The syntax to cancelling a migration is:
-
-```
-vtctlclient OnlineDDL cancel <migration_id>
-```
-
-Example:
-
-```shell
-$ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | running          |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | running          |
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | running          |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | running          |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-
-$ vtctlclient OnlineDDL commerce cancel 2201058f_f266_11ea_bab4_0242c0a8b007
-+-----------------+--------------+
-|     Tablet      | RowsAffected |
-+-----------------+--------------+
-| test-0000000401 |            1 |
-| test-0000000101 |            1 |
-| test-0000000201 |            1 |
-| test-0000000301 |            1 |
-+-----------------+--------------+
-
-$ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | failed           |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | failed           |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | failed           |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | failed           |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-```
-
-
-## Cancelling all keyspace migrations
-
-The user may cancel all migrations in a keyspace. A migration is cancellable if it is in `queued`, `ready` or `running` states, as described previously. It is a high impact operation and should be used with care.
-
-The syntax to cancelling all keyspace migrations is:
-
-```
-vtctlclient OnlineDDL cancel-all
-```
-
-Example:
-
-```shell
-$ vtctlclient OnlineDDL commerce show all
-+------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
-|      Tablet      | shard | mysql_schema | mysql_table |            migration_uuid            | strategy | started_timestamp | completed_timestamp | migration_status |
-+------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c581994_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | queued           |
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c6420c9_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | queued           |
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c7040df_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | queued           |
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c7c0572_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | queued           |
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c87f7cd_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | queued           |
-+------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
-
-$  vtctlclient OnlineDDL commerce cancel-all
-+------------------+--------------+
-|      Tablet      | RowsAffected |
-+------------------+--------------+
-| zone1-0000000100 |            5 |
-+------------------+--------------+
-
- vtctlclient OnlineDDL commerce show all
-+------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
-|      Tablet      | shard | mysql_schema | mysql_table |            migration_uuid            | strategy | started_timestamp | completed_timestamp | migration_status |
-+------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c581994_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | cancelled        |
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c6420c9_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | cancelled        |
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c7040df_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | cancelled        |
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c7c0572_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | cancelled        |
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c87f7cd_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | cancelled        |
-+------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
-```
-
-## Retrying a migration
-
-The user may retry running a migration. If the migration is in `failed` or in `cancelled` state, Vitess will re-run the migration, with exact same arguments as previously intended. If the migration is in any other state, `retry` does nothing.
-
-It is not possible to retry a migration with different options. e.g. if the user initially runs `ALTER TABLE demo MODIFY id BIGINT` with `@@ddl_strategy='gh-ost --max-load Threads_running=200'` and the migration fails, retrying it will use exact same options. It is not possible to retry with `@@ddl_strategy='gh-ost --max-load Threads_running=500'`.
-
-Continuing the above example, where we cancelled a migration while running, we now retry it:
-
-```shell
-$ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | failed           |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | failed           |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | failed           |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | failed           |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-
-$ vtctlclient OnlineDDL commerce retry 2201058f_f266_11ea_bab4_0242c0a8b007
-+-----------------+--------------+
-|     Tablet      | RowsAffected |
-+-----------------+--------------+
-| test-0000000101 |            1 |
-| test-0000000201 |            1 |
-| test-0000000301 |            1 |
-| test-0000000401 |            1 |
-+-----------------+--------------+
-
-$ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+-------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy | started_timestamp | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+-------------------+---------------------+------------------+
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   |                   |                     | queued           |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   |                   |                     | queued           |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   |                   |                     | queued           |
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   |                   |                     | queued           |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+-------------------+---------------------+------------------+
-
-$ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:37:33 |                     | running          |
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:37:33 |                     | running          |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:37:33 |                     | running          |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:37:33 |                     | running          |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-```
-
+  Example: `vtgate -enable_online_ddl=false` to disable access to Online DDL via `VTGate`.
+ 
 ## Auto resume after failure
 
 VReplication based migrations (`ddl_strategy="online"`) are resumable across failure and across primary failovers.
@@ -444,98 +223,4 @@ All `ALTER` strategies leave artifacts behind. Whether successful or failed, eit
 The tables are kept for 24 hours after migration completion. Vitess automatically cleans up those tables as soon as a migration completes (either successful or failed). You will normally not need to do anything.
 
 Artifact tables are identifiable via `SELECT artifacts FROM _vt.schema_migrations` in a `VExec` command, see below. You should generally not touch these tables. It's possible to `DROP` those tables with `direct` DDL strategy. Note that dropping tables in production can be risky and lock down your database for a substantial period of time.
-
-## VExec commands for greater control and visibility
-
-`vtctlclient OnlineDDL` command should provide with most needs. However, Vitess gives the user greater control through the `VExec` command and via SQL queries.
-
-For schema migrations, Vitess allows operations on the virtual table `_vt.schema_migrations`. Queries on this virtual table scatter to the underlying tablets and gather or manipulate data on their own, private backend tables (which incidentally are called by the same name). `VExec` only allows specific types of queries on that table.
-
-- `SELECT`: you may SELECT any column, or `SELECT *`. `vtctlclient OnlineDDL show` commands only present with a subset of columns, and so running ` VExec` `SELECT` provides greater visibility. Some columns that are not shown are:
-  - `log_path`: tablet server and path where migration logs are.
-  - `artifacts`: tables created by the migration. This can be used to determine which tables need cleanup.
-  - `alter`: the exact `alter` statement used by the migration
-  - `options`: any options passed by the user (e.g. `--max-load=Threads_running=200`)
-  - Various timestamps indicating the migration progress
-  Aggregate functions do not work as expected and should be avoided. `LIMIT` and `OFFSET` are not supported.
-- `UPDATE`: you may directly update the status of a migration. You may only change status into `cancel` or `retry`, which Vitess interprets similarly to a `vtctlclient OnlineDDL cancel/retry` command. However, you get greater control as you may filter on a specific `shard`.
-- `DELETE`: unsupported
-- `INSERT`: unsupported, used internally only to advertise new migration requests to the tablets.
-
-The syntax to run `VExec` queries is:
-
-```
-vtctlclient VExec <keyspace>.<migration_id> "<sql query>"
-```
-
-Examples:
-
-```shell
-
-$ vtctlclient VExec commerce.2201058f_f266_11ea_bab4_0242c0a8b007 "select * from _vt.schema_migrations"
-
-$ vtctlclient VExec commerce.91b5c953-e1e2-11ea-a097-f875a4d24e90 "update _vt.schema_migrations set migration_status='retry'
-
-$ vtctlclient VExec commerce.91b5c953-e1e2-11ea-a097-f875a4d24e90 "update _vt.schema_migrations set migration_status='retry' where shard='40-80'
-```
-
-```shell
-$ vtctlclient VExec commerce.2201058f_f266_11ea_bab4_0242c0a8b007 "select shard, mysql_table, migration_uuid, started_timestamp, completed_timestamp, migration_status from _vt.schema_migrations"
-+-----------------+-------+-------------+--------------------------------------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_table |            migration_uuid            |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+-------------+--------------------------------------+---------------------+---------------------+------------------+
-| test-0000000301 | 80-c0 | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | 2020-09-09 06:37:33 |                     | failed           |
-| test-0000000101 |   -40 | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | 2020-09-09 06:37:33 |                     | failed           |
-| test-0000000201 | 40-80 | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | 2020-09-09 08:31:47 |                     | failed           |
-| test-0000000401 | c0-   | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | 2020-09-09 06:37:33 |                     | failed           |
-+-----------------+-------+-------------+--------------------------------------+---------------------+---------------------+------------------+
-
-$ vtctlclient VExec commerce.2201058f_f266_11ea_bab4_0242c0a8b007 "update _vt.schema_migrations set migration_status='retry' where migration_uuid='2201058f_f266_11ea_bab4_0242c0a8b007' and shard='40-80'"
-+-----------------+--------------+
-|     Tablet      | RowsAffected |
-+-----------------+--------------+
-| test-0000000201 |            1 |
-+-----------------+--------------+
-
-$ vtctlclient VExec commerce.2201058f_f266_11ea_bab4_0242c0a8b007 "select shard, mysql_table, migration_uuid, started_timestamp, completed_timestamp, migration_status from _vt.schema_migrations"
-+-----------------+-------+-------------+--------------------------------------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_table |            migration_uuid            |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+-------------+--------------------------------------+---------------------+---------------------+------------------+
-| test-0000000301 | 80-c0 | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | 2020-09-09 06:37:33 |                     | failed           |
-| test-0000000201 | 40-80 | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | 2020-09-09 08:34:59 |                     | running          |
-| test-0000000101 |   -40 | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | 2020-09-09 06:37:33 |                     | failed           |
-| test-0000000401 | c0-   | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | 2020-09-09 06:37:33 |                     | failed           |
-+-----------------+-------+-------------+--------------------------------------+---------------------+---------------------+------------------+
-
-$ vtctlclient VExec commerce.2201058f_f266_11ea_bab4_0242c0a8b007 "update _vt.schema_migrations set migration_status='cancel' where migration_uuid='2201058f_f266_11ea_bab4_0242c0a8b007' and shard='40-80'"
-+-----------------+--------------+
-|     Tablet      | RowsAffected |
-+-----------------+--------------+
-| test-0000000201 |            1 |
-+-----------------+--------------+
-
-$ vtctlclient VExec commerce.2201058f_f266_11ea_bab4_0242c0a8b007 "select shard, mysql_table, migration_uuid, started_timestamp, completed_timestamp, migration_status from _vt.schema_migrations"
-+-----------------+-------+-------------+--------------------------------------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_table |            migration_uuid            |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+-------------+--------------------------------------+---------------------+---------------------+------------------+
-| test-0000000401 | c0-   | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | 2020-09-09 06:37:33 |                     | failed           |
-| test-0000000101 |   -40 | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | 2020-09-09 06:37:33 |                     | failed           |
-| test-0000000201 | 40-80 | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | 2020-09-09 08:34:59 |                     | failed           |
-| test-0000000301 | 80-c0 | demo        | 2201058f_f266_11ea_bab4_0242c0a8b007 | 2020-09-09 06:37:33 |                     | failed           |
-+-----------------+-------+-------------+--------------------------------------+---------------------+---------------------+------------------+
-
-$ vtctlclient VExec commerce.2201058f_f266_11ea_bab4_0242c0a8b007 "update _vt.schema_migrations set migration_status='cancel' where migration_uuid='2201058f_f266_11ea_bab4_0242c0a8b007' and shard='40-80'"
-<no result>
-
-$ vtctlclient VExec commerce.2201058f_f266_11ea_bab4_0242c0a8b007 "select shard, log_path from _vt.schema_migrations"
-+-----------------+-------+-----------------------------------------------------------------------------+
-|     Tablet      | shard |                                   log_path                                  |
-+-----------------+-------+-----------------------------------------------------------------------------+
-| test-0000000201 | 40-80 | 11ac2af6e63e:/tmp/online-ddl-2201058f_f266_11ea_bab4_0242c0a8b007-657478384 |
-| test-0000000101 |   -40 | e779a82d35d7:/tmp/online-ddl-2201058f_f266_11ea_bab4_0242c0a8b007-901629215 |
-| test-0000000401 | c0-   | 5aad1249ab91:/tmp/online-ddl-2201058f_f266_11ea_bab4_0242c0a8b007-039568897 |
-| test-0000000301 | 80-c0 | 5e7c662679d3:/tmp/online-ddl-2201058f_f266_11ea_bab4_0242c0a8b007-532703073 |
-+-----------------+-------+-----------------------------------------------------------------------------+
-```
-
 
