@@ -146,10 +146,6 @@ There are pros and cons to using any of the strategies. Some notable differences
 
 - `pt-online-schema-change` partially supports foreign keys. Neither `gh-ost` nor `VReplication` support foreign keys.
 
-#### External MySQL compatibility
-
-* If you run on Aurora or RDS you will need to use the `online` strategy. This is because both `pt-online-schema-change` and `gh-ost` try to create a new user and then attempt to grant the new user SUPER privileges. 
-
 ## Vitess functionality comparison
 
 | Strategy | Managed | Online | Trackable | Declarative | Revertible          | Traffic |
