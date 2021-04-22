@@ -132,10 +132,73 @@ Tables in sharded keyspaces do not support the `auto_increment` column attribute
 Vitess supports a few additional options with the SHOW statement.
 
 * `SHOW keyspaces` -- A list of keyspaces available.
+```shell
+Example Output:
++----------+
+| Database |
++----------+
+| commerce |
+| customer |
++----------+
+```
 * `SHOW vitess_tablets` -- Information about the current Vitess tablets such as the keyspace, key ranges, tablet type, hostname, and status.
+```shell
+Example Output:
++-------+----------+-------+------------+---------+------------------+------------+----------------------+
+| Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname   | MasterTermStartTime  |
++-------+----------+-------+------------+---------+------------------+------------+----------------------+
+| zone1 | commerce | 0     | MASTER     | SERVING | zone1-0000000100 | <redacted> | 2021-04-22T04:10:29Z |
+| zone1 | commerce | 0     | REPLICA    | SERVING | zone1-0000000101 | <redacted> |                      |
+| zone1 | commerce | 0     | RDONLY     | SERVING | zone1-0000000102 | <redacted> |                      |
+| zone1 | customer | -80   | MASTER     | SERVING | zone1-0000000300 | <redacted> | 2021-04-22T04:12:23Z |
+| zone1 | customer | -80   | REPLICA    | SERVING | zone1-0000000301 | <redacted> |                      |
+| zone1 | customer | -80   | RDONLY     | SERVING | zone1-0000000302 | <redacted> |                      |
+| zone1 | customer | 80-   | MASTER     | SERVING | zone1-0000000400 | <redacted> | 2021-04-22T04:12:23Z |
+| zone1 | customer | 80-   | REPLICA    | SERVING | zone1-0000000401 | <redacted> |                      |
+| zone1 | customer | 80-   | RDONLY     | SERVING | zone1-0000000402 | <redacted> |                      |
++-------+----------+-------+------------+---------+------------------+------------+----------------------+
+```
 * `SHOW vitess_shards` -- A list of shards that are available.
+```shell
+Example Output:
++--------------+
+| Shards       |
++--------------+
+| commerce/0   |
+| customer/-80 |
+| customer/80- |
++--------------+
+```
 * `SHOW vschema tables` -- A list of tables available in the current keyspace's vschema.
+```shell
+Example Output for customer keyspace:
++----------+
+| Tables   |
++----------+
+| corder   |
+| customer |
+| dual     |
++----------+
+```
 * `SHOW vschema vindexes` -- Information about the current keyspace's vindexes such as the keyspace, name, type, params, and owner. Optionally supports an "ON" clause with a table name.
+```shell
+Example Output:
++----------+------+------+--------+-------+
+| Keyspace | Name | Type | Params | Owner |
++----------+------+------+--------+-------+
+| customer | hash | hash |        |       |
++----------+------+------+--------+-------+
+```
+* `show global gtid_executed [FROM <keyspace>]` -- retrieves the global gtid_executed from each shard in the keyspace either selected or provided in the query.
+```shell
+Example Output for customer keyspace:
++----------+-------------------------------------------+-------+
+| db_name  | gtid_executed                             | shard |
++----------+-------------------------------------------+-------+
+| customer | e9148eb0-a320-11eb-8026-98af65a6dc4a:1-43 | 80-   |
+| customer | e0f64aca-a320-11eb-9be4-98af65a6dc4a:1-43 | -80   |
++----------+-------------------------------------------+-------+
+```
 
 ### USE Statements
 
@@ -173,3 +236,6 @@ type DBDDLPlugin interface {
 It must then register itself calling `DBDDLRegister`. 
 You can take a look at the `dbddl_plugin.go` in the engine package for an example of how it's done.
 Finally, you need to add a command line flag to vtgate to have it use the new plugin: `-dbddl_plugin=myPluginName`
+
+
+
