@@ -324,11 +324,11 @@ It is important to use the `vtctlclient VReplicationExec` command to inspect thi
 
 ## Cleanup
 
-As seen earlier, you can easily use the `vtctlclient Workflow ... delete`
-command to clean up a materialize operation.  If you like, you can also
-instead use the `VReplicationExec` command to temporarily stop the replication
-streams for the VReplication streams that make up the `Materialize` process.
-For example, to stop both streams, you can do:
+As seen earlier, you can easily use the `vtctlclient Workflow ... stop`
+and `vtctlclient Workflow ... delete` commands to clean up a materialize
+operation.  If you like, you can instead use the `VReplicationExec`
+command to temporarily stop the VReplication streams that make up the
+`Materialize` process.  For example, to stop both streams, you can do:
 
 ```sh
 $ vtctlclient VReplicationExec zone1-0000000100 'update _vt.vreplication set state = "Stopped" where id in (1,2)'
@@ -367,4 +367,4 @@ Note that this just cleans up the VReplication streams;  the actual source and t
 
 ## Recap
 
-As mentioned at the beginning, `Materialize` gives you finer control over the VReplication process without having to form VReplication rules completely by hand.  For the ultimate flexibility, that is still possible, but you should be able to use `Materialize` together with other Vitess features like routing rules to cover a large set of potential migration and data maintenance use-cases without resorting to creating VReplication rules directly.
+As mentioned at the beginning, `Materialize` gives you finer control over the VReplication process without having to form VReplication rules by hand.  For the ultimate flexibility, that is still possible, but you should be able to use `Materialize` together with other Vitess features like routing rules to cover a large set of potential migration and data maintenance use-cases without resorting to creating VReplication rules directly.
