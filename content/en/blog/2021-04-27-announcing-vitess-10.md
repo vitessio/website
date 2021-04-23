@@ -37,7 +37,7 @@ The release also includes Improved metrics, bug-fixes and fine-tuning of the VRe
 Online DDL continues to evolve on top of version 9. New and noteworthy:
 * Improved SQL syntax:
   * SHOW VITESS_MIGRATIONS
-  * SHOW VITESS MIGRATIONS LIKE '<uuid>'
+  * SHOW VITESS MIGRATIONS LIKE \'<uuid>\'
   * SHOW VITESS MIGRATIONS LIKE '<migration-context>'
   * SHOW VITESS MIGRATIONS LIKE '<state>’
   ' ALTER VITESS_MIGRATION '<uuid>' CANCEL
