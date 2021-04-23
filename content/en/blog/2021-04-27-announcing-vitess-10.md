@@ -37,18 +37,18 @@ The release also includes Improved metrics, bug-fixes and fine-tuning of the VRe
 Online DDL continues to evolve on top of version 9. New and noteworthy:
 * Improved SQL syntax:
   * SHOW VITESS_MIGRATIONS
-  * SHOW VITESS MIGRATIONS LIKE ```'<uuid>\'```
-  * SHOW VITESS MIGRATIONS LIKE '<migration-context>'
-  * SHOW VITESS MIGRATIONS LIKE '<state>’
-  ' ALTER VITESS_MIGRATION '<uuid>' CANCEL
-  * ALTER VITESS_MIGRATION '<uuid>' RETRY
-  * REVERT VITESS_MIGRATION '<uuid>' (see following)
+  * SHOW VITESS MIGRATIONS LIKE ```'<uuid>'```
+  * SHOW VITESS MIGRATIONS LIKE ```'<migration-context>'```
+  * SHOW VITESS MIGRATIONS LIKE ```'<state>’```
+  ' ALTER VITESS_MIGRATION ```'<uuid>'``` CANCEL
+  * ALTER VITESS_MIGRATION ```'<uuid>'``` RETRY
+  * REVERT VITESS_MIGRATION ```'<uuid>'``` (see following)
 https://vitess.io/docs/user-guides/schema-changes/audit-and-control/
 * Introducing VReplication-based migrations, via @@ddl_strategy='online'
-VReplication is the underlying mechanism behind resharding, materialed news, MoveTables, and more. It is now capable of running schema migrations.
+ VReplication is the underlying mechanism behind resharding, materialed news, MoveTables, and more. It is now capable of running schema migrations.
   * https://vitess.io/docs/user-guides/schema-changes/ddl-strategies/#onlinevreplication
 * Revertible Online DDL: lossless, online revert for completed migrations
-  * Supported via REVERT VITESS_MIGRATION '<uuid>' statement
+  * Supported via REVERT VITESS_MIGRATION ```'<uuid>'``` statement
   * Supported for CREATE TABLE statements in all online DDL strategies (reverting a CREATE TABLE hides away the table)
   * Supported for DROP TABLE statements in all online DDL strategies (reverting a DROP TABLE reinstates the table with all data)
   * Supported for ALTER TABLE in online (VReplication) strategy. Reverting an ALTER TABLE is lossless, and retains changes made to the table after migration completion. The operation is quick and only requires catching up on the binlog events since migration completion.
