@@ -18,7 +18,7 @@ Let's start by simulating this situation by loading sample data:
 
 ```sh
 # On helm, local and operator installs: 
-mysql --table < ../common/insert_commerce_data.sql
+mysql < ../common/insert_commerce_data.sql
 ```
 
 We can look at what we just inserted:
