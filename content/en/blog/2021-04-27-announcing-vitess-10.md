@@ -29,33 +29,33 @@ Rails is just the beginning - we’ll continue adding tests for more frameworks,
 We’ll continue with this work, making sure that Vitess can be used as a database wherever you can use MySQL.
 
 ### Migration
-Freno-style throttling has been added to VReplication workflows. Both source and target tablets can be throttled based on replication lag of the corresponding shards.
-New commands Mount and Migrate let you import data from another Vitess cluster. 
-The release also includes Improved metrics, bug-fixes and fine-tuning of the VReplication V2  user commands.
+* Freno-style throttling has been added to VReplication workflows. Both source and target tablets can be throttled based on replication lag of the corresponding shards.
+* New commands Mount and Migrate let you import data from another Vitess cluster. 
+* The release also includes Improved metrics, bug-fixes and fine-tuning of the VReplication V2  user commands.
 
 ### Schema Management
 Online DDL continues to evolve on top of version 9. New and noteworthy:
 * Improved SQL syntax:
-  * SHOW VITESS_MIGRATIONS
-  * SHOW VITESS MIGRATIONS LIKE ```'<uuid>'```
-  * SHOW VITESS MIGRATIONS LIKE ```'<migration-context>'```
-  * SHOW VITESS MIGRATIONS LIKE ```'<state>’```
-  ' ALTER VITESS_MIGRATION ```'<uuid>'``` CANCEL
-  * ALTER VITESS_MIGRATION ```'<uuid>'``` RETRY
-  * REVERT VITESS_MIGRATION ```'<uuid>'``` (see following)
-https://vitess.io/docs/user-guides/schema-changes/audit-and-control/
-* Introducing VReplication-based migrations, via @@ddl_strategy='online'
- VReplication is the underlying mechanism behind resharding, materialed news, MoveTables, and more. It is now capable of running schema migrations.
+  * `SHOW VITESS_MIGRATIONS`
+  * `SHOW VITESS MIGRATIONS LIKE '<uuid>'`
+  * `SHOW VITESS MIGRATIONS LIKE '<migration-context>'`
+  * `SHOW VITESS MIGRATIONS LIKE '<state>’`
+  * `ALTER VITESS_MIGRATION '<uuid>' CANCEL`
+  * `ALTER VITESS_MIGRATION '<uuid>' RETRY`
+  * `REVERT VITESS_MIGRATION '<uuid>'` (see following)
+  * https://vitess.io/docs/user-guides/schema-changes/audit-and-control/
+* Introducing VReplication-based migrations, via `@@ddl_strategy='online'`
+ VReplication is the underlying mechanism behind resharding, materialized views, MoveTables, and more. It is now capable of running schema migrations.
   * https://vitess.io/docs/user-guides/schema-changes/ddl-strategies/#onlinevreplication
 * Revertible Online DDL: lossless, online revert for completed migrations
-  * Supported via REVERT VITESS_MIGRATION ```'<uuid>'``` statement
-  * Supported for CREATE TABLE statements in all online DDL strategies (reverting a CREATE TABLE hides away the table)
-  * Supported for DROP TABLE statements in all online DDL strategies (reverting a DROP TABLE reinstates the table with all data)
-  * Supported for ALTER TABLE in online (VReplication) strategy. Reverting an ALTER TABLE is lossless, and retains changes made to the table after migration completion. The operation is quick and only requires catching up on the binlog events since migration completion.
+  * Supported via `REVERT VITESS_MIGRATION '<uuid>'` statement
+  * Supported for `CREATE TABLE` statements in all online DDL strategies (reverting a `CREATE TABLE` hides away the table)
+  * Supported for `DROP TABLE` statements in all online DDL strategies (reverting a `DROP TABLE` reinstates the table with all data)
+  * Supported for `ALTER TABLE` in online (VReplication) strategy. Reverting an `ALTER TABLE` is lossless, and retains changes made to the table after migration completion. The operation is quick and only requires catching up on the binlog events since migration completion.
   * https://vitess.io/docs/user-guides/schema-changes/revertible-migrations/
 * Declarative schema changes
-  * Via @@ddl_strategy='online|gh-ost|pt-osc -declarative'
-  * Per-table, either supply CREATE TABLE or DROP TABLE statement but never ALTER TABLE
+  * Via `@@ddl_strategy='online|gh-ost|pt-osc -declarative'`
+  * Per-table, either supply `CREATE TABLE` or `DROP TABLE` statement but never `ALTER TABLE`
   * Vitess automatically decides whether the existing schema matches the required schema, or works towards matching it.
   * Declarative schema changes are idempotent
   * https://vitess.io/docs/user-guides/schema-changes/declarative-migrations/
@@ -73,7 +73,7 @@ This new release of Vitess has had a particular focus on performance optimizatio
 Vitess 10.0 introduces an experimental multi-cluster admin API and web UI, called VTAdmin. Deploying the vtadmin-api and vtadmin-web components is completely opt-in. If you're interested in trying it out and providing early feedback, come find us in #feat-vtadmin in the Vitess slack. Note that VTAdmin relies on the new VtctldServer API, so you must be running the new grpc-vtctld service on your vtctlds in order to use it.
 
 ## Benchmarking 
-To ensure that Vitess delivers high performance to its users, we have improved our benchmarking and performance monitoring techniques ever since Vitess 9.0. The project arewefastyet is at the core of these techniques and is still under development at the moment, its goal is to measure and observe Vitess’s performance in an automatic manner.
+To ensure that Vitess delivers high performance to its users, we have improved our benchmarking and performance monitoring techniques ever since Vitess 9.0. The project `arewefastyet` is at the core of these techniques and is still under development at the moment, its goal is to measure and observe Vitess’s performance in an automatic manner.
 
 There is a shortlist of incompatible changes in this release. We encourage you to spend a moment reading the release notes and see if any of these will affect you.
 
