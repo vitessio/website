@@ -6,9 +6,13 @@ aliases: []
 Query consolidation is a VTTablet feature meant to protect your database from an overload caused by a spike in QPS for a specific query.
 
 Without this feature enabled such spikes can completely overwhelm the database. With this feature enabled the following will occur: when a vttablet receives a query, if an identical query is already in the process of being executed, the query will then wait.
+
 As soon as the first query returns from the underlying database, the result is sent to all callers that have been waiting.
 
-**Note**: an identical query is one that is exactly the same, including literals and bind variables.
+**Notes**: 
+
+* an identical query is one that is exactly the same, including literals and bind variables.
+* query consolidation doesn't work in streaming mode
 
 Flags:
 
