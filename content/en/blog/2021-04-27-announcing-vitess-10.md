@@ -1,7 +1,7 @@
 ---
 author: 'Alkin Tezuysal'
 date: 2021-04-27
-slug: '2020-04-27-announcing-vitess-10'
+slug: '2021-04-27-announcing-vitess-10'
 tags: ['release','Vitess','MySQL','kubernetes','operator','cloud','GKE','sharding']
 title: 'Announcing Vitess 10'
 description: 'We are pleased to announce the general availability of Vitess 10'
