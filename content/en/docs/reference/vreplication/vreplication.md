@@ -292,12 +292,13 @@ The `SELECT` statement has the following features (and restrictions):
 * The `SELECT` expressions can be any deterministic MySQL expression.
   Subqueries and joins are not supported. Among aggregate expressions, only
   `count(*)` and `sum(col)` are supported.
-* The where clause can only contain the `in_keyrange` construct. It
-  has two forms:
-  * `in_keyrange('-80')`: The row's source keyrange matched against `-80`.
-  * `in_keyrange(col, 'vindex_func', '-80')`: The keyrange is computed using
-    the specified Vindex function as `vindex_func(col)` and matched against
-    `-80`.
+* The `WHERE` clause can only contain:
+  * Integer or string equality comparisons, like `customer_id = 42 AND somecol='newval'`.
+  * The `in_keyrange` construct. It has two forms:
+    * `in_keyrange('-80')`: The row's source keyrange matched against `-80`.
+    * `in_keyrange(col, 'vindex_func', '-80')`: The keyrange is computed using
+      the specified Vindex function as `vindex_func(col)` and matched against
+      `-80`.
 * `GROUP BY`: can be specified if using aggregations. The `GROUP BY`
   expressions are expected to cover the non-aggregated columns just
   like regular SQL requires.
