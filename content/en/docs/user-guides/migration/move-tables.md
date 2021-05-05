@@ -427,13 +427,13 @@ As part of the `SwitchWrites` operation above, Vitess will automatically (unless
 
 ## Drop Sources
 
-The final step is to remove the data from the original keyspace. As well as freeing space on the original tablets, this is an important step to eliminate potential future confusions. If you have a misconfiguration down the line and accidentally route queries for the  `customer` and `corder` tables to `commerce`, it is much better to return a "table not found" error, rather than return stale data:
+The final step is to **remove** the data from the original keyspace. As well as freeing space on the original tablets, this is an important step to eliminate potential future confusion. If you have a misconfiguration down the line and accidentally route queries for the  `customer` and `corder` tables to `commerce`, it is much better to return a *"table not found"* error, rather than return stale data:
 
 ```sh
 $ vtctlclient DropSources customer.commerce2customer
 ```
 
-After this step is complete, you should see an error similar to:
+After this step is complete, you should see an error (in Vitess 9.0 and later) similar to:
 
 ```sh
 # Expected to fail!
@@ -445,7 +445,9 @@ ERROR 1146 (42S02) at line 4: vtgate: http://localhost:15001/: target: commerce.
 (sqlstate 42S02) (CallerID: userData1): Sql: "select * from customer", BindVars: {}
 ```
 
-This confirms that the data has been correctly cleaned up.  Note that the `DropSources` process also cleans up the reverse VReplication workflow mentioned above.  Finally, the only thing that is not cleaned up is the explicit routing rules from the source keyspace to the target keyspace.  The assumption is that you might still have applications that refer to the tables by their explicit `schema.table` designation, and you want these applications to (still) transparently be forwarded to the new location of the data.  When you are absolutely sure that no applications are using this access pattern, you can clean up the routing rules by manually adjusting the routing rules via the `vtctlclient ApplyRoutingRules` command.
+This confirms that the data has been correctly cleaned up.  Note that the `DropSources` process also cleans up the reverse VReplication workflow mentioned above. Regarding the routing rules, Vitess behavior here has changed recently:
+  * Before Vitess 9.0, the the routing rules from the source keyspace to the target keyspace was not cleaned up.  The assumption was that you might still have applications that refer to the tables by their explicit `schema.table` designation, and you want these applications to (still) transparently be forwarded to the new location of the data.  When you are absolutely sure that no applications are using this access pattern, you can clean up the routing rules by manually adjusting the routing rules via the `vtctlclient ApplyRoutingRules` command.
+  * From Vitess 9.0 onwards, the routing rules from the source keyspace to the target keyspace are also cleaned up as part of the `DropSources` operation. If this is not the behavior you want, can choose to either delay the `DropSources` until you are sure the routing rules (and source data) are no longer required; or you can perform the same steps as `DropSources` manually.
 
 ## Next Steps
 
