@@ -118,7 +118,7 @@ Summary for customer: {ProcessedRows:11 MatchingRows:11 MismatchedRows:0 ExtraRo
 
 ### Using VDiff with huge tables
 
-Currently VDiff runs within vtctd. Each VDiff will stream rows from all sources and targets and then compare them row by row after assembling the rows in order. Since there are no database transactions, VDiff will run much faster than the actual workflow. However for huge tables (billions of rows or TBs in size) this can take several hours or even days depending on the number of rows, row composition, server configurations and the topology of the cluster. If your sources and/or targets are across multiple cells, for example, this can slow down the vdiff considerably.
+Currently VDiff runs within vtctd. Each VDiff will stream rows from all sources and targets and then compare them row by row after assembling the rows in order. Since there are no database transactions, VDiff will run much faster than the actual workflow. However, for huge tables (billions of rows or terabytes in size) this can take several hours or even days depending on the number of rows, row composition, server configurations and the topology of the cluster. If your sources and/or targets are across multiple cells, for example, this can slow down the VDiff considerably.
 
 Actual VDiff speeds are of course dependent on several factors in your cluster. But as a reference, we have seen VDiffs run as fast as 400mrph (million rows per hour) (~9B rows/day) for tables with short rows, or as slow as 60mrph (~1.5B rows/day), for tables with larger width and complex columns.
 
@@ -127,13 +127,12 @@ You may need to use one or more of the following recommendations while running l
 * If VDiff takes more than an hour `vtctlclient` will hit grpc/http timeouts of 1 hour. In that case you can use `vtctl` (the bundled `vctlclient` + `vtctld`) instead.
 * VDiff also synchronizes sources and targets to get consistent snapshots. If you have a high write QPS then you may encounter timeouts during the sync. Use higher values of `-filtered_replication_wait_time` to prevent that, for example `-filtered_replication_wait_time=4h`.
 * If VDiff takes more than a day set the `-wait-time` parameter, which is the maximum time a vtctl command can run for, to a value comfortably higher than the expected run time, for example `-wait_time=168h`.
-* You can follow the progress of the command by tailing the vtctld logs. VDiff logs progress every
-10 million rows. This can also give you an early indication of how long it will run for, allowing you
-to increase your settings if needed.
+* You can follow the progress of the command by tailing the vtctld logs. VDiff logs progress every 10 million rows. This can also give you an early indication of how long it will run for, allowing you to increase your settings if needed.
 
 ### Note
+
 * There is no throttling, so you might see an increased lag in the replica used as the source.
-* VDiff is currently not resumable, so any timeouts or errors mean that you will need to rerun the entire vdiff again.
+* VDiff is currently not resumable, so any timeouts or errors mean that you will need to rerun the entire VDiff again.
 * VDiff runs one table at a time.
 
 _VReplication and VDiff performance improvements, resumability and throttling support are on the roadmap!_
