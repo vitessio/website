@@ -12,8 +12,9 @@ This guide follows on from the Get Started guides. Please make sure that you hav
 
 Since `Materialize` uses VReplication, the view can be kept up-to-date very close to real-time, which enables use-cases like creating copies of the same table sharded different ways for the purposes of certain types of queries that would otherwise be prohibitively expensive on the original table.  `Materialize` is also flexible enough to allow for you to pre-create the schema and vschema for the copied table, allowing you to, for example, maintain a copy of a table without some of the source table's MySQL indexes.  Alternatively, you could use `Materialize` to do certain schema changes (e.g. change the type of a table column) without having to use other tools like [gh-ost](https://github.com/github/gh-ost).
 
-In our example, we will be using `Materialize` to perform something similar to the [MoveTables](../move-tables) user guide, which will cover just the basics of what is possible using `Materialize`.
+All of the command options and parameters are listed in our [reference page for Materialize](../../../reference/vreplication/materialize).
 
+In our example, we will be using `Materialize` to perform something similar to the [MoveTables](../move-tables) user guide, which will cover just the basics of what is possible using `Materialize`.
 
 Let's start by simulating this situation by loading sample data:
 
