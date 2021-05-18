@@ -130,3 +130,26 @@ mysql> select * from customer;
 {{< info >}}
 There is no implicit or predictable ordering for rows that are gathered from multiple shards. If a specific order is required, the query must include an `order by` clause.
 {{< /info >}}
+
+To find out what shard is targeted for a particular value of the sharding key, connect to vtgate and issue a query like the following, where 'hash' is the name of the vindex as per the vschema:
+```
+mysql> select * from hash where id = 1000\G
+*************************** 1. row ***************************
+             id: 1000
+    keyspace_id: }��7��Z
+    range_start:
+      range_end: �
+hex_keyspace_id: 1f7db68037e0ff5a
+          shard: -80
+1 row in set (0.00 sec)
+mysql> select * from hash where id = 1001\G
+*************************** 1. row ***************************
+             id: 1001
+�x9Bkeyspace_id: �-
+    range_start: �
+      range_end:
+hex_keyspace_id: c32d170dc5783942
+          shard: 80-
+1 row in set (0.00 sec)
+```
+More in: https://github.com/vitessio/vitess/pull/7044
