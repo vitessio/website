@@ -14,7 +14,7 @@ Migrate  -v2 <options> <action> <workflow identifier>
 
 ### Description
 
-Migrate is used to start and manage workflows to move one or more tables from an external clusterinto a new Vitess keyspace. The target keyspace can be unsharded or sharded.
+Migrate is used to start and manage workflows to move one or more tables from an external cluster into a new Vitess keyspace. The target keyspace can be unsharded or sharded.
 
 Migrate is typically used for migrating data into Vitess from an external cluster. See [Mount command](../mount) for more information on external clusters.
 
@@ -68,5 +68,6 @@ MoveTables has separate semantics than Migrate. MoveTables can migrate data from
 * While switching Write traffic, in MoveTables, is possible to set up a reverse replication workflow so that the Source can be in sync with the Target, allowing you to revert back to the Source.
 
 However this requires that the Target can create vreplication streams (in the \_vt database) on the Source database. This may not be always possible, for example, if the Source is a production system.
+
 * In MoveTables the tables already exist, just in a different keyspace. So the VSchema already contains these tables. While migrating, these tables will be available only after the Migrate is completed
 * Switching traffic is not meaningful in the case of Migrate since there is no query traffic to the original tables, as the Source is in a different cluster.

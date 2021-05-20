@@ -4,6 +4,7 @@ description: Link an external cluster to the current one
 weight: 11
 ---
 ##### _Experimental_
+
 This documentation is for a new (v2) set of vtctld commands. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
 
 ### Command
@@ -15,9 +16,9 @@ Mount [-type vitess] [-topo_type=etcd2|consul|zookeeper] [-topo_server=topo_url]
 
 ### Description
 
-Mount is used to link external vitess clusters to the current cluster. (In the future we will also support mounting external MySQL servers)
+Mount is used to link external vitess clusters to the current cluster. (In the future we will also support mounting external MySQL servers.)
 
-Mounting vitess clusters requires the topology information of the external cluster to be specified. Used in conjunction of [the Migrate command](../migrate).
+Mounting vitess clusters requires the topology information of the external cluster to be specified. Used in conjunction with [the Migrate command](../migrate).
 
 ### Parameters
 
@@ -38,9 +39,9 @@ Show details of an already mounted cluster. Requires `cluster_name` to be specif
 List all mounted clusters
 
 ### Topo parameters
+
 ##### topo_type=[etcd2|consul|zookeeper]
 ##### topo_server=<topo_url>
 ##### topo_root=<root_topo_node>
 
-Mandatory (and only specified) while mounting a Vitess cluster. These should specify the
-topology parameters of the cluster being mounted.
+Mandatory (and only specified) while mounting a Vitess cluster. These should specify the topology parameters of the cluster being mounted.
