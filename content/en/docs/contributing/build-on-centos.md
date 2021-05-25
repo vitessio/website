@@ -17,7 +17,7 @@ The following has been verified to work on __CentOS 7__. If you are new to Vites
 [Download and install](http://golang.org/doc/install) Golang 1.15. For example, at writing:
 
 ```
-curl -O https://golang.org/dl/go1.15.6.linux-amd64.tar.gz
+curl -LO https://golang.org/dl/go1.15.6.linux-amd64.tar.gz
 sudo tar -C /usr/local -xzf go1.15.6.linux-amd64.tar.gz
 ```
 
