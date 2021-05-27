@@ -19,7 +19,7 @@ Vitess served all YouTube database traffic for over five years. Many enterprises
 * Performance
     - Connection pooling - Multiplex front-end application queries onto a pool of MySQL connections to optimize performance.
     - Query de-duping – Reuse results of an in-flight query for any identical requests received while the in-flight query was still executing.
-    - Transaction manager – Limit number of concurrent transactions and manage deadlines to optimize overall throughput.
+    - Transaction manager – Limit number of concurrent transactions and manage deadlocks to optimize overall throughput.
 
 * Protection
     - Query rewriting and sanitization – Add limits and avoid non-deterministic updates.
