@@ -33,7 +33,7 @@ echo 'export PATH="/usr/local/opt/go@1.15/bin:$PATH"' >> ~/.bash_profile
 
 Do not install etcd via brew otherwise it will not be the version that is supported. Let it be installed when running make build.
 
-Do not setup MySQL or etcd to restart at login.
+Do not set up MySQL or etcd to restart at login.
 
 ## Build Vitess
 
@@ -64,7 +64,7 @@ The unit tests require that you first install a Java runtime. This is required f
 
 ```shell
 brew tap adoptopenjdk/openjdk
-brew cask install adoptopenjdk8
+brew install adoptopenjdk8
 brew info java
 ```
 
