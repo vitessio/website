@@ -38,8 +38,6 @@ If you are already familiar with Vitess and you'd like information on how to fil
 
 We have a number of [recorded presentations and videos](https://vitess.io/docs/resources/presentations/) that can be watched to start learning about Vitess.
 
-PlanetScale also hosts a [number of videos](https://www.planetscale.com/resources) on Vitess.
-
 * For a curated list please check out a PlanetScale blog post [here](https://www.planetscale.com/blog/videos-intro-to-vitess-its-powerful-capabilities-and-how-to-get-started).
 
 ## Where can I read additional FAQs?
