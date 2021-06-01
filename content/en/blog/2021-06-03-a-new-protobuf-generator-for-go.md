@@ -120,6 +120,10 @@ With these trivial changes in place, we can run our replication benchmark again 
 
 No, I did not screw up when cropping the flame graph. Once we enable memory pooling for `VStreamRowsResponse` objects, the unmarshaling code no longer needs to allocate memory for the underlying `Row` data. We're spending **0.63 CPU seconds** in unmarshaling now, because we just keep re-using the same few `Response` objects over and over again while copying rows from the source Vitess node.
 
+The impact of the memory pooling optimization is clearly visible when graphed against the CPU usage of all the different ProtoBuf code generators:
+
+![](https://i.imgur.com/Ts5Jy8l.png)
+
 ## Wrapping up
 
 Protocol Buffers performance in Go is a hard subject, which has only become much more complex with the release of the ProtoBuf APIv2 and the deprecation of Gogo ProtoBuf, the best recipe we've had in the past to reduce the CPU usage of the marshaling & unmarshaling overhead in our RPCs.
