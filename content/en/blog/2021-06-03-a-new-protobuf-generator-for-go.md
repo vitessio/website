@@ -26,7 +26,7 @@ The results of our benchmarks, however, were discouraging. [AreWeFastYet](https:
 
 ![](https://imgur.com/7Of96gT.png)
 
-We have a very stringent rule of never regressing performance between Vitess releases, so we started evaluating our options to perform this upgrade and leaving behind the ProtoBuf APIv1 package (now deprecated) and the Gogo ProtoBuf compiler (now unmaintained) while keeping Vitess as fast as it was.
+We try _really hard_ to never regress performance between Vitess releases, so we started evaluating our options to perform this upgrade and leaving behind the ProtoBuf APIv1 package (now deprecated) and the Gogo ProtoBuf compiler (now unmaintained) while keeping Vitess as fast as it was.
 
 ## Introducing `vtprotobuf`, the Vitess ProtoBuf compiler
 
