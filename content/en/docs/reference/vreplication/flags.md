@@ -48,7 +48,7 @@ For an idle source shard, the source vstreamer sends a heartbeat. Currently, tha
 * even for a single stream, if the server is of a lower configuration, then the resulting increase in the QPS or binlog increase may become significant as a percentage of resources
 
 **vreplicationHeartbeatUpdateInterval** determines how often the time_updated column is updated if there is no activity on the source and the source vstream is only sending heartbeats. Use a low value if you expect a high QPS or you are monitoring this column to alert about potential outages. Keep this high if:
-	
+
 * you have too many streams and the extra write QPS or CPU load due to these updates is unacceptable OR
  * you have too many streams and/or a large binlogsource field (i.e., there are a lot of participating tables) which generates unacceptable increase in your binlog size
 
@@ -84,7 +84,7 @@ When enabled, vttablet will start the _tracker_ which runs a separate vstream th
 The target might encounter connection failures during a workflow. VReplication automatically retries
 stalled streams after _vreplication_retry_delay_ seconds
 
-#### vreplication_retry_delay
+#### vreplication_tablet_type
 
 **Type** string\
 **Default** MASTER,REPLICA\
