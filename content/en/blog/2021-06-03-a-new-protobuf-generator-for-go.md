@@ -128,7 +128,7 @@ The impact of the memory pooling optimization is clearly visible when graphed ag
 
 Protocol Buffers performance in Go is a hard subject, which has only become much more complex with the release of the ProtoBuf APIv2 and the deprecation of Gogo ProtoBuf, the best recipe we've had in the past to reduce the CPU usage of the marshaling & unmarshaling overhead in our RPCs.
 
-There are many open-source and proprietary Go projects that are either stuck in ProtoBuf APIv1 (because they rely on Gogo ProtoBuf) or that have upgraded to APIv2 and suffered a performance regression. We know that `vtprotobuf` is not able to handle all the use cases that Gogo ProtoBuf did, but we're hoping it'll enable many projects to migrate to ProtBuf APIv2 without suffering a serious performance penalty, like we've done in Vitess, and result in a more unified and more performant Go ecosystem.
+There are many open-source and proprietary Go projects that are either stuck in ProtoBuf APIv1 (because they rely on Gogo ProtoBuf) or that have upgraded to APIv2 and suffered a performance regression. We know that `vtprotobuf` is not able to handle all the use cases that Gogo ProtoBuf did, but we're hoping it'll enable many projects to migrate to ProtoBuf APIv2 without suffering a serious performance penalty, like we've done in Vitess, and result in a more unified and more performant Go ecosystem.
 
 We're actively testing the beta of `vtprotobuf` in the Vitess `master` branch already, and we're hoping to ship the optimized codegen as the default for our next major Vitess release. Please feel free to try it out on your own projects and report any performance regressions or incompatibilities.
 
