@@ -36,11 +36,11 @@ Last Updated: May 25, 2021
   - Performance
   - More supported queries
 - Schema changes
-  - Declarative schema
+  - Usability
 - VSchema improvements
   - Vtgates auto-detect schema changes
-- Vitess-native unplanned failovers
-- Pluggable durability policies
+- Vitess-native unplanned failovers (vtorc)
+- Pluggable durability policies (vtorc)
 - Rewrite of vtctld UI including visualization of VReplication
 - VReplication throttling
 - Topology Service: Reduce dependencies on the topology service. i.e. Vitess should be operable normally even if topology service is down for several hours. Topology service should be used only for passive discovery.
