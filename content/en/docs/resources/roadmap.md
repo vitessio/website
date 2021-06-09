@@ -10,25 +10,37 @@ As an open source project, Vitess is developed by a community of contributors. M
 If you have a specific question about the Roadmap, we recommend posting in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
 {{< /info >}}
 
-## Short Term
+Last Updated: May 25, 2021
+
+## Short Term (1-3 months)
 
 - Improve Documentation
 - Improve Usability
 - Support more MySQL Syntax (improve compatibility as a drop-in replacement)
-  - Certify popular frameworks like Ruby on Rails, Hibernate etc.
-- Vitess-native unplanned failovers
-- Pluggable durability policies
+  - Certify popular frameworks like Ruby on Rails, Django etc.
 - Nightly benchmarking (regression testing)
-- Schema changes through vitess
-  - gh-ost and pt-osc integration
 - VReplication
-  - VExec tool for management
+  - Performance
+  - Usability
+  - Online schema changes
+- Technical debt
+  - grpc
+  - protobuf
+  - golang 1.16
 
-## Medium Term
+## Medium Term (3-9 months)
 
-- Vttablet to manage more than one MySQL schema
+- MySQL compatibility
+  - More frameworks
+- Query Planning improvements
+  - Performance
+  - More supported queries
+- Schema changes
+  - Usability
+- VSchema improvements
+  - Vtgates auto-detect schema changes
+- Vitess-native unplanned failovers (vtorc)
+- Pluggable durability policies (vtorc)
 - Rewrite of vtctld UI including visualization of VReplication
 - VReplication throttling
-- Binlog server
 - Topology Service: Reduce dependencies on the topology service. i.e. Vitess should be operable normally even if topology service is down for several hours. Topology service should be used only for passive discovery.
-- Support for PostgreSQL: Vitess should be able to support PostgreSQL for both storing data, and speaking the protocol in VTGate.
