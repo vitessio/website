@@ -228,7 +228,7 @@ Can't stress this enough: the lock must not be released until all children table
 
 Remember that an OSC works by creating a _ghost_ table and populating it until it is in sync with the original table. This effectively means requiring extra disk space at roughly the same volume as the original table.
 
-In a perfect world, we'd have all the disk space we ever needed. In reality we don't have that luxury. Sometimes we're not sure we have the space fo reven a single migration.
+In a perfect world, we'd have all the disk space we ever needed. In reality we don't have that luxury. Sometimes we're not sure we have the space for even a single migration.
 
 If we are to `ALTER` a parent, and as by product `ALTER` all of its children, at the same time, we'd need enough free disk space for all volumes of affected tables, combined.
 
