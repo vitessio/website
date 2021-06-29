@@ -138,6 +138,7 @@ The following global options apply to `vtgate`:
 | -redact-debug-ui-queries | boolean | redact full queries and bind variables from debug UI |
 | -remote_operation_timeout | duration | time to wait for a remote operation (default 30s) |
 | -retry-count | int | retry count (default 2) |
+| -schema_change_signal | boolean | enable schema tracking |
 | -security_policy | string | the name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only) |
 | -service_map | value | comma separated list of services to enable (or disable if prefixed with '-') Example: grpc-vtworker |
 | -sql-max-length-errors | int | truncate queries in error logs to the given length (default unlimited) |
