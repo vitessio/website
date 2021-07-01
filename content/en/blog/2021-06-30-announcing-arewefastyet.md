@@ -51,6 +51,9 @@ This page can be used to compare the results of all releases (after 7.0.0) on th
 Clicking on any of the individual benchmarks opens up another page where we can see the results of that microbenchmark on the past few days.
 
 
+<img src="/files/blog-arewefastyet/microbench.png" width="auto" height="auto" alt="Microbenchmark page" />
+
+
 ## [Macrobenchmark Page](https://benchmark.vitess.io/macrobench)
 Like its microbenchmark counterpart, this page also compares the results of all releases (after 7.0.0) and main on OLTP and TPCC benchmarks. We can also compare the results of Gen4 planner by using the toggle button in the menu bar (highlighted in the green box).
 
