@@ -48,25 +48,32 @@ All the results accumulated through the cron jobs are also available to be seen 
 
 ## [Microbenchmark Page](https://benchmark.vitess.io/microbench)
 This page can be used to compare the results of all releases (after 7.0.0) on the microbenchmarks. They can also be compared against the latest results on main.
-Clicking on any of the individual benchmarks opens up another page where we can see the results of that microbenchmark on the past few days.
-
 
 <img src="/files/blog-arewefastyet/microbench.png" width="auto" height="auto" alt="Microbenchmark page" />
 
+Clicking on any of the individual benchmarks opens up another page where we can see the results of that microbenchmark on the past few days.
+
+<img src="/files/blog-arewefastyet/microbenchSingle.png" width="auto" height="auto" alt="Single Microbenchmark page" />
 
 ## [Macrobenchmark Page](https://benchmark.vitess.io/macrobench)
 Like its microbenchmark counterpart, this page also compares the results of all releases (after 7.0.0) and main on OLTP and TPCC benchmarks. We can also compare the results of Gen4 planner by using the toggle button in the menu bar (highlighted in the green box).
 
+<img src="/files/blog-arewefastyet/macrobench.png" width="auto" height="auto" alt="Macrobenchmark page" />
 
 ## [V3 vs Gen4](https://benchmark.vitess.io/v3_VS_Gen4)
 This page compares the performance of the v3 planner and Gen4 planner on all the releases after 10.0.0 in which it was introduced
 
+<img src="/files/blog-arewefastyet/v3VsGen4.png" width="auto" height="auto" alt="v3 VS Gen4 page" />
+
 ## [Search Page](https://benchmark.vitess.io/search)
 This page can be used to check the results for a specific sha commit if they exist for the micro and macro benchmarks. The functionality of the Gen4 switch button remains the same.
 
+<img src="/files/blog-arewefastyet/search.png" width="auto" height="auto" alt="Search page" />
 
 ## [Compare](https://benchmark.vitess.io/compare)
 This page is similar to the search page except that it compares the results of 2 SHAs provided on all the benchmarks, both micro and macro. 
+
+<img src="/files/blog-arewefastyet/compare.png" width="auto" height="auto" alt="Compare page" />
 
 # Conclusion
 
