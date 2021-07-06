@@ -1,7 +1,7 @@
 ---
 author: 'Florent Poinsard, Manan Gupta'
-date: 2021-06-30
-slug: '2021-06-30-announcing-arewefastyet'
+date: 2021-07-06
+slug: '2021-07-06-announcing-arewefastyet'
 tags: ['Vitess','MySQL', 'benchmark', 'arewefastyet']
 title: 'Announcing Arewefastyet - Nightly Benchmarks'
 description: "Announcing Arewefastyet - Nightly Benchmarks Project"
@@ -29,6 +29,8 @@ In addition to sysbench’s measurements, the system and Vitess metrics are also
 
 Once a benchmark is finished and its results are stored we can provide a feasible comparison between the same trigger’s previous execution and the current execution, this comparison is sent through a Slack channel.
 Below is a diagram of the whole execution process.
+
+<img src="/files/blog-arewefastyet/execution-pipeline.png" width="auto" height="auto" alt="Execution Pipeline" />
 
 # The Link With Vitess
 
