@@ -7,52 +7,54 @@ title: 'Announcing Arewefastyet - Nightly Benchmarks'
 description: "Announcing Arewefastyet - Nightly Benchmarks Project"
 ---
 
-In a world where end-to-end performance is becoming a critical metric for both users and businesses, our techniques have become more advanced allowing us to deliver fast and optimized software products that meet the market expectations.
-To reach such expectations benchmarking comes in.
-Benchmarking lets us measure and compare the performance of a software version against another.
-Developed and used for a very long time, a lot of techniques have emerged and we can draw a line to define two categories, namely: micro and macro benchmarks.
-The former, benchmarks a small part of the codebase, usually at the method or functionality level.
-Whereas the latter measures the performance of the whole codebase and uses an environment similar to what end-users will experience.
-These two categories are analogous to unit tests and end-to-end tests.
+Benchmarking is a critical technique for delivering high performance software.
+The basic idea behind benchmarking is measuring and comparing the performance of a software version against another.
+Over the years, many benchmarking techniques have emerged, but we can broadly separate them in two categories: micro and macro benchmarks.
+Microbenchmarks measure a small part of the codebase, usually by isolating a single function call and calling it repeatedly, whereas macrobenchmarks measure the performance of the codebase as a whole and run in an environment similar to what end-users experience.
+These two categories of benchmarks are analogous to unit tests and end-to-end tests.
 
-Vitess’s performance is critical to its users, from a [blog post](https://slack.engineering/scaling-datastores-at-slack-with-vitess/) written by Slack’s engineering team, Vitess serves 2.3 million QPS at peak, it is thus fundamental for us to ensure we ship code that has high performance.
-For that reason, we have created a toolset named “arewefastyet”.
+Vitess is critical part of the infrastructure of many large companies.
+As an example, this [blog post](https://slack.engineering/scaling-datastores-at-slack-with-vitess/) from Slack’s engineering team discusses how their Vitess deployment serves 2.3 million queries per second at peak.
+Because of the impact that Vitess' performance has on ___ the Vitess team has a very serious and methodical commitment to performance.
+We try really hard to make sure that every Vitess version is faster than the previous one.
+To ensure that we meet this commitment we have created a benchmarking toolset named “arewefastyet”.
 
 ## How arewefastyet works
 
-Executing a benchmark against Vitess is not benign, benchmarks can be unreliable and hard to reproduce, this section introduces how arewefastyet achieves it.
+Executing a benchmark against Vitess is not trivial: benchmarks can be unreliable and hard to reproduce. Let us discuss how arewefastyet achieves accurate and reproducible benchmarks at scale.
 
 At the core of arewefastyet lies the execution engine.
-This engine is responsible for the entire lifespan of a benchmark, or as we call it: an execution.
-An execution can be triggered from a variety of sources such as a manual trigger from the CLI, a cron schedule, or based on an event (new pull request, new release, …).
-Triggering an execution results in the creation of a new pipeline, which is thoroughly configured using a YAML file provided by the trigger.
+This engine is responsible for the entire lifespan of a benchmark run, which is the reason we call individual runs "execution".
+An execution can be triggered from a variety of sources such as a manual trigger from the CLI, a cron schedule, or based on an event (new pull request, new release, etc).
+Triggering an execution results in the creation of a new pipeline, which is configured using a YAML file provided by the trigger.
 The YAML file contains the required configurations to run the entire benchmark, some of which define how to provision the benchmark’s infrastructure, store results, notify maintainers, and so on.
 
-Each execution gets a dedicated server on which the benchmark can be run.
-The hardware used is provided by [Equinix Metal](https://metal.equinix.com), a cloud provider on which all the benchmarks we execute rely.
-The default configuration uses the [m2.xlarge.x86](https://metal.equinix.com/developers/docs/servers/server-specs/#m2xlargex86) servers.
-These servers are bare-metal servers thus increasing our reliability and confidence.
-The provision of an execution’s infrastructure is accomplished through the use of Terraform that lets us manage our infrastructure in a reproducible manner.
-Once a server is provisioned several [Ansible roles](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html) are executed to apply dynamic configurations and settings on the server based on the upcoming benchmark.
-Between two benchmarks a server is likely going to be configured differently, for instance, a macro-benchmark needs to have a Vitess cluster created whereas a micro-benchmark does not.
-Configuring a server implies installing required packages and binaries, tweaking hard drive and network settings, building Vitess and arewefastyet codebases, setting up a Vitess cluster.
-The setup of the Vitess cluster is based on the configuration initially provided by the trigger. The default configuration benchmarks Vitess using a sharded [keyspace](https://vitess.io/docs/concepts/keyspace/) with six [vtgates](https://vitess.io/docs/concepts/vtgate/) and two [vttablets](https://vitess.io/docs/concepts/tablet/).
-Once an execution’s server is ready to be used, Ansible’s ultimate task is to call arewefastyet’s CLI to start benchmarking Vitess.
+Each execution gets a dedicated server on which the benchmark is run.
+For the production deployment of arewefastyet, all the hardware used is provided by [Equinix Metal](https://metal.equinix.com).
+The default configuration uses [m2.xlarge.x86](https://metal.equinix.com/developers/docs/servers/server-specs/#m2xlargex86) servers; these are bare-metal servers which greatly increase the reliability and accuracy of our benchmarks.
+The provisioning of an execution’s infrastructure is accomplished through the use of Terraform, which lets us manage the exact configuration of our servers in a reproducible manner.
+Once a server is provisioned, several [Ansible roles](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html) are executed to apply dynamic configurations and settings on each instance based on the benchmark we intend to run.
+Between two different benchmark runs, a server is likely going to be configured differently. For instance, a macro-benchmark needs to have a Vitess cluster created, whereas a micro-benchmark does not.
+Configuring a server implies installing required packages and binaries, tweaking hard drive and network settings, building the Vitess and arewefastyet codebases, and lastly setting up and deploying a Vitess cluster.
+The settings of the Vitess cluster are based on the configuration initially provided by the trigger. The default configuration measures Vitess' performance while using a sharded [keyspace](https://vitess.io/docs/concepts/keyspace/) with six [vtgates](https://vitess.io/docs/concepts/vtgate/) and two [vttablets](https://vitess.io/docs/concepts/tablet/).
+Once an execution’s server is ready to be used, Ansible’s final task is to call arewefastyet’s CLI to start the actual benchmark run.
 
-Vitess is coded in Golang, a programming language that is shipped with its standard testing library, luckily this library encapsulates a micro benchmarking toolset.
-Vitess’s codebase has numerous tests, right next to them lies a multitude of micro-benchmarking tests.
-These micro-benchmarking tests are executed, using `go test -bench`, by [arewefastyet’s microbench command](https://github.com/vitessio/arewefastyet/blob/master/docs/arewefastyet_microbench_run.md), their results are then parsed and analyzed before being stored in a MySQL database.
-The results we get from go’s standard library measure how well each function is performing using a few metrics such as the number of nanoseconds per iteration, number of bytes used per iteration. 
+Vitess is mostly written in Golang, and the Go standard library ships with a comprehensive testing framework which includes a micro-benchmarking toolset.
+Next to the numerous unit-test in Vitess' codebase, we can also find a multitude of micro-benchmarks implemented directly in Go.
+These micro-benchmarks are executed using the default `go test` runner by [arewefastyet’s microbench command](https://github.com/vitessio/arewefastyet/blob/master/docs/arewefastyet_microbench_run.md).
+The results of these micro-benchmarks contain critical performance metrics such as: the number of nanoseconds per iteration, number of bytes allocated, etc.
+We parse and analyze these values, and then we store them in a MySQL database, so they can be displayed later on. 
 
-Where micro-benchmarks are great to measure unit-level performance, macro-benchmarks give us a better understanding of the overall performance, however, their setup is more complicated since we want to reproduce something close to what users will be experiencing.
-As mentioned earlier, during the configuration phase, we instantiate a new Vitess cluster that contains six vtgates, two vttablets, an [etcd](https://etcd.io) cluster, and a [vtctld](https://vitess.io/docs/concepts/vtctld/) server.
-The tool [sysbench](https://github.com/planetscale/sysbench), a tool that enables multi-threaded database benchmarks, is at the core of our macro benchmarks, we divide its execution into three steps: preparation, warm-up, run, the three of which are executed one by one by [arewefastyet’s macrobench command](https://github.com/vitessio/arewefastyet/blob/master/docs/arewefastyet_macrobench_run.md).
-The preparation and warm-up steps are meant to create all the required data and files, as well as running a small benchmark to get the system warmed up.
-The run step starts the sysbench benchmark against the Vitess cluster using the configuration the user provides.
-Arewefastyet supports two types of macro benchmarks: OLTP and TPC-C, the former benchmarks Vitess using transactional queries, while the latter is a benchmark that portrays the scenario of a wholesale supplier using OLTP-based queries.
-Each execution of macro-benchmark will use one of these two types.
-Once the macro benchmark has run, we fetch the results generated by sysbench and store them in a MySQL database.
-The results we get from sysbench measure the latency, and the number of transactions and queries per second (TPS and QPS).
+Whilst micro-benchmarks are great to measure the performance of functional units in our codebase, we need macro-benchmarks to give us a better understanding of the overall performance of the system.
+The setup of a macro-benchmark is, however, much more complicated since we want to reproduce an environment closer to what users will be running in their production deployments.
+As mentioned earlier, we try to deploy a realistic configuration for our benchmark Vitess cluster, including: six vtgates, two vttablets, an [etcd](https://etcd.io) cluster, and a [vtctld](https://vitess.io/docs/concepts/vtctld/) server.
+The actual benchmarking of a cluster is performed by a custom fork of [sysbench](https://github.com/planetscale/sysbench), a highly configurable lua-based tool that is designed to benchmark arbitrary data stores. We divide the execution of every macro-benchmark run into three steps: preparation, warm-up, and the actual run. The three steps are executed one by one by [arewefastyet’s macrobench command](https://github.com/vitessio/arewefastyet/blob/master/docs/arewefastyet_macrobench_run.md).
+The preparation step is meant to create all the required data and files on the Vitess cluster.
+The warm-up steps runs a small benchmark, which is then discarded.
+The run step starts the sysbench benchmark against the Vitess cluster. 
+Right now arewefastyet supports two different OLTP benchmarks, a simple one which we call "OTLP", and a more complex one named "TPC-C" which mimics a real world scenario where a wholesale supplier runs complex transactional queries.
+Once a macro benchmark has run, we fetch the results generated by sysbench and store them in a MySQL database.
+These results measure the latency, and the number of transactions and queries per second (TPS and QPS).
 
 In addition to sysbench’s measurements, the system and Vitess metrics are also recorded.
 During the configuration of the server, a Prometheus backend starts and becomes responsible for scrapping metrics out of the system and the Vitess cluster.
