@@ -7,13 +7,11 @@ title: 'Announcing Arewefastyet - Nightly Benchmarks'
 description: "Announcing Arewefastyet - Nightly Benchmarks Project"
 ---
 
-# What are benchmarks
-
 In a world where end-to-end performance is becoming a critical metric for both users and businesses, our techniques have become more advanced allowing us to deliver fast and optimized software products that meet the market expectations. To reach such expectations benchmarking comes in. Benchmarking lets us measure and compare the performance of a software version against another. Developed and used for a very long time, a lot of techniques have emerged and we can draw a line to define two categories, namely: micro and macro benchmarks. The former, benchmarks a small part of the codebase, usually at the method or functionality level. Whereas the latter measures the performance of the whole codebase and uses an environment similar to what end-users will experience. These two categories are analogous to unit tests and end-to-end tests.
 
 Vitess’s performance is critical to its users, from a [blog post](https://slack.engineering/scaling-datastores-at-slack-with-vitess/) written by Slack’s engineering team, Vitess serves 2.3 million QPS at peak, it is thus fundamental for us to ensure we ship code that has high performance. For that reason, we have created a toolset named “arewefastyet”.
 
-# How it works
+## How arewefastyet works
 
 Executing a benchmark against Vitess is not benign, benchmarks can be unreliable and hard to reproduce, this section introduces how arewefastyet achieves it.
 
@@ -32,23 +30,24 @@ Below is a diagram of the whole execution process.
 
 <img src="/files/blog-arewefastyet/execution-pipeline.png" width="auto" height="auto" alt="Execution Pipeline" />
 
-# The Link With Vitess
+## The Link With Vitess
 
-In order to benchmark Vitess continuously we have cron jobs setup that run at midnight (CEST). We benchmark the main branch, the release branches, tags, and PRs with the Benchmark Me label of Vitess. These results are then used to run regression tests on a daily basis. This will allow us to catch any performance regression as soon as possible. We run the following comparison for regression tests - 
- - Main branch against the previous day results on main branch
- - Main branch with the last release
- - Release branch against the previous day results on release branch
- - Release branch against the last patch release for that release
- - Pull Request against the base of the head of the PR
+In order to continuously benchmark Vitess, arewefastyet has a bunch of cron jobs setup that run daily at midnight (CEST). The cron jobs take care of benchmarking: the main branch, the release branches, tags, and PRs with the `Benchmark Me` label of Vitess. The results we get from these cron-triggered benchmarks are compared against previous benchmarks of the same type, this allows us to catch any performance regression as soon as possible. We run the following comparisons: 
+ 
+  - Main branch against the previous day results on main branch.
+  - Main branch with the last release.
+  - Release branch against the previous day results on release branch.
+  - Release branch against the last patch release for that release.
+  - Pull Request against the base of the head of the PR.
 
-After these comparisons, if we find that any of the benchmarks have deteriorated by more than 10%, then we send a slack message to notify the developers about the same.
-Furthermore, we benchmark the performance of both the planners that Vitess has - the current default v3 planner and experimental, under-work Gen4 planner. With this, we are able to track the performance boost that Gen4 provides over the current v3 planner.
+After these comparisons, if we find that any of the benchmarks have deteriorated by more than 10%, we send a Slack message to notify maintainers about the regression.
+Furthermore, we benchmark the performance of both query planners Vitess has - the current defaults to the `v3` planner and the experimental, [under-work](https://github.com/vitessio/vitess/issues/7280), `Gen4` planner. With this, we are able to track the performance boost that `Gen4` provides over the current `v3` planner.
 
-# Website
+## Website
 
-All the results accumulated through the cron jobs are also available to be seen and compared on the website [arewefastyet](https://benchmark.vitess.io/). Within this section we describe the different pages available on the website. 
+All the results accumulated through the cron jobs are available to be seen and compared on the website [arewefastyet](https://benchmark.vitess.io/). Within this section we describe the different pages available on the website. 
 
-## [Microbenchmark Page](https://benchmark.vitess.io/microbench)
+### [Microbenchmark Page](https://benchmark.vitess.io/microbench)
 This page can be used to compare the results of all releases (after 7.0.0) on the microbenchmarks. They can also be compared against the latest results on main.
 
 <img src="/files/blog-arewefastyet/microbench.png" width="auto" height="auto" alt="Microbenchmark page" />
@@ -57,27 +56,27 @@ Clicking on any of the individual benchmarks opens up another page where we can 
 
 <img src="/files/blog-arewefastyet/microbenchSingle.png" width="auto" height="auto" alt="Single Microbenchmark page" />
 
-## [Macrobenchmark Page](https://benchmark.vitess.io/macrobench)
+### [Macrobenchmark Page](https://benchmark.vitess.io/macrobench)
 Like its microbenchmark counterpart, this page also compares the results of all releases (after 7.0.0) and main on OLTP and TPCC benchmarks. We can also compare the results of Gen4 planner by using the toggle button in the menu bar (highlighted in the green box).
 
 <img src="/files/blog-arewefastyet/macrobench.png" width="auto" height="auto" alt="Macrobenchmark page" />
 
-## [V3 vs Gen4](https://benchmark.vitess.io/v3_VS_Gen4)
+### [V3 vs Gen4](https://benchmark.vitess.io/v3_VS_Gen4)
 This page compares the performance of the v3 planner and Gen4 planner on all the releases after 10.0.0 in which it was introduced
 
 <img src="/files/blog-arewefastyet/v3VsGen4.png" width="auto" height="auto" alt="v3 VS Gen4 page" />
 
-## [Search Page](https://benchmark.vitess.io/search)
+### [Search Page](https://benchmark.vitess.io/search)
 This page can be used to check the results for a specific sha commit if they exist for the micro and macro benchmarks. The functionality of the Gen4 switch button remains the same.
 
 <img src="/files/blog-arewefastyet/search.png" width="auto" height="auto" alt="Search page" />
 
-## [Compare](https://benchmark.vitess.io/compare)
+### [Compare](https://benchmark.vitess.io/compare)
 This page is similar to the search page except that it compares the results of 2 SHAs provided on all the benchmarks, both micro and macro. 
 
 <img src="/files/blog-arewefastyet/compare.png" width="auto" height="auto" alt="Compare page" />
 
-# Conclusion
+## Summary
 
-In all, arewefastyet is an extra tool provided to both the users and developers to quickly compare the results of the different releases of Vitess. It will make it easier for the users to migrate to a higher release and have confidence in the performance impact expected. It enables the developers to track performance regressions early on and fix it as soon as possible.
+In all, arewefastyet is a tool provided to both the users and developers to quickly compare the results of the different releases of Vitess. It makes it easier for the users to migrate to a higher release and have confidence in the expected performance impact. It enables the maintainers of Vitess to track performance regressions early on and fix them as soon as possible.
 
