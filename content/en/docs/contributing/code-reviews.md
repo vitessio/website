@@ -5,23 +5,23 @@ title: Coding Standards
 ## Backwards Compatibility
 
 Vitess is being used to power many mission-critical production workloads at very large scale. 
-Moreover, many users deploy directly from the master branch. 
+Moreover, many users deploy directly from the main branch. 
 It is very important the changes made by contributors do not break any existing workloads.
 
 In order to avoid disruption, the following concerns need to be kept in mind:
 
-* Does the change affect any external APIs? If so, make sure the change satisfies the [compatibility rules](https://github.com/vitessio/enhancements/blob/master/veps/vep-3.md).
+* Does the change affect any external APIs? If so, make sure the change satisfies the [compatibility rules](https://github.com/vitessio/enhancements/blob/main/veps/vep-3.md).
 * Can the change introduce a performance regression? If so, it will be good to measure the impact using benchmarks.
 * If the change is substantial or is a breaking change, you must publish the proposal as an issue with a title like `RFC: Changing behavior of feature xxx`. Following this, sufficient time has to be given for others to give feedback. A breaking change must still satisfy the compatibility rules.
 * New features that affect existing behavior must be introduced "behind a flag". Users will then be encouraged to enable them, but will have the option to fallback to the old behavior if issues are found.
 
 ## What does a good PR look like?
 
-Every GitHub pull request must go through a code review and get approved before it will be merged into the master branch.
+Every GitHub pull request must go through a code review and get approved before it will be merged into the main branch.
 
 Every pull request should meet the following requirements:
 
-* Use the [Pull Request Template](https://github.com/vitessio/vitess/blob/master/.github/pull_request_template.md)
+* Use the [Pull Request Template](https://github.com/vitessio/vitess/blob/main/.github/pull_request_template.md)
 * Adhere to the [Go coding guidelines](https://golang.org/doc/effective_go.html) and watch out for these [common errors](https://github.com/golang/go/wiki/CodeReviewComments).
 * Contain a description message that is as detailed as possible. Here is a great example https://github.com/vitessio/vitess/pull/6543.
 * Pass all CI tests that run on PRs.
