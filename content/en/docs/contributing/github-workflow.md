@@ -38,28 +38,28 @@ upstream        git@github.com:vitessio/vitess.git (fetch)
 upstream        git@github.com:vitessio/vitess.git (push)
 ```
 
-Now to sync your local `master` branch, do this:
+Now to sync your local `main` branch, do this:
 
 ```
-$ git checkout master
-(master) $ git pull upstream master
+$ git checkout main
+(main) $ git pull upstream main
 ```
 
-Note: In the example output above we prefixed the prompt with `(master)` to
-stress the fact that the command must be run from the branch `master`.
+Note: In the example output above we prefixed the prompt with `(main)` to
+stress the fact that the command must be run from the branch `main`.
 
-You can omit the `upstream master` from the `git pull` command when you let your
-`master` branch always track the main `vitessio/vitess` repository. To achieve
+You can omit the `upstream main` from the `git pull` command when you let your
+`main` branch always track the main `vitessio/vitess` repository. To achieve
 this, run this command once:
 
 ```
-(master) $ git branch --set-upstream-to=upstream/master
+(main) $ git branch --set-upstream-to=upstream/main
 ```
 
-Now the following command syncs your local `master` branch as well:
+Now the following command syncs your local `main` branch as well:
 
 ```
-(master) $ git pull
+(main) $ git pull
 ```
 
 ## Topic Branches
@@ -67,9 +67,9 @@ Now the following command syncs your local `master` branch as well:
 Before you start working on changes, create a topic branch:
 
 ```
-$ git checkout master
-(master) $ git pull
-(master) $ git checkout -b new-feature
+$ git checkout main
+(main) $ git pull
+(main) $ git checkout -b new-feature
 (new-feature) $ # You are now in the new-feature branch.
 ```
 
@@ -131,7 +131,7 @@ $ git checkout new-feature
 (new-feature) $ git push
 ```
 
-That is because a pull request always mirrors all commits from your topic branch which are not in the master branch.
+That is because a pull request always mirrors all commits from your topic branch which are not in the `main` branch.
 
 Once your pull request is merged:
 
