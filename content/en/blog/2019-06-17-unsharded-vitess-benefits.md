@@ -16,7 +16,7 @@ Thankfully, Vitess kills and rewrites dangerous queries to make sure that your d
 
 ### Monitoring
 
-Vitess includes a fairly extensive debug suite with variables that are set up to directly export for time-series monitoring. Vitess has [direct support](https://github.com/vitessio/vitess/pull/3784) for Prometheus metrics and can [be configured](https://github.com/vitessio/vitess/blob/master/doc/Monitoring.md) to use most types of pull or push based monitoring tools. In addition to the vast selection of exported variables, Vitess ships with built-in status dashboards that can allow you to oversee database performance without needing to add extra software to your stack. 
+Vitess includes a fairly extensive debug suite with variables that are set up to directly export for time-series monitoring. Vitess has [direct support](https://github.com/vitessio/vitess/pull/3784) for Prometheus metrics and can [be configured](https://vitess.io/docs/reference/features/monitoring/) to use most types of pull or push based monitoring tools. In addition to the vast selection of exported variables, Vitess ships with built-in status dashboards that can allow you to oversee database performance without needing to add extra software to your stack. 
 
 ### Consistent Topology
 
