@@ -1,7 +1,7 @@
 ---
 author: 'Florent Poinsard, Manan Gupta'
-date: 2021-07-09
-slug: '2021-07-09-announcing-vitess-arewefastyet'
+date: 2021-07-08
+slug: '2021-07-08-announcing-vitess-arewefastyet'
 tags: ['Vitess','MySQL','benchmark','arewefastyet']
 title: 'Announcing Vitess Arewefastyet'
 description: "Announcing Vitess Arewefastyet - Nightly Benchmarks Project"
@@ -41,7 +41,7 @@ Once an execution’s server is ready to be used, Ansible’s final task is to c
 ### Micro benchmark runs
 
 Vitess is mostly written in Golang, and the Go standard library ships with a comprehensive testing framework which includes a micro-benchmarking toolset.
-Next to the numerous unit-test in Vitess' codebase, we can also find a multitude of micro-benchmarks implemented directly in Go.
+Along with the numerous unit tests in the Vitess codebase, we can also find a multitude of micro-benchmarks implemented directly in Go.
 These micro-benchmarks are executed using the default `go test` runner by [arewefastyet’s microbench command](https://github.com/vitessio/arewefastyet/blob/master/docs/arewefastyet_microbench_run.md).
 The results of these micro-benchmarks contain critical performance metrics such as: the number of nanoseconds per iteration, number of bytes allocated, etc.
 We parse and analyze these values, and then we store them in a MySQL database, so they can be displayed later on. 
