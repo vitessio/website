@@ -21,14 +21,14 @@ The following has been verified to work on __macOS Mojave__. If you are new to V
 [Install Homebrew](http://brew.sh/). From here you should be able to install:
 
 ```shell
-brew install go@1.15 automake git curl wget mysql@5.7
+brew install go@1.16 automake git curl wget mysql@5.7
 ```
 
-Add `mysql@5.7` and `go@1.15` to your `PATH`:
+Add `mysql@5.7` and `go@1.16` to your `PATH`:
 
 ```shell
 echo 'export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"' >> ~/.bash_profile
-echo 'export PATH="/usr/local/opt/go@1.15/bin:$PATH"' >> ~/.bash_profile
+echo 'export PATH="/usr/local/opt/go@1.16/bin:$PATH"' >> ~/.bash_profile
 ```
 
 Do not install etcd via brew otherwise it will not be the version that is supported. Let it be installed when running make build.
