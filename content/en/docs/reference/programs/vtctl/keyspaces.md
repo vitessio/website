@@ -362,13 +362,13 @@ Makes the &lt;destination keyspace/shard&gt; serve the given type. This command 
 
 ### SwitchReads
 ```shell
-SwitchReads  [-cells=c1,c2,...] [-reverse] -tablet_type={replica|rdonly} [-dry-run] <keyspace.workflow>
+SwitchReads  [-cells=c1,c2,...] [-reverse] -tablet_types={replica|rdonly} [-dry-run] <keyspace.workflow>
 Switch read traffic for the specified workflow.
 ```
 
 ### SwitchWrites
 ```shell
-SwitchWrites  [-filtered_replication_wait_time=30s] [-cancel] [-reverse_replication=false] [-dry-run] <keyspace.workflow>
+SwitchWrites  [-timeout=30s] [-cancel] [-reverse] [-reverse_replication=false] -tablet_types={replica|rdonly} [-dry-run] <keyspace.workflow>
 Switch write traffic for the specified workflow.
 ```
 
