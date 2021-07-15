@@ -7,7 +7,7 @@ weight: 110
 ### Command
 
 ```
-Workflow  [-dry_run] <keyspace[.workflow]> <action>
+Workflow  [-dry_run] <keyspace.workflow> <action>
 ```
 
 ### Description

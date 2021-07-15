@@ -302,17 +302,19 @@ Applies the VTGate routing schema to the provided keyspace. Shows the result aft
 
 #### Example
 
-<pre class="command-example">ApplyVSchema {-vschema=&lt;vschema&gt; || -vschema_file=&lt;vschema file&gt;} [-cells=c1,c2,...] [-skip_rebuild] &lt;keyspace&gt;</pre>
+<pre class="command-example">ApplyVSchema {-vschema=&lt;vschema&gt; || -vschema_file=&lt;vschema file&gt; || -sql=&lt;sql&gt; || -sql_file=&lt;sql file&gt;} [-cells=c1,c2,...] [-skip_rebuild] [-dry-run]&lt;keyspace&gt;</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | cells | string | If specified, limits the rebuild to the cells, after upload. Ignored if skipRebuild is set. |
+| dry-run | Boolean | If set, do not save the altered vschema, simply echo to console. |
 | skip_rebuild | Boolean | If set, do no rebuild the SrvSchema objects. |
+| sql | add vindex | A vschema ddl SQL statement (e.g. add vindex, `alter table t add vindex hash(id)`, etc) |
+| sql_file | add vindes | A vschema ddl SQL statement (e.g. add vindex, `alter table t add vindex hash(id)`, etc) |
 | vschema | string | Identifies the VTGate routing schema |
 | vschema_file | string | Identifies the VTGate routing schema file |
-
 
 #### Arguments
 

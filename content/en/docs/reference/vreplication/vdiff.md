@@ -9,7 +9,7 @@ weight: 20
 ```
 VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=replica]
        [-limit=<max rows to diff>] [-table=<table list>] [-format=json]
-       [-filtered_replication_wait_time=30s] <keyspace.workflow>
+       [-filtered_replication_wait_time=30s] [-debug_query] [-only_pks] <keyspace.workflow>
 ```
 
 ### Description
@@ -58,7 +58,7 @@ a high write qps on the source then this time will need to be increased.
 
 #### -limit
 **optional**\
-**default** none
+**default** 9223372036854775807
 
 <div class="cmd">
 Maximum number of rows to run vdiff on (across all tables specified).
@@ -99,6 +99,20 @@ Only other format supported is json
   "ExtraRowsTarget": 0
 }]
 ```
+
+#### -debug_query
+**optional**\
+
+<div class="cmd">
+Adds a MySQL query to the report that can be used for further debugging
+</div>
+
+#### -only_pks
+**optional**\
+
+<div class="cmd">
+When reporting missing rows, only show primary keys in the report.
+</div>
 
 #### keyspace.workflow
 **mandatory**
