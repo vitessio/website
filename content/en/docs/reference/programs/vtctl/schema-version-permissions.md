@@ -312,7 +312,7 @@ Applies the VTGate routing schema to the provided keyspace. Shows the result aft
 | dry-run | Boolean | If set, do not save the altered vschema, simply echo to console. |
 | skip_rebuild | Boolean | If set, do no rebuild the SrvSchema objects. |
 | sql | add vindex | A vschema ddl SQL statement (e.g. add vindex, `alter table t add vindex hash(id)`, etc) |
-| sql_file | add vindes | A vschema ddl SQL statement (e.g. add vindex, `alter table t add vindex hash(id)`, etc) |
+| sql_file | add vindex | A vschema ddl SQL statement (e.g. add vindex, `alter table t add vindex hash(id)`, etc) |
 | vschema | string | Identifies the VTGate routing schema |
 | vschema_file | string | Identifies the VTGate routing schema file |
 
