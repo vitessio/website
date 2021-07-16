@@ -10,7 +10,7 @@ The following `vtctl` commands are available for administering Cell Aliases.
 
 ### AddCellsAlias
 
-Defines a group of cells within which replica/rdonly traffic can be routed across cells. By default, Vitess does not allow traffic between replicas that are part of different cells. Between cells that are not in the same group (alias), only master traffic can be routed.
+Defines a group of cells within which replica/rdonly traffic can be routed across cells. By default, Vitess does not allow traffic between replicas that are part of different cells. Between cells that are not in the same group (alias), only primary traffic can be routed.
 
 
 #### Example

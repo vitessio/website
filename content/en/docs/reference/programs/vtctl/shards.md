@@ -73,7 +73,7 @@ Validates that all nodes that are reachable from this shard are consistent.
 
 ### ShardReplicationPositions
 
-Shows the replication status of each replica machine in the shard graph. In this case, the status refers to the replication lag between the master vttablet and the replica vttablet. In Vitess, data is always written to the master vttablet first and then replicated to all replica vttablets. Output is sorted by tablet type, then replication position. Use ctrl-C to interrupt command and see partial result if needed.
+Shows the replication status of each replica machine in the shard graph. In this case, the status refers to the replication lag between the primary vttablet and the replica vttablet. In Vitess, data is always written to the primary vttablet first and then replicated to all replica vttablets. Output is sorted by tablet type, then replication position. Use ctrl-C to interrupt command and see partial result if needed.
 
 #### Example
 
@@ -104,11 +104,14 @@ Lists all tablets in the specified shard.
 
 * the <code>&lt;keyspace/shard&gt;</code> argument is required for the <code>&lt;ListShardTablets&gt;</code> command This error occurs if the command is not called with exactly one argument.
 
-### SetShardIsMasterServing
+### SetShardIsPrimaryServing
 
 ```
-SetShardIsMasterServing <keyspace/shard> <is_master_serving>
+SetShardIsPrimaryServing <keyspace/shard> <is_serving>
 ```
+### SetShardIsMasterServing
+
+Deprecated. Use <code>SetShardIsPrimaryServing</code>
 
 ### SetShardTabletControl
 
@@ -133,15 +136,16 @@ Sets the TabletControl record for a shard and type. Only use this for an emergen
 * <code>&lt;keyspace/shard&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables as well as the shard associated with the command. The keyspace must be identified by a string that does not contain whitespace, while the shard is typically identified by a string in the format <code>&lt;range start&gt;-&lt;range end&gt;</code>.
 * <code>&lt;tablet type&gt;</code> &ndash; Required. The vttablet's role. Valid values are:
 
-    * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
-    * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
-    * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
-    * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
-    * <code>master</code> &ndash; A primary copy of data
-    * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
-    * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to master
-    * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
-    * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
+  * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
+  * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
+  * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
+  * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential primary. Vitess also does not worry about lag for experimental tablets when reparenting.
+  * <code>primary</code> &ndash; A primary copy of data
+  * <code>master</code> &ndash; Deprecated, same as primary
+  * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
+  * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to primary
+  * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
+  * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential primary tablet.
 
 
 #### Errors
@@ -156,7 +160,7 @@ UpdateSrvKeyspacePartition [--cells=c1,c2,...] [--remove] <keyspace/shard> <tabl
 
 ### SourceShardDelete
 
-Deletes the SourceShard record with the provided index. This is meant as an emergency cleanup function. It does not call RefreshState for the shard master.
+Deletes the SourceShard record with the provided index. This is meant as an emergency cleanup function. It does not call RefreshState for the shard primary.
 
 #### Example
 
@@ -173,7 +177,7 @@ Deletes the SourceShard record with the provided index. This is meant as an emer
 
 ### SourceShardAdd
 
-Adds the SourceShard record with the provided index. This is meant as an emergency function. It does not call RefreshState for the shard master.
+Adds the SourceShard record with the provided index. This is meant as an emergency function. It does not call RefreshState for the shard primary.
 
 #### Example
 
@@ -294,12 +298,12 @@ Lists all the backups for a shard.
 ### BackupShard
 
 ```
-BackupShard [-allow_master=false] <keyspace/shard>
+BackupShard [-allow_primary=false] <keyspace/shard>
 ```
 
 ### RemoveBackup
 
-Removes a backup for the BackupStorage.
+Removes a backup from the BackupStorage.
 
 #### Example
 
@@ -315,17 +319,21 @@ Removes a backup for the BackupStorage.
 
 ### InitShardMaster
 
-Sets the initial master for a shard. Will make all other tablets in the shard replicas of the provided master. WARNING: this could cause data loss on an already replicating shard. PlannedReparentShard or EmergencyReparentShard should be used instead.
+Deprecated. Use <code>InitShardPrimary</code>
+
+### InitShardPrimary
+
+Sets the initial primary for a shard. Will make all other tablets in the shard replicas of the provided primary. WARNING: this could cause data loss on an already replicating shard. PlannedReparentShard or EmergencyReparentShard should be used instead.
 
 #### Example
 
-<pre class="command-example">InitShardMaster [-force] [-wait_replicas_timeout=&lt;duration&gt;] &lt;keyspace/shard&gt; &lt;tablet alias&gt;</pre>
+<pre class="command-example">InitShardPrimary [-force] [-wait_replicas_timeout=&lt;duration&gt;] &lt;keyspace/shard&gt; &lt;tablet alias&gt;</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| force | Boolean | will force the reparent even if the provided tablet is not a master or the shard master |
+| force | Boolean | will force the reparent even if the provided tablet is not writable or the shard primary |
 | wait_replicas_timeout | Duration | time to wait for replicas to catch up in reparenting |
 
 
@@ -336,72 +344,72 @@ Sets the initial master for a shard. Will make all other tablets in the shard re
 
 #### Errors
 
-* action <code>&lt;InitShardMaster&gt;</code> requires <code>&lt;keyspace/shard&gt;</code> <code>&lt;tablet alias&gt;</code> This error occurs if the command is not called with exactly 2 arguments.
+* action <code>&lt;InitShardPrimary&gt;</code> requires <code>&lt;keyspace/shard&gt;</code> <code>&lt;tablet alias&gt;</code> This error occurs if the command is not called with exactly 2 arguments.
 * active reparent commands disabled (unset the -disable_active_reparents flag to enable)
 
 ### PlannedReparentShard
 
-Reparents the shard to a new master that can either be explicitly specified,
-or chosen by Vitess.  Both the existing master and new master need to be up
-and running to use this command. If the existing master for the shard is
+Reparents the shard to a new primary that can either be explicitly specified,
+or chosen by Vitess.  Both the existing primary and new primary need to be up
+and running to use this command. If the existing primary for the shard is
 down, you should use [EmergencyReparentShard](#emergencyreparentshard) instead.
 
-If the `new_master` flag is not provided, Vitess will try to automatically
-choose a replica to promote to master, avoiding any replicas specified in
-the `avoid_master` flag, if provided.  Note that Vitess **will not consider
-any replicas outside the cell the current master is in for promotion**,
-therefore you **must** pass the `new_master` flag if you need to promote
-a replica in a different cell from the master.  In the automated selection
+If the `new_primary` flag is not provided, Vitess will try to automatically
+choose a replica to promote to primary, avoiding any replicas specified in
+the `avoid_tablet` flag, if provided.  Note that Vitess **will not consider
+any replicas outside the cell the current primary is in for promotion**,
+therefore you **must** pass the `new_primary` flag if you need to promote
+a replica in a different cell from the primary.  In the automated selection
 mode Vitess will prefer the most advanced replica for promotion, to minimize
 failover time.
 
 #### Example
 
-<pre class="command-example">PlannedReparentShard -keyspace_shard=&lt;keyspace/shard&gt; [-new_master=&lt;tablet alias&gt;] [-avoid_master=&lt;tablet alias&gt;]</pre>
+<pre class="command-example">PlannedReparentShard -keyspace_shard=&lt;keyspace/shard&gt; [-new_primary=&lt;tablet alias&gt;] [-avoid_tablet=&lt;tablet alias&gt;]</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| avoid_master | string | alias of a tablet that should not be the master, i.e. reparent to any replica other than this one |
+| avoid_tablet | string | alias of a tablet that should not be the primary, i.e. reparent to any replica other than this one |
 | keyspace_shard | string | keyspace/shard of the shard that needs to be reparented |
-| new_master | string | alias of a tablet that should be the new master |
+| new_primary | string | alias of a tablet that should be the new primary |
 | wait_replicas_timeout | Duration | time to wait for replicas to catch up in reparenting |
 
 
 #### Errors
 
-* action <code>&lt;PlannedReparentShard&gt;</code> requires -keyspace_shard=<code>&lt;keyspace/shard&gt;</code> [-new_master=<code>&lt;tablet alias&gt;</code>] [-avoid_master=<code>&lt;tablet alias&gt;</code>] This error occurs if the command is not called with exactly 0 arguments.
+* action <code>&lt;PlannedReparentShard&gt;</code> requires -keyspace_shard=<code>&lt;keyspace/shard&gt;</code> [-new_primary=<code>&lt;tablet alias&gt;</code>] [-avoid_tablet=<code>&lt;tablet alias&gt;</code>] This error occurs if the command is not called with exactly 0 arguments.
 * active reparent commands disabled (unset the -disable_active_reparents flag to enable)
-* cannot use legacy syntax and flags -<code>&lt;keyspace_shard&gt;</code> and -<code>&lt;new_master&gt;</code> for action <code>&lt;PlannedReparentShard&gt;</code> at the same time
+* cannot use legacy syntax and flags -<code>&lt;keyspace_shard&gt;</code> and -<code>&lt;new_primary&gt;</code> for action <code>&lt;PlannedReparentShard&gt;</code> at the same time
 
 ### EmergencyReparentShard
 
-Reparents the shard to the new master. Assumes the old master is dead and not responding.
+Reparents the shard to the new primary. Assumes the old primary is dead and not responding.
 
 #### Example
 
-<pre class="command-example">EmergencyReparentShard -keyspace_shard=&lt;keyspace/shard&gt; -new_master=&lt;tablet alias&gt;</pre>
+<pre class="command-example">EmergencyReparentShard -keyspace_shard=&lt;keyspace/shard&gt; -new_primary=&lt;tablet alias&gt;</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | keyspace_shard | string | keyspace/shard of the shard that needs to be reparented |
-| new_master | string | alias of a tablet that should be the new master |
+| new_primary | string | alias of a tablet that should be the new primary |
 | wait_replicas_timeout | Duration | time to wait for replicas to catch up in reparenting |
 
 
 #### Errors
 
-* action <code>&lt;EmergencyReparentShard&gt;</code> requires -keyspace_shard=<code>&lt;keyspace/shard&gt;</code> -new_master=<code>&lt;tablet alias&gt;</code> This error occurs if the command is not called with exactly 0 arguments.
+* action <code>&lt;EmergencyReparentShard&gt;</code> requires -keyspace_shard=<code>&lt;keyspace/shard&gt;</code> -new_primary=<code>&lt;tablet alias&gt;</code> This error occurs if the command is not called with exactly 0 arguments.
 * active reparent commands disabled (unset the -disable_active_reparents flag to enable)
-* cannot use legacy syntax and flag -<code>&lt;new_master&gt;</code> for action <code>&lt;EmergencyReparentShard&gt;</code> at the same time
+* cannot use legacy syntax and flag -<code>&lt;new_primary&gt;</code> for action <code>&lt;EmergencyReparentShard&gt;</code> at the same time
 
 
 ### TabletExternallyReparented
 
-Changes metadata in the topology service to acknowledge a shard master change performed by an external tool. See [Reparenting](../../../../user-guides/configuration-advanced/reparenting/#external-reparenting) for more information.
+Changes metadata in the topology service to acknowledge a shard primary change performed by an external tool. See [Reparenting](../../../../user-guides/configuration-advanced/reparenting/#external-reparenting) for more information.
 
 #### Example
 
