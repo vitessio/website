@@ -310,7 +310,7 @@ Applies the VTGate routing schema to the provided keyspace. Shows the result aft
 | :-------- | :--------- | :--------- |
 | cells | string | If specified, limits the rebuild to the cells, after upload. Ignored if skipRebuild is set. |
 | dry-run | Boolean | If set, do not save the altered vschema, simply echo to console. |
-| skip_rebuild | Boolean | If set, do no rebuild the SrvSchema objects. |
+| skip_rebuild | Boolean | If set, do not rebuild the SrvSchema objects. |
 | sql | add vindex | A vschema ddl SQL statement (e.g. add vindex, `alter table t add vindex hash(id)`, etc) |
 | sql_file | add vindex | A vschema ddl SQL statement (e.g. add vindex, `alter table t add vindex hash(id)`, etc) |
 | vschema | string | Identifies the VTGate routing schema |
@@ -333,10 +333,24 @@ GetRoutingRules
 
 ### ApplyRoutingRules
 
+Applies the VSchema routing rules.
+
+#### Example
+
 ```
-ApplyRoutingRules  {-rules=<rules>
-| -rules_file=<rules_file>} [-cells=c1,c2,...] [-skip_rebuild] [-dry-run]
+ApplyRoutingRules  {-rules=<rules> | -rules_file=<rules_file>} [-cells=c1,c2,...] [-skip_rebuild] [-dry-run]
 ```
+
+#### Flags
+
+| Name | Type | Definition |
+| :-------- | :--------- | :--------- |
+| cells | string | If specified, limits the rebuild to the cells, after upload. Ignored if skipRebuild is set. |
+| dry-run | Boolean | If set, do not save the altered vschema, simply echo to console. |
+| skip_rebuild | Boolean | If set, do not rebuild the SrvSchema objects. |
+| -rules | string | Specify rules as a string. |
+| -rules_file | string | Specify rules in a file. |
+
 
 ### RebuildVSchemaGraph
 
