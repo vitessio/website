@@ -7,7 +7,7 @@ weight: 60
 ### Command
 
 ```
-Reshard [-cells=<cells>] [-tablet_types=<source_tablet_types>] [-skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>
+Reshard [-cells=<cells>] [-tablet_types=<source_tablet_types>] [-skip_schema_copy] [-auto_start] [-stop_after_copy] <keyspace.workflow> <source_shards> <target_shards>
 ```
 
 ### Description
@@ -40,6 +40,22 @@ Source Vitess tablet_type, or comma separated list of tablet types, that should 
 <div class="cmd">
 If true the source schema is copied to the target shards. If false, you need to create the tables
 before calling reshard.
+</div>
+
+#### -auto_start
+**optional**\
+**default** true
+
+<div class="cmd">
+If false, streams will start in the Stopped state and will need to be explicitly started (default true)
+</div>
+
+#### -stop_after_copy
+**optional**\
+**default** false
+
+<div class="cmd">
+Streams will be stopped once the copy phase is completed
 </div>
 
 #### keyspace.workflow 
