@@ -4,6 +4,10 @@ weight: 1
 description: Errors a users might encounter while querying Vitess
 ---
 
+{{< info >}}
+These error messages are internal to Vitess. If you are getting REST errors from MySQL you can check them on this MySQL error [page](https://dev.mysql.com/doc/mysql-errors/5.7/en/server-error-reference.html).
+{{< /info >}}
+
 | Error Number | Error State |  Message | Meaning |
 | :--: |:--: | :-- | -- |
 | 1105 | HY000 | INSERT not supported when targeting a key range: %s | When targeting a range of shards, Vitess doesn't know which shard to send the INSERT to, so this is not supported.  |
