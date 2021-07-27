@@ -17,7 +17,7 @@ Please take a moment to review the [Release Notes](https://github.com/vitessio/v
 
 ### Schema Tracking
 
-Until now certain queries required that VTGate have authoritative column information provided to it separately even though the information already exists at the individual database level. Schema tracking communicates schema changes at the database level to VTGate so that a manual step is no longer required to keep VTGate’s view of the underlying schemas in sync. This allows the query planner to plan more queries and improves our compatibility with MySQL.[Link to enable the feature](https://vitess.io/docs/reference/features/schema-tracking/)
+Until now certain queries required that VTGate have authoritative column information provided to it separately even though the information already exists at the individual database level. Schema tracking communicates schema changes at the database level to VTGate so that a manual step is no longer required to keep VTGate’s view of the underlying schemas in sync. This allows the query planner to plan more queries and improves our compatibility with MySQL. [Link to enable the feature](https://vitess.io/docs/reference/features/schema-tracking/)
 
 ### Schema Management
 
