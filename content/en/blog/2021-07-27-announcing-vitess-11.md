@@ -29,7 +29,7 @@ Online DDL continues to evolve on top of version 10. New and noteworthy:
   - The command `vtctl OnlineDDL revert …`  is deprecated. Instead, use `vtctl ApplySchema -sql "REVERT VITESS_MIGRATION …"`
   - The command `vtctl VExec` is deprecated.
    To view online DDL migration status use `SHOW VITESS_MIGRATIONS LIKE '...'`
-  - To control online DDL migrations, use `ALTER VITESS_MIGRATION '...' CANCEL|RETR`Y` or `ALTER VITESS_MIGRATION CANCEL ALL`
+  - To control online DDL migrations, use `ALTER VITESS_MIGRATION '...' CANCEL|RETRY` or `ALTER VITESS_MIGRATION CANCEL ALL`
 
 
 ### Performance Optimizations
@@ -53,6 +53,6 @@ Over the last few months, several at-scale MoveTables, Resharding and VStream AP
 
 ### Benchmarking 
 
-Since the last release, the continuous benchmarking tool of Vitess: [arewefastyet(https://benchmark.vitess.io/)], has finished its main development phase and has been announced through a [blog post](https://vitess.io/blog/2021-07-08-announcing-vitess-arewefastyet/). The post contains a detailed description of arewefastyet’s implementation and UI. 
+Since the last release, the continuous benchmarking tool of Vitess: [arewefastyet](https://benchmark.vitess.io/), has finished its main development phase and has been announced through a [blog post](https://vitess.io/blog/2021-07-08-announcing-vitess-arewefastyet/). The post contains a detailed description of arewefastyet’s implementation and UI. 
 
 Please download [Vitess 11](https://github.com/vitessio/vitess/releases/tag/v11.0.0) and try it out!
