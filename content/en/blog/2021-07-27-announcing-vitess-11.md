@@ -55,4 +55,6 @@ Over the last few months, several at-scale MoveTables, Resharding and VStream AP
 
 Since the last release, the continuous benchmarking tool of Vitess: [arewefastyet](https://benchmark.vitess.io/), has finished its main development phase and has been announced through a [blog post](https://vitess.io/blog/2021-07-08-announcing-vitess-arewefastyet/). The post contains a detailed description of arewefastyet’s implementation and UI. 
 
+We can now visualize the performance improvement between versions 10.0.0 and 11.0.0 on Vitess arewefastyet’s website. The full comparison can be found [here](https://benchmark.vitess.io/macrobench?ltag=10.0.0&rtag=11.0.0).
+
 Please download [Vitess 11](https://github.com/vitessio/vitess/releases/tag/v11.0.0) and try it out!
