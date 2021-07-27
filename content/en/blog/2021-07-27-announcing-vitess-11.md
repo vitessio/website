@@ -24,7 +24,7 @@ Until now certain queries required that VTGate have authoritative column informa
 Online DDL continues to evolve on top of version 10. New and noteworthy:
 
 * Report rows_copied, progress, eta_seconds throughout the migration.
-* SHOW VITESS_MIGRATION '...' LOGS: Vitess now retains migration logs up to 24 hours after migration completion/failure, and makes them available upon request.
+* `SHOW VITESS_MIGRATION '...' LOGS`: Vitess now retains migration logs up to 24 hours after migration completion/failure, and makes them available upon request.
 * Deprecating topo flow: Online DDL now goes directly to tablets. We are deprecating the involvement of topo. Version v12  will complete the deprecation.
   - The command `vtctl OnlineDDL revert …`  is deprecated. Instead, use `vtctl ApplySchema -sql "REVERT VITESS_MIGRATION …"`
   - The command `vtctl VExec` is deprecated.
