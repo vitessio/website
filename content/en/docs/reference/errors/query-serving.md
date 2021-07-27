@@ -5,7 +5,7 @@ description: Errors a users might encounter while querying Vitess
 ---
 
 {{< info >}}
-These error messages are internal to Vitess. If you are getting REST errors from MySQL you can check them on this MySQL error [page](https://dev.mysql.com/doc/mysql-errors/5.7/en/server-error-reference.html).
+These error messages are internal to Vitess. If you are getting other errors from MySQL you can check them on this MySQL error [page](https://dev.mysql.com/doc/mysql-errors/5.7/en/server-error-reference.html).
 {{< /info >}}
 
 | Error Number | Error State |  Message | Meaning |
