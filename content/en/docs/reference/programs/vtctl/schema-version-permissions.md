@@ -161,9 +161,8 @@ Applies the schema change to the specified keyspace on every master, running in 
 | :-------- | :--------- | :--------- |
 | allow_long_unavailability | Boolean | Allow large schema changes which incur a longer unavailability of the database. |
 | sql | string | A list of semicolon-delimited SQL commands |
-| sql-file | string | Identifies the file that contains the SQL commands |
+| sql-file | string | Identifies the file that contains the SQL commands. This file needs to exist on the server, rather than on the client. |
 | wait_replicas_timeout | Duration | The amount of time to wait for replicas to receive the schema change via replication. |
-
 
 #### Arguments
 

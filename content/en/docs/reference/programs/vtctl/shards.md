@@ -422,6 +422,7 @@ Generates shard ranges assuming a keyspace with N shards.
 #### Example
 
 <pre class="command-example">GenerateShardRanges &lt;num shards&gt; </pre>
+<pre class="command-example">GenerateShardRanges -num_shards &lt;N&gt; </pre>
 
 #### Flags
 
