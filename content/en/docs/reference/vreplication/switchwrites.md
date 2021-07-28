@@ -7,8 +7,7 @@ weight: 50
 ### Command
 
 ```
-SwitchWrites  [-filtered_replication_wait_time=30s] [-cancel] [-reverse_replication=true] 
-              [-dry-run] <keyspace.workflow>
+SwitchWrites  [-timeout=30s] [-cancel] [-reverse] [-reverse_replication=false] -tablet_types={replica|rdonly} [-dry-run] <keyspace.workflow>
 ```
 
 ### Description
@@ -18,8 +17,17 @@ Reshard workflow away from the master in the source keyspace to the master in th
 
 ### Parameters
 
-#### -filtered_replication_wait_time 
+#### -timeout 
 **optional**\
+**default** 30s
+
+<div class="cmd">
+Specifies the maximum time to wait, in seconds, for vreplication to catch up on primary migrations. The migration will be cancelled on a timeout.
+</div>
+
+
+#### -filtered_replication_wait_time 
+**DEPRECATED**\
 **default** 30s
 
 <div class="cmd">
@@ -39,6 +47,14 @@ the issue that caused the failure) or the SwitchWrites can be canceled using thi
 is cancelled: the workflow is set to Running so that replication continues.
 </div>
 
+#### -reverse 
+**optional**\
+**default** false
+
+<div class="cmd">
+Reverse a previous SwitchWrites serve from source
+</div>
+
 #### -reverse_replication 
 **optional**\
 **default** true
@@ -47,6 +63,13 @@ is cancelled: the workflow is set to Running so that replication continues.
 SwitchWrites, by default, starts a reverse replication stream with the current target as the source, replicating
 back to the original source. This enables a quick and simple rollback. This reverse workflow name is that
 of the original workflow concatenated with \_reverse.
+</div>
+
+#### -tablet_types
+**mandatory**
+
+<div class="cmd">
+Tablet types to switch one or both or rdonly/replica (default "rdonly,replica")
 </div>
 
 #### -dry-run 

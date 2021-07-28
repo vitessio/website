@@ -60,6 +60,7 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 | [PlannedReparentShard](../vtctl/shards#plannedreparentshard) | `PlannedReparentShard -keyspace_shard=<keyspace/shard> [-new_master=<tablet alias>] [-avoid_master=<tablet alias>] [-wait_replicas_timeout=<duration>]` |
 | [EmergencyReparentShard](../vtctl/shards#emergencyreparentshard) | `EmergencyReparentShard -keyspace_shard=<keyspace/shard> -new_master=<tablet alias>` |
 | [TabletExternallyReparented](../vtctl/shards#tabletexternallyreparented) | `TabletExternallyReparented <tablet alias>` |
+| [GenerateShardRanges](../vtctl/shards#generateshardranges) | `GenerateShardRanges <num shards>` |
 
 ### Keyspaces
 

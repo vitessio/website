@@ -161,9 +161,8 @@ Applies the schema change to the specified keyspace on every master, running in 
 | :-------- | :--------- | :--------- |
 | allow_long_unavailability | Boolean | Allow large schema changes which incur a longer unavailability of the database. |
 | sql | string | A list of semicolon-delimited SQL commands |
-| sql-file | string | Identifies the file that contains the SQL commands |
+| sql-file | string | Identifies the file that contains the SQL commands. This file needs to exist on the server, rather than on the client. |
 | wait_replicas_timeout | Duration | The amount of time to wait for replicas to receive the schema change via replication. |
-
 
 #### Arguments
 
@@ -302,17 +301,19 @@ Applies the VTGate routing schema to the provided keyspace. Shows the result aft
 
 #### Example
 
-<pre class="command-example">ApplyVSchema {-vschema=&lt;vschema&gt; || -vschema_file=&lt;vschema file&gt;} [-cells=c1,c2,...] [-skip_rebuild] &lt;keyspace&gt;</pre>
+<pre class="command-example">ApplyVSchema {-vschema=&lt;vschema&gt; || -vschema_file=&lt;vschema file&gt; || -sql=&lt;sql&gt; || -sql_file=&lt;sql file&gt;} [-cells=c1,c2,...] [-skip_rebuild] [-dry-run]&lt;keyspace&gt;</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | cells | string | If specified, limits the rebuild to the cells, after upload. Ignored if skipRebuild is set. |
-| skip_rebuild | Boolean | If set, do no rebuild the SrvSchema objects. |
+| dry-run | Boolean | If set, do not save the altered vschema, simply echo to console. |
+| skip_rebuild | Boolean | If set, do not rebuild the SrvSchema objects. |
+| sql | add vindex | A vschema ddl SQL statement (e.g. add vindex, `alter table t add vindex hash(id)`, etc) |
+| sql_file | add vindex | A vschema ddl SQL statement (e.g. add vindex, `alter table t add vindex hash(id)`, etc) |
 | vschema | string | Identifies the VTGate routing schema |
 | vschema_file | string | Identifies the VTGate routing schema file |
-
 
 #### Arguments
 
@@ -331,10 +332,24 @@ GetRoutingRules
 
 ### ApplyRoutingRules
 
+Applies the VSchema routing rules.
+
+#### Example
+
 ```
-ApplyRoutingRules  {-rules=<rules>
-| -rules_file=<rules_file>} [-cells=c1,c2,...] [-skip_rebuild] [-dry-run]
+ApplyRoutingRules  {-rules=<rules> | -rules_file=<rules_file>} [-cells=c1,c2,...] [-skip_rebuild] [-dry-run]
 ```
+
+#### Flags
+
+| Name | Type | Definition |
+| :-------- | :--------- | :--------- |
+| cells | string | If specified, limits the rebuild to the cells, after upload. Ignored if skipRebuild is set. |
+| dry-run | Boolean | If set, do not save the altered vschema, simply echo to console. |
+| skip_rebuild | Boolean | If set, do not rebuild the SrvSchema objects. |
+| -rules | string | Specify rules as a string. |
+| -rules_file | string | Specify rules in a file. |
+
 
 ### RebuildVSchemaGraph
 

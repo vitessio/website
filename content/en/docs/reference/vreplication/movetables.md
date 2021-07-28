@@ -78,7 +78,7 @@ Name of existing keyspace to which the tables will be moved
 </div>
 
 #### table_specs
-**optional**  one of `table_specs` or `-all` needs to be specified
+**mandatory**  Either `table_specs` or `-all` needs to be specified
 <div class="cmd">
 
 _Either_

@@ -7,8 +7,7 @@ weight: 30
 ### Command
 
 ```
-SwitchReads  [-cells=<cells>] [-reverse] [-dry-run] 
-             -tablet_type={replica|rdonly} <keyspace.workflow>
+SwitchReads  [-cells=c1,c2,...] [-reverse] -tablet_types={replica|rdonly} [-dry-run] <keyspace.workflow>
 ```
 
 ### Description
@@ -51,8 +50,15 @@ You can do a dry run where no actual action is taken but the command logs all th
 by SwitchReads.
 </div>
 
-#### -tablet_type 
+#### -tablet_types
 **mandatory**
+
+<div class="cmd">
+Tablet types to switch one or both or rdonly/replica (default "rdonly,replica")
+</div>
+
+#### -tablet_type 
+**DEPRECATED**
 
 <div class="cmd">
 On which type of tablets should be reads be switched to the target keyspace. One of replica or rdonly. rdonly
