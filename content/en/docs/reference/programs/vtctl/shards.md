@@ -415,6 +415,19 @@ Changes metadata in the topology service to acknowledge a shard master change pe
 
 * the <code>&lt;tablet alias&gt;</code> argument is required for the <code>&lt;TabletExternallyReparented&gt;</code> command This error occurs if the command is not called with exactly one argument.
 
+### GenerateShardRanges
+
+Generates shard ranges assuming a keyspace with N shards.
+
+#### Example
+
+<pre class="command-example">GenerateShardRanges &lt;num shards&gt; </pre>
+
+#### Flags
+
+| Name | Type | Definition |
+| :-------- | :--------- | :--------- |
+| num_shards | int | Number of shards to generate shard ranges for. (default 2) |
 
 ## See Also
 
