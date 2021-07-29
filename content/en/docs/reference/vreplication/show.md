@@ -1,7 +1,7 @@
 ---
-title: Show
+title: --- Show
 description: Show information about a workflow
-weight: 60
+weight: 35
 ---
 ##### _Experimental_
 This documentation is for a new (v2) set of vtctld commands. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
@@ -9,7 +9,7 @@ This documentation is for a new (v2) set of vtctld commands. See [RFC](https://g
 ### Command
 
 ```
-MoveTables/Reshard -v2 Show <targetKs.workflow>
+MoveTables/Reshard Show <targetKs.workflow>
 ```
 
 ### Description

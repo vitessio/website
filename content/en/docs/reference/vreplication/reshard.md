@@ -1,92 +1,58 @@
 ---
 title: Reshard
-description: split or merge shards in a keyspace
-weight: 60
+description: Reshard a keyspace to achieve horizontal scaling
+weight: 20
 ---
+##### _Experimental_
+This documentation is for a new (v2) set of vtctld commands. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
 
 ### Command
 
 ```
-Reshard [-cells=<cells>] [-tablet_types=<source_tablet_types>] [-skip_schema_copy] [-auto_start] [-stop_after_copy] <keyspace.workflow> <source_shards> <target_shards>
+Reshard <options> <action> <workflow identifier>
 ```
 
 ### Description
 
-Reshard support horizontal sharding by letting you change the sharding ranges of your existing keyspace.
+Reshard is used to create and manage workflows to horizontally shard an existing keyspace. The source keyspace can be unsharded or sharded.
 
 ### Parameters
 
-#### -cells
-**optional**\
+#### action
 
 <div class="cmd">
-Comma separated Cell(s) or CellAlias(es) to replicate from.
+
+Reshard is an "umbrella" command. The `action` sub-command defines the operation on the workflow.
+
 </div>
 
-#### -tablet_types
-**optional**\
-**default** empty
-
+#### options
 <div class="cmd">
-Source Vitess tablet_type, or comma separated list of tablet types, that should be used for choosing source tablet(s) for the reshard.
+
+Each `action` has additional options/parameters that can be used to modify its behavior.
+
+`actions` are common to both MoveTables and Reshard v2 workflows. Only the `create` action has different parameters, all other actions have common options and similar semantics. These actions are documented separately.
+
 </div>
 
-**Note:** If replicating from master, you must explicitly use `-tablet_types=master`. If not specified, it defaults to the tablet type(s) specified by the `-vreplication_tablet_type` VTTablet command line flag. `-vreplication_tablet_type` defaults to replica.
-
-#### -skip_schema_copy 
-**optional**\
-**default** false
+#### workflow identifier
 
 <div class="cmd">
-If true the source schema is copied to the target shards. If false, you need to create the tables
-before calling reshard.
-</div>
 
-#### -auto_start
-**optional**\
-**default** true
+All workflows are identified by `targetKeyspace.workflow` where `targetKeyspace` is the name of the keyspace to which the tables are being moved. `workflow` is a name you assign to the Reshard workflow to identify it.
 
-<div class="cmd">
-If false, streams will start in the Stopped state and will need to be explicitly started (default true)
-</div>
-
-#### -stop_after_copy
-**optional**\
-**default** false
-
-<div class="cmd">
-Streams will be stopped once the copy phase is completed
-</div>
-
-#### keyspace.workflow 
-**mandatory**
-
-<div class="cmd">
-Name of keyspace being sharded and the associated workflow name, used in later commands to refer back to this reshard.
-</div>
-
-#### source_shards 
-**mandatory**
-
-<div class="cmd">
-Comma separated shard names to reshard from.
-</div>
-
-#### target_shards
-**mandatory**
-
-<div class="cmd">
-Comma separated shard names to reshard to.
 </div>
 
 
-### A Reshard Workflow
+### The most basic Reshard Workflow lifecycle
 
-Once you decide on the new resharding strategy for a keyspace, you need to initiate a VReplication workflow as follows:
-
-1. Initiate the migration using Reshard
-2. Monitor the workflow using [Workflow](../workflow) or [VExec](../vexec)
-3. Confirm that data has been copied over correctly using [VDiff](../vdiff)
-4. Start the cutover by routing all reads from your application to those tables using [SwitchReads](../switchreads)
-5. Complete the cutover by routing all writes using [SwitchWrites](../switchwrites)
-6. Optionally cleanup the source tables using [DropSources](../dropsources)
+1. Initiate the migration using [Create](../create)<br/>
+`Reshard -source_shards=<source_shards> -target_shards=<target_shards> Create <keyspace.workflow>`
+1. Monitor the workflow using [Show](../show) or [Progress](../progress)<br/>
+`Reshard Show <keyspace.workflow>` _*or*_ <br/>
+`Reshard Progress <keyspace.workflow>`<br/>
+1. Confirm that data has been copied over correctly using [VDiff](../../vdiff)
+1. Cutover to the target keyspace with [SwitchTraffic](../switchtraffic) <br/>
+`Reshard SwitchTraffic <keyspace.workflow>`
+1. Cleanup vreplication artifacts and source shards with [Complete](../complete) <br/>
+`Reshard Complete <keyspace.workflow>`

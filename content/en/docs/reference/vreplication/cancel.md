@@ -1,7 +1,7 @@
 ---
-title: Cancel
+title: --- Cancel
 description: Tear down a workflow where no traffic has been switched
-weight: 90
+weight: 37
 ---
 ##### _Experimental_
 This documentation is for a new (v2) set of vtctld commands. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
@@ -9,7 +9,7 @@ This documentation is for a new (v2) set of vtctld commands. See [RFC](https://g
 ### Command
 
 ```
-MoveTables/Reshard -v2 [-keep_data] Cancel <targetKs.workflow>
+MoveTables/Reshard [-keep_data] Cancel <targetKs.workflow>
 ```
 
 ### Description

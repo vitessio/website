@@ -1,7 +1,7 @@
 ---
-title: Progress
+title: --- Progress
 description: Show copy progress and replication lag of a workflow
-weight: 70
+weight: 36
 ---
 ##### _Experimental_
 This documentation is for a new (v2) set of vtctld commands. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
@@ -9,7 +9,7 @@ This documentation is for a new (v2) set of vtctld commands. See [RFC](https://g
 ### Command
 
 ```
-MoveTables/Reshard -v2 Progress <targetKs.workflow>
+MoveTables/Reshard Progress <targetKs.workflow>
 ```
 
 ### Description

@@ -1,7 +1,7 @@
 ---
 title: VDiff
 description: Compare the source and target in a workflow to ensure integrity
-weight: 20
+weight: 40
 ---
 
 ### Command

@@ -1,6 +1,8 @@
 ---
 title: VReplication
-description: Command references, architecture and design docs
-weight: 3
+description: VReplication vtctl commands
+weight: 1
 skip_sections: true
 ---
+
+We now default to the v2 cli commands

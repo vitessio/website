@@ -1,7 +1,7 @@
 ---
-title: Create
+title: "--- Create"
 description: Initiate a workflow
-weight: 30
+weight: 31
 ---
 ##### _Experimental_
 This documentation is for a new (v2) set of vtctld commands. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
@@ -9,12 +9,12 @@ This documentation is for a new (v2) set of vtctld commands. See [RFC](https://g
 ### Command
 
 ```
-MoveTables -v2 [-source=<sourceKs>] [-tables=<tableSpecs>] [-cells=<cells>]
+MoveTables [-source=<sourceKs>] [-tables=<tableSpecs>] [-cells=<cells>]
   [-tablet_types=<source_tablet_types>] [-all] [-exclude=<tables>]
    [-auto_start] [-stop_after_copy]
   Create <targetKs.workflow>
 
-Reshard -v2 [-source_shards=<source_shards>] [-target_shards=<target_shards>]
+Reshard [-source_shards=<source_shards>] [-target_shards=<target_shards>]
   [-cells=<cells>] [-tablet_types=<source_tablet_types>]  [-skip_schema_copy]
   Create <keyspace.workflow>
 

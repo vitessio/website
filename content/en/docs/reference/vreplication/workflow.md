@@ -1,7 +1,7 @@
 ---
 title: Workflow
 description: Wrapper on VExec to perform common actions on a workflow
-weight: 110
+weight: 50
 ---
 
 ### Command
@@ -12,12 +12,12 @@ Workflow  [-dry_run] <keyspace.workflow> <action>
 
 ### Description
 
-Workflow is a convenience command for useful actions on a workflow that you can use instead of 
+Workflow is a convenience command for useful actions on a workflow that you can use instead of
 actually specifying a query to VExec.
 
 ### Parameters
 
-#### -dry-run 
+#### -dry-run
 **optional**\
 **default** false
 
@@ -26,14 +26,14 @@ You can do a dry run where no actual action is taken but the command logs all th
 by SwitchReads.
 </div>
 
-#### keyspace.workflow 
+#### keyspace.workflow
 **mandatory**
 
 <div class="cmd">
 Name of target keyspace and the associated workflow to SwitchWrites for.
 </div>
 
-#### action 
+#### action
 **mandatory**
 
 <div class="cmd">

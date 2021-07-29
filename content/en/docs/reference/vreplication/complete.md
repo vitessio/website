@@ -1,7 +1,7 @@
 ---
-title: Complete
+title: --- Complete
 description: Tear down a workflow after switching all traffic
-weight: 80
+weight: 34
 ---
 ##### _Experimental_
 This documentation is for a new (v2) set of vtctld commands. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
@@ -9,7 +9,7 @@ This documentation is for a new (v2) set of vtctld commands. See [RFC](https://g
 ### Command
 
 ```
-MoveTables/Reshard -v2 [-keep_data] [-rename_tables] [-dry_run]
+MoveTables/Reshard [-keep_data] [-rename_tables] [-dry_run]
   Complete <targetKs.workflow>
 ```
 

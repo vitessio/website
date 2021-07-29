@@ -448,4 +448,3 @@ monitoring tools like prometheus:
 * VReplicationSourceTablet: The source tablet for each VReplication stream.
 
 Thresholds and alerts can be set to draw attention to potential problems.
-

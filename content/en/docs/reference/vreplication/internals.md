@@ -1,6 +1,6 @@
 ---
 title: Life of a stream
-weight: 200
+weight: 300
 ---
 
 ### Introduction

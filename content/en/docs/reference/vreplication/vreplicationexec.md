@@ -1,7 +1,7 @@
 ---
 title: VReplicationExec
 description: Low level command to run a query on vreplication related tables
-weight: 190
+weight: 70
 ---
 
 ### Command
@@ -16,14 +16,14 @@ The VReplicationExec command is used to view or manage vreplication streams. Mor
 
 ### Parameters
 
-#### -json 
+#### -json
 **optional**
 
 <div class="cmd">
 The output of the command is json formatted: to be readable by scripts.
 </div>
 
-#### tablet alias 
+#### tablet alias
 **mandatory**
 
 <div class="cmd">
@@ -31,12 +31,12 @@ Id of the target tablet on which to run the sql query, specified using the vites
 cell-uid (see example below).
 </div>
 
-#### sql query 
+#### sql query
 **mandatory**
 
 <div class="cmd">
 SQL query which will be run: validations are done to ensure that queries can be run only against vreplication tables.
-A limited set of queries are allowed. 
+A limited set of queries are allowed.
 </div>
 
 #### Example
