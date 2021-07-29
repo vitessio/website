@@ -223,6 +223,30 @@ The syntax for tracking migrations is:
 vtctlclient OnlineDDL <keyspace> show <migration_id|all|recent|queued|ready|running|complete|failed|cancelled>
 ```
 
+
+
+## Showing migration logs
+
+`gh-ost` and `pt-osc` tools generate logs files, which are retrievable for `24` hours after migration completion/failure.
+
+#### Via VTGate/SQL
+
+```sql
+mysql> show vitess_migration '3a273866_e867_11eb_ab12_0a43f95f28a3' logs \G
+*************************** 1. row ***************************
+migration_log: 2021-07-19 07:59:23 INFO starting gh-ost 261355426d8fc31b590733ca8ff8e79012103c18
+2021-07-19 07:59:23 INFO Migrating `vt_commerce`.`corder`
+2021-07-19 07:59:23 INFO executing gh-ost-on-startup hook: /tmp/online-ddl-3a273866_e867_11eb_ab12_0a43f95f28a3-943208852/gh-ost-on-startup
+ok
+2021-07-19 07:59:23 INFO inspector connection validated on ip-REDACTED:17100
+2021-07-19 07:59:23 INFO User has SUPER, REPLICATION SLAVE privileges, and has ALL privileges on `vt_commerce`.*
+2021-07-19 07:59:23 INFO binary logs validated on ip-REDACTED:17100
+2021-07-19 07:59:23 INFO Restarting replication on ip-REDACTED:17100 to make sure binlog settings apply to replication thread
+2021-07-19 07:59:23 INFO Inspector initiated on ip-REDACTED:17100, version 5.7.30-log
+2021-07-19 07:59:23 INFO Table found. Engine=InnoDB
+...
+```
+
 ## Cancelling a migration
 
 The user may cancel a migration, as follows:

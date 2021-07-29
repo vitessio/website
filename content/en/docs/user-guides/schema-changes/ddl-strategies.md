@@ -59,7 +59,6 @@ VReplication migrations enjoy the general features of VReplication:
 - Seamless integration with Vitess.
 - Seamless use of the throttler mechanism.
 - Visibility into internal working and status of VReplication.
-- Recoverable after failover.
 
 ### gh-ost
 
