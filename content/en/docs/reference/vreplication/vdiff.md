@@ -7,7 +7,7 @@ weight: 20
 ### Command
 
 ```
-VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=replica]
+VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=master,replica,rdonly]
        [-limit=<max rows to diff>] [-table=<table list>] [-format=json]
        [-filtered_replication_wait_time=30s] [-debug_query] [-only_pks] <keyspace.workflow>
 ```
@@ -39,7 +39,7 @@ VDiff will choose a tablet from this cell to diff the source table(s) with the t
 
 #### -tablet_types
 **optional**\
-**default** replica
+**default** master,replica,rdonly
 
 <div class="cmd">
 A comma separated list of tablet types that are used while picking a tablet for sourcing data.
