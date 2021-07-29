@@ -1,8 +1,6 @@
 ---
 title: VReplication
-description: VReplication vtctl commands
+description: "VReplication vtctl commands (now defaulting to the experimental v2 commands)"
 weight: 1
 skip_sections: true
 ---
-
-We now default to the v2 cli commands
