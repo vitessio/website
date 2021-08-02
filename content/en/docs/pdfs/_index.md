@@ -9,6 +9,7 @@ The Vitess Documentation currently posted should reflect the most recent code.
 
 To view a PDF of the state of the Vitess Documentation on the date of the general availability release for previous versions please follow the links below:
 
+- [Vitess Docs 11.0 on August 2, 2021](../../../../files/version-pdfs/Vitess-Docs-11.0-08-02-2021.pdf)
 - [Vitess Docs 10.0 on April 27, 2021](../../../../files/version-pdfs/Vitess-Docs-10.0-04-27-2021.pdf)
 - [Vitess Docs 9.0 on January 26, 2021](../../../../files/version-pdfs/Vitess-Docs-9.0-01-26-2021.pdf)
 - [Vitess Docs 8.0 on October 27, 2020](../../../../files/version-pdfs/Vitess-Docs-8.0-10-27-2020.pdf)
