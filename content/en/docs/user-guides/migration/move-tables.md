@@ -453,7 +453,7 @@ ERROR 1146 (42S02) at line 4: vtgate: http://localhost:15001/: target: commerce.
 This confirms that the data has been correctly cleaned up.  Note that the `Complete` process also cleans up the reverse VReplication workflow mentioned above. Regarding the routing rules, Vitess behavior here has changed recently:
 
   * Before Vitess 9.0, the the routing rules from the source keyspace to the target keyspace was not cleaned up.  The assumption was that you might still have applications that refer to the tables by their explicit `schema.table` designation, and you want these applications to (still) transparently be forwarded to the new location of the data.  When you are absolutely sure that no applications are using this access pattern, you can clean up the routing rules by manually adjusting the routing rules via the `vtctlclient ApplyRoutingRules` command.
-  * From Vitess 9.0 onwards, the routing rules from the source keyspace to the target keyspace are also cleaned up as part of the `Complete` operation. If this is not the behavior you want, can choose to either delay the `Complete` until you are sure the routing rules (and source data) are no longer required; or you can perform the same steps as `Complete` manually.
+  * From Vitess 9.0 onwards, the routing rules from the source keyspace to the target keyspace are also cleaned up as part of the `Complete` operation. If this is not the behavior you want, you can choose to either delay the `Complete` until you are sure the routing rules (and source data) are no longer required; or you can perform the same steps as `Complete` manually.
 
 ## Next Steps
 

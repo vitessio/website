@@ -24,7 +24,7 @@ MoveTables is typically used for migrating data into Vitess or to implement vert
 
 <div class="cmd">
 
-MoveTables is an "umbrella" command. The `action` sub-command defines the operation on the workflow.
+MoveTables is an top-level command. The `action` sub-command defines the operation on the workflow.
 
 </div>
 
