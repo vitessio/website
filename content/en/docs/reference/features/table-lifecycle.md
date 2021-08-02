@@ -22,6 +22,7 @@ There are two locking aspects to dropping tables:
 
 The exact locking behavior and duration can vary depending on
 various factors:
+
  - Which filesystem is used
  - Whether the MySQL adaptive hash index is used
  - Whether you are attempting to hack around some of the MySQL `DROP TABLE`
