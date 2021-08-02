@@ -55,7 +55,7 @@ All workflows are identified by `targetKeyspace.workflow` where `targetKeyspace`
 `Migrate -all -source ext1.load Create commerce.wf`
 1. Monitor the workflow using [Show](../show)<br/>
 `Workflow Show commerce.wf`
-1. Confirm that data has been copied over correctly using [VDiff](../../vdiff)
+1. Confirm that data has been copied over correctly using [VDiff](../../../vdiff)
 1. Cleanup vreplication artifacts and source tables with [Complete](../complete) <br/>
 `Migrate Complete commerce.wf`
 
