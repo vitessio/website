@@ -1,7 +1,7 @@
 ---
 title: Resharding
 weight: 4
-aliases: ['/docs/user-guides/resharding/'] 
+aliases: ['/docs/user-guides/resharding/']
 ---
 
 {{< info >}}
@@ -197,10 +197,12 @@ This process starts the reshard operation. It occurs online, and will not block 
 
 ```bash
 # With Helm and Local Installation
-vtctlclient Reshard customer.cust2cust '0' '-80,80-'
+vtctlclient Reshard -source_shards '0' -target_shards '-80,80-' Create customer.cust2cust
 # With Operator
-vtctlclient Reshard customer.cust2cust '-' '-80,80-'
+vtctlclient Reshard -source_shards '-' -target_shards '-80,80-' Create customer.cust2cust
 ```
+
+All of the command options and parameters for `Reshard` are listed in our [reference page for Reshard](../../../reference/vreplication/v2/reshard).
 
 ## Validate Correctness
 
@@ -216,22 +218,26 @@ Summary for customer: {ProcessedRows:5 MatchingRows:5 MismatchedRows:0 ExtraRows
 Summary for corder: {ProcessedRows:5 MatchingRows:5 MismatchedRows:0 ExtraRowsSource:0 ExtraRowsTarget:0}
 ```
 
-## Switch Reads
+## Switch Non-Primary Reads
 
 After validating for correctness, the next step is to switch read operations to occur at the new location. By switching read operations first, we are able to verify that the new tablet servers are healthy and able to respond to requests:
 
 ```bash
-vtctlclient SwitchReads -tablet_type=rdonly customer.cust2cust
-vtctlclient SwitchReads -tablet_type=replica customer.cust2cust
+vtctlclient Reshard -tablet_types=rdonly,replica SwitchTraffic customer.cust2cust
 ```
 
-## Switch Writes
+## Switch Writes and Primary Reads
 
-After reads have been switched, and the health of the system has been verified, it's time to switch writes. The usage is very similar to switching reads:
+After the replica/rdonly reads have been switched, and the health of the system has been verified, it's time to switch writes. The usage is very similar to switching reads:
 
 ```bash
-vtctlclient SwitchWrites customer.cust2cust
+vtctlclient Reshard -tablet_types=master SwitchTraffic customer.cust2cust
 ```
+
+## Note
+
+While we have switched reads and writes separately in this example, you can also switch all traffic, read and write, at the same time. If you don't specify the `-tablet_types` parameter `SwitchTraffic` will start serving traffic from the target for all tablet types.
+
 
 You should now be able to see the data that has been copied over to the new shards:
 
@@ -274,7 +280,7 @@ COrder
 +----------+-------------+----------+-------+
 ```
 
-## Cleanup
+## Finalize and Cleanup
 
 After celebrating your second successful resharding, you are now ready to clean up the leftover artifacts:
 
@@ -293,16 +299,12 @@ kubectl apply -f 306_down_shard_0.yaml
 ### Using a Local Deployment
 
 ``` sh
+vtctlclient Reshard Complete customer.cust2cust
+
 for i in 200 201 202; do
  CELL=zone1 TABLET_UID=$i ./scripts/vttablet-down.sh
  CELL=zone1 TABLET_UID=$i ./scripts/mysqlctl-down.sh
 done
 ```
 
-In this script, we just stopped all tablet instances for shard 0. This will cause all those vttablet and `mysqld` processes to be stopped. But the shard metadata is still present. After Vitess brings down all vttablets, we can clean that up with this command:
-
-``` sh
-vtctlclient DeleteShard -recursive customer/0
-```
-
-Beyond this, you will also need to manually delete the disk associated with this shard.
+In this script, we just stopped all tablet instances for shard 0. This will cause all those vttablet and `mysqld` processes to be stopped. Beyond this, you will also need to manually delete the disk associated with this shard.

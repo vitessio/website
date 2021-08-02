@@ -9,7 +9,7 @@ This documentation is for a new (v2) set of vtctld commands. See [RFC](https://g
 ### Command
 
 ```
-MoveTables  -v2 <options> <action> <workflow identifier>
+MoveTables <options> <action> <workflow identifier>
 ```
 
 ### Description

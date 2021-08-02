@@ -1,13 +1,13 @@
 ---
 title: Throttling
-weight: 200
+weight: 300
 ---
 
 ### Introduction
 
 VReplication moves potentially massive amounts of data from one place to another, whether within the same keyspace and shard or across keyspaces. It copies data of entire tables and follows up to apply ongoing changes on those tables by reading the binary logs (aka the changelog).
 
-This places load on both the source side (where VReplication reads data from) as well as on target side (where VReplication writes data to). 
+This places load on both the source side (where VReplication reads data from) as well as on target side (where VReplication writes data to).
 
 On the source side, VReplication reads the full content of tables. This typically means loading pages from disk contending for disk IO, and "polluting" the MySQL buffer pool. The operation competes with normal production traffic for both IO and memory resources. If the source is a replica, the operation may lead to replication lag. If the source is a primary, this may lead to write contention.
 

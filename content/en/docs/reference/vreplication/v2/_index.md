@@ -1,5 +1,5 @@
 ---
-title: VReplication V2 Commands
-description: New V2 MoveTables and Reshard vtctld commands (Experimental)
-weight: 1000
+title: VReplication V2 commands
+description: "VReplication V2 vtctld commands (experimental)"
+weight: 2000
 ---

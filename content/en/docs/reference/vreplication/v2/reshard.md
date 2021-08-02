@@ -9,7 +9,7 @@ This documentation is for a new (v2) set of vtctld commands. See [RFC](https://g
 ### Command
 
 ```
-Reshard  -v2 <options> <action> <workflow identifier>
+Reshard <options> <action> <workflow identifier>
 ```
 
 ### Description

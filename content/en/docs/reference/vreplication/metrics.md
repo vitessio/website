@@ -1,7 +1,7 @@
 ---
 title: Metrics
 description: Metrics related to vreplication functionality
-weight: 90
+weight: 85
 ---
 
 VReplication exports several metrics using the expvars interface. These are available at the `debug/vars` endpoint of vttablet's http status pages. [More details here](../../features/monitoring/#3-push-based-metrics-system#3-push-based-metrics-system)

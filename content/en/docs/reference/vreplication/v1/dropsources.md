@@ -7,7 +7,7 @@ weight: 60
 ### Command
 
 ```
-DropSources  [-dry_run] [-rename_tables] [-keep_data] <keyspace.workflow>
+DropSources [-dry_run] [-rename_tables] [-keep_data] <keyspace.workflow>
 ```
 
 ### Description
