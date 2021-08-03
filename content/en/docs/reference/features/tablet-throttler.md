@@ -59,6 +59,7 @@ The cluster's metric is only as accurate as the following metrics:
 - The aggregation interval
 
 The error margin equals approximately the sum of the above values, plus additional overhead. The defaults for these intervals are as follows:
+
 + Probe interval: `100ms`
 + Aggregation interval: `100ms`
 + Heartbeat interval: `250ms`

@@ -5,6 +5,7 @@ weight: 1
 ---
 
 ### Feature Description
+
 Vitess currently supports transactions through vtgate only on MASTER tablets. We would like to extend transaction support to REPLICA (or other tablet types).
 
 ### Use Case(s)
@@ -13,6 +14,7 @@ Vitess currently supports transactions through vtgate only on MASTER tablets. We
 * Sqoop integration
 
 ### Proposed Solution
+
 - When vtgate chooses a tablet to execute a query on, it should return the tablet alias.
 - tablet alias and transactionID will be stored on the shard session struct.
 - if the session object has a tablet alias set, then the query will target the specific tablet.

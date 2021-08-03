@@ -7,8 +7,11 @@ aliases: ['/docs/recovery/pitr','/docs/reference/pitr/']
 ## Point in Time Recovery
 
 ### Supported Databases
+
 - MySQL 5.7
+
 ### Believed to work, but untested
+
 - MySQL 8.0
 
 ### Introduction
@@ -16,15 +19,18 @@ aliases: ['/docs/recovery/pitr','/docs/reference/pitr/']
 The Point in Time Recovery feature in Vitess enables recovery of data to a specific point time (timestamp). There can be multiple recovery requests active at the same time. It is possible to recover across sharding actions, i.e. you can recover to a time when there were two shards even though at present there are four.
 
 Point in Time Recovery leverages two Vitess features:
+
 1. The use of `SNAPSHOT` keyspaces for recovery of the last backup before a requested specific timestamp to restore to.
 2. Integration with a binlog server to allow vttablet to apply binary logs from the recovered backup up to the specified timestamp.
 
 ### Use cases
+
 - Accidental deletion of data, e.g. dropping a table by mistake, running an UPDATE or DELETE with an incorrect WHERE clause, etc.
 - Corruption of data due to application bugs.
 - Corruption of data due to MySQL bugs or underlying hardware (e.g. storage) problems.
 
 ### Preconditions
+
 - There should be a Vitess backup taken before the desired point in time.
 - There should be continuous binlogs available from the backup time to the desired point in time.
 - This feature is tested using [Ripple](https://github.com/google/mysql-ripple) as the binlog server.  However, it should be possible to use a MySQL instance as source for the binlogs as well.
@@ -52,6 +58,7 @@ there are other options; and you could use an existing MySQL server as well.
 
 If you use Ripple, you will need to configure it yourself, and ensure you take
 care of the following:
+
  - You should have a highly available binlog server setup. If the binlog
    server goes down, you need to ensure that it is back up and able
    to synchronize the MySQL binary logs from its upstream MySQL server
@@ -95,6 +102,7 @@ $ vtctlclient -server <vtctld_host>:<vtctld_port> CreateKeyspace -keyspace_type=
  process.  You may already be using some of these as part of your
  normal vttablet initialization parameters (e.g. if you are using the
  Vitess K8s operator):
+ 
  - `-init_keyspace restoreks` - here `restoreks` is the recovery keyspace
  name which we created earlier
  - `-init_db_name_override vt_originalks` - here `vt_originalks` is the
@@ -113,6 +121,7 @@ $ vtctlclient -server <vtctld_host>:<vtctld_port> CreateKeyspace -keyspace_type=
 
 And then, depending on your backup storage implementation, you can use a
 variety of flags:
+ 
  - `-backup_storage_implementation file` - for plain file backup type.
  If you use this option, you will also need to specify:
    - `-file_backup_storage_root` - with a path pointing to your backup
@@ -126,11 +135,13 @@ variety of flags:
   others.
 
 You will also probably want to use other flags for backup and restore like:
+
  - `-backup_engine_implementation xtrabackup` - Use Percona Xtrabackup to
  take online backups. Without this flag, the mysql instance on the replica
  being backed up will be shut down during the backup.
  - `-backup_storage_compress true` - gzip compress the backup (default is
  true).
+
 You need to be consistent in your use of these flags for backup and restore.
 
 Once the restore of the last backup earlier than the `snapshot_time` timestamp

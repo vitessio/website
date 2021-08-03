@@ -5,6 +5,7 @@ weight: 1
 ---
 
 ## Use Case
+
 There are multiple applications/frameworks that tweak session system variables at the start of the connection to configure the system in specific ways. Some do it for all connections it uses, and some do it only for specific workloads, such as import, installation, etc.
 
 To support these use cases, Vitess needs to allow SET statements to be set on a per-connection basis.
@@ -12,22 +13,27 @@ To support these use cases, Vitess needs to allow SET statements to be set on a 
 The recommendation is to change the setting at a global level during Vitess tablet setup. When this is done, sessions can use the normal connection pools, which is the most efficient way to operate. However, this design allows for sessions with VTgate changing these system variables and Vitess will make sure that they are set for all connections with MySQL for that session.
 
 ## System variable types
+
 Vitess internally classifies system variables into three types - Ignore, Reserve, and Vitess-aware.
 
 ### Ignore modification
+
 These are the system variables for which Vitess validates the current setting and notify users via warning that settings are either ignored or modification was not allowed. E.g. default_storage_engine, debug, etc.
 
 ### Vitess Aware
+
 These are the system variables for which Vitess needs to change behavior based on the settings. E.g. autocommit, client_found_rows, etc.
 
 ### Reserve connection
+
 These are the system variables that Vitess will send down to the storage engine and modify the settings at the session connection level. E.g. sql_mode, sql_safe_updates, etc.
 
 This document contains the design for this type of system variables.
 
 ## Design
-### VTTablet
-Reserve Pool
+
+### VTTablet Reserve Pool
+
 VTTablet will have a new pool named reserved pool. Connections in the reserved pool are tied to a specific session and are closed when the session is closed.
 
 QueryService interface changes:
@@ -41,6 +47,7 @@ QueryService interface changes:
 Connections that have updated session system variables will at the end of a transaction (Commit/Rollback) be moved to the reserve pool - they can’t be reused by other sessions.
 
 ### VTGate
+
 When a session issues a SET statement to change a system variable, VTGate will compare the provided value with the already configured value. If it differs, it is stored in the session.
 
 A connection with the vttablet is reserved when a query is sent from the client connection. The stored settings are applied first to the reserved connection and then the query is executed.
@@ -74,7 +81,9 @@ From State | Query | Vtgate Action | API on tablet | To State
 | reserved-inTx | Close Connection | Close Session | ReserveRelease | clear |
 
 ## Release Plan
+
 The release plan would be to update vttablet < vtctl < vtgate in this particular order.
 
 ## Assumption
+
 The order of the SET statements is not maintained. Different Vitess shards might see settings being applied in any order.

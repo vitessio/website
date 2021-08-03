@@ -53,7 +53,7 @@ All workflows are identified by `targetKeyspace.workflow` where `targetKeyspace`
 1. Monitor the workflow using [Show](../show) or [Progress](../progress)<br/>
 `MoveTables Show <targetKs.workflow>` _*or*_ <br/>
 `MoveTables Progress <targetKs.workflow>`<br/>
-1. Confirm that data has been copied over correctly using [VDiff](../../vdiff)
+1. Confirm that data has been copied over correctly using [VDiff](../vdiff)
 1. Cutover to the target keyspace with [SwitchTraffic](../switchtraffic) <br/>
 `MoveTables SwitchTraffic <targetKs.workflow>`
 1. Cleanup vreplication artifacts and source tables with [Complete](../complete) <br/>
