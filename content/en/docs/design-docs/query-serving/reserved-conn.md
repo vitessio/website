@@ -34,7 +34,7 @@ If a user uses temporary tables, Vitess will mark the session as needing a reser
 
 ### GET_LOCK() and reserved connections
 
-The MySQL locking functions allows users to work with user level locks. Since the locks are tied to the connection, and freeing lock has to be done in the same connection as the lock was acquired, use of these functions will force a connection to become a reserved connection. This connection is also kept alive so it does not time out due to inactivity. More information can be found [here.](/docs/design-docs/query-serving/locking-functions/).
+The MySQL locking functions allow users to work with user level locks. Since the locks are tied to the connection, and the lock must be released in the same connection as it was acquired, use of these functions will force a connection to become a reserved connection. This connection is also kept alive so it does not time out due to inactivity. More information can be found [here.](/docs/design-docs/query-serving/locking-functions/).
 
 ### Shutting down reserved connections
 
