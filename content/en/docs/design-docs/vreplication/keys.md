@@ -277,7 +277,7 @@ In the above:
 - `target_unique_key_columns` is the (comma delimited) list of columns covered by the chosen key on target table
 - `source_unique_key_target_columns` is the (comma delimited) list of column names in target table, which map to `source_unique_key_columns`. This mapping is necessary because columns may change their names.
 
-# Example 2
+### Example 2
 
 Again both source and target table share same `PRIMARY KEY`, but this time it covers two columns:
 
@@ -304,7 +304,7 @@ keyspace:"commerce" shard:"0" filter:{
 
 Not much changed from the previous example, just note how we comma separate `"order_id,customer_id"`
 
-# Example 3
+### Example 3
 
 Continuing previous example, we now rename a column the target table:
 
