@@ -247,7 +247,7 @@ After a MoveTables or Resharding workflow cleanup unused artifacts like source t
 
 ### CreateLookupVindex
 ```shell
-CreateLookupVindex  [-cell=<cell>] [-tablet_types=<source_tablet_types>] <keyspace> <json_spec>
+CreateLookupVindex  [-cells=<source_cells>] [-continue_after_copy_with_owner=false] [-tablet_types=<source_tablet_types>] <keyspace> <json_spec>
 Create and backfill a lookup vindex. the json_spec must contain the vindex and colvindex specs for the new lookup.
 ```
 
