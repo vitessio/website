@@ -342,3 +342,32 @@ Note:
 OnlineDDL mechanism automatically analyzes the differences between source and target tables, evaluates eligible keys, chooses the keys on source and target tables, and populates the filter's `source_unique_key_columns`, `target_unique_key_columns`, `source_unique_key_target_columns` fields. Indeed, OnlineDDL operations are most susceptible to differences in keys.
 
 At this time no other VReplication mechanism automates this analysis. The user must supply the correct values.
+
+## Implementation
+
+In high level, this is how VReplication is able to work with different keys/columns.
+
+Originally, VReplication was only designed to work with identical `PRIMARY KEY`s. If not specified, VReplication assumes the source table's `PRIMARY KEY` _can be used_ on target table, and that target table's `PRIMARY KEY` applies to source table. If not, it breaks.
+
+With the introduction of `source_unique_key_columns`, `target_unique_key_columns`, `source_unique_key_target_columns` VReplication changes behavior as follows:
+
+#### Notes about the code
+
+Much of the code uses "PK" terminology. With the introduction of _any_ unique key utilization the "PK" terminology becomes incorrect. However, to avoid mass rewrites we kept this terminology, and wherever VReplication discusses a primary key or pkColumns etc., it may refer to a non-PK Unique Key.
+
+### Streamer
+
+Streaming is done by `source_unique_key_columns`. When not present, `rowstreamer` uses PK columns. When present. rowstreamer trusts the information in `source_unique_key_columns` to be correct. It does not validate that there is indeed a valid unique key covering those columns. It does validate that the columns exist.
+
+The streamer iterates the table by `source_unique_key_columns` order. It tracks its progress in `lastPk` as if this was indeed a PK.
+
+### Copier
+
+VCopier receives rows from the streamer in `source_unique_key_columns` order. It complies with the streamer's ordering. When tracking progress in `_vt.copy_state` it uses `lastPk` values from the streamer, which means it uses the same `source_unique_key_columns` as the streamer in that order.
+
+### Player
+
+VPlayer adhers to both `source_unique_key_columns` and `target_unique_key_columns`.
+
+- `TablePlan`'s `isOutsidePKRange()` function needs to compare values according to rowstreamer's ordering, therefore uses `source_unique_key_columns` ordering
+- `tablePlanBuilder`'s `generateWhere()` function uses the target table's `target_unique_key_columns`, and then also appends any supplemental columns from `source_unique_key_target_columns` not included in `target_unique_key_columns`.
