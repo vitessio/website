@@ -476,6 +476,3 @@ mysql> select sku, hex(keyspace_id) from corder_lookup;
 We added a new row to the `corder` table, and now we have a new row in the
 lookup table.
 
-### ExternalizeVindex
-
-Once the backfill is done,

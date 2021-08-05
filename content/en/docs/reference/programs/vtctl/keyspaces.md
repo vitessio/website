@@ -254,7 +254,10 @@ Create and backfill a lookup vindex. the json_spec must contain the vindex and c
 ### ExternalizeVindex
 ```shell
 ExternalizeVindex  <keyspace>.<vindex>
-Externalize a backfilled vindex.
+Externalize (activate) a lookup vindex backfilled using `CreateLookupVindex`.
+This removes the workflow and vreplication streams associated with the
+backfill, and clears the `write_only` flag on the vindex. After this flag is
+removed, applications can start using the vindex for lookups.
 ```
 
 ### Materialize
