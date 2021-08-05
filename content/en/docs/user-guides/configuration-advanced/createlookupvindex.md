@@ -478,4 +478,10 @@ lookup table.
 
 ### ExternalizeVindex
 
-Once the backfill is done,
+Once the backfill is done you need to run this command and to externalize the vindex. A newly added Vindex has to be Externalized it for it to be usable.
+
+```bash
+vtctlclient -server localhost:15999 ExternalizeVindex <keyspace>.<vindex>
+```
+
+
