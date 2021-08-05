@@ -476,12 +476,3 @@ mysql> select sku, hex(keyspace_id) from corder_lookup;
 We added a new row to the `corder` table, and now we have a new row in the
 lookup table.
 
-### ExternalizeVindex
-
-Once the backfill is done you need to run this command and to externalize the vindex. A newly added Vindex has to be Externalized it for it to be usable.
-
-```bash
-vtctlclient -server localhost:15999 ExternalizeVindex <keyspace>.<vindex>
-```
-
-
