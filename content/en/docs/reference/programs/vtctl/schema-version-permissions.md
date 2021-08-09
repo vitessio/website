@@ -57,14 +57,14 @@ Reloads the schema on all the tablets in a shard.
 
 #### Example
 
-<pre class="command-example">ReloadSchemaShard [-concurrency=10] [-include_master=false] &lt;keyspace/shard&gt;</pre>
+<pre class="command-example">ReloadSchemaShard [-concurrency=10] [-include_primary=false] &lt;keyspace/shard&gt;</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | concurrency | Int | How many tablets to reload in parallel |
-| include_master | Boolean | Include the master tablet |
+| include_primary | Boolean | Include the primary tablet |
 
 
 #### Arguments
@@ -81,14 +81,14 @@ Reloads the schema on all the tablets in a keyspace.
 
 #### Example
 
-<pre class="command-example">ReloadSchemaKeyspace [-concurrency=10] [-include_master=false] &lt;keyspace&gt;</pre>
+<pre class="command-example">ReloadSchemaKeyspace [-concurrency=10] [-include_primary=false] &lt;keyspace&gt;</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | concurrency | Int | How many tablets to reload in parallel |
-| include_master | Boolean | Include the master tablet(s) |
+| include_primary | Boolean | Include the primary tablet(s) |
 
 
 #### Arguments
@@ -101,7 +101,7 @@ Reloads the schema on all the tablets in a keyspace.
 
 ### ValidateSchemaShard
 
-Validates that the master schema matches all of the replicas.
+Validates that the schema on the primary tablet matches all of the replicas.
 
 #### Example
 
@@ -125,7 +125,7 @@ Validates that the master schema matches all of the replicas.
 
 ### ValidateSchemaKeyspace
 
-Validates that the master schema from shard 0 matches the schema on all of the other tablets in the keyspace.
+Validates that the schema on the primary tablet for shard 0 matches the schema on all of the other tablets in the keyspace.
 
 #### Example
 
@@ -149,7 +149,7 @@ Validates that the master schema from shard 0 matches the schema on all of the o
 
 ### ApplySchema
 
-Applies the schema change to the specified keyspace on every master, running in parallel on all shards. The changes are then propagated to replicas via replication. If -allow_long_unavailability is set, schema changes affecting a large number of rows (and possibly incurring a longer period of unavailability) will not be rejected.
+Applies the schema change to the specified keyspace on every primary, running in parallel on all shards. The changes are then propagated to replicas via replication. If -allow_long_unavailability is set, schema changes affecting a large number of rows (and possibly incurring a longer period of unavailability) will not be rejected.
 
 #### Example
 
@@ -174,7 +174,7 @@ Applies the schema change to the specified keyspace on every master, running in 
 
 ### CopySchemaShard
 
-Copies the schema from a source shard's master (or a specific tablet) to a destination shard. The schema is applied directly on the master of the destination shard, and it is propagated to the replicas through binlogs.
+Copies the schema from a source shard's primary (or a specific tablet) to a destination shard. The schema is applied directly on the primary of the destination shard, and it is propagated to the replicas through binlogs.
 
 #### Example
 
@@ -201,7 +201,7 @@ Copies the schema from a source shard's master (or a specific tablet) to a desti
 
 ### ValidateVersionShard
 
-Validates that the master version matches all of the replicas.
+Validates that the version on the primary matches all of the replicas.
 
 #### Example
 
@@ -217,7 +217,7 @@ Validates that the master version matches all of the replicas.
 
 ### ValidateVersionKeyspace
 
-Validates that the master version from shard 0 matches all of the other tablets in the keyspace.
+Validates that the version on the primary of shard 0 matches all of the other tablets in the keyspace.
 
 #### Example
 
@@ -249,7 +249,7 @@ Displays the permissions for a tablet.
 
 ### ValidatePermissionsShard
 
-Validates that the master permissions match all the replicas.
+Validates that the permissions on the primary tablet match all the replicas.
 
 #### Example
 
@@ -265,7 +265,7 @@ Validates that the master permissions match all the replicas.
 
 ### ValidatePermissionsKeyspace
 
-Validates that the master permissions from shard 0 match those of all of the other tablets in the keyspace.
+Validates that the permissions on the primary of shard 0 match those of all of the other tablets in the keyspace.
 
 #### Example
 

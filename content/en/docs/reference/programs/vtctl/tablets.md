@@ -10,7 +10,7 @@ The following `vtctl` commands are available for administering tablets.
 
 ### InitTablet
 
-Initializes a tablet in the topology.
+Deprecated. It is no longer necessary to run this command to initialize a tablet's record in the topology. Starting up a vttablet ensures that the tablet record is eventually published.
 
 #### Example
 
@@ -20,7 +20,7 @@ Initializes a tablet in the topology.
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| allow_master_override | Boolean | Use this flag to force initialization if a tablet is created as master, and a master for the keyspace/shard already exists. Use with caution. |
+| allow_master_override | Boolean | Use this flag to force initialization if a tablet is created as primary, and a primary for the keyspace/shard already exists. Use with caution. |
 | allow_update | Boolean | Use this flag to force initialization if a tablet with the same name already exists. Use with caution. |
 | db_name_override | string | Overrides the name of the database that the vttablet uses |
 | grpc_port | Int | The gRPC port for the vttablet process |
@@ -39,15 +39,16 @@ Initializes a tablet in the topology.
 * <code>&lt;tablet alias&gt;</code> &ndash; Required. A Tablet Alias uniquely identifies a vttablet. The argument value is in the format <code>&lt;cell name&gt;-&lt;uid&gt;</code>.
 * <code>&lt;tablet type&gt;</code> &ndash; Required. The vttablet's role. Valid values are:
 
-    * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
-    * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
-    * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
-    * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
-    * <code>master</code> &ndash; A primary copy of data
-    * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
-    * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to master
-    * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
-    * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
+  * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
+  * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
+  * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
+  * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential primary. Vitess also does not worry about lag for experimental tablets when reparenting.
+  * <code>primary</code> &ndash; A primary copy of data
+  * <code>master</code> &ndash; Deprecated, same as primary
+  * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
+  * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to primary
+  * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
+  * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential primary tablet.
 
 
 #### Errors
@@ -122,13 +123,13 @@ Deletes tablet(s) from the topology.
 
 #### Example
 
-<pre class="command-example">DeleteTablet [-allow_master] &lt;tablet alias&gt; ...</pre>
+<pre class="command-example">DeleteTablet [-allow_primary] &lt;tablet alias&gt; ...</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| allow_master | Boolean | Allows for the master tablet of a shard to be deleted. Use with caution. |
+| allow_primary | Boolean | Allows for the primary tablet of a shard to be deleted. Use with caution. |
 
 
 #### Arguments
@@ -209,7 +210,7 @@ Stops replication on the specified tablet.
 
 ### ChangeTabletType
 
-Changes the db type for the specified tablet, if possible. This command is used primarily to arrange replicas, and it will not convert a master.<br><br>NOTE: This command automatically updates the serving graph.<br><br>
+Changes the db type for the specified tablet, if possible. This command is used primarily to arrange replicas, and it will not convert a primary.<br><br>NOTE: This command automatically updates the serving graph.<br><br>
 
 #### Example
 
@@ -227,15 +228,16 @@ Changes the db type for the specified tablet, if possible. This command is used 
 * <code>&lt;tablet alias&gt;</code> &ndash; Required. A Tablet Alias uniquely identifies a vttablet. The argument value is in the format <code>&lt;cell name&gt;-&lt;uid&gt;</code>.
 * <code>&lt;tablet type&gt;</code> &ndash; Required. The vttablet's role. Valid values are:
 
-    * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
-    * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
-    * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
-    * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
-    * <code>master</code> &ndash; A primary copy of data
-    * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
-    * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to master
-    * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
-    * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
+  * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
+  * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
+  * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
+  * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential primary. Vitess also does not worry about lag for experimental tablets when reparenting.
+  * <code>primary</code> &ndash; A primary copy of data
+  * <code>master</code> &ndash; Deprecated, same as primary
+  * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
+  * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to primary
+  * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
+  * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential primary tablet.
 
 #### Errors
 
@@ -428,22 +430,6 @@ Stops mysqld and uses the BackupStorage service to store a new backup. This func
 
 * the <code>&lt;Backup&gt;</code> command requires the <code>&lt;tablet alias&gt;</code> argument This error occurs if the command is not called with exactly one argument.
 
-
-### ChangeSlaveType
-
-Changes the db type for the specified tablet, if possible. This command is used primarily to arrange replicas, and it will not convert a master.<br><br>NOTE: This command automatically updates the serving graph.<br><br>
-
-#### Example
-
-<pre class="command-example">ChangeSlaveType [-dry-run] &lt;tablet alias&gt; &lt;tablet type&gt;</pre>
-
-#### Flags
-
-| Name | Type | Definition |
-| :-------- | :--------- | :--------- |
-| dry-run | Boolean | Lists the proposed change without actually executing it |
-
-
 ### RestoreFromBackup
 
 Stops mysqld and restores the data from the latest backup.
@@ -459,7 +445,7 @@ Stops mysqld and restores the data from the latest backup.
 
 ### ReparentTablet
 
-Reparent a tablet to the current master in the shard. This only works if the current replication position matches the last known reparent action.
+Reparent a tablet to the current primary in the shard. This only works if the current replication position matches the last known reparent action.
 
 #### Example
 
