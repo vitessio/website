@@ -1,3 +1,8 @@
+---
+title: Global Routing
+weight: 23
+---
+
 # Global Table Routing
 Vitess has an implicit feature of routing the queries to appropriate keyspace based on the table specified in the `from` list.
 This works only for unique table names provided in the [VSchema](https://vitess.io/docs/concepts/vschema/).
