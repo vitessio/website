@@ -3,11 +3,4 @@ title: Common Operational Issues
 description: Frequently asked questions and commonly occurring problems while operating VReplication workflows.
 weight: 400
 ---
-{{%expand "expand this"%}}
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-{{% /expand%}}
+{{< expand `Click me!` "fas fa-bars" "fas fa-ban" >}} Hidden content {{< /expand >}}
