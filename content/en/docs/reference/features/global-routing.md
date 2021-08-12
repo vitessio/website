@@ -57,7 +57,7 @@ mysql> show tables from commerce;
 3 rows in set (0.00 sec)
 ```
 
-Without any default keyspace we can route to unique tables like `corder`, `product` and `player` but cannot route to `customer`
+Without a default keyspace we can route to unique tables like `corder`, `product` and `player` but cannot route to `customer`
 
 ```sql
 mysql> show columns from corder;
