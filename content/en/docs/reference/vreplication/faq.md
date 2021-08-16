@@ -1,6 +1,6 @@
 ---
-title: Common Operational Issues
-description: Frequently asked questions and commonly occurring problems while operating VReplication workflows.
+title: VReplication FAQ
+description: Common issues/questions while operating VReplication workflows.
 weight: 400
 ---
 {{< expand
@@ -29,7 +29,21 @@ GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, RELOAD, PROCESS, FILE, REFER
 {{< /expand >}}
 
 {{< expand
+`What GTID-related options do I need to set in my my.cnf?`
+"fas fa-angle-double-right" "fas fa-angle-double-up" >}}
+<pre>
+log_bin=1
+binlog_format=ROW
+binlog_row_image=full
+</pre>
+{{< /expand >}}
+
+<!--
+
+{{< expand
 `If I can't turn GTID on, can I run a VReplication workflow using FilePos instead?`
 "fas fa-angle-double-right" "fas fa-angle-double-up" >}}
-TBD
+To be done
 {{< /expand >}}
+
+-->
