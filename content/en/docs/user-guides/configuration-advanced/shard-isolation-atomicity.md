@@ -3,7 +3,7 @@ title: Shard Isolation and Atomicity Model
 weight: 20
 ---
 
-This is meant to explain some of the practical effects of the Vitess multi-shard isolation and atomicity model touched on in (Vitess' scalability philosophy)[https://vitess.io/docs/overview/scalability-philosophy/#consistency-model].
+This is meant to explain some of the practical effects of the Vitess multi-shard isolation and atomicity model touched on in [Vitess' scalability philosophy](../../overview/scalability-philosophy/#consistency-model).
 
 {{< info >}}
 A note about naming:  When talking about multi-shard atomicity and isolation informally, we may talk about it as "consistency", but in the context of **ACID** (atomicity, consistency, isolation, durability) as it is applied in a database context, this is incorrect. For this document, we will attempt to use the more precise terms.
@@ -22,7 +22,7 @@ Before we dive in, let us state that in the simple case, where a read (`SELECT`)
 
 ## Cross-shard isolation
 
-Because cross-shard writes might not be (completely atomic)[../#cross-shard-atomicity], cross-shard reads (even if they all go to the master) might not display **isolation**, i.e. they may show partial results for in-flight cross-shard write operations. A simple example may be that the all the rows for a multi-valued insert might not become visible across all shards at the same time.
+Because cross-shard writes might not be [completely atomic](../#cross-shard-atomicity), cross-shard reads (even if they all go to the master) might not display **isolation**, i.e. they may show partial results for in-flight cross-shard write operations. A simple example may be that the all the rows for a multi-valued insert might not become visible across all shards at the same time.
 
 This is typically not a big issue for most applications, since so-called read-after-write consistency is retained,  e.g.:
 
@@ -174,7 +174,7 @@ Vitess also supports (assuming the vtgate and vttablets have been configured app
 
 It should be emphasized that if you need to use **TWOPC** extensively in your application, you may be using Vitess incorrectly;  the vast majority of Vitess users do not use it at all.
 
-See our (TWOPC page)[../../reference/features/two-phase-commit/] for more details on how to configure **TWOPC**.
+See our [TWOPC page](../../reference/features/two-phase-commit/) for more details on how to configure **TWOPC**.
 
 In TWOPC mode, Vitess uses the `_vt` sidecar database to record metadata related to each transactions across multiple tables.  As a result, any multi-shard write in **TWOPC** mode is likely to be an order of a magnitude slower than in **MULTI** mode.
 
