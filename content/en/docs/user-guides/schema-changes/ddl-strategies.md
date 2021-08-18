@@ -59,6 +59,12 @@ VReplication migrations enjoy the general features of VReplication:
 - Seamless integration with Vitess.
 - Seamless use of the throttler mechanism.
 - Visibility into internal working and status of VReplication.
+- Agnostic to planned reparenting and to unplanned failovers. A migration will resume from point of interruption shortly after a new primary is instated.
+
+VReplication migrations further:
+
+- Are [revertible](../revertible-migrations): you may switch back to the pre-migration schema without losing any data accumulated during and post migration.
+- Support a wider range of schema changes. For example, while `gh-ost` has a strict requirement for a shared unique key pre/post migration, `online` migrations may work with different keys, making it possible to modify a table's `PRIMARY KEY` without having to rely on an additional `UNIQUE KEY`.
 
 ### gh-ost
 
@@ -147,12 +153,12 @@ There are pros and cons to using any of the strategies. Some notable differences
 
 ## Vitess functionality comparison
 
-| Strategy | Managed | Online | Trackable | Declarative | Revertible          | Traffic |
-|----------|---------|--------|-----------|-------------|---------------------|---------|
-| `direct` | No      | MySQL* | No        | No          | No                  | Any     |
-| `pt-osc` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP`       | Any     |
-| `gh-ost` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP`       | Any     |
-| `online` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP,ALTER` | Vitess  |
+| Strategy | Managed | Online | Trackable | Declarative | Revertible          | Recoverable | Traffic |
+|----------|---------|--------|-----------|-------------|---------------------|-------------|---------|
+| `direct` | No      | MySQL* | No        | No          | No                  | No          | Any     |
+| `pt-osc` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP`       | No*         | Any     |
+| `gh-ost` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP`       | No*         | Any     |
+| `online` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP,ALTER` | Yes         | Vitess  |
 
 - **Managed**: whether Vitess schedules and operates the migration
 - **Online**:
@@ -163,4 +169,5 @@ There are pros and cons to using any of the strategies. Some notable differences
   - `gh-ost` also makes available _progress %_ and _ETA seconds_
 - **Declarative**: support `-declarative` flag
 - **Revertible**: `online` strategy supports revertible `ALTER` statements (or `ALTER`s implied by `-declarative` migrations). All managed strategies supports revertible `CREATE` and `ALTER`.
+- **Recoverable**: an `online` migration interrupted by planned/unplanned failover, automatically resumes work from point of interruption. `gh-ost` and `pt-osc` will not resume after failover, but Vitess will automatically retry the migration (by marking the migration as failed and by initiating a `RETRY`), no more than once for any migration.
 - **Traffic**: `online` migration cut-over uses Vitess specific blocking of traffic, and is therefore only safe when write traffic to the tables runs entirely through Vitess/VTGate. `gh-ost` and `pt-osc` use generic MySQL blocking/locking mechanisms, and it is safe to run some write traffic on the migrated table outside Vitess.

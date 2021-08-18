@@ -137,35 +137,18 @@ a2994c92_f1d4_11ea_afa3_f875a4d24e90
 
 ## Migration flow and states
 
-We highlight how Vitess manages migrations internally, and explain what states a migration goes through.
+A migration can be in any one of these states:
 
-- Whether via `vtctlclient ApplySchema` or via `VTGate` as described above, a migration request entry is persisted in global `topo` (e.g. the global `etcd` cluster).
-- `vtctld` periodically checks on new migration requests.
-- `vtctld` resolves the relevant shards, and the `primary` tablet for each shard.
-- `vtctld` pushes the request to all relevant `primary` tablets.
-- If not all shards confirm receipt, `vtctld` periodically keeps retrying pushing the request to the shards until all approve.
-- Internally, tablets persist the request in a designated table in the `_vt` schema. **Do not** manipulate that table directly as that can cause inconsistencies.
-- A shard's `primary` tablet owns running the migration. It is independent of other shards. It will schedule the migration to run when possible. A tablet will not run two migrations at the same time.
-- A migration is first created in `queued` state.
-- If the tablet sees queued migration, and assuming there's no reason to wait, it picks the oldest requested migration in `queued` state, and moves it to `ready` state.
-- For `ALTER TABLE` statements:
-  - Tablet prepares for the migration. It creates a MySQL account with a random password, to be used by this migration only. It creates the command line invocation, and extra scripts if possible.
-  - The tablet then runs the migration. Whether `gh-ost` or `pt-online-schema-change`, it first runs in _dry run_ mode, and, if successful, in actual _execute_ mode. The migration is then in `running` state.
-  - The migration will either run to completion, fail, or be interrupted. If successful, it transitions into `complete` state, which is the end of the road for that migration. If failed or interrupted, it transitions to `failed` state. The user may choose to _retry_ failed migrations (see below).
-  - The user is able to _cancel_ a migration (details below). If the migration hasn't started yet, it transitions to `cancelled` state. If the migration is `running`, then it is interrupted, and is expected to transition into `failed` state.
-- For `CREATE TABLE` statements:
-  - Tablet runs the statement directly on the MySQL backend
-- For `DROP TABLE` statements:
-  - A multi-table `DROP TABLE` statement is converted to multiple single-table `DROP TABLE` statements
-  - Each `DROP TABLE` is internally replaced with a `RENAME TABLE`
-  - Table is renamed using a special naming convention, identified by the [Table Lifecycle](../../../reference/features/table-lifecycle/) mechanism
-  - As result, a single `DROP TABLE` statement may generate multiple distinct migrations with distinct migration UUIDs.
+- `queued`: a migration is submitted
+- `ready`: a migration is picked from the queue to run
+- `running`: a migration was started. It is periodically tested to be alive.
+- `complete`: a migration completed successfully
+- `failed`: a migration started running and failed due to whatever reason
+- `cancelled`: a _pending_ migration was cancelled
 
-By way of illustration, suppose a migration is now in `running` state, and is expected to keep on running for the next few hours. The user may initiate a new `ALTER TABLE...` statement. It will persist in global `topo`. `vtctld` will pick it up and advertise it to the relevant tablets. Each will persist the migration request in `queued` state. None will run the migration yet, since another migration is already in progress. In due time, and when the executing migration completes (whether successfully or not), and assuming no other migrations are `queued`, the `primary` tablets, each in its own good time, will execute the new migration. 
+A migration is said to be _pending_ if we expect it to run and complete. Pending migrations are those in `queued`, `ready` and `running` states.
 
-At this time, the user is responsible to track the state of all migrations. VTTablet does not report back to `vtctld`. This may change in the future.
-
-At this time, there are no automated retries. For example, a failover on a shard causes the migration to fail, and Vitess will not try to re-run the migration on the new `primary`. It is the user's responsibility to issue a `retry`. This may change in the future.
+For more about internals of the scheduler and how migration states are controlled, see [Online DDL Scheduler](../../../design-docs/online-ddl/scheduler)
 
 ## Configuration
 
@@ -183,7 +166,11 @@ At this time, there are no automated retries. For example, a failover on a shard
  
 ## Auto resume after failure
 
-VReplication based migrations (`ddl_strategy="online"`) are resumable across failure and across primary failovers.
+VReplication based migrations (`ddl_strategy="online"`) are failover agnostic. They automatically resume after either planned promotion ([PlannedReparentShard](../../configuration-advanced/reparenting/#plannedreparentshard-planned-reparenting)), emergency promotion ([EmergencyReparentShard](../../configuration-advanced/reparenting/#emergencyreparentshard-emergency-reparenting)) or completely external reparenting.
+
+Once the new primary is in place and turns active, it auto-resumes the VReplication stream. The online DDL scheduler assumes ownership of the stream and follows it to completion.
+
+The new primary must be instated within `10 minutes`, or else the migration is considered to be stale and is aborted.
 
 ## Auto retry after failure
 
