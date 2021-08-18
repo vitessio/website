@@ -4,7 +4,7 @@ weight: 2
 aliases: ['/docs/user-guides/managed-online-schema-changes/']
 ---
 
-**Note:** this feature is **EXPERIMENTAL**.
+**Note:** `gh-ost` migrations are considered stable. `pt-osc` and `online` migrations are considered **EXPERIMENTAL**.
 
 Vitess offers managed, online schema migrations (aka Online DDL), transparently to the user. Vitess Onine DDL offers:
 
@@ -15,6 +15,7 @@ Vitess offers managed, online schema migrations (aka Online DDL), transparently 
 - Migrations are retry-able
 - Lossless, [revertible migrations](../revertible-migrations/)
 - Support for [declarative migrations](../declarative-migrations/)
+- Support for [failover agnostic migrations](../recoverable-migrations/)
 
 
 As general overview:
@@ -166,7 +167,7 @@ For more about internals of the scheduler and how migration states are controlle
  
 ## Auto resume after failure
 
-VReplication based migrations (`ddl_strategy="online"`) are failover agnostic. They automatically resume after either planned promotion ([PlannedReparentShard](../../configuration-advanced/reparenting/#plannedreparentshard-planned-reparenting)), emergency promotion ([EmergencyReparentShard](../../configuration-advanced/reparenting/#emergencyreparentshard-emergency-reparenting)) or completely external reparenting.
+VReplication based migrations (`ddl_strategy="online"`) are [failover agnostic](../recoverable-migrations/). They automatically resume after either planned promotion ([PlannedReparentShard](../../configuration-advanced/reparenting/#plannedreparentshard-planned-reparenting)), emergency promotion ([EmergencyReparentShard](../../configuration-advanced/reparenting/#emergencyreparentshard-emergency-reparenting)) or completely external reparenting.
 
 Once the new primary is in place and turns active, it auto-resumes the VReplication stream. The online DDL scheduler assumes ownership of the stream and follows it to completion.
 

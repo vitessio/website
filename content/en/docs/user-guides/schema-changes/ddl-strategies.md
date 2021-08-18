@@ -168,6 +168,6 @@ There are pros and cons to using any of the strategies. Some notable differences
 - **Trackable**: able to determine migration state (`ready`, `running`, `complete` etc)
   - `gh-ost` also makes available _progress %_ and _ETA seconds_
 - **Declarative**: support `-declarative` flag
-- **Revertible**: `online` strategy supports revertible `ALTER` statements (or `ALTER`s implied by `-declarative` migrations). All managed strategies supports revertible `CREATE` and `ALTER`.
-- **Recoverable**: an `online` migration interrupted by planned/unplanned failover, automatically resumes work from point of interruption. `gh-ost` and `pt-osc` will not resume after failover, but Vitess will automatically retry the migration (by marking the migration as failed and by initiating a `RETRY`), no more than once for any migration.
+- **Revertible**: `online` strategy supports [revertible](../revertible-migrations/) `ALTER` statements (or `ALTER`s implied by `-declarative` migrations). All managed strategies supports revertible `CREATE` and `ALTER`.
+- **Recoverable**: an `online` migration interrupted by planned/unplanned failover, [automatically resumes](../recoverable-migrations/) work from point of interruption. `gh-ost` and `pt-osc` will not resume after failover, but Vitess will automatically retry the migration (by marking the migration as failed and by initiating a `RETRY`), no more than once for any migration.
 - **Traffic**: `online` migration cut-over uses Vitess specific blocking of traffic, and is therefore only safe when write traffic to the tables runs entirely through Vitess/VTGate. `gh-ost` and `pt-osc` use generic MySQL blocking/locking mechanisms, and it is safe to run some write traffic on the migrated table outside Vitess.
