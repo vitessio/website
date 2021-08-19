@@ -12,7 +12,7 @@ Vitess provides `READ COMMITTED` semantics when executing cross-shard queries. T
 
 ## SQL Syntax
 
-The following describes some of the major differences in SQL Syntax handling between Vitess and MySQL. For a list of unsupported queries, check out the [test-suite cases](https://github.com/vitessio/vitess/blob/master/go/vt/vtgate/planbuilder/testdata/unsupported_cases.txt).
+The following describes some of the major differences in SQL Syntax handling between Vitess and MySQL. For a list of unsupported queries, check out the [test-suite cases](https://github.com/vitessio/vitess/blob/main/go/vt/vtgate/planbuilder/testdata/unsupported_cases.txt).
 
 ### DDL                                                                      
 
@@ -145,15 +145,15 @@ Example Output:
 ```shell
 Example Output:
 +-------+----------+-------+------------+---------+------------------+------------+----------------------+
-| Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname   | MasterTermStartTime  |
+| Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname   | PrimaryTermStartTime  |
 +-------+----------+-------+------------+---------+------------------+------------+----------------------+
-| zone1 | commerce | 0     | MASTER     | SERVING | zone1-0000000100 | <redacted> | 2021-04-22T04:10:29Z |
+| zone1 | commerce | 0     | PRIMARY    | SERVING | zone1-0000000100 | <redacted> | 2021-04-22T04:10:29Z |
 | zone1 | commerce | 0     | REPLICA    | SERVING | zone1-0000000101 | <redacted> |                      |
 | zone1 | commerce | 0     | RDONLY     | SERVING | zone1-0000000102 | <redacted> |                      |
-| zone1 | customer | -80   | MASTER     | SERVING | zone1-0000000300 | <redacted> | 2021-04-22T04:12:23Z |
+| zone1 | customer | -80   | PRIMARY    | SERVING | zone1-0000000300 | <redacted> | 2021-04-22T04:12:23Z |
 | zone1 | customer | -80   | REPLICA    | SERVING | zone1-0000000301 | <redacted> |                      |
 | zone1 | customer | -80   | RDONLY     | SERVING | zone1-0000000302 | <redacted> |                      |
-| zone1 | customer | 80-   | MASTER     | SERVING | zone1-0000000400 | <redacted> | 2021-04-22T04:12:23Z |
+| zone1 | customer | 80-   | PRIMARY    | SERVING | zone1-0000000400 | <redacted> | 2021-04-22T04:12:23Z |
 | zone1 | customer | 80-   | REPLICA    | SERVING | zone1-0000000401 | <redacted> |                      |
 | zone1 | customer | 80-   | RDONLY     | SERVING | zone1-0000000402 | <redacted> |                      |
 +-------+----------+-------+------------+---------+------------------+------------+----------------------+

@@ -31,7 +31,7 @@ Refresh state will continue to exist as an API, but it’s only for refreshing a
 
 ### Exception 1: Mastership
 
-In the case of flows that designate who the master is, the topo is the authority. For such requests, the tablet will first try to update its record, and only then succeed. This is required because of how the new mastership redesign works.
+In the case of flows that designate who the primary is, the topo is the authority. For such requests, the tablet will first try to update its record, and only then succeed. This is required because of how the new mastership redesign works.
 
 ### Exception 2: VTTablet startup
 
@@ -44,7 +44,7 @@ When a vttablet starts up, it will treat the following info from the topo as aut
 
 As an additional precaution, if this info does not match the init parameters, we should exit.
 
-We can also consider the following: If the tablet type is master, we can force a sync against the shard record before we confirm ourselves to be the master.
+We can also consider the following: If the tablet type is primary, we can force a sync against the shard record before we confirm ourselves to be the primary.
 
 ## Advantages
 

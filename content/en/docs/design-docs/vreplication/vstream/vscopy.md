@@ -23,7 +23,7 @@ Clients create vstreams by grpc-ing to VTGate using the Vstream API call. In gol
 
 ```
 conn, _ := 	VTGate.Dial(ctx, "localhost:15991")
-// tabletType is one of replica/master/rdonly, filter,vgtid: see below
+// tabletType is one of replica/primary/rdonly, filter,vgtid: see below
 reader, _ := 	VStream(ctx, tabletType, vgtid, filter)
 e, _  := 	reader.Recv() //receive VEvents in a loop until io.EOF
 ```
@@ -95,7 +95,7 @@ Note that the vgtid is opaque to the consumer of the vstream API once the vstrea
 
 To start a VStream Copy user is expected to provide an empty gtid along with a list of tables to copy
  (essentially a LastTablePK list with a nil PK for each). Some examples
- (see https://github.com/vitessio/contrib/blob/master/vstream_client/vstream_client.go for a sample client):
+ (see https://github.com/vitessio/contrib/blob/main/vstream_client/vstream_client.go for a sample client):
 
 ```
 // vstream copy two tables table from two shards

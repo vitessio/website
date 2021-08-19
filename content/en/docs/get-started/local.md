@@ -116,8 +116,8 @@ HTTP/1.1 200 OK
 Date: Wed, 25 Mar 2020 17:33:01 GMT
 Content-Type: text/html; charset=utf-8
 
-W0325 11:33:01.932674   16036 main.go:64] W0325 17:33:01.930970 reparent.go:185] master-elect tablet zone1-0000000100 is not the shard master, proceeding anyway as -force was used
-W0325 11:33:01.933188   16036 main.go:64] W0325 17:33:01.931580 reparent.go:191] master-elect tablet zone1-0000000100 is not a master in the shard, proceeding anyway as -force was used
+W0325 11:33:01.932674   16036 main.go:64] W0325 17:33:01.930970 reparent.go:185] primary-elect tablet zone1-0000000100 is not the shard primary, proceeding anyway as -force was used
+W0325 11:33:01.933188   16036 main.go:64] W0325 17:33:01.931580 reparent.go:191] primary-elect tablet zone1-0000000100 is not a primary in the shard, proceeding anyway as -force was used
 ..
 ```
 

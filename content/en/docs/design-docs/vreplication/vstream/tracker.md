@@ -16,7 +16,7 @@ All Vstreams on a tablet share a common engine. Vstreams that are lagging might 
 In addition reloading schemas is an expensive operation. If there are multiple Vstreams each of them will separately receive a DDL event resulting in multiple reloads for the same DDL.
 
 {{< info >}}
-For full functionality, schema tracking relies on non-default Vitess vttablet options: `-watch_replication_stream` and `-track_schema_versions`. Specifically, performing a Vstream from a non-master tablet while concurrently making DDL changes to the keyspace without one or both of these tablet options will result in incorrect Vstream results.
+For full functionality, schema tracking relies on non-default Vitess vttablet options: `-watch_replication_stream` and `-track_schema_versions`. Specifically, performing a Vstream from a non-primary tablet while concurrently making DDL changes to the keyspace without one or both of these tablet options will result in incorrect Vstream results.
 {{< /info >}}
 
 ## Goals
@@ -40,11 +40,11 @@ Replication watcher is a Vstream that is started by the tabletserver. It notifie
 
 #### Version Tracker
 
-Version tracker runs on the master. It subscribes to the replication watcher and inserts a new row into the schema_version table with the latest schema.
+Version tracker runs on the primary. It subscribes to the replication watcher and inserts a new row into the schema_version table with the latest schema.
 
 #### Version Historian
 
-Version historian runs on both master and replica and handles DDL events. For a given GTID it looks up its cache to check if it has a schema valid for that GTID. If not, on the replica, it looks up the schema_version table. If no schema is found then it provides the latest schema which is updated by subscribing to the schema engine’s change notification.
+Version historian runs on both primary and replica and handles DDL events. For a given GTID it looks up its cache to check if it has a schema valid for that GTID. If not, on the replica, it looks up the schema_version table. If no schema is found then it provides the latest schema which is updated by subscribing to the schema engine’s change notification.
 
 ### Notes
 
@@ -53,11 +53,11 @@ Version historian runs on both master and replica and handles DDL events. For a 
 
 ## Basic Flow for version tracking
 
-### Master
+### Primary
 
 #### Version tracker:
 
-1. When the master comes up the replication watcher (a Vstream) is started from the current GTID position. Tracker subscribes to the watcher.
+1. When the primary comes up the replication watcher (a Vstream) is started from the current GTID position. Tracker subscribes to the watcher.
 1. Say, a DDL is applied
 1. The watcher Vstream sees the DDL and
    1. asks the schema engine to reload the schema, also providing the corresponding gtid position
@@ -75,14 +75,14 @@ Version historian runs on both master and replica and handles DDL events. For a 
 
 #### Replica
 
-1. Version tracker does not run: the tracker can only store versions on the master since it is writing to the database.
-2. Historian functionality is identical to that on the master.
+1. Version tracker does not run: the tracker can only store versions on the primary since it is writing to the database.
+2. Historian functionality is identical to that on the primary.
 
 ## Flags
 
-### Master
+### Primary
 
-Schema version snapshots are stored only on the master. This is done when the Replication Watcher gets a DDL event resulting in a SchemaUpdated(). There are two independent flows here:
+Schema version snapshots are stored only on the primary. This is done when the Replication Watcher gets a DDL event resulting in a SchemaUpdated(). There are two independent flows here:
 
 1. Replication Watcher is running
 2. Schema snapshots are saved to \_vt.schema_version when SchemaUpdated is called
@@ -139,7 +139,7 @@ So now on the replica, at T4, the version historian will incorrectly provide the
 
 ### Situation 2
 
-If version tracking is turned off on the master for some time, correct versions may not be available to the historian which will always return the latest schema. This might result in an incorrect schema when a Vstream is processing events in the past.
+If version tracking is turned off on the primary for some time, correct versions may not be available to the historian which will always return the latest schema. This might result in an incorrect schema when a Vstream is processing events in the past.
 
 #### Possible new features around this functionality
 
