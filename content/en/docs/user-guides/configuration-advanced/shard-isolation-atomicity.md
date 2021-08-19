@@ -32,11 +32,11 @@ This is typically not a big issue for most applications, since so-called read-af
 
 ### Note  
 
-If you perform replica or rdonly reads instead of master reads (using the `@replica` or `@rdonly` Vitess dbname syntax extension), you will face the same issues you would if you read from a single MySQL replica instance. Accordingly, writes might not become visible for an extended period of time, depending on **replica lag**.  That being said, since Vitess helps you to keep your individual master instances smaller, replica lag should be less of an issue than it would be with a unsharded large MySQL setup.
+If you perform replica or rdonly reads instead of master reads (using the `@replica` or `@rdonly` Vitess dbname syntax extension), you will face the same issues you would if you read from a single MySQL replica instance. Accordingly, writes might not become visible for an extended period of time, depending on **replica lag**. That being said, since Vitess helps you to keep your individual master instances smaller, replica lag should be less of an issue than it would be with an unsharded large MySQL setup.
 
 ## Cross-shard atomicity
 
-When performing a write (`INSERT`, `UPDATE`, `DELETE`) across multiple shards, Vitess attempts to optimize performance, while also trying to ensure as much **atomicity** as possible. That is, Vitess will attempt to ensure that the whole write operation succeeds across all shards, or is rolled back.  However, if you think about what actually needs to happen across the multiple shards, achieving full atomicity across a (potentially large) number of shards can be very expensive. As a result, Vitess does not even try to guarantee cross-shard **isolation**, but rather focuses on trying to optimize cross-shard **atomicity**. The difference here is while the results of a single transaction might not become visible across all shards in the same instant, Vitess does try to ensure that write failures on a subset of the shards are:
+When performing a write (`INSERT`, `UPDATE`, `DELETE`) across multiple shards, Vitess attempts to optimize performance, while also trying to ensure as much **atomicity** as possible. That is, Vitess will attempt to ensure that the whole write operation succeeds across all shards, or is rolled back.  However, if you think about what actually needs to happen across the multiple shards, achieving full atomicity across a (potentially large) number of shards can be very expensive. As a result, Vitess does not even try to guarantee cross-shard **isolation**, but rather focuses on trying to optimize cross-shard **atomicity**. The difference here is that while the results of a single transaction might not become visible across all shards in the same instant, Vitess does try to ensure that write failures on a subset of the shards are:
 
   * rolled back
   * or if they cannot be rolled back, the application receives a reasonable error to that effect.
@@ -96,7 +96,7 @@ multi-db transaction attempted: [target:{keyspace:"ks1" shard:"40-80" tablet_typ
 
 As expected, we start getting errors since we are attempting a Vitess "transaction" across multiple shards.
 
-If we limited ourselves to writes that only target a single of the multiple shards, this would work fine, e.g.:
+If we limited ourselves to writes that only target a single one of the multiple shards, this would work fine, e.g.:
 
 ```sh
 $ ./method2_working.sh
