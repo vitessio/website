@@ -22,8 +22,8 @@ In this guide, we will walk through the process of using the `CreateLookupVindex
 VReplication to populate/backfill the lookup Vindex from the source table.
  * `<keyspace>`:  The Vitess keyspace we are creating the lookup Vindex in.
 The source table is expected to also be in this keyspace.
- * `-tablet-types`:  Provided to specify the shard tablet types
-(e.g. `MASTER`, `REPLICA`, `RDONLY`) that are acceptable
+ * `-tablet-types`:  Provided to specify the tablet types
+(e.g. `PRIMARY`, `REPLICA`, `RDONLY`) that are acceptable
 as source tablets for the VReplication stream(s) that this command will
 create. If not specified, the tablet type used will default to the value
 of the vttablet `-vreplication_tablet_type` option, which defaults to
@@ -201,25 +201,25 @@ issue commands against:
 
 ```sh
 $ vtctlclient -server localhost:15999 ListAllTablets | grep customer
-zone1-0000000300 customer -80 master localhost:15300 localhost:17300 [] 2020-08-13T01:23:15Z
+zone1-0000000300 customer -80 primary localhost:15300 localhost:17300 [] 2020-08-13T01:23:15Z
 zone1-0000000301 customer -80 replica localhost:15301 localhost:17301 [] <null>
 zone1-0000000302 customer -80 rdonly localhost:15302 localhost:17302 [] <null>
-zone1-0000000400 customer 80- master localhost:15400 localhost:17400 [] 2020-08-13T01:23:15Z
+zone1-0000000400 customer 80- primary localhost:15400 localhost:17400 [] 2020-08-13T01:23:15Z
 zone1-0000000401 customer 80- replica localhost:15401 localhost:17401 [] <null>
 zone1-0000000402 customer 80- rdonly localhost:15402 localhost:17402 [] <null>
 ```
 
 i.e. now we can see what will happen:
 
-  * VReplication streams will be setup from the master tablets
+  * VReplication streams will be setup from the primary tablets
 `zone1-0000000300` and `zone1-0000000400`; pulling data from the `RDONLY`
 source tablets `zone1-0000000302` and `zone1-0000000402`.
-  * Note that each master tablet will start streams from each source
+  * Note that each primary tablet will start streams from each source
 tablet, for a total of 4 streams in this case.
 
 Lets observe the VReplication streams that got created using the
 `vtctlclient VReplicationExec` command.  First let's look at the streams
-to the first master tablet `zone1-0000000300`:
+to the first primary tablet `zone1-0000000300`:
 
 ```sql
 $ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000300 "select * from _vt.vreplication"
@@ -245,7 +245,7 @@ $ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000300 "select 
 +----+-------------------+--------------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------------------+-------------+
 ```
 
-And now the streams to the second master tablet `zone1-0000000400`:
+And now the streams to the second primary tablet `zone1-0000000400`:
 
 ```sql
 $ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000400 "select * from _vt.vreplication"

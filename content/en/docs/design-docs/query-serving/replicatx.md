@@ -6,7 +6,7 @@ weight: 1
 
 ### Feature Description
 
-Vitess currently supports transactions through vtgate only on MASTER tablets. We would like to extend transaction support to REPLICA (or other tablet types).
+Vitess currently supports transactions through vtgate only on PRIMARY tablets. We would like to extend transaction support to REPLICA (or other tablet types).
 
 ### Use Case(s)
 

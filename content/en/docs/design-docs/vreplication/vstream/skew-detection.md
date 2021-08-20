@@ -50,6 +50,6 @@ This is how you would turn on the skew detection and alignment feature in a VStr
     flags := &vtgatepb.VStreamFlags{};
     flags.MinimizeSkew = true;
 
-    reader, err := conn.VStream(ctx, topodatapb.TabletType_MASTER, vgtid, filter, flags)
+    reader, err := conn.VStream(ctx, topodatapb.TabletType_PRIMARY, vgtid, filter, flags)
 
 ```

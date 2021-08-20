@@ -30,7 +30,7 @@ Additionally, you can connect without specifying a database name and still acces
 
 You can still specify a tablet type for the unspecified mode. For example, you can connect to `@replica` if you want to access the replica tablets in unspecified mode.
 
-Some frameworks require you to specify an explicit database name while connecting. In order to make them work in unspecified mode, you can specify the database name as `@replica` or `@master` instead of a blank one.
+Some frameworks require you to specify an explicit database name while connecting. In order to make them work in unspecified mode, you can specify the database name as `@replica` or `@primary` instead of a blank one.
 
 ## Sharded keyspaces require a VSchema
 
@@ -41,7 +41,7 @@ If you have multiple unsharded keyspaces, you can still avoid defining a VSchema
 1. Connect to a keyspace and all queries are sent to it.
 2. Connect to Vitess without specifying a keyspace (unspecified mode), but use qualified names for tables, like `keyspace.table` in your queries.
 
-However, once the setup exceeds the above complexity, VSchemas become a necessity. Vitess has a [working demo](https://github.com/vitessio/vitess/tree/master/examples/demo) of VSchemas.
+However, once the setup exceeds the above complexity, VSchemas become a necessity. Vitess has a [working demo](https://github.com/vitessio/vitess/tree/main/examples/demo) of VSchemas.
 
 ## Sharding Model
 

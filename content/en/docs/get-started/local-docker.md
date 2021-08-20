@@ -46,7 +46,7 @@ This will set up a MySQL replication topology, as well as `etcd`, `vtctld` and `
 From within the docker shell, aliases are set up for your convenience. Try the following `mysql` commands to connect to various tablets:
 
 - `mysql commerce`
-- `mysql commerce@master`
+- `mysql commerce@primary`
 - `mysql commerce@replica`
 - `mysql commerce@rdonly`
 

@@ -88,7 +88,7 @@ Note that if your tablet is using a MySQL instance type where you do not have `S
 
 You should be able to see debug information written to screen confirming Vitess can reach the unmanaged server. A common problem is that you may need to change the authentication plugin to `mysql_native_password` (MySQL 8.0).
 
-Assuming that there are no errors, after a few seconds you can mark the server as externally promoted to master:
+Assuming that there are no errors, after a few seconds you can mark the server as externally promoted to primary:
 
 ```bash
 vtctlclient TabletExternallyReparented zone1-401
@@ -122,7 +122,7 @@ Empty set (0.01 sec)
 Move the table:
 
 ```bash
-vtctlclient MoveTables -tablet_types=master -workflow=legacy2commerce legacy commerce '{"legacytable": {}}'
+vtctlclient MoveTables -tablet_types=primary -workflow=legacy2commerce legacy commerce '{"legacytable": {}}'
 ```
 
 Switch reads:

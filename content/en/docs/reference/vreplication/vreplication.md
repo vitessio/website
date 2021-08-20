@@ -163,7 +163,7 @@ involved:
 * One of the parameters within the protobuf is an SQL `SELECT` expression
   for the materialized view.
 
-However, you can use [vreplgen.go](https://github.com/vitessio/contrib/blob/master/vreplgen/vreplgen.go) to generate a fully escaped bash command.
+However, you can use [vreplgen.go](https://github.com/vitessio/contrib/blob/main/vreplgen/vreplgen.go) to generate a fully escaped bash command.
 
 Alternately, you can use a python program. Here's an example:
 
@@ -176,11 +176,11 @@ cmd = [
   'test-200',
   """insert into _vt.vreplication
   (db_name, source, pos, max_tps, max_replication_lag, tablet_types, time_updated, transaction_timestamp, state) values
-  ('vt_keyspace', 'keyspace:"lookup" shard:"0" filter:<rules:<match:"uproduct" filter:"select * from product" > >', '', 99999, 99999, 'master', 0, 0, 'Running')""",
+  ('vt_keyspace', 'keyspace:"lookup" shard:"0" filter:<rules:<match:"uproduct" filter:"select * from product" > >', '', 99999, 99999, 'primary', 0, 0, 'Running')""",
 ]
 ```
 
-The first argument to the command is the master tablet id of the target
+The first argument to the command is the primary tablet id of the target
 keyspace/shard for the VReplication stream.
 
 The second argument is the SQL command. To start a new stream, you need
@@ -407,8 +407,8 @@ in the replication stream from the source. The values can be as follows:
 
 ### Failover continuation
 
-If a failover is performed on the target keyspace/shard, the new master will
-automatically resume VReplication from where the previous master left off.
+If a failover is performed on the target keyspace/shard, the new primary will
+automatically resume VReplication from where the previous primary left off.
 
 ### Throttling
 
@@ -418,7 +418,7 @@ VReplication throttles operation when the source or target appear to be overload
 
 ### VTTablet /debug/status
 
-The first place to look at is the `/debug/status` page of the target master
+The first place to look at is the `/debug/status` page of the target primary
 vttablet. The bottom of the page shows the status of all the VReplication
 streams.
 
@@ -442,8 +442,8 @@ VReplication also reports the following variables that can be scraped by
 monitoring tools like prometheus:
 
 * VReplicationStreamCount: Number of VReplication streams.
-* VReplicationSecondsBehindMasterMax: Max vreplication seconds behind master.
-* VReplicationSecondsBehindMaster: vreplication seconds behind master per stream.
+* VReplicationLagSecondsMax: Max vreplication lag behind primary.
+* VReplicationLagSeconds: vreplication lag behind primary per stream.
 * VReplicationSource: The source for each VReplication stream.
 * VReplicationSourceTablet: The source tablet for each VReplication stream.
 

@@ -17,7 +17,7 @@ This guide explains how to build vschemas for Vitess keyspaces.
 
 ### Demo
 
-To illustrate the various features of the VSchema, we will make use of the [demo app](https://github.com/vitessio/vitess/tree/master/examples/demo). After installing Vitess, you can launch this demo by running `go run demo.go`. Following this, you can visit http://localhost:8000 to view the tables, issue arbitrary queries, and view their effects.
+To illustrate the various features of the VSchema, we will make use of the [demo app](https://github.com/vitessio/vitess/tree/main/examples/demo). After installing Vitess, you can launch this demo by running `go run demo.go`. Following this, you can visit http://localhost:8000 to view the tables, issue arbitrary queries, and view their effects.
 
 Alternatively, you can also connect to Vitess using a MySQL client: `mysql -h 127.0.0.1 -P 12348`.
 

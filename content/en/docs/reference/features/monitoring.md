@@ -27,7 +27,7 @@ By default, the stats_emit_period is 60s, so each component will push stats to t
 
 Vitess has preliminary plug-ins to support OpenTSDB as a push-based metrics backend.
 
-It should be fairly straightforward to write your own plug-in, if you want to support a different backend. The plug-in package simply needs to implement the `PushBackend` interface of the `stats` package. For an example, you can see the [OpenTSDB plugin](https://github.com/vitessio/vitess/blob/master/go/stats/opentsdb/opentsdb.go).
+It should be fairly straightforward to write your own plug-in, if you want to support a different backend. The plug-in package simply needs to implement the `PushBackend` interface of the `stats` package. For an example, you can see the [OpenTSDB plugin](https://github.com/vitessio/vitess/blob/main/go/stats/opentsdb/opentsdb.go).
 
 Once you’ve written the backend plug-in, you also need to register the plug-in from within all the relevant Vitess binaries. An example of how to do this can be seen in [this pull request](https://github.com/vitessio/vitess/pull/469).
 

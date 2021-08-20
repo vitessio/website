@@ -10,9 +10,9 @@ In order to configure `vtorc`, you have to make the following changes to `vttabl
 * Remove `-enable_semi_sync=true`: This part will be managed by vtorc instead.
 * Add `-disable_active_reparents=true`: This part will prevent vttablet from fixing replication, and will rely on vtorc instead.
 
-As mentioned before, bringing up `vtorc` also lets you avoid performing the `InitShardMaster` step.
+As mentioned before, bringing up `vtorc` also lets you avoid performing the `InitShardPrimary` step.
 
-`vtorc` requires a config file to be launched. A sample is available [here](https://github.com/vitessio/vitess/blob/master/config/orchestrator/default.json):
+`vtorc` requires a config file to be launched. A sample is available [here](https://github.com/vitessio/vitess/blob/main/config/orchestrator/default.json):
 
 ```json
 {
@@ -37,7 +37,7 @@ vtorc <topo_flags> \
   -config orc_config.json \
   -orc_web_dir ${VTROOT}/web/orchestrator
  ```
-`orc_web_dir` must point at the contents of the orchestrator web files. The source can be found [here](https://github.com/vitessio/vitess/tree/master/web/orchestrator).
+`orc_web_dir` must point at the contents of the orchestrator web files. The source can be found [here](https://github.com/vitessio/vitess/tree/main/web/orchestrator).
 
 Bringing up `vtorc` should immediately cause a primary to be elected among the vttablets that have come up.
 

@@ -20,7 +20,7 @@ vtgate \
   -mysql_server_port 15306 \
   -cell test \
   -cells_to_watch test \
-  -tablet_types_to_wait MASTER,REPLICA \
+  -tablet_types_to_wait PRIMARY,REPLICA \
   -gateway_implementation discoverygateway \
   -service_map 'grpc-vtgateservice' \
   -pid_file $VTDATAROOT/tmp/vtgate.pid \
@@ -35,7 +35,7 @@ The following global options apply to `vtgate`:
 | :------------------------------------ | :--------- | :----------------------------------------------------------------------------------------- |
 | -allowed_tablet_types | value | Specifies the tablet types this vtgate is allowed to route queries to |
 | -alsologtostderr | boolean | log to standard error as well as files |
-| -buffer_drain_concurrency | int | Maximum number of requests retried simultaneously. More concurrency will increase the load on the MASTER vttablet when draining the buffer. (default 1) |
+| -buffer_drain_concurrency | int | Maximum number of requests retried simultaneously. More concurrency will increase the load on the PRIMARY vttablet when draining the buffer. (default 1) |
 | -buffer_keyspace_shards | string | If not empty, limit buffering to these entries (comma separated). Entry format: keyspace or keyspace/shard. Requires --enable_buffer=true. |
 | -buffer_max_failover_duration | duration | Stop buffering completely if a failover takes longer than this duration. (default 20s) |
 | -buffer_min_time_between_failovers | duration | Minimum time between the end of a failover and the start of the next one (tracked per shard). Faster consecutive failovers will not trigger buffering. (default 1m0s) |
@@ -48,11 +48,11 @@ The following global options apply to `vtgate`:
 | -datadog-agent-host | string | host to send spans to. if empty, no tracing will be done |
 | -datadog-agent-port | string | port to send spans to. if empty, no tracing will be done |
 | -ddl_strategy | string | Set default strategy for DDL statements. Override with @@ddl_strategy session variable. |
-| -default_tablet_type | value | The default tablet type to set for queries, when one is not explicitly selected (default MASTER) |
+| -default_tablet_type | value | The default tablet type to set for queries, when one is not explicitly selected (default PRIMARY) |
 | -discovery_high_replication_lag_minimum_serving | duration | the replication lag that is considered too high when selecting the minimum num vttablets for serving (default 2h0m0s) |
 | -discovery_low_replication_lag | duration | the replication lag that is considered low enough to be healthy (default 30s) |
 | -emit_stats | boolean | true iff we should emit stats to push-based monitoring/stats backends |
-| -enable_buffer | boolean | Enable buffering (stalling) of master traffic during failovers. |
+| -enable_buffer | boolean | Enable buffering (stalling) of primary traffic during failovers. |
 | -enable_buffer_dry_run | boolean | Detect and log failover events, but do not actually buffer requests. |
 | -enable_system_settings | boolean | Enables the system settings to be changed per session at the database connection level. Override with @@enable_system_settings session variable. |
 | -gate_query_cache_size | int | gate server query cache size, maximum number of queries to be cached. vtgate analyzes every incoming query and generate a query plan, these plans are being cached in a lru cache. This config controls the capacity of the lru cache. (default 10000) |
@@ -162,7 +162,7 @@ The following global options apply to `vtgate`:
 | -tablet_types_to_wait | string | wait till connected for specified tablet types during Gateway initialization |
 | -tablet_url_template | string | format string describing debug tablet url formatting. See the Go code for getTabletDebugURL() how to customize this. (default "http://{{.GetTabletHostPort}}") |
 | -topo_consul_watch_poll_duration | duration | time of the long poll for watch queries. (default 30s) |
-| -topo_etcd_lease_ttl | int | Lease TTL for locks and master election. The client will use KeepAlive to keep the lease going. (default 30) |
+| -topo_etcd_lease_ttl | int | Lease TTL for locks and leader election. The client will use KeepAlive to keep the lease going. (default 30) |
 | -topo_etcd_tls_ca | string | path to the ca to use to validate the server cert when connecting to the etcd topo server |
 | -topo_etcd_tls_cert | string | path to the client cert to use to connect to the etcd topo server, requires topo_etcd_tls_key, enables TLS |
 | -topo_etcd_tls_key | string | path to the client key to use to connect to the etcd topo server, enables TLS |

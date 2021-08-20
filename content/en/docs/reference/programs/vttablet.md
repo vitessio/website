@@ -44,10 +44,10 @@ See [Unmanaged Tablet](../../../user-guides/configuration-advanced/unmanaged-tab
 
 Even if a MySQL is remote, you can still make vttablet perform some management functions. They are as follows:
 
-* `-disable_active_reparents`: If this flag is set, then any reparent or replica commands will not be allowed. These are InitShardMaster, PlannedReparent, PlannedReparent, EmergencyReparent, and ReparentTablet. In this mode, you should use the TabletExternallyReparented command to inform vitess of the current master.
-* `-master_connect_retry`: This value is give to mysql when it connects a replica to the master as the retry duration parameter.
+* `-disable_active_reparents`: If this flag is set, then any reparent or replica commands will not be allowed. These are InitShardMaster, PlannedReparent, PlannedReparent, EmergencyReparent, and ReparentTablet. In this mode, you should use the TabletExternallyReparented command to inform vitess of the current primary.
+* `-replication_connect_retry`: This value is give to mysql when it connects a replica to the primary as the retry duration parameter.
 * `-enable_replication_reporter`: If this flag is set, then vttablet will transmit replica lag related information to the vtgates, which will allow it to balance load better. Additionally, enabling this will also cause vttablet to restart replication if it was stopped. However, it will do this only if -disable_active_reparents was not turned on.
-* `-enable_semi_sync`: This option will automatically enable semi-sync on new replicas as well as on any tablet that transitions into a replica type. This includes the demotion of a master to a replica.
+* `-enable_semi_sync`: This option will automatically enable semi-sync on new replicas as well as on any tablet that transitions into a replica type. This includes the demotion of a primary to a replica.
 * `-heartbeat_enable` and `-heartbeat interval duration`: cause vttablet to write heartbeats to the sidecar database. This information is also used by the replication reporter to assess replica lag.
 
 
@@ -120,7 +120,6 @@ The following global options apply to `vttablet`:
 | -dba_idle_timeout | duration | Idle timeout for dba connections (default 1m0s) |
 | -dba_pool_size | int | Size of the connection pool for dba connections (default 20) |
 | -degraded_threshold | duration | replication lag after which a replica is considered degraded (only used in status UI) (default 30s) |
-| -demote_master_type | string | the tablet type a demoted master will transition to (default "REPLICA") |
 | -disable_active_reparents |  | if set, do not allow active reparents. Use this to protect a cluster using external reparents. |
 | -discovery_high_replication_lag_minimum_serving | duration | the replication lag that is considered too high when selecting the minimum num vttablets for serving (default 2h0m0s) |
 | -discovery_low_replication_lag | duration | the replication lag that is considered low enough to be healthy (default 30s) |
@@ -132,7 +131,7 @@ The following global options apply to `vttablet`:
 | -enable_hot_row_protection |  | If true, incoming transactions for the same row (range) will be queued and cannot consume all txpool slots. |
 | -enable_hot_row_protection_dry_run |  | If true, hot row protection is not enforced but logs if transactions would have been queued. |
 | -enable_replication_reporter |  | Register the health check module that monitors MySQL replication |
-| -enable_semi_sync |  | Enable semi-sync when configuring replication, on master and replica tablets only (rdonly tablets will not ack). |
+| -enable_semi_sync |  | Enable semi-sync when configuring replication, on primary and replica tablets only (rdonly tablets will not ack). |
 | -enable_transaction_limit |  | If true, limit on number of transactions open at the same time will be enforced for all users. User trying to open a new transaction after exhausting their limit will receive an error immediately, regardless of whether there are available slots or not. |
 | -enable_transaction_limit_dry_run |  | If true, limit on number of transactions open at the same time will be tracked for all users, but not enforced. |
 | -enforce-tableacl-config |  | if this flag is true, vttablet will fail to start if a valid tableacl config does not exist |
@@ -165,7 +164,7 @@ The following global options apply to `vttablet`:
 | -grpc_server_keepalive_enforcement_policy_min_time | duration | grpc server minimum keepalive time (default 5m0s) |
 | -grpc_server_keepalive_enforcement_policy_permit_without_stream |  | grpc server permit client keepalive pings even when there are no active streams (RPCs) |
 | -health_check_interval | duration | Interval between health checks (default 20s) |
-| -heartbeat_enable |  | If true, vttablet records (if master) or checks (if replica) the current time of a replication heartbeat in the table _vt.heartbeat. The result is used to inform the serving state of the vttablet via healthchecks. |
+| -heartbeat_enable |  | If true, vttablet records (if primary) or checks (if replica) the current time of a replication heartbeat in the table _vt.heartbeat. The result is used to inform the serving state of the vttablet via healthchecks. |
 | -heartbeat_interval | duration | How frequently to read and write replication heartbeat. (default 1s) |
 | -hot_row_protection_concurrent_transactions | int | Number of concurrent transactions let through to the txpool/MySQL for the same hot row. Should be > 1 to have enough 'ready' transactions in MySQL and benefit from a pipelining effect. (default 5) |
 | -hot_row_protection_max_global_queue_size | int | Global queue limit across all row (ranges). Useful to prevent that the queue can grow unbounded. (default 1000) |
@@ -190,7 +189,7 @@ The following global options apply to `vttablet`:
 | -log_queries_to_file | string | Enable query logging to the specified file |
 | -log_rotate_max_size | uint | size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800) |
 | -logtostderr |  | log to standard error instead of files |
-| -master_connect_retry | duration | how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s) |
+| -replication_connect_retry | duration | how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s) |
 | -mem-profile-rate | int | profile every n bytes allocated (default 524288) |
 | -min_number_serving_vttablets | int | the minimum number of vttablets that will be continue to be used even with low replication lag (default 2) |
 | -mutex-profile-fraction | int | profile every n mutex contention events (see runtime.SetMutexProfileFraction) |
@@ -305,7 +304,7 @@ The following global options apply to `vttablet`:
 | -tablet_protocol | string | how to talk to the vttablets (default "grpc") |
 | -tablet_url_template | string | format string describing debug tablet url formatting. See the Go code for getTabletDebugURL() how to customize this. (default "http://{{.GetTabletHostPort}}") |
 | -topo_consul_watch_poll_duration | duration | time of the long poll for watch queries. (default 30s) |
-| -topo_etcd_lease_ttl | int | Lease TTL for locks and master election. The client will use KeepAlive to keep the lease going. (default 30) |
+| -topo_etcd_lease_ttl | int | Lease TTL for locks and leader election. The client will use KeepAlive to keep the lease going. (default 30) |
 | -topo_etcd_tls_ca | string | path to the ca to use to validate the server cert when connecting to the etcd topo server |
 | -topo_etcd_tls_cert | string | path to the client cert to use to connect to the etcd topo server, requires topo_etcd_tls_key, enables TLS |
 | -topo_etcd_tls_key | string | path to the client key to use to connect to the etcd topo server, enables TLS |
@@ -365,6 +364,6 @@ The following global options apply to `vttablet`:
 
 * -restore_from_backup: The default value for this flag is false. If set to true, and the my.cnf file was successfully loaded, then vttablet can perform automatic restores as follows:
 
-	* If started against a mysql instance that has no data files, it will search the list of backups for the latest one, and initiate a restore. After this, it will point the mysql to the current master and wait for replication to catch up. Once replication is caught up to the specified tolerance limit, it will advertise itself as serving. This will cause the vtgates to add it to the list of healthy tablets to serve queries from.
+	* If started against a mysql instance that has no data files, it will search the list of backups for the latest one, and initiate a restore. After this, it will point the mysql to the current primary and wait for replication to catch up. Once replication is caught up to the specified tolerance limit, it will advertise itself as serving. This will cause the vtgates to add it to the list of healthy tablets to serve queries from.
 	* If this flag is true, but my.cnf was not loaded, then vttablet will fatally exit with an error message.
 	* You can additionally control the level of concurrency for a restore with the `-restore_concurrency` flag. This is typically useful in cloud environments to prevent the restore process from becoming a 'noisy' neighbor by consuming all available disk IOPS.

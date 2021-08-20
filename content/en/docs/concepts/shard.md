@@ -2,7 +2,7 @@
 title: Shard
 ---
 
-A *shard* is a subset of a keyspace. A keyspace will always contain one or more shards. A shard typically contains one MySQL master and potentially many MySQL replicas.
+A *shard* is a subset of a keyspace. A keyspace will always contain one or more shards. A shard typically contains one MySQL primary and potentially many MySQL replicas.
 
 Each MySQL instance within a shard has identical data (if we ignore any replication lag). The replicas can serve read-only traffic (with eventual consistency guarantees), execute long-running data analysis queries, or perform administrative tasks (backup, restore, diff, etc.).
 

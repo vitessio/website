@@ -35,12 +35,12 @@ specified tablet types.
 
 #### -tablet_types
 **optional**\
-**default** all (replica,rdonly,master)
+**default** all (replica,rdonly,primary)
 
 <div class="cmd">
 
 A comma-separated list of tablet types for which traffic is to be switched.
-One or more from master,replica,rdonly.<br><br>
+One or more from primary,replica,rdonly.<br><br>
 
 </div>
 
@@ -50,7 +50,7 @@ One or more from master,replica,rdonly.<br><br>
 
 <div class="cmd">
 
-For master tablets, SwitchTraffic first stops writes on the source master and waits for the replication to the target to
+For primary tablets, SwitchTraffic first stops writes on the source primary and waits for the replication to the target to
 catchup with the point where the writes were stopped. If the wait time is longer than timeout
 the command will error out. For setups with high write qps you may need to increase this value.
 
@@ -62,7 +62,7 @@ the command will error out. For setups with high write qps you may need to incre
 
 <div class="cmd">
 
-SwitchTraffic for master tablet types, by default, starts a reverse replication stream with the current target as the source, replicating back to the original source. This enables a quick and simple rollback using ReverseTraffic. This reverse workflow name is that of the original workflow concatenated with \_reverse.
+SwitchTraffic for primary tablet types, by default, starts a reverse replication stream with the current target as the source, replicating back to the original source. This enables a quick and simple rollback using ReverseTraffic. This reverse workflow name is that of the original workflow concatenated with \_reverse.
 
 If set to false these reverse replication streams will not be created and you will not be able to rollback once you have switched write traffic over to the target.
 

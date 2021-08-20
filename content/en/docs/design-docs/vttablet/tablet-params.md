@@ -128,7 +128,7 @@ hotRowProtection:
   maxGlobalQueueSize: 1000    # hot_row_protection_max_global_queue_size
   maxConcurrency: 5           # hot_row_protection_concurrent_transactions
 
-consolidator: enable|disable|notOnMaster # enable-consolidator, enable-consolidator-replicas
+consolidator: enable|disable|notOnPrimary # enable-consolidator, enable-consolidator-replicas
 heartbeatIntervalMilliseconds: 0         # heartbeat_enable, heartbeat_interval
 shutdownGracePeriodSeconds: 0            # transaction_shutdown_grace_period
 passthroughDML: false                    # queryserver-config-passthrough-dmls

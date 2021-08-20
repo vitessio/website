@@ -175,7 +175,7 @@ $ vtctlclient Workflow commerce.copy_corder_1 show
     "MaxVReplicationLag": 1599019410,
     "ShardStatuses": {
         "0/zone1-0000000100": {
-            "MasterReplicationStatuses": [
+            "PrimaryReplicationStatuses": [
                 {
                     "Shard": "0",
                     "Tablet": "zone1-0000000100",
@@ -209,7 +209,7 @@ $ vtctlclient Workflow commerce.copy_corder_1 show
                 }
             ],
             "TabletControls": null,
-            "MasterIsServing": true
+            "PrimaryIsServing": true
         }
     }
 }
@@ -304,7 +304,7 @@ $ echo "select * from corder_view_redacted;" | mysql --table commerce
 
 ## What happened under the covers
 
-As with `MoveTables`, a VReplication stream was formed for each of the `Materialize` workflows we executed.  We can see these by inspecting the VReplication table on the target keyspace master tablet, e.g. in this case:
+As with `MoveTables`, a VReplication stream was formed for each of the `Materialize` workflows we executed.  We can see these by inspecting the VReplication table on the target keyspace primary tablet, e.g. in this case:
 
 ```sh
 $ vtctlclient VReplicationExec zone1-0000000100 'select * from _vt.vreplication'

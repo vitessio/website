@@ -4,7 +4,7 @@ weight: 5
 aliases: ['/docs/user-guides/integration-with-orchestrator/'] 
 ---
 
-[Orchestrator](https://github.com/github/orchestrator) is a tool for managing MySQL replication topologies, including automated failover. It can detect master failure and initiate a recovery in a matter of seconds.
+[Orchestrator](https://github.com/github/orchestrator) is a tool for managing MySQL replication topologies, including automated failover. It can detect primary failure and initiate a recovery in a matter of seconds.
 
 For the most part, Vitess is agnostic to the actions of Orchestrator, which operates below Vitess at the MySQL level. That means you can pretty much [set up Orchestrator](https://github.com/github/orchestrator/wiki/Orchestrator-Manual) in the normal way, with just a few additions as described below.
 
@@ -12,7 +12,7 @@ For the [Kubernetes](../../../get-started/kubernetes) example, we provide a samp
 
 ## Orchestrator configuration
 
-Orchestrator needs to know some things from the Vitess side, like the tablet aliases and whether semisync is enforced with async fallback disabled. We pass this information by telling Orchestrator to execute certain queries that return local metadata from a non-replicated table, as seen in our sample [orchestrator.conf.json](https://github.com/vitessio/vitess/blob/master/docker/orchestrator/orchestrator.conf.json):
+Orchestrator needs to know some things from the Vitess side, like the tablet aliases and whether semisync is enforced with async fallback disabled. We pass this information by telling Orchestrator to execute certain queries that return local metadata from a non-replicated table, as seen in our sample [orchestrator.conf.json](https://github.com/vitessio/vitess/blob/main/docker/orchestrator/orchestrator.conf.json):
 
 ``` json
 "DetectClusterAliasQuery": "SELECT value FROM _vt.local_metadata WHERE name='ClusterAlias'",
@@ -21,7 +21,7 @@ Orchestrator needs to know some things from the Vitess side, like the tablet ali
 "DetectSemiSyncEnforcedQuery": "SELECT @@global.rpl_semi_sync_master_wait_no_slave AND @@global.rpl_semi_sync_master_timeout > 1000000",
 ```
 
-Vitess also needs to know the identity of the master for each shard. This is necessary in case of a failover.
+Vitess also needs to know the identity of the primary for each shard. This is necessary in case of a failover.
 
 It is important to ensure that orchestrator has access to `vtctlclient` so that orchestrator can trigger the change in topology via the [`TabletExternallyReparented`](../../../reference/vtctl/#tabletexternallyreparented) command.
 

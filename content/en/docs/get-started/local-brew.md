@@ -63,13 +63,13 @@ Starting vttablet for zone1-0000000102...
 HTTP/1.1 200 OK
 Date: Wed, 17 Feb 2021 13:10:12 GMT
 Content-Type: text/html; charset=utf-8
-W0217 16:10:13.075530   65562 main.go:67] W0217 13:10:13.074510 reparent.go:188] master-elect tablet zone1-0000000100 is not the shard master, proceeding anyway as -force was used
-W0217 16:10:13.076472   65562 main.go:67] W0217 13:10:13.075483 reparent.go:194] master-elect tablet zone1-0000000100 is not a master in the shard, proceeding anyway as -force was used
+W0217 16:10:13.075530   65562 main.go:67] W0217 13:10:13.074510 reparent.go:188] primary-elect tablet zone1-0000000100 is not the shard primary, proceeding anyway as -force was used
+W0217 16:10:13.076472   65562 main.go:67] W0217 13:10:13.075483 reparent.go:194] primary-elect tablet zone1-0000000100 is not a primary in the shard, proceeding anyway as -force was used
 I0217 16:10:13.076498   65562 main.go:67] I0217 13:10:13.075729 reparent.go:225] resetting replication on tablet zone1-0000000102
 I0217 16:10:13.076503   65562 main.go:67] I0217 13:10:13.075730 reparent.go:225] resetting replication on tablet zone1-0000000101
 I0217 16:10:13.076508   65562 main.go:67] I0217 13:10:13.075732 reparent.go:225] resetting replication on tablet zone1-0000000100
-I0217 16:10:13.649509   65562 main.go:67] I0217 13:10:13.649327 reparent.go:244] initializing master on zone1-0000000100
-I0217 16:10:13.819282   65562 main.go:67] I0217 13:10:13.818887 reparent.go:277] populating reparent journal on new master zone1-0000000100
+I0217 16:10:13.649509   65562 main.go:67] I0217 13:10:13.649327 reparent.go:244] initializing primary on zone1-0000000100
+I0217 16:10:13.819282   65562 main.go:67] I0217 13:10:13.818887 reparent.go:277] populating reparent journal on new primary zone1-0000000100
 I0217 16:10:13.819341   65562 main.go:67] I0217 13:10:13.818928 reparent.go:284] initializing replica zone1-0000000101
 I0217 16:10:13.819363   65562 main.go:67] I0217 13:10:13.819005 reparent.go:284] initializing replica zone1-0000000102
 I0217 16:10:15.913013   65563 main.go:67] I0217 13:10:15.912595 tablet_executor.go:240] Received DDL request. strategy=direct
@@ -100,7 +100,7 @@ $ mysql -e "show vitess_tablets"
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
 | Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname  | MasterTermStartTime  |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
-| zone1 | commerce | 0     | MASTER     | SERVING | zone1-0000000100 | localhost | 2021-02-17T13:10:13Z |
+| zone1 | commerce | 0     | PRIMARY    | SERVING | zone1-0000000100 | localhost | 2021-02-17T13:10:13Z |
 | zone1 | commerce | 0     | REPLICA    | SERVING | zone1-0000000101 | localhost |                      |
 | zone1 | commerce | 0     | RDONLY     | SERVING | zone1-0000000102 | localhost |                      |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+

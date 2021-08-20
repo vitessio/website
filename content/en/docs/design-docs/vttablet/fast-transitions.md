@@ -4,13 +4,13 @@ description: Fast and reliable vttablet state transitions
 weight: 1
 ---
 
-This issue is in response to #6645. When vttablet transitions from master to non-master, the following problems can occur under different circumstances:
+This issue is in response to #6645. When vttablet transitions from primary to non-primary, the following problems can occur under different circumstances:
 
 * When a query is killed, it may take a long time for mysql to return the error if it has to do a lot of cleanup. This can delay a vttablet transition. Just closing the pools is not enough because the tablet shutdown also waits for all executing goroutines to return.
 * It is possible that the query timeout is much greater than the transaction timeout. In such cases, the query timeout must be reduced to match the transaction timeout. Otherwise, a running query can hold a transaction hostage and prevent a vttablet from transitioning.
 * The `transaction_shutdown_grace_period` must acquire a new meaning. It should be renamed to `shutdown_grace_period`, and must also apply to queries that are exceeding this time limit. This limit applies to all queries: streaming, oltp read, reserved, and in_transaction.
 * The transaction shutdown code "waits for empty", but reserved connections (not in a transaction) are now part of this pool and will prevent the pool from going empty until they timeout. We need to close them more proactively during a shutdown.
-* The transition from master to non-master uses the immediate flag. This should wait for transactions to complete. Fortunately, due to how PRS works, that code path is not used. We instead use the "dont_serve" code path. But this needs to be fixed for future-proofing.
+* The transition from primary to non-primary uses the immediate flag. This should wait for transactions to complete. Fortunately, due to how PRS works, that code path is not used. We instead use the "dont_serve" code path. But this needs to be fixed for future-proofing.
 
 Many approaches were discussed in #6645. Those approaches are all non-viable because they don't address all of the above concerns.
 

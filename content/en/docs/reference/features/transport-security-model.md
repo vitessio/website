@@ -116,7 +116,7 @@ In a private network, where TLS security is not required, it might still be desi
 
 ### Example
 
-For a concrete example, see [encrypted_transport_test.go](https://github.com/vitessio/vitess/blob/master/go/test/endtoend/encryption/encryptedtransport/encrypted_transport_test.go) in the source tree.
+For a concrete example, see [encrypted_transport_test.go](https://github.com/vitessio/vitess/blob/main/go/test/endtoend/encryption/encryptedtransport/encrypted_transport_test.go) in the source tree.
 
 It first sets up all the certificates, some table ACLs, and then uses the golang client to connect with TLS. It also exercises the `grpc_use_effective_callerid` flag, by connecting without TLS.
 
