@@ -58,7 +58,7 @@ As a result we might not even be able to tell the application with some certaint
 
 It is not possible to make this the default behavior in Vitess; i.e. you will have to change your application code to take advantage of this option.
 
-In the (local examples)[https://github.com/vitessio/vitess/tree/main/examples/local], we have a script, (`method1.sh`)[https://github.com/vitessio/vitess/blob/main/examples/local/vtexplain/atomicity_method1.sh]; which tries to use a sample vschema from `vschema.json` and SQL schema in `vschema.sql` to illustrate this method. Let's run this and inspect the output:
+In the [local examples](https://github.com/vitessio/vitess/tree/main/examples/local), we have a script, [`method1.sh`](https://github.com/vitessio/vitess/blob/main/examples/local/vtexplain/atomicity_method1.sh); which tries to use a sample vschema from `vschema.json` and SQL schema in `vschema.sql` to illustrate this method. Let's run this and inspect the output:
 
 ```sh
 $ ./method1.sh
@@ -80,7 +80,7 @@ As can be seen from this output, we just issue all the inserts with the subset o
 
 In certain situations, a schema may be constructed in a fashion where cross-shard writes are very rare (or should not happen). In a situation like this Vitess provides for a transaction mode (set via the MySQL set statement `set transaction_mode = 'single'`) called **SINGLE**.  In this transaction mode, any write that needs to span multiple shards will fail with an error. Similarly, any **transactional read** (i.e. using `BEGIN` & `COMMIT`) that spans multiple shards will also get an error.
 
-Here is our example for this case using `vtexplain` and (`method2.sh`)[https://github.com/vitessio/vitess/blob/main/examples/local/vtexplain/atomicity_method2.sh]:
+Here is our example for this case using `vtexplain` and [`method2.sh`](https://github.com/vitessio/vitess/blob/main/examples/local/vtexplain/atomicity_method2.sh):
 
 ```sh
 $ ./method2.sh
@@ -141,7 +141,7 @@ By default, Vitess employs a default setting for `transaction_mode` of **MULTI**
 * As an optimization Phase 1+2 are performed at the same time, see below.
 * Because parts of this proceeds serially, the latency of the overall insert is typically proportional to the number of shards that the insert is scattered across.
 
-Let's run our example for this case (`method3.sh`)[https://github.com/vitessio/vitess/blob/main/examples/local/vtexplain/atomicity_method3.sh] and inspect the output:
+Let's run our example for this case [`method3.sh`](https://github.com/vitessio/vitess/blob/main/examples/local/vtexplain/atomicity_method3.sh) and inspect the output:
 
 ```sh
 $ ./method3.sh
