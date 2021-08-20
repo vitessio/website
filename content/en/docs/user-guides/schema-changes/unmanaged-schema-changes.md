@@ -92,7 +92,7 @@ Please do note that if VTGate does not recognize a DDL syntax, the statement wil
 
 ## Directly to MySQL
 
-You can apply schema changes directly to the underlying MySQL shard master instances. 
+You can apply schema changes directly to the underlying MySQL shard primary instances. 
 
 VTTablet will eventually notice the change and update itself. This is controlled by the `-queryserver-config-schema-reload-time` parameter which defaults to 1800 seconds.
 

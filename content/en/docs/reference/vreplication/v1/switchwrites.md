@@ -13,7 +13,7 @@ SwitchWrites  [-timeout=30s] [-cancel] [-reverse] [-reverse_replication=false] -
 ### Description
 
 SwitchWrites is used to switch writes for tables in a MoveTables workflow or for entire keyspace in the
-Reshard workflow away from the master in the source keyspace to the master in the target keyspace
+Reshard workflow away from the primary in the source keyspace to the primary in the target keyspace
 
 ### Parameters
 
@@ -31,7 +31,7 @@ Specifies the maximum time to wait, in seconds, for vreplication to catch up on 
 **default** 30s
 
 <div class="cmd">
-SwitchWrites first stops writes on the source master and waits for the replication to the target to
+SwitchWrites first stops writes on the source primary and waits for the replication to the target to
 catchup with the point where the writes were stopped. If the wait time is longer than filtered_replication_wait_time
 the command will error out. 
 For setups with high write qps you may need to increase this value.

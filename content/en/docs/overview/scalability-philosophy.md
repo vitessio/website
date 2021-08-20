@@ -42,8 +42,8 @@ For a true snapshot, queries must be sent to the primary within a transaction. F
 To summarize, these are the various levels of consistency supported:
 
 * `REPLICA/RDONLY` read: Servers can be scaled geographically. Local reads are fast, but can be stale depending on replica lag.
-* `MASTER` read: There is only one worldwide primary per shard. Reads coming from remote locations will be subject to network latency and reliability, but the data will be up-to-date (read-after-write consistency). The isolation level is `READ_COMMITTED`.
-* `MASTER` transactions: These exhibit the same properties as MASTER reads. However, you get REPEATABLE_READ consistency and ACID writes for a single shard. Support is underway for cross-shard Atomic transactions.
+* `PRIMARY` read: There is only one worldwide primary per shard. Reads coming from remote locations will be subject to network latency and reliability, but the data will be up-to-date (read-after-write consistency). The isolation level is `READ_COMMITTED`.
+* `PRIMARY` transactions: These exhibit the same properties as PRIMARY reads. However, you get REPEATABLE_READ consistency and ACID writes for a single shard. Support is underway for cross-shard Atomic transactions.
 
 As for atomicity, the following levels are supported:
 

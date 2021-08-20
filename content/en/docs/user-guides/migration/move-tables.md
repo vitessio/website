@@ -70,9 +70,9 @@ In this scenario, we are going to add the `customer` keyspace to the `commerce` 
 ```sh
 $ mysql --table --execute="show vitess_tablets"
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
-| Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname  | MasterTermStartTime  |
+| Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname  | PrimaryTermStartTime  |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
-| zone1 | commerce | 0     | MASTER     | SERVING | zone1-0000000100 | localhost | 2020-08-26T00:37:21Z |
+| zone1 | commerce | 0     | PRIMARY     | SERVING | zone1-0000000100 | localhost | 2020-08-26T00:37:21Z |
 | zone1 | commerce | 0     | REPLICA    | SERVING | zone1-0000000101 | localhost |                      |
 | zone1 | commerce | 0     | RDONLY     | SERVING | zone1-0000000102 | localhost |                      |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
@@ -82,7 +82,7 @@ As can be seen, we have 3 tablets running, with tablet ids 100, 101 and 102;  wh
 
 ## Create new tablets
 
-The first step in our MoveTables operation is to deploy new tablets for our `customer` keyspace. By the convention used in our examples, we are going to use the tablet ids 200-202 as the `commerce` keyspace previously used `100-102`. Once the tablets have started, we can force the first tablet to be the master using the `InitShardMaster` `-force` flag:
+The first step in our MoveTables operation is to deploy new tablets for our `customer` keyspace. By the convention used in our examples, we are going to use the tablet ids 200-202 as the `commerce` keyspace previously used `100-102`. Once the tablets have started, we can force the first tablet to be the primary using the `InitShardPrimary` `-force` flag:
 
 ### Using Helm
 
@@ -111,7 +111,7 @@ job.batch/zone1-commerce-0-init-shard-master   1/1           90s        5m36s
 job.batch/zone1-customer-0-init-shard-master   1/1           23s        84s
 ```
 
-`InitShardMaster` is performed implicitly by Helm for you.
+`InitShardMaster` (deprecated, but equivalent to `InitShardPrimary`) is performed implicitly by Helm for you.
 
 ### Using Operator
 
@@ -153,7 +153,7 @@ for i in 200 201 202; do
  CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
 done
 
-vtctlclient InitShardMaster -force customer/0 zone1-200
+vtctlclient InitShardPrimary -force customer/0 zone1-200
 vtctlclient ReloadSchemaKeyspace customer
 ```
 
@@ -162,12 +162,12 @@ vtctlclient ReloadSchemaKeyspace customer
 ```sh
 $ mysql --table --execute="show vitess_tablets"
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
-| Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname  | MasterTermStartTime  |
+| Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname  | PrimaryTermStartTime  |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
-| zone1 | commerce | 0     | MASTER     | SERVING | zone1-0000000100 | localhost | 2020-08-26T00:37:21Z |
+| zone1 | commerce | 0     | PRIMARY     | SERVING | zone1-0000000100 | localhost | 2020-08-26T00:37:21Z |
 | zone1 | commerce | 0     | REPLICA    | SERVING | zone1-0000000101 | localhost |                      |
 | zone1 | commerce | 0     | RDONLY     | SERVING | zone1-0000000102 | localhost |                      |
-| zone1 | customer | 0     | MASTER     | SERVING | zone1-0000000200 | localhost | 2020-08-26T00:52:39Z |
+| zone1 | customer | 0     | PRIMARY     | SERVING | zone1-0000000200 | localhost | 2020-08-26T00:52:39Z |
 | zone1 | customer | 0     | REPLICA    | SERVING | zone1-0000000201 | localhost |                      |
 | zone1 | customer | 0     | RDONLY     | SERVING | zone1-0000000202 | localhost |                      |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
@@ -231,7 +231,7 @@ Basically what the `MoveTables` operation has done is to create routing rules to
 
 ## Monitoring Progress (optional)
 
-In this example there are only a few rows in the tables, so the `MoveTables` operation only takes seconds. If the tables were large, you may need to monitor the progress of the operation.  There is no simple way to get a percentage complete status, but you can estimate the progress by running the following against the master tablet of the target keyspace:
+In this example there are only a few rows in the tables, so the `MoveTables` operation only takes seconds. If the tables were large, you may need to monitor the progress of the operation.  There is no simple way to get a percentage complete status, but you can estimate the progress by running the following against the primary tablet of the target keyspace:
 
 ```sh
 $ vtctlclient VReplicationExec zone1-0000000200 "select * from _vt.copy_state"
@@ -383,7 +383,7 @@ As you can see, we now have requests to the `rdonly` and `replica` tablets for t
 After the replica/rdonly reads have been _switched_, and you have verified that the system is operating as expected, it is time to _switch_ the _write_ and primary read operations. The command to execute the switch is very similar to the one in Phase 1:
 
 ```bash
-$ vtctlclient MoveTables -tablet_types=master SwitchTraffic customer.commerce2customer
+$ vtctlclient MoveTables -tablet_types=primary SwitchTraffic customer.commerce2customer
 ```
 
 ## Note
@@ -445,7 +445,7 @@ After this step is complete, you should see an error (in Vitess 9.0 and later) s
 mysql --table < ../common/select_commerce_data.sql
 Using commerce/0
 Customer
-ERROR 1146 (42S02) at line 4: vtgate: http://localhost:15001/: target: commerce.0.master, used tablet: zone1-100
+ERROR 1146 (42S02) at line 4: vtgate: http://localhost:15001/: target: commerce.0.primary, used tablet: zone1-100
 (localhost): vttablet: rpc error: code = NotFound desc = Table 'vt_commerce.customer' doesn't exist (errno 1146)
 (sqlstate 42S02) (CallerID: userData1): Sql: "select * from customer", BindVars: {}
 ```

@@ -16,7 +16,7 @@ The two critical Vitess processes to monitor are vttablet and vtgate. Additional
 
 Beyond what the tools export, it is important to also monitor system resource usage: CPU, memory, network and disk usage.
 
-There is a [popular mixin](https://github.com/vitessio/vitess/tree/master/vitess-mixin) contributed by [Slack](https://slack.com) that is based on how they monitor Vitess internally. It can be used as a starting point if you intend to use Prometheus and Grafana.
+There is a [popular mixin](https://github.com/vitessio/vitess/tree/main/vitess-mixin) contributed by [Slack](https://slack.com) that is based on how they monitor Vitess internally. It can be used as a starting point if you intend to use Prometheus and Grafana.
 
 Beyond the monitoring variables, the Vitess processes export additional information about their status on other URL paths. Some of those pages are for human consumption, and others are machine-readable meant for building automation.
 
@@ -111,7 +111,7 @@ Use this variable to track:
 
 * QPS
 * Latency
-* Per-category QPS. For replicas, the only category will be `Select`, but there will be more for masters.
+* Per-category QPS. For replicas, the only category will be `Select`, but there will be more for primary tablets.
 * Per-category latency
 * Per-category tail latency
 * Per-category cost: This value is calculated as QPS\*Latency. If the latency of a high QPS query goes up, it is likely causing more harm than the latency increase of an occasional query.
@@ -258,7 +258,7 @@ These variables are yet another view of Queries, but broken out by user, table a
 
 #### /debug/health
 
-This URL prints out a simple "ok" or “not ok” string that can be used to check if the server is healthy. The health check makes sure mysqld connections work, and replication is configured (though not necessarily running) if not on master.
+This URL prints out a simple "ok" or “not ok” string that can be used to check if the server is healthy. The health check makes sure mysqld connections work, and replication is configured (though not necessarily running) if not on primary.
 
 #### /debug/status\_details
 
@@ -269,7 +269,7 @@ This URL prints out a JSON object that lists the state of all the variables that
   {
     "Key": "Current State",
     "Class": "healthy",
-    "Value": "MASTER: Serving, Jan 13, 2021 at 20:52:13 (PST)"
+    "Value": "PRIMARY: Serving, Jan 13, 2021 at 20:52:13 (PST)"
   }
 ]
 ```
@@ -283,7 +283,7 @@ This URL prints out a JSON object that lists the state of all the variables that
 
 #### /querylogz, /debug/querylog, /txlogz, /debug/txlog
 
-* /debug/querylog is a continuous stream of verbose execution info as each query is executed. This URL can generate a lot of data because it streams every query processed by vttablet. The details are as per this function: https://github.com/vitessio/vitess/blob/master/go/vt/vttablet/tabletserver/tabletenv/logstats.go#L202
+* /debug/querylog is a continuous stream of verbose execution info as each query is executed. This URL can generate a lot of data because it streams every query processed by vttablet. The details are as per this function: https://github.com/vitessio/vitess/blob/main/go/vt/vttablet/tabletserver/tabletenv/logstats.go#L202
 * /querylogz is a limited human readable version of /debug/querylog. It prints the next 300 queries by default. The limit can be specified with a limit=N parameter on the URL.
 * /txlogz is like /querylogz, but for transactions.
 * /debug/txlog is the JSON counterpart to /txlogz.

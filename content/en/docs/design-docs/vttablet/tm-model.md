@@ -29,9 +29,9 @@ Essentially, we generally assume that the tablet record may not be in sync with 
 
 Refresh state will continue to exist as an API, but it’s only for refreshing against state changes in the global topo.
 
-### Exception 1: Mastership
+### Exception 1: Cluster Leadership
 
-In the case of flows that designate who the primary is, the topo is the authority. For such requests, the tablet will first try to update its record, and only then succeed. This is required because of how the new mastership redesign works.
+In the case of flows that designate who the primary is, the topo is the authority. For such requests, the tablet will first try to update its record, and only then succeed. This is required because of how the new cluster leadership redesign works.
 
 ### Exception 2: VTTablet startup
 

@@ -5,7 +5,7 @@ weight: 13
 
 Once you have the cluster up and running, you should perform a trial failover using `PlannedReparentShard` to make sure it works as expected.
 
-A typical use case for `PlannedReparentShard` is to use it during software updates. The command has a convenient `avoid_master` flag that allows you to specify the current vttablet you are going to perform maintenance on. If that is a primary, then it performs a failover to another eligible replica. Otherwise, it is a no-op.
+A typical use case for `PlannedReparentShard` is to use it during software updates. The command has a convenient `avoid_tablet` flag that allows you to specify the current vttablet you are going to perform maintenance on. If that is a primary, then it performs a failover to another eligible replica. Otherwise, it is a no-op.
 
 You can also perform a "Planned Reparent" through the browser from the `vtctld` Dashboard.
 

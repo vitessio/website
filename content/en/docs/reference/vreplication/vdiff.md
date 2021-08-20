@@ -7,7 +7,7 @@ weight: 40
 ### Command
 
 ```
-VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=master,replica,rdonly]
+VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=primary,replica,rdonly]
        [-limit=<max rows to diff>] [-table=<table list>] [-format=json]
        [-filtered_replication_wait_time=30s] [-debug_query] [-only_pks] <keyspace.workflow>
 ```
@@ -39,11 +39,11 @@ VDiff will choose a tablet from this cell to diff the source table(s) with the t
 
 #### -tablet_types
 **optional**\
-**default** master,replica,rdonly
+**default** primary,replica,rdonly
 
 <div class="cmd">
 A comma separated list of tablet types that are used while picking a tablet for sourcing data.
-One or more from MASTER, REPLICA, RDONLY.<br><br>
+One or more from PRIMARY, REPLICA, RDONLY.<br><br>
 </div>
 
 #### -filtered_replication_wait_time
@@ -51,7 +51,7 @@ One or more from MASTER, REPLICA, RDONLY.<br><br>
 **default** 30s
 
 <div class="cmd">
-VDiff finds the current position of the source master and then waits for the target replication to reach
+VDiff finds the current position of the source primary and then waits for the target replication to reach
 that position for _filtered_replication_wait_time_. If the target is much behind the source or if there is
 a high write qps on the source then this time will need to be increased.
 </div>

@@ -71,7 +71,7 @@ Let's start by looking at the MySQL auto-increment feature:
 * Inserting a row with a given value that is higher than the current value will
   set the current value.
 
-* The value used by the master in a statement is sent in the replication stream,
+* The value used by the primary in a statement is sent in the replication stream,
   so replicas will have the same value when re-playing the stream.
 
 * There is no strict guarantee about ordering: two concurrent statements may
@@ -80,7 +80,7 @@ Let's start by looking at the MySQL auto-increment feature:
   issued, not when the transaction is committed).
 
 * MySQL has multiple options for auto-increment, like only using every N number
-  (for multi-master configurations), or performance related features (locking
+  (for active-active configurations), or performance related features (locking
   that table’s current ID may have concurrency implications).
 
 * When inserting a row in a table with an auto-increment column, if the value
@@ -169,7 +169,7 @@ And the table it is going to be using it can also reference the Sequence in its 
     },
 ```
 
-After this done (and the Schema has been reloaded on master tablet, and the
+After this done (and the Schema has been reloaded on primary tablet, and the
 VSchema has been pushed), the sequence can be used.
 
 ### Accessing a Sequence

@@ -51,7 +51,7 @@ specify a keyspace and shard, and have Vitess choose the tablet to run the
 backup for you, instead of having to specify the tablet alias explicitly.
 
 To maintain continuous binlogs, you need to have a binlog server pointing to
-the master (or a replica, assuming that the replica is also maintaining its
+the primary (or a replica, assuming that the replica is also maintaining its
 own binlogs, which is the default Vitess configuration). You can use
 [Ripple](https://github.com/google/mysql-ripple) as a binlog server, although
 there are other options; and you could use an existing MySQL server as well.

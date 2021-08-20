@@ -148,7 +148,7 @@ Vindex Type | Cost
 
 In the case of a simple select, Vitess scans the WHERE clause to match references to Vindex columns and chooses the best one to use. If there is no match and the query is simple without complex constructs like aggregates, etc., it is sent to all shards.
 
-Vitess can handle more complex queries. For now, refer to the [design doc](https://github.com/vitessio/vitess/blob/master/doc/V3HighLevelDesign.md) for background information on how it handles them.
+Vitess can handle more complex queries. For now, refer to the [design doc](https://github.com/vitessio/vitess/blob/main/doc/V3HighLevelDesign.md) for background information on how it handles them.
 
 #### Insert
 

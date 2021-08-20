@@ -37,7 +37,7 @@ Note the `vitess_sequence` comment in the create table statement. VTTablet will 
 * `next_id` is set to `1000`: the value should be comfortably greater than the `auto_increment` max value used so far.
 * `cache` specifies the number of values to cache before vttablet updates `next_id`.
 
-Larger cache values perform better, but will exhaust the values quicker, since during reparent operations the new master will start off at the `next_id` value.
+Larger cache values perform better, but will exhaust the values quicker, since during reparent operations the new primary will start off at the `next_id` value.
 
 The VTGate servers also need to know about the sequence tables. This is done by updating the VSchema for commerce as follows:
 
@@ -187,8 +187,8 @@ for i in 400 401 402; do
  SHARD=80- CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
 done
 
-vtctlclient InitShardMaster -force customer/-80 zone1-300
-vtctlclient InitShardMaster -force customer/80- zone1-400
+vtctlclient InitShardPrimary -force customer/-80 zone1-300
+vtctlclient InitShardPrimary -force customer/80- zone1-400
 ```
 
 ## Start the Reshard
@@ -231,7 +231,7 @@ vtctlclient Reshard -tablet_types=rdonly,replica SwitchTraffic customer.cust2cus
 After the replica/rdonly reads have been switched, and the health of the system has been verified, it's time to switch writes. The usage is very similar to switching reads:
 
 ```bash
-vtctlclient Reshard -tablet_types=master SwitchTraffic customer.cust2cust
+vtctlclient Reshard -tablet_types=primary SwitchTraffic customer.cust2cust
 ```
 
 ## Note

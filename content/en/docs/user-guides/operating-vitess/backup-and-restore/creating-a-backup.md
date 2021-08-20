@@ -43,7 +43,7 @@ If the engine is `xtrabackup`, the tablet can continue to serve traffic while th
 ### Run the following vtctl command to backup a specific shard:
 
 ``` sh
-vtctl BackupShard [-allow_master=false] <keyspace/shard>
+vtctl BackupShard [-allow_primary=false] <keyspace/shard>
 ```
 
 ## Restoring a backup

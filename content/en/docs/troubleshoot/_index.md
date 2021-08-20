@@ -14,7 +14,7 @@ When an alert fires, you have the following sources of information to perform yo
 * Diagnostic URLs
 * Log files
 
-### Find Vitess build running 
+### Find version of Vitess build 
 ```
 select @@version;
 ```

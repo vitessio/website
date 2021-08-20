@@ -65,7 +65,7 @@ The following flags need to be set to enable 2PC support in VTTablet:
 * **twopc_coordinator_address**: This should specify the address (or VIP) of the VTGate that VTTablet will use to resolve abandoned transactions.
 * **twopc_abandon_age**: This is the time in seconds that specifies how long to wait before asking a VTGate to resolve an abandoned transaction.
 
-With the above flags specified, every master VTTablet also turns into a watchdog. If any 2PC transaction is left lingering for longer than twopc_abandon_age seconds, then VTTablet invokes VTGate and requests it to resolve it. Typically, the abandon_age needs to be substantially longer than the time it takes for a typical 2PC commit to complete (10s of seconds).
+With the above flags specified, every primary VTTablet also turns into a watchdog. If any 2PC transaction is left lingering for longer than twopc_abandon_age seconds, then VTTablet invokes VTGate and requests it to resolve it. Typically, the abandon_age needs to be substantially longer than the time it takes for a typical 2PC commit to complete (10s of seconds).
 
 ## Configuring MySQL
 
@@ -80,7 +80,7 @@ A few additional variables have been added to /debug/vars. Failures described be
 The following errors are not expected to happen. If they do, it means that 2PC transactions have failed to commit atomically:
 
 * **InternalErrors.TwopcCommit**: This is a counter that shows the number of times a prepared transaction failed to fulfil a commit request.
-* **InternalErrors.TwopcResurrection**: This counter is incremented if a new master failed to resurrect a previously prepared (and unresolved) transaction.
+* **InternalErrors.TwopcResurrection**: This counter is incremented if a new primary failed to resurrect a previously prepared (and unresolved) transaction.
 
 ## Alertable failures
 

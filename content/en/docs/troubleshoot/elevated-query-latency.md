@@ -1,9 +1,9 @@
 ---
-title: Elevated query latency on master
+title: Elevated query latency on primary
 description: Debug common issues with Vitess
 weight: 1
 ---
-## Elevated query latency on master
+## Elevated query latency on primary
 
 Diagnosis 1: Inspect the graphs to see if QPS has gone up. If yes, drill down on the more detailed QPS graphs to see which table, or user caused the increase. If a table is identified, look at /debug/queryz for queries on that table.
 

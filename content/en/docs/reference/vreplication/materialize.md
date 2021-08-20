@@ -43,12 +43,12 @@ cells should be used to pick a tablet for selecting data from the source keyspac
 <div class="cmd">
 
 A comma-separated list of tablet types that are used while picking a tablet for sourcing data.
-One or more from MASTER, REPLICA, RDONLY.<br><br>
+One or more from PRIMARY, REPLICA, RDONLY.<br><br>
 
 ###### Uses
 
-* To reduce the load on master tablets by using REPLICAs or RDONLYs
-* Reducing lags by pointing to MASTER
+* To reduce the load on PRIMARY tablets by using REPLICAs or RDONLYs
+* Reducing lag by pointing to PRIMARY
 </div>
 
 #### JSON spec details

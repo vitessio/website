@@ -18,7 +18,7 @@ There's a clear need of improving GitHub naming conventions for the following se
 
 The most problematic area we see is the Pull Request Naming Convention and Labels hence we'd like to come up with guidelines and once agreed by maintainers provide a Template that will help streamline the above areas.
 
-For Issue Templates please refer to this [section](https://github.com/vitessio/vitess/tree/master/.github/ISSUE_TEMPLATE).
+For Issue Templates please refer to this [section](https://github.com/vitessio/vitess/tree/main/.github/ISSUE_TEMPLATE).
 
 ## Solution
 

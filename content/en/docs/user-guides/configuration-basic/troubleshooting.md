@@ -43,7 +43,7 @@ This is one of the most common problems. It can show up as just an elevated late
 
 Check vtgate CPU usage: If the vtgate CPU is too high or is getting throttled, it could be the root cause. Bringing up another vtgate to take on additional load or increasing the CPU quota of the VTGate should resolve the problem.
 
-Check vttablet CPU usage: If vttablet CPU usage is maxed out, the immediate solution is to increase the quota. If the vttablet is a replica, then bringing up more replicas should help distribute the load. If it is a master, then you need to plan on splitting the shard into smaller parts, or reshard in the case of an unsharded keyspace.
+Check vttablet CPU usage: If vttablet CPU usage is maxed out, the immediate solution is to increase the quota. If the vttablet is a replica, then bringing up more replicas should help distribute the load. If it is a primary, then you need to plan on splitting the shard into smaller parts, or reshard in the case of an unsharded keyspace.
 
 Check MySQL resource usage: If MySQL is resource constrained, for example IOPS, then you need to provision more. Also, you will then need to add more replicas or plan a reshard or split just like in the case of a vttablet. More often than not, MySQL will run into resource constraints before vttablet does.
 
@@ -138,7 +138,7 @@ If there are no topo errors in vtgate, check to see if the tablet record has bee
 
 If you see the following error string `The MySQL server is running with the --read-only option so it cannot execute this statement (errno 1290) (sqlstate HY000)` while trying to write to the primary, then it likely means that a previous `PlannedReparentShard` operation failed in the middle.
 
-Re-executing `PlannedReparentShard` against that master should fix the problem. If this operation fails with an error saying that there is no current master, you may have to issue an `EmergencyReparentShard` to safely elect a master.
+Re-executing `PlannedReparentShard` against that primary should fix the problem. If this operation fails with an error saying that there is no current primary, you may have to issue an `EmergencyReparentShard` to safely elect a primary.
 
 If `vtorc` is running, no action is needed because `vtorc` will notice this state and fix it in a safe manner.
 

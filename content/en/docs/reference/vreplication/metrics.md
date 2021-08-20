@@ -50,7 +50,11 @@ _VReplicationQueryCount_ is the total number of queries in each phase of a workf
 
 #### VReplicationSecondsBehindMaster, VReplicationSecondsBehindMasterMax, VReplicationSecondsBehindMasterTotal
 
-These metrics show the replication lag of the target stream with respect to the source stream. _VReplicationSecondsBehindMaster_ shows the current replication lag and _VReplicationSecondsBehindMasterMax_ has the maximum lag in this stream. Note that these values are only valid during the replication phase of a workflow.
+Deprecated. See next section.
+
+#### VReplicationLagSeconds, VReplicationLagSecondsMax, VReplicationLagSecondsTotal
+
+These metrics show the replication lag of the target stream with respect to the source stream. _VReplicationLagSeconds_ shows the current replication lag and _VReplicationLagSecondsMax_ has the maximum lag in this stream. Note that these values are only valid during the replication phase of a workflow.
 
 #### VReplicationSource
 
@@ -113,9 +117,9 @@ The total number of vstreamer created during the lifetime of this tablet
 "VReplicationQPS": {"All":[7.2,1,1.2,1,1.2,1,1.2,1.2,1,1.2,1,1.2,1,1.2,1],"Query":[6.6,1,1.2,1,1.2,1,1.2,1.2,1,1.2,1,1.2,1,1.2,1],"Transaction":[0.6,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
 "VReplicationQueryCount": {"commerce.0.commerce2customer.1.copy": 2},
 "VReplicationQueryCountTotal": 2,
-"VReplicationSecondsBehindMaster": {"commerce.0.commerce2customer.1": 0},
-"VReplicationSecondsBehindMasterMax": 0,
-"VReplicationSecondsBehindMasterTotal": 0,
+"VReplicationLagSeconds": {"commerce.0.commerce2customer.1": 0},
+"VReplicationLagSecondsMax": 0,
+"VReplicationLagSecondsTotal": 0,
 "VReplicationSource": {"1": "commerce/0"},
 "VReplicationSourceTablet": {"1": "cell:\"zone1\" uid:100 "},
 "VReplicationStreamCount": 1,

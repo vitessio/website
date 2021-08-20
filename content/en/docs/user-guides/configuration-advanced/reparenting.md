@@ -4,14 +4,14 @@ weight: 6
 aliases: ['/docs/user-guides/reparenting/']
 ---
 
-**Reparenting** is the process of changing a shard's master tablet from one host to another or changing a replica tablet to have a different master. Reparenting can be initiated manually or it can occur automatically in response to particular database conditions. As examples, you might reparent a shard or tablet during a maintenance exercise or automatically trigger reparenting when a master tablet dies.
+**Reparenting** is the process of changing a shard's primary tablet from one host to another or changing a replica tablet to have a different primary. Reparenting can be initiated manually or it can occur automatically in response to particular database conditions. As examples, you might reparent a shard or tablet during a maintenance exercise or automatically trigger reparenting when a primary tablet dies.
 
 This document explains the types of reparenting that Vitess supports:
 
 * [Active reparenting](../../configuration-advanced/reparenting/#active-reparenting) occurs when Vitess manages the entire reparenting process.
-* [External reparenting](../../configuration-advanced/reparenting/#external-reparenting) occurs when another tool handles the reparenting process, and Vitess just updates its topology service, replication graph, and serving graph to accurately reflect master-replica relationships.
+* [External reparenting](../../configuration-advanced/reparenting/#external-reparenting) occurs when another tool handles the reparenting process, and Vitess just updates its topology service, replication graph, and serving graph to accurately reflect primary-replica relationships.
 
-**Note:** The `InitShardMaster` command defines the initial parenting relationships within a shard. That command makes the specified tablet the master and makes the other tablets in the shard replicas that replicate from that master.
+**Note:** The `InitShardPrimary` command defines the initial parenting relationships within a shard. That command makes the specified tablet the primary and makes the other tablets in the shard replicas that replicate from that primary.
 
 ## MySQL requirements
 
@@ -33,54 +33,54 @@ You can use the following `vtctl` commands to perform reparenting operations:
 * `PlannedReparentShard`
 * `EmergencyReparentShard`
 
-Both commands lock the Shard record in the global topology service. The two commands cannot run in parallel, nor can either command run in parallel with the `InitShardMaster` command.
+Both commands lock the Shard record in the global topology service. The two commands cannot run in parallel, nor can either command run in parallel with the `InitShardPrimary` command.
 
 Both commands are both dependent on the global topology service being available, and they both insert rows in the topology service's `_vt.reparent_journal` table. As such, you can review your database's reparenting history by inspecting that table.
 
 ### PlannedReparentShard: Planned reparenting
 
-The `PlannedReparentShard` command reparents a healthy master tablet to a new master. The current and new master must both be up and running.
+The `PlannedReparentShard` command reparents a healthy primary tablet to a new primary. The current and new primary must both be up and running.
 
 This command performs the following actions:
 
-1. Puts the current master tablet in read-only mode.
-2. Shuts down the current master's query service, which is the part of the system that handles user SQL queries. At this point, Vitess does not handle any user SQL queries until the new master is configured and can be used a few seconds later.
-3. Retrieves the current master's replication position.
-4. Instructs the master-elect tablet to wait for replication data and then begin functioning as the new master after that data is fully transferred.
+1. Puts the current primary tablet in read-only mode.
+2. Shuts down the current primary's query service, which is the part of the system that handles user SQL queries. At this point, Vitess does not handle any user SQL queries until the new primary is configured and can be used a few seconds later.
+3. Retrieves the current primary's replication position.
+4. Instructs the primary-elect tablet to wait for replication data and then begin functioning as the new primary after that data is fully transferred.
 5. Ensures replication is functioning properly via the following steps:
-    - On the master-elect tablet, insert an entry in a test table and then update the global Shard object's MasterAlias record.
-    - In parallel on each replica, including the old master, set the new master and wait for the test entry to replicate to the replica tablet. Replica tablets that had not been replicating before the command was called are left in their current state and do not start replication after the reparenting process.
-    - Start replication on the old master tablet so it catches up to the new master.
+    - On the primary-elect tablet, insert an entry in a test table and then update the global Shard object's PrimaryAlias record.
+    - In parallel on each replica, including the old primary, set the new primary and wait for the test entry to replicate to the replica tablet. Replica tablets that had not been replicating before the command was called are left in their current state and do not start replication after the reparenting process.
+    - Start replication on the old primary tablet so it catches up to the new primary.
 
-In this scenario, the old master's tablet type transitions to `spare`. If health checking is enabled on the old master, it will likely rejoin the cluster as a replica on the next health check. To enable health checking, set the `target_tablet_type` parameter when starting a tablet. That parameter indicates what type of tablet that tablet tries to be when healthy. When it is not healthy, the tablet type changes to spare.
+In this scenario, the old primary's tablet type transitions to `spare`. If health checking is enabled on the old primary, it will likely rejoin the cluster as a replica on the next health check. To enable health checking, set the `target_tablet_type` parameter when starting a tablet. That parameter indicates what type of tablet that tablet tries to be when healthy. When it is not healthy, the tablet type changes to spare.
 
 ### EmergencyReparentShard: Emergency reparenting
 
-The `EmergencyReparentShard` command is used to force a reparent to a new master when the current master is unavailable. The command assumes that data cannot be retrieved from the current master because it is dead or not working properly.
+The `EmergencyReparentShard` command is used to force a reparent to a new primary when the current primary is unavailable. The command assumes that data cannot be retrieved from the current primary because it is dead or not working properly.
 
-As such, this command does not rely on the current master at all to replicate data to the new master. Instead, it makes sure that the master-elect is the most advanced in replication within all of the available replicas.
+As such, this command does not rely on the current primary at all to replicate data to the new primary. Instead, it makes sure that the primary-elect is the most advanced in replication within all of the available replicas.
 
-**Important**: Before calling this command, you must first identify the replica with the most advanced replication position as that replica must be designated as the new master. You can use the [`vtctl ShardReplicationPositions`](../../../reference/vtctl/#shardreplicationpositions) command to determine the current replication positions of a shard's replicas.
+**Important**: Before calling this command, you must first identify the replica with the most advanced replication position as that replica must be designated as the new primary. You can use the [`vtctl ShardReplicationPositions`](../../../reference/vtctl/#shardreplicationpositions) command to determine the current replication positions of a shard's replicas.
 
 This command performs the following actions:
 
-1. Determines the current replication position on all of the replica tablets and confirms that the master-elect tablet has the most advanced replication position.
-2. Promotes the master-elect tablet to be the new master. In addition to changing its tablet type to master, the master-elect performs any other changes that might be required for its new state.
+1. Determines the current replication position on all of the replica tablets and confirms that the primary-elect tablet has the most advanced replication position.
+2. Promotes the primary-elect tablet to be the new primary. In addition to changing its tablet type to primary, the primary-elect performs any other changes that might be required for its new state.
 3. Ensures replication is functioning properly via the following steps:
-    - On the master-elect tablet, Vitess inserts an entry in a test table and then updates the `MasterAlias` record of the global Shard object.
-    - In parallel on each replica, excluding the old master, Vitess sets the master and waits for the test entry to replicate to the replica tablet. Replica tablets that had not been replicating before the command was called are left in their current state and do not start replication after the reparenting process.
+    - On the primary-elect tablet, Vitess inserts an entry in a test table and then updates the `PrimaryAlias` record of the global Shard object.
+    - In parallel on each replica, excluding the old primary, Vitess sets the primary and waits for the test entry to replicate to the replica tablet. Replica tablets that had not been replicating before the command was called are left in their current state and do not start replication after the reparenting process.
 
 ## External Reparenting
 
-External reparenting occurs when another tool handles the process of changing a shard's master tablet. After that occurs, the tool needs to call the [`vtctl TabletExternallyReparented`](../../../reference/vtctl/#tabletexternallyreparented) command to ensure that the topology service, replication graph, and serving graph are updated accordingly.
+External reparenting occurs when another tool handles the process of changing a shard's primary tablet. After that occurs, the tool needs to call the [`vtctl TabletExternallyReparented`](../../../reference/vtctl/#tabletexternallyreparented) command to ensure that the topology service, replication graph, and serving graph are updated accordingly.
 
 That command performs the following operations:
 
 1. Reads the Tablet from the local topology service.
 2. Reads the Shard object from the global topology service.
-3. If the Tablet type is not already `MASTER`, sets the tablet type to `MASTER`.
-4. The Shard record is updated asynchronously (if needed) with the current master alias.
-5. Any other tablets that still have their tablet type to `MASTER` will demote themselves to `REPLICA`.
+3. If the Tablet type is not already `PRIMARY`, sets the tablet type to `PRIMARY`.
+4. The Shard record is updated asynchronously (if needed) with the current primary alias.
+5. Any other tablets that still have their tablet type to `PRIMARY` will demote themselves to `REPLICA`.
 
 The `TabletExternallyReparented` command fails in the following cases:
 
@@ -90,4 +90,4 @@ Active reparenting might be a dangerous practice in any system that depends on e
 
 ## Fixing Replication
 
-A tablet can be orphaned after a reparenting if it is unavailable when the reparent operation is running but then recovers later on. In that case, you can manually reset the tablet's master to the current shard master using the `vtctl ReparentTablet` command. You can then restart replication on the tablet if it was stopped by calling the `vtctl StartReplication` command.
+A tablet can be orphaned after a reparenting if it is unavailable when the reparent operation is running but then recovers later on. In that case, you can manually reset the tablet's primary to the current shard primary using the `vtctl ReparentTablet` command. You can then restart replication on the tablet if it was stopped by calling the `vtctl StartReplication` command.
