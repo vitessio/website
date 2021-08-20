@@ -16,7 +16,7 @@ In this guide, we will walk through the process of using the `CreateLookupVindex
 
 `vtctlclient CreateLookupVindex` has the following syntax:
 
-`CreateLookupVindex  [-cells=<source_cells>] [-continue_after_copy_with_owner=false] [-tablet_types=<source_tablet_types>] <keyspace> <json_spec>`
+```CreateLookupVindex  [-cells=<source_cells>] [-continue_after_copy_with_owner=false] [-tablet_types=<source_tablet_types>] <keyspace> <json_spec>```
 
  * `<json_spec>`:  Use the lookup Vindex specified in `<json_spec>` along with
 VReplication to populate/backfill the lookup Vindex from the source table.
