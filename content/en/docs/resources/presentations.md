@@ -4,6 +4,24 @@ weight: 1
 aliases: ['/resources/presentations.html']
 ---
 
+## Perconalive 2021
+
+Deploying a Sharded Vitess Sandbox Cluster in Public Cloud Kubernetes in 10 Minutes. - Jordan Moldow, Box
+
+{{< youtube id="Bllc-u_cCGA" autoplay="false" >}}
+
+Scaling MySQL @LinkedIn with Vitess. - Apoorv Purohit and Karthik Appigatla, LinkedIn
+
+{{< youtube id="fbI6wIIKs50" autoplay="false" >}}
+
+Integrating Best of Breed Open Source Tools to Vitess: Orchestrator - Alkin Tezuysal, PlanetScale
+
+{{< youtube id="0a4xqQ3JYjw" autoplay="false" >}}
+
+Revertible, Recoverable Schema Migrations in Vitess - Shlomi Noach, PlanetScale
+
+{{< youtube id="kB7ziLxXft4" autoplay="false" >}}
+
 ## Rawkode Live
 
 Introduction to Vitess.  Deepthi Sigireddi, Alkin Tezuysal - PlanetScale, David McKay @rawkode
