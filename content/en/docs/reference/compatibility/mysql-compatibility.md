@@ -145,7 +145,7 @@ Example Output:
 ```shell
 Example Output:
 +-------+----------+-------+------------+---------+------------------+------------+----------------------+
-| Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname   | PrimaryTermStartTime  |
+| Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname   | PrimaryTermStartTime |
 +-------+----------+-------+------------+---------+------------------+------------+----------------------+
 | zone1 | commerce | 0     | PRIMARY    | SERVING | zone1-0000000100 | <redacted> | 2021-04-22T04:10:29Z |
 | zone1 | commerce | 0     | REPLICA    | SERVING | zone1-0000000101 | <redacted> |                      |

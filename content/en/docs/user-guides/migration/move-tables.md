@@ -70,9 +70,9 @@ In this scenario, we are going to add the `customer` keyspace to the `commerce` 
 ```sh
 $ mysql --table --execute="show vitess_tablets"
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
-| Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname  | PrimaryTermStartTime  |
+| Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname  | PrimaryTermStartTime |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
-| zone1 | commerce | 0     | PRIMARY     | SERVING | zone1-0000000100 | localhost | 2020-08-26T00:37:21Z |
+| zone1 | commerce | 0     | PRIMARY    | SERVING | zone1-0000000100 | localhost | 2020-08-26T00:37:21Z |
 | zone1 | commerce | 0     | REPLICA    | SERVING | zone1-0000000101 | localhost |                      |
 | zone1 | commerce | 0     | RDONLY     | SERVING | zone1-0000000102 | localhost |                      |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
@@ -162,12 +162,12 @@ vtctlclient ReloadSchemaKeyspace customer
 ```sh
 $ mysql --table --execute="show vitess_tablets"
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
-| Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname  | PrimaryTermStartTime  |
+| Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname  | PrimaryTermStartTime |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
-| zone1 | commerce | 0     | PRIMARY     | SERVING | zone1-0000000100 | localhost | 2020-08-26T00:37:21Z |
+| zone1 | commerce | 0     | PRIMARY    | SERVING | zone1-0000000100 | localhost | 2020-08-26T00:37:21Z |
 | zone1 | commerce | 0     | REPLICA    | SERVING | zone1-0000000101 | localhost |                      |
 | zone1 | commerce | 0     | RDONLY     | SERVING | zone1-0000000102 | localhost |                      |
-| zone1 | customer | 0     | PRIMARY     | SERVING | zone1-0000000200 | localhost | 2020-08-26T00:52:39Z |
+| zone1 | customer | 0     | PRIMARY    | SERVING | zone1-0000000200 | localhost | 2020-08-26T00:52:39Z |
 | zone1 | customer | 0     | REPLICA    | SERVING | zone1-0000000201 | localhost |                      |
 | zone1 | customer | 0     | RDONLY     | SERVING | zone1-0000000202 | localhost |                      |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
