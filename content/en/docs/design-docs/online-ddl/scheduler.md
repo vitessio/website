@@ -48,7 +48,7 @@ A migration can be in any one of these states:
 
 - `queued`: a migration is submitted
 - `ready`: a migration is picked from the queue to run
-- `running`: a migration was started. It is periodically tested to be alive.
+- `running`: a migration was started. It is periodically tested to be making progress.
 - `complete`: a migration completed successfully
 - `failed`: a migration started running and failed due to whatever reason
 - `cancelled`: a _pending_ migration was cancelled

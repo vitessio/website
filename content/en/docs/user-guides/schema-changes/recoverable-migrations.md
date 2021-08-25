@@ -21,12 +21,12 @@ Normally, schema migrations are coupled with the original MySQL server they oper
 
 Whether by planned operation or an unplanned failure, an `online` migration's VReplication stream is interrupted while copying/applying data. VReplication's mechanism persists the state of data transfer transactionally with the transfer itself. Any replica will have a _consistent_ state of the migration, even if that replica lags behind the primary.
 
-When a replica tablet is promoted as `primary`, it notices the VReplication stream, which is meant to be active an running. It sets up the connections and processes to resume its work. It is possible that some retries will take place as the stream re-evaluates its source of data.
+When a replica tablet is promoted as `primary`, it notices the VReplication stream, which is meant to be active and running. It sets up the connections and processes to resume its work. It is possible that some retries will take place as the stream re-evaluates its source of data.
 
 The [Online DDL Scheduler](../../../design-docs/online-ddl/scheduler) detects the running stream, and identifies it as having been created by a different tablet. It assumes ownership of the stream and proceeds to follow its progress till completion.
 
 The stream must be no more than `10` minutes stale, otherwise the scheduler marks the migration as failed.
 
-There is no limitation on the number of failovers a `online` migration can survive.
+There is no limitation on the number of failovers an `online` migration can survive.
 
 No user action is required. Immediately after promotion/failover the migration will present as making no progress. It is likely to present progress within 1 or 2 minutes after promotion.

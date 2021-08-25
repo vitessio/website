@@ -142,7 +142,7 @@ A migration can be in any one of these states:
 
 - `queued`: a migration is submitted
 - `ready`: a migration is picked from the queue to run
-- `running`: a migration was started. It is periodically tested to be alive.
+- `running`: a migration was started. It is periodically tested to be making progress.
 - `complete`: a migration completed successfully
 - `failed`: a migration started running and failed due to whatever reason
 - `cancelled`: a _pending_ migration was cancelled
@@ -171,7 +171,7 @@ VReplication based migrations (`ddl_strategy="online"`) are [failover agnostic](
 
 Once the new primary is in place and turns active, it auto-resumes the VReplication stream. The online DDL scheduler assumes ownership of the stream and follows it to completion.
 
-The new primary must be instated within `10 minutes`, or else the migration is considered to be stale and is aborted.
+The new primary must be available within `10 minutes`, or else the migration is considered to be stale and is aborted.
 
 ## Auto retry after failure
 
