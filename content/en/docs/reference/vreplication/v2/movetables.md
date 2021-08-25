@@ -29,7 +29,7 @@ MoveTables is typically used for migrating data into Vitess or to implement vert
 
 MoveTables is an "umbrella" command. The `action` sub-command defines the operation on the workflow.
 
-####-workflow 
+#### -workflow 
 **mandatory**\
 **string**\
 
@@ -45,7 +45,7 @@ Each `action` has additional options/parameters that can be used to modify its b
 
 `actions` are common to both MoveTables and Reshard v2 workflows. Only the `create` action has different parameters, all other actions have common options and similar semantics. 
 
-####--cells
+#### -cells
 **optional**\
 **default** local cell\ 
 **string**
@@ -56,7 +56,7 @@ Cell(s) or CellAlias(es) (comma-separated) to replicate from.
 
 </div>
 
-####--tablet_types 
+#### -tablet_types 
 **optional**\
 **default** `-vreplication_tablet_type` parameter value for the tablet\
 **string**
