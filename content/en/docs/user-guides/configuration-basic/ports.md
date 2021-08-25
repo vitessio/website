@@ -10,41 +10,40 @@ defaults or the defaults we use in examples here. Your
 environment may differ considerably, depending on your configuration options
 for the various components:
 
-  * Data path - e.g.:~/vitess/vtdataroot
+  * Data path:
     * Main query path:
-      * application -> vtgate
-        * port 3306 or 15306 (MySQL)
-        * port 15999 (gRPC)
-      * vtgate -> vttablet
-        * port 16000 + vttablet UID (gRPC)
-      * vttablet -> MySQL
-        * local socket (if MySQL is local)
-        * port 3306 (if MySQL is remote)
-      * vttablet -> vttablet: vreplication within or across shards
-        * port 16000 + vttablet UID (gRPC)
-      * MySQL -> MySQL:  within-shard replication
-        * port 3306 (MySQL protocol)
-  * Control or meta-data paths - e.g.: ~/vitess/global
-    * vtctld -> vttablet
-      * port 16000 + vttablet UID (gRPC)
-    * vtctlclient -> vtctld
-      * port 15999 (gRPC)
-    * vtgate -> topology server
-      * Depends on topology server, e.g. for etcd typically port 2379
-    * vttablet -> topology server
-      * Depends on topology server, e.g. for consul typically port 8502
-    * vtctld -> topology server
-      * Depends on topology server, e.g. for zookeper typically port 2888
-    * administrator using web browser -> vtgate web UI
-      * port 15001 (HTTP)
-    * administrator using web browser -> vttablet web UI
-      * port 15000 + vttablet UID (HTTP)
-    * administrator using web browser -> vtctld web UI
-      * port 15000 (HTTP)
-    * Metrics scraper (e.g. Prometheus) -> vtgate web port
-      * port 15001 (HTTP)
-    * Metrics scraper (e.g. Prometheus) -> vttablet web port
-      * port 15000 + vttablet UID (HTTP)
-    * Metrics scraper (e.g. Prometheus) -> vtctld web port
-      * port 15000 (HTTP)
+      * application &rarr; vtgate
+        * TCP port 3306 or 15306 (MySQL)
+        * TCP port 15999 (gRPC)
+      * vtgate &rarr; vttablet
+        * TCP port 16000 + vttablet UID (gRPC); e.g port 16100 for UID 100
+      * vttablet &rarr; MySQL
+        * local Unix domain socket (if MySQL is local)
+        * TCP port 3306 (if MySQL is remote)
+      * vttablet &rarr; vttablet: vreplication within or across shards
+        * TCP port 16000 + vttablet UID (gRPC); e.g port 16100 for UID 100
+      * MySQL &rarr; MySQL:  within-shard replication
+        * TCP port 3306 (MySQL protocol)
+  * Control or meta-data paths:
+    * vtctld &rarr; vttablet
+      * TCP port 16000 + vttablet UID (gRPC); e.g port 16100 for UID 100
+    * vtctlclient &rarr; vtctld
+      * TCP port 15999 (gRPC)
+    * vtgate &rarr; topology server
+      * Depends on topology server, e.g.:
+         * for etcd typically TCP port 2379
+         * for consul typically TCP port 8502
+         * for zookeeper typically TCP port 2888
+    * administrator using web browser &rarr; vtgate web UI
+      * TCP port 15001 (HTTP)
+    * administrator using web browser &rarr; vttablet web UI
+      * TCP port 15000 + vttablet UID (HTTP); e.g port 15100 for UID 100
+    * administrator using web browser &rarr; vtctld web UI
+      * TCP port 15000 (HTTP)
+    * Metrics scraper (e.g. Prometheus) &rarr; vtgate web port
+      * TCP port 15001 (HTTP)
+    * Metrics scraper (e.g. Prometheus) &rarr; vttablet web port
+      * TCP port 15000 + vttablet UID (HTTP); e.g port 15100 for UID 100
+    * Metrics scraper (e.g. Prometheus) &rarr; vtctld web port
+      * TCP port 15000 (HTTP)
 
