@@ -8,7 +8,7 @@ weight: 25
 Vitess has a number of different components that, in most real-world configurations, connect to each other over the network. Many organizations require, for compliance or practical reasons, that these communications
 be encrypted and/or authenticated. This guide will provide an overview of these client/server combinations between components, what the encryption and authentication options are, and a walkthrough on how to configure Vitess to use them. You can read more about our [transport security model](../../../reference/features/transport-security-model/) in our references. 
 
-There are two paths a data path and a control path that could be secured. The focus in the guide will be to secure the data path. You can read more about the two paths [here](../../../configuration-basic/ports/)
+There are two paths a data path and a control path that could be secured. The focus in the guide will be to secure the data path. You can read more about the two paths [here](../../../configuration-basic/ports/).
 
 Note that the sensitive information mainly flows over the data path, and depending on your deployment model, you may not have to encrypt all of the the control or meta-data path.  We recommend that you evaluate your needs in the context of your compliance directives, threat model and risk management framework.
 
@@ -64,11 +64,11 @@ Client authentication in Vitess can take two forms, depending on the protocol in
   * TLS client certificate authentication (also known as mTLS)
   * Username/password authentication;  this is only an option for the connections involving the MySQL protocol.
 
-# Walkthroughs
+## Walkthroughs
 
 We will now cover how to setup the various TLS component combinations. We will start with the data path, then move on to the control paths. We will handle [encryption](#encryption) and [server authentication](#server-authentication) together, and then handle [client authentication](#client-authentication) separately.
 
-## Certificate generation
+### Certificate generation
 
 As discussed above, large organizations will often have established tools to secure a TLS certificate hierarchy and issue certificates. For the purpose of these walkthroughs, we could use bare `openssl` commands to step through every detail. However, since we consider this an implementation detail that is likely to vary from user to user, we will leverage a shell-script-based tool called [easy-rsa](https://github.com/OpenVPN/easy-rsa) that uses `openssl` under the covers, and hides much of the complexity.
 
@@ -76,7 +76,7 @@ This tool has been around for many years as part of the OpenVPN project, and can
 
 We will use the newest `easy-rsa` release at the time of writing, version 3.0.8.
 
-## Installing easy-rsa
+### Installing easy-rsa
 
 Create a directory to install and run `easy-rsa` from, download and unpack the tool:
 
@@ -160,7 +160,7 @@ Do not forget this password! You will not be able to recover it.
 
 Your CA is now configured and you should be able to generate certs easily now.
 
-## Application to vtgate
+### Application to vtgate
 
 While applications can connect to vtgate using gRPC, the vast majority of Vitess users only use the MySQL protocol. When using the MySQL protocol, most users will use username/password for client authentication, although it is also possible to configure TLS client certificate authentication. We will assume the use of username/password authentication.
 
@@ -309,7 +309,7 @@ If TLS was not setup on the vtgate at all, an error like this could have resulte
   ERROR 2026 (HY000): SSL connection error: SSL is required but the server doesn't support it
 ```
 
-## vttablet to MySQL
+### vttablet to MySQL
 
 A common Vitess deployment model is to co-locate vttablet and MySQL on the same host/VM/container. In a case like this, vttablet connectivity to MySQL will be via local unix socket or TCP connection on localhost. It is unnecessary to configure encryption between vttablet and MySQL in this case, since the traffic never leaves the local machine/VM. However, in some deployment models vttablet and MySQL are running on different hosts, and you may want vttablet to use TLS to speak to MySQL.
 
@@ -375,7 +375,7 @@ In Vitess, communication between vtgate and vttablet instances are via gRPC. gRP
 
 Other components, as detailed above, also connect to vttablet via gRPC. After configuring vttablet gRPC for TLS, you will need to configure all these components (vtgate, other vttablets, vtctld) explicitly to connect using TLS to vttablet via gRPC, or you will have a partially or wholly non-functional system.
 
-### vtgate to vttablet
+#### vtgate to vttablet
 
 First, generate a certificate for use by vttablet:
 
@@ -487,7 +487,7 @@ Conversely, if you have configured the TLS parameters on the vtgate side and the
   vttablet: rpc error: code = Unavailable desc = all SubConns are in TransientFailure, latest connection error: connection error: desc = "transport: authentication handshake failed: tls: first record does not look like a TLS handshake"
 ```
 
-### vttablet to vtablet:  vreplication within or across shards
+#### vttablet to vtablet:  vreplication within or across shards
 
 For vreplication to work between vttablet instances once the gRPC server TLS options above are activated, you will need to add the following additional vttablet options:
 
@@ -500,7 +500,7 @@ Since each vttablet instance may need to talk to more than one other vttablet in
   * Use the same vttablet server key material and server certificate common name for each vttablet instance. This is obviously the easiest option, but might not conform to your compliance requirements.
   * or, ensure each vttablet server certificate common name or IP SAN matches the DNS name or IP it it accessed via. In this case, you can omit the use of the `-tablet_grpc_server_name` above for vttablet, and also for vtgate.
   
-### vtctld to vttablet
+#### vtctld to vttablet
 
 Once your vttablet(s) are configured with gRPC server TLS options as above,
 you will need to also add TLS client options to vtctld, or vtctld will be
@@ -512,7 +512,7 @@ unable to connect to your vttablet(s).
   -tablet_grpc_server_name vttablet1 -tablet_grpc_ca /home/user/config/ca.crt -tablet_manager_grpc_server_name vttablet1 -tablet_manager_grpc_ca /home/user/config/ca.crt
 ```
 
-## vtctlclient to vtctld
+### vtctlclient to vtctld
 
 The communication from vtctlclient to vtctld is also via gRPC, so the method for securing it is similar to vtctld to vttablet above. 
 
