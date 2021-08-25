@@ -11,6 +11,11 @@ This documentation is for a new (v2) set of vtctld commands. See [RFC](https://g
 ```
 MoveTables <options> <action> <workflow identifier>
 ```
+or
+
+```
+MoveTables [-cells=<cells>] [-tablet_types=<source_tablet_types>] -workflow=<workflow> <source_keyspace> <target_keyspace> <table_specs>
+```
 
 ### Description
 
@@ -22,18 +27,43 @@ MoveTables is typically used for migrating data into Vitess or to implement vert
 
 #### action
 
+MoveTables is an "umbrella" command. The `action` sub-command defines the operation on the workflow.
+
+##### -workflow 
+**mandatory**\
+**string**
+
 <div class="cmd">
 
-MoveTables is an "umbrella" command. The `action` sub-command defines the operation on the workflow.
+Workflow name. Can be any descriptive string. Will be used to later migrate traffic via SwitchReads/SwitchWrites.
 
 </div>
 
 #### options
-<div class="cmd">
 
 Each `action` has additional options/parameters that can be used to modify its behavior.
 
-`actions` are common to both MoveTables and Reshard v2 workflows. Only the `create` action has different parameters, all other actions have common options and similar semantics. These actions are documented separately.
+`actions` are common to both MoveTables and Reshard v2 workflows. Only the `create` action has different parameters, all other actions have common options and similar semantics. 
+
+##### -cells
+**optional**\
+**default** local cell 
+**string**
+
+<div class="cmd">
+
+Cell(s) or CellAlias(es) (comma-separated) to replicate from.
+
+</div>
+
+##### -tablet_types 
+**optional**\
+**default** `-vreplication_tablet_type` parameter value for the tablet
+**string**
+
+<div class="cmd">
+
+Source tablet types to replicate from (e.g. master, replica, rdonly). Defaults to -vreplication_tablet_type parameter value for the tablet, which has the default value of replica.
 
 </div>
 
