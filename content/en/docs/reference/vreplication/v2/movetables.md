@@ -31,7 +31,7 @@ MoveTables is an "umbrella" command. The `action` sub-command defines the operat
 
 #### -workflow 
 **mandatory**\
-**string**\
+**string**
 
 <div class="cmd">
 
@@ -47,7 +47,7 @@ Each `action` has additional options/parameters that can be used to modify its b
 
 #### -cells
 **optional**\
-**default** local cell\ 
+**default** local cell\
 **string**
 
 <div class="cmd">
@@ -96,13 +96,13 @@ All workflows are identified by `targetKeyspace.workflow` where `targetKeyspace`
 
 For those wanting to try out Vitess for the first time, MoveTables provides an easy way to route part of their workload to Vitess with the ability to migrate back at any time without any risk. You point a vttablet to your existing MySQL installation, spin up an unsharded Vitess cluster and use a MoveTables workflow to start serving some tables from Vitess. You can also go further and use a Reshard workflow to experiment with a sharded version of a part of your database.
 
-See the [user guide](../../../../../docs/user-guides/configuration-advanced/unmanaged-tablet/#move-legacytable-to-the-commerce-keyspace) for detailed steps.
+See this [user guide](../../../../../docs/user-guides/configuration-advanced/unmanaged-tablet/#move-legacytable-to-the-commerce-keyspace) for detailed steps.
 
 ### Vertical Sharding
 
 For existing Vitess users you can easily move one or more tables to another keyspace, either for balancing load or as preparation for sharding your tables.
 
-See the [user guide](../../../../../docs/user-guides/migration/move-tables/) which describes how MoveTables works in the local example provided in the Vitess repo.
+See this [user guide](../../../../../docs/user-guides/migration/move-tables/) which describes how MoveTables works in the local example provided in the Vitess repo.
 
 ### More Reading
 
