@@ -4,7 +4,7 @@ description: Move tables between keyspaces without downtime
 weight: 10
 ---
 ##### _Experimental_
-This documentation is for a new (v2) set of vtctld commands. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
+This documentation is for a new (v2) set of vtctld commands. See the [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
 
 ## Command
 
