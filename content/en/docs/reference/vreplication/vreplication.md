@@ -410,9 +410,13 @@ in the replication stream from the source. The values can be as follows:
 If a failover is performed on the target keyspace/shard, the new primary will
 automatically resume VReplication from where the previous primary left off.
 
+### Tablet selection
+
+VReplication automatically chooses viable tablets for the source and target of a given stream. See [tablet selection](../../vreplication/tablet_selection).
+
 ### Throttling
 
-VReplication throttles operation when the source or target appear to be overloaded, indicated by replication lag. See [throttling](../../vreplication/throttling)
+VReplication throttles operation when the source or target appear to be overloaded, indicated by replication lag. See [throttling](../../vreplication/throttling).
 
 ## Monitoring and troubleshooting
 
