@@ -4,7 +4,7 @@ date: 2021-09-02
 slug: '2021-09-02-examine-query-plan'
 tags: ['Vitess','MySQL', 'DDL', 'query', 'plan', 'examine', 'explain', 'optimizer']
 title: 'Examining query plans in MySQL and Vitess'
-description: 'How to examine query plans by Vitess optimizer plan" 
+description: "How to examine query plans by Vitess optimizer plan" 
 ---
 Originally posted at [link](http://systay.github.io/2021/08/27/explain-a-query.htm)
 
