@@ -41,6 +41,7 @@ Note that the target always pulls the data. This ensures that there is no proble
 can occur if the source is pushing the data since (especially in sharding) it is possible that the application
 of events can be substantially cpu intensive especially in the case of bulk inserts.
 
+For more on how the tablets are selected, see [tablet selection](../../vreplication/tablet_selection).
 
 
 ### Modes, in detail

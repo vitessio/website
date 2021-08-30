@@ -303,7 +303,7 @@ Start the VerticalSplitClone process to perform vertical resharding. Example: Sp
 
 ### VDiff
 ```shell
-VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=replica] [-filtered_replication_wait_time=30s] <keyspace.workflow>
+VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=<source_tablet_types>] [-filtered_replication_wait_time=30s] <keyspace.workflow>
 Perform a diff of all tables in the workflow
 ```
 
