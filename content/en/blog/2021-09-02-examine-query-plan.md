@@ -10,7 +10,7 @@ Originally posted at [link](http://systay.github.io/2021/08/27/explain-a-query.h
 
 Traditional query optimizing is mostly about two things: first - in which order and from where to access data, and then how to then combine it.
 
-You have probably seen the tree shapes execution plans that are produced from query planning. I’ll use an example from the MySQL docs, using FORMAT=TREE which was introduced in MySQL 8.0:
+You have probably seen the tree shapes execution plans that are produced from query planning. I’ll use an example from the MySQL docs, using `FORMAT=TREE` which was introduced in MySQL 8.0:
 ```sql
 mysql> EXPLAIN FORMAT=TREE
     -> SELECT *
@@ -29,11 +29,11 @@ EXPLAIN: -> Inner hash join (t3.c1 = t1.c1)  (cost=1.05 rows=1)
                 -> Hash
                     -> Table scan on t1  (cost=0.35 rows=1)
 ```
-Here we can see that the MySQL optimizer things the best plan is to start reading from t1 using a table scan. It could have used an index, but since we are projecting every column `(SELECT *)`, it’s reading the full table.
+Here we can see that the MySQL optimizer things the best plan is to start reading from `t1` using a table scan. It could have used an index, but since we are projecting every column `(SELECT *)`, it’s reading the full table.
 
-This is hashed in the next step, and we know it is hashing on the c1 column. This is then read by the hash join step, which will use the hash map to join data from t1 and t2 using the `t2.c1 = t1.c1` predicate.
+This is hashed in the next step, and we know it is hashing on the `c1` column. This is then read by the hash join step, which will use the hash map to join data from t1 and t2 using the `t2.c1 = t1.c1` predicate.
 
-This is hashed in the next step, and we know it is hashing on the c1 column. This is then read by the hash join step, which will use the hash map to join data from t1 and t2 using the t2.c1 = t1.c1 predicate.
+This is hashed in the next step, and we know it is hashing on the `c1` column. This is then read by the hash join step, which will use the hash map to join data from `t1` and `t2` using the `t2.c1 = t1.c1` predicate.
 
 Next we need to hash the results again, and this time the probe table (that’s what the hash map is called) is used to join with `t3`.
 
