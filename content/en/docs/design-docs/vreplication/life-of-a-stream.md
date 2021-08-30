@@ -21,14 +21,11 @@ While we may have multiple database sources in a workflow each vstream has just 
 
 Note that for all steps the data selected from the source will only be from the list of tables specified (specified via Match). Furthermore if a Filter is specified for a table it will be applied before being sent to the target. Columns may also be transformed in the Filter’s select clause.
 
-
 #### Source and Sink
 
 Each stream has two parts. The target initiates streaming by making grpc calls to the source tablet. The source sources the data connecting to mysql as a replica or using sql queries and streams it to the target. The target takes appropriate action: in case of resharding it will convert the events into CRUDs and apply it to the target database. In case of vstream clients the events are forwarded by vtgate to the client.
 
 Note that the target always pulls the data. This ensures that there is no problems of buffer overruns that can occur if the source is pushing the data since (especially in sharding) it is possible that the application of events can be substantially cpu intensive especially in the case of bulk inserts.
-
-
 
 ### Modes, in detail
 
@@ -37,11 +34,9 @@ Note that the target always pulls the data. This ensures that there is no proble
 
 This is the easiest step to understand. The source stream just mimics a mysql replica and processes events as they are received. Events (after filtering and transformation) are sent to the target. Replication runs continuously with short sleeps when there are no more events to source.
 
-
 #### Initialize
 
 Initialize is called at the start of the copy phase. For each table to be copied an entry is created in \_vt.copy_state with a zero primary key. As each table copy is completed the related entry is deleted and when there are no more entries for this workflow the copy phase is considered complete and the workflow moves into the Replication mode.
-
 
 #### Copy
 
@@ -113,11 +108,9 @@ This flow actually works!
 
 T1 can take a long time (due to the bulk inserts). T3 (which is just a snapshot) is quick. So the position can diverge much more at T2 than at T4. Hence we call the step in T2 as Catchup and Step T4 is called Fast Forward.
 
-
 #### Catchup
 
 As detailed above the catchup phase runs between two copy phases. During the copy phase the gtid position can move significantly ahead. So we run a replicate till we come close to the current position i.e.the replication lag is small. At this point we call Copy again.
-
 
 #### Fast forward
 

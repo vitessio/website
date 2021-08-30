@@ -7,12 +7,15 @@ weight: 30
 # Related persistent Vitess objects
 
 ## VSchema
+
 A [VSchema](https://vitess.io/docs/concepts/vschema/) allows you to describe how data is organized within keyspaces and shards.
 
 ## Shard Info
+
 The `global` key in the topo contains one key per keyspace which then contains one key per shard that has been created within the keyspace. For each shard that is active there is an attribute `is_master_serving` which is set to true. The other shards which have been created but are still not serving this keyspace will not have this attribute set.
 
 ## SrvKeyspace
+
 Each cell has a [SrvKeyspace](https://vitess.io/docs/reference/features/topology-service/#srvkeyspace) in the topo per keyspace. For each tablet type (primary/replica) there is one Partition object. The partition object contains all the current shards in the keyspace. The ones which are active have a key range specified for that shard. The ones which are not active have no key ranges set.
 
 Also the primary can contain a `query_service_disabled` attribute which is set to false during resharding cutovers. This tells the primary in that shard to reject any queries made to it, as a signal to vtgate in case vtgate routes queries to this primary during the cutover or before it discovers the new serving graph. OR the `is_master_serving` parameter is set to false for that shard in the corresponding shard info object.
@@ -46,6 +49,7 @@ For brevity we only show the records for the 80- shard. There will be similar re
 Only shard 0 has `is_master_serving` set to true. The SrvKeyspace has only references to 0 for both primary and replica.
 
 _global/keyspaces/customer/shards/0/shard_
+
 ```
 master_alias:{cell:"zone1" uid:200}
 master_term_start_time:{seconds:1627465761 nanoseconds:600070156}
@@ -53,6 +57,7 @@ is_master_serving:true
 ```
 
 _global/keyspaces/customer/shards/80-/shard_
+
 ```
 master_alias:{cell:"zone1" uid:400}
 master_term_start_time:{seconds:1627465833 nanoseconds:536524508}
@@ -60,6 +65,7 @@ key_range:{start:"\x80"}
 ```
 
 _zone1/keyspace/customer/srvkeyspace_
+
 ```
 partitions:{served_type:MASTER shard_references:{name:"0"}}
 partitions:{served_type:REPLICA shard_references:{name:"0"}}
@@ -70,12 +76,14 @@ partitions:{served_type:REPLICA shard_references:{name:"0"}}
 Shard 0 still has the `is_master_serving` set as true. The primary partition is still the same.
 
 The replica partition has the following changes:
+
 * Two more shard_references for -80 and 80-
 * Key ranges are specified for these shards
 * The key range for shard 0 has been removed
 * `query_service_disabled` is set to true for shard 0
 
 _global/keyspaces/customer/shards/0/shard_
+
 ```
 master_alias:{cell:"zone1" uid:200}
 master_term_start_time:{seconds:1627466189 nanoseconds:587021377}
@@ -83,6 +91,7 @@ is_master_serving:true
 ```
 
 _global/keyspaces/customer/shards/80-/shard_
+
 ```
 master_alias:{cell:"zone1" uid:400}
 master_term_start_time:{seconds:1627466263 nanoseconds:16201490}
@@ -90,6 +99,7 @@ key_range:{start:"\x80"}``
 ```
 
 _zone1/keyspace/customer/srvkeyspace_
+
 ```
 partitions:{served_type:MASTER shard_references:{name:"0"}}
 
@@ -110,12 +120,14 @@ shard_tablet_controls:{name:"80-" key_range:{start:"\x80"}}}
 * The replica partition is the same as in the previous step
 
 _global/keyspaces/customer/shards/0/shard_
+
 ```
 master_alias:{cell:"zone1" uid:200}
 master_term_start_time:{seconds:1627466636 nanoseconds:405646818}  
 ```
 
 _global/keyspaces/customer/shards/80-/shard_
+
 ```
 master_alias:{cell:"zone1" uid:400}
 master_term_start_time:{seconds:1627466710 nanoseconds:579634511}
@@ -123,6 +135,7 @@ key_range:{start:"\x80"}
 is_master_serving:true
 ```
 _zone1/keyspace/customer/srvkeyspace_
+
 ```
 partitions:{served_type:MASTER
 shard_references:{name:"-80" key_range:{end:"\x80"}}
@@ -148,6 +161,7 @@ VSchema for source keyspace contains table name, so vtgate routes to that keyspa
 Both source and target now contain the tables and both VSchemas refer to them. However we have routing rules that map the tables for each tablet type from the target keyspace to the other
 
 _global/routingrules_
+
 ```
 rules:{from_table:"customer" to_tables:"commerce.customer"}
 rules:{from_table:"customer.customer" to_tables:"commerce.customer"}
@@ -160,6 +174,7 @@ rules:{from_table:"customer.customer@replica" to_tables:"commerce.customer"}
 The routing rules for replicas are updated to map the table on source to the target
 
 _global/routingrules_
+
 ```
 rules:{from_table:"customer.customer" to_tables:"commerce.customer"} rules:{from_table:"commerce.customer@replica" to_tables:"customer.customer"}
 rules:{from_table:"customer" to_tables:"commerce.customer"}
@@ -171,6 +186,7 @@ rules:{from_table:"customer@replica" to_tables:"customer.customer"}
 The routing rules for the primary are updated to map the table on source to the target. In addition the tables are added to the “blacklist” on the source keyspace which vttablet uses to reject writes for tables that have moved. The blacklist/routing rules are temporary and can be removed since the moved tables will only appear in the target VSchema
 
 _global/routingrules_
+
 ```
 rules:{from_table:"commerce.customer@replica" to_tables:"customer.customer"}
 rules:{from_table:"customer.customer@replica" to_tables:"customer.customer"}
@@ -179,6 +195,7 @@ rules:{from_table:"customer" to_tables:"customer.customer"}
 ```
 
 _global/keyspaces/commerce/shards/0/shard_
+
 ```
 master_alias:{cell:"zone1" uid:100}
 master_term_start_time:{seconds:1627477340 nanoseconds:740407602}

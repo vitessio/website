@@ -30,7 +30,6 @@ VReplication needs to be able to determine, given a row in the source table, whi
 
 In the case both tables share the same `PRIMARY KEY`, the answer is trivial: given a row from the source table, take the PK column values (say the table has `PRIMARY KEY(col1, col2)`), and compare with/apply to target table via `... WHERE col1=<val1> AND col2=<val2>`.
 
-
 However, other scenarios are valid. Consider an OnlineDDL operation that modifies the `PRIMARY KEY` as follows: `DROP PRIMARY KEY, ADD PRIMARY KEY(col1)`. On the source table, a row is identified by `col1, col2`. On the target table, a row is only identifiable by `col1`. This scenario still feels comfortable: all we need to do when we apply e.g. an `UPDATE` statement on target table is to drop `col2` from the statement: `... WHERE col1=<val1>`.
 
 _Note that it is the user's responsibility to make sure the data will comply with the new constraints. If not, VReplication wil fail the operation._
@@ -52,6 +51,7 @@ To be able to create a VReplication stream between source table and target table
 - Except in the trivial case where both tables share same `PRIMARY KEY` (of same columns in same order), VReplication must be told which keys to utilize (more on this later on)
 
 To clarify, it is **OK** if:
+
 - Keys in source table and target table go by different names
 - Chosen key in source table and chosen key in target table do not share any columns
 - Chosen key in source table and chosen key in target table share some or all columns
@@ -66,6 +66,7 @@ All it takes is _one_ good key in source table, and one good key in target table
 ### Examples for valid cases
 
 #### Source table and target table are same:
+
 ```sql
 CREATE TABLE `entry` (
   `id` int NOT NULL,
@@ -79,6 +80,7 @@ CREATE TABLE `entry` (
 The above is the trivial scenario.
 
 #### Source table and target table share same PRIMARY KEY
+
 ```sql
 CREATE TABLE `source` (
   `id` int NOT NULL,
@@ -101,6 +103,7 @@ CREATE TABLE `target` (
 The differences in structure are interesting, but irrelevant to VReplication's ability to copy the data.
 
 #### Subset PRIMARY KEY
+
 ```sql
 CREATE TABLE `source` (
   `id` int NOT NULL,
@@ -120,6 +123,7 @@ CREATE TABLE `target` (
 ```
 
 #### Superset PRIMARY KEY
+
 ```sql
 CREATE TABLE `source` (
   `id` int NOT NULL,
@@ -139,6 +143,7 @@ CREATE TABLE `target` (
 ```
 
 #### Different PRIMARY KEYs
+
 ```sql
 CREATE TABLE `source` (
   `id` int NOT NULL,
@@ -191,11 +196,10 @@ The only eligible solution in the above is:
 
 Incidentally, in the above, the chosen keys differ by name, but share the same columns (`uuid`).
 
-
 ### Examples for invalid cases
 
-
 #### NULLable columns
+
 ```sql
 CREATE TABLE `source` (
   `id` int NOT NULL,
@@ -237,7 +241,6 @@ CREATE TABLE `target` (
 
 `target` only has one possible key, the `PRIMARY KEY`, covering `id`. But `id` is not found in `source`.
 
-
 ## Configuring the stream
 
 If both source and target table share the same `PRIMARY KEY` (covering same columns in same order) then there's nothing to be done. VReplication will pick `PRIMARY KEY` on both ends by default.
@@ -247,6 +250,7 @@ In all other cases, we must instruct VReplication which keys are involved.
 ### Example 1
 
 Let's begin again as a trivial example, both tables have same `PRIMARY KEY`s:
+
 ```sql
 CREATE TABLE `corder` (
   `order_id` bigint NOT NULL AUTO_INCREMENT,
@@ -330,12 +334,10 @@ keyspace:"commerce" shard:"0" filter:{
 ```
 
 Note:
+
 - `source_unique_key_columns` indicates names of columns on source table
 - `target_unique_key_columns` indicates names of columns on target table
 - `source_unique_key_target_columns` repeats `source_unique_key_columns`, but replaces `customer_id` with `cust_id`
-
-
-
 
 ## Automation
 

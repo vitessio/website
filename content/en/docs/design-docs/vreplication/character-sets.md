@@ -51,10 +51,13 @@ The current list of supported character sets/encodings is:
 # Converting/encoding
 
 - In VRecpliation's filter query, make sure to convert all non-trivial character sets to UTF like so:
+ 
 ```
 select ..., convert(column_name using utf8mb4) as column_name, ...
 ```
+
 - In VReplication's rule, add one or more `convert_charset` entries. Each entry is of the form: 
+
 ```
 convert_charset:{key:"<column_name>" value:{from_charset:"<charset_name>" to_charset:"<charset_name>"}}
 ```
@@ -62,6 +65,7 @@ convert_charset:{key:"<column_name>" value:{from_charset:"<charset_name>" to_cha
 ### Example
 
 In this simplified example, we wish to stream from this source table:
+
 ```sql
 create table source_names (
   id int,
@@ -69,7 +73,9 @@ create table source_names (
   primary key(id)
 )
 ```
+
 And into this target table:
+
 ```sql
 create table target_names (
   id int,
@@ -77,9 +83,11 @@ create table target_names (
   primary key(id)
 )
 ```
+
 Note that we wish to convert column `name` from `latin1` to `utf8mb4`.
 
 The rule would looks like this:
+
 ```
 keyspace:"commerce" shard:"0" filter:{
   rules:{
@@ -95,4 +103,3 @@ keyspace:"commerce" shard:"0" filter:{
 Right now `to_charset` is not actually used in the code. The write works correctly whether `to_charset` is specified or not, and irrespective of its value. It "just works"" because the data gets encoded from a `utf8` in Go-plane, via MySQL connector and onto the specific column. However, future implementations may require explicit definition of `to_charset`.
 
 As for the filter query, right now it's the user's responsibility to identify non-UTF columns in the source table. In the future, Vitess should be able to auto detect those, and automatically select `convert(col_name using utf8mb4) as col_name`.
-
