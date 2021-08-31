@@ -33,7 +33,7 @@ Here we can see that the MySQL optimizer thinks the best plan is to start readin
 
 This is hashed in the next step, and we know it is hashing on the `c1` column. This is then read by the hash join step, which will use the hash map to join data from t1 and t2 using the `t2.c1 = t1.c1` predicate.
 
-Next we need to hash the results again, and this time the `probe` table (that’s what the hash map is called) is used to join with `t3`.
+Next we need to hash the results again, and the hash map created in the last step is used to join with `t3`.
 
 The goal of the optimizer is to produce a plan that is as efficient as possible, touching as little data as possible to answer the query. This is done using statistics about table sizes and index content.
 
