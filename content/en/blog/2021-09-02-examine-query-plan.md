@@ -1,7 +1,7 @@
 ---
 author: 'Andres Taylor'
-date: 2021-09-02
-slug: '2021-09-02-examine-query-plan'
+date: 2021-09-07
+slug: '2021-09-07-examine-query-plan'
 tags: ['Vitess','MySQL', 'DDL', 'query', 'plan', 'examine', 'explain', 'optimizer']
 title: 'Examining query plans in MySQL and Vitess'
 description: "How to examine query plans by Vitess optimizer plan" 
