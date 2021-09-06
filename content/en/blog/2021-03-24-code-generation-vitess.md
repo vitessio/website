@@ -7,7 +7,7 @@ title: 'Code generation in Vitess'
 description: 'How to write nice code, and eat the cake too'
 ---
 
-[Cross posting link](http://systay.github.io/blog/2021/03/23/code-generation-in-vitess)
+[Cross posting link](https://systay.github.io/2021/03/23/code-generation-in-vitess)
 
 Golang is a wonderful language. It's simple, and most of the time not confusing or surprising.
 This makes it easy to jump into library code and start reading and quickly understand what's going on.

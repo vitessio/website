@@ -51,7 +51,7 @@ All workflows are identified by `targetKeyspace.workflow` where `targetKeyspace`
 1. Monitor the workflow using [Show](../show) or [Progress](../progress)<br/>
 `Reshard Show <keyspace.workflow>` _*or*_ <br/>
 `Reshard Progress <keyspace.workflow>`<br/>
-1. Confirm that data has been copied over correctly using [VDiff](../../vdiff)
+1. Confirm that data has been copied over correctly using [VDiff](../../vreplication/vdiff)
 1. Cutover to the target keyspace with [SwitchTraffic](../switchtraffic) <br/>
 `Reshard SwitchTraffic <keyspace.workflow>`
 1. Cleanup vreplication artifacts and source shards with [Complete](../complete) <br/>
