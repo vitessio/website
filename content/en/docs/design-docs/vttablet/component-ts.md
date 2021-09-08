@@ -112,7 +112,7 @@ We propose to address the above requirements with the following design elements.
 
 The dimension dropper will be a new feature of the stats package. Its purpose is to remove specific dimensions from any multi-dimensional variable.
 
-We’ll introduce a new command-line flag that takes a list of labels as input, like `-drop_dimensions=’Keyspace,ShardName’`. The stats package will then remove that dimension from any variable that refers to it.
+We’ll introduce a new command-line flag that takes a list of labels as input, like `-drop_dimensions='Keyspace,ShardName'`. The stats package will then remove that dimension from any variable that refers to it.
 
 In the case of the TabletServer, specifying `TabletID` in the list of dropped dimensions will have the effect of all TabletServers incrementing a common counter instead of different ones under their own tablet id.
 
@@ -141,7 +141,7 @@ It’s possible to achieve backward compatibility for stats by creating an expor
 
 ## Config loader
 
-The TabletServer already has most, if not all, of its input flags consolidated into a `Config` struct under tabletenv. The existing flags initialize a `DefaultConfig` global variable. If the command line specifies a newly defined flag, like `-tablet_config=’filename.yaml’`, then we can branch off into code that reads the yaml file and initializes the configs from there.
+The TabletServer already has most, if not all, of its input flags consolidated into a `Config` struct under tabletenv. The existing flags initialize a `DefaultConfig` global variable. If the command line specifies a newly defined flag, like `-tablet_config='filename.yaml'`, then we can branch off into code that reads the yaml file and initializes the configs from there.
 
 The code will load the global part of the yaml into a “global” Config. For each tablet specific config, the global config will be copied first, and then the tablet specific overrides will be overwritten into the copied values.
 
