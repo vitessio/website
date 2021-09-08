@@ -27,7 +27,7 @@ vtgate <topo_flags> \
   -mysql_auth_server_static_file=mysql_creds.json \
   -grpc_port=15991 \
   -service_map='grpc-vtgateservice' \
-  -vschema_ddl_authorized_users=’dba%’
+  -vschema_ddl_authorized_users='dba%'
 ```
 VTGate uses the global topo to get the topo addresses of the cells it has to watch. For this reason, you do not need to specify the topo addresses for the current cell.
 

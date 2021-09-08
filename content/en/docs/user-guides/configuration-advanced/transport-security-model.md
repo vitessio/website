@@ -8,7 +8,7 @@ weight: 25
 Vitess has a number of different components that, in most real-world configurations, connect to each other over the network. Many organizations require, for compliance or practical reasons, that these communications
 be encrypted and/or authenticated. This guide will provide an overview of these client/server combinations between components, what the encryption and authentication options are, and a walkthrough on how to configure Vitess to use them. You can read more about our [transport security model](../../../reference/features/transport-security-model/) in our references. 
 
-There are two paths a data path and a control path that could be secured. The focus in the guide will be to secure the data path. You can read more about the two paths [here](../../../configuration-basic/ports/).
+There are two paths a data path and a control path that could be secured. The focus in the guide will be to secure the data path. You can read more about the two paths [here](../../configuration-basic/ports/).
 
 Note that the sensitive information mainly flows over the data path, and depending on your deployment model, you may not have to encrypt all of the the control or meta-data path.  We recommend that you evaluate your needs in the context of your compliance directives, threat model and risk management framework.
 

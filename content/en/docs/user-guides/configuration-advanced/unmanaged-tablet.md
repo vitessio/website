@@ -175,3 +175,4 @@ Output:
 ~/vitess/examples/local$ mysql -h 127.0.0.1 -P 5726 -umsandbox -pmsandbox legacy -e 'show tables'
 mysql: [Warning] Using a password on the command line interface can be insecure.
 ```
+
