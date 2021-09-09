@@ -57,7 +57,7 @@ The following global options apply to `vtgate`:
 | -enable_system_settings | boolean | Enables the system settings to be changed per session at the database connection level. Override with @@enable_system_settings session variable. |
 | -gate_query_cache_size | int | gate server query cache size, maximum number of queries to be cached. vtgate analyzes every incoming query and generate a query plan, these plans are being cached in a lru cache. This config controls the capacity of the lru cache. (default 10000) |
 | -gateway_implementation | string | The implementation of gateway (default "tabletgateway") |
-| -buffer_implementation | string | The algorithm used for managing request buffering during cluster availability events (default "healthcheck") |
+| -buffer_implementation | string | The algorithm used for managing request buffering during cluster availability events (allowed values: "healthcheck" (default), "keyspace_events") |
 | -gateway_initial_tablet_timeout | duration | At startup, the gateway will wait up to that duration to get one tablet per keyspace/shard/tablettype (default 30s) |
 | -grpc_auth_mode | string | Which auth plugin implementation to use (eg: static) |
 | -grpc_auth_mtls_allowed_substrings | string | List of substrings of at least one of the client certificate names (separated by colon). |
