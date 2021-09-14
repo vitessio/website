@@ -6,34 +6,34 @@ aliases: ['/docs/user-guides/backup-and-restore/']
 
 ## Creating a backup
 
-The default backup implementation is ‘builtin’, however we strongly recommend using the xtrabackup engine as it is more robust and allows for non-blocking backups. Restores will always be done with whichever engine was used to create the backup.
+The default backup implementation is `builtin`, however we strongly recommend using the `xtrabackup` engine as it is more robust and allows for non-blocking backups. Restores will always be done with whichever engine was used to create the backup.
 
 ### Prerequisite
 
-A compatible version of [xtrabackup](https://www.percona.com/doc/percona-xtrabackup/LATEST/index.html) and [xbstream](https://www.percona.com/doc/percona-xtrabackup/LATEST/xtrabackup_bin/backup.streaming.html), if needed, must be present in $PATH prior to running the backup command.
+A compatible version of [xtrabackup](https://www.percona.com/doc/percona-xtrabackup/LATEST/index.html) and [xbstream](https://www.percona.com/doc/percona-xtrabackup/LATEST/xtrabackup_bin/backup.streaming.html), if needed, must be present in your `$PATH` prior to running the `Backup[Shard]` command.
 
 ### Supported Versions of Xtrabackup
 
 * [For MySQL 5.7 and MariaDB 10](https://www.percona.com/doc/percona-xtrabackup/2.4/index.html#installation)
 * [MySQL 8.0](https://www.percona.com/doc/percona-xtrabackup/8.0/index.html#installation)
-* MariaDB 10.3 is not compatible with xtrabackup.
+* MariaDB 10.3 is not compatible with xtrabackup
 
-### Basic VTTablet Configuration
+### Basic VTTablet and Vtctld Configuration
 
-Required vttablet flags:
+Required vttablet and vtctld flags:
 
-* -backup_engine_implementation=xtrabackup
-* -xtrabackup_user string 
-	* The string should be the user that xtrabackup will use to connect to the database server. This user must have the [necessary privileges](https://www.percona.com/doc/percona-xtrabackup/2.4/using_xtrabackup/privileges.html#permissions-and-privileges-needed).
+* `-backup_engine_implementation=xtrabackup`
+* `-xtrabackup_user string` 
+	* The user that xtrabackup will use to connect to the database server. This user must have the [necessary privileges](https://www.percona.com/doc/percona-xtrabackup/2.4/using_xtrabackup/privileges.html#permissions-and-privileges-needed).
 
-Required for MySQL 8.0:
+Additionaly required for MySQL 8.0:
 
-* -xtrabackup_stream_mode=xbstream
+* `-xtrabackup_stream_mode=xbstream`
 
 ### Run the following vtctl command to create a backup:
 
 ``` sh
-vtctl Backup <tablet-alias>
+vtctlclient -server=<vtctld_host>:<vtctld_port> Backup <tablet-alias>
 ```
 
 If the engine is `builtin`, replication will be stopped prior to shutting down mysqld for the backup.
@@ -43,7 +43,7 @@ If the engine is `xtrabackup`, the tablet can continue to serve traffic while th
 ### Run the following vtctl command to backup a specific shard:
 
 ``` sh
-vtctl BackupShard [-allow_primary=false] <keyspace/shard>
+vtctlclient -server=<vtctld_host>:<vtctld_port> BackupShard [-allow_primary=false] <keyspace/shard>
 ```
 
 ## Restoring a backup
@@ -70,19 +70,19 @@ vttablet ... -backup_storage_implementation=file \
 * [ListBackups](https://vitess.io/docs/reference/programs/vtctl/shards/#listbackups) displays the existing backups for a keyspace/shard in chronological order.
 
     ``` sh
-    vtctl ListBackups <keyspace/shard>
+    vtctlclient -server=<vtctld_host>:<vtctld_port> ListBackups <keyspace/shard>
     ```
 
 * [RemoveBackup](https://vitess.io/docs/reference/programs/vtctl/shards/#removebackup) deletes a specified backup for a keyspace/shard.
 
     ``` sh
-    RemoveBackup <keyspace/shard> <backup name>
+    vtctlclient -server=<vtctld_host>:<vtctld_port> RemoveBackup <keyspace/shard> <backup name>
     ```
 
-You can also confirm your backup finished by viewing the files on disk. You will still need to test and verify these backups for completeness. Note that backups are stored by keyspace and shard under backup_storage_root:
+You can also confirm your backup finished by viewing the files in your configured `-<engine>_backup_storage_root` location. You will still need to test and verify these backups for completeness. Note that backups are stored by keyspace and shard under `-<engine>_backup_storage_root`. For example, when using `-file_backup_storage_root=/vt/vtdataroot/backups`:
 
 ```sh
-~/vtdataroot/backups/commerce/0/2021-03-10.205419.zone1-0000000102:
+/vt/vtdataroot/backups/commerce/0/2021-03-10.205419.zone1-0000000102:
 backup.xbstream.gz  MANIFEST
 ```
 
@@ -106,7 +106,7 @@ MySQL 8.0 xbstream Manifest
 
 ## Bootstrapping a new tablet
 
-Bootstrapping a new tablet is almost identical to restoring an existing tablet. The only thing you need to be cautious about is that the tablet specifies its keyspace, shard and tablet type when it registers itself at the topology. Specifically, make sure that the following additional vttablet parameters are set:
+Bootstrapping a new tablet is almost identical to restoring an existing tablet. The only thing you need to be cautious about is that the tablet specifies its keyspace, shard and tablet type when it registers itself in the topology. Specifically, make sure that the following additional vttablet parameters are set:
 
 ``` sh
     -init_keyspace <keyspace>
@@ -124,7 +124,7 @@ The bootstrapped tablet will restore the data from the backup and then apply cha
 E0310 08:15:45.336083  197442 main.go:72] remote error: rpc error: code = Unknown desc = TabletManager.Backup on zone1-0000000102 error: xtrabackupUser must be specified.: xtrabackupUser must be specified
 ```
 
-Fix: Set vttablet flag [-xtrabackup_user](../#basic-vttablet-configuration)
+Fix: Set the vtctld and vttablet flag `-xtrabackup_user`
 
 ### xtrabackup binary not found in $PATH
 
@@ -135,7 +135,7 @@ E0310 08:22:22.260044  200147 main.go:72] remote error: rpc error: code = Unknow
 Fixes:
 
 	* Ensure the xtrabackup binary is in the $PATH for the $USER running vttablet
-	* Alternatively, set -xtrabackup_root_path on vttablet provide path to xtrabackup/xbstream binaries via vttablet flag
+	* Alternatively, set -xtrabackup_root_path on vttablet provide path to xtrabackup/xbstream binaries via vtctld and vttablet flags
 
 ### Tar format no longer supported in 8.0
 
@@ -144,7 +144,7 @@ I0310 12:34:47.900363  211809 backup.go:163] I0310 20:34:47.900004 xtrabackupeng
 Streaming in tar format is no longer supported in 8.0; use xbstream instead
 ```
 
-Fix: Set [-xtrabackup_stream_mode to xbstream](../#basic-vttablet-configuration) on vttablet 
+Fix: Set the `-xtrabackup_stream_mode` flag to to xbstream on vttablets and vtctlds
 
 ### Unsupported mysql server version
 
@@ -153,7 +153,7 @@ I0310 12:49:32.279729  215835 backup.go:163] I0310 20:49:32.279435 xtrabackupeng
 I0310 12:49:32.279773  215835 backup.go:163] I0310 20:49:32.279485 xtrabackupengine.go:310] xtrabackup stderr: Please upgrade PXB, if a new version is available. To continue with risk, use the option --no-server-version-check.
 ```
 
-To continue with risk: Set -xtrabackup_backup_flags=--no-server-version-check. Note this occurs when your MySQL server version is technically unsupported by `xtrabackup`.
+To continue with risk: Set `-xtrabackup_backup_flags=--no-server-version-check`. Note this occurs when your MySQL server version is technically unsupported by `xtrabackup`.
 
 ## Backing up Topology Server
 

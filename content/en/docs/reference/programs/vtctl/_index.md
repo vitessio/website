@@ -248,7 +248,7 @@ The following global options apply to `vtctl`:
 | -enable_transaction_limit | | If true, limit on number of transactions open at the same time will be enforced for all users. User trying to open a new transaction after exhausting their limit will receive an error immediately, regardless of whether there are available slots or not. |
 | -enable_transaction_limit_dry_run | | If true, limit on number of transactions open at the same time will be tracked for all users, but not enforced. |
 | -enforce_strict_trans_tables | | If true, vttablet requires MySQL to run with STRICT_TRANS_TABLES or STRICT_ALL_TABLES on. It is recommended to not turn this flag off. Otherwise MySQL may alter your supplied values before saving them to the database. (default true)|
-|-file_backup_storage_root | string | root directory for the file backup storage |
+|-file_backup_storage_root | string | root directory for the file backup storage -- this path must be on shared storage to provide a global view of backups to all vitess components |
 | -gcs_backup_storage_bucket | string | Google Cloud Storage bucket to use for backups |
 | -gcs_backup_storage_root | string | root prefix for all backup-related object names |
 | -grpc_auth_mode | string | Which auth plugin implementation to use (eg: static) |

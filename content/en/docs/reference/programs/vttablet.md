@@ -136,7 +136,7 @@ The following global options apply to `vttablet`:
 | -enable_transaction_limit_dry_run |  | If true, limit on number of transactions open at the same time will be tracked for all users, but not enforced. |
 | -enforce-tableacl-config |  | if this flag is true, vttablet will fail to start if a valid tableacl config does not exist |
 | -enforce_strict_trans_tables |  | If true, vttablet requires MySQL to run with STRICT_TRANS_TABLES or STRICT_ALL_TABLES on. It is recommended to not turn this flag off. Otherwise MySQL may alter your supplied values before saving them to the database. (default true) |
-| -file_backup_storage_root | string | root directory for the file backup storage |
+| -file_backup_storage_root | string | root directory for the file backup storage -- this path must be on shared storage to provide a global view of backups to all vitess components |
 | -filecustomrules | string | file based custom rule path |
 | -finalize_external_reparent_timeout | duration | Timeout for the finalize stage of a fast external reparent reconciliation. (default 30s) |
 | -gcs_backup_storage_bucket | string | Google Cloud Storage bucket to use for backups |

@@ -10,13 +10,13 @@ Backup and Restore are integrated features provided by tablets managed by Vitess
 
 Vitess supports pluggable interfaces for both [Backup Storage Services](https://github.com/vitessio/vitess/blob/main/go/vt/mysqlctl/backupstorage/interface.go) and [Backup Engines](https://github.com/vitessio/vitess/blob/main/go/vt/mysqlctl/backupengine.go).
 
-Before backing up or restoring a tablet, you need to ensure that the tablet is aware of the Backup Storage system and Backup engine that you are using. To do so, use the following command-line flags when starting a vttablet that has access to the location where you are storing backups.
+Before backing up or restoring a tablet, you need to ensure that the tablet is aware of the Backup Storage system and Backup engine that you are using. To do so, use the following command-line flags when starting a vttablet or vtctld that has access to the location where you are storing backups.
 
 ### Backup Storage Services
 
 Currently, Vitess has plugins for:
 
-* A network-mounted path (e.g. NFS)
+* File (using a path on shared storage, e.g. an NFS mount)
 * Google Cloud Storage
 * Amazon S3
 * Ceph
@@ -26,11 +26,11 @@ Currently, Vitess has plugins for:
 The engine is the techology used for generating the backup. Currently Vitess has plugins for:
 
 * Builtin: Shutdown an instance and copy all the database files (default)
-* XtraBackup: An online backup using Percona's XtraBackup
+* XtraBackup: An online backup using Percona's [XtraBackup](https://www.percona.com/software/mysql-database/percona-xtrabackup)
 
-## VTTablet Configuration
+## VTTablet and Vtctld configuration
 
-The following options can be used to configure VTTablet for backups:
+The following options can be used to configure VTTablet and Vtctld for backups:
 
 <table class="responsive">
   <thead>
@@ -45,8 +45,7 @@ The following options can be used to configure VTTablet for backups:
         use.<br><br>
         Current plugin options available are:
         <ul>
-          <li><code>file</code>: NFS or any other filesystem-mounted network
-            drive.</li>
+          <li><code>file</code>: Using shared storage (e.g. NFS).</li>
           <li><code>gcs</code>: Google Cloud Storage.</li>
           <li><code>s3</code>: Amazon S3.</li>
           <li><code>ceph</code>: Ceph Object Gateway S3 API.</li>
@@ -60,7 +59,7 @@ The following options can be used to configure VTTablet for backups:
         Current options available are:
         <ul>
           <li><code>builtin</code>: Copy all the database files into specified storage. This is the default.</li>
-          <li><code>xtrabackup</code>: Percona Xtrabackup.</li>
+          <li><code>xtrabackup</code>: Percona <a href="https://www.percona.com/software/mysql-database/percona-xtrabackup">XtraBackup</a>.</li>
         </ul>
       </td>
     </tr>
@@ -91,7 +90,7 @@ The following options can be used to configure VTTablet for backups:
     <tr>
       <td><code>file_backup_storage_root</code></td>
       <td>For the <code>file</code> plugin, this identifies the root directory
-        for backups.
+        for backups. This path <b>must</b> exist on shared storage to provide a global backup view for all vtctlds and vttablets.
       </td>
     </tr>
     <tr>
@@ -126,19 +125,19 @@ The following options can be used to configure VTTablet for backups:
     </tr>
     <tr>
       <td><code>xbstream_restore_flags</code></td>
-      <td>String<br>Flags to pass to xbstream command during restore. These should be space separated and will be added to the end of the command. These need to match the ones used for backup e.g. --compress / --decompress, --encrypt / --decrypt</td>
+      <td>The flags to pass to the xbstream command during restore. These should be space separated and will be added to the end of the command. These need to match the ones used for backup e.g. <code>--compress</code> / <code>--decompress</code>, <code>--encrypt</code> / <code>--decrypt</code></td>
     </tr>
     <tr>
       <td><code>xtrabackup_root_path</code></td>
-      <td>For the <code>xtrabackup</code> backup engine, directory location of the xtrabackup executable, e.g., /usr/bin</td>
+      <td>For the <code>xtrabackup</code> backup engine, directory location of the xtrabackup executable, e.g., `/usr/bin`</td>
     </tr>
     <tr>
       <td><code>xtrabackup_backup_flags</code></td>
-      <td>String<br>For the <code>xtrabackup</code> backup engine, flags to pass to backup command. These should be space separated and will be added to the end of the command.</td>
+      <td>For the <code>xtrabackup</code> backup engine, flags to pass to the backup command. These should be space separated and will be added to the end of the command.</td>
     </tr>
     <tr>
       <td><code>xtrabackup_stream_mode</code></td>
-      <td>String<br>For the <code>xtrabackup</code> backup engine, which mode to use if streaming, valid values are <code>tar</code> and <code>xbstream</code>. Defaults to <code>tar</code>.</td>
+      <td>For the <code>xtrabackup</code> backup engine, which mode to use if streaming, valid values are <code>tar</code> and <code>xbstream</code>. Defaults to <code>tar</code>.</td>
     </tr>
     <tr>
       <td><code>xtrabackup_user</code></td>
@@ -146,15 +145,15 @@ The following options can be used to configure VTTablet for backups:
     </tr>
     <tr>
       <td><code>xtrabackup_stripes</code></td>
-      <td>Unit<br>For the <code>xtrabackup</code> backup engine, if greater than 0, use data striping across this many destination files to parallelize data transfer and decompression.</td>
+      <td>For the <code>xtrabackup</code> backup engine, if greater than 0, use data striping across this many destination files to parallelize data transfer and decompression.</td>
     </tr>
     <tr>
       <td><code>xtrabackup_stripe_block_size</code></td>
-      <td>Unit<br>For the <code>xtrabackup</code> backup engine, size in bytes of each block that gets sent to a given stripe before rotating to the next stripe.Defaults to <code>102400</code>.</td>
+      <td>For the <code>xtrabackup</code> backup engine, size in bytes of each block that gets sent to a given stripe before rotating to the next stripe. Defaults to <code>102400</code>.</td>
     </tr>
     <tr>
       <td><code>xtrabackup_prepare_flags</code></td>
-      <td>String<br>Flags to pass to prepare command. These should be space separated and will be added to the end of the command.</td>
+      <td>Flags to pass to the prepare command. These should be space separated and will be added to the end of the command.</td>
     </tr> 
   </tbody>
 </table>
@@ -162,19 +161,15 @@ The following options can be used to configure VTTablet for backups:
 ### Authentication
 
 Note that for the Google Cloud Storage plugin, we currently only support
-[Application Default Credentials](https://developers.google.com/identity/protocols/application-default-credentials).
-It means that access to Cloud Storage is automatically granted by virtue of
-the fact that you're already running within Google Compute Engine or Container
-Engine.
+[Application Default Credentials](https://developers.google.com/identity/protocols/application-default-credentials). This means that access to Google Cloud Storage (GCS) is automatically granted by virtue of the fact that you're already running within Google Compute Engine (GCE) or Google Kubernetes Engine (GKE).
 
-For this to work, the GCE instances must have been created with the [scope](https://cloud.google.com/compute/docs/authentication#using) that grants read-write access to Cloud Storage. When using Container Engine, you can
-do this for all the instances it creates by adding `--scopes storage-rw` to the `gcloud container clusters create` command.
+For this to work, the GCE instances must have been created with the [scope](https://cloud.google.com/compute/docs/authentication#using) that grants read-write access to GCS. When using GKE, you can do this for all the instances it creates by adding `--scopes storage-rw` to the `gcloud container clusters create` command.
 
 ### Backup Frequency
 
-We recommend to take backups regularly e.g. you should set up a cron job for it.
+We recommend to take backups regularly -- e.g. you should set up a cron job for it.
 
-To determine the proper frequency for creating backups, consider the amount of time that you keep replication logs and allow enough time to investigate and fix problems in the event that a backup operation fails.
+To determine the proper frequency for creating backups, consider the amount of time that you keep replication logs (see the [binlog_expire_logs](https://dev.mysql.com/doc/refman/8.0/en/replication-options-binary-log.html#sysvar_binlog_expire_logs_seconds) variables) and allow enough time to investigate and fix problems in the event that a backup operation fails.
 
 For example, suppose you typically keep four days of replication logs and you create daily backups. In that case, even if a backup fails, you have at least a couple of days from the time of the failure to investigate and fix the problem.
 
