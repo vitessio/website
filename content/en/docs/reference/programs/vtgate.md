@@ -36,6 +36,7 @@ The following global options apply to `vtgate`:
 | -allowed_tablet_types | value | Specifies the tablet types this vtgate is allowed to route queries to |
 | -alsologtostderr | boolean | log to standard error as well as files |
 | -buffer_drain_concurrency | int | Maximum number of requests retried simultaneously. More concurrency will increase the load on the PRIMARY vttablet when draining the buffer. (default 1) |
+| -buffer_implementation | string | The algorithm used for managing request buffering during cluster availability events (allowed values: "healthcheck" (default), "keyspace_events") |
 | -buffer_keyspace_shards | string | If not empty, limit buffering to these entries (comma separated). Entry format: keyspace or keyspace/shard. Requires --enable_buffer=true. |
 | -buffer_max_failover_duration | duration | Stop buffering completely if a failover takes longer than this duration. (default 20s) |
 | -buffer_min_time_between_failovers | duration | Minimum time between the end of a failover and the start of the next one (tracked per shard). Faster consecutive failovers will not trigger buffering. (default 1m0s) |
