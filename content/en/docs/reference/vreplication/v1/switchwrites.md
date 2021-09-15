@@ -75,6 +75,7 @@ of the original workflow concatenated with \_reverse.
 
 <div class="cmd">
 Tablet types to switch one or both or rdonly/replica (default "rdonly,replica")
+Note: For tablet type rdonly you must [SwitchReads](../switchreads) before you can SwitchWrites
 </div>
 
 #### -dry-run 

@@ -5,9 +5,9 @@ weight: 35
 aliases: ['/docs/reference/vreplication/v2/show/']
 ---
 
-##### _Experimental_
-
-This documentation is for a new (v2) set of vtctld commands. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
+{{< info >}}
+This documentation is for a new (v2) set of vtctld commands that start in Vitess 11.0. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
+{{< /info >}}
 
 ### Command
 
