@@ -50,6 +50,10 @@ Backups will need to be shared across vttablet instances and multiple cells. You
 -backup_storage_implementation file -file_backup_storage_root <mounted_path_dir>
 ```
 
+{{< warning >}}
+When using the file backup storage engine the backup storage root path must be on shared storage to provide a global view of backups to all vitess components.
+{{< /warning >}}
+
 Please refer to the [Backup and Restore](../../operating-vitess/backup-and-restore) guide for instructions on how to configure other storage options.
 
 To avoid repetition we will use `<backup_flags>` in our examples to signify the above flags.
@@ -58,7 +62,7 @@ To avoid repetition we will use `<backup_flags>` in our examples to signify the 
 
 Vitess servers write to log files, and they are rotated when they reach a maximum size. It’s recommended that you run at INFO level logging. The information printed in the log files can come in handy for troubleshooting. You can limit the disk usage by running cron jobs that periodically purge or archive them.
 
-All Vitess servers accept a `-log_dir` as argument and will create the log files in that specified directory. For example:
+All Vitess servers accept a `-log_dir` argument and will create the log files in that specified directory. For example:
 
 ```text
 -log_dir=${VTDATAROOT}/tmp

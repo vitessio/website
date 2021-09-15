@@ -134,6 +134,10 @@ variety of flags:
  - There are more `-backup_storage_implementation` options like `gcs` and
   others.
 
+{{< warning >}}
+When using the file backup storage engine the backup storage root path must be on shared storage to provide a global view of backups to all vitess components.
+{{< /warning >}}
+
 You will also probably want to use other flags for backup and restore like:
 
  - `-backup_engine_implementation xtrabackup` - Use Percona Xtrabackup to
