@@ -4,6 +4,10 @@ description: Cleans up after a MoveTables and Reshard workflow
 weight: 60
 ---
 
+{{< info >}}
+Starting with Vitess 11.0 you should use the [VReplication v2 commands](../../vreplication/v2)
+{{< /info >}}
+
 ### Command
 
 ```

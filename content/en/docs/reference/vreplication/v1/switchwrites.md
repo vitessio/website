@@ -2,7 +2,12 @@
 title: SwitchWrites
 description: Route writes to target keyspace in a vreplication workflow
 weight: 50
+aliases: ['/docs/reference/vreplication/switchwrites/']
 ---
+
+{{< info >}}
+Starting with Vitess 11.0 you should use the [VReplication v2 commands](../../vreplication/v2)
+{{< /info >}}
 
 ### Command
 
