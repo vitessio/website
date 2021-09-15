@@ -2,8 +2,11 @@
 title: "--- Create"
 description: Initiate a workflow
 weight: 31
+aliases: ['/docs/reference/vreplication/v2/create/']
 ---
+
 ##### _Experimental_
+
 This documentation is for a new (v2) set of vtctld commands. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
 
 ### Command
@@ -35,7 +38,7 @@ Name of existing keyspace (the source keyspace) that contains the tables to be m
 </div>
 
 #### table_specs
-**mandatory**  Either `table_specs` or `-all` needs to be specified
+**optional**  one of `table_specs` or `-all` needs to be specified
 
 **MoveTables only**
 <div class="cmd">
@@ -68,7 +71,7 @@ cells should be used to pick a tablet for selecting data from the source keyspac
 ###### Uses
 
 * Improve performance by picking a tablet in cells in network proximity with the target
-* Reduce bandwidth costs by skipping cells that are in different availability zones
+* To reduce bandwidth costs by skipping cells that are in different availability zones
 * Select cells where replica lags are lower
 </div>
 
@@ -77,12 +80,13 @@ cells should be used to pick a tablet for selecting data from the source keyspac
 **default** replica
 
 <div class="cmd">
-A comma-separated list of tablet types that are used while picking a tablet for sourcing data. One or more from PRIMARY, REPLICA, RDONLY.<br><br>
+A comma-separated list of tablet types that are used while picking a tablet for sourcing data.
+One or more from PRIMARY, REPLICA, RDONLY.<br><br>
 
 ###### Uses
 
 * To reduce the load on PRIMARY tablets by using REPLICAs or RDONLYs
-* Reducing lag by pointing to PRIMARY
+* Reducing lags by pointing to PRIMARY
 </div>
 
 
@@ -99,13 +103,13 @@ to false then the workflow is in a Stopped state until you explicitly start it.
 </div>
 
 ###### Uses
-* Allows updating the rows in `_vt.vreplication` after MoveTables has setup the
+* allows updating the rows in `_vt.vreplication` after MoveTables has setup the
 streams. For example, you can add some filters to specific tables or change the
 projection clause to modify the values on the target. This
 provides an easier way to create simpler Materialize workflows by first using
 MoveTables with auto_start false, updating the BinlogSource as required by your
-Materialize and then starting the workflow.
-* Changing the `copy_state` and/or `pos` values to restart a broken MoveTables workflow
+Materialize and then start the workflow.
+* changing the `copy_state` and/or `pos` values to restart a broken MoveTables workflow
 from a specific point of time.
 
 #### -stop_after_copy
@@ -175,5 +179,5 @@ Comma-separated shard names to reshard to.
 
 <div class="cmd">
 If true the source schema is copied to the target shards. If false, you need to create the tables
-before calling `Reshard`.
+before calling reshard.
 </div>

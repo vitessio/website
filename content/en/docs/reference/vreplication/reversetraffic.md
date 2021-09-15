@@ -2,8 +2,11 @@
 title: --- ReverseTraffic
 description: Reverse traffic from target to source
 weight: 33
+aliases: ['/docs/reference/vreplication/v2/reversetraffic/']
 ---
+
 ##### _Experimental_
+
 This documentation is for a new (v2) set of vtctld commands. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
 
 ### Command
@@ -48,7 +51,9 @@ One or more from primary, replica, rdonly.<br><br>
 
 <div class="cmd">
 
-For primary tablets, ReverseTraffic first stops writes on the target primary and waits for the replication on the source to catchup with the gtid on the target where the writes were stopped. If the wait time is longer than timeout the command will error out. For setups with high write qps you may need to increase this value.
+For primary tablets, ReverseTraffic first stops writes on the target primary and waits for the replication to the source to
+catchup with the point where the writes were stopped. If the wait time is longer than timeout
+the command will error out. For setups with high write qps you may need to increase this value.
 
 </div>
 
