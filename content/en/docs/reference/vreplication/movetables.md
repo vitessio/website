@@ -17,7 +17,7 @@ MoveTables <options> <action> <workflow identifier>
 or
 
 ```
-MoveTables [-cells=<cells>] [-tablet_types=<source_tablet_types>] -workflow=<workflow> <source_keyspace> <target_keyspace> <table_specs>
+MoveTables [-cells=<cells>] [-tablet_types=<source_tablet_types>] <source_keyspace> <target_keyspace.workflowname> <table_specs>
 ```
 
 ## Description
@@ -31,16 +31,6 @@ MoveTables is typically used for migrating data into Vitess or to implement vert
 ### action
 
 MoveTables is an "umbrella" command. The `action` sub-command defines the operation on the workflow.
-
-#### -workflow 
-**mandatory**\
-**string**
-
-<div class="cmd">
-
-Workflow name. Can be any descriptive string. Will be used to later migrate traffic via SwitchReads/SwitchWrites.
-
-</div>
 
 ### options
 
@@ -61,7 +51,7 @@ Cell(s) or CellAlias(es) (comma-separated) to replicate from.
 
 #### -tablet_types 
 **optional**\
-**default** `-vreplication_tablet_type` parameter value for the tablet\
+**default** `-vreplication_tablet_type` parameter value for the tablet. `-vreplication_tablet_type` has the default value of replica. (default "master,replica,rdonly")\
 **string**
 
 <div class="cmd">

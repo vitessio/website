@@ -32,7 +32,7 @@ Displays the full schema for a tablet, or just the schema for the specified tabl
 
 #### Errors
 
-* the <code>&lt;tablet alias&gt;</code> argument is required for the <code>&lt;GetSchema&gt;</code> command This error occurs if the command is not called with exactly one argument.
+* The <code>&lt;tablet alias&gt;</code> argument is required for the <code>&lt;GetSchema&gt;</code> command This error occurs if the command is not called with exactly one argument.
 
 
 ### ReloadSchema
@@ -49,7 +49,7 @@ Reloads the schema on a remote tablet.
 
 #### Errors
 
-* the <code>&lt;tablet alias&gt;</code> argument is required for the <code>&lt;ReloadSchema&gt;</code> command This error occurs if the command is not called with exactly one argument.
+* The <code>&lt;tablet alias&gt;</code> argument is required for the <code>&lt;ReloadSchema&gt;</code> command This error occurs if the command is not called with exactly one argument.
 
 ### ReloadSchemaShard
 
@@ -73,7 +73,7 @@ Reloads the schema on all the tablets in a shard.
 
 #### Errors
 
-* the <code>&lt;keyspace/shard&gt;</code> argument is required for the <code>&lt;ReloadSchemaShard&gt;</code> command This error occurs if the command is not called with exactly one argument.
+* The <code>&lt;keyspace/shard&gt;</code> argument is required for the <code>&lt;ReloadSchemaShard&gt;</code> command This error occurs if the command is not called with exactly one argument.
 
 ### ReloadSchemaKeyspace
 
@@ -97,7 +97,7 @@ Reloads the schema on all the tablets in a keyspace.
 
 #### Errors
 
-* the <code>&lt;keyspace&gt;</code> argument is required for the <code>&lt;ReloadSchemaKeyspace&gt;</code> command This error occurs if the command is not called with exactly one argument.
+* The <code>&lt;keyspace&gt;</code> argument is required for the <code>&lt;ReloadSchemaKeyspace&gt;</code> command This error occurs if the command is not called with exactly one argument.
 
 ### ValidateSchemaShard
 
@@ -121,7 +121,7 @@ Validates that the schema on the primary tablet matches all of the replicas.
 
 #### Errors
 
-* the <code>&lt;keyspace/shard&gt;</code> argument is required for the <code>&lt;ValidateSchemaShard&gt;</code> command This error occurs if the command is not called with exactly one argument.
+* The <code>&lt;keyspace/shard&gt;</code> argument is required for the <code>&lt;ValidateSchemaShard&gt;</code> command This error occurs if the command is not called with exactly one argument.
 
 ### ValidateSchemaKeyspace
 
@@ -145,24 +145,27 @@ Validates that the schema on the primary tablet for shard 0 matches the schema o
 
 #### Errors
 
-* the <code>&lt;keyspace name&gt;</code> argument is required for the <code>&lt;ValidateSchemaKeyspace&gt;</code> command This error occurs if the command is not called with exactly one argument.
+* The <code>&lt;keyspace name&gt;</code> argument is required for the <code>&lt;ValidateSchemaKeyspace&gt;</code> command This error occurs if the command is not called with exactly one argument.
 
 ### ApplySchema
 
-Applies the schema change to the specified keyspace on every primary, running in parallel on all shards. The changes are then propagated to replicas via replication. If -allow_long_unavailability is set, schema changes affecting a large number of rows (and possibly incurring a longer period of unavailability) will not be rejected.
+Applies the schema change to the specified keyspace on every primary, running in parallel on all shards. The changes are then propagated to replicas via replication. If -allow_long_unavailability is set, schema changes affecting a large number of rows (and possibly incurring a longer period of unavailability) will not be rejected. -ddl_strategy is used to instruct migrations via vreplication, gh-ost or pt-osc with optional parameters. -request_context allows the user to specify a custom request context for online DDL migrations. If -skip_preflight, SQL goes directly to shards without going through sanity checks.
 
 #### Example
 
-<pre class="command-example">ApplySchema [-allow_long_unavailability] [-wait_replicas_timeout=10s] {-sql=&lt;sql&gt; || -sql-file=&lt;filename&gt;} &lt;keyspace&gt;</pre>
+<pre class="command-example">ApplySchema [-allow_long_unavailability] [-wait_replicas_timeout=10s] [-ddl_strategy=<ddl_strategy>] [-request_context=<unique-request-context>] [-skip_preflight] {-sql=&lt;sql&gt; || -sql-file=&lt;filename&gt;} &lt;keyspace&gt;</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | allow_long_unavailability | Boolean | Allow large schema changes which incur a longer unavailability of the database. |
-| sql | string | A list of semicolon-delimited SQL commands |
+| ddl_strategy | string | Online DDL strategy, compatible with @@ddl_strategy session variable (examples: 'gh-ost', 'pt-osc', 'gh-ost --max-load=Threads_running=100' (default "direct"). |
+| request_context | string | For Only DDL, optionally supply a custom unique string used as context for the migration(s) in this command. By default a unique context is auto-generated by Vitess. |
+| skip_preflight | Boolean | Skip pre-apply schema checks, and directly forward schema change query to shards. |
+| sql | string | A list of semicolon-delimited SQL commands. |
 | sql-file | string | Identifies the file that contains the SQL commands. This file needs to exist on the server, rather than on the client. |
-| wait_replicas_timeout | Duration | The amount of time to wait for replicas to receive the schema change via replication. |
+| wait_replicas_timeout | Duration | The amount of time to wait for replicas to receive the schema change via replication (default 10s). |
 
 #### Arguments
 
@@ -170,7 +173,8 @@ Applies the schema change to the specified keyspace on every primary, running in
 
 #### Errors
 
-* the <code>&lt;keyspace&gt;</code> argument is required for the command<code>&lt;ApplySchema&gt;</code> command This error occurs if the command is not called with exactly one argument.
+* The <code>&lt;keyspace&gt;</code> argument is required for the command<code>&lt;ApplySchema&gt;</code> command This error occurs if the command is not called with exactly one argument.
+* If using a file you may need to pass the absolute path.
 
 ### CopySchemaShard
 
@@ -197,7 +201,7 @@ Copies the schema from a source shard's primary (or a specific tablet) to a dest
 
 #### Errors
 
-* the <code>&lt;source keyspace/shard&gt;</code> and <code>&lt;destination keyspace/shard&gt;</code> arguments are both required for the <code>&lt;CopySchemaShard&gt;</code> command. Instead of the <code>&lt;source keyspace/shard&gt;</code> argument, you can also specify <code>&lt;tablet alias&gt;</code> which refers to a specific tablet of the shard in the source keyspace This error occurs if the command is not called with exactly 2 arguments.
+* The <code>&lt;source keyspace/shard&gt;</code> and <code>&lt;destination keyspace/shard&gt;</code> arguments are both required for the <code>&lt;CopySchemaShard&gt;</code> command. Instead of the <code>&lt;source keyspace/shard&gt;</code> argument, you can also specify <code>&lt;tablet alias&gt;</code> which refers to a specific tablet of the shard in the source keyspace This error occurs if the command is not called with exactly 2 arguments.
 
 ### ValidateVersionShard
 
@@ -213,7 +217,7 @@ Validates that the version on the primary matches all of the replicas.
 
 #### Errors
 
-* the <code>&lt;keyspace/shard&gt;</code> argument is required for the <code>&lt;ValidateVersionShard&gt;</code> command This error occurs if the command is not called with exactly one argument.
+* The <code>&lt;keyspace/shard&gt;</code> argument is required for the <code>&lt;ValidateVersionShard&gt;</code> command This error occurs if the command is not called with exactly one argument.
 
 ### ValidateVersionKeyspace
 
@@ -229,7 +233,7 @@ Validates that the version on the primary of shard 0 matches all of the other ta
 
 #### Errors
 
-* the <code>&lt;keyspace name&gt;</code> argument is required for the <code>&lt;ValidateVersionKeyspace&gt;</code> command This error occurs if the command is not called with exactly one argument.
+* The <code>&lt;keyspace name&gt;</code> argument is required for the <code>&lt;ValidateVersionKeyspace&gt;</code> command This error occurs if the command is not called with exactly one argument.
 
 ### GetPermissions
 
@@ -245,7 +249,7 @@ Displays the permissions for a tablet.
 
 #### Errors
 
-* the <code>&lt;tablet alias&gt;</code> argument is required for the <code>&lt;GetPermissions&gt;</code> command This error occurs if the command is not called with exactly one argument.
+* The <code>&lt;tablet alias&gt;</code> argument is required for the <code>&lt;GetPermissions&gt;</code> command This error occurs if the command is not called with exactly one argument.
 
 ### ValidatePermissionsShard
 
@@ -261,7 +265,7 @@ Validates that the permissions on the primary tablet match all the replicas.
 
 #### Errors
 
-* the <code>&lt;keyspace/shard&gt;</code> argument is required for the <code>&lt;ValidatePermissionsShard&gt;</code> command This error occurs if the command is not called with exactly one argument.
+* The <code>&lt;keyspace/shard&gt;</code> argument is required for the <code>&lt;ValidatePermissionsShard&gt;</code> command This error occurs if the command is not called with exactly one argument.
 
 ### ValidatePermissionsKeyspace
 
@@ -277,7 +281,7 @@ Validates that the permissions on the primary of shard 0 match those of all of t
 
 #### Errors
 
-* the <code>&lt;keyspace name&gt;</code> argument is required for the <code>&lt;ValidatePermissionsKeyspace&gt;</code> command This error occurs if the command is not called with exactly one argument.
+* The <code>&lt;keyspace name&gt;</code> argument is required for the <code>&lt;ValidatePermissionsKeyspace&gt;</code> command This error occurs if the command is not called with exactly one argument.
 
 ### GetVSchema
 
@@ -293,7 +297,7 @@ Displays the VTGate routing schema.
 
 #### Errors
 
-* the <code>&lt;keyspace&gt;</code> argument is required for the <code>&lt;GetVSchema&gt;</code> command This error occurs if the command is not called with exactly one argument.
+* The <code>&lt;keyspace&gt;</code> argument is required for the <code>&lt;GetVSchema&gt;</code> command This error occurs if the command is not called with exactly one argument.
 
 ### ApplyVSchema
 
@@ -321,8 +325,9 @@ Applies the VTGate routing schema to the provided keyspace. Shows the result aft
 
 #### Errors
 
-* the <code>&lt;keyspace&gt;</code> argument is required for the <code>&lt;ApplyVSchema&gt;</code> command This error occurs if the command is not called with exactly one argument.
-* either the <code>&lt;vschema&gt;</code> or <code>&lt;vschema&gt;</code>File flag must be specified when calling the <code>&lt;ApplyVSchema&gt;</code> command
+* The <code>&lt;keyspace&gt;</code> argument is required for the <code>&lt;ApplyVSchema&gt;</code> command This error occurs if the command is not called with exactly one argument.
+* Either the <code>&lt;vschema&gt;</code> or <code>&lt;vschema&gt;</code>File flag must be specified when calling the <code>&lt;ApplyVSchema&gt;</code> command.
+* If using a file you may need to pass the absolute path.
 
 ### GetRoutingRules
 
@@ -344,7 +349,7 @@ ApplyRoutingRules  {-rules=<rules> | -rules_file=<rules_file>} [-cells=c1,c2,...
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| cells | string | If specified, limits the rebuild to the cells, after upload. Ignored if skipRebuild is set. |
+| cells | string | If specified, limits the rebuild to the cells, after upload. Ignored if skip_rebuild is set. |
 | dry-run | Boolean | If set, do not save the altered vschema, simply echo to console. |
 | skip_rebuild | Boolean | If set, do not rebuild the SrvSchema objects. |
 | -rules | string | Specify rules as a string. |
