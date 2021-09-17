@@ -345,7 +345,7 @@ The following global options apply to `vttablet`:
 | -vreplication_healthcheck_timeout | duration | healthcheck retry delay (default 1m0s) |
 | -vreplication_healthcheck_topology_refresh | duration | refresh interval for re-reading the topology (default 30s) |
 | -vreplication_retry_delay | duration | delay before retrying a failed binlog connection (default 5s) |
-| -vreplication_tablet_type | string | comma separated list of tablet types used as a source (default "REPLICA") |
+| -vreplication_tablet_type | string | comma separated list of tablet types used as a source (default "PRIMARY,REPLICA") |
 | -vstream_packet_size | int | Suggested packet size for VReplication streamer. This is used only as a recommendation. The actual packet size may be more or less than this amount. (default 30000) |
 | -vtctld_addr | string | address of a vtctld instance |
 | -vtgate_protocol | string | how to talk to vtgate (default "grpc") |
