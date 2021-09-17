@@ -6,7 +6,7 @@ aliases: ['/docs/reference/vreplication/switchreads/']
 ---
 
 {{< info >}}
-Starting with Vitess 11.0 you should use the [VReplication v2 commands](../../vreplication/v2)
+Starting with Vitess 11.0 you should use the [SwitchTraffic VReplication v2 commands](../../vreplication/switchtraffic)
 {{< /info >}}
 
 ### Command
