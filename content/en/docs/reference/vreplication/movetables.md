@@ -36,7 +36,7 @@ MoveTables is an "umbrella" command. The `action` sub-command defines the operat
 
 Each `action` has additional options/parameters that can be used to modify its behavior.
 
-`actions` are common to both MoveTables and Reshard v2 workflows. Only the `create` action has different parameters, all other actions have common options and similar semantics. 
+`actions` are common to both MoveTables and Reshard v2 workflows. Only the `create` action has different parameters, all other actions have common options and similar semantics. These actions are documented separately.
 
 #### -cells
 **optional**\

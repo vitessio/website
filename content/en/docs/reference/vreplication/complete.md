@@ -19,7 +19,7 @@ MoveTables/Reshard [-keep_data] [-rename_tables] [-dry_run]
 ### Description
 **Alert: This is a destructive command**
 
-`Complete` is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state in the side-car \_vt database, routing rules, and blacklisted tables (for MoveTables) from the topo. Also, by default, the source tables (or source shards) are dropped.
+`Complete` is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the side-car `_vt` database and routing rules and and blacklisted tables (for MoveTables) from the topo. By default, the source tables (or source shards) are also dropped.
 
 ### Parameters
 
