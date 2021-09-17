@@ -182,7 +182,7 @@ The following global options apply to `vtgate`:
 | -topo_zk_tls_key | string | the key to use to connect to the zk topo server, enables TLS |
 | -tracer | string | tracing service to use (default "noop") |
 | -tracing-sampling-rate | float | sampling rate for the probabilistic jaeger sampler (default 0.1) |
-| -transaction_mode | string | SINGLE: disallow multi-db transactions, MULTI: allow multi-db transactions with best effort commit, TWOPC: allow multi-db transactions with 2pc commit (default "MULTI") |
+| -transaction_mode | string | the default transaction mode -- SINGLE: disallow multi-db transactions, MULTI: allow multi-db transactions with best effort commit, TWOPC: allow multi-db transactions with 2pc commit (default "MULTI");  this can be overridden at the session level when needed using `SET transaction_mode="<mode>";`|
 | -v | value | log level for V logs |
 | -version | boolean | print binary version |
 | -vmodule | value | comma-separated list of pattern=N settings for file-filtered logging |
