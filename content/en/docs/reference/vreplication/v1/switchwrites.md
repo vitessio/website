@@ -2,7 +2,12 @@
 title: SwitchWrites
 description: Route writes to target keyspace in a vreplication workflow
 weight: 50
+aliases: ['/docs/reference/vreplication/switchwrites/']
 ---
+
+{{< info >}}
+Starting with Vitess 11.0 you should use the [SwitchTraffic VReplication v2 commands](../vreplication/switchtraffic)
+{{< /info >}}
 
 ### Command
 
@@ -70,6 +75,7 @@ of the original workflow concatenated with \_reverse.
 
 <div class="cmd">
 Tablet types to switch one or both or rdonly/replica (default "rdonly,replica")
+Note: For tablet type rdonly you must [SwitchReads](../switchreads) before you can SwitchWrites
 </div>
 
 #### -dry-run 

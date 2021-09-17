@@ -4,6 +4,10 @@ description: Cleans up after a MoveTables and Reshard workflow
 weight: 60
 ---
 
+{{< info >}}
+Starting with Vitess 11.0 you should use the [VReplication v2 commands](../vreplication/v2)
+{{< /info >}}
+
 ### Command
 
 ```
@@ -12,7 +16,6 @@ DropSources [-dry_run] [-rename_tables] [-keep_data] <keyspace.workflow>
 
 ### Description
 
-
 Once SwitchWrites has been run DropSources cleans up the source resources by deleting the
 source tables for a MoveTables workflow or source shards for a Reshard workflow. It also
 cleans up other artifacts of the workflow, deleting forward and reverse replication streams and
@@ -20,7 +23,6 @@ blacklisted tables.
 
 ***Warning***: This command actually deletes data. We recommend that you run this
 with the -dry_run parameter first and reads its output so that you know which actions will be performed.
-
 
 ### Parameters
 

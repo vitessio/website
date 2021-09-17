@@ -4,10 +4,14 @@ description: split or merge shards in a keyspace
 weight: 60
 ---
 
+{{< info >}}
+Starting with Vitess 11.0 you should use the [VReplication v2 commands](../vreplication/v2)
+{{< /info >}}
+
 ### Command
 
 ```
-Reshard -v1 [-cells=<cells>] [-tablet_types=<source_tablet_types>] [-skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>
+Reshard -v1 [-cells=<cells>] [-tablet_types=<source_tablet_types>] [-skip_schema_copy] [-auto_start] [-stop_after_copy] <keyspace.workflow> <source_shards> <target_shards>
 ```
 
 ### Description
@@ -31,7 +35,7 @@ Comma separated Cell(s) or CellAlias(es) to replicate from.
 Source Vitess tablet_type, or comma separated list of tablet types, that should be used for choosing source tablet(s) for the reshard.
 </div>
 
-**Note:** If replicating from primary, you must explicitly use `-tablet_types=primary`. If not specified, it defaults to the tablet type(s) specified by the `-vreplication_tablet_type` VTTablet command line flag. `-vreplication_tablet_type` defaults to replica.
+**Note:** If replicating from primary, you must explicitly use `-tablet_types=primary`. If not specified, it defaults to the tablet type(s) specified by the `-vreplication_tablet_type` VTTablet command line flag. `-vreplication_tablet_type` defaults to "PRIMARY,REPLICA".
 
 #### -skip_schema_copy
 **optional**\
@@ -40,6 +44,22 @@ Source Vitess tablet_type, or comma separated list of tablet types, that should 
 <div class="cmd">
 If true the source schema is copied to the target shards. If false, you need to create the tables
 before calling reshard.
+</div>
+
+#### -auto_start
+**optional**\
+**default** true
+
+<div class="cmd">
+If false, streams will start in the Stopped state and will need to be explicitly started (default true).
+</div>
+
+#### -stop_after_copy
+**optional**\
+**default** false
+
+<div class="cmd">
+Streams will be stopped once the copy phase is completed.
 </div>
 
 #### keyspace.workflow

@@ -8,7 +8,7 @@ weight: 40
 
 ```
 VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=primary,replica,rdonly]
-       [-limit=<max rows to diff>] [-table=<table list>] [-format=json]
+       [-limit=<max rows to diff>] [-tables=<table list>] [-format=json]
        [-filtered_replication_wait_time=30s] [-debug_query] [-only_pks] <keyspace.workflow>
 ```
 

@@ -4,6 +4,10 @@ description: Move tables between keyspaces without downtime
 weight: 10
 ---
 
+{{< info >}}
+Starting with Vitess 11.0 you should use the [VReplication v2 commands](../vreplication/v2)
+{{< /info >}}
+
 ### Command
 
 ```

@@ -2,9 +2,12 @@
 title: --- SwitchTraffic
 description: Switch traffic from source to target
 weight: 32
+aliases: ['/docs/reference/vreplication/v2/switchtraffic/']
 ---
-##### _Experimental_
-This documentation is for a new (v2) set of vtctld commands. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
+
+{{< info >}}
+This documentation is for a new (v2) set of vtctld commands that start in Vitess 11.0. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
+{{< /info >}}
 
 ### Command
 
@@ -16,9 +19,7 @@ MoveTables/Reshard [-tablet_types=<tablet_types>] [-cells=<cells>]
 
 ### Description
 
-`SwitchTraffic` switches traffic forward for the tablet_types specified. This replaces the previous
-SwitchReads and SwitchWrites commands with a single one. It is now possible to switch all traffic with just one command. Also, you can now switch replica, rdonly and primary traffic in any order: earlier you needed to first
-SwitchReads (for replicas and rdonly tablets) first before SwitchWrites.
+`SwitchTraffic` switches traffic forward for the tablet_types specified. This replaces the previous SwitchReads and SwitchWrites commands with a single one. It is now possible to switch all traffic with just one command. Also, you can now switch replica, rdonly and primary traffic in any order: earlier you needed to first SwitchReads (for replicas and rdonly tablets) first before SwitchWrites.
 
 ### Parameters
 
