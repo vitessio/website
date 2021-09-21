@@ -18,6 +18,8 @@ The schema tracking functionality alleviates this issue and enable VTGate to pla
 ## VTGate
 
 Schema tracking is enabled in VTGate with the flag `-schema_change_signal`. When enabled, VTGate listens for schema changes from VTTablet.
+A change triggers a fetch query on vttablet on internal _vt schema.
+If the Table ACL is enabled, then an exempted/allowed username needs to be passed to VTGate with flag `-schema_change_signal_user`.
 
 ## VTTablet
 
