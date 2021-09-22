@@ -315,6 +315,7 @@ Runs a health check on a remote tablet.
 #### Errors
 
 * the <code>&lt;tablet alias&gt;</code> argument is required for the <code>&lt;RunHealthCheck&gt;</code> command This error occurs if the command is not called with exactly one argument.
+* this only reports an error if a "healthcheck" RPC call to a vttablet fails. It is only useful as a connectivity and vttablet liveness check.
 
 ### IgnoreHealthError
 

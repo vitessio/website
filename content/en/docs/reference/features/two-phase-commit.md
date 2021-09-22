@@ -5,8 +5,12 @@ aliases: ['/docs/launching/twopc/','/docs/reference/two-phase-commit/']
 ---
 
 {{< warning >}}
-Transaction commit is much slower when using 2PC. The authors of Vitess recommend that you design your VSchema so that cross-shard updates (and 2PC) are not required.
+2PC is an experimental feature and is likely not robust enough to be considered production-ready.
 {{< /warning >}}
+
+{{< info >}}
+Transaction commit is much slower when using 2PC. The authors of Vitess recommend that you design your VSchema so that cross-shard updates (and 2PC) are not required.
+{{< /info >}}
 
 Vitess 2PC allows you to perform atomic distributed commits. The feature is implemented using traditional MySQL transactions, and hence inherits the same guarantees. With this addition, Vitess can be configured to support the following three levels of atomicity:
 
