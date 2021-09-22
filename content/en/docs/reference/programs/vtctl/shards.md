@@ -417,7 +417,7 @@ Changes metadata in the topology service to acknowledge a shard primary change p
 
 #### Arguments
 
-* <code>&lt;tablet alias&gt;</code> &ndash; Required. A Tablet Alias uniquely identifies a vttablet. The argument value is in the format <code>&lt;cell name&gt;-&lt;uid&gt;</code>.
+* <code>&lt;tablet alias&gt;</code> &ndash; Required. A Tablet Alias uniquely identifies a vttablet to promote to primary. The argument value is in the format <code>&lt;cell name&gt;-&lt;uid&gt;</code>.
 
 #### Errors
 

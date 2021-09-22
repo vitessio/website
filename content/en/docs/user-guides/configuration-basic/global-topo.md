@@ -1,6 +1,7 @@
 ---
 title: Global TopoServer
 weight: 4
+aliases: ['/docs/user-guide/topology-service/ ']
 ---
 
 The first component to bring up is the Global TopoServer. As mentioned before, this can be a zookeeper or etcd cluster. The servers will likely have to be distributed across data centers for resilience. Please refer to the corresponding documentation for instructions on how to configure and launch these servers.
