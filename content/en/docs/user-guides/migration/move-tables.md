@@ -5,7 +5,7 @@ aliases: ['/docs/user-guides/move-tables/']
 ---
 
 {{< info >}}
-This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../../get-started/operator), [local](../../../get-started/local) or [Helm](../../../get-started/helm) installation ready after the `101_initial_cluster` step, and making sure you have setup aliases and port-forwarding (if necessary).
+This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../../get-started/operator) or [local](../../../get-started/local) installation ready after the `101_initial_cluster` step, and making sure you have setup aliases and port-forwarding (if necessary).
 {{< /info >}}
 
 [MoveTables](../../../concepts/move-tables) is a new VReplication workflow in Vitess 6 and later, and obsoletes Vertical Split from earlier releases.
@@ -19,14 +19,14 @@ As a stepping stone towards splitting a single table across multiple servers (sh
 Let's start by simulating this situation by loading sample data:
 
 ```sh
-# On helm, local and operator installs:
+# On local and operator installs:
 mysql --table < ../common/insert_commerce_data.sql
 ```
 
 We can look at what we just inserted:
 
 ```sh
-# On helm, local and operator installs:
+# On local and operator installs:
 mysql --table < ../common/select_commerce_data.sql
 
 Using commerce/0
@@ -83,35 +83,6 @@ As can be seen, we have 3 tablets running, with tablet ids 100, 101 and 102;  wh
 ## Create new tablets
 
 The first step in our MoveTables operation is to deploy new tablets for our `customer` keyspace. By the convention used in our examples, we are going to use the tablet ids 200-202 as the `commerce` keyspace previously used `100-102`. Once the tablets have started, we can force the first tablet to be the primary using the `InitShardPrimary` `-force` flag:
-
-### Using Helm
-
-```bash
-helm upgrade vitess ../../helm/vitess/ -f 201_customer_tablets.yaml
-```
-
-After a few minutes the pods should appear running:
-
-```bash
-$ kubectl get pods,jobs
-NAME                                           READY   STATUS      RESTARTS   AGE
-pod/vtctld-58bd955948-pgz7k                    1/1     Running     0          5m36s
-pod/vtgate-zone1-c7444bbf6-t5xc6               1/1     Running     3          5m36s
-pod/zone1-commerce-0-init-shard-master-gshz9   0/1     Completed   0          5m35s
-pod/zone1-commerce-0-replica-0                 2/2     Running     0          5m35s
-pod/zone1-commerce-0-replica-1                 2/2     Running     0          5m35s
-pod/zone1-commerce-0-replica-2                 2/2     Running     0          5m35s
-pod/zone1-customer-0-init-shard-master-7w7rm   0/1     Completed   0          84s
-pod/zone1-customer-0-replica-0                 2/2     Running     0          84s
-pod/zone1-customer-0-replica-1                 2/2     Running     0          84s
-pod/zone1-customer-0-replica-2                 2/2     Running     0          84s
-
-NAME                                           COMPLETIONS   DURATION   AGE
-job.batch/zone1-commerce-0-init-shard-master   1/1           90s        5m36s
-job.batch/zone1-customer-0-init-shard-master   1/1           23s        84s
-```
-
-`InitShardMaster` (deprecated, but equivalent to `InitShardPrimary`) is performed implicitly by Helm for you.
 
 ### Using Operator
 

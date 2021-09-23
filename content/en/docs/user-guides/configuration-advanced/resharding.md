@@ -5,7 +5,7 @@ aliases: ['/docs/user-guides/resharding/']
 ---
 
 {{< info >}}
-This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../../get-started/operator), [local](../../../get-started/local) or [Helm](../../../get-started/helm) installation ready. It also assumes that the [MoveTables](../../migration/move-tables/) user guide has been followed.
+This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../../get-started/operator) or [local](../../../get-started/local) installation ready. It also assumes that the [MoveTables](../../migration/move-tables/) user guide has been followed.
 {{< /info >}}
 
 ## Preparation
@@ -125,12 +125,6 @@ Since the primary vindex columns are `BIGINT`, we choose `hash` as the primary v
 
 Applying the new VSchema instructs Vitess that the keyspace is sharded, which may prevent some complex queries. It is a good idea to [validate this](../../sql/vtexplain) before proceeding with this step. If you do notice that certain queries start failing, you can always revert temporarily by restoring the old VSchema. Make sure you fix all of the queries before proceeding to the Reshard process.
 
-### Using Helm
-
-```bash
-helm upgrade vitess ../../helm/vitess/ -f 301_customer_sharded.yaml
-```
-
 ### Using Operator
 
 ```bash
@@ -154,12 +148,6 @@ vtctlclient ApplySchema -sql-file create_customer_sharded.sql customer
 At this point, you have finalized your sharded VSchema and vetted all the queries to make sure they still work. Now, it’s time to reshard.
 
 The resharding process works by splitting existing shards into smaller shards. This type of resharding is the most appropriate for Vitess. There are some use cases where you may want to bring up a new shard and add new rows in the most recently created shard. This can be achieved in Vitess by splitting a shard in such a way that no rows end up in the ‘new’ shard. However, it's not natural for Vitess. We have to create the new target shards:
-
-### Using Helm
-
-```sh
-helm upgrade vitess ../../helm/vitess/ -f 302_new_shards.yaml
-```
 
 ### Using Operator
 
@@ -283,12 +271,6 @@ COrder
 ## Finalize and Cleanup
 
 After celebrating your second successful resharding, you are now ready to clean up the leftover artifacts:
-
-### Using Helm
-
-```sh
-helm upgrade vitess ../../helm/vitess/ -f 306_down_shard_0.yaml
-```
 
 ### Using Operator
 
