@@ -102,7 +102,7 @@ To configure VTGate to support `TLS` set `-mysql_server_ssl_cert` and `-mysql_se
 
 ### X Dev API
 
-Vitess does not support X Dev API.
+Vitess does not support [X Dev API](https://dev.mysql.com/doc/x-devapi-userguide/en/).
 
 ## Temporary Tables
 

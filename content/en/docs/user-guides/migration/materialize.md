@@ -28,7 +28,7 @@ mysql --table < insert_commerce_data.sql
 We can look at what we just inserted:
 
 ```sh
-# On ocal installs:
+# On local installs:
 mysql --table < /usr/local/vitess/examples/common/select_commerce_data.sql
 # With operator:
 mysql --table < select_commerce_data.sql
