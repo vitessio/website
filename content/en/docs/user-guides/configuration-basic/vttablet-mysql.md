@@ -124,7 +124,7 @@ When starting vttablet, the following additional flag must be specified:
 VTTablet should be brought up on the same machine as the MySQL instance. It needs the following flags:
 
 * <topo_flags> and <backup_flags>.
-* `tablet-path`: This should be the cell name followed by a `-` and the tablet UID used for `mysqlctl`. It will infer the `cell` name from this. Example: `cell1-100`.
+* `tablet-path`: This should be the cell name followed by a `-` and the tablet UID used for `mysqlctl`. VTTablet will infer the `cell` name from this. Example: `cell1-100`.
 * `init_keyspace`: The keyspace that the tablet is going to serve. This will cause a keyspace to be created if one is not present.
 * `init_shard`: The shard that the tablet is going to serve. This will cause a shard to be created if one is not present.
 * `init_tablet_type`: This will typically be REPLICA. You may use other tablet types like “RDONLY”. Those tablet types will be deprecated in favor of newer ways to achieve their functionality. Note that you are not allowed to start a tablet as a MASTER.
