@@ -51,7 +51,7 @@ vtctlclient -server=<vtctld_host>:<vtctld_port> BackupShard [-allow_primary=fals
 
 When a tablet starts, Vitess checks the value of the `-restore_from_backup` command-line flag to determine whether to restore a backup to that tablet.
 
-* If the flag is present, Vitess tries to restore the most recent backup from the Backup Storage system when starting the tablet.
+* If the flag is present, Vitess tries to restore the most recent backup from the [BackupStorage](../backup-and-restore/#backup-storage-services) system when starting the tablet or if the `-restore_from_backup_ts` flag (Vitess 12.0+) is also set then using the latest backup taken at or before this timestamp instead. Example: '2021-04-29.133050'
 * If the flag is absent, Vitess does not try to restore a backup to the tablet. This is the equivalent of starting a new tablet in a new shard.
 
 As noted in the [Configuration](#vttablet-configuration) section, the flag is generally enabled all of the time for all of the tablets in a shard. By default, if Vitess cannot find a backup in the Backup Storage system, the tablet will start up empty. This behavior allows you to bootstrap a new shard before any backups exist.
