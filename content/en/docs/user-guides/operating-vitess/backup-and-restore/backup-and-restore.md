@@ -124,6 +124,12 @@ The following options can be used to configure VTTablet and Vtctld for backups:
         storage plugin.</td>
     </tr>
     <tr>
+      <td><code>restore_from_backup_ts</code></td>
+      <td>If set, restore the latest backup taken at or before this timestamp
+        rather than using the most recent one. Example: ‘2021-04-29.133050’.
+        (Vitess 12.0+)</td>
+    </tr>
+    <tr>
       <td><code>xbstream_restore_flags</code></td>
       <td>The flags to pass to the xbstream command during restore. These should be space separated and will be added to the end of the command. These need to match the ones used for backup e.g. <code>--compress</code> / <code>--decompress</code>, <code>--encrypt</code> / <code>--decrypt</code></td>
     </tr>

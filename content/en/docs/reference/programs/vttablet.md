@@ -263,6 +263,7 @@ The following global options apply to `vttablet`:
 | -remote_operation_timeout | duration | time to wait for a remote operation (default 30s) |
 | -restore_concurrency | int | (init restore parameter) how many concurrent files to restore at once (default 4) |
 | -restore_from_backup |  | (init restore parameter) will check BackupStorage for a recent backup at startup and start there |
+| -restore_from_backup_ts | string | (init restore parameter) if set, restore the latest backup taken at or before this timestamp. Example: '2021-04-29.133050' (Vitess 12.0+) |
 | -s3_backup_aws_endpoint | string | endpoint of the S3 backend (region must be provided) |
 | -s3_backup_aws_region | string | AWS region to use (default "us-east-1") |
 | -s3_backup_aws_retries | int | AWS request retries (default -1) |

@@ -410,7 +410,7 @@ VReplicationExec [-json] <tablet alias> <sql command>
 
 ### Backup
 
-Stops mysqld and uses the BackupStorage service to store a new backup. This function also remembers if the tablet was replicating so that it can restore the same state after the backup completes.
+Stops mysqld and uses the [BackupEngine](../../../../user-guides/operating-vitess/backup-and-restore/backup-and-restore/#backup-engines) to generate a new backup and uses the [BackupStorage](../../../../user-guides/operating-vitess/backup-and-restore/backup-and-restore/#backup-storage-services) service to store the results. This function also remembers if the tablet was replicating so that it can restore the same state after the backup completes.
 
 #### Example
 
@@ -437,7 +437,13 @@ Stops mysqld and restores the data from the latest backup.
 
 #### Example
 
-<pre class="command-example">RestoreFromBackup &lt;tablet alias&gt;</pre>
+<pre class="command-example">RestoreFromBackup [-backup_timestamp=2021-09-24.021828] &lt;tablet alias&gt;</pre>
+
+#### Flags
+
+| Name | Type | Definition |
+| :-------- | :--------- | :--------- |
+| backup_timestamp | String | Use the latest backup at or before this time -- in `yyyy-MM-dd.HHmmss` format -- rather than using the most recent backup (Vitess 12.0+) |
 
 #### Errors
 
