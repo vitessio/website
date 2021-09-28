@@ -230,7 +230,7 @@ VSchema:
   "sharded": true,
   "vindexes": {
     "name_user_idx": {
-      "type": "lookup_hash",
+      "type": "lookup",
       "params": {
         "table": "name_user_idx",
         "from": "name",
@@ -256,7 +256,7 @@ To recap, a checklist for creating the shared Secondary Vindex is:
 
 * Create physical `name_user_idx` table in lookup database.
 * Define a routing for it in the lookup VSchema.
-* Define a Vindex as type `lookup_hash` that points to it. Ensure that the `params` match the table name and columns.
+* Define a Vindex as type `lookup` that points to it. Ensure that the `params` match the table name and columns.
 * Define the owner for the Vindex as the `user` table.
 * Specify that `name` uses the Vindex.
 
