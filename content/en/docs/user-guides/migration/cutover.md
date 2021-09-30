@@ -221,6 +221,7 @@ In a case like this, you should stop the VDiff, then adjust the options appropri
 
 Since VDiff is synchronous, just using CTRL-C on the vtctlclient VDiff command is sufficient.
 If you do plan to execute another VDiff that will get the workflow back to the proper state.  
+
 If you do NOT plan to execute another VDiff you will need to double check the current state of the workflow to ensure that it’s running after you interrupted the vtctlclient process. 
 If a VDiff is interrupted in certain phases it can leave the workflow stopped.
 
@@ -414,7 +415,7 @@ Unless you explicitly specify it, MoveTables flows will not cross Vitess cells.
 Also, if you do not have the source tablet_types for the MoveTables workflow, either implied or explicitly specified, in the local cell, the MoveTables workflow will not actually take any action. 
 Any subsequent SwitchReads or SwitchWrites will fail.
 
-You need to verify that the MoveTables workflow did complete successfully (i.e. copied all data), either manually or by using VDiff.  
+You need to verify that the MoveTables workflow did complete successfully (i.e. copied all data), either manually or by using VDiff. 
 At a minimum, you can use the `Workflow … show` command to validate that the workflow has not errored.
 
 This example shows a healthy, completed MoveTables workflow:
@@ -562,7 +563,7 @@ vtctlclient -server vtctld.host:15999 SwitchReads -tablet_type=replica -reverse 
 
 The output of this command will look similar to the following:
 
-‘’’sh
+```sh
 $ vtctlclient -server localhost:15999 SwitchReads -tablet_type=rdonly -dry_run sourcekeyspace.workflowname_reverse
 Dry Run results for SwitchReads run at 02 Jan 06 15:04 MST
 Parameters: -tablet_type=rdonly -dry_run sourcekeyspace.workflowname_reverse
@@ -571,9 +572,9 @@ Lock keyspace targetkeyspace
 Switch reads for tables [t1] to keyspace sourcekeyspace for tablet types [RDONLY]
 Routing rules for tables [t1] will be updated
 Unlock keyspace targetkeyspace
-‘’’
+```
 
-‘’’sh
+```sh
 $ vtctlclient -server localhost:15999 SwitchReads -tablet_type=replica -dry_run sourcekeyspace.workflowname_reverse
 *** SwitchReads is deprecated. Consider using v2 commands instead, see https://vitess.io/docs/reference/vreplication/v2/ ***
 Dry Run results for SwitchReads run at 02 Jan 06 15:04 MST
@@ -583,7 +584,7 @@ Lock keyspace targetkeyspace
 Switch reads for tables [t1] to keyspace sourcekeyspace for tablet types [REPLICA]
 Routing rules for tables [t1] will be updated
 Unlock keyspace targetkeyspace
-‘’’
+```
 
 2. After the reads are switched you will then need to reverse the writes
 
@@ -593,7 +594,7 @@ vtctlclient -server vtctld.host:15999 SwitchWrites sourcekeyspace.workflowname_r
 
 The output of this command will look similar to the following:
 
-‘’’sh
+```sh
 $ vtctlclient -server localhost:15999 SwitchWrites -dry_run sourcekeyspace.workflowname_reverse
 Dry Run results for SwitchWrites run at 02 Jan 06 15:04 MST
 Parameters: -dry_run sourcekeyspace.workflowname_reverse
@@ -616,7 +617,7 @@ Mark vreplication streams frozen on:
         Keyspace sourcekeyspace, Shard 0, Tablet 100, Workflow workflowname_reverse, DbName vt_sourcekeyspace
 Unlock keyspace sourcekeyspace
 Unlock keyspace targetkeyspace
-‘’’
+```
 
 ### Potential errors or issues during the rollback
 
@@ -687,8 +688,8 @@ Note that when rolling back a switchover, Vitess will attempt to revive the orig
 
 ### Potential errors or issues during the clean up
 
-In certain older Vitess versions, those prior to v10.0, there were issues when cleaning the RoutingRules as part of DropSources.  
+In certain older Vitess versions, those prior to v10.0, there were issues when cleaning the RoutingRules as part of DropSources. 
 We recommend that you save the RoutingRules before and after each cutover and DropSources step. 
-This will ensure that they have been appropriately updated.  
+This will ensure that they have been appropriately updated. 
 If not, you will need to update the RoutingRules manually by editing the RoutingRules JSON blob and then applying the new RoutingRules by using [ApplyRoutingRules](../../../reference/features/schema-routing-rules/#applyroutingrules).
 
