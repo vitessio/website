@@ -6,7 +6,7 @@ tags: ['Vitess','MySQL', 'DDL', 'query', 'plan', 'examine', 'explain', 'optimize
 title: 'Examining query plans in MySQL and Vitess'
 description: "How to examine query plans by Vitess optimizer plan" 
 ---
-Originally posted at [Andres's blog.](http://systay.github.io/2021/08/27/explain-a-query.htm)
+Originally posted at [Andres's blog.](http://systay.github.io/2021/08/27/explain-a-query.html)
 
 Traditional query optimizing is mostly about two things: first, in which order and from where to access data, and then how to then combine it.
 
