@@ -510,13 +510,13 @@ vtctlclient -server vtctld.host:15999 MoveTables -tablet_types=rdonly -dry_run R
 - REPLICA:
   
 ```
-vtctlclient -server vtctld.host:15999 MoveTables -tablet_types=replica ReverseTraffic targetkeyspace.workflowname
+vtctlclient -server vtctld.host:15999 MoveTables -tablet_types=replica -dry_run ReverseTraffic targetkeyspace.workflowname
 ```
 
 - PRIMARY:  
 
 ```
-vtctlclient -server vtctld.host:15999 MoveTables -tablet_types=primary ReverseTraffic targetkeyspace.workflowname
+vtctlclient -server vtctld.host:15999 MoveTables -tablet_types=primary -dry_run ReverseTraffic targetkeyspace.workflowname
 ```
 
 ### When using -v1 commands
@@ -532,13 +532,13 @@ Only follow these steps if SwitchWrites has not yet been run.
 - RDONLY:
   
 ```
-vtctlclient -server vtctld.host:15999 SwitchReads -tablet_type=rdonly -reverse targetkeyspace.workflowname
+vtctlclient -server localhost:15999 SwitchReads -tablet_type=rdonly -dry_run sourcekeyspace.workflowname_reverse
 ```
 
 - REPLICA:  
 
 ```
-vtctlclient -server vtctld.host:15999 SwitchReads -tablet_type=replica -reverse targetkeyspace.workflowname
+vtctlclient -server localhost:15999 SwitchReads -tablet_type=replica -dry_run sourcekeyspace.workflowname_reverse
 ```
 
 #### Writes have been switched:

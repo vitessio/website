@@ -26,7 +26,7 @@ As a result, connection pools should be sized mindful of the capacity of the und
   * Used by transaction engine to manage transactions that require a dedicated connection. 
   The main pool for this use the **transaction_pool**. 
   The **found_rows_pool** is dedicated for connections where the client is using the `CLIENT_FOUND_ROWS` option. 
-  For example, the affected rows variable returned by the MySQL protocol becomes the number of rows matched by the `WHERE` clause instead.
+  For example, the `affected_rows` field return by the [MySQL protocol](https://dev.mysql.com/doc/internals/en/packet-OK_Packet.html) becomes the number of rows matched by the `WHERE` clause instead.
 
 ### conn_pool
 
@@ -48,7 +48,7 @@ As a result, connection pools should be sized mindful of the capacity of the und
   * Max size controlled by:  `-dba_pool_size` (default 20)
   * metric:  `vttablet_dba_conn_pool_capacity`
   * vttablet user flag:  `-db_dba_user` (default 'vt_dba')
-  * Used by vttablet `ExecuteFetchAsDba` RPC.  
+  * Used by vttablet `ExecuteFetchAsDba` RPC. This is used when using `vtctlclient ExecuteFetchAsDba` 
   Also used implicitly for various internal Vitess maintenance tasks (e.g. schema reloads, etc.)
 
 ### app_conn_pool
@@ -56,11 +56,11 @@ As a result, connection pools should be sized mindful of the capacity of the und
   * Max size controlled by:  `-app_pool_size` (default 40)
   * metric:  `vttablet_app_conn_pool_capacity`
   * vttablet user flag:  `-db_app_user` default 'vt_app')
-  * Used by vttablet `ExecuteFetchAsApp` RPC.
+  * Used by vttablet `ExecuteFetchAsApp` RPC. This is used when using `vtctlclient ExecuteFetchAsApp`
 
 ### tx_read_pool
 
- * Hardcoded (default 3)
+ * Hardcoded (size 3)
  * metric:  `vttablet_tx_read_pool_capacity`
  * vttablet user flag:  `-db_dba_user` (default 'vt_dba')
  * Used in the (non-default) TWOPC `transaction_mode` for metadata state management.  
@@ -70,7 +70,7 @@ As a result, connection pools should be sized mindful of the capacity of the und
   
 #### online_ddl_executor_pool
 
- * Hardcoded (default 3)
+ * Hardcoded (size 3)
  * metric:  `vttablet_online_ddl_executor_pool_capacity`
  * Potentially uses `-db_app_user`, `-db_dba_user` and `-db_appdebug_user` i.e. defaults 'vt_app', 'vt_dba' and 'vt_appdebug'
  * Used in Online DDL to during the actual process of running gh-ost or pt-osc.
@@ -87,7 +87,7 @@ As a result, connection pools should be sized mindful of the capacity of the und
  * Hardcoded (default 2)
  * metric:  `vttablet_throttler_pool_capacity`
  * Potentially uses `-db_app_user`, `-db_dba_user` and `-db_appdebug_user` i.e. defaults 'vt_app', 'vt_dba' and 'vt_appdebug'
- * Used in Online DDL to measure/track the master -> replica lag, and adjust the DDL copy speed accordingly.
+ * Used in Online DDL to measure/track the primary -> replica lag, and adjust the DDL copy speed accordingly.
 
 ## Other DB connections used without pools:
 
@@ -96,7 +96,7 @@ As a result, connection pools should be sized mindful of the capacity of the und
 #### `-db_allprivs_user` 
 
  * (default 'vt_allprivs')
- * Created on demand by `ExecuteFetchAsAllPrivs`
+ * Created on demand by `vtctlclient ExecuteFetchAsAllPrivs`
 
 #### `-db_erepl_user` 
                                
@@ -107,7 +107,7 @@ As a result, connection pools should be sized mindful of the capacity of the und
 #### `-db_repl_user` 
                                 
  * (default 'vt_repl')
- * Used to setup MySQL replication between shard master and replica instance types.
+ * Used to setup MySQL replication between shard primary and replica instance types.
 
 #### `-db_filtered_user`
                              
@@ -126,4 +126,5 @@ As a result, connection pools should be sized mindful of the capacity of the und
  The username is passed to vttablet from vtgate.  
  If you are using a limited set of users, you may want to increase this limit.  
  Or disable this limit feature by setting `-transaction_limit_by_username` to `false` as the default is `true`.
+ This option only comes into play if the TX limiter is enabled by `-enable_transaction_limit`, which it is not by default.
    
