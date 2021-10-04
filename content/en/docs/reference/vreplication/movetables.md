@@ -17,7 +17,7 @@ MoveTables <options> <action> <workflow identifier>
 or
 
 ```
-MoveTables [-cells=<cells>] [-tablet_types=<source_tablet_types>] <source_keyspace> <target_keyspace.workflowname> <table_specs>
+MoveTables [-source=<sourceKs>] [-tables=<tableSpecs>] [-cells=<cells>] [-tablet_types=<source_tablet_types>] [-all] [-exclude=<tables>] [-auto_start] [-stop_after_copy] [-timeout=timeoutDuration] [-reverse_replication] [-keep_data] <action> <workflow identifier>
 ```
 
 ## Description
@@ -31,12 +31,43 @@ MoveTables is typically used for migrating data into Vitess or to implement vert
 ### action
 
 MoveTables is an "umbrella" command. The `action` sub-command defines the operation on the workflow.
+Action must be one of the following: Create, Complete, Cancel, SwitchTraffic, ReverseTrafffic, Show, or Progress
 
 ### options
 
 Each `action` has additional options/parameters that can be used to modify its behavior.
 
 `actions` are common to both MoveTables and Reshard v2 workflows. Only the `create` action has different parameters, all other actions have common options and similar semantics. These actions are documented separately.
+
+#### source_keyspace
+**mandatory**
+<div class="cmd">
+
+Name of existing keyspace that contains the tables to be moved
+
+</div>
+
+#### table_specs
+**optional**  one of `table_specs` or `-all` needs to be specified
+<div class="cmd">
+
+_Either_
+
+* a comma-separated list of tables
+  * if target keyspace is unsharded OR '
+  * if target keyspace is sharded AND the tables being moved are already defined in the target's vschema
+
+  Example: `MoveTables -workflow=commerce2customer commerce customer customer,corder`
+
+_Or_
+
+* the JSON table section of the vschema for associated tables
+  * if target keyspace is sharded AND
+  * tables being moved are not yet present in the target's vschema
+
+  Example: `MoveTables -workflow=commerce2customer commerce customer '{"t1":{"column_vindexes": [{"column": "id", "name": "hash"}]}}}'`
+
+</div>
 
 #### -cells
 **optional**\
@@ -57,6 +88,108 @@ Cell(s) or CellAlias(es) (comma-separated) to replicate from.
 <div class="cmd">
 
 Source tablet types to replicate from (e.g. primary, replica, rdonly). Defaults to -vreplication_tablet_type parameter value for the tablet, which has the default value of "PRIMARY,REPLICA".
+
+</div>
+
+#### -all
+
+**optional** cannot specify `table_specs` if `-all` is specified
+<div class="cmd">
+
+Move all tables from the source keyspace.
+
+</div>
+
+#### -tablet_types 
+**optional**\
+**default** `-vreplication_tablet_type` parameter value for the tablet. `-vreplication_tablet_type` has the default value of "PRIMARY,REPLICA".\
+**string**
+
+<div class="cmd">
+
+Source tablet types to replicate from (e.g. primary, replica, rdonly). Defaults to -vreplication_tablet_type parameter value for the tablet, which has the default value of "PRIMARY,REPLICA".
+
+</div>
+
+#### -exclude
+
+**optional** only applies if `-all` is specified
+<div class="cmd">
+
+If moving all tables, specifies tables to be skipped.
+
+</div>
+
+#### -auto_start
+
+**optional**
+**default** true
+
+<div class="cmd">
+
+Normally the workflow starts immediately after it is created. If this flag is set
+to false then the workflow is in a Stopped state until you explicitly start it.
+
+</div>
+
+###### Uses
+* allows updating the rows in `_vt.vreplication` after MoveTables has setup the
+streams. For example, you can add some filters to specific tables or change the
+projection clause to modify the values on the target. This
+provides an easier way to create simpler Materialize workflows by first using
+MoveTables with auto_start false, updating the BinlogSource as required by your
+Materialize and then start the workflow.
+* changing the `copy_state` and/or `pos` values to restart a broken MoveTables workflow
+from a specific point of time.
+
+#### -stop_after_copy
+
+**optional**
+**default** false
+
+<div class="cmd">
+
+If set, the workflow will stop once the Copy phase has been completed i.e. once
+all tables have been copied and VReplication decides that the lag
+is small enough to start replicating, the workflow state will be set to Stopped.
+
+###### Uses
+* If you just want a consistent snapshot of all the tables you can set this flag. The workflow
+will stop once the copy is done and you can then mark the workflow as `Complete`d
+
+</div>
+
+#### -timeout
+**optional**\
+**default** 30s
+
+<div class="cmd">
+
+For primary tablets, SwitchTraffic first stops writes on the source primary and waits for the replication to the target to
+catchup with the point where the writes were stopped. If the wait time is longer than timeout
+the command will error out. For setups with high write qps you may need to increase this value.
+
+</div>
+
+#### -reverse_replication
+**optional**\
+**default** true
+
+<div class="cmd">
+
+SwitchTraffic for primary tablet types, by default, starts a reverse replication stream with the current target as the source, replicating back to the original source. This enables a quick and simple rollback using ReverseTraffic. This reverse workflow name is that of the original workflow concatenated with \_reverse.
+
+If set to false these reverse replication streams will not be created and you will not be able to rollback once you have switched write traffic over to the target.
+
+</div>
+
+#### -keep_data
+**optional**\
+**default** false
+
+<div class="cmd">
+
+Usually, the target data (tables or shards) are deleted by Cancel. If this flag is used with MoveTables, target tables will not be deleted and, with Reshard, target shards will not be dropped.
 
 </div>
 

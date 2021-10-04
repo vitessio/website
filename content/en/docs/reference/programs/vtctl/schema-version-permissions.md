@@ -196,6 +196,7 @@ Copies the schema from a source shard's primary (or a specific tablet) to a dest
 
 #### Arguments
 
+* <code>&lt;source keyspace/shard&gt;</code> &ndash; Required. A keyspace or shard to be used as the source of the copy.
 * <code>&lt;source tablet alias&gt;</code> &ndash; Required. A Tablet Alias uniquely identifies a vttablet. The argument value is in the format <code>&lt;cell name&gt;-&lt;uid&gt;</code>.
 * <code>&lt;destination keyspace/shard&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables as well as the shard associated with the command. The keyspace must be identified by a string that does not contain whitespace, while the shard is typically identified by a string in the format <code>&lt;range start&gt;-&lt;range end&gt;</code>.
 
