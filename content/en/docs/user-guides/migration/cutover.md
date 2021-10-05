@@ -28,7 +28,7 @@ vtctlclient -server vtctld.host:15999 GetRoutingRules > /var/tmp/routingrules.ba
 
 - In newer Vitess versions (e.g. v7, v8, or v9) MoveTable performance is usually limited by the downstream MySQL instance insert performance.
 - In very recent Vitess versions (e.g. v10 or v11), the various database row and gRPC packet buffers are sized dynamically for improved performance.
-- With Vitess versions before v10, be careful of making the row and packet buffers too large, since you might run an issue where [vreplication catchup mode may be unable to terminate](https://github.com/vitessio/vitess/issues/8104).
+- With Vitess versions before v10, be careful of making the row and packet buffers too large, since you might run into an issue where [vreplication catchup mode may be unable to terminate](https://github.com/vitessio/vitess/issues/8104).
 
 ## Start MoveTables
 
@@ -220,9 +220,9 @@ In a case like this, you should stop the VDiff, then adjust the options appropri
 ### How do you stop and restart VDiff
 
 Since VDiff is synchronous, just using CTRL-C on the vtctlclient VDiff command is sufficient.
-If you do plan to execute another VDiff that will get the workflow back to the proper state.  
+Executing another VDiff immediately afterwards will return the workflow back to the proper state.  
 
-If you do NOT plan to execute another VDiff you will need to double check the current state of the workflow to ensure that it’s running after you interrupted the vtctlclient process. 
+If you do NOT plan to execute another VDiff, you will need to double check the current state of the workflow to ensure that it’s running after you interrupted the vtctlclient process. 
 If a VDiff is interrupted in certain phases it can leave the workflow stopped.
 
 To check workflow state:
@@ -231,7 +231,7 @@ To check workflow state:
 vtctlclient … Workflow targetkeyspace.workflowname show
 ```
 
-If the workflow state is STOPPED and the message field is empty then you can simply start the workflow again:
+If the workflow state is STOPPED and the message field is empty you can simply start the workflow again:
 
 ```sh
 vtctlclient … Workflow targetkeyspace.workflowname start
@@ -298,7 +298,7 @@ It is recommended you first run SwitchTraffic with -dry_run so you understand wh
 Reads and writes no longer need to be switched in specific order, but both will need to be completed to run MoveTables Complete. 
 The default SwitchTraffic behavior is to switch all traffic in a single command, Vitess switches all reads and then writes if you use this default option.
 
-1. Depending on what `-table_type` you are using you will use one of the four following commands:
+1. Depending on what `-table_type` you are using, you will use one of the four following commands:
 
 - Default (switches all tablet types)
 
@@ -341,7 +341,7 @@ After you have tried the above command(s) with `-dry_run` remove just that flag 
 
 ### When using -v1 commands
 
-1. Depending on what `-table_type` you are using you will use one of the two following commands:
+1. Depending on what `-table_type` you are using, you will use one of the two following commands:
 
 - RDONLY:
   
@@ -475,7 +475,7 @@ $ vtctlclient -server localhost:15999 Workflow show targetkeyspace.workflowname
 
 2. Timeouts 
 
-If the vreplication of changes from the sourcekeyspace to the targetkeyspace are lagging (possibly because of high write rate to the source keyspace), the SwitchWrites operation may fail.
+If the VReplication of changes from the sourcekeyspace to the targetkeyspace are lagging (possibly because of high write rate to the source keyspace), the SwitchWrites operation may fail.
 This is because as part of SwitchWrites, traffic is paused, and Vitess then waits a short amount of time for the targetkeyspace shards to catch up to the point(s) where the sourcekeyspace shard(s) were stopped.
 If this does not happen within that timeout period, the SwitchWrites will fail. 
 The default for this wait period is 30 seconds;  and can be adjusted upwards or downwards by passing the -timeout flag to the SwitchWrites command.
@@ -493,7 +493,7 @@ ReverseTraffic supports the `-dry_run` flag and we recommend using it to verify 
 Then remove -dry_run when you are prepared to actually ReverseTraffic.
 The default ReverseTraffic behavior is to switch all traffic in a single command, meaning that Vitess switches all reads and then writes if you use this default option.
 
-1. Depending on what `-table_type` you are using you will use one of the four following commands:
+1. Depending on what `-table_type` you are using, you will use one of the four following commands:
 
 - Default (switches all tablet types)
 
@@ -527,7 +527,7 @@ vtctlclient -server vtctld.host:15999 MoveTables -tablet_types=primary -dry_run 
 Only follow these steps if SwitchWrites has not yet been run.
 {{< /warning >}}
 
-1. Depending on what `-table_type` you are using you will use one of the two following commands:
+1. Depending on what `-table_type` you are using, you will use one of the two following commands:
 
 - RDONLY:
   
@@ -547,7 +547,7 @@ vtctlclient -server localhost:15999 SwitchReads -tablet_type=replica -dry_run so
 Only follow these steps if SwitchWrites has already been run.
 {{< /warning >}}
 
-1. Depending on what `-table_type` you are using you will use one of the two following commands:
+1. Depending on what `-table_type` you are using, you will use one of the two following commands:
 
 - RDONLY:
   
@@ -586,7 +586,7 @@ Routing rules for tables [t1] will be updated
 Unlock keyspace targetkeyspace
 ```
 
-2. After the reads are switched you will then need to reverse the writes
+2. After the reads are switched you will then need to reverse the writes:
 
 ```
 vtctlclient -server vtctld.host:15999 SwitchWrites sourcekeyspace.workflowname_reverse
