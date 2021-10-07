@@ -6,7 +6,7 @@ weight: 20
 VTTablet uses a variety of connection pools to connect to MySQLd. 
 Most of these can be controlled by vttablet options.  
 Note that almost all of these pools are **not** fixed size connection pools, and will grow on demand to the maximum configured sizes.  
-In older Vitess versions, possibly around v9.0 or before, some pools would eventually shrink again, but in recent Vitess versions a new pool connection is created when an old one reaches its idle timeout.  
+In older Vitess versions, v6.0 or before, some pools would eventually shrink again, but in recent Vitess versions a new pool connection is created when an old one reaches its idle timeout.  
 As a result, pools will now effectively never shrink.
 
 One thing to note is that each of these pools do not use unique MySQL usernames, so it can be hard from a MySQL process list to distinguish between different pool connections.  
