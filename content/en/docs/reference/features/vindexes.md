@@ -71,9 +71,9 @@ There are currently two vindex types in Vitess for consistent lookup:
 * `consistent_lookup_unique`
 * `consistent_lookup`
 
-#### Conisitent Lookup usage
+#### Consistent Lookup usage
 
-There are 3 sessions with VTGate open when a consistent lookup is involved.
+There are 3 sessions which VTGate can open when a consistent lookup is involved.
 
 1. Pre session
 2. Normal session
@@ -81,7 +81,7 @@ There are 3 sessions with VTGate open when a consistent lookup is involved.
 
 The pre and post session are used by lookup queries. The normal session is used by the original query that was sent from the client to VTGate.
 
-If an insert query is received, insert on Consistent lookup will happen through the pre session and the actual query insert will happen through the normal Session. When a commit happens it happens on the pre session first and if it succeeds then the commit happens on the post session.
+If an insert query is received, insert on consistent lookup will happen through the pre session and the actual query insert will happen through the normal session. When a commit happens it happens on the pre session first and if it succeeds then the commit happens on the post session.
 
 If an update or delete query is received, the post session is used to do the update or delete on consistent lookup and the normal session for the original query. When a commit happens it happens on the normal session first and if that succeeds then the commit is executed on the post session.
 
@@ -91,7 +91,7 @@ In order to do that we have to select the right session at the beginning. For an
 
 For an update or delete query, the post session is used to send `SELECT ...` for the update query.
 
-Due to these processes, the current limitation with consistent lookup is that it cannot support insert followed by an update, delete, or other option when the consistent lookup column has same value.
+Due to this, a current limitation with consistent lookup is that it cannot support an insert followed by an update or delete in the same transaction for the same consistent lookup column value.
 
 #### Shared Vindexes
 
@@ -151,7 +151,7 @@ In the above case, the name of the vindex is `name_keyspace_idx`. It is of type 
 
 Every Vindex has an optional `params` section that contains a map of string key-value pairs. The keys and values differ depending on the vindex type and are explained below. 
 
-In Vitess 12.0 there is an optional fourth parameter: `batch_lookup`. To read more about how to use `batch_lookup` see our [Unique Lookup user guide](../../../user-guides/vschema-guide/unique-lookup/).
+Since Vitess 12.0 there is an optional fourth parameter: `batch_lookup`. To read more about how to use `batch_lookup` see our [Unique Lookup user guide](../../../user-guides/vschema-guide/unique-lookup/).
 
 ### How Vindexes are used
 
@@ -229,7 +229,7 @@ Lookup Vindexes support the following parameters:
 * `table`: The backing table for the lookup vindex. It is recommended that the table name be qualified by its keyspace.
 * `from`: The list of "from" columns. The first column is used for routing, and the rest of the columns are used for identifying the owner row.
 * `to`: The name of the "to" keyspace\_id column.
-* `autocommit` (false): if true, specific vindex entries are updated in their own autocommit transaction. This is useful if values never get remapped to different values. For example, if the input column comes from an auto-increment value. Note that autocommit does not work for consistent_lookup vindexes, but does for lookup vindexes.
+* `autocommit` (false): if true, specific vindex entries are updated in their own autocommit transaction. This is useful if values never get remapped to different values. For example, if the input column comes from an auto-increment value. Note that the autocommit option does not affect `consistent_lookup` or `consistent_lookup_unique` vindexes, but is for use with `lookup` or `lookup_unique` vindexes..
 * `write_only` (false): if true, the vindex is kept updated, but a lookup will return all shards if the key is not found. This mode is used while the vindex is being populated and backfilled.
 * `ignore_nulls` (false): if true, null values in input columns do not create entries in the lookup table. Otherwise, a null input results in an error.
 
@@ -239,7 +239,7 @@ The `region_experimental` vindex is an experimental vindex that uses the first o
 
 The `region_json` vindex requires an additional `region_map` file name that is used to compute the region from the country. The `region_bytes` is presumed to contain country codes.
 
-Custom Vindexes can also be created as needed. At the moment there is no formal plugin system for custom Vindexes, but the interface is well-defined, and thus custom implementations including code performing arbitary lookups in other systems can be accomodated.
+Custom Vindexes can also be created as needed. At the moment there is no formal plugin system for custom Vindexes, but the interface is well-defined, and thus custom implementations including code performing arbitrary lookups in other systems can be accommodated.
 
 \
 \
