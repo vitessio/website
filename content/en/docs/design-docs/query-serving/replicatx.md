@@ -6,20 +6,18 @@ weight: 1
 
 ### Feature Description
 
-Vitess currently supports transactions through vtgate only on PRIMARY tablets. We would like to extend transaction support to REPLICA (or other tablet types).
+Vitess supports transactions through vtgate on PRIMARY and read REPLICA tablets as of v7.0. 
 
 ### Use Case(s)
 
 * Consistent reads
 * Sqoop integration
 
-### Proposed Solution
+### Implimented Solution
 
-- When vtgate chooses a tablet to execute a query on, it should return the tablet alias.
-- tablet alias and transactionID will be stored on the shard session struct.
-- if the session object has a tablet alias set, then the query will target the specific tablet.
-- if the transaction is committed or rolled back, the session should end.
+- When vtgate chooses a tablet to execute a query on, it will return the tablet alias.
+- The tablet alias and transactionID is then stored on the shard session struct.
+- If the session object has a tablet alias set, then the query will target the specific tablet.
+- If the transaction is committed or rolled back, the session will end.
 
 In order to use this feature, a client will need to issue `use @replica` followed by `BEGIN`.
-
-Prerequisite: #5750
