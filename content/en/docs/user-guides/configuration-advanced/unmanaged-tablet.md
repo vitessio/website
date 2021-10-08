@@ -122,26 +122,19 @@ Empty set (0.01 sec)
 Move the table:
 
 ```bash
-vtctlclient MoveTables -tablet_types=primary -workflow=legacy2commerce legacy commerce '{"legacytable": {}}'
+vtctlclient MoveTables -source legacy -tables 'legacytable, commerce' Create commerce.legacy2commerce 
 ```
 
-Switch reads:
+Switch traffic:
 
 ```bash
-vtctlclient SwitchReads -tablet_type=rdonly commerce.legacy2commerce
-vtctlclient SwitchReads -tablet_type=replica commerce.legacy2commerce
+vtctlclient MoveTables -tablet_type=rdonly,replica SwitchTraffic commerce.legacy2commerce
 ```
 
-Switch writes:
+Complete the MoveTables
 
 ```bash
-vtctlclient SwitchWrites commerce.legacy2commerce
-```
-
-Drop source table:
-
-```bash
-vtctlclient DropSources commerce.legacy2commerce
+vtctlclient MoveTables Complete commerce.legacy2commerce
 ```
 
 Verify that the table was moved:
