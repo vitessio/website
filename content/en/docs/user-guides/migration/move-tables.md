@@ -160,7 +160,7 @@ You can read this command as:  "Start copying the tables called **customer** and
 A few things to note:
 
  * In a real-world situation this process might take hours/days to complete if the table has millions or billions of rows.
- * The workflow name (`commerce2customer` in this case) is arbitrary, you can name it whatever you want.  You will use this handle/alias for the other `MoveTables` related commands like `SwitchReads` and `SwitchWrites` in the next steps.
+ * The workflow name (`commerce2customer` in this case) is arbitrary, you can name it whatever you want.  You will use this handle/alias for the other `MoveTables` related commands like `SwitchTraffic` in the next steps.
 
 ## Check routing rules (optional)
 

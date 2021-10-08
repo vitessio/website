@@ -22,15 +22,14 @@ actually specifying a query to VExec.
 **default** false
 
 <div class="cmd">
-You can do a dry run where no actual action is taken but the command logs all the actions that would be taken
-by SwitchReads.
+You can do a dry run where no actual action is taken but the command logs all the actions that would be taken by the Workflow.
 </div>
 
 #### keyspace.workflow
 **mandatory**
 
 <div class="cmd">
-Name of target keyspace and the associated workflow to SwitchWrites for.
+Name of target keyspace and the associated workflow to take action on.
 </div>
 
 #### action

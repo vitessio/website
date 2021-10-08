@@ -100,17 +100,6 @@ Move all tables from the source keyspace.
 
 </div>
 
-#### -tablet_types 
-**optional**\
-**default** `-vreplication_tablet_type` parameter value for the tablet. `-vreplication_tablet_type` has the default value of "PRIMARY,REPLICA".\
-**string**
-
-<div class="cmd">
-
-Source tablet types to replicate from (e.g. primary, replica, rdonly). Defaults to -vreplication_tablet_type parameter value for the tablet, which has the default value of "PRIMARY,REPLICA".
-
-</div>
-
 #### -exclude
 
 **optional** only applies if `-all` is specified

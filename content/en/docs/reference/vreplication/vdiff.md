@@ -17,7 +17,7 @@ VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=primary,replic
 VDiff does a row by row comparison of all tables associated with the workflow, diffing the
 source keyspace and the target keyspace and reporting counts of missing/extra/unmatched rows.
 
-It is highly recommended that you do this before you finalize a workflow with SwitchWrites.
+It is highly recommended that you do this before you finalize a workflow with `SwitchTraffic`.
 
 ### Parameters
 
