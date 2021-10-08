@@ -122,7 +122,7 @@ Empty set (0.01 sec)
 Move the table:
 
 ```bash
-vtctlclient MoveTables -source legacy -tables 'legacytable, commerce' Create commerce.legacy2commerce 
+vtctlclient MoveTables -source legacy -tables 'legacytable' Create commerce.legacy2commerce 
 ```
 
 Switch traffic:
