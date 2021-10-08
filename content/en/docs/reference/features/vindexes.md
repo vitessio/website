@@ -64,13 +64,34 @@ The lookup table that implements a Lookup Vindex can be sharded or unsharded.  N
 
 Vitess allows for the transparent population of these lookup table rows by assigning an owner table, which is the main table that requires this lookup. When a row is inserted into this owner table, the lookup row for it is created in the lookup table. The lookup row is also deleted upon a delete of the corresponding row in the owner table. These essentially result in distributed transactions, which traditionally require 2PC to guarantee atomicity.
 
-Consistent lookup vindexes use an alternate approach that makes use of careful locking and transaction sequences to guarantee consistency without using 2PC. This gives the best of both worlds, with the benefit of a consistent cross-shard vindex without paying the price of 2PC.
+Consistent lookup vindexes use an alternate approach that makes use of careful locking and transaction sequences to guarantee consistency without using 2PC. This gives the best of both worlds, with the benefit of a consistent cross-shard vindex without paying the price of 2PC. To read more about what makes a consistent lookup vindex different from a standard lookup vindex read our [consistent lookup vindexes design documentation](../../../design-docs/query-serving/clookup-vindex/).
 
 There are currently two vindex types in Vitess for consistent lookup:
 
 * `consistent_lookup_unique`
 * `consistent_lookup`
 
+#### Consistent Lookup usage
+
+There are 3 sessions which VTGate can open when a consistent lookup is involved.
+
+1. Pre session
+2. Normal session
+3. Post session
+
+The pre and post session are used by lookup queries. The normal session is used by the original query that was sent from the client to VTGate.
+
+If an insert query is received, insert on consistent lookup will happen through the pre session and the actual query insert will happen through the normal session. When a commit happens it happens on the pre session first and if it succeeds then the commit happens on the post session.
+
+If an update or delete query is received, the post session is used to do the update or delete on consistent lookup and the normal session for the original query. When a commit happens it happens on the normal session first and if that succeeds then the commit is executed on the post session.
+
+Anytime there is a consistent lookup involved in the query received, a lock will be taken so that is not available for other sessions to be modified.
+
+In order to do that we have to select the right session at the beginning. For an insert query, the pre session is used to send `SELECT ...` for the update query.
+
+For an update or delete query, the post session is used to send `SELECT ...` for the update query.
+
+Due to this, a current limitation with consistent lookup is that it cannot support an insert followed by an update or delete in the same transaction for the same consistent lookup column value.
 
 #### Shared Vindexes
 
@@ -83,7 +104,6 @@ An existing `lookup_unique` vindex can be trivially switched to a `consistent_lo
 As for a `lookup` vindex, it can be changed it to a `consistent_lookup` only if the `from` columns can uniquely identify the owner row. Without this, many potentially valid inserts would fail.
 
 Functional Vindexes can be also be shared. However, there is no concept of ownership because the column to keyspace ID mapping is pre-established.
-
 
 ### Lookup Vindex guidance
 
@@ -129,7 +149,9 @@ Vindexes are defined in the [VSchema](../vschema/) inside the `Vindexes` section
 
 In the above case, the name of the vindex is `name_keyspace_idx`. It is of type `lookup`, and it is owned by the `user` table.
 
-Every Vindex has an optional `params` section that contains a map of string key-value pairs. The keys and values differ depending on the vindex type and are explained below.
+Every Vindex has an optional `params` section that contains a map of string key-value pairs. The keys and values differ depending on the vindex type and are explained below. 
+
+Since Vitess 12.0 there is an optional fourth parameter: `batch_lookup`. To read more about how to use `batch_lookup` see our [Unique Lookup user guide](../../../user-guides/vschema-guide/unique-lookup/).
 
 ### How Vindexes are used
 
@@ -207,7 +229,7 @@ Lookup Vindexes support the following parameters:
 * `table`: The backing table for the lookup vindex. It is recommended that the table name be qualified by its keyspace.
 * `from`: The list of "from" columns. The first column is used for routing, and the rest of the columns are used for identifying the owner row.
 * `to`: The name of the "to" keyspace\_id column.
-* `autocommit` (false): if true, vindex entries are updated in their own autocommit transaction. This is useful if values never get remapped to different values. For example, if the input column comes from an auto-increment value.
+* `autocommit` (false): if true, specific vindex entries are updated in their own autocommit transaction. This is useful if values never get remapped to different values. For example, if the input column comes from an auto-increment value. Note that the autocommit option does not affect `consistent_lookup` or `consistent_lookup_unique` vindexes, but is for use with `lookup` or `lookup_unique` vindexes..
 * `write_only` (false): if true, the vindex is kept updated, but a lookup will return all shards if the key is not found. This mode is used while the vindex is being populated and backfilled.
 * `ignore_nulls` (false): if true, null values in input columns do not create entries in the lookup table. Otherwise, a null input results in an error.
 
@@ -217,7 +239,7 @@ The `region_experimental` vindex is an experimental vindex that uses the first o
 
 The `region_json` vindex requires an additional `region_map` file name that is used to compute the region from the country. The `region_bytes` is presumed to contain country codes.
 
-Custom Vindexes can also be created as needed. At the moment there is no formal plugin system for custom Vindexes, but the interface is well-defined, and thus custom implementations including code performing arbitary lookups in other systems can be accomodated.
+Custom Vindexes can also be created as needed. At the moment there is no formal plugin system for custom Vindexes, but the interface is well-defined, and thus custom implementations including code performing arbitrary lookups in other systems can be accommodated.
 
 \
 \
