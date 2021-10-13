@@ -58,15 +58,17 @@ In this scenario, the old master's tablet type transitions to `spare`. If health
 
 The `EmergencyReparentShard` command is used to force a reparent to a new master when the current master is unavailable. The command assumes that data cannot be retrieved from the current master because it is dead or not working properly.
 
-As such, this command does not rely on the current master at all to replicate data to the new master. Instead, it makes sure that the master-elect is the most advanced in replication within all of the available replicas.
+As such, this command does not rely on the current master at all to replicate data to the new master. Instead, it makes sure that the master-elect is the most advanced in replication within all of the available replicas or it has caught up to the most advanced one. In either case, the candidate will only be promoted once it is the most advanced replica.
 
-**Important**: Before calling this command, you must first identify the replica with the most advanced replication position as that replica must be designated as the new master. You can use the [`vtctl ShardReplicationPositions`](../../../reference/vtctl/#shardreplicationpositions) command to determine the current replication positions of a shard's replicas.
+**Important**: You can specify which replica you want to be promoted. If not specified, Vitess will choose it for you depending on the durability policies being used.
 
 This command performs the following actions:
 
-1. Determines the current replication position on all of the replica tablets and confirms that the master-elect tablet has the most advanced replication position.
-2. Promotes the master-elect tablet to be the new master. In addition to changing its tablet type to master, the master-elect performs any other changes that might be required for its new state.
-3. Ensures replication is functioning properly via the following steps:
+1. Determines the current replication position on all of the replica tablets and finds the tablet that has the most advanced replication position.
+2. Choose a primary-elect tablet based on the durability policy specified, if the user has not specified one using the flags.
+3. Wait for the primary-elect to catch up to the most advanced replica if itsn't already the most advanced.
+4. Promotes the master-elect tablet to be the new master. In addition to changing its tablet type to master, the master-elect performs any other changes that might be required for its new state.
+5. Ensures replication is functioning properly via the following steps:
     - On the master-elect tablet, Vitess inserts an entry in a test table and then updates the `MasterAlias` record of the global Shard object.
     - In parallel on each replica, excluding the old master, Vitess sets the master and waits for the test entry to replicate to the replica tablet. Replica tablets that had not been replicating before the command was called are left in their current state and do not start replication after the reparenting process.
 
