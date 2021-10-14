@@ -1,5 +1,5 @@
 ---
-title: Configuration
-description: User guides covering basic configuration concepts
-weight: 1
+title: Running in Production
+description: Instructions and guidelines for running Vitess in a production environment
+weight: 2
 ---

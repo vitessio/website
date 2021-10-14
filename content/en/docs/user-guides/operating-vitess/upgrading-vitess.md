@@ -6,7 +6,7 @@ aliases: ['/docs/user-guides/upgrading/', '/docs/user-guides/upgrading-vitess/']
 
 This document highlights things to be aware of when upgrading a Vitess production installation to a newer Vitess release.
 
-Generally speaking, upgrading Vitess is a safe and easy process because it is explicitly designed for it. This is because at YouTube we followed the practice of releasing new versions often (usually from the tip of the Git master branch).
+Generally speaking, upgrading Vitess is a safe and easy process because it is explicitly designed for it. This is because at YouTube we followed the practice of releasing new versions often (usually from the tip of the Git primary branch).
 
 ## Compatibility
 
@@ -39,10 +39,10 @@ As of June 2016 we do not have templates for any major open-source configuration
 
 Any upgrade should be a rolling release i.e. usually one tablet at a time within a shard. This ensures that the remaining tablets continue serving live traffic and there is no interruption.
 
-## Upgrading the Master Tablet
+## Upgrading the Primary Tablet
 
-The *master* tablet of each shard should always be updated last in the following manner:
+The *primary* tablet of each shard should always be updated last in the following manner:
 
 * verify that all *replica* tablets in the shard have been upgraded
-* reparent away from the current *master* to a *replica* tablet
-* upgrade old *master* tablet
+* reparent away from the current *primary* to a *replica* tablet
+* upgrade old *primary* tablet

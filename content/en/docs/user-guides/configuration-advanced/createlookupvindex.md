@@ -1,11 +1,11 @@
 ---
 title: CreateLookupVindex
 weight: 11
-aliases: ['/docs/user-guides/createlookupvindex/'] 
+aliases: ['/docs/user-guides/createlookupvindex/']
 ---
 
 {{< info >}}
-This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../../get-started/operator), [local](../../../get-started/local) or [Helm](../../../get-started/helm) installation ready.  Make sure you are at the point where you have the sharded keyspace called `customer` setup.
+This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../../get-started/operator) or [local](../../../get-started/local) installation ready.  Make sure you are at the point where you have the sharded keyspace called `customer` setup.
 {{< /info >}}
 
 **CreateLookupVindex** is a new VReplication workflow in Vitess 6.  It is used to create **and** backfill a lookup Vindex automatically for a table that already exists, and may have a significant amount of data in it already.
@@ -16,22 +16,28 @@ In this guide, we will walk through the process of using the `CreateLookupVindex
 
 `vtctlclient CreateLookupVindex` has the following syntax:
 
-`CreateLookupVindex  [-cell=<cell>] [-tablet_types=<source_tablet_types>] <keyspace> <json_spec>`
+```CreateLookupVindex  [-cells=<source_cells>] [-continue_after_copy_with_owner=false] [-tablet_types=<source_tablet_types>] <keyspace> <json_spec>```
 
  * `<json_spec>`:  Use the lookup Vindex specified in `<json_spec>` along with
 VReplication to populate/backfill the lookup Vindex from the source table.
  * `<keyspace>`:  The Vitess keyspace we are creating the lookup Vindex in.
 The source table is expected to also be in this keyspace.
- * `-tablet-types`:  Provided to specify the shard tablet types 
-(e.g. `MASTER`, `REPLICA`, `RDONLY`) that are acceptable
+ * `-tablet-types`:  Provided to specify the tablet types
+(e.g. `PRIMARY`, `REPLICA`, `RDONLY`) that are acceptable
 as source tablets for the VReplication stream(s) that this command will
 create. If not specified, the tablet type used will default to the value
 of the vttablet `-vreplication_tablet_type` option, which defaults to
-`REPLICA`.
- * `-cell`: By default VReplication streams, such as used by 
-`CreateLookupVindex` will not cross cell boundaries.  If you want the 
-VReplication streams to source their data from tablets in a cell other 
-than the local cell, you can use the `-cell` option to specify this.
+`PRIMARY,REPLICA`.
+ * `-cells`: By default VReplication streams, such as used by
+`CreateLookupVindex` will not cross cell boundaries.  If you want the
+VReplication streams to source their data from tablets in cells other
+than the local cell, you can use the `-cells` option to specify a
+comma-separated list of cells.
+* `-continue_after_copy_with_owner`: By default, when an owner is provided,
+the VReplication streams will stop after the backfill completes. Set this flag if
+you don't want this to happen. This is useful if, for example,
+the owner table is being migrated from an unsharded keyspace to a sharded keyspace
+using MoveTables.
 
 The `<json_spec>` describes the lookup Vindex to be created, and details about
 the table it is to be created against (on which column, etc.).  However,
@@ -101,7 +107,7 @@ mysql> select * from corder;
 ```
 
 If we look at the VSchema for the `customer.corder` table, we
-will see there is a `hash` index on the `customer_id` table, 
+will see there is a `hash` index on the `customer_id` table,
 and 4 of our 5 rows have ended up on the `-80` shard, and the
 5th row on the `80-` shard:
 
@@ -195,28 +201,28 @@ issue commands against:
 
 ```sh
 $ vtctlclient -server localhost:15999 ListAllTablets | grep customer
-zone1-0000000300 customer -80 master localhost:15300 localhost:17300 [] 2020-08-13T01:23:15Z
+zone1-0000000300 customer -80 primary localhost:15300 localhost:17300 [] 2020-08-13T01:23:15Z
 zone1-0000000301 customer -80 replica localhost:15301 localhost:17301 [] <null>
 zone1-0000000302 customer -80 rdonly localhost:15302 localhost:17302 [] <null>
-zone1-0000000400 customer 80- master localhost:15400 localhost:17400 [] 2020-08-13T01:23:15Z
+zone1-0000000400 customer 80- primary localhost:15400 localhost:17400 [] 2020-08-13T01:23:15Z
 zone1-0000000401 customer 80- replica localhost:15401 localhost:17401 [] <null>
 zone1-0000000402 customer 80- rdonly localhost:15402 localhost:17402 [] <null>
 ```
 
 i.e. now we can see what will happen:
 
-  * VReplication streams will be setup from the master tablets
+  * VReplication streams will be setup from the primary tablets
 `zone1-0000000300` and `zone1-0000000400`; pulling data from the `RDONLY`
 source tablets `zone1-0000000302` and `zone1-0000000402`.
-  * Note that each master tablet will start streams from each source 
+  * Note that each primary tablet will start streams from each source
 tablet, for a total of 4 streams in this case.
 
 Lets observe the VReplication streams that got created using the
 `vtctlclient VReplicationExec` command.  First let's look at the streams
-to the first master tablet `zone1-0000000300`:
+to the first primary tablet `zone1-0000000300`:
 
 ```sql
-$ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000300 "select * from _vt.vreplication" 
+$ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000300 "select * from _vt.vreplication"
 +----+-------------------+--------------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------------------+-------------+
 | id |     workflow      |                source                |                        pos                        | stop_pos |       max_tps       | max_replication_lag | cell | tablet_types | time_updated | transaction_timestamp |  state  |       message       |   db_name   |
 +----+-------------------+--------------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------------------+-------------+
@@ -239,10 +245,10 @@ $ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000300 "select 
 +----+-------------------+--------------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------------------+-------------+
 ```
 
-And now the streams to the second master tablet `zone1-0000000400`:
+And now the streams to the second primary tablet `zone1-0000000400`:
 
 ```sql
-$ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000400 "select * from _vt.vreplication" 
+$ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000400 "select * from _vt.vreplication"
 +----+-------------------+--------------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------------------+-------------+
 | id |     workflow      |                source                |                        pos                        | stop_pos |       max_tps       | max_replication_lag | cell | tablet_types | time_updated | transaction_timestamp |  state  |       message       |   db_name   |
 +----+-------------------+--------------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------------------+-------------+
@@ -265,7 +271,7 @@ $ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000400 "select 
 +----+-------------------+--------------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------------------+-------------+
 ```
 
-There is a lot going on in this output, but the most important parts are the 
+There is a lot going on in this output, but the most important parts are the
 `state` and `message` fields which say `Stopped` and `Stopped after copy.`
 for all four the streams.  This means that the VReplication streams finished
 their copying/backfill of the lookup table.
@@ -275,7 +281,7 @@ Note that if the tables were large and the copy was still in progress, the
 the copy by looking at the `_vt.copy_state` table, e.g.:
 
 ```sql
-$ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000300 "select * from _vt.copy_state" 
+$ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000300 "select * from _vt.copy_state"
 +----------+------------+--------+
 | vrepl_id | table_name | lastpk |
 +----------+------------+--------+
@@ -284,7 +290,7 @@ $ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000300 "select 
 
 (In this case this table is empty, because the copy has finished already).
 
-We can verify the result of the backfill by looking at the `customer` 
+We can verify the result of the backfill by looking at the `customer`
 keyspace again in the MySQL client:
 
 ```sql
@@ -324,18 +330,13 @@ mysql> select sku, hex(keyspace_id) from corder_lookup;
 +-----------+------------------+
 ```
 
-Basically, this shows exactly what we expected.  Now, we can clean up the
-VReplication streams.  Note these commands will clean up all VReplication
-streams on these tablets. You may want to filter by `id` if there are other
-streams running:
+Basically, this shows exactly what we expected.  Now, we have to clean-up
+the artifacts of the backfill. The `ExternalizeVindex` command will delete
+the vreplication streams and also clear the `write_only` flag from the
+vindex indicating that it is not backfilling any more.
 
 ```sh
-$ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000300 "delete from _vt.vreplication"
-+
-+
-$ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000400 "delete from _vt.vreplication"
-+
-+
+$ vtctlclient -server localhost:15999 ExternalizeVindex customer.corder_lookup
 ```
 
 Next, to confirm the lookup Vindex is doing what we think it should, we can
@@ -352,7 +353,7 @@ mysql> explain format=vitess select * from corder where customer_id = 1;
 ```
 
 Since the above `select` statement is doing a lookup using the primary Vindex
-on the `corder` table, this query does not Scatter (variant is 
+on the `corder` table, this query does not Scatter (variant is
 `SelectEqualUnique`), as expected.  Let's try a scatter query to see what that
 looks like:
 
@@ -440,7 +441,7 @@ mysql> select sku, hex(keyspace_id) from corder_lookup;
 4 rows in set (0.01 sec)
 ```
 
-We deleted a row from the `corder` table, and the matching lookup Vindex row 
+We deleted a row from the `corder` table, and the matching lookup Vindex row
 is gone.
 
 ```sql

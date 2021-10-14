@@ -14,4 +14,4 @@ The diagram below illustrates Vitess' components:
 
 ![Architecture Diagram](../img/architecture.svg)
 
-For additonal details on each of the components, see [Concepts](../../concepts).
+For additional details on each of the components, see [Concepts](../../concepts).

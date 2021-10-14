@@ -3,7 +3,7 @@ publish = "public"
 command = "make production-build"
 
 [build.environment]
-HUGO_VERSION = "0.65.3"
+HUGO_VERSION = "0.78.2"
 
 [context.production]
 HUGO_ENVIRONMENT = "production"
@@ -17,5 +17,5 @@ command = "make preview-build"
 # Redirect to Slack invite link.
 [[redirects]]
 from = "/slack"
-to = "https://join.slack.com/t/vitess/shared_invite/enQtMzIxMDMyMzA0NzA1LTYxMjk2M2M2NjAwNGY0ODljY2E1MjBlZjRkMmZmNDVkZTBhNDUxNzNkOGM4YmEzNWEwOTE2NjJiY2QyZjZjYTE"
+to = "https://join.slack.com/t/vitess/shared_invite/zt-rbtfk682-uqBu8WCyAUEDLFpydt1BOQ"
 status = 302

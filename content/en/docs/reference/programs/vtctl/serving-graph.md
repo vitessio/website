@@ -1,6 +1,7 @@
 ---
 title: vtctl Serving Graph Command Reference
 series: vtctl
+docs_nav_title: Serving Graph
 ---
 
 The following `vtctl` commands are available for administering the Serving Graph.

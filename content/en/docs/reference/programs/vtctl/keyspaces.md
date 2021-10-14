@@ -1,6 +1,7 @@
 ---
 title: vtctl Keyspace Command Reference
 series: vtctl
+docs_nav_title: Keyspaces
 ---
 
 The following `vtctl` commands are available for administering Keyspaces.
@@ -163,12 +164,13 @@ Changes the ServedFromMap manually. This command is intended for emergency fixes
     * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
     * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
     * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
-    * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
-    * <code>master</code> &ndash; A primary copy of data
+    * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential primary. Vitess also does not worry about lag for experimental tablets when reparenting.
+    * <code>primary</code> &ndash; A primary copy of data
+    * <code>master</code> &ndash; Deprecated, same as primary
     * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
-    * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to master
+    * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to primary
     * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
-    * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
+    * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential primary tablet.
 
 
 #### Errors
@@ -226,34 +228,59 @@ Validates that all nodes reachable from the specified keyspace are consistent.</
 * the <code>&lt;keyspace name&gt;</code> argument is required for the <code>&lt;ValidateKeyspace&gt;</code> command This error occurs if the command is not called with exactly one argument.
 
 
-### Reshard
+### Reshard (v1)
 ```shell
-Reshard  [-skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>
-Start a Resharding process. Example: Reshard -cells='zone1,alias1' -tablet_types='master,replica,rdonly'  ks.workflow001 '0' '-80,80-'.
+Reshard  -v1 [-skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>
+Start a Resharding process. Example: Reshard -cells='zone1,alias1' -tablet_types='primary,replica,rdonly'  ks.workflow001 '0' '-80,80-'.
+```
+#### Notes
+
+* The <code>v1</code> argument is required in Vitess 11.0 and later
+* This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/v2) in Vitess 11.0 and later
+
+### Reshard (v2)
+```shell
+Reshard <options> <action> <workflow identifier>
 ```
 
-### MoveTables
+### MoveTables (v1)
 ```shell
-MoveTables  [-cell=<cell>] [-tablet_types=<source_tablet_types>] -workflow=<workflow> <source_keyspace> <target_keyspace> <table_specs>
+MoveTables  -v1 [-cell=<cell>] [-tablet_types=<source_tablet_types>] -workflow=<workflow> <source_keyspace> <target_keyspace> <table_specs>
 Move table(s) to another keyspace, table_specs is a list of tables or the tables section of the vschema for the target keyspace. Example: '{"t1":{"column_vindexes": [{"column": "id1", "name": "hash"}]}, "t2":{"column_vindexes": [{"column": "id2", "name": "hash"}]}}'.  In the case of an unsharded target keyspace the vschema for each table may be empty. Example: '{"t1":{}, "t2":{}}'.
+```
+#### Notes
+
+* The <code>v1</code> argument is required in Vitess 11.0 and later
+* This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/v2) in Vitess 11.0 and later
+
+## MoveTables (v2)
+```shell
+MoveTables <options> <action> <workflow identifier>
 ```
 
 ### DropSources
 ```shell
-DropSources  [-dry_run] <keyspace.workflow>
+DropSources  [-dry_run] [-rename_tables] <keyspace.workflow>
 After a MoveTables or Resharding workflow cleanup unused artifacts like source tables, source shards and blacklists.
 ```
 
+#### Notes
+
+* This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/v2) in Vitess 11.0 and later
+
 ### CreateLookupVindex
 ```shell
-CreateLookupVindex  [-cell=<cell>] [-tablet_types=<source_tablet_types>] <keyspace> <json_spec>
+CreateLookupVindex  [-cells=<source_cells>] [-continue_after_copy_with_owner=false] [-tablet_types=<source_tablet_types>] <keyspace> <json_spec>
 Create and backfill a lookup vindex. the json_spec must contain the vindex and colvindex specs for the new lookup.
 ```
 
 ### ExternalizeVindex
 ```shell
 ExternalizeVindex  <keyspace>.<vindex>
-Externalize a backfilled vindex.
+Externalize (activate) a lookup vindex backfilled using `CreateLookupVindex`.
+This removes the workflow and vreplication streams associated with the
+backfill, and clears the `write_only` flag on the vindex. After this flag is
+removed, applications can start using the vindex for lookups.
 ```
 
 ### Materialize
@@ -276,7 +303,7 @@ Start the VerticalSplitClone process to perform vertical resharding. Example: Sp
 
 ### VDiff
 ```shell
-VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=replica] [-filtered_replication_wait_time=30s] <keyspace.workflow>
+VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=<source_tablet_types>] [-filtered_replication_wait_time=30s] <keyspace.workflow>
 Perform a diff of all tables in the workflow
 ```
 
@@ -294,10 +321,10 @@ Migrates a serving type from the source shard to the shards that it replicates t
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | cells | string | Specifies a comma-separated list of cells to update |
-| filtered\_replication\_wait\_time | Duration | Specifies the maximum time to wait, in seconds, for filtered replication to catch up on master migrations |
+| filtered\_replication\_wait\_time | Duration | Specifies the maximum time to wait, in seconds, for filtered replication to catch up on primary migrations |
 | reverse | Boolean | Moves the served tablet type backward instead of forward. Use in case of trouble |
 | skip-refresh-state | Boolean | Skips refreshing the state of the source tablets after the migration, meaning that the refresh will need to be done manually, replica and rdonly only) |
-| reverse\_replication | Boolean | For master migration, enabling this flag reverses replication which allows you to rollback |
+| reverse\_replication | Boolean | For primary migration, enabling this flag reverses replication which allows you to rollback |
 
 
 #### Arguments
@@ -308,18 +335,19 @@ Migrates a serving type from the source shard to the shards that it replicates t
     * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
     * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
     * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
-    * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
-    * <code>master</code> &ndash; A primary copy of data
+    * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential primary. Vitess also does not worry about lag for experimental tablets when reparenting.
+    * <code>primary</code> &ndash; A primary copy of data
+    * <code>master</code> &ndash; Deprecated, same as primary
     * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
-    * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to master
+    * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to primary
     * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
-    * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
+    * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential primary tablet.
 
 
 #### Errors
 
 * the <code>&lt;source keyspace/shard&gt;</code> and <code>&lt;served tablet type&gt;</code> arguments are both required for the <code>&lt;MigrateServedTypes&gt;</code> command This error occurs if the command is not called with exactly 2 arguments.
-* the <code>&lt;skip-refresh-state&gt;</code> flag can only be specified for non-master migrations
+* the <code>&lt;skip-refresh-state&gt;</code> flag can only be specified for non-primary migrations
 
 
 ### MigrateServedFrom
@@ -335,7 +363,7 @@ Makes the &lt;destination keyspace/shard&gt; serve the given type. This command 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | cells | string | Specifies a comma-separated list of cells to update |
-| filtered_replication_wait_time | Duration | Specifies the maximum time to wait, in seconds, for filtered replication to catch up on master migrations |
+| filtered_replication_wait_time | Duration | Specifies the maximum time to wait, in seconds, for filtered replication to catch up on primary migrations |
 | reverse | Boolean | Moves the served tablet type backward instead of forward. Use in case of trouble |
 
 
@@ -347,12 +375,13 @@ Makes the &lt;destination keyspace/shard&gt; serve the given type. This command 
     * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
     * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
     * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
-    * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
-    * <code>master</code> &ndash; A primary copy of data
+    * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential primary. Vitess also does not worry about lag for experimental tablets when reparenting.
+    * <code>primary</code> &ndash; A primary copy of data
+    * <code>master</code> &ndash; Deprecated, same as primary
     * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
-    * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to master
+    * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to primary
     * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
-    * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
+    * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential primary tablet.
 
 
 #### Errors
@@ -361,15 +390,23 @@ Makes the &lt;destination keyspace/shard&gt; serve the given type. This command 
 
 ### SwitchReads
 ```shell
-SwitchReads  [-cells=c1,c2,...] [-reverse] -tablet_type={replica|rdonly} [-dry-run] <keyspace.workflow>
+SwitchReads  [-cells=c1,c2,...] [-reverse] -tablet_types={replica|rdonly} [-dry-run] <keyspace.workflow>
 Switch read traffic for the specified workflow.
 ```
 
+#### Notes
+
+* This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/v2) in Vitess 11.0 and later
+
 ### SwitchWrites
 ```shell
-SwitchWrites  [-filtered_replication_wait_time=30s] [-cancel] [-reverse_replication=false] [-dry-run] <keyspace.workflow>
+SwitchWrites  [-timeout=30s] [-cancel] [-reverse] [-reverse_replication=false] -tablet_types={replica|rdonly} [-dry-run] <keyspace.workflow>
 Switch write traffic for the specified workflow.
 ```
+
+#### Notes
+
+* This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/v2) in Vitess 11.0 and later
 
 ### CancelResharding
 
@@ -430,15 +467,16 @@ Blocks until no new queries were observed on all tablets with the given tablet t
 * <code>&lt;keyspace/shard&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables as well as the shard associated with the command. The keyspace must be identified by a string that does not contain whitespace, while the shard is typically identified by a string in the format <code>&lt;range start&gt;-&lt;range end&gt;</code>.
 * <code>&lt;served tablet type&gt;</code> &ndash; Required. The vttablet's role. Valid values are:
 
-    * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
-    * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
-    * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
-    * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
-    * <code>master</code> &ndash; A primary copy of data
-    * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
-    * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to master
-    * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
-    * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
+  * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
+  * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
+  * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
+  * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential primary. Vitess also does not worry about lag for experimental tablets when reparenting.
+  * <code>primary</code> &ndash; A primary copy of data
+  * <code>master</code> &ndash; Deprecated, same as primary
+  * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
+  * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to primary
+  * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
+  * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential primary tablet.
 
 #### Errors
 

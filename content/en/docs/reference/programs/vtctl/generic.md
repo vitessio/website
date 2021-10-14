@@ -1,6 +1,7 @@
 ---
 title: vtctl Generic Command Reference
 series: vtctl
+docs_nav_title: Generic Commands
 ---
 
 The following generic `vtctl` commands are available for administering Vitess.

@@ -1,11 +1,16 @@
 ---
 title: Two-Phase Commit
+weight: 11
 aliases: ['/docs/launching/twopc/','/docs/reference/two-phase-commit/']
 ---
 
 {{< warning >}}
-Transaction commit is much slower when using 2PC. The authors of Vitess recommend that you design your VSchema so that cross-shard updates (and 2PC) are not required.
+2PC is an experimental feature and is likely not robust enough to be considered production-ready.
 {{< /warning >}}
+
+{{< info >}}
+Transaction commit is much slower when using 2PC. The authors of Vitess recommend that you design your VSchema so that cross-shard updates (and 2PC) are not required.
+{{< /info >}}
 
 Vitess 2PC allows you to perform atomic distributed commits. The feature is implemented using traditional MySQL transactions, and hence inherits the same guarantees. With this addition, Vitess can be configured to support the following three levels of atomicity:
 
@@ -23,13 +28,13 @@ Guaranteeing ACID Isolation is very contentious and has high costs. Providing it
 
 ### Configuring VTGate
 
-The atomicity policy is controlled by the `transaction_mode` flag. The default value is multi, and will set it in multi-database mode. This is the same as the previous legacy behavior.
+The atomicity policy is controlled by the `transaction_mode` flag. The default value is `multi` and will set all transactions to multi-database mode.
 
 To enforce single-database transactions, the VTGates can be started by specifying `transaction_mode=single`.
 
 To enable 2PC, the VTGates need to be started with `transaction_mode=twopc`. The VTTablets will require additional flags, which will be explained below.
 
-The VTGate `transaction_mode` flag decides what to allow. The application can independently request a specific atomicity for each transaction. The request will be honored by VTGate only if it does not exceed what is allowed by the `transaction_mode`. For example, `transaction_mode=single` will only allow single-db transactions. On the other hand, `transaction_mode=twopc` will allow all three levels of atomicity.
+The VTGate `transaction_mode` flag decides what to allow by default. The application can then override that global default for an individual transaction using `SET transaction_mode="<mode>";` when necessary or appropriate.
 
 ## Driver APIs
 
@@ -64,7 +69,7 @@ The following flags need to be set to enable 2PC support in VTTablet:
 * **twopc_coordinator_address**: This should specify the address (or VIP) of the VTGate that VTTablet will use to resolve abandoned transactions.
 * **twopc_abandon_age**: This is the time in seconds that specifies how long to wait before asking a VTGate to resolve an abandoned transaction.
 
-With the above flags specified, every master VTTablet also turns into a watchdog. If any 2PC transaction is left lingering for longer than twopc_abandon_age seconds, then VTTablet invokes VTGate and requests it to resolve it. Typically, the abandon_age needs to be substantially longer than the time it takes for a typical 2PC commit to complete (10s of seconds).
+With the above flags specified, every primary VTTablet also turns into a watchdog. If any 2PC transaction is left lingering for longer than twopc_abandon_age seconds, then VTTablet invokes VTGate and requests it to resolve it. Typically, the abandon_age needs to be substantially longer than the time it takes for a typical 2PC commit to complete (10s of seconds).
 
 ## Configuring MySQL
 
@@ -79,7 +84,7 @@ A few additional variables have been added to /debug/vars. Failures described be
 The following errors are not expected to happen. If they do, it means that 2PC transactions have failed to commit atomically:
 
 * **InternalErrors.TwopcCommit**: This is a counter that shows the number of times a prepared transaction failed to fulfil a commit request.
-* **InternalErrors.TwopcResurrection**: This counter is incremented if a new master failed to resurrect a previously prepared (and unresolved) transaction.
+* **InternalErrors.TwopcResurrection**: This counter is incremented if a new primary failed to resurrect a previously prepared (and unresolved) transaction.
 
 ## Alertable failures
 

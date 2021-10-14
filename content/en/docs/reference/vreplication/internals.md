@@ -1,11 +1,11 @@
 ---
 title: Life of a stream
-weight: 200
+weight: 300
 ---
 
 ### Introduction
 
-The diagram above outlines how a VReplication workflow is performed. VReplication can be asked to start
+The diagram below outlines how a VReplication workflow is performed. VReplication can be asked to start
 from a specific GTID or from the start. When starting from a GTID the _replication_ mode is used
 where it streams events from the binlog.
 
@@ -33,7 +33,7 @@ the target. Columns may also be transformed in the Filter’s select clause.
 #### Source and Sink
 
 Each stream has two parts. The target initiates streaming by making grpc calls to the source tablet. The source
-sources the data connecting to mysql as a slave or using sql queries and streams it to the target. The target
+sources the data connecting to mysql as a replica or using sql queries and streams it to the target. The target
 takes appropriate action: in case of resharding it will convert the events into CRUDs and apply it to the
 target database. In case of vstream clients the events are forwarded by vtgate to the client.
 
@@ -41,6 +41,7 @@ Note that the target always pulls the data. This ensures that there is no proble
 can occur if the source is pushing the data since (especially in sharding) it is possible that the application
 of events can be substantially cpu intensive especially in the case of bulk inserts.
 
+For more on how the tablets are selected, see [tablet selection](../../vreplication/tablet_selection).
 
 
 ### Modes, in detail
@@ -48,7 +49,7 @@ of events can be substantially cpu intensive especially in the case of bulk inse
 
 #### Replicate
 
-This is the easiest step to understand. The source stream just mimics a mysql slave and processes events as
+This is the easiest step to understand. The source stream just mimics a mysql replica and processes events as
 they are received. Events (after filtering and transformation) are sent to the target. Replication runs continuously
 with short sleeps when there are no more events to source.
 

@@ -1,5 +1,6 @@
 ---
 title: Schema Routing Rules
+weight: 15
 aliases: ['/docs/schema-management/routing-rules/','/docs/reference/schema-routing-rules/']
 ---
 
@@ -18,7 +19,7 @@ It fulfils the following use cases:
 You can use the vtctlclient command to apply routing rules:
 
 ```
-ApplyRoutingRules {-rules=<rules> || -rules_file=<rules_file=<sql file>} [-cells=c1,c2,...] [-skip_rebuild] [-dry-run]
+ApplyRoutingRules {-rules=<rules> || -rules_file=<rules_json_file>} [-cells=c1,c2,...] [-skip_rebuild] [-dry-run]
 ```
 
 ## Syntax
@@ -43,6 +44,7 @@ Routing rules can be specified using JSON format. Here's an example:
 ```
 
 The above JSON specifies the following rules:
+
 * If you sent a query accessing `t` for an `rdonly` instance, then it would be sent to table `t` in the `target` keyspace.
 * If you sent a query accessing `target.t` for anything other than `rdonly`, it would be sent `t` in the `source` keyspace.
 * If you sent a query accessing `t` without any qualification, it would be sent to `t` in the `source` keyspace.

@@ -194,25 +194,25 @@ The shardrange map has the same structure as the output of running `vtctl FindAl
 {
   "mainkeyspace": {
     "-80": {
-      "master_alias": {
+      "primary_alias": {
         "cell": "test",
         "uid": 00000000100
       },
-      "master_term_start_time": {
+      "primary_term_start_time": {
         "seconds": 1599828375,
         "nanoseconds": 664404881
       },
       "key_range": {
         "end": "gA=="
       },
-      "is_master_serving": true
+      "is_primary_serving": true
     },
     "80-90": {
-      "master_alias": {
+      "primary_alias": {
         "cell": "test",
         "uid": 00000000200
       },
-      "master_term_start_time": {
+      "primary_term_start_time": {
         "seconds": 1599828344,
         "nanoseconds": 868327074
       },
@@ -220,14 +220,14 @@ The shardrange map has the same structure as the output of running `vtctl FindAl
         "start": "gA==",
         "end": "kA=="
       },
-      "is_master_serving": true
+      "is_primary_serving": true
     },
     "90-a0": {
-      "master_alias": {
+      "primary_alias": {
         "cell": "test",
         "uid": 00000000300
       },
-      "master_term_start_time": {
+      "primary_term_start_time": {
         "seconds": 1599828405,
         "nanoseconds": 152120945
       },
@@ -235,14 +235,14 @@ The shardrange map has the same structure as the output of running `vtctl FindAl
         "start": "kA==",
         "end": "oA=="
       },
-      "is_master_serving": true
+      "is_primary_serving": true
     },
     "a0-e8": {
-      "master_alias": {
+      "primary_alias": {
         "cell": "test",
         "uid": 00000000400
       },
-      "master_term_start_time": {
+      "primary_term_start_time": {
         "seconds": 1599828183,
         "nanoseconds": 911677983
       },
@@ -250,21 +250,21 @@ The shardrange map has the same structure as the output of running `vtctl FindAl
         "start": "oA==",
         "end": "6A=="
       },
-      "is_master_serving": true
+      "is_primary_serving": true
     },
     "e8-": {
-      "master_alias": {
+      "primary_alias": {
         "cell": "test",
         "uid": 00000000500
       },
-      "master_term_start_time": {
+      "primary_term_start_time": {
         "seconds": 1599827865,
         "nanoseconds": 770606551
       },
       "key_range": {
         "start": "6A=="
       },
-      "is_master_serving": true
+      "is_primary_serving": true
     }
 }
 ```

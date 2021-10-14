@@ -61,10 +61,13 @@ sudo setenforce 0
 Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux. For example with Vitess 6:
 
 ```sh
-tar -xzf vitess-6.0.20-20200508-147bc5a.tar.gz
-cd vitess-6.0.20-20200508-147bc5a
+version=6.0.20-20200818
+file=vitess-${version}-90741b8.tar.gz
+wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
+tar -xzf ${file}
+cd ${file/.tar.gz/}
 sudo mkdir -p /usr/local/vitess
-sudo mv * /usr/local/vitess/
+sudo cp -r * /usr/local/vitess/
 ```
 
 Make sure to add `/usr/local/vitess/bin` to the `PATH` environment variable. You can do this by adding the following to your `$HOME/.bashrc` file:
@@ -113,8 +116,8 @@ HTTP/1.1 200 OK
 Date: Wed, 25 Mar 2020 17:33:01 GMT
 Content-Type: text/html; charset=utf-8
 
-W0325 11:33:01.932674   16036 main.go:64] W0325 17:33:01.930970 reparent.go:185] master-elect tablet zone1-0000000100 is not the shard master, proceeding anyway as -force was used
-W0325 11:33:01.933188   16036 main.go:64] W0325 17:33:01.931580 reparent.go:191] master-elect tablet zone1-0000000100 is not a master in the shard, proceeding anyway as -force was used
+W0325 11:33:01.932674   16036 main.go:64] W0325 17:33:01.930970 reparent.go:185] primary-elect tablet zone1-0000000100 is not the shard primary, proceeding anyway as -force was used
+W0325 11:33:01.933188   16036 main.go:64] W0325 17:33:01.931580 reparent.go:191] primary-elect tablet zone1-0000000100 is not a primary in the shard, proceeding anyway as -force was used
 ..
 ```
 

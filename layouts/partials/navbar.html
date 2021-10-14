@@ -1,22 +1,16 @@
 {{ $isHome       := .IsHome }}
-{{ $isBlog       := eq .Section "blog" }}
-{{ $nav          := site.Data.nav }}
+{{ $isDocs       := eq .Section "docs" }}
 {{ $logoUrl      := "img/logos/vitess.png" | relURL }}
 {{ $social       := site.Params.social }}
-{{ $docs         := where site.Pages "Section" "docs" }}
-{{ $blogPosts    := where site.RegularPages "Section" "blog" }}
-{{ $hasBlogPosts := gt (len $blogPosts) 0 }}
 {{ $currentLang  := .Language.LanguageName }}
 {{ $translations := site.Home.Translations }}
 
 <nav class="navbar is-fixed-top is-dark">
-  <div class="container">
+  <div class="container {{if $isDocs}} navbar-container-docs {{end}}">
     <div class="navbar-brand">
-      {{ if not $isHome }}
       <a class="navbar-item" href="{{ site.BaseURL }}">
         <img src="{{ $logoUrl }}" alt="Vitess logo">
       </a>
-      {{ end }}
 
       <a role="button" class="navbar-burger burger">
         <span aria-hidden="true"></span>
@@ -26,44 +20,16 @@
     </div>
 
     <div class="navbar-menu">
+		{{ partial "search-bar.html" . }}
+		
       <div class="navbar-end">
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link has-text-weight-bold" href="{{ "/docs" | relLangURL }}">
-            {{ T "docs" }}
-          </a>
+        <a class="navbar-item has-text-weight-bold" href="{{ "/docs" | relLangURL }}">
+          {{ T "docs" }}
+        </a>
 
-          <div class="navbar-dropdown">
-            {{ range $docs }}
-            {{ if .Params.featured }}
-            <a class="navbar-item" href="{{ .RelPermalink }}">
-              {{ .Title }}
-            </a>
-            {{ end }}
-            {{ end }}
-          </div>
-        </div>
-
-        {{ if $hasBlogPosts }}
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link has-text-weight-bold" href="{{ "/blog" | relLangURL }}">
-            {{ T "blog" }}
-          </a>
-
-          <div class="navbar-dropdown">
-            {{ range first 5 $blogPosts }}
-            <a class="navbar-item" href="{{ .RelPermalink }}">
-              {{ .Title }}
-            </a>
-            {{ end }}
-
-            <hr class="navbar-divider" />
-
-            <a class="navbar-item has-text-weight-bold" href="{{ "/blog" | relLangURL }}">
-              {{ T "more" }}
-            </a>
-          </div>
-        </div>
-        {{ end }}
+        <a class="navbar-item has-text-weight-bold" href="{{ "/blog" | relLangURL }}">
+          {{ T "blog" }}
+        </a>
 
         <a class="navbar-item has-text-weight-bold" href="{{ "/community" | relLangURL }}">
           {{ T "community" }}
@@ -88,7 +54,7 @@
         <div class="navbar-item">
           {{ partial "social-buttons.html" (dict "footer" false "social" $social) }}
         </div>
-      </div>
+	  </div>
     </div>
   </div>
 </nav>

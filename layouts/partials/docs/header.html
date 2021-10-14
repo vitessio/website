@@ -3,6 +3,34 @@
 {{ $language     := .Language }}
 {{ $editUrl      := printf "https://github.com/vitessio/website/tree/prod/content/%s/%s" $language $path }}
 <header class="docs-header">
+  {{/* Hide breadcrumbs on mobile since bulma.io doesn't handle overflows nicely for long crumbs */}}
+  <nav class="breadcrumb is-hidden-touch" aria-label="breadcrumbs">
+    <ul>
+      {{ template "breadcrumbnav" (dict "p1" . "p2" .) }}
+    </ul>
+
+    {{/* See: https://gohugo.io/content-management/sections/#example-breadcrumb-navigation */}}
+    {{ define "breadcrumbnav" }}
+      {{ $isCurrentPage := eq .p1 .p2 }}
+
+      {{ if .p1.Parent }}
+        {{ template "breadcrumbnav" (dict "p1" .p1.Parent "p2" .p2 )  }}
+      {{ else if not .p1.IsHome }}
+        {{ template "breadcrumbnav" (dict "p1" .p1.Site.Home "p2" .p2 )  }}
+      {{end}}
+
+      {{/* No breadcrumb for root URL since we already have the logo */}}
+      {{ if not .p1.IsHome }}
+        {{/* No breadcrumb if the current page is the first and only breadcrumb */}}
+        {{ if not (and .p1.Parent.IsHome $isCurrentPage) }}
+          <li {{ if eq .p1 .p2}}class="is-active"{{end}}>
+            <a href="{{ .p1.Permalink }}">{{ or .p1.Params.docs_nav_title .p1.Title }}</a>
+          </li>
+        {{end}}
+      {{ end }}
+    {{ end }}
+  </nav>
+
   <p class="title is-size-1 is-size-2-mobile has-text-weight-light{{ if .Params.description }} is-spaced{{ end }}">
     {{ .Title }}
   </p>
@@ -59,4 +87,6 @@
       </div>
     </div>
   </div>
+  {{ partial "docs/next-prev-navigation.html" . }}
+
 </header>

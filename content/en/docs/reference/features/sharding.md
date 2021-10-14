@@ -1,7 +1,7 @@
 ---
 title: Sharding
 description: Shard widely, shard often.
-weight: 5
+weight: 1
 aliases: ['/docs/sharding/','/user-guide/sharding.html','/docs/reference/sharding/']
 ---
 
@@ -13,7 +13,7 @@ A keyspace in Vitess can be sharded or unsharded. An unsharded keyspace maps dir
 
 For example, if an application's "user" keyspace is split into two shards, each shard contains records for approximately half of the application's users. Similarly, each user's information is stored in only one shard.
 
-Note that sharding is orthogonal to (MySQL) replication. A Vitess shard typically contains one MySQL master and many MySQL replicas. The master handles write operations, while replicas handle read-only traffic, batch processing operations, and other tasks. Each MySQL instance within the shard should have the same data, excepting some replication lag.
+Note that sharding is orthogonal to (MySQL) replication. A Vitess shard typically contains one MySQL primary and many MySQL replicas. The primary handles write operations, while replicas handle read-only traffic, batch processing operations, and other tasks. Each MySQL instance within the shard should have the same data, excepting some replication lag.
 
 ### Supported Operations
 
@@ -94,5 +94,6 @@ Cool a hot tablet | For read access, add replicas or split shards. For write acc
 
 Vitess provides the following tools to help manage range-based shards:
 
-* The [vtctl](../../../reference/programs/vtctl) command-line tool supports functions for managing keyspaces, shards, tablets, and more.
+* The [vtctl GenerateShardRanges](../../../reference/programs/vtctl/shards/#generateshardranges) command-line tool supports generating shard ranges based on the provided number of shards.
+* There are additional [Shard specific vtctl](../../../reference/programs/vtctl/shards) command-line tools. 
 * Client APIs account for sharding operations.

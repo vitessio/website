@@ -1,5 +1,6 @@
 ---
 title: Vindexes
+weight: 10
 aliases: ['/docs/schema-management/consistent-lookup/','/docs/reference/vindexes/']
 ---
 
@@ -63,12 +64,34 @@ The lookup table that implements a Lookup Vindex can be sharded or unsharded.  N
 
 Vitess allows for the transparent population of these lookup table rows by assigning an owner table, which is the main table that requires this lookup. When a row is inserted into this owner table, the lookup row for it is created in the lookup table. The lookup row is also deleted upon a delete of the corresponding row in the owner table. These essentially result in distributed transactions, which traditionally require 2PC to guarantee atomicity.
 
-Consistent lookup vindexes use an alternate approach that makes use of careful locking and transaction sequences to guarantee consistency without using 2PC. This gives the best of both worlds, with the benefit of a consistent cross-shard vindex without paying the price of 2PC.
+Consistent lookup vindexes use an alternate approach that makes use of careful locking and transaction sequences to guarantee consistency without using 2PC. This gives the best of both worlds, with the benefit of a consistent cross-shard vindex without paying the price of 2PC. To read more about what makes a consistent lookup vindex different from a standard lookup vindex read our [consistent lookup vindexes design documentation](../../../design-docs/query-serving/clookup-vindex/).
 
 There are currently two vindex types in Vitess for consistent lookup:
+
 * `consistent_lookup_unique`
 * `consistent_lookup`
 
+#### Consistent Lookup usage
+
+There are 3 sessions which VTGate can open when a consistent lookup is involved.
+
+1. Pre session
+2. Normal session
+3. Post session
+
+The pre and post session are used by lookup queries. The normal session is used by the original query that was sent from the client to VTGate.
+
+If an insert query is received, insert on consistent lookup will happen through the pre session and the actual query insert will happen through the normal session. When a commit happens it happens on the pre session first and if it succeeds then the commit happens on the post session.
+
+If an update or delete query is received, the post session is used to do the update or delete on consistent lookup and the normal session for the original query. When a commit happens it happens on the normal session first and if that succeeds then the commit is executed on the post session.
+
+Anytime there is a consistent lookup involved in the query received, a lock will be taken so that is not available for other sessions to be modified.
+
+In order to do that we have to select the right session at the beginning. For an insert query, the pre session is used to send `SELECT ...` for the update query.
+
+For an update or delete query, the post session is used to send `SELECT ...` for the update query.
+
+Due to this, a current limitation with consistent lookup is that it cannot support an insert followed by an update or delete in the same transaction for the same consistent lookup column value.
 
 #### Shared Vindexes
 
@@ -82,7 +105,6 @@ As for a `lookup` vindex, it can be changed it to a `consistent_lookup` only if 
 
 Functional Vindexes can be also be shared. However, there is no concept of ownership because the column to keyspace ID mapping is pre-established.
 
-
 ### Lookup Vindex guidance
 
 The guidance for implementing lookup vindexes has been to create a two-column table. The first column (`from` column) should match the type of the column of the main table that needs the vindex. The second column (`to` column) should be a `BINARY` or a `VARBINARY` large enough to accommodate the keyspace id.
@@ -94,7 +116,7 @@ For non-unique lookup Vindexes, the lookup table should consist of multiple colu
 For example, if a user table had the columns `(user_id, email)`, where `user_id` was the primary key and `email` needed a non-unique lookup vindex, the lookup table would have the columns `(email, user_id, keyspace_id)`.
 
 
-### Indepedence
+### Independence
 
 The previously described properties are mostly independent of each other. Combining them gives rise to the following valid categories:
 
@@ -109,6 +131,27 @@ Of the above categories, `Functional Unique` and `Lookup Unique Unowned` Vindexe
 
 However, it is generally not recommended to use a Lookup Vindex as a Primary Vindex because it is too slow for resharding. If absolutely unavoidable, it is recommended to add a `keyspace ID` column to the tables that need this level of control of the row-to-shard mapping. While resharding, Vitess can use that column to efficiently compute the target shard. Vitess can also be configured to auto-populate that column on inserts. This is done using the reverse map feature explained [below](#insert).
 
+### Defining Vindexes
+
+Vindexes are defined in the [VSchema](../vschema/) inside the `Vindexes` section of every keyspace. The `column_vindexes` section of each table in that keyspace may refer to the Vindex by name. Here is an example:
+
+``` json
+    "name_keyspace_idx": {
+      "type": "lookup",
+      "params": {
+        "table": "name_keyspace_idx",
+        "from": "name",
+        "to": "keyspace_id"
+      },
+      "owner": "user"
+    }
+```
+
+In the above case, the name of the vindex is `name_keyspace_idx`. It is of type `lookup`, and it is owned by the `user` table.
+
+Every Vindex has an optional `params` section that contains a map of string key-value pairs. The keys and values differ depending on the vindex type and are explained below. 
+
+Since Vitess 12.0 there is an optional fourth parameter: `batch_lookup`. To read more about how to use `batch_lookup` see our [Unique Lookup user guide](../../../user-guides/vschema-guide/unique-lookup/).
 
 ### How Vindexes are used
 
@@ -117,17 +160,17 @@ However, it is generally not recommended to use a Lookup Vindex as a Primary Vin
 Vindexes have costs. For routing a query, the applicable Vindex with the lowest cost is chosen. The current general costs for the different Vindex Types are as follows:
 
 Vindex Type | Cost
------------ | ----
-Identity | 0
-Functional | 1
-Lookup Unique | 10
-Lookup NonUnique | 20
+| ----------- | ---- |
+| Identity | 0 |
+| Functional | 1 |
+| Lookup Unique | 10 |
+| Lookup NonUnique | 20 |
 
 #### Select
 
 In the case of a simple select, Vitess scans the WHERE clause to match references to Vindex columns and chooses the best one to use. If there is no match and the query is simple without complex constructs like aggregates, etc., it is sent to all shards.
 
-Vitess can handle more complex queries. For now, refer to the [design doc](https://github.com/vitessio/vitess/blob/master/doc/V3HighLevelDesign.md) for background information on how it handles them.
+Vitess can handle more complex queries. For now, refer to the [design doc](https://github.com/vitessio/vitess/blob/main/doc/V3HighLevelDesign.md) for background information on how it handles them.
 
 #### Insert
 
@@ -143,40 +186,68 @@ The WHERE clause is used to route the update. Updating the value of a Vindex col
 
 If the table owns lookup vindexes, then the rows to be deleted are first read and the associated Vindex entries are deleted. Following this, the query is routed according to the WHERE clause.
 
+#### Ignore Nulls
+
+There are situations where the from columns of a lookup vindex can be `NULL`. Such columns cannot be inserted in the lookup backing table due to the uniqueness constraints of a lookup. There are two ways to deal with a `NULL` value in the from column of a lookup vindex:
+
+* Use a predefined vindex as the primary vindex of the backing table that supports the use of a `NULL` value. The table for [predefined vindexes](../vindexes/#predefined-vindexes) lists what types are and are not nullable.
+* Enable the `ignore_nulls` option. If the input value of any of the columns is null, Vitess can skip the creation of the lookup row if `ignore_nulls` is enabled. 
+
+{{< info >}}
+Note: You can have `NULL` values for the primary vindex column, as long as that vindex allows it (e.g. xxhash). However, you cannot have `NULL` values for the lookup input column, unless you have enabled `ignore_nulls`.
+{{< /info >}}
+
 ### Predefined Vindexes
 
 Vitess provides the following predefined Vindexes:
 
-Name | Type | Description | Primary | Reversible | Cost | Data types |
----- | ---- | ----------- | ------- | ---------- | ---- | ---------- |
-binary | Functional Unique | Identity | Yes | Yes | 0 | Any |
-binary\_md5 | Functional Unique | MD5 hash | Yes | No | 1 | Any |
-consistent\_lookup | Lookup NonUnique | Lookup table non-unique values | No | No | 20 | Any |
-consistent\_lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | No | 10 | Any |
-hash | Functional Unique | DES null-key hash | Yes | Yes | 1 | 64 bit or smaller numeric or equivalent type |
-lookup | Lookup NonUnique | Lookup table non-unique values | No | No | 20 | Any |
-lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | No | 10 | Any |
-null | Functional Unique | Always map to keyspace ID 0 | Yes | No | 100 | Any |
-numeric | Functional Unique | Identity | Yes | Yes | 0 | 64 bit or smaller numeric or equivalent type |
-numeric\_static\_map | Functional Unique | JSON file statically mapping input string values to keyspace IDs | Yes | No | 1 | Any |
-region\_experimental | Functional Unique | Multi-column prefix-based hash for use in geo-partitioning | Yes | No | 1 | String and numeric type |
-region\_json | Functional Unique | Multi-column prefix-based hash combined with a JSON map for key-to-region mapping, for use in geo-partitioning | Yes | No | 1 | String and numeric type |
-reverse\_bits | Functional Unique | Bit reversal | Yes | Yes | 1 | 64 bit or smaller numeric or equivalent type |
-unicode\_loose\_md5 | Functional Unique | Case-insensitive (UCA level 1) MD5 hash | Yes | No | 1 | String or binary types |
-unicode\_loose\_xxhash | Functional Unique | Case-insensitive (UCA level 1) xxHash64 hash | Yes | No | 1 | String or binary types |
-xxhash | Functional Unique | xxHash64 hash | Yes | No | 1 | Any |
+Name | Type | Description | Primary | Multi-column | Reversible | Nullable | Cost | Data types |
+---- | ---- | ----------- | ------- | ------------ | ---------- | -------- | ---- | ---------- |
+binary | Functional Unique | Identity | Yes | No | Yes | Yes | 0 | Any |
+binary\_md5 | Functional Unique | MD5 hash | Yes | No | No | Yes | 1 | Any |
+consistent\_lookup | Lookup NonUnique | Lookup table non-unique values | No | Identify Row | No | Yes [only if](../vindexes/#ignore-nulls) | 20 | Any |
+consistent\_lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | Identify Row | No | Yes [only if](../vindexes/#ignore-nulls) | 10 | Any |
+hash | Functional Unique | DES null-key hash | Yes | No | Yes | No | 1 | 64 bit or smaller numeric or equivalent type |
+lookup | Lookup NonUnique | Lookup table non-unique values | No | Identify Row | No | Yes [only if](../vindexes/#ignore-nulls) | 20 | Any |
+lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | Identify Row | No | Yes [only if](../vindexes/#ignore-nulls) | 10 | Any |
+null | Functional Unique | Always map to keyspace ID 0 | Yes | No | No | Yes | 100 | Any |
+numeric | Functional Unique | Identity | Yes | No | Yes | No | 0 | 64 bit or smaller numeric or equivalent type |
+numeric\_static\_map | Functional Unique | JSON file statically mapping input string values to keyspace IDs | Yes | No | No | No | 1 | Any |
+region\_experimental | Functional Unique | Multi-column prefix-based hash for use in geo-partitioning | Yes | Yes | No | No | 1 | String and numeric type |
+region\_json | Functional Unique | Multi-column prefix-based hash combined with a JSON map for key-to-region mapping, for use in geo-partitioning | Yes | Yes | No | No | 1 | String and numeric type |
+reverse\_bits | Functional Unique | Bit reversal | Yes | No | Yes | No | 1 | 64 bit or smaller numeric or equivalent type |
+unicode\_loose\_md5 | Functional Unique | Case-insensitive (UCA level 1) MD5 hash | Yes | No | No | Yes | 1 | String or binary types |
+unicode\_loose\_xxhash | Functional Unique | Case-insensitive (UCA level 1) xxHash64 hash | Yes | No | No | Yes | 1 | String or binary types |
+xxhash | Functional Unique | xxHash64 hash | Yes | No | No | Yes | 1 | Any |
 
 Consistent lookup vindexes, as described above, are a new category of Vindexes that are meant to replace the existing lookup Vindexes implementation. For the time being, they have a different name to allow for users to switch back and forth.
 
-Custom Vindexes can also be created as needed. At the moment there is no formal plugin system for custom Vindexes, but the interface is well-defined, and thus custom implementations including code performing arbitary lookups in other systems can be accomodated.
+Under the Multi-column heading, an `Identify Row` comment indicates that the Vindex only uses the first column to map to the keyspace id(s). The rest of the columns are used to identify the owner row.
+
+Lookup Vindexes support the following parameters:
+
+* `table`: The backing table for the lookup vindex. It is recommended that the table name be qualified by its keyspace.
+* `from`: The list of "from" columns. The first column is used for routing, and the rest of the columns are used for identifying the owner row.
+* `to`: The name of the "to" keyspace\_id column.
+* `autocommit` (false): if true, specific vindex entries are updated in their own autocommit transaction. This is useful if values never get remapped to different values. For example, if the input column comes from an auto-increment value. Note that the autocommit option does not affect `consistent_lookup` or `consistent_lookup_unique` vindexes, but is for use with `lookup` or `lookup_unique` vindexes..
+* `write_only` (false): if true, the vindex is kept updated, but a lookup will return all shards if the key is not found. This mode is used while the vindex is being populated and backfilled.
+* `ignore_nulls` (false): if true, null values in input columns do not create entries in the lookup table. Otherwise, a null input results in an error.
+
+The `numeric_static_map` vindex requires a `json_path` parameter. The file must contain a json that maps input values to keyspace ids.
+
+The `region_experimental` vindex is an experimental vindex that uses the first one or two bytes of the input value as prefix for keyspace id. The rest of the bits are hashed. This allows you to group users of the same region within the same group of shards. The vindex requires a `region_bytes` parameter that specifies if the prefix is one or two bytes.
+
+The `region_json` vindex requires an additional `region_map` file name that is used to compute the region from the country. The `region_bytes` is presumed to contain country codes.
+
+Custom Vindexes can also be created as needed. At the moment there is no formal plugin system for custom Vindexes, but the interface is well-defined, and thus custom implementations including code performing arbitrary lookups in other systems can be accommodated.
 
 \
 \
 There are also the following legacy (deprecated) Vindexes. **Do not use these**:
 
-Name | Type | Primary | Reversible | Cost
----- | ---- | ------- | ---------- | ----
-lookup\_hash | Lookup NonUnique | No | No | 20
-lookup\_hash\_unique | Lookup Unique | If unowned | No | 10
-lookup\_unicodeloosemd5\_hash | Lookup NonUnique | No | No | 20
-lookup\_unicodeloosemd5\_hash\_unique | Lookup Unique | If unowned | No | 10
+| Name | Type | Primary | Reversible | Cost |
+| ---- | ---- | ------- | ---------- | ---- |
+| lookup\_hash | Lookup NonUnique | No | No | 20 |
+| lookup\_hash\_unique | Lookup Unique | If unowned | No | 10 |
+| lookup\_unicodeloosemd5\_hash | Lookup NonUnique | No | No | 20 |
+| lookup\_unicodeloosemd5\_hash\_unique | Lookup Unique | If unowned | No | 10 |

@@ -13,3 +13,8 @@ When an alert fires, you have the following sources of information to perform yo
 * Graphs
 * Diagnostic URLs
 * Log files
+
+### Find version of Vitess build 
+```
+select @@version;
+```

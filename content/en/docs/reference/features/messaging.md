@@ -1,5 +1,6 @@
 ---
 title: Messaging
+weight: 18
 aliases: ['/docs/advanced/messaging/','/docs/reference/messaging/']
 ---
 
@@ -57,9 +58,10 @@ create table my_message(
   time_created bigint,
   time_acked bigint,
   message varchar(128),
+  priority tinyint NOT NULL DEFAULT '0',
   primary key(time_scheduled, id),
   unique index id_idx(id),
-  index next_idx(time_next, epoch)
+  index next_idx(priority, time_next)
 ) comment 'vitess_message,vt_ack_wait=30,vt_purge_after=86400,vt_batch_size=10,vt_cache_size=10000,vt_poller_interval=30'
 ```
 

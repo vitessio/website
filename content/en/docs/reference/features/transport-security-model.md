@@ -1,5 +1,6 @@
 ---
 title: Transport Security Model
+weight: 12
 aliases: ['/docs/user-guides/transport-security-model/','/docs/reference/transport-security-model/']
 ---
 
@@ -53,6 +54,7 @@ With these options, it is possible to use TLS-secured connections for all parts 
 This is not enabled by default, as usually the different Vitess servers will run on a private network. It is also important to note, that in a Cloud environment, for example, usually all local traffic is already secured between VMs.
 
 ### Options for vtctld
+
   | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | -tablet_grpc_ca | string | the server ca to use to validate servers when connecting |
@@ -77,6 +79,7 @@ This is not enabled by default, as usually the different Vitess servers will run
 | -vtworker_client_grpc_server_name  | string | the server name to use to validate server certificate |
 
 ### Options for vtgate
+
   | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | -tablet_grpc_ca | string | the server ca to use to validate servers when connecting |
@@ -85,6 +88,7 @@ This is not enabled by default, as usually the different Vitess servers will run
 | -tablet_grpc_server_name  | string | the server name to use to validate server certificate |
 
 ### Options for vttablet
+
   | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | -binlog_player_grpc_ca | string | the server ca to use to validate servers when connecting |
@@ -111,7 +115,8 @@ In a private network, where TLS security is not required, it might still be desi
 **Important**: This is not secure. Any user code can provide any value for the Effective Caller ID's principal, and therefore access any data. This is intended as a safety feature to make sure some applications do not misbehave. Therefore, this flag is not enabled by default.
 
 ### Example
-For a concrete example, see [encrypted_transport_test.go](https://github.com/vitessio/vitess/blob/master/go/test/endtoend/encryption/encryptedtransport/encrypted_transport_test.go) in the source tree.
+
+For a concrete example, see [encrypted_transport_test.go](https://github.com/vitessio/vitess/blob/main/go/test/endtoend/encryption/encryptedtransport/encrypted_transport_test.go) in the source tree.
 
 It first sets up all the certificates, some table ACLs, and then uses the golang client to connect with TLS. It also exercises the `grpc_use_effective_callerid` flag, by connecting without TLS.
 

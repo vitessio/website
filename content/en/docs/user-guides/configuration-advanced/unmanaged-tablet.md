@@ -8,7 +8,7 @@ aliases: ['/docs/user-guides/unmanaged-tablet/']
 This guide follows on from the [local](../../../get-started/local) installation guide.
 {{< /info >}}
 
-This guide uses the Vitess components vtctld, Topology Service and VTGate which have already been started in the local installation guide. It assumes that you have an existing MySQL Server setup that you would like to add to Vitess as a new keyspace, which we will call `legacy`. The same set of steps can be used to create a tablet that uses Amazon RDS, Aurora, or Google CloudSQL.
+This guide uses the Vitess components vtctld, Topology Service and VTGate which have already been started in the local installation guide. It assumes that you have an existing MySQL Server setup that you would like to add to Vitess as a new keyspace, which we will call `legacy`. The same set of steps can be used to create a tablet that uses Amazon RDS, AWS Aurora, or Google CloudSQL.
 
 ## Ensure all components are up
 
@@ -83,9 +83,12 @@ vttablet \
  -init_populate_metadata &
 ```
 
+Note that if your tablet is using a MySQL instance type where you do not have `SUPER` privileges to the database 
+(e.g. AWS RDS, AWS Aurora or Google CloudSQL), you should omit the `-init_populate_metadata` flag. The `-init_populate_metadata` flag should only be enabled if the cluster is being managed through Vitess.
+
 You should be able to see debug information written to screen confirming Vitess can reach the unmanaged server. A common problem is that you may need to change the authentication plugin to `mysql_native_password` (MySQL 8.0).
 
-Assuming that there are no errors, after a few seconds you can mark the server as externally promoted to master:
+Assuming that there are no errors, after a few seconds you can mark the server as externally promoted to primary:
 
 ```bash
 vtctlclient TabletExternallyReparented zone1-401
@@ -119,26 +122,19 @@ Empty set (0.01 sec)
 Move the table:
 
 ```bash
-vtctlclient MoveTables -tablet_types=master -workflow=legacy2commerce legacy commerce '{"legacytable": {}}'
+vtctlclient MoveTables -source legacy -tables 'legacytable' Create commerce.legacy2commerce 
 ```
 
-Switch reads:
+Switch traffic:
 
 ```bash
-vtctlclient SwitchReads -tablet_type=rdonly commerce.legacy2commerce
-vtctlclient SwitchReads -tablet_type=replica commerce.legacy2commerce
+vtctlclient MoveTables -tablet_type=rdonly,replica SwitchTraffic commerce.legacy2commerce
 ```
 
-Switch writes:
+Complete the MoveTables
 
 ```bash
-vtctlclient SwitchWrites commerce.legacy2commerce
-```
-
-Drop source table:
-
-```bash
-vtctlclient DropSources commerce.legacy2commerce
+vtctlclient MoveTables Complete commerce.legacy2commerce
 ```
 
 Verify that the table was moved:
@@ -172,3 +168,4 @@ Output:
 ~/vitess/examples/local$ mysql -h 127.0.0.1 -P 5726 -umsandbox -pmsandbox legacy -e 'show tables'
 mysql: [Warning] Using a password on the command line interface can be insecure.
 ```
+

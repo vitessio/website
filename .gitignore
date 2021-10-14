@@ -7,3 +7,10 @@ resources/
 bin/
 tmp/
 .idea
+
+# File generated when running npm install 
+package-lock.json
+
+# vim files
+*.swp
+tags

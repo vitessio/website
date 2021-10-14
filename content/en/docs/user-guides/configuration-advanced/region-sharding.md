@@ -109,11 +109,11 @@ HTTP/1.1 200 OK
 Date: Mon, 17 Aug 2020 14:20:08 GMT
 Content-Type: text/html; charset=utf-8
 
-W0817 07:20:08.822742    7735 main.go:64] W0817 14:20:08.821985 reparent.go:185] master-elect tablet zone1-0000000100 is not the shard master, proceeding anyway as -force was used
-W0817 07:20:08.823004    7735 main.go:64] W0817 14:20:08.822370 reparent.go:191] master-elect tablet zone1-0000000100 is not a master in the shard, proceeding anyway as -force was used
+W0817 07:20:08.822742    7735 main.go:64] W0817 14:20:08.821985 reparent.go:185] primary-elect tablet zone1-0000000100 is not the shard primary, proceeding anyway as -force was used
+W0817 07:20:08.823004    7735 main.go:64] W0817 14:20:08.822370 reparent.go:191] primary-elect tablet zone1-0000000100 is not a primary in the shard, proceeding anyway as -force was used
 I0817 07:20:08.823239    7735 main.go:64] I0817 14:20:08.823075 reparent.go:222] resetting replication on tablet zone1-0000000100
-I0817 07:20:08.833215    7735 main.go:64] I0817 14:20:08.833019 reparent.go:241] initializing master on zone1-0000000100
-I0817 07:20:08.849955    7735 main.go:64] I0817 14:20:08.849736 reparent.go:274] populating reparent journal on new master zone1-0000000100
+I0817 07:20:08.833215    7735 main.go:64] I0817 14:20:08.833019 reparent.go:241] initializing primary on zone1-0000000100
+I0817 07:20:08.849955    7735 main.go:64] I0817 14:20:08.849736 reparent.go:274] populating reparent journal on new primary zone1-0000000100
 New VSchema object:
 {
   "tables": {
@@ -415,26 +415,26 @@ HTTP/1.1 200 OK
 Date: Mon, 17 Aug 2020 15:07:55 GMT
 Content-Type: text/html; charset=utf-8
 
-W0817 08:07:55.217317   15230 main.go:64] W0817 15:07:55.215654 reparent.go:185] master-elect tablet zone1-0000000200 is not the shard master, proceeding anyway as -force was used
-W0817 08:07:55.218083   15230 main.go:64] W0817 15:07:55.215771 reparent.go:191] master-elect tablet zone1-0000000200 is not a master in the shard, proceeding anyway as -force was used
+W0817 08:07:55.217317   15230 main.go:64] W0817 15:07:55.215654 reparent.go:185] primary-elect tablet zone1-0000000200 is not the shard primary, proceeding anyway as -force was used
+W0817 08:07:55.218083   15230 main.go:64] W0817 15:07:55.215771 reparent.go:191] primary-elect tablet zone1-0000000200 is not a primary in the shard, proceeding anyway as -force was used
 I0817 08:07:55.218121   15230 main.go:64] I0817 15:07:55.215918 reparent.go:222] resetting replication on tablet zone1-0000000200
-I0817 08:07:55.229794   15230 main.go:64] I0817 15:07:55.229416 reparent.go:241] initializing master on zone1-0000000200
-I0817 08:07:55.249680   15230 main.go:64] I0817 15:07:55.249325 reparent.go:274] populating reparent journal on new master zone1-0000000200
-W0817 08:07:55.286894   15247 main.go:64] W0817 15:07:55.286288 reparent.go:185] master-elect tablet zone1-0000000300 is not the shard master, proceeding anyway as -force was used
-W0817 08:07:55.287392   15247 main.go:64] W0817 15:07:55.286354 reparent.go:191] master-elect tablet zone1-0000000300 is not a master in the shard, proceeding anyway as -force was used
+I0817 08:07:55.229794   15230 main.go:64] I0817 15:07:55.229416 reparent.go:241] initializing primary on zone1-0000000200
+I0817 08:07:55.249680   15230 main.go:64] I0817 15:07:55.249325 reparent.go:274] populating reparent journal on new primary zone1-0000000200
+W0817 08:07:55.286894   15247 main.go:64] W0817 15:07:55.286288 reparent.go:185] primary-elect tablet zone1-0000000300 is not the shard primary, proceeding anyway as -force was used
+W0817 08:07:55.287392   15247 main.go:64] W0817 15:07:55.286354 reparent.go:191] primary-elect tablet zone1-0000000300 is not a primary in the shard, proceeding anyway as -force was used
 I0817 08:07:55.287411   15247 main.go:64] I0817 15:07:55.286448 reparent.go:222] resetting replication on tablet zone1-0000000300
-I0817 08:07:55.300499   15247 main.go:64] I0817 15:07:55.300276 reparent.go:241] initializing master on zone1-0000000300
-I0817 08:07:55.324774   15247 main.go:64] I0817 15:07:55.324454 reparent.go:274] populating reparent journal on new master zone1-0000000300
-W0817 08:07:55.363497   15264 main.go:64] W0817 15:07:55.362451 reparent.go:185] master-elect tablet zone1-0000000400 is not the shard master, proceeding anyway as -force was used
-W0817 08:07:55.364061   15264 main.go:64] W0817 15:07:55.362569 reparent.go:191] master-elect tablet zone1-0000000400 is not a master in the shard, proceeding anyway as -force was used
+I0817 08:07:55.300499   15247 main.go:64] I0817 15:07:55.300276 reparent.go:241] initializing primary on zone1-0000000300
+I0817 08:07:55.324774   15247 main.go:64] I0817 15:07:55.324454 reparent.go:274] populating reparent journal on new primary zone1-0000000300
+W0817 08:07:55.363497   15264 main.go:64] W0817 15:07:55.362451 reparent.go:185] primary-elect tablet zone1-0000000400 is not the shard primary, proceeding anyway as -force was used
+W0817 08:07:55.364061   15264 main.go:64] W0817 15:07:55.362569 reparent.go:191] primary-elect tablet zone1-0000000400 is not a primary in the shard, proceeding anyway as -force was used
 I0817 08:07:55.364079   15264 main.go:64] I0817 15:07:55.362689 reparent.go:222] resetting replication on tablet zone1-0000000400
-I0817 08:07:55.378370   15264 main.go:64] I0817 15:07:55.378201 reparent.go:241] initializing master on zone1-0000000400
-I0817 08:07:55.401258   15264 main.go:64] I0817 15:07:55.400569 reparent.go:274] populating reparent journal on new master zone1-0000000400
-W0817 08:07:55.437158   15280 main.go:64] W0817 15:07:55.435986 reparent.go:185] master-elect tablet zone1-0000000500 is not the shard master, proceeding anyway as -force was used
-W0817 08:07:55.437953   15280 main.go:64] W0817 15:07:55.436038 reparent.go:191] master-elect tablet zone1-0000000500 is not a master in the shard, proceeding anyway as -force was used
+I0817 08:07:55.378370   15264 main.go:64] I0817 15:07:55.378201 reparent.go:241] initializing primary on zone1-0000000400
+I0817 08:07:55.401258   15264 main.go:64] I0817 15:07:55.400569 reparent.go:274] populating reparent journal on new primary zone1-0000000400
+W0817 08:07:55.437158   15280 main.go:64] W0817 15:07:55.435986 reparent.go:185] primary-elect tablet zone1-0000000500 is not the shard primary, proceeding anyway as -force was used
+W0817 08:07:55.437953   15280 main.go:64] W0817 15:07:55.436038 reparent.go:191] primary-elect tablet zone1-0000000500 is not a primary in the shard, proceeding anyway as -force was used
 I0817 08:07:55.437982   15280 main.go:64] I0817 15:07:55.436107 reparent.go:222] resetting replication on tablet zone1-0000000500
-I0817 08:07:55.449958   15280 main.go:64] I0817 15:07:55.449725 reparent.go:241] initializing master on zone1-0000000500
-I0817 08:07:55.467790   15280 main.go:64] I0817 15:07:55.466993 reparent.go:274] populating reparent journal on new master zone1-0000000500
+I0817 08:07:55.449958   15280 main.go:64] I0817 15:07:55.449725 reparent.go:241] initializing primary on zone1-0000000500
+I0817 08:07:55.467790   15280 main.go:64] I0817 15:07:55.466993 reparent.go:274] populating reparent journal on new primary zone1-0000000500
 ```
 
 ## Perform Resharding
@@ -445,9 +445,9 @@ Once the tablets are up, we can go ahead with the resharding.
 ```
 This script has only one command: `Reshard`
 ```bash
-vtctlclient Reshard -tablet_types=MASTER main.main2regions '0' '-40,40-80,80-c0,c0-'
+vtctlclient Reshard -tablet_types=PRIMARY main.main2regions '0' '-40,40-80,80-c0,c0-'
 ```
-Let us unpack this a bit. Since we are running only master tablets in this cluster, we have to tell the `Reshard` command to use them as the source for copying data into the target shards.
+Let us unpack this a bit. Since we are running only primary tablets in this cluster, we have to tell the `Reshard` command to use them as the source for copying data into the target shards.
 The next argument is of the form `keyspace.workflow`. `keyspace` is the one we want to reshard. `workflow` is an identifier chosen by the user. It can be any arbitrary string and is used to tie the different steps of the resharding flow together.
 We will see it being used in subsequent steps.
 Then we have the source shard `0` and target shards `-40,40-80,80-c0,c0-`
@@ -466,10 +466,10 @@ vtctlclient VReplicationExec zone1-0000000200 'select * from _vt.vreplication'
 +----+--------------+--------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------+---------+
 | id |   workflow   |             source             |                        pos                        | stop_pos |       max_tps       | max_replication_lag | cell | tablet_types | time_updated | transaction_timestamp |  state  | message | db_name |
 +----+--------------+--------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------+---------+
-|  1 | main2regions | keyspace:"main" shard:"0"      | MySQL56/cd3b495a-e096-11ea-9088-34e12d1e6711:1-44 |          | 9223372036854775807 | 9223372036854775807 |      | MASTER       |   1597676983 |                     0 | Running |         | vt_main |
+|  1 | main2regions | keyspace:"main" shard:"0"      | MySQL56/cd3b495a-e096-11ea-9088-34e12d1e6711:1-44 |          | 9223372036854775807 | 9223372036854775807 |      | PRIMARY      |   1597676983 |                     0 | Running |         | vt_main |
 |    |              | filter:<rules:<match:"/.*"     |                                                   |          |                     |                     |      |              |              |                       |         |         |         |
 |    |              | filter:"-40" > >               |                                                   |          |                     |                     |      |              |              |                       |         |         |         |
-+----+--------------+--------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+----
++----+--------------+--------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------+---------+
 ```
 We have a running stream on tablet 200 (shard `-40`) that will keep it up-to-date with the source shard (`0`)
 
@@ -477,7 +477,7 @@ We have a running stream on tablet 200 (shard `-40`) that will keep it up-to-dat
 
 Once the copy process is complete, we can start cutting-over traffic.
 This is done in 2 steps, `SwitchReads` and `SwitchWrites`. Note that the commands are named for the tablet_types and not user operations.
-`Reads` is used for replica/rdonly, and `Writes` for master. Read operations on master will not be affected by a `SwitchReads`.
+`Reads` is used for replica/rdonly, and `Writes` for primary. Read operations on primary will not be affected by a `SwitchReads`.
 
 ```bash
 ./204_switch_reads.sh

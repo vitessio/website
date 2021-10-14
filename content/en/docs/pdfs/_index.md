@@ -2,10 +2,17 @@
 title: Older Version Docs
 description: PDFs of vitess.io/docs at the time of previous versions
 weight: 25
+docs_nav_disable_expand: true
 ---
 
-To view a PDF of the state of the Vitess Documentation for previous versions of Vitess please follow the links below:
+The Vitess Documentation currently posted should reflect the most recent code.
 
-- [Vitess Docs 5.0 on April 17, 2020](https://drive.google.com/file/d/1gK6ELHFxr5X9Rieg64XJ7iFcnOuUlwb-/view?usp=sharing)
-- [Vitess Docs 6.0 on July 28, 2020](https://drive.google.com/file/d/11r7trOcjjKnxcPJWa8Ae7lkti_Ny0HqV/view?usp=sharing)
-- [Vitess Docs 7.0 on October 26, 2020](https://drive.google.com/file/d/1wgGuJbCmchSif6z569ujqG4-QE6zVn8f/view?usp=sharing)
+To view a PDF of the state of the Vitess Documentation on the date of the general availability release for previous versions please follow the links below:
+
+- [Vitess Docs 11.0 on August 2, 2021](../../../../files/version-pdfs/Vitess-Docs-11.0-08-02-2021.pdf)
+- [Vitess Docs 10.0 on April 27, 2021](../../../../files/version-pdfs/Vitess-Docs-10.0-04-27-2021.pdf)
+- [Vitess Docs 9.0 on January 26, 2021](../../../../files/version-pdfs/Vitess-Docs-9.0-01-26-2021.pdf)
+- [Vitess Docs 8.0 on October 27, 2020](../../../../files/version-pdfs/Vitess-Docs-8.0-10-27-2020.pdf)
+- [Vitess Docs 7.0 on July 28, 2020](../../../../files/version-pdfs/Vitess-Docs-7.0-07-28-2020.pdf)
+- [Vitess Docs 6.0 on April 29, 2020](../../../../files/version-pdfs/Vitess-Docs-6.0-04-29-2020.pdf)
+- [Vitess Docs 5.0 on February 4, 2020](../../../../files/version-pdfs/Vitess-Docs-5.0-02-04-2020.pdf)

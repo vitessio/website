@@ -1,9 +1,10 @@
 ---
 title: Topology Service
+weight: 20
 aliases: ['/docs/user-guides/topology-service/','/docs/reference/topology-service/']
 ---
 
-This document describes the Topology Service, a key part of the Vitess architecture. This service is exposed to all Vitess processes, and is used to store small pieces of configuration data about the Vitess cluster, and provide cluster-wide locks. It also supports watches, and master election.
+This document describes the Topology Service, a key part of the Vitess architecture. This service is exposed to all Vitess processes, and is used to store small pieces of configuration data about the Vitess cluster, and provide cluster-wide locks. It also supports watches, and primary election.
 
 Vitess uses a plugin implementation to support multiple backend technologies for the Topology Service (etcd, ZooKeeper, Consul). Concretely, the Topology Service handles two functions: it is both a [distributed lock manager](http://en.wikipedia.org/wiki/Distributed_lock_manager) and a repository for topology metadata. In earlier versions of Vitess, the Topology Serice was also referred to as the Lock Service.
 
@@ -77,9 +78,9 @@ guarantee only one operation changes the Keyspace data concurrently.
 A Shard contains a subset of the data for a Keyspace. The Shard record in the
 Global topology service contains:
 
-* the Master tablet alias for this shard (that has the MySQL master).
+* the primary tablet alias for this shard (that has the MySQL primary).
 * the sharding key range covered by this Shard inside the Keyspace.
-* the tablet types this Shard is serving (master, replica, batch, …), per cell
+* the tablet types this Shard is serving (primary, replica, batch, …), per cell
   if necessary.
 * if using filtered replication, the source shards this shard is replicating
   from.
@@ -94,7 +95,7 @@ tasks cannot concurrently alter the data.
 ### VSchema data
 
 The VSchema data contains sharding and routing information for
-the [VTGate V3](https://github.com/vitessio/vitess/blob/master/doc/VTGateV3Features.md) API.
+the [VTGate V3](https://github.com/vitessio/vitess/blob/main/doc/VTGateV3Features.md) API.
 
 ## Local data
 
@@ -108,7 +109,7 @@ making up each tablet (along with the MySQL process):
 
 * the Tablet Alias (cell+unique id) that uniquely identifies the Tablet.
 * the Hostname, IP address and port map of the Tablet.
-* the current Tablet type (master, replica, batch, spare, …).
+* the current Tablet type (primary, replica, batch, spare, …).
 * which Keyspace / Shard the tablet is part of.
 * the sharding Key Range served by this Tablet.
 * user-specified tag map (e.g. to store per-installation data).
@@ -143,7 +144,7 @@ It is the local representation of a Keyspace. It contains information on what
 shard to use for getting to the data (but not information about each individual
 shard):
 
-* the partitions map is keyed by the tablet type (master, replica, batch, …) and
+* the partitions map is keyed by the tablet type (primary, replica, batch, …) and
   the value is a list of shards to use for serving.
 * it also contains the global Keyspace fields, copied for fast access.
 
@@ -165,7 +166,7 @@ rebuilt when using `vtctl ApplyVSchema` (unless prevented by flags).
 The Topology Service is involved in many Vitess workflows.
 
 When a Tablet is initialized, we create the Tablet record, and add the Tablet to
-the Replication Graph. If it is the master for a Shard, we update the global
+the Replication Graph. If it is the primary for a Shard, we update the global
 Shard record as well.
 
 Administration tools need to find the tablets for a given Keyspace / Shard. To retrieve this:
@@ -176,7 +177,7 @@ Shard record has these)
 Keyspace / Shard to find all the tablets then we can read each tablet record.
 
 When a Shard is reparented, we need to update the global Shard record with the
-new master alias.
+new primary alias.
 
 Finding a tablet to serve the data is done in two stages:
 
@@ -301,9 +302,9 @@ regular files:
 
 * Locks sub-directory: `locks/` (for instance:
   `keyspaces/<keyspace>/Keyspace/locks/` for a keyspace)
-* Master election path: `elections/<name>`
+* Leader election path: `elections/<name>`
 
-Both locks and master election are implemented using ephemeral, sequential files
+Both locks and primary election are implemented using ephemeral, sequential files
 which are stored in their respective directory.
 
 ### etcd `etcd2` implementation (new version of `etcd`)
@@ -357,7 +358,7 @@ can be set with the `-topo_etcd_lease_duration` flag, defaults to 30
 seconds). The ephemeral file with the lowest ModRevision has the lock, the
 others wait for files with older ModRevisions to disappear.
 
-Master elections also use a subdirectory, named after the election Name, and use
+Leader elections also use a subdirectory, named after the election Name, and use
 a similar method as the locks, with ephemeral files.
 
 We store the proto3 binary data for each object (as the v3 API allows us to store 
@@ -410,8 +411,8 @@ the same server address and, very importantly, a *different* root node path.
 For locks, we use a file named `Lock` in the directory to lock, and the regular
 Consul Lock API.
 
-Master elections use a single lock file (the Election path) and the regular
-Consul Lock API. The contents of the lock file is the ID of the current master.
+Leader elections use a single lock file (the Election path) and the regular
+Consul Lock API. The contents of the lock file is the ID of the current primary.
 
 Watches use the Consul long polling Get call. They cannot be interrupted, so we
 use a long poll whose duration is set by the
@@ -449,7 +450,7 @@ vtgates can now be started in the second cell, and used normally.
 
 vtgate can then be configured with a list of cells to watch for tablets using
 the `-cells_to_watch` command line parameter. It can then use all tablets in
-all cells to route traffic. Note this is necessary to access the master in
+all cells to route traffic. Note this is necessary to access the primary in
 another cell.
 
 After the extension to two cells, the original topo service contains both the

@@ -48,7 +48,7 @@ If you would like to submit a topic for discussion at the meeting, please [email
 
 Vitess is an independent open-source project and not controlled by any single company. To emphasize this we joined the [Cloud Native Computing Foundation](https://cncf.io/) in 2018.
 
-Within the project, we make decisions [based on these rules](https://github.com/vitessio/vitess/blob/master/GOVERNANCE.md).
+Within the project, we make decisions [based on these rules](https://github.com/vitessio/vitess/blob/main/GOVERNANCE.md).
 
 ### Code of Conduct
 

@@ -1,6 +1,6 @@
 ---
 title: Exporting data from Vitess
-weight: 8
+weight: 18
 aliases: ['/docs/user-guides/exporting-data/'] 
 ---
 
@@ -33,12 +33,15 @@ The default invocation of `mysqldump` attempts to execute statements which are [
 For example to export the `commerce` keyspace using the `mysqldump` binary from MySQL 5.7:
 
 ```sh
-$ mysqldump  --lock-tables=off --set-gtid-purged=OFF --no-tablespaces commerce > commerce.sql
+$ mysqldump  --set-gtid-purged=OFF --no-tablespaces commerce > commerce.sql
 ```
+{{< info >}}
+Vitess' support for LOCK and UNLOCK statements is currently syntax-only. As a result, Vitess will simply ignore LOCK and UNLOCK statements without taking any underlying action. It is therefore *unsafe* to perform a locking mysqldump against a database that is actively being written to, and you should pause writes completely while performing the dump; or be willing to deal with any data inconsistencies that result.
+{{< /info >}}
 
 **NOTE:** You will be limited by the Vitess row limits in the size of the
 tables that you can dump using this method.  The default Vitess row limit is
-determined by the VTTablet option `-queryserver-config-max-result-size`
+determined by the vttablet option `-queryserver-config-max-result-size`
 and defaults to 10000 rows.  So for an unsharded database, you will not be
 able to dump tables with more than 10000 rows, or N x 10000 rows if the table
 is fully sharded across N shards.  Note that you should not blindly raise your

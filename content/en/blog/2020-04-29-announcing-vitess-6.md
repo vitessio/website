@@ -6,7 +6,7 @@ tags: ['Guides']
 title: 'Announcing Vitess 6'
 ---
 
-I am excited to announce the general availability of Vitess 6, the second release to follow our [new accelerated release schedule](https://github.com/vitessio/enhancements/blob/master/veps/vep-1.md).
+I am excited to announce the general availability of Vitess 6, the second release to follow our [new accelerated release schedule](https://github.com/vitessio/enhancements/blob/main/veps/vep-1.md).
 
 While only 12 weeks have elapsed since the previous release, it feels like a few key investments have started to pay dividends all at once. To provide some personal highlights:
 

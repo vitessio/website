@@ -16,9 +16,9 @@ Similarly, tables that are updated at a more frequent rate could increase the mo
 
 Internally, a MoveTables operation is comprised of both a table copy and a subscription to all changes made to the table. Vitess uses batching to improve the performance of both table copying and applying subscription changes, but you should expect that tables with lighter modification rates to move faster.
 
-During the active move process, data is copied from replicas instead of the master server. This helps ensure minimal production traffic impact.
+During the active move process, data is copied from replicas instead of the primary server. This helps ensure minimal production traffic impact.
 
-During the `SwitchWrites` phase of the MoveTables operation, Vitess may be briefly unavailable. This unavailability is usually a few seconds, but will be higher in the event that your system has a high replication delay from master to replica(s).
+During the `SwitchWrites` phase of the MoveTables operation, Vitess may be briefly unavailable. This unavailability is usually a few seconds, but will be higher in the event that your system has a high replication delay from primary to replica(s).
 
 
 **Related Vitess Documentation**

@@ -1,5 +1,6 @@
 ---
 title: Schema Management
+weight: 16
 aliases: ['/docs/schema-management/','/docs/user-guides/schema-management/','/docs/reference/schema-management/']
 ---
 
@@ -42,9 +43,9 @@ GetSchema test-000000100
 
 ### ValidateSchemaShard
 
-The [`ValidateSchemaShard`](../../../reference/programs/vtctl/#validateschemashard) command confirms that for a given keyspace, all of the replica tablets in a specified shard have the same schema as the master tablet in that shard. When you call `ValidateSchemaShard`, you specify both the keyspace and the shard that you are validating.
+The [`ValidateSchemaShard`](../../../reference/programs/vtctl/#validateschemashard) command confirms that for a given keyspace, all of the replica tablets in a specified shard have the same schema as the primary tablet in that shard. When you call `ValidateSchemaShard`, you specify both the keyspace and the shard that you are validating.
 
-The following command confirms that the master and replica tablets in shard `0` all have the same schema for the `user` keyspace:
+The following command confirms that the primary and replica tablets in shard `0` all have the same schema for the `user` keyspace:
 
 ``` sh
 ValidateSchemaShard user/0
@@ -52,9 +53,9 @@ ValidateSchemaShard user/0
 
 ### ValidateSchemaKeyspace
 
-The [`ValidateSchemaKeyspace`](../../../reference/programs/vtctl/#validateschemakeyspace) command confirms that all of the tablets in a given keyspace have the the same schema as the master tablet on shard `0` in that keyspace. Thus, whereas the `ValidateSchemaShard` command confirms the consistency of the schema on tablets within a shard for a given keyspace, `ValidateSchemaKeyspace` confirms the consistency across all tablets in all shards for that keyspace.
+The [`ValidateSchemaKeyspace`](../../../reference/programs/vtctl/#validateschemakeyspace) command confirms that all of the tablets in a given keyspace have the the same schema as the primary tablet on shard `0` in that keyspace. Thus, whereas the `ValidateSchemaShard` command confirms the consistency of the schema on tablets within a shard for a given keyspace, `ValidateSchemaKeyspace` confirms the consistency across all tablets in all shards for that keyspace.
 
-The following command confirms that all tablets in all shards have the same schema as the master tablet in shard 0 for the user keyspace:
+The following command confirms that all tablets in all shards have the same schema as the primary tablet in shard 0 for the user keyspace:
 
 ``` sh
 ValidateSchemaKeyspace user
@@ -86,16 +87,16 @@ Vitess' schema modification functionality is designed the following goals in min
 * Guarantee very little downtime (or no downtime) for most schema updates.
 * Do not store permanent schema data in the topology service.
 
-Note that, at this time, Vitess only supports [data definition statements](https://dev.mysql.com/doc/refman/5.6/en/sql-syntax-data-definition.html) that create, modify, or delete database tables. For instance, `ApplySchema` does not affect stored procedures or grants.
+Note that, at this time, Vitess only supports [data definition statements](https://dev.mysql.com/doc/refman/5.6/en/sql-data-definition-statements.html) that create, modify, or delete database tables. For instance, `ApplySchema` does not affect stored procedures or grants.
 
-The [ApplySchema](../../../reference/programs/vtctl/#applyvschema) command applies a schema change to the specified keyspace on every master tablet, running in parallel on all shards. Changes are then propagated to replicas. The command format is: `ApplySchema {-sql=<sql> || -sql_file=<filename>} <keyspace>`
+The [ApplySchema](../../../reference/programs/vtctl/#applyvschema) command applies a schema change to the specified keyspace on every primary tablet, running in parallel on all shards. Changes are then propagated to replicas. The command format is: `ApplySchema {-sql=<sql> || -sql_file=<filename>} <keyspace>`
 
 When the `ApplySchema` action actually applies a schema change to the specified keyspace, it performs the following steps:
 
 1. It finds shards that belong to the keyspace, including newly added shards if a [resharding event](../sharding/#resharding) has taken place.
 2. It validates the SQL syntax and determines the impact of the schema change. If the scope of the change is too large, Vitess rejects it. See the [permitted schema changes](#permitted-schema-changes) section for more detail.
 3. It employs a pre-flight check to ensure that a schema update will succeed before the change is actually applied to the live database. In this stage, Vitess copies the current schema into a temporary database, applies the change there to validate it, and retrieves the resulting schema. By doing so, Vitess verifies that the change succeeds without actually touching live database tables.
-4. It applies the SQL command on the master tablet in each shard.
+4. It applies the SQL command on the primary tablet in each shard.
 
 The following sample command applies the SQL in the **user_table.sql** file to the **user** keyspace:
 
@@ -120,8 +121,8 @@ The following list identifies types of DDL statements that Vitess supports:
 In addition, Vitess applies the following rules when assessing the impact of a potential change:
 
 * `DROP` statements are always allowed, regardless of the table's size.
-* `ALTER` statements are only allowed if the table on the shard's master tablet has 100,000 rows or less.
-* For all other statements, the table on the shard's master tablet must have 2 million rows or less.
+* `ALTER` statements are only allowed if the table on the shard's primary tablet has 100,000 rows or less.
+* For all other statements, the table on the shard's primary tablet must have 2 million rows or less.
 
 If a schema change gets rejected because it affects too many rows, you can specify the flag `-allow_long_unavailability` to tell `ApplySchema` to skip this check. However, we do not recommend this. Instead, you should apply large schema changes by using an external tool such as `gh-ost` or `pt-online-schema-change`.
 

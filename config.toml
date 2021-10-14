@@ -61,12 +61,12 @@ icon = "cubes"
 
 [[languages.en.params.features]]
 title = "Performance"
-description = "Vitess automatically rewrites queries that hurt database performance. It also uses caching mechanisms to mediate queries and prevent duplicate queries from simultaneously reaching your database."
+description = "Vitess automatically rewrites queries that hurt database performance. It also uses caching mechanisms to mediate queries and prevent duplicate queries from simultaneously reaching your database. Performance is monitored through nightly <a href='https://benchmark.vitess.io'>benchmarks</a>."
 icon = "fighter-jet"
 
 [[languages.en.params.features]]
 title = "Manageability"
-description = "Vitess automatically handles functions like master failovers and backups. It uses a lock server to track and administer servers, letting your application be blissfully ignorant of database topology."
+description = "Vitess automatically handles functions like failovers and backups. It uses a lock server to track and administer servers, letting your application be blissfully ignorant of database topology."
 icon = "tachometer-alt"
 
 [[languages.en.params.features]]
@@ -92,7 +92,7 @@ icon = "cubes"
 
 [[languages.zh.params.features]]
 title = "性能"
-description = "Vitess自动重写对数据库性能有损害的查询。它还使用缓存机制来调解查询，并防止重复查询同时到达您的数据库"
+description = "Vitess自动重写对数据库性能有损害的查询。它还使用缓存机制来调解查询，并防止重复查询同时到达您的数据库。通過每夜的<a href='https://benchmark.vitess.io'>基準</a>來監控性能表現。"
 icon = "fighter-jet"
 
 [[languages.zh.params.features]]

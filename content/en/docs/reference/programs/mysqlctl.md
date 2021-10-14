@@ -81,7 +81,7 @@ mysqlctl -tablet_uid 101 -alsologtostderr shutdown
 The following global parameters apply to `mysqlctl`:
 
 | Name | Type | Definition |
-| :-------- | :--------- | :--------- |
+| :-------------------------------- | :--------- | :--------- |
 | alsologtostderr | boolean | log to standard error as well as files |
 | app_idle_timeout | duration | Idle timeout for app connections (default 1m0s) |
 | app_pool_size | int | Size of the connection pool for app connections (default 40) |
@@ -146,7 +146,7 @@ The following global parameters apply to `mysqlctl`:
 | log_err_stacks | boolean | log stack traces for errors |
 | log_rotate_max_size | uint | size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800) |
 | logtostderr | boolean | log to standard error instead of files |
-| master_connect_retry | duration | how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s) |
+| replication_connect_retry | duration | how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s) |
 | mem-profile-rate | int | profile every n bytes allocated (default 524288) |
 | mutex-profile-fraction | int | profile every n mutex contention events (see runtime.SetMutexProfileFraction) |
 | mysql_auth_server_static_file | string | JSON File to read the users/passwords from. |

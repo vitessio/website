@@ -8,7 +8,7 @@ A VTTablet server _controls_ a running MySQL server. VTTablet supports two prima
 * Managed MySQL (most common)
 * Unmanaged or Remote MySQL
 
-In addition to these deployment types, a partially managed VTTablet is also possible by setting `-disable_active_reparents`.
+In addition to these deployment types, a partially managed VTTablet is also possible by setting `-disable_active_reparents`. 
 
 
 ## Example Usage
@@ -36,43 +36,19 @@ $TOPOLOGY_FLAGS
 
 ### Unmanaged or Remote MySQL
 
-In this mode, an external MySQL can be used such as RDS, Aurora, CloudSQL:
-
-```bash
-mkdir -p $VTDATAROOT/vt_0000000401
-vttablet \
- $TOPOLOGY_FLAGS \
- -logtostderr \
- -log_queries_to_file $VTDATAROOT/tmp/vttablet_0000000401_querylog.txt \
- -tablet-path "zone1-0000000401" \
- -init_keyspace legacy \
- -init_shard 0 \
- -init_tablet_type replica \
- -port 15401 \
- -grpc_port 16401 \
- -service_map 'grpc-queryservice,grpc-tabletmanager,grpc-updatestream' \
- -pid_file $VTDATAROOT/vt_0000000401/vttablet.pid \
- -vtctld_addr http://localhost:15000/ \
- -db_host 127.0.0.1 \
- -db_port 5726 \
- -db_app_user msandbox \
- -db_app_password msandbox \
- -db_dba_user msandbox \
- -db_dba_password msandbox \
- -db_repl_user msandbox \
- -db_repl_password msandbox \
- -db_filtered_user msandbox \
- -db_filtered_password msandbox \
- -db_allprivs_user msandbox \
- -db_allprivs_password msandbox \
- -init_db_name_override legacy \
- -init_populate_metadata &
-
-sleep 10
-vtctlclient TabletExternallyReparented zone1-401
-```
+In this mode, an external MySQL can be used such as AWS RDS, AWS Aurora, Google CloudSQL; or just an existing (vanilla) MySQL installation.
 
 See [Unmanaged Tablet](../../../user-guides/configuration-advanced/unmanaged-tablet) for the full guide.
+
+### Partially managed MySQL
+
+Even if a MySQL is remote, you can still make vttablet perform some management functions. They are as follows:
+
+* `-disable_active_reparents`: If this flag is set, then any reparent or replica commands will not be allowed. These are InitShardMaster, PlannedReparent, PlannedReparent, EmergencyReparent, and ReparentTablet. In this mode, you should use the TabletExternallyReparented command to inform vitess of the current primary.
+* `-replication_connect_retry`: This value is give to mysql when it connects a replica to the primary as the retry duration parameter.
+* `-enable_replication_reporter`: If this flag is set, then vttablet will transmit replica lag related information to the vtgates, which will allow it to balance load better. Additionally, enabling this will also cause vttablet to restart replication if it was stopped. However, it will do this only if -disable_active_reparents was not turned on.
+* `-enable_semi_sync`: This option will automatically enable semi-sync on new replicas as well as on any tablet that transitions into a replica type. This includes the demotion of a primary to a replica.
+* `-heartbeat_enable` and `-heartbeat interval duration`: cause vttablet to write heartbeats to the sidecar database. This information is also used by the replication reporter to assess replica lag.
 
 
 ## Options
@@ -144,7 +120,6 @@ The following global options apply to `vttablet`:
 | -dba_idle_timeout | duration | Idle timeout for dba connections (default 1m0s) |
 | -dba_pool_size | int | Size of the connection pool for dba connections (default 20) |
 | -degraded_threshold | duration | replication lag after which a replica is considered degraded (only used in status UI) (default 30s) |
-| -demote_master_type | string | the tablet type a demoted master will transition to (default "REPLICA") |
 | -disable_active_reparents |  | if set, do not allow active reparents. Use this to protect a cluster using external reparents. |
 | -discovery_high_replication_lag_minimum_serving | duration | the replication lag that is considered too high when selecting the minimum num vttablets for serving (default 2h0m0s) |
 | -discovery_low_replication_lag | duration | the replication lag that is considered low enough to be healthy (default 30s) |
@@ -156,12 +131,12 @@ The following global options apply to `vttablet`:
 | -enable_hot_row_protection |  | If true, incoming transactions for the same row (range) will be queued and cannot consume all txpool slots. |
 | -enable_hot_row_protection_dry_run |  | If true, hot row protection is not enforced but logs if transactions would have been queued. |
 | -enable_replication_reporter |  | Register the health check module that monitors MySQL replication |
-| -enable_semi_sync |  | Enable semi-sync when configuring replication, on master and replica tablets only (rdonly tablets will not ack). |
+| -enable_semi_sync |  | Enable semi-sync when configuring replication, on primary and replica tablets only (rdonly tablets will not ack). |
 | -enable_transaction_limit |  | If true, limit on number of transactions open at the same time will be enforced for all users. User trying to open a new transaction after exhausting their limit will receive an error immediately, regardless of whether there are available slots or not. |
 | -enable_transaction_limit_dry_run |  | If true, limit on number of transactions open at the same time will be tracked for all users, but not enforced. |
 | -enforce-tableacl-config |  | if this flag is true, vttablet will fail to start if a valid tableacl config does not exist |
 | -enforce_strict_trans_tables |  | If true, vttablet requires MySQL to run with STRICT_TRANS_TABLES or STRICT_ALL_TABLES on. It is recommended to not turn this flag off. Otherwise MySQL may alter your supplied values before saving them to the database. (default true) |
-| -file_backup_storage_root | string | root directory for the file backup storage |
+| -file_backup_storage_root | string | root directory for the file backup storage -- this path must be on shared storage to provide a global view of backups to all vitess components |
 | -filecustomrules | string | file based custom rule path |
 | -finalize_external_reparent_timeout | duration | Timeout for the finalize stage of a fast external reparent reconciliation. (default 30s) |
 | -gcs_backup_storage_bucket | string | Google Cloud Storage bucket to use for backups |
@@ -189,7 +164,7 @@ The following global options apply to `vttablet`:
 | -grpc_server_keepalive_enforcement_policy_min_time | duration | grpc server minimum keepalive time (default 5m0s) |
 | -grpc_server_keepalive_enforcement_policy_permit_without_stream |  | grpc server permit client keepalive pings even when there are no active streams (RPCs) |
 | -health_check_interval | duration | Interval between health checks (default 20s) |
-| -heartbeat_enable |  | If true, vttablet records (if master) or checks (if replica) the current time of a replication heartbeat in the table _vt.heartbeat. The result is used to inform the serving state of the vttablet via healthchecks. |
+| -heartbeat_enable |  | If true, vttablet records (if primary) or checks (if replica) the current time of a replication heartbeat in the table _vt.heartbeat. The result is used to inform the serving state of the vttablet via healthchecks. |
 | -heartbeat_interval | duration | How frequently to read and write replication heartbeat. (default 1s) |
 | -hot_row_protection_concurrent_transactions | int | Number of concurrent transactions let through to the txpool/MySQL for the same hot row. Should be > 1 to have enough 'ready' transactions in MySQL and benefit from a pipelining effect. (default 5) |
 | -hot_row_protection_max_global_queue_size | int | Global queue limit across all row (ranges). Useful to prevent that the queue can grow unbounded. (default 1000) |
@@ -201,8 +176,8 @@ The following global options apply to `vttablet`:
 | -init_tablet_type | string | (init parameter) the tablet type to use for this tablet. |
 | -init_tags | value | (init parameter) comma separated list of key:value pairs used to tag the tablet |
 | -init_timeout | duration | (init parameter) timeout to use for the init phase. (default 1m0s) |
-| -jaeger-agent-host | string | host and port to send spans to. if empty, no tracing will be done |
-| -keep_logs | duration | keep logs for this long (using ctime) (zero to keep forever) |
+| -jaeger-agent-host | string | host and port to send spans to. If empty, no tracing will be done |
+| -keep_logs | duration | keep logs for this long (using ctime) (zero to keep forever). Note ctime here means "change time" and can be essentially equivalent to mtime. Read [#5318](https://github.com/vitessio/vitess/issues/5318) |
 | -keep_logs_by_mtime | duration | keep logs for this long (using mtime) (zero to keep forever) |
 | -lameduck-period | duration | keep running at least this long after SIGTERM before stopping (default 50ms) |
 | -legacy_replication_lag_algorithm |  | use the legacy algorithm when selecting the vttablets for serving (default true) |
@@ -214,7 +189,7 @@ The following global options apply to `vttablet`:
 | -log_queries_to_file | string | Enable query logging to the specified file |
 | -log_rotate_max_size | uint | size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800) |
 | -logtostderr |  | log to standard error instead of files |
-| -master_connect_retry | duration | how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s) |
+| -replication_connect_retry | duration | how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s) |
 | -mem-profile-rate | int | profile every n bytes allocated (default 524288) |
 | -min_number_serving_vttablets | int | the minimum number of vttablets that will be continue to be used even with low replication lag (default 2) |
 | -mutex-profile-fraction | int | profile every n mutex contention events (see runtime.SetMutexProfileFraction) |
@@ -271,6 +246,8 @@ The following global options apply to `vttablet`:
 | -queryserver-config-query-pool-waiter-cap | int | query server query pool waiter limit, this is the maximum number of queries that can be queued waiting to get a connection (default 5000) |
 | -queryserver-config-query-timeout | int | query server query timeout (in seconds), this is the query timeout in vttablet side. If a query takes more than this timeout, it will be killed. (default 30) |
 | -queryserver-config-schema-reload-time | int | query server schema reload time, how often vttablet reloads schemas from underlying MySQL instance in seconds. vttablet keeps table schemas in its own memory and periodically refreshes it from MySQL. This config controls the reload time. (default 1800) |
+| -queryserver-config-schema-change-signal-interval | int | interval used to periodically send schema change updates to vtgate (default 5 seconds) |
+| -queryserver-config-schema-change-signal | boolean | enable schema tracking |
 | -queryserver-config-stream-buffer-size | int | query server stream buffer size, the maximum number of bytes sent from vttablet for each stream call. It's recommended to keep this value in sync with vtgate's stream_buffer_size. (default 32768) |
 | -queryserver-config-stream-pool-prefill-parallelism | int | query server stream pool prefill parallelism, a non-zero value will prefill the pool using the specified parallelism |
 | -queryserver-config-stream-pool-size | int | query server stream connection pool size, stream pool is used by stream queries: queries that return results to client in a streaming fashion (default 200) |
@@ -286,6 +263,7 @@ The following global options apply to `vttablet`:
 | -remote_operation_timeout | duration | time to wait for a remote operation (default 30s) |
 | -restore_concurrency | int | (init restore parameter) how many concurrent files to restore at once (default 4) |
 | -restore_from_backup |  | (init restore parameter) will check BackupStorage for a recent backup at startup and start there |
+| -restore_from_backup_ts | string | (init restore parameter) if set, restore the latest backup taken at or before this timestamp. Example: '2021-04-29.133050' (Vitess 12.0+) |
 | -s3_backup_aws_endpoint | string | endpoint of the S3 backend (region must be provided) |
 | -s3_backup_aws_region | string | AWS region to use (default "us-east-1") |
 | -s3_backup_aws_retries | int | AWS request retries (default -1) |
@@ -327,7 +305,7 @@ The following global options apply to `vttablet`:
 | -tablet_protocol | string | how to talk to the vttablets (default "grpc") |
 | -tablet_url_template | string | format string describing debug tablet url formatting. See the Go code for getTabletDebugURL() how to customize this. (default "http://{{.GetTabletHostPort}}") |
 | -topo_consul_watch_poll_duration | duration | time of the long poll for watch queries. (default 30s) |
-| -topo_etcd_lease_ttl | int | Lease TTL for locks and master election. The client will use KeepAlive to keep the lease going. (default 30) |
+| -topo_etcd_lease_ttl | int | Lease TTL for locks and leader election. The client will use KeepAlive to keep the lease going. (default 30) |
 | -topo_etcd_tls_ca | string | path to the ca to use to validate the server cert when connecting to the etcd topo server |
 | -topo_etcd_tls_cert | string | path to the client cert to use to connect to the etcd topo server, requires topo_etcd_tls_key, enables TLS |
 | -topo_etcd_tls_key | string | path to the client key to use to connect to the etcd topo server, enables TLS |
@@ -368,7 +346,7 @@ The following global options apply to `vttablet`:
 | -vreplication_healthcheck_timeout | duration | healthcheck retry delay (default 1m0s) |
 | -vreplication_healthcheck_topology_refresh | duration | refresh interval for re-reading the topology (default 30s) |
 | -vreplication_retry_delay | duration | delay before retrying a failed binlog connection (default 5s) |
-| -vreplication_tablet_type | string | comma separated list of tablet types used as a source (default "REPLICA") |
+| -vreplication_tablet_type | string | comma separated list of tablet types used as a source (default "PRIMARY,REPLICA") |
 | -vstream_packet_size | int | Suggested packet size for VReplication streamer. This is used only as a recommendation. The actual packet size may be more or less than this amount. (default 30000) |
 | -vtctld_addr | string | address of a vtctld instance |
 | -vtgate_protocol | string | how to talk to vtgate (default "grpc") |
@@ -382,4 +360,12 @@ The following global options apply to `vttablet`:
 | -xtrabackup_stripe_block_size | uint | Size in bytes of each block that gets sent to a given stripe before rotating to the next stripe (default 102400) |
 | -xtrabackup_stripes | uint | If greater than 0, use data striping across this many destination files to parallelize data transfer and decompression |
 | -xtrabackup_user | string | User that xtrabackup will use to connect to the database server. This user must have all necessary privileges. For details, please refer to xtrabackup documentation. |
+
+### Key Options
+
+* -restore_from_backup: The default value for this flag is false. If set to true, and the my.cnf file was successfully loaded, then vttablet can perform automatic restores as follows:
+
+	* If started against a mysql instance that has no data files, it will search the list of backups for the latest one, and initiate a restore. After this, it will point the mysql to the current primary and wait for replication to catch up. Once replication is caught up to the specified tolerance limit, it will advertise itself as serving. This will cause the vtgates to add it to the list of healthy tablets to serve queries from.
+	* If this flag is true, but my.cnf was not loaded, then vttablet will fatally exit with an error message.
+	* You can additionally control the level of concurrency for a restore with the `-restore_concurrency` flag. This is typically useful in cloud environments to prevent the restore process from becoming a 'noisy' neighbor by consuming all available disk IOPS.
 

@@ -4,6 +4,86 @@ weight: 1
 aliases: ['/resources/presentations.html']
 ---
 
+## Perconalive 2021
+
+Deploying a Sharded Vitess Sandbox Cluster in Public Cloud Kubernetes in 10 Minutes. - Jordan Moldow, Box
+
+{{< youtube id="Bllc-u_cCGA" autoplay="false" >}}
+
+Scaling MySQL @LinkedIn with Vitess. - Apoorv Purohit and Karthik Appigatla, LinkedIn
+
+{{< youtube id="fbI6wIIKs50" autoplay="false" >}}
+
+Integrating Best of Breed Open Source Tools to Vitess: Orchestrator - Alkin Tezuysal, PlanetScale
+
+{{< youtube id="0a4xqQ3JYjw" autoplay="false" >}}
+
+Revertible, Recoverable Schema Migrations in Vitess - Shlomi Noach, PlanetScale
+
+{{< youtube id="kB7ziLxXft4" autoplay="false" >}}
+
+## Rawkode Live
+
+Introduction to Vitess.  Deepthi Sigireddi, Alkin Tezuysal - PlanetScale, David McKay @rawkode
+
+{{< youtube id="Cwpu0y119I0" autoplay="false" >}}
+
+## Percona FOSS Talks 2021
+
+All Things Vitess, MySQL, and Sailing: Alkin Tezuysal on Percona’s HOSS Talks FOSS!
+
+{{< youtube id="8e3IC-lAgXs" autoplay="false" >}}
+
+## FOSDEM 2021
+
+* [Open Source Database Infrastructure with Vitess](http://bofh.nikhef.nl/events/FOSDEM/2021/D.mysql/vitess.webm) - Shlomi Noach, PlanetScale
+* [How to shard MariaDB like a Pro?](http://bofh.nikhef.nl/events/FOSDEM/2021/D.mariadb/mariadb_shard.webm) - Alkin Tezuysal, PlanetScale
+
+## KubeCon NA 2020
+
+KubeCon featured several Vitess talks, including:
+
+* [Keynote: CNCF Projects Update](https://youtu.be/uNpZA5fz5o8) - CNCF
+* [Vitess: Introduction and New Features](https://youtu.be/Nqzhgzg5WCw) - Sugu Sougoumarane & Deepthi Sigireddi, PlanetScale
+* [Introduction to Vitess](https://youtu.be/Sny8rITrdvE) - Deepthi Sigireddi, PlanetScale
+* [Codename VIFL - How to Migrate MySQL Database Clusters to Vitess](https://youtu.be/k51L0xdClGQ) - Guido Iaquinti & Rafael Chacon , Slack
+
+## Perconalive Europe Online 2020
+
+Vitess Online Schema Migration Automation - Shlomi Noach, PlanetScale
+
+{{< youtube id="iQYZ0dRe7O8" autoplay="false" >}}
+
+## CNCF Webinars 2020 
+
+* [Transactional microservices with Vitess - coordination without state](https://youtu.be/FaFzrVqkueI) - Dan Kozlowski
+
+## Quarantine 2020 Database Talks, Carnegie Mellon University
+
+Query Planning for a Sharded System like Vitess - Sugu Sougoumarane - CTO,Planetscale
+
+{{< youtube id="TZb6m5ACIsA" autoplay="false" >}}
+
+## KubeCon Europe 2020
+
+KubeCon featured several Vitess talks, including:
+
+* [Vitess Intro: How to Migrate a MySQL Database to Vitess](https://youtu.be/WRNftOqRVVY) - Sugu Sougoumarane & Morgan Tocker
+* [Zero Downtime Data Relocation with Vitess](https://youtu.be/6--4bQKMNF4) -  Liz van Dijk & Deepthi Sigireddi, PlanetScale
+* [Multicloud Vitess over Network Service Mesh](https://youtu.be/NulLc7DxXg8) -  Tim Swanson, Cisco & John Watson, PlanetScale
+
+## Online Demo
+
+A demo of the new Vitess-native Orchestrator. Sugu Sougoumarane - CTO, PlanetScale 
+
+{{< youtube id="JVHi2oN3lxM" autoplay="false" >}}
+
+## Perconalive NA Online 2020
+
+Unbounded scale: Using Vitess for scaling write intensive workloads.  Morgan Tocker , Daniel Guzman Burgos
+
+{{< youtube id="kHPSp8coQ5g" autoplay="false" >}}
+
 ## CNCF Webinar 2020
 
 Lizz van Dijk demonstrates how to migrate from a regular MySQL release to Vitess.
@@ -16,16 +96,22 @@ Lizz van Dijk presents an introduction to Vitess for MySQL users.
 
 <iframe src = "/ViewerJS/#../files/2020-lizz-prefosdem.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
 
+## QCon 2019
+
+Sugu Sougoumarane gives an overview of the salient features of Vitess.
+
+[Video and Slides](https://www.infoq.com/presentations/vitess/)
+
 ## KubeCon San Diego 2019
 
 KubeCon featured several Vitess talks, including:
 
-* [Scaling Resilient Systems: A Journey into Slack's Database Service](https://kccncna19.sched.com/event/UaWu/scaling-resilient-systems-a-journey-into-slacks-database-service-rafael-chacon-guido-iaquinti-slack) - Rafael Chacon & Guido Iaquinti, Slack
-* [How to Migrate a MySQL Database to Vitess](https://kccncna19.sched.com/event/UaiN/how-to-migrate-a-mysql-database-to-vitess-sugu-sougoumarane-morgan-tocker-planetscale) - Sugu Sougoumarane & Morgan Tocker, PlanetScale
-* [Building a Database as a Service on Kubernetes](https://kccncna19.sched.com/event/Uabw/building-a-database-as-a-service-on-kubernetes-abhi-vaidyanatha-lucy-burns-planetscale) - Abhi Vaidyanatha & Lucy Burns, PlanetScale
-* [Vitess: Stateless Storage in the Cloud](https://kccncna19.sched.com/event/UaeD/vitess-stateless-storage-in-the-cloud-sugu-sougoumarane-planetscale) - Sugu Sougoumarane, PlanetScale
-* [Geo-partitioning with Vitess](https://kccncna19.sched.com/event/UagI/geo-partitioning-with-vitess-deepthi-sigireddi-jitendra-vaidya-planetscale) - Deepthi Sigireddi & Jitendra Vaidya, PlanetScale
-* [Gone in 60 Minutes: Migrating 20 TB from AKS to GKE in an Hour with Vitess](https://kccncna19.sched.com/event/UaYn/gone-in-60-minutes-migrating-20-tb-from-aks-to-gke-in-an-hour-with-vitess-derek-perkins-nozzle) - Derek Perkins, Nozzle
+* [Scaling Resilient Systems: A Journey into Slack's Database Service](https://youtu.be/aTItjMJE17c) - Rafael Chacon & Guido Iaquinti, Slack
+* [How to Migrate a MySQL Database to Vitess](https://youtu.be/OCS45iy5v1M) - Sugu Sougoumarane & Morgan Tocker, PlanetScale
+* [Building a Database as a Service on Kubernetes](https://youtu.be/469NOldFOgw) - Abhi Vaidyanatha & Lucy Burns, PlanetScale
+* [Vitess: Stateless Storage in the Cloud](https://youtu.be/z63dtNj6ctY) - Sugu Sougoumarane, PlanetScale
+* [Geo-partitioning with Vitess](https://youtu.be/-Hz6LFJu1cY) - Deepthi Sigireddi & Jitendra Vaidya, PlanetScale
+* [Gone in 60 Minutes: Migrating 20 TB from AKS to GKE in an Hour with Vitess](https://youtu.be/KpygSD-v_ws) - Derek Perkins, Nozzle
 
 Vitess was also featured during the [CNCF project updates keynote](https://www.youtube.com/watch?v=two3TzF9mVY&feature=youtu.be&t=105)!
 
@@ -188,8 +274,9 @@ Vitess team member [Anthony Yeh](https://github.com/enisoc)'s talk at
 the [January 2016 CoreOS Meetup](http://www.meetup.com/coreos/events/228233948/)
 discussed challenges and techniques for running distributed databases
 within Kubernetes, followed by a deep dive into the design trade-offs
-of the [Vitess on Kubernetes](https://github.com/vitessio/vitess/tree/master/examples/kubernetes)
-deployment templates.
+of the Vitess on Kubernetes deployment templates.
+
+Please note the Vitess on Kubernetes deployment templates were removed as of February 27, 2020.
 
 {{< pdf src="/ViewerJS/#../files/coreos-meetup-2016-01-27.pdf" >}}
 

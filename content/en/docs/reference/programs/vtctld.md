@@ -25,7 +25,6 @@ vtctld \
  -grpc_port 15999
 ```
 
-
 ## Options
 
 | Name | Type | Definition |
@@ -72,7 +71,7 @@ vtctld \
 | -enable_transaction_limit | boolean | If true, limit on number of transactions open at the same time will be enforced for all users. User trying to open a new transaction after exhausting their limit will receive an error immediately, regardless of whether there are available slots or not. |
 | -enable_transaction_limit_dry_run | boolean | If true, limit on number of transactions open at the same time will be tracked for all users, but not enforced. |
 | -enforce_strict_trans_tables | boolean | If true, vttablet requires MySQL to run with STRICT_TRANS_TABLES or STRICT_ALL_TABLES on. It is recommended to not turn this flag off. Otherwise MySQL may alter your supplied values before saving them to the database. (default true) |
-| -file_backup_storage_root | string | root directory for the file backup storage |
+| -file_backup_storage_root | string | root directory for the file backup storage -- this path must be on shared storage to provide a global view of backups to all vitess components |
 | -gcs_backup_storage_bucket | string | Google Cloud Storage bucket to use for backups |
 | -gcs_backup_storage_root | string | root prefix for all backup-related object names |
 | -grpc_auth_mode | string | Which auth plugin implementation to use (eg: static) |
@@ -97,7 +96,7 @@ vtctld \
 | -grpc_server_initial_window_size | int | grpc server initial window size |
 | -grpc_server_keepalive_enforcement_policy_min_time | duration | grpc server minimum keepalive time (default 5m0s) |
 | -grpc_server_keepalive_enforcement_policy_permit_without_strea | m | grpc server permit client keepalive pings even when there are no active streams (RPCs) |
-| -heartbeat_enable | boolean | If true, vttablet records (if master) or checks (if replica) the current time of a replication heartbeat in the table _vt.heartbeat. The result is used to inform the serving state of the vttablet via healthchecks. |
+| -heartbeat_enable | boolean | If true, vttablet records (if primary) or checks (if replica) the current time of a replication heartbeat in the table _vt.heartbeat. The result is used to inform the serving state of the vttablet via healthchecks. |
 | -heartbeat_interval | duration | How frequently to read and write replication heartbeat. (default 1s) |
 | -hot_row_protection_concurrent_transactions | int | Number of concurrent transactions let through to the txpool/MySQL for the same hot row. Should be > 1 to have enough 'ready' transactions in MySQL and benefit from a pipelining effect. (default 5) |
 | -hot_row_protection_max_global_queue_size | int | Global queue limit across all row (ranges). Useful to prevent that the queue can grow unbounded. (default 1000) |
@@ -112,7 +111,7 @@ vtctld \
 | -log_err_stacks | boolean | log stack traces for errors |
 | -log_rotate_max_size | uint | size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800) |
 | -logtostderr | boolean | log to standard error instead of files |
-| -master_connect_retry | duration | how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s) |
+| -replication_connect_retry | duration | how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s) |
 | -mem-profile-rate | int | profile every n bytes allocated (default 524288) |
 | -min_number_serving_vttablets | int | the minimum number of vttablets that will be continue to be used even with low replication lag (default 2) |
 | -mutex-profile-fraction | int | profile every n mutex contention events (see runtime.SetMutexProfileFraction) |
@@ -173,7 +172,7 @@ vtctld \
 | -schema_change_check_interval | int | this value decides how often we check schema change dir, in seconds (default 60) |
 | -schema_change_controller | string | schema change controller is responsible for finding schema changes and responding to schema change events |
 | -schema_change_dir | string | directory contains schema changes for all keyspaces. Each keyspace has its own directory and schema changes are expected to live in '$KEYSPACE/input' dir. e.g. test_keyspace/input/*sql, each sql file represents a schema change |
-| -schema_change_slave_timeout | duration | how long to wait for replicas to receive the schema change (default 10s) |
+| -schema_change_replicas_timeout | duration | how long to wait for replicas to receive the schema change (default 10s) |
 | -schema_change_user | string | The user who submits this schema change. |
 | -schema_swap_admin_query_timeout | duration | timeout for SQL queries used to save and retrieve meta information for schema swap process (default 30s) |
 | -schema_swap_backup_concurrency | int | number of simultaneous compression/checksum jobs to run for seed backup during schema swap (default 4) |
@@ -210,7 +209,7 @@ vtctld \
 | -throttler_client_grpc_server_name | string | the server name to use to validate server certificate |
 | -throttler_client_protocol | string | the protocol to use to talk to the integrated throttler service (default "grpc") |
 | -topo_consul_watch_poll_duration | duration | time of the long poll for watch queries. (default 30s) |
-| -topo_etcd_lease_ttl | int | Lease TTL for locks and master election. The client will use KeepAlive to keep the lease going. (default 30) |
+| -topo_etcd_lease_ttl | int | Lease TTL for locks and leader election. The client will use KeepAlive to keep the lease going. (default 30) |
 | -topo_etcd_tls_ca | string | path to the ca to use to validate the server cert when connecting to the etcd topo server |
 | -topo_etcd_tls_cert | string | path to the client cert to use to connect to the etcd topo server, requires topo_etcd_tls_key, enables TLS |
 | -topo_etcd_tls_key | string | path to the client key to use to connect to the etcd topo server, enables TLS |
@@ -247,7 +246,7 @@ vtctld \
 | -vreplication_healthcheck_timeout | duration | healthcheck retry delay (default 1m0s) |
 | -vreplication_healthcheck_topology_refresh | duration | refresh interval for re-reading the topology (default 30s) |
 | -vreplication_retry_delay | duration | delay before retrying a failed binlog connection (default 5s) |
-| -vreplication_tablet_type | string | comma separated list of tablet types used as a source (default "REPLICA") |
+| -vreplication_tablet_type | string | comma separated list of tablet types used as a source (default "PRIMARY,REPLICA") |
 | -vstream_packet_size | int | Suggested packet size for VReplication streamer. This is used only as a recommendation. The actual packet size may be more or less than this amount. (default 30000) |
 | -vtctl_client_protocol | string | the protocol to use to talk to the vtctl server (default "grpc") |
 | -vtctl_healthcheck_retry_delay | duration | delay before retrying a failed healthcheck (default 5s) |
@@ -269,7 +268,7 @@ vtctld \
 | -watch_replication_stream | boolean | When enabled, vttablet will stream the MySQL replication stream from the local server, and use it to support the include_event_token ExecuteOptions. |
 | -workflow_manager_disable | value | comma separated list of workflow types to disable |
 | -workflow_manager_init | boolean | Initialize the workflow manager in this vtctld instance. |
-| -workflow_manager_use_election | boolean | if specified, will use a topology server-based master election to ensure only one workflow manager is active at a time. |
+| -workflow_manager_use_election | boolean | if specified, will use a topology server-based leader election to ensure only one workflow manager is active at a time. |
 | -xbstream_restore_flags | string | flags to pass to xbstream command during restore. These should be space separated and will be added to the end of the command. These need to match the ones used for backup e.g. --compress / --decompress, --encrypt / --decrypt |
 | -xtrabackup_backup_flags | string | flags to pass to backup command. These should be space separated and will be added to the end of the command |
 | -xtrabackup_prepare_flags | string | flags to pass to prepare command. These should be space separated and will be added to the end of the command |

@@ -1,7 +1,7 @@
 ---
 title: VExec
-description: Wrapper on VReplicationExec to run query on all participating masters
-weight: 120
+description: Wrapper on VReplicationExec to run query on all participating primary tablets
+weight: 60
 ---
 
 ### Command
@@ -14,12 +14,12 @@ VExec  [-dry_run] <keyspace.workflow> <query>
 
 
 VExec is a wrapper over [VReplicationExec](../vreplicationexec).
-Given a workflow it executes the provided query on all masters in the target keyspace that participate
+Given a workflow it executes the provided query on all primary tablets in the target keyspace that participate
 in the workflow. Internally it calls VReplicationExec for running the query.
 
 ### Parameters
 
-#### -dry-run 
+#### -dry-run
 **optional**\
 **default** false
 
@@ -29,19 +29,19 @@ You can do a dry run where no actual action is taken but the command logs the qu
 by VExec.
 </div>
 
-#### keyspace.workflow 
+#### keyspace.workflow
 **mandatory**
 
 <div class="cmd">
 Name of target keyspace and the associated workflow
 </div>
 
-#### sql query 
+#### sql query
 **mandatory**
 
 <div class="cmd">
 SQL query to be run: validations are done to ensure that queries can be run only against vreplication tables.
-A limited set of queries are allowed. 
+A limited set of queries are allowed.
 </div>
 
 #### Example

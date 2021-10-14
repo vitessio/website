@@ -10,7 +10,7 @@
   </div>
 
   <div class="docs-article">
-    {{ partial "docs/navbar.html" . }}
+    {{ partial "navbar.html" . }}
     
     <article class="docs-content">
       {{ partial "docs/header.html" . }}
@@ -25,14 +25,11 @@
           {{ end }}
         {{ else }}
           {{ partial "docs/pages-in-section.html" . }}
-          <hr class="has-background-grey" />
           {{ .Content }}
         {{ end }}
       </div>
     
     </article>
   </div>
-
-  {{ partial "docs/toc.html" . }}
 </div>
 {{ end }}
