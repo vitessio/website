@@ -476,8 +476,7 @@ We have a running stream on tablet 200 (shard `-40`) that will keep it up-to-dat
 ## Cutover
 
 Once the copy process is complete, we can start cutting-over traffic.
-This is done in 2 steps, `SwitchReads` and `SwitchWrites`. Note that the commands are named for the tablet_types and not user operations.
-`Reads` is used for replica/rdonly, and `Writes` for primary. Read operations on primary will not be affected by a `SwitchReads`.
+This is done via [SwitchTraffic](../../../reference/vreplication/switchtraffic/). This replaced the previous SwitchReads and SwitchWrites commands with a single one. It is now possible to switch all traffic with just one command. 
 
 ```bash
 ./204_switch_reads.sh
