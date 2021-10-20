@@ -439,13 +439,16 @@ I0817 08:07:55.467790   15280 main.go:64] I0817 15:07:55.466993 reparent.go:274]
 
 ## Perform Resharding
 
-Once the tablets are up, we can go ahead with the resharding.
+Once the tablets are up, we can go ahead with the resharding:
+
 ```bash
 ./203_reshard.sh
 ```
-This script has only one command: `Reshard`
+
+This script has only one command: `Reshard`:
+
 ```bash
-vtctlclient Reshard -tablet_types=PRIMARY main.main2regions '0' '-40,40-80,80-c0,c0-'
+vtctlclient Reshard -source_shards '0' -target_shards '-40,40-80,80-c0,c0-' -tablet_types=PRIMARY Create main.main2regions
 ```
 Let us unpack this a bit. Since we are running only primary tablets in this cluster, we have to tell the `Reshard` command to use them as the source for copying data into the target shards.
 The next argument is of the form `keyspace.workflow`. `keyspace` is the one we want to reshard. `workflow` is an identifier chosen by the user. It can be any arbitrary string and is used to tie the different steps of the resharding flow together.
