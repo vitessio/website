@@ -1,6 +1,6 @@
 ---
 title: Applying, auditing, and controlling Online DDL
-weight: 4
+weight: 5
 aliases: ['/docs/user-guides/managed-online-schema-changes/audit-and-control']
 ---
 
