@@ -82,6 +82,10 @@ cells should be used to pick a tablet for selecting data from the source keyspac
 <div class="cmd">
 A comma-separated list of tablet types that are used while picking a tablet for sourcing data. One or more from PRIMARY, REPLICA, RDONLY.<br><br>
 
+{{< info >}}
+Note: Create expects the `-tablet_types` to be lower case, but will accept uppercase.
+{{< /info >}}
+
 ###### Uses
 
 * To reduce the load on PRIMARY tablets by using REPLICAs or RDONLYs
