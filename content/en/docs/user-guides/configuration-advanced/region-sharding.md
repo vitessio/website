@@ -16,7 +16,8 @@ The location will be denoted by a `country` column.
 
 ## Schema
 
-We will create one table in the unsharded keyspace to start with.
+We will create one table in the unsharded keyspace to start with:
+
 ```text
 CREATE TABLE customer (
   id int NOT NULL,
@@ -30,8 +31,10 @@ CREATE TABLE customer (
 The customer table is the main table we want to shard using country. 
 
 ## Region Vindex
+
 We will use a `region_json` vindex to compute the keyspace_id for a customer row using the (id, country) fields.
 Here's what the vindex definition looks like:
+
 ```text
     "region_vdx": {
 	    "type": "region_json",
@@ -41,7 +44,9 @@ Here's what the vindex definition looks like:
 	    }
     },
 ```
+
 And we use it thus:
+
 ```text
     "customer": {
       "column_vindexes": [
@@ -52,6 +57,7 @@ And we use it thus:
 ```
 This vindex uses a byte mapping of countries provided in a JSON file and combines that with the id column in the customer table to compute the keyspace_id. 
 This is what the JSON file contains:
+
 ```text
 {
     "United States": 1,
@@ -64,6 +70,7 @@ This is what the JSON file contains:
     "Indonesia": 193
 }
 ```
+
 The values for the countries have been chosen such that 2 countries fall into each shard.
 
 In this example, we are using 1 byte to represent a country code. You can use 1 or 2 bytes. With 2 bytes, 65536 distinct locations can be supported. The byte value of the country(or other location identifier) is prefixed to a hash value computed from the id to produce the keyspace_id.
@@ -77,7 +84,8 @@ To do this, we will use the new vreplication workflow `CreateLookupVindex`. This
 
 ## Start the Cluster
 
-Start by copying the region_sharding example included with Vitess to your preferred location.
+Start by copying the region_sharding example included with Vitess to your preferred location:
+
 ```sh
 cp -r /usr/local/vitess/examples/region_sharding ~/my-vitess/examples/region_sharding
 cd ~/my-vitess/examples/region_sharding
@@ -85,11 +93,13 @@ cd ~/my-vitess/examples/region_sharding
 
 The VSchema for this tutorial uses a config file. You will need to edit the value of the `region_map` parameter in the vschema file `main_vschema_sharded.json`.
 For example:
+
 ```text
 "region_map": "/home/user/my-vitess/examples/region_sharding/countries.json",
 ```
 
-Now start the cluster
+Now start the cluster:
+
 ```sh
 ./101_initial_cluster.sh
 ```
@@ -439,13 +449,16 @@ I0817 08:07:55.467790   15280 main.go:64] I0817 15:07:55.466993 reparent.go:274]
 
 ## Perform Resharding
 
-Once the tablets are up, we can go ahead with the resharding.
+Once the tablets are up, we can go ahead with the resharding:
+
 ```bash
 ./203_reshard.sh
 ```
-This script has only one command: `Reshard`
+
+This script has only one command: `Reshard`:
+
 ```bash
-vtctlclient Reshard -tablet_types=PRIMARY main.main2regions '0' '-40,40-80,80-c0,c0-'
+vtctlclient Reshard -source_shards '0' -target_shards '-40,40-80,80-c0,c0-' -tablet_types=PRIMARY Create main.main2regions
 ```
 Let us unpack this a bit. Since we are running only primary tablets in this cluster, we have to tell the `Reshard` command to use them as the source for copying data into the target shards.
 The next argument is of the form `keyspace.workflow`. `keyspace` is the one we want to reshard. `workflow` is an identifier chosen by the user. It can be any arbitrary string and is used to tie the different steps of the resharding flow together.
@@ -476,15 +489,15 @@ We have a running stream on tablet 200 (shard `-40`) that will keep it up-to-dat
 ## Cutover
 
 Once the copy process is complete, we can start cutting-over traffic.
-This is done in 2 steps, `SwitchReads` and `SwitchWrites`. Note that the commands are named for the tablet_types and not user operations.
-`Reads` is used for replica/rdonly, and `Writes` for primary. Read operations on primary will not be affected by a `SwitchReads`.
+This is done via [SwitchTraffic](../../../reference/vreplication/switchtraffic/). This replaced the previous SwitchReads and SwitchWrites commands with a single one. It is now possible to switch all traffic with just one command, however in this example we continue to do it in two steps as that is a more typical workflow. 
 
 ```bash
 ./204_switch_reads.sh
 ./205_switch_writes.sh
 ```
 
-Let us take a look at the sharded data
+Let us take a look at the sharded data:
+
 ```text
 mysql> use main/-40;
 Database changed
@@ -509,6 +522,7 @@ mysql> select id,hex(keyspace_id) from customer_lookup;
 +----+--------------------+
 2 rows in set (0.00 sec)
 ```
+
 You can see that only data from US and Canada exists in the customer table in this shard. 
 Repeat this for the other shards (40-80, 80-c0 and c0-) and see that each shard contains 4 rows in customer table.
 
@@ -537,7 +551,8 @@ mysql> select id, hex(keyspace_id) from customer_lookup;
 
 ## Drop source
 
-Once resharding is complete, we can teardown the source shard
+Once resharding is complete, we can teardown the source shard:
+
 ```bash
 ./206_down_shard_0.sh
 ./207_delete_shard_0.sh
@@ -546,7 +561,7 @@ What we have now is a sharded keyspace. The original unsharded keyspace no longe
 
 ## Teardown
 
-Once you are done playing with the example, you can tear it down completely.
+Once you are done playing with the example, you can tear it down completely:
 
 ```bash
 ./301_teardown.sh
