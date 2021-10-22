@@ -14,6 +14,10 @@ Vitess supports the core features of MySQL versions 5.6 to 8.0, with [some limit
 
 With MySQL 5.6 reaching end of life in February 2021, it is recommended to deploy MySQL 5.7 and later.
 
+{{< warning >}}
+MySQL and Percona 5.6 are no longer supported in Vitess 13.0 and later
+{{< /warning >}}
+
 ## MariaDB versions 10.0 to 10.3
 
 Vitess supports the core features of MariaDB versions 10.0 to 10.3. Vitess [does not yet](https://github.com/vitessio/vitess/issues/5362) support version 10.4 of MariaDB.
