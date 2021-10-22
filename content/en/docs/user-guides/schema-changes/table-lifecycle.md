@@ -1,7 +1,7 @@
 ---
 title: Table lifecycle
-weight: 22
-aliases: ['/docs/user-guides/table-lifecycle/','/docs/reference/table-lifecycle/']
+weight: 4
+aliases: ['/docs/user-guides/table-lifecycle/','/docs/reference/table-lifecycle/', 'docs/reference/features/table-lifecycle/']
 ---
 
 Vitess manages a table lifecycle flow, an abstraction and automation for a `DROP TABLE` operation.

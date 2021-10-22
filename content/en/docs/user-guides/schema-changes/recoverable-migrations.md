@@ -1,6 +1,6 @@
 ---
 title: Recoverable, failover agnostic migrations
-weight: 6
+weight: 10
 aliases: ['/docs/user-guides/schema-changes/recoverable-migrations/']
 ---
 
