@@ -1,6 +1,6 @@
 ---
 title: Workflow
-description: Wrapper on VExec to perform common actions on a workflow
+description: Wrapper on VReplication to perform common actions on a workflow
 weight: 50
 ---
 
@@ -13,7 +13,7 @@ Workflow  [-dry_run] <keyspace.workflow> <action>
 ### Description
 
 Workflow is a convenience command for useful actions on a workflow that you can use instead of
-actually specifying a query to VExec.
+actually specifying a query to VReplication.
 
 ### Parameters
 

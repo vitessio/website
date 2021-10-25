@@ -12,6 +12,7 @@ VExec  [-dry_run] <keyspace.workflow> <query>
 
 ### Description
 
+Deprecated in version 12.0.
 
 VExec is a wrapper over [VReplicationExec](../vreplicationexec).
 Given a workflow it executes the provided query on all primary tablets in the target keyspace that participate
@@ -45,6 +46,7 @@ A limited set of queries are allowed.
 </div>
 
 #### Example
+
 ```
 vtctlclient VExec keyspace1.workflow1 'select * from _vt.vreplication'
 ```
