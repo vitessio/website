@@ -579,7 +579,9 @@ $ vtctlclient OnlineDDL commerce revert 2201058f_f266_11ea_bab4_0242c0a8b007
 
 ## VExec commands for greater control and visibility
 
-`vtctlclient OnlineDDL` command should provide with most needs. However, Vitess gives the user greater control through the `VExec` command and via SQL queries.
+VExec is deprecated in version 12.0.
+
+`vtctlclient OnlineDDL` command should provide for most needs. However, Vitess gives the user greater control through the `VExec` command and via SQL queries.
 
 For schema migrations, Vitess allows operations on the virtual table `_vt.schema_migrations`. Queries on this virtual table scatter to the underlying tablets and gather or manipulate data on their own, private backend tables (which incidentally are called by the same name). `VExec` only allows specific types of queries on that table.
 
