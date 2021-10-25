@@ -192,7 +192,7 @@ COrder
 
 ## SplitClone
 
-The process for SplitClone is similar to VerticalSplitClone. It starts the horizontal resharding process:
+SplitClone has been deprecated in version 12.0. In older versions the process for SplitClone is similar to VerticalSplitClone. It starts the horizontal resharding process:
 
 ``` sh
 ./303_horizontal_split.sh

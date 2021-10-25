@@ -114,8 +114,7 @@ making up each tablet (along with the MySQL process):
 * the sharding Key Range served by this Tablet.
 * user-specified tag map (e.g. to store per-installation data).
 
-A Tablet record is created before a tablet can be running (either by `vtctl
-InitTablet` or by passing the `init_*` parameters to the vttablet process).
+A Tablet record is created before a tablet can be running (by passing the `init_*` parameters to the vttablet process).
 The only way a Tablet record will be updated is one of:
 
 * The vttablet process itself owns the record while it is running, and can

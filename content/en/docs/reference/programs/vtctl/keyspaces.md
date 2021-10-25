@@ -204,7 +204,6 @@ Rebuilds the serving data for the keyspace. This command may trigger an update t
 
 ### ValidateKeyspace
 
-
 Validates that all nodes reachable from the specified keyspace are consistent.
 
 #### Example
@@ -229,6 +228,7 @@ Validates that all nodes reachable from the specified keyspace are consistent.</
 
 
 ### Reshard (v1)
+
 ```shell
 Reshard  -v1 [-skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>
 Start a Resharding process. Example: Reshard -cells='zone1,alias1' -tablet_types='primary,replica,rdonly'  ks.workflow001 '0' '-80,80-'.
@@ -239,11 +239,13 @@ Start a Resharding process. Example: Reshard -cells='zone1,alias1' -tablet_types
 * This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/v2) in Vitess 11.0 and later
 
 ### Reshard (v2)
+
 ```shell
 Reshard <options> <action> <workflow identifier>
 ```
 
 ### MoveTables (v1)
+
 ```shell
 MoveTables  -v1 [-cell=<cell>] [-tablet_types=<source_tablet_types>] -workflow=<workflow> <source_keyspace> <target_keyspace> <table_specs>
 Move table(s) to another keyspace, table_specs is a list of tables or the tables section of the vschema for the target keyspace. Example: '{"t1":{"column_vindexes": [{"column": "id1", "name": "hash"}]}, "t2":{"column_vindexes": [{"column": "id2", "name": "hash"}]}}'.  In the case of an unsharded target keyspace the vschema for each table may be empty. Example: '{"t1":{}, "t2":{}}'.
@@ -254,11 +256,13 @@ Move table(s) to another keyspace, table_specs is a list of tables or the tables
 * This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/v2) in Vitess 11.0 and later
 
 ## MoveTables (v2)
+
 ```shell
 MoveTables <options> <action> <workflow identifier>
 ```
 
 ### DropSources
+
 ```shell
 DropSources  [-dry_run] [-rename_tables] <keyspace.workflow>
 After a MoveTables or Resharding workflow cleanup unused artifacts like source tables, source shards and blacklists.
@@ -269,12 +273,14 @@ After a MoveTables or Resharding workflow cleanup unused artifacts like source t
 * This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/v2) in Vitess 11.0 and later
 
 ### CreateLookupVindex
+
 ```shell
 CreateLookupVindex  [-cells=<source_cells>] [-continue_after_copy_with_owner=false] [-tablet_types=<source_tablet_types>] <keyspace> <json_spec>
 Create and backfill a lookup vindex. the json_spec must contain the vindex and colvindex specs for the new lookup.
 ```
 
 ### ExternalizeVindex
+
 ```shell
 ExternalizeVindex  <keyspace>.<vindex>
 Externalize (activate) a lookup vindex backfilled using `CreateLookupVindex`.
@@ -284,24 +290,32 @@ removed, applications can start using the vindex for lookups.
 ```
 
 ### Materialize
+
 ```shell
 Materialize  <json_spec>, example : '{"workflow": "aaa", "source_keyspace": "source", "target_keyspace": "target", "table_settings": [{"target_table": "customer", "source_expression": "select * from customer", "create_ddl": "copy"}]}'
 Performs materialization based on the json spec. Is used directly to form VReplication rules, with an optional step to copy table structure/DDL.
 ```
 
 ### SplitClone
+
+Deprecated.
+
 ```shell
 SplitClone  <keyspace> <from_shards> <to_shards>
 Start the SplitClone process to perform horizontal resharding. Example: SplitClone ks '0' '-80,80-'
 ```
 
 ### VerticalSplitClone
+
+Deprecated.
+
 ```shell
 VerticalSplitClone  <from_keyspace> <to_keyspace> <tables>
 Start the VerticalSplitClone process to perform vertical resharding. Example: SplitClone from_ks to_ks 'a,/b.*/'
 ```
 
 ### VDiff
+
 ```shell
 VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=<source_tablet_types>] [-filtered_replication_wait_time=30s] <keyspace.workflow>
 Perform a diff of all tables in the workflow
@@ -389,6 +403,7 @@ Makes the &lt;destination keyspace/shard&gt; serve the given type. This command 
 * the <code>&lt;destination keyspace/shard&gt;</code> and <code>&lt;served tablet type&gt;</code> arguments are both required for the <code>&lt;MigrateServedFrom&gt;</code> command This error occurs if the command is not called with exactly 2 arguments.
 
 ### SwitchReads
+
 ```shell
 SwitchReads  [-cells=c1,c2,...] [-reverse] -tablet_types={replica|rdonly} [-dry-run] <keyspace.workflow>
 Switch read traffic for the specified workflow.
@@ -399,6 +414,7 @@ Switch read traffic for the specified workflow.
 * This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/v2) in Vitess 11.0 and later
 
 ### SwitchWrites
+
 ```shell
 SwitchWrites  [-timeout=30s] [-cancel] [-reverse] [-reverse_replication=false] -tablet_types={replica|rdonly} [-dry-run] <keyspace.workflow>
 Switch write traffic for the specified workflow.
