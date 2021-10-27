@@ -23,7 +23,7 @@ I've had the good fortune to have worked on a couple of different query planners
 
 ## Standing on the shoulders of giants
 
-Some time later, the team I was working with had the chance to start a cooperation with Andrey Gubichev from TUM, the technical university in München, Germany. He helped us read the appropriate papers and implement them. To me, who had just written a planner without really knowing what I was doing, this felt like cheating. I did not have to reinvent the wheel for every problem - there were tons of papers that we could just read and implement for most problems we came across.
+Some time later, the team I was working with had the chance to start a cooperation with [Andrey Gubichev](https://scholar.google.com/citations?user=7qyHAfAAAAAJ) from TUM, the technical university in München, Germany. He helped us read the appropriate papers and implement them. To me, who had just written a planner without really knowing what I was doing, this felt like cheating. I did not have to reinvent the wheel for every problem - there were tons of papers that we could just read and implement for most problems we came across.
 
 The Vitess V3 planner was similarly written without using the benefit of decades of papers on query planning. An incredible feat, but the planner was not using a lot of the clever tricks that people have come up with over the years.
 
