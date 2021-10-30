@@ -4,7 +4,7 @@ This repo houses the assets used to build the website at https://vitess.io.
 
 ## Running the site locally
 
-To run the website locally, you need to have the [Hugo](https://gohugo.io) static site generator installed (installation instructions [here](https://gohugo.io/getting-started/installing/)). Installing the Hugo version in [netlify.toml](./netlify.toml) is recommended.
+To run the website locally, you need to have the "extended" version of the [Hugo](https://gohugo.io) static site generator installed (installation instructions [here](https://gohugo.io/getting-started/installing/)). Installing the Hugo version in [netlify.toml](./netlify.toml) is recommended.
 
 Once Hugo is installed run the following:
 
@@ -26,3 +26,9 @@ If you'd like to add your logo to the [Who uses Vitess](https://vitess.io/#who-u
 ## Link checking
 
 You can check the site's internal links by running `make check-internal-links` and all links—internal *and* external—by running `make check-all-links`.
+
+## CSS/SASS
+
+The Vitess website uses [Bulma](https://bulma.io/), a CSS (and SASS) framework that provides all kinds of variables, utilities, and components. 
+
+**⚠ If you are running Hugo locally and your .sass file changes are not getting picked up:** make sure you have [installed the "extended" version](https://gohugo.io/getting-started/installing/) of the `hugo` binary. 
