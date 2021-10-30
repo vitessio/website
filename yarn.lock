@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"bulma@^0.7.3":
-  "integrity" "sha512-cX98TIn0I6sKba/DhW0FBjtaDpxTelU166pf7ICXpCCuplHWyu6C9LYZmL5PEsnePIeJaiorsTEzzNk3Tsm1hw=="
-  "resolved" "https://registry.npmjs.org/bulma/-/bulma-0.7.5.tgz"
-  "version" "0.7.5"
+"bulma@^0.9.3":
+  "integrity" "sha512-0d7GNW1PY4ud8TWxdNcP6Cc8Bu7MxcntD/RRLGWuiw/s0a9P+XlH/6QoOIrmbj6o8WWJzJYhytiu9nFjTszk1g=="
+  "resolved" "https://registry.npmjs.org/bulma/-/bulma-0.9.3.tgz"
+  "version" "0.9.3"
 
 "yarn@^1.22.11":
   "integrity" "sha512-AWje4bzqO9RUn3sdnM5N8n4ZJ0BqCc/kqFJvpOI5/EVkINXui0yuvU7NDCEF//+WaxHuNay2uOHxA4+tq1P3cg=="
