@@ -39,6 +39,7 @@ $colors: mergeColorMaps(("stack-overflow-orange": ($stack-overflow-orange, $whit
 @import "bulma/bulma"
 
 @import "docs"
+@import "navbar"
 
 figure
   img
@@ -193,28 +194,6 @@ figure
   &.is-active
     position: fixed
 
-+until($navbar-breakpoint)
-  #search-bar
-    display: block
-
-  .algolia-autocomplete
-    // Fixes for the DocSearch widget to prevent clipping on mobile.
-    display: block !important
-
-    .ds-dropdown-menu
-      max-width: 100vw !important
-      min-width: fit-content !important
-
-+from($navbar-breakpoint)
-	// On mobile (and by default), the search input is displayed at the top of the menu,
-	// whereas on desktop, it's displayed at the right side of the menu bar (i.e., flex-end)
-	.navbar-menu
-		flex-direction: row-reverse
-
-	// Cuddle up the search input + social icons for the full-width navbar  	
-	.navbar-item-search
-		padding-left: 0
-	
 .header-link
   color: $dark
   opacity: 0.3 
