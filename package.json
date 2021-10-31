@@ -1,8 +1,8 @@
 {
-  "devDependencies": {
-    "bulma": "^0.7.3"
-  },
   "dependencies": {
     "yarn": "^1.22.11"
+  },
+  "devDependencies": {
+    "bulma": "^0.9.3"
   }
 }
