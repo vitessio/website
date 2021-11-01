@@ -1,7 +1,5 @@
 {{ $docsSections := where site.Sections "Section" "docs" }}
-{{ $path         := .File.Path }}
-{{ $language     := .Language }}
-{{ $editUrl      := printf "https://github.com/vitessio/website/tree/prod/content/%s/%s" $language $path }}
+
 <header class="docs-header">
   {{/* Hide breadcrumbs on mobile since bulma.io doesn't handle overflows nicely for long crumbs */}}
   <nav class="breadcrumb is-hidden-touch" aria-label="breadcrumbs">
@@ -42,15 +40,6 @@
   {{ end }}
 
   <div class="buttons">
-    <a class="button is-dark" href="{{ $editUrl }}">
-      <span class="icon">
-        <i class="fab fa-github"></i>
-      </span>
-      <span>
-        Edit
-      </span>
-    </a>
-
     <div class="dropdown is-hoverable is-hidden-desktop">
       <div class="dropdown-trigger">
         <button class="button is-primary" aria-haspopup="true" aria-controls="docs-menu">
