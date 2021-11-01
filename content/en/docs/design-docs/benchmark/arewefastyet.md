@@ -16,7 +16,7 @@ The GitHub repository where lies all of arewefastyet's code can be found on [vit
 
 ### Pull Request needing benchmarks
 
-When a pull request affect the perfomance of Vitess, one might wish to benchmark it before merging it. The latter can be done by setting the `Benchmark me` label to your pull request. Each night, at midnight central european time, the head commit of your pull request will be benchmarked and compared against the pull request's base.
+When a pull request affect the performance of Vitess, one might wish to benchmark it before merging it. The latter can be done by setting the `Benchmark me` label to your pull request. Each night, at midnight central european time, the head commit of your pull request will be benchmarked and compared against the pull request's base.
 
 ## Website
 
