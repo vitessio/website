@@ -54,9 +54,12 @@ disconnects from `vtgate`.
 Use of reserved connections are controlled by the `vtgate` flag
 `-enable_system_settings`.  This flag has traditionally defaulted to **false**
 (or off) in release versions (i.e. `x.0` and `x.0.y`) of Vitess, and to
-**true** (or on) in development versions.  It is therefore important that
-you specify this flag explicitly, so you are sure whether it is enabled or
-not, independent of which Vitess release/build/version you are running.
+**true** (or on) in development versions. From Vitess 12.0 onwards, it
+defaults to **true** in all release and development versions
+(see https://github.com/vitessio/vitess/issues/9125).  It is therefore
+advisable that you specify this flag explicitly, so you are sure whether
+it is enabled or not, independent of which Vitess release/build/version
+you are running.
 
 If you have reserved connections disabled, you get the "old" Vitess behavior,
 where most setting most system settings (e.g. `sql_mode`) are just silently
