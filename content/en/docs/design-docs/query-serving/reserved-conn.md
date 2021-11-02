@@ -102,7 +102,7 @@ connector to disconnect idle sessions that are likely to use
 reserved connections promptly. In order to release resources that cannot
 otherwise be reused.
 
-### Number of `vttablet` <-> MySQL connections
+### Number of vttablet <-> MySQL connections
 
 As a result of how reserved connections work, it is possible for there
 to be significantly more `vttablet` <-> MySQL connections than the limit you
