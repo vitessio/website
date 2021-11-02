@@ -6,27 +6,30 @@ weight: 1
 
 ## Feature Description
 
-Vitess uses connection pooling to minimize the memory usage of the underlying
-MySQL servers. This means that different users connecting to a `vtgate` can be
-sharing a connection session to MySQL. To make this as invisible as possible
+Vitess uses connection pooling to minimize the memory usage and otherwise
+optimize the performance of the underlying MySQL servers, even in the face
+of tens of thousands of client database connections. This means that
+different users connecting to a `vtgate` can effectively be sharing a
+database session to MySQL. To make this process as transparent as possible
 to users, Vitess works hard removing all query constructs that would normally
 need to change the state in the MySQL connection. A simple example are user
-defined ariables. When a user sets or evaluates an user defined variable,
+defined variables. When a user sets or evaluates an user defined variable,
 the `vtgate` will rewrite the query so that it does not actually do anything
 with user variables, and keep the state in the Vitess layer.
 
 For some things a user might want to do, this is not enough, and in those
-cases, Vitess will use something called reserved connections. This means a
-dedicated connection is maintained for the `vtgate` session from the `vttablet`
-to the MySQL server. Reserved connections are used when changing system
-variables, using temporary tables, or when a user uses MySQL locking functions
-to acquire advisory locks.  In general, it is desirable to use reserved
-connections sparingly, because they reduce the effectiveness of the `vttablet`
-connection pooling, and may reduce (or even eliminate) the advantages of
-using connection pooling between `vttablet` and MySQL. As such, it is critical
-to be aware of the `SET` statements that your application's MySQL connector
-and/or ORM sends to MySQL/`vtgate`, and if those settings will result in
-reserved connections being employed for some/all of the application's sessions.
+cases, Vitess will use what we call **reserved connections**. This means a
+dedicated connection is maintained for the `vtgate` session from the relevant
+`vttablet` to the MySQL server. Reserved connections are used when changing
+system variables, using temporary tables, or when a user uses MySQL locking
+functions to acquire advisory locks.  In general, it is desirable to use
+reserved connections sparingly, because they reduce the effectiveness of the
+`vttablet` connection pooling, and may reduce (or even eliminate) the
+advantages of using connection pooling between `vttablet` and MySQL. As such,
+it is critical to be aware of the `SET` statements that your application's
+MySQL connector and/or ORM sends to MySQL/`vtgate`, and if those settings will
+result in reserved connections being employed for some/all of the application's
+sessions.
 
 ### System variables and reserved connections
 
@@ -40,7 +43,7 @@ is reserved for this session and no one else.
 
 Connection pooling is an important part of what makes Vitess performant, so
 using constructs that turn it off should only be done in rare circumstances.
-If you are using an application or library that is issues these kind of `SET`
+If you are using an application or library that issues these kind of `SET`
 statements, the best way to avoid reserved connections is to make sure the
 global MySQL settings match the one the application is trying to set (e.g.
 `sql_mode`, or `wait_timeout`). When Vitess discovers that you are changing
@@ -93,7 +96,10 @@ Whenever a connection gets transformed into a reserved connection, a fresh
 connection is created in the connection pool to replace it. Once the `vtgate`
 session that initiated the reserved connections disconnects, all reserved
 connections created for this session between the `vttablet`s and MySQL
-are terminated.
+are terminated. It may therefore be advisable to configure your application
+or application connnector to disconnect idle sessions that are likely to use
+reserved connections promptly, to release these resources that cannot
+otherwise be reused.
 
 ### Number of `vttablet` <-> MySQL connections
 
@@ -103,9 +109,9 @@ set by sizing the `vttablet` connection pools. This is because the connection
 pools are still being maintained, resulting in a set maximum number of
 connections, plus then the number of reserved connections, which is at
 least partially based on the number of connected vtgate clients that are using
-reserved connections. As such, it might be challenging to size you MySQL
+reserved connections. As such, it may be challenging to size your MySQL
 `max_connections` configuration setting appropriately to deal with the
 potentially (much) larger number of connections.
 
 We recommend you review the value of this setting carefully, and keep this
-in might when you decide whether to enable reserved connections.
+in mind when you decide whether to enable or disable reserved connections.
