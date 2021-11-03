@@ -142,7 +142,7 @@ There are some additional parameters that we recommend setting:
 * `queryserver-config-stream-pool-size`: This value is relevant only if you plan to run streaming queries using the `workload='olap'` setting. This value depends on how many simultaneous streaming queries you plan to run. Typical values are similar to `queryserver-config-pool-size`.
 * `queryserver-config-query-timeout`: This value should be set to the upper limit you’re willing to allow an OLTP query to run before it’s deemed too expensive or detrimental to the rest of the system. VTTablet will kill any query that exceeds this timeout. This value is usually around 15-30s.
 * `queryserver-config-transaction-timeout`: This value is meant to protect the situation where a client has crashed without completing a transaction. Typical value for this timeout is 30s.
-* `queryserver-config-idle-timeout`:  This value sets a time in seconds after which, if a connection has not been used, this connection will be removed from the pool.
+* `queryserver-config-idle-timeout`:  This value sets a time in seconds after which, if a pool connection has not been used, this connection will be replaced with a fresh connection.
 * `queryserver-config-max-result-size`: This parameter prevents the OLTP application from accidentally requesting too many rows. If the result exceeds the specified number of rows, VTTablet returns an error. The default value is 10,000.
 
 Here is a typical vttablet invocation:
