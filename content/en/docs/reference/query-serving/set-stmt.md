@@ -22,13 +22,13 @@ These are the system variables for which Vitess validates the current setting an
 
 ### Vitess Aware
 
-These are the system variables for which Vitess needs to change behavior based on the settings. E.g. autocommit, client_found_rows, etc.
+These are the system variables for which Vitess needs to change behavior based on the settings. E.g. auto-commit, client_found_rows, etc.
 
 ### Reserve connection
 
 These are the system variables that Vitess will send down to the storage engine and modify the settings at the session connection level. E.g. sql_mode, sql_safe_updates, etc.
 
-This document contains the design for this type of system variables.
+This document contains the design for this type of system variables. To learn how to enable reserve connections see [Reserved connections](../reserved-conn/#enabling-reserved-connections). 
 
 ## Design
 
