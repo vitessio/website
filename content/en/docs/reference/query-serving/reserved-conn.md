@@ -36,7 +36,7 @@ If a user changes a system variable and reserved connections are enabled,
 the user connection will be marked as needing reserved connections.
 For all subsequent calls to Vitess, connection pooling is turned off for
 a particular session. This only applies to certain system settings. For more
-details see [here](/docs/design-docs/query-serving/set-stmt/). Any queries to a
+details see [here](../set-stmt). Any queries to a
 tablet from this session will create a reserved connection on that tablet. This 
 means a connection is reserved only for that session.
 
@@ -80,7 +80,7 @@ Temporary tables exist only in the context of a particular MySQL connection.
 If using a temporary table, Vitess will mark the session as needing a
 reserved connection. It will continue to use the reserved connection
 until the user disconnects. Note that removing the temp table is not enough to reset this.
-More info can be found [here](/docs/reference/compatibility/mysql-compatibility/#temporary-tables).
+More info can be found [here](../../../compatibility/mysql-compatibility/#temporary-tables).
 
 ### GET_LOCK() and reserved connections
 
@@ -89,7 +89,7 @@ the locks are tied to the connection, and the lock must be released in the
 same connection as it was acquired, use of these functions will force a
 connection to become a reserved connection. This connection is also kept alive
 so it does not time out due to inactivity.  More information can be found
-[here](/docs/design-docs/query-serving/locking-functions/).
+[here](../locking-functions/).
 
 ### Shutting down reserved connections
 
