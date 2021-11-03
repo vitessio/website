@@ -80,7 +80,7 @@ Temporary tables exist only in the context of a particular MySQL connection.
 If using a temporary table, Vitess will mark the session as needing a
 reserved connection. It will continue to use the reserved connection
 until the user disconnects. Note that removing the temp table is not enough to reset this.
-More info can be found [here](../../../compatibility/mysql-compatibility/#temporary-tables).
+More info can be found [here](../../compatibility/mysql-compatibility/#temporary-tables).
 
 ### GET_LOCK() and reserved connections
 
