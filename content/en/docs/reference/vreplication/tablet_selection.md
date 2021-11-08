@@ -17,7 +17,7 @@ VReplication will only look for tablet pairings within the same cell. If you wan
 
 ### Tablet types
 
-The server side default which determines the candiate types made available for potential selection in a stream is set using the [vttablet's `-vreplication_tablet_type` flag](../flags/#vreplication_retry_delay). The target tablet will use this when finding the viable source tablet candidates.
+The server side default which determines the candidate types made available for potential selection in a stream is set using the [vttablet's `-vreplication_tablet_type` flag](../flags/#vreplication_retry_delay). The target tablet will use this when finding the viable source tablet candidates.
 
 You can override this on the client side using your workflow command's `-tablet_types` flag.
 

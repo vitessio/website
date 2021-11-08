@@ -13,7 +13,7 @@ Vitess supports transactions through vtgate on PRIMARY and read REPLICA tablets 
 * Consistent reads
 * Sqoop integration
 
-### Implimented Solution
+### Implemented Solution
 
 - When vtgate chooses a tablet to execute a query on, it will return the tablet alias.
 - The tablet alias and transactionID is then stored on the shard session struct.
