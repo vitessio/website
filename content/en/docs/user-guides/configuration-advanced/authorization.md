@@ -58,6 +58,15 @@ behavior of ACLs.  Let's review these:
    VTTablet to reload the ACL config file from disk by sending a SIGHUP
    signal to your VTTablet process.
 
+## Warning regarding ACL reloading
+If you choose to reload the ACL config manually or on an interval,
+and you are using the `-enforce-tableacl-config` option, your VTTablet
+processes **will exit** if your table ACL config file contains an invalid
+configuration at reload time. While this might be unexpected, this ensures
+the highest level of security. Accordingly, it is very important to test
+your ACL config thoroughly before applying, pay attention to access
+permissions on the ACL config file, etc.
+
 ## Format of the table ACL config file
 
 The file specified in the `-table-acl-config` parameter above is a JSON
