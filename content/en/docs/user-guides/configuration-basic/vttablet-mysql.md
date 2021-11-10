@@ -142,6 +142,7 @@ There are some additional parameters that we recommend setting:
 * `queryserver-config-stream-pool-size`: This value is relevant only if you plan to run streaming queries using the `workload='olap'` setting. This value depends on how many simultaneous streaming queries you plan to run. Typical values are similar to `queryserver-config-pool-size`.
 * `queryserver-config-query-timeout`: This value should be set to the upper limit you’re willing to allow an OLTP query to run before it’s deemed too expensive or detrimental to the rest of the system. VTTablet will kill any query that exceeds this timeout. This value is usually around 15-30s.
 * `queryserver-config-transaction-timeout`: This value is meant to protect the situation where a client has crashed without completing a transaction. Typical value for this timeout is 30s.
+* `queryserver-config-idle-timeout`:  This value sets a time in seconds after which, if a connection has not been used, this connection will be removed from pool. This effectively manages number of connection objects and optimizes the pool performance.
 * `queryserver-config-max-result-size`: This parameter prevents the OLTP application from accidentally requesting too many rows. If the result exceeds the specified number of rows, VTTablet returns an error. The default value is 10,000.
 
 Here is a typical vttablet invocation:
@@ -165,9 +166,12 @@ vttablet <topo_flags> <backup_flags> \
   -queryserver-config-stream-pool-size= 16
 ```
 
-{{< info >}}
-It is important to set MySQL’s `max_connections` property to be 50%-100% higher than the total number of connections in the various pools. This is because Vitess may have to kill connections and open new ones. MySQL accounting has a delay in how it counts closed connections, which may cause its view of the number of connections to exceed the ones currently opened by Vitess. For example, in the above example, the `max_connections` settings should be around 800.
-{{< /info >}}
+### Key configuration notes
+
+* It is important to set MySQL’s `max_connections` property to be 50%-100% higher than the total number of connections in the various pools. 
+	* This is because Vitess may have to kill connections and open new ones. MySQL accounting has a delay in how it counts closed connections, which may cause its view of the number of connections to exceed the ones currently opened by Vitess. For example, in the above example, the `max_connections` settings should be around 800.
+* It is also important to set vttablets `queryserver-config-idle-timeout` to be at least 10% lower than MySQL's `wait_timeout`.
+	* This is because MySQL's `wait_timeout` is the number of seconds the server waits for activity on a noninteractive connection before closing it. So if the vttablet setting is not lower the MySQL limit will be hit first and can cause issues with performance. The defaults are as follows: `queryserver-config-idle-timeout` defaults to 30 minutes and MySQL's `wait_timeout` defaults to 8 hours. 
 
 It is normal to see errors like these in the log file until MySQL instances have been initialized and a vttablet has been elected as primary:
 

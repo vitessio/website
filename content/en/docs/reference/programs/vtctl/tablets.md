@@ -92,7 +92,7 @@ Sets the regexp for health check errors to ignore on the specified tablet. The p
 
 ### UpdateTabletAddrs
 
-Updates the IP address and port numbers of a tablet.
+Deprecated. Updates the IP address and port numbers of a tablet.
 
 #### Example
 

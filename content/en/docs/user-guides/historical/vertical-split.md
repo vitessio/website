@@ -81,7 +81,7 @@ The move in the VSchema should not make a difference yet because any queries sen
 
 ## VerticalSplitClone
 
-The next step:
+VerticalSplitClone has been deprecated in version 12.0. In older versions the process would continue with:
 
 ``` sh
 ./203_vertical_split.sh
