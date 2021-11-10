@@ -89,7 +89,7 @@ Comma separated shard names to reshard to.
 Once you decide on the new resharding strategy for a keyspace, you need to initiate a VReplication workflow as follows:
 
 1. Initiate the migration using Reshard
-2. Monitor the workflow using [Workflow](../../workflow) or [VExec](../../vexec)
+2. Monitor the workflow using [Workflow](../../workflow)
 3. Confirm that data has been copied over correctly using [VDiff](../../vdiff)
 4. Start the cutover by routing all reads from your application to those tables using [SwitchReads](../switchreads)
 5. Complete the cutover by routing all writes using [SwitchWrites](../switchwrites)
