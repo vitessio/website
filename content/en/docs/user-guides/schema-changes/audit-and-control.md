@@ -574,8 +574,5 @@ Create Table: CREATE TABLE `corder` (
 ### Via vtctl/ApplySchema
 
 ```
-$ vtctlclient OnlineDDL commerce revert 2201058f_f266_11ea_bab4_0242c0a8b007
+$ vtctlclient ApplySchema -ddl_strategy "online" -sql "revert vitess_migration '1a689113_8d77_11eb_815f_f875a4d24e90'" commerce
 ```
-
-
-
