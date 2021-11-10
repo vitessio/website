@@ -109,10 +109,6 @@ Lists all tablets in the specified shard.
 ```
 SetShardIsPrimaryServing <keyspace/shard> <is_serving>
 ```
-### SetShardIsMasterServing
-
-Deprecated. Use <code>SetShardIsPrimaryServing</code>
-
 ### SetShardTabletControl
 
 Sets the TabletControl record for a shard and type. Only use this for an emergency fix or after a finished vertical split. The *MigrateServedFrom* and *MigrateServedType* commands set this field appropriately already. Always specify the blacklisted_tables flag for vertical splits, but never for horizontal splits.<br><br>To set the DisableQueryServiceFlag, keep 'blacklisted_tables' empty, and set 'disable_query_service' to true or false. Useful to fix horizontal splits gone wrong.<br><br>To change the blacklisted tables list, specify the 'blacklisted_tables' parameter with the new list. Useful to fix tables that are being blocked after a vertical split.<br><br>To just remove the ShardTabletControl entirely, use the 'remove' flag, useful after a vertical split is finished to remove serving restrictions.
@@ -316,10 +312,6 @@ Removes a backup from the BackupStorage.
 #### Errors
 
 * action <code>&lt;RemoveBackup&gt;</code> requires <code>&lt;keyspace/shard&gt;</code> <code>&lt;backup name&gt;</code> This error occurs if the command is not called with exactly 2 arguments.
-
-### InitShardMaster
-
-Deprecated. Use <code>InitShardPrimary</code>
 
 ### InitShardPrimary
 
