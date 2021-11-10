@@ -210,5 +210,5 @@ All `ALTER` strategies leave artifacts behind. Whether successful or failed, eit
 
 The tables are kept for 24 hours after migration completion. Vitess automatically cleans up those tables as soon as a migration completes (either successful or failed). You will normally not need to do anything.
 
-Artifact tables are identifiable via `SELECT artifacts FROM _vt.schema_migrations` in a `VExec` command, see below. You should generally not touch these tables. It's possible to `DROP` those tables with `direct` DDL strategy. Note that dropping tables in production can be risky and lock down your database for a substantial period of time.
+Artifact tables are identifiable via `artifacts` column in a `SHOW VITESS_MIGRATION ...` command. You should generally not touch these tables. It's possible to `DROP` those tables with `direct` DDL strategy. Note that dropping tables in production can be risky and lock down your database for a substantial period of time. Dropping artifact tables also makes the migrations impossible to [revert](../revertible-migrations/).
 
