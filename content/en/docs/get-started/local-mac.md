@@ -135,17 +135,37 @@ W0325 11:33:01.933188   16036 main.go:64] W0325 17:33:01.931580 reparent.go:191]
 ..
 ```
 
-If you encounter any errors, such as ports already in use, you can kill the processes and start over:
+If you encounter any errors, such as ports already in use, you can kill the processes and start over. Ensure you're in the vitess/examples/local directory, then issue the statement to kill the processes and remove the data directory. 
+This data directory `vtdataroot` will get recreated when you run the 101_initial_cluster.sh startup script again.
 
 ```sh
-NEED EXAMPLE
+user@computer:~/Github/vitess/examples/local$ pwd
+/home/user/Github/vitess/examples/local
+
+user@computer:~/Github/vitess/examples/local$ pkill -e -f ./vtdataroot
+etcd killed (pid 224091)
+vtctld killed (pid 224154)
+mysqld_safe killed (pid 224247)
+mysqld killed (pid 224716)
+vttablet killed (pid 224764)
+mysqld_safe killed (pid 224897)
+mysqld killed (pid 225364)
+vttablet killed (pid 225413)
+mysqld_safe killed (pid 225529)
+mysqld killed (pid 225995)
+vttablet killed (pid 226045)
+vtgate killed (pid 226204)
+
+user@computer:~/Github/vitess/examples/local$ rm -rf ./vtdataroot
 ```
 
 ## Connect to your cluster
 
 You should now be able to connect to the VTGate server that was started in `101_initial_cluster.sh`:
 
-``NEED EXAMPLE```
+```sh
+$ mysql -P 15306 -u root --protocol tcp
+```
 
 You can also browse to the vtctld console using the following URL:
 
