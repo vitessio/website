@@ -2,6 +2,7 @@
 title: Life of a stream
 description: Replicating data in a VRep Workflow
 weight: 1
+aliases: ['/docs/reference/vreplication/internals']
 ---
 
 ### Introduction
