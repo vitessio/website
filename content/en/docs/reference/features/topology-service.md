@@ -18,8 +18,8 @@ The main contract for the Topology Service is to be very highly available and
 consistent. It is understood it will come at a higher latency cost and very low
 throughput.
 
-We never use the Topology Service as an RPC or queuing mechanism or as a storage
-system for logs. We never depend on the Topology Service being responsive and
+We never use the Topology Service as an RPC or queuing mechanism or as a storage 
+system for logs. We never depend on the Topology Service being responsive and 
 fast to serve every query.
 
 The Topology Service must also support a Watch interface, to signal when certain
@@ -32,7 +32,7 @@ We differentiate two instances of the Topology Service: the Global instance, and
 the per-cell Local instance:
 
 * The Global instance is used to store global data about the topology that
-  doesn’t change very often, e.g. information about Keyspaces and Shards.
+  doesn’t change very often, e.g. information about Keyspaces and Shards. 
   The data is independent of individual instances and cells, and needs
   to survive a cell going down entirely.
 * There is one Local instance per cell, that contains cell-specific information,
@@ -55,7 +55,7 @@ the tablets in that cell then need to be restarted so they re-initialize their
 topology records (but they won’t lose any MySQL data).
 
 If the Global Topology Service dies and is not recoverable, this is more of a
-problem. All the Keyspace / Shard objects have to be recreated or be restored.
+problem. All the Keyspace / Shard objects have to be recreated or be restored. 
 Then the cells should recover.
 
 ## Global data
@@ -181,7 +181,7 @@ new primary alias.
 
 Finding a tablet to serve the data is done in two stages:
 
-* vtgate maintains a health check connection to all possible tablets, and they
+* vtgate maintains a health check connection to all possible tablets, and they 
 report which Keyspace / Shard / Tablet type they serve.
 * vtgate also reads the SrvKeyspace object, to find out the shard map.
 
@@ -361,7 +361,7 @@ others wait for files with older ModRevisions to disappear.
 Leader elections also use a subdirectory, named after the election Name, and use
 a similar method as the locks, with ephemeral files.
 
-We store the proto3 binary data for each object (as the v3 API allows us to store
+We store the proto3 binary data for each object (as the v3 API allows us to store 
 binary data).  Note that this means that if you want to interact with etcd using 
 the `etcdctl` tool, you will have to tell it to use the v3 API, e.g.:
 
@@ -637,11 +637,11 @@ The process to follow in that case is:
 * Run `vtctl RebuildKeyspaceGraph` for each keyspace using the new topology
   service flags.
 * Run `vtctl RebuildVSchemaGraph` using the new topology service flags.
-* Restart all `vtgate` processes using the new topology service flags. They
-  will see the same Keyspaces / Shards / Tablets / VSchema as before, as the
+* Restart all `vtgate` processes using the new topology service flags. They 
+  will see the same Keyspaces / Shards / Tablets / VSchema as before, as the 
   topology was copied over.
-* Restart all `vttablet` processes using the new topology service flags.
-  They may use the same ports or not, but they will update the new topology
+* Restart all `vttablet` processes using the new topology service flags. 
+  They may use the same ports or not, but they will update the new topology 
   when they start up, and be visible from `vtgate`.
 * Restart all `vtctld` processes using the new topology service flags. So that
   the UI also shows the new data.
