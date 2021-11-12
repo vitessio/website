@@ -423,7 +423,7 @@ wait until the end of a polling cycle with that duration before returning.
 
 When running an environment with multiple cells, it's essential to first create
 and configure your global topology service, then register each local cell
-topology to the global topology. At a higher level overview:
+topology to the global topology. At a higher level overview: 
 
 * Create the global keystore service using etcd, zookeeper, or consul.
 * Use vtctld command to initialize it as the global topology service. NOTE: for
