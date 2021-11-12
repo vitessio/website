@@ -89,7 +89,7 @@ The following global options apply to `vttablet`:
 | -db_allprivs_user | string | db allprivs user userKey (default "vt_allprivs") |
 | -db_app_password | string | db app password |
 | -db_app_use_ssl |  | Set this flag to false to make the app connection to not use ssl (default true) |
-| -db_app_user | string | db app user userKey (default "vt_app") |
+| -db_app_user | string | db app user userKey. Used for VReplication. (default "vt_app") |
 | -db_appdebug_password | string | db appdebug password |
 | -db_appdebug_use_ssl |  | Set this flag to false to make the appdebug connection to not use ssl (default true) |
 | -db_appdebug_user | string | db appdebug user userKey (default "vt_appdebug") |
