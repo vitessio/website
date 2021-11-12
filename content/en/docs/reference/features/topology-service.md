@@ -362,7 +362,7 @@ Leader elections also use a subdirectory, named after the election Name, and use
 a similar method as the locks, with ephemeral files.
 
 We store the proto3 binary data for each object (as the v3 API allows us to store
-binary data).  Note that this means that if you want to interact with etcd using
+binary data).  Note that this means that if you want to interact with etcd using 
 the `etcdctl` tool, you will have to tell it to use the v3 API, e.g.:
 
 ```
