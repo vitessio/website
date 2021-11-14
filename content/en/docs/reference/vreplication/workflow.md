@@ -12,7 +12,8 @@ Workflow  [-dry_run] <keyspace.workflow> <action>
 
 ### Description
 
-Workflow is a convenience command for useful actions on a workflow.
+Workflow is a convenience command for useful actions on a workflow that you can use instead of
+actually specifying a query to VExec.
 
 ### Parameters
 

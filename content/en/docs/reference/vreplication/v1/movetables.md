@@ -165,7 +165,7 @@ will stop once the copy is done and you can then mark the workflow as `Complete`
 Once you select the set of tables to move from one keyspace to another you need to initiate a VReplication workflow as follows:
 
 1. Initiate the migration using MoveTables
-2. Monitor the workflow using [Workflow](../../workflow)
+2. Monitor the workflow using [Workflow](../../workflow) or [VExec](../../vexec)
 3. Confirm that data has been copied over correctly using [VDiff](../../vdiff)
 4. Start the cutover by routing all reads from your application to those tables using [SwitchReads](../switchreads)
 5. Complete the cutover by routing all writes using [SwitchWrites](../switchwrites)
