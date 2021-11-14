@@ -2,5 +2,5 @@
 title: Table Lifecycle
 description: Table lifecycle related documents
 weight: 2
-aliases: ['/docs/design/lifecycle/']
+aliases: ['/docs/design/lifecycle/', '/docs/reference/features/table-lifecycle']
 ---
