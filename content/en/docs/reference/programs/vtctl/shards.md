@@ -109,9 +109,6 @@ Lists all tablets in the specified shard.
 ```
 SetShardIsPrimaryServing <keyspace/shard> <is_serving>
 ```
-### SetShardIsMasterServing
-
-Deprecated. Use <code>SetShardIsPrimaryServing</code>
 
 ### SetShardTabletControl
 
@@ -316,10 +313,6 @@ Removes a backup from the BackupStorage.
 #### Errors
 
 * action <code>&lt;RemoveBackup&gt;</code> requires <code>&lt;keyspace/shard&gt;</code> <code>&lt;backup name&gt;</code> This error occurs if the command is not called with exactly 2 arguments.
-
-### InitShardMaster
-
-Deprecated. Use <code>InitShardPrimary</code>
 
 ### InitShardPrimary
 
