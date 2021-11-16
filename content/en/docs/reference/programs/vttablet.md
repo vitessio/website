@@ -6,10 +6,9 @@ aliases: ['/docs/user-guides/vttablet-modes/','/docs/reference/vttablet-modes/']
 A VTTablet server _controls_ a running MySQL server. VTTablet supports two primary types of deployments:
 
 * Managed MySQL (most common)
-* Unmanaged or Remote MySQL
+* External MySQL
 
 In addition to these deployment types, a partially managed VTTablet is also possible by setting `-disable_active_reparents`. 
-
 
 ## Example Usage
 
@@ -34,22 +33,19 @@ $TOPOLOGY_FLAGS
 
 `$alias` needs to be of the form: `<cell>-id`, and the cell should match one of the local cells that was created in the topology. The id can be left padded with zeroes: `cell-100` and `cell-000000100` are synonymous.
 
-### Unmanaged or Remote MySQL
+### External MySQL
 
 In this mode, an external MySQL can be used such as AWS RDS, AWS Aurora, Google CloudSQL; or just an existing (vanilla) MySQL installation.
 
 See [Unmanaged Tablet](../../../user-guides/configuration-advanced/unmanaged-tablet) for the full guide.
 
-### Partially managed MySQL
-
-Even if a MySQL is remote, you can still make vttablet perform some management functions. They are as follows:
+Even if a MySQL is external, you can still make vttablet perform some management functions. They are as follows:
 
 * `-disable_active_reparents`: If this flag is set, then any reparent or replica commands will not be allowed. These are InitShardMaster, PlannedReparent, PlannedReparent, EmergencyReparent, and ReparentTablet. In this mode, you should use the TabletExternallyReparented command to inform vitess of the current primary.
 * `-replication_connect_retry`: This value is give to mysql when it connects a replica to the primary as the retry duration parameter.
 * `-enable_replication_reporter`: If this flag is set, then vttablet will transmit replica lag related information to the vtgates, which will allow it to balance load better. Additionally, enabling this will also cause vttablet to restart replication if it was stopped. However, it will do this only if -disable_active_reparents was not turned on.
 * `-enable_semi_sync`: This option will automatically enable semi-sync on new replicas as well as on any tablet that transitions into a replica type. This includes the demotion of a primary to a replica.
 * `-heartbeat_enable` and `-heartbeat interval duration`: cause vttablet to write heartbeats to the sidecar database. This information is also used by the replication reporter to assess replica lag.
-
 
 ## Options
 
