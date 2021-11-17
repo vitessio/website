@@ -12,18 +12,17 @@ Vitess uses collations to compare strings the same way that MySQL uses `@collati
 
 #### VTGate
 
-At the VTGate level we use the `-collation` flag to specify which collation we want to use.
-Leaving this flag empty will result in VTGate picking the default collation of the `utf8mb4` charset.
-
-The default collation of charsets varies depending on the backend database and its version.
-For instance, the default collation for `utf8mb4` is `utf8mb4_general_ci` on MySQL57 and `utf8mb4_0900_ai_ci` on MySQL80.
-For this reason, VTTablet is responsible for notifying VTGate which backend version of MySQL/MariaDB we are using.
-This is done through health-check at start time.
+The default collation of VTGate depends on VTTablet.
+Through health-checks, VTGate receives the collation it needs to use.
 
 #### VTTablet
 
 VTTablet's collation and charset can respectively be set with `-db_collation` and `-db_charset`.
-In a similar fashion as what we do in VTGate, using the backend database version, the charset defaults to `utf8mb4`, while the collation can be left empty, in which case the default collation of the charset will be picked.
+If the `-db_collation` flag is empty, we choose the collation using the charset based on the backend database version (MySQL80, MySQL57, ...), the charset defaults to `utf8mb4`.
+
+> The default collation of charsets varies depending on the backend database and its version.
+> 
+> For instance, the default collation for `utf8mb4` is `utf8mb4_general_ci` on MySQL57 and `utf8mb4_0900_ai_ci` on MySQL80.
 
 ### Internals
 
