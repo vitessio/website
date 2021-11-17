@@ -402,7 +402,7 @@ Using collations that are not supported by Vitess but implemented in the underly
 
 ### Configuring the default connection collation for a Vitess cluster
 
-**The default connection collation and charset for a Vitess cluster is configured in your VTTablet instances** via the `-db_collation` and `-db_charset` flags. These flags modify the behavior of the_connections_ that the tablet creates, not the underlying MySQL instance: it only affects the collation that VTTablet uses when opening connections to MySQL, in the same way that [`@collation_connection`](https://dev.mysql.com/doc/refman/8.0/en/charset-connection.html) works in a normal MySQL instance.
+**The default connection collation and charset for a Vitess cluster is configured in your VTTablet instances** via the `-db_collation` and `-db_charset` flags. These flags modify the behavior of the _connections_ that the tablet creates, not the underlying MySQL instance: it defines the collation that VTTablet uses when opening connections to MySQL, in the same way that [`@collation_connection`](https://dev.mysql.com/doc/refman/8.0/en/charset-connection.html) works in a normal MySQL instance.
 
 The `@collation_connection` of a VTTablet is automatically propagated to all the VTGates that connect to it, and hence to all the MySQL clients connected to the VTGates. It is a configuration error to deploy several VTTablets in the same Vitess cluster with different connection collations: it will cause warning messages in the VTGates and lead to inconsistent behaviors. 
 
