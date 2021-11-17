@@ -4,7 +4,7 @@ description:
 weight: 1
 ---
 
-MySQL is an Unicode-aware database, and as explained on [the MySQL documentation](https://dev.mysql.com/doc/refman/8.0/en/charset-mysql.html), it supports using many different character sets to store textual data in databases, and many different collations which are used to compare and sort this textual data.
+MySQL is a Unicode-aware database, and as explained on [the MySQL documentation](https://dev.mysql.com/doc/refman/8.0/en/charset-mysql.html), it supports using many different character sets to store textual data in databases, and many different collations which are used to compare and sort this textual data.
 
 Likewise, Vitess is also Unicode-aware, and it supports the vast majority of the collations and charsets in the underlying MySQL server. On a basic level, this support means that Vitess handles gracefully textual Unicode columns and queries, and relays this information to MySQL clients without losing or corrupting the encoding of the data. On top of this, newer versions of Vitess are also capable of performing textual comparison and sorting operations in SQL queries directly on VTGate instances, greatly speeding up complex operations such as cross-shard joins.
 
