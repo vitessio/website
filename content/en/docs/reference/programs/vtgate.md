@@ -44,7 +44,6 @@ The following global options apply to `vtgate`:
 | -buffer_window | duration | Duration for how long a request should be buffered at most. (default 10s) |
 | -cell | string | cell to use (default "test_nj") |
 | -cells_to_watch | string | comma-separated list of cells for watching tablets |
-| -collation | string | Collation to use between VTGate and VTTablet. If this flag is not defined, the default collation of utf8mb4 for your backend database will be used. |
 | -consul_auth_static_file | string | JSON File to read the topos/tokens from. |
 | -cpu_profile | string | write cpu profile to file |
 | -datadog-agent-host | string | host to send spans to. if empty, no tracing will be done |
