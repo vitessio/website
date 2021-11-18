@@ -118,6 +118,12 @@ The following options can be used to configure VTTablet and Vtctld for backups:
         keyspaces / shards.</td>
     </tr>
     <tr>
+      <td><code>restart_before_backup</code></td>
+      <td>If set, perform a clean MySQL shutdown and startup cycle. Note this is not
+       	executing any `FLUSH` statements. This enables users to work around <a href="https://jira.percona.com/browse/PXB-2205">xtrabackup
+	DDL issues.</a></td>
+    </tr>
+    <tr>
       <td><code>restore_from_backup</code></td>
       <td>Indicates that, when started with an empty MySQL instance, the
         tablet should restore the most recent backup from the specified

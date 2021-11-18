@@ -56,6 +56,7 @@ As a result, connection pools should be sized mindful of the capacity of the und
   * Max size controlled by:  `-app_pool_size` (default 40)
   * metric:  `vttablet_app_conn_pool_capacity`
   * vttablet user flag:  `-db_app_user` default 'vt_app')
+  	* Used for VReplication source and vstreamer in v7.0 and onwards to setup filtered binlog stream from a source shard MySQL instance. Also used for actual copying of the upstream source table rows in VReplication, if necessary. Note that before v7.0 db_dba_user was used for VReplication.
   * Used by vttablet `ExecuteFetchAsApp` RPC. This is used when using `vtctlclient ExecuteFetchAsApp`
 
 ### tx_read_pool
@@ -112,8 +113,6 @@ As a result, connection pools should be sized mindful of the capacity of the und
 #### `-db_filtered_user`
                              
  * (default 'vt_filtered')
- * Used for VReplication to setup filtered binlog stream from a source shard MySQL instance.  
- Also used for actual copying of the upstream source table rows in VReplication, if necessary.
 
 ## Other relevant pool-related variables
 

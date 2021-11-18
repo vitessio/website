@@ -6,6 +6,8 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 
 `vtctl` is a command-line tool used to administer a Vitess cluster. It is available as both a standalone tool (`vtctl`) and client-server (`vtctlclient` in combination with `vtctld`). Using client-server is recommended, as it provides an additional layer of security when using the client remotely.
 
+Note that wherever `vtctl` commands produced master or MASTER for tablet type, they now produce primary or PRIMARY. Scripts and tools that depend on parsing command output will need to be updated.
+
 ## Commands
 
 ### Tablets
