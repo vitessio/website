@@ -1,0 +1,9 @@
+name: Check links
+on: 
+  - pull_request
+  - push
+jobs:
+  checklinks:
+    runs-on: ubuntu-latest
+    steps:
+      - run: make check-all-links
