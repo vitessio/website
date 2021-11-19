@@ -10,7 +10,7 @@ Likewise, Vitess is also Unicode-aware, and it supports the vast majority of the
 
 ### Supported collations
 
-The collation enviornment (i.e. the set of support collations and charsets) of a Vitess cluster is defined by the MySQL server version flag (`-mysql_server_version`) provided to the VTGate and VTTablet instances in the cluster. Higher (newer) MySQL versions will enable built-in support for more collations.
+The collation environment (i.e. the set of support collations and charsets) of a Vitess cluster is defined by the MySQL server version flag (`-mysql_server_version`) provided to the VTGate and VTTablet instances in the cluster. Higher (newer) MySQL versions will enable built-in support for more collations.
 
 The following table lists all of the supported collations in the current release of Vitess:
 
@@ -413,4 +413,3 @@ Do note that, as the MySQL documentation explains, the `@collation_connection` s
 Vitess has extensive support for creating collation-aware tables and columns in your SQL database, and performing collation-aware operations in SQL queries. Any of the supported collations in Vitess can be used when declaring the collation of a table or a row in your database -- it does not need to match the value of `@collation_connection`.
 
 Generally speaking, setting `@collation_connection` to any collation that is not based on `utf8mb4` is a mistake. We strongly encourage you to leave both the `-db_collation` and `-db_charset` flags to their default values: If these flags are not provided, the VTTablet will default to `utf8mb4` as its connection charset, and the connection collation will be the default connection collation for `utf8mb4`, which depends on the underlying MySQL server version. MySQL 5.7 will use `utf8mb4_general_ci`, while MySQL 8.0 will use `utf8mb4_0900_ai_ci`.
-
