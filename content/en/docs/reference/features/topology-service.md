@@ -215,9 +215,9 @@ The `vtctl TopoCat` utility can decode these files when using the
 `-decode_proto` option:
 
 ``` sh
-TOPOLOGY="-topo_implementation zk2 -topo_global_server_address global_server1,global_server2 -topo_global_root /vitess/global"
+GLOBAL_TOPOLOGY="-topo_implementation zk2 -topo_global_server_address global_server1,global_server2 -topo_global_root /vitess/global"
 
-$ vtctl $TOPOLOGY TopoCat -decode_proto -long /keyspaces/*/Keyspace
+$ vtctl ${GLOBAL_TOPOLOGY} TopoCat -decode_proto -long /keyspaces/*/Keyspace
 path=/keyspaces/ks1/Keyspace version=53
 sharding_column_name: "col1"
 path=/keyspaces/ks2/Keyspace version=55
@@ -275,10 +275,10 @@ Then to add a cell whose local topology service `cell1_server1,cell1_server2`
 will store their data under the directory `/vitess/cell1`:
 
 ``` sh
-TOPOLOGY="-topo_implementation zk2 -topo_global_server_address global_server1,global_server2 -topo_global_root /vitess/global"
+GLOBAL_TOPOLOGY="-topo_implementation zk2 -topo_global_server_address global_server1,global_server2 -topo_global_root /vitess/global"
 
 # Reference cell1 in the global topology service:
-vtctl $TOPOLOGY AddCellInfo \
+vtctl ${GLOBAL_TOPOLOGY} AddCellInfo \
   -server_address cell1_server1,cell1_server2 \
   -root /vitess/cell1 \
   cell1
@@ -329,7 +329,7 @@ want to use servers `http://global_server1,http://global_server2` in path
 # -topo_implementation etcd2
 # -topo_global_server_address http://global_server1,http://global_server2
 # -topo_global_root /vitess/global
-TOPOLOGY="-topo_implementation etcd2 -topo_global_server_address http://global_server1,http://global_server2 -topo_global_root /vitess/global
+GLOBAL_TOPOLOGY="-topo_implementation etcd2 -topo_global_server_address http://global_server1,http://global_server2 -topo_global_root /vitess/global"
 ```
 
 Then to add a cell whose local topology service
@@ -339,7 +339,7 @@ directory `/vitess/cell1`:
 ``` sh
 # Reference cell1 in the global topology service:
 # (the TOPOLOGY variable is defined in the previous section)
-vtctl $TOPOLOGY AddCellInfo \
+vtctl ${GLOBAL_TOPOLOGY} AddCellInfo \
   -server_address http://cell1_server1,http://cell1_server2 \
   -root /vitess/cell1 \
   cell1
@@ -385,7 +385,7 @@ want to use servers `global_server:global_port` with node path
 # -topo_implementation consul
 # -topo_global_server_address global_server:global_port
 # -topo_global_root vitess/global
-TOPOLOGY="-topo_implementation consul -topo_global_server_address global_server:global_port -topo_global_root vitess/global
+GLOBAL_TOPOLOGY="-topo_implementation consul -topo_global_server_address global_server:global_port -topo_global_root vitess/global"
 ```
 
 Then to add a cell whose local topology service
@@ -395,7 +395,7 @@ directory `vitess/cell1`:
 ``` sh
 # Reference cell1 in the global topology service:
 # (the TOPOLOGY variable is defined in the previous section)
-vtctl $TOPOLOGY AddCellInfo \
+vtctl ${GLOBAL_TOPOLOGY} AddCellInfo \
   -server_address cell1_server1:cell1_port \
   -root vitess/cell1 \
   cell1
@@ -422,15 +422,16 @@ wait until the end of a polling cycle with that duration before returning.
 
 When running an environment with multiple cells, it is essential to first create
 and configure your global topology service. Then define each local topology
-service to the global topology. As mentioned perviously, the global
-and local topology service can reside on the same or sperate implementation of
+service to the global topology. As mentioned previously, the global
+and local topology service can reside on the same or separate implementation of
 etcd, zookeeper, or consul. At a higher level overview:
 
 * Create or locate an existing instance of etcd, zookeeper, or consul for the
   global topology service.
 * Use vtctl client commands to initialize the global topology service,
   providing the global topology implementation, and root directory.
-  NOTE: for best practices the root dir should be set to `/vitess/global`.
+  NOTE: for best practices the root dir should be set to `/vitess/global` (on
+  consul this should be `vitess/global`).
 * (Optional) For each cell create an instance of etcd, zookeeper, or consul for
   the local topology service. This step is optional as you may use the existing
   implementation used by the global topology service. If you create a new local
@@ -441,13 +442,12 @@ etcd, zookeeper, or consul. At a higher level overview:
   service with the global topology service. This is done by providing the global
   topology service with the cell name, the local topology service, and the root
   directory. NOTE: for best practices the local root dir should be set to
-  `/vitess/${CELL_NAME}` where `${CELL_NAME}` is the location of the cell
+  `/vitess/${CELL_NAME}` (on consul this should be `vitess/${CELL_NAME}`) where `${CELL_NAME}` is the location of the cell
   `us-east-1, eu-west-2, etc`.
 * When starting a vttablet instance you must provide the global topology service
   as well as the `-tablet-path`, which implicitly includes the cell details.
   With this information the vttablet process will read the local topology
-  details from the global topology server. The vttablet process is only
-  concerned with one local topology service.
+  details from the global topology server.
 * When starting a vtgate instance, you will provide the global topology
   service, as well as the `-cell` flag to explicitly provide the cell details.
   With this information the vtgate process will retrieve the connection details
@@ -461,8 +461,11 @@ etcd, zookeeper, or consul. At a higher level overview:
 For this example run through, we will be using two etcd services one for
 the global and one for local topology service.
 
-NOTE: Production environments can and should be configured with multiple
-instances at the global and local levels.
+{{< warning >}}
+Production environments can and should be configured with multiple
+topology instances at the global and local levels.
+{{< /warning >}}
+
 
 1. Create the global etcd service
 
@@ -550,7 +553,7 @@ vttablet ${GLBOAL_TOPOLOGY} -tablet-path=${TABLET_ALIAS} -tablet_dir=${VTDATAROO
 details with `-cell` flag, and the global topology details. vtgate may be aware
 of additional local topology services if `-cells_to_watch` contains more than
 one cell. Local Topology information will be retrieved from the global toplogy
-server for each cell vtgate is aware of. 
+server for each cell vtgate is aware of.
 
 ```sh
 # vtgate implementation
@@ -687,10 +690,10 @@ zk -server global_server1,global_server2 touch -p /vitess/global
 zk -server cell1_server1,cell1_server2 touch -p /vitess/cell1
 
 # Store the flags in a shell variable to simplify the example below.
-TOPOLOGY="-topo_implementation zk2 -topo_global_server_address global_server1,global_server2 -topo_global_root /vitess/global"
+GLOBAL_TOPOLOGY="-topo_implementation zk2 -topo_global_server_address global_server1,global_server2 -topo_global_root /vitess/global"
 
 # Reference cell1 in the global topology service:
-vtctl $TOPOLOGY AddCellInfo \
+vtctl ${GLOBAL_TOPOLOGY} AddCellInfo \
   -server_address cell1_server1,cell1_server2 \
   -root /vitess/cell1 \
   cell1
@@ -704,11 +707,11 @@ topo2topo \
   -to_root /vitess/global \
 
 # Rebuild SvrKeyspace objects in new service, for each keyspace.
-vtctl $TOPOLOGY RebuildKeyspaceGraph keyspace1
-vtctl $TOPOLOGY RebuildKeyspaceGraph keyspace2
+vtctl ${GLOBAL_TOPOLOGY} RebuildKeyspaceGraph keyspace1
+vtctl ${GLOBAL_TOPOLOGY} RebuildKeyspaceGraph keyspace2
 
 # Rebuild SrvVSchema objects in new service.
-vtctl $TOPOLOGY RebuildVSchemaGraph
+vtctl ${GLOBAL_TOPOLOGY} RebuildVSchemaGraph
 
 # Now restart all vtgate, vttablet, vtctld processes replacing:
 # -topo_implementation zookeeper
