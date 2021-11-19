@@ -18,8 +18,8 @@ The main contract for the Topology Service is to be very highly available and
 consistent. It is understood it will come at a higher latency cost and very low
 throughput.
 
-We never use the Topology Service as an RPC or queuing mechanism or as a storage 
-system for logs. We never depend on the Topology Service being responsive and 
+We never use the Topology Service as an RPC or queuing mechanism or as a storage
+system for logs. We never depend on the Topology Service being responsive and
 fast to serve every query.
 
 The Topology Service must also support a Watch interface, to signal when certain
@@ -32,7 +32,7 @@ We differentiate two instances of the Topology Service: the Global instance, and
 the per-cell Local instance:
 
 * The Global instance is used to store global data about the topology that
-  doesn’t change very often, e.g. information about Keyspaces and Shards. 
+  doesn’t change very often, e.g. information about Keyspaces and Shards.
   The data is independent of individual instances and cells, and needs
   to survive a cell going down entirely.
 * There is one Local instance per cell, that contains cell-specific information,
@@ -55,7 +55,7 @@ the tablets in that cell then need to be restarted so they re-initialize their
 topology records (but they won’t lose any MySQL data).
 
 If the Global Topology Service dies and is not recoverable, this is more of a
-problem. All the Keyspace / Shard objects have to be recreated or be restored. 
+problem. All the Keyspace / Shard objects have to be recreated or be restored.
 Then the cells should recover.
 
 ## Global data
@@ -180,7 +180,7 @@ new primary alias.
 
 Finding a tablet to serve the data is done in two stages:
 
-* vtgate maintains a health check connection to all possible tablets, and they 
+* vtgate maintains a health check connection to all possible tablets, and they
 report which Keyspace / Shard / Tablet type they serve.
 * vtgate also reads the SrvKeyspace object, to find out the shard map.
 
@@ -360,8 +360,8 @@ others wait for files with older ModRevisions to disappear.
 Leader elections also use a subdirectory, named after the election Name, and use
 a similar method as the locks, with ephemeral files.
 
-We store the proto3 binary data for each object (as the v3 API allows us to store 
-binary data).  Note that this means that if you want to interact with etcd using 
+We store the proto3 binary data for each object (as the v3 API allows us to store
+binary data).  Note that this means that if you want to interact with etcd using
 the `etcdctl` tool, you will have to tell it to use the v3 API, e.g.:
 
 ```
@@ -420,30 +420,51 @@ wait until the end of a polling cycle with that duration before returning.
 
 ## Running multi cell environments
 
-When running an environment with multiple cells, it's essential to first create
-and configure your global topology service, then register each local cell
-topology to the global topology. At a higher level overview:
+When running an environment with multiple cells, it is essential to first create
+and configure your global topology service. Then define each local topology
+service to the global topology. As mentioned perviously, the global
+and local topology service can reside on the same or sperate implementation of
+etcd, zookeeper, or consul. At a higher level overview:
 
-* Create the global keystore service using etcd, zookeeper, or consul. 
-* Use vtctld command to initialize it as the global topology service. NOTE: for
-  best practices the root dir should be set to `/vitess/global`.
-* For each cell create a local keystore service using a separate instance of
-  etcd, zookeeper, or consul.
-* For each cell register the new local topology service with the global topology
-  service using vtctl or vtctlclient commands. NOTE: for best practices the root
-  dir should be set to `/vitess/${CELL_NAME}`.
-* When starting vtgate/vttablet commands, you will provide the global topology
-  information, as well as the name of the cell. The information on the local
-  cell topology will be passed to the process from the global topology service
-  and your vtgate/vttablet will connect to the local topology service.
+* Create or locate an existing instance of etcd, zookeeper, or consul for the
+  global topology service.
+* Use vtctl client commands to initialize the global topology service,
+  providing the global topology implementation, and root directory.
+  NOTE: for best practices the root dir should be set to `/vitess/global`.
+* (Optional) For each cell create an instance of etcd, zookeeper, or consul for
+  the local topology service. This step is optional as you may use the existing
+  implementation used by the global topology service. If you create a new local
+  instances, the technologies must match. For example, if you are using etcd for
+  your global topology service then you must use etcd for your local topology
+  service.
+* For each cell, using the vtctl client commands, define the local topology
+  service with the global topology service. This is done by providing the global
+  topology service with the cell name, the local topology service, and the root
+  directory. NOTE: for best practices the local root dir should be set to
+  `/vitess/${CELL_NAME}` where `${CELL_NAME}` is the location of the cell
+  `us-east-1, eu-west-2, etc`.
+* When starting a vttablet instance you must provide the global topology service
+  as well as the `-tablet-path`, which implicitly includes the cell details.
+  With this information the vttablet process will read the local topology
+  details from the global topology server. The vttablet process is only
+  concerned with one local topology service.
+* When starting a vtgate instance, you will provide the global topology
+  service, as well as the `-cell` flag to explicitly provide the cell details.
+  With this information the vtgate process will retrieve the connection details
+  it needs to connect to the applicable local topology server(s). Unlike the
+  vttablet process, if you are watching more than one cell, in `-cells_to_watch`
+  you may connect to multiple local topology services.
+
 
 ### Simple local configuration
 
-For this example run through, we will be assuming a single node etcd service for
-the global and local topology services. NOTE: Production environments can and
-should be configured with multiple etcd nodes at the global and local levels.
+For this example run through, we will be using two etcd services one for
+the global and one for local topology service.
 
-1. Create the global etcd service to store our global values
+NOTE: Production environments can and should be configured with multiple
+instances at the global and local levels.
+
+1. Create the global etcd service
 
 ``` sh
 export VTDATAROOT="/vt"
@@ -459,7 +480,7 @@ etcd --enable-v2=true --data-dir ${VTDATAROOT}/etcd/global --listen-client-urls 
   ${OTHER_ETCD_FLAGS}
 ```
 
-2. Associate vtctld to the etcd service and initialize global topology values
+2. Configure vtctld to use the global topology service
 
 ``` sh
 vtctld -topo_implementation=etcd2 -topo_global_server_address=${GLOBAL_ETCD_SERVER} \
@@ -467,11 +488,11 @@ vtctld -topo_implementation=etcd2 -topo_global_server_address=${GLOBAL_ETCD_SERV
   ${OTHER_VTCTLD_FLAGS}
 ```
 
-3. Create a local etcd service to store our cell information
+3. Create a local etcd instance to store our cell information
 
 ``` sh
 CELL_NAME="US_EAST"
-CELL_TOKEN="SOMETHING_UNIQ_HERE_TOO"
+CELL_TOKEN="${CELL_NAME}"
 CELL_ETCD_IP="192.168.0.3"
 CELL_ETCD_SERVER="http://${CELL_ETCD_IP}:2379"
 CELL_ETCD_PEER_SERVER="http://${CELL_ETCD_IP}:2380"
@@ -483,71 +504,70 @@ etcd --enable-v2=true --data-dir ${VTDATAROOT}/etcd/${CELL_NAME} --listen-client
   ${OTHER_ETCD_FLAGS}
 ```
 
-4. Register the local etcd service to the global topology service using vtctl or
-vtctlclient. We are providing the global topolgy server three pieces of
-information:
+4. Define the local topology service in the global topology service using vtctl
+client commands. We are providing the global topolgy server three pieces of
+information about the local topology service:
     * `-root=` the root of our local topology server
     * `-server_address` comma separated connection details to our local etcd
   instance(s). In this example, it is only a single instance
     * `${CELL_NAME}` the name of our local cell in this case `US_EAST`
 
-    Create cell with vtctlclient
-
 ``` sh
-# Using vtctlclient uses the IP address of the vtctld daemon
-# The daemon has the global topology information.
-# Therefore we don't need to explicitly provide these details.
+# vtctlclient uses the IP address of the vtctld daemon with the `-server` flag
+# The daemon already has the global topology information, therefore, we do not
+# need to explicitly provide these details.
 
 vtctlclient -server ${VTCTLD_IP}:15999 AddCellInfo \
   -root=/vitess/${CELL_NAME} \
   -server_address=${CELL_ETCD_SERVER} \
   ${CELL_NAME}
 ```
-4. Alternative method: create cell with vtctl  
-``` sh
-# Alternatively, using vtctl to create the cell, it does not connect to vtctld.
-# Therefore vtctl does not natively have the global topology details, we have
-# to explicitly state the global topology information to register the local topo.
 
-TOPOLOGY="-topo_implementation etcd2 -topo_global_server_address ${GLOBAL_ETCD_SERVER} -topo_global_root /vitess/global"
-
-vtctl $TOPOLOGY AddCellInfo \
-  -root /vitess/${CELL_NAME} \
-  -server_address ${CELL_ETCD_SERVER} \
-  ${CELL_NAME}
-```
-
-5. When starting up new vtgate or vttablet instances, you will need to provide
-the global topology details, as well as the name of the cell. With the cell name
-vtgate and vttablet retrieve the local topology information from the global
-topology server.
-
-```sh
-# vtgate implementation
-TOPOLOGY="-topo_implementation etcd2 -topo_global_server_address ${GLOBAL_ETCD_SERVER} -topo_global_root /vitess/global"
-
-vtgate ${TOPOLOGY} -cell=${CELL_NAME} -cells_to_watch=${CELL_NAME} -port=15001 -grpc_port=15991 \
--mysql_server_port=25306 -mysql_auth_server_impl=none -service_map='grpc-vtgateservice' \
--tablet_types_to_wait PRIMARY,REPLICA \
-${OTHER_VTGATE_FLAGS}
-```
+5. When starting up a new vttablet instances, you will need to provide
+the global topology details, as well as the alias of the tablet, provided through
+`-tablet-path=${TABLET_ALIAS}`. With the alias vttablet will acquire the cell
+name and retrieve the local topology information from the global topology server.
+NOTE: the `${TABLET_ALIAS}` variable is composed of two parts, the `${CELL_NAME}`
+and the `${TABLET_UID}`. The `${TABLET_ALIAS}` must be unique within the cluster
+and the `${TABLET_UID}` must be unique numerical value within the cell.
 
 ```sh
 # vttablet implementation
-TOPOLOGY="-topo_implementation etcd2 -topo_global_server_address ${GLOBAL_ETCD_SERVER} -topo_global_root /vitess/global"
-TAB_NAME=${CELL_NAME}-100
-KEYSPACE=CustomerInfo
+GLOBAL_TOPOLOGY="-topo_implementation etcd2 -topo_global_server_address ${GLOBAL_ETCD_SERVER} -topo_global_root /vitess/global"
+TABLET_UID="100"
+CELL_NAME="US_EAST"
+TABLET_ALIAS="${CELL_NAME}-${TABLET_UID}"
+KEYSPACE="CustomerInfo"
 
-vttablet ${TOPOLOGY} -tablet-path=${TAB_NAME} -tablet_dir=${VTDATAROOT}/${TAB_NAME} \
-  -mycnf-file=${VTDATAROOT}/${TAB_NAME}/my.cnf -init_keyspace=${KEYSPACE} -enable_semi_sync=true \
+vttablet ${GLBOAL_TOPOLOGY} -tablet-path=${TABLET_ALIAS} -tablet_dir=${VTDATAROOT}/${TABLET_ALIAS} \
+  -mycnf-file=${VTDATAROOT}/${TABLET_ALIAS}/my.cnf -init_keyspace=${KEYSPACE} -enable_semi_sync=true \
   -init_shard=0 -init_tablet_type=replica -port=15100 -grpc_port=16100 \
   -service_map='grpc-queryservice,grpc-tabletmanager,grpc-updatestream' \
   ${OTHER_VTTABLET_FLAGS}
 ```
 
+5. When starting up a new vtgate instances, you will explicitly provide cell
+details with `-cell` flag, and the global topology details. vtgate may be aware
+of additional local topology services if `-cells_to_watch` contains more than
+one cell. Local Topology information will be retrieved from the global toplogy
+server for each cell vtgate is aware of. 
+
+```sh
+# vtgate implementation
+GLOBAL_TOPOLOGY="-topo_implementation etcd2 -topo_global_server_address ${GLOBAL_ETCD_SERVER} -topo_global_root /vitess/global"
+CELL_NAME="US_EAST"
+
+vtgate ${GLOBAL_TOPOLOGY} -cell=${CELL_NAME} -cells_to_watch=${CELL_NAME} -port=15001 -grpc_port=15991 \
+-mysql_server_port=25306 -mysql_auth_server_impl=none -service_map='grpc-vtgateservice' \
+-tablet_types_to_wait PRIMARY,REPLICA \
+${OTHER_VTGATE_FLAGS}
+```
+
 6. You can repeat steps 3 through 5 above to create each cell as needed. If you
-have a vtgate instance that is watching a new and old cell with `-cells_to_watch=`,
-you may have to Rebuild the topology for the Keyspace and VSchema
+have a vtgate instance that is watching a new and old cell with `-cells_to_watch`,
+you may have to rebuild the topology for the Keyspace and VSchema. This will
+propagate information from the global topology service back to the local topology
+services
 
 ```sh
 vtctlclient -server ${VTCTLD_IP}:15999 RebuildKeyspaceGraph ${KEYSPACE_NAME}
@@ -636,11 +656,11 @@ The process to follow in that case is:
 * Run `vtctl RebuildKeyspaceGraph` for each keyspace using the new topology
   service flags.
 * Run `vtctl RebuildVSchemaGraph` using the new topology service flags.
-* Restart all `vtgate` processes using the new topology service flags. They 
-  will see the same Keyspaces / Shards / Tablets / VSchema as before, as the 
+* Restart all `vtgate` processes using the new topology service flags. They
+  will see the same Keyspaces / Shards / Tablets / VSchema as before, as the
   topology was copied over.
-* Restart all `vttablet` processes using the new topology service flags. 
-  They may use the same ports or not, but they will update the new topology 
+* Restart all `vttablet` processes using the new topology service flags.
+  They may use the same ports or not, but they will update the new topology
   when they start up, and be visible from `vtgate`.
 * Restart all `vtctld` processes using the new topology service flags. So that
   the UI also shows the new data.
