@@ -1,11 +1,7 @@
-<!-- File: expand.html -->
-<span class="expand">
-    <span class="expand-label" style="cursor: pointer;color: #f16626; font-size:larger" onclick="$h = $(this);$h.next('div').slideToggle(100,function () {$h.children('i').attr('class',function () {return $h.next('div').is(':visible') ? '{{.Get 2 | default `fas fa-chevron-down`}}' : 'fas fa-{{.Get 1 | default `fas fa-chevron-right`}}';});});">
-        <i class="{{.Get 1 | default `fas fa-chevron-right`}}"></i>
-        {{.Get 0}}
-    </span>
-    <div class="expand-content" style="display: none;">
+<details class="my-2">
+    <summary class="py-2 is-size-5 has-text-weight-semibold">{{.Get 0}}</summary>
+
+    <div class="mt-1 mb-6">
         {{.Inner | safeHTML}}
     </div>
-</span>
-<p></p>
+</details>
