@@ -158,7 +158,7 @@ There are pros and cons to using any of the strategies. Some notable differences
 | `direct` | No      | MySQL* | No        | No          | No                  | No          | Any     |
 | `pt-osc` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP`       | No*         | Any     |
 | `gh-ost` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP`       | No*         | Any     |
-| `online` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP,ALTER` | Yes         | Vitess  |
+| `online` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP,ALTER` | Yes         | Vitess  |
 
 - **Managed**: whether Vitess schedules and operates the migration
 - **Online**:
