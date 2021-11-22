@@ -16,6 +16,7 @@ Supported interactions are:
 - [Cancelling a migration](#cancelling-a-migration)
 - [Cancelling all pending migrations](#cancelling-all-keyspace-migrations)
 - [Retrying a migration](#retrying-a-migration)
+- [Cleaning migration artifacts](#cleaning-migration-artifacts)
 - [Reverting a migration](#reverting-a-migration)
 
 ## Running migrations
@@ -509,6 +510,32 @@ $ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
 | test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:37:33 |                     | running          |
 +-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
 ```
+
+## Cleaning migration artifacts
+
+Migrations yield artifacts: these are leftover tables, such as the ghost or shadow tables in an `ALTER` DDL. These tables are audited and collected as part of [table lifecycle](../../../reference/features/table-lifecycle/).
+
+The artifacts are essential to [Reverting a migration](../revertible-migrations/), and are kept intact for a while before destroyed.
+
+However, the artifacts also consume disk space. If the user is convinced they will not need the artifacts, they may explicitly request that the artifacts are dropped sooner.
+
+{{< warning >}}
+Once cleanup is requested, the migration cannot be reverted.
+{{< /warning >}}
+{{< info >}}
+The artifact tables are not purged immediately. Rather, they are sent for processing into the lifecycle mechanism.
+{{< /info >}}
+
+
+#### Via VTGate/SQL
+
+Per migration, request artifact cleanup via:
+```sql
+mysql> alter vitess_migration 'aa89f255_8d68_11eb_815f_f875a4d24e90' cleanup;
+Query OK, 1 row affected (0.00 sec)
+```
+
+
 
 ## Reverting a migration
 
