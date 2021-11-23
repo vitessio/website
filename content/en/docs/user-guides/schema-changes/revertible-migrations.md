@@ -1,6 +1,6 @@
 ---
 title: Revertible migrations
-weight: 11
+weight: 14
 aliases: ['/docs/user-guides/schema-changes/revertible-migrations/']
 ---
 

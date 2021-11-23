@@ -1,6 +1,6 @@
 ---
 title: Postponed migrations
-weight: 7
+weight: 12
 aliases: ['/docs/user-guides/schema-changes/postponed-migrations/']
 ---
 
