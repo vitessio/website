@@ -4,6 +4,12 @@ weight: 1
 aliases: ['/resources/presentations.html']
 ---
 
+## KubeCon NA 2021
+
+Vitess: Introduction and New Features - Deepthi Sigireddi & Alkin Tezuysal, PlanetScale, Inc.; Andrew Mason & Malcolm Akinje, Slack Corp.
+
+{{< youtube id="uKdMR89mfdE" autoplay="false" >}}
+
 ## Perconalive 2021
 
 Deploying a Sharded Vitess Sandbox Cluster in Public Cloud Kubernetes in 10 Minutes. - Jordan Moldow, Box
