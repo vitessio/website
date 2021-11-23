@@ -53,4 +53,4 @@ To clarify:
 - Multiple migrations can be in `ready` state. The scheduler will check them one by one to see which is eligible to next run.
 - Migrations will advance to `running` state one at a time, at most a few seconds apart.
 - A migration can be blocked from `running` if it operates on the same table as an already running migration.
-- While one or more migrations can be blocked from `running`, other migrations, even if submitted later, could start running, assuming no concurrency conflicts. 
+- While one or more migrations can be blocked from `running`, other migrations, even if submitted later, could start running, assuming no concurrency conflicts.
