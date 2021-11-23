@@ -28,7 +28,7 @@ As general overview:
 - Tablets will independently run schema migrations:
   - `ALTER TABLE` statements run via `VReplication`, `gh-ost` or `pt-online-schema-change`, as per selected [strategy](../ddl-strategies)
   - `CREATE TABLE` statements run directly.
-  - `DROP TABLE` statements run [safely and lazily](../../../reference/features/table-lifecycle/).
+  - `DROP TABLE` statements run [safely and lazily](../../../design-docs/table-lifecycle/safe-lazy-drop-tables/).
 - Vitess provides the user a mechanism to view migration status, cancel or retry migrations, based on the job ID.
 
 ## Syntax
