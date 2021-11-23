@@ -23,7 +23,7 @@ Orchestrator needs to know some things from the Vitess side, like the tablet ali
 
 Vitess also needs to know the identity of the primary for each shard. This is necessary in case of a failover.
 
-It is important to ensure that orchestrator has access to `vtctlclient` so that orchestrator can trigger the change in topology via the [`TabletExternallyReparented`](../../../reference/vtctl/#tabletexternallyreparented) command.
+It is important to ensure that orchestrator has access to `vtctlclient` so that orchestrator can trigger the change in topology via the [`TabletExternallyReparented`](../../../reference/vtctl/shards/#tabletexternallyreparented) command.
 
 ``` json
 "PostMasterFailoverProcesses": [
