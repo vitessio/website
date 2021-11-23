@@ -41,8 +41,16 @@ vtctl ApplySchema -skip_preflight -ddl_strategy "online -allow-concurrent" -sql 
 - Any `REVERT` request is eligible for concurrent execution.
 - There can be at most one non-concurrent (regular) migration running at any given time.
 - There may be an unlimited number of concurrent migrations running at any given time, on top of potentially a single non-concurrent migration.
-- But there will never be two migrations running concurrnelty that operate on the same table.
+- But there will never be two migrations running concurrently that operate on the same table.
+
+To clarify:
+
+- `gh-ost` and `pt-osc` `ALTER` migrations are not eligible to run concurrently
+- A "normal" `online` `ALTER` migration is not eligible to run concurrently. A `REVERT` of an `online` migration _is_ eligible though.
 
 ## Scheduling notes
 
-
+- Multiple migrations can be in `ready` state. The scheduler will check them one by one to see which is eligible to next run.
+- Migrations will advance to `running` state one at a time, at most a few seconds apart.
+- A migration can be blocked from `running` if it operates on the same table as an already running migration.
+- While one or more migrations can be blocked from `running`, other migrations, even if submitted later, could start running, assuming no concurrency conflicts. 
