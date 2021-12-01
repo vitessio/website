@@ -37,6 +37,10 @@ Via SQL:
 REVERT VITESS_MIGRATION '69b17887_8a62_11eb_badd_f875a4d24e90';
 ```
 
+{{< warning >}}
+As of Vitess 12.0 `vtctl OnlineDDL revert` is deprecated. Use the `REVERT VITESS_MIGRATION '...' ` SQL command either via `vtctl ApplySchema` or via `vtgate`.
+{{< /warning >}}
+
 Via `vtctl`:
 ```shell
 $ vtctlclient OnlineDDL commerce revert 69b17887_8a62_11eb_badd_f875a4d24e90
