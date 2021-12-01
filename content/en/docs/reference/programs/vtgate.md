@@ -191,3 +191,10 @@ The following global options apply to `vtgate`:
 | -vtgate-config-terse-errors | boolean | prevent bind vars from escaping in returned errors |
 | -warn_memory_rows | int | Warning threshold for in-memory results. A row count higher than this amount will cause the VtGateWarnings.ResultsExceeded counter to be incremented. (default 30000) |
 | -warn_payload_size | int | The warning threshold for query payloads in bytes. A payload greater than this threshold will cause the VtGateWarnings.WarnPayloadSizeExceeded counter to be incremented. |
+
+### Key Options
+
+* -srv_topo_cache_ttl: There may be instances where you will need to increase the cached TTL from the default of 1 second to a higher number:
+	* You may want to increase this option if you see that your topo leader goes down and keeps your queries waiting for a few seconds
+
+
