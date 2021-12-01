@@ -28,14 +28,12 @@ As general overview:
 - Tablets will independently run schema migrations:
   - `ALTER TABLE` statements run via `VReplication`, `gh-ost` or `pt-online-schema-change`, as per selected [strategy](../ddl-strategies)
   - `CREATE TABLE` statements run directly.
-  - `DROP TABLE` statements run [safely and lazily](../../../reference/features/table-lifecycle/).
+  - `DROP TABLE` statements run [safely and lazily](../../../design-docs/table-lifecycle/safe-lazy-drop-tables/).
 - Vitess provides the user a mechanism to view migration status, cancel or retry migrations, based on the job ID.
 
 ## Syntax
 
 The standard MySQL syntax for `CREATE`, `ALTER` and `DROP` is supported.
-
-
 
 ### ALTER TABLE
 
@@ -92,6 +90,8 @@ You will set either `@@ddl_strategy` session variable, or `-ddl_strategy` comman
 
 `CREATE` and `DROP` statements run in the same way for `"online"`, `"gh-ost"` and `"pt-osc"` strategies, and we consider them all to be _online_.
 
+See also [ddl_strategy flags](../ddl-strategy-flags).
+
 ## Running, tracking and controlling Online DDL
 
 Vitess provides two interfaces to interacting with Online DDL:
@@ -133,9 +133,21 @@ mysql> drop table customer;
 #### Executing an Online DDL via vtctl/ApplySchema
 
 ```shell
-$ vtctlclient ApplySchema -ddl_strategy "online" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
+$ vtctlclient ApplySchema -skip_preflight -ddl_strategy "online" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
 a2994c92_f1d4_11ea_afa3_f875a4d24e90
 ```
+You my run multiple migrations withing the same `ApplySchema` command:
+```shell
+$ vtctlclient ApplySchema -skip_preflight -ddl_strategy "online" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED; CREATE TABLE sample (id int PRIMARY KEY); DROP TABLE another;" commerce
+3091ef2a_4b87_11ec_a827_0a43f95f28a3
+```
+
+`ApplySchema` accepts the following flags:
+
+- `-ddl_strategy`: by default migrations run directly via MySQL standard DDL. This flag must be aupplied to indicate an online strategy. See also [DDL strategies](../ddl-strategies) and [ddl_strategy flags](../ddl-strategy-flags).
+- `-request_context <unique-value>`: all migrations in a `ApplySchema` command are logically grouped via a unique _context_. A unique value will be supplied automatically. The user may choose to supply their own value, and it's their responsibility to provide with a unique value. Any string format is accepted.
+  The context can then be used to search for migrations, via `SHOW VITESS_MIGRATIONS LIKE 'the-context'`. It is visible in `SHOW VITESS_MIGRATIONS ...` output as the `migration_context` column.
+- `-skip_preflight`: skip an internal Vitess schema validation. When running an online DDL it's recommended to add `-skip_preflight`. In future Vitess versions this flag may be removed or default to `true`.
 
 ## Migration flow and states
 

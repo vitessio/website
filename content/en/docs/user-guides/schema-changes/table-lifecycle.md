@@ -1,6 +1,6 @@
 ---
 title: Table lifecycle
-weight: 4
+weight: 5
 aliases: ['/docs/user-guides/table-lifecycle/','/docs/reference/table-lifecycle/', 'docs/reference/features/table-lifecycle/']
 ---
 

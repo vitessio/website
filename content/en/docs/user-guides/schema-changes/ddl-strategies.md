@@ -13,6 +13,8 @@ Vitess supports both managed, online schema migrations (aka Online DDL) as well 
 
 `CREATE` and `DROP` are managed in the same way, by Vitess, whether strategy is `online`, `gh-ost` or `pt-osc`.
 
+See also [ddl_strategy flags](../ddl-strategy-flags).
+
 ## Specifying a DDL strategy
 
 You will set either `@@ddl_strategy` session variable, or `-ddl_strategy` command line flag. Examples:
