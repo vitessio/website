@@ -52,7 +52,6 @@ From within the docker shell, aliases are set up for your convenience. Try the f
 
 You will find that Vitess runs a single keyspace, single shard cluster.
 
-
 ## Summary
 
 In this example, we deployed a single unsharded keyspace named `commerce`. Unsharded keyspaces have a single shard named `0`. The following schema reflects a common ecommerce scenario that was created by the script:

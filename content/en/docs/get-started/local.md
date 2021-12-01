@@ -12,7 +12,7 @@ A [docker setup](../local-docker/) is also available, which requires no dependen
 
 ## Install MySQL and etcd
 
-Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your installation method provides a choice:
+Vitess supports the databases listed [here](../../../overview/supported-databases/). We recommend MySQL 5.7 if your installation method provides a choice:
 
 ```sh
 # Ubuntu based

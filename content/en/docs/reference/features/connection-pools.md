@@ -113,6 +113,7 @@ As a result, connection pools should be sized mindful of the capacity of the und
 #### `-db_filtered_user`
                              
  * (default 'vt_filtered')
+ * Used on the target or vplayer side during VReplication.
 
 ## Other relevant pool-related variables
 
