@@ -57,7 +57,7 @@ Vitess does not yet support Window Functions or Common Table Expressions.
 
 ### Killing running queries
 
-Vitess does not yet support killing running shard queries via the `KILL` command through VTGate. Vitess does have strict query timeouts for OLTP workloads (see below). If you need a query, you can connect to the underlying MySQL shard instance and run `KILL` from there.
+Vitess does not yet support killing running shard queries via the `KILL` command through VTGate. Vitess does have strict query timeouts for OLTP workloads (see below). If you need to kill a query, you can connect to the underlying MySQL shard instance and run `KILL` from there.
 
 ### Cross-shard Transactions
 
