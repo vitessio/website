@@ -4,7 +4,7 @@ date: 2021-12-06
 slug: '2021-12-06-connecteam-story'
 tags: ['Vitess','MySQL', 'usecase', 'casestudy', 'story', 'journey', 'production', 'sharding']
 title: 'Connecteam - our Vitess story'
-description: "A Vitess journey from PoC to Production'
+description: "A Vitess journey from PoC to Production"
 ---
 [Connecteam](https://connecteam.com/) is a SaaS company that provides an employee management solution for deskless teams. Over the last couple of years, we’ve been growing tremendously and we recently started to face one of the hardest technical challenges: horizontal scaling.
 
