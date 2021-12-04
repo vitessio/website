@@ -1,5 +1,17 @@
-{{ $latest := site.Params.versions.latest }}
+{{ $current := site.Params.versions.current }}
+{{ $next := site.Params.versions.next }}
 
+/docs/current                             /docs/{{ $current }}/
+/docs/current/*                           /docs/{{ $current }}/:splat
+/docs/next                                /docs/{{ $next }}/
+/docs/next/*                              /docs/{{ $next }}/:splat
+
+/zh/docs/current                          /zh/docs/{{ $current }}/
+/zh/docs/current/*                        /zh/docs/{{ $current }}/:splat
+/zh/docs/next                             /zh/docs/{{ $next }}/
+/zh/docs/next/*                           /zh/docs/{{ $next }}/:splat
+
+# Go imports: `go get vitess.io/vitess`
 /vitess/*   go-get=1 /go-import/vitess.html   200
 /messages/* go-get=1 /go-import/messages.html 200
 /operator/* go-get=1 /go-import/operator.html 200
@@ -44,4 +56,54 @@
 /blog/rss          /blog/index.xml	 301
 
 # Redirect to Slack invite link.
-/slack https://join.slack.com/t/vitess/shared_invite/zt-rbtfk682-uqBu8WCyAUEDLFpydt1BOQ 302
+/slack     https://join.slack.com/t/vitess/shared_invite/zt-rbtfk682-uqBu8WCyAUEDLFpydt1BOQ     302
+
+# Docs versioning redirects
+
+### [en]
+/docs/contributing     /docs/{{ $current }}/contributing
+/docs/contributing/*   /docs/{{ $current }}/contributing/:splat
+/docs/concepts         /docs/{{ $current }}/concepts
+/docs/concepts/*       /docs/{{ $current }}/concepts/:splat
+/docs/design-docs      /docs/{{ $current }}/design-docs
+/docs/design-docs/*    /docs/{{ $current }}/design-docs/:splat
+/docs/faq              /docs/{{ $current }}/faq
+/docs/faq/*            /docs/{{ $current }}/faq/:splat
+/docs/get-started      /docs/{{ $current }}/get-started
+/docs/get-started/*    /docs/{{ $current }}/get-started/:splat
+/docs/overview         /docs/{{ $current }}/overview
+/docs/overview/*       /docs/{{ $current }}/overview/:splat
+/docs/pdfs             /docs/{{ $current }}/pdfs
+/docs/pdfs/*           /docs/{{ $current }}/pdfs/:splat
+/docs/reference        /docs/{{ $current }}/reference
+/docs/reference/*      /docs/{{ $current }}/reference/:splat
+/docs/resources        /docs/{{ $current }}/resources
+/docs/resources/*      /docs/{{ $current }}/resources/:splat
+/docs/troubleshoot     /docs/{{ $current }}/troubleshoot
+/docs/troubleshoot/*   /docs/{{ $current }}/troubleshoot/:splat
+/docs/user-guides      /docs/{{ $current }}/user-guides
+/docs/contributing/*   /docs/{{ $current }}/user-guides/:splat
+
+### [zh]
+/zh/docs/contributing     /zh/docs/{{ $current }}/contributing
+/zh/docs/contributing/*   /zh/docs/{{ $current }}/contributing/:splat
+/zh/docs/concepts         /zh/docs/{{ $current }}/concepts
+/zh/docs/concepts/*       /zh/docs/{{ $current }}/concepts/:splat
+/zh/docs/design-docs      /zh/docs/{{ $current }}/design-docs
+/zh/docs/design-docs/*    /zh/docs/{{ $current }}/design-docs/:splat
+/zh/docs/faq              /zh/docs/{{ $current }}/faq
+/zh/docs/faq/*            /zh/docs/{{ $current }}/faq/:splat
+/zh/docs/get-started      /zh/docs/{{ $current }}/get-started
+/zh/docs/get-started/*    /zh/docs/{{ $current }}/get-started/:splat
+/zh/docs/overview         /zh/docs/{{ $current }}/overview
+/zh/docs/overview/*       /zh/docs/{{ $current }}/overview/:splat
+/zh/docs/pdfs             /zh/docs/{{ $current }}/pdfs
+/zh/docs/pdfs/*           /zh/docs/{{ $current }}/pdfs/:splat
+/zh/docs/reference        /zh/docs/{{ $current }}/reference
+/zh/docs/reference/*      /zh/docs/{{ $current }}/reference/:splat
+/zh/docs/resources        /zh/docs/{{ $current }}/resources
+/zh/docs/resources/*      /zh/docs/{{ $current }}/resources/:splat
+/zh/docs/troubleshoot     /zh/docs/{{ $current }}/troubleshoot
+/zh/docs/troubleshoot/*   /zh/docs/{{ $current }}/troubleshoot/:splat
+/zh/docs/user-guides      /zh/docs/{{ $current }}/user-guides
+/zh/docs/contributing/*   /zh/docs/{{ $current }}/user-guides/:splat

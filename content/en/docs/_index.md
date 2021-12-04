@@ -1,6 +1,9 @@
 ---
-title: The Vitess Documentation
-description: Everything you need to know about the world's most scalable open-source MySQL platform
-notoc: true
+title: Documentation versions
+linkTitle: versions
 ---
 
+<!-- Welcome to the docs for Vitess! The following doc versions are available: -->
+
+<!-- TODO: Replace versions shortcode -->
+<!-- {{ < versions > }} -->
