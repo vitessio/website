@@ -76,4 +76,4 @@ Essentially, Vitess removes the fear of making the wrong sharding decision becau
 
 Although a Vitess shard can grow to many terabytes, we have seen that 250GB is the sweet spot. If your data size approaches this limit, it is time to think about splitting your data.
 
-Please also note that smaller shard sizes will backup more quickly. However, you will likely end up with more shards to backup, which may take more time to run, but can be run in parallel.  
+Please also note that smaller shard sizes will backup more quickly. However, you will likely end up with more shards to backup, which may take more time to run in total, but can be run in parallel.  
