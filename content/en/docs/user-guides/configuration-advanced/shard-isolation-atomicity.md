@@ -1,6 +1,7 @@
 ---
 title: Shard Isolation and Atomicity Model
 weight: 20
+aliases: ['/docs/user-guides/shard-isolation-atomicity/'] 
 ---
 
 This is meant to explain some of the practical effects of the Vitess multi-shard isolation and atomicity model touched on in [Vitess' scalability philosophy](../../../overview/scalability-philosophy/#consistency-model).
