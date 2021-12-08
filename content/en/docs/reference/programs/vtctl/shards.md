@@ -2,6 +2,7 @@
 title: vtctl Shard Command Reference
 series: vtctl
 docs_nav_title: Shards
+aliases: ['/docs/reference/vtctl/shards/'] 
 ---
 
 The following `vtctl` commands are available for administering shards.

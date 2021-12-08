@@ -2,6 +2,7 @@
 title: Replica Transactions
 description:
 weight: 1
+aliases: ['/docs/design-docs/query-serving/replicatx/'] 
 ---
 
 ### Feature Description
