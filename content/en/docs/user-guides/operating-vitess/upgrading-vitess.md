@@ -18,7 +18,7 @@ In general, always **read the 'Upgrading' section of the release notes**. It wil
 
 ## Upgrade Order
 
-We recommend to upgrade components in a bottom-to-top order such that "old" clients will talk to "new" servers during the transition.
+We recommend upgrading Vitess using a bottom up approach starting with the vttablet instances and ending with application updates. Upgrades and restarts for vttablets should be handled one at a time, in a rotating fashion, with the primary tablet being last. All components will need restarts after applying upgrades.
 
 Please use this upgrade order (unless otherwise noted in the release notes):
 
