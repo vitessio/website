@@ -78,11 +78,9 @@ The scheduler works by periodic sampling of known migration states. Normally the
 
 will kick a burst of additional ticks. This is done to speed up the progress of the state machine. For example, if a new migration is submitted, there's a good chance it will be clear to execute, so an increase in ticks will start the migration within a few seconds rather than one minute later.
 
-The scheduler only runs a single migration at a time. This could be a simple `CREATE TABLE` or a hours-long running `ALTER TABLE`. Noteworthy:
+By default, the scheduler only runs a single migration at a time. This could be a simple `CREATE TABLE` or a hours-long running `ALTER TABLE`. However, the user my request some migrations to run concurrently via `-allow-concurrent` flag of `ddl_strategy`.
 
-- Two parallel `ALTER TABLE` are likely to interfere with each other, competing for same resources, causing total runtime to be longer than sequential run. This is the reasoning for only running a single migration at a time.
-- `CREATE TABLE` does not interfere in the same fashion. Generally speaking, there shouldn't be a problem running a `CREATE TABLE` while a hours-long `ALTER TABLE` is in mid-run. The current logic still only allows one migration at a time. In the future we may change that.
-- `DROP TABLE` is implemented by `RENAME TABLE`, and is therefore also a lightweight operation similarly to `CREATE TABLE`. Again, current logic still only allows one migration at a time. In the future we may change that.
+The scheduler may advance multiple migrations to `ready` state, and from there it checks which can be further advance into `running` state, based on concurrency eligibility.
 
 ## Who runs the migration
 
