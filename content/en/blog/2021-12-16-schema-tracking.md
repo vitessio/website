@@ -2,7 +2,7 @@
 author: 'Florent Poinsard'
 date: 2021-12-16
 slug: '2021-12-16-schema-tracking'
-tags: ['Vitess','CNCF', 'Schema', 'Tracking', 'Planner', 'Query', 'Serving']
+tags: ['Vitess','CNCF', 'Schema', 'Tracking', 'Planner', 'Query', 'Serving', 'MySQL']
 title: 'Vitess Schema Tracking'
 description: "Insight into Vitess' Schema Tracking feature"
 ---
