@@ -2,7 +2,7 @@
 author: 'Manan Gupta'
 date: 2021-12-17
 slug: '2021-12-17-rails-that-scales'
-tags: ['Vitess','CNCF', 'Rails', 'scaling','web','framework']
+tags: ['Vitess','MySQL','CNCF', 'Rails', 'scaling','web','framework','SQL']
 title: 'Rails that scales - Powered by Vitess'
 description: "Announcing compatibility of Vitess with Rails" 
 ---
