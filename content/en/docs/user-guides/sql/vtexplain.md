@@ -1,10 +1,10 @@
 ---
 title: Analyzing a SQL statement
 weight: 1
-aliases: ['/docs/user-guides/vtexplain/'] 
+aliases: ['/docs/user-guides/vtexplain/']
 ---
 
-# Introduction 
+# Introduction
 
 This document covers the way Vitess executes a particular SQL statement using the [VTExplain tool](../../../reference/vtexplain). This tool works similarly to the MySQL `EXPLAIN` statement.
 
@@ -19,7 +19,7 @@ You can also build the `vtexplain` binary in your environment. To build this bin
 To successfully analyze your SQL queries and determine how Vitess executes each statement, follow these steps:
 
 1. Identify a SQL schema for the statement's source tables
-1. Identify a VSchema for the statement's source tables 
+1. Identify a VSchema for the statement's source tables
 1. Run the VTExplain tool
 
 If you have a large number of queries you want to analyze for issues, based on a Vschema you’ve created for your database, you can read through a detailed scripted example [here](../vtexplain-in-bulk).
@@ -135,16 +135,33 @@ vtexplain -shards 8 -vschema-file vschema.json -schema-file schema.sql -replicat
 ----------------------------------------------------------------------
 SELECT * from users
 
+1 mainkeyspace/-20: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/-20: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/-20: select * from users limit 10001
+1 mainkeyspace/20-40: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/20-40: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/20-40: select * from users limit 10001
+1 mainkeyspace/40-60: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/40-60: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/40-60: select * from users limit 10001
+1 mainkeyspace/60-80: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/60-80: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/60-80: select * from users limit 10001
+1 mainkeyspace/80-a0: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/80-a0: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/80-a0: select * from users limit 10001
+1 mainkeyspace/a0-c0: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/a0-c0: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/a0-c0: select * from users limit 10001
+1 mainkeyspace/c0-e0: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/c0-e0: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/c0-e0: select * from users limit 10001
+1 mainkeyspace/e0-: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/e0-: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/e0-: select * from users limit 10001
 
 ----------------------------------------------------------------------
+<nil>
 ```
 
 In the example above, the output of `VTExplain` shows the sequence of queries that Vitess runs in order to execute the query. Each line shows the logical sequence of the query, the keyspace where the query executes, the shard where the query executes, and the query that executes, in the following format:
@@ -161,18 +178,20 @@ In the following example, the `VTExplain` command takes an `INSERT` query and re
 
 ```
 vtexplain -shards 128 -vschema-file vschema.json -schema-file schema.sql -replication-mode "ROW" -output-mode text -sql "INSERT INTO users (user_id, name) VALUES(1, 'john')"
-
 ----------------------------------------------------------------------
 INSERT INTO users (user_id, name) VALUES(1, 'john')
 
+1 mainkeyspace/22-24: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/22-24: begin
-1 mainkeyspace/22-24: insert into users_name_idx(name, user_id) values ('john', 1) /* vtgate:: keyspace_id:22c0c31d7a0b489a16332a5b32b028bc */
+1 mainkeyspace/22-24: insert into users_name_idx(`name`, user_id) values ('john', 1)
+2 mainkeyspace/16-18: SET collation_connection = utf8mb4_general_ci
 2 mainkeyspace/16-18: begin
-2 mainkeyspace/16-18: insert into users(user_id, name) values (1, 'john') /* vtgate:: keyspace_id:166b40b44aba4bd6 */
+2 mainkeyspace/16-18: insert into users(user_id, `name`) values (1, 'john')
 3 mainkeyspace/22-24: commit
 4 mainkeyspace/16-18: commit
 
 ----------------------------------------------------------------------
+<nil>
 ```
 
 The example above shows how Vitess handles an insert into a table with a secondary lookup Vindex:
@@ -196,7 +215,7 @@ The shardrange map has the same structure as the output of running `vtctl FindAl
     "-80": {
       "primary_alias": {
         "cell": "test",
-        "uid": 00000000100
+        "uid":  100
       },
       "primary_term_start_time": {
         "seconds": 1599828375,
@@ -210,7 +229,7 @@ The shardrange map has the same structure as the output of running `vtctl FindAl
     "80-90": {
       "primary_alias": {
         "cell": "test",
-        "uid": 00000000200
+        "uid": 200
       },
       "primary_term_start_time": {
         "seconds": 1599828344,
@@ -225,7 +244,7 @@ The shardrange map has the same structure as the output of running `vtctl FindAl
     "90-a0": {
       "primary_alias": {
         "cell": "test",
-        "uid": 00000000300
+        "uid": 300
       },
       "primary_term_start_time": {
         "seconds": 1599828405,
@@ -240,7 +259,7 @@ The shardrange map has the same structure as the output of running `vtctl FindAl
     "a0-e8": {
       "primary_alias": {
         "cell": "test",
-        "uid": 00000000400
+        "uid": 400
       },
       "primary_term_start_time": {
         "seconds": 1599828183,
@@ -255,7 +274,7 @@ The shardrange map has the same structure as the output of running `vtctl FindAl
     "e8-": {
       "primary_alias": {
         "cell": "test",
-        "uid": 00000000500
+        "uid": 500
       },
       "primary_term_start_time": {
         "seconds": 1599827865,
@@ -266,33 +285,58 @@ The shardrange map has the same structure as the output of running `vtctl FindAl
       },
       "is_primary_serving": true
     }
+  }
 }
+
 ```
 
 After having saved that to a file called `shardmaps.json`:
 
 ```
-vtexplain -vschema-file vschema.json -schema-file schema.sql -ks-shard-map shardmaps.json -replication-mode "ROW" -output-mode text -sql "SELECT * FROM users; SELECT * FROM users WHERE id IN (10, 17, 42, 1000);"
+vtexplain -vschema-file vschema.json -schema-file schema.sql -ks-shard-map "$(cat shardmaps.json)" -replication-mode "ROW" -output-mode text -sql "SELECT * FROM users; SELECT * FROM users WHERE id IN (10, 17, 42, 1000);"
 ----------------------------------------------------------------------
 SELECT * FROM users
 
+1 mainkeyspace/-80: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/-80: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/-80: select * from users limit 10001
+1 mainkeyspace/80-90: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/80-90: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/80-90: select * from users limit 10001
+1 mainkeyspace/90-a0: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/90-a0: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/90-a0: select * from users limit 10001
+1 mainkeyspace/a0-e8: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/a0-e8: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/a0-e8: select * from users limit 10001
+1 mainkeyspace/e8-: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/e8-: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/e8-: select * from users limit 10001
 
 ----------------------------------------------------------------------
-SELECT * FROM users WHERE id IN (10, 17, 42, 100000)
+SELECT * FROM users WHERE id IN (10, 17, 42, 1000)
 
-1 mainkeyspace/-80: select * from users where id in (10, 17, 42) limit 10001
-1 mainkeyspace/80-90: select * from users where id in (100000) limit 10001
+1 mainkeyspace/-80: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/-80: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/-80: select * from users where id in (10, 17, 42, 1000) limit 10001
+1 mainkeyspace/80-90: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/80-90: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/80-90: select * from users where id in (10, 17, 42, 1000) limit 10001
+1 mainkeyspace/90-a0: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/90-a0: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/90-a0: select * from users where id in (10, 17, 42, 1000) limit 10001
+1 mainkeyspace/a0-e8: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/a0-e8: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/a0-e8: select * from users where id in (10, 17, 42, 1000) limit 10001
+1 mainkeyspace/e8-: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/e8-: SET collation_connection = utf8mb4_general_ci
+1 mainkeyspace/e8-: select * from users where id in (10, 17, 42, 1000) limit 10001
 
 ----------------------------------------------------------------------
+<nil>
 ```
 
 
 ## See also
 
 * For detailed configuration options for VTExplain, see the [VTExplain syntax reference](../../../reference/vtexplain).
-

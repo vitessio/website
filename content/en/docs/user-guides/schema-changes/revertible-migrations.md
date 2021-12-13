@@ -37,6 +37,10 @@ Via SQL:
 REVERT VITESS_MIGRATION '69b17887_8a62_11eb_badd_f875a4d24e90';
 ```
 
+{{< warning >}}
+As of Vitess 12.0 `vtctl OnlineDDL revert` is deprecated. Use the `REVERT VITESS_MIGRATION '...' ` SQL command either via `vtctl ApplySchema` or via `vtgate`.
+{{< /warning >}}
+
 Via `vtctl`:
 ```shell
 $ vtctlclient OnlineDDL commerce revert 69b17887_8a62_11eb_badd_f875a4d24e90
@@ -218,7 +222,7 @@ mysql> select * from t;
 
 Revert for `CREATE` and `DROP` are implemented similarly for all online strategies.
 
-- The revert for a `CREATE` DDL is to rename the table away and into a [table lifecycle](../../../reference/features/table-lifecycle/) name, rather than actually `DROP` it. This keeps th etale safe for a period of time, and makes it possible to reinstate the table, populated with all data, via a 2nd revert.
+- The revert for a `CREATE` DDL is to rename the table away and into a [table lifecycle](../table-lifecycle/) name, rather than actually `DROP` it. This keeps th etale safe for a period of time, and makes it possible to reinstate the table, populated with all data, via a 2nd revert.
 - The revert for a `DROP` relies on the fact that Online DDL `DROP TABLE` does not, in fact, drop the table, but actually rename it away. Thus, reverting the `DROP` is merely a `RENAME` back into its original place.
 - The revert for `ALTER` is only available for `online` strategy, implemented by `VReplication`. VReplication keep track of a DDL migration by writing down the GTID position through the migration flow. In particular, at time of cut-over and when tables are swapped, VReplication notes the _final_ GTID pos for the migration.
   When a revert is requested, Vitess computes a new VReplication rule/filter for the new stream. It them copies the _final_ GTID pos from the reverted migration, and instructs VReplication to resume from that point.
