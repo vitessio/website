@@ -104,9 +104,9 @@ You can look at the examples from the Rails guides and the Vschema that we used 
 
 We cover all the examples from the five guides: [Active Records Migration](https://guides.rubyonrails.org/active_record_migrations.html), [Active Records Validations](https://guides.rubyonrails.org/active_record_validations.html), [Active Records Callbacks](https://guides.rubyonrails.org/active_record_callbacks.html), [Active Records Associations](https://guides.rubyonrails.org/association_basics.html) and [Active Records Query Interface](https://guides.rubyonrails.org/active_record_querying.html).
 
-## Trainwrecks Along the way
+## Speedbumps along the way
 
-While trying to make Vitess compatible with Rails, we frequently encountered trainwrecks that we had to fix. Some of them are listed here -
+While trying to make Vitess compatible with Rails, we frequently encountered speedbumps that we had to fix. Some of them are listed here -
 
 1. https://github.com/vitessio/vitess/issues/7396
 2. https://github.com/vitessio/vitess/issues/7456
