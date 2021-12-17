@@ -17,7 +17,7 @@ MoveTables/Reshard [-keep_data] Cancel <targetKs.workflow>
 
 ### Description
 
-`Cancel` can be used if a workflow was created in error or was misconfigured and you prefer to create a new workflow instead of fixing this one. Cancel can only be called if no traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the side-car `_vt` database and routing rules and blacklisted tables from the topo and, by default, the target tables/shards from the target keyspace.
+`Cancel` can be used if a workflow was created in error or was misconfigured and you prefer to create a new workflow instead of fixing this one. Cancel can only be called if no traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the side-car `_vt` database and routing rules and denied tables from the topo and, by default, the target tables/shards from the target keyspace.
 
 ### Parameters
 
