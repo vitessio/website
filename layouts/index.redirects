@@ -1,3 +1,5 @@
+{{ $latest := site.Params.versions.latest }}
+
 /vitess/*   go-get=1 /go-import/vitess.html   200
 /messages/* go-get=1 /go-import/messages.html 200
 /operator/* go-get=1 /go-import/operator.html 200
@@ -41,3 +43,5 @@
 # RSS URL Redirect
 /blog/rss          /blog/index.xml	 301
 
+# Redirect to Slack invite link.
+/slack https://join.slack.com/t/vitess/shared_invite/zt-rbtfk682-uqBu8WCyAUEDLFpydt1BOQ 302

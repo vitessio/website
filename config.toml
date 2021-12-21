@@ -10,6 +10,9 @@ pygmentsCodeFences = true
 pygmentsUseClasses = false
 pygmentsStyle = "fruity"
 
+[params.versions]
+latest = "12.0"
+
 [params.assets]
 js = ["app"]
 fontawesomeversion = "5.7.2"
@@ -118,3 +121,14 @@ icon = "magic"
 
 [markup.goldmark.renderer]
 unsafe = true
+
+[mediaTypes]
+"text/netlify" = { }
+
+[outputFormats.REDIRECTS]
+mediaType = "text/netlify"
+baseName = "_redirects"
+notAlternative = true
+
+[outputs]
+home = [ "HTML", "REDIRECTS", "RSS" ]
