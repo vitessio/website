@@ -1,0 +1,147 @@
+---
+title: VTGate Buffering
+weight: 5
+aliases: ['/docs/user-guides/buffering/','/docs/reference/programs/vtgate']
+---
+
+VTGate in Vitess supports the **buffering** of queries in certain situations.
+The original intention of this feature was to **reduce** (but not necessarily
+eliminate) downtime during planned failovers (a.k.a. PRS -
+PlannedReparentShard operations).  It has been extended to provide buffering
+in some additional (planned) failover situations, e.g. during resharding.
+
+Note that buffering is not intended for, or active during, unplanned failovers
+or other unplanned issues with a `PRIMARY` tablet during normal operations.
+
+As you may imagine if you think about the problem, buffering can be
+somewhat involved, and there are a number of tricky edge cases. We will
+discuss this in the context of an application's experience, starting with
+the simplest case, that of buffering during a PRS (PlannedReparentShard)
+operation.
+
+## VTGate parameters to enable buffering
+
+First, let us cover the parameters that need to be set in VTGate to enable
+buffering:
+  * `-enable_buffer`:  Enables buffering.  **Not enabled by default**
+  * `-enable_buffer_dry_run`:  Enable logging of if/when buffering would
+  trigger, without actually buffering anything. Useful for testing.
+  Default: `false`
+  * `-buffer_implementation`:  Default: `healthcheck`.  More consistent results
+  have been seen with `keyspace_events` and the default will change to
+  `keyspace_events` in Vitess release 13.
+  * `-buffer_size`:  Default: `10` in Vitess release 13 the default will be
+  `1000`. This should be sized to the appropriate number of expected connections
+  during the PRS event. Each connection will consume one buffer slot of the
+  `buffer_size`. The resource consideration for setting this parameter are
+  memory resources
+  * `-buffer_drain_concurrency`:  Default: `1`.  If the buffer is of any
+  significant size, you probably want to increase this proportionally.
+  * `-buffer_keyspace_shards`:  Can be used to limit buffering to only
+  certain keyspaces. Should not be necessary in most cases.
+  * `-buffer_max_failover_duration`:  Default: `20s`.  If buffering is active
+  for longer than this from when the first request was buffered, stop buffering
+  and return errors to the buffered requests.
+  * `-buffer_window`: Default: `10s`.  The maximum time any individual request
+  should be buffered for. Should probably be less than the value for
+  `-buffer_max_failover_duration`. Adjust according to your application
+  requirements. Beaware if your mysql client has  `write_timeout` or
+  `read_timeout` settings those values should be greater than the
+  `buffer_max_failover_duration`.
+  * `-buffer_min_time_between_failovers`: Default `1m`. If consecutive
+  failovers for a shard happens within less than this duration, do **not**
+  buffer again. This avoids "endless" buffering if there are consecutive
+  failovers, and makes sure that the application will eventually receive
+  errors that will allow it (or the application client) to take appropriate
+  action within a bounded amount of time.
+
+## Types of queries that can be buffered
+
+ * Only requests to tablets of type `PRIMARY` are buffered. In-flight requests
+ to a `REPLICA` in the process of transitioning to `PRIMARY` because of a PRS
+ should be unaffected, and do not require buffering.
+
+## What happens during buffering
+
+Fundamentally we are:
+ * Hold up and buffering queries to the `PRIMARY` tablet for a shard
+ * Wait for replication on a primary canidate `REPLICA` to catch up to the
+ current `PRIMARY`.
+ * Perform the actions which demote the `PRIMARY` and promote a `REPLICA`
+ * Drain the buffered queries to the new `PRIMARY` tablet.
+ * Begin the countdown timer for `buffer_max_failover_duration`.
+
+
+Note that this process is not guaranteed to eliminate errors to the
+application, but rather reduce them or make them less frequent. The application
+should still endeavor to handle errors appropriately if/when they
+occur (e.g. unplanned outages/failovers, etc.)
+
+## How does it work?
+
+Simplifying considerably:
+  * All buffering is done in `vtgate`
+  * When a shard begins a failover or resharding event, and a query is sent
+  from `vtgate` to `vttablet`, `vttablet` will return a certain type of error
+  to `vtgate` (`vtrpcpb.Code_CLUSTER_EVENT`).
+  * This error indicates to `vtgate` that it is appropriate to buffer this
+  request.
+  * Separately the various timers associated with the flags above are being
+  maintained to timeout and return errors to the application when appropriate,
+  e.g. if an individual request was buffered for too long;  or if buffering
+  start "too long" ago.
+  * When the failover is complete, and the tablet starts accepting queries
+  again, we start draining the buffered queries, with a concurrency as
+  indicated by the `-buffer_drain_concurrency` parameter.
+  * When the buffer is drained, the buffering is complete.  We maintain a
+  timer based on `-buffer_min_time_between_failovers` to make sure we
+  do not buffer again if another failover starts within that period.
+
+
+## What the application sees
+
+When buffering executes as expected the application will see a pause in their
+querry processing. Each connection making a querry will consume a slot in the
+`buffer_size` and will be paused for the duration of `buffer_window` before
+errors are returned. Once the PRS event completes, the buffer will begin to
+drain at a concurrency set by the `buffer_drain_concurrency` value; a countdown
+timer will start set by `buffer_min_time_between_failovers`. During this period
+any future buffers will be disabled.
+
+## Potential Errors
+Buffering was implemented to minimize downtime, there are still potential for
+errors to occur, and your application should be configured to handle them
+appropriately. Below are a few errors which may occur:
+
+### Lost connection
+```
+Error Number: 2013
+Error Message: Lost connection to MySQL server during query (timed out)
+```
+
+Due the nature of buffering and pausing your querries the MySQL client will see
+delays in their querry request. If your client has a `read_timeout` or
+`write_timeout` set the value should be greater than the value set
+`buffer_window` in vtgate `buffer_window`.
+
+### Primary not serving
+```
+Error Number: 1105
+Error Message: target: ${KEYSPACE}.0.primary: primary is not serving, there is a reparent operation in progress
+```
+
+You may get this error in the application for a variety of reasons.
+* `enable_buffer` is not configured; by default buffers are disabled.
+* `enable_buffer_dry_run` is configured to be true; no buffering actions are
+taken when this setting is enabled.
+* `buffer_keyspace_shards` is not configured for the keyspace in which the
+PRS event is being executed on
+* `buffer_size` is set to be lower than the number of incoming querries; any
+incoming request over the `buffer_size` will see this error.
+* A new buffering event occurs before the `buffer_min_time_between_failovers`
+has expired.
+* `buffer_max_failover_duration` has been exceeded; buffering is discontinued
+and this error is returned.
+
+## Next Steps
+You may want to review the senarios in [Buffering Senarios](../../../user-guides/configuration-advanced/buffering-senarios/).

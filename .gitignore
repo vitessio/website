@@ -8,9 +8,12 @@ bin/
 tmp/
 .idea
 
-# File generated when running npm install 
+# File generated when running npm install
 package-lock.json
 
 # vim files
 *.swp
 tags
+
+# Hugo lock file
+.hugo_build.lock
