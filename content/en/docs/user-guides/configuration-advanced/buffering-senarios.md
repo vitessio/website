@@ -1,18 +1,20 @@
 ---
-title: VTGate Buffering
-weight: 10
+title: VTGate Buffering Senarios
+weight: 1
 aliases: ['/docs/reference/features/vtgate-buffering',
 '/docs/reference/programs/vtgate']
 ---
 
-Here we are going to go through a few senarios involving buffering to see the
-various behviors. There are several senarios for buffering tunning, so we will
-be using a python utility [gateslap](https://github.com/FancyFane/gateslap)
+For documentation on buffering behaviors please see
+[VTGate Buffering](/docs/reference/features/vtgate-buffering/).
+In this wiki we are going to go through a few senarios involving buffering to
+see the practical behviors. There are several senarios to tune buffering for,
+so we will be using a python utility [gateslap](https://github.com/FancyFane/gateslap)
 to generate traffic and simulate an application. You will need three terminal
 windows for these exercises:
-  * A terminal window for manipulating vtgate
-  * A terminal window for sending simulated traffic; gateslap
-  * A terminal window to send PlannedReparentShard (PRS) commands
+  * terminal1 for manipulating vtgate
+  * terminal2 for sending simulated traffic; gateslap
+  * terminal3 to send PlannedReparentShard (PRS) commands and retrieve metrics
 
 ## Setup
 
@@ -21,11 +23,13 @@ off of the 101 application in the example folder. For these senarios we are
 assuming a local build of Vitess
 
 #### Terminal 1
-1.) Create a vitess cluster using the 101 init script:
+1.) Create a vitess cluster using the 101 initial cluster script provided in the
+Vitess repo; this walkthrough assumes the Vitess binaries are already installed:
 
 ```
 Terminal 1
-    $ cd example/local
+    $ git clone git@github.com:planetscale/vitess.git
+    $ cd vitess/examples/local
     $ source env.sh
     $ ./101_initial_cluster.sh
 ```
@@ -39,15 +43,19 @@ Terminal 1
     $ pkill vtgate
 ```
 
-3.) From your notes, paste in the vtgate command you have previously copied
+3.) From your notes, paste in the vtgate command you have previously copied back
+into the terminal window:
+
 
 ```
 Terminal 1
-    $ vtgate -topo_implementation etcd2 -topo_global_server_address localhost:2379 -topo_global_root /vitess/global \
-    -log_dir ~/Github/vitess/examples/local/vtdataroot/tmp -log_queries_to_file ~/Github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
-    -port 15001 -grpc_port 15991 -mysql_server_port 15306 -mysql_server_socket_path /tmp/mysql.sock -cell zone1 \
-    -cells_to_watch zone1 -tablet_types_to_wait PRIMARY,REPLICA -service_map grpc-vtgateservice \
-    -pid_file ~/Github/vitess/examples/local/vtdataroot/tmp/vtgate.pid -mysql_auth_server_impl none
+    $ vtgate -topo_implementation etcd2 -topo_global_server_address localhost:2379 \
+    -topo_global_root /vitess/global -log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
+    -log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
+    -port 15001 -grpc_port 15991 -mysql_server_port 15306 -mysql_server_socket_path /tmp/mysql.sock \
+    -cell zone1 -cells_to_watch zone1 -tablet_types_to_wait PRIMARY,REPLICA \
+    -service_map grpc-vtgateservice -pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
+    -mysql_auth_server_impl none
 ```
 
 #### Terminal 2:
@@ -58,14 +66,16 @@ be used to simulate traffic on vitess:
 Terminal 2
     $ git clone https://github.com/FancyFane/gateslap.git
     $ cd gateslap
-    $ virtual venv
+    $ virtualenv venv
     $ source venv/bin/activate
     $ sudo python3 setup.py install
 ```
 
-5.) You may do a test run of this script which will create a table called "t1"
-in customers. You may hit "CTRL + C" at anytime to stop the traffic. By default
-this will create 2 persistent, 2 pooled, and 2 oneoff mysql connections.
+5.) You may do a test run of this script which will create a table called `t1`
+in the commerce schema. You may hit "CTRL + C" at anytime to stop the traffic.
+By default this will create 2 persistent, 2 pooled, and 2 oneoff mysql
+connections and it will drop the `t1` table when it is complete, or when the
+SIGINT signal is given.
 
 ```
 Terminal 2
@@ -74,7 +84,7 @@ Terminal 2
 
 #### Terminal 3:
 6.) In a third terminal window we will prepare our statments to do a
-PlannedReparentShard (PRS) operation. NOTE: `time` is optional but it is useful
+PlannedReparentShard (PRS) operation. Note, `time` is optional but it is useful
 for measuring how long the operation takes.
 
 ```
@@ -82,6 +92,7 @@ Terminal 3
     $ time vtctlclient -server localhost:15999 PlannedReparentShard -keyspace_shard=commerce/0
 ```
 ---
+
 ## Senarios
 
 ### Senario 1: Default behavior
@@ -117,19 +128,20 @@ vtgate_buffer_requests_evicted{keyspace="commerce",reason="BufferFull",shard_nam
 vtgate_buffer_requests_evicted{keyspace="commerce",reason="ContextDone",shard_name="0"} 0
 vtgate_buffer_requests_evicted{keyspace="commerce",reason="WindowExceeded",shard_name="0"} 0
 vtgate_buffer_requests_skipped{keyspace="commerce",reason="BufferFull",shard_name="0"} 0
-vtgate_buffer_requests_skipped{keyspace="commerce",reason="Disabled",shard_name="0"} 64
+vtgate_buffer_requests_skipped{keyspace="commerce",reason="Disabled",shard_name="0"} 33
 vtgate_buffer_requests_skipped{keyspace="commerce",reason="LastFailoverTooRecent",shard_name="0"} 0
 vtgate_buffer_requests_skipped{keyspace="commerce",reason="LastReparentTooRecent",shard_name="0"} 0
 vtgate_buffer_requests_skipped{keyspace="commerce",reason="Shutdown",shard_name="0"} 0
 ```
-
+NOTE: reviewing the buffered request metrics from vtgate, nothing was buffered
+during this event.
 
 
 ### Senario 2: Solving with error Handling
 One approach to preventing these `1105` errors is to handle them in the
 application. In the next example we will configure gateslap to retry the mysql
-connection 5 times before it quits. Each time it will wait half a second
-(500ms) waiting for a `PRIMARY` tablet to return.
+connection 10 times before it quits. Each time it will wait five seconds
+(5000ms) waiting for a `PRIMARY` tablet to return.
 
 ```
 Terminal 2:
@@ -141,38 +153,63 @@ Terminal 3:
     $ time vtctlclient -server localhost:15999 PlannedReparentShard -keyspace_shard=commerce/0
 ```
 #### Results:
-After sleeping for about a second the new primary is elected and the
-application can continue sending request to vtgate.
-```sh
-placeholder
-```
+The PlannedReparentShard event occurs, and the application recgonizes the `1105`
+error. The error is displayed on screen, and the application sleeps for 5
+seconds before retrying the connection. During the error handling the connection
+is retried, and it is able to execute the SQL and continue processing. Nothing
+is getting buffered in vtgate.
 
+```sh
+$ curl -s localhost:15001/metrics | grep -v '^#' | grep buffer_requests
+vtgate_buffer_requests_buffered{keyspace="commerce",shard_name="0"} 0
+vtgate_buffer_requests_buffered_dry_run{keyspace="commerce",shard_name="0"} 0
+vtgate_buffer_requests_drained{keyspace="commerce",shard_name="0"} 0
+vtgate_buffer_requests_evicted{keyspace="commerce",reason="BufferFull",shard_name="0"} 0
+vtgate_buffer_requests_evicted{keyspace="commerce",reason="ContextDone",shard_name="0"} 0
+vtgate_buffer_requests_evicted{keyspace="commerce",reason="WindowExceeded",shard_name="0"} 0
+vtgate_buffer_requests_skipped{keyspace="commerce",reason="BufferFull",shard_name="0"} 0
+vtgate_buffer_requests_skipped{keyspace="commerce",reason="Disabled",shard_name="0"} 122
+vtgate_buffer_requests_skipped{keyspace="commerce",reason="LastFailoverTooRecent",shard_name="0"} 0
+vtgate_buffer_requests_skipped{keyspace="commerce",reason="LastReparentTooRecent",shard_name="0"} 0
+vtgate_buffer_requests_skipped{keyspace="commerce",reason="Shutdown",shard_name="0"} 0
+```
+NOTE: Once again no querries are being buffered in these examples.
 
 
 ### Senario 3: Solving with Buffering
-As another approach to this problem, buffering may be employed. While both of
-these techniques may be employed we're going to look at the inital (no error
-handling) traffic once again. This will allow us to appropriately test buffering.
+Another approach to this problem, is to employ buffering on vtgate. It is highly
+recomended to use both buffering and error handling in your code; however for
+purposes of highlighting buffering we will disable the error handling in this
+example.
+
+First we will need to reconfigure vtgate running in your terminal1.
 ```
 Terminal 1:
     Hit "Ctrl + C" to kill the vtgate process
 ```
-Add the vtgate arguments needed to implment buffering.
+Add the vtgate arguments needed to implment buffering, we are only implmenting
+basic buffering functionality. Notice the two additional flags we are adding
+to our vtgate process: `-enable_buffer=1` and
+`-buffer_implmentation=keyspace_events`
+
 {{< warning >}}
 The buffering implementation should be set to `keyspace_events` which can
 better detect when buffering needs to be enabled. This will become the default
-in Vitess 13.
+in Vitess Release 13.
 {{< /warning >}}
 ```
 Terminal 1:
-    $ vtgate -topo_implementation etcd2 -topo_global_server_address localhost:2379 -topo_global_root /vitess/global \
-    -log_dir ~/Github/vitess/examples/local/vtdataroot/tmp -log_queries_to_file ~/Github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
-    -port 15001 -grpc_port 15991 -mysql_server_port 15306 -mysql_server_socket_path /tmp/mysql.sock -cell zone1 \
-    -cells_to_watch zone1 -tablet_types_to_wait PRIMARY,REPLICA -service_map grpc-vtgateservice \
-    -pid_file ~/Github/vitess/examples/local/vtdataroot/tmp/vtgate.pid -mysql_auth_server_impl none \
-     -enable_buffer=1 -buffer_implementation=keyspace_events
+Terminal 1
+    $ vtgate -topo_implementation etcd2 -topo_global_server_address localhost:2379 \
+    -topo_global_root /vitess/global -log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
+    -log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
+    -port 15001 -grpc_port 15991 -mysql_server_port 15306 -mysql_server_socket_path /tmp/mysql.sock \
+    -cell zone1 -cells_to_watch zone1 -tablet_types_to_wait PRIMARY,REPLICA \
+    -service_map grpc-vtgateservice -pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
+    -mysql_auth_server_impl none -enable_buffer=1 -buffer_implementation=keyspace_events
 ```
 
+We're using the `01_light_traffic.ini` which has error handling disabled.
 ```
 Terminal 2:
     $ gateslap examples/01_light_traffic.ini
@@ -205,6 +242,7 @@ In this senario we are going to look at the buffering behavior when quickly
 issuing several PlannedReparentShard operations. Restart the VTGate before
 proceeding to reset the buffering statistics.
 
+Restart the vtgate process to clear metrics:
 ```
 Terminal 1:
     Ctrl + C
@@ -242,7 +280,7 @@ PlannedReparentShard command.
 
 
 
-### Senario 5:
+### Senario 5: Too many connections
 Another aspect to be aware of is the `-buffer_size`. For the next seario we will
 be setting the buffer size lower than the number of connections from the
 application.
@@ -253,6 +291,7 @@ The default `buffer_size` is `10` in versions of Vitess prior to 13; in version
 not to set the `buffer_size` too high as it consumes memory as a resource.
 {{< /warning >}}
 
+Restart the vtgate process to clear metrics:
 ```
 Terminal 1:
     Hit "Ctrl + C" to kill the vtgate process
@@ -279,9 +318,12 @@ number of active connections going to vtgate during the PRS event.
 placeholder
 ```
 
+### Senario 6: Buffer time too Short
 
 
-### Senario 6:
+---
+
+### Senario LAST: Replica never becomes Primary
 There may be time in which the PRS event takes too long and must be rolled back.
 To accomplish this senario we will need to ensure we are using an older version
 of MySQL, and we will need to send excessive traffic to vtgate.

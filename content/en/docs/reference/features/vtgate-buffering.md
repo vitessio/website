@@ -12,12 +12,16 @@ in some additional (planned) failover situations, e.g. during resharding.
 
 Note that buffering is not intended for, or active during, unplanned failovers
 or other unplanned issues with a `PRIMARY` tablet during normal operations.
+There are some new heuristics built with the `keyspace_events` implementation
+for senarios where the `PRIMARY`is ofline, however, you should not rely on
+these at this time.
 
 As you may imagine if you think about the problem, buffering can be
 somewhat involved, and there are a number of tricky edge cases. We will
 discuss this in the context of an application's experience, starting with
 the simplest case, that of buffering during a PRS (PlannedReparentShard)
-operation.
+operation. Examples of various edge cases can be found in
+[Buffering Senarios](/docs/user-guides/configuration-advanced/buffering-senarios/).
 
 ## VTGate parameters to enable buffering
 
@@ -31,10 +35,11 @@ buffering:
   have been seen with `keyspace_events` and the default will change to
   `keyspace_events` in Vitess release 13.
   * `-buffer_size`:  Default: `10` in Vitess release 13 the default will be
-  `1000`. This should be sized to the appropriate number of expected connections
-  during the PRS event. Each connection will consume one buffer slot of the
-  `buffer_size`. The resource consideration for setting this parameter are
-  memory resources
+  `1000`. This should be sized to the appropriate number of expected request
+  during the PRS event. Typically, if each connection has one request then, each
+  connection will consume one buffer slot of the `buffer_size` and be put in a
+  "pause" state as it is buffered on the vtgate. The resource consideration
+  for setting this parameter are memory resources.
   * `-buffer_drain_concurrency`:  Default: `1`.  If the buffer is of any
   significant size, you probably want to increase this proportionally.
   * `-buffer_keyspace_shards`:  Can be used to limit buffering to only
@@ -63,19 +68,22 @@ buffering:
 
 ## What happens during buffering
 
-Fundamentally we are:
+Fundamentally Vitess will:
  * Hold up and buffering queries to the `PRIMARY` tablet for a shard
  * Wait for replication on a primary canidate `REPLICA` to catch up to the
  current `PRIMARY`.
- * Perform the actions which demote the `PRIMARY` and promote a `REPLICA`
+ * Perform the actions which demote the `PRIMARY` to a `REPLICA` and promote a
+ primary canidate `REPLICA` to `PRIMARY`.
  * Drain the buffered queries to the new `PRIMARY` tablet.
  * Begin the countdown timer for `buffer_max_failover_duration`.
 
+ {{< warning >}}
+This process is not guaranteed to eliminate errors to the application, but
+rather reduce them or make them less frequent. The application should still
+endeavor to handle errors appropriately if/when they occur (e.g. unplanned
+outages/failovers, etc.)
+{{< /warning >}}
 
-Note that this process is not guaranteed to eliminate errors to the
-application, but rather reduce them or make them less frequent. The application
-should still endeavor to handle errors appropriately if/when they
-occur (e.g. unplanned outages/failovers, etc.)
 
 ## How does it work?
 
@@ -106,7 +114,9 @@ querry processing. Each connection making a querry will consume a slot in the
 errors are returned. Once the PRS event completes, the buffer will begin to
 drain at a concurrency set by the `buffer_drain_concurrency` value; a countdown
 timer will start set by `buffer_min_time_between_failovers`. During this period
-any future buffers will be disabled.
+any future buffers will be disabled. Once the
+`buffer_min_time_between_failovers` timer expires, buffering will be enabled
+once again.
 
 ## Potential Errors
 Buffering was implemented to minimize downtime, there are still potential for
@@ -130,7 +140,8 @@ Error Number: 1105
 Error Message: target: ${KEYSPACE}.0.primary: primary is not serving, there is a reparent operation in progress
 ```
 
-You may get this error in the application for a variety of reasons.
+This is the most common error you will see in regards to buffering. You may get
+this result in the application for a variety of reasons:
 * `enable_buffer` is not configured; by default buffers are disabled.
 * `enable_buffer_dry_run` is configured to be true; no buffering actions are
 taken when this setting is enabled.
@@ -144,4 +155,5 @@ has expired.
 and this error is returned.
 
 ## Next Steps
-You may want to review the senarios in [Buffering Senarios](../../../user-guides/configuration-advanced/buffering-senarios/).
+You may want to review the senarios in
+[Buffering Senarios](/docs/user-guides/configuration-advanced/buffering-senarios/).
