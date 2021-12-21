@@ -13,9 +13,3 @@ command = "make preview-build"
 
 [context.branch-deploy]
 command = "make preview-build"
-
-# Redirect to Slack invite link.
-[[redirects]]
-from = "/slack"
-to = "https://join.slack.com/t/vitess/shared_invite/zt-rbtfk682-uqBu8WCyAUEDLFpydt1BOQ"
-status = 302
