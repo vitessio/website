@@ -23,7 +23,7 @@ Vitess served all YouTube database traffic for over five years. Many enterprises
 
 * Protection
     - Query rewriting and sanitization – Add limits and avoid non-deterministic updates.
-    - Query blacklisting – Customize rules to prevent potentially problematic queries from hitting your database.
+    - Query blocking – Customize rules to prevent potentially problematic queries from hitting your database.
     - Query killer – Terminate queries that take too long to return data.
     - Table ACLs – Specify access control lists (ACLs) for tables based on the connected user.
 

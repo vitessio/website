@@ -183,7 +183,7 @@ rules:{from_table:"customer@replica" to_tables:"customer.customer"}
 
 #### On switching primary traffic
 
-The routing rules for the primary are updated to map the table on source to the target. In addition the tables are added to the “blacklist” on the source keyspace which vttablet uses to reject writes for tables that have moved. The blacklist/routing rules are temporary and can be removed since the moved tables will only appear in the target VSchema
+The routing rules for the primary are updated to map the table on source to the target. In addition the tables are added to the “denylist” on the source keyspace which vttablet uses to reject writes for tables that have moved. The denylist/routing rules are temporary and can be removed since the moved tables will only appear in the target VSchema
 
 _global/routingrules_
 
