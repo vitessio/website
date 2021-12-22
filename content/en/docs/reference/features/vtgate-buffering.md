@@ -13,7 +13,7 @@ in some additional (planned) failover situations, e.g. during resharding.
 Note that buffering is not intended for, or active during, unplanned failovers
 or other unplanned issues with a `PRIMARY` tablet during normal operations.
 There are some new heuristics built with the `keyspace_events` implementation
-for senarios where the `PRIMARY`is ofline, however, you should not rely on
+for Scenarios where the `PRIMARY`is ofline, however, you should not rely on
 these at this time.
 
 As you may imagine if you think about the problem, buffering can be
@@ -21,7 +21,7 @@ somewhat involved, and there are a number of tricky edge cases. We will
 discuss this in the context of an application's experience, starting with
 the simplest case, that of buffering during a PRS (PlannedReparentShard)
 operation. Examples of various edge cases can be found in
-[Buffering Senarios](/docs/user-guides/configuration-advanced/buffering-senarios/).
+[Buffering Scenarios](/docs/user-guides/configuration-advanced/buffering-scenarios/).
 
 ## VTGate parameters to enable buffering
 
@@ -155,5 +155,5 @@ has expired.
 and this error is returned.
 
 ## Next Steps
-You may want to review the senarios in
-[Buffering Senarios](/docs/user-guides/configuration-advanced/buffering-senarios/).
+You may want to review the Scenarios in
+[Buffering Scenarios](/docs/user-guides/configuration-advanced/buffering-scenarios/).
