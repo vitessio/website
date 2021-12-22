@@ -5,15 +5,15 @@ aliases: ['/docs/user-guides/buffering/','/docs/reference/programs/vtgate']
 ---
 
 VTGate in Vitess supports the **buffering** of queries in certain situations.
-The original intention of this feature was to **reduce** (but not necessarily
-eliminate) downtime during planned failovers (a.k.a. PRS -
-PlannedReparentShard operations).  It has been extended to provide buffering
-in some additional (planned) failover situations, e.g. during resharding.
+The original intention of this feature was to **reduce**, not necessarily
+eliminate, downtime during planned fail overs  PlannedReparentShard (PRS)
+operations.  It has been extended to provide buffering in some additional fail
+over situations, e.g. during resharding.
 
 Note that buffering is not intended for, or active during, unplanned failovers
 or other unplanned issues with a `PRIMARY` tablet during normal operations.
 There are some new heuristics built with the `keyspace_events` implementation
-for Scenarios where the `PRIMARY`is ofline, however, you should not rely on
+for scenarios where the `PRIMARY`is offline, however, you should not rely on
 these at this time.
 
 As you may imagine if you think about the problem, buffering can be
@@ -33,30 +33,31 @@ buffering:
   Default: `false`
   * `-buffer_implementation`:  Default: `healthcheck`.  More consistent results
   have been seen with `keyspace_events` and the default will change to
-  `keyspace_events` in Vitess release 13.
-  * `-buffer_size`:  Default: `10` in Vitess release 13 the default will be
-  `1000`. This should be sized to the appropriate number of expected request
-  during the PRS event. Typically, if each connection has one request then, each
-  connection will consume one buffer slot of the `buffer_size` and be put in a
-  "pause" state as it is buffered on the vtgate. The resource consideration
-  for setting this parameter are memory resources.
+  `keyspace_events` in future releases.
+  * `-buffer_size`:  Default: `10` in future releases of Vitess the default will
+  change to `1000`. This should be sized to the appropriate number of expected
+  request during a buffering event. Typically, if each connection has one request
+  then, each connection will consume one buffer slot of the `buffer_size` and
+  be put in a "pause" state as it is buffered on the vtgate. The resource
+  consideration for setting this parameter are memory resources.
   * `-buffer_drain_concurrency`:  Default: `1`.  If the buffer is of any
   significant size, you probably want to increase this proportionally.
   * `-buffer_keyspace_shards`:  Can be used to limit buffering to only
-  certain keyspaces. Should not be necessary in most cases.
+  certain keyspaces. Should not be necessary in most cases, defaults to watching
+  all keyspaces.
   * `-buffer_max_failover_duration`:  Default: `20s`.  If buffering is active
   for longer than this from when the first request was buffered, stop buffering
   and return errors to the buffered requests.
   * `-buffer_window`: Default: `10s`.  The maximum time any individual request
   should be buffered for. Should probably be less than the value for
   `-buffer_max_failover_duration`. Adjust according to your application
-  requirements. Beaware if your mysql client has  `write_timeout` or
+  requirements. Be aware, if your MySQL client has  `write_timeout` or
   `read_timeout` settings those values should be greater than the
   `buffer_max_failover_duration`.
-  * `-buffer_min_time_between_failovers`: Default `1m`. If consecutive
-  failovers for a shard happens within less than this duration, do **not**
+  * `-buffer_min_time_between_failover`: Default `1m`. If consecutive
+  fail overs for a shard happens within less than this duration, do **not**
   buffer again. This avoids "endless" buffering if there are consecutive
-  failovers, and makes sure that the application will eventually receive
+  fail overs, and makes sure that the application will eventually receive
   errors that will allow it (or the application client) to take appropriate
   action within a bounded amount of time.
 
@@ -66,14 +67,14 @@ buffering:
  to a `REPLICA` in the process of transitioning to `PRIMARY` because of a PRS
  should be unaffected, and do not require buffering.
 
-## What happens during buffering
+## What happens during a PlannedReparentShard with Buffering
 
 Fundamentally Vitess will:
- * Hold up and buffering queries to the `PRIMARY` tablet for a shard
- * Wait for replication on a primary canidate `REPLICA` to catch up to the
+ * Hold up and buffering queries to the `PRIMARY` tablet for a shard.
+ * Wait for replication on a primary candidate `REPLICA` to catch up to the
  current `PRIMARY`.
  * Perform the actions which demote the `PRIMARY` to a `REPLICA` and promote a
- primary canidate `REPLICA` to `PRIMARY`.
+ primary candidate `REPLICA` to `PRIMARY`.
  * Drain the buffered queries to the new `PRIMARY` tablet.
  * Begin the countdown timer for `buffer_max_failover_duration`.
 
@@ -81,7 +82,7 @@ Fundamentally Vitess will:
 This process is not guaranteed to eliminate errors to the application, but
 rather reduce them or make them less frequent. The application should still
 endeavor to handle errors appropriately if/when they occur (e.g. unplanned
-outages/failovers, etc.)
+outages/fail overs, etc.)
 {{< /warning >}}
 
 
@@ -89,7 +90,7 @@ outages/failovers, etc.)
 
 Simplifying considerably:
   * All buffering is done in `vtgate`
-  * When a shard begins a failover or resharding event, and a query is sent
+  * When a shard begins a fail over or resharding event, and a query is sent
   from `vtgate` to `vttablet`, `vttablet` will return a certain type of error
   to `vtgate` (`vtrpcpb.Code_CLUSTER_EVENT`).
   * This error indicates to `vtgate` that it is appropriate to buffer this
@@ -102,20 +103,20 @@ Simplifying considerably:
   again, we start draining the buffered queries, with a concurrency as
   indicated by the `-buffer_drain_concurrency` parameter.
   * When the buffer is drained, the buffering is complete.  We maintain a
-  timer based on `-buffer_min_time_between_failovers` to make sure we
-  do not buffer again if another failover starts within that period.
+  timer based on `-buffer_min_time_between_fail overs` to make sure we
+  do not buffer again if another fail over starts within that period.
 
 
 ## What the application sees
 
 When buffering executes as expected the application will see a pause in their
-querry processing. Each connection making a querry will consume a slot in the
+query processing. Each query will consume a slot from the configured
 `buffer_size` and will be paused for the duration of `buffer_window` before
-errors are returned. Once the PRS event completes, the buffer will begin to
-drain at a concurrency set by the `buffer_drain_concurrency` value; a countdown
-timer will start set by `buffer_min_time_between_failovers`. During this period
-any future buffers will be disabled. Once the
-`buffer_min_time_between_failovers` timer expires, buffering will be enabled
+errors are returned. Once the failover event completes, the buffer will begin to
+drain at a concurrency set by the `buffer_drain_concurrency` value. Next a
+countdown timer will start set by `buffer_min_time_between_failover`. During
+this period any future buffers will be disabled. Once the
+`buffer_min_time_between_failover` timer expires, buffering will be enabled
 once again.
 
 ## Potential Errors
@@ -129,8 +130,8 @@ Error Number: 2013
 Error Message: Lost connection to MySQL server during query (timed out)
 ```
 
-Due the nature of buffering and pausing your querries the MySQL client will see
-delays in their querry request. If your client has a `read_timeout` or
+Due the nature of buffering and pausing your queries the MySQL client will see
+delays in their query request. If your client has a `read_timeout` or
 `write_timeout` set the value should be greater than the value set
 `buffer_window` in vtgate `buffer_window`.
 
@@ -147,13 +148,13 @@ this result in the application for a variety of reasons:
 taken when this setting is enabled.
 * `buffer_keyspace_shards` is not configured for the keyspace in which the
 PRS event is being executed on
-* `buffer_size` is set to be lower than the number of incoming querries; any
+* `buffer_size` is set to be lower than the number of incoming queries; any
 incoming request over the `buffer_size` will see this error.
-* A new buffering event occurs before the `buffer_min_time_between_failovers`
+* A new buffering event occurs before the `buffer_min_time_between_fail overs`
 has expired.
 * `buffer_max_failover_duration` has been exceeded; buffering is discontinued
 and this error is returned.
 
 ## Next Steps
-You may want to review the Scenarios in
+You may want to review the scenarios in
 [Buffering Scenarios](/docs/user-guides/configuration-advanced/buffering-scenarios/).

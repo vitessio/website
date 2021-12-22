@@ -7,28 +7,26 @@ aliases: ['/docs/reference/features/vtgate-buffering',
 
 For documentation on buffering behaviors please see
 [VTGate Buffering](/docs/reference/features/vtgate-buffering/).
-In this wiki we are going to go through a few Scenarios involving buffering to
-see the practical behviors. There are several Scenarios to tune buffering for,
-so we will be using a python utility [gateslap](https://github.com/FancyFane/gateslap)
+In this wiki we are going to go through a few scenarios involving buffering to
+see the practical behaviors. There are several parameters to tune for buffering
+so, we will be using a python utility [gateslap](https://github.com/FancyFane/gateslap)
 to generate traffic and simulate an application. You will need three terminal
 windows for these exercises:
-  * terminal1 for manipulating vtgate
-  * terminal2 for sending simulated traffic; gateslap
-  * terminal3 to send PlannedReparentShard (PRS) commands and retrieve metrics
+  * terminal 1 - for manipulating the vtgate process
+  * terminal 2 - for sending simulated traffic to vtgate; gateslap
+  * terminal 3 - to send PlannedReparentShard (PRS) commands and retrieve metrics
 
 ## Setup
 
-These Scenarios will be will be using a Vitess Release 13 Cluster, and will be
-building off of the 101 application in the example folder. For these Scenarios
-we are assuming a local build of Vitess on a Ubuntu 20.04 LTS system.
-
+These scenarios will be will be using a Vitess Release 13 SNAPSHOT, and will be
+building off of the 101 application in the example folder.
 
 {{< warning >}}
 There were several improvements to buffering after the Vitess 12.0.0 release,
 which is why we are building and using a 13.0.0 Snapshot:
 
-  * `buffer_size` bummped up from `10` to `1000`
-  * `buffer_implmentation` changed from `healthcheck` to `keyspace_events`
+  * `buffer_size` increased from `10` to `1000`
+  * `buffer_implementation` changed from `healthcheck` to `keyspace_events`
 
 {{< /warning >}}
 
@@ -73,7 +71,8 @@ Terminal 1
 
 #### Terminal 2:
 4.) In a NEW terminal window download and configure gateslap. This utility will
-be used to simulate traffic on vitess:
+be used to simulate traffic on vitess. The virtualenv and source commands are
+optional:
 
 ```
 Terminal 2
@@ -88,15 +87,17 @@ Terminal 2
 in the commerce schema. You may hit "CTRL + C" at anytime to stop the traffic.
 By default this will create 2 persistent, 2 pooled, and 2 oneoff mysql
 connections and it will drop the `t1` table when it is complete, or when the
-SIGINT signal is given.
+SIGINT signal is given. You can change the behavior by modifying the
+`slapper.ini` file.
 
 ```
 Terminal 2
     (venv) $ gateslap
+    (venv) CTRL + C
 ```
 
 #### Terminal 3:
-6.) In a third terminal window we will prepare our statments to do a
+6.) In a third terminal window we will prepare the vtctlclient to do a
 PlannedReparentShard (PRS) operation. Note, `time` is optional but it is useful
 for measuring how long the operation takes.
 
@@ -125,7 +126,7 @@ Terminal 3:
 ```
 
 #### Results:
-As soon as you issue the PRS operation, you will notice SQL statments begin
+As soon as you issue the PRS operation, you will notice SQL statements begin
 to drop and the utility exits. The error code we get from vtgate is `1105` with
 the message `target: commerce.0.primary: primary is not serving, there is a
 reparent operation in progress`. With no buffering in place it is exclusively
@@ -166,8 +167,9 @@ As soon as traffic is sent issue the PlannedReparentShard command:
 Terminal 3:
     $ time vtctlclient -server localhost:15999 PlannedReparentShard -keyspace_shard=commerce/0
 ```
+
 #### Results:
-The PlannedReparentShard event occurs, and the application recgonizes the `1105`
+The PlannedReparentShard event occurs, and the application recognizes the `1105`
 error. The error is displayed on screen, and the application sleeps for 5
 seconds before retrying the connection. During the error handling the connection
 is retried, and it is able to execute the SQL and continue processing. Nothing
@@ -187,12 +189,12 @@ vtgate_buffer_requests_skipped{keyspace="commerce",reason="LastFailoverTooRecent
 vtgate_buffer_requests_skipped{keyspace="commerce",reason="LastReparentTooRecent",shard_name="0"} 0
 vtgate_buffer_requests_skipped{keyspace="commerce",reason="Shutdown",shard_name="0"} 0
 ```
-NOTE: Once again no querries are being buffered in these examples.
+NOTE: Once again no queries are being buffered in these examples.
 
 
 ### Scenario 3: Solving with Buffering
 Another approach to this problem, is to employ buffering on vtgate. It is highly
-recomended to use both buffering and error handling in your code; however for
+recommended to use both buffering and error handling in your code; however for
 purposes of highlighting buffering we will disable the error handling in this
 example.
 
@@ -201,7 +203,7 @@ First we will need to reconfigure vtgate running in your terminal 1.
 Terminal 1:
     Hit "Ctrl + C" to kill the vtgate process
 ```
-Add the vtgate arguments needed to implment buffering, we are only implmenting
+Add the vtgate arguments needed to implement buffering, we are only implementing
 basic buffering functionality. Notice the two additional flags we are adding
 to our vtgate process: `-enable_buffer=1`
 
@@ -229,16 +231,16 @@ Terminal 3:
 ```
 
 #### Results:
-Shortly after the PRS command is issued, the SQL statments pause momentarily,
+Shortly after the PRS command is issued, the SQL statements pause momentarily,
 also during this time a message is logged to the terminal console window:
 
 ```
 E1215 15:35:47.712589  251262 healthcheck.go:487] Adding 1 to PrimaryPromoted counter for target: keyspace:"commerce" shard:"0" tablet_type:REPLICA, tablet: zone1-0000000101, tabletType: PRIMARY
 ```
 
-After this process completes, SQL statments resume processing once again. When
+After this process completes, SQL statements resume processing once again. When
 we take a look at stats (shown below) we will see for the first time records of
-buffering occuring on the vtgate.
+buffering occurring on the vtgate.
 
 ```sh
 $ curl -s localhost:15001/metrics | grep -v '^#' | grep buffer_requests
@@ -260,7 +262,7 @@ the PRS event.
 
 
 ### Scenario 4: Quickly issued PRS events
-In this Scenario we are going to look at the buffering behavior when quickly
+In this scenario we are going to look at the buffering behavior when quickly
 issuing several PlannedReparentShard operations. Restart the VTGate before
 proceeding to reset the buffering statistics.
 
@@ -282,14 +284,14 @@ Terminal 2:
     (venv) $ gateslap examples/01_light_traffic.ini
 ```
 As soon as traffic is sent issue the PlannedReparentShard commands. Note there
-is a 5 second sleep commands between the PRS statments.
+is a 5 second sleep commands between the PRS statements.
 ```
 Terminal 3:
     $ time vtctlclient -server localhost:15999 PlannedReparentShard -keyspace_shard=commerce/0 && sleep 5 && time vtctlclient -server localhost:15999 PlannedReparentShard -keyspace_shard=commerce/0
 ```
 
 #### Results:
-In this Scenario, back to back PRS events were issued, only 5 seconds apart.
+In this scenario, back to back PRS events were issued, only 5 seconds apart.
 Due to the close nature of these events, buffering is disabled to protect vitess
 against events where PRS may be issued in looping fashion. This behavior is
 adjustable with the vtgate flag `-buffer_min_time_between_failovers`.
@@ -321,7 +323,7 @@ the next PlannedReparentShard command.
 
 
 ### Scenario 5: Too many connections
-Another aspect to be aware of is the `-buffer_size`. For this cenario we will
+Another aspect to be aware of is the `-buffer_size`. For this scenario we will
 be setting the buffer size lower than the number of connections from the
 application. As we're using 6 connections in our example we will set the
 `buffer_size` down from the default of `1000` to `4`.
@@ -375,7 +377,7 @@ had an overflow.
 
 
 ### Scenario 6: Buffer time too Short
-In this senario we are going to set the buffer_window to a short period of time,
+In this scenario we are going to set the buffer_window to a short period of time,
 and hit the vtgate a bit harder with a different configuration file.
 
 Restart the vtgate process to clear metrics:
@@ -403,7 +405,7 @@ Terminal 3:
 ```
 
 #### Results:
-In these results, we see a few SQL statments fail to buffer, while they display
+In these results, we see a few SQL statements fail to buffer, while they display
 the standard `1105` error we've seen previously.
 
 ```sh
@@ -427,11 +429,11 @@ informing us the buffer_window was not long enough for these request.
 
 ### Scenario LAST: Replica never becomes Primary
 There may be time in which the PRS event takes too long and must be rolled back.
-To accomplish this Scenario we will need to ensure we are using an older version
+To accomplish this scenario we will need to ensure we are using an older version
 of MySQL, and we will need to send excessive traffic to vtgate.
 
 {{< warning >}}
-This Scenario assumes you are running Ubuntu LTS 20.04, you may have to adjust if
+This scenario assumes you are running Ubuntu LTS 20.04, you may have to adjust if
 your environment is different.
 {{< /warning >}}
 
@@ -471,14 +473,14 @@ Terminal 3:
 
 #### Results:
 Here the buffering takes too long to complete, as a result the application
-heavily utilizes error handling to recover. When programing for error handling
+heavily utilizes error handling to recover. When programming for error handling
 in these events, consider allowing the client enough time to recover from an
-attempted RPC + rollback. This senario will retry the connection 10 times,
+attempted RPC + rollback. This scenario will retry the connection 10 times,
 waiting 5 seconds between each attempt.
 
 Part of the reason we had to downgrade mysql was to make replication issues more
-relevant. In this senario vtgate bailed on the PlannedReparentShard as the
-primary canidate `REPLICA` failed to catch up to the `PRIMARY`.
+relevant. In this scenario vtgate bailed on the PlannedReparentShard as the
+primary candidate `REPLICA` failed to catch up to the `PRIMARY`.
 
 ```
 $ time vtctlclient -server localhost:15999 PlannedReparentShard -keyspace_shard=commerce/0
@@ -502,7 +504,7 @@ There are a few things we can do to resolve this issue:
 * Perform these operations during non-peak times
 * Ensure we have error handling in case the PRS command fails
 
-This senario was designed to show buffering assisting
+This scenario was designed to show buffering assisting
 
 ```sh
 curl -s localhost:15001/metrics | grep -v '^#' | grep buffer_requests
@@ -519,7 +521,7 @@ vtgate_buffer_requests_skipped{keyspace="commerce",reason="LastReparentTooRecent
 vtgate_buffer_requests_skipped{keyspace="commerce",reason="Shutdown",shard_name="0"} 0
 ```
 NOTE: Reviewing the results, we can see from the `WindowExceeded` metric some of
-the buffered querries expired. If this is common you may want to increase your
+the buffered queries expired. If this is common you may want to increase your
 buffer_window to cover these failures. Retrying this scenario with the following
 vtgate flags appended resolves many of these errors:
 
@@ -527,7 +529,7 @@ vtgate flags appended resolves many of these errors:
 
 ## Revert your configurations
 
-To undo our configuraion we will need to tear the cluster down; upgrade mysql;
+To undo our configuration we will need to tear the cluster down; upgrade mysql;
 then rebuild the vitess cluster:
 ```
 Terminal 1:
