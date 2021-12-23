@@ -6,20 +6,19 @@ aliases: ['/docs/user-guides/buffering/','/docs/reference/programs/vtgate']
 
 VTGate in Vitess supports the **buffering** of queries in certain situations.
 The original intention of this feature was to **reduce**, not necessarily
-eliminate, downtime during planned fail overs  PlannedReparentShard (PRS)
-operations.  It has been extended to provide buffering in some additional fail
-over situations, e.g. during resharding.
+eliminate, downtime during planned fail overs PlannedReparentShard (PRS). VTGate
+has been extended to provide buffering in some additional fail over situations,
+e.g. during resharding.
 
-Note that buffering is not intended for, or active during, unplanned failovers
+Note that buffering is not intended for, nor active during, unplanned failovers
 or other unplanned issues with a `PRIMARY` tablet during normal operations.
-There are some new heuristics built with the `keyspace_events` implementation
-for scenarios where the `PRIMARY`is offline, however, you should not rely on
+There are some new heuristics built in the `keyspace_events` implementation
+for scenarios where the `PRIMARY`is offline. However, you should not rely on
 these at this time.
 
-As you may imagine if you think about the problem, buffering can be
-somewhat involved, and there are a number of tricky edge cases. We will
-discuss this in the context of an application's experience, starting with
-the simplest case, that of buffering during a PRS (PlannedReparentShard)
+Buffering can be somewhat involved, and there are a number of tricky edge cases.
+We will discuss these in the context of an application's experience, starting
+with the simplest case: that of buffering during a PRS (PlannedReparentShard)
 operation. Examples of various edge cases can be found in
 [Buffering Scenarios](/docs/user-guides/configuration-advanced/buffering-scenarios/).
 
@@ -27,6 +26,7 @@ operation. Examples of various edge cases can be found in
 
 First, let us cover the parameters that need to be set in VTGate to enable
 buffering:
+
   * `-enable_buffer`:  Enables buffering.  **Not enabled by default**
   * `-enable_buffer_dry_run`:  Enable logging of if/when buffering would
   trigger, without actually buffering anything. Useful for testing.
@@ -46,8 +46,7 @@ buffering:
   certain keyspaces. Should not be necessary in most cases, defaults to watching
   all keyspaces.
   * `-buffer_max_failover_duration`:  Default: `20s`.  If buffering is active
-  for longer than this from when the first request was buffered, stop buffering
-  and return errors to the buffered requests.
+  longer than this set duration, stop buffering and return errors to the client.
   * `-buffer_window`: Default: `10s`.  The maximum time any individual request
   should be buffered for. Should probably be less than the value for
   `-buffer_max_failover_duration`. Adjust according to your application
@@ -56,10 +55,8 @@ buffering:
   `buffer_max_failover_duration`.
   * `-buffer_min_time_between_failover`: Default `1m`. If consecutive
   fail overs for a shard happens within less than this duration, do **not**
-  buffer again. This avoids "endless" buffering if there are consecutive
-  fail overs, and makes sure that the application will eventually receive
-  errors that will allow it (or the application client) to take appropriate
-  action within a bounded amount of time.
+  buffer again. The purpose of this setting is to avoid consecutive fail over
+  events where vtgate may be buffering, but never purging the buffer.
 
 ## Types of queries that can be buffered
 
@@ -70,7 +67,8 @@ buffering:
 ## What happens during a PlannedReparentShard with Buffering
 
 Fundamentally Vitess will:
- * Hold up and buffering queries to the `PRIMARY` tablet for a shard.
+
+ * Hold up and buffer any queries sent to the `PRIMARY` tablet for a shard.
  * Wait for replication on a primary candidate `REPLICA` to catch up to the
  current `PRIMARY`.
  * Perform the actions which demote the `PRIMARY` to a `REPLICA` and promote a
@@ -88,7 +86,9 @@ outages/fail overs, etc.)
 
 ## How does it work?
 
-Simplifying considerably:
+The following steps are considerably simplified, but to give a high level
+overview of how buffering works:
+
   * All buffering is done in `vtgate`
   * When a shard begins a fail over or resharding event, and a query is sent
   from `vtgate` to `vttablet`, `vttablet` will return a certain type of error
@@ -97,7 +97,7 @@ Simplifying considerably:
   request.
   * Separately the various timers associated with the flags above are being
   maintained to timeout and return errors to the application when appropriate,
-  e.g. if an individual request was buffered for too long;  or if buffering
+  e.g. if an individual request was buffered for too long; or if buffering
   start "too long" ago.
   * When the failover is complete, and the tablet starts accepting queries
   again, we start draining the buffered queries, with a concurrency as
@@ -120,22 +120,25 @@ this period any future buffers will be disabled. Once the
 once again.
 
 ## Potential Errors
-Buffering was implemented to minimize downtime, there are still potential for
+
+Buffering was implemented to minimize downtime, but there is still potential for
 errors to occur, and your application should be configured to handle them
 appropriately. Below are a few errors which may occur:
 
 ### Lost connection
+
 ```
 Error Number: 2013
 Error Message: Lost connection to MySQL server during query (timed out)
 ```
 
-Due the nature of buffering and pausing your queries the MySQL client will see
+Due to the nature of buffering and pausing your queries the MySQL client will see
 delays in their query request. If your client has a `read_timeout` or
-`write_timeout` set the value should be greater than the value set
+`write_timeout` set, the value should be greater than the value set
 `buffer_window` in vtgate `buffer_window`.
 
 ### Primary not serving
+
 ```
 Error Number: 1105
 Error Message: target: ${KEYSPACE}.0.primary: primary is not serving, there is a reparent operation in progress
@@ -143,11 +146,12 @@ Error Message: target: ${KEYSPACE}.0.primary: primary is not serving, there is a
 
 This is the most common error you will see in regards to buffering. You may get
 this result in the application for a variety of reasons:
+
 * `enable_buffer` is not configured; by default buffers are disabled.
 * `enable_buffer_dry_run` is configured to be true; no buffering actions are
 taken when this setting is enabled.
-* `buffer_keyspace_shards` is not configured for the keyspace in which the
-PRS event is being executed on
+* `buffer_keyspace_shards` is not configured for the keyspace on which the
+PRS event is being executed.
 * `buffer_size` is set to be lower than the number of incoming queries; any
 incoming request over the `buffer_size` will see this error.
 * A new buffering event occurs before the `buffer_min_time_between_fail overs`
@@ -156,5 +160,6 @@ has expired.
 and this error is returned.
 
 ## Next Steps
+
 You may want to review the scenarios in
 [Buffering Scenarios](/docs/user-guides/configuration-advanced/buffering-scenarios/).
