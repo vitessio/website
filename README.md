@@ -42,3 +42,17 @@ You can check the site's internal links by running `make check-internal-links` a
 The Vitess website uses [Bulma](https://bulma.io/), a CSS (and SASS) framework that provides all kinds of variables, utilities, and components. 
 
 **⚠ If you are running Hugo locally and your .sass file changes are not getting picked up:** make sure you have [installed the "extended" version](https://gohugo.io/getting-started/installing/) of the `hugo` binary. 
+
+# Releasing a new version of the documentation
+
+1. Copy the most recent docs version folder to a new folder named for the new upcoming version (for each language)
+  `cp -R content/en/docs/v1.0 content/en/docs/v2.0`
+  `cp -R content/zh/docs/v1.0 content/zh/docs/v2.0`
+
+1. Update `config.toml`
+  Set `[params.versions]` `current` to the value of the new release number.
+  Set `[params.versions]` `next` to the value of the upcoming planned version.
+
+1. (optional) Remove any version of the documenation that is no longer supported
+  `git rm -rf content/en/docs/v0.0`
+  `git rm -rf content/zh/docs/v0.0`
