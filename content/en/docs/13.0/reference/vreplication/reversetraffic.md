@@ -43,10 +43,6 @@ specified tablet types.
 A comma-separated list of tablet types for which traffic is to be reversed.
 One or more from primary, replica, rdonly.<br><br>
 
-{{< info >}}
-Note: ReverseTraffic expects the `-tablet_types` to be lower case.
-{{< /info >}}
-
 </div>
 
 

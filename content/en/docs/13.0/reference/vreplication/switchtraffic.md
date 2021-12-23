@@ -43,10 +43,6 @@ specified tablet types.
 A comma-separated list of tablet types for which traffic is to be switched.
 One or more from primary,replica,rdonly.<br><br>
 
-{{< info >}}
-Note: SwtichTraffic expects the `-tablet_types` to be lower case.
-{{< /info >}}
-
 </div>
 
 #### -timeout
