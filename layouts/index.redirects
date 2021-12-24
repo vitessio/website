@@ -1,109 +1,99 @@
 {{ $current := site.Params.versions.current }}
 {{ $next := site.Params.versions.next }}
 
-/docs/current                             /docs/{{ $current }}/
-/docs/current/*                           /docs/{{ $current }}/:splat
-/docs/next                                /docs/{{ $next }}/
-/docs/next/*                              /docs/{{ $next }}/:splat
+/docs/current                            /docs/{{ $current }}/
+/docs/current/*                          /docs/{{ $current }}/:splat
+/docs/next                               /docs/{{ $next }}/
+/docs/next/*                             /docs/{{ $next }}/:splat
 
-/zh/docs/current                          /zh/docs/{{ $current }}/
-/zh/docs/current/*                        /zh/docs/{{ $current }}/:splat
-/zh/docs/next                             /zh/docs/{{ $next }}/
-/zh/docs/next/*                           /zh/docs/{{ $next }}/:splat
+/zh/docs/current                         /zh/docs/{{ $current }}/
+/zh/docs/current/*                       /zh/docs/{{ $current }}/:splat
+/zh/docs/next                            /zh/docs/{{ $next }}/
+/zh/docs/next/*                          /zh/docs/{{ $next }}/:splat
 
 # Go imports: `go get vitess.io/vitess`
-/vitess/*   go-get=1 /go-import/vitess.html   200
-/messages/* go-get=1 /go-import/messages.html 200
-/operator/* go-get=1 /go-import/operator.html 200
+/vitess/*                                go-get=1 /go-import/vitess.html   200
+/messages/*                              go-get=1 /go-import/messages.html 200
+/operator/*                              go-get=1 /go-import/operator.html 200
 
-# User guide redirects
-/user-guide/schema-management             /docs/user-guides/schema-management
-/user-guide/sharding                      /docs/reference/sharding
-/user-guide/introduction                  /docs/user-guides
-/user-guide/replication                   /docs/reference/vitess-replication
-/user-guide/vitess-sequences              /docs/reference/vitess-sequences
-/user-guide/vschema                       /docs/reference/vschema
-/user-guide/twopc                         /docs/reference/two-phase-commit
-/user-guide/server-configuration          /docs/user-guides/server-configuration
-/user-guide/scalability-philosophy        /docs/overview/scalability-philosophy
-/user-guide/horizontal-sharding           /docs/get-started/local
-/user-guide/horizontal-sharding-workflow  /docs/get-started/local/#workflow
-/user-guide/mysql-server-protocol         /docs/reference/mysql-server-protocol
-/user-guide/production-planning           /docs/user-guide/production-planning
-/user-guide/row-based-replication         /docs/reference/row-based-replication
-/user-guide/schema-swap                   /docs/reference
-/user-guide/sharding-kubernetes-workflow  /docs/get-started/kubernetes
-/user-guide/sharding-kubernetes           /docs/get-started/kubernetes
-/user-guide/troubleshooting               /docs/troubleshoot
-/user-guide/vitess-replication            /docs/reference/vitess-replication
-/getting-started/local-instance		  /docs/get-started/local
-/user-guide/vschema.html		  /docs/reference/vschema
+# user-guide redirects
+
+## Specific pages
+/user-guide/schema-management            /docs/{{ $current }}/reference/features/schema-management/
+/user-guide/row-based-replication        /docs/{{ $current }}/reference/features/mysql-replication/
+/user-guide/vschema                      /docs/{{ $current }}/reference/features/vschema/
+/user-guide/vschema.html                 /docs/{{ $current }}/reference/features/vschema/
+
+## generally
+/user-guide				 /docs/user-guides/
+/user-guide/*				 /docs/user-guides/:splat
+
+# getting-started redirect
+/getting-started/local-instance		 /docs/get-started/local
 
 # Splat-style redirects
-/advanced          /docs/advanced
-/advanced/*        /docs/advanced/:splat
-/contributing      /docs/contributing
-/contributing/*    /docs/contributing/:splat
-/getting-started   /docs/get-started
-/getting-started/* /docs/get-started/:splat
-/docs/getting-started/* /docs/get-started/:splat
-/overview          /docs/overview
-/overview/*        /docs/overview/:splat
-/reference         /docs/reference
-/reference/*       /docs/reference/:splat
+/advanced                                /docs/{{ $current }}/reference
+/advanced/*                              /docs/{{ $current }}/reference/:splat
+/contributing                            /docs/contributing
+/contributing/*                          /docs/contributing/:splat
+/getting-started                         /docs/get-started
+/getting-started/*                       /docs/get-started/:splat
+/docs/getting-started/*                  /docs/get-started/:splat
+/overview                                /docs/overview
+/overview/*                              /docs/overview/:splat
+/reference                               /docs/reference
+/reference/*                             /docs/reference/:splat
 
 # RSS URL Redirect
-/blog/rss          /blog/index.xml	 301
+/blog/rss                                /blog/index.xml 301
 
 # Redirect to Slack invite link.
-/slack     https://join.slack.com/t/vitess/shared_invite/zt-rbtfk682-uqBu8WCyAUEDLFpydt1BOQ     302
+/slack https://join.slack.com/t/vitess/shared_invite/zt-rbtfk682-uqBu8WCyAUEDLFpydt1BOQ 302
 
 # Docs versioning redirects
 
-### [en]
-/docs/contributing     /docs/{{ $current }}/contributing
-/docs/contributing/*   /docs/{{ $current }}/contributing/:splat
-/docs/concepts         /docs/{{ $current }}/concepts
-/docs/concepts/*       /docs/{{ $current }}/concepts/:splat
-/docs/design-docs      /docs/{{ $current }}/design-docs
-/docs/design-docs/*    /docs/{{ $current }}/design-docs/:splat
-/docs/faq              /docs/{{ $current }}/faq
-/docs/faq/*            /docs/{{ $current }}/faq/:splat
-/docs/get-started      /docs/{{ $current }}/get-started
-/docs/get-started/*    /docs/{{ $current }}/get-started/:splat
-/docs/overview         /docs/{{ $current }}/overview
-/docs/overview/*       /docs/{{ $current }}/overview/:splat
-/docs/pdfs             /docs/{{ $current }}/pdfs
-/docs/pdfs/*           /docs/{{ $current }}/pdfs/:splat
-/docs/reference        /docs/{{ $current }}/reference
-/docs/reference/*      /docs/{{ $current }}/reference/:splat
-/docs/resources        /docs/{{ $current }}/resources
-/docs/resources/*      /docs/{{ $current }}/resources/:splat
-/docs/troubleshoot     /docs/{{ $current }}/troubleshoot
-/docs/troubleshoot/*   /docs/{{ $current }}/troubleshoot/:splat
-/docs/user-guides      /docs/{{ $current }}/user-guides
-/docs/user-guides/*   /docs/{{ $current }}/user-guides/:splat
+## [en]
+/docs/advanced                           /docs/{{ $current }}/reference 301!
+/docs/advanced/*                         /docs/{{ $current }}/reference/:splat 301!
+/docs/contributing                       /docs/{{ $current }}/contributing
+/docs/contributing/*                     /docs/{{ $current }}/contributing/:splat
+/docs/concepts                           /docs/{{ $current }}/concepts
+/docs/concepts/*                         /docs/{{ $current }}/concepts/:splat
+/docs/design-docs                        /docs/{{ $current }}/design-docs
+/docs/design-docs/*                      /docs/{{ $current }}/design-docs/:splat
+/docs/faq                                /docs/{{ $current }}/faq
+/docs/faq/*                              /docs/{{ $current }}/faq/:splat
+/docs/get-started                        /docs/{{ $current }}/get-started
+/docs/get-started/*                      /docs/{{ $current }}/get-started/:splat
+/docs/overview                           /docs/{{ $current }}/overview
+/docs/overview/*                         /docs/{{ $current }}/overview/:splat
+/docs/pdfs                               /docs/{{ $current }}/pdfs
+/docs/pdfs/*                             /docs/{{ $current }}/pdfs/:splat
+/docs/reference                          /docs/{{ $current }}/reference
+/docs/reference/*                        /docs/{{ $current }}/reference/:splat
+/docs/resources                          /docs/{{ $current }}/resources
+/docs/resources/*                        /docs/{{ $current }}/resources/:splat
+/docs/troubleshoot                       /docs/{{ $current }}/troubleshoot
+/docs/troubleshoot/*                     /docs/{{ $current }}/troubleshoot/:splat
+/docs/user-guides                        /docs/{{ $current }}/user-guides 301!
+/docs/user-guides/*                      /docs/{{ $current }}/user-guides/:splat 301!
+/docs/user-guide                         /docs/{{ $current }}/user-guides
+/docs/user-guide/*                       /docs/{{ $current }}/user-guides/:splat
 
-### [zh]
-/zh/docs/contributing     /zh/docs/{{ $current }}/contributing
-/zh/docs/contributing/*   /zh/docs/{{ $current }}/contributing/:splat
-/zh/docs/concepts         /zh/docs/{{ $current }}/concepts
-/zh/docs/concepts/*       /zh/docs/{{ $current }}/concepts/:splat
-/zh/docs/design-docs      /zh/docs/{{ $current }}/design-docs
-/zh/docs/design-docs/*    /zh/docs/{{ $current }}/design-docs/:splat
-/zh/docs/faq              /zh/docs/{{ $current }}/faq
-/zh/docs/faq/*            /zh/docs/{{ $current }}/faq/:splat
-/zh/docs/get-started      /zh/docs/{{ $current }}/get-started
-/zh/docs/get-started/*    /zh/docs/{{ $current }}/get-started/:splat
-/zh/docs/overview         /zh/docs/{{ $current }}/overview
-/zh/docs/overview/*       /zh/docs/{{ $current }}/overview/:splat
-/zh/docs/pdfs             /zh/docs/{{ $current }}/pdfs
-/zh/docs/pdfs/*           /zh/docs/{{ $current }}/pdfs/:splat
-/zh/docs/reference        /zh/docs/{{ $current }}/reference
-/zh/docs/reference/*      /zh/docs/{{ $current }}/reference/:splat
-/zh/docs/resources        /zh/docs/{{ $current }}/resources
-/zh/docs/resources/*      /zh/docs/{{ $current }}/resources/:splat
-/zh/docs/troubleshoot     /zh/docs/{{ $current }}/troubleshoot
-/zh/docs/troubleshoot/*   /zh/docs/{{ $current }}/troubleshoot/:splat
-/zh/docs/user-guides      /zh/docs/{{ $current }}/user-guides
-/zh/docs/user-guides/*   /zh/docs/{{ $current }}/user-guides/:splat
+## [zh]
+/zh/docs/contributing                    /zh/docs/{{ $current }}/contributing
+/zh/docs/contributing/*                  /zh/docs/{{ $current }}/contributing/:splat
+/zh/docs/concepts                        /zh/docs/{{ $current }}/concepts
+/zh/docs/concepts/*                      /zh/docs/{{ $current }}/concepts/:splat
+/zh/docs/design-docs                     /zh/docs/{{ $current }}/design-docs
+/zh/docs/design-docs/*                   /zh/docs/{{ $current }}/design-docs/:splat
+/zh/docs/faq                             /zh/docs/{{ $current }}/faq
+/zh/docs/faq/*                           /zh/docs/{{ $current }}/faq/:splat
+/zh/docs/get-started                     /zh/docs/{{ $current }}/get-started
+/zh/docs/get-started/*                   /zh/docs/{{ $current }}/get-started/:splat
+/zh/docs/overview                        /zh/docs/{{ $current }}/overview
+/zh/docs/overview/*                      /zh/docs/{{ $current }}/overview/:splat
+/zh/docs/reference                       /zh/docs/{{ $current }}/reference
+/zh/docs/reference/*                     /zh/docs/{{ $current }}/reference/:splat
+/zh/docs/user-guides                     /zh/docs/{{ $current }}/user-guides
+/zh/docs/user-guides/*                   /zh/docs/{{ $current }}/user-guides/:splat
