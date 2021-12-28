@@ -46,7 +46,7 @@ Before we get started, let’s get a few things out of the way:
 Change to the operator example directory:
 
 ```bash
-git clone git@github.com:vitessio/vitess.git
+git clone https://github.com/vitessio/vitess.git
 cd vitess/examples/operator
 ```
 
