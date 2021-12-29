@@ -14,3 +14,6 @@ package-lock.json
 # vim files
 *.swp
 tags
+
+# vscode files
+.vscode/
