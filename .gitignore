@@ -17,3 +17,6 @@ tags
 
 # File created when running hugo locally
 .hugo_build.lock
+
+# vscode files
+.vscode/

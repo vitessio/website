@@ -18,7 +18,7 @@ Reshard <options> <action> <workflow identifier>
 or
 
 ```
-Reshard [-source_shards=<source_shards>] [-target_shards=<target_shards>] [-cells=<cells>] [-tablet_types=<source_tablet_types>]  [-skip_schema_copy] [-auto_start] [-stop_after_copy] [-timeout=timeoutDuration] [-reverse_replication] [-keep_data] <action> <keyspace.workflow>
+Reshard [-source_shards=<source_shards>] [-target_shards=<target_shards>] [-cells=<cells>] [-tablet_types=<source_tablet_types>]  [-skip_schema_copy] [-auto_start] [-stop_after_copy] [-timeout=timeoutDuration] [-reverse_replication] [-keep_data] [-keep_routing_rules] <action> <keyspace.workflow>
 ```
 
 ## Description
@@ -155,6 +155,16 @@ If set to false these reverse replication streams will not be created and you wi
 <div class="cmd">
 
 Usually, the target data (tables or shards) are deleted by Cancel. If this flag is used with MoveTables, target tables will not be deleted and, with Reshard, target shards will not be dropped.
+
+</div>
+
+#### -keep_routing_rules
+**optional**\
+**default** false
+
+<div class="cmd">
+
+Usually, any routing rules created by the workflow in the source and target keyspace are removed by Complete or Cancel. If this flag is used the routing rules will be left in place.
 
 </div>
 

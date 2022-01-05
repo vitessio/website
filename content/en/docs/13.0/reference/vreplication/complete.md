@@ -12,7 +12,7 @@ This documentation is for a new (v2) set of vtctld commands that start in Vitess
 ### Command
 
 ```
-MoveTables/Reshard [-keep_data] [-rename_tables] [-dry_run]
+MoveTables/Reshard [-keep_data] [-keep_routing_rules] [-rename_tables] [-dry_run]
   Complete <targetKs.workflow>
 ```
 
@@ -30,6 +30,16 @@ MoveTables/Reshard [-keep_data] [-rename_tables] [-dry_run]
 <div class="cmd">
 
 Usually, the source data (tables or shards) are deleted by Complete. If this flag is used, for MoveTables, source tables will not be deleted, for Reshard, source shards will not be dropped.
+
+</div>
+
+#### -keep_routing_rules
+**optional**\
+**default** false
+
+<div class="cmd">
+
+Usually, any routing rules added in the source keyspace are removed by Complete. If this flag is used the routing rules in the source keyspace will be left in place.
 
 </div>
 
