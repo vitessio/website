@@ -82,7 +82,7 @@
 /docs/troubleshoot     /docs/{{ $current }}/troubleshoot
 /docs/troubleshoot/*   /docs/{{ $current }}/troubleshoot/:splat
 /docs/user-guides      /docs/{{ $current }}/user-guides
-/docs/contributing/*   /docs/{{ $current }}/user-guides/:splat
+/docs/user-guides/*   /docs/{{ $current }}/user-guides/:splat
 
 ### [zh]
 /zh/docs/contributing     /zh/docs/{{ $current }}/contributing
@@ -106,4 +106,4 @@
 /zh/docs/troubleshoot     /zh/docs/{{ $current }}/troubleshoot
 /zh/docs/troubleshoot/*   /zh/docs/{{ $current }}/troubleshoot/:splat
 /zh/docs/user-guides      /zh/docs/{{ $current }}/user-guides
-/zh/docs/contributing/*   /zh/docs/{{ $current }}/user-guides/:splat
+/zh/docs/user-guides/*   /zh/docs/{{ $current }}/user-guides/:splat

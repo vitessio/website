@@ -8,7 +8,7 @@ This document describes the Vitess Sequences feature, and how to use it.
 
 ## Motivation
 
-MySQL provides the `auto-increment` feature to assign monotonically incrementing
+MySQL provides the `auto_increment` feature to assign monotonically incrementing
 IDs to a column in a table. However, when a table is sharded across multiple
 instances, maintaining the same feature is a lot more tricky.
 
@@ -19,17 +19,17 @@ Vitess Sequences fill that gap:
 
 * Very high throughput for ID creation, using a configurable in-memory block allocation.
 
-* Transparent use, similar to MySQL auto-increment: when the field is omitted in
+* Transparent use, similar to MySQL auto_increment: when the field is omitted in
   an `insert` statement, the next sequence value is used.
 
-## When *not* to Use Auto-Increment
+## When *not* to Use auto_increment
 
-Before we go any further, an auto-increment column has limitations and
+Before we go any further, an auto_increment column has limitations and
 drawbacks. let's explore this topic a bit here.
 
 ### Security Considerations
 
-Using auto-increment can leak confidential information about a service. Let's
+Using auto_increment can leak confidential information about a service. Let's
 take the example of a web site that store user information, and assign user IDs
 to its users as they sign in. The user ID is then passed in a cookie for all
 subsequent requests.
@@ -40,105 +40,76 @@ The client then knows their own user ID. It is now possible to:
 
 * Get an approximate number of users of the system (using the user ID).
 
-* Get an approximate number of sign-ins during a week (creating two accounts a
+* Get an approximate number of sign-ups during a week (creating two accounts a
   week apart, and diffing the two IDs).
 
-Auto-incrementing IDs should be reserved for either internal applications, or
+auto_incrementing IDs should be reserved for either internal applications, or
 exposed to the clients only when safe.
 
 ### Alternatives
 
-Alternative to auto-incrementing IDs are:
+Alternative to auto_incrementing IDs are:
 
-* use a 64 bits random generator number. Try to insert a new row with that
+* Using a 64 bit random generator number. Try to insert a new row with that
   ID. If taken (because the statement returns an integrity error), try another
   ID.
 
-* use a UUID scheme, and generate truely unique IDs.
+* Using a UUID scheme, and generate truly unique IDs.
 
-Now that this is out of the way, let's get to MySQL auto-increment.
+Now that this is out of the way, let's get to [MySQL auto_increment](https://dev.mysql.com/doc/refman/en/example-auto-increment.html).
 
-## MySQL Auto-increment Feature
+## MySQL auto_increment Feature
 
-Let's start by looking at the MySQL auto-increment feature:
+Let's start by looking at the key [MySQL auto_increment](https://dev.mysql.com/doc/refman/en/example-auto-increment.html) features, properties, and behaviors that Vitess Sequences share:
 
-* A row that has no value for the auto-increment value will be given the next ID.
+* A row that has no value provided for the auto_increment column will be given the next ID.
 
-* The current value is stored in the table metadata.
+* The current ID value is stored in table metadata.
 
-* Values may be ‘burned’ (by rolled back transactions).
+* Values may be ‘burned’ (by rolled back transactions) and gaps in the generated and stored values are possible.
 
-* Inserting a row with a given value that is higher than the current value will
-  set the current value.
-
-* The value used by the primary in a statement is sent in the replication stream,
+* The value stored by the primary instance resulting from the original statement is sent in the replication stream,
   so replicas will have the same value when re-playing the stream.
 
 * There is no strict guarantee about ordering: two concurrent statements may
-  have their commit time in one order, but their auto-incrementing ID in the
+  have their commit time in one order, but their auto_incrementing ID in the
   opposite order (as the value for the ID is reserved when the statement is
   issued, not when the transaction is committed).
 
-* MySQL has multiple options for auto-increment, like only using every N number
-  (for active-active configurations), or performance related features (locking
-  that table’s current ID may have concurrency implications).
-
-* When inserting a row in a table with an auto-increment column, if the value
-  for the auto-increment row is not set, the value for the column is returned to
-  the client alongside the statement result.
+* When inserting a row in a table with an auto_increment column, if the value
+  for the auto_increment column is generated (not explicitly specified in the statement), the value for the column
+  is returned to the client alongside the statement result (which can be queried with [`LAST_INSERT_ID()`](https://dev.mysql.com/doc/refman/en/information-functions.html#function_last-insert-id)).
 
 ## Vitess Sequences
 
-An early design was to use a single unsharded database and a table with an
-auto-increment value to generate new values. However, this has serious
-limitations, in particular throughtput, and storing one entry for each value in
-that table, for no reason.
+Each sequence has a backing MySQL table — which must be in an unsharded keyspace — and
+uses a single row in that table to describe which values the sequence should have next.
+To improve performance we also support block allocation of IDs: each update to
+the MySQL table is only done every N IDs (N being configurable) and in between those writes
+only the in-memory structures within the primary vttablet serving the unsharded keyspace 
+where the backing table lives are updated, making the QPS only limited by the RPC latency
+between the vtgates and the the serving vttablet for the sequence table.
 
-So we decided instead to base sequences on a MySQL table, and use a single value
-in that table to describe which values the sequence should have next. To
-increase performance, we also support block allocation of IDs: each update to
-the MySQL table is only done every N IDs (N being configurable), and in between
-only memory structures in vttablet are updated, making the QPS only limited by
-RPC latency.
-
-The sequence table then is an unsharded single row table that Vitess can use to generate monotonically increasing ids. The VSchema allows you to associate a column of a table with the sequence table. Once they are associated, an insert on that table will transparently fetch an id from the sequence table, fill in the value, and route the row to the appropriate shard.
-
-Since sequences are unsharded tables, they will be stored in the database (in our tutorial example, this is the commerce database).
-
-The final goal is to have Sequences supported with SQL statements, like:
-
-``` sql
-/* DDL support */
-CREATE SEQUENCE my_sequence;
-
-SELECT NEXT VALUE FROM my_sequence;
-
-ALTER SEQUENCE my_sequence ...;
-
-DROP SEQUENCE my_sequence;
-
-SHOW CREATE SEQUENCE my_sequence;
-```
-
-In the current implementation, we support the query access to Sequences, but not
-the administration commands yet.
+So the sequence table is an unsharded single row table that Vitess can use to generate monotonically increasing ids.
+The VSchema then allows you to associate a column in your table with the sequence. Once they are associated, an `insert`
+on that table will transparently fetch an ID from the sequence, fill in the value, and route the row to the appropriate shard.
 
 ### Creating a Sequence
 
-*Note*: The names in this section are extracted from the examples/demo sample
-application.
-
-To create a Sequence, a backing table must first be created and initialized with a single row. The columns for that table have to be respected.
-
-This is an example:
+To create a sequence, a backing table must first be created. The table structure must have
+the following columns and SQL comment in order to provide sequences (in the examples here the sequence is for a user table):
 
 ``` sql
-create table user_seq(id int, next_id bigint, cache bigint, primary key(id)) comment 'vitess_sequence';
-
-insert into user_seq(id, next_id, cache) values(0, 1, 100);
+create table user_seq(id bigint, next_id bigint, cache bigint, primary key(id)) comment 'vitess_sequence';
 ```
 
-Then, the Sequence has to be defined in the VSchema for that keyspace:
+<p> 
+{{< info >}}
+Note: the vttablet in-memory structure uses `int64` types so `bigint unsigned` types are not supported for these columns in the backing table
+{{< /info >}}
+</p> 
+
+Then the sequence has to be defined in the VSchema for the unsharded keyspace where the backing table lives:
 
 ``` json
 {
@@ -152,7 +123,9 @@ Then, the Sequence has to be defined in the VSchema for that keyspace:
 }
 ```
 
-And the table it is going to be using it can also reference the Sequence in its VSchema:
+<p>
+Now any table that will be using the new sequence can reference it in its VSchema as shown here:
+</p>
 
 ``` json
 {
@@ -169,22 +142,34 @@ And the table it is going to be using it can also reference the Sequence in its 
     },
 ```
 
-After this done (and the Schema has been reloaded on primary tablet, and the
-VSchema has been pushed), the sequence can be used.
+## Initializing a Sequence
+The sequence backing table needs to be pre-populated with a single row where:
+
+* `id` must always be 0.
+* `next_id` should be set to the next (starting) value of the sequence.
+* `cache` is the number of values to be reserved and cached in each block allocation of IDs served by the primary vttablet of the
+unsharded keyspace where the sequence backing table lives. This value should be set to a fairly large number like 1000 for improved write
+latency and throughput (the tradeoff being that this chunk of reserved IDs could be lost if e.g. the tablet crashes, resulting in a
+potential ID gap up to that size).
+
+For example:
+
+``` sql
+insert into user_seq(id, next_id, cache) values(0, 1, 1000);
+```
 
 ### Accessing a Sequence
 
-If a Sequence is used to fill in a column for a table, nothing further needs to
+If a sequence is used to fill in an ID column for a table, nothing further needs to
 be done. Just sending no value for the column will make vtgate insert the next
-Sequence value in its place.
+sequence value in its place.
 
-It is also possible to access the Sequence directly with the following SQL constructs:
+It is also possible, however, to access the sequence directly with the following SQL constructs:
 
 ``` sql
 /* Returns the next value for the sequence */
-select next value from my_sequence;
+select next value from user_seq;
 
 /* Returns the next value for the sequence, and also reserve 4 values after that. */
-select next 5 values from my_sequence;
-
+select next 5 values from user_seq;
 ```
