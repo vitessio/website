@@ -31,15 +31,14 @@ buffering:
   * `-enable_buffer_dry_run`:  Enable logging of if/when buffering would
   trigger, without actually buffering anything. Useful for testing.
   Default: `false`
-  * `-buffer_implementation`:  Default: `healthcheck`.  More consistent results
-  have been seen with `keyspace_events` and the default will change to
-  `keyspace_events` in future releases.
-  * `-buffer_size`:  Default: `10` in future releases of Vitess the default will
-  change to `1000`. This should be sized to the appropriate number of expected
-  request during a buffering event. Typically, if each connection has one request
-  then, each connection will consume one buffer slot of the `buffer_size` and
-  be put in a "pause" state as it is buffered on the vtgate. The resource
-  consideration for setting this parameter are memory resources.
+  * `-buffer_implementation`:  Default: `keyspace_events`.  More consistent results
+  have been seen with `keyspace_events`. However, if the legacy behavior is needed
+  you may use `healthcheck`.
+  * `-buffer_size`:  Default: `1000` This should be sized to the appropriate
+  number of expected request during a buffering event. Typically, if each
+  connection has one request then, each connection will consume one buffer slot
+  of the `buffer_size` and be put in a "pause" state as it is buffered on the
+  vtgate. The resource consideration for setting this parameter are memory resources.
   * `-buffer_drain_concurrency`:  Default: `1`.  If the buffer is of any
   significant size, you probably want to increase this proportionally.
   * `-buffer_keyspace_shards`:  Can be used to limit buffering to only
