@@ -8,7 +8,7 @@ Queries are routed to a tablet via a [VTGate](../vtgate) server.
 
 ## Tablet Types
 
-See the user guide [VTTablet Modes](../../user-guides/vttablet-modes) for more information.
+See the user guide [VTTablet Modes](../../user-guides/configuration-basic/vttablet-mysql/) for more information.
 
 * **primary** - A *replica* tablet that happens to currently be the MySQL primary for its shard.
 * **master** - Same as **primary**. Deprecated.

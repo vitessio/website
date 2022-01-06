@@ -1,7 +1,7 @@
 ---
 title: Presentations and Videos
 weight: 1
-aliases: ['/resources/presentations.html']
+aliases: ['/resources/presentations.html', '/docs/resources/presentations/']
 ---
 
 ## KubeCon NA 2021
