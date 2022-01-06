@@ -13,5 +13,5 @@ Kubernetes handles scheduling onto nodes in a compute cluster, actively manages 
 
 **Related Vitess Documentation**
 
-* [Kubernetes Quickstart](../../get-started/kubernetes)
+* [Kubernetes Quickstart](../../get-started/operator)
 

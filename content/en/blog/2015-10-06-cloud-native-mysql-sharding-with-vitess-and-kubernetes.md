@@ -34,7 +34,7 @@ We've also been hard at work adding lots more [documentation](http://vitess.io/u
 The preferred sharding strategy in Vitess is what we call [range-based shards>](http://vitess.io/user-guide/sharding.html#range-based-sharding). You can think of the shards as being like the buckets of a hash table. We decide which bucket to place a record in based solely on its key, so we don't need a separate table that keeps track of which bucket each key is in.
 
 To make it easy to change the number of buckets, we use [consistent hashing](https://en.wikipedia.org/wiki/Consistent_hashing). That means instead of using a hash function that maps each key to a bucket number, we use a function that maps each key to a randomly distributed (but consistent) value in a very large set - such as the set of all 8-byte sequences. Then we assign each bucket a range of these
-values, which we call [keyspace IDs](http://vitess.io/overview/concepts.html#keyspace-id).
+values, which we call [keyspace IDs](https://vitess.io/docs/12.0/concepts/keyspace-id/).
 
 **Transparent Resharding**
 
@@ -42,7 +42,7 @@ If you want to follow along with the new [resharding walkthrough](http://vitess.
 
 In the [sample app code](https://github.com/youtube/vitess/blob/master/examples/kubernetes/guestbook/main.py), you'll see a `get\_keyspace\_id()` function that transforms a given page number to the set of all 8-byte sequences, establishing the mapping we need for consistent hashing. In the unsharded case, these values are stored but not used. When we introduce sharding, page numbers will be evenly distributed (on average) across all the shards we create, allowing the app to scale to support arbitrary amounts of pages.
 
-Before resharding, you'll see a single [custom shard](http://vitess.io/user-guide/sharding.html#custom-sharding) named "0" in the Vitess dashboard. This is what an unsharded [keyspace](http://vitess.io/overview/concepts.html#keyspace) looks like.
+Before resharding, you'll see a single [custom shard](http://vitess.io/user-guide/sharding.html#custom-sharding) named "0" in the Vitess dashboard. This is what an unsharded [keyspace](https://vitess.io/docs/12.0/concepts/keyspace/) looks like.
 
 As you begin the [resharding walkthrough](http://vitess.io/user-guide/sharding-kubernetes.html),you'll bring up two new shards for the same keyspace. During resharding, the new shards will run alongside the old one, but they'll remain idle (Vitess will not route any app traffic to them) until you're ready to migrate. In the dashboard, you'll see all three shards, but only shard "0" is currently active.
 

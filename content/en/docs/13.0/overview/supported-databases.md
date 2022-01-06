@@ -24,4 +24,4 @@ Vitess supports the core features of MariaDB versions 10.0 to 10.3. Vitess [does
 
 ## See also
 
-+ [MySQL Compatibility](../../reference/mysql-compatibility/)
++ [MySQL Compatibility](../../reference/compatibility/mysql-compatibility/)
