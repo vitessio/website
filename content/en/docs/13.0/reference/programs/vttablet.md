@@ -248,6 +248,7 @@ The following global options apply to `vttablet`:
 | -queryserver-config-stream-buffer-size | int | query server stream buffer size, the maximum number of bytes sent from vttablet for each stream call. It's recommended to keep this value in sync with vtgate's stream_buffer_size. (default 32768) |
 | -queryserver-config-stream-pool-prefill-parallelism | int | query server stream pool prefill parallelism, a non-zero value will prefill the pool using the specified parallelism |
 | -queryserver-config-stream-pool-size | int | query server stream connection pool size, stream pool is used by stream queries: queries that return results to client in a streaming fashion (default 200) |
+| -queryserver-config-stream-pool-waiter-cap | int | query server stream pool waiter limit, this is the maximum number of streaming queries that can be queued waiting to get a connection (default unlimited) |
 | -queryserver-config-strict-table-acl |  | only allow queries that pass table acl checks |
 | -queryserver-config-terse-errors |  | prevent bind vars from escaping in returned errors |
 | -queryserver-config-transaction-cap | int | query server transaction cap is the maximum number of transactions allowed to happen at any given point of a time for a single vttablet. E.g. by setting transaction cap to 100, there are at most 100 transactions will be processed by a vttablet and the 101th transaction will be blocked (and fail if it cannot get connection within specified timeout) (default 20) |
