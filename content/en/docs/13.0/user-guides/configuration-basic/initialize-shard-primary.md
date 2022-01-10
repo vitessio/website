@@ -3,7 +3,7 @@ title: Initialize Shard Primary
 weight: 9
 ---
 
-The [PlannedReparentShard](../../configuration-advanced/reparenting/#plannedreparentshard-planned-reparenting) should be used to initialize the shard by electing a new primary and setting up replication for the replicas. Additionally, a database is created to store the data for the keyspace-shard. The default name for the database will be `vt_` followed by the keyspace. In our use case, it would be `vt_commerce`. You can override this default by providing an `init_db_name_override` flag to vttablet. However, all future invocations must continue to supply this parameter.
+The [PlannedReparentShard](../../configuration-advanced/reparenting/#plannedreparentshard-planned-reparenting) command should be used to initialize the shard by electing a new primary and setting up replication for the replicas. Additionally, a database is created to store the data for the keyspace-shard. The default name for the database will be `vt_` followed by the keyspace. In our use case, it would be `vt_commerce`. You can override this default by providing an `init_db_name_override` flag to each vttablet. However, all future invocations must continue to supply this parameter.
 
 The InitShardPrimary step can also be used to do the same operation. However, it is a destructive command and should only be used by advanced users. This command copies over the `executed_gtid_set` from the primary to the replica which can break replication if the user isn't careful. 
 
@@ -17,9 +17,9 @@ vtctlclient \
   cell1-100
 ```
 
-Until one of these command are run, you may also see errors like this in the vttablet logs: `Cannot start query service: Unknown database 'vt_xxx'`. This is because the database will be created only after a primary is elected.
+Until one of these commands is run, you may also see errors like this in the vttablet logs: `Cannot start query service: Unknown database 'vt_xxx'`. This is because the database will be created only after a primary is elected.
 
-If you have semi-sync enabled and did not set up at least three replicas, InitiShardPrimary could hang indefinitely. Even if it succeeds, future operations that perform failovers could cause this shard to go into a deadlocked state.
+If you have semi-sync enabled and did not set up at least two replicas, InitShardPrimary could hang indefinitely. Even if it succeeds, future operations that perform failovers could cause this shard to go into a deadlocked state.
 
 After this step, visiting the `/debug/status` page on the vttablets should show all the tablets as healthy:
 

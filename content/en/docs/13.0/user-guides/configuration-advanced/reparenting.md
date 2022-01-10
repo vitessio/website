@@ -46,8 +46,8 @@ This command performs the following actions when used to change the current prim
 3. Retrieves the current primary's replication position.
 4. Instructs the primary-elect tablet to wait for replication data and then begin functioning as the new primary after that data is fully transferred.
 5. Ensures replication is functioning properly via the following steps:
-    - On the primary-elect tablet, insert an entry in a test table and then update the global Shard object's PrimaryAlias record.
-    - In parallel on each replica, including the old primary, set the new primary and wait for the test entry to replicate to the replica tablet. Replica tablets that had not been replicating before the command was called are left in their current state and do not start replication after the reparenting process.
+    - On the primary-elect tablet, insert a row into an internal tabkle and then update the global shard object's PrimaryAlias record.
+    - In parallel on each replica, including the old primary, set the new primary and wait for the inserted row to replicate to the replica tablet. Replica tablets that had not been replicating before the command was called are left in their current state and do not start replication after the reparenting process.
     - Start replication on the old primary tablet so it catches up to the new primary.
 
 In this scenario, the old primary's tablet type transitions to `spare`. If health checking is enabled on the old primary, it will likely rejoin the cluster as a replica on the next health check. To enable health checking, set the `target_tablet_type` parameter when starting a tablet. That parameter indicates what type of tablet that tablet tries to be when healthy. When it is not healthy, the tablet type changes to spare.
@@ -55,8 +55,8 @@ In this scenario, the old primary's tablet type transitions to `spare`. If healt
 This command performs the following actions when used to initialize the first primary in the shard:
 1. Promote the new primary that is specified.
 2. Ensures replication is functioning properly via the following steps:
-    - On the primary-elect tablet, insert an entry in a test table and then update the global Shard object's PrimaryAlias record.
-    - In parallel on each replica, set the new primary and wait for the test entry to replicate to the replica tablet.
+    - On the primary-elect tablet, insert a row into an internal table and then update the global shard object's PrimaryAlias record.
+    - In parallel on each replica, set the new primary and wait for the inserted row to replicate to the replica tablet.
 
 ### EmergencyReparentShard: Emergency reparenting
 
