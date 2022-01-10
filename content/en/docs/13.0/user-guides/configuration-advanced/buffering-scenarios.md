@@ -507,7 +507,7 @@ Terminal 1:
 ```
 Terminal 2:
     Ctrl + C
-    (venv) $ gateslap examples/06_numerous_heavy_traffic.ini
+    (venv) $ gateslap examples/04_numerous_heavy_traffic.ini
 ```
 
 As soon as the heavy traffic starts to generate send the PRS command.
