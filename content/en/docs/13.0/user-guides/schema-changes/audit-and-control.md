@@ -526,7 +526,7 @@ $ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
 
 ## Cleaning migration artifacts
 
-Migrations yield artifacts: these are leftover tables, such as the ghost or shadow tables in an `ALTER` DDL. These tables are audited and collected as part of [table lifecycle](../../../reference/features/table-lifecycle/).
+Migrations yield artifacts: these are leftover tables, such as the ghost or shadow tables in an `ALTER` DDL. These tables are audited and collected as part of [table lifecycle](../table-lifecycle/).
 
 The artifacts are essential to [Reverting a migration](../revertible-migrations/), and are kept intact for a while before destroyed.
 

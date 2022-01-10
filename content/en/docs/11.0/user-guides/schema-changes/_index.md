@@ -71,7 +71,7 @@ When using either managed schema changes, or direct schema changes via `vtctl` o
 
 ### Schedule
 
-In managed, online schema changes, Vitess owns and tracks all pending and active migrations. As a rule of thumb, it is generally advisable to only run one online schema change at a time on a given server. Following that rule of thumb, Vitess will by default queue incoming schema change requests and schedule them to run sequentially. There are cases for concurrent execution, and Vitess is able to run some types of migrations concurrently. See [concurrent migrations](./concurrent-migrations).
+In managed, online schema changes, Vitess owns and tracks all pending and active migrations. As a rule of thumb, it is generally advisable to only run one online schema change at a time on a given server. Following that rule of thumb, Vitess will queue incoming schema change requests and schedule them to run sequentially.
 
 ### Execute
 
