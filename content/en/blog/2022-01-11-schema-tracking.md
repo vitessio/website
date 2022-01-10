@@ -1,7 +1,7 @@
 ---
 author: 'Florent Poinsard'
-date: 2021-12-16
-slug: '2021-12-16-schema-tracking'
+date: 2022-01-11
+slug: '2022-01-11-schema-tracking'
 tags: ['Vitess','CNCF', 'Schema', 'Tracking', 'Planner', 'Query', 'Serving', 'MySQL']
 title: 'Vitess Schema Tracking'
 description: "Insight into Vitess' Schema Tracking feature"
@@ -9,29 +9,29 @@ description: "Insight into Vitess' Schema Tracking feature"
 
 ## What is Schema Tracking?
 
-In a distributed relational database system like Vitess a central component is responsible for  serving queries across multiple shards, for Vitess, it is [VTGate](https://vitess.io/docs/concepts/vtgate/).
-One of the challenges for this component is to be aware of the underlying SQL schema that is being used.
+In a distributed relational database system, like Vitess, a central component is responsible for serving queries across multiple shards. For Vitess, it is [VTGate](https://vitess.io/docs/concepts/vtgate/).
+One of the challenges this component faces is being aware of the underlying SQL schema being used.
 This awareness facilitates query planning.
 
 Table schemas are stored in MySQL’s information_schema, meaning that they are located in a [VTTablet](https://vitess.io/docs/concepts/tablet/)’s MySQL instance and not in VTGate.
 When planning queries, VTGate is unable to know the explicit list of columns for a table, also known as the authoritative column list.
-This inability leads to several limitations that are listed below.
+This inability leads to several limitations that are listed below:
 
-- This query is a cross-shard query with an order by clause, VTGate needs to create a plan that contains an order by instruction with the column index to order. Without knowledge of the schema, this is not possible.
+- This query is a cross-shard query with an order by clause. VTGate needs to create a plan that contains an order by instruction with the column index to order. Without knowledge of the schema, this is not possible.
 
   ```sql
   SELECT * FROM tbl1, tbl2 WHERE tbl1.id = tbl2.id ORDER BY tbl1.name
   ```
 
 
-- In this cross-shard query’s projection, the name column is ambiguous, which table are we talking about? If only one of the two tables had a name column, schema tracking would tell VTGate which table name belongs to, and thus the query would not be ambiguous anymore.
+- In this cross-shard query’s projection, the name column is ambiguous. Which table are we talking about? If at least one of the two tables had a name column, schema tracking would tell VTGate which table the name belongs to, and thus the query would not be ambiguous anymore.
   
   ```sql
   SELECT name FROM tbl1, tbl2 WHERE tbl1.id = tbl2.id
   ```
 
 
-- Since this query is cross-shard, it involves a group by operation at the VTGate level. Let’s assume that tbl2.name is a textual column, we need to know its collation to perform correct string comparisons. Without schema tracking, this is not possible as VTGate does not natively know about tables’ columns collations.
+- Since this query is cross-shard, it involves a group by operation at the VTGate level. Let’s assume that tbl2.name is a textual column, so we need to know its collation to perform correct string comparisons. Without schema tracking, this is not possible as VTGate does not natively know about tables’ columns collations.
 
   ```sql
   SELECT tbl2.name FROM tbl1, tbl2 WHERE tbl1.id = tbl2.id GROUP BY tbl2.name
@@ -45,7 +45,7 @@ Vitess has some pretty large-scale users, like [Slack](https://slack.engineering
 To ensure constant authoritativeness using the VSchema they would need to update their VSchema after every change to the MySQL schema, which is definitely not sustainable.
 The lack of scalability that comes with VSchema motivated the development of the Schema Tracking feature.
 
-We developed the Schema Tracking feature to augment the capabilities of our new [Gen4](https://vitess.io/blog/2021-11-02-why-write-new-planner/) planner by increasing the number of queries supported by it in comparison with the V3 planner, the previous generation of our query planner.
+We developed the Schema Tracking feature to augment the capabilities of our new [Gen4](https://vitess.io/blog/2021-11-02-why-write-new-planner/) planner by increasing the number of queries it supports in comparison with the V3 planner, the previous generation of our query planner.
 The next section covers how this new functionality works.
 
 ## How does Schema Tracking work?
@@ -54,6 +54,7 @@ At a regular interval, VTTablet queries its underlying MySQL database to detect 
 VTTablet keeps a copy of the schema in a table named schemacopy, this table is updated with the VTTablet’s latest view on the SQL schema.
 When comparing the information_schema and the schemacopy table, VTTablet can easily detect any change.
 There are three types of changes we want to detect:
+
 - New columns.
 - Changed columns.
 - Deleted columns.
@@ -82,7 +83,7 @@ Once VTGate has updated its local view of the schema, the VSchema gets updated w
 These lists are then used by our query planner.
 
 As mentioned earlier, large-scale deployments of Vitess can concurrently change their schema at a very high cadence on thousands of shards.
-In order to avoid network congestion  in such scenarios, the Schema Tracker has a queueing mechanism at the VTGate level.
+In order to avoid network congestion in such scenarios, the Schema Tracker has a queueing mechanism at the VTGate level.
 This mechanism queues all incoming schema changes from the healthcheck, and at a fixed interval compiles all the different schema change notifications into a single list of updated tables.
 This allows us to send a single query to the VTTablet to fetch all metadata changes.
 
