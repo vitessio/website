@@ -11,8 +11,6 @@ This document explains the types of reparenting that Vitess supports:
 * [Active reparenting](../../configuration-advanced/reparenting/#active-reparenting) occurs when Vitess manages the entire reparenting process.
 * [External reparenting](../../configuration-advanced/reparenting/#external-reparenting) occurs when another tool handles the reparenting process, and Vitess just updates its topology service, replication graph, and serving graph to accurately reflect primary-replica relationships.
 
-**Note:** The `InitShardPrimary` command defines the initial parenting relationships within a shard. That command makes the specified tablet the primary and makes the other tablets in the shard replicas that replicate from that primary.
-
 ## MySQL requirements
 
 ### GTIDs
@@ -39,20 +37,26 @@ Both commands are both dependent on the global topology service being available,
 
 ### PlannedReparentShard: Planned reparenting
 
-The `PlannedReparentShard` command reparents a healthy primary tablet to a new primary. The current and new primary must both be up and running.
+The `PlannedReparentShard` command reparents a healthy shard to a new primary. It can be used to initialize the shard primary when the shard is brought up. If it is used to change the primary of an already running shard, then both the current and new primary must be up and running. In case the current primary is down, use `EmergencyReparentShard` instead.
 
-This command performs the following actions:
+This command performs the following actions when used to change the current primary:
 
 1. Puts the current primary tablet in read-only mode.
 2. Shuts down the current primary's query service, which is the part of the system that handles user SQL queries. At this point, Vitess does not handle any user SQL queries until the new primary is configured and can be used a few seconds later.
 3. Retrieves the current primary's replication position.
 4. Instructs the primary-elect tablet to wait for replication data and then begin functioning as the new primary after that data is fully transferred.
 5. Ensures replication is functioning properly via the following steps:
-    - On the primary-elect tablet, insert an entry in a test table and then update the global Shard object's PrimaryAlias record.
-    - In parallel on each replica, including the old primary, set the new primary and wait for the test entry to replicate to the replica tablet. Replica tablets that had not been replicating before the command was called are left in their current state and do not start replication after the reparenting process.
+    - On the primary-elect tablet, insert a row into an internal tabkle and then update the global shard object's PrimaryAlias record.
+    - In parallel on each replica, including the old primary, set the new primary and wait for the inserted row to replicate to the replica tablet. Replica tablets that had not been replicating before the command was called are left in their current state and do not start replication after the reparenting process.
     - Start replication on the old primary tablet so it catches up to the new primary.
 
 In this scenario, the old primary's tablet type transitions to `spare`. If health checking is enabled on the old primary, it will likely rejoin the cluster as a replica on the next health check. To enable health checking, set the `target_tablet_type` parameter when starting a tablet. That parameter indicates what type of tablet that tablet tries to be when healthy. When it is not healthy, the tablet type changes to spare.
+
+This command performs the following actions when used to initialize the first primary in the shard:
+1. Promote the new primary that is specified.
+2. Ensures replication is functioning properly via the following steps:
+    - On the primary-elect tablet, insert a row into an internal table and then update the global shard object's PrimaryAlias record.
+    - In parallel on each replica, set the new primary and wait for the inserted row to replicate to the replica tablet.
 
 ### EmergencyReparentShard: Emergency reparenting
 
