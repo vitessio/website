@@ -576,7 +576,7 @@ Unlock keyspace targetkeyspace
 
 ```sh
 $ vtctlclient -server localhost:15999 SwitchReads -tablet_type=replica -dry_run sourcekeyspace.workflowname_reverse
-*** SwitchReads is deprecated. Consider using v2 commands instead, see https://vitess.io/docs/reference/vreplication/v2/ ***
+*** SwitchReads is deprecated. Consider using v2 commands instead, see https://vitess.io/docs/reference/vreplication/ ***
 Dry Run results for SwitchReads run at 02 Jan 06 15:04 MST
 Parameters: -tablet_type=replica -dry_run sourcekeyspace.workflowname_reverse
 

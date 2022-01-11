@@ -23,7 +23,7 @@ to the database while running the dump.
 
 ### mysqldump
 
-The default invocation of `mysqldump` attempts to execute statements which are [not supported by Vitess](../../../reference/mysql-compatibility/), such as attempting to lock tables and dump GTID coordinates. The following options are required when using the `mysqldump` binary from MySQL 5.7 to export data from the `commerce` keyspace:
+The default invocation of `mysqldump` attempts to execute statements which are [not supported by Vitess](../../../reference/compatibility/mysql-compatibility/), such as attempting to lock tables and dump GTID coordinates. The following options are required when using the `mysqldump` binary from MySQL 5.7 to export data from the `commerce` keyspace:
 
 * `--lock-tables=off`: VTGate currently prohibits the syntax `LOCK TABLES` and `UNLOCK TABLES`.
 * `--set-gtid-purged=OFF`: `mysqldump` attemps to dump GTID coordinates of a server, but in the case of VTGate this does not make sense since it could be routing to multiple servers.

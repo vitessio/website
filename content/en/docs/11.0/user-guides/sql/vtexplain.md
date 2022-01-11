@@ -6,13 +6,13 @@ aliases: ['/docs/user-guides/vtexplain/']
 
 # Introduction 
 
-This document covers the way Vitess executes a particular SQL statement using the [VTExplain tool](../../../reference/vtexplain). This tool works similarly to the MySQL `EXPLAIN` statement.
+This document covers the way Vitess executes a particular SQL statement using the [VTExplain tool](../../../reference/programs/vtexplain). This tool works similarly to the MySQL `EXPLAIN` statement.
 
 ## Prerequisites
 
 You can find a prebuilt binary version of the VTExplain tool in [the most recent release of Vitess](https://github.com/vitessio/vitess/releases/).
 
-You can also build the `vtexplain` binary in your environment. To build this binary, refer to the [Build From Source](../../../contributing/build-from-source) guide.
+You can also build the `vtexplain` binary in your environment. TTo build this binary, refer to the [build guide](../../../contributing) for your OS.
 
 ## Overview
 
@@ -48,7 +48,7 @@ CREATE TABLE users_name_idx(
 
 ## 2. Identify a VSchema for the statement's source tables
 
-Next, identify a [VSchema](../../../concepts/vschema) that contains the [Vindexes](../../../reference/vindexes) for the tables in the statement.
+Next, identify a [VSchema](../../../concepts/vschema) that contains the [Vindexes](../../../reference/features/vindexes) for the tables in the statement.
 
 ### The VSchema must use a keyspace name.
 
@@ -294,5 +294,5 @@ SELECT * FROM users WHERE id IN (10, 17, 42, 100000)
 
 ## See also
 
-* For detailed configuration options for VTExplain, see the [VTExplain syntax reference](../../../reference/vtexplain).
+* For detailed configuration options for VTExplain, see the [VTExplain syntax reference](../../../reference/programs/vtexplain).
 

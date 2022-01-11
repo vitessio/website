@@ -339,4 +339,4 @@ SELECT * FROM users WHERE id IN (10, 17, 42, 1000)
 
 ## See also
 
-* For detailed configuration options for VTExplain, see the [VTExplain syntax reference](../../../reference/vtexplain).
+* For detailed configuration options for VTExplain, see the [VTExplain syntax reference](../../../reference/programs/vtexplain).
