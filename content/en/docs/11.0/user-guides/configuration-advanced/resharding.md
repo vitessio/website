@@ -10,7 +10,7 @@ This guide follows on from the Get Started guides. Please make sure that you hav
 
 ## Preparation
 
-[Resharding](../../../concepts/shard) enables you to both _initially shard_ and reshard tables so that your keyspace is partitioned across several underlying [tablets](../../../concepts/tablet). A sharded keyspace has some additional restrictions on both [query syntax](../../../reference/mysql-compatibility) and features such as `auto_increment`, so it is helpful to plan out a reshard operation diligently. However, you can always _reshard again_ if your sharding scheme turns out to be suboptimal.
+[Resharding](../../../concepts/shard) enables you to both _initially shard_ and reshard tables so that your keyspace is partitioned across several underlying [tablets](../../../concepts/tablet). A sharded keyspace has some additional restrictions on both [query syntax](../../../reference/compatibility/mysql-compatibility) and features such as `auto_increment`, so it is helpful to plan out a reshard operation diligently. However, you can always _reshard again_ if your sharding scheme turns out to be suboptimal.
 
 Using our example commerce and customer keyspaces, lets work through the two most common issues.
 
