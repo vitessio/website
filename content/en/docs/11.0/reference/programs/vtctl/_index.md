@@ -76,9 +76,9 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 | [RebuildKeyspaceGraph](../vtctl/keyspaces#rebuildkeyspacegraph) | `RebuildKeyspaceGraph  [-cells=c1,c2,...] <keyspace> ...` |
 | [ValidateKeyspace](../vtctl/keyspaces#validatekeyspace) | `ValidateKeyspace  [-ping-tablets] <keyspace name>` |
 | [Reshard (v1)](../../vreplication/v1/reshard) | `Reshard  -v1 [-skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>` |
-| [Reshard (v2)](../../vreplication/v2/reshard) | `Reshard <options> <action> <workflow identifier>` |
+| [Reshard (v2)](../../vreplication/reshard) | `Reshard <options> <action> <workflow identifier>` |
 | [MoveTables (v1)](../../vreplication/v1/movetables) | `MoveTables  -v1 [-cell=<cell>] [-tablet_types=<source_tablet_types>] -workflow=<workflow> <source_keyspace> <target_keyspace> <table_specs>` |
-| [MoveTables (v2)](../../vreplication/v2/movetables) | `MoveTables  <options> <action> <workflow identifier>` |
+| [MoveTables (v2)](../../vreplication/movetables) | `MoveTables  <options> <action> <workflow identifier>` |
 | [DropSources](../../vreplication/v1/dropsources) | `DropSources  [-dry_run] <keyspace.workflow>` |
 | [CreateLookupVindex](../vtctl/keyspaces#createLookupvindex) | `CreateLookupVindex  [-cell=<cell>] [-tablet_types=<source_tablet_types>] <keyspace> <json_spec>` |
 | [ExternalizeVindex](../vtctl/keyspaces#externalizevindex) | `ExternalizeVindex  <keyspace>.<vindex>` |

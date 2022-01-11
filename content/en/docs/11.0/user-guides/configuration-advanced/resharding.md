@@ -190,7 +190,7 @@ vtctlclient Reshard -source_shards '0' -target_shards '-80,80-' Create customer.
 vtctlclient Reshard -source_shards '-' -target_shards '-80,80-' Create customer.cust2cust
 ```
 
-All of the command options and parameters for `Reshard` are listed in our [reference page for Reshard](../../../reference/vreplication/v2/reshard).
+All of the command options and parameters for `Reshard` are listed in our [reference page for Reshard](../../../reference/vreplication/reshard).
 
 ## Validate Correctness
 
