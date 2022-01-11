@@ -8,7 +8,7 @@ aliases: ['/docs/reference/row-based-replication/','/docs/reference/vitess-repli
 Vitess requires the use of Row-Based Replication with GTIDs enabled. In addition, Vitess only supports the default `binlog_row_image` of `FULL`.
 {{< /warning >}}
 
-Vitess makes use of MySQL Replication for both high availability and to receive a feed of changes to database tables. This feed is then used in features such as [VReplication](../vreplication), and to identify schema changes so that caches can be updated.
+Vitess makes use of MySQL Replication for both high availability and to receive a feed of changes to database tables. This feed is then used in features such as [VReplication](../../vreplication), and to identify schema changes so that caches can be updated.
 
 ## Semi-Sync
 

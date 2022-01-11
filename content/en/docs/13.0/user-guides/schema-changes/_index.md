@@ -50,7 +50,7 @@ The cycle of schema changes, from idea to production, is complex, involves multi
 11. Notify user: let the developer know their changes are now in production.
 12. Deploy & merge: the developer completes their process.
 
-Steps `4` - `10` are tightly coupled with the database or with the infrastrcture around the database.
+Steps `4` - `10` are tightly coupled with the database or with the infrastructure around the database.
 
 ## Schema change and Vitess
 
@@ -71,11 +71,11 @@ When using either managed schema changes, or direct schema changes via `vtctl` o
 
 ### Schedule
 
-In managed, online schema changes, Vitess owns and tracks all pending and active migrations. As a rule of thumb, it is generally advisable to only run one online schema change at a time on a given server. Following that rule of thumb, Vitess will by default queue incoming schema change requests and schedule them to run sequentially. There are cases for concurrent execution, and Vitess is able to run some types of migrations concurrently. See [concurrent migrations](../concurrent-migrations/).
+In managed, online schema changes, Vitess owns and tracks all pending and active migrations. As a rule of thumb, it is generally advisable to only run one online schema change at a time on a given server. Following that rule of thumb, Vitess will by default queue incoming schema change requests and schedule them to run sequentially. There are cases for concurrent execution, and Vitess is able to run some types of migrations concurrently. See [concurrent migrations](../schema-changes/concurrent-migrations/).
 
 ### Execute
 
-In managed, online schema changes, Vitess owns the execution of `gh-ost` or `pt-online-schema-change`. While these run in the background, Vitess keeps track of the migratoin state.
+In managed, online schema changes, Vitess owns the execution of `gh-ost` or `pt-online-schema-change`. While these run in the background, Vitess keeps track of the migration state.
 
 In direct schema changes via `vtctl` or `vtgate`, Vitess issues a synchronous `ALTER TABLE` statement on the relevant shards.
 
