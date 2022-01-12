@@ -236,7 +236,7 @@ Start a Resharding process. Example: Reshard -cells='zone1,alias1' -tablet_types
 #### Notes
 
 * The <code>v1</code> argument is required in Vitess 11.0 and later
-* This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/v2) in Vitess 11.0 and later
+* This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/reshard) in Vitess 11.0 and later
 
 ### Reshard (v2)
 
@@ -253,7 +253,7 @@ Move table(s) to another keyspace, table_specs is a list of tables or the tables
 #### Notes
 
 * The <code>v1</code> argument is required in Vitess 11.0 and later
-* This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/v2) in Vitess 11.0 and later
+* This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/movetables) in Vitess 11.0 and later
 
 ## MoveTables (v2)
 
@@ -270,7 +270,7 @@ After a MoveTables or Resharding workflow cleanup unused artifacts like source t
 
 #### Notes
 
-* This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/v2) in Vitess 11.0 and later
+* This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/complete) in Vitess 11.0 and later
 
 ### CreateLookupVindex
 
@@ -411,7 +411,7 @@ Switch read traffic for the specified workflow.
 
 #### Notes
 
-* This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/v2) in Vitess 11.0 and later
+* This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/switchtraffic) in Vitess 11.0 and later
 
 ### SwitchWrites
 
@@ -422,7 +422,7 @@ Switch write traffic for the specified workflow.
 
 #### Notes
 
-* This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/v2) in Vitess 11.0 and later
+* This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/switchtraffic) in Vitess 11.0 and later
 
 ### CancelResharding
 

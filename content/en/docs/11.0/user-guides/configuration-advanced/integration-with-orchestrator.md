@@ -8,7 +8,7 @@ aliases: ['/docs/user-guides/integration-with-orchestrator/']
 
 For the most part, Vitess is agnostic to the actions of Orchestrator, which operates below Vitess at the MySQL level. That means you can pretty much [set up Orchestrator](https://github.com/github/orchestrator/wiki/Orchestrator-Manual) in the normal way, with just a few additions as described below.
 
-For the [Kubernetes](../../../get-started/kubernetes) example, we provide a sample script to launch Orchestrator for you with these settings applied.
+For the [Kubernetes](../../../get-started/operator) example, we provide a sample script to launch Orchestrator for you with these settings applied.
 
 ## Orchestrator configuration
 
