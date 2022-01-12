@@ -5,7 +5,7 @@ weight: 10
 ---
 
 {{< info >}}
-Starting with Vitess 11.0 you should use the [VReplication v2 commands](../../v2)
+Starting with Vitess 11.0 you should use the [VReplication v2 commands](../../movetables)
 {{< /info >}}
 
 ### Command
@@ -181,16 +181,16 @@ to Vitess with the ability to migrate back at any time without any risk. You poi
 spin up an unsharded Vitess cluster and use a MoveTables workflow to start serving some tables from Vitess. You can also go
 further and use a Reshard workflow to experiment with a sharded version of a part of your database.
 
-See [user guide](../../../../../docs/user-guides/configuration-advanced/unmanaged-tablet/#move-legacytable-to-the-commerce-keyspace) for detailed steps
+See [user guide](../../../../user-guides/configuration-advanced/unmanaged-tablet/#move-legacytable-to-the-commerce-keyspace) for detailed steps
 
 #### Vertical Sharding
 
 For existing Vitess users you can easily move one or more tables to another keyspace, either for balancing load or
 as preparation for sharding your tables.
 
-See [user guide](../../../../../docs/user-guides/migration/move-tables/) which describes how MoveTables works in the local example provided
+See [user guide](../../../../user-guides/migration/move-tables/) which describes how MoveTables works in the local example provided
 in the Vitess repo.
 
 #### More Reading
 
-* [MoveTables in practice](../../../../../docs/concepts/move-tables/)
+* [MoveTables in practice](../../../../concepts/move-tables/)
