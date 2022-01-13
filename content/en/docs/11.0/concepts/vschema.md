@@ -2,7 +2,7 @@
 title: VSchema
 ---
 
-A [VSchema](../../reference/vschema) allows you to describe how data is organized within keyspaces and shards. This information is used for routing queries, and also during resharding operations.
+A [VSchema](../../reference/features/vschema) allows you to describe how data is organized within keyspaces and shards. This information is used for routing queries, and also during resharding operations.
 
 For a Keyspace, you can specify if it's sharded or not. For sharded keyspaces, you can specify the list of vindexes for each table.
 

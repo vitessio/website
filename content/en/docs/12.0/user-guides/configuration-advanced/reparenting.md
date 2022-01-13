@@ -60,7 +60,7 @@ The `EmergencyReparentShard` command is used to force a reparent to a new primar
 
 As such, this command does not rely on the current primary at all to replicate data to the new primary. Instead, it makes sure that the primary-elect is the most advanced in replication within all of the available replicas.
 
-**Important**: Before calling this command, you must first identify the replica with the most advanced replication position as that replica must be designated as the new primary. You can use the [`vtctl ShardReplicationPositions`](../../../reference/vtctl/#shardreplicationpositions) command to determine the current replication positions of a shard's replicas.
+**Important**: Before calling this command, you must first identify the replica with the most advanced replication position as that replica must be designated as the new primary. You can use the [`vtctl ShardReplicationPositions`](../../../reference/programs/vtctl/#shardreplicationpositions) command to determine the current replication positions of a shard's replicas.
 
 This command performs the following actions:
 
@@ -72,7 +72,7 @@ This command performs the following actions:
 
 ## External Reparenting
 
-External reparenting occurs when another tool handles the process of changing a shard's primary tablet. After that occurs, the tool needs to call the [`vtctl TabletExternallyReparented`](../../../reference/vtctl/#tabletexternallyreparented) command to ensure that the topology service, replication graph, and serving graph are updated accordingly.
+External reparenting occurs when another tool handles the process of changing a shard's primary tablet. After that occurs, the tool needs to call the [`vtctl TabletExternallyReparented`](../../../reference/programs/vtctl/#tabletexternallyreparented) command to ensure that the topology service, replication graph, and serving graph are updated accordingly.
 
 That command performs the following operations:
 
