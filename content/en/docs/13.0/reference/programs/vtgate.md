@@ -36,11 +36,11 @@ The following global options apply to `vtgate`:
 | -allowed_tablet_types | value | Specifies the tablet types this vtgate is allowed to route queries to |
 | -alsologtostderr | boolean | log to standard error as well as files |
 | -buffer_drain_concurrency | int | Maximum number of requests retried simultaneously. More concurrency will increase the load on the PRIMARY vttablet when draining the buffer. (default 1) |
-| -buffer_implementation | string | The algorithm used for managing request buffering during cluster availability events (allowed values: "healthcheck" (default), "keyspace_events") |
+| -buffer_implementation | string | The algorithm used for managing request buffering during cluster availability events (allowed values: "keyspace_events" (default), "healthcheck" (legacy value)) |
 | -buffer_keyspace_shards | string | If not empty, limit buffering to these entries (comma separated). Entry format: keyspace or keyspace/shard. Requires --enable_buffer=true. |
 | -buffer_max_failover_duration | duration | Stop buffering completely if a failover takes longer than this duration. (default 20s) |
 | -buffer_min_time_between_failovers | duration | Minimum time between the end of a failover and the start of the next one (tracked per shard). Faster consecutive failovers will not trigger buffering. (default 1m0s) |
-| -buffer_size | int | Maximum number of buffered requests in flight (across all ongoing failovers). (default 10) |
+| -buffer_size | int | Maximum number of buffered requests in flight (across all ongoing failovers). (default 1000) |
 | -buffer_window | duration | Duration for how long a request should be buffered at most. (default 10s) |
 | -cell | string | cell to use (default "test_nj") |
 | -cells_to_watch | string | comma-separated list of cells for watching tablets |
@@ -196,5 +196,3 @@ The following global options apply to `vtgate`:
 
 * -srv_topo_cache_ttl: There may be instances where you will need to increase the cached TTL from the default of 1 second to a higher number:
 	* You may want to increase this option if you see that your topo leader goes down and keeps your queries waiting for a few seconds
-
-

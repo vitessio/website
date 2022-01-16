@@ -21,6 +21,6 @@ Capture) process downstream from your Vitess datastore.
 
 For reference, please refer to the diagram below:
 
-![VStream diagram](../img/VStream.svg)
+![VStream diagram](/img/VStream.svg)
 
 Note: A VStream is distinct from a VStreamer. The former is located on the VTGate and the latter is located on the VTTablet.

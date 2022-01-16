@@ -9,8 +9,8 @@ This user guide describes the problem space of schema changes and the various ap
 
 Quick links:
 
-- Vitess supports EXPERIMENTAL [managed, online schema changes](../managed-online-schema-changes/) via `gh-ost` or `pt-online-schema-change`, and with visibility and control over the migration process
-- Multiple approaches to [unmanaged schema changes](../unmanaged-schema-changes/), either blocking, or owned by the user/DBA.
+- Vitess supports EXPERIMENTAL [managed, online schema changes](../schema-changes/managed-online-schema-changes/) via `gh-ost` or `pt-online-schema-change`, and with visibility and control over the migration process
+- Multiple approaches to [unmanaged schema changes](../schema-changes/unmanaged-schema-changes/), either blocking, or owned by the user/DBA.
 
 Some background on schema changes follows.
 
@@ -50,7 +50,7 @@ The cycle of schema changes, from idea to production, is complex, involves multi
 11. Notify user: let the developer know their changes are now in production.
 12. Deploy & merge: the developer completes their process.
 
-Steps `4` - `10` are tightly coupled with the database or with the infrastrcture around the database.
+Steps `4` - `10` are tightly coupled with the database or with the infrastructure around the database.
 
 ## Schema change and Vitess
 
@@ -58,7 +58,7 @@ Vitess solves or automates multiple parts of the flow:
 
 ### Formalize
 
-In [managed, online schema changes](../managed-online-schema-changes/) the user supplies a valid SQL `ALTER TABLE` statement, and Vitess generates the `gh-ost` or `pt-online-schema-change` command line invocation. It will also auto generate config files and set up the environment for those tools. This is hidden from the user.
+In [managed, online schema changes](../schema-changes/managed-online-schema-changes/) the user supplies a valid SQL `ALTER TABLE` statement, and Vitess generates the `gh-ost` or `pt-online-schema-change` command line invocation. It will also auto generate config files and set up the environment for those tools. This is hidden from the user.
 
 ### Locate
 
@@ -71,11 +71,11 @@ When using either managed schema changes, or direct schema changes via `vtctl` o
 
 ### Schedule
 
-In managed, online schema changes, Vitess owns and tracks all pending and active migrations. As a rule of thumb, it is generally advisable to only run one online schema change at a time on a given server. Following that rule of thumb, Vitess will queue incoming schema change requests and schedule them to run sequentially.
+In managed, online schema changes, Vitess owns and tracks all pending and active migrations. As a rule of thumb, it is generally advisable to only run one online schema change at a time on a given server. Following that rule of thumb, Vitess will by default queue incoming schema change requests and schedule them to run sequentially. There are cases for concurrent execution, and Vitess is able to run some types of migrations concurrently. See [concurrent migrations](../schema-changes/concurrent-migrations/).
 
 ### Execute
 
-In managed, online schema changes, Vitess owns the execution of `gh-ost` or `pt-online-schema-change`. While these run in the background, Vitess keeps track of the migratoin state.
+In managed, online schema changes, Vitess owns the execution of `gh-ost` or `pt-online-schema-change`. While these run in the background, Vitess keeps track of the migration state.
 
 In direct schema changes via `vtctl` or `vtgate`, Vitess issues a synchronous `ALTER TABLE` statement on the relevant shards.
 
@@ -101,4 +101,4 @@ Vitess allows a variety of approaches to schema changes, from fully automated to
 - Direct, blocking ALTERs are generally impractical in production given that they can block writes for substantial lengths of time.
 - User controlled migrations are allowed, and under the user's responsibility.
 
-See breakdown in [managed, online schema changes](../managed-online-schema-changes/) and in [unmanaged schema changes](../unmanaged-schema-changes/).
+See breakdown in [managed, online schema changes](../schema-changes/managed-online-schema-changes/) and in [unmanaged schema changes](../schema-changes/unmanaged-schema-changes/).

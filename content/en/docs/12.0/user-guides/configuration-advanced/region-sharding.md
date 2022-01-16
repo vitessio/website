@@ -10,7 +10,7 @@ This guide follows on from the Get Started guides. Please make sure that you hav
 
 ## Preparation
 
-Having gone through the Resharding tutorial, you should be familiar with [VSchema](../../../concepts/vschema) and [Vindexes](../../../reference/vindexes).
+Having gone through the Resharding tutorial, you should be familiar with [VSchema](../../../concepts/vschema) and [Vindexes](../../../reference/features/vindexes).
 In this tutorial, we will perform resharding on an existing keyspace using a location-based vindex. We will create 4 shards (-40, 40-80, 80-c0, c0-).
 The location will be denoted by a `country` column.
 

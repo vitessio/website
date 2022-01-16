@@ -1,7 +1,7 @@
 ---
 title: Presentations and Videos
 weight: 1
-aliases: ['/resources/presentations.html']
+aliases: ['/resources/presentations.html', '/docs/resources/presentations/']
 ---
 
 ## KubeCon NA 2021
@@ -288,7 +288,7 @@ Please note the Vitess on Kubernetes deployment templates were removed as of Feb
 
 ## Oracle OpenWorld 2015
 
-Vitess team member [Anthony Yeh](https://github.com/enisoc)'s talk at Oracle OpenWorld 2015 focused on what the [Cloud Native Computing](http://cncf.io) paradigm means when applied to MySQL in the cloud. The talk also included a deep dive into [transparent, live resharding](../../sharding), one of the key
+Vitess team member [Anthony Yeh](https://github.com/enisoc)'s talk at Oracle OpenWorld 2015 focused on what the [Cloud Native Computing](http://cncf.io) paradigm means when applied to MySQL in the cloud. The talk also included a deep dive into [transparent, live resharding](../../reference/features/sharding/), one of the key
 features of Vitess that makes it well-adapted for a Cloud Native environment.
 
 {{< pdf src="/ViewerJS/#../files/openworld-2015-vitess.pdf" >}}

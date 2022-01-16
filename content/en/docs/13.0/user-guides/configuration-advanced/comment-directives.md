@@ -34,7 +34,7 @@ As indicated by the comment name (QUERY_TIMEOUT_MS), this timeout is in millisec
 
 ## Multi-shard Autocommit (`MULTI_SHARD_AUTOCOMMIT`)
 
-Using this in, for example, an insert statement will cause individual shard autocommit to be used for the shards where the rows for the insert are routed. This means that if one of the individual shard inserts fails, it will not be possible to roll back the inserts on all the other shards. This is the default behavior. A helpful way to think of this is as best-effort cross-shard writes, with the application being responsible for repairs in the case of errors. For an example, read our [Shard Isolation and Atomicity guide](../../shard-isolation-atomicity/#method-1--the-naive-way).
+Using this in, for example, an insert statement will cause individual shard autocommit to be used for the shards where the rows for the insert are routed. This means that if one of the individual shard inserts fails, it will not be possible to roll back the inserts on all the other shards. This is the default behavior. A helpful way to think of this is as best-effort cross-shard writes, with the application being responsible for repairs in the case of errors. For an example, read our [Shard Isolation and Atomicity guide](../../configuration-advanced/shard-isolation-atomicity/#method-1--the-naive-way).
 
 ## Skip query plan cache (`SKIP_QUERY_PLAN_CACHE`)
 

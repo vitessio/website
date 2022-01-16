@@ -8,7 +8,7 @@ aliases: ['/docs/user-guides/integration-with-orchestrator/']
 
 For the most part, Vitess is agnostic to the actions of Orchestrator, which operates below Vitess at the MySQL level. That means you can pretty much [set up Orchestrator](https://github.com/github/orchestrator/wiki/Orchestrator-Manual) in the normal way, with just a few additions as described below.
 
-For the [Kubernetes](../../../get-started/kubernetes) example, we provide a sample script to launch Orchestrator for you with these settings applied.
+For the [Kubernetes](../../../get-started/operator) example, we provide a sample script to launch Orchestrator for you with these settings applied.
 
 ## Orchestrator configuration
 
@@ -23,7 +23,7 @@ Orchestrator needs to know some things from the Vitess side, like the tablet ali
 
 Vitess also needs to know the identity of the primary for each shard. This is necessary in case of a failover.
 
-It is important to ensure that orchestrator has access to `vtctlclient` so that orchestrator can trigger the change in topology via the [`TabletExternallyReparented`](../../../reference/vtctl/#tabletexternallyreparented) command.
+It is important to ensure that orchestrator has access to `vtctlclient` so that orchestrator can trigger the change in topology via the [`TabletExternallyReparented`](../../../reference/programs/vtctl/#tabletexternallyreparented) command.
 
 ``` json
 "PostMasterFailoverProcesses": [
