@@ -91,7 +91,7 @@ The use case and workflow is as follows:
 Consider the following example. We run a 5 hour long migration to drop an index:
 
 ```sh
-$ vtctlclient ApplySchema -skip_preflight -ddl_strategy='online -singleton-context' -sql "alter table customer drop index joined_timestamp_idx" commerce
+$ vtctlclient ApplySchema -skip_preflight -ddl_strategy='online' -sql "alter table customer drop index joined_timestamp_idx" commerce
 29231906_776f_11ec_a656_0a43f95f28a3
 ```
 
