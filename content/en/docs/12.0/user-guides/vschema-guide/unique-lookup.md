@@ -16,7 +16,7 @@ Vitess supports the concept of lookup vindexes, also known as cross-shard indexe
 This lookup table can be created in any keyspace, and it may or may not be sharded. In this particular case, we are going to create the table in the unsharded product keyspace even though the lookup vindex itself is going to be in the `customer` keyspace:
 
 ```sql
-create table corder_keyspace_idx(corder_id bigint not null auto_increment, keyspace_id varbinary(10), primary key(corder_id));
+create table corder_keyspace_idx(corder_id bigint, keyspace_id varbinary(10), primary key(corder_id));
 ```
 
 The primary key is `corder_id`. The unique constraint on `corder_id` makes the Lookup Vindex unique: for a given `corder_id` as input, at most one `keyspace_id` can be produced. It is not necessary to name the column as `corder_id`, but it is less confusing to do so.
