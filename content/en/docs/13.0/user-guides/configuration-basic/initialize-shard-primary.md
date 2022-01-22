@@ -7,6 +7,8 @@ The [PlannedReparentShard](../../configuration-advanced/reparenting/#plannedrepa
 
 The InitShardPrimary step can also be used to do the same operation. However, it is a destructive command and should only be used by advanced users. This command copies over the `executed_gtid_set` from the primary to the replica which can break replication if the user isn't careful. 
 
+InitShardPrimary must be used in case the users are using a custom `init_db.sql` file in their setup which creates errant GTIDs on the vttablets. If the users have `SET sql_log_bin = 0` in the beginning of their file (like in the example `init_db.sql` file), then PlannedReparentShard will work as expected and it should be used.
+
 The command for `InitShardPrimary` is as follows:
 
 ```text
