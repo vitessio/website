@@ -4,7 +4,7 @@ weight: 2
 featured: true
 ---
 
-Vitess deploys, scales and manages clusters of open-source SQL database instances. Currently, Vitess supports the [MySQL](https://www.mysql.com/), [Percona](https://www.percona.com/software/mysql-database/percona-server) and [MariaDB](https://mariadb.org) databases.
+Vitess deploys, scales and manages clusters of open-source SQL database instances. Currently, Vitess supports the [MySQL](https://www.mysql.com/), [Percona Server for MySQL](https://www.percona.com/software/mysql-database/percona-server), and to a limited extent [MariaDB](https://mariadb.org) databases.
 
 The [VTGate](../../concepts/vtgate/) proxy server advertises its version as MySQL 5.7.
 
@@ -14,13 +14,17 @@ Vitess supports the core features of MySQL versions 5.6 to 8.0, with [some limit
 
 With MySQL 5.6 reaching end of life in February 2021, it is recommended to deploy MySQL 5.7 and later.
 
+{{< info >}}For new Vitess installations, MySQL or Percona Server for MySQL version 8 are recommended.{{< /info >}}
+
 {{< warning >}}
 MySQL and Percona 5.6 are no longer supported in Vitess 13.0 and later
 {{< /warning >}}
 
 ## MariaDB versions 10.0 to 10.3
 
-Vitess supports the core features of MariaDB versions 10.0 to 10.3. Vitess [does not yet](https://github.com/vitessio/vitess/issues/5362) support version 10.4 of MariaDB.
+Vitess supports the core features of MariaDB versions 10.0 to 10.3. Vitess [does not yet](https://github.com/vitessio/vitess/issues/5362) support later versions of MariaDB.
+
+{{< warning >}}MariaDB support is likely to end in the future. You can view and comment on [the relevant proposal here](https://github.com/vitessio/vitess/issues/9518).{{< /warning >}}
 
 ## See also
 
