@@ -139,6 +139,7 @@ watchReplication: false                  # watch_replication_stream
 terseErrors: false                       # queryserver-config-terse-errors
 messagePostponeParallelism: 4            # queryserver-config-message-postpone-cap
 cacheResultFields: true                  # enable-query-plan-field-caching
+sanitizeLogMessages: false               # sanitize_log_messages
 
 
 # The following flags are currently not supported.
