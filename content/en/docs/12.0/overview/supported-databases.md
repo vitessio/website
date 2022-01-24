@@ -12,12 +12,10 @@ The [VTGate](../../concepts/vtgate/) proxy server advertises its version as MySQ
 
 Vitess supports the core features of MySQL versions 5.6 to 8.0, with [some limitations](../../reference/compatibility/mysql-compatibility/). Vitess also supports [Percona Server for MySQL](https://www.percona.com/software/mysql-database/percona-server) versions 5.6 to 8.0.
 
-With MySQL 5.6 reaching end of life in February 2021, it is recommended to deploy MySQL 5.7 and later.
-
 {{< info >}}For new Vitess installations, MySQL or Percona Server for MySQL version 8 are recommended.{{< /info >}}
 
 {{< warning >}}
-MySQL and Percona 5.6 are no longer supported in Vitess 13.0 and later
+MySQL and Percona Server for MySQL 5.6 are no longer supported in Vitess 13.0 and later.
 {{< /warning >}}
 
 ## MariaDB versions 10.0 to 10.3
