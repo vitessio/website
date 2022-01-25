@@ -123,7 +123,7 @@ The following global options apply to `vtgate`:
 | -mysql_server_ssl_ca | string | Path to ssl CA for mysql server plugin SSL. If specified, server will require and validate client certs. |
 | -mysql_server_ssl_cert | string | Path to the ssl cert for mysql server plugin SSL |
 | -mysql_server_ssl_key | string | Path to ssl key for mysql server plugin SSL |
-| -mysql_server_version | string | MySQL server version to advertise. (default "5.7.9-Vitess") |
+| -mysql_server_version | string | MySQL server version to advertise. |
 | -mysql_server_write_timeout | duration | connection write timeout |
 | -mysql_slow_connect_warn_threshold | duration | Warn if it takes more than the given threshold for a mysql connection to establish |
 | -mysql_tcp_version | string | Select tcp, tcp4, or tcp6 to control the socket type. (default "tcp") |

@@ -89,8 +89,8 @@ The following global options apply to `vttablet`:
 | -db_appdebug_password | string | db appdebug password |
 | -db_appdebug_use_ssl |  | Set this flag to false to make the appdebug connection to not use ssl (default true) |
 | -db_appdebug_user | string | db appdebug user userKey (default "vt_appdebug") |
-| -db_charset | string | Character set. Only utf8(mb3/mb4) or latin1 based character sets are supported. |
-| -db_collation | string | Collation to use between VTTablet and VTGate and MySQL. If this flag is not defined, the default collation of -db_charset will be used. |
+| -db_charset | string | Sets the character set. utf8mb4 is the only supported connection charset. This flag will be deprecated in future releases. |
+| -db_collation | string | Collation to use between VTTablet and VTGate and MySQL. If this flag is not defined, the default collation of the current mysql_server_version will be used. |
 | -db_connect_timeout_ms | int | connection timeout to mysqld in milliseconds (0 for no timeout) |
 | -db_dba_password | string | db dba password |
 | -db_dba_use_ssl |  | Set this flag to false to make the dba connection to not use ssl (default true) |
@@ -212,6 +212,7 @@ The following global options apply to `vttablet`:
 | -mysql_auth_static_reload_interval | duration | Ticker to reload credentials |
 | -mysql_clientcert_auth_method | string | client-side authentication method to use. Supported values: mysql_clear_password, dialog. (default "mysql_clear_password") |
 | -mysql_server_flush_delay | duration | Delay after which buffered response will flushed to client. (default 100ms) |
+| -mysql_server_version | string | MySQL server version to advertise. |
 | -mysqlctl_client_protocol | string | the protocol to use to talk to the mysqlctl server (default "grpc") |
 | -mysqlctl_mycnf_template | string | template file to use for generating the my.cnf file during server init |
 | -mysqlctl_socket | string | socket file to use for remote mysqlctl actions (empty for local actions) |
