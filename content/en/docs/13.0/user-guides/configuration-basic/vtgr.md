@@ -3,7 +3,7 @@ title: vtgr (experimental)
 weight: 10
 ---
 
-`vtgr` is a stateless orchestration compoment that integrates Vitess with MySQL group replication. It is available as an experimental feature. It still needs thorough testing, and more features need to be added.
+`vtgr` is a stateless orchestration compoment that integrates Vitess with MySQL group replication: it is responsible to bootstrap MySQL group and reconcile between the group and Vitess. It is available as an experimental feature. It still needs thorough testing, and more features need to be added.
 
 In order to configure `vtgr`, you have to make the following changes to `vttablet`:
 
