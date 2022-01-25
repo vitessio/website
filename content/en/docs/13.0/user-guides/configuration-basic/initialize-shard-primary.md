@@ -7,6 +7,10 @@ The [PlannedReparentShard](../../configuration-advanced/reparenting/#plannedrepa
 
 The InitShardPrimary step can also be used to do the same operation. However, it is a destructive command and should only be used by advanced users. This command copies over the `executed_gtid_set` from the primary to the replica which can break replication if the user isn't careful. 
 
+{{< info >}}
+If using a custom `init_db.sql` that omits `SET sql_log_bin = 0`, then InitShardPrimary must be used instead of PlannedReparentShard.
+{{< /info >}}
+
 The command for `InitShardPrimary` is as follows:
 
 ```text
