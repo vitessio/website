@@ -29,15 +29,17 @@ Lists all tablets in an awk-friendly way.
 
 #### Example
 
-<pre class="command-example">ListAllTablets &lt;cell name&gt;</pre>
+<pre class="command-example">ListAllTablets [-keyspace=''] [-tablet_type=&lt;primary,replica,rdonly,spare&gt;] [&lt;cell_name1&gt;,&lt;cell_name2&gt;,...]</pre>
 
 #### Arguments
 
-* <code>&lt;cell name&gt;</code> &ndash; Required. A cell is a location for a service. Generally, a cell resides in only one cluster. In Vitess, the terms "cell" and "data center" are interchangeable. The argument value is a string that does not contain whitespace.
+* <code>&lt;cell_name&gt;</code> &ndash; Optional. A cell is a location for a service. Generally, a cell resides in only one cluster. In Vitess, the terms "cell" and "data center" are interchangeable. The argument value is a string that does not contain whitespace. This allows you to request server side filtering to exlude tablets in cells not explicitly specified.
+* <code>keyspace</code> &ndash; Optional. A keyspace is a logical database. This allows you to request server side filtering to exlude tablets not in this keyspace.
+* <code>tablet_type</code> &ndash; Optional. A tablet type is one of PRIMARY,REPLICA,RDONLY,SPARE. This allows you to request server side filtering to exlude tablets not of this type.
 
 #### Errors
 
-* the <code>&lt;cell name&gt;</code> argument is required for the <code>&lt;ListAllTablets&gt;</code> command This error occurs if the command is not called with exactly one argument.
+* An error will be returned if you specify a non-existent cell or an invalid tablet type.
 
 ### ListTablets
 
