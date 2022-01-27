@@ -41,7 +41,7 @@ vtorc <topo_flags> \
 
 Bringing up `vtorc` should immediately cause a primary to be elected among the vttablets that have come up.
 
-The `vtorc` config supports a new `Durability` setting that can currently be set to `none`, `semi_sync` or `cross_cell`. The `semi_sync` setting is the equivalent to setting the vttablet’s `enable_semi_sync` flag, whereas `cross_cell` will ensure that a primary will acknowledge a commit only if a `replica` that is not in the current cell has received the binary logs.
+The `vtorc` config supports `Durability` setting. Look at [Durability Policies](../durability_policy) for more information on the possible durability policies.
 
 You can optionally add a `clusters_to_watch` flag that contains a comma separated list of keyspaces or `keyspace/shard` values. If specified, `vtorc` will manage only those clusters.
 
