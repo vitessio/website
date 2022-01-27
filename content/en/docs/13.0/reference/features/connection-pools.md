@@ -130,16 +130,14 @@ As a result, connection pools should be sized mindful of the capacity of the und
  
  ## `-enable_system_settings`
 
-This vtgate flag converts pool connections into reserved/dedicated session
-connections that live for the life of the vtgate session.  The pool is then
-refilled.  As such their lifecycle is outside of that of the usual pool
+This vtgate flag converts pool connections into [reserved/dedicated session connections](../../query-serving/reserved-conn/#enabling-reserved-connections) that live for the life of the vtgate session.  The pool is then refilled.  Thus their lifecycle is outside of that of the usual pool
 connections. As a result, the number of MySQL server connections used by
 vttablet may be significantly higher than expected from the pool settings if
 you have `-enable_system_settings` enabled.
 
 ## Calculating maximum db connections used by vttablet
 
-Formula for approximate maximum MySQL connections per vttablet instance:
+You can use the following formula to approximate the maximum MySQL connections per vttablet instance:
 ```
     -queryserver-config-transaction-cap x 2  (transaction_pool and found_rows_pool)
   + -queryserver-config-pool-size            (conn_pool)
@@ -152,6 +150,7 @@ Formula for approximate maximum MySQL connections per vttablet instance:
   + variable                                 (reserved connections used by `enable_system_settings`)
 ```
 
-Note that most servers will not use this many connections, since most
-workloads do not exercise all the pools.
+{{< info >}}
+Note that most servers will not use this many connections, since most workloads do not exercise all the pools.
+{{< /info >}}
    
