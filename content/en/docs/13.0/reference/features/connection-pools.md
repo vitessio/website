@@ -127,4 +127,30 @@ As a result, connection pools should be sized mindful of the capacity of the und
  If you are using a limited set of users, you may want to increase this limit.  
  Or disable this limit feature by setting `-transaction_limit_by_username` to `false` as the default is `true`.
  This option only comes into play if the TX limiter is enabled by `-enable_transaction_limit`, which it is not by default.
+ 
+ ## `-enable_system_settings`
+
+This vtgate flag converts pool connections into [reserved/dedicated session connections](../../query-serving/reserved-conn/#enabling-reserved-connections) that live for the life of the vtgate session.  The pool is then refilled.  Thus their lifecycle is outside of that of the usual pool
+connections. As a result, the number of MySQL server connections used by
+vttablet may be significantly higher than expected from the pool settings if
+you have `-enable_system_settings` enabled.
+
+## Calculating maximum db connections used by vttablet
+
+You can use the following formula to approximate the maximum MySQL connections per vttablet instance:
+```
+    -queryserver-config-transaction-cap x 2  (transaction_pool and found_rows_pool)
+  + -queryserver-config-pool-size            (conn_pool)
+  + -queryserver-config-stream-pool-size     (stream_conn_pool)
+  + -dba_pool_size                           (dba_conn_pool)
+  + -app_pool_size                           (app_conn_pool)
+  + 3                                        (tx_read_pool, hardcoded)
+  + 7                                        (online DDL)
+  + variable                                 (on demand:  for vreplication, MySQL replication, etc;  should < 10)
+  + variable                                 (reserved connections used by `enable_system_settings`)
+```
+
+{{< info >}}
+Note that most servers will not use this many connections, since most workloads do not exercise all the pools.
+{{< /info >}}
    
