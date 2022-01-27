@@ -9,6 +9,8 @@ PlanetScale provides a [Vitess Operator for Kubernetes](https://github.com/plane
 
 ## Prerequisites
 
+{{<info>}}Information on the versions of Kubernetes supported can be [found here](https://github.com/planetscale/vitess-operator#compatibility).{{</info>}}
+
 Before we get started, let’s get a few pre-requisites out of the way:
 
 1. Install [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) and start a Minikube engine:

@@ -9,44 +9,27 @@ PlanetScale provides a [Vitess Operator for Kubernetes](https://github.com/plane
 
 ## Prerequisites
 
-Before we get started, let’s get a few things out of the way:
+{{<info>}}Information on the versions of Kubernetes supported can be [found here](https://github.com/planetscale/vitess-operator#compatibility).{{</info>}}
 
-1. Install [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) and start a Minikube engine. We recommend using Kubernetes 1.14, as this is a common denominator across public clouds:
+Before we get started, let’s get a few pre-requisites out of the way:
+
+1. Install [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) and start a Minikube engine:
     ```bash
-    minikube start --kubernetes-version=v1.14.10 --cpus=8 --memory=11000 --disk-size=50g
+    minikube start --kubernetes-version=v1.19.16 --cpus=4 --memory=4000 --disk-size=32g
     ```
 
-    If you do not have a machine with 11GB of memory to spare, you could also consider using GKE instead. An equivalent setup can be deployed from the Cloud Shell with:
-    ```bash
-    gcloud container clusters create vitess --cluster-version 1.14 --zone us-east1-b --num-nodes 5
-    ```
+2. Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and ensure it is in your `PATH`.
 
-2. Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and ensure it is in your `PATH`. For example, on Linux:
+1. Install [the MySQL client](https://dev.mysql.com/doc/mysql-getting-started/en/) locally.
 
-    ```bash
-    curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.14.9/bin/linux/amd64/kubectl
-    ```
-
-1. Install the MySQL client locally. For example, on Ubuntu:
-
-    ```bash
-    apt install mysql-client
-    ```
-
-1. Install vtctlclient locally:
-
-    If you are familiar with Go development, the easiest way to do this is:
-    ```bash
-    go get vitess.io/vitess/go/cmd/vtctlclient
-    ```
-    If not, you can also [download the latest Vitess release](https://github.com/vitessio/vitess/releases) and extract `vtctlclient` from it.
+1. Install [vtctlclient](https://vitess.io/docs/get-started/local/#install-vitess) locally.
 
 ## Install the Operator
 
 Change to the operator example directory:
 
 ```bash
-git clone https://github.com/vitessio/vitess.git
+git clone git@github.com:vitessio/vitess.git
 cd vitess/examples/operator
 ```
 
