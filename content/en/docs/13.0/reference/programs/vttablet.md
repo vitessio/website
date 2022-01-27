@@ -89,8 +89,7 @@ The following global options apply to `vttablet`:
 | -db_appdebug_password | string | db appdebug password |
 | -db_appdebug_use_ssl |  | Set this flag to false to make the appdebug connection to not use ssl (default true) |
 | -db_appdebug_user | string | db appdebug user userKey (default "vt_appdebug") |
-| -db_charset | string | Sets the character set. utf8mb4 is the only supported connection charset. This flag will be deprecated in future releases. |
-| -db_collation | string | Collation to use between VTTablet and VTGate and MySQL. If this flag is not defined, the default collation of the current mysql_server_version will be used. |
+| -db_charset | string | Sets the character set for the connection. |
 | -db_connect_timeout_ms | int | connection timeout to mysqld in milliseconds (0 for no timeout) |
 | -db_dba_password | string | db dba password |
 | -db_dba_use_ssl |  | Set this flag to false to make the dba connection to not use ssl (default true) |
