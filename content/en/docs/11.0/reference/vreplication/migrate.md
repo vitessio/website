@@ -96,8 +96,8 @@ This is important as there is no reverse replication flow with Migrate. Any writ
 
 For Migrate to function properly, you will need to ensure communication is possible between the target Vitess cluster and the source Vitess cluster. At a minimum the following network concerns must be implemented:
 
-* Target vtctld/vttablet processes must reach the Source topo service.
-* Target vtctld/vttablet processes must reach EACH source vttablet's grpc port.
+* Target vtctld/vttablet (PRIMARY) processes must reach the Source topo service.
+* Target vtctld/vttablet (PRIMARY) processes must reach EACH source vttablet's grpc port.
     * You can limit your source vttablet's to just the replicas by using the `-tablet_types` option when creating the migration. 
 
 If you're migrating a keyspace from a production system, you may want to target a replica to reduce your load on the primary vttablets. This will also assist you in reducing the number of network considerations you need to make. 
