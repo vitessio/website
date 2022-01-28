@@ -21,6 +21,11 @@ Mount is used to link external vitess clusters to the current cluster. (In the f
 
 Mounting vitess clusters requires the topology information of the external cluster to be specified. Used in conjunction with [the Migrate command](../migrate).
 
+{{< info >}}
+No validation is performed when using the Mount command. You must ensure your values are correct, or you may get errors when initializing a migration.
+{{< /info >}}
+
+
 ### Parameters
 
 #### cluster_name
