@@ -69,6 +69,21 @@ If set to false these reverse replication streams will not be created and you wi
 
 </div>
 
+#### -max_transaction_lag_allowed
+**optional**\
+**default**  the value used for `-timeout`
+
+<div class="cmd">
+
+While switching traffic ensure that the VReplication lag for the workflow is less than this duration, otherwise
+report an error and don't switch. VReplication lag is the estimated maximum lag across workflow streams between the last event seen at the source and the event processed by the target. Usually, when VReplication has caught up, this should be very small (under a second).
+
+While switching write traffic, we temporarily make the source databases read-only, and wait for the targets to catchup. The application will be down for this time: writes will error out. While switching write traffic, this flag can ensure that you only switch traffic if the current lag is small limiting downtime.
+
+This can also be useful if only reads are being switched: if the lag is too high the app might be reading stale data.
+
+</div>
+
 #### -dry-run
 **optional**\
 **default** false
