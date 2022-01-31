@@ -75,20 +75,7 @@ Outputs a JSON structure that contains information about the Tablet.
 
 ### IgnoreHealthError
 
-Sets the regexp for health check errors to ignore on the specified tablet. The pattern has implicit ^$ anchors. Set to empty string or restart vttablet to stop ignoring anything.
-
-#### Example
-
-<pre class="command-example">IgnoreHealthError &lt;tablet alias&gt; &lt;ignore regexp&gt;</pre>
-
-#### Arguments
-
-* <code>&lt;tablet alias&gt;</code> &ndash; Required. A Tablet Alias uniquely identifies a vttablet. The argument value is in the format <code>&lt;cell name&gt;-&lt;uid&gt;</code>.
-* <code>&lt;ignore regexp&gt;</code> &ndash; Required.
-
-#### Errors
-
-* the <code>&lt;tablet alias&gt;</code> and <code>&lt;ignore regexp&gt;</code> arguments are required for the <code>&lt;IgnoreHealthError&gt;</code> command This error occurs if the command is not called with exactly 2 arguments.
+Deprecated.
 
 ### UpdateTabletAddrs
 
@@ -316,23 +303,6 @@ Runs a health check on a remote tablet.
 
 * the <code>&lt;tablet alias&gt;</code> argument is required for the <code>&lt;RunHealthCheck&gt;</code> command This error occurs if the command is not called with exactly one argument.
 * this only reports an error if a "healthcheck" RPC call to a vttablet fails. It is only useful as a connectivity and vttablet liveness check.
-
-### IgnoreHealthError
-
-Sets the regexp for health check errors to ignore on the specified tablet. The pattern has implicit ^$ anchors. Set to empty string or restart vttablet to stop ignoring anything.
-
-#### Example
-
-<pre class="command-example">IgnoreHealthError &lt;tablet alias&gt; &lt;ignore regexp&gt;</pre>
-
-#### Arguments
-
-* <code>&lt;tablet alias&gt;</code> &ndash; Required. A Tablet Alias uniquely identifies a vttablet. The argument value is in the format <code>&lt;cell name&gt;-&lt;uid&gt;</code>.
-* <code>&lt;ignore regexp&gt;</code> &ndash; Required.
-
-#### Errors
-
-* the <code>&lt;tablet alias&gt;</code> and <code>&lt;ignore regexp&gt;</code> arguments are required for the <code>&lt;IgnoreHealthError&gt;</code> command This error occurs if the command is not called with exactly 2 arguments.
 
 ### Sleep
 
