@@ -7,7 +7,7 @@ weight: 11
 
 A subsharding vindex is a functional unique vindex. It is represented by using a set of columns from the table. 
 If all the columns are provided in query routing using where clause then it is routed to single shard.
-If subset of columns in order of the appearance are provided then the qiuery is routed to subset of shards instead of all shards.
+If subset of columns in order of the appearance are provided then the query is routed to subset of shards instead of all shards.
 
 ### Use Case
 
@@ -25,7 +25,7 @@ The Vindex takes in 3 inputs
 2. `column_vindex` - hashing function each column will use to provide hash value for that column
 3. `column_bytes` - bytes to be used from each column's hash value after applying hashing function on it to produce keyspace id.
 
-Usage in VSchema:
+Example Usage in VSchema:
 
 ```json
 "vindexes": {
