@@ -91,6 +91,8 @@ col 5 -> 1
 ### Hashing Function Implementation
 Below is the list of vindex that has implemented the hashing interface required to be passed in `column_vindex` for using `multicol` vindex.
 
+* binary
+* binary_md5
 * hash
 * numeric
 * numeric_static_map
