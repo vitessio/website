@@ -65,6 +65,20 @@ type Hashing interface {
 }
 ```
 
+Eg for how keyspace id is created
+```
+Given
+c1 - 1 byte
+c2 - 3 bytes
+c3 - 4 bytes
+
+For the column Cn -> Cn.Hash(Cn_values)[0 : n_bytes_allocated_for_column]
+
+keyspace_id:
+|_c1|_c2__c2__c2|_c3__c3__c3__c3|
+|_0_|_1_|_2_|_3_|_4_|_5_|_6_|_7_|
+```
+
 `column_bytes` should contain bytes in a comma-separated list. The total count should be equal to 8 bytes.
 If for some columns bytes are not represented then it is calculated by assigning equal bytes to remaining unassigned columns.
 
