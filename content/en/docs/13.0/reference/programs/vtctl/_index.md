@@ -27,7 +27,6 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [RefreshState](../vtctl/tablets#refreshstate) | `RefreshState <tablet alias>` |
 | [RefreshStateByShard](../vtctl/tablets#refreshstatebyshard) | `RefreshStateByShard [-cells=c1,c2,...] <keyspace/shard>` |
 | [RunHealthCheck](../vtctl/tablets#runhealthcheck) | `RunHealthCheck <tablet alias>` |
-| [IgnoreHealthError](../vtctl/tablets#ignorehealtherror) | `IgnoreHealthError <tablet alias> <ignore regexp>` |
 | [Sleep](../vtctl/tablets#sleep) | `Sleep <tablet alias> <duration>` |
 | [ExecuteHook](../vtctl/tablets#executehook) | `ExecuteHook <tablet alias> <hook name> [<param1=value1> <param2=value2> ...]` |
 | [ExecuteFetchAsApp](../vtctl/tablets#executefetchasapp) | `ExecuteFetchAsApp [-max_rows=10000] [-json] [-use_pool] <tablet alias> <sql command>` |
