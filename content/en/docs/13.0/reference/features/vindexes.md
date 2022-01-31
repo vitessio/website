@@ -201,24 +201,25 @@ Note: You can have `NULL` values for the primary vindex column, as long as that 
 
 Vitess provides the following predefined Vindexes:
 
-Name | Type | Description | Primary | Multi-column | Reversible | Nullable | Cost | Data types |
----- | ---- | ----------- | ------- | ------------ | ---------- | -------- | ---- | ---------- |
-binary | Functional Unique | Identity | Yes | No | Yes | Yes | 0 | Any |
-binary\_md5 | Functional Unique | MD5 hash | Yes | No | No | Yes | 1 | Any |
-consistent\_lookup | Lookup NonUnique | Lookup table non-unique values | No | Identify Row | No | Yes [only if](../vindexes/#ignore-nulls) | 20 | Any |
-consistent\_lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | Identify Row | No | Yes [only if](../vindexes/#ignore-nulls) | 10 | Any |
-hash | Functional Unique | DES null-key hash | Yes | No | Yes | No | 1 | 64 bit or smaller numeric or equivalent type |
-lookup | Lookup NonUnique | Lookup table non-unique values | No | Identify Row | No | Yes [only if](../vindexes/#ignore-nulls) | 20 | Any |
-lookup\_unique | Lookup Unique | Lookup table unique values | If unowned | Identify Row | No | Yes [only if](../vindexes/#ignore-nulls) | 10 | Any |
-null | Functional Unique | Always map to keyspace ID 0 | Yes | No | No | Yes | 100 | Any |
-numeric | Functional Unique | Identity | Yes | No | Yes | No | 0 | 64 bit or smaller numeric or equivalent type |
-numeric\_static\_map | Functional Unique | JSON file statically mapping input string values to keyspace IDs | Yes | No | No | No | 1 | Any |
-region\_experimental | Functional Unique | Multi-column prefix-based hash for use in geo-partitioning | Yes | Yes | No | No | 1 | String and numeric type |
-region\_json | Functional Unique | Multi-column prefix-based hash combined with a JSON map for key-to-region mapping, for use in geo-partitioning | Yes | Yes | No | No | 1 | String and numeric type |
-reverse\_bits | Functional Unique | Bit reversal | Yes | No | Yes | No | 1 | 64 bit or smaller numeric or equivalent type |
-unicode\_loose\_md5 | Functional Unique | Case-insensitive (UCA level 1) MD5 hash | Yes | No | No | Yes | 1 | String or binary types |
-unicode\_loose\_xxhash | Functional Unique | Case-insensitive (UCA level 1) xxHash64 hash | Yes | No | No | Yes | 1 | String or binary types |
-xxhash | Functional Unique | xxHash64 hash | Yes | No | No | Yes | 1 | Any |
+Name | Type | Description                                                                                                                                                                             | Primary | Multi-column | Reversible | Nullable | Cost | Data types                                   |
+---- | ---- |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| ------- | ------------ | ---------- | -------- | --- |----------------------------------------------|
+binary | Functional Unique | Identity                                                                                                                                                                                | Yes | No | Yes | Yes | 0 | Any                                          |
+binary\_md5 | Functional Unique | MD5 hash                                                                                                                                                                                | Yes | No | No | Yes | 1 | Any                                          |
+consistent\_lookup | Lookup NonUnique | Lookup table non-unique values                                                                                                                                                          | No | Identify Row | No | Yes [only if](../vindexes/#ignore-nulls) | 20 | Any                                          |
+consistent\_lookup\_unique | Lookup Unique | Lookup table unique values                                                                                                                                                              | If unowned | Identify Row | No | Yes [only if](../vindexes/#ignore-nulls) | 10 | Any                                          |
+hash | Functional Unique | DES null-key hash                                                                                                                                                                       | Yes | No | Yes | No | 1 | 64 bit or smaller numeric or equivalent type |
+lookup | Lookup NonUnique | Lookup table non-unique values                                                                                                                                                          | No | Identify Row | No | Yes [only if](../vindexes/#ignore-nulls) | 20 | Any                                          |
+lookup\_unique | Lookup Unique | Lookup table unique values                                                                                                                                                              | If unowned | Identify Row | No | Yes [only if](../vindexes/#ignore-nulls) | 10 | Any                                          |
+multicol | Functional Unique | Multi-column [subsharding](../../../user-guides/vschema-guide/subsharding-vindex/) hash for use in tenant based sharding or geo-partitioning or multiple column serving as sharding key | Yes | Yes | No | No | sum of cost of hashing function used for each column | Any                                          |
+null | Functional Unique | Always map to keyspace ID 0                                                                                                                                                             | Yes | No | No | Yes | 100 | Any                                          |
+numeric | Functional Unique | Identity                                                                                                                                                                                | Yes | No | Yes | No | 0 | 64 bit or smaller numeric or equivalent type |
+numeric\_static\_map | Functional Unique | JSON file statically mapping input string values to keyspace IDs                                                                                                                        | Yes | No | No | No | 1 | Any                                          |
+region\_experimental | Functional Unique | Multi-column prefix-based hash for use in geo-partitioning                                                                                                                              | Yes | Yes | No | No | 1 | String and numeric type                      |
+region\_json | Functional Unique | Multi-column prefix-based hash combined with a JSON map for key-to-region mapping, for use in geo-partitioning                                                                          | Yes | Yes | No | No | 1 | String and numeric type                      |
+reverse\_bits | Functional Unique | Bit reversal                                                                                                                                                                            | Yes | No | Yes | No | 1 | 64 bit or smaller numeric or equivalent type |
+unicode\_loose\_md5 | Functional Unique | Case-insensitive (UCA level 1) MD5 hash                                                                                                                                                 | Yes | No | No | Yes | 1 | String or binary types                       |
+unicode\_loose\_xxhash | Functional Unique | Case-insensitive (UCA level 1) xxHash64 hash                                                                                                                                            | Yes | No | No | Yes | 1 | String or binary types                       |
+xxhash | Functional Unique | xxHash64 hash                                                                                                                                                                           | Yes | No | No | Yes | 1 | Any                                          |
 
 Consistent lookup vindexes, as described above, are a new category of Vindexes that are meant to replace the existing lookup Vindexes implementation. For the time being, they have a different name to allow for users to switch back and forth.
 
