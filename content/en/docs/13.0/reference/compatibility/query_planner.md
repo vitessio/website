@@ -4,7 +4,7 @@ weight: 2
 aliases: ['/docs/reference/query_planner/', '/docs/reference/gen4-and-v3-compatibility/']
 ---
 
-The query planner is the module that is responsible for taking a query sent to VTGate, split it across shards and combiner the results to make it look like a single database.
+The query planner is the module that is responsible for taking a query sent to VTGate, split it across shards and combine the results to make it look like a single database.
 Since this is a critical piece of the system, we have made it easy to change which planner is used.
 
 The following planners are available:
