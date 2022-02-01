@@ -15,7 +15,7 @@ The following planners are available:
  + gen4
    - The new planner added to vitess. 
    It supports more queries, and is able to find plans that are more optimal than the old planner could.
-   Read more about it [here](/blog/2021-11-02-why-write-new-planner.md)
+   Read more about it [here](../../../../../../blog/2021-11-02-why-write-new-planner)
 
  + left2right
    - This planner works similar to the `straight_join` directive in MySQL - the joins are going to be performed in the order specified by the query.
