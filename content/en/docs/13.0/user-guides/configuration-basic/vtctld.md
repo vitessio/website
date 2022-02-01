@@ -16,7 +16,7 @@ vtctld <topo_flags> <backup_flags> \
   -durability_policy='none'
 ```
 
-Look at [Durability Policies](../durability_policy) for more information on the possible durability policies.
+Look at [Durability Policies](../durability_policy) for more information on the available durability policies.
 
 If the TopoServer is unreachable, or if the topo flags are incorrectly configured, vtctld will fail to start. You may see an error message like the following in the logs:
 

@@ -18,7 +18,7 @@ type durabler interface {
 There are 3 implementations bundled with Vitess:
  - ***semi_sync*** - This durability policy sets the number of required semi-sync ACKers to 1. It only allows Primary and Replica type servers to acknowledge semi sync. It returns NeutralPromoteRule for Primary and Replica tablet types, MustNotPromoteRule for everything else
  - ***none** (default)* - This durability policy does not set any semi-sync configurations. It returns NeutralPromoteRule for Primary and Replica tablet types, MustNotPromoteRule for everything else
- - ***cross_cell*** - This durability policy sets the number of required semi-sync ACKers to 1. It only allows Primary and Replica type servers from a different cell to acknowledge semi sync. This means that a transaction must be in two cells for it to be acknowledged. It returns NeutralPromoteRule for Primary and Replica tablet types, MustNotPromoteRule for everything else
+ - ***cross_cell*** - This durability policy sets the number of required semi-sync ACKers to 1. It only allows Primary and Replica type servers from a different cell to acknowledge semi sync. This means that a write must be in two cells for it to be acknowledged. It returns NeutralPromoteRule for Primary and Replica tablet types, MustNotPromoteRule for everything else
 
 
 [EmergencyReparentShard](../../configuration-advanced/reparenting/#emergencyreparentshard-emergency-reparenting) and [PlannedReparentShard](../../configuration-advanced/reparenting/#plannedreparentshard-planned-reparenting) will use the durability rules while choosing the correct candidate for promotion.
