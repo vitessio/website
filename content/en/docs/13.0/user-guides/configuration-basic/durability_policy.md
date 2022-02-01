@@ -30,13 +30,17 @@ Currently the durability policies are not used to setup semi-sync in EmergencyRe
 {{< /info >}}
 
 {{< info >}}
-In case you notice any logs that look like the following, you should create an issue [here](https://github.com/vitessio/vitess/issues) and report it:
+In case you notice any logs that look like the following, please check that your vtctld and vttablet configurations match:
 ```
 invalid configuration - semi-sync should be setup according to durability policies, but enable_semi_sync is not set
 ```
 ```
 invalid configuration - semi-sync should be setup according to durability policies, but the tablet is not primaryEligible
 ```
+If `-enable_semi_sync` is set on the vttablets, then `semi_sync` durability policy should be used.  If semi-sync is not being used then `-durability_policy` should be set to `none`.
+
+If the configurations are in order , then you should create an issue [here](https://github.com/vitessio/vitess/issues) and report it.
+
 If the following log is noticed when all the components are upgraded, then it should also be reported:
 ```
 invalid configuration - enabling semi sync even though not specified by durability policies. Possibly in the process of upgrading
