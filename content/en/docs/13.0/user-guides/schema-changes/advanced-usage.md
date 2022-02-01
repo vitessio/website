@@ -24,7 +24,7 @@ You can only run this change successfully once. Once it it applied, the column `
 
 Sometimes it is desirable to be able to retry a migration. For example, if you apply a migration on a sharded keyspace, where one or more of the shards can be down. In such scenario some shards receive and apply the DDL, while other shards do not, and are not aware of its existence. Attempting to re-apply the same DDL will generate errors on the shards that have received and applied it on the first attempt.
 
-`vtctl ApplySchema` accepts a `-request_context` flag. By default, Vitess auto-generates a unique context per execution of `vtctl ApplySchema`. You may supply your own value, which can be an arbitrary text (limited to `1024` characters). You may search for migrations with a particular context via `SHOW VITESS_MIGRATIONS LIKE '<context-value>'`. Also, any `SHOW VITESS_MIGRATIONS ...` command outputs the context value in the `migration_context` column.
+`vtctl ApplySchema` accepts a `-migration_context` flag. By default, Vitess auto-generates a unique context per execution of `vtctl ApplySchema`. You may supply your own value, which can be an arbitrary text (limited to `1024` characters). You may search for migrations with a particular context via `SHOW VITESS_MIGRATIONS LIKE '<context-value>'`. Also, any `SHOW VITESS_MIGRATIONS ...` command outputs the context value in the `migration_context` column.
 
 When Vitess meets a migration which has exact same DDL and exact same (non-empty) context as some older migration, it considers it as a _duplicate_. The new migration does get a `UUID` of its own, and is tracked as a new migration. But if the previous migration (or, if there are multiple past duplicate migrations with same DDL and context, _any one of those_) is `complete`, then the new migration is also implicitly assumed to be `complete`.
 
@@ -33,12 +33,12 @@ Thus, the new migration does not get to execute if an identical previous migrati
 Usage:
 
 ```sh
-$ vtctlclient ApplySchema -request_context="1111-2222" -skip_preflight -ddl_strategy='online' -sql "alter table customer add column status int unsigned not null" commerce
+$ vtctlclient ApplySchema -migration_context="1111-2222" -skip_preflight -ddl_strategy='online' -sql "alter table customer add column status int unsigned not null" commerce
 
-$ vtctlclient ApplySchema -request_context="1111-2222" -skip_preflight -ddl_strategy='online' -sql "alter table customer add column status int unsigned not null" commerce
+$ vtctlclient ApplySchema -migration_context="1111-2222" -skip_preflight -ddl_strategy='online' -sql "alter table customer add column status int unsigned not null" commerce
 ```
 
-In the above, the two calls are identical. Specifically, they share the exact same `-request_context` value of `1111-2222`, and the exact same `-sql`.
+In the above, the two calls are identical. Specifically, they share the exact same `-migration_context` value of `1111-2222`, and the exact same `-sql`.
 
 Notes:
 
