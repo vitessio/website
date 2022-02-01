@@ -13,8 +13,8 @@ pygmentsStyle = "fruity"
 # Versions (folder-based)
 
 [params.versions]
-current = "12.0"
-next = "13.0"
+current = "13.0"
+next = "14.0"
 
 # end Versions
 
