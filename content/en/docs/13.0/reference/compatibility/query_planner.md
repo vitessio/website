@@ -15,12 +15,13 @@ The following planners are available:
  + gen4
    - The new planner added to vitess. 
    It supports more queries, and is able to find plans that are more optimal than the old planner could.
+   Read more about it [here](/blog/2021-11-02-why-write-new-planner.md)
 
  + left2right
-   - This planner works similarly to the `straight_join` directive in MySQL - the joins are going to be performed in the order specified by the query.
+   - This planner works similar to the `straight_join` directive in MySQL - the joins are going to be performed in the order specified by the query.
    
  + gen4fallback
-   - This planner will first try the gen4 planner, and if it fails, it uses the V3 planner. This was useful during the development of gen4, but probably not very useful in production.
+   - This planner will first try the gen4 planner, and if it fails, it uses the v3 planner. This was useful during the development of gen4, but probably not very useful in production.
 
  + gen4comparev3
    - Finally, specifying the planner to `gen4comparev3` will run the query using both planners, and compares the output, failing the query if the results do not agree.
@@ -44,7 +45,7 @@ select /*vt+ PLANNER=gen4 */ * from commerce;
 ### Testing the new planner using `gen4comparev3`
 
 The latest version of the Vitess query planner, `Gen4`, changes most of the planner's internals.
-To ensure `Gen4` produces plans that, once executed, give us the same results as what `V3` would do, we have developed a small test tool that runs queries using both `Gen4` and `V3` planners and compare their results. 
+To ensure `Gen4` produces plans that, once executed, give us the same results as what `V3` would, we have developed a small test tool that runs queries using both `Gen4` and `V3` planners and compares their results. 
 If the results we got are different from the two planners, the query will fail and the difference will be printed in VTGate's logs as a warning.
 
 This tool is enabled by the use of a new planner: `Gen4CompareV3`, to use it, we must start VTGate with the `-planner_version` flag set to `Gen4CompareV3`.
