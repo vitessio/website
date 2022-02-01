@@ -76,11 +76,11 @@ If set to false these reverse replication streams will not be created and you wi
 <div class="cmd">
 
 While switching traffic ensure that the VReplication lag for the workflow is less than this duration, otherwise
-report an error and don't switch. VReplication lag is the estimated maximum lag across workflow streams between the last event seen at the source and the event processed by the target. Usually, when VReplication has caught up, this should be very small (under a second).
+report an error and don't switch. VReplication lag is the estimated maximum lag across workflow streams between the last event seen at the source and the event processed by the target (which would be a heartbeat event if we're fully caught up). Usually, when VReplication has caught up, this should be very small (under a second).
 
-While switching write traffic, we temporarily make the source databases read-only, and wait for the targets to catchup. The application will be down for this time: writes will error out. While switching write traffic, this flag can ensure that you only switch traffic if the current lag is small limiting downtime.
+While switching write traffic, we temporarily make the source databases read-only, and wait for the targets to catchup. The application will be down for this time: writes will error out. While switching write traffic, this flag can ensure that you only switch traffic if the current lag is small limiting write-unavailability.
 
-This can also be useful if only reads are being switched: if the lag is too high the app might be reading stale data.
+While switching read traffic this can be used to set an approximate upper bound on how stale reads will be against the replica tablets when using `@replica` shard targeting.
 
 </div>
 
