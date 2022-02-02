@@ -28,7 +28,6 @@ The default invocation of `mysqldump` attempts to execute statements which are [
 * `--lock-tables=off`: VTGate currently prohibits the syntax `LOCK TABLES` and `UNLOCK TABLES`.
 * `--set-gtid-purged=OFF`: `mysqldump` attemps to dump GTID coordinates of a server, but in the case of VTGate this does not make sense since it could be routing to multiple servers.
 * `--no-tablespaces`: This option disables dumping InnoDB tables by tablespace. This functionality is not yet supported by Vitess.
-* `--skip-network-timeout`: This option is required when using `mysqldump` from MySQL 8.0 ([#5401](https://github.com/vitessio/vitess/issues/5401)) with Vitess versions before 7.0.
 
 For example to export the `commerce` keyspace using the `mysqldump` binary from MySQL 5.7:
 
