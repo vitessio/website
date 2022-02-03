@@ -1,8 +1,8 @@
 ---
-title: v14.0 (Future release)
+title: v14.0 (Development)
 description: > 
   Under construction, upcoming release.
-  Everything you need to know about the world's most scalable open-source MySQL platform.
+  Everything you need to know about scaling MySQL with Vitess.
 notoc: true
 cascade:
   version: v14.0
