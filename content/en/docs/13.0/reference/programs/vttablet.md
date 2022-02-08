@@ -250,7 +250,7 @@ The following global options apply to `vttablet`:
 | -queryserver-config-stream-pool-size | int | query server stream connection pool size, stream pool is used by stream queries: queries that return results to client in a streaming fashion (default 200) |
 | -queryserver-config-stream-pool-waiter-cap | int | query server stream pool waiter limit, this is the maximum number of streaming queries that can be queued waiting to get a connection (default unlimited) |
 | -queryserver-config-strict-table-acl |  | only allow queries that pass table acl checks |
-| -queryserver-config-terse-errors |  | prevent bind vars from escaping in returned errors |
+| -queryserver-config-terse-errors |  | prevent bind vars from escaping in client error messages |
 | -queryserver-config-transaction-cap | int | query server transaction cap is the maximum number of transactions allowed to happen at any given point of a time for a single vttablet. E.g. by setting transaction cap to 100, there are at most 100 transactions will be processed by a vttablet and the 101th transaction will be blocked (and fail if it cannot get connection within specified timeout) (default 20) |
 | -queryserver-config-transaction-prefill-parallelism | int | query server transaction prefill parallelism, a non-zero value will prefill the pool using the specified parallism. |
 | -queryserver-config-transaction-timeout | int | query server transaction timeout (in seconds), a transaction will be killed if it takes longer than this value (default 30) |
@@ -271,6 +271,7 @@ The following global options apply to `vttablet`:
 | -s3_backup_storage_bucket | string | S3 bucket to use for backups |
 | -s3_backup_storage_root | string | root prefix for all backup-related object names |
 | -s3_backup_tls_skip_verify_cert |  | skip the 'certificate is valid' check for SSL connections |
+| -sanitize_log_messages | bool | Remove potentially sensitive information in tablet INFO, WARNING, and ERROR log messages such as query parameters |
 | -security_policy | string | the name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only) |
 | -service_map | value | comma separated list of services to enable (or disable if prefixed with '-') Example: grpc-vtworker |
 | -serving_state_grace_period | duration | how long to pause after broadcasting health to vtgate, before enforcing a new serving state |
