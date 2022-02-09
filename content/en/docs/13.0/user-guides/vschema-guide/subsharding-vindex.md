@@ -7,7 +7,7 @@ weight: 11
 
 A subsharding vindex is a functional unique vindex. It is constructed by using
 a set of columns from the table to be sharded.  If all the columns in this
-vindex are provided in a query's `WHERE` clause then the query is guaranteed to
+vindex are provided in a query's `WHERE` clause, then the query is guaranteed to
 be routed to a single shard.  If an ordered subset of columns are provided,
 starting with the first column in the vindex, then the query can usually be
 routed to a subset of shards instead of all shards.
@@ -17,7 +17,7 @@ routed to a subset of shards instead of all shards.
 A common use case for a subsharding vindex is when a given entity’s data fits
 on more than one shard (e.g a large tenant in a SaaS scenario) and there is
 no suitable intermediary grouping construct.  Storing that entity’s data across
-all shards will lead to scatter queries, which are especially expensive for
+all shards will lead to scatter queries. Scatter queries are especially expensive for
 keyspaces with large numbers of shards.
 
 An additional use case could be geo-sharding, where the data for a particular
@@ -28,9 +28,10 @@ region.
 
 This vindex is registered as `multicol` vindex.
 
-The vindex takes in 3 parameter inputs
+The vindex takes in 3 parameter inputs:
+
 1. `column_count` - the number of columns provided for using the vindex.
-2. `column_vindex` - a list of functional vindexes, mapping to hashing functions to be used on each column in turn to provide hash value for that column.
+2. `column_vindex` - a list of functional vindexes, mapping to hashing functions, to be used on each column in turn to provide hash value for that column.
 3. `column_bytes` - number of bytes to be used from each column's hash value after applying hashing function on it to produce keyspace id. These must sum to 8 bytes to make up the 64 bit keyspace ID.
 
 Example usage in VSchema:
@@ -64,7 +65,7 @@ A maximum of 8 columns can be used in this vindex i.e. `column_count <= 8`
 
 `column_vindex` should contain the vindex name in a comma-separated list. It should be less than equal to column_count.
 Default vindex is `hash` vindex, any column for which vindex is not provided, the default vindex will be used.
-The vindex in `column_vindex` should implement the below interface otherwise the initialization will fail. See below for the list of standard Vitess vindexes that implement this interface.
+The vindex in `column_vindex` should implement the below interface otherwise the initialization will fail. See below for the list of [standard Vitess vindexes](../#hashing-function-implementation) that implement this interface.
 
 ```go
 // Hashing defined the interface for the vindexes that export the Hash function to be used by multi-column vindex.
@@ -74,6 +75,7 @@ type Hashing interface {
 ```
 
 As an example of how the keyspace ID is constructed:
+
 ```
 Given that we allocate bytes from the following columns:
 c1 - 1 byte
@@ -91,6 +93,7 @@ keyspace_id:
 If for some columns bytes are not represented then it is calculated by assigning equal bytes to remaining unassigned columns.
 
 Eg:
+
 ```
 Given:
 column_count = 5
@@ -110,9 +113,9 @@ col 4 -> 1
 col 5 -> 1
 ```
 
-
 ### Hashing Function Implementation
-The Vitess vindexes that implement the hashing interface required, and can be used in a subsharding vindex:
+
+The Vitess vindexes that implement the hashing interface requires and can be used in a subsharding vindex:
 
 * `binary`
 * `binary_md5`
@@ -126,6 +129,7 @@ The Vitess vindexes that implement the hashing interface required, and can be us
 
 
 ### Example
+
 For a concrete example, assume we have a table with `BIGINT` columns:
 
 ```
@@ -209,9 +213,9 @@ mysql> explain format=vitess select * from t1 where c1=1;
 1 row in set (0.00 sec)
 ```
 
-Note that the number of shards that these types of queries, that provide a
-subset of the subsharding vindex's columns in the `WHERE` clause, target is
-dependant on the structure (byte allocation) of the vindex, and the number
+Note that the number of shards that these types of queries target. For queries that provide a
+subset of the subsharding vindex's columns in the `WHERE` clause the target is
+dependent on the structure (byte allocation) of the vindex and the number
 of shards in the keyspace.
 
 Next, let's show that providing no columns scatters (as expected):
@@ -246,7 +250,6 @@ mysql> explain format=vitess select * from t1 where c2=1 and c3=1;
 +----------+---------+----------+-------------+------------+------------------------------------------+
 1 row in set (0.00 sec)
 ```
-
 
 ### Known issues
 
