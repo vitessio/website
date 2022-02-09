@@ -81,38 +81,39 @@ The following global options apply to `vttablet`:
 | -db-credentials-file | string | db credentials file; send SIGHUP to reload this file |
 | -db-credentials-server | string | db credentials server type (use 'file' for the file implementation) (default "file") |
 | -db_allprivs_password | string | db allprivs password |
-| -db_allprivs_use_ssl |  | Set this flag to false to make the allprivs connection to not use ssl (default true) |
+| -db_allprivs_use_ssl |  | Set this flag to false to make the allprivs connection to not use SSL (default true) |
 | -db_allprivs_user | string | db allprivs user userKey (default "vt_allprivs") |
 | -db_app_password | string | db app password |
-| -db_app_use_ssl |  | Set this flag to false to make the app connection to not use ssl (default true) |
+| -db_app_use_ssl |  | Set this flag to false to make the app connection to not use SSL (default true) |
 | -db_app_user | string | db app user userKey. Used for VReplication. (default "vt_app") |
 | -db_appdebug_password | string | db appdebug password |
-| -db_appdebug_use_ssl |  | Set this flag to false to make the appdebug connection to not use ssl (default true) |
+| -db_appdebug_use_ssl |  | Set this flag to false to make the appdebug connection to not use SSL (default true) |
 | -db_appdebug_user | string | db appdebug user userKey (default "vt_appdebug") |
 | -db_charset | string | Sets the character set for the connection. |
 | -db_connect_timeout_ms | int | connection timeout to mysqld in milliseconds (0 for no timeout) |
 | -db_dba_password | string | db dba password |
-| -db_dba_use_ssl |  | Set this flag to false to make the dba connection to not use ssl (default true) |
+| -db_dba_use_ssl |  | Set this flag to false to make the dba connection to not use SSL (default true) |
 | -db_dba_user | string | db dba user userKey (default "vt_dba") |
 | -db_erepl_password | string | db erepl password |
-| -db_erepl_use_ssl |  | Set this flag to false to make the erepl connection to not use ssl (default true) |
+| -db_erepl_use_ssl |  | Set this flag to false to make the erepl connection to not use SSL (default true) |
 | -db_erepl_user | string | db erepl user userKey (default "vt_erepl") |
 | -db_filtered_password | string | db filtered password |
-| -db_filtered_use_ssl |  | Set this flag to false to make the filtered connection to not use ssl (default true) |
+| -db_filtered_use_ssl |  | Set this flag to false to make the filtered connection to not use SSL (default true) |
 | -db_filtered_user | string | db filtered user userKey (default "vt_filtered") |
 | -db_flags | uint | Flag values as defined by MySQL. |
 | -db_flavor | string | Flavor overrid. Valid value is FilePos. |
 | -db_host | string | The host name for the tcp connection. |
 | -db_port | int | tcp port |
 | -db_repl_password | string | db repl password |
-| -db_repl_use_ssl |  | Set this flag to false to make the repl connection to not use ssl (default true) |
+| -db_repl_use_ssl |  | Set this flag to false to make the repl connection to not use SSL (default true) |
 | -db_repl_user | string | db repl user userKey (default "vt_repl") |
 | -db_server_name | string | server name of the DB we are connecting to. |
 | -db_socket | string | The unix socket to connect on. If this is specified, host and port will not be used. |
-| -db_ssl_ca | string | connection ssl ca |
-| -db_ssl_ca_path | string | connection ssl ca path |
-| -db_ssl_cert | string | connection ssl certificate |
-| -db_ssl_key | string | connection ssl key |
+| -db_ssl_ca | string | connection SSL ca |
+| -db_ssl_ca_path | string | connection SSL ca path |
+| -db_ssl_cert | string | connection SSL certificate |
+| -db_ssl_key | string | connection SSL key |
+| -db_tls_min_version | string | Configures the minimal TLS version negotiated when SSL is enabled. Defaults to TLSv1.2. Options: TLSv1.0, TLSv1.1, TLSv1.2, TLSv1.3 |
 | -dba_idle_timeout | duration | Idle timeout for dba connections (default 1m0s) |
 | -dba_pool_size | int | Size of the connection pool for dba connections (default 20) |
 | -degraded_threshold | duration | replication lag after which a replica is considered degraded (only used in status UI) (default 30s) |
