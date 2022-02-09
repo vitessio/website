@@ -65,7 +65,7 @@ A maximum of 8 columns can be used in this vindex i.e. `column_count <= 8`
 
 `column_vindex` should contain the vindex name in a comma-separated list. It should be less than equal to column_count.
 Default vindex is `hash` vindex, any column for which vindex is not provided, the default vindex will be used.
-The vindex in `column_vindex` should implement the below interface otherwise the initialization will fail. See below for the list of [standard Vitess vindexes](#hashing-function-implementation) that implement this interface.
+The vindex in `column_vindex` should implement the following interface otherwise the initialization will fail. See below for the list of [standard Vitess vindexes](#hashing-function-implementation) that implement this interface.
 
 ```go
 // Hashing defined the interface for the vindexes that export the Hash function to be used by multi-column vindex.
