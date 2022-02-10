@@ -28,7 +28,6 @@ This configuration should be specified in [vtctld](../vtctld), [vtctl](../../../
 Currently the durability policies are not used to setup semi-sync in EmergencyReparentShard or PlannedReparentShard. All the RPCs are still using the `-enable_semi_sync` flag on vttablet to setup semi-sync. This flag is currently being used for promotion rules and to log discrepancies in semi-sync setup. Nonetheless, this flag should be specified correctly for upgrade considerations to future releases when the durability policies will be used to setup semi-sync and `-enable_semi_sync` is deprecated.
 {{< /info >}}
 
-{{< info >}}
 In case you notice any logs that look like the following, please check that your vtctld and vttablet configurations match:
 ```
 invalid configuration - semi-sync should be setup according to durability policies, but enable_semi_sync is not set
@@ -44,4 +43,3 @@ If the following log is noticed when all the components are upgraded, then it sh
 ```
 invalid configuration - enabling semi sync even though not specified by durability policies. Possibly in the process of upgrading
 ```
-{{< /info >}}
