@@ -15,7 +15,7 @@ type durabler interface {
 }
 ```
 
-There are 3 implementations bundled with Vitess:
+There are 2 implementations supported in this release:
  - ***semi_sync*** - This durability policy sets the number of required semi-sync ACKers to 1. It only allows Primary and Replica type servers to acknowledge semi sync. It returns NeutralPromoteRule for Primary and Replica tablet types, MustNotPromoteRule for everything else
  - ***none** (default)* - This durability policy does not set any semi-sync configurations. It returns NeutralPromoteRule for Primary and Replica tablet types, MustNotPromoteRule for everything else
 
