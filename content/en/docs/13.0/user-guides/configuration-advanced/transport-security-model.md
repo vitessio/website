@@ -315,6 +315,8 @@ A common Vitess deployment model is to co-locate vttablet and MySQL on the same 
 
 We will not cover configuring MySQL to use TLS certificates extensively here, just the minimum.  Please consult the MySQL documentation for further information. Again, we will also assume that vttablet will be using MySQL username/password client authentication.
 
+Note that when you are configuring TLS and MySQL you will need to be aware of what TLS versions are supported. You may be using an [older version of MySQL that does not have TLS 1.2 support](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_MySQL.html#MySQL.Concepts.SSLSupport). If you need to support pre 1.2 TLS [vtgate supports ](https://github.com/vitessio/vitess/blob/de7f133dbe2dd6a7910f13c682910a4f5c0ac0df/go/vt/vtgate/plugin_mysql_server.go#L67)that setting using `-mysql_server_tls_min_version` and vttablet supports that setting using `-db_tls_min_version=TLSv1.1`
+
 Generate a server certificate for our MySQL instance using our CA:
 
 ```bash

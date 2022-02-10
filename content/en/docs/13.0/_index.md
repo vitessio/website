@@ -1,8 +1,8 @@
 ---
-title: v13.0 (Future release)
-description: > 
-  Under construction, upcoming release.
-  Everything you need to know about the world's most scalable open-source MySQL platform.
+title: v13.0 (RC)
+description: >
+  Release candidate.
+  Everything you need to know about scaling MySQL with Vitess.
 notoc: true
 cascade:
   version: v13.0

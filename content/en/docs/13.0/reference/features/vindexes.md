@@ -252,3 +252,65 @@ There are also the following legacy (deprecated) Vindexes. **Do not use these**:
 | lookup\_hash\_unique | Lookup Unique | If unowned | No | 10 |
 | lookup\_unicodeloosemd5\_hash | Lookup NonUnique | No | No | 20 |
 | lookup\_unicodeloosemd5\_hash\_unique | Lookup Unique | If unowned | No | 10 |
+
+### Query Vindex functions
+
+You can query Vindex functions to see the resulting `keyspace_id` it produces (the resulting hash is a 64-bit hexadecimal number) and thus which shard a particular row would be placed on within the keyspace. You would query the Vindex functions by referencing their name as defined in your VSchema, and using query predicates specifically on the fixed name `id` field (this is not related to your actual schema). The Vindex functions support both equality (`WHERE id = X`) and list (`WHERE id IN(...)`) lookups. Here's a full example using the `customer` keyspace:
+
+First, a snippet of the VSchema:
+``` shell
+$ vtctlclient -server=localhost:15999 GetVSchema customer | jq '.vindexes'
+{
+  "binary_md5_vdx": {
+    "type": "binary_md5"
+  },
+  "binary_vdx": {
+    "type": "binary"
+  },
+  "hash_vdx": {
+    "type": "hash"
+  }
+}
+```
+
+And example queries using them from a VTGate (the Vindex function exists as a meta table in the given keyspace):
+``` sql
+mysql> use customer;
+Database changed
+
+mysql> select * from hash_vdx where id in(1,29999,397)\G
+*************************** 1. row ***************************
+             id: 1
+    keyspace_id: k@�J�K�
+    range_start:
+      range_end: �
+hex_keyspace_id: 166b40b44aba4bd6
+          shard: -80
+*************************** 2. row ***************************
+             id: 29999
+    keyspace_id: ��>V�7M�
+    range_start: �
+      range_end:
+hex_keyspace_id: fcd63e56d3374d88
+          shard: 80-
+*************************** 3. row ***************************
+             id: 397
+    keyspace_id: U��s���
+    range_start:
+      range_end: �
+hex_keyspace_id: 5584fa738baaf516
+          shard: -80
+3 rows in set (0.00 sec)
+
+mysql> select * from binary_md5_vdx where id = "heythere"\G
+*************************** 1. row ***************************
+             id: heythere
+    keyspace_id: ��,
+���e��u�I�
+    range_start: �
+      range_end:
+hex_keyspace_id: d9e62c0ad204fe91658ecc758049e515
+          shard: 80-
+1 row in set (0.00 sec)
+
+```

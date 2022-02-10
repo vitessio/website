@@ -1,8 +1,8 @@
 ---
-title: v12.0 (Current release)
+title: v12.0 (Stable)
 description: >
-  Most recent release.
-  Everything you need to know about the world's most scalable open-source MySQL platform.
+  Latest stable release.
+  Everything you need to know about scaling MySQL with Vitess.
 notoc: true
 cascade:
   version: v12.0
