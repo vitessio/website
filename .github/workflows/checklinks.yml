@@ -6,4 +6,8 @@ jobs:
   checklinks:
     runs-on: ubuntu-latest
     steps:
-      - run: make check-all-links
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Check links
+        run: make check-all-links
