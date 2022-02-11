@@ -9,5 +9,11 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.78.2'
+          extended: true
+
       - name: Check links
         run: make check-all-links
