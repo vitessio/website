@@ -19,12 +19,12 @@ windows for these exercises:
 
 ## Setup
 
-These scenarios will be using a Vitess Release 13 SNAPSHOT, and will be
-building off of the 101 application in the example folder.
+These scenarios will be building off of the 101 initial cluster from the 
+[local getting started guide](../../../get-started/local/).
 
 {{< warning >}}
-There were several improvements to buffering after the Vitess 12.0.0 release,
-which is why we are building and using the Vitess 13.0.0 Snapshot:
+There were several improvements to buffering after the Vitess 12 release,
+which is why we are building and using Vitess release 13+:
 
   * `buffer_size` increased from `10` to `1000`
   * `buffer_implementation` changed from `healthcheck` to `keyspace_events`
@@ -33,21 +33,7 @@ which is why we are building and using the Vitess 13.0.0 Snapshot:
 
 #### Terminal 1
 
-1.) Create a vitess cluster using the 101 initial cluster script provided in the
-Vitess repo:
-
-```
-Terminal 1
-    $ git clone git@github.com:planetscale/vitess.git
-    $ cd vitess
-    $ make build
-    $ export PATH=${PATH}:$(pwd)/bin
-    $ cd examples/local
-    $ source env.sh
-    $ ./101_initial_cluster.sh
-```
-
-2.) Locate the vtgate process, copy the process information to your notes for
+1.) Locate the vtgate process, copy the process information to your notes for
 future use; then kill the process:
 
 ```
@@ -56,7 +42,7 @@ Terminal 1
     $ pkill vtgate
 ```
 
-3.) From your notes, paste in the vtgate command you have previously copied into
+2.) From your notes, paste in the vtgate command you have previously copied into
 the terminal window and hit enter:
 
 
@@ -73,20 +59,20 @@ Terminal 1
 
 #### Terminal 2:
 
-4.) In a NEW terminal window download and configure gateslap. This utility will
+3.) In a NEW terminal window download and configure gateslap. This utility will
 be used to simulate traffic on Vitess. The virtualenv and source commands are
 optional:
 
 ```
 Terminal 2
-    $ git clone https://github.com/FancyFane/gateslap.git
+    $ git clone https://github.com/planetscale/gateslap.git
     $ cd gateslap
     $ virtualenv venv
     $ source venv/bin/activate
     $ sudo python3 setup.py install
 ```
 
-5.) You may do a test run of this script which will create a table called `t1`
+4.) You may do a test run of this script which will create a table called `t1`
 in the commerce schema. You may hit "CTRL + C" at anytime to stop the traffic.
 By default this will create 2 persistent, 2 pooled, and 2 oneoff MySQL
 connections and it will drop the `t1` table when it is complete, or when the
@@ -101,7 +87,7 @@ Terminal 2
 
 #### Terminal 3:
 
-6.) In a third terminal window we will prepare the vtctlclient to do a
+5.) In a third terminal window we will prepare the vtctlclient to do a
 PlannedReparentShard (PRS). Note, `time` is optional but it is useful
 for measuring how long the operation takes.
 
