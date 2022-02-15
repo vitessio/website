@@ -29,37 +29,40 @@ vtctld \
 
 | Name | Type | Definition |
 | :------------------------------------ | :--------- | :----------------------------------------------------------------------------------------- |
-| -action_timeout | duration | time to wait for an action before resorting to force (default 2m0s) |
-| -alsologtostderr |  | log to standard error as well as files |
+| -action_timeout | duration | Time to wait for an action before resorting to force (default 2m0s) |
+| -alsologtostderr | boolean  | Log to standard error as well as files |
 | -app_idle_timeout | duration | Idle timeout for app connections (default 1m0s) |
-| -app_pool_size | int | Size of the connection pool for app connections (default 40) |
-| -azblob_backup_account_key_file | string | Path to a file containing the Azure Storage account key; if this flag is unset, the environment variable VT_AZBLOB_ACCOUNT_KEY will be used as the key itself (NOT a file path) |
-| -azblob_backup_account_name | string | Azure Storage Account name for backups; if this flag is unset, the environment variable VT_AZBLOB_ACCOUNT_NAME will be used |
-| -azblob_backup_container_name | string | Azure Blob Container Name |
-| -azblob_backup_parallelism | int | Azure Blob operation parallelism (requires extra memory when increased) (default 1) |
-| -azblob_backup_storage_root | string | Root prefix for all backup-related Azure Blobs; this should exclude both initial and trailing '/' (e.g. just 'a/b' not '/a/b/') |
-| -backup_engine_implementation | string | Specifies which implementation to use for creating new backups (builtin or xtrabackup). Restores will always be done with whichever engine created a given backup. (default "builtin") |
-| -backup_storage_block_size | int | if backup_storage_compress is true, backup_storage_block_size sets the byte size for each block while compressing (default is 250000). (default 250000) |
-| -backup_storage_compress | boolean | if set, the backup files will be compressed (default is true). Set to false for instance if a backup_storage_hook is specified and it compresses the data. (default true) |
-| -backup_storage_hook | string | if set, we send the contents of the backup files through this hook. |
-| -backup_storage_implementation | string | which implementation to use for the backup storage feature |
-| -backup_storage_number_blocks | int | if backup_storage_compress is true, backup_storage_number_blocks sets the number of blocks that can be processed, at once, before the writer blocks, during compression (default is 2). It should be equal to the number of CPUs available for compression (default 2) |
+| -app_pool_size | int      | Size of the connection pool for app connections (default 40) |
+| -azblob_backup_account_key_file | string   | Path to a file containing the Azure Storage account key; if this flag is unset, the environment variable VT_AZBLOB_ACCOUNT_KEY will be used as the key itself (NOT a file path) |
+| -azblob_backup_account_name | string   | Azure Storage Account name for backups; if this flag is unset, the environment variable VT_AZBLOB_ACCOUNT_NAME will be used |
+| -azblob_backup_container_name | string   | Azure Blob Container Name |
+| -azblob_backup_parallelism | int      | Azure Blob operation parallelism (requires extra memory when increased) (default 1) |
+| -azblob_backup_storage_root | string   | Root prefix for all backup-related Azure Blobs; this should exclude both initial and trailing '/' (e.g. just 'a/b' not '/a/b/') |
+| -backup_engine_implementation | string   | Specifies which implementation to use for creating new backups (builtin or xtrabackup). Restores will always be done with whichever engine created a given backup. (default "builtin") |
+| -backup_storage_block_size | int      | If backup_storage_compress is true, backup_storage_block_size sets the byte size for each block while compressing (default is 250000) |
+| -backup_storage_compress | boolean | If set, the backup files will be compressed. Set to false for instance if a backup_storage_hook is specified and it compresses the data (default true) |
+| -backup_storage_hook | string   | If set, we send the contents of the backup files through this hook |
+| -backup_storage_implementation | string   | Which implementation to use for the backup storage feature |
+| -backup_storage_number_blocks | int      | If backup_storage_compress is true, backup_storage_number_blocks sets the number of blocks that can be processed at once, before the writer blocks, during compression. It should be equal to the number of CPUs available for compression (default 2) |
 | -binlog_player_protocol | string | the protocol to download binlogs from a vttablet (default "grpc") |
-| -binlog_use_v3_resharding_mode | boolean | True iff the binlog streamer should use V3-style sharding, which doesn't require a preset sharding key column. (default true) |
-| -cell | string | cell to use |
-| -ceph_backup_storage_config | string | Path to JSON config file for ceph backup storage (default "ceph_backup_config.json") |
-| -consul_auth_static_file | string | JSON File to read the topos/tokens from. |
-| -cpu_profile | string | write cpu profile to file |
-| -datadog-agent-host | string | host to send spans to. if empty, no tracing will be done |
-| -datadog-agent-port | string | port to send spans to. if empty, no tracing will be done |
-| -db-credentials-file | string | db credentials file; send SIGHUP to reload this file |
+| -binlog_use_v3_resharding_mode | boolean | True if the binlog streamer should use V3-style sharding, which doesn't require a preset sharding key column (default true) |
+| -builtinbackup_mysqld_timeout | duration | How long to wait for mysqld to shutdown at the start of the backup (default 10m0s) |
+| -builtinbackup_progress | duration | How often to send progress updates when backing up large files (default 5s) |
+| -catch-sigpipe | boolean | Catch and ignore SIGPIPE on stdout and stderr if specified |
+| -cell | string   | Cell to use |
+| -ceph_backup_storage_config | string   | Path to JSON config file for ceph backup storage (default "ceph_backup_config.json") |
+| -consul_auth_static_file | string   | JSON File to read the topos/tokens from |
+| -cpu_profile | string   | Deprecated: use '-pprof=cpu' instead |
+| -datadog-agent-host | string   | Host to send spans to; if empty, no tracing will be done |
+| -datadog-agent-port | string   | Port to send spans to; if empty, no tracing will be done |
 | -db-credentials-server | string | db credentials server type (use 'file' for the file implementation) (default "file") |
 | -dba_idle_timeout | duration | Idle timeout for dba connections (default 1m0s) |
 | -dba_pool_size | int | Size of the connection pool for dba connections (default 20) |
-| -disable_active_reparents | boolean | if set, do not allow active reparents. Use this to protect a cluster using external reparents. |
+| -disable_active_reparents | boolean | If set, do not allow active reparents. Use this to protect a cluster using external reparents |
 | -discovery_high_replication_lag_minimum_serving | duration | the replication lag that is considered too high when selecting the minimum num vttablets for serving (default 2h0m0s) |
 | -discovery_low_replication_lag | duration | the replication lag that is considered low enough to be healthy (default 30s) |
-| -emit_stats | boolean | true iff we should emit stats to push-based monitoring/stats backends |
+| -durability_policy | string   | Type of durability to enforce. Other values are dictated by registered plugins (default "none") |
+| -emit_stats | boolean | If set, emit stats to push-based monitoring and stats backends |
 | -enable-consolidator | boolean | This option enables the query consolidator. (default true) |
 | -enable-consolidator-replicas | boolean | This option enables the query consolidator only on replicas. |
 | -enable-query-plan-field-caching | boollean | This option fetches & caches fields (columns) when storing query plans (default true) |
@@ -67,54 +70,59 @@ vtctld \
 | -enable_hot_row_protection | boolean | If true, incoming transactions for the same row (range) will be queued and cannot consume all txpool slots. |
 | -enable_hot_row_protection_dry_run | boolean | If true, hot row protection is not enforced but logs if transactions would have been queued. |
 | -enable_queries | boolean | if set, allows vtgate and vttablet queries. May have security implications, as the queries will be run from this process. |
-| -enable_realtime_stats | boolean | Required for the Realtime Stats view. If set, vtctld will maintain a streaming RPC to each tablet (in all cells) to gather the realtime health stats. |
+| -enable_realtime_stats | boolean | Required for the Realtime Stats view. If set, vtctld will maintain a streaming RPC to each tablet (in all cells) to gather the realtime health stats |
+| -enable_replication_reporter | boolean | Use polling to track replication lag |
 | -enable_transaction_limit | boolean | If true, limit on number of transactions open at the same time will be enforced for all users. User trying to open a new transaction after exhausting their limit will receive an error immediately, regardless of whether there are available slots or not. |
 | -enable_transaction_limit_dry_run | boolean | If true, limit on number of transactions open at the same time will be tracked for all users, but not enforced. |
 | -enforce_strict_trans_tables | boolean | If true, vttablet requires MySQL to run with STRICT_TRANS_TABLES or STRICT_ALL_TABLES on. It is recommended to not turn this flag off. Otherwise MySQL may alter your supplied values before saving them to the database. (default true) |
-| -file_backup_storage_root | string | root directory for the file backup storage -- this path must be on shared storage to provide a global view of backups to all vitess components |
-| -gcs_backup_storage_bucket | string | Google Cloud Storage bucket to use for backups |
-| -gcs_backup_storage_root | string | root prefix for all backup-related object names |
-| -grpc_auth_mode | string | Which auth plugin implementation to use (eg: static) |
-| -grpc_auth_mtls_allowed_substrings | string | List of substrings of at least one of the client certificate names (separated by colon). |
-| -grpc_auth_static_client_creds | string | when using grpc_static_auth in the server, this file provides the credentials to use to authenticate with server |
-| -grpc_auth_static_password_file | string | JSON File to read the users/passwords from. |
-| -grpc_ca | string | ca to use, requires TLS, and enforces client cert check |
-| -grpc_cert | string | certificate to use, requires grpc_key, enables TLS |
-| -grpc_compression | string | how to compress gRPC, default: nothing, supported: snappy |
+| -file_backup_storage_root | string   | Root directory for the file backup storage |
+| -gcs_backup_storage_bucket | string   | Google Cloud Storage bucket to use for backups |
+| -gcs_backup_storage_root | string   | Root prefix for all backup-related object names |
+| -grpc_auth_mode | string   | Which auth plugin implementation to use (eg: static) |
+| -grpc_auth_mtls_allowed_substrings | string   | List of substrings of at least one of the client certificate names (separated by colon) |
+| -grpc_auth_static_client_creds | string   | When using grpc_static_auth in the server, this file provides the credentials to use to authenticate with the server |
+| -grpc_auth_static_password_file | string   | JSON File to read the users/passwords from |
+| -grpc_ca | string   | Server CA to use for gRPC connections, requires TLS, and enforces client certificate check |
+| -grpc_cert | string   | Server certificate to use for gRPC connections, requires grpc_key, enables TLS |
+| -grpc_compression | string   | Which protocol to use for compressing gRPC. Supported: snappy (default: nothing) |
+| -grpc_crl | string   | Path to a certificate revocation list in PEM format, client certificates will be further verified against this file during TLS handshake |
+| -grpc_enable_optional_tls | boolean | Enable optional TLS mode when a server accepts both TLS and plain-text connections on the same port |
 | -grpc_enable_tracing | boolean | Enable GRPC tracing |
-| -grpc_initial_conn_window_size | int | grpc initial connection window size |
-| -grpc_initial_window_size | int | grpc initial window size |
-| -grpc_keepalive_time | duration | After a duration of this time if the client doesn't see any activity it pings the server to see if the transport is still alive. (default 10s) |
-| -grpc_keepalive_timeout | duration | After having pinged for keepalive check, the client waits for a duration of Timeout and if no activity is seen even after that the connection is closed. (default 10s) |
-| -grpc_key | string | key to use, requires grpc_cert, enables TLS |
-| -grpc_max_connection_age | duration | Maximum age of a client connection before GoAway is sent. (default 2562047h47m16.854775807s) |
-| -grpc_max_connection_age_grace | duration | Additional grace period after grpc_max_connection_age, after which connections are forcibly closed. (default 2562047h47m16.854775807s) |
-| -grpc_max_message_size | int | Maximum allowed RPC message size. Larger messages will be rejected by gRPC with the error 'exceeding the max size'. (default 16777216) |
-| -grpc_port | int | Port to listen on for gRPC calls |
+| -grpc_initial_conn_window_size | int      | gRPC initial connection window size |
+| -grpc_initial_window_size | int      | gRPC initial window size |
+| -grpc_keepalive_time | duration | After a duration of this time, if the client doesn't see any activity, it pings the server to see if the transport is still alive (default 10s) |
+| -grpc_keepalive_timeout | duration | After having pinged for keepalive check, the client waits for a duration of Timeout and if no activity is seen even after that, the connection is closed (default 10s) |
+| -grpc_key | string   | Server private key to use for gRPC connections, requires grpc_cert, enables TLS |
+| -grpc_max_connection_age | duration | Maximum age of a client connection before GoAway is sent (default 2562047h47m16.854775807s) |
+| -grpc_max_connection_age_grace | duration | Additional grace period after grpc_max_connection_age, after which connections are forcibly closed (default 2562047h47m16.854775807s) |
+| -grpc_max_message_size | int      | Maximum allowed RPC message size. Larger messages will be rejected by gRPC with the error 'exceeding the max size' (default 16777216) |
+| -grpc_port | int      | Port to listen on for gRPC calls |
 | -grpc_prometheus | boolean | Enable gRPC monitoring with Prometheus |
-| -grpc_server_initial_conn_window_size | int | grpc server initial connection window size |
-| -grpc_server_initial_window_size | int | grpc server initial window size |
-| -grpc_server_keepalive_enforcement_policy_min_time | duration | grpc server minimum keepalive time (default 5m0s) |
-| -grpc_server_keepalive_enforcement_policy_permit_without_strea | m | grpc server permit client keepalive pings even when there are no active streams (RPCs) |
+| -grpc_server_ca | string   | Path to server CA in PEM format, which will be combine with server cert, return full certificate chain to clients |
+| -grpc_server_initial_conn_window_size | int      | gRPC server initial connection window size |
+| -grpc_server_initial_window_size | int      | gRPC server initial window size |
+| -grpc_server_keepalive_enforcement_policy_min_time | duration | gRPC server minimum keepalive time (default 10s) |
+| -grpc_server_keepalive_enforcement_policy_permit_without_stream | boolean | gRPC server permit client keepalive pings even when there are no active streams (RPCs) |
 | -heartbeat_enable | boolean | If true, vttablet records (if primary) or checks (if replica) the current time of a replication heartbeat in the table _vt.heartbeat. The result is used to inform the serving state of the vttablet via healthchecks. |
 | -heartbeat_interval | duration | How frequently to read and write replication heartbeat. (default 1s) |
 | -hot_row_protection_concurrent_transactions | int | Number of concurrent transactions let through to the txpool/MySQL for the same hot row. Should be > 1 to have enough 'ready' transactions in MySQL and benefit from a pipelining effect. (default 5) |
 | -hot_row_protection_max_global_queue_size | int | Global queue limit across all row (ranges). Useful to prevent that the queue can grow unbounded. (default 1000) |
 | -hot_row_protection_max_queue_size | int | Maximum number of BeginExecute RPCs which will be queued for the same row (range). (default 20) |
-| -jaeger-agent-host | string | host and port to send spans to. if empty, no tracing will be done |
-| -keep_logs | duration | keep logs for this long (using ctime) (zero to keep forever) |
-| -keep_logs_by_mtime | duration | keep logs for this long (using mtime) (zero to keep forever) |
-| -lameduck-period | duration | keep running at least this long after SIGTERM before stopping (default 50ms) |
+| -jaeger-agent-host | string   | Host and port to send spans to; if empty, no tracing will be done |
+| -keep_logs | duration | Keep logs for this long (using ctime) (zero to keep forever) |
+| -keep_logs_by_mtime | duration | Keep logs for this long (using mtime) (zero to keep forever) |
+| -lameduck-period | duration | Keep running at least this long after SIGTERM before stopping (default 50ms) |
 | -legacy_replication_lag_algorithm | boolean | use the legacy algorithm when selecting the vttablets for serving (default true) |
-| -log_backtrace_at | value | when logging hits line file:N, emit a stack trace |
-| -log_dir | string | If non-empty, write log files in this directory |
-| -log_err_stacks | boolean | log stack traces for errors |
-| -log_rotate_max_size | uint | size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800) |
-| -logtostderr | boolean | log to standard error instead of files |
+| -log_backtrace_at | value    | When logging hits line file:N, emit a stack trace |
+| -log_dir | string   | If non-empty, write log files in this directory |
+| -log_err_stacks | boolean | Log stack traces for errors |
+| -log_rotate_max_size | uint     | Size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800) |
+| -logtostderr | boolean | Log to standard error instead of files |
 | -replication_connect_retry | duration | how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s) |
-| -mem-profile-rate | int | profile every n bytes allocated (default 524288) |
+| -master_connect_retry | duration | Deprecated, use -replication_connect_retry (default 10s) |
+| -mem-profile-rate | int      | Deprecated: use '-pprof=mem' instead (default 524288) |
 | -min_number_serving_vttablets | int | the minimum number of vttablets that will be continue to be used even with low replication lag (default 2) |
-| -mutex-profile-fraction | int | profile every n mutex contention events (see runtime.SetMutexProfileFraction) |
+| -mutex-profile-fraction | int      | Deprecated: use '-pprof=mutex' instead |
 | -mysql_auth_server_static_file | string | JSON File to read the users/passwords from. |
 | -mysql_auth_server_static_string | string | JSON representation of the users/passwords config. |
 | -mysql_auth_static_reload_interval | duration | Ticker to reload credentials |
@@ -123,13 +131,16 @@ vtctld \
 | -mysqlctl_client_protocol | string | the protocol to use to talk to the mysqlctl server (default "grpc") |
 | -mysqlctl_mycnf_template | string | template file to use for generating the my.cnf file during server init |
 | -mysqlctl_socket | string | socket file to use for remote mysqlctl actions (empty for local actions) |
-| -onterm_timeout | duration | wait no more than this for OnTermSync handlers before stopping (default 10s) |
-| -opentsdb_uri | string | URI of opentsdb /api/put method |
-| -pid_file | string | If set, the process will write its pid to the named file, and delete it on graceful shutdown. |
-| -pool_hostname_resolve_interval | duration | if set force an update to all hostnames and reconnect if changed, defaults to 0 (disabled) |
-| -port | int | port for the server |
+| -onclose_timeout | duration | Wait no more than this for OnClose handlers before stopping (default 1ns) |
+| -online_ddl_check_interval | duration | Interval polling for new online DDL requests (default 1m0s) |
+| -onterm_timeout | duration | Wait no more than this for OnTermSync handlers before stopping (default 10s) |
+| -opentsdb_uri | string   | URI of opentsdb /api/put method |
+| -pid_file | string   | If set, the process will write its pid to the named file, and delete it on graceful shutdown |
+| -pool_hostname_resolve_interval | duration | If set force an update to all hostnames and reconnect if changed, defaults to 0 (disabled) |
+| -port | int      | Port for the server |
+| -pprof | string   | Enable profiling |
 | -proxy_tablets | boolean | Setting this true will make vtctld proxy the tablet status instead of redirecting to them |
-| -purge_logs_interval | duration | how often try to remove old logs (default 1h0m0s) |
+| -purge_logs_interval | duration | How often to try to remove old logs (default 1h0m0s) |
 | -query-log-stream-handler | string | URL handler for streaming queries log (default "/debug/querylog") |
 | -querylog-filter-tag | string | string that must be present in the query as a comment for the query to be logged, works for both vtgate and vttablet |
 | -querylog-format | string | format for query logs ("text" or "json") (default "text") |
@@ -159,16 +170,19 @@ vtctld \
 | -queryserver-config-txpool-waiter-cap | int | query server transaction pool waiter limit, this is the maximum number of transactions that can be queued waiting to get a connection (default 5000) |
 | -queryserver-config-warn-result-size | int | query server result size warning threshold, warn if number of rows returned from vttablet for non-streaming queries exceeds this |
 | -redact-debug-ui-queries | boolean | redact full queries and bind variables from debug UI |
-| -remote_operation_timeout | duration | time to wait for a remote operation (default 30s) |
-| -s3_backup_aws_endpoint | string | endpoint of the S3 backend (region must be provided) |
-| -s3_backup_aws_region | string | AWS region to use (default "us-east-1") |
-| -s3_backup_aws_retries | int | AWS request retries (default -1) |
-| -s3_backup_force_path_style | boolean | force the s3 path style |
-| -s3_backup_log_level | string | determine the S3 loglevel to use from LogOff, LogDebug, LogDebugWithSigning, LogDebugWithHTTPBody, LogDebugWithRequestRetries, LogDebugWithRequestErrors (default "LogOff") |
-| -s3_backup_server_side_encryption | string | server-side encryption algorithm (e.g., AES256, aws:kms) |
-| -s3_backup_storage_bucket | string | S3 bucket to use for backups |
-| -s3_backup_storage_root | string | root prefix for all backup-related object names |
-| -s3_backup_tls_skip_verify_cert | boolean | skip the 'certificate is valid' check for SSL connections |
+| -relay_log_max_items | int      | Maximum number of rows for VReplication target buffering (default 5000) |
+| -relay_log_max_size | int      | Maximum buffer size (in bytes) for VReplication target buffering. If single rows are larger than this, a single row is buffered at a time (default 250000) |
+| -remote_operation_timeout | duration | Time to wait for a remote operation (default 30s) |
+| -replication_connect_retry | duration | How long to wait in between replica reconnect attempts. Only precise to the second (default 10s) |
+| -s3_backup_aws_endpoint | string   | Endpoint of the S3 backend (region must be provided) |
+| -s3_backup_aws_region | string   | AWS region to use (default "us-east-1") |
+| -s3_backup_aws_retries | int      | AWS request retries (default -1) |
+| -s3_backup_force_path_style | boolean | Force the S3 path style |
+| -s3_backup_log_level | string   | Determine the S3 loglevel to use from LogOff, LogDebug, LogDebugWithSigning, LogDebugWithHTTPBody, LogDebugWithRequestRetries, LogDebugWithRequestErrors (default "LogOff") |
+| -s3_backup_server_side_encryption | string   | Server-side encryption algorithm (e.g., AES256, aws:kms, sse_c:/path/to/key/file) |
+| -s3_backup_storage_bucket | string   | S3 bucket to use for backups |
+| -s3_backup_storage_root | string   | Root prefix for all backup-related object names |
+| -s3_backup_tls_skip_verify_cert | boolean | Skip the 'certificate is valid' check for SSL connections |
 | -schema_change_check_interval | int | this value decides how often we check schema change dir, in seconds (default 60) |
 | -schema_change_controller | string | schema change controller is responsible for finding schema changes and responding to schema change events |
 | -schema_change_dir | string | directory contains schema changes for all keyspaces. Each keyspace has its own directory and schema changes are expected to live in '$KEYSPACE/input' dir. e.g. test_keyspace/input/*sql, each sql file represents a schema change |
@@ -178,8 +192,8 @@ vtctld \
 | -schema_swap_backup_concurrency | int | number of simultaneous compression/checksum jobs to run for seed backup during schema swap (default 4) |
 | -schema_swap_delay_between_errors | duration | time to wait after a retryable error happened in the schema swap process (default 1m0s) |
 | -schema_swap_reparent_timeout | duration | timeout to wait for replicas when doing reparent during schema swap (default 30s) |
-| -security_policy | string | the name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only) |
-| -service_map | value | comma separated list of services to enable (or disable if prefixed with '-') Example: grpc-vtworker |
+| -security_policy | string   | The name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only) |
+| -service_map | value    | Comma separated list of services to enable (or disable if prefixed with '-') Example: grpc-vtworker |
 | -sql-max-length-errors | int | truncate queries in error logs to the given length (default unlimited) |
 | -sql-max-length-ui | int | truncate queries in debug UIs to the given length (default 512) (default 512) |
 | -srv_topo_cache_refresh | duration | how frequently to refresh the topology for cached entries (default 1s) |
