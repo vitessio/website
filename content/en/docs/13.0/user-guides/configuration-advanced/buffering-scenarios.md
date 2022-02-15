@@ -19,17 +19,8 @@ windows for these exercises:
 
 ## Setup
 
-These scenarios will be building off of the 101 initial cluster from the 
+These scenarios will be building off of the
 [local getting started guide](../../../get-started/local/).
-
-{{< warning >}}
-There were several improvements to buffering after the Vitess 12 release,
-which is why we are building and using Vitess release 13+:
-
-  * `buffer_size` increased from `10` to `1000`
-  * `buffer_implementation` changed from `healthcheck` to `keyspace_events`
-
-{{< /warning >}}
 
 #### Terminal 1
 

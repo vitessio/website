@@ -19,7 +19,7 @@ windows for these exercises:
 
 ## Setup
 
-These scenarios will be building off of the 101 initial cluster from the 
+These scenarios will be building off of the
 [local getting started guide](../../../get-started/local/).
 
 #### Terminal 1
