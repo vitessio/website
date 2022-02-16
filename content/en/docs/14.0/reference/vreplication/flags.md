@@ -1,5 +1,5 @@
 ---
-title: Flags
+title: VTTablet Flags
 description: vttablet flags related to VReplication functionality
 weight: 80
 ---
