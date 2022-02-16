@@ -25,7 +25,7 @@ region should reside within a subset of shards which are co-located in that
 region.
 
 ### Prerequisite
-The subsharding vindex only works with [Gen4 planner](../../reference/compatibility/query_planner).
+The subsharding vindex only works with [Gen4 query planner](../../../reference/compatibility/query_planner).
 
 ### Usage
 
