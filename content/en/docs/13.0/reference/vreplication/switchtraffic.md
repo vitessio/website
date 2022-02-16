@@ -69,7 +69,7 @@ If set to false these reverse replication streams will not be created and you wi
 
 </div>
 
-#### -max_transaction_lag_allowed
+#### -max_replication_lag_allowed
 **optional**\
 **default**  the value used for `-timeout`
 
