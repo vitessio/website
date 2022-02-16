@@ -53,7 +53,3 @@ Once set, new queries will be tested against both `Gen4` and `V3`.
 
 The comparer planner runs the same query twice, so it will consume a lot more resources and take longer to run. 
 It is only meant to be used for testing before switching query planners.
-
-{{< warning >}}
-The gen4 planner is still considered experimental and should only be used after careful testing
-{{< /warning >}}
