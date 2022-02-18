@@ -30,7 +30,7 @@ The subsharding vindex only works with [Gen4 query planner](../../../reference/c
 ### Usage
 
 This vindex is registered as `multicol` vindex. 
-It takes 3 parameter as input:
+It takes 3 parameters as input:
 
 1. `column_count` - the number of columns provided for using the vindex.
 2. `column_vindex` - a list of functional vindexes, mapping to hashing functions, to be used on each column in turn to compute the hash value for that column.
