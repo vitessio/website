@@ -25,7 +25,7 @@ Every pull request should meet the following requirements:
 * Adhere to the [Go coding guidelines](https://golang.org/doc/effective_go.html) and watch out for these [common errors](https://github.com/golang/go/wiki/CodeReviewComments).
 * Contain a description message that is as detailed as possible. Here is a great example https://github.com/vitessio/vitess/pull/6543.
 * Pass all CI tests that run on PRs.
-* For bigger changes, it is a good idea to start by creating an RFC (Request for Commnent) issue - this is where you can discuss the feature and why it's important.
+* For bigger changes, it is a good idea to start by creating an RFC (Request for Comment) issue - this is where you can discuss the feature and why it's important.
 Once that is in place, you can create the PR, as a solution to the problem described in the issue. Separating the need and the solution this way makes discussions easier and more focused.
 
 ### Testing
