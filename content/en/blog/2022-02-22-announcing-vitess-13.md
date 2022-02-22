@@ -1,7 +1,7 @@
 ---
 author: 'Florent Poinsard'
 date: 2022-02-22
-slug: '2022-02-22-schema-tracking'
+slug: '2022-02-22-announcing-vitess-13'
 tags: ['release','Vitess','MySQL','kubernetes','operator','cloud','GKE','sharding']
 title: 'Announcing Vitess 13'
 description: "We are pleased to announce the general availability of Vitess 13"
