@@ -8,7 +8,7 @@ weight: 40
 
 ```
 VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=primary,replica,rdonly]
-       [-limit=<max rows to diff>] [-tables=<table list>] [-format=json]
+       [-limit=<max rows to diff>] [-tables=<table list>] [-format=json] [-max_extra_rows_to_compare=1000]
        [-filtered_replication_wait_time=30s] [-debug_query] [-only_pks] <keyspace.workflow>
 ```
 
@@ -100,11 +100,18 @@ Only other format supported is json
 }]
 ```
 
+#### -max_extra_rows_to_compare
+**optional**\
+
+<div class="cmd">
+Limits the number of extra rows on both the source and target that we will perform a second compare pass on to confirm that the rows are in fact different in content and not simply returned in a different order on the source and target (which can happen when there are collation differences, e.g. different MySQL versions).
+</div>
+
 #### -debug_query
 **optional**\
 
 <div class="cmd">
-Adds a MySQL query to the report that can be used for further debugging
+Adds a MySQL query to the report that can be used for further debugging.
 </div>
 
 #### -only_pks

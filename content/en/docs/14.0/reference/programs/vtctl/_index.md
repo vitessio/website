@@ -86,7 +86,7 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [Materialize](../vtctl/keyspaces#materialize) | `Materialize  <json_spec>, example : '{"workflow": "aaa", "source_keyspace": "source", "target_keyspace": "target", "table_settings": [{"target_table": "customer", "source_expression": "select * from customer", "create_ddl": "copy"}]}'` |
 | [SplitClone](../vtctl/keyspaces#splitclone) DEPRECATED | `SplitClone  <keyspace> <from_shards> <to_shards>` |
 | [VerticalSplitClone](../vtctl/keyspaces#verticalsplitclone) DEPRECATED | `VerticalSplitClone  <from_keyspace> <to_keyspace> <tables>` |
-| [VDiff](../vtctl/keyspaces#VDiff) | `VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=<source_tablet_types>] [-filtered_replication_wait_time=30s] <keyspace.workflow>` |
+| [VDiff](../vtctl/keyspaces#VDiff) | `VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=<source_tablet_types>] [-filtered_replication_wait_time=30s] [-max_extra_rows_to_compare=1000] <keyspace.workflow>` |
 | [MigrateServedTypes](../vtctl/keyspaces#migrateservedtypes) | `MigrateServedTypes  [-cells=c1,c2,...] [-reverse] [-skip-refresh-state] <keyspace/shard> <served tablet type>` |
 | [MigrateServedFrom](../vtctl/keyspaces#migrateservedfrom) | `MigrateServedFrom  [-cells=c1,c2,...] [-reverse] <destination keyspace/shard> <served tablet type>` |
 | [SwitchReads](../../vreplication/v1/switchreads) | `SwitchReads  [-cells=c1,c2,...] [-reverse] -tablet_type={replica|rdonly} [-dry-run] <keyspace.workflow>` |
