@@ -1,5 +1,5 @@
 ---
-title: v14.0 (Development)
+title: v14.0 (Future Release)
 description: > 
   Under construction, upcoming release.
   Everything you need to know about scaling MySQL with Vitess.
