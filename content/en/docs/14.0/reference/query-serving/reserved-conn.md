@@ -74,6 +74,23 @@ this comes down to a trade-off between compatibility and
 performance/scalability. You should also review [this section](#number-of-vttablet---mysql-connections)
 when deciding on whether or not to enable reserved connections.
 
+### Avoiding the use of reserved connections
+
+In MySQL80 a new query hint (`SET_VAR`) allows setting the session value of certain system variables during
+the execution of a statement. More information about this MySQL feature on the
+[MySQL documentation](https://dev.mysql.com/doc/refman/8.0/en/optimizer-hints.html#optimizer-hints-set-var).
+Vitess leverages this query hint to reduce the number of reserved connections. When setting a system variable,
+instead of creating a reserved connection, the variable and its new value will be sent to MySQL using the
+`SET_VAR` query hint. This applies only if the system variable is supported by the `SET_VAR` hint
+(list of supported variables [here](https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html)).
+
+
+For example, executing: `set @@sql_mode = 'NO_ZERO_DATE'` will not create a reserved connection for future queries.
+If we execute a `select` statement like: `select foo from bar`, VTGate will rewrite the query as 
+`select /*+ SET_VAR(sql_mode = 'NO_ZERO_DATE') foo from bar */`.
+
+This feature can be disabled using the VTGate flag `-enable_set_var` (by default set to true).
+
 ### Temporary tables and reserved connections
 
 Temporary tables exist only in the context of a particular MySQL connection.
