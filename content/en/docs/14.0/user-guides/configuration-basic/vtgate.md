@@ -87,7 +87,7 @@ If vtgates cannot connect to one of the vttablets it discovered from the topo, o
 You can verify that the vtgates came up successfully by using the MySQL client:
 
 ```text
-~/...vitess/examples/local> mysql -h 127.0.0.1 -P 15306 -u=mysql_user -p=mysql_password
+~/...vitess/examples/local> mysql -h 127.0.0.1 -P 15306 --user=mysql_user --password=mysql_password
 [snip]
 mysql> show databases;
 +----------+
