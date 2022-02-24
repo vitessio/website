@@ -245,6 +245,30 @@ Changes the db type for the specified tablet, if possible. This command is used 
 * failed reading tablet %v: %v
 * invalid type transition %v: %v -&gt;</code> %v
 
+### SetWritable
+
+Sets the specified tablet as writable or read-only.
+
+#### Example
+
+<pre class="command-example">SetWritable &lt;alias&gt; &lt;true/false&gt;</pre>
+
+#### Arguments
+
+* <code>&lt;tablet alias&gt;</code> &ndash; Required. A Tablet Alias uniquely identifies a vttablet. The argument value is in the format <code>&lt;cell name&gt;-&lt;uid&gt;</code>.
+* <code>&lt;tablet type&gt;</code> &ndash; Required. The vttablet's role. Valid values are:
+
+  * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
+  * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
+  * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
+  * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential primary. Vitess also does not worry about lag for experimental tablets when reparenting.
+  * <code>primary</code> &ndash; A primary copy of data
+  * <code>master</code> &ndash; Deprecated, same as primary
+  * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
+  * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to primary
+  * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
+  * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential primary tablet.
+
 ### Ping
 
 hecks that the specified tablet is awake and responding to RPCs. This command can be blocked by other in-flight operations.
