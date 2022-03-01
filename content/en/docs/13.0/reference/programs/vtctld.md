@@ -45,8 +45,6 @@ vtctld \
 | -backup_storage_implementation | string   | Which implementation to use for the backup storage feature |
 | -backup_storage_number_blocks | int      | If backup_storage_compress is true, backup_storage_number_blocks sets the number of blocks that can be processed at once, before the writer blocks, during compression. It should be equal to the number of CPUs available for compression (default 2) |
 | -binlog_use_v3_resharding_mode | boolean | True if the binlog streamer should use V3-style sharding, which doesn't require a preset sharding key column (default true) |
-| -builtinbackup_mysqld_timeout | duration | How long to wait for mysqld to shutdown at the start of the backup (default 10m0s) |
-| -builtinbackup_progress | duration | How often to send progress updates when backing up large files (default 5s) |
 | -catch-sigpipe | boolean | Catch and ignore SIGPIPE on stdout and stderr if specified |
 | -cell | string   | Cell to use |
 | -ceph_backup_storage_config | string   | Path to JSON config file for ceph backup storage (default "ceph_backup_config.json") |
@@ -54,11 +52,9 @@ vtctld \
 | -cpu_profile | string   | Deprecated: use '-pprof=cpu' instead |
 | -datadog-agent-host | string   | Host to send spans to; if empty, no tracing will be done |
 | -datadog-agent-port | string   | Port to send spans to; if empty, no tracing will be done |
-| -disable_active_reparents | boolean | If set, do not allow active reparents. Use this to protect a cluster using external reparents |
 | -durability_policy | string   | Type of durability to enforce. Other values are dictated by registered plugins (default "none") |
 | -emit_stats | boolean | If set, emit stats to push-based monitoring and stats backends |
 | -enable_realtime_stats | boolean | Required for the Realtime Stats view. If set, vtctld will maintain a streaming RPC to each tablet (in all cells) to gather the realtime health stats |
-| -enable_replication_reporter | boolean | Use polling to track replication lag |
 | -file_backup_storage_root | string   | Root directory for the file backup storage |
 | -gcs_backup_storage_bucket | string   | Google Cloud Storage bucket to use for backups |
 | -gcs_backup_storage_root | string   | Root prefix for all backup-related object names |
@@ -71,7 +67,7 @@ vtctld \
 | -grpc_compression | string   | Which protocol to use for compressing gRPC. Supported: snappy (default: nothing) |
 | -grpc_crl | string   | Path to a certificate revocation list in PEM format, client certificates will be further verified against this file during TLS handshake |
 | -grpc_enable_optional_tls | boolean | Enable optional TLS mode when a server accepts both TLS and plain-text connections on the same port |
-| -grpc_enable_tracing | boolean | Enable GRPC tracing |
+| -grpc_enable_tracing | boolean | Enable gRPC tracing |
 | -grpc_initial_conn_window_size | int      | gRPC initial connection window size |
 | -grpc_initial_window_size | int      | gRPC initial window size |
 | -grpc_keepalive_time | duration | After a duration of this time, if the client doesn't see any activity, it pings the server to see if the transport is still alive (default 10s) |
@@ -96,7 +92,6 @@ vtctld \
 | -log_err_stacks | boolean | Log stack traces for errors |
 | -log_rotate_max_size | uint     | Size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800) |
 | -logtostderr | boolean | Log to standard error instead of files |
-| -master_connect_retry | duration | Deprecated, use -replication_connect_retry (default 10s) |
 | -mem-profile-rate | int      | Deprecated: use '-pprof=mem' instead (default 524288) |
 | -mutex-profile-fraction | int      | Deprecated: use '-pprof=mutex' instead |
 | -onclose_timeout | duration | Wait no more than this for OnClose handlers before stopping (default 1ns) |
@@ -109,10 +104,7 @@ vtctld \
 | -pprof | string   | Enable profiling |
 | -proxy_tablets | boolean | Setting this true will make vtctld proxy the tablet status instead of redirecting to them |
 | -purge_logs_interval | duration | How often to try to remove old logs (default 1h0m0s) |
-| -relay_log_max_items | int      | Maximum number of rows for VReplication target buffering (default 5000) |
-| -relay_log_max_size | int      | Maximum buffer size (in bytes) for VReplication target buffering. If single rows are larger than this, a single row is buffered at a time (default 250000) |
 | -remote_operation_timeout | duration | Time to wait for a remote operation (default 30s) |
-| -replication_connect_retry | duration | How long to wait in between replica reconnect attempts. Only precise to the second (default 10s) |
 | -s3_backup_aws_endpoint | string   | Endpoint of the S3 backend (region must be provided) |
 | -s3_backup_aws_region | string   | AWS region to use (default "us-east-1") |
 | -s3_backup_aws_retries | int      | AWS request retries (default -1) |
