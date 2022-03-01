@@ -19,7 +19,7 @@ Reserved connections are used when changing system variables, using temporary ta
 ### System variables and reserved connections
 
 If a user does change a system variable, the user connection will be marked as needing reserved connections, and for all sub-sequent calls to Vitess, connection pooling is turned off for this particular session.
-This only applies to some system settings. See more details [here.](/docs/design-docs/query-serving/set-stmt/)
+This only applies to some system settings. See more details [here.](../set-stmt/)
 Any queries to a tablet from this session will create a reserved connection on that tablet that is reserved for the user and no one else.
 
 Connection pooling is an important part of what makes Vitess fast, so using constructs that turn it off should only be done in rare circumstances.
@@ -34,7 +34,7 @@ If a user uses temporary tables, Vitess will mark the session as needing a reser
 
 ### GET_LOCK() and reserved connections
 
-The MySQL locking functions allow users to work with user level locks. Since the locks are tied to the connection, and the lock must be released in the same connection as it was acquired, use of these functions will force a connection to become a reserved connection. This connection is also kept alive so it does not time out due to inactivity. More information can be found [here.](/docs/design-docs/query-serving/locking-functions/).
+The MySQL locking functions allow users to work with user level locks. Since the locks are tied to the connection, and the lock must be released in the same connection as it was acquired, use of these functions will force a connection to become a reserved connection. This connection is also kept alive so it does not time out due to inactivity. More information can be found [here.](../locking-functions/).
 
 ### Shutting down reserved connections
 

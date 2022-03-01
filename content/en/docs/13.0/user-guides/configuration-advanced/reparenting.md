@@ -58,7 +58,7 @@ This command performs the following actions when used to initialize the first pr
     - On the primary-elect tablet, insert a row into an internal table and then update the global shard object's PrimaryAlias record.
     - In parallel on each replica, set the new primary and wait for the inserted row to replicate to the replica tablet.
 
-The new primary (if unspecified) is chosen using the configured [Durability Policy](../durability_policy).  
+The new primary (if unspecified) is chosen using the configured [Durability Policy](../../configuration-basic/durability_policy).  
 
 ### EmergencyReparentShard: Emergency reparenting
 
@@ -78,7 +78,7 @@ This command performs the following actions:
     - On the primary-elect tablet, Vitess inserts an entry in a test table and then updates the `PrimaryAlias` record of the global Shard object.
     - In parallel on each replica, excluding the old primary, Vitess sets the primary and waits for the test entry to replicate to the replica tablet. Replica tablets that had not been replicating before the command was called are left in their current state and do not start replication after the reparenting process.
 
-The new primary (if unspecified) is chosen using the configured [Durability Policy](../durability_policy).  
+The new primary (if unspecified) is chosen using the configured [Durability Policy](../../configuration-basic/durability_policy).  
 
 ## External Reparenting
 
