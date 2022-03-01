@@ -18,7 +18,7 @@ Migrate <options> <action> <workflow identifier>
 ### Description
 
 Migrate is used to start and manage vReplication workflows for copying keyspaces and/or tables from a source Vitess cluster, to a target Vitess cluster.
-This command is built off of [MoveTables](../movetables) but has been extended to work with source and target topology services, and should be 
+This command is built off of [MoveTables](../movetables) but has been extended to work with source and target topology services. It should be 
 utilized when moving Keyspaces or Tables between two separate Vitess environments. Migrate is an advantageous strategy for large sharded environments
 for a few reasons:
 
@@ -34,14 +34,15 @@ on external Vitess clusters.
 
 #### Differences between Migrate and MoveTables
 
-Migrate has separate semantics and behaviors than MoveTables:
+Migrate has separate semantics and behaviors from MoveTables:
 
 * MoveTables migrates data from one keyspace to another, within the same Vitess cluster; Migrate functions between two separated Vitess clusters. 
-* MoveTables erases the source data upon completion; Migrate keeps the source data intact.
-* MoveTables sets up routing rules and reverse replication, allowing for rollback prior to completion
+* MoveTables erases the source data upon completion by default; Migrate keeps the source data intact.
+    * There are flags available in MoveTables to change the default behavior in regards to the source data.
+* MoveTables sets up routing rules and reverse replication, allowing for rollback prior to completion.
     * Switching read/write traffic is not meaningful in the case of Migrate, as the Source is in a different cluster.
-    * SWitching traffic requires that the Target can create vreplication streams (in the \_vt database) on the Source database;
-      this may not be always possible on production systems.
+    * Switching traffic requires the Target to have the ability to create vreplication streams (in the _vt database) on the Source;
+      this may not always be possible on production systems.
 * Not all MoveTables options work with Migrate; for example [Progress](../progress) is unavailable with Migrate. 
 
 
