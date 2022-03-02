@@ -121,11 +121,6 @@ vtctld \
 | -mysql_auth_server_static_file | string | JSON File to read the users/passwords from. |
 | -mysql_auth_server_static_string | string | JSON representation of the users/passwords config. |
 | -mysql_auth_static_reload_interval | duration | Ticker to reload credentials |
-| -mysql_clientcert_auth_method | string | Client-side authentication method to use. Supported values: mysql_clear_password, dialog (default "mysql_clear_password") |
-| -mysql_server_flush_delay | duration | Delay after which buffered response will flushed to client (default 100ms) |
-| -mysqlctl_client_protocol | string | The protocol to use to talk to the mysqlctl server (default "grpc") |
-| -mysqlctl_mycnf_template | string | Template file to use for generating the my.cnf file during server init |
-| -mysqlctl_socket | string | Socket file to use for remote mysqlctl actions (empty for local actions) |
 | -onclose_timeout | duration | Wait no more than this for OnClose handlers before stopping (default 1ns) |
 | -online_ddl_check_interval | duration | Interval polling for new online DDL requests (default 1m0s) |
 | -onterm_timeout | duration | Wait no more than this for OnTermSync handlers before stopping (default 10s) |
@@ -139,31 +134,6 @@ vtctld \
 | -query-log-stream-handler | string | URL handler for streaming queries log (default "/debug/querylog") |
 | -querylog-filter-tag | string | String that must be present in the query as a comment for the query to be logged, works for both vtgate and vttablet |
 | -querylog-format | string | Gormat for query logs ("text" or "json") (default "text") |
-| -queryserver-config-acl-exempt-acl | string | An ACL that exempt from table ACL checking (this ACL is free to access any vitess tables). |
-| -queryserver-config-enable-table-acl-dry-run | boolean | If this flag is enabled, tabletserver will emit monitoring metrics and let the request pass regardless of table acl check results |
-| -queryserver-config-idle-timeout | int | Query server idle timeout (in seconds), vttablet manages various mysql connection pools. This config means if a connection has not been used in given idle timeout, this connection will be removed from pool. This effectively manages number of connection objects and optimize the pool performance (default 1800) |
-| -queryserver-config-max-dml-rows | int | Query server max dml rows per statement, maximum number of rows allowed to return at a time for an update or delete with either 1) an equality where clauses on primary keys, or 2) a subselect statement. For update and delete statements in above two categories, vttablet will split the original query into multiple small queries based on this configuration value  |
-| -queryserver-config-max-result-size | int | Query server max result size, maximum number of rows allowed to return from vttablet for non-streaming queries (default 10000) |
-| -queryserver-config-message-postpone-cap | int | Query server message postpone cap is the maximum number of messages that can be postponed at any given time. Set this number to substantially lower than transaction cap, so that the transaction pool isn't exhausted by the message subsystem (default 4) |
-| -queryserver-config-passthrough-dmls | boolean | Query server pass through all dml statements without rewriting |
-| -queryserver-config-pool-prefill-parallelism | int | Query server read pool prefill parallelism, a non-zero value will prefill the pool using the specified parallism |
-| -queryserver-config-pool-size | int | Query server read pool size, connection pool is used by regular queries (non streaming, not in a transaction) (default 16) |
-| -queryserver-config-query-cache-size | int | Query server query cache size, maximum number of queries to be cached. vttablet analyzes every incoming query and generate a query plan, these plans are being cached in a lru cache. This config controls the capacity of the lru cache (default 5000) |
-| -queryserver-config-query-pool-timeout | int | Query server query pool timeout (in seconds), it is how long vttablet waits for a connection from the query pool. If set to 0 (default) then the overall query timeout is used instead |
-| -queryserver-config-query-pool-waiter-cap | int | Query server query pool waiter limit, this is the maximum number of queries that can be queued waiting to get a connection (default 5000) |
-| -queryserver-config-query-timeout | int | Query server query timeout (in seconds), this is the query timeout in vttablet side. If a query takes more than this timeout, it will be killed (default 30) |
-| -queryserver-config-schema-reload-time | int | Query server schema reload time, how often vttablet reloads schemas from underlying MySQL instance in seconds. vttablet keeps table schemas in its own memory and periodically refreshes it from MySQL. This config controls the reload time (default 1800) |
-| -queryserver-config-stream-buffer-size | int | Query server stream buffer size, the maximum number of bytes sent from vttablet for each stream call. It's recommended to keep this value in sync with vtgate's stream_buffer_size (default 32768) |
-| -queryserver-config-stream-pool-prefill-parallelism | int | Query server stream pool prefill parallelism, a non-zero value will prefill the pool using the specified parallelism |
-| -queryserver-config-stream-pool-size | int | Query server stream connection pool size, stream pool is used by stream queries: queries that return results to client in a streaming fashion (default 200) |
-| -queryserver-config-strict-table-acl | boolean | Only allow queries that pass table ACL checks |
-| -queryserver-config-terse-errors | boolean | Prevent bind vars from escaping in returned errors |
-| -queryserver-config-transaction-cap | int | Query server transaction cap is the maximum number of transactions allowed to happen at any given point of a time for a single vttablet. E.g. by setting transaction cap to 100, there are at most 100 transactions will be processed by a vttablet and the 101th transaction will be blocked (and fail if it cannot get connection within specified timeout) (default 20) |
-| -queryserver-config-transaction-prefill-parallelism | int | Query server transaction prefill parallelism, a non-zero value will prefill the pool using the specified parallism |
-| -queryserver-config-transaction-timeout | int | Query server transaction timeout (in seconds), a transaction will be killed if it takes longer than this value (default 30) |
-| -queryserver-config-txpool-timeout | int | Query server transaction pool timeout, it is how long vttablet waits if tx pool is full (default 1) |
-| -queryserver-config-txpool-waiter-cap | int | Query server transaction pool waiter limit, this is the maximum number of transactions that can be queued waiting to get a connection (default 5000) |
-| -queryserver-config-warn-result-size | int | Query server result size warning threshold, warn if number of rows returned from vttablet for non-streaming queries exceeds this |
 | -redact-debug-ui-queries | boolean | Redact full queries and bind variables from debug UI |
 | -remote_operation_timeout | duration | Time to wait for a remote operation (default 30s) |
 | -s3_backup_aws_endpoint | string   | Endpoint of the S3 backend (region must be provided) |
@@ -186,8 +156,6 @@ vtctld \
 | -schema_swap_reparent_timeout | duration | Timeout to wait for replicas when doing reparent during schema swap (default 30s) |
 | -security_policy | string   | The name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only) |
 | -service_map | value    | Comma separated list of services to enable (or disable if prefixed with '-') Example: grpc-vtworker |
-| -serving_state_grace_period | duration | how long to pause after broadcasting health to vtgate, before enforcing a new serving state |
-| -shutdown_grace_period | float    | how long to wait (in seconds) for queries and transactions to complete during graceful shutdown. |
 | -sql-max-length-errors | int | Truncate queries in error logs to the given length (default unlimited) |
 | -sql-max-length-ui | int | Truncate queries in debug UIs to the given length (default 512) (default 512) |
 | -srv_topo_cache_refresh | duration | How frequently to refresh the topology for cached entries (default 1s) |
@@ -253,16 +221,6 @@ vtctld \
 | -v | value    | Log level for V logs |
 | -version | boolean | Print binary version |
 | -vmodule | value    | Comma-separated list of pattern=N settings for file-filtered logging |
-| -vreplication_copy_phase_duration | duration | Duration for each copy phase loop before running the next catchup (default 1h0m0s) |
-| -vreplication_experimental_flags | int      | (Bitmask) of experimental features in vreplication to enable (default 1) |
-| -vreplication_healthcheck_retry_delay | duration | healthcheck retry delay (default 5s) |
-| -vreplication_healthcheck_timeout | duration | healthcheck retry delay (default 1m0s) |
-| -vreplication_healthcheck_topology_refresh | duration | Refresh interval for re-reading the topology (default 30s) |
-| -vreplication_heartbeat_update_interval | int      | Frequency (in seconds, max 60) at which the time_updated column of a vreplication stream when idling (default 1) |
-| -vreplication_replica_lag_tolerance | duration | Replica lag threshold duration: once lag is below this we switch from copy phase to the replication (streaming) phase (default 1m0s) |
-| -vreplication_retry_delay | duration | Delay before retrying a failed binlog connection (default 5s) |
-| -vreplication_store_compressed_gtid | boolean | Store compressed gtids in the pos column of _vt.vreplication |
-| -vreplication_tablet_type | string   | Comma separated list of tablet types used as a source (default "PRIMARY,REPLICA") |
 | -vstream_dynamic_packet_size | boolean | Enable dynamic packet sizing for VReplication. This will adjust the packet size during replication to improve performance (default true) |
 | -vstream_packet_size | int      | Suggested packet size for VReplication streamer. This is used only as a recommendation. The actual packet size may be more or less than this amount (default 250000) |
 | -vtctl_client_protocol | string   | The protocol to use to talk to the vtctl server (default "grpc") |
@@ -290,10 +248,3 @@ vtctld \
 | -workflow_manager_init | boolean | Initialize the workflow manager in this vtctld instance |
 | -workflow_manager_use_election | boolean | If specified, will use a topology server-based master election to ensure only one workflow manager is active at a time |
 | -xbstream_restore_flags | string   | Flags to pass to xbstream command during restore. These should be space separated and will be added to the end of the command. These need to match the ones used for backup e.g. --compress / --decompress, --encrypt / --decrypt |
-| -xtrabackup_backup_flags | string   | Flags to pass to backup command. These should be space separated and will be added to the end of the command |
-| -xtrabackup_prepare_flags | string   | Flags to pass to prepare command. These should be space separated and will be added to the end of the command |
-| -xtrabackup_root_path | string   | Directory location of the xtrabackup and xbstream executables, e.g., /usr/bin |
-| -xtrabackup_stream_mode | string   | Which mode to use if streaming, valid values are tar and xbstream (default "tar") |
-| -xtrabackup_stripe_block_size | uint     | Size in bytes of each block that gets sent to a given stripe before rotating to the next stripe (default 102400) |
-| -xtrabackup_stripes | uint     | If greater than 0, use data striping across this many destination files to parallelize data transfer and decompression |
-| -xtrabackup_user | string   | User that xtrabackup will use to connect to the database server. This user must have all necessary privileges. For details, please refer to xtrabackup documentation |

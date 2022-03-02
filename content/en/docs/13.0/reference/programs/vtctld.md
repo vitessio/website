@@ -116,8 +116,6 @@ vtctld \
 | -s3_backup_tls_skip_verify_cert | boolean | Skip the 'certificate is valid' check for SSL connections |
 | -security_policy | string   | The name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only) |
 | -service_map | value    | Comma separated list of services to enable (or disable if prefixed with '-') Example: grpc-vtworker |
-| -serving_state_grace_period | duration | how long to pause after broadcasting health to vtgate, before enforcing a new serving state |
-| -shutdown_grace_period | float    | how long to wait (in seconds) for queries and transactions to complete during graceful shutdown. |
 | -stats_backend | string   | The name of the registered push-based monitoring/stats backend to use |
 | -stats_combine_dimensions | string   | List of dimensions to be combined into a single "all" value in exported stats vars |
 | -stats_common_tags | string   | Comma-separated list of common tags for the stats backend. It provides both label and values. Example: label1:value1,label2:value2 |
@@ -131,16 +129,6 @@ vtctld \
 | -v | value    | Log level for V logs |
 | -version | boolean | Print binary version |
 | -vmodule | value    | Comma-separated list of pattern=N settings for file-filtered logging |
-| -vreplication_copy_phase_duration | duration | Duration for each copy phase loop before running the next catchup (default 1h0m0s) |
-| -vreplication_experimental_flags | int      | (Bitmask) of experimental features in vreplication to enable (default 1) |
-| -vreplication_healthcheck_retry_delay | duration | healthcheck retry delay (default 5s) |
-| -vreplication_healthcheck_timeout | duration | healthcheck retry delay (default 1m0s) |
-| -vreplication_healthcheck_topology_refresh | duration | Refresh interval for re-reading the topology (default 30s) |
-| -vreplication_heartbeat_update_interval | int      | Frequency (in seconds, max 60) at which the time_updated column of a vreplication stream when idling (default 1) |
-| -vreplication_replica_lag_tolerance | duration | Replica lag threshold duration: once lag is below this we switch from copy phase to the replication (streaming) phase (default 1m0s) |
-| -vreplication_retry_delay | duration | Delay before retrying a failed binlog connection (default 5s) |
-| -vreplication_store_compressed_gtid | boolean | Store compressed gtids in the pos column of _vt.vreplication |
-| -vreplication_tablet_type | string   | Comma separated list of tablet types used as a source (default "PRIMARY,REPLICA") |
 | -vstream_dynamic_packet_size | boolean | Enable dynamic packet sizing for VReplication. This will adjust the packet size during replication to improve performance (default true) |
 | -vstream_packet_size | int      | Suggested packet size for VReplication streamer. This is used only as a recommendation. The actual packet size may be more or less than this amount (default 250000) |
 | -vtctl_client_protocol | string   | The protocol to use to talk to the vtctl server (default "grpc") |
