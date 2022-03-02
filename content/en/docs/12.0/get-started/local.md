@@ -12,7 +12,7 @@ A [docker setup](../local-docker/) is also available, which requires no dependen
 
 ## Install MySQL and etcd
 
-Vitess supports MySQL 5.6+ and MariaDB 10.0+. We recommend MySQL 5.7 if your installation method provides a choice:
+Vitess supports the databases listed [here](../../overview/supported-databases/). We recommend MySQL 8.0 if your installation method provides that option:
 
 ```sh
 # Ubuntu based
@@ -22,7 +22,7 @@ sudo apt install -y mysql-server etcd curl
 sudo apt install -y default-mysql-server default-mysql-client etcd curl
 
 # Yum based
-sudo yum -y localinstall https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
+sudo yum -y localinstall https://dev.mysql.com/get/mysql80-community-release-el8-3.noarch.rpm
 sudo yum -y install mysql-community-server etcd curl
 ```
 
@@ -58,11 +58,11 @@ sudo setenforce 0
 
 ## Install Vitess
 
-Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux. For example with Vitess 6:
+Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux. For example with Vitess 13:
 
 ```sh
-version=6.0.20-20200818
-file=vitess-${version}-90741b8.tar.gz
+version=13.0.0
+file=vitess-${version}-bc4a960.tar.gz
 wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
 tar -xzf ${file}
 cd ${file/.tar.gz/}

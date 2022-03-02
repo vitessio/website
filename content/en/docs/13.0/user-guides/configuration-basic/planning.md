@@ -20,8 +20,8 @@ Before starting, we assume that you have downloaded Vitess and finished the [Get
 
 Vitess relies on two external components, and we recommend that you choose them upfront:
 
-1. TopoServer: This is the server in which Vitess stores its metadata. We currently support zookeeper or etcd.
-2. MySQL: Vitess supports MySQL/Percona Server 5.7 to 8.0, and MariaDB 10.0 to 10.3. MariaDB 10.4 is currently known to have installation issues ([#5362](https://github.com/vitessio/vitess/issues/5362)). The most common deployments use MySQL 5.7.
+1. [TopoServer](../../../concepts/topology-service/): This is the server in which Vitess stores its metadata. We recommend Etcd if you have no other preference.
+2. [MySQL](../../../overview/supported-databases/): Vitess supports MySQL/Percona Server 5.7 to 8.0 and to a limited extent MariaDB 10.0 to 10.3. We recommend MySQL 8.0 for new installations.
 
 In this guide, we will be covering the case where the MySQL instances are managed by Vitess. A different section covers the details of running against [externally managed databases](../../configuration-advanced/unmanaged-tablet).
 
