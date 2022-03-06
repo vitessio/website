@@ -15,6 +15,9 @@ to minutes and more. This is typically less of a problem in Vitess than it might
 be in normal MySQL, if you are keeping your shard instances (and thus shard
 table instances) small, but could still be a problem.
 
+{{< info >}}MySQL 8.0.23 addresses the issues of DROP TABLE. Vitess changes its course of action based on the MySQL version, see below.{{< /info >}}
+
+
 There are two locking aspects to dropping tables:
 
 - Purging dropped table's pages from the InnoDB buffer pool(s)
@@ -23,10 +26,10 @@ There are two locking aspects to dropping tables:
 The exact locking behavior and duration can vary depending on
 various factors:
 
- - Which filesystem is used
- - Whether the MySQL adaptive hash index is used
- - Whether you are attempting to hack around some of the MySQL `DROP TABLE`
-   performance problems using hard links
+- Which filesystem is used
+- Whether the MySQL adaptive hash index is used
+- Whether you are attempting to hack around some of the MySQL `DROP TABLE`
+  performance problems using hard links
 
 It is common practice to avoid direct `DROP TABLE` statements and to follow
 a more elaborate table lifecycle.
@@ -62,6 +65,11 @@ Vitess supports all subsets via `-table_gc_lifecycle` flag to `vttablet`. The de
 Vitess will always work the steps in this order: `hold -> purge -> evac -> drop`. For example, setting `-table_gc_lifecycle "drop,hold"` still first _holds_, then _drops_
 
 All subsets end with a `drop`, even if not explicitly mentioned. Thus, `"purge"` is interpreted as `"purge,drop"`.
+
+In MySQL **8.0.23** and later, table drops do not acquire locks on the InnoDB buffer pool, and are non-blocking for queries that do not reference the table being dropped. Vitess automatically identifies whether the underlying MySQL server is at that version or later and will:
+
+- Implicitly skip `purge` state, even if defined
+- Implicitly skip `hold` state, even if defined
 
 ## Stateless flow by table name hints
 
