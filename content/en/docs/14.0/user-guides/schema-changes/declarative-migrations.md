@@ -113,5 +113,5 @@ Consider the following types of migrations:
 
 Declarative DDLs are [revertible](../revertible-migrations/). Note:
 
-- A declarative migration which ends up being an `ALTER` is only revertible if executed with `online` strategy.
+- A declarative migration which ends up being an `ALTER` is only revertible if executed with `vitess` strategy.
 - A declarative migration which ends up being a noop (and implicitly successful), implies a noop revert.
