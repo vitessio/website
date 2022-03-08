@@ -238,5 +238,4 @@ mysql> select * from t1;
 3 rows in set (0.01 sec)
 ```
 
-It is arguably bad practice to mix use-cases like this;  avoid it, and
-you will not run into this issue.
+It is arguably bad practice to mix use-cases like this. If you avoid mixing use-cases you will not run into this issue.
