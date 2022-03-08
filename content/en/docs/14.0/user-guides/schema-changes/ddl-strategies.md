@@ -145,9 +145,11 @@ There are pros and cons to using any of the strategies. Some notable differences
 
 #### Cut-over
 
-- Both `pt-online-schema-change` and `gh-ost` have an atomic cut-over: at the end of the migration, the tables are switched, and incoming queries are momentarily blocked, but not lost.
-- VReplication causes a brief outage at time of cut-over (subject to change): apps will not be able to _write_ to the original table during cut-over, and will return with error.
-- VReplication cut-over is only safe when all traffic comes through Vitess/VTGate (subject to change). Any DML query running on migrated table at time of cut-over, and which executes directly on the MySQL server without going through Vitess, might lose its data.
+- Both `pt-online-schema-change` and `gh-ost` have an atomic cut-over based on MySQL locking. At the end of the migration, the tables are switched, and incoming queries are momentarily blocked, but not lost.
+- `vitess` offers a combined Vitess/MySQL locking logic:
+  - To queries on the migrated table, that are going through Vitess (ie route through `VTGate`), the cut-over is blocking. Vitess will buffer incoming queries during cut-over, and will allow them to operate once the cut-over is complete.
+  - Any queries on the migrated table that are not going through Vitess and which operate directly on the MySQL server will experience a brief outage: the queries will notice the table does not exist momentarily.
+  - It is at any case safe, in terms of data consistency, to run both types of queries throughout the migration and specifically during the cut-over.
 
 #### MySQL compatibility
 
@@ -155,12 +157,12 @@ There are pros and cons to using any of the strategies. Some notable differences
 
 ## Vitess functionality comparison
 
-| Strategy | Managed | Online | Trackable | Declarative | Revertible          | Recoverable | Traffic |
-|----------|---------|--------|-----------|-------------|---------------------|-------------|---------|
-| `direct` | No      | MySQL* | No        | No          | No                  | No          | Any     |
-| `pt-osc` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP`       | No*         | Any     |
-| `gh-ost` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP`       | No*         | Any     |
-| `vitess` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP,ALTER` | Yes         | Any*    |
+| Strategy | Managed | Online | Trackable | Declarative | Revertible          | Recoverable |
+|----------|---------|--------|-----------|-------------|---------------------|-------------|
+| `direct` | No      | MySQL* | No        | No          | No                  | No          |
+| `pt-osc` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP`       | No*         |
+| `gh-ost` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP`       | No*         |
+| `vitess` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP,ALTER` | Yes         |
 
 - **Managed**: whether Vitess schedules and operates the migration
 - **Online**:
