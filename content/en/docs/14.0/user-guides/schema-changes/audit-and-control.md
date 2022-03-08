@@ -31,7 +31,7 @@ When the user submits an online DDL, Vitess responds with a UUID, a job Id used 
 #### Via VTGate/SQL
 
 ```sql
-mysql> set @@ddl_strategy='online';
+mysql> set @@ddl_strategy='vitess';
 
 mysql> alter table corder add column ts timestamp not null default current_timestamp;
 +--------------------------------------+
@@ -57,13 +57,13 @@ mysql> drop table customer;
 You may use `vtctl` or `vtctlclient` (the two are interchangeable for the purpose of this document) to apply schema changes. The `ApplySchema` command supports both synchronous and online schema migrations. To run an online schema migration you will supply the `-ddl_strategy` command line flag:
 
 ```shell
-$ vtctlclient ApplySchema -ddl_strategy "online" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
+$ vtctlclient ApplySchema -ddl_strategy "vitess" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
 a2994c92_f1d4_11ea_afa3_f875a4d24e90
 ```
 
  You my run multiple migrations withing the same `ApplySchema` command:
 ```shell
-$ vtctlclient ApplySchema -skip_preflight -ddl_strategy "online" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED; CREATE TABLE sample (id int PRIMARY KEY); DROP TABLE another;" commerce
+$ vtctlclient ApplySchema -skip_preflight -ddl_strategy "vitess" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED; CREATE TABLE sample (id int PRIMARY KEY); DROP TABLE another;" commerce
 3091ef2a_4b87_11ec_a827_0a43f95f28a3
 ```
 
@@ -98,7 +98,7 @@ mysql> show vitess_migrations like 'bf4598ab_8d55_11eb_815f_f875a4d24e90' \G
        mysql_schema: vt_commerce
         mysql_table: corder
 migration_statement: alter table corder add column ts timestamp not null default current_timestamp()
-           strategy: online
+           strategy: vitess
             options: 
     added_timestamp: 2021-03-25 12:35:01
 requested_timestamp: 2021-03-25 12:34:58
@@ -131,7 +131,7 @@ mysql> show vitess_migrations like 'complete' \G
        mysql_schema: vt_commerce
         mysql_table: customer
 migration_statement: drop table customer
-           strategy: online
+           strategy: vitess
             options: 
     added_timestamp: 2021-03-25 12:46:53
 requested_timestamp: 2021-03-25 12:46:51
@@ -614,5 +614,5 @@ Create Table: CREATE TABLE `corder` (
 ### Via vtctl/ApplySchema
 
 ```
-$ vtctlclient ApplySchema -ddl_strategy "online" -sql "revert vitess_migration '1a689113_8d77_11eb_815f_f875a4d24e90'" commerce
+$ vtctlclient ApplySchema -ddl_strategy "vitess" -sql "revert vitess_migration '1a689113_8d77_11eb_815f_f875a4d24e90'" commerce
 ```
