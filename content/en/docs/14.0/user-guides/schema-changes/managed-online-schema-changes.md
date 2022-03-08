@@ -4,7 +4,7 @@ weight: 2
 aliases: ['/docs/user-guides/managed-online-schema-changes/']
 ---
 
-**Note:** `gh-ost` migrations are considered stable. `pt-osc` and `online` migrations are considered **EXPERIMENTAL**.
+**Note:** `gh-ost` migrations are considered stable. `pt-osc` and `vitess` migrations are considered **EXPERIMENTAL**.
 
 Vitess offers managed, online schema migrations (aka Online DDL), transparently to the user. Vitess Onine DDL offers:
 
@@ -207,9 +207,9 @@ The primary use case is a primary failure and failover. The newly promoted table
 
 ## Throttling
 
-All three strategies: `online`, `gh-ost` and `pt-osc` utilize the tablet throttler, which is a cooperative throttler service based on replication lag. The tablet throttler automatically detects topology `REPLICA` tablets and adapts to changes in the topology. See [Tablet throttler](../../../reference/features/tablet-throttler/).
+All three strategies: `vitess`, `gh-ost` and `pt-osc` utilize the tablet throttler, which is a cooperative throttler service based on replication lag. The tablet throttler automatically detects topology `REPLICA` tablets and adapts to changes in the topology. See [Tablet throttler](../../../reference/features/tablet-throttler/).
 
-- `online` strategy uses the throttler by the fact VReplication natively uses the throttler on both source and target ends (for both reads and writes)
+- `vitess` strategy uses the throttler by the fact VReplication natively uses the throttler on both source and target ends (for both reads and writes)
 - `gh-ost` uses the throttler via `--throttle-http`, which is automatically provided by Vitess
 - `pt-osc` uses the throttler by replication lag plugin, automatically injected by Vitess.
 

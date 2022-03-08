@@ -39,4 +39,4 @@ set @@ddl_strategy='pt-osc --null-to-not-null'
 ```
 Consult [pt-online-schema-change documentation](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html) for supported command line flags.
 
-The `online` strategy uses Vitess internal mechanisms and is not a standalone command line tool. therefore, it has no particular command line flags. For internal testing/CI purposes, the `online` strategy supports `-vreplication-test-suite`, and this flag must **not** be used in production as it can have destructive consequences.
+The `vitess` strategy (formerly known as `online`) uses Vitess internal mechanisms and is not a standalone command line tool. therefore, it has no particular command line flags. For internal testing/CI purposes, the `vitess` strategy supports `-vreplication-test-suite`, and this flag must **not** be used in production as it can have destructive consequences.

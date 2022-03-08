@@ -164,7 +164,7 @@ mysql> show vitess_migrations like '3091ef2a_4b87_11ec_a827_0a43f95f28a3' \G
 Postponed completion is supported for:
 
 - `CREATE` and `DROP` for all online strategies
-- `ALTER` migrations in `vitess` strategy (formerly called `online`)
+- `ALTER` migrations in `vitess` (formerly known as `online`) strategy
 - `ALTER` migrations in `gh-ost` strategy
 - `REVERT` of any of the above, as well as further cascading `REVERT` operations
 
