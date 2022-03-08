@@ -24,7 +24,7 @@ Add `-declarative` to any of the online DDL strategies. Example:
 
 ```sql
 
-mysql> set @@ddl_strategy='online -declarative';
+mysql> set @@ddl_strategy='vitess -declarative';
 
 -- The following migration creates a new table:
 mysql> create table decl_table(id int primary key);
@@ -66,7 +66,7 @@ migration_statement: create table decl_table (
 	id int primary key,
 	ts timestamp not null
 )
-           strategy: online
+           strategy: vitess
             options: -declarative
     added_timestamp: 2021-03-21 20:39:08
 requested_timestamp: 2021-03-21 20:39:07
@@ -113,5 +113,5 @@ Consider the following types of migrations:
 
 Declarative DDLs are [revertible](../revertible-migrations/). Note:
 
-- A declarative migration which ends up being an `ALTER` is only revertible if executed with `online` strategy.
+- A declarative migration which ends up being an `ALTER` is only revertible if executed with `vitess` strategy.
 - A declarative migration which ends up being a noop (and implicitly successful), implies a noop revert.

@@ -46,7 +46,7 @@ vtctl ApplySchema -skip_preflight -ddl_strategy "online -allow-concurrent" -sql 
 To clarify:
 
 - `gh-ost` and `pt-osc` `ALTER` migrations are not eligible to run concurrently
-- A "normal" `online` `ALTER` migration is not eligible to run concurrently. A `REVERT` of an `online` migration _is_ eligible though.
+- A "normal" `vitess` `ALTER` migration is not eligible to run concurrently. A `REVERT` of a `vitess` migration _is_ eligible though.
 
 ## Scheduling notes
 
