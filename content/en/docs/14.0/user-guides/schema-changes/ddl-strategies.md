@@ -160,7 +160,7 @@ There are pros and cons to using any of the strategies. Some notable differences
 | `direct` | No      | MySQL* | No        | No          | No                  | No          | Any     |
 | `pt-osc` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP`       | No*         | Any     |
 | `gh-ost` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP`       | No*         | Any     |
-| `vitess` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP,ALTER` | Yes         | Vitess  |
+| `vitess` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP,ALTER` | Yes         | Any*    |
 
 - **Managed**: whether Vitess schedules and operates the migration
 - **Online**:
@@ -172,4 +172,4 @@ There are pros and cons to using any of the strategies. Some notable differences
 - **Declarative**: support `-declarative` flag
 - **Revertible**: `vitess` strategy supports [revertible](../revertible-migrations/) `ALTER` statements (or `ALTER`s implied by `-declarative` migrations). All managed strategies supports revertible `CREATE` and `DROP`.
 - **Recoverable**: a `vitess` migration interrupted by planned/unplanned failover, [automatically resumes](../recoverable-migrations/) work from point of interruption. `gh-ost` and `pt-osc` will not resume after failover, but Vitess will automatically retry the migration (by marking the migration as failed and by initiating a `RETRY`), exactly once for any migration.
-- **Traffic**: `vitess` migration cut-over uses Vitess specific blocking of traffic, and is therefore only safe when write traffic to the tables runs entirely through Vitess/VTGate. `gh-ost` and `pt-osc` use generic MySQL blocking/locking mechanisms, and it is safe to run some write traffic on the migrated table outside Vitess.
+- **Traffic**: at cut-over time, `vitess` migration cut-over exhibits a blocking behavior to queries routing through Vitess. To queries running directly on the MySQL server, if any, the cut-over exhibits errors, an dthe queries will notice the table does not exist throughout the cut-over. It is safe to run queries of both sorts throughout migration including during cut-over.
