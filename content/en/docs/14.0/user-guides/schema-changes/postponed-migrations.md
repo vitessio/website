@@ -21,7 +21,7 @@ Add `-postpone-completion` to any* (see [supported migrations](#supported-migrat
 
 ```sql
 
-mysql> set @@ddl_strategy='online -postpone-completion';
+mysql> set @@ddl_strategy='vitess -postpone-completion';
 
 -- The migration is tracked, but the table won't get created
 mysql> create table mytable(id int primary key);
@@ -46,7 +46,7 @@ mysql> show vitess_migrations like 'a1dac193_4b86_11ec_a827_0a43f95f28a3' \G
             migration_statement: create table my_table (
 	id int primary key
 )
-                       strategy: online
+                       strategy: vitess
                         options: --postpone-completion --allow-zero-in-date
                 added_timestamp: 2021-11-22 11:23:35
             requested_timestamp: 0000-00-00 00:00:00
@@ -89,7 +89,7 @@ mysql> alter table another_table add column ts timestamp not null;
                              id: 3
                  migration_uuid: 3091ef2a_4b87_11ec_a827_0a43f95f28a3
 ...                 
-                       strategy: online
+                       strategy: vitess
                         options: --postpone-completion
                 added_timestamp: 2021-11-22 11:27:34
             requested_timestamp: 0000-00-00 00:00:00
@@ -124,7 +124,7 @@ mysql> show vitess_migrations like '3091ef2a_4b87_11ec_a827_0a43f95f28a3' \G
                              id: 3
                  migration_uuid: 3091ef2a_4b87_11ec_a827_0a43f95f28a3
 ...
-                       strategy: online
+                       strategy: vitess
                         options: --postpone-completion
                 added_timestamp: 2021-11-22 11:27:34
             requested_timestamp: 0000-00-00 00:00:00
@@ -145,7 +145,7 @@ mysql> show vitess_migrations like '3091ef2a_4b87_11ec_a827_0a43f95f28a3' \G
                              id: 3
                  migration_uuid: 3091ef2a_4b87_11ec_a827_0a43f95f28a3
 ...
-                       strategy: online
+                       strategy: vitess
                         options: --postpone-completion
                 added_timestamp: 2021-11-22 11:27:34
             requested_timestamp: 0000-00-00 00:00:00
@@ -164,7 +164,7 @@ mysql> show vitess_migrations like '3091ef2a_4b87_11ec_a827_0a43f95f28a3' \G
 Postponed completion is supported for:
 
 - `CREATE` and `DROP` for all online strategies
-- `ALTER` migrations in `online` strategy
+- `ALTER` migrations in `vitess` (formerly known as `online`) strategy
 - `ALTER` migrations in `gh-ost` strategy
 - `REVERT` of any of the above, as well as further cascading `REVERT` operations
 
@@ -179,6 +179,6 @@ Postponed completion is not supported in:
 
 The two strong cases for postponed migrations are `DROP` and log `ALTER`s. Both carry an amount of risk to production above other migrations.
 
-Postponed `ALTER` migrations (in `online` and `gh-ost` strategies) are actually executed, and begin copying table data as well as track ongoing changes. But as they reach the point where cut-over is agreeable, they stall, and keep waiting until the user issues the `alter vitess_migration ... complete` statement. Assuming the user runs the statement when all data has already been copied, it is typically a matter of seconds until the migration completes and the new schema is instated.
+Postponed `ALTER` migrations (in `vitess` and `gh-ost` strategies) are actually executed, and begin copying table data as well as track ongoing changes. But as they reach the point where cut-over is agreeable, they stall, and keep waiting until the user issues the `alter vitess_migration ... complete` statement. Assuming the user runs the statement when all data has already been copied, it is typically a matter of seconds until the migration completes and the new schema is instated.
 
 For `CREATE` and `DROP` statements, there's no such backfill process as with `ALTER`, and the migrations are simply not scheduled, until the user issues the `complete` statement. Once the statement is issued, the migrations still need to be scheduled, and may be possibly delayed by an existing queue of migrations.

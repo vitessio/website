@@ -24,14 +24,14 @@ There are valid, even essential cases to running multiple migrations concurrentl
 To run a migration concurrently, the user will add `-allow-concurrent` to the `ddl_strategy`. For example:
 
 ```sql
-mysql> set @@ddl_strategy='online -allow-concurrent';
+mysql> set @@ddl_strategy='vitess -allow-concurrent';
 mysql> create table sample_table(id int primary key);
 ```
 
 or, via `vtctl`:
 
 ```shell
-vtctl ApplySchema -skip_preflight -ddl_strategy "online -allow-concurrent" -sql "REVERT VITESS_MIGRATION '3091ef2a_4b87_11ec_a827_0a43f95f28a3'"
+vtctl ApplySchema -skip_preflight -ddl_strategy "vitess -allow-concurrent" -sql "REVERT VITESS_MIGRATION '3091ef2a_4b87_11ec_a827_0a43f95f28a3'"
 ```
 
 ## Restrictions and eligibility
@@ -46,7 +46,7 @@ vtctl ApplySchema -skip_preflight -ddl_strategy "online -allow-concurrent" -sql 
 To clarify:
 
 - `gh-ost` and `pt-osc` `ALTER` migrations are not eligible to run concurrently
-- A "normal" `online` `ALTER` migration is not eligible to run concurrently. A `REVERT` of an `online` migration _is_ eligible though.
+- A "normal" `vitess` `ALTER` migration is not eligible to run concurrently. A `REVERT` of a `vitess` migration _is_ eligible though.
 
 ## Scheduling notes
 

@@ -4,7 +4,7 @@ weight: 2
 aliases: ['/docs/user-guides/managed-online-schema-changes/']
 ---
 
-**Note:** `gh-ost` migrations are considered stable. `pt-osc` and `online` migrations are considered **EXPERIMENTAL**.
+**Note:** `gh-ost` migrations are considered stable. `pt-osc` and `vitess` migrations are considered **EXPERIMENTAL**.
 
 Vitess offers managed, online schema migrations (aka Online DDL), transparently to the user. Vitess Onine DDL offers:
 
@@ -84,12 +84,12 @@ Vitess may modify your queries to qualify for online DDL statement. Modification
 You will set either `@@ddl_strategy` session variable, or `-ddl_strategy` command line flag, to control your schema migration strategy, and specifically, to enable and configure online DDL. Details in [DDL Strategies](../ddl-strategies). A quick overview:
 
 - The value `"direct"`, means not an online DDL. The empty value (`""`) is also interpreted as `direct`. A query is immediately pushed and applied on backend servers. This is the default strategy.
-- The value `"online"` instructs Vitess to run an `ALTER TABLE` online DDL via `VReplication`.
+- The value `"vitess"` instructs Vitess to run an `ALTER TABLE` online DDL via `VReplication`.
 - The value `"gh-ost"` instructs Vitess to run an `ALTER TABLE` online DDL via `gh-ost`.
 - The value `"pt-osc"` instructs Vitess to run an `ALTER TABLE` online DDL via `pt-online-schema-change`.
 - You may specify arguments for your tool of choice, e.g. `"gh-ost --max-load Threads_running=200"`. Details follow.
 
-`CREATE` and `DROP` statements run in the same way for `"online"`, `"gh-ost"` and `"pt-osc"` strategies, and we consider them all to be _online_.
+`CREATE` and `DROP` statements run in the same way for `"vitess"`, `"gh-ost"` and `"pt-osc"` strategies, and we consider them all to be _online_.
 
 See also [ddl_strategy flags](../ddl-strategy-flags).
 
@@ -114,7 +114,7 @@ See [Audit and Control](../audit-and-control/) for a detailed breakdown. As quic
 #### Executing an Online DDL via VTGate/SQL
 
 ```sql
-mysql> set @@ddl_strategy='online';
+mysql> set @@ddl_strategy='vitess';
 
 mysql> alter table corder add column ts timestamp not null default current_timestamp;
 +--------------------------------------+
@@ -134,12 +134,12 @@ mysql> drop table customer;
 #### Executing an Online DDL via vtctl/ApplySchema
 
 ```shell
-$ vtctlclient ApplySchema -skip_preflight -ddl_strategy "online" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
+$ vtctlclient ApplySchema -skip_preflight -ddl_strategy "vitess" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
 a2994c92_f1d4_11ea_afa3_f875a4d24e90
 ```
 You my run multiple migrations withing the same `ApplySchema` command:
 ```shell
-$ vtctlclient ApplySchema -skip_preflight -ddl_strategy "online" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED; CREATE TABLE sample (id int PRIMARY KEY); DROP TABLE another;" commerce
+$ vtctlclient ApplySchema -skip_preflight -ddl_strategy "vitess" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED; CREATE TABLE sample (id int PRIMARY KEY); DROP TABLE another;" commerce
 3091ef2a_4b87_11ec_a827_0a43f95f28a3
 ```
 
@@ -181,7 +181,7 @@ For more about internals of the scheduler and how migration states are controlle
  
 ## Auto resume after failure
 
-VReplication based migrations (`ddl_strategy="online"`) are [failover agnostic](../recoverable-migrations/). They automatically resume after either planned promotion ([PlannedReparentShard](../../configuration-advanced/reparenting/#plannedreparentshard-planned-reparenting)), emergency promotion ([EmergencyReparentShard](../../configuration-advanced/reparenting/#emergencyreparentshard-emergency-reparenting)) or completely external reparenting.
+VReplication based migrations (`ddl_strategy="vitess"`) are [failover agnostic](../recoverable-migrations/). They automatically resume after either planned promotion ([PlannedReparentShard](../../configuration-advanced/reparenting/#plannedreparentshard-planned-reparenting)), emergency promotion ([EmergencyReparentShard](../../configuration-advanced/reparenting/#emergencyreparentshard-emergency-reparenting)) or completely external reparenting.
 
 Once the new primary is in place and turns active, it auto-resumes the VReplication stream. The online DDL scheduler assumes ownership of the stream and follows it to completion.
 
@@ -207,9 +207,9 @@ The primary use case is a primary failure and failover. The newly promoted table
 
 ## Throttling
 
-All three strategies: `online`, `gh-ost` and `pt-osc` utilize the tablet throttler, which is a cooperative throttler service based on replication lag. The tablet throttler automatically detects topology `REPLICA` tablets and adapts to changes in the topology. See [Tablet throttler](../../../reference/features/tablet-throttler/).
+All three strategies: `vitess`, `gh-ost` and `pt-osc` utilize the tablet throttler, which is a cooperative throttler service based on replication lag. The tablet throttler automatically detects topology `REPLICA` tablets and adapts to changes in the topology. See [Tablet throttler](../../../reference/features/tablet-throttler/).
 
-- `online` strategy uses the throttler by the fact VReplication natively uses the throttler on both source and target ends (for both reads and writes)
+- `vitess` strategy uses the throttler by the fact VReplication natively uses the throttler on both source and target ends (for both reads and writes)
 - `gh-ost` uses the throttler via `--throttle-http`, which is automatically provided by Vitess
 - `pt-osc` uses the throttler by replication lag plugin, automatically injected by Vitess.
 

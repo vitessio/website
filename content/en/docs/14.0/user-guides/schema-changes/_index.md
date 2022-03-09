@@ -9,7 +9,7 @@ This user guide describes the problem space of schema changes and the various ap
 
 Quick links:
 
-- Vitess supports EXPERIMENTAL [managed, online schema changes](../schema-changes/managed-online-schema-changes/) via `gh-ost` or `pt-online-schema-change`, and with visibility and control over the migration process
+- Vitess supports [managed, online schema changes](../schema-changes/managed-online-schema-changes/) using different [strategies](../schema-changes/ddl-strategies/), and with visibility and control over the migration process
 - Multiple approaches to [unmanaged schema changes](../schema-changes/unmanaged-schema-changes/), either blocking, or owned by the user/DBA.
 
 Some background on schema changes follows.
@@ -27,9 +27,10 @@ Direct `ALTER TABLE` is fine in development or possibly staging environments, wh
 Busy production systems tend to use either of these two approaches, to make schema changes less disruptive to ongoing production traffic:
 
 - Using online schema change tools, such as [gh-ost](https://github.com/github/gh-ost) and [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html). These tools _emulate_ an `ALTER TABLE` statement by creating a _ghost_ table in the new desired format, and slowly working through copying data from the existing table, while also applying ongoing changes throughout the migration.
-  Online schema change tools can be throttled on high load, and can be interrupted at will.
+  - Vitess offers a built in online schema change flow based on VReplication, and additionally supports `gh-ost` and `pt-online-schema-change`.
+  - Online schema change tools can be throttled on high load, and can be interrupted at will.
 - Run the migration independently on replicas; when all replicas have the new schema, demote the `primary` and promote a `replica` as the new `primary`; then, at leisure, run the migration on the demoted server. Two considerations if using this approach are:
-  - Each migration requires a failover (aka successover, aka planned reparent).
+  - Each migration requires a failover (aka _successover_, aka _planned reparent_).
   - Total wall clock time is higher since we run the same migration in sequence on different servers.
 
 ## Schema change cycle and operation
@@ -58,7 +59,9 @@ Vitess solves or automates multiple parts of the flow:
 
 ### Formalize
 
-In [managed, online schema changes](../schema-changes/managed-online-schema-changes/) the user supplies a valid SQL `ALTER TABLE` statement, and Vitess generates the `gh-ost` or `pt-online-schema-change` command line invocation. It will also auto generate config files and set up the environment for those tools. This is hidden from the user.
+In [managed, online schema changes](../schema-changes/managed-online-schema-changes/) the user supplies a valid SQL `ALTER TABLE` statement, and Vitess generates the `gh-ost` or `pt-online-schema-change` command line invocation, or `vitess` internal instructions. It will also auto generate config files and set up the environment for those tools. This is hidden from the user.
+
+In addition, `vitess` strategy migrations offer [declarative](../schema-changes/declarative-migrations/) changes, where the user only needs to supply the desired `CREATE TABLE` or `DROP TABLE` statements, and Vitess computes the correct migration needed.
 
 ### Locate
 
@@ -75,7 +78,7 @@ In managed, online schema changes, Vitess owns and tracks all pending and active
 
 ### Execute
 
-In managed, online schema changes, Vitess owns the execution of `gh-ost` or `pt-online-schema-change`. While these run in the background, Vitess keeps track of the migration state.
+In managed, online schema changes, Vitess owns the execution of `vitess`, `gh-ost` or `pt-online-schema-change` migrations. While these run in the background, Vitess keeps track of the migration state.
 
 In direct schema changes via `vtctl` or `vtgate`, Vitess issues a synchronous `ALTER TABLE` statement on the relevant shards.
 
@@ -91,7 +94,7 @@ Vitess runs automated cut-overs. The migration will complete as soon as it's abl
 
 In the case of managed, online schema changes via `pt-online-schema-change`, Vitess will ensure to drop the triggers in case the tool failed to do so for whatever reason.
 
-Vitess automatically garbage-collects the "old" tables, artifacts of `gh-ost` and `pt-online-schema-change`. It drops those tables in an incremental, non blocking method.
+Vitess automatically garbage-collects the "old" tables, artifacts of `vitess`, `gh-ost` and `pt-online-schema-change` migrations. It drops those tables in an incremental, non blocking method.
 
 ## The various approaches
 

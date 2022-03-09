@@ -10,7 +10,7 @@ Revertible migrations supported for:
 
 - `CREATE TABLE` statements: the _revert_ is to _uncreate_ the table
 - `DROP TABLE` statements: the _revert_ is to _reinstate_ the table, populated with data from time of `DROP`
-- `ALTER TABLE` statements: supported in `online` strategy, the _revert_ is to reapply previous table schema, without losing any data added/modified since migration completion.
+- `ALTER TABLE` statements: supported in `vitess` strategy, the _revert_ is to reapply previous table schema, without losing any data added/modified since migration completion.
 - Another `revert` migration. It is possible to revert a _revert_, revert the revert of a _revert_, and so forth.
 
 ## Behavior and limitations
@@ -19,7 +19,7 @@ Revertible migrations supported for:
 - Migrations are only for revertible for `24h` since completion.
 - It's only possible to revert the last successful migration on a given table. Illustrated following.
   - In the future it may be possible to revert down the stack of completed migrations.
-- `ALTER` migrations are revertible only in `online` strategy.
+- `ALTER` migrations are revertible only in `vitess` strategy.
 - If a DDL is a noop, then so is its revert:
   - If a table `t` exists, and an online DDL is `CREATE TABLE IF NOT EXISTS t (...)`, then the DDL does nothing, and its revert will do nothing.
   - If a table `t` does not exist, and an online DDL is `DROP TABLE IF EXISTS t`, then likewise the DDL does nothing, and its revert does nothing.
@@ -52,7 +52,7 @@ Both operations return a UUID for the revert migration. The user can track the r
 
 Consider the following annotated flow:
 ```sql
-mysql> set @@ddl_strategy='online';
+mysql> set @@ddl_strategy='vitess';
 
 mysql> create table t(id int primary key);
 +--------------------------------------+
@@ -134,7 +134,7 @@ Create Table: CREATE TABLE `t` (
        mysql_schema: vt_commerce
         mysql_table: t
 migration_statement: alter table t add column id bigint
-           strategy: online
+           strategy: vitess
             options: 
     added_timestamp: 2021-03-21 18:21:36
 requested_timestamp: 2021-03-21 18:21:32
@@ -166,7 +166,7 @@ mysql> show vitess_migrations like 'c3dff91a_8a61_11eb_badd_f875a4d24e90' \G
        mysql_schema: vt_commerce
         mysql_table: 
 migration_statement: revert 7fbdf1c7_8a61_11eb_badd_f875a4d24e90
-           strategy: online
+           strategy: vitess
             options: 
     added_timestamp: 2021-03-21 18:23:31
 requested_timestamp: 2021-03-21 18:23:26
@@ -224,6 +224,6 @@ Revert for `CREATE` and `DROP` are implemented similarly for all online strategi
 
 - The revert for a `CREATE` DDL is to rename the table away and into a [table lifecycle](../table-lifecycle/) name, rather than actually `DROP` it. This keeps th etale safe for a period of time, and makes it possible to reinstate the table, populated with all data, via a 2nd revert.
 - The revert for a `DROP` relies on the fact that Online DDL `DROP TABLE` does not, in fact, drop the table, but actually rename it away. Thus, reverting the `DROP` is merely a `RENAME` back into its original place.
-- The revert for `ALTER` is only available for `online` strategy, implemented by `VReplication`. VReplication keep track of a DDL migration by writing down the GTID position through the migration flow. In particular, at time of cut-over and when tables are swapped, VReplication notes the _final_ GTID pos for the migration.
+- The revert for `ALTER` is only available for `vitess` strategy (formerly called `online`), implemented by `VReplication`. VReplication keep track of a DDL migration by writing down the GTID position through the migration flow. In particular, at time of cut-over and when tables are swapped, VReplication notes the _final_ GTID pos for the migration.
   When a revert is requested, Vitess computes a new VReplication rule/filter for the new stream. It them copies the _final_ GTID pos from the reverted migration, and instructs VReplication to resume from that point.
   As result, a revert for an `ALTER` migration only needs to catch up with the changelog (binary log entries) since the cut-over of the original migration. To elaborate, it does not need to copy table data, and only needs to consider events for the specific table affected by the revert. This makes the revert operation efficient.

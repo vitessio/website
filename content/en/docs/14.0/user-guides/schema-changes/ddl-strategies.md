@@ -7,11 +7,11 @@ aliases: ['/docs/user-guides/schema-changes/ddl-strategies/']
 Vitess supports both managed, online schema migrations (aka Online DDL) as well as unmanaged migrations. How Vitess runs a schema migration depends on the _DDL strategy_. Vitess allows these strategies:
 
 - `direct`: the direct apply of DDL to your database. This is not an online DDL. It is a synchronous and blocking operation. This is the default strategy. 
-- `online`: utilizes Vitess's built in [VReplication](../../../reference/vreplication/vreplication/) mechanism.
+- `vitess` (formerly known as `online`): utilizes Vitess's built in [VReplication](../../../reference/vreplication/vreplication/) mechanism.
 - `gh-ost`: uses 3rd party GitHub's [gh-ost](https://github.com/github/gh-ost) tool.
 - `pt-osc`: uses 3rd party Percona's [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html) as part of [Percona Toolkit](https://www.percona.com/doc/percona-toolkit/3.0/index.html)
 
-`CREATE` and `DROP` are managed in the same way, by Vitess, whether strategy is `online`, `gh-ost` or `pt-osc`.
+`CREATE` and `DROP` are managed in the same way, by Vitess, whether strategy is `vitess`, `gh-ost` or `pt-osc`.
 
 See also [ddl_strategy flags](../ddl-strategy-flags).
 
@@ -21,7 +21,7 @@ You will set either `@@ddl_strategy` session variable, or `-ddl_strategy` comman
 
 #### Via vtctl/vtctlclient
 ```shell
-$ vtctlclient ApplySchema -ddl_strategy "online" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
+$ vtctlclient ApplySchema -ddl_strategy "vitess" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
 a2994c92_f1d4_11ea_afa3_f875a4d24e90
 ```
 
@@ -36,7 +36,7 @@ $ vtctlclient ApplySchema -ddl_strategy "gh-ost --max-load Threads_running=200" 
 $ mysql -h 127.0.0.1 -P 15306 commerce
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 
-mysql> SET @@ddl_strategy='online';
+mysql> SET @@ddl_strategy='vitess';
 Query OK, 0 rows affected (0.00 sec)
 
 mysql> ALTER TABLE demo ADD COLUMN sample INT;
@@ -52,9 +52,9 @@ mysql> ALTER TABLE demo ADD COLUMN sample INT;
 
 Different strategies have different behavior for `ALTER` statements. Sections below first break down specific handling and notes for each strategy, followed by an evaluation of the differences.
 
-### online/VReplication
+### vitess
 
-The `online` strategy invokes Vitess's built in [VReplication](../../../reference/vreplication/vreplication/) mechanism. It is the mechanism behind resharding, materialized views, imports from external databases, and more. VReplication migrations use the same logic for copying data as do other VReplication operations, and as such the `online` strategy is known to be compatible with overall Vitess behavior. VReplication is authored by the maintainers of Vitess.
+The `vitess` strategy invokes Vitess's built in [VReplication](../../../reference/vreplication/vreplication/) mechanism. It is the mechanism behind resharding, materialized views, imports from external databases, and more. VReplication migrations use the same logic for copying data as do other VReplication operations, and as such the `vitess` strategy is known to be compatible with overall Vitess behavior. VReplication is authored by the maintainers of Vitess.
 
 VReplication migrations enjoy the general features of VReplication:
 
@@ -66,7 +66,7 @@ VReplication migrations enjoy the general features of VReplication:
 VReplication migrations further:
 
 - Are [revertible](../revertible-migrations): you may switch back to the pre-migration schema without losing any data accumulated during and post migration.
-- Support a wider range of schema changes. For example, while `gh-ost` has a strict requirement for a shared unique key pre/post migration, `online` migrations may work with different keys, making it possible to modify a table's `PRIMARY KEY` without having to rely on an additional `UNIQUE KEY`.
+- Support a wider range of schema changes. For example, while `gh-ost` has a strict requirement for a shared unique key pre/post migration, `vitess` migrations may work with different keys, making it possible to modify a table's `PRIMARY KEY` without having to rely on an additional `UNIQUE KEY`.
 
 ### gh-ost
 
@@ -127,7 +127,7 @@ There are pros and cons to using any of the strategies. Some notable differences
 
 #### Support
 
-- VReplication (`online` strategy) is internal to Vitess and supported by the Vitess maintainers.
+- VReplication (`vitess` strategy) is internal to Vitess and supported by the Vitess maintainers.
 - `gh-ost` enjoys partial, informal support from Vitess maintainers.
 - `pt-online-schema-change` is out of the maintainers control.
 
@@ -145,9 +145,11 @@ There are pros and cons to using any of the strategies. Some notable differences
 
 #### Cut-over
 
-- Both `pt-online-schema-change` and `gh-ost` have an atomic cut-over: at the end of the migration, the tables are switched, and incoming queries are momentarily blocked, but not lost.
-- VReplication causes a brief outage at time of cut-over (subject to change): apps will not be able to _write_ to the original table during cut-over, and will return with error.
-- VReplication cut-over is only safe when all traffic comes through Vitess/VTGate (subject to change). Any DML query running on migrated table at time of cut-over, and which executes directly on the MySQL server without going through Vitess, might lose its data.
+- Both `pt-online-schema-change` and `gh-ost` have an atomic cut-over based on MySQL locking. At the end of the migration, the tables are switched, and incoming queries are momentarily blocked, but not lost.
+- `vitess` offers a combined Vitess/MySQL locking logic:
+  - To queries on the migrated table, that are going through Vitess (ie route through `VTGate`), the cut-over is blocking. Vitess will buffer incoming queries during cut-over, and will allow them to operate once the cut-over is complete.
+  - Any queries on the migrated table that are not going through Vitess and which operate directly on the MySQL server will experience a brief outage: the queries will notice the table does not exist momentarily.
+  - It is at any case safe, in terms of data consistency, to run both types of queries throughout the migration and specifically during the cut-over.
 
 #### MySQL compatibility
 
@@ -155,21 +157,20 @@ There are pros and cons to using any of the strategies. Some notable differences
 
 ## Vitess functionality comparison
 
-| Strategy | Managed | Online | Trackable | Declarative | Revertible          | Recoverable | Traffic |
-|----------|---------|--------|-----------|-------------|---------------------|-------------|---------|
-| `direct` | No      | MySQL* | No        | No          | No                  | No          | Any     |
-| `pt-osc` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP`       | No*         | Any     |
-| `gh-ost` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP`       | No*         | Any     |
-| `online` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP,ALTER` | Yes         | Vitess  |
+| Strategy | Managed | Online | Trackable | Declarative | Revertible          | Recoverable |
+|----------|---------|--------|-----------|-------------|---------------------|-------------|
+| `direct` | No      | MySQL* | No        | No          | No                  | No          |
+| `pt-osc` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP`       | No*         |
+| `gh-ost` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP`       | No*         |
+| `vitess` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP,ALTER` | Yes         |
 
 - **Managed**: whether Vitess schedules and operates the migration
 - **Online**:
   - MySQL supports limited online ("In place") DDL and instant DDL. See [support chart](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html).
-  - `gh-ost`, `online` do not support foreign keys
+  - `gh-ost`, `vitess` do not support foreign keys
   - `pt-osc` has support for foreign keys (may apply collateral blocking operations)
 - **Trackable**: able to determine migration state (`ready`, `running`, `complete` etc)
-  - `online` and `gh-ost` strategies also makes available _progress %_ and _ETA seconds_
+  - `vitess` and `gh-ost` strategies also makes available _progress %_ and _ETA seconds_
 - **Declarative**: support `-declarative` flag
-- **Revertible**: `online` strategy supports [revertible](../revertible-migrations/) `ALTER` statements (or `ALTER`s implied by `-declarative` migrations). All managed strategies supports revertible `CREATE` and `DROP`.
-- **Recoverable**: an `online` migration interrupted by planned/unplanned failover, [automatically resumes](../recoverable-migrations/) work from point of interruption. `gh-ost` and `pt-osc` will not resume after failover, but Vitess will automatically retry the migration (by marking the migration as failed and by initiating a `RETRY`), exactly once for any migration.
-- **Traffic**: `online` migration cut-over uses Vitess specific blocking of traffic, and is therefore only safe when write traffic to the tables runs entirely through Vitess/VTGate. `gh-ost` and `pt-osc` use generic MySQL blocking/locking mechanisms, and it is safe to run some write traffic on the migrated table outside Vitess.
+- **Revertible**: `vitess` strategy supports [revertible](../revertible-migrations/) `ALTER` statements (or `ALTER`s implied by `-declarative` migrations). All managed strategies supports revertible `CREATE` and `DROP`.
+- **Recoverable**: a `vitess` migration interrupted by planned/unplanned failover, [automatically resumes](../recoverable-migrations/) work from point of interruption. `gh-ost` and `pt-osc` will not resume after failover, but Vitess will automatically retry the migration (by marking the migration as failed and by initiating a `RETRY`), exactly once for any migration.

@@ -17,9 +17,33 @@ Migrate <options> <action> <workflow identifier>
 
 ### Description
 
-Migrate is used to start and manage workflows to move one or more tables from an external cluster into a new Vitess keyspace. The target keyspace can be unsharded or sharded.
+Migrate is used to start and manage vReplication workflows for copying keyspaces and/or tables from a source Vitess cluster, to a target Vitess cluster.
+This command is built off of [MoveTables](../movetables) but has been extended to work with source and target topology services. It should be 
+utilized when moving Keyspaces or Tables between two separate Vitess environments. Migrate is an advantageous strategy for large sharded environments
+for a few reasons:
 
-Migrate is typically used for migrating data into Vitess from an external cluster. See [Mount command](../mount) for more information on external clusters.
+* Data can be migrated while the source Vitess cluster, typically the production environment, continues to serve traffic.
+* Shard mapping between Source and Target Vitess clusters is handled automatically by Migrate.
+    * Similar to MoveTables, you may have different shard counts between the source and target Vitess clusters.
+* VDiffs and read-only SQL can be performed to verify data integrity before the Migration completes.
+* Migrate works as a copy of data not a move, source data remains once the Migrate completes.
+* Could be used for configuring lower environments with production data.
+
+Please note the Migrate command works with an externally mounted source cluster. See the related [Mount command](../mount) for more information
+on external Vitess clusters.
+
+#### Differences between Migrate and MoveTables
+
+Migrate has separate semantics and behaviors from MoveTables:
+
+* MoveTables migrates data from one keyspace to another, within the same Vitess cluster; Migrate functions between two separated Vitess clusters. 
+* MoveTables erases the source data upon completion by default; Migrate keeps the source data intact.
+    * There are flags available in MoveTables to change the default behavior in regards to the source data.
+* MoveTables sets up routing rules and reverse replication, allowing for rollback prior to completion.
+    * Switching read/write traffic is not meaningful in the case of Migrate, as the Source is in a different cluster.
+    * Switching traffic requires the Target to have the ability to create vreplication streams (in the _vt database) on the Source;
+      this may not always be possible on production systems.
+* Not all MoveTables options work with Migrate; for example [Progress](../progress) is unavailable with Migrate. 
 
 
 ### Parameters
@@ -52,23 +76,17 @@ A common option to give if migrating all of the tables from a source keyspace is
 All workflows are identified by `targetKeyspace.workflow` where `targetKeyspace` is the name of the keyspace to which the tables are being moved. `workflow` is a name you assign to the Migrate workflow to identify it.
 
 
-### Differences between MoveTables and Migrate
-
-MoveTables has separate semantics than Migrate. MoveTables can migrate data from one keyspace to another, but both keyspaces need to be in the same Vitess Cluster. Migrate is intended as a one-way copy whereas MoveTables allows you to serve either data from the source or target keyspace and switch between each other until you finalize MoveTables.
-
-* MoveTables sets up routing rules so that Vitess routes queries to the Source keyspace until a cut over.
-* While switching Write traffic, in MoveTables, is possible to set up a reverse replication workflow so that the Source can be in sync with the Target, allowing you to revert back to the Source.
-
-However this requires that the Target can create vreplication streams (in the \_vt database) on the Source database. This may not be always possible, for example, if the Source is a production system.
-
-* In MoveTables the tables already exist, just in a different keyspace. So the VSchema already contains these tables. While migrating, these tables will be available only after the Migrate is completed.
-* Switching traffic is not meaningful in the case of Migrate since there is no query traffic to the original tables, as the Source is in a different cluster.
-
 
 ### A Migrate Workflow lifecycle
 
-1. Mount the external cluster using [Mount](../mount).<br/>
+{{< info >}}
+NOTE: there is no reverse replication flow with Migrate. After the `Migrate Complete` command is given; no writes will be replicated between the Source and Target Vitess clusters. They are essentially two identical Vitess clusters running in two different environments. Once writing resumes on one of the clusters they will begin to drift apart. 
+{{< /info >}}
+
+1. Mount the source Vitess cluster using [Mount](../mount).<br/>
 `Mount -type vitess -topo_type etcd2 -topo_server localhost:12379 -topo_root /vitess/global ext1`
+1. Apply source vSchema to the Target's Keyspace.<br/>
+`ApplyVSchema -vschema_file commerceVschema.json commerce`
 1. Initiate the migration using [Create](../create).<br/>
 `Migrate -all -source ext1.commerce Create commerce.wf`
 1. Monitor the workflow using [Show](../show).<br/>
@@ -76,19 +94,12 @@ However this requires that the Target can create vreplication streams (in the \_
 1. Confirm that data has been copied over correctly using [VDiff](../vdiff).<br/>
 `VDiff commerce.wf`
 1. Stop the application from writing to the source Vitess cluster.<br/>
-
-{{< info >}}
-This is important as there is no reverse replication flow with Migrate. Any writes to the source Vitess cluster performed after the migration completes will not be carried over to the target Vitess Cluster. 
-{{< /info >}}
-
 1. Confirm again the data has been copied over correctly using [VDiff](../vdiff).<br/>
 `VDiff commerce.wf`
-1. Cleanup vreplication artifacts and source tables with [Complete](../complete).<br/>
+1. Cleanup vreplication artifacts and source tables with [Complete](../complete).<br />
 `Migrate Complete commerce.wf`
-1. Migrate over relevant vSchema from the source Vitess cluster.<br/>
-`ApplyVSchema -vschema_file commerceVschema.json commerce`
-1. Validate migration and Start the application pointed to the target Vitess Cluster
-1. Unmount the external cluster<br/>
+1. Start the application pointed to the target Vitess Cluster.
+1. Unmount the source cluster.<br/>
 `Mount -unmount ext1`
 
 
@@ -111,3 +122,56 @@ To verify the Migration you can also perform VDiff with the `-tablet_types` opti
 ```
 VDiff -tablet_types "REPLICA"  <target keyspace>.<workflow identifier>
 ```
+
+### Troubleshooting Errors
+
+Migrate fails right away with error:
+
+```sh
+E0224 23:51:45.312536     138 main.go:76] remote error: rpc error: code = Unknown desc = table table1 not found in vschema for keyspace sharded
+```
+<br />Solution:
+* The target table has a vSchema which does not match the source vSchema
+* Upload the source vSchema to the target vSchema and try the migrate again
+
+---
+
+Migrate fails right away with error:
+
+```sh
+E0224 18:55:29.275019     578 main.go:76] remote error: rpc error: code = Unknown desc = node doesn't exist
+```
+
+<br />Solution:
+* Ensure there is networking communication between Target vtctld and Source topology
+* Ensure the topology information is correct on the `Mount` command
+
+---
+
+After issuing Migrate command everything is stuck at 0% progress 
+with errors found in target vttablet logs:
+
+```sh
+I0223 20:13:36.825110       1 tablet_picker.go:146] No tablet found for streaming
+```
+
+<br />Solution:
+* Ensure there is networking communication between Target vttablets and Source vttablets
+* Ensure there is networking communication between Target vttablets and the Source topology service
+* Older versions of Vitess may be labeling vttablets as "master" instead of "primary"
+  you can resolve this problem by adjusting your `tablet_types`:
+
+      Migrate -all -tablet_types "MASTER,REPLICA,RDONLY" ...
+
+---
+
+The MySQL client fails with:
+
+```sh
+SQL error, errno = 1105, state = 'HY000': table 'table_name' does not have a primary vindex
+```
+
+<br />Solution:
+
+* The write was sent to the Target Vitess cluster before the migration completed,
+  solvable by writing to the source instead, or by completing the migration.

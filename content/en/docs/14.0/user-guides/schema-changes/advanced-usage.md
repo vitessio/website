@@ -33,9 +33,9 @@ Thus, the new migration does not get to execute if an identical previous migrati
 Usage:
 
 ```sh
-$ vtctlclient ApplySchema -migration_context="1111-2222" -skip_preflight -ddl_strategy='online' -sql "alter table customer add column status int unsigned not null" commerce
+$ vtctlclient ApplySchema -migration_context="1111-2222" -skip_preflight -ddl_strategy='vitess' -sql "alter table customer add column status int unsigned not null" commerce
 
-$ vtctlclient ApplySchema -migration_context="1111-2222" -skip_preflight -ddl_strategy='online' -sql "alter table customer add column status int unsigned not null" commerce
+$ vtctlclient ApplySchema -migration_context="1111-2222" -skip_preflight -ddl_strategy='vitess' -sql "alter table customer add column status int unsigned not null" commerce
 ```
 
 In the above, the two calls are identical. Specifically, they share the exact same `-migration_context` value of `1111-2222`, and the exact same `-sql`.
@@ -56,9 +56,9 @@ You may go one step beyond [duplicate migration detection](#duplicate-migration-
 Consider the following example, note `-uuid_list` flag:
 
 ```sh
-$ vtctlclient ApplySchema -uuid_list "73380089_7764_11ec_a656_0a43f95f28a3" -skip_preflight -ddl_strategy='online' -sql "alter table customer add column status int unsigned not null" commerce
+$ vtctlclient ApplySchema -uuid_list "73380089_7764_11ec_a656_0a43f95f28a3" -skip_preflight -ddl_strategy='vitess' -sql "alter table customer add column status int unsigned not null" commerce
 
-$ vtctlclient ApplySchema -uuid_list "73380089_7764_11ec_a656_0a43f95f28a3" -skip_preflight -ddl_strategy='online' -sql "alter table customer add column status int unsigned not null" commerce
+$ vtctlclient ApplySchema -uuid_list "73380089_7764_11ec_a656_0a43f95f28a3" -skip_preflight -ddl_strategy='vitess' -sql "alter table customer add column status int unsigned not null" commerce
 ```
 
 Normally Vitess generates a `UUID` for each migration, thus having a new, unique ID per migration. With `-uuid_list`, you can force Vitess into using your own supplied UUID. There cannot be two migrations with the same `UUID`. Therefore, any subsequent submission of a migration with an already existing `UUID` is implicitly discarded. The 2nd call does return the migration `UUID`, but is internally discarded.
@@ -91,14 +91,14 @@ The use case and workflow is as follows:
 Consider the following example. We run a 5 hour long migration to drop an index:
 
 ```sh
-$ vtctlclient ApplySchema -skip_preflight -ddl_strategy='online' -sql "alter table customer drop index joined_timestamp_idx" commerce
+$ vtctlclient ApplySchema -skip_preflight -ddl_strategy='vitess' -sql "alter table customer drop index joined_timestamp_idx" commerce
 29231906_776f_11ec_a656_0a43f95f28a3
 ```
 
 As soon as the migration completes, we run:
 
 ```sh
-$ vtctlclient ApplySchema -skip_preflight -ddl_strategy='online -postpone-completion -allow-concurrent' -sql "revert vitess_migration '29231906_776f_11ec_a656_0a43f95f28a3'" commerce
+$ vtctlclient ApplySchema -skip_preflight -ddl_strategy='vitess -postpone-completion -allow-concurrent' -sql "revert vitess_migration '29231906_776f_11ec_a656_0a43f95f28a3'" commerce
 3cc4ae0e_776f_11ec_a656_0a43f95f28a3
 ```
 
