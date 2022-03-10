@@ -63,7 +63,7 @@ The docker image expects some of the environment variables to be set to function
 | *FOREIGN_KEY_MODE* | no | This is to provide how to handle foreign key constraint in create/alter table. Valid values are: allow (default), disallow. |
 | *ENABLE_ONLINE_DDL* | no | Allow users to submit, review and control Online DDL. Valid values are: true (default), false. |
 | *ENABLE_DIRECT_DDL* | no | Allow users to submit direct DDL statements. Valid values are: true (default), false. |
-| *PLANNER_VERSION* | no | Sets the default planner to use when the session has not changed it. Valid values are: V3 (default), Gen4, Gen4Greedy and Gen4Fallback. Gen4Fallback tries the new gen4 planner and falls back to the V3 planner if the gen4 fails. |
+| *PLANNER_VERSION* | no | Sets the default planner to use when the session has not changed it. Valid values are: Gen4 (default), v3, Gen4Greedy and Gen4Fallback. Gen4Fallback tries the new gen4 planner and falls back to the V3 planner if the gen4 fails. |
 
 Environment variables in docker can be specified using the `-e` aka `--env` flag.
 

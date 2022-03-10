@@ -29,7 +29,7 @@ The following parameters apply to `mysqlctl`:
 | Name | Type | Definition |
 | :-------------------- | :--------- | :---------------------------------------------------- |
 | -output-mode | string | Output in human-friendly text or json (default "text") |
-| -planner-version | string | Sets the query planner version to use when generating the explain output. Valid values are V3 and Gen4 (default "V3"; Vitess 12.0+) |
+| -planner-version | string | Sets the query planner version to use when generating the explain output. Valid values are V3 and Gen4 (default "Gen4") |
 | -normalize |  | Whether to enable vtgate normalization (default false) |
 | -shards | int | Number of shards per keyspace (default 2) |
 | -replication-mode | string | The replication mode to simulate -- must be set to either ROW or STATEMENT (default "ROW") |
