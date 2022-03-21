@@ -116,4 +116,4 @@ Before renaming the original table away, VTTablet audits the intended action. In
 
 ## Summary
 
-By taking advantage of the vitess framework itself, vitess migration are able to deliver a multi layered cut-over mechanism, involving ACLs as well as MySQL primitives, such that users and apps get the best experience, while still maintaining complete control over data accuracy.
+By taking advantage of the vitess framework itself, vitess migrations are able to deliver a multi layered cut-over mechanism, involving ACLs as well as MySQL primitives, such that users and apps get the best experience, while still maintaining complete control over data accuracy.
