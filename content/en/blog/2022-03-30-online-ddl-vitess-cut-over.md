@@ -40,7 +40,7 @@ To be able to bring the ghost table up to speed with the original table, vitess 
 - Consume binary logs up to marked point in time, and apply onto ghost table
 - Tables now in sync, cut-over
 
-Exactly ow vitess prevents write to the original table is the topic of the reminder of this post. It's noteworthy that the flow can fail, or timeout, in which case vitess resumes writes and tries again at a later stage.
+Exactly how vitess prevents write to the original table is the topic of the reminder of this post. It's noteworthy that the flow can fail, or timeout, in which case vitess resumes writes and tries again at a later stage.
 
 ## Preventing writes
 
@@ -54,7 +54,7 @@ Implementing vitess's cut-over, we wanted the best of all worlds. We wanted the 
 
 ### 1. Buffering writes
 
-Vitess has the advantage that traffic goes through VTGate, its MySQL compatible proxy. Normal uses and apps do not communicate directly to MySQL (though as explained below, the cut-over logic also covers direct communication scenarios). Queries are normally sent to VTGate, which routes them to the appropriate shards and to the VTTablet servers on those shards. VTTablet will then run the query on MySQL.
+Vitess has the advantage that traffic goes through VTGate, its MySQL compatible proxy. Normal users and apps do not communicate directly to MySQL (though as explained below, the cut-over logic also covers direct communication scenarios). Queries are normally sent to VTGate, which routes them to the appropriate shards and to the VTTablet servers on those shards. VTTablet will then run the query on MySQL.
 
 VTTablet has the notion of ACLs (Access Control Lists). These were primarily intended to let administrators deny writes to tables.
 
