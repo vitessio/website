@@ -11,10 +11,8 @@ Vitess supports managed, non-blocking schema migrations based on VReplication, a
 
 Vitess migrations are:
 
-- Blocking & atomic to vitess clients (*)
+- Blocking & atomic to vitess clients
 - Safe from data loss / data drift concerns
-
-_(*) up to database limitations_
 
 To understand better what this means, let's first review what cut-over is.
 
