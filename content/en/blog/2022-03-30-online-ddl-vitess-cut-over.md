@@ -67,7 +67,7 @@ While the rule is active, a query is buffered, or essentially just kept at bay, 
 
 We expect cut-over total time to be a few seconds, typically two or three. When cut-over begins, vitess sets a `10s` buffering ACL on the migrated table. Thus, any new query enters buffering for up to ten seconds. If migration completes by then, great, the query unblocks and proceeds to run on the new table. If not, then the query errors.
 
-Buffering can only allow as many queries to wait. Each query runs on its own connection. As more queries come in, more connections will pile up. Under heavy load the app could eventually exhaust the connections limit, at which time queries will error. This is why it is essential to complete the cut-over as soon as possible.
+Buffering can only allow as many queries to wait. Under heavy load the app could eventually exhaust the buffer capacity, at which time queries will error. This is why it is essential to complete the cut-over as soon as possible.
 
 However, buffering is not a complete solution:
 
@@ -76,7 +76,7 @@ However, buffering is not a complete solution:
 
 ### 2. Stall
 
-As a gesture to potential pending queries, the flow stalls for an extra `100ms`. That time is very likely to let any queries which already passed pre-cut-over ACLs to begin executing on the MySQL server, also likely to let them complete executing.
+As a gesture to potential pending queries, the flow stalls for an extra `100ms`. That time is very likely enough to let any queries which already passed pre-cut-over ACLs to begin executing on the MySQL server, also likely enough to let them complete executing.
 
 This step increases the overall cut-over time for everyone, but lets remaining queries execute before introducing any locking.
 
