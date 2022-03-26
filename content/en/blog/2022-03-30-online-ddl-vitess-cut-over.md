@@ -19,23 +19,23 @@ To understand better what this means, let's first review what cut-over is.
 ## The cut-over step
 
 This is the most critical step in an online schema migration process, and in all implementations and tools: from [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html), [fb-osc](http://bazaar.launchpad.net/~mysqlatfacebook/mysqlatfacebook/tools/annotate/head:/osc/OnlineSchemaChange.php), to [gh-ost](https://github.com/github/gh-ost) and finally [vitess](https://vitess.io/docs/user-guides/schema-changes/).
-An online schema migration (aka online DDL) process creates a ghost table, populates it, brings it up to date with the original table, and then cuts-over by renaming the original table away, and the ghost table in its place.
+An online schema migration (aka online DDL) process creates a shadow table, populates it, brings it up to date with the original table, and then cuts-over by renaming the original table away, and the shadow table in its place.
 
 The cut-over is a point where the two tables must be, and remain, in complete sync throughout the switch. Whichever the implementation is, this involves locks, and this impacts the users/apps.
-Vitess migrations use asynchronous change propagation: they look for changes to the original table in the binary logs, then apply those changes to the ghost table. This means some latency, however small, before applying those changes to the shadow table. At any point in time the two tables may be out of sync, with the ghost table slightly lagging behind the original table.
+Vitess migrations use asynchronous change propagation: they look for changes to the original table in the binary logs, then apply those changes to the shadow table. This means some latency, however small, before applying those changes to the shadow table. At any point in time the two tables may be out of sync, with the shadow table slightly lagging behind the original table.
 
-But at cut-over, the ghost table must be brought into complete sync with the original table. How is this done?
+But at cut-over, the shadow table must be brought into complete sync with the original table. How is this done?
 
 ## A brief suspense
 
 All schema migration techniques use some form of locking at cut-over time. That locking causes queries to stall and connections to spike.
 
-To be able to bring the ghost table up to speed with the original table, vitess runs the following generalized flow:
+To be able to bring the shadow table up to speed with the original table, vitess runs the following generalized flow:
 
 - Verify the migration is in appropriate state
 - Prevent writes to the original table
 - Mark the point in time where writes have been disabled
-- Consume binary logs up to marked point in time, and apply onto ghost table
+- Consume binary logs up to marked point in time, and apply onto shadow table
 - Tables now in sync, cut-over
 
 Exactly how vitess prevents write to the original table is the topic of the reminder of this post. It's noteworthy that the flow can fail, or timeout, in which case vitess resumes writes and tries again at a later stage.
@@ -44,11 +44,11 @@ Exactly how vitess prevents write to the original table is the topic of the remi
 
 There's a few techniques to preventing writes on the migrated table. They differ in a few ways: are the techniques safe enough? Are they revertible? What is the impact to the app?
 
-Take `fb-osc`'s approach: it runs a two-step cut-over, where it first renames the original table away, thus creating a puncture in the database, then renaming the ghost table in its place. There is a point in time where the table just doesn't exist. To the users and apps this manifests as unexpected errors. All of a sudden a bunch of queries fail claiming there is no such table. And what if the tool crashes in between those two renames?
+Take `fb-osc`'s approach: it runs a two-step cut-over, where it first renames the original table away, thus creating a puncture in the database, then renaming the shadow table in its place. There is a point in time where the table just doesn't exist. To the users and apps this manifests as unexpected errors. All of a sudden a bunch of queries fail claiming there is no such table. And what if the tool crashes in between those two renames?
 
 `gh-ost`'s approach is to lock the table via an [elaborate mechanism](https://github.com/github/gh-ost/issues/82) that ensures rollback in case of error/timeout. To the users/apps it looks atomic. Queries will block and pile up, then be released to operate on the new table. The logic relies on internal MySQL lock prioritization, and some users have shown specific scenarios where expected prioritization [can fail](https://github.com/github/gh-ost/issues/887).
 
-Implementing vitess's cut-over, we wanted the best of all worlds. We wanted the cut-over to appear atomic to the apps, i.e. the apps should see no unexpected errors, and at worst case will block for a few seconds. We also wanted complete certainty of data integrity: that no write can possibly take place on the original table while we bring the ghost table to speed. Breakdown follows.
+Implementing vitess's cut-over, we wanted the best of all worlds. We wanted the cut-over to appear atomic to the apps, i.e. the apps should see no unexpected errors, and at worst case will block for a few seconds. We also wanted complete certainty of data integrity: that no write can possibly take place on the original table while we bring the shadow table to speed. Breakdown follows.
 
 ### 1. Buffering writes
 
@@ -94,9 +94,9 @@ We now mark our point in time (MySQL's `gtid_executed` value).
 
 ### 4. Complete
 
-Vitess proceeds to read any remaining binary log entires up to marked point in time, and apply them onto the ghost table. We don't expect many of those. We only enter the cut-over process when our binary log processing is in good shape and tightly behind actual writes. We expect a second or two of final catchup time.
+Vitess proceeds to read any remaining binary log entires up to marked point in time, and apply them onto the shadow table. We don't expect many of those. We only enter the cut-over process when our binary log processing is in good shape and tightly behind actual writes. We expect a second or two of final catchup time.
 
-When the events are consumed, we know the original and ghost tables are in full sync. We now `RENAME` the ghost table in place of the original table. We have a new table in place! The puncture is amended.
+When the events are consumed, we know the original and shadow tables are in full sync. We now `RENAME` the shadow table in place of the original table. We have a new table in place! The puncture is amended.
 
 Finally, we clear the buffering ACL. Buffered queries are then permitted to proceed to execute on the table - the new table - unaware that anything happened.
 
@@ -106,7 +106,7 @@ While VTTablet is running, it is able to rollback the cut-over operation at any 
 
 - Failure before buffering begins? No problem, no harm done.
 - Failure in renaming the original table away? No problem, undo ACLs and try later
-- Failure in renaming the ghost table in place of the original table? No problem, rename the original table back in place, remove buffering, try again later
+- Failure in renaming the shadow table in place of the original table? No problem, rename the original table back in place, remove buffering, try again later
 
 What happens if VTTablet's process fails while the puncture is in place, though? This is where we see the vitess framework benefit. A new VTTablet will run. Whether we failover to a new MySQL server or not, we expect there to eventually be a VTTablet process in charge. That process will run recovery steps for prematurely interrupted migrations. It will in fact resume any interrupted migration from point of interruption.
 
