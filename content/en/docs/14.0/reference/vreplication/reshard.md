@@ -9,6 +9,10 @@ aliases: ['/docs/reference/vreplication/v2/reshard/']
 This documentation is for a new (v2) set of vtctld commands that start in Vitess 11.0. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
 {{< /info >}}
 
+{{< warning >}}
+These workflows can have a significant impact on the source tablets (which are often in production) — especially when a PRIMARY tablet is used as a source. You can limit the impact on the source tablets using the [`--vreplication_copy_phase_max_*` vttablet flags](../flags/#vreplication_copy_phase_max_innodb_history_list_length)
+{{< /warning >}}
+
 ## Command
 
 ```
@@ -18,7 +22,7 @@ Reshard <options> <action> <workflow identifier>
 or
 
 ```
-Reshard [-source_shards=<source_shards>] [-target_shards=<target_shards>] [-cells=<cells>] [-tablet_types=<source_tablet_types>]  [-skip_schema_copy] [-auto_start] [-stop_after_copy] [-timeout=timeoutDuration] [-reverse_replication] [-keep_data] [-keep_routing_rules] <action> <keyspace.workflow>
+Reshard [--source_shards=<source_shards>] [--target_shards=<target_shards>] [--cells=<cells>] [--tablet_types=<source_tablet_types>]  [--skip_schema_copy] [--auto_start] [--stop_after_copy] [--timeout=timeoutDuration] [--reverse_replication] [--keep_data] [--keep_routing_rules] <action> <keyspace.workflow>
 ```
 
 ## Description
@@ -59,14 +63,14 @@ Comma separated shard names to reshard from.
 Comma separated shard names to reshard to.
 </div>
 
-#### -cells
+#### --cells
 **optional**\
 
 <div class="cmd">
 Comma separated Cell(s) or CellAlias(es) to replicate from.
 </div>
 
-#### -tablet_types
+#### --tablet_types
 **optional**\
 **default** empty
 
@@ -74,9 +78,9 @@ Comma separated Cell(s) or CellAlias(es) to replicate from.
 Source Vitess tablet_type, or comma separated list of tablet types, that should be used for choosing source tablet(s) for the reshard.
 </div>
 
-**Note:** If replicating from primary, you must explicitly use `-tablet_types=primary`. If not specified, it defaults to the tablet type(s) specified by the `-vreplication_tablet_type` VTTablet command line flag. `-vreplication_tablet_type` defaults to "PRIMARY,REPLICA".
+**Note:** If replicating from primary, you must explicitly use `--tablet_types=primary`. If not specified, it defaults to the tablet type(s) specified by the `--vreplication_tablet_type` VTTablet command line flag. `--vreplication_tablet_type` defaults to "PRIMARY,REPLICA".
 
-#### -skip_schema_copy
+#### --skip_schema_copy
 **optional**\
 **default** false
 
@@ -85,7 +89,7 @@ If true the source schema is copied to the target shards. If false, you need to 
 before calling reshard.
 </div>
 
-#### -auto_start
+#### --auto_start
 
 **optional**
 **default** true
@@ -124,7 +128,7 @@ will stop once the copy is done and you can then mark the workflow as `Complete`
 
 </div>
 
-#### -timeout
+#### --timeout
 **optional**\
 **default** 30s
 
@@ -136,7 +140,7 @@ the command will error out. For setups with high write qps you may need to incre
 
 </div>
 
-#### -reverse_replication
+#### --reverse_replication
 **optional**\
 **default** true
 
@@ -148,7 +152,7 @@ If set to false these reverse replication streams will not be created and you wi
 
 </div>
 
-#### -keep_data
+#### --keep_data
 **optional**\
 **default** false
 
@@ -158,7 +162,7 @@ Usually, the target data (tables or shards) are deleted by Cancel. If this flag 
 
 </div>
 
-#### -keep_routing_rules
+#### --keep_routing_rules
 **optional**\
 **default** false
 
@@ -180,7 +184,7 @@ All workflows are identified by `targetKeyspace.workflow` where `targetKeyspace`
 ### The most basic Reshard Workflow lifecycle
 
 1. Initiate the migration using [Create](../create)<br/>
-`Reshard -source_shards=<source_shards> -target_shards=<target_shards> Create <keyspace.workflow>`
+`Reshard --source_shards=<source_shards> --target_shards=<target_shards> Create <keyspace.workflow>`
 1. Monitor the workflow using [Show](../show) or [Progress](../progress)<br/>
 `Reshard Show <keyspace.workflow>` _*or*_ <br/>
 `Reshard Progress <keyspace.workflow>`<br/>

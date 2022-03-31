@@ -134,7 +134,7 @@ The fields are explained in the following section.
 This is the syntax of the command:
 
 ```
-VReplicationExec [-json] <tablet alias> <sql command>
+VReplicationExec [--json] <tablet alias> <sql command>
 ```
 
 Here's an example of the command to list all existing streams for
@@ -426,6 +426,12 @@ monitoring tools like prometheus:
 * VReplicationSecondsBehindMaster: VReplication seconds behind master per stream.
 * VReplicationSource: The source for each VReplication stream.
 * VReplicationSourceTablet: The source tablet for each VReplication stream.
+* RowStreamerMaxInnoDBTrxHistLen: Max length of the InnoDB transaction history list on a source tablet before streaming a batch of rows when copying a table.
+  * This can be modified in the running server at the `/debug/env` endpoint.
+* RowStreamerMaxMySQLReplLagSecs: Max MySQL replication lag on a source tablet before streaming a batch of rows when copying a table.
+  * This can be modified in the running server at the `/debug/env` endpoint.
+* RowStreamerWaits: The total number of times we've waited, and how long we've waited, for MySQL to fall below the `RowStreamerMax*` values on a source tablet when preparing to stream a batch of rows when copying a table.
+  * This can be seen on a per table basis in `VStreamerPhaseTiming`.
 
 Thresholds and alerts can be set to draw attention to potential problems.
 
