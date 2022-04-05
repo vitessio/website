@@ -9,6 +9,10 @@ aliases: ['/docs/reference/vreplication/v2/movetables/']
 This documentation is for a new (v2) set of vtctld commands that start in Vitess 11.0. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
 {{< /info >}}
 
+{{< warning >}}
+These workflows can have a significant impact on the source tablets (which are often in production) — especially when a PRIMARY tablet is used as a source. You can limit the impact on the source tablets using the [`--vreplication_copy_phase_max_*` vttablet flags](../flags/#vreplication_copy_phase_max_innodb_history_list_length)
+{{< /warning >}}
+
 ## Command
 
 ```
@@ -17,7 +21,7 @@ MoveTables <options> <action> <workflow identifier>
 or
 
 ```
-MoveTables [-source=<sourceKs>] [-tables=<tableSpecs>] [-cells=<cells>] [-tablet_types=<source_tablet_types>] [-all] [-exclude=<tables>] [-auto_start] [-stop_after_copy] [-timeout=timeoutDuration] [-reverse_replication] [-keep_data] [-keep_routing_rules] <action> <workflow identifier>
+MoveTables [--source=<sourceKs>] [--tables=<tableSpecs>] [--cells=<cells>] [--tablet_types=<source_tablet_types>] [--all] [--exclude=<tables>] [--auto_start] [--stop_after_copy] [--timeout=timeoutDuration] [--reverse_replication] [--keep_data] [--keep_routing_rules] <action> <workflow identifier>
 ```
 
 ## Description
@@ -48,7 +52,7 @@ Name of existing keyspace that contains the tables to be moved
 </div>
 
 #### table_specs
-**optional**  one of `table_specs` or `-all` needs to be specified
+**optional**  one of `table_specs` or `--all` needs to be specified
 <div class="cmd">
 
 _Either_
@@ -57,7 +61,7 @@ _Either_
   * if target keyspace is unsharded OR '
   * if target keyspace is sharded AND the tables being moved are already defined in the target's vschema
 
-  Example: `MoveTables -workflow=commerce2customer commerce customer customer,corder`
+  Example: `MoveTables --workflow=commerce2customer commerce customer customer,corder`
 
 _Or_
 
@@ -65,11 +69,11 @@ _Or_
   * if target keyspace is sharded AND
   * tables being moved are not yet present in the target's vschema
 
-  Example: `MoveTables -workflow=commerce2customer commerce customer '{"t1":{"column_vindexes": [{"column": "id", "name": "hash"}]}}}'`
+  Example: `MoveTables --workflow=commerce2customer commerce customer '{"t1":{"column_vindexes": [{"column": "id", "name": "hash"}]}}}'`
 
 </div>
 
-#### -cells
+#### --cells
 **optional**\
 **default** local cell\
 **string**
@@ -80,36 +84,36 @@ Cell(s) or CellAlias(es) (comma-separated) to replicate from.
 
 </div>
 
-#### -tablet_types 
+#### --tablet_types 
 **optional**\
-**default** `-vreplication_tablet_type` parameter value for the tablet. `-vreplication_tablet_type` has the default value of "in_order:REPLICA,PRIMARY".\
+**default** `--vreplication_tablet_type` parameter value for the tablet. `--vreplication_tablet_type` has the default value of "in_order:REPLICA,PRIMARY".\
 **string**
 
 <div class="cmd">
 
-Source tablet types to replicate from (e.g. primary, replica, rdonly). Defaults to -vreplication_tablet_type parameter value for the tablet, which has the default value of "in_order:REPLICA,PRIMARY".
+Source tablet types to replicate from (e.g. primary, replica, rdonly). Defaults to --vreplication_tablet_type parameter value for the tablet, which has the default value of "in_order:REPLICA,PRIMARY".
 
 </div>
 
-#### -all
+#### --all
 
-**optional** cannot specify `table_specs` if `-all` is specified
+**optional** cannot specify `table_specs` if `--all` is specified
 <div class="cmd">
 
 Move all tables from the source keyspace.
 
 </div>
 
-#### -exclude
+#### --exclude
 
-**optional** only applies if `-all` is specified
+**optional** only applies if `--all` is specified
 <div class="cmd">
 
 If moving all tables, specifies tables to be skipped.
 
 </div>
 
-#### -auto_start
+#### --auto_start
 
 **optional**
 **default** true
@@ -131,7 +135,7 @@ Materialize and then start the workflow.
 * changing the `copy_state` and/or `pos` values to restart a broken MoveTables workflow
 from a specific point of time.
 
-#### -stop_after_copy
+#### --stop_after_copy
 
 **optional**
 **default** false
@@ -148,7 +152,7 @@ will stop once the copy is done and you can then mark the workflow as `Complete`
 
 </div>
 
-#### -timeout
+#### --timeout
 **optional**\
 **default** 30s
 
@@ -160,7 +164,7 @@ the command will error out. For setups with high write qps you may need to incre
 
 </div>
 
-#### -reverse_replication
+#### --reverse_replication
 **optional**\
 **default** true
 
@@ -172,7 +176,7 @@ If set to false these reverse replication streams will not be created and you wi
 
 </div>
 
-#### -keep_data
+#### --keep_data
 **optional**\
 **default** false
 
@@ -182,7 +186,7 @@ Usually, any data created by the workflow in the source and target (tables or sh
 
 </div>
 
-#### -keep_routing_rules
+#### --keep_routing_rules
 **optional**\
 **default** false
 
@@ -204,7 +208,7 @@ All workflows are identified by `targetKeyspace.workflow` where `targetKeyspace`
 ## The most basic MoveTables Workflow lifecycle
 
 1. Initiate the migration using [Create](../create)<br/>
-`MoveTables -source=<sourceKs> -tables=<tableSpecs> Create <targetKs.workflow>`
+`MoveTables --source=<sourceKs> --tables=<tableSpecs> Create <targetKs.workflow>`
 1. Monitor the workflow using [Show](../show) or [Progress](../progress)<br/>
 `MoveTables Show <targetKs.workflow>` _*or*_ <br/>
 `MoveTables Progress <targetKs.workflow>`<br/>
