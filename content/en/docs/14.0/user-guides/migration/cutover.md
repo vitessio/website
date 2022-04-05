@@ -167,15 +167,6 @@ Depending on the size of the table(s), the VDiff process may need increased time
 - If you are running VDiff using vtctlclient (i.e. vtctld is doing the VDiff) you will need to increase the vtctlclient gRPC action timeout. This increase could be something like `-action_timeout 12h` as the default is 1 hour.
 - Increase the `-filtered_replication_wait_time` parameter for VDiff as the default is 30 seconds. You many need to increase this to hours on large and/or busy tables.
 
-You will probably want to override the default for the VDiff `-tablet_types` parameter. 
-This defaults to PRIMARY,REPLICA,RDONLY, and accordingly it will use any tablet type in the source keyspace as the source for the VDiff. 
-This may have performance impact to production traffic still going to the sourcekeyspace, so we recommend updating to something like just RDONLY.
-For example running something like the following:
-
-```sh
-vtctlclient -server vtctld.host:15999 -action_timeout=12h VDiff -filtered_replication_wait_time=2h -tablet_types=rdonly targetkeyspace.workflowname
-```
-
 {{< info >}}
 Note that running VDiff via vtctld can lead to vtctld consuming significantly more memory than usual. 
 We've found this to be around 1 GB plus, instead of the a few hundred MB that it normally uses. 

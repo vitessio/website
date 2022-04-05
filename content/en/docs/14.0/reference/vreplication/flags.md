@@ -87,7 +87,7 @@ stalled streams after _vreplication_retry_delay_ seconds
 #### vreplication_tablet_type
 
 **Type** string\
-**Default** PRIMARY,REPLICA\
+**Default** in_order:REPLICA,PRIMARY\
 **Applicable on** target
 
 This parameter specifies the default tablet_types that will be used by the tablet picker to find sources for a VReplication stream. It can be overridden, per workflow, by passing a different list to the workflow commands like MoveTables and Reshard.
