@@ -21,6 +21,7 @@ vtgate <topo_flags> \
   -log_dir=${VTDATAROOT}/tmp \
   -cell=cell1 \
   -cells_to_watch=cell1 \
+  -tablet_types_to_wait=PRIMARY,REPLICA \
   -port=15001 \
   -mysql_server_port=15306 \
   -mysql_auth_server_impl=static \
