@@ -101,7 +101,7 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | Name | Example Usage |
 | :-------- | :--------------- |
 | [Validate](../vtctl/generic#validate) | `Validate [-ping-tablets]` |
-| [ListAllTablets](../vtctl/generic#listalltablets) | `ListAllTablets [-keyspace=''] [-tablet_type=<primary,replica,rdonly,spare>] [<cell_name1>,<cell_name2>,...]` |
+| [ListAllTablets](../vtctl/generic#listalltablets) | `ListAllTablets [-keyspace=''] [-tablet_type=<PRIMARY,REPLICA,RDONLY,SPARE>] [<cell_name1>,<cell_name2>,...]` |
 | [ListTablets](../vtctl/generic#listtablets) | `ListTablets <tablet alias> ...` |
 | [Help](../vtctl/generic#help) | `Help [command name]` |
 

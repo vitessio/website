@@ -91,7 +91,7 @@ Cell(s) or CellAlias(es) (comma-separated) to replicate from.
 
 <div class="cmd">
 
-Source tablet types to replicate from (e.g. primary, replica, rdonly). Defaults to --vreplication_tablet_type parameter value for the tablet, which has the default value of "in_order:REPLICA,PRIMARY".
+Source tablet types to replicate from (e.g. PRIMARY, REPLICA, RDONLY). Defaults to --vreplication_tablet_type parameter value for the tablet, which has the default value of "in_order:REPLICA,PRIMARY".
 
 </div>
 
