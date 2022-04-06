@@ -1,7 +1,7 @@
 ---
 author: 'Shlomi Noach'
-date: 2022-03-30
-slug: '2022-03-30-online-ddl-vitess-cut-over'
+date: 2022-04-06
+slug: '2022-04-06-online-ddl-vitess-cut-over'
 tags: ['Vitess','MySQL', 'DDL', 'schema migrations', 'operations']
 title: 'Cut-over logic in vitess schema migrations'
 description: 'A deep dive into the migration cut-over logic, which provides the best experience to the apps while maintaining complete data integrity'
