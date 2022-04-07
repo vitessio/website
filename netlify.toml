@@ -3,7 +3,7 @@ publish = "public"
 command = "make production-build"
 
 [build.environment]
-HUGO_VERSION = "0.78.2"
+HUGO_VERSION = "0.96.0"
 
 [context.production]
 HUGO_ENVIRONMENT = "production"
