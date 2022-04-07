@@ -61,7 +61,7 @@ create table my_message(
   priority tinyint NOT NULL DEFAULT '0',
   primary key(time_scheduled, id),
   unique index id_idx(id),
-  index next_idx(priority, time_next)
+  index next_idx(priority asc, time_next desc)
 ) comment 'vitess_message,vt_ack_wait=30,vt_purge_after=86400,vt_batch_size=10,vt_cache_size=10000,vt_poller_interval=30'
 ```
 
