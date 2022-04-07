@@ -196,7 +196,7 @@ an insert statement.  The parameters are as follows:
 * `max_replication_lag`: 99999, reserved.
 * `tablet_types`: specifies a comma separated list of tablet types to replicate from.
   If empty, the default tablet type specified by the `-vreplication_tablet_type`
-  command line flag is used, which in turn defaults to 'REPLICA'.
+  command line flag is used, which in turn defaults to 'in_order:REPLICA,PRIMARY'.
 * `time_updated`: 0, reserved.
 * `transaction_timestamp`: 0, reserved.
 * `state`: 'Init', 'Copying', 'Running', 'Stopped', 'Error'.

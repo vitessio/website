@@ -101,7 +101,7 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | Name | Example Usage |
 | :-------- | :--------------- |
 | [Validate](../vtctl/generic#validate) | `Validate [-ping-tablets]` |
-| [ListAllTablets](../vtctl/generic#listalltablets) | `ListAllTablets [-keyspace=''] [-tablet_type=<primary,replica,rdonly,spare>] [<cell_name1>,<cell_name2>,...]` |
+| [ListAllTablets](../vtctl/generic#listalltablets) | `ListAllTablets [-keyspace=''] [-tablet_type=<PRIMARY,REPLICA,RDONLY,SPARE>] [<cell_name1>,<cell_name2>,...]` |
 | [ListTablets](../vtctl/generic#listtablets) | `ListTablets <tablet alias> ...` |
 | [Help](../vtctl/generic#help) | `Help [command name]` |
 
@@ -413,7 +413,7 @@ The following global options apply to `vtctl`:
 | -vreplication_healthcheck_timeout | duration | healthcheck retry delay (default 1m0s) |
 | -vreplication_healthcheck_topology_refresh | duration | refresh interval for re-reading the topology (default 30s) |
 | -vreplication_retry_delay | duration | delay before retrying a failed binlog connection (default 5s) |
-| -vreplication_tablet_type | string | comma separated list of tablet types used as a source (default "PRIMARY,REPLICA") |
+| -vreplication_tablet_type | string | comma separated list of tablet types used as a source (default "in_order:REPLICA,PRIMARY") |
 | -vstream_packet_size | int | Suggested packet size for VReplication streamer. This is used only as a recommendation. The actual packet size may be more or less than this amount. (default 30000) |
 | -vtctl_healthcheck_retry_delay | duration | delay before retrying a failed healthcheck (default 5s) |
 | -vtctl_healthcheck_timeout | duration | the health check timeout period (default 1m0s) |

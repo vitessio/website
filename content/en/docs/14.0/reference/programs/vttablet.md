@@ -330,7 +330,7 @@ The following global options apply to `vttablet`:
 | --transaction_limit_by_principal |  | Include CallerID.principal when considering who the user is for the purpose of transaction limit. (default true) |
 | --transaction_limit_by_subcomponent |  | Include CallerID.subcomponent when considering who the user is for the purpose of transaction limit. |
 | --transaction_limit_by_username |  | Include VTGateCallerID.username when considering who the user is for the purpose of transaction limit. (default true) |
-| -transaction_limit_per_user | float | Maximum number of transactions a single user is allowed to use at any time, represented as fraction of --transaction_cap. (default 0.4) |
+| --transaction_limit_per_user | float | Maximum number of transactions a single user is allowed to use at any time, represented as fraction of --transaction_cap. (default 0.4) |
 | --shutdown_grace_period | float | how long to wait (in seconds) for queries and transactions to complete during graceful shutdown. |
 | --twopc_abandon_age | float | time in seconds. Any unresolved transaction older than this time will be sent to the coordinator to be resolved. |
 | --twopc_coordinator_address | string | address of the (VTGate) process(es) that will be used to notify of abandoned transactions. |
@@ -348,7 +348,7 @@ The following global options apply to `vttablet`:
 | --vreplication_healthcheck_timeout | duration | healthcheck retry delay (default 1m0s) |
 | --vreplication_healthcheck_topology_refresh | duration | refresh interval for re-reading the topology (default 30s) |
 | --vreplication_retry_delay | duration | delay before retrying a failed binlog connection (default 5s) |
-| --vreplication_tablet_type | string | comma separated list of tablet types used as a source (default "PRIMARY,REPLICA") |
+| --vreplication_tablet_type | string | comma separated list of tablet types used as a source (default "in_order:REPLICA,PRIMARY") |
 | --vstream_packet_size | int | Suggested packet size for VReplication streamer. This is used only as a recommendation. The actual packet size may be more or less than this amount. (default 30000) |
 | --vtctld_addr | string | address of a vtctld instance |
 | --vtgate_protocol | string | how to talk to vtgate (default "grpc") |

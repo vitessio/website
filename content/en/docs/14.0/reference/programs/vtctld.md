@@ -246,7 +246,7 @@ vtctld \
 | -vreplication_healthcheck_timeout | duration | healthcheck retry delay (default 1m0s) |
 | -vreplication_healthcheck_topology_refresh | duration | refresh interval for re-reading the topology (default 30s) |
 | -vreplication_retry_delay | duration | delay before retrying a failed binlog connection (default 5s) |
-| -vreplication_tablet_type | string | comma separated list of tablet types used as a source (default "PRIMARY,REPLICA") |
+| -vreplication_tablet_type | string | comma separated list of tablet types used as a source (default "in_order:REPLICA,PRIMARY") |
 | -vstream_packet_size | int | Suggested packet size for VReplication streamer. This is used only as a recommendation. The actual packet size may be more or less than this amount. (default 30000) |
 | -vtctl_client_protocol | string | the protocol to use to talk to the vtctl server (default "grpc") |
 | -vtctl_healthcheck_retry_delay | duration | delay before retrying a failed healthcheck (default 5s) |

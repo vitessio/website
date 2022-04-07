@@ -27,7 +27,7 @@ The source table is expected to also be in this keyspace.
 as source tablets for the VReplication stream(s) that this command will
 create. If not specified, the tablet type used will default to the value
 of the vttablet `-vreplication_tablet_type` option, which defaults to
-`PRIMARY,REPLICA`.
+`in_order:REPLICA,PRIMARY`.
  * `-cells`: By default VReplication streams, such as used by
 `CreateLookupVindex` will not cross cell boundaries.  If you want the
 VReplication streams to source their data from tablets in cells other
