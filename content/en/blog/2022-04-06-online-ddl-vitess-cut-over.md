@@ -9,9 +9,10 @@ description: 'A deep dive into the migration cut-over logic, which provides the 
 
 Vitess supports managed, non-blocking schema migrations based on VReplication, aptly named `vitess` migrations. Vitess migrations are powerful, revertible, and failure agnostic. They take an [asynchronous approach](https://docs.planetscale.com/learn/online-schema-change-tools-comparison#synchronous-vs-asynchronous), which is more lightweight on the database server. The asynchronous approach comes with an implementation challenge: how to cut-over with minimal impact to the user/app and risk free of data loss. In this post we take a deep dive into the cut-over logic used in vitess migrations.
 
-Vitess migrations are:
+Vitess migration cut-over is:
 
-- Blocking & atomic to vitess clients
+- Quick
+- Atomic to vitess clients
 - Safe from data loss / data drift concerns
 
 To understand better what this means, let's first review what cut-over is.
@@ -94,7 +95,7 @@ We now mark our point in time (MySQL's `gtid_executed` value).
 
 ### 4. Complete
 
-Vitess proceeds to read any remaining binary log entires up to marked point in time, and apply them onto the shadow table. We don't expect many of those. We only enter the cut-over process when our binary log processing is in good shape and tightly behind actual writes. We expect a second or two of final catchup time.
+Vitess proceeds to read any remaining binary log entries up to marked point in time, and apply them onto the shadow table. We don't expect many of those. We only enter the cut-over process when our binary log processing is in good shape and tightly behind actual writes. We expect a second or two of final catchup time.
 
 When the events are consumed, we know the original and shadow tables are in full sync. We now `RENAME` the shadow table in place of the original table. We have a new table in place! The puncture is amended.
 
