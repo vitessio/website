@@ -20,7 +20,7 @@ Before starting, we assume that you have downloaded Vitess and finished the [Get
 
 Vitess relies on two external components, and we recommend that you choose them upfront:
 
-1. [TopoServer](../../../concepts/topology-service/): This is the server in which Vitess stores its metadata. We recommend Etcd if you have no other preference.
+1. [TopoServer](../../../concepts/topology-service/): This is the server in which Vitess stores its metadata. We recommend etcd if you have no other preference.
 2. [MySQL](../../../overview/supported-databases/): Vitess supports MySQL/Percona Server 5.7 to 8.0. We recommend MySQL 8.0 for new installations.
 
 In this guide, we will be covering the case where the MySQL instances are managed by Vitess. A different section covers the details of running against [externally managed databases](../../configuration-advanced/unmanaged-tablet).

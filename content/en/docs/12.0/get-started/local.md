@@ -58,11 +58,11 @@ sudo setenforce 0
 
 ## Install Vitess
 
-Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux. For example with Vitess 13:
+Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux. For example with Vitess 12:
 
 ```sh
-version=13.0.0
-file=vitess-${version}-bc4a960.tar.gz
+version=12.0.3
+file=vitess-${version}-cbc6ab6.tar.gz
 wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
 tar -xzf ${file}
 cd ${file/.tar.gz/}
