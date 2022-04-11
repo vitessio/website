@@ -22,7 +22,7 @@ MySQL and Percona Server for MySQL 5.6 are no longer supported in Vitess 13.0 an
 
 Vitess supports the core features of MariaDB versions 10.0 to 10.3. Vitess [does not yet](https://github.com/vitessio/vitess/issues/5362) support later versions of MariaDB.
 
-{{< warning >}}MariaDB support is likely to end in the future. You can view and comment on [the relevant proposal here](https://github.com/vitessio/vitess/issues/9518).{{< /warning >}}
+{{< warning >}}MariaDB support has been EOL'd in Vitess 14.0.{{< /warning >}}
 
 ## See also
 

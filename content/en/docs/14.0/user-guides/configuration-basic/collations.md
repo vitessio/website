@@ -17,8 +17,8 @@ The following table lists all of the supported collations in the current release
 | Legend | |
 |----|----|
 | ✅ | Vitess has full support for this collation. |
-| ⚠️ | The underlying MySQL engine supports this collation, but Vitess does not. |
-| ❌ | Neither Vitess nor the underlying MySQL engine supports this collation. |
+| ⚠️ | The underlying MySQL (or compatible) database supports this collation, but Vitess does not. |
+| ❌ | Neither Vitess nor the underlying MySQL database supports this collation. |
 
 Using collations that are not supported by Vitess but implemented in the underlying MySQL instance can lead to unpredictable behavior.
 

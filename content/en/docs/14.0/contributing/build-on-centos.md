@@ -37,7 +37,7 @@ export GOPATH=/home/<user>/go
 
 ### Packages from CentOS repos
 
-The MariaDB version included with CentOS 7 (5.5) is not supported by Vitess. First install the MySQL 5.7 repository from Oracle:
+First install the MySQL 5.7 repository from Oracle:
 
 ```
 sudo yum localinstall -y https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
