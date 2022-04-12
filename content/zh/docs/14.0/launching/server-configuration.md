@@ -198,7 +198,7 @@ VTTablet requires multiple user credentials to perform its tasks. Since it's req
 * `db_repl_password`
 * `db_repl_use_ssl`
 
-**filtered** credentials are for performing resharding:
+**filtered** credentials are for VReplication streams when copying data:
 
 * `db_filtered_user`
 * `db_filtered_password`
