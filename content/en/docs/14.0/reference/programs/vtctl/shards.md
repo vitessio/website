@@ -113,15 +113,19 @@ SetShardIsPrimaryServing <keyspace/shard> <is_serving>
 
 ### SetShardTabletControl
 
-Sets the shardTabletControls record for a shard and tablet type in the topology service. Only use this for an emergency fix or after a finished vertical split or after a corrupted MoveTables action. The [MigrateServedFrom](../keyspaces#migrateservedfrom) and [MigrateServedType](../keyspaces#migrateservedtype) commands set this field appropriately already. Always specify the `denied_tables` flag for MoveTables, but never for Reshard operations.<br><br>
+Sets the shardTabletControls or the tabletControls records for a shard and tablet type in the topology service. Only use this for an emergency fix or after a finished vertical split or after a corrupted MoveTables action. The [MigrateServedFrom](../keyspaces#migrateservedfrom) and [MigrateServedType](../keyspaces#migrateservedtype) commands set this field appropriately already. Always specify the `denied_tables` flag for MoveTables, but never for Reshard operations.
 
-To set the queryServiceDisabled, set `disable_query_service` to true; to unset the queryServiceDisabled provide `denied_tables` with an empty tablet set. Useful to fix vReplication operations gone wrong.<br><br>
+To set the `queryServiceDisabled` for the tablet, set `disable_query_service` to true; to unset the queryServiceDisabled provide `denied_tables` with an empty table set. Useful to fix vReplication operations gone wrong. These specific flags update the values for `shardTabletControls` in the topology path: `/keyspaces/<keyspace>/SrvKeyspace`.
 
-To change the denied tables list, specify the `denied_tables` parameter with the new list, this is useful to fix tables that are being blocked after a vertical split. To remove the ShardTabletControl for selected tables, use the `remove` flag, useful after a vertical split is finished to remove serving restrictions.<br><br>
+{{< warning >}}
+It is important to note here the queryServiceDisabled can not be removed by `disable_query_service=false` or the `remove` flags. Only `denied_tables=""` will remove this setting.
+{{< /warning >}}
 
-The `SetShardTabletControl` only updates the topology record for a given shard and type, you still need to run [RefreshStateByShard](../tablets#refreshstatebyshard) to inform the vttablets of the topology change. 
+To change the `deniedTables` list, specify the `denied_tables` parameter with the new list, this is useful to fix tables that are being blocked after a vertical split. To remove the tabletControls for selected tables, use the `remove` flag, useful after a vertical split is finished to remove serving restrictions. These specific flags update the values for `tabletControls` in the topology path: `/keyspaces/<keyspace>/shards/<shard>/Shard`.
 
-#### Example
+The `SetShardTabletControl` only updates the topology records for a given shard and type, you still need to run [RefreshStateByShard](../tablets#refreshstatebyshard) to inform the vttablets of the topology change.
+
+#### Examples
 
 <pre class="command-example">SetShardTabletControl [--cells=c1,c2,...] [--denied_tables=t1,t2,...] [--remove] [--disable_query_service] &lt;keyspace/shard&gt; &lt;tablet type&gt;</pre>
 
