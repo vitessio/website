@@ -7,7 +7,7 @@ weight: 30
 # Related persistent Vitess objects
 
 {{< info >}}
-As the objects or keys noted below are stored in the topo server and cached locally, the processes involved will refresh their topo data throughout the cutover process. For example, each tablet on the source and target shards that are involved in a VReplication workflow will refresh their topo data multiple times as the state of things transition during the cutover.
+As the objects or keys noted below are stored in the topo server and cached locally, the processes involved will refresh their topo data throughout the cutover process. For example, each tablet on the source and target shards that are involved in a VReplication workflow will refresh their topo data multiple times as the state of things transition during the cutover. If we are *not* able to confirm that all tablets involved in a VReplication worfklow are able to refresh their topo data then the cutover command — e.g. `vtctlclient SwitchTraffic` — will cancel the operation and return an error indicating which tablet(s) is unhealthy (including `--dry_run` executions).
 {{< /info >}}
 
 ## VSchema
@@ -16,7 +16,7 @@ A [VSchema](https://vitess.io/docs/concepts/vschema/) allows you to describe how
 
 ## Shard Info
 
-The `global` topo contains one key per keyspace which then contains one key per shard that has been created within the keyspace. For each shard that is healthy there is an attribute `is_primary_serving` which is set to true. The other shards which have been created but are still not healthy and serving this keyspace will not have this attribute set. Here is an example shard info record from an unsharded keyspace named commerce (without the `--cell` flag being passed the global topo base path is used):
+The `global` topo contains one key per keyspace which then contains one key per shard that has been created within the keyspace. For each shard that is healthy there is an attribute `is_primary_serving` which is set to true. The other shards which have been created but are still not healthy and serving within the keyspace will not have this attribute set. Here is an example shard info record from an unsharded keyspace named commerce (without the `--cell` flag being passed the global topo base path is used):
 ```bash
 $ vtctlclient --server=localhost:15999 TopoCat -- --decode_proto '/keyspaces/commerce/shards/0/Shard'
 primary_alias:{cell:"zone1" uid:100} primary_term_start_time:{seconds:1650341417 nanoseconds:374817485} is_primary_serving:true
@@ -24,11 +24,11 @@ primary_alias:{cell:"zone1" uid:100} primary_term_start_time:{seconds:1650341417
 
 ## SrvKeyspace
 
-Each cell has a [SrvKeyspace](https://vitess.io/docs/reference/features/topology-service/#srvkeyspace) key in the `local` topo (per cell info) for each keyspace. For each tablet type (primary/replica) there is one Partition object. The partition object contains all the current shards in the keyspace. The ones which are active have a key range specified for that shard. The ones which are not active have no key ranges set.
+Each cell has a [SrvKeyspace](https://vitess.io/docs/reference/features/topology-service/#srvkeyspace) key in the `local` topo (per cell info) for each keyspace. For each tablet type (primary/replica) there is one `partitions` object. The `partitions` objects contain all of the current shards in the keyspace. For sharded keyspaces, the tablets which are healthy and serving have a key range specified for that shard.
 
-Also the primary can contain a `query_service_disabled` attribute which is set to false during resharding cutovers. This tells the primary in that shard to reject any queries made to it, as a signal to vtgate in case vtgate routes queries to this primary during the cutover or before it discovers the new serving graph. OR the `is_primary_serving` parameter is set to false for that shard in the corresponding shard info object. Here is an example using the same unsharded commerce keyspace and here we specify the `--cell` flag so that cell's topo base path — stored in its `CellInfo` record in the `global topo` — is used:
+Also the primary can contain a `query_service_disabled` attribute which is set to false during resharding cutovers. This tells the primary in that shard to reject any queries made to it, as a signal to vtgate in case vtgate routes queries to this primary during the cutover or before it discovers the new serving graph. Here is an example using the same unsharded commerce keyspace and here we specify the `--cell` flag so that cell's topo base path — stored in its `CellInfo` record in the `global topo` — is used:
 ```bash
-$ $ vtctlclient --server=localhost:15999 TopoCat -- --decode_proto '/cells/zone1/CellInfo'
+$ vtctlclient --server=localhost:15999 TopoCat -- --decode_proto '/cells/zone1/CellInfo'
 server_address:"localhost:2379" root:"/vitess/zone1"
 
 $ vtctlclient --server=localhost:15999 TopoCat -- --decode_proto --cell=zone1 '/keyspaces/commerce/SrvKeyspace'
@@ -37,11 +37,15 @@ partitions:{served_type:PRIMARY shard_references:{name:"0"}} partitions:{served_
 
 ## Routing Rules
 
-[Routing Rules](https://vitess.io/docs/reference/features/schema-routing-rules) are stored in the `RoutingRules` key within the `global` topo. Routing Rules contain a list of table-specific routes. You can route a table for all or specific tablet types to another table in the same or different keyspace. Here is an example using the same commerce keyspace:
+[Routing Rules](https://vitess.io/docs/reference/features/schema-routing-rules) are stored in the `RoutingRules` key within the `global` topo. Routing Rules contain a list of table-specific routes. You can route a table for all or specific tablet types to another table in the same or different keyspace. Here is an example using the same commerce keyspace where we have an active `MoveTables` workflow to move tables to the customer keyspace but we have not switched any traffic yet:
 ```bash
 $ vtctlclient --server=localhost:15999 TopoCat -- --decode_proto '/RoutingRules'
 rules:{from_table:"corder@rdonly" to_tables:"commerce.corder"} rules:{from_table:"customer.corder" to_tables:"commerce.corder"} rules:{from_table:"customer.corder@replica" to_tables:"commerce.corder"} rules:{from_table:"customer@rdonly" to_tables:"commerce.customer"} rules:{from_table:"customer.customer@rdonly" to_tables:"commerce.customer"} rules:{from_table:"customer.corder@rdonly" to_tables:"commerce.corder"} rules:{from_table:"customer@replica" to_tables:"commerce.customer"} rules:{from_table:"corder@replica" to_tables:"commerce.corder"} rules:{from_table:"commerce.corder@replica" to_tables:"commerce.corder"} rules:{from_table:"commerce.corder@rdonly" to_tables:"commerce.corder"} rules:{from_table:"commerce.customer@rdonly" to_tables:"commerce.customer"} rules:{from_table:"corder" to_tables:"commerce.corder"} rules:{from_table:"customer.customer@replica" to_tables:"commerce.customer"} rules:{from_table:"commerce.customer@replica" to_tables:"commerce.customer"} rules:{from_table:"customer" to_tables:"commerce.customer"} rules:{from_table:"customer.customer" to_tables:"commerce.customer"}
 ```
+
+{{< info >}}
+In practice you would instead typically view the routing rules via the dedicated vtctl `GetRoutingRules` command which will return the rules for all keyspaces in the topo.
+{{< /info >}}
 
 # How VTGate routes a query
 
@@ -50,8 +54,8 @@ This section gives a simplified logic used to determine which keyspace and table
 * Check to see if t1 has an appropriate routing rule defined. If so, use the specified target table as an alias for t1
 * Locate the keyspace for t1 using the VSchema
 * For a non-sharded keyspace locate the appropriate tablet (primary, by default) from the (cached) `SrvKeyspace` `local` (per cell) topo record.
-* For a sharded keyspace the `SrvKeyspace` record is used to find the currently active shards. This is done by checking the list of partitions for the specific tablet type selected for the query (primary, by default, for reads and writes) and selecting the ones whose `query_service_disabled` is not set and whose `is_primary_serving` is set .
-* Finally, based on the vindex for the table from the cached `VSchema` (stored in the `global` topo), the shard for the relevant row is computed based on the keyrange to which the id is mapped to using the assigned vindex function/type.
+* For a sharded keyspace the `SrvKeyspace` record is used to find the currently active shards. This is done by checking the list of partitions for the specific tablet type selected for the query (primary, by default, for reads and writes) and selecting the ones whose `query_service_disabled` is not set and whose `is_primary_serving` is true.
+* Finally, based on the vindex for the table from the cached `VSchema` (stored in the `global` topo), the shard for the relevant row is computed based on the keyrange to which the id is mapped to using the declared vindex function/type.
 
 # Changes made to the topo when traffic is switched
 
@@ -65,7 +69,7 @@ For brevity we only show the records for the 80- shard. There will be similar re
 
 #### Before Resharding, after -80/80- shards are created
 
-Only shard 0 has `is_primary_serving` set to true. The `SrvKeyspace` record has only references to 0 for both primary and replica.
+Only shard 0 has `is_primary_serving` set to true. The `SrvKeyspace` record only has references to 0 for both primary and replica.
 
 _global/keyspaces/customer/shards/0/Shard_
 
@@ -191,7 +195,7 @@ rules:{from_table:"customer.customer@replica" to_tables:"commerce.customer"}
 
 #### On switching replica traffic to target
 
-The routing rules for replicas are updated to map the table on source to the target
+The routing rules for replicas are updated to map the table on the source to the target
 
 _global/RoutingRules_
 
@@ -203,7 +207,7 @@ rules:{from_table:"customer@replica" to_tables:"customer.customer"}
 
 #### On switching primary traffic
 
-The routing rules for the primary are updated to map the table on source to the target. In addition the tables are added to the “denylist” on the source keyspace which vttablet uses to reject writes for tables that have moved. The blacklist/routing rules are temporary and can be removed since the moved tables will only appear in the target VSchema
+The routing rules for the primary are updated to map the table on the source to the target. In addition the tables are added to the “denylist” on the source keyspace which vttablet uses to reject writes for tables that have moved. The denylist/routing rules are temporary and can be removed since the moved tables will only appear in the target VSchema
 
 _global/RoutingRules_
 
@@ -219,14 +223,14 @@ _global/keyspaces/commerce/shards/0/Shard_
 ```
 primary_alias:{cell:"zone1" uid:100}
 primary_term_start_time:{seconds:1627477340 nanoseconds:740407602}
-tablet_controls:{tablet_type:PRIMARY blacklisted_tables:"customer"}
+tablet_controls:{tablet_type:PRIMARY denylisted_tables:"customer"}
 is_primary_serving:true
 ```
 
 # Miscellaneous Notes:
 
 * In VReplication workflows cutover is achieved manually by the user
-* `SwitchReads` and `SwitchWrites` are deprecated terms from the “v1” flows and are now replaced by `SwitchTraffic` and `ReverseTraffic` in the “v2” flows. This section mentions both terms since the nomenclature has just recently changed and the v1 names are the ones understood more
-* The term `SwitchReads` it refers to switching traffic for replicas and rdonly tablets. Of course this is by definition read traffic. Traffic to the primary tablets,  including all reads by default, are not affected. Equivalent to `SwitchTraffic` for replica and rdonly.
-* `SwitchWrites` refers to switching all traffic for the primary tablets. Equivalent to `SwitchTraffic` for primary
+* `SwitchReads` and `SwitchWrites` are deprecated terms from the “v1” workflows and are now replaced by `SwitchTraffic` and `ReverseTraffic` in the “v2” workflows. This section mentions both terms since the nomenclature has changed in recent versions and the v1 names may be more well known.
+* The term `SwitchReads` refers to switching traffic for replica and rdonly tablets. Of course this is by definition read-only traffic. Traffic to the primary tablets is not affected. This is equivalent to `SwitchTraffic` for replica and rdonly tablets (if you do not specify primary as a tablet_type for the `SwitchTraffic` command).
+* `SwitchWrites` refers to switching all traffic for the primary tablets. Equivalent to `SwitchTraffic` for primary tablet types.
 * `SwitchReads` and `SwitchWrites` can also reverse traffic based on the options/parameters provided to them
