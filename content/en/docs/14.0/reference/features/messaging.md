@@ -53,15 +53,15 @@ message table must be created like this:
 create table my_message(
   time_scheduled bigint,
   id bigint,
-  time_next bigint,
+  time_next bigint DEFAULT 0,
   epoch bigint,
   time_created bigint,
   time_acked bigint,
   message varchar(128),
-  priority tinyint NOT NULL DEFAULT '0',
+  priority tinyint NOT NULL DEFAULT 0,
   primary key(time_scheduled, id),
   unique index id_idx(id),
-  index next_idx(priority asc, time_next desc)
+  index poller_idx(time_acked, priority, time_next desc)
 ) comment 'vitess_message,vt_ack_wait=30,vt_purge_after=86400,vt_batch_size=10,vt_cache_size=10000,vt_poller_interval=30'
 ```
 
