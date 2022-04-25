@@ -4,7 +4,7 @@ weight: 15
 aliases: ['/docs/user-guides/schema-changes/concurrent-migrations/']
 ---
 
-By default, Vitess schedules all migrations to run sequentially. Only a single migration is expected to run at any given time. However, there are cases for concurrent execution of migrations, and the user may request concurrent execution via `-allow-concurrent` flag in `ddl_startegy`.
+By default, Vitess schedules all migrations to run sequentially. Only a single migration is expected to run at any given time. However, there are cases for concurrent execution of migrations, and the user may request concurrent execution via `-allow-concurrent` flag in `ddl_strategy`.
 
 ## Why not run concurrent migrations by default
 
