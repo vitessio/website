@@ -115,20 +115,50 @@ Deprecated. Use <code>SetShardIsPrimaryServing</code>
 
 ### SetShardTabletControl
 
-Sets the TabletControl record for a shard and type. Only use this for an emergency fix or after a finished vertical split. The *MigrateServedFrom* and *MigrateServedType* commands set this field appropriately already. Always specify the blacklisted_tables flag for vertical splits, but never for horizontal splits.<br><br>To set the DisableQueryServiceFlag, keep 'blacklisted_tables' empty, and set 'disable_query_service' to true or false. Useful to fix horizontal splits gone wrong.<br><br>To change the blacklisted tables list, specify the 'blacklisted_tables' parameter with the new list. Useful to fix tables that are being blocked after a vertical split.<br><br>To just remove the ShardTabletControl entirely, use the 'remove' flag, useful after a vertical split is finished to remove serving restrictions.
+Sets the shardTabletControls or the tabletControls records for a shard and tablet type in the topology service. Only use this for an emergency fix or after a finished vertical split or after a corrupted MoveTables action. The [MigrateServedFrom](../keyspaces#migrateservedfrom) and [MigrateServedType](../keyspaces#migrateservedtype) commands set this field appropriately already. Always specify the `blacklisted_tables` flag for MoveTables, but never for Reshard operations.
 
-#### Example
+To set the `queryServiceDisabled` for the tablet, set `disable_query_service` to true; to unset the queryServiceDisabled provide `blacklisted_tables` with an empty table set. Useful to fix vReplication operations gone wrong. These specific flags update the values for `shardTabletControls` in the topology path: `/keyspaces/<keyspace>/SrvKeyspace`.
 
-<pre class="command-example">SetShardTabletControl [--cells=c1,c2,...] [--blacklisted_tables=t1,t2,...] [--remove] [--disable_query_service] &lt;keyspace/shard&gt; &lt;tablet type&gt;</pre>
+{{< warning >}}
+It is important to note here the queryServiceDisabled can not be removed by `disable_query_service=false` or the `remove` flags. Only `blacklisted_tables=""` will remove this setting.
+{{< /warning >}}
+
+To change the `blacklistedTables` list, specify the `blacklisted_tables` parameter with the new list, this is useful to fix tables that are being blocked after a vertical split. To remove the tabletControls for selected tables, use the `remove` flag, useful after a vertical split is finished to remove serving restrictions. These specific flags update the values for `tabletControls` in the topology path: `/keyspaces/<keyspace>/shards/<shard>/Shard`.
+
+The `SetShardTabletControl` only updates the topology records for a given shard and type, you still need to run [RefreshStateByShard](../tablets#refreshstatebyshard) to inform the vttablets of the topology change.
+
+#### Examples
+
+<pre class="command-example">SetShardTabletControl [-cells=c1,c2,...] [-blacklisted_tables=t1,t2,...] [-remove] [-disable_query_service] &lt;keyspace/shard&gt; &lt;tablet type&gt;</pre>
+
+**Disable serving of the listed tables for the selected keyspace/shard and tablet type:**
+
+<pre class="command-example">SetShardTabletControl [-blacklisted_tables=t1,t2,...] &lt;keyspace/shard&gt; &lt;tablet type&gt;<br>
+RefreshStateByShard &lt;keyspace/shard&gt;</pre>
+
+**Serve all tables for the selected keyspace/shard and tablet type:**
+
+<pre class="command-example">SetShardTabletControl -remove &lt;keyspace/shard&gt; &lt;tablet type&gt;<br>
+RefreshStateByShard &lt;keyspace/shard&gt;</pre>
+
+**Disable serving for the selected keyspace/shard and tablet type:**
+
+<pre class="command-example">SetShardTabletControl -disable_query_service=true &lt;keyspace/shard&gt; &lt;tablet type&gt;<br>
+RefreshStateByShard &lt;keyspace/shard&gt;</pre>
+
+**Enable serving for the selected keyspace/shard and tablet type:**
+
+<pre class="command-example">SetShardTabletControl -blacklisted_tables="" &lt;keyspace/shard&gt; &lt;tablet type&gt;<br>
+RefreshStateByShard &lt;keyspace/shard&gt;</pre>
 
 #### Flags
 
-| Name | Type | Definition |
-| :-------- | :--------- | :--------- |
-| blacklisted_tables | string | Specifies a comma-separated list of tables to blacklist (used for vertical split). Each is either an exact match, or a regular expression of the form '/regexp/'. |
-| cells | string | Specifies a comma-separated list of cells to update |
-| disable_query_service | Boolean | Disables query service on the provided nodes. This flag requires 'blacklisted_tables' and 'remove' to be unset, otherwise it's ignored. |
-| remove | Boolean | Removes cells for vertical splits. |
+| Name | Type | Definition                                                                                                                                                              |
+| :-------- | :--------- |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| blacklisted_tables | string | Specifies a comma-separated list of tables to deny queries on (used for vertical split). Each is either an exact match, or a regular expression of the form '/regexp/'. |
+| cells | string | Specifies a comma-separated list of cells to update                                                                                                                     |
+| disable_query_service | Boolean | Disables query service on the provided nodes. This flag requires 'blacklisted_tables' and 'remove' to be unset, otherwise it's ignored.                                      |
+| remove | Boolean | Removes cells for MoveTables.                                                                                                                                           |
 
 
 #### Arguments
@@ -155,7 +185,7 @@ Sets the TabletControl record for a shard and type. Only use this for an emergen
 ### UpdateSrvKeyspacePartition
 
 ```
-UpdateSrvKeyspacePartition [--cells=c1,c2,...] [--remove] <keyspace/shard> <tablet type>
+UpdateSrvKeyspacePartition [-cells=c1,c2,...] [-remove] <keyspace/shard> <tablet type>
 ```
 
 ### SourceShardDelete
@@ -181,7 +211,7 @@ Adds the SourceShard record with the provided index. This is meant as an emergen
 
 #### Example
 
-<pre class="command-example">SourceShardAdd [--key_range=&lt;keyrange&gt;] [--tables=&lt;table1,table2,...&gt;] &lt;keyspace/shard&gt; &lt;uid&gt; &lt;source keyspace/shard&gt;</pre>
+<pre class="command-example">SourceShardAdd [-key_range=&lt;keyrange&gt;] [-tables=&lt;table1,table2,...&gt;] &lt;keyspace/shard&gt; &lt;uid&gt; &lt;source keyspace/shard&gt;</pre>
 
 #### Flags
 
