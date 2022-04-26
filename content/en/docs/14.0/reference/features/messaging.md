@@ -82,8 +82,10 @@ The comment section specifies additional configuration parameters. The fields
 are as follows:
 
 * `vitess_message`: Indicates that this is a message table.
-* `vt_min_backoff=30`, `vt_max_backoff=3600`: Set bounds, in seconds, on exponential
-  backoff for message retries.
+* `vt_min_backoff=30`: Set lower bound, in seconds, on exponential backoff for
+  message retries. If not set, defaults to `vt_ack_wait` _(optional)_
+* `vt_max_backoff=3600`: Set upper bound, in seconds, on exponential backoff for
+  message retries. The default value is infinite backoff _(optional)_
 * `vt_ack_wait=30`: Wait for 30 seconds for the *first* message send to be acked.
   If one is not received within this time frame, the message will be resent.
 * `vt_purge_after=86400`: Purge acked messages that are older than 86400
@@ -94,7 +96,7 @@ are as follows:
 * `vt_poller_interval=30`: Poll every 30 seconds for messages that should be
   [re]sent.
 
-If any of the above fields are missing, Vitess will fail to load the table. No
+If any of the above fields not marked as optional are missing, Vitess will fail to load the table. No
 operation will be allowed on a table that has failed to load.
 
 ## Enqueuing messages
@@ -109,6 +111,14 @@ These inserts can be part of a regular transaction. Multiple messages can be
 inserted into different tables. Avoid accumulating too many big messages within a
 transaction as it consumes memory on the VTTablet side. At the time of commit,
 memory permitting, all messages are instantly enqueued to be sent.
+
+Messages can also be created to be sent in the future:
+
+ ```sql
+ insert into my_message(id, message, time_next) values(1, '{"message": "hello world"}', :future_time)
+ ```
+
+ `future_time` must be a unix timestamp expressed in nanoseconds.
 
 ## Receiving messages
 
@@ -155,8 +165,9 @@ Once a message is successfully acked, it will never be resent.
 
 For a message that was successfully sent we will wait for the specified `vt_ack_wait`
 time. If no ack is received by then, it will be resent. The next attempt will be 2x
-the previous wait, and this delay is doubled for every attempt (with some added
-jitter to avoid thundering herds).
+the previous wait and this delay is doubled for every subsequent attempt — bound by
+`vt_min_backoff` and `vt_max_backoff` — with some added jitter (up to 33%) to avoid
+thundering herds.
 
 ## Purging
 
@@ -183,7 +194,7 @@ update my_message set priority = :priority, time_next = :time_next, epoch = :epo
 This comes in handy if a bunch of messages had chronic failures and got
 postponed to the distant future. If the root cause of the problem was fixed,
 the application could reschedule them to be delivered as soon as possible. You can
-also optionally change the priroity and or epoch. Lower priority and epoch values
+also optionally change the priority and or epoch. Lower priority and epoch values
 both increase the relative priority of the message and the back-off is less
 aggressive.
 
@@ -197,6 +208,7 @@ Here is a short list of possible limitations/improvements:
   timely delivery instead of waiting for the next polling cycle.
 * Changed properties: Although the engine detects new message tables, it does
   not refresh the properties (such as `vt_ack_wait`) of an existing table.
+* No explicit rate limiting.
 * Usage of MySQL partitioning for more efficient purging.
 
 
