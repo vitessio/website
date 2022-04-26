@@ -166,8 +166,8 @@ exceeds the time period specified by `vt_purge_after`.
 ## Advanced usage
 
 The `MessageAck` functionality is currently an gRPC API call and cannot be used
-inside a transaction or more generally from the SQL interface. However, you can
-manually ack messages using a regular DML query like this:
+from the SQL interface. However, you can manually ack messages using a regular
+DML query like this:
 
 ```sql
 update my_message set time_acked = :time_acked, time_next = null where id in ::ids and time_acked is null
