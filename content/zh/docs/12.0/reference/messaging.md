@@ -44,7 +44,8 @@ Messages are not a good fit for the following use cases:
 ## Creating a message table
 
 The current implementation requires a base fixed schema with properties defined
-using specific table COMMENT directives. The message table format is as follows:
+using Vitess specific table `COMMENT` directives. The message table format is as
+follows:
 
 ```sql
 create table my_message(
@@ -81,7 +82,7 @@ The comment section specifies additional configuration parameters. The fields
 are as follows:
 
 * `vitess_message`: Indicates that this is a message table.
-* `vt_min_backoff=30`, `vt_max_backoff=3600`: set bounds, in seconds, on exponential
+* `vt_min_backoff=30`, `vt_max_backoff=3600`: Set bounds, in seconds, on exponential
   backoff for message retries.
 * `vt_ack_wait=30`: Wait for 30 seconds for the *first* message send to be acked.
   If one is not received within this time frame, the message will be resent.
@@ -112,22 +113,22 @@ memory permitting, all messages are instantly enqueued to be sent.
 ## Receiving messages
 
 Processes can subscribe to receive messages by sending a `MessageStream`
-gRPC request to VTGate or using the `stream * from <table>` SQL statement
+gRPC request to a `VTGate` or using the `stream * from <table>` SQL statement
 (if using the interactive mysql command-line client you must also pass the
 `-q`/`--quick` option). If there are multiple subscribers, the messages will be
 delivered in a round-robin fashion. Note that *this is not a broadcast*; each
 message will be sent to at most one subscriber.
 
 The format for messages is the same as a standard Vitess `Result` received from
-a vtgate. This means that standard database tools that understand query results
+a `VTGate`. This means that standard database tools that understand query results
 can also be message receivers.
 
 ### Subsetting
 
 It's possible that you may want to subscribe to specific shards or groups of
 shards while requesting messages. This is useful for partitioning or load
-balancing. The `MessageStream` API allows you to specify these constraints. The
-request parameters are as follows:
+balancing. The `MessageStream` gRPC API call allows you to specify these
+constraints. The request parameters are as follows:
 
 * `Name`: Name of the message table.
 * `Keyspace`: Keyspace where the message table is present.
@@ -141,7 +142,7 @@ request parameters are as follows:
 
 A received and processed (you've completed some meaningful work based on the
 message contents received) message can be acknowledged using the `MessageAck`
-API call. This call accepts the following parameters:
+gRPC API call. This call accepts the following parameters:
 
 * `Name`: Name of the message table.
 * `Keyspace`: Keyspace where the message table is present. This field can be
@@ -152,7 +153,7 @@ Once a message is successfully acked, it will never be resent.
 
 ## Exponential backoff
 
-A message that was successfully sent we will wait for the specified `vt_ack_wait`
+For a message that was successfully sent we will wait for the specified `vt_ack_wait`
 time. If no ack is received by then, it will be resent. The next attempt will be 2x
 the previous wait, and this delay is doubled for every attempt (with some added
 jitter to avoid thundering herds).
