@@ -132,22 +132,22 @@ The `SetShardTabletControl` only updates the topology records for a given shard 
 **Disable serving of the listed tables for the selected keyspace/shard and tablet type:**
 
 <pre class="command-example">SetShardTabletControl [--denied_tables=t1,t2,...] &lt;keyspace/shard&gt; &lt;tablet type&gt;<br>
-RefreshStateByShard &lt;keyspace/shard&gt; &lt;tablet type&gt;</pre>
+RefreshStateByShard &lt;keyspace/shard&gt;</pre>
 
 **Serve all tables for the selected keyspace/shard and tablet type:**
 
 <pre class="command-example">SetShardTabletControl --remove &lt;keyspace/shard&gt; &lt;tablet type&gt;<br>
-RefreshStateByShard &lt;keyspace/shard&gt; &lt;tablet type&gt;</pre>
+RefreshStateByShard &lt;keyspace/shard&gt;</pre>
 
 **Disable serving for the selected keyspace/shard and tablet type:**
 
 <pre class="command-example">SetShardTabletControl --disable_query_service=true &lt;keyspace/shard&gt; &lt;tablet type&gt;<br>
-RefreshStateByShard &lt;keyspace/shard&gt; &lt;tablet type&gt;</pre>
+RefreshStateByShard &lt;keyspace/shard&gt;</pre>
 
 **Enable serving for the selected keyspace/shard and tablet type:**
 
 <pre class="command-example">SetShardTabletControl --denied_tables="" &lt;keyspace/shard&gt; &lt;tablet type&gt;<br>
-RefreshStateByShard &lt;keyspace/shard&gt; &lt;tablet type&gt;</pre>
+RefreshStateByShard &lt;keyspace/shard&gt;</pre>
 
 #### Flags
 
