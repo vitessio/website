@@ -7,7 +7,7 @@ that needs to be performed asynchronously. Under the covers, messages are
 stored in a traditional MySQL table and therefore enjoy the following
 properties:
 
-* **Scalable**: Because of vitess's sharding abilities, messages can scale to
+* **Scalable**: Because of Vitess's sharding abilities, messages can scale to
   very large QPS or sizes.
 * **Guaranteed delivery**: A message will be indefinitely retried until a
   successful ack is received.
@@ -33,20 +33,18 @@ Messages are good for:
 * Handing off work to another system.
 * Recording potentially time-consuming work that needs to be done
   asynchronously.
-* Scheduling for future delivery.
 * Accumulating work that could be done during off-peak hours.
 
 Messages are not a good fit for the following use cases:
 
 * Broadcasting each event to multiple subscribers.
-* Ordered delivery.
-* Real-time delivery.
+* Ordered delivery is required.
+* Real-time delivery properties are required.
 
 ## Creating a message table
 
-The current implementation requires a base fixed schema. This will be made more
-flexible in the future. There will also be a custom DDL syntax. For now, a
-message table must be created like this:
+The current implementation requires a base fixed schema with properties defined
+using specific table COMMENT directives. The message table format is as follows:
 
 ```sql
 create table my_message(
@@ -76,7 +74,7 @@ The application-related columns are as follows:
 * `message`: can be any type.
 * `priority`: messages with a lower priority will be processed first.
 
-The above indexes are recommended for optimum performance. However, some
+The noted indexes are recommended for optimum performance. However, some
 variation can be allowed to achieve different performance trade-offs.
 
 The comment section specifies additional configuration parameters. The fields
@@ -85,28 +83,29 @@ are as follows:
 * `vitess_message`: Indicates that this is a message table.
 * `vt_min_backoff=30`, `vt_max_backoff=3600`: set bounds, in seconds, on exponential
   backoff for message retries.
-* `vt_ack_wait=30`: Wait for 30s for the first message ack. If one is not
-  received, resend.
+* `vt_ack_wait=30`: Wait for 30 seconds for the *first* message send to be acked.
+  If one is not received within this time frame, the message will be resent.
 * `vt_purge_after=86400`: Purge acked messages that are older than 86400
   seconds (1 day).
-* `vt_batch_size=10`: Send up to 10 messages per RPC packet.
-* `vt_cache_size=10000`: Store up to 10000 messages in the cache. If the demand
+* `vt_batch_size=10`: Send up to 10 messages per gRPC packet.
+* `vt_cache_size=10000`: Store up to 10,000 messages in the cache. If the demand
   is higher, the rest of the items will have to wait for the next poller cycle.
-* `vt_poller_interval=30`: Poll every 30s for messages that are due to be sent.
+* `vt_poller_interval=30`: Poll every 30 seconds for messages that should be
+  [re]sent.
 
-If any of the above fields are missing, vitess will fail to load the table. No
+If any of the above fields are missing, Vitess will fail to load the table. No
 operation will be allowed on a table that has failed to load.
 
 ## Enqueuing messages
 
-The application can enqueue messages using an insert statement, for example:
+The application can enqueue messages using a standard `INSERT` statement, for example:
 
 ```sql
 insert into my_message(id, message) values(1, '{"message": "hello world"}')
 ```
 
 These inserts can be part of a regular transaction. Multiple messages can be
-inserted to different tables. Avoid accumulating too many big messages within a
+inserted into different tables. Avoid accumulating too many big messages within a
 transaction as it consumes memory on the VTTablet side. At the time of commit,
 memory permitting, all messages are instantly enqueued to be sent.
 
@@ -116,12 +115,12 @@ Processes can subscribe to receive messages by sending a `MessageStream`
 gRPC request to VTGate or using the `stream * from <table>` SQL statement
 (if using the interactive mysql command-line client you must also pass the
 `-q`/`--quick` option). If there are multiple subscribers, the messages will be
-delivered in a round-robin fashion. Note that this is not a broadcast; Each
+delivered in a round-robin fashion. Note that *this is not a broadcast*; each
 message will be sent to at most one subscriber.
 
-The format for messages is the same as a vitess `Result`. This means that
-standard database tools that understand query results can also be message
-recipients.
+The format for messages is the same as a standard Vitess `Result` received from
+a vtgate. This means that standard database tools that understand query results
+can also be message receivers.
 
 ### Subsetting
 
@@ -141,7 +140,7 @@ request parameters are as follows:
 ## Acknowledging messages
 
 A received and processed (you've completed some meaningful work based on the
-message contents) message can be acknowledged using the `MessageAck`
+message contents received) message can be acknowledged using the `MessageAck`
 API call. This call accepts the following parameters:
 
 * `Name`: Name of the message table.
@@ -153,8 +152,8 @@ Once a message is successfully acked, it will never be resent.
 
 ## Exponential backoff
 
-A message that was successfully sent will wait for the specified ack wait time.
-If no ack is received by then, it will be resent. The next attempt will be 2x
+A message that was successfully sent we will wait for the specified `vt_ack_wait`
+time. If no ack is received by then, it will be resent. The next attempt will be 2x
 the previous wait, and this delay is doubled for every attempt (with some added
 jitter to avoid thundering herds).
 
@@ -165,7 +164,7 @@ exceeds the time period specified by `vt_purge_after`.
 
 ## Advanced usage
 
-The `MessageAck` functionality is currently an gRPC API call and cannot be used
+The `MessageAck` functionality is currently a gRPC API call and cannot be used
 from the SQL interface. However, you can manually ack messages using a regular
 DML query like this:
 
@@ -182,11 +181,12 @@ update my_message set priority = :priority, time_next = :time_next, epoch = :epo
 
 This comes in handy if a bunch of messages had chronic failures and got
 postponed to the distant future. If the root cause of the problem was fixed,
-the application could reschedule them to be delivered immediately. You can also
-optionally change the priroity and or epoch. Lower priority and epoch values
-both increase the priority of the message and the back-off is less aggressive.
+the application could reschedule them to be delivered as soon as possible. You can
+also optionally change the priroity and or epoch. Lower priority and epoch values
+both increase the relative priority of the message and the back-off is less
+aggressive.
 
-You can also view messages using regular `select` queries against the message table.
+You can also view messages using regular `SELECT` queries against the message table.
 
 ## Known limitations
 
@@ -195,6 +195,7 @@ Here is a short list of possible limitations/improvements:
 * Proactive scheduling: Upcoming messages can be proactively scheduled for
   timely delivery instead of waiting for the next polling cycle.
 * Changed properties: Although the engine detects new message tables, it does
-  not refresh properties of an existing table.
-* Usage of MySQL partitions for more efficient purging.
+  not refresh the properties (such as `vt_ack_wait`) of an existing table.
+* Usage of MySQL partitioning for more efficient purging.
+
 
