@@ -21,7 +21,11 @@ MoveTables <options> <action> <workflow identifier>
 or
 
 ```
-MoveTables [--source=<sourceKs>] [--tables=<tableSpecs>] [--cells=<cells>] [--tablet_types=<source_tablet_types>] [--all] [--exclude=<tables>] [--auto_start] [--stop_after_copy] [--timeout=timeoutDuration] [--reverse_replication] [--keep_data] [--keep_routing_rules] <action> <workflow identifier>
+MoveTables [-source=<sourceKs>] [-tables=<tableSpecs>] [-cells=<cells>] 
+  [-tablet_types=<source_tablet_types>] [-all] [-exclude=<tables>] [-auto_start] 
+  [-stop_after_copy] [-timeout=timeoutDuration] [-reverse_replication] [-keep_data] 
+  [-keep_routing_rules] [-source_time_zone=<mysql_time_zone>]
+  <action> <workflow identifier>
 ```
 
 ## Description
@@ -195,6 +199,29 @@ Usually, any data created by the workflow in the source and target (tables or sh
 Usually, any routing rules created by the workflow in the source and target keyspace are removed by Complete or Cancel. If this flag is used the routing rules will be left in place.
 
 </div>
+
+#### -source_time_zone
+**optional**\
+**default** ""
+
+<div class="cmd">
+
+Specifying this flag causes all `DATETIME` fields to be converted from the given time zone into `UTC`. It is expected that the application has
+stored *all* `DATETIME` fields, in all tables being moved, in the specified time zone. On the target these `DATETIME` values will be stored in `UTC`.
+
+As a best practice, Vitess expects users to run their MySQL servers in `UTC`. So we do not specify a target time zone for the conversion.
+It is expected that the [time zone tables have been pre-populated](https://dev.mysql.com/doc/refman/en/time-zone-support.html#time-zone-installation) on the target mysql servers. 
+
+Any reverse replication streams running after a SwitchWrites will do the reverse date conversion on the source.
+
+Note that selecting the `DATETIME` columns from the target will now give the times in UTC. It is expected that the application will
+perform any conversions using, for example, `SET GLOBAL time_zone = 'US/Pacific'`or `convert_tz()`.
+
+Also note that only columns of `DATETIME` data types are converted. If you store `DATETIME` values as `VARCHAR` or `VARBINARY` strings,
+setting this flag will not convert them. 
+
+</div>
+
 
 ### workflow identifier
 
