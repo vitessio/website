@@ -74,6 +74,7 @@ Finally, to instruct VTAdmin to use your Authenticator, specify its name in the 
 ```yaml
 authenticator: "./path/to/your_authn_name.so" # or just "your_authn_name" (see below)
 ```
+<br/>
 
 If the name ends in `.so`, VTAdmin will assume it is a Go plugin (the second option described in the previous section).
 VTAdmin will attempt to open the plugin and find a function named `NewAuthenticator` that returns an `rbac.Authenticator` implementation.
@@ -84,9 +85,48 @@ If there is no plugin registered with that name, VTAdmin will refuse to start.
 
 ## Authorization
 
+Unlike authentication, which occurs at the incoming request boundary (both HTTP and gRPC), authorization happens within the `vtadmin.API` layer itself.
+
+In each method, the API extracts any `Actor` from the authentication layer, and performs one or more checks to see if that actor is allowed to perform the actions necessary to fulfill the request.
+We'll go over how this works in more detail, but as an example, here's a snippet of the `GetClusters` handler:
+
+```go
+func (api *API) GetClusters(ctx context.Context, req *vtadminpb.GetClustersRequest) (*vtadminpb.GetClustersResponse, error) {
+	clusters, _ := api.getClustersForRequest(nil) // `nil` implies "all clusters"
+	resp := &vtadminpb.GetClustersResponse{
+		Clusters: make([]*vtadminpb.Cluster, 0, len(clusters)),
+	}
+
+	for _, c := range clusters {
+		if !api.authz.IsAuthorized(ctx, c.ID, rbac.ClusterResource, rbac.GetAction) {
+			continue
+		}
+
+		resp.Clusters = append(resp.Clusters, &vtadminpb.Cluster{
+			Id:   c.ID,
+			Name: c.Name,
+		})
+	}
+
+    return resp, nil
+}
+```
+<br/>
+
+First, it's necessary to note that there's a shim layer in the HTTP/gRPC middlewares that puts any `Actor` from an authentication plugin into the `ctx` that gets passed to the method you see here.
+The details of how this works are not particularly relevant to this documentation, but you can refer to [these][http_authn_handler] [files][grpc_authn_interceptors] if you would like to learn more.
+
+Second, it is possible to run VTAdmin with authorization but without an authentication plugin installed.
+If you do this, all requests will implicitly be made by the "unauthenticated" actor, and therefore may only access resources that permit the wildcard `Subject` (more on RBAC configs in a bit!).
+
+Third, and most important: note that being unauthorized to access to a `(cluster, resource, action)` **does not fail the overall request**.
+If a request involves multiple clusters, and the actor is permitted to access a subset of them, the request will proceed for those clusters.
+If a user tries to access a cluster they are not permitted to, **including a cluster that does not exist**, they will be unable to tell if
+(1) there is simply no data; (2) they do not have access to the cluster; or (3) the cluster exists at all.
+This is by design, to prevent a malicious actor from being able to enumerate resources by brute force and interpreting the authorization failure responses.
+
 TODO:
-- where authn happens (middlewares) and where authz checks happen (api-layer)
-- "unauthorized" fails silently (for security reasons)
+- describe config structure
 - list and describe actions/resources
 
 
@@ -95,3 +135,6 @@ TODO:
 
 [jaeger_plugin_example]: https://github.com/vitessio/vitess/blob/46cb4679c198c96fbe7b51f40219d8196f4284a7/go/trace/plugin_jaeger.go#L32-L36
 [go_plugin_pkg_docs]: https://pkg.go.dev/plugin
+
+[http_authn_handler]: https://github.com/vitessio/vitess/blob/01eab00275bbd73855c8c92876f73deb7ef62259/go/vt/vtadmin/http/handlers/authentication.go#L25-L42
+[grpc_authn_interceptors]: https://github.com/vitessio/vitess/blob/01eab00275bbd73855c8c92876f73deb7ef62259/go/vt/vtadmin/rbac/authentication.go#L52-L88
