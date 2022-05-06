@@ -60,8 +60,8 @@ If using RBAC, both the `--rbac` and `--rbac-config` flags must be set. If not u
 
 | Name | Required | Type | Default | Definition |
 | -------- | --------- | --------- | --------- |--------- |
-| `no-rbac` | Optional | boolean | false | Whether to disable RBAC. | 
-| `rbac` | Optional | boolean | false | Whether to enable RBAC. |
+| `no-rbac` | Optional | boolean | `false` | Whether to disable RBAC. | 
+| `rbac` | Optional | boolean | `false` | Whether to enable RBAC. |
 | `rbac-config` | Optional | string | - | Path to an RBAC config file. Must be set if passing `--rbac`. |
 
 ### glog flags
