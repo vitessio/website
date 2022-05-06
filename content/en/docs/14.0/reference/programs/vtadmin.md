@@ -21,7 +21,7 @@ One of `cluster`, `cluster-defaults`, or `cluster-config` file is required. Mult
 | Name | Definition |
 | -------- | --------- | 
 | `cluster` | Per-cluster configuration. Any values here take precedence over those defined by the `cluster-defaults` and/or `cluster-config` flags. | 
-| `cluster-config` | Path to a yaml cluster configuration; for reference, see the example [clusters.yaml](https://github.com/vitessio/vitess/blob/main/doc/vtadmin/clusters.yaml. | 
+| `cluster-config` | Path to a yaml cluster configuration; for reference, see the example [clusters.yaml](https://github.com/vitessio/vitess/blob/main/doc/vtadmin/clusters.yaml). | 
 | `cluster-defaults` | Default options for all clusters. |
 | `enable-dynamic-clusters` | Defaults to `false`. Whether to enable dynamic clusters that are set by request header cookies or gRPC metadata. | 
 
