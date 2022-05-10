@@ -6,7 +6,7 @@ weight: 30
 
 # The use of unique keys
 
-A VReplication stream copies data from a table on a source target to a table on a target tablet. In some cases the two tablets may be the same one, but the stream is oblivious to such nuance. VReplication needs to be able to copy existing rows from the source table onto the target table, as well as identify binary log events from the source tablet, and apply them onto the target table. To that effect, VReplication needs to be able to uinquely identify rows, so that it can apply a specific `UPDATE` on the correct row, or so that it knows all rows _up to a given row_ have been copied.
+A VReplication stream copies data from a table on a source target to a table on a target tablet. In some cases the two tablets may be the same one, but the stream is oblivious to such nuance. VReplication needs to be able to copy existing rows from the source table onto the target table, as well as identify binary log events from the source tablet, and apply them onto the target table. To that effect, VReplication needs to be able to uniquely identify rows, so that it can apply a specific `UPDATE` on the correct row, or so that it knows all rows _up to a given row_ have been copied.
 
 Each row needs to be uniquely identifiable. In the relational model this is trivially done by utilizing `UNIQUE KEY`s, preferably `PRIMARY KEY`s. A `UNIQUE KEY` made up of non-`NULL`able columns is considered a `PRIMARY KEY` equivalent (PKE) for this purpose.
 
@@ -351,7 +351,7 @@ At a high level, this is how VReplication is able to work with different keys/co
 
 Originally, VReplication was only designed to work with identical `PRIMARY KEY`s. If not specified, VReplication assumed the source table's `PRIMARY KEY` _can be used_ on target table, and that target table's `PRIMARY KEY` applied to the source table. If not, it would error out and the workflow would fail.
 
-With the introduction of mechanisms to automatically determine the optimal key to use and of the `source_unique_key_columns`, `target_unique_key_columns`, `source_unique_key_target_columns` for more fine-grained control, VReplication changes behavior as follows:
+With the introduction of mechanisms to automatically determine the optimal key to use and of the `source_unique_key_columns`, `target_unique_key_columns`, `source_unique_key_target_columns` fields for more fine-grained control, VReplication changes behavior as follows:
 
 #### Notes about the code
 
@@ -365,7 +365,7 @@ The streamer iterates the table by the chosen index's column order. It then trac
 
 ### Copier
 
-VCopier receives rows from the streamer in the chosen index's column order order. It complies with the streamer's ordering. When tracking progress in `_vt.copy_state` it uses `lastPk` values from the streamer, which means it uses the same index columns as the streamer in that order.
+VCopier receives rows from the streamer in the chosen index's column order. It complies with the streamer's ordering. When tracking progress in `_vt.copy_state` it uses `lastPk` values from the streamer, which means it uses the same index columns as the streamer in that order.
 
 ### Player
 
