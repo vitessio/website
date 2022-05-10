@@ -7,7 +7,7 @@ aliases: ['/docs/user-guides/schema-changes/ddl-strategies/']
 Vitess supports both managed, online schema migrations (aka Online DDL) as well as unmanaged migrations. How Vitess runs a schema migration depends on the _DDL strategy_. Vitess allows these strategies:
 
 - `direct`: the direct apply of DDL to your database. This is not an online DDL. It is a synchronous and blocking operation. This is the default strategy. 
-- `vitess` (formerly known as `online`): utilizes Vitess's built in [VReplication](../../../reference/vreplication/vreplication/) mechanism.
+- `vitess` (formerly known as `online`): utilizes Vitess's built in [VReplication](../../../reference/vreplication/vreplication/) mechanism. This is the preferred strategy in Vitess.
 - `gh-ost`: uses 3rd party GitHub's [gh-ost](https://github.com/github/gh-ost) tool.
 - `pt-osc`: uses 3rd party Percona's [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html) as part of [Percona Toolkit](https://www.percona.com/doc/percona-toolkit/3.0/index.html)
 
@@ -20,6 +20,7 @@ See also [ddl_strategy flags](../ddl-strategy-flags).
 You will set either `@@ddl_strategy` session variable, or `-ddl_strategy` command line flag. Examples:
 
 #### Via vtctl/vtctlclient
+
 ```shell
 $ vtctlclient ApplySchema -ddl_strategy "vitess" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
 a2994c92_f1d4_11ea_afa3_f875a4d24e90
@@ -91,7 +92,6 @@ Vitess takes care of setting up the necessary command line flags. It automatical
 
 `gh-ost` throttling is done via Vitess's own tablet throttler, based on replication lag.
 
-
 ### Using pt-online-schema-change
 
 [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html) is part of [Percona Toolkit](https://www.percona.com/doc/percona-toolkit/3.0/index.html), a set of Perl scripts. To be able to use `pt-online-schema-change`, you must have the following setup on all your tablet servers (normally tablets are co-located with MySQL on same host and so this implies setting up on all MySQL servers):
@@ -146,7 +146,7 @@ There are pros and cons to using any of the strategies. Some notable differences
 #### Cut-over
 
 - Both `pt-online-schema-change` and `gh-ost` have an atomic cut-over based on MySQL locking. At the end of the migration, the tables are switched, and incoming queries are momentarily blocked, but not lost.
-- `vitess` offers a combined Vitess/MySQL locking logic:
+- `vitess` offers a combined Vitess/MySQL locking logic ([read more](https://vitess.io/blog/2022-04-06-online-ddl-vitess-cut-over/)):
   - To queries on the migrated table, that are going through Vitess (ie route through `VTGate`), the cut-over is blocking. Vitess will buffer incoming queries during cut-over, and will allow them to operate once the cut-over is complete.
   - Any queries on the migrated table that are not going through Vitess and which operate directly on the MySQL server will experience a brief outage: the queries will notice the table does not exist momentarily.
   - It is at any case safe, in terms of data consistency, to run both types of queries throughout the migration and specifically during the cut-over.

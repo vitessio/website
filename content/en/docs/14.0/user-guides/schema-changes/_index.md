@@ -100,7 +100,7 @@ Vitess automatically garbage-collects the "old" tables, artifacts of `vitess`, `
 
 Vitess allows a variety of approaches to schema changes, from fully automated to fully owned by the user.
 
-- Managed, online schema changes are _experimental_ at this time, but are Vitess's way forward
+- Managed, online schema changes are the preferred approach in Vitess .
 - Direct, blocking ALTERs are generally impractical in production given that they can block writes for substantial lengths of time.
 - User controlled migrations are allowed, and under the user's responsibility.
 
