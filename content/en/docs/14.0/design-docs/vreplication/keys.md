@@ -341,9 +341,9 @@ Note:
 
 ## Automation
 
-OnlineDDL mechanism automatically analyzes the differences between source and target tables, evaluates eligible keys, chooses the keys on source and target tables, and populates the filter's `source_unique_key_columns`, `target_unique_key_columns`, `source_unique_key_target_columns` fields. Indeed, OnlineDDL operations are most susceptible to differences in keys.
+OnlineDDL has a mechanism to automatically analyze the differences between source and target tables, evaluate eligible keys, choose the keys on source and target tables, and populate the filter's `source_unique_key_columns`, `target_unique_key_columns`, `source_unique_key_target_columns` fields. Indeed, OnlineDDL operations are most susceptible to differences in keys. The user can also supply their chosen values as an override — using those fields in the workflow definition — in the rare case it's needed.
 
-At this time no other VReplication mechanism automates this analysis. The user must supply the correct values.
+VReplication more broadly will automatically use the most efficient `PRIMARY KEY` equivalent (NON-NULL unique key) when there's no defined `PRIMARY KEY` on the table.
 
 ## Implementation
 
@@ -355,21 +355,21 @@ With the introduction of `source_unique_key_columns`, `target_unique_key_columns
 
 #### Notes about the code
 
-Much of the code uses "PK" terminology. With the introduction of _any_ unique key utilization the "PK" terminology becomes incorrect. However, to avoid mass rewrites we kept this terminology, and wherever VReplication discusses a primary key or pkColumns etc., it may refer to a non-PK Unique Key.
+Much of the code uses "PK" terminology. With the introduction of _any_ unique key utilization the "PK" terminology becomes incorrect. However, to avoid mass rewrites we kept this terminology, and wherever VReplication discusses a `PRIMARY KEY` or pkColumns etc., it may refer to a non-PK Unique Key.
 
 ### Streamer
 
-Streaming is done by `source_unique_key_columns`. When not present, `rowstreamer` uses PK columns. When present. rowstreamer trusts the information in `source_unique_key_columns` to be correct. It does not validate that there is indeed a valid unique key covering those columns. It does validate that the columns exist.
+Streaming is done using the `source_unique_key_columns` value, if present. When present, `rowstreamer` trusts the information in `source_unique_key_columns` to be correct. It does not validate that there is indeed a valid unique key covering those columns, it only validates that the columns exist. When a `source_unique_key_columns` value is not present, `rowstreamer` uses the `PRIMARY KEY` columns if they exist, otherwise it will determine the best available `PRIMARY KEY` equivalent if one exists, and lastly if none of these are available it will use all of the columns in the table.
 
-The streamer iterates the table by `source_unique_key_columns` order. It tracks its progress in `lastPk` as if this was indeed a PK.
+The streamer iterates the table by the chosen index's column order. It then tracks its progress in `lastPk` as if this was indeed a true `PRIMARY KEY`.
 
 ### Copier
 
-VCopier receives rows from the streamer in `source_unique_key_columns` order. It complies with the streamer's ordering. When tracking progress in `_vt.copy_state` it uses `lastPk` values from the streamer, which means it uses the same `source_unique_key_columns` as the streamer in that order.
+VCopier receives rows from the streamer in the chosen index's column order order. It complies with the streamer's ordering. When tracking progress in `_vt.copy_state` it uses `lastPk` values from the streamer, which means it uses the same index columns as the streamer in that order.
 
 ### Player
 
-VPlayer adhers to both `source_unique_key_columns` and `target_unique_key_columns`.
+VPlayer adhers to both `source_unique_key_columns` and `target_unique_key_columns` when present. If not present, again it attempts to use the `PRIMARY KEY` columns if they exist, otherwise it will determine the best available `PRIMARY KEY` equivalent if one exists, and lastly if none of these are available it will use all of the columns in the table.
 
-- `TablePlan`'s `isOutsidePKRange()` function needs to compare values according to rowstreamer's ordering, therefore uses `source_unique_key_columns` ordering
-- `tablePlanBuilder`'s `generateWhere()` function uses the target table's `target_unique_key_columns`, and then also appends any supplemental columns from `source_unique_key_target_columns` not included in `target_unique_key_columns`.
+- `TablePlan`'s `isOutsidePKRange()` function needs to compare values according to `rowstreamer`'s ordering, therefore uses the chosen index columns in order 
+- `tablePlanBuilder`'s `generateWhere()` function uses the target table's `target_unique_key_columns`, and then also appends any supplemental columns from `source_unique_key_target_columns` not included in `target_unique_key_columns` when they are present. If not present, again it attempts to use the `PRIMARY KEY` columns if they exist, otherwise it will determine the best available `PRIMARY KEY` equivalent if one exists, and lastly if none of these are available it will use all of the columns in the table.
