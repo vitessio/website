@@ -58,7 +58,7 @@ This statement can be executed as:
 
 - a `VReplication`, managed online migration
 - a `gh-ost`, managed online migration
-- a `pt-online-schema-change`, managed online migration
+- a `pt-online-schema-change`, managed online migration (**experimental**)
 - a synchronous, [unmanaged schema change](../unmanaged-schema-changes/)
 
 See [DDL Strategies](../ddl-strategies) for discussion around the different options.

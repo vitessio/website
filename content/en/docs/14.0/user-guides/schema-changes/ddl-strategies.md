@@ -9,7 +9,7 @@ Vitess supports both managed, online schema migrations (aka Online DDL) as well 
 - `direct`: the direct apply of DDL to your database. This is not an online DDL. It is a synchronous and blocking operation. This is the default strategy. 
 - `vitess` (formerly known as `online`): utilizes Vitess's built in [VReplication](../../../reference/vreplication/vreplication/) mechanism. This is the preferred strategy in Vitess.
 - `gh-ost`: uses 3rd party GitHub's [gh-ost](https://github.com/github/gh-ost) tool.
-- `pt-osc`: uses 3rd party Percona's [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html) as part of [Percona Toolkit](https://www.percona.com/doc/percona-toolkit/3.0/index.html)
+- `pt-osc`: uses 3rd party Percona's [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html) as part of [Percona Toolkit](https://www.percona.com/doc/percona-toolkit/3.0/index.html). `pt-osc` strategy is **experimental**.
 
 `CREATE` and `DROP` are managed in the same way, by Vitess, whether strategy is `vitess`, `gh-ost` or `pt-osc`.
 
