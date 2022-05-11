@@ -4,8 +4,6 @@ weight: 2
 aliases: ['/docs/user-guides/managed-online-schema-changes/']
 ---
 
-**Note:** `gh-ost` migrations are considered stable. `pt-osc` and `vitess` migrations are considered **EXPERIMENTAL**.
-
 Vitess offers managed, online schema migrations (aka Online DDL), transparently to the user. Vitess Onine DDL offers:
 
 - Non-blocking migrations
@@ -21,6 +19,7 @@ Vitess offers managed, online schema migrations (aka Online DDL), transparently 
 - See also [advanced usage](../advanced-usage/)
 
 As general overview:
+
 - User chooses a [strategy](../ddl-strategies) for online DDL (online DDL is opt in)
 - User submits one or more schema change queries, using the standard MySQL `CREATE TABLE`, `ALTER TABLE` and `DROP TABLE` syntax.
 - Vitess responds with a Job ID for each schema change query.
@@ -59,7 +58,7 @@ This statement can be executed as:
 
 - a `VReplication`, managed online migration
 - a `gh-ost`, managed online migration
-- a `pt-online-schema-change`, managed online migration
+- a `pt-online-schema-change`, managed online migration (**experimental**)
 - a synchronous, [unmanaged schema change](../unmanaged-schema-changes/)
 
 See [DDL Strategies](../ddl-strategies) for discussion around the different options.
