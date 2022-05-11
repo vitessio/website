@@ -99,14 +99,14 @@ Vitess only supports gauges for custom metrics: the user may define a query whic
 - The throttler is currently **disabled** by default. Use the `vttablet` option `-enable-lag-throttler` to enable the throttler.
   When the throttler is disabled, it still serves `/throttler/check` and `/throttler/check-self` API endpoints, and responds with `HTTP 200 OK` to all requests.
   When the throttler is enabled, it implicitly also runs heartbeat injections.
-- Use the `vttablet` flag `-throttle_threshold` to set a lag threshold value. The default threshold is `1sec` and is set upon tablet startup. For example, to set a half-second lag threshold, use the flag `-throttle_threshold=0.5s`.
-- To set the tablet types that the throttler queries for lag, use the `vttablet` flag `-throttle_tablet_types="replica,rdonly"`. The default tablet type is `replica`; this type is always implicitly included in the tablet types list. You may add any other tablet type. Any type not specified is ignored by the throttler.
-- To override the default lag evaluation, and measure a different metric, use `-throttle_metrics_query`. The query must be either of these forms:
+- Use the `vttablet` flag `--throttle_threshold` to set a lag threshold value. The default threshold is `1sec` and is set upon tablet startup. For example, to set a half-second lag threshold, use the flag `--throttle_threshold=0.5s`.
+- To set the tablet types that the throttler queries for lag, use the `vttablet` flag `--throttle_tablet_types="replica,rdonly"`. The default tablet type is `replica`; this type is always implicitly included in the tablet types list. You may add any other tablet type. Any type not specified is ignored by the throttler.
+- To override the default lag evaluation, and measure a different metric, use `--throttle_metrics_query`. The query must be either of these forms:
   - `SHOW GLOBAL STATUS LIKE '<metric>'`
   - `SHOW GLOBAL VARIABLES LIKE '<metric>'`
   - `SELECT <single-column> FROM ...`, expecting single column, single row result
-- To override the throttle threshold, use `-throttle_metrics_threshold`. Floating point values are accepted.
-- Use `-throttle_check_as_check_self` to implicitly reroute any `/throttler/check` call into `/throttler/check-self`. This makes sense when the user supplies a custom query, and where the user wishes to throttle writes to the cluster based on the primary tablet's health, rather than the overall health of the cluster.
+- To override the throttle threshold, use `--throttle_metrics_threshold`. Floating point values are accepted.
+- Use `--throttle_check_as_check_self` to implicitly reroute any `/throttler/check` call into `/throttler/check-self`. This makes sense when the user supplies a custom query, and where the user wishes to throttle writes to the cluster based on the primary tablet's health, rather than the overall health of the cluster.
 
 An example for custom query & threshold setup, using the MySQL metrics `Threads_running` (number of threads actively executing a query at a given time) on the primary, might look like:
 
@@ -117,17 +117,25 @@ $ vttablet
   -throttle_check_as_check_self
 ```
 
+## Heartbeat configuration
+
+Enabling the lag throttler also automatically enables heartbeat injection. The follwing `vttablet` flags further control heartbeat behavior:
+
+- `--heartbeat_interval` indicates how frequently heartbeats are injected. The interval should over-sample the `--throttle_threshold`. For example, if `--throttle_threshold` is `1s`, then `--heartbeat_interval` should be `250ms` or less.
+- `--heartbeat_on_demand_duration` ensures heartbeats are only injected when needed. Heartbeats are written to the binary logs, and can therefore bloat them. If this is a concern, configure for example: `--heartbeat_on_demand_duration 5s`. This setting means: any throttler request starts a `5s` lease of heartbeat writes.
+  in normal times, heartbeats are not written. Once a throttle check is requested (e.g. by a running migration), the throttler asks the tablet to start a `5s` lease of heartbeats. that first check is likely to return a non-OK code, because heartbeats were stale. However, subsequent checks will soon pick on the newly injected heartbeats. Checks made while the lease is ongoing further extend the lease. In the scenario of a running migration, we can expect heartbeats to begin as soon as the migration begins, and terminate `5s` (in our example) after the migration completes.
+  A recommended value is a multiple of `--throttle_threshold`. If `--throttle_threshold` is `1s`, reasonable values would be `5s` to `60s`.
+
 ## API & usage
 
 Applications use these API endpoints:
 
-- `/throttler/check`, for apps that wish to write mass amounts of data to a shard, and wish to maintain the overall health of the shard.
+### Checks
+
+- `/throttler/check?app=<name>`, for apps that wish to write mass amounts of data to a shard, and wish to maintain the overall health of the shard.
 - `/throttler/check-self`, for apps that wish to perform some operation (e.g. a massive _read_) on a specific tablet and only wish to maintain the health of that tablet.
 
-- Applications may indicate their identity via `?app=<name>` parameter.
-- Applications may also declare themselves to be _low priority_ via `?p=low` param. Managed online schema migrations (`gh-ost`, `pt-online-schema-change`) do so, as does the table purge process.
-
-Examples:
+#### Examples:
 
 - `gh-ost` uses this throttler endpoint: `/throttler/check?app=gh-ost&p=low`
 - A data backfill application will identify as such, and use _normal_ priority: `/throttler/check?app=my_backfill` (priority not indicated in URL therefore assumed to be _normal_)
@@ -141,9 +149,25 @@ A `HEAD` request is sufficient. A `GET` request also provides a `JSON` output. F
 
 In the first two above examples we can see that the tablet is configured to throttle at `1sec`
 
-Tablet also provides `/throttler/status` endpoint. This is useful for monitoring and management purposes. 
+### Instructions
 
-**Example: Healthy primary tablet**
+- `/throttler/throttle-app?app=<name>[&duration=<duration>][&ratio=<ratio>][&p=low]`: instructs the throttler to begin throttling requests from given app.
+  - An optional `duration` value auto expires the throttling after indicated time. You may specify these units: `s` (seconds), `m` (minutes), `h` (hours) or combinations. Example values: `90s`, `30m`, `1h`, `1h30m`, etc.
+  - An optional `ratio` value indicates the throttling intensity, ranging from `0` (no throttling at all) to `1.0` (the default, full throttle).
+  - Applications may also declare themselves to be _low priority_ via `?p=low` param. Managed online schema migrations (`gh-ost`, `pt-online-schema-change`) do so, as does the table purge process.
+- `/throttler/unthrottle-app?app=<name>`: instructs the throttler to stop throttling for the given app. This removes any previous throttling instruction for the app. the throttler still reserves the right to throttle the app based on cluster status.
+
+#### Examples:
+
+- `/throttler/throttle-app?app=vreplication&ratio=0.75` rejects on average 3 out of 4 requests made by `vreplication`.
+- `/throttler/throttle-app?app=vreplication&ratio=0.25&duration=2h` rejects on average 1 out of 4 requests made by `vreplication` for the next `2` hours, after which the app is unthrottled.
+
+### Information
+
+- `/throttler/status` endpoint. This is useful for monitoring and management purposes.
+- `/throttler/throttled-apps` endpoint, listing all apps for which there's a throttling instruction
+
+#### Example: Healthy primary tablet
 
 The following command gets throttler status on a primary tablet hosted on `tablet1`, serving on port `15100`.
 
@@ -189,7 +213,7 @@ The primary tablet serves two types of metrics:
 `"IsLeader": true` indicates this tablet is active, is the `primary`, and is running probes.
 `"IsDormant": false,` means that an application has recently issued a `check`, and the throttler is probing for lag at high frequency.
 
-**Example: replica tablet**
+#### Example: replica tablet
 
 The following command gets throttler status on a replica tablet hosted on `tablet2`, serving on port `15100`.
 
@@ -222,6 +246,22 @@ This API call returns the following JSON object:
 
 The replica tablet only presents `mysql/self` metric (measurement of its own backend MySQL's lag). It does not serve checks for the shard in general.
 
+
+#### Example: throttled-apps
+
+```sh
+$ curl -s http://127.0.0.1:15100/throttler/throttled-apps
+```
+
+```json
+[
+  {
+    "AppName": "always-throttled-app",
+    "ExpireAt": "2032-05-08T11:33:19.683767744Z",
+    "Ratio": 1
+  }
+]
+```
 
 ## Resources
 
