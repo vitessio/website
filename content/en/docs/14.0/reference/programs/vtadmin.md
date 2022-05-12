@@ -11,8 +11,10 @@ These flags are provided to the `vtadmin` process. They are also referenced in [
 | Name | Required | Type | Default | Definition |
 | -------- | --------- | --------- | --------- |--------- |
 | `addr` | **Required** | string | ":15000" | The address for `vtadmin` to serve on. |
-| `lame-duck-duration` | Optional | seconds | 5s | The length of the lame duck period at shutdown. |
-| `lmux-read-timeout` | Optional | seconds | 1s | How long to spend connection muxing. | 
+| `lame-duck-duration` | Optional | [time.Duration](duration) | "5s" | The length of the lame duck period at shutdown. |
+| `lmux-read-timeout` | Optional | [time.Duration](duration) | "1s" | How long to spend connection muxing. | 
+
+[duration]: https://pkg.go.dev/time#ParseDuration
 
 ### Cluster config flags
 
