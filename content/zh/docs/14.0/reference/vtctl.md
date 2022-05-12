@@ -192,10 +192,10 @@ Validates that all nodes reachable from the global replication graph and that al
 * [ShowResharding](#showresharding)
 * [RebuildKeyspaceGraph](#rebuildkeyspacegraph)
 * [RemoveKeyspaceCell](#removekeyspacecell)
-* [SetKeyspaceServedFrom](#setkeyspaceservedfrom)
-* [SetKeyspaceShardingInfo](#setkeyspaceshardinginfo)
+* (DEPRECATED) [SetKeyspaceServedFrom](#setkeyspaceservedfrom)
+* (DEPRECATED) [SetKeyspaceShardingInfo](#setkeyspaceshardinginfo)
 * [ValidateKeyspace](#validatekeyspace)
-* [WaitForDrain](#waitfordrain)
+* (DEPRECATED) [WaitForDrain](#waitfordrain)
 
 ### CreateKeyspace
 
@@ -444,6 +444,8 @@ Removes the cell from the Cells list for all shards in the keyspace, and the Srv
 
 ### SetKeyspaceServedFrom
 
+Deprecated.
+
 Changes the ServedFromMap manually. This command is intended for emergency fixes. This field is automatically set when you call the *MigrateServedFrom* command. This command does not rebuild the serving graph.
 
 #### Example
@@ -485,6 +487,8 @@ Changes the ServedFromMap manually. This command is intended for emergency fixes
 
 
 ### SetKeyspaceShardingInfo
+
+Deprecated.
 
 Updates the sharding information for a keyspace.
 

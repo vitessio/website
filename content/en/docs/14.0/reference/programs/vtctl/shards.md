@@ -166,7 +166,6 @@ RefreshStateByShard &lt;keyspace/shard&gt;</pre>
 
   * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
   * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
-  * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
   * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential primary. Vitess also does not worry about lag for experimental tablets when reparenting.
   * <code>primary</code> &ndash; A primary copy of data
   * <code>master</code> &ndash; Deprecated, same as primary

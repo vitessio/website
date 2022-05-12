@@ -112,11 +112,16 @@ Outputs a sorted list of all keyspaces.
 
 ### SetKeyspaceShardingInfo
 
+Deprecated.
+
 Updates the sharding information for a keyspace.
 
 #### Example
 
 <pre class="command-example">SetKeyspaceShardingInfo [-force] &lt;keyspace name&gt; [&lt;column name&gt;] [&lt;column type&gt;]
+
+Deprecated.
+
 Updates the sharding information for a keyspace.</pre>
 
 #### Flags
@@ -460,6 +465,8 @@ Displays all of the shards in the specified keyspace.</pre>
 
 
 ### WaitForDrain
+
+Deprecated.
 
 Blocks until no new queries were observed on all tablets with the given tablet type in the specified keyspace.  This can be used as sanity check to ensure that the tablets were drained after running vtctl MigrateServedTypes  and vtgate is no longer using them. If -timeout is set, it fails when the timeout is reached.
 

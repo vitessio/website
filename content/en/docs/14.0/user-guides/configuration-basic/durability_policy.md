@@ -22,7 +22,7 @@ There are 2 implementations supported in this release:
 
 [EmergencyReparentShard](../../configuration-advanced/reparenting/#emergencyreparentshard-emergency-reparenting) and [PlannedReparentShard](../../configuration-advanced/reparenting/#plannedreparentshard-planned-reparenting) will use the durability rules while choosing the correct candidate for promotion.
 
-This configuration should be specified in [vtctld](../vtctld), [vtctl](../../../concepts/vtctl) and vtworker as a flag `-durability_policy`. It should be specified in [vtorc](../vtorc) as `Durability` config.
+This configuration should be specified in [vtctld](../vtctld), [vtctl](../../../concepts/vtctl) as a flag `-durability_policy`. It should be specified in [vtorc](../vtorc) as `Durability` config.
 
 {{< info >}}
 Currently the durability policies are not used to setup semi-sync in EmergencyReparentShard or PlannedReparentShard. All the RPCs are still using the `-enable_semi_sync` flag on vttablet to setup semi-sync. This flag is currently being used for promotion rules and to log discrepancies in semi-sync setup. Nonetheless, this flag should be specified correctly for upgrade considerations to future releases when the durability policies will be used to setup semi-sync and `-enable_semi_sync` is deprecated.

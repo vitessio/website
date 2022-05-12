@@ -166,7 +166,7 @@ The following global parameters apply to `mysqlctl`:
 | purge_logs_interval | duration | how often try to remove old logs (default 1h0m0s) |
 | remote_operation_timeout | duration | time to wait for a remote operation (default 30s) |
 | security_policy | string | the name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only) |
-| service_map | value | comma separated list of services to enable (or disable if prefixed with '-') Example: grpc-vtworker |
+| service_map | value | comma separated list of services to enable (or disable if prefixed with '-') Example: grpc-queryservice |
 | sql-max-length-errors | int | truncate queries in error logs to the given length (default unlimited) |
 | sql-max-length-ui | int | truncate queries in debug UIs to the given length (default 512) (default 512) |
 | stats_backend | string | The name of the registered push-based monitoring/stats backend to use |
