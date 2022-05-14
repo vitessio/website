@@ -6,9 +6,9 @@ weight: 30
 
 # The use of unique keys
 
-A VReplication stream copies data from a table on a source target to a table on a target tablet. In some cases the two tablets may be the same one, but the stream is oblivious to such nuance. VReplication needs to be able to copy existing rows from the source table onto the target table, as well as identify binary log events from the source tablet, and apply them onto the target table. To that effect, VReplication needs to be able to identify rows, so that it can apply a specific `UPDATE` on the correct row, or so that it knows all rows _up to a given row_ have been copied.
+A VReplication stream copies data from a table on a source target to a table on a target tablet. In some cases the two tablets may be the same one, but the stream is oblivious to such nuance. VReplication needs to be able to copy existing rows from the source table onto the target table, as well as identify binary log events from the source tablet, and apply them onto the target table. To that effect, VReplication needs to be able to uniquely identify rows, so that it can apply a specific `UPDATE` on the correct row, or so that it knows all rows _up to a given row_ have been copied.
 
-Each row needs to be uniquely identifiable. In the relational model this is trivially done by utilizing `UNIQUE KEY`s, preferably `PRIMARY KEY`s.
+Each row needs to be uniquely identifiable. In the relational model this is trivially done by utilizing `UNIQUE KEY`s, preferably `PRIMARY KEY`s. A `UNIQUE KEY` made up of non-`NULL`able columns is considered a `PRIMARY KEY` equivalent (PKE) for this purpose.
 
 Typically, both source and target table have similar structure, and same keys. 
 
@@ -20,7 +20,7 @@ Any `UNIQUE KEY` that is non-`NULL`able potentially qualifies. A `NULL`able `UNI
 
 `PRIMARY KEY`s are by definition always non-`NULL`able. A `PRIMARY KEY` (PK) is typically the best choice. It gives best iteration/read performance on InnoDB tables, as those are clustered by PK order.
 
-`PRIMARY KEY` aside, `VReplication` prioritizes keys that utilize integers rather than texts, and prioritizes smaller data types over larger data types.
+`PRIMARY KEY` aside, `VReplication` prioritizes keys that utilize e.g. integers rather than texts, and more generally prioritizes smaller data types over larger data types.
 
 However, not all eligible `UNIQUE KEY`s, or even `PRIMARY KEY`s are usable for all VReplication streams, as described below.
 
@@ -32,11 +32,11 @@ In the case both tables share the same `PRIMARY KEY`, the answer is trivial: giv
 
 However, other scenarios are valid. Consider an OnlineDDL operation that modifies the `PRIMARY KEY` as follows: `DROP PRIMARY KEY, ADD PRIMARY KEY(col1)`. On the source table, a row is identified by `col1, col2`. On the target table, a row is only identifiable by `col1`. This scenario still feels comfortable: all we need to do when we apply e.g. an `UPDATE` statement on target table is to drop `col2` from the statement: `... WHERE col1=<val1>`.
 
-_Note that it is the user's responsibility to make sure the data will comply with the new constraints. If not, VReplication wil fail the operation._
+_Note that it is the user's responsibility to make sure the data will comply with the new constraints. If not, VReplication will fail the operation._
 
 But consider the opposite case, there's a `PRIMARY KEY(col1)` and an OnlineDDL operation turns it into `PRIMARY KEY(col1, col2)`. Now we need to apply changes `... WHERE col1=<val1> AND col2=<val2>`. But `col2` is not part of the source `PRIMARY KEY`.
 
-An extreme case is when the keys on source table and target table do not share _any columns_ between them. Say source table has `PRIMARY KEY(col1)` and target table has `PRIMARY KEY(col2)` and with no other potential keys. We still need to identify which row in source table maps to which row in the target table. VReplication still allows this scenario.
+An extreme case is when the keys on source table and target table do not share _any columns_ between them. Say source table has `PRIMARY KEY(col1)` and target table has `PRIMARY KEY(col2)` and with no other potential keys. We still need to identify which row in source table maps to which row in the target table. VReplication still supports this scenario.
 
 Yet another complication is when columns are renamed along the way. Consider a `ALTER TABLE CHANGE COLUMN col2 col_two INT UNSIGNED ...`. A row on the source table is identified by `col1, col2`, but on the target table it is identified by `col1, col_two`.
 
@@ -46,9 +46,9 @@ Let's now discuss what the exact requirements are for unique keys, and then disc
 
 To be able to create a VReplication stream between source table and target table:
 
-- The source table must have a non-`NULL`able `UNIQUE/PRIMARY` key whose columns all exist in the target table (possibly under different names)
+- The source table must have a non-`NULL`able `UNIQUE/PRIMARY` key (PK or PKE) whose columns all exist in the target table (possibly under different names)
 - The target table must have a non-`NULL`able `UNIQUE/PRIMARY` key whose columns all exist in the source table (possibly under different names)
-- Except in the trivial case where both tables share same `PRIMARY KEY` (of same columns in same order), VReplication must be told which keys to utilize (more on this later on)
+- Except in the trivial case where both tables share same `PRIMARY KEY` (of same columns in same order), VReplication can automatically determine which keys to utilize (more on this later on)
 
 To clarify, it is **OK** if:
 
@@ -58,10 +58,10 @@ To clarify, it is **OK** if:
 - Chosen key in source table and chosen key in target table share some or all columns but in different order
 - There are keys in source table that cover columns not present in target table
 - There are keys in target table that cover columns not present in source table
-- There are `NULL`able columns in source and tasrget table
-- There are `NULL`able keys in source and tasrget table
+- There are `NULL`able columns in source and target table
+- There are `NULL`able keys in source and target table
 
-All it takes is _one_ good key in source table, and one good key in target table to make VReplication work.
+All it takes is _one_ viable key that can be used to uniqely identify rows in the source table, and one such viable key in target table to allow VReplication to work.
 
 ### Examples for valid cases
 
@@ -245,7 +245,7 @@ CREATE TABLE `target` (
 
 If both source and target table share the same `PRIMARY KEY` (covering same columns in same order) then there's nothing to be done. VReplication will pick `PRIMARY KEY` on both ends by default.
 
-In all other cases, we must instruct VReplication which keys are involved.
+In all other cases, VReplication must determine which keys are involved and which ones to use.
 
 ### Example 1
 
@@ -261,7 +261,7 @@ CREATE TABLE `corder` (
 )
 ```
 
-And even though we don't _have to_, here's how we'd configure VReplication (prettified for readability):
+And even though we don't _have to_, here's how we could manually configure the VReplication workflow definition (prettified for readability):
 
 ```
 keyspace:"commerce" shard:"0" filter:{
@@ -341,35 +341,35 @@ Note:
 
 ## Automation
 
-OnlineDDL mechanism automatically analyzes the differences between source and target tables, evaluates eligible keys, chooses the keys on source and target tables, and populates the filter's `source_unique_key_columns`, `target_unique_key_columns`, `source_unique_key_target_columns` fields. Indeed, OnlineDDL operations are most susceptible to differences in keys.
+OnlineDDL has a mechanism to automatically analyze the differences between source and target tables, evaluate eligible keys, choose the keys on source and target tables, and populate the filter's `source_unique_key_columns`, `target_unique_key_columns`, `source_unique_key_target_columns` fields. Indeed, OnlineDDL operations are most susceptible to differences in keys. The user can also supply their chosen values as an override — using those fields in the workflow definition — in the rare case it's needed.
 
-At this time no other VReplication mechanism automates this analysis. The user must supply the correct values.
+VReplication more broadly will automatically use the most efficient `PRIMARY KEY` equivalent (non-`NULL`able unique key) when there's no defined `PRIMARY KEY` on the table.
 
 ## Implementation
 
-In high level, this is how VReplication is able to work with different keys/columns.
+At a high level, this is how VReplication is able to work with different keys/columns.
 
-Originally, VReplication was only designed to work with identical `PRIMARY KEY`s. If not specified, VReplication assumes the source table's `PRIMARY KEY` _can be used_ on target table, and that target table's `PRIMARY KEY` applies to source table. If not, it breaks.
+Originally, VReplication was only designed to work with identical `PRIMARY KEY`s. If not specified, VReplication assumed the source table's `PRIMARY KEY` _can be used_ on target table, and that target table's `PRIMARY KEY` applied to the source table. If not, it would error out and the workflow would fail.
 
-With the introduction of `source_unique_key_columns`, `target_unique_key_columns`, `source_unique_key_target_columns` VReplication changes behavior as follows:
+With the introduction of mechanisms to automatically determine the optimal key to use and of the `source_unique_key_columns`, `target_unique_key_columns`, `source_unique_key_target_columns` fields for more fine-grained control, VReplication changes behavior as follows:
 
 #### Notes about the code
 
-Much of the code uses "PK" terminology. With the introduction of _any_ unique key utilization the "PK" terminology becomes incorrect. However, to avoid mass rewrites we kept this terminology, and wherever VReplication discusses a primary key or pkColumns etc., it may refer to a non-PK Unique Key.
+Much of the code uses "PK" terminology. With the introduction of _any_ unique key utilization the "PK" terminology becomes incorrect. However, to avoid mass rewrites we kept this terminology, and wherever VReplication discusses a `PRIMARY KEY` or pkColumns etc., it may refer to a non-PK Unique Key (PKE).
 
 ### Streamer
 
-Streaming is done by `source_unique_key_columns`. When not present, `rowstreamer` uses PK columns. When present. rowstreamer trusts the information in `source_unique_key_columns` to be correct. It does not validate that there is indeed a valid unique key covering those columns. It does validate that the columns exist.
+Streaming is done using the `source_unique_key_columns` value, if present. When present, `rowstreamer` trusts the information in `source_unique_key_columns` to be correct. It does not validate that there is indeed a valid unique key covering those columns, it only validates that the columns exist. When a `source_unique_key_columns` value is not present, `rowstreamer` uses the `PRIMARY KEY` columns if they exist, otherwise it will determine the best available `PRIMARY KEY` equivalent if one exists, and lastly if none of these are available it will use all of the columns in the table.
 
-The streamer iterates the table by `source_unique_key_columns` order. It tracks its progress in `lastPk` as if this was indeed a PK.
+The streamer iterates the table by the chosen index's column order. It then tracks its progress in `lastPk` as if this was indeed a true `PRIMARY KEY`.
 
 ### Copier
 
-VCopier receives rows from the streamer in `source_unique_key_columns` order. It complies with the streamer's ordering. When tracking progress in `_vt.copy_state` it uses `lastPk` values from the streamer, which means it uses the same `source_unique_key_columns` as the streamer in that order.
+VCopier receives rows from the streamer in the chosen index's column order. It complies with the streamer's ordering. When tracking progress in `_vt.copy_state` it uses `lastPk` values from the streamer, which means it uses the same index columns as the streamer in that order.
 
 ### Player
 
-VPlayer adhers to both `source_unique_key_columns` and `target_unique_key_columns`.
+VPlayer adhers to both `source_unique_key_columns` and `target_unique_key_columns` when present. If not present, again it attempts to use the `PRIMARY KEY` columns if they exist, otherwise it will determine the best available `PRIMARY KEY` equivalent if one exists, and lastly if none of these are available it will use all of the columns in the table.
 
-- `TablePlan`'s `isOutsidePKRange()` function needs to compare values according to rowstreamer's ordering, therefore uses `source_unique_key_columns` ordering
-- `tablePlanBuilder`'s `generateWhere()` function uses the target table's `target_unique_key_columns`, and then also appends any supplemental columns from `source_unique_key_target_columns` not included in `target_unique_key_columns`.
+- `TablePlan`'s `isOutsidePKRange()` function needs to compare values according to `rowstreamer`'s ordering, therefore uses the chosen index columns in order 
+- `tablePlanBuilder`'s `generateWhere()` function uses the target table's `target_unique_key_columns`, and then also appends any supplemental columns from `source_unique_key_target_columns` not included in `target_unique_key_columns` when they are present. If not present, again it attempts to use the `PRIMARY KEY` columns if they exist, otherwise it will determine the best available `PRIMARY KEY` equivalent if one exists, and lastly if none of these are available it will use all of the columns in the table.
