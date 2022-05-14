@@ -15,7 +15,7 @@ Creates the specified shard.
 
 #### Example
 
-<pre class="command-example">CreateShard [-force] [-parent] &lt;keyspace/shard&gt;</pre>
+<pre class="command-example">CreateShard [--force] [--parent] &lt;keyspace/shard&gt;</pre>
 
 #### Flags
 
@@ -55,7 +55,7 @@ Validates that all nodes that are reachable from this shard are consistent.
 
 #### Example
 
-<pre class="command-example">ValidateShard [-ping-tablets] &lt;keyspace/shard&gt;</pre>
+<pre class="command-example">ValidateShard [--ping-tablets] &lt;keyspace/shard&gt;</pre>
 
 #### Flags
 
@@ -251,7 +251,7 @@ Blocks until the specified shard has caught up with the filtered replication of 
 
 #### Example
 
-<pre class="command-example">WaitForFilteredReplication [-max_delay &lt;max_delay, default 30s&gt;] &lt;keyspace/shard&gt;</pre>
+<pre class="command-example">WaitForFilteredReplication [--max_delay &lt;max_delay, default 30s&gt;] &lt;keyspace/shard&gt;</pre>
 
 #### Arguments
 
@@ -267,7 +267,7 @@ Removes the cell from the shard's Cells list.
 
 #### Example
 
-<pre class="command-example">RemoveShardCell [-force] [-recursive] &lt;keyspace/shard&gt; &lt;cell&gt;</pre>
+<pre class="command-example">RemoveShardCell [--force] [--recursive] &lt;keyspace/shard&gt; &lt;cell&gt;</pre>
 
 #### Flags
 
@@ -292,7 +292,7 @@ Deletes the specified shard(s). In recursive mode, it also deletes all tablets b
 
 #### Example
 
-<pre class="command-example">DeleteShard [-recursive] [-even_if_serving] &lt;keyspace/shard&gt; ...</pre>
+<pre class="command-example">DeleteShard [--recursive] [--even_if_serving] &lt;keyspace/shard&gt; ...</pre>
 
 #### Flags
 
@@ -325,7 +325,7 @@ Lists all the backups for a shard.
 ### BackupShard
 
 ```
-BackupShard [-allow_primary=false] <keyspace/shard>
+BackupShard [--allow_primary=false] <keyspace/shard>
 ```
 
 ### RemoveBackup
@@ -350,7 +350,7 @@ Sets the initial primary for a shard. Will make all other tablets in the shard r
 
 #### Example
 
-<pre class="command-example">InitShardPrimary [-force] [-wait_replicas_timeout=&lt;duration&gt;] &lt;keyspace/shard&gt; &lt;tablet alias&gt;</pre>
+<pre class="command-example">InitShardPrimary [--force] [--wait_replicas_timeout=&lt;duration&gt;] &lt;keyspace/shard&gt; &lt;tablet alias&gt;</pre>
 
 #### Flags
 
@@ -388,7 +388,7 @@ failover time.
 
 #### Example
 
-<pre class="command-example">PlannedReparentShard -keyspace_shard=&lt;keyspace/shard&gt; [-new_primary=&lt;tablet alias&gt;] [-avoid_tablet=&lt;tablet alias&gt;]</pre>
+<pre class="command-example">PlannedReparentShard -keyspace_shard=&lt;keyspace/shard&gt; [--new_primary=&lt;tablet alias&gt;] [--avoid_tablet=&lt;tablet alias&gt;]</pre>
 
 #### Flags
 
@@ -402,9 +402,9 @@ failover time.
 
 #### Errors
 
-* action <code>&lt;PlannedReparentShard&gt;</code> requires -keyspace_shard=<code>&lt;keyspace/shard&gt;</code> [-new_primary=<code>&lt;tablet alias&gt;</code>] [-avoid_tablet=<code>&lt;tablet alias&gt;</code>] This error occurs if the command is not called with exactly 0 arguments.
-* active reparent commands disabled (unset the -disable_active_reparents flag to enable)
-* cannot use legacy syntax and flags -<code>&lt;keyspace_shard&gt;</code> and -<code>&lt;new_primary&gt;</code> for action <code>&lt;PlannedReparentShard&gt;</code> at the same time
+* action <code>&lt;PlannedReparentShard&gt;</code> requires --keyspace_shard=<code>&lt;keyspace/shard&gt;</code> [--new_primary=<code>&lt;tablet alias&gt;</code>] [--avoid_tablet=<code>&lt;tablet alias&gt;</code>] This error occurs if the command is not called with exactly 0 arguments.
+* active reparent commands disabled (unset the --disable_active_reparents flag to enable)
+* cannot use legacy syntax and flags --<code>&lt;keyspace_shard&gt;</code> and --<code>&lt;new_primary&gt;</code> for action <code>&lt;PlannedReparentShard&gt;</code> at the same time
 
 ### EmergencyReparentShard
 
@@ -425,9 +425,9 @@ Reparents the shard to the new primary. Assumes the old primary is dead and not 
 
 #### Errors
 
-* action <code>&lt;EmergencyReparentShard&gt;</code> requires -keyspace_shard=<code>&lt;keyspace/shard&gt;</code> -new_primary=<code>&lt;tablet alias&gt;</code> This error occurs if the command is not called with exactly 0 arguments.
-* active reparent commands disabled (unset the -disable_active_reparents flag to enable)
-* cannot use legacy syntax and flag -<code>&lt;new_primary&gt;</code> for action <code>&lt;EmergencyReparentShard&gt;</code> at the same time
+* action <code>&lt;EmergencyReparentShard&gt;</code> requires --keyspace_shard=<code>&lt;keyspace/shard&gt;</code> --new_primary=<code>&lt;tablet alias&gt;</code> This error occurs if the command is not called with exactly 0 arguments.
+* active reparent commands disabled (unset the --disable_active_reparents flag to enable)
+* cannot use legacy syntax and flag --<code>&lt;new_primary&gt;</code> for action <code>&lt;EmergencyReparentShard&gt;</code> at the same time
 
 
 ### TabletExternallyReparented
@@ -452,7 +452,7 @@ Generates shard ranges assuming a keyspace with N shards.
 
 #### Example
 
-<pre class="command-example">GenerateShardRanges -num_shards=&lt;N&gt; </pre>
+<pre class="command-example">GenerateShardRanges --num_shards=&lt;N&gt; </pre>
 
 #### Flags
 

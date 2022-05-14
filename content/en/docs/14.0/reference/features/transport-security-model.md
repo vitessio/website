@@ -57,52 +57,52 @@ This is not enabled by default, as usually the different Vitess servers will run
 
   | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| -tablet_grpc_ca | string | the server ca to use to validate servers when connecting |
-| -tablet_grpc_cert | string | the cert to use to connect |
-| -tablet_grpc_key  | string | the key to use to connect |
-| -tablet_grpc_server_name  | string | the server name to use to validate server certificate |
-| -tablet_manager_grpc_ca  | string | the server ca to use to validate servers when connecting |
-| -tablet_manager_grpc_cert  | string | the cert to use to connect |
-| -tablet_manager_grpc_key  | string | the key to use to connect |
-| -tablet_manager_grpc_server_name  | string | the server name to use to validate server certificate |
-| -throttler_client_grpc_ca  | string | the server ca to use to validate servers when connecting |
-| -throttler_client_grpc_cert | string | the cert to use to connect |
-| -throttler_client_grpc_key  | string | the key to use to connect |
-| -throttler_client_grpc_server_name  | string | the server name to use to validate server certificate |
-| -vtgate_grpc_ca  | string | the server ca to use to validate servers when connecting |
-| -vtgate_grpc_cert | string | the cert to use to connect |
-| -vtgate_grpc_key  | string | the key to use to connect |
-| -vtgate_grpc_server_name  | string | the server name to use to validate server certificate |
-| -vtworker_client_grpc_ca  | string | (DEPRECATED) the server ca to use to validate servers when connecting |
-| -vtworker_client_grpc_cert | string | (DEPRECATED)the cert to use to connect |
-| -vtworker_client_grpc_key  | string | (DEPRECATED) the key to use to connect |
-| -vtworker_client_grpc_server_name  | string | (DEPRECATED) the server name to use to validate server certificate |
+| --tablet_grpc_ca | string | the server ca to use to validate servers when connecting |
+| --tablet_grpc_cert | string | the cert to use to connect |
+| --tablet_grpc_key  | string | the key to use to connect |
+| --tablet_grpc_server_name  | string | the server name to use to validate server certificate |
+| --tablet_manager_grpc_ca  | string | the server ca to use to validate servers when connecting |
+| --tablet_manager_grpc_cert  | string | the cert to use to connect |
+| --tablet_manager_grpc_key  | string | the key to use to connect |
+| --tablet_manager_grpc_server_name  | string | the server name to use to validate server certificate |
+| --throttler_client_grpc_ca  | string | the server ca to use to validate servers when connecting |
+| --throttler_client_grpc_cert | string | the cert to use to connect |
+| --throttler_client_grpc_key  | string | the key to use to connect |
+| --throttler_client_grpc_server_name  | string | the server name to use to validate server certificate |
+| --vtgate_grpc_ca  | string | the server ca to use to validate servers when connecting |
+| --vtgate_grpc_cert | string | the cert to use to connect |
+| --vtgate_grpc_key  | string | the key to use to connect |
+| --vtgate_grpc_server_name  | string | the server name to use to validate server certificate |
+| --vtworker_client_grpc_ca  | string | (DEPRECATED) the server ca to use to validate servers when connecting |
+| --vtworker_client_grpc_cert | string | (DEPRECATED)the cert to use to connect |
+| --vtworker_client_grpc_key  | string | (DEPRECATED) the key to use to connect |
+| --vtworker_client_grpc_server_name  | string | (DEPRECATED) the server name to use to validate server certificate |
 
 ### Options for vtgate
 
   | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| -tablet_grpc_ca | string | the server ca to use to validate servers when connecting |
-| -tablet_grpc_cert | string | the cert to use to connect |
-| -tablet_grpc_key  | string | the key to use to connect |
-| -tablet_grpc_server_name  | string | the server name to use to validate server certificate |
+| --tablet_grpc_ca | string | the server ca to use to validate servers when connecting |
+| --tablet_grpc_cert | string | the cert to use to connect |
+| --tablet_grpc_key  | string | the key to use to connect |
+| --tablet_grpc_server_name  | string | the server name to use to validate server certificate |
 
 ### Options for vttablet
 
   | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| -binlog_player_grpc_ca | string | the server ca to use to validate servers when connecting |
-| -binlog_player_grpc_cert | string | the cert to use to connect |
-| -binlog_player_grpc_key  | string | the key to use to connect |
-| -binlog_player_grpc_server_name  | string | the server name to use to validate server certificate |
-| -tablet_grpc_ca | string | the server ca to use to validate servers when connecting |
-| -tablet_grpc_cert | string | the cert to use to connect |
-| -tablet_grpc_key  | string | the key to use to connect |
-| -tablet_grpc_server_name  | string | the server name to use to validate server certificate |
-| -tablet_manager_grpc_ca  | string | the server ca to use to validate servers when connecting |
-| -tablet_manager_grpc_cert  | string | the cert to use to connect |
-| -tablet_manager_grpc_key  | string | the key to use to connect |
-| -tablet_manager_grpc_server_name  | string | the server name to use to validate server certificate |
+| --binlog_player_grpc_ca | string | the server ca to use to validate servers when connecting |
+| --binlog_player_grpc_cert | string | the cert to use to connect |
+| --binlog_player_grpc_key  | string | the key to use to connect |
+| --binlog_player_grpc_server_name  | string | the server name to use to validate server certificate |
+| --tablet_grpc_ca | string | the server ca to use to validate servers when connecting |
+| --tablet_grpc_cert | string | the cert to use to connect |
+| --tablet_grpc_key  | string | the key to use to connect |
+| --tablet_grpc_server_name  | string | the server name to use to validate server certificate |
+| --tablet_manager_grpc_ca  | string | the server ca to use to validate servers when connecting |
+| --tablet_manager_grpc_cert  | string | the cert to use to connect |
+| --tablet_manager_grpc_key  | string | the key to use to connect |
+| --tablet_manager_grpc_server_name  | string | the server name to use to validate server certificate |
 
 ### Certificates and Caller ID
 
@@ -122,6 +122,6 @@ It first sets up all the certificates, some table ACLs, and then uses the golang
 
 ## MySQL Transport to VTGate
 
-To get VTGate to support TLS use the `-mysql_server_ssl_cert` and `-mysql_server_ssl_key` VTGate options. To require client certificates, you can set `-mysql_server_ssl_ca`, containing the CA certificate you expect the client TLS certificates to be verified against.
+To get VTGate to support TLS use the `--mysql_server_ssl_cert` and `--mysql_server_ssl_key` VTGate options. To require client certificates, you can set `--mysql_server_ssl_ca`, containing the CA certificate you expect the client TLS certificates to be verified against.
 
-Finally, if you want to require all VTGate clients to only be able to connect using TLS, you can use the `-mysql_server_require_secure_transport` flag.
+Finally, if you want to require all VTGate clients to only be able to connect using TLS, you can use the `--mysql_server_require_secure_transport` flag.

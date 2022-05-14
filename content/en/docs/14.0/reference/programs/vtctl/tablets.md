@@ -14,7 +14,7 @@ Deprecated. It is no longer necessary to run this command to initialize a tablet
 
 #### Example
 
-<pre class="command-example">InitTablet [-allow_update] [-allow_different_shard] [-allow_master_override] [-parent] [-db_name_override=&lt;db name&gt;] [-hostname=&lt;hostname&gt;] [-mysql_port=&lt;port&gt;] [-port=&lt;port&gt;] [-grpc_port=&lt;port&gt;] -keyspace=&lt;keyspace&gt; -shard=&lt;shard&gt; &lt;tablet alias&gt; &lt;tablet type&gt;</pre>
+<pre class="command-example">InitTablet [--allow_update] [--allow_different_shard] [--allow_master_override] [--parent] [--db_name_override=&lt;db name&gt;] [--hostname=&lt;hostname&gt;] [--mysql_port=&lt;port&gt;] [--port=&lt;port&gt;] [--grpc_port=&lt;port&gt;] -keyspace=&lt;keyspace&gt; --shard=&lt;shard&gt; &lt;tablet alias&gt; &lt;tablet type&gt;</pre>
 
 #### Flags
 
@@ -41,7 +41,6 @@ Deprecated. It is no longer necessary to run this command to initialize a tablet
 
   * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
   * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
-  * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
   * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential primary. Vitess also does not worry about lag for experimental tablets when reparenting.
   * <code>primary</code> &ndash; A primary copy of data
   * <code>master</code> &ndash; Deprecated, same as primary
@@ -83,7 +82,7 @@ Deprecated. Updates the IP address and port numbers of a tablet.
 
 #### Example
 
-<pre class="command-example">UpdateTabletAddrs [-hostname &lt;hostname&gt;] [-ip-addr &lt;ip addr&gt;] [-mysql-port &lt;mysql port&gt;] [-vt-port &lt;vt port&gt;] [-grpc-port &lt;grpc port&gt;] &lt;tablet alias&gt;</pre>
+<pre class="command-example">UpdateTabletAddrs [--hostname &lt;hostname&gt;] [--ip-addr &lt;ip addr&gt;] [--mysql-port &lt;mysql port&gt;] [--vt-port &lt;vt port&gt;] [--grpc-port &lt;grpc port&gt;] &lt;tablet alias&gt;</pre>
 
 #### Flags
 
@@ -110,7 +109,7 @@ Deletes tablet(s) from the topology.
 
 #### Example
 
-<pre class="command-example">DeleteTablet [-allow_primary] &lt;tablet alias&gt; ...</pre>
+<pre class="command-example">DeleteTablet [--allow_primary] &lt;tablet alias&gt; ...</pre>
 
 #### Flags
 
@@ -201,7 +200,7 @@ Changes the db type for the specified tablet, if possible. This command is used 
 
 #### Example
 
-<pre class="command-example">ChangeTabletType [-dry-run] &lt;tablet alias&gt; &lt;tablet type&gt;</pre>
+<pre class="command-example">ChangeTabletType [--dry-run] &lt;tablet alias&gt; &lt;tablet type&gt;</pre>
 
 #### Flags
 
@@ -229,7 +228,7 @@ Changes the db type for the specified tablet, if possible. This command is used 
 
 * the <code>&lt;tablet alias&gt;</code> and <code>&lt;db type&gt;</code> arguments are required for the <code>&lt;ChangeTabletType&gt;</code> command This error occurs if the command is not called with exactly 2 arguments.
 * failed reading tablet %v: %v
-* invalid type transition %v: %v -&gt;</code> %v
+* invalid type transition %v: %v --&gt;</code> %v
 
 ### Ping
 
@@ -269,7 +268,7 @@ Runs 'RefreshState' on all tablets in the given shard.
 
 #### Example
 
-<pre class="command-example">RefreshStateByShard [-cells=c1,c2,...] &lt;keyspace/shard&gt;</pre>
+<pre class="command-example">RefreshStateByShard [--cells=c1,c2,...] &lt;keyspace/shard&gt;</pre>
 
 #### Flags
 
@@ -341,7 +340,7 @@ Runs the specified hook on the given tablet. A hook is a script that resides in 
 ### ExecuteFetchAsApp
 
 ```
-ExecuteFetchAsApp [-max_rows=10000] [-json] [-use_pool] <tablet alias> <sql command>
+ExecuteFetchAsApp [--max_rows=10000] [--json] [--use_pool] <tablet alias> <sql command>
 ```
 
 ### ExecuteFetchAsDba
@@ -350,7 +349,7 @@ Runs the given SQL command as a DBA on the remote tablet.
 
 #### Example
 
-<pre class="command-example">ExecuteFetchAsDba [-max_rows=10000] [-disable_binlogs] [-json] &lt;tablet alias&gt; &lt;sql command&gt;</pre>
+<pre class="command-example">ExecuteFetchAsDba [--max_rows=10000] [--disable_binlogs] [--json] &lt;tablet alias&gt; &lt;sql command&gt;</pre>
 
 #### Flags
 
@@ -374,7 +373,7 @@ Runs the given SQL command as a DBA on the remote tablet.
 ### VReplicationExec
 
 ```
-VReplicationExec [-json] <tablet alias> <sql command>
+VReplicationExec [--json] <tablet alias> <sql command>
 ```
 
 ### Backup
@@ -383,7 +382,7 @@ Stops mysqld and uses the [BackupEngine](../../../../user-guides/operating-vites
 
 #### Example
 
-<pre class="command-example">Backup [-concurrency=4] &lt;tablet alias&gt;</pre>
+<pre class="command-example">Backup [--concurrency=4] &lt;tablet alias&gt;</pre>
 
 #### Flags
 
@@ -406,7 +405,7 @@ Stops mysqld and restores the data from the latest backup.
 
 #### Example
 
-<pre class="command-example">RestoreFromBackup [-backup_timestamp=2021-09-24.021828] &lt;tablet alias&gt;</pre>
+<pre class="command-example">RestoreFromBackup [--backup_timestamp=2021-09-24.021828] &lt;tablet alias&gt;</pre>
 
 #### Flags
 

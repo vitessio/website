@@ -8,16 +8,16 @@ title: mysqlctl
 
 ## Commands
 
-### init [-wait_time=5m] [-init_db_sql_file=(default)]
+### init [--wait_time=5m] [--init_db_sql_file=(default)]
 
 Bootstraps a new `mysqld` instance. The MySQL version and flavor will be auto-detected, with a minimal configuration file applied. For example:
 
 ```bash
 export VTDATAROOT=/tmp
 mysqlctl \
- -alsologtostderr \
- -tablet_uid 101 \
- -mysql_port 12345 \
+ --alsologtostderr \
+ --tablet_uid 101 \
+ --mysql_port 12345 \
  init
 ```
 
@@ -28,9 +28,9 @@ Bootstraps the configuration for a new `mysqld` instance. This command is the sa
 ```bash
 export VTDATAROOT=/tmp
 mysqlctl \
- -alsologtostderr \
- -tablet_uid 101 \
- -mysql_port 12345 \
+ --alsologtostderr \
+ --tablet_uid 101 \
+ --mysql_port 12345 \
  init_config
 ```
 
@@ -41,39 +41,39 @@ Regenerate new configuration files for an existing `mysqld` instance. This could
 ```bash
 export VTDATAROOT=/tmp
 mysqlctl \
- -alsologtostderr \
- -tablet_uid 101 \
- -mysql_port 12345 \
+ --alsologtostderr \
+ --tablet_uid 101 \
+ --mysql_port 12345 \
  reinit_config
 ```
 
-### teardown [-wait_time=5m] [-force]
+### teardown [--wait_time=5m] [--force]
 
 Remove the data files for a previously shutdown `mysqld` instance. This is a destructive operation:
 
 ```bash
 export VTDATAROOT=/tmp
-mysqlctl -tablet_uid 101 -alsologtostderr teardown
+mysqlctl --tablet_uid 101 --alsologtostderr teardown
 ```
 
-### start [-wait_time=5m]
+### start [--wait_time=5m]
 
 Resume an existing `mysqld` instance that was previously bootstrapped with `init` or `init_config`:
 
 ```bash
 export VTDATAROOT=/tmp
-mysqlctl -tablet_uid 101 -alsologtostderr start
+mysqlctl --tablet_uid 101 --alsologtostderr start
 ```
 
-### shutdown [-wait_time=5m]
+### shutdown [--wait_time=5m]
 
 Stop a `mysqld` instance that was previously started with `init` or `start`.
 
-For large `mysqld` instances, you may need to extend the -`wait_time` as flushing dirty pages.
+For large `mysqld` instances, you may need to extend the --`wait_time` as flushing dirty pages.
 
 ```bash
 export VTDATAROOT=/tmp
-mysqlctl -tablet_uid 101 -alsologtostderr shutdown
+mysqlctl --tablet_uid 101 --alsologtostderr shutdown
 ```
 
 ## Options
