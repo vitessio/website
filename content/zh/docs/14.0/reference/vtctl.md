@@ -192,10 +192,10 @@ Validates that all nodes reachable from the global replication graph and that al
 * [ShowResharding](#showresharding)
 * [RebuildKeyspaceGraph](#rebuildkeyspacegraph)
 * [RemoveKeyspaceCell](#removekeyspacecell)
-* (DEPRECATED) [SetKeyspaceServedFrom](#setkeyspaceservedfrom)
-* (DEPRECATED) [SetKeyspaceShardingInfo](#setkeyspaceshardinginfo)
+* [SetKeyspaceServedFrom](#setkeyspaceservedfrom)
+* [SetKeyspaceShardingInfo](#setkeyspaceshardinginfo)
 * [ValidateKeyspace](#validatekeyspace)
-* (DEPRECATED) [WaitForDrain](#waitfordrain)
+* [WaitForDrain](#waitfordrain)
 
 ### CreateKeyspace
 
@@ -203,7 +203,7 @@ Creates the specified keyspace.
 
 #### Example
 
-<pre class="command-example">CreateKeyspace [--sharding_column_name=name] [--sharding_column_type=type] [--served_from=tablettype1:ks1,tablettype2,ks2,...] [--force] &lt;keyspace name&gt;</pre>
+<pre class="command-example">CreateKeyspace [-sharding_column_name=name] [-sharding_column_type=type] [-served_from=tablettype1:ks1,tablettype2,ks2,...] [-force] &lt;keyspace name&gt;</pre>
 
 #### Flags
 
@@ -230,7 +230,7 @@ Deletes the specified keyspace. In recursive mode, it also recursively deletes a
 
 #### Example
 
-<pre class="command-example">DeleteKeyspace [--recursive] &lt;keyspace&gt;</pre>
+<pre class="command-example">DeleteKeyspace [-recursive] &lt;keyspace&gt;</pre>
 
 #### Flags
 
@@ -293,7 +293,7 @@ Makes the &lt;destination keyspace/shard&gt; serve the given type. This command 
 
 #### Example
 
-<pre class="command-example">MigrateServedFrom [--cells=c1,c2,...] [--reverse] &lt;destination keyspace/shard&gt; &lt;served tablet type&gt;</pre>
+<pre class="command-example">MigrateServedFrom [-cells=c1,c2,...] [-reverse] &lt;destination keyspace/shard&gt; &lt;served tablet type&gt;</pre>
 
 #### Flags
 
@@ -311,13 +311,14 @@ Makes the &lt;destination keyspace/shard&gt; serve the given type. This command 
 
     * <code>backup</code> &ndash; A slaved copy of data that is offline to queries other than for backup purposes
     * <code>batch</code> &ndash; A slaved copy of data for OLAP load patterns (typically for MapReduce jobs)
+    * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
     * <code>experimental</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
     * <code>master</code> &ndash; A primary copy of data
     * <code>rdonly</code> &ndash; A slaved copy of data for OLAP load patterns
     * <code>replica</code> &ndash; A slaved copy of data ready to be promoted to master
     * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
     * <code>schema_apply</code> &ndash; A slaved copy of data that had been serving query traffic but that is now applying a schema change. Following the change, the tablet will revert to its serving type.
-    * <code>snapshot_source</code> &ndash; A slaved copy of data where mysqld is <b>not</b> running and where Vitess is serving data files to clone slaves. Use this command to enter this mode: <pre>vtctl Snapshot --server-mode ...</pre> Use this command to exit this mode: <pre>vtctl SnapshotSourceEnd ...</pre>
+    * <code>snapshot_source</code> &ndash; A slaved copy of data where mysqld is <b>not</b> running and where Vitess is serving data files to clone slaves. Use this command to enter this mode: <pre>vtctl Snapshot -server-mode ...</pre> Use this command to exit this mode: <pre>vtctl SnapshotSourceEnd ...</pre>
     * <code>spare</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
 
 
@@ -334,7 +335,7 @@ Migrates a serving type from the source shard to the shards that it replicates t
 
 #### Example
 
-<pre class="command-example">MigrateServedTypes [--cells=c1,c2,...] [--reverse] [--skip-refresh-state] &lt;keyspace/shard&gt; &lt;served tablet type&gt;</pre>
+<pre class="command-example">MigrateServedTypes [-cells=c1,c2,...] [-reverse] [-skip-refresh-state] &lt;keyspace/shard&gt; &lt;served tablet type&gt;</pre>
 
 #### Flags
 
@@ -354,13 +355,14 @@ Migrates a serving type from the source shard to the shards that it replicates t
 
     * <code>backup</code> &ndash; A slaved copy of data that is offline to queries other than for backup purposes
     * <code>batch</code> &ndash; A slaved copy of data for OLAP load patterns (typically for MapReduce jobs)
+    * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
     * <code>experimental</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
     * <code>master</code> &ndash; A primary copy of data
     * <code>rdonly</code> &ndash; A slaved copy of data for OLAP load patterns
     * <code>replica</code> &ndash; A slaved copy of data ready to be promoted to master
     * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
     * <code>schema_apply</code> &ndash; A slaved copy of data that had been serving query traffic but that is now applying a schema change. Following the change, the tablet will revert to its serving type.
-    * <code>snapshot_source</code> &ndash; A slaved copy of data where mysqld is <b>not</b> running and where Vitess is serving data files to clone slaves. Use this command to enter this mode: <pre>vtctl Snapshot --server-mode ...</pre> Use this command to exit this mode: <pre>vtctl SnapshotSourceEnd ...</pre>
+    * <code>snapshot_source</code> &ndash; A slaved copy of data where mysqld is <b>not</b> running and where Vitess is serving data files to clone slaves. Use this command to enter this mode: <pre>vtctl Snapshot -server-mode ...</pre> Use this command to exit this mode: <pre>vtctl SnapshotSourceEnd ...</pre>
     * <code>spare</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
 
 
@@ -396,7 +398,7 @@ Rebuilds the serving data for the keyspace. This command may trigger an update t
 
 #### Example
 
-<pre class="command-example">RebuildKeyspaceGraph [--cells=c1,c2,...] &lt;keyspace&gt; ...</pre>
+<pre class="command-example">RebuildKeyspaceGraph [-cells=c1,c2,...] &lt;keyspace&gt; ...</pre>
 
 #### Flags
 
@@ -420,7 +422,7 @@ Removes the cell from the Cells list for all shards in the keyspace, and the Srv
 
 #### Example
 
-<pre class="command-example">RemoveKeyspaceCell [--force] [--recursive] &lt;keyspace&gt; &lt;cell&gt;</pre>
+<pre class="command-example">RemoveKeyspaceCell [-force] [-recursive] &lt;keyspace&gt; &lt;cell&gt;</pre>
 
 #### Flags
 
@@ -442,13 +444,11 @@ Removes the cell from the Cells list for all shards in the keyspace, and the Srv
 
 ### SetKeyspaceServedFrom
 
-Deprecated.
-
 Changes the ServedFromMap manually. This command is intended for emergency fixes. This field is automatically set when you call the *MigrateServedFrom* command. This command does not rebuild the serving graph.
 
 #### Example
 
-<pre class="command-example">SetKeyspaceServedFrom [--source=&lt;source keyspace name&gt;] [--remove] [--cells=c1,c2,...] &lt;keyspace name&gt; &lt;tablet type&gt;</pre>
+<pre class="command-example">SetKeyspaceServedFrom [-source=&lt;source keyspace name&gt;] [-remove] [-cells=c1,c2,...] &lt;keyspace name&gt; &lt;tablet type&gt;</pre>
 
 #### Flags
 
@@ -466,13 +466,14 @@ Changes the ServedFromMap manually. This command is intended for emergency fixes
 
     * <code>backup</code> &ndash; A slaved copy of data that is offline to queries other than for backup purposes
     * <code>batch</code> &ndash; A slaved copy of data for OLAP load patterns (typically for MapReduce jobs)
+    * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
     * <code>experimental</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
     * <code>master</code> &ndash; A primary copy of data
     * <code>rdonly</code> &ndash; A slaved copy of data for OLAP load patterns
     * <code>replica</code> &ndash; A slaved copy of data ready to be promoted to master
     * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
     * <code>schema_apply</code> &ndash; A slaved copy of data that had been serving query traffic but that is now applying a schema change. Following the change, the tablet will revert to its serving type.
-    * <code>snapshot_source</code> &ndash; A slaved copy of data where mysqld is <b>not</b> running and where Vitess is serving data files to clone slaves. Use this command to enter this mode: <pre>vtctl Snapshot --server-mode ...</pre> Use this command to exit this mode: <pre>vtctl SnapshotSourceEnd ...</pre>
+    * <code>snapshot_source</code> &ndash; A slaved copy of data where mysqld is <b>not</b> running and where Vitess is serving data files to clone slaves. Use this command to enter this mode: <pre>vtctl Snapshot -server-mode ...</pre> Use this command to exit this mode: <pre>vtctl SnapshotSourceEnd ...</pre>
     * <code>spare</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
 
 
@@ -485,13 +486,11 @@ Changes the ServedFromMap manually. This command is intended for emergency fixes
 
 ### SetKeyspaceShardingInfo
 
-Deprecated.
-
 Updates the sharding information for a keyspace.
 
 #### Example
 
-<pre class="command-example">SetKeyspaceShardingInfo [--force] &lt;keyspace name&gt; [&lt;column name&gt;] [&lt;column type&gt;]</pre>
+<pre class="command-example">SetKeyspaceShardingInfo [-force] &lt;keyspace name&gt; [&lt;column name&gt;] [&lt;column type&gt;]</pre>
 
 #### Flags
 
@@ -518,7 +517,7 @@ Validates that all nodes reachable from the specified keyspace are consistent.
 
 #### Example
 
-<pre class="command-example">ValidateKeyspace [--ping-tablets] &lt;keyspace name&gt;</pre>
+<pre class="command-example">ValidateKeyspace [-ping-tablets] &lt;keyspace name&gt;</pre>
 
 #### Flags
 
@@ -542,7 +541,7 @@ Blocks until no new queries were observed on all tablets with the given tablet t
 
 #### Example
 
-<pre class="command-example">WaitForDrain [--timeout &lt;duration&gt;] [--retry_delay &lt;duration&gt;] [--initial_wait &lt;duration&gt;] &lt;keyspace/shard&gt; &lt;served tablet type&gt;</pre>
+<pre class="command-example">WaitForDrain [-timeout &lt;duration&gt;] [-retry_delay &lt;duration&gt;] [-initial_wait &lt;duration&gt;] &lt;keyspace/shard&gt; &lt;served tablet type&gt;</pre>
 
 #### Flags
 
@@ -561,13 +560,14 @@ Blocks until no new queries were observed on all tablets with the given tablet t
 
     * <code>backup</code> &ndash; A slaved copy of data that is offline to queries other than for backup purposes
     * <code>batch</code> &ndash; A slaved copy of data for OLAP load patterns (typically for MapReduce jobs)
+    * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
     * <code>experimental</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
     * <code>master</code> &ndash; A primary copy of data
     * <code>rdonly</code> &ndash; A slaved copy of data for OLAP load patterns
     * <code>replica</code> &ndash; A slaved copy of data ready to be promoted to master
     * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
     * <code>schema_apply</code> &ndash; A slaved copy of data that had been serving query traffic but that is now applying a schema change. Following the change, the tablet will revert to its serving type.
-    * <code>snapshot_source</code> &ndash; A slaved copy of data where mysqld is <b>not</b> running and where Vitess is serving data files to clone slaves. Use this command to enter this mode: <pre>vtctl Snapshot --server-mode ...</pre> Use this command to exit this mode: <pre>vtctl SnapshotSourceEnd ...</pre>
+    * <code>snapshot_source</code> &ndash; A slaved copy of data where mysqld is <b>not</b> running and where Vitess is serving data files to clone slaves. Use this command to enter this mode: <pre>vtctl Snapshot -server-mode ...</pre> Use this command to exit this mode: <pre>vtctl SnapshotSourceEnd ...</pre>
     * <code>spare</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
 
 
@@ -597,7 +597,7 @@ Executes the given SQL query with the provided bound variables against the vtgat
 
 #### Example
 
-<pre class="command-example">VtGateExecute --server &lt;vtgate&gt; [--bind_variables &lt;JSON map&gt;] [--keyspace &lt;default keyspace&gt;] [--tablet_type &lt;tablet type&gt;] [--options &lt;proto text options&gt;] [--json] &lt;sql&gt;</pre>
+<pre class="command-example">VtGateExecute -server &lt;vtgate&gt; [-bind_variables &lt;JSON map&gt;] [-keyspace &lt;default keyspace&gt;] [-tablet_type &lt;tablet type&gt;] [-options &lt;proto text options&gt;] [-json] &lt;sql&gt;</pre>
 
 #### Flags
 
@@ -617,7 +617,7 @@ Executes the given SQL query with the provided bound variables against the vtgat
 #### Errors
 
 * the <code>&lt;sql&gt;</code> argument is required for the <code>&lt;VtGateExecute&gt;</code> command This error occurs if the command is not called with exactly one argument.
-* query commands are disabled (set the --enable_queries flag to enable)
+* query commands are disabled (set the -enable_queries flag to enable)
 * error connecting to vtgate '%v': %v
 * Execute failed: %v
 
@@ -628,7 +628,7 @@ Executes the given SQL query with the provided bound variables against the vtgat
 
 #### Example
 
-<pre class="command-example">VtGateExecuteKeyspaceIds --server &lt;vtgate&gt; --keyspace &lt;keyspace&gt; --keyspace_ids &lt;ks1 in hex&gt;,&lt;k2 in hex&gt;,... [--bind_variables &lt;JSON map&gt;] [--tablet_type &lt;tablet type&gt;] [--options &lt;proto text options&gt;] [--json] &lt;sql&gt;</pre>
+<pre class="command-example">VtGateExecuteKeyspaceIds -server &lt;vtgate&gt; -keyspace &lt;keyspace&gt; -keyspace_ids &lt;ks1 in hex&gt;,&lt;k2 in hex&gt;,... [-bind_variables &lt;JSON map&gt;] [-tablet_type &lt;tablet type&gt;] [-options &lt;proto text options&gt;] [-json] &lt;sql&gt;</pre>
 
 #### Flags
 
@@ -652,7 +652,7 @@ Executes the given SQL query with the provided bound variables against the vtgat
 #### Errors
 
 * the <code>&lt;sql&gt;</code> argument is required for the <code>&lt;VtGateExecuteKeyspaceIds&gt;</code> command This error occurs if the command is not called with exactly one argument.
-* query commands are disabled (set the --enable_queries flag to enable)
+* query commands are disabled (set the -enable_queries flag to enable)
 * cannot hex-decode value %v '%v': %v
 * error connecting to vtgate '%v': %v
 * Execute failed: %v
@@ -664,7 +664,7 @@ Executes the given SQL query with the provided bound variables against the vtgat
 
 #### Example
 
-<pre class="command-example">VtGateExecuteShards --server &lt;vtgate&gt; --keyspace &lt;keyspace&gt; --shards &lt;shard0&gt;,&lt;shard1&gt;,... [--bind_variables &lt;JSON map&gt;] [--tablet_type &lt;tablet type&gt;] [--options &lt;proto text options&gt;] [--json] &lt;sql&gt;</pre>
+<pre class="command-example">VtGateExecuteShards -server &lt;vtgate&gt; -keyspace &lt;keyspace&gt; -shards &lt;shard0&gt;,&lt;shard1&gt;,... [-bind_variables &lt;JSON map&gt;] [-tablet_type &lt;tablet type&gt;] [-options &lt;proto text options&gt;] [-json] &lt;sql&gt;</pre>
 
 #### Flags
 
@@ -688,7 +688,7 @@ Executes the given SQL query with the provided bound variables against the vtgat
 #### Errors
 
 * the <code>&lt;sql&gt;</code> argument is required for the <code>&lt;VtGateExecuteShards&gt;</code> command This error occurs if the command is not called with exactly one argument.
-* query commands are disabled (set the --enable_queries flag to enable)
+* query commands are disabled (set the -enable_queries flag to enable)
 * error connecting to vtgate '%v': %v
 * Execute failed: %v
 
@@ -699,7 +699,7 @@ Executes the SplitQuery computation for the given SQL query with the provided bo
 
 #### Example
 
-<pre class="command-example">VtGateSplitQuery --server &lt;vtgate&gt; --keyspace &lt;keyspace&gt; [--split_column &lt;split_column&gt;] --split_count &lt;split_count&gt; [--bind_variables &lt;JSON map&gt;] &lt;sql&gt;</pre>
+<pre class="command-example">VtGateSplitQuery -server &lt;vtgate&gt; -keyspace &lt;keyspace&gt; [-split_column &lt;split_column&gt;] -split_count &lt;split_count&gt; [-bind_variables &lt;JSON map&gt;] &lt;sql&gt;</pre>
 
 #### Flags
 
@@ -721,7 +721,7 @@ Executes the SplitQuery computation for the given SQL query with the provided bo
 #### Errors
 
 * the <code>&lt;sql&gt;</code> argument is required for the <code>&lt;VtGateSplitQuery&gt;</code> command This error occurs if the command is not called with exactly one argument.
-* query commands are disabled (set the --enable_queries flag to enable)
+* query commands are disabled (set the -enable_queries flag to enable)
 * Exactly one of <code>&lt;split_count&gt;</code> or num_rows_per_query_part
 * Unknown split-query <code>&lt;algorithm&gt;</code>: %v
 * error connecting to vtgate '%v': %v
@@ -735,7 +735,7 @@ Starts a transaction on the provided server.
 
 #### Example
 
-<pre class="command-example">VtTabletBegin [--username &lt;TableACL user&gt;] &lt;tablet alias&gt;</pre>
+<pre class="command-example">VtTabletBegin [-username &lt;TableACL user&gt;] &lt;tablet alias&gt;</pre>
 
 #### Flags
 
@@ -752,7 +752,7 @@ Starts a transaction on the provided server.
 #### Errors
 
 * the <code>&lt;tablet_alias&gt;</code> argument is required for the <code>&lt;VtTabletBegin&gt;</code> command This error occurs if the command is not called with exactly one argument.
-* query commands are disabled (set the --enable_queries flag to enable)
+* query commands are disabled (set the -enable_queries flag to enable)
 * cannot connect to tablet %v: %v
 * Begin failed: %v
 
@@ -763,7 +763,7 @@ Commits the given transaction on the provided server.
 
 #### Example
 
-<pre class="command-example">VtTabletCommit [--username &lt;TableACL user&gt;] &lt;transaction_id&gt;</pre>
+<pre class="command-example">VtTabletCommit [-username &lt;TableACL user&gt;] &lt;transaction_id&gt;</pre>
 
 #### Flags
 
@@ -780,17 +780,17 @@ Commits the given transaction on the provided server.
 #### Errors
 
 * the <code>&lt;tablet_alias&gt;</code> and <code>&lt;transaction_id&gt;</code> arguments are required for the <code>&lt;VtTabletCommit&gt;</code> command This error occurs if the command is not called with exactly 2 arguments.
-* query commands are disabled (set the --enable_queries flag to enable)
+* query commands are disabled (set the -enable_queries flag to enable)
 * cannot connect to tablet %v: %v
 
 
 ### VtTabletExecute
 
-Executes the given query on the given tablet. --transaction_id is optional. Use VtTabletBegin to start a transaction.
+Executes the given query on the given tablet. -transaction_id is optional. Use VtTabletBegin to start a transaction.
 
 #### Example
 
-<pre class="command-example">VtTabletExecute [--username &lt;TableACL user&gt;] [--transaction_id &lt;transaction_id&gt;] [--options &lt;proto text options&gt;] [--json] &lt;tablet alias&gt; &lt;sql&gt;</pre>
+<pre class="command-example">VtTabletExecute [-username &lt;TableACL user&gt;] [-transaction_id &lt;transaction_id&gt;] [-options &lt;proto text options&gt;] [-json] &lt;tablet alias&gt; &lt;sql&gt;</pre>
 
 #### Flags
 
@@ -811,7 +811,7 @@ Executes the given query on the given tablet. --transaction_id is optional. Use 
 #### Errors
 
 * the <code>&lt;tablet_alias&gt;</code> and <code>&lt;sql&gt;</code> arguments are required for the <code>&lt;VtTabletExecute&gt;</code> command This error occurs if the command is not called with exactly 2 arguments.
-* query commands are disabled (set the --enable_queries flag to enable)
+* query commands are disabled (set the -enable_queries flag to enable)
 * cannot connect to tablet %v: %v
 * Execute failed: %v
 
@@ -822,7 +822,7 @@ Rollbacks the given transaction on the provided server.
 
 #### Example
 
-<pre class="command-example">VtTabletRollback [--username &lt;TableACL user&gt;] &lt;tablet alias&gt; &lt;transaction_id&gt;</pre>
+<pre class="command-example">VtTabletRollback [-username &lt;TableACL user&gt;] &lt;tablet alias&gt; &lt;transaction_id&gt;</pre>
 
 #### Flags
 
@@ -840,7 +840,7 @@ Rollbacks the given transaction on the provided server.
 #### Errors
 
 * the <code>&lt;tablet_alias&gt;</code> and <code>&lt;transaction_id&gt;</code> arguments are required for the <code>&lt;VtTabletRollback&gt;</code> command This error occurs if the command is not called with exactly 2 arguments.
-* query commands are disabled (set the --enable_queries flag to enable)
+* query commands are disabled (set the -enable_queries flag to enable)
 * cannot connect to tablet %v: %v
 
 
@@ -850,7 +850,7 @@ Executes the StreamHealth streaming query to a vttablet process. Will stop after
 
 #### Example
 
-<pre class="command-example">VtTabletStreamHealth [--count &lt;count, default 1&gt;] &lt;tablet alias&gt;</pre>
+<pre class="command-example">VtTabletStreamHealth [-count &lt;count, default 1&gt;] &lt;tablet alias&gt;</pre>
 
 #### Flags
 
@@ -867,7 +867,7 @@ Executes the StreamHealth streaming query to a vttablet process. Will stop after
 #### Errors
 
 * the <code>&lt;tablet alias&gt;</code> argument is required for the <code>&lt;VtTabletStreamHealth&gt;</code> command This error occurs if the command is not called with exactly one argument.
-* query commands are disabled (set the --enable_queries flag to enable)
+* query commands are disabled (set the -enable_queries flag to enable)
 * cannot connect to tablet %v: %v
 
 
@@ -877,7 +877,7 @@ Executes the UpdateStream streaming query to a vttablet process. Will stop after
 
 #### Example
 
-<pre class="command-example">VtTabletUpdateStream [--count &lt;count, default 1&gt;] [--position &lt;position&gt;] [--timestamp &lt;timestamp&gt;] &lt;tablet alias&gt;</pre>
+<pre class="command-example">VtTabletUpdateStream [-count &lt;count, default 1&gt;] [-position &lt;position&gt;] [-timestamp &lt;timestamp&gt;] &lt;tablet alias&gt;</pre>
 
 #### Flags
 
@@ -896,7 +896,7 @@ Executes the UpdateStream streaming query to a vttablet process. Will stop after
 #### Errors
 
 * the <code>&lt;tablet alias&gt;</code> argument is required for the <code>&lt;VtTabletUpdateStream&gt;</code> command This error occurs if the command is not called with exactly one argument.
-* query commands are disabled (set the --enable_queries flag to enable)
+* query commands are disabled (set the -enable_queries flag to enable)
 * cannot connect to tablet %v: %v
 
 
@@ -936,18 +936,18 @@ Returns the current configuration of the MaxReplicationLag module. If no throttl
 
 #### Example
 
-<pre class="command-example">GetThrottlerConfiguration --server &lt;vttablet&gt; [&lt;throttler name&gt;]</pre>
+<pre class="command-example">GetThrottlerConfiguration -server &lt;vtworker or vttablet&gt; [&lt;throttler name&gt;]</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| server | string | vttablet to connect to |
+| server | string | vtworker or vttablet to connect to |
 
 
 #### Arguments
 
-* <code>&lt;vttablet&gt;</code> &ndash; Required.
+* <code>&lt;vtworker or vttablet&gt;</code> &ndash; Required.
 * <code>&lt;throttler name&gt;</code> &ndash; Optional.
 
 #### Errors
@@ -963,18 +963,18 @@ Resets the current configuration of the MaxReplicationLag module. If no throttle
 
 #### Example
 
-<pre class="command-example">ResetThrottlerConfiguration --server &lt;vttablet&gt; [&lt;throttler name&gt;]</pre>
+<pre class="command-example">ResetThrottlerConfiguration -server &lt;vtworker or vttablet&gt; [&lt;throttler name&gt;]</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| server | string | vttablet to connect to |
+| server | string | vtworker or vttablet to connect to |
 
 
 #### Arguments
 
-* <code>&lt;vttablet&gt;</code> &ndash; Required.
+* <code>&lt;vtworker or vttablet&gt;</code> &ndash; Required.
 * <code>&lt;throttler name&gt;</code> &ndash; Optional.
 
 #### Errors
@@ -990,18 +990,18 @@ Returns the current max rate of all active resharding throttlers on the server.
 
 #### Example
 
-<pre class="command-example">ThrottlerMaxRates --server &lt;vttablet&gt;</pre>
+<pre class="command-example">ThrottlerMaxRates -server &lt;vtworker or vttablet&gt;</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| server | string | vttablet to connect to |
+| server | string | vtworker or vttablet to connect to |
 
 
 #### Arguments
 
-* <code>&lt;vttablet&gt;</code> &ndash; Required.
+* <code>&lt;vtworker or vttablet&gt;</code> &ndash; Required.
 
 #### Errors
 
@@ -1016,18 +1016,18 @@ Sets the max rate for all active resharding throttlers on the server.
 
 #### Example
 
-<pre class="command-example">ThrottlerSetMaxRate --server &lt;vttablet&gt; &lt;rate&gt;</pre>
+<pre class="command-example">ThrottlerSetMaxRate -server &lt;vtworker or vttablet&gt; &lt;rate&gt;</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| server | string | vttablet to connect to |
+| server | string | vtworker or vttablet to connect to |
 
 
 #### Arguments
 
-* <code>&lt;vttablet&gt;</code> &ndash; Required.
+* <code>&lt;vtworker or vttablet&gt;</code> &ndash; Required.
 * <code>&lt;rate&gt;</code> &ndash; Required.
 
 #### Errors
@@ -1044,19 +1044,19 @@ Updates the configuration of the MaxReplicationLag module. The configuration mus
 
 #### Example
 
-<pre class="command-example">UpdateThrottlerConfiguration `--server &lt;vttablet&gt; [--copy_zero_values] "&lt;configuration protobuf text&gt;" [&lt;throttler name&gt;]`</pre>
+<pre class="command-example">UpdateThrottlerConfiguration `-server &lt;vtworker or vttablet&gt; [-copy_zero_values] "&lt;configuration protobuf text&gt;" [&lt;throttler name&gt;]`</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | copy_zero_values | Boolean | If true, fields with zero values will be copied as well |
-| server | string | vttablet to connect to |
+| server | string | vtworker or vttablet to connect to |
 
 
 #### Arguments
 
-* <code>&lt;vttablet&gt;</code> &ndash; Required.
+* <code>&lt;vtworker or vttablet&gt;</code> &ndash; Required.
 * <code>&lt;throttler name&gt;</code> &ndash; Optional.
 
 #### Errors
@@ -1087,11 +1087,11 @@ Updates the configuration of the MaxReplicationLag module. The configuration mus
 
 ### ApplySchema
 
-Applies the schema change to the specified keyspace on every master, running in parallel on all shards. The changes are then propagated to slaves via replication. If --allow_long_unavailability is set, schema changes affecting a large number of rows (and possibly incurring a longer period of unavailability) will not be rejected.
+Applies the schema change to the specified keyspace on every master, running in parallel on all shards. The changes are then propagated to slaves via replication. If -allow_long_unavailability is set, schema changes affecting a large number of rows (and possibly incurring a longer period of unavailability) will not be rejected.
 
 #### Example
 
-<pre class="command-example">ApplySchema [--allow_long_unavailability] [--wait_replicas_timeout=10s] {--sql=&lt;sql&gt; || --sql-file=&lt;filename&gt;} &lt;keyspace&gt;</pre>
+<pre class="command-example">ApplySchema [-allow_long_unavailability] [-wait_replicas_timeout=10s] {-sql=&lt;sql&gt; || -sql-file=&lt;filename&gt;} &lt;keyspace&gt;</pre>
 
 #### Flags
 
@@ -1118,7 +1118,7 @@ Applies the VTGate routing schema to the provided keyspace. Shows the result aft
 
 #### Example
 
-<pre class="command-example">ApplyVSchema {--vschema=&lt;vschema&gt; || --vschema_file=&lt;vschema file&gt;} [--cells=c1,c2,...] [--skip_rebuild] &lt;keyspace&gt;</pre>
+<pre class="command-example">ApplyVSchema {-vschema=&lt;vschema&gt; || -vschema_file=&lt;vschema file&gt;} [-cells=c1,c2,...] [-skip_rebuild] &lt;keyspace&gt;</pre>
 
 #### Flags
 
@@ -1146,7 +1146,7 @@ Copies the schema from a source shard's master (or a specific tablet) to a desti
 
 #### Example
 
-<pre class="command-example">CopySchemaShard [--tables=&lt;table1&gt;,&lt;table2&gt;,...] [--exclude_tables=&lt;table1&gt;,&lt;table2&gt;,...] [--include-views] [--wait_replicas_timeout=10s] {&lt;source keyspace/shard&gt; || &lt;source tablet alias&gt;} &lt;destination keyspace/shard&gt;</pre>
+<pre class="command-example">CopySchemaShard [-tables=&lt;table1&gt;,&lt;table2&gt;,...] [-exclude_tables=&lt;table1&gt;,&lt;table2&gt;,...] [-include-views] [-wait_replicas_timeout=10s] {&lt;source keyspace/shard&gt; || &lt;source tablet alias&gt;} &lt;destination keyspace/shard&gt;</pre>
 
 #### Flags
 
@@ -1191,7 +1191,7 @@ Displays the full schema for a tablet, or just the schema for the specified tabl
 
 #### Example
 
-<pre class="command-example">GetSchema [--tables=&lt;table1&gt;,&lt;table2&gt;,...] [--exclude_tables=&lt;table1&gt;,&lt;table2&gt;,...] [--include-views] &lt;tablet alias&gt;</pre>
+<pre class="command-example">GetSchema [-tables=&lt;table1&gt;,&lt;table2&gt;,...] [-exclude_tables=&lt;table1&gt;,&lt;table2&gt;,...] [-include-views] &lt;tablet alias&gt;</pre>
 
 #### Flags
 
@@ -1235,7 +1235,7 @@ Rebuilds the cell-specific SrvVSchema from the global VSchema objects in the pro
 
 #### Example
 
-<pre class="command-example">RebuildVSchemaGraph [--cells=c1,c2,...]</pre>
+<pre class="command-example">RebuildVSchemaGraph [-cells=c1,c2,...]</pre>
 
 #### Flags
 
@@ -1272,7 +1272,7 @@ Reloads the schema on all the tablets in a keyspace.
 
 #### Example
 
-<pre class="command-example">ReloadSchemaKeyspace [--concurrency=10] [--include_master=false] &lt;keyspace&gt;</pre>
+<pre class="command-example">ReloadSchemaKeyspace [-concurrency=10] [-include_master=false] &lt;keyspace&gt;</pre>
 
 #### Flags
 
@@ -1297,7 +1297,7 @@ Reloads the schema on all the tablets in a shard.
 
 #### Example
 
-<pre class="command-example">ReloadSchemaShard [--concurrency=10] [--include_master=false] &lt;keyspace/shard&gt;</pre>
+<pre class="command-example">ReloadSchemaShard [-concurrency=10] [-include_master=false] &lt;keyspace/shard&gt;</pre>
 
 #### Flags
 
@@ -1356,7 +1356,7 @@ Validates that the master schema from shard 0 matches the schema on all of the o
 
 #### Example
 
-<pre class="command-example">ValidateSchemaKeyspace [--exclude_tables=''] [--include-views] &lt;keyspace name&gt;</pre>
+<pre class="command-example">ValidateSchemaKeyspace [-exclude_tables=''] [-include-views] &lt;keyspace name&gt;</pre>
 
 #### Flags
 
@@ -1381,7 +1381,7 @@ Validates that the master schema matches all of the slaves.
 
 #### Example
 
-<pre class="command-example">ValidateSchemaShard [--exclude_tables=''] [--include-views] &lt;keyspace/shard&gt;</pre>
+<pre class="command-example">ValidateSchemaShard [-exclude_tables=''] [-include-views] &lt;keyspace/shard&gt;</pre>
 
 #### Flags
 
@@ -1520,7 +1520,7 @@ Creates the specified shard.
 
 #### Example
 
-<pre class="command-example">CreateShard [--force] [--parent] &lt;keyspace/shard&gt;</pre>
+<pre class="command-example">CreateShard [-force] [-parent] &lt;keyspace/shard&gt;</pre>
 
 #### Flags
 
@@ -1545,7 +1545,7 @@ Deletes the specified shard(s). In recursive mode, it also deletes all tablets b
 
 #### Example
 
-<pre class="command-example">DeleteShard [--recursive] [--even_if_serving] &lt;keyspace/shard&gt; ...</pre>
+<pre class="command-example">DeleteShard [-recursive] [-even_if_serving] &lt;keyspace/shard&gt; ...</pre>
 
 #### Flags
 
@@ -1570,7 +1570,7 @@ Reparents the shard to the new master. Assumes the old master is dead and not re
 
 #### Example
 
-<pre class="command-example">EmergencyReparentShard --keyspace_shard=&lt;keyspace/shard&gt; --new_master=&lt;tablet alias&gt;</pre>
+<pre class="command-example">EmergencyReparentShard -keyspace_shard=&lt;keyspace/shard&gt; -new_master=&lt;tablet alias&gt;</pre>
 
 #### Flags
 
@@ -1583,9 +1583,9 @@ Reparents the shard to the new master. Assumes the old master is dead and not re
 
 #### Errors
 
-* action <code>&lt;EmergencyReparentShard&gt;</code> requires --keyspace_shard=<code>&lt;keyspace/shard&gt;</code> --new_master=<code>&lt;tablet alias&gt;</code> This error occurs if the command is not called with exactly 0 arguments.
-* active reparent commands disabled (unset the --disable_active_reparents flag to enable)
-* cannot use legacy syntax and flag --<code>&lt;new_master&gt;</code> for action <code>&lt;EmergencyReparentShard&gt;</code> at the same time
+* action <code>&lt;EmergencyReparentShard&gt;</code> requires -keyspace_shard=<code>&lt;keyspace/shard&gt;</code> -new_master=<code>&lt;tablet alias&gt;</code> This error occurs if the command is not called with exactly 0 arguments.
+* active reparent commands disabled (unset the -disable_active_reparents flag to enable)
+* cannot use legacy syntax and flag -<code>&lt;new_master&gt;</code> for action <code>&lt;EmergencyReparentShard&gt;</code> at the same time
 
 
 ### GetShard
@@ -1611,7 +1611,7 @@ Sets the initial master for a shard. Will make all other tablets in the shard sl
 
 #### Example
 
-<pre class="command-example">InitShardMaster [--force] [--wait_replicas_timeout=&lt;duration&gt;] &lt;keyspace/shard&gt; &lt;tablet alias&gt;</pre>
+<pre class="command-example">InitShardMaster [-force] [-wait_replicas_timeout=&lt;duration&gt;] &lt;keyspace/shard&gt; &lt;tablet alias&gt;</pre>
 
 #### Flags
 
@@ -1629,7 +1629,7 @@ Sets the initial master for a shard. Will make all other tablets in the shard sl
 #### Errors
 
 * action <code>&lt;InitShardMaster&gt;</code> requires <code>&lt;keyspace/shard&gt;</code> <code>&lt;tablet alias&gt;</code> This error occurs if the command is not called with exactly 2 arguments.
-* active reparent commands disabled (unset the --disable_active_reparents flag to enable)
+* active reparent commands disabled (unset the -disable_active_reparents flag to enable)
 
 
 ### ListBackups
@@ -1668,7 +1668,7 @@ Reparents the shard to the new master, or away from old master. Both old and new
 
 #### Example
 
-<pre class="command-example">PlannedReparentShard --keyspace_shard=&lt;keyspace/shard&gt; [--new_master=&lt;tablet alias&gt;] [--avoid_master=&lt;tablet alias&gt;]</pre>
+<pre class="command-example">PlannedReparentShard -keyspace_shard=&lt;keyspace/shard&gt; [-new_master=&lt;tablet alias&gt;] [-avoid_master=&lt;tablet alias&gt;]</pre>
 
 #### Flags
 
@@ -1682,9 +1682,9 @@ Reparents the shard to the new master, or away from old master. Both old and new
 
 #### Errors
 
-* action <code>&lt;PlannedReparentShard&gt;</code> requires --keyspace_shard=<code>&lt;keyspace/shard&gt;</code> [--new_master=<code>&lt;tablet alias&gt;</code>] [--avoid_master=<code>&lt;tablet alias&gt;</code>] This error occurs if the command is not called with exactly 0 arguments.
-* active reparent commands disabled (unset the --disable_active_reparents flag to enable)
-* cannot use legacy syntax and flags --<code>&lt;keyspace_shard&gt;</code> and --<code>&lt;new_master&gt;</code> for action <code>&lt;PlannedReparentShard&gt;</code> at the same time
+* action <code>&lt;PlannedReparentShard&gt;</code> requires -keyspace_shard=<code>&lt;keyspace/shard&gt;</code> [-new_master=<code>&lt;tablet alias&gt;</code>] [-avoid_master=<code>&lt;tablet alias&gt;</code>] This error occurs if the command is not called with exactly 0 arguments.
+* active reparent commands disabled (unset the -disable_active_reparents flag to enable)
+* cannot use legacy syntax and flags -<code>&lt;keyspace_shard&gt;</code> and -<code>&lt;new_master&gt;</code> for action <code>&lt;PlannedReparentShard&gt;</code> at the same time
 
 
 ### RemoveBackup
@@ -1753,13 +1753,14 @@ Add or remove served type to/from a shard. This is meant as an emergency functio
 
     * <code>backup</code> &ndash; A slaved copy of data that is offline to queries other than for backup purposes
     * <code>batch</code> &ndash; A slaved copy of data for OLAP load patterns (typically for MapReduce jobs)
+    * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
     * <code>experimental</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
     * <code>master</code> &ndash; A primary copy of data
     * <code>rdonly</code> &ndash; A slaved copy of data for OLAP load patterns
     * <code>replica</code> &ndash; A slaved copy of data ready to be promoted to master
     * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
     * <code>schema_apply</code> &ndash; A slaved copy of data that had been serving query traffic but that is now applying a schema change. Following the change, the tablet will revert to its serving type.
-    * <code>snapshot_source</code> &ndash; A slaved copy of data where mysqld is <b>not</b> running and where Vitess is serving data files to clone slaves. Use this command to enter this mode: <pre>vtctl Snapshot --server-mode ...</pre> Use this command to exit this mode: <pre>vtctl SnapshotSourceEnd ...</pre>
+    * <code>snapshot_source</code> &ndash; A slaved copy of data where mysqld is <b>not</b> running and where Vitess is serving data files to clone slaves. Use this command to enter this mode: <pre>vtctl Snapshot -server-mode ...</pre> Use this command to exit this mode: <pre>vtctl SnapshotSourceEnd ...</pre>
     * <code>spare</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
 
 
@@ -1795,13 +1796,14 @@ Sets the TabletControl record for a shard and type. Only use this for an emergen
 
     * <code>backup</code> &ndash; A slaved copy of data that is offline to queries other than for backup purposes
     * <code>batch</code> &ndash; A slaved copy of data for OLAP load patterns (typically for MapReduce jobs)
+    * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
     * <code>experimental</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
     * <code>master</code> &ndash; A primary copy of data
     * <code>rdonly</code> &ndash; A slaved copy of data for OLAP load patterns
     * <code>replica</code> &ndash; A slaved copy of data ready to be promoted to master
     * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
     * <code>schema_apply</code> &ndash; A slaved copy of data that had been serving query traffic but that is now applying a schema change. Following the change, the tablet will revert to its serving type.
-    * <code>snapshot_source</code> &ndash; A slaved copy of data where mysqld is <b>not</b> running and where Vitess is serving data files to clone slaves. Use this command to enter this mode: <pre>vtctl Snapshot --server-mode ...</pre> Use this command to exit this mode: <pre>vtctl SnapshotSourceEnd ...</pre>
+    * <code>snapshot_source</code> &ndash; A slaved copy of data where mysqld is <b>not</b> running and where Vitess is serving data files to clone slaves. Use this command to enter this mode: <pre>vtctl Snapshot -server-mode ...</pre> Use this command to exit this mode: <pre>vtctl SnapshotSourceEnd ...</pre>
     * <code>spare</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
 
 
@@ -1915,7 +1917,7 @@ Validates that all nodes that are reachable from this shard are consistent.
 
 #### Example
 
-<pre class="command-example">ValidateShard [--ping-tablets] &lt;keyspace/shard&gt;</pre>
+<pre class="command-example">ValidateShard [-ping-tablets] &lt;keyspace/shard&gt;</pre>
 
 #### Flags
 
@@ -1939,7 +1941,7 @@ Blocks until the specified shard has caught up with the filtered replication of 
 
 #### Example
 
-<pre class="command-example">WaitForFilteredReplication [--max_delay &lt;max_delay, default 30s&gt;] &lt;keyspace/shard&gt;</pre>
+<pre class="command-example">WaitForFilteredReplication [-max_delay &lt;max_delay, default 30s&gt;] &lt;keyspace/shard&gt;</pre>
 
 #### Arguments
 
@@ -1979,7 +1981,7 @@ Stops mysqld and uses the BackupStorage service to store a new backup. This func
 
 #### Example
 
-<pre class="command-example">Backup [--concurrency=4] &lt;tablet alias&gt;</pre>
+<pre class="command-example">Backup [-concurrency=4] &lt;tablet alias&gt;</pre>
 
 #### Flags
 
@@ -2003,7 +2005,7 @@ Changes the db type for the specified tablet, if possible. This command is used 
 
 #### Example
 
-<pre class="command-example">ChangeSlaveType [--dry-run] &lt;tablet alias&gt; &lt;tablet type&gt;</pre>
+<pre class="command-example">ChangeSlaveType [-dry-run] &lt;tablet alias&gt; &lt;tablet type&gt;</pre>
 
 #### Flags
 
@@ -2019,13 +2021,14 @@ Changes the db type for the specified tablet, if possible. This command is used 
 
     * <code>backup</code> &ndash; A slaved copy of data that is offline to queries other than for backup purposes
     * <code>batch</code> &ndash; A slaved copy of data for OLAP load patterns (typically for MapReduce jobs)
+    * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
     * <code>experimental</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
     * <code>master</code> &ndash; A primary copy of data
     * <code>rdonly</code> &ndash; A slaved copy of data for OLAP load patterns
     * <code>replica</code> &ndash; A slaved copy of data ready to be promoted to master
     * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
     * <code>schema_apply</code> &ndash; A slaved copy of data that had been serving query traffic but that is now applying a schema change. Following the change, the tablet will revert to its serving type.
-    * <code>snapshot_source</code> &ndash; A slaved copy of data where mysqld is <b>not</b> running and where Vitess is serving data files to clone slaves. Use this command to enter this mode: <pre>vtctl Snapshot --server-mode ...</pre> Use this command to exit this mode: <pre>vtctl SnapshotSourceEnd ...</pre>
+    * <code>snapshot_source</code> &ndash; A slaved copy of data where mysqld is <b>not</b> running and where Vitess is serving data files to clone slaves. Use this command to enter this mode: <pre>vtctl Snapshot -server-mode ...</pre> Use this command to exit this mode: <pre>vtctl SnapshotSourceEnd ...</pre>
     * <code>spare</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
 
 
@@ -2044,7 +2047,7 @@ Deletes tablet(s) from the topology.
 
 #### Example
 
-<pre class="command-example">DeleteTablet [--allow_master] &lt;tablet alias&gt; ...</pre>
+<pre class="command-example">DeleteTablet [-allow_master] &lt;tablet alias&gt; ...</pre>
 
 #### Flags
 
@@ -2068,7 +2071,7 @@ Runs the given SQL command as a DBA on the remote tablet.
 
 #### Example
 
-<pre class="command-example">ExecuteFetchAsDba [--max_rows=10000] [--disable_binlogs] [--json] &lt;tablet alias&gt; &lt;sql command&gt;</pre>
+<pre class="command-example">ExecuteFetchAsDba [-max_rows=10000] [-disable_binlogs] [-json] &lt;tablet alias&gt; &lt;sql command&gt;</pre>
 
 #### Flags
 
@@ -2146,13 +2149,11 @@ Sets the regexp for health check errors to ignore on the specified tablet. The p
 
 ### InitTablet
 
-Deprecated.
-
 Initializes a tablet in the topology.<br><br>
 
 #### Example
 
-<pre class="command-example">InitTablet [--allow_update] [--allow_different_shard] [--allow_master_override] [--parent] [--db_name_override=&lt;db name&gt;] [--hostname=&lt;hostname&gt;] [--mysql_port=&lt;port&gt;] [--port=&lt;port&gt;] [--grpc_port=&lt;port&gt;]- -keyspace=&lt;keyspace&gt; --shard=&lt;shard&gt; &lt;tablet alias&gt; &lt;tablet type&gt;</pre>
+<pre class="command-example">InitTablet [-allow_update] [-allow_different_shard] [-allow_master_override] [-parent] [-db_name_override=&lt;db name&gt;] [-hostname=&lt;hostname&gt;] [-mysql_port=&lt;port&gt;] [-port=&lt;port&gt;] [-grpc_port=&lt;port&gt;] -keyspace=&lt;keyspace&gt; -shard=&lt;shard&gt; &lt;tablet alias&gt; &lt;tablet type&gt;</pre>
 
 #### Flags
 
@@ -2179,13 +2180,14 @@ Initializes a tablet in the topology.<br><br>
 
     * <code>backup</code> &ndash; A slaved copy of data that is offline to queries other than for backup purposes
     * <code>batch</code> &ndash; A slaved copy of data for OLAP load patterns (typically for MapReduce jobs)
+    * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
     * <code>experimental</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential master. Vitess also does not worry about lag for experimental tablets when reparenting.
     * <code>master</code> &ndash; A primary copy of data
     * <code>rdonly</code> &ndash; A slaved copy of data for OLAP load patterns
     * <code>replica</code> &ndash; A slaved copy of data ready to be promoted to master
     * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
     * <code>schema_apply</code> &ndash; A slaved copy of data that had been serving query traffic but that is now applying a schema change. Following the change, the tablet will revert to its serving type.
-    * <code>snapshot_source</code> &ndash; A slaved copy of data where mysqld is <b>not</b> running and where Vitess is serving data files to clone slaves. Use this command to enter this mode: <pre>vtctl Snapshot --server-mode ...</pre> Use this command to exit this mode: <pre>vtctl SnapshotSourceEnd ...</pre>
+    * <code>snapshot_source</code> &ndash; A slaved copy of data where mysqld is <b>not</b> running and where Vitess is serving data files to clone slaves. Use this command to enter this mode: <pre>vtctl Snapshot -server-mode ...</pre> Use this command to exit this mode: <pre>vtctl SnapshotSourceEnd ...</pre>
     * <code>spare</code> &ndash; A slaved copy of data that is ready but not serving query traffic. The data could be a potential master tablet.
 
 
@@ -2236,7 +2238,7 @@ Runs 'RefreshState' on all tablets in the given shard.
 
 #### Example
 
-<pre class="command-example">RefreshStateByShard [--cells=c1,c2,...] &lt;keyspace/shard&gt;</pre>
+<pre class="command-example">RefreshStateByShard [-cells=c1,c2,...] &lt;keyspace/shard&gt;</pre>
 
 #### Flags
 
@@ -2265,7 +2267,7 @@ Reparent a tablet to the current master in the shard. This only works if the cur
 #### Errors
 
 * action <code>&lt;ReparentTablet&gt;</code> requires <code>&lt;tablet alias&gt;</code> This error occurs if the command is not called with exactly one argument.
-* active reparent commands disabled (unset the --disable_active_reparents flag to enable)
+* active reparent commands disabled (unset the -disable_active_reparents flag to enable)
 
 
 ### RestoreFromBackup
@@ -2394,7 +2396,7 @@ Updates the IP address and port numbers of a tablet.
 
 #### Example
 
-<pre class="command-example">UpdateTabletAddrs [--hostname &lt;hostname&gt;] [--ip-addr &lt;ip addr&gt;] [--mysql-port &lt;mysql port&gt;] [--vt-port &lt;vt port&gt;] [--grpc-port &lt;grpc port&gt;] &lt;tablet alias&gt;</pre>
+<pre class="command-example">UpdateTabletAddrs [-hostname &lt;hostname&gt;] [-ip-addr &lt;ip addr&gt;] [-mysql-port &lt;mysql port&gt;] [-vt-port &lt;vt port&gt;] [-grpc-port &lt;grpc port&gt;] &lt;tablet alias&gt;</pre>
 
 #### Flags
 
@@ -2426,7 +2428,7 @@ Retrieves the file(s) at &lt;path&gt; from the topo service, and displays it. It
 
 #### Example
 
-<pre class="command-example">TopoCat [-cell &lt;cell&gt;] [--decode_proto] [--long] &lt;path&gt; [&lt;path&gt;...]</pre>
+<pre class="command-example">TopoCat [-cell &lt;cell&gt;] [-decode_proto] [-long] &lt;path&gt; [&lt;path&gt;...]</pre>
 
 #### Flags
 
@@ -2480,11 +2482,11 @@ Sends the provided action name on the specified path.
 
 ### WorkflowCreate
 
-Creates the workflow with the provided parameters. The workflow is also started, unless --skip_start is specified.
+Creates the workflow with the provided parameters. The workflow is also started, unless -skip_start is specified.
 
 #### Example
 
-<pre class="command-example">WorkflowCreate [--skip_start] &lt;factoryName&gt; [parameters...]</pre>
+<pre class="command-example">WorkflowCreate [-skip_start] &lt;factoryName&gt; [parameters...]</pre>
 
 #### Flags
 
