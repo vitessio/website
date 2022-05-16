@@ -32,7 +32,7 @@ Reshard is used to create and manage workflows to horizontally shard an existing
 <div class="cmd">
 
 Reshard is an "umbrella" command. The `action` sub-command defines the operation on the workflow.
-Action must be one of the following: Create, Complete, Cancel, SwitchTraffic, ReverseTrafffic, Show, or Progress 
+Action must be one of the following: Create, Complete, Cancel, SwitchTraffic, ReverseTrafffic, Show, or Progress
 
 </div>
 
@@ -81,8 +81,8 @@ Source Vitess tablet_type, or comma separated list of tablet types, that should 
 **default** false
 
 <div class="cmd">
-If true the source schema is copied to the target shards. If false, you need to create the tables
-before calling reshard.
+If false, the source schema is copied to the target shards. If true, the schema won't be copied
+and you need to create the tables before calling reshard.
 </div>
 
 #### -auto_start
