@@ -49,6 +49,7 @@ One of `cluster`, `cluster-defaults`, or `cluster-config` file is required. Mult
 | Name | Required | Type | Default | Definition |
 | -------- | --------- | --------- | --------- |--------- |
 | `http-origin` | **Required** | string | - | repeated, comma-separated flag of allowed CORS origins. omit to disable CORS |
+| `http-metrics-endpoint` | **Recommended** | string | "/metrics" | HTTP endpoint to expose prometheus metrics on. Omit to disable scraping metrics. Using a path used by VTAdmin's http API is unsupported and causes undefined behavior.|
 | `http-tablet-url-tmpl` | **Recommended** | string | - | Go template string to generate a reachable http(s) address for a tablet. Currently used to make passthrough requests to /debug/vars endpoints. Example: `"https://{{ .Tablet.Hostname }}:80"` |
 | `http-debug-omit-env` | Optional | boolean | `false` | The name of an environment variable to omit from /debug/env, if http debug endpoints are enabled. Specify multiple times to omit multiple env vars. |
 | `http-debug-sanitize-env`| Optional | string | - | The name of an environment variable to sanitize in /debug/env, if http debug endpoints are enabled. Specify multiple times to sanitize multiple env vars. | 
