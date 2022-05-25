@@ -616,3 +616,55 @@ Create Table: CREATE TABLE `corder` (
 ```
 $ vtctlclient ApplySchema -ddl_strategy "vitess" -sql "revert vitess_migration '1a689113_8d77_11eb_815f_f875a4d24e90'" commerce
 ```
+
+## Controlling throttling
+
+Managed migrations [use](../managed-online-schema-changes/#throttling) the [tablet throttler](../../../reference/features/tablet-throttler/) to ensure a sustainable impact to the MySQL servers and replication stream. Normally, the user doesn't need to get involved, as the throttler auto-identifies load scenarios, and pushes back on migration progress. However, Vitess makes available these commands for additional control over migration throttling:
+
+```sql
+alter vitess_migration '<uuid>' throttle [expire '<duration>'] [ratio <ratio>];
+alter vitess_migration throttle all [expire '<duration>'] [ratio <ratio>];
+alter vitess_migration '<uuid>' unthrottle;
+alter vitess_migration unthrottle all;
+show vitess_throttled_apps;
+```
+
+**Note:** the tablet throttler must be enabled for these command to run.
+
+### Throttling a migration
+
+To fully throttle a migration, run:
+
+```sql
+mysql> alter vitess_migration 'aa89f255_8d68_11eb_815f_f875a4d24e90' throttle;
+Query OK, 1 row affected (0.00 sec)
+```
+
+From this point on, the migration will not make row copy progress and will not apply binary logs. By default, this command does not expire, and it takes an explicit `unthrottle` command to resume migration progress. Because MySQL binary logs are rotated, a migration may only survive a full throttling up to the point where the binary log it last processed is purged.
+
+You may supply either or both these options: `expire`, `ratio`:
+
+- `alter vitess_migration 'aa89f255_8d68_11eb_815f_f875a4d24e90' throttle expire '2h'` will fully throttle the migration for the next `2` hours, after which the migration resumes normal work. You may specify these units: `s` (seconds), `m` (minutes), `h` (hours) or combinations. Example values: `90s`, `30m`, `1h`, `1h30m`, etc.
+- `alter vitess_migration 'aa89f255_8d68_11eb_815f_f875a4d24e90' throttle ratio 0.7` will partially throttle the migration. This instructs the throttler to reject, on average, `7` migration throttling check requests out of `10`. Any value between `0` (no throttling at all) and `1.0` (fully throttled) are allowed. This is a fine tune way to slow down a migration.
+
+### Throttling all migrations
+
+It's likely that you will want to throttle migrations in general, and not a specific migration. Use:
+
+- `alter vitess_migration throttle all;` to fully throttle any and all migrations from this point on
+- `alter vitess_migration throttle all expire '90m';` to fully throttle any and all migrations from this point on and for the next `90` minutes.
+- `alter vitess_migration throttle all ratio 0.8;` to severely slow down all migrations from this point on (4 out of 5 migrations requests to the throttler are denied)
+- `alter vitess_migration throttle all duration '10m' ratio 0.2;` to lightly slow down all migrations from this point on (1 out of 5 migrations requests to the throttler are denied) for the next `10` minutes.
+
+### Unthrottling
+
+Use:
+
+- `alter vitess_migration 'aa89f255_8d68_11eb_815f_f875a4d24e90' unthrottle;` to allow the specified migration to resume working as normal
+- `alter vitess_migration unthrottle all;` to unthrottle all migrations.
+
+**Note** that this does not disable throttling altogether. If, for example, replication lag grows on replicas, the throttler may still throttle the migration until replication is caught up. Unthrottling only cancels an explicit throttling request as described above.
+
+### Showing throttled apps
+
+The command `show vitess_throttled_apps;` is a general purpose throttler command, and shows all apps for which there are throttling rules. It will list any specific or general migration throttling status.
