@@ -154,7 +154,7 @@ In the first two above examples we can see that the tablet is configured to thro
 - `/throttler/throttle-app?app=<name>[&duration=<duration>][&ratio=<ratio>][&p=low]`: instructs the throttler to begin throttling requests from given app.
   - An optional `duration` value auto expires the throttling after indicated time. You may specify these units: `s` (seconds), `m` (minutes), `h` (hours) or combinations. Example values: `90s`, `30m`, `1h`, `1h30m`, etc.
   - An optional `ratio` value indicates the throttling intensity, ranging from `0` (no throttling at all) to `1.0` (the default, full throttle).
-    I a value of `0.3`, for example, `3` out of `10`, on average, checks by the app, are flat out denied, regardless of present metrics and threshold. The remaining `7` out of `10` checks, will get a response that is based on the actual metrics and threshold (thereby, thay may be approved, or they may be rejected).
+    With a value of `0.3`, for example, `3` out of `10`, on average, checks by the app, are flat out denied, regardless of present metrics and threshold. The remaining `7` out of `10` checks, will get a response that is based on the actual metrics and threshold (thereby, thay may be approved, or they may be rejected).
   - Applications may also declare themselves to be _low priority_ via `?p=low` param. Managed online schema migrations (`gh-ost`, `pt-online-schema-change`) do so, as does the table purge process.
 - `/throttler/unthrottle-app?app=<name>`: instructs the throttler to stop throttling for the given app. This removes any previous throttling instruction for the app. the throttler still reserves the right to throttle the app based on cluster status.
 
