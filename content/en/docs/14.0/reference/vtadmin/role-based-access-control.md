@@ -125,9 +125,117 @@ If a user tries to access a cluster they are not permitted to, **including a clu
 (1) there is simply no data; (2) they do not have access to the cluster; or (3) the cluster exists at all.
 This is by design, to prevent a malicious actor from being able to enumerate resources by brute force and interpreting the authorization failure responses.
 
-TODO:
-- describe config structure
-- list and describe actions/resources
+### Configuration
+
+Authorization rules are specified as a list under the `rules` key of your `rbac.yaml` configuration file.
+Each rule is a 4-key map, corresponding to the 4-tuple of `(resource, cluster, subject, action)`.
+
+In order to allow more consisely-expressed configurations, each "rule" element actually takes a list of `clusters`, `subjects`, and `actions` (**but only a singular `resource`!**), as well as a wildcard (`*`) to stand in for "any {resource|cluster|subject|action}".
+At startup, `vtadmin-api` will expand these rulesets and wildcards into the individual 4-tuples discussed previously.
+
+#### Example
+
+For example, take the following configuration:
+
+```yaml
+rules:
+  - resource: "*"
+    actions:
+    - "get"
+    - "ping"
+    subjects: ["*"]
+    clusters: ["*"]
+
+  - resource: "*"
+    actions:
+	- "create"
+	- "delete"
+	- "put"
+	subjects:
+	- "user:andrew"
+	- "role:admin"
+	clusters: ["*"]
+
+  - resource: "Shard"
+    actions:
+    - "emergency_reparent_shard"
+    - "planned_reparent_shard"
+    subjects:
+	- "role:admin"
+    clusters:
+    - "local"
+```
+
+This permits the following:
+1. Any subject can `get` or `ping` any resource in any cluster.
+2. Any user with the name "andrew" or role of "admin" can `create`, `delete`, or `put` any resource in any cluster.
+3. Any user with the role of "admin" can perform ERS and PRS operations on a `Shard` in _only_ the cluster with the id of "local".
+
+### Clusters and Subjects
+
+`cluster` and `subject` values depend entirely on the details of your particular vtadmin deployment.
+Possible values for `cluster`, aside from the wildcard, are the `id` of any cluster you inform `vtadmin-api` of (either via flags at start time or dynamically).
+
+`subject` values should be prefixed with either `user:` or `role:`.
+In the case of `user:`, vtadmin's authorization check will verify the actor's `Name` value matches.
+In the case of `role:`, it will verify that one of the actor's `Roles` values matches.
+In code:
+
+```go
+func (r *Rule) Allows(clusterID string, action Action, actor *Actor) bool {
+	if r.clusters.HasAny("*", clusterID) {
+		if r.actions.HasAny("*", string(action)) {
+			if r.subjects.Has("*") {
+				return true
+			}
+
+			if actor == nil {
+				return false
+			}
+
+			if r.subjects.Has(fmt.Sprintf("user:%s", actor.Name)) {
+				return true
+			}
+
+			for _, role := range actor.Roles {
+				if r.subjects.Has(fmt.Sprintf("role:%s", role)) {
+					return true
+				}
+			}
+		}
+	}
+
+	return false
+}
+```
+
+Note that if you are using just authorization without authentication, you must use the wildcard subject in your rules.
+
+### Resources and Actions
+
+The following table lists all current resources vtadmin has, and the actions that can be performed on them.
+Note that it's technically possible to specify a rule for an action that cannot actually be performed on a particular resource (e.g. an action of `planned_reparent_shard` on a resource of `Schema`), but this has no effect on the rest of your rules.
+
+| API | Rule(s) Needed `(<action>, <resource>)` form |
+| :--- | :--- |
+| `CreateKeyspace` | `(create, Keyspace)` |
+| `CreateShard` | `(create, Shard)` |
+| `DeleteKeyspace` | `(delete, Keyspace)` |
+| `DeleteShards` | `(delete, Shard)` |
+| `DeleteTablet` | `(delete, Tablet)` |
+| `EmergencyReparentShard` | `(emergency_reparent_shard, Shard)` |
+| `FindSchema` | `(get, Schema)` |
+| `GetBackups` | `(get, Backup)` |
+| `GetCellInfos` | `(get, CellInfo)` |
+| `GetCellsAliases` | `(get, CellsAlias)` |
+| `GetClusters` | `(get, Cluster)` |
+| `GetGates` | `(get, VTGate)` |
+| `GetVtctlds` | `(get, Vtctld)` |
+| `GetKeyspace` | `(get, Keyspace)` |
+| `GetKeyspaces` | `(get, Keyspace)` |
+| `GetSchema` | `(get, Schema)` |
+| `GetSchemas` | `(get, Schema)` |
+| and so on ... (TODO: finish this table if we like the structure/format)
 
 
 [authn_interface]: https://github.com/vitessio/vitess/blob/46cb4679c198c96fbe7b51f40219d8196f4284a7/go/vt/vtadmin/rbac/authentication.go#L34-L50
