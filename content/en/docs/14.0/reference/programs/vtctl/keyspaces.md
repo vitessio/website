@@ -14,7 +14,7 @@ Creates the specified keyspace.
 
 #### Example
 
-<pre class="command-example">CreateKeyspace [--sharding_column_name=name] [--sharding_column_type=type] [--served_from=tablettype1:ks1,tablettype2,ks2,...] [--force] &lt;keyspace name&gt;
+<pre class="command-example">CreateKeyspace -- [--sharding_column_name=name] [--sharding_column_type=type] [--served_from=tablettype1:ks1,tablettype2,ks2,...] [--force] &lt;keyspace name&gt;
 Creates the specified keyspace. keyspace_type can be NORMAL or SNAPSHOT. For a SNAPSHOT keyspace you must specify the name of a base_keyspace, and a snapshot_time in UTC, in RFC3339 time format, e.g. 2006-01-02T15:04:05+00:00</pre>
 
 #### Flags
@@ -41,7 +41,7 @@ Deletes the specified keyspace. In recursive mode, it also recursively deletes a
 
 #### Example
 
-<pre class="command-example">DeleteKeyspace [--recursive] &lt;keyspace&gt;
+<pre class="command-example">DeleteKeyspace -- [--recursive] &lt;keyspace&gt;
 Deletes the specified keyspace. In recursive mode, it also recursively deletes all shards in the keyspace. Otherwise, there must be no shards left in the keyspace.</pre>
 
 #### Flags
@@ -65,7 +65,7 @@ Removes the cell from the Cells list for all shards in the keyspace, and the Srv
 
 #### Example
 
-<pre class="command-example">RemoveKeyspaceCell [--force] [--recursive] &lt;keyspace&gt; &lt;cell&gt;
+<pre class="command-example">RemoveKeyspaceCell -- [--force] [--recursive] &lt;keyspace&gt; &lt;cell&gt;
 Removes the cell from the Cells list for all shards in the keyspace, and the SrvKeyspace for that keyspace in that cell.</pre>
 
 #### Flags
@@ -118,7 +118,7 @@ Updates the sharding information for a keyspace.
 
 #### Example
 
-<pre class="command-example">SetKeyspaceShardingInfo [--force] &lt;keyspace name&gt; [&lt;column name&gt;] [&lt;column type&gt;]
+<pre class="command-example">SetKeyspaceShardingInfo -- [--force] &lt;keyspace name&gt; [&lt;column name&gt;] [&lt;column type&gt;]
 
 Deprecated.
 
@@ -149,7 +149,7 @@ Changes the ServedFromMap manually. This command is intended for emergency fixes
 
 #### Example
 
-<pre class="command-example">SetKeyspaceServedFrom [--source=&lt;source keyspace name&gt;] [--remove] [--cells=c1,c2,...] &lt;keyspace name&gt; &lt;tablet type&gt;
+<pre class="command-example">SetKeyspaceServedFrom -- [--source=&lt;source keyspace name&gt;] [--remove] [--cells=c1,c2,...] &lt;keyspace name&gt; &lt;tablet type&gt;
 Changes the ServedFromMap manually. This command is intended for emergency fixes. This field is automatically set when you call the *MigrateServedFrom* command. This command does not rebuild the serving graph.</pre>
 
 #### Flags
@@ -188,7 +188,7 @@ Rebuilds the serving data for the keyspace. This command may trigger an update t
 
 #### Example
 
-<pre class="command-example">RebuildKeyspaceGraph [--cells=c1,c2,...] &lt;keyspace&gt; ...
+<pre class="command-example">RebuildKeyspaceGraph -- [--cells=c1,c2,...] &lt;keyspace&gt; ...
 Rebuilds the serving data for the keyspace. This command may trigger an update to all connected clients.</pre>
 
 #### Flags
@@ -213,7 +213,7 @@ Validates that all nodes reachable from the specified keyspace are consistent.
 
 #### Example
 
-<pre class="command-example">ValidateKeyspace [--ping-tablets] &lt;keyspace name&gt;
+<pre class="command-example">ValidateKeyspace -- [--ping-tablets] &lt;keyspace name&gt;
 Validates that all nodes reachable from the specified keyspace are consistent.</pre>
 
 #### Flags
@@ -235,8 +235,8 @@ Validates that all nodes reachable from the specified keyspace are consistent.</
 ### Reshard (v1)
 
 ```shell
-Reshard  --v1 [--skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>
-Start a Resharding process. Example: Reshard --cells='zone1,alias1' --tablet_types='primary,replica,rdonly'  ks.workflow001 '0' '-80,80-'.
+Reshard  -- --v1 [--skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>
+Start a Resharding process. Example: Reshard -- --cells='zone1,alias1' --tablet_types='primary,replica,rdonly'  ks.workflow001 '0' '-80,80-'.
 ```
 #### Notes
 
@@ -252,7 +252,7 @@ Reshard <options> <action> <workflow identifier>
 ### MoveTables (v1)
 
 ```shell
-MoveTables  --v1 [--cell=<cell>] [--tablet_types=<source_tablet_types>] --workflow=<workflow> <source_keyspace> <target_keyspace> <table_specs>
+MoveTables  -- --v1 [--cell=<cell>] [--tablet_types=<source_tablet_types>] --workflow=<workflow> <source_keyspace> <target_keyspace> <table_specs>
 Move table(s) to another keyspace, table_specs is a list of tables or the tables section of the vschema for the target keyspace. Example: '{"t1":{"column_vindexes": [{"column": "id1", "name": "hash"}]}, "t2":{"column_vindexes": [{"column": "id2", "name": "hash"}]}}'.  In the case of an unsharded target keyspace the vschema for each table may be empty. Example: '{"t1":{}, "t2":{}}'.
 ```
 #### Notes
@@ -269,7 +269,7 @@ MoveTables <options> <action> <workflow identifier>
 ### DropSources
 
 ```shell
-DropSources  [--dry_run] [--rename_tables] <keyspace.workflow>
+DropSources  -- [--dry_run] [--rename_tables] <keyspace.workflow>
 After a MoveTables or Resharding workflow cleanup unused artifacts like source tables, source shards and blacklists.
 ```
 
@@ -280,7 +280,7 @@ After a MoveTables or Resharding workflow cleanup unused artifacts like source t
 ### CreateLookupVindex
 
 ```shell
-CreateLookupVindex  [--cells=<source_cells>] [--continue_after_copy_with_owner=false] [--tablet_types=<source_tablet_types>] <keyspace> <json_spec>
+CreateLookupVindex  -- [--cells=<source_cells>] [--continue_after_copy_with_owner=false] [--tablet_types=<source_tablet_types>] <keyspace> <json_spec>
 Create and backfill a lookup vindex. the json_spec must contain the vindex and colvindex specs for the new lookup.
 ```
 
@@ -322,7 +322,7 @@ Start the VerticalSplitClone process to perform vertical resharding. Example: Sp
 ### VDiff
 
 ```shell
-VDiff  [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=<source_tablet_types>] [--filtered_replication_wait_time=30s] [--max_extra_rows_to_compare=1000] <keyspace.workflow>
+VDiff  -- [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=<source_tablet_types>] [--filtered_replication_wait_time=30s] [--max_extra_rows_to_compare=1000] <keyspace.workflow>
 Perform a diff of all tables in the workflow
 ```
 
@@ -332,7 +332,7 @@ Migrates a serving type from the source shard to the shards that it replicates t
 
 #### Example
 
-<pre class="command-example">MigrateServedTypes [--cells=c1,c2,...] [--reverse] [--skip-refresh-state] &lt;keyspace/shard&gt; &lt;served tablet type&gt;
+<pre class="command-example">MigrateServedTypes -- [--cells=c1,c2,...] [--reverse] [--skip-refresh-state] &lt;keyspace/shard&gt; &lt;served tablet type&gt;
 Migrates a serving type from the source shard to the shards that it replicates to. This command also rebuilds the serving graph. The <keyspace/shard> argument can specify any of the shards involved in the migration.</pre>
 
 #### Flags
@@ -375,7 +375,7 @@ Makes the &lt;destination keyspace/shard&gt; serve the given type. This command 
 
 #### Example
 
-<pre class="command-example">MigrateServedFrom [--cells=c1,c2,...] [--reverse] &lt;destination keyspace/shard&gt; &lt;served tablet type&gt;</pre>
+<pre class="command-example">MigrateServedFrom -- [--cells=c1,c2,...] [--reverse] &lt;destination keyspace/shard&gt; &lt;served tablet type&gt;</pre>
 
 #### Flags
 
@@ -410,7 +410,7 @@ Makes the &lt;destination keyspace/shard&gt; serve the given type. This command 
 ### SwitchReads
 
 ```shell
-SwitchReads  [--cells=c1,c2,...] [--reverse] -tablet_types={replica|rdonly} [--dry-run] <keyspace.workflow>
+SwitchReads  -- [--cells=c1,c2,...] [--reverse] -tablet_types={replica|rdonly} [--dry-run] <keyspace.workflow>
 Switch read traffic for the specified workflow.
 ```
 
@@ -421,7 +421,7 @@ Switch read traffic for the specified workflow.
 ### SwitchWrites
 
 ```shell
-SwitchWrites  [--timeout=30s] [--cancel] [--reverse] [--reverse_replication=false] -tablet_types={replica|rdonly} [--dry-run] <keyspace.workflow>
+SwitchWrites  -- [--timeout=30s] [--cancel] [--reverse] [--reverse_replication=false] -tablet_types={replica|rdonly} [--dry-run] <keyspace.workflow>
 Switch write traffic for the specified workflow.
 ```
 
@@ -472,7 +472,7 @@ Blocks until no new queries were observed on all tablets with the given tablet t
 
 #### Example
 
-<pre class="command-example">WaitForDrain [--timeout &lt;duration&gt;] [--retry_delay &lt;duration&gt;] [--initial_wait &lt;duration&gt;] &lt;keyspace/shard&gt; &lt;served tablet type&gt;
+<pre class="command-example">WaitForDrain -- [--timeout &lt;duration&gt;] [--retry_delay &lt;duration&gt;] [--initial_wait &lt;duration&gt;] &lt;keyspace/shard&gt; &lt;served tablet type&gt;
 Blocks until no new queries were observed on all tablets with the given tablet type in the specified keyspace. This can be used as sanity check to ensure that the tablets were drained after running vtctl MigrateServedTypes and vtgate is no longer using them. If --timeout is set, it fails when the timeout is reached."</pre>
 
 #### Flags

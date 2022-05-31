@@ -14,7 +14,7 @@ Returns the current max rate of all active resharding throttlers on the server.
 
 #### Example
 
-<pre class="command-example">ThrottlerMaxRates --server &lt;vttablet&gt;</pre>
+<pre class="command-example">ThrottlerMaxRates -- --server &lt;vttablet&gt;</pre>
 
 #### Flags
 
@@ -39,7 +39,7 @@ Sets the max rate for all active resharding throttlers on the server.
 
 #### Example
 
-<pre class="command-example">ThrottlerSetMaxRate --server &lt;vttablet&gt; &lt;rate&gt;</pre>
+<pre class="command-example">ThrottlerSetMaxRate -- --server &lt;vttablet&gt; &lt;rate&gt;</pre>
 
 #### Flags
 
@@ -67,7 +67,7 @@ Returns the current configuration of the MaxReplicationLag module. If no throttl
 
 #### Example
 
-<pre class="command-example">GetThrottlerConfiguration --server &lt;vttablet&gt; [&lt;throttler name&gt;]</pre>
+<pre class="command-example">GetThrottlerConfiguration -- --server &lt;vttablet&gt; [&lt;throttler name&gt;]</pre>
 
 #### Flags
 
@@ -93,7 +93,7 @@ Updates the configuration of the MaxReplicationLag module. The configuration mus
 
 #### Example
 
-<pre class="command-example">UpdateThrottlerConfiguration `--server &lt;vttablet&gt; [--copy_zero_values] "&lt;configuration protobuf text&gt;" [&lt;throttler name&gt;]`</pre>
+<pre class="command-example">UpdateThrottlerConfiguration `-- --server &lt;vttablet&gt; [--copy_zero_values] "&lt;configuration protobuf text&gt;" [&lt;throttler name&gt;]`</pre>
 
 #### Flags
 
@@ -121,7 +121,7 @@ Resets the current configuration of the MaxReplicationLag module. If no throttle
 
 #### Example
 
-<pre class="command-example">ResetThrottlerConfiguration --server &lt;vttablet&gt; [&lt;throttler name&gt;]</pre>
+<pre class="command-example">ResetThrottlerConfiguration -- --server &lt;vttablet&gt; [&lt;throttler name&gt;]</pre>
 
 #### Flags
 
