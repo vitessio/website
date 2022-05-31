@@ -12,13 +12,13 @@ This documentation is for a new (v2) set of vtctld commands that start in Vitess
 ### Command
 
 ```
-MoveTables [-source=<sourceKs>] [-tables=<tableSpecs>] [-cells=<cells>]
-  [-tablet_types=<source_tablet_types>] [-all] [-exclude=<tables>]
-   [-auto_start] [-stop_after_copy]
+MoveTables -- [--source=<sourceKs>] [--tables=<tableSpecs>] [--cells=<cells>]
+  [--tablet_types=<source_tablet_types>] [--all] [--exclude=<tables>]
+   [--auto_start] [--stop_after_copy]
   Create <targetKs.workflow>
 
-Reshard [-source_shards=<source_shards>] [-target_shards=<target_shards>]
-  [-cells=<cells>] [-tablet_types=<source_tablet_types>]  [-skip_schema_copy]
+Reshard [--source_shards=<source_shards>] [--target_shards=<target_shards>]
+  [--cells=<cells>] [--tablet_types=<source_tablet_types>]  [--skip_schema_copy]
   Create <keyspace.workflow>
 
 ```
@@ -29,7 +29,7 @@ Reshard [-source_shards=<source_shards>] [-target_shards=<target_shards>]
 
 ### Parameters
 
-#### -source
+#### --source
 **mandatory**
 
 **MoveTables only**
@@ -38,7 +38,7 @@ Name of existing keyspace (the source keyspace) that contains the tables to be m
 </div>
 
 #### table_specs
-**mandatory**  Either `table_specs` or `-all` needs to be specified
+**mandatory**  Either `table_specs` or `--all` needs to be specified
 
 **MoveTables only**
 <div class="cmd">
@@ -48,7 +48,7 @@ _Either_
   * if target keyspace is unsharded OR
   * if target keyspace is sharded AND the tables being moved are already defined in the target's vschema
 
-  Example: `MoveTables -source=commerce -tables=customer,corder Create customer.commerce2customer`
+  Example: `MoveTables -- --source=commerce --tables=customer,corder Create customer.commerce2customer`
 
 _Or_
 
@@ -56,11 +56,11 @@ _Or_
   * if target keyspace is sharded AND
   * tables being moved are not yet present in the target's vschema
 
-  Example: `MoveTables -source=commerce -tables='{"t1":{"column_vindexes": [{"column": "id", "name": "hash"}]}}}' Create customer.commerce2customer`
+  Example: `MoveTables -- --source=commerce --tables='{"t1":{"column_vindexes": [{"column": "id", "name": "hash"}]}}}' Create customer.commerce2customer`
 
 </div>
 
-#### -cells
+#### --cells
 **optional**\
 **default** local cell
 
@@ -75,7 +75,7 @@ cells should be used to pick a tablet for selecting data from the source keyspac
 * Select cells where replica lags are lower
 </div>
 
-#### -tablet_types
+#### --tablet_types
 **optional**\
 **default** replica
 
@@ -89,7 +89,7 @@ A comma-separated list of tablet types that are used while picking a tablet for 
 </div>
 
 
-#### -auto_start
+#### --auto_start
 
 **optional**
 **default** true
@@ -112,7 +112,7 @@ Materialize and then starting the workflow.
 * Changing the `copy_state` and/or `pos` values to restart a broken MoveTables workflow
 from a specific point of time.
 
-#### -stop_after_copy
+#### --stop_after_copy
 
 **optional**
 **default** false
@@ -129,8 +129,8 @@ will stop once the copy is done and you can then mark the workflow as `Complete`
 
 </div>
 
-#### -all
-**optional** cannot specify `table_specs` if `-all` is specified
+#### --all
+**optional** cannot specify `table_specs` if `--all` is specified
 
 **MoveTables only**
 <div class="cmd">
@@ -139,8 +139,8 @@ Move all tables from the source keyspace.
 
 </div>
 
-#### -exclude
-**optional** only applies if `-all` is specified
+#### --exclude
+**optional** only applies if `--all` is specified
 
 **MoveTables only**
 <div class="cmd">
@@ -158,7 +158,7 @@ If moving all tables, specifies tables to be skipped.
 <div class="cmd">
 Comma-separated shard names to reshard from.
 
-Example: `Reshard -source_shards=0 -target_shards=-80,80- Create customer.reshard1to2`
+Example: `Reshard -- --source_shards=0 --target_shards=-80,80- Create customer.reshard1to2`
 
 </div>
 
@@ -171,7 +171,7 @@ Example: `Reshard -source_shards=0 -target_shards=-80,80- Create customer.reshar
 Comma-separated shard names to reshard to.
 </div>
 
-#### -skip_schema_copy
+#### --skip_schema_copy
 **optional**\
 **default** false
 

@@ -17,8 +17,8 @@ VReplication will only look for tablet pairings within the same cell. If you wan
 
 ### Tablet types
 
-The server side default which determines the candidate types made available for potential selection in a stream is set using the [vttablet's `-vreplication_tablet_type` flag](../flags/#vreplication_tablet_type) (default value is `in_order:REPLICA,PRIMARY`). The target tablet will use this when finding the viable source tablet candidates.
+The server side default which determines the candidate types made available for potential selection in a stream is set using the [vttablet's `--vreplication_tablet_type` flag](../flags/#vreplication_tablet_type) (default value is `in_order:REPLICA,PRIMARY`). The target tablet will use this when finding the viable source tablet candidates.
 
-You can override this on the client side using your workflow command's `-tablet_types` flag.
+You can override this on the client side using your workflow command's `--tablet_types` flag.
 
-In Vitess 12.0 and later you can specify an order of preference for the tablet types using the `in_order:` prefix in both the server and client flags. For example, `-tablet_types "in_order:REPLICA,PRIMARY"` would cause a replica source tablet to be used whenever possible and a primary would only be used as a fallback in the event that there are no viable replicas available at the time.
+In Vitess 12.0 and later you can specify an order of preference for the tablet types using the `in_order:` prefix in both the server and client flags. For example, `--tablet_types "in_order:REPLICA,PRIMARY"` would cause a replica source tablet to be used whenever possible and a primary would only be used as a fallback in the event that there are no viable replicas available at the time.

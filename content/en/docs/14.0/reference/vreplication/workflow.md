@@ -7,7 +7,7 @@ weight: 50
 ### Command
 
 ```
-Workflow  [-dry_run] <keyspace.workflow> <action>
+Workflow  -- [--dry_run] <keyspace.workflow> <action>
 ```
 
 ### Description
@@ -17,7 +17,7 @@ actually specifying a query to VReplication.
 
 ### Parameters
 
-#### -dry-run
+#### --dry-run
 **optional**\
 **default** false
 

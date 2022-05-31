@@ -56,7 +56,7 @@ The only actions supported by Migrate are `Create`, `Complete` and `Cancel`.
 The `Create` action is also modified to accommodate the external mount. The proper syntax will be highlighted below:
 
 ```
-Migrate <options> -source <mount name>.<source keyspace> Create <workflow identifier>
+Migrate -- <options> --source <mount name>.<source keyspace> Create <workflow identifier>
 ```
 
 If needed, you can rename the keyspace while migrating, simply provide a different name for the target keyspace in the `<workflow identifier>`. 
@@ -109,7 +109,7 @@ For Migrate to function properly, you will need to ensure communication is possi
 
 * Target vtctld/vttablet (PRIMARY) processes must reach the Source topo service.
 * Target vtctld/vttablet (PRIMARY) processes must reach EACH source vttablet's grpc port.
-    * You can limit your source vttablet's to just the replicas by using the `-tablet_types` option when creating the migration. 
+    * You can limit your source vttablet's to just the replicas by using the `--tablet_types` option when creating the migration. 
 
 If you're migrating a keyspace from a production system, you may want to target a replica to reduce your load on the primary vttablets. This will also assist you in reducing the number of network considerations you need to make. 
 
@@ -117,7 +117,7 @@ If you're migrating a keyspace from a production system, you may want to target 
 Migrate -all -tablet_types "REPLICA" -source <mount name>.<source keyspace> Create <workflow identifier>
 ```
 
-To verify the Migration you can also perform VDiff with the `-tablet_types` option:
+To verify the Migration you can also perform VDiff with the `--tablet_types` option:
 
 ```
 VDiff -tablet_types "REPLICA"  <target keyspace>.<workflow identifier>

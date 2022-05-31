@@ -12,8 +12,8 @@ This documentation is for a new (v2) set of vtctld commands that start in Vitess
 ### Command
 
 ```
-MoveTables/Reshard [-tablet_types=<tablet_types>] [-cells=<cells>]
-  [-timeout=timeoutDuration] [-reverse_replication] [-dry_run]
+MoveTables/Reshard -- [--tablet_types=<tablet_types>] [--cells=<cells>]
+  [--timeout=timeoutDuration] [--reverse_replication] [--dry_run]
   SwitchTraffic <targetKs.workflow>
 ```
 
@@ -23,7 +23,7 @@ MoveTables/Reshard [-tablet_types=<tablet_types>] [-cells=<cells>]
 
 ### Parameters
 
-#### -cells
+#### --cells
 **optional**\
 **default** all cells
 
@@ -34,7 +34,7 @@ specified tablet types.
 
 </div>
 
-#### -tablet_types
+#### --tablet_types
 **optional**\
 **default** all (replica,rdonly,primary)
 
@@ -45,7 +45,7 @@ One or more from primary,replica,rdonly.<br><br>
 
 </div>
 
-#### -timeout
+#### --timeout
 **optional**\
 **default** 30s
 
@@ -57,7 +57,7 @@ the command will error out. For setups with high write qps you may need to incre
 
 </div>
 
-#### -reverse_replication
+#### --reverse_replication
 **optional**\
 **default** true
 
@@ -69,21 +69,21 @@ If set to false these reverse replication streams will not be created and you wi
 
 </div>
 
-#### -max_replication_lag_allowed
+#### --max_replication_lag_allowed
 **optional**\
-**default**  the value used for `-timeout`
+**default**  the value used for `--timeout`
 
 <div class="cmd">
 
 While switching traffic ensure that the VReplication lag for the workflow is less than this duration, otherwise report an error and don't attempt the switch. The calculated VReplication lag is the estimated maximum lag across workflow streams between the last event seen at the source and the last event processed by the target (which would be a heartbeat event if we're fully caught up). Usually, when VReplication has caught up, this lag should be very small (under a second).
 
-While switching write traffic, we temporarily make the source databases read-only, and wait for the targets to catchup. This means that the application can effectively be partially down for this cutover period as writes will pause or error out. While switching write traffic this flag can ensure that you only switch traffic if the current lag is low, thus limiting this period of write-unavailability and avoiding it entirely if we're not likely to catch up within the `-timeout` window.
+While switching write traffic, we temporarily make the source databases read-only, and wait for the targets to catchup. This means that the application can effectively be partially down for this cutover period as writes will pause or error out. While switching write traffic this flag can ensure that you only switch traffic if the current lag is low, thus limiting this period of write-unavailability and avoiding it entirely if we're not likely to catch up within the `--timeout` window.
 
 While switching read traffic this can also be used to set an approximate upper bound on how stale reads will be against the replica tablets when using `@replica` shard targeting.
 
 </div>
 
-#### -dry-run
+#### --dry-run
 **optional**\
 **default** false
 
