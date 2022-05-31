@@ -128,19 +128,19 @@ Applying the new VSchema instructs Vitess that the keyspace is sharded, which ma
 ### Using Operator
 
 ```bash
-vtctlclient ApplySchema -sql="$(cat create_commerce_seq.sql)" commerce
-vtctlclient ApplyVSchema -vschema="$(cat vschema_commerce_seq.json)" commerce
-vtctlclient ApplyVSchema -vschema="$(cat vschema_customer_sharded.json)" customer
-vtctlclient ApplySchema -sql="$(cat create_customer_sharded.sql)" customer
+vtctlclient ApplySchema -- --sql="$(cat create_commerce_seq.sql)" commerce
+vtctlclient ApplyVSchema -- --vschema="$(cat vschema_commerce_seq.json)" commerce
+vtctlclient ApplyVSchema -- --vschema="$(cat vschema_customer_sharded.json)" customer
+vtctlclient ApplySchema -- --sql="$(cat create_customer_sharded.sql)" customer
 ```
 
 ### Using a Local Deployment
 
 ``` sh
-vtctlclient ApplySchema -sql-file create_commerce_seq.sql commerce
-vtctlclient ApplyVSchema -vschema_file vschema_commerce_seq.json commerce
-vtctlclient ApplyVSchema -vschema_file vschema_customer_sharded.json customer
-vtctlclient ApplySchema -sql-file create_customer_sharded.sql customer
+vtctlclient ApplySchema -- --sql-file create_commerce_seq.sql commerce
+vtctlclient ApplyVSchema -- --vschema_file vschema_commerce_seq.json commerce
+vtctlclient ApplyVSchema -- --vschema_file vschema_customer_sharded.json customer
+vtctlclient ApplySchema -- --sql-file create_customer_sharded.sql customer
 ```
 
 ## Create new shards
@@ -185,9 +185,9 @@ This process starts the reshard operation. It occurs online, and will not block 
 
 ```bash
 # With Helm and Local Installation
-vtctlclient Reshard -source_shards '0' -target_shards '-80,80-' Create customer.cust2cust
+vtctlclient Reshard -- --source_shards '0' --target_shards '-80,80-' Create customer.cust2cust
 # With Operator
-vtctlclient Reshard -source_shards '-' -target_shards '-80,80-' Create customer.cust2cust
+vtctlclient Reshard -- --source_shards '-' --target_shards '-80,80-' Create customer.cust2cust
 ```
 
 All of the command options and parameters for `Reshard` are listed in our [reference page for Reshard](../../../reference/vreplication/reshard).
@@ -211,7 +211,7 @@ Summary for corder: {ProcessedRows:5 MatchingRows:5 MismatchedRows:0 ExtraRowsSo
 After validating for correctness, the next step is to switch read operations to occur at the new location. By switching read operations first, we are able to verify that the new tablet servers are healthy and able to respond to requests:
 
 ```bash
-vtctlclient Reshard -tablet_types=rdonly,replica SwitchTraffic customer.cust2cust
+vtctlclient Reshard -- --tablet_types=rdonly,replica SwitchTraffic customer.cust2cust
 ```
 
 ## Switch Writes and Primary Reads
@@ -219,7 +219,7 @@ vtctlclient Reshard -tablet_types=rdonly,replica SwitchTraffic customer.cust2cus
 After the replica/rdonly reads have been switched, and the health of the system has been verified, it's time to switch writes. The usage is very similar to switching reads:
 
 ```bash
-vtctlclient Reshard -tablet_types=primary SwitchTraffic customer.cust2cust
+vtctlclient Reshard -- --tablet_types=primary SwitchTraffic customer.cust2cust
 ```
 
 ## Note
