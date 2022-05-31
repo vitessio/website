@@ -12,8 +12,8 @@ This documentation is for a new (v2) set of vtctld commands that start in Vitess
 ### Command
 
 ```
-MoveTables/Reshard [-tablet_types <tablet_types_csv>] [-cells <cells>]
-  [-timeout=timeoutDuration] [-dry_run]
+MoveTables/Reshard -- [--tablet_types <tablet_types_csv>] [--cells <cells>]
+  [--timeout=timeoutDuration] [--dry_run]
   ReverseTraffic <targetKs.workflow>
 ```
 
@@ -34,7 +34,7 @@ specified tablet types.
 
 </div>
 
-#### -tablet_types
+#### --tablet_types
 **optional**\
 **default** all (replica,rdonly,primary)
 
@@ -46,7 +46,7 @@ One or more from primary, replica, rdonly.<br><br>
 </div>
 
 
-#### -timeout
+#### --timeout
 **optional**\
 **default** 30s
 
@@ -56,7 +56,7 @@ For primary tablets, ReverseTraffic first stops writes on the target primary and
 
 </div>
 
-#### -dry-run
+#### --dry-run
 **optional**\
 **default** false
 

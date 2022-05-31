@@ -12,7 +12,7 @@ This documentation is for a new (v2) set of vtctld commands that start in Vitess
 ### Command
 
 ```
-MoveTables/Reshard [-keep_data] [-keep_routing_rules] [-rename_tables] [-dry_run]
+MoveTables/Reshard -- [--keep_data] [--keep_routing_rules] [--rename_tables] [--dry_run]
   Complete <targetKs.workflow>
 ```
 
@@ -23,7 +23,7 @@ MoveTables/Reshard [-keep_data] [-keep_routing_rules] [-rename_tables] [-dry_run
 
 ### Parameters
 
-#### -keep_data
+#### --keep_data
 **optional**\
 **default** false
 
@@ -33,7 +33,7 @@ Usually, the source data (tables or shards) are deleted by Complete. If this fla
 
 </div>
 
-#### -keep_routing_rules
+#### --keep_routing_rules
 **optional**\
 **default** false
 
@@ -43,7 +43,7 @@ Usually, any routing rules added in the source keyspace are removed by Complete.
 
 </div>
 
-#### -rename_tables
+#### --rename_tables
 **optional**\
 **default** false
 
@@ -55,7 +55,7 @@ We use the same renaming logic used by `pt-online-schema-change`. Such tables ar
 
 </div>
 
-#### -dry-run
+#### --dry-run
 **optional**\
 **default** false
 

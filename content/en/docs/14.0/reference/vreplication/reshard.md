@@ -22,7 +22,7 @@ Reshard <options> <action> <workflow identifier>
 or
 
 ```
-Reshard [--source_shards=<source_shards>] [--target_shards=<target_shards>] [--cells=<cells>] [--tablet_types=<source_tablet_types>]  [--skip_schema_copy] [--auto_start] [--stop_after_copy] [--timeout=timeoutDuration] [--reverse_replication] [--keep_data] [--keep_routing_rules] <action> <keyspace.workflow>
+Reshard -- [--source_shards=<source_shards>] [--target_shards=<target_shards>] [--cells=<cells>] [--tablet_types=<source_tablet_types>]  [--skip_schema_copy] [--auto_start] [--stop_after_copy] [--timeout=timeoutDuration] [--reverse_replication] [--keep_data] [--keep_routing_rules] <action> <keyspace.workflow>
 ```
 
 ## Description
@@ -109,7 +109,7 @@ Materialize and then start the workflow.
 * changing the `copy_state` and/or `pos` values to restart a broken MoveTables workflow
 from a specific point of time.
 
-#### -stop_after_copy
+#### --stop_after_copy
 
 **optional**
 **default** false
