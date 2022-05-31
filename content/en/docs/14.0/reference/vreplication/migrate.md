@@ -11,7 +11,7 @@ This documentation is for a new (v2) set of vtctld commands that start in Vitess
 ### Command
 
 ```
-Migrate <options> <action> <workflow identifier>
+Migrate -- <options> <action> <workflow identifier>
 ```
 
 
@@ -84,11 +84,11 @@ NOTE: there is no reverse replication flow with Migrate. After the `Migrate Comp
 {{< /info >}}
 
 1. Mount the source Vitess cluster using [Mount](../mount).<br/>
-`Mount -type vitess -topo_type etcd2 -topo_server localhost:12379 -topo_root /vitess/global ext1`
+`Mount -- --type vitess --topo_type etcd2 --topo_server localhost:12379 --topo_root /vitess/global ext1`
 1. Apply source vSchema to the Target's Keyspace.<br/>
-`ApplyVSchema -vschema_file commerceVschema.json commerce`
+`ApplyVSchema -- --vschema_file commerceVschema.json commerce`
 1. Initiate the migration using [Create](../create).<br/>
-`Migrate -all -source ext1.commerce Create commerce.wf`
+`Migrate -- --all --source ext1.commerce Create commerce.wf`
 1. Monitor the workflow using [Show](../show).<br/>
 `Workflow commerce.wf Show`
 1. Confirm that data has been copied over correctly using [VDiff](../vdiff).<br/>
@@ -100,7 +100,7 @@ NOTE: there is no reverse replication flow with Migrate. After the `Migrate Comp
 `Migrate Complete commerce.wf`
 1. Start the application pointed to the target Vitess Cluster.
 1. Unmount the source cluster.<br/>
-`Mount -unmount ext1`
+`Mount -- --unmount ext1`
 
 
 ### Network Considerations
@@ -114,13 +114,13 @@ For Migrate to function properly, you will need to ensure communication is possi
 If you're migrating a keyspace from a production system, you may want to target a replica to reduce your load on the primary vttablets. This will also assist you in reducing the number of network considerations you need to make. 
 
 ```
-Migrate -all -tablet_types "REPLICA" -source <mount name>.<source keyspace> Create <workflow identifier>
+Migrate -- --all --tablet_types "REPLICA" --source <mount name>.<source keyspace> Create <workflow identifier>
 ```
 
 To verify the Migration you can also perform VDiff with the `--tablet_types` option:
 
 ```
-VDiff -tablet_types "REPLICA"  <target keyspace>.<workflow identifier>
+VDiff -- --tablet_types "REPLICA"  <target keyspace>.<workflow identifier>
 ```
 
 ### Troubleshooting Errors
@@ -161,7 +161,7 @@ I0223 20:13:36.825110       1 tablet_picker.go:146] No tablet found for streamin
 * Older versions of Vitess may be labeling vttablets as "master" instead of "primary"
   you can resolve this problem by adjusting your `tablet_types`:
 
-      Migrate -all -tablet_types "MASTER,REPLICA,RDONLY" ...
+      Migrate -- --all --tablet_types "MASTER,REPLICA,RDONLY" ...
 
 ---
 
