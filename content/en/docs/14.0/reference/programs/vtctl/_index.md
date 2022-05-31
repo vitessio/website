@@ -14,25 +14,25 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 
 | Name | Example Usage |
 | :-------- | :--------------- |
-| (DEPRECATED) [InitTablet](../vtctl/tablets#inittablet) DEPRECATED | `InitTablet [--allow_update] [--allow_different_shard] [--allow_master_override] [--parent] [--db_name_override=<db name>] [--hostname=<hostname>] [--mysql_port=<port>] [--port=<port>] [--grpc_port=<port>] [--tags=tag1:value1,tag2:value2] -keyspace=<keyspace> -shard=<shard> <tablet alias> <tablet type>` |
+| (DEPRECATED) [InitTablet](../vtctl/tablets#inittablet) DEPRECATED | `InitTablet  -- [--allow_update] [--allow_different_shard] [--allow_master_override] [--parent] [--db_name_override=<db name>] [--hostname=<hostname>] [--mysql_port=<port>] [--port=<port>] [--grpc_port=<port>] [--tags=tag1:value1,tag2:value2] -keyspace=<keyspace> -shard=<shard> <tablet alias> <tablet type>` |
 | [GetTablet](../vtctl/tablets#gettablet) | `GetTablet <tablet alias>` |
-| (DEPRECATED) [UpdateTabletAddrs](../vtctl/tablets#updatetabletaddrs) DEPRECATED | `UpdateTabletAddrs [--hostname <hostname>] [--ip-addr <ip addr>] [--mysql-port <mysql port>] [--vt-port <vt port>] [--grpc-port <grpc port>] <tablet alias>` |
-| [DeleteTablet](../vtctl/tablets#deletetablet) | `DeleteTablet [--allow_primary=false] <tablet alias> ...` |
+| (DEPRECATED) [UpdateTabletAddrs](../vtctl/tablets#updatetabletaddrs) DEPRECATED | `UpdateTabletAddrs  -- [--hostname <hostname>] [--ip-addr <ip addr>] [--mysql-port <mysql port>] [--vt-port <vt port>] [--grpc-port <grpc port>] <tablet alias>` |
+| [DeleteTablet](../vtctl/tablets#deletetablet) | `DeleteTablet  -- [--allow_primary=false] <tablet alias> ...` |
 | [SetReadOnly](../vtctl/tablets#setreadonly) | `SetReadOnly <tablet alias>` |
 | [SetReadWrite](../vtctl/tablets#setreadwrite) | `SetReadWrite <tablet alias>` |
 | [StartReplication](../vtctl/tablets#startreplication) | `StartReplication <tablet alias>` |
 | [StopReplication](../vtctl/tablets#stopreplication) | `StopReplication <tablet alias>` |
-| [ChangeTabletType](../vtctl/tablets#changetablettype) | `ChangeTabletType [--dry-run] <tablet alias> <tablet type>` |
+| [ChangeTabletType](../vtctl/tablets#changetablettype) | `ChangeTabletType  -- [--dry-run] <tablet alias> <tablet type>` |
 | [Ping](../vtctl/tablets#ping) | `Ping <tablet alias>` |
 | [RefreshState](../vtctl/tablets#refreshstate) | `RefreshState <tablet alias>` |
-| [RefreshStateByShard](../vtctl/tablets#refreshstatebyshard) | `RefreshStateByShard [--cells=c1,c2,...] <keyspace/shard>` |
+| [RefreshStateByShard](../vtctl/tablets#refreshstatebyshard) | `RefreshStateByShard  -- [--cells=c1,c2,...] <keyspace/shard>` |
 | [RunHealthCheck](../vtctl/tablets#runhealthcheck) | `RunHealthCheck <tablet alias>` |
 | [Sleep](../vtctl/tablets#sleep) | `Sleep <tablet alias> <duration>` |
 | [ExecuteHook](../vtctl/tablets#executehook) | `ExecuteHook <tablet alias> <hook name> [<param1=value1> <param2=value2> ...]` |
-| [ExecuteFetchAsApp](../vtctl/tablets#executefetchasapp) | `ExecuteFetchAsApp [--max_rows=10000] [--json] [--use_pool] <tablet alias> <sql command>` |
-| [ExecuteFetchAsDba](../vtctl/tablets#executefetchasdba) | `ExecuteFetchAsDba [--max_rows=10000] [--disable_binlogs] [--json] <tablet alias> <sql command>` |
-| [VReplicationExec](../vtctl/tablets#vreplicationexec) | `VReplicationExec [--json] <tablet alias> <sql command>` |
-| [Backup](../vtctl/tablets#backup) | `Backup [--concurrency=4] [--allow_primary=false] <tablet alias>` |
+| [ExecuteFetchAsApp](../vtctl/tablets#executefetchasapp) | `ExecuteFetchAsApp  -- [--max_rows=10000] [--json] [--use_pool] <tablet alias> <sql command>` |
+| [ExecuteFetchAsDba](../vtctl/tablets#executefetchasdba) | `ExecuteFetchAsDba  -- [--max_rows=10000] [--disable_binlogs] [--json] <tablet alias> <sql command>` |
+| [VReplicationExec](../vtctl/tablets#vreplicationexec) | `VReplicationExec  -- [--json] <tablet alias> <sql command>` |
+| [Backup](../vtctl/tablets#backup) | `Backup  -- [--concurrency=4] [--allow_primary=false] <tablet alias>` |
 | [RestoreFromBackup](../vtctl/tablets#restorefrombackup) | `RestoreFromBackup <tablet alias>` |
 | [ReparentTablet](../vtctl/tablets#reparenttablet) | `ReparentTablet <tablet alias>` |
 
@@ -40,26 +40,26 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 
 | Name | Example Usage |
 | :-------- | :--------------- |
-| [CreateShard](../vtctl/shards#createshard) | `CreateShard [--force] [--parent] <keyspace/shard>` |
+| [CreateShard](../vtctl/shards#createshard) | `CreateShard  -- [--force] [--parent] <keyspace/shard>` |
 | [GetShard](../vtctl/shards#getshard) | `GetShard <keyspace/shard>` |
-| [ValidateShard](../vtctl/shards#validateshard) | `ValidateShard [--ping-tablets] <keyspace/shard>` |
+| [ValidateShard](../vtctl/shards#validateshard) | `ValidateShard  -- [--ping-tablets] <keyspace/shard>` |
 | [ShardReplicationPositions](../vtctl/shards#shardreplicationpositions) | `ShardReplicationPositions <keyspace/shard>` |
 | [ListShardTablets](../vtctl/shards#listshardtablets) | `ListShardTablets <keyspace/shard>` |
 | [SetShardIsPrimaryServing](../vtctl/shards#setshardisprimaryserving) | `SetShardIsPrimaryServing <keyspace/shard> <is_serving>` |
-| [SetShardTabletControl](../vtctl/shards#setshardtabletcontrol) | `SetShardTabletControl [--cells=c1,c2,...] [--denied_tables=t1,t2,...] [--remove] [--disable_query_service] <keyspace/shard> <tablet type>` |
-| [UpdateSrvKeyspacePartition](../vtctl/shards#updatesrvkeyspacepartition)| `UpdateSrvKeyspacePartition [--cells=c1,c2,...] [--remove] <keyspace/shard> <tablet type>` |
+| [SetShardTabletControl](../vtctl/shards#setshardtabletcontrol) | `SetShardTabletControl  -- [--cells=c1,c2,...] [--denied_tables=t1,t2,...] [--remove] [--disable_query_service] <keyspace/shard> <tablet type>` |
+| [UpdateSrvKeyspacePartition](../vtctl/shards#updatesrvkeyspacepartition)| `UpdateSrvKeyspacePartition -- [--cells=c1,c2,...] [--remove] <keyspace/shard> <tablet type>` |
 | [SourceShardDelete](../vtctl/shards#sourcesharddelete) | `SourceShardDelete <keyspace/shard> <uid>` |
-| [SourceShardAdd](../vtctl/shards#sourceshardadd) | `SourceShardAdd [--key_range=<keyrange>] [--tables=<table1,table2,...>] <keyspace/shard> <uid> <source keyspace/shard>` |
+| [SourceShardAdd](../vtctl/shards#sourceshardadd) | `SourceShardAdd  -- [--key_range=<keyrange>] [--tables=<table1,table2,...>] <keyspace/shard> <uid> <source keyspace/shard>` |
 | [ShardReplicationFix](../vtctl/shards#shardreplicationfix) | `ShardReplicationFix <cell> <keyspace/shard>` |
-| [WaitForFilteredReplication](../vtctl/shards#waitforfilteredreplication) | `WaitForFilteredReplication [--max_delay <max_delay, default 30s>] <keyspace/shard>` |
-| [RemoveShardCell](../vtctl/shards#removeshardcell) | `RemoveShardCell [--force] [--recursive] <keyspace/shard> <cell>` |
-| [DeleteShard](../vtctl/shards#deleteshard) | `DeleteShard [--recursive] [--even_if_serving] <keyspace/shard> ...` |
+| [WaitForFilteredReplication](../vtctl/shards#waitforfilteredreplication) | `WaitForFilteredReplication  -- [--max_delay <max_delay, default 30s>] <keyspace/shard>` |
+| [RemoveShardCell](../vtctl/shards#removeshardcell) | `RemoveShardCell  -- [--force] [--recursive] <keyspace/shard> <cell>` |
+| [DeleteShard](../vtctl/shards#deleteshard) | `DeleteShard  -- [--recursive] [--even_if_serving] <keyspace/shard> ...` |
 | [ListBackups](../vtctl/shards#listbackups) | `ListBackups <keyspace/shard>` |
-| [BackupShard](../vtctl/shards#backupshard) | `BackupShard [--allow_primary=false] <keyspace/shard>` |
+| [BackupShard](../vtctl/shards#backupshard) | `BackupShard  -- [--allow_primary=false] <keyspace/shard>` |
 | [RemoveBackup](../vtctl/shards#removebackup) | `RemoveBackup <keyspace/shard> <backup name>` |
-| [InitShardPrimary](../vtctl/shards#initshardprimary) | `InitShardPrimary [--force] [--wait_replicas_timeout=<duration>] <keyspace/shard> <tablet alias>` |
-| [PlannedReparentShard](../vtctl/shards#plannedreparentshard) | `PlannedReparentShard -keyspace_shard=<keyspace/shard> [--new_primary=<tablet alias>] [--avoid_tablet=<tablet alias>] [--wait_replicas_timeout=<duration>]` |
-| [EmergencyReparentShard](../vtctl/shards#emergencyreparentshard) | `EmergencyReparentShard -keyspace_shard=<keyspace/shard> [--new_primary=<tablet alias>] [--wait_replicas_timeout=<duration>] [--ignore_replicas=<tablet alias list>] [--prevent_cross_cell_promotion=<true/false>]`
+| [InitShardPrimary](../vtctl/shards#initshardprimary) | `InitShardPrimary  -- [--force] [--wait_replicas_timeout=<duration>] <keyspace/shard> <tablet alias>` |
+| [PlannedReparentShard](../vtctl/shards#plannedreparentshard) | `PlannedReparentShard  -- --keyspace_shard=<keyspace/shard> [--new_primary=<tablet alias>] [--avoid_tablet=<tablet alias>] [--wait_replicas_timeout=<duration>]` |
+| [EmergencyReparentShard](../vtctl/shards#emergencyreparentshard) | `EmergencyReparentShard  -- --keyspace_shard=<keyspace/shard> [--new_primary=<tablet alias>] [--wait_replicas_timeout=<duration>] [--ignore_replicas=<tablet alias list>] [--prevent_cross_cell_promotion=<true/false>]`
 | [TabletExternallyReparented](../vtctl/shards#tabletexternallyreparented) | `TabletExternallyReparented <tablet alias>` |
 | [GenerateShardRanges](../vtctl/shards#generateshardranges) | `GenerateShardRanges <num shards>` |
 
@@ -67,41 +67,41 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 
 | Name | Example Usage |
 | :-------- | :--------------- |
-| [CreateKeyspace](../vtctl/keyspaces#createkeyspace) | `CreateKeyspace  [--sharding_column_name=name] [--sharding_column_type=type] [--served_from=tablettype1:ks1,tablettype2:ks2,...] [--force] [--keyspace_type=type] [--base_keyspace=base_keyspace] [--snapshot_time=time] <keyspace name>` |
-| [DeleteKeyspace](../vtctl/keyspaces#deletekeyspace) | `DeleteKeyspace  [--recursive] <keyspace>` |
-| [RemoveKeyspaceCell](../vtctl/keyspaces#removekeyspacesell) | `RemoveKeyspaceCell  [--force] [--recursive] <keyspace> <cell>` |
+| [CreateKeyspace](../vtctl/keyspaces#createkeyspace) | `CreateKeyspace  -- [--sharding_column_name=name] [--sharding_column_type=type] [--served_from=tablettype1:ks1,tablettype2:ks2,...] [--force] [--keyspace_type=type] [--base_keyspace=base_keyspace] [--snapshot_time=time] <keyspace name>` |
+| [DeleteKeyspace](../vtctl/keyspaces#deletekeyspace) | `DeleteKeyspace  -- [--recursive] <keyspace>` |
+| [RemoveKeyspaceCell](../vtctl/keyspaces#removekeyspacesell) | `RemoveKeyspaceCell  -- [--force] [--recursive] <keyspace> <cell>` |
 | [GetKeyspace](../vtctl/keyspaces#getkeyspace) | `GetKeyspace  <keyspace>` |
 | [GetKeyspaces](../vtctl/keyspaces#getkeyspaces) | `GetKeyspaces  ` |
-| (DEPRECATED)[SetKeyspaceShardingInfo](../vtctl/keyspaces#setkeyspaceshardinginfo) DEPRECATED | `SetKeyspaceShardingInfo  [--force] <keyspace name> [<column name>] [<column type>]` |
-| (DEPRECATED) [SetKeyspaceServedFrom](../vtctl/keyspaces#setkeyspaceservedfrom) DEPRECATED | `SetKeyspaceServedFrom  [--source=<source keyspace name>] [--remove] [--cells=c1,c2,...] <keyspace name> <tablet type>` |
-| [RebuildKeyspaceGraph](../vtctl/keyspaces#rebuildkeyspacegraph) | `RebuildKeyspaceGraph  [--cells=c1,c2,...] <keyspace> ...` |
-| [ValidateKeyspace](../vtctl/keyspaces#validatekeyspace) | `ValidateKeyspace  [--ping-tablets] <keyspace name>` |
-| [Reshard (v1)](../../vreplication/v1/reshard) | `Reshard  --v1 [--skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>` |
+| (DEPRECATED)[SetKeyspaceShardingInfo](../vtctl/keyspaces#setkeyspaceshardinginfo) DEPRECATED | `SetKeyspaceShardingInfo  -- [--force] <keyspace name> [<column name>] [<column type>]` |
+| (DEPRECATED) [SetKeyspaceServedFrom](../vtctl/keyspaces#setkeyspaceservedfrom) DEPRECATED | `SetKeyspaceServedFrom  -- [--source=<source keyspace name>] [--remove] [--cells=c1,c2,...] <keyspace name> <tablet type>` |
+| [RebuildKeyspaceGraph](../vtctl/keyspaces#rebuildkeyspacegraph) | `RebuildKeyspaceGraph  -- [--cells=c1,c2,...] <keyspace> ...` |
+| [ValidateKeyspace](../vtctl/keyspaces#validatekeyspace) | `ValidateKeyspace  -- [--ping-tablets] <keyspace name>` |
+| [Reshard (v1)](../../vreplication/v1/reshard) | `Reshard  -- --v1 [--skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>` |
 | [Reshard (v2)](../../vreplication/reshard) | `Reshard <options> <action> <workflow identifier>` |
-| [MoveTables (v1)](../../vreplication/v1/movetables) | `MoveTables  --v1 [--cell=<cell>] [--tablet_types=<source_tablet_types>] -workflow=<workflow> <source_keyspace> <target_keyspace> <table_specs>` |
+| [MoveTables (v1)](../../vreplication/v1/movetables) | `MoveTables  -- --v1 [--cell=<cell>] [--tablet_types=<source_tablet_types>] --workflow=<workflow> <source_keyspace> <target_keyspace> <table_specs>` |
 | [MoveTables (v2)](../../vreplication/movetables) | `MoveTables  <options> <action> <workflow identifier>` |
-| [DropSources](../../vreplication/v1/dropsources) | `DropSources  [--dry_run] <keyspace.workflow>` |
-| [CreateLookupVindex](../vtctl/keyspaces#createLookupvindex) | `CreateLookupVindex  [--cell=<cell>] [--tablet_types=<source_tablet_types>] <keyspace> <json_spec>` |
+| [DropSources](../../vreplication/v1/dropsources) | `DropSources  -- [--dry_run] <keyspace.workflow>` |
+| [CreateLookupVindex](../vtctl/keyspaces#createLookupvindex) | `CreateLookupVindex  -- [--cell=<cell>] [--tablet_types=<source_tablet_types>] <keyspace> <json_spec>` |
 | [ExternalizeVindex](../vtctl/keyspaces#externalizevindex) | `ExternalizeVindex  <keyspace>.<vindex>` |
 | [Materialize](../vtctl/keyspaces#materialize) | `Materialize  <json_spec>, example : '{"workflow": "aaa", "source_keyspace": "source", "target_keyspace": "target", "table_settings": [{"target_table": "customer", "source_expression": "select * from customer", "create_ddl": "copy"}]}'` |
 | (DEPRECATED) [SplitClone](../vtctl/keyspaces#splitclone) DEPRECATED | `SplitClone  <keyspace> <from_shards> <to_shards>` |
 | (DEPRECATED) [VerticalSplitClone](../vtctl/keyspaces#verticalsplitclone) DEPRECATED | `VerticalSplitClone  <from_keyspace> <to_keyspace> <tables>` |
-| [VDiff](../vtctl/keyspaces#VDiff) | `VDiff  [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=<source_tablet_types>] [--filtered_replication_wait_time=30s] [--max_extra_rows_to_compare=1000] <keyspace.workflow>` |
-| (DEPRECATED) [MigrateServedTypes](../vtctl/keyspaces#migrateservedtypes) DEPRECATED | `MigrateServedTypes  [--cells=c1,c2,...] [--reverse] [--skip-refresh-state] <keyspace/shard> <served tablet type>` |
-| (DEPRECATED) [MigrateServedFrom](../vtctl/keyspaces#migrateservedfrom) DEPRECATED | `MigrateServedFrom  [--cells=c1,c2,...] [--reverse] <destination keyspace/shard> <served tablet type>` |
-| [SwitchReads](../../vreplication/v1/switchreads) | `SwitchReads  [--cells=c1,c2,...] [--reverse] -tablet_type={replica|rdonly} [--dry-run] <keyspace.workflow>` |
-| [SwitchWrites](../../vreplication/v1/switchwrites) | `SwitchWrites  [--filtered_replication_wait_time=30s] [--cancel] [--reverse_replication=false] [--dry-run] <keyspace.workflow>` |
+| [VDiff](../vtctl/keyspaces#VDiff) | `VDiff -- [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=<source_tablet_types>] [--filtered_replication_wait_time=30s] [--max_extra_rows_to_compare=1000] <keyspace.workflow>` |
+| (DEPRECATED) [MigrateServedTypes](../vtctl/keyspaces#migrateservedtypes) DEPRECATED | `MigrateServedTypes  -- [--cells=c1,c2,...] [--reverse] [--skip-refresh-state] <keyspace/shard> <served tablet type>` |
+| (DEPRECATED) [MigrateServedFrom](../vtctl/keyspaces#migrateservedfrom) DEPRECATED | `MigrateServedFrom  -- [--cells=c1,c2,...] [--reverse] <destination keyspace/shard> <served tablet type>` |
+| [SwitchReads](../../vreplication/v1/switchreads) | `SwitchReads  -- [--cells=c1,c2,...] [--reverse] -tablet_type={replica|rdonly} [--dry-run] <keyspace.workflow>` |
+| [SwitchWrites](../../vreplication/v1/switchwrites) | `SwitchWrites  -- [--filtered_replication_wait_time=30s] [--cancel] [--reverse_replication=false] [--dry-run] <keyspace.workflow>` |
 | [CancelResharding](../vtctl/keyspaces#cancelresharding) | `CancelResharding  <keyspace/shard>` |
 | [ShowResharding](../vtctl/keyspaces#showresharding) | `ShowResharding  <keyspace/shard>` |
 | [FindAllShardsInKeyspace](../vtctl/keyspaces#findallshardsinkeyspace) | `FindAllShardsInKeyspace  <keyspace>` |
-| (DEPRECATED) [WaitForDrain](../vtctl/keyspaces#waitfordrain) DEPRECATED | `WaitForDrain  [--timeout <duration>] [--retry_delay <duration>] [--initial_wait <duration>] <keyspace/shard> <served tablet type>` |
+| (DEPRECATED) [WaitForDrain](../vtctl/keyspaces#waitfordrain) DEPRECATED | `WaitForDrain  -- [--timeout <duration>] [--retry_delay <duration>] [--initial_wait <duration>] <keyspace/shard> <served tablet type>` |
 
 ### Generic
 
 | Name | Example Usage |
 | :-------- | :--------------- |
-| [Validate](../vtctl/generic#validate) | `Validate [--ping-tablets]` |
-| [ListAllTablets](../vtctl/generic#listalltablets) | `ListAllTablets [--keyspace=''] [--tablet_type=<PRIMARY,REPLICA,RDONLY,SPARE>] [<cell_name1>,<cell_name2>,...]` |
+| [Validate](../vtctl/generic#validate) | `Validate  -- [--ping-tablets]` |
+| [ListAllTablets](../vtctl/generic#listalltablets) | `ListAllTablets  -- [--keyspace=''] [--tablet_type=<PRIMARY,REPLICA,RDONLY,SPARE>] [<cell_name1>,<cell_name2>,...]` |
 | [ListTablets](../vtctl/generic#listtablets) | `ListTablets <tablet alias> ...` |
 | [Help](../vtctl/generic#help) | `Help [command name]` |
 
@@ -109,24 +109,24 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 
 | Name | Example Usage |
 | :-------- | :--------------- |
-| [GetSchema](../vtctl/schema-version-permissions#getschema) | `GetSchema  [--tables=<table1>,<table2>,...] [--exclude_tables=<table1>,<table2>,...] [--include-views] <tablet alias>` |
+| [GetSchema](../vtctl/schema-version-permissions#getschema) | `GetSchema  -- [--tables=<table1>,<table2>,...] [--exclude_tables=<table1>,<table2>,...] [--include-views] <tablet alias>` |
 | [ReloadSchema](../vtctl/schema-version-permissions#reloadschema) | `ReloadSchema  <tablet alias>` |
-| [ReloadSchemaShard](../vtctl/schema-version-permissions#reloadschemashard) | `ReloadSchemaShard  [--concurrency=10] [--include_primary=false] <keyspace/shard>` |
-| [ReloadSchemaKeyspace](../vtctl/schema-version-permissions#reloadschemakeyspace) | `ReloadSchemaKeyspace  [--concurrency=10] [--include_primary=false] <keyspace>` |
-| [ValidateSchemaShard](../vtctl/schema-version-permissions#validateschemashard) | `ValidateSchemaShard  [--exclude_tables=''] [--include-views] <keyspace/shard>` |
-| [ValidateSchemaKeyspace](../vtctl/schema-version-permissions#validateschemakeyspace) | `ValidateSchemaKeyspace  [--exclude_tables=''] [--include-views] <keyspace name>` |
-| [ApplySchema](../vtctl/schema-version-permissions#applyschema) | `ApplySchema  [--allow_long_unavailability] [--wait_replicas_timeout=10s] {--sql=<sql> || --sql-file=<filename>} <keyspace>` |
-| [CopySchemaShard](../vtctl/schema-version-permissions#copyschemashard) | `CopySchemaShard  [--tables=<table1>,<table2>,...] [--exclude_tables=<table1>,<table2>,...] [--include-views] [--skip-verify] [--wait_replicas_timeout=10s] {<source keyspace/shard> || <source tablet alias>} <destination keyspace/shard>` |
+| [ReloadSchemaShard](../vtctl/schema-version-permissions#reloadschemashard) | `ReloadSchemaShard  -- [--concurrency=10] [--include_primary=false] <keyspace/shard>` |
+| [ReloadSchemaKeyspace](../vtctl/schema-version-permissions#reloadschemakeyspace) | `ReloadSchemaKeyspace  -- [--concurrency=10] [--include_primary=false] <keyspace>` |
+| [ValidateSchemaShard](../vtctl/schema-version-permissions#validateschemashard) | `ValidateSchemaShard  -- [--exclude_tables=''] [--include-views] <keyspace/shard>` |
+| [ValidateSchemaKeyspace](../vtctl/schema-version-permissions#validateschemakeyspace) | `ValidateSchemaKeyspace  -- [--exclude_tables=''] [--include-views] <keyspace name>` |
+| [ApplySchema](../vtctl/schema-version-permissions#applyschema) | `ApplySchema  -- [--allow_long_unavailability] [--wait_replicas_timeout=10s] {--sql=<sql> || --sql-file=<filename>} <keyspace>` |
+| [CopySchemaShard](../vtctl/schema-version-permissions#copyschemashard) | `CopySchemaShard  -- [--tables=<table1>,<table2>,...] [--exclude_tables=<table1>,<table2>,...] [--include-views] [--skip-verify] [--wait_replicas_timeout=10s] {<source keyspace/shard> || <source tablet alias>} <destination keyspace/shard>` |
 | [ValidateVersionShard](../vtctl/schema-version-permissions#validateversionshard) | `ValidateVersionShard  <keyspace/shard>` |
 | [ValidateVersionKeyspace](../vtctl/schema-version-permissions#validateversionkeyspace) | `ValidateVersionKeyspace  <keyspace name>` |
 | [GetPermissions](../vtctl/schema-version-permissions#getpermissions) | `GetPermissions  <tablet alias>` |
 | [ValidatePermissionsShard](../vtctl/schema-version-permissions#validatepermissionsshard) | `ValidatePermissionsShard  <keyspace/shard>` |
 | [ValidatePermissionsKeyspace](../vtctl/schema-version-permissions#validatepermissionskeyspace) | `ValidatePermissionsKeyspace  <keyspace name>` |
 | [GetVSchema](../vtctl/schema-version-permissions#getvschema) | `GetVSchema  <keyspace>` |
-| [ApplyVSchema](../vtctl/schema-version-permissions#applyvschema) | `ApplyVSchema  {--vschema=<vschema> || --vschema_file=<vschema file> || --sql=<sql> || --sql_file=<sql file>} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run] <keyspace>` |
+| [ApplyVSchema](../vtctl/schema-version-permissions#applyvschema) | `ApplyVSchema  -- {--vschema=<vschema> || --vschema_file=<vschema file> || --sql=<sql> || --sql_file=<sql file>} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run] <keyspace>` |
 | [GetRoutingRules](../vtctl/schema-version-permissions#getroutingrules) | `GetRoutingRules  ` |
-| [ApplyRoutingRules](../vtctl/schema-version-permissions#applyroutingrules) | `ApplyRoutingRules  {--rules=<rules> || --rules_file=<rules_file>} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run]` |
-| [RebuildVSchemaGraph](../vtctl/schema-version-permissions#rebuildvschemagraph) | `RebuildVSchemaGraph  [--cells=c1,c2,...]` |
+| [ApplyRoutingRules](../vtctl/schema-version-permissions#applyroutingrules) | `ApplyRoutingRules  -- {--rules=<rules> || --rules_file=<rules_file>} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run]` |
+| [RebuildVSchemaGraph](../vtctl/schema-version-permissions#rebuildvschemagraph) | `RebuildVSchemaGraph  -- [--cells=c1,c2,...]` |
 
 ### Serving Graph
 
@@ -147,9 +147,9 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 
 | Name | Example Usage |
 | :-------- | :--------------- |
-| [AddCellInfo](../vtctl/cells#addcellinfo) | `AddCellInfo  [--server_address <addr>] [--root <root>] <cell>` |
-| [UpdateCellInfo](../vtctl/cells#updatecellinfo) | `UpdateCellInfo  [--server_address <addr>] [--root <root>] <cell>` |
-| [DeleteCellInfo](../vtctl/cells#deletecellinfo) | `DeleteCellInfo  [--force] <cell>` |
+| [AddCellInfo](../vtctl/cells#addcellinfo) | `AddCellInfo  -- [--server_address <addr>] [--root <root>] <cell>` |
+| [UpdateCellInfo](../vtctl/cells#updatecellinfo) | `UpdateCellInfo  -- [--server_address <addr>] [--root <root>] <cell>` |
+| [DeleteCellInfo](../vtctl/cells#deletecellinfo) | `DeleteCellInfo  -- [--force] <cell>` |
 | [GetCellInfoNames](../vtctl/cells#getcellinfonames) | `GetCellInfoNames  ` |
 | [GetCellInfo](../vtctl/cells#getcellinfo) | `GetCellInfo  <cell>` |
 
@@ -157,8 +157,8 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 
 | Name | Example Usage |
 | :-------- | :--------------- |
-| [AddCellsAlias](../vtctl/cell-aliases#addcellsalias) | `AddCellsAlias  [--cells <cell,cell2...>] <alias>` |
-| [UpdateCellsAlias](../vtctl/cell-aliases#updatecellsalias) | `UpdateCellsAlias  [--cells <cell,cell2,...>] <alias>` |
+| [AddCellsAlias](../vtctl/cell-aliases#addcellsalias) | `AddCellsAlias  -- [--cells <cell,cell2...>] <alias>` |
+| [UpdateCellsAlias](../vtctl/cell-aliases#updatecellsalias) | `UpdateCellsAlias  -- [--cells <cell,cell2,...>] <alias>` |
 | [DeleteCellsAlias](../vtctl/cell-aliases#deletecellsalias) | `DeleteCellsAlias  <alias>` |
 | [GetCellsAliases](../vtctl/cell-aliases#getcellsaliases) | `GetCellsAliases  ` |
 
@@ -166,35 +166,35 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 
 | Name | Example Usage |
 | :-------- | :--------------- |
-| [VtGateExecute](../vtctl/queries#vtgateexecute) | `VtGateExecute  --server <vtgate> [--bind_variables <JSON map>] [--keyspace <default keyspace>] [--tablet_type <tablet type>] [--options <proto text options>] [--json] <sql>` |
-| [VtTabletExecute](../vtctl/queries#vttabletexecute) | `VtTabletExecute  [--username <TableACL user>] [--transaction_id <transaction_id>] [--options <proto text options>] [--json] <tablet alias> <sql>` |
-| [VtTabletBegin](../vtctl/queries#vttabletbegin) | `VtTabletBegin  [--username <TableACL user>] <tablet alias>` |
-| [VtTabletCommit](../vtctl/queries#vttabletcommit) | `VtTabletCommit  [--username <TableACL user>] <transaction_id>` |
-| [VtTabletRollback](../vtctl/queries#vttabletrollback) | `VtTabletRollback  [--username <TableACL user>] <tablet alias> <transaction_id>` |
-| [VtTabletStreamHealth](../vtctl/queries#vttabletstreamhealth) | `VtTabletStreamHealth  [--count <count, default 1>] <tablet alias>` |
+| [VtGateExecute](../vtctl/queries#vtgateexecute) | `VtGateExecute  -- --server <vtgate> [--bind_variables <JSON map>] [--keyspace <default keyspace>] [--tablet_type <tablet type>] [--options <proto text options>] [--json] <sql>` |
+| [VtTabletExecute](../vtctl/queries#vttabletexecute) | `VtTabletExecute  -- [--username <TableACL user>] [--transaction_id <transaction_id>] [--options <proto text options>] [--json] <tablet alias> <sql>` |
+| [VtTabletBegin](../vtctl/queries#vttabletbegin) | `VtTabletBegin  -- [--username <TableACL user>] <tablet alias>` |
+| [VtTabletCommit](../vtctl/queries#vttabletcommit) | `VtTabletCommit  -- [--username <TableACL user>] <transaction_id>` |
+| [VtTabletRollback](../vtctl/queries#vttabletrollback) | `VtTabletRollback  -- [--username <TableACL user>] <tablet alias> <transaction_id>` |
+| [VtTabletStreamHealth](../vtctl/queries#vttabletstreamhealth) | `VtTabletStreamHealth  -- [--count <count, default 1>] <tablet alias>` |
 
 ### Resharding Throttler
 
 | Name | Example Usage |
 | :-------- | :--------------- |
-| [ThrottlerMaxRates](../vtctl/resharding-throttler#throttlermaxrates) | `ThrottlerMaxRates  --server <vttablet>` |
-| [ThrottlerSetMaxRate](../vtctl/resharding-throttler#throttlersetmaxrate) | `ThrottlerSetMaxRate  --server <vttablet> <rate>` |
-| [GetThrottlerConfiguration](../vtctl/resharding-throttler#getthrottlerconfiguration) | `GetThrottlerConfiguration  --server <vttablet> [<throttler name>]` |
-| [UpdateThrottlerConfiguration](../vtctl/resharding-throttler#updatethrottlerconfiguration) | `UpdateThrottlerConfiguration  --server <vttablet> [--copy_zero_values] "<configuration protobuf text>" [<throttler name>]` |
-| [ResetThrottlerConfiguration](../vtctl/resharding-throttler#resetthrottlerconfiguration) | `ResetThrottlerConfiguration  --server <vttablet> [<throttler name>]` |
+| [ThrottlerMaxRates](../vtctl/resharding-throttler#throttlermaxrates) | `ThrottlerMaxRates  -- --server <vttablet>` |
+| [ThrottlerSetMaxRate](../vtctl/resharding-throttler#throttlersetmaxrate) | `ThrottlerSetMaxRate  -- --server <vttablet> <rate>` |
+| [GetThrottlerConfiguration](../vtctl/resharding-throttler#getthrottlerconfiguration) | `GetThrottlerConfiguration  -- --server <vttablet> [<throttler name>]` |
+| [UpdateThrottlerConfiguration](../vtctl/resharding-throttler#updatethrottlerconfiguration) | `UpdateThrottlerConfiguration  -- --server <vttablet> [--copy_zero_values] "<configuration protobuf text>" [<throttler name>]` |
+| [ResetThrottlerConfiguration](../vtctl/resharding-throttler#resetthrottlerconfiguration) | `ResetThrottlerConfiguration  -- --server <vttablet> [<throttler name>]` |
 
 ### Topo
 
 | Name | Example Usage |
 | :-------- | :--------------- |
-| [TopoCat](../vtctl/topo#topocat) | `TopoCat  [--cell <cell>] [--decode_proto] [--decode_proto_json] [--long] <path> [<path>...]` |
-| [TopoCp](../vtctl/topo#topocp) | `TopoCp  [--cell <cell>] [--to_topo] <src> <dst>` |
+| [TopoCat](../vtctl/topo#topocat) | `TopoCat  -- [--cell <cell>] [--decode_proto] [--decode_proto_json] [--long] <path> [<path>...]` |
+| [TopoCp](../vtctl/topo#topocp) | `TopoCp  -- [--cell <cell>] [--to_topo] <src> <dst>` |
 
 ### Workflows
 
 | Name | Example Usage |
 | :-------- | :--------------- |
-| [WorkflowCreate](../vtctl/workflows#workflowcreate) | `WorkflowCreate  [--skip_start] <factoryName> [parameters...]` |
+| [WorkflowCreate](../vtctl/workflows#workflowcreate) | `WorkflowCreate  -- [--skip_start] <factoryName> [parameters...]` |
 | [WorkflowStart](../vtctl/workflows#workflowstart) | `WorkflowStart  <uuid>` |
 | [WorkflowStop](../vtctl/workflows#workflowstop) | `WorkflowStop  <uuid>` |
 | [WorkflowDelete](../vtctl/workflows#workflowdelete) | `WorkflowDelete  <uuid>` |
