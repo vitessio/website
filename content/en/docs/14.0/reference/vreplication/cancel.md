@@ -12,7 +12,7 @@ This documentation is for a new (v2) set of vtctld commands that start in Vitess
 ### Command
 
 ```
-MoveTables/Reshard [-keep_data] [-keep_routing_rules] Cancel <targetKs.workflow>
+MoveTables/Reshard -- [--keep_data] [--keep_routing_rules] Cancel <targetKs.workflow>
 ```
 
 ### Description
@@ -21,7 +21,7 @@ MoveTables/Reshard [-keep_data] [-keep_routing_rules] Cancel <targetKs.workflow>
 
 ### Parameters
 
-#### -keep_data
+#### --keep_data
 **optional**\
 **default** false
 
@@ -31,7 +31,7 @@ Usually, the target data (tables or shards) are deleted by Cancel. If this flag 
 
 </div>
 
-#### -keep_routing_rules
+#### --keep_routing_rules
 **optional**\
 **default** false
 

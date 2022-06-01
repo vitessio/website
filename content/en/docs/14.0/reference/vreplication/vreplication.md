@@ -140,14 +140,14 @@ The fields are explained in the following section.
 This is the syntax of the command:
 
 ```
-VReplicationExec [--json] <tablet alias> <sql command>
+VReplicationExec -- [--json] <tablet alias> <sql command>
 ```
 
 Here's an example of the command to list all existing streams for
 a given tablet.
 
 ```
-vtctlclient --server localhost:15999 VReplicationExec 'tablet-100' 'select * from _vt.vreplication'
+vtctlclient --server localhost:15999 VReplicationExec -- 'tablet-100' 'select * from _vt.vreplication'
 ```
 
 ### Creating a stream

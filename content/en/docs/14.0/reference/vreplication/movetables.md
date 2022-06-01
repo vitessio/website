@@ -21,10 +21,10 @@ MoveTables <options> <action> <workflow identifier>
 or
 
 ```
-MoveTables [-source=<sourceKs>] [-tables=<tableSpecs>] [-cells=<cells>] 
-  [-tablet_types=<source_tablet_types>] [-all] [-exclude=<tables>] [-auto_start] 
-  [-stop_after_copy] [-timeout=timeoutDuration] [-reverse_replication] [-keep_data] 
-  [-keep_routing_rules] [-source_time_zone=<mysql_time_zone>]
+MoveTables -- [--source=<sourceKs>] [--tables=<tableSpecs>] [--cells=<cells>] 
+  [--tablet_types=<source_tablet_types>] [--all] [--exclude=<tables>] [--auto_start] 
+  [--stop_after_copy] [--timeout=timeoutDuration] [--reverse_replication] [--keep_data] 
+  [--keep_routing_rules] [--source_time_zone=<mysql_time_zone>]
   <action> <workflow identifier>
 ```
 
@@ -65,7 +65,7 @@ _Either_
   * if target keyspace is unsharded OR '
   * if target keyspace is sharded AND the tables being moved are already defined in the target's vschema
 
-  Example: `MoveTables --workflow=commerce2customer commerce customer customer,corder`
+  Example: `MoveTables -- --source commerce --tables 'customer,corder' Create customer.commerce2customer`
 
 _Or_
 
@@ -73,7 +73,7 @@ _Or_
   * if target keyspace is sharded AND
   * tables being moved are not yet present in the target's vschema
 
-  Example: `MoveTables --workflow=commerce2customer commerce customer '{"t1":{"column_vindexes": [{"column": "id", "name": "hash"}]}}}'`
+  Example: `MoveTables -- --source commerce --tables '{"t1":{"column_vindexes": [{"column": "id1", "name": "hash"}]}, "t2":{"column_vindexes": [{"column": "id2", "name": "hash"}]}}' Create customer.commerce2customer`
 
 </div>
 
@@ -200,7 +200,7 @@ Usually, any routing rules created by the workflow in the source and target keys
 
 </div>
 
-#### -source_time_zone
+#### --source_time_zone
 **optional**\
 **default** ""
 
@@ -235,7 +235,7 @@ All workflows are identified by `targetKeyspace.workflow` where `targetKeyspace`
 ## The most basic MoveTables Workflow lifecycle
 
 1. Initiate the migration using [Create](../create)<br/>
-`MoveTables --source=<sourceKs> --tables=<tableSpecs> Create <targetKs.workflow>`
+`MoveTables -- --source=<sourceKs> --tables=<tableSpecs> Create <targetKs.workflow>`
 1. Monitor the workflow using [Show](../show) or [Progress](../progress)<br/>
 `MoveTables Show <targetKs.workflow>` _*or*_ <br/>
 `MoveTables Progress <targetKs.workflow>`<br/>

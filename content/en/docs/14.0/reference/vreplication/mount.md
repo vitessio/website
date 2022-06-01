@@ -11,8 +11,8 @@ This documentation is for a new (v2) set of vtctld commands that start in Vitess
 ### Command
 
 ```
-Mount [-type vitess] [-topo_type=etcd2|consul|zookeeper] [-topo_server=topo_url]
-    [-topo_root=root_topo_node> [-unmount] [-list] [-show]  [<cluster_name>]
+Mount -- [--type vitess] [--topo_type=etcd2|consul|zookeeper] [--topo_server=topo_url]
+    [--topo_root=root_topo_node> [--unmount] [--list] [--show]  [<cluster_name>]
 ```
 
 ### Description

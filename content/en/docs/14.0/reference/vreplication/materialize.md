@@ -7,7 +7,7 @@ weight: 40
 ### Command
 
 ```
-Materialize [-cells=<cells>] [-tablet_types=<source_tablet_types>] <json_spec>
+Materialize -- [--cells=<cells>] [--tablet_types=<source_tablet_types>] <json_spec>
 ```
 
 ### Description
@@ -24,7 +24,7 @@ Be careful to avoid using the `INSTANT ADD COLUMN` feature in [MySQL 8.0+](https
 ### Parameters
 
 
-#### -cells
+#### --cells
 **optional**\
 **default** local cell
 
@@ -40,7 +40,7 @@ cells should be used to pick a tablet for selecting data from the source keyspac
 * Select cells where replica lags are lower
 </div>
 
-#### -tablet_types
+#### --tablet_types
 **optional**\
 **default** replica
 
@@ -74,7 +74,7 @@ One or more from PRIMARY, REPLICA, RDONLY.<br><br>
   * *tablet_types* a Vitess tablet_type, or comma separated list of tablet
     types, that should be used for choosing source tablet(s) for the
     materialization. If not specified, this defaults to the tablet type(s)
-    specified by the `-vreplication_tablet_type` VTTablet command line flag
+    specified by the `--vreplication_tablet_type` VTTablet command line flag
 
 </div>
 

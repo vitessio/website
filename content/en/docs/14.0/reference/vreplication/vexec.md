@@ -7,7 +7,7 @@ weight: 60
 ### Command
 
 ```
-VExec  [-dry_run] <keyspace.workflow> <query>
+VExec  -- [--dry_run] <keyspace.workflow> <query>
 ```
 
 ### Description
@@ -20,7 +20,7 @@ in the workflow. Internally it calls VReplicationExec for running the query.
 
 ### Parameters
 
-#### -dry-run
+#### --dry-run
 **optional**\
 **default** false
 

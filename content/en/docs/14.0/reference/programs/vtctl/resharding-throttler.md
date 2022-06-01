@@ -14,18 +14,18 @@ Returns the current max rate of all active resharding throttlers on the server.
 
 #### Example
 
-<pre class="command-example">ThrottlerMaxRates -server &lt;vtworker or vttablet&gt;</pre>
+<pre class="command-example">ThrottlerMaxRates -- --server &lt;vttablet&gt;</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| server | string | vtworker or vttablet to connect to |
+| server | string | vttablet to connect to |
 
 
 #### Arguments
 
-* <code>&lt;vtworker or vttablet&gt;</code> &ndash; Required.
+* <code>&lt;vttablet&gt;</code> &ndash; Required.
 
 #### Errors
 
@@ -39,18 +39,18 @@ Sets the max rate for all active resharding throttlers on the server.
 
 #### Example
 
-<pre class="command-example">ThrottlerSetMaxRate -server &lt;vtworker or vttablet&gt; &lt;rate&gt;</pre>
+<pre class="command-example">ThrottlerSetMaxRate -- --server &lt;vttablet&gt; &lt;rate&gt;</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| server | string | vtworker or vttablet to connect to |
+| server | string | vttablet to connect to |
 
 
 #### Arguments
 
-* <code>&lt;vtworker or vttablet&gt;</code> &ndash; Required.
+* <code>&lt;vttablet&gt;</code> &ndash; Required.
 * <code>&lt;rate&gt;</code> &ndash; Required.
 
 #### Errors
@@ -67,18 +67,18 @@ Returns the current configuration of the MaxReplicationLag module. If no throttl
 
 #### Example
 
-<pre class="command-example">GetThrottlerConfiguration -server &lt;vtworker or vttablet&gt; [&lt;throttler name&gt;]</pre>
+<pre class="command-example">GetThrottlerConfiguration -- --server &lt;vttablet&gt; [&lt;throttler name&gt;]</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| server | string | vtworker or vttablet to connect to |
+| server | string | vttablet to connect to |
 
 
 #### Arguments
 
-* <code>&lt;vtworker or vttablet&gt;</code> &ndash; Required.
+* <code>&lt;vttablet&gt;</code> &ndash; Required.
 * <code>&lt;throttler name&gt;</code> &ndash; Optional.
 
 #### Errors
@@ -93,19 +93,19 @@ Updates the configuration of the MaxReplicationLag module. The configuration mus
 
 #### Example
 
-<pre class="command-example">UpdateThrottlerConfiguration `-server &lt;vtworker or vttablet&gt; [-copy_zero_values] "&lt;configuration protobuf text&gt;" [&lt;throttler name&gt;]`</pre>
+<pre class="command-example">UpdateThrottlerConfiguration `-- --server &lt;vttablet&gt; [--copy_zero_values] "&lt;configuration protobuf text&gt;" [&lt;throttler name&gt;]`</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | copy_zero_values | Boolean | If true, fields with zero values will be copied as well |
-| server | string | vtworker or vttablet to connect to |
+| server | string | vttablet to connect to |
 
 
 #### Arguments
 
-* <code>&lt;vtworker or vttablet&gt;</code> &ndash; Required.
+* <code>&lt;vttablet&gt;</code> &ndash; Required.
 * <code>&lt;throttler name&gt;</code> &ndash; Optional.
 
 #### Errors
@@ -121,18 +121,18 @@ Resets the current configuration of the MaxReplicationLag module. If no throttle
 
 #### Example
 
-<pre class="command-example">ResetThrottlerConfiguration -server &lt;vtworker or vttablet&gt; [&lt;throttler name&gt;]</pre>
+<pre class="command-example">ResetThrottlerConfiguration -- --server &lt;vttablet&gt; [&lt;throttler name&gt;]</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| server | string | vtworker or vttablet to connect to |
+| server | string | vttablet to connect to |
 
 
 #### Arguments
 
-* <code>&lt;vtworker or vttablet&gt;</code> &ndash; Required.
+* <code>&lt;vttablet&gt;</code> &ndash; Required.
 * <code>&lt;throttler name&gt;</code> &ndash; Optional.
 
 #### Errors

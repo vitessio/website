@@ -152,7 +152,7 @@ __Note:__ The following change does not change actual routing yet. We will use a
 In this step we will initiate the MoveTables, which copies tables from the commerce keyspace into customer. This operation does not block any database activity; the MoveTables operation is performed online:
 
 ```bash
-$ vtctlclient MoveTables -source commerce -tables 'customer,corder' Create customer.commerce2customer
+$ vtctlclient MoveTables -- --source commerce --tables 'customer,corder' Create customer.commerce2customer
 ```
 
 You can read this command as:  "Start copying the tables called **customer** and **corder** from the **commerce** keyspace to the **customer** keyspace."
@@ -236,7 +236,7 @@ This can obviously take a long time on very large tables.
 Once the MoveTables operation is complete, the first step in making the changes live is to _switch_ `SELECT` statements to read from the new keyspace. Other statements will continue to route to the `commerce` keyspace. By staging this as two operations, Vitess allows you to test the changes and reduce the associated risks. For example, you may have a different configuration of hardware or software on the new keyspace.
 
 ```bash
-vtctlclient MoveTables -tablet_types=rdonly,replica SwitchTraffic customer.commerce2customer
+vtctlclient MoveTables -- --tablet_types=rdonly,replica SwitchTraffic customer.commerce2customer
 ```
 
 ## Interlude: check the routing rules (optional)
@@ -354,7 +354,7 @@ As you can see, we now have requests to the `rdonly` and `replica` tablets for t
 After the replica/rdonly reads have been _switched_, and you have verified that the system is operating as expected, it is time to _switch_ the _write_ and primary read operations. The command to execute the switch is very similar to the one in Phase 1:
 
 ```bash
-$ vtctlclient MoveTables -tablet_types=primary SwitchTraffic customer.commerce2customer
+$ vtctlclient MoveTables -- --tablet_types=primary SwitchTraffic customer.commerce2customer
 ```
 
 ## Note
