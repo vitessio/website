@@ -31,7 +31,7 @@ This PR was related to parsing of JSON functions. These are supported in 8.0 and
 
 After merging of the JSON PRs, I worked on introducing the parsing support for partitions and subpartitions. At that time, the support was partial and my task was to fully support them. I was able to implement the parser changes and created the [PR](https://github.com/vitessio/vitess/pull/10127). This was followed by PR for [subpartition](https://github.com/vitessio/vitess/pull/10232).
 
-In my last month, I worked on adding the parsing support for Window functions and Regex Expression functions in Vitess. These two PRs were big changes and took almost 20-25 days to complete. There were some discussions, the best option for a particular case and code changes. Finally, I was able to complete the PRs. At the time of writing the blog, the PRs are still open(waiting to be merged).
+In my last month, I worked on adding the parsing support for Window functions and Regex Expression functions in Vitess. These two PRs were big changes and took almost 20-25 days to complete. There were some discussions, the best option for a particular case and code changes. Finally, I was able to complete the PRs and these were merged at the end of the term.
 
 ## Wrap Up
 
