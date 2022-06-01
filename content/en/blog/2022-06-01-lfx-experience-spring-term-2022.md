@@ -29,9 +29,9 @@ The first PR which I worked on was multi-index hint list. Details [here](https:/
 
 This PR was related to parsing of JSON functions. These are supported in 8.0 and an issue regarding the parsing of similar can be found [here](https://github.com/vitessio/vitess/issues/4099). It was a big change, so the PRs were divided into different parts, where each part dealt with one aspect of JSON Functions as mentioned in [SQL docs](https://dev.mysql.com/doc/refman/8.0/en/json-functions.html). The different PRs related to JSON Functions took over a month to get merged into the codebase and it was already mid-term.
 
-After merging of the JSON PRs, I worked on introducing the parsing support for partitions and subpartitions. At that time, the support was partial and my task was to fully support them. I was able to implement the parser changes and created the [PR](https://github.com/vitessio/vitess/pull/10127). This was followed by PR for [subpartition](https://github.com/vitessio/vitess/pull/10232.
+After merging of the JSON PRs, I worked on introducing the parsing support for partitions and subpartitions. At that time, the support was partial and my task was to fully support them. I was able to implement the parser changes and created the [PR](https://github.com/vitessio/vitess/pull/10127). This was followed by PR for [subpartition](https://github.com/vitessio/vitess/pull/10232).
 
-In my last month, I worked on adding the parsing support for Window functions and Regex Expression functions in Vitess. These two PRs were big changes and took almost 20-25 days to complete. There were some discussions, the best option for a particular case and code changes. Finally, I was able to complete the PRs. At the time of writing the blog, the PRs are still open(waiting to be merged).
+In my last month, I worked on adding the parsing support for Window functions and Regex Expression functions in Vitess. These two PRs were big changes and took almost 20-25 days to complete. There were some discussions, the best option for a particular case and code changes. Finally, I was able to complete the PRs and these were merged by the end of the term.
 
 ## Wrap Up
 
