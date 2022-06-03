@@ -18,7 +18,7 @@ Before starting the cutover process you will want to:
 1.  Save your routing rules just in case the are needed to revert the process:
 
 ```sh
-vtctlclient -server vtctld.host:15999 GetRoutingRules > /var/tmp/routingrules.backup.json
+vtctlclient --server vtctld.host:15999 GetRoutingRules > /var/tmp/routingrules.backup.json
 ```
 
 2. Check that the source keyspace(s) have the necessary tablet types in them (e.g. RDONLY).
@@ -32,42 +32,42 @@ vtctlclient -server vtctld.host:15999 GetRoutingRules > /var/tmp/routingrules.ba
 
 ## Start MoveTables
 
-### Using -v2 commands
+### Using --v2 commands
 
 To begin MoveTables run the following command:
 
 ```sh
-vtctlclient -server vtctld.host:15999 MoveTables -source sourcekeyspace -tables 'table1,table2,table3' Create targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 MoveTables -- --source sourcekeyspace --tables 'table1,table2,table3' Create targetkeyspace.workflowname
 ```
 
 You can then monitor the workflow status:
 
 ```sh
-vtctlclient -server vtctld.host:15999 Workflow targetkeyspace listall
+vtctlclient --server vtctld.host:15999 Workflow targetkeyspace listall
 Following workflow(s) found in keyspace targetkeyspace.workflowname
-vtctlclient -server vtctld.host:15999 MoveTables Progress targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 MoveTables Progress targetkeyspace.workflowname
 ```
 If you want more detailed information you can also run:
 
 ```sh
-vtctlclient -server vtctld.host:15999 Workflow targetkeyspace.workflowname show 
+vtctlclient --server vtctld.host:15999 Workflow targetkeyspace.workflowname show 
 ```
-The output for `Workflow ... show` is shown below in the -v1 commands.
+The output for `Workflow ... show` is shown below in the --v1 commands.
 
-### Using -v1 commands
+### Using --v1 commands
 
 To begin MoveTables run the following command:
 
 ```sh
-vtctlclient -server vtctld.host:15999 MoveTables -workflow=workflowname sourcekeyspace targetkeyspace table1,table2,table3
+vtctlclient --server vtctld.host:15999 MoveTables -- --workflow=workflowname sourcekeyspace targetkeyspace table1,table2,table3
 ```
 
 You can then monitor the workflow status:
 
 ```sh
-vtctlclient -server vtctld.host:15999 Workflow targetkeyspace listall
+vtctlclient --server vtctld.host:15999 Workflow targetkeyspace listall
 Following workflow(s) found in keyspace targetkeyspace: workflowname
-vtctlclient -server vtctld.host:15999 Workflow targetkeyspace.workflowname show
+vtctlclient --server vtctld.host:15999 Workflow targetkeyspace.workflowname show
     {
     "Workflow": "workflowname",
     "SourceLocation": {
@@ -140,7 +140,7 @@ vtctlclient -server vtctld.host:15999 Workflow targetkeyspace.workflowname show
 - Use `Workflow .. listall` and `Workflow .. show` as described above to determine what happened 
 - You may need to collect vttablet log information on the source(s) and/or target(s) to diagnose some issues
 
-For example, if you set your `-vreplication_tablet_type` for your vttablets to RDONLY and you are not passing an override `-tablet_types` for MoveTables.  
+For example, if you set your `--vreplication_tablet_type` for your vttablets to RDONLY and you are not passing an override `-tablet_types` for MoveTables.  
 
 The result will be that the MoveTables vreplication streams will only use RDONLY tablet types as their source. 
 If no tablets of this type are available in the same cell as the target keyspace’s primary tablet, the vreplication streams will never start and will loop while searching for eligible tablets to copy from. 
@@ -149,8 +149,8 @@ You would only be able to diagnose this problem by looking at the vttablet logs 
 - In most cases, it would be appropriate to stop and delete the workflow using the following:
 
 ```sh
-vtctlclient -server vtctld.host:15999 Workflow targetkeyspace.workflowname stop
-vtctlclient -server vtctld.host:15999 Workflow targetkeyspace.workflowname delete
+vtctlclient --server vtctld.host:15999 Workflow targetkeyspace.workflowname stop
+vtctlclient --server vtctld.host:15999 Workflow targetkeyspace.workflowname delete
 ```
 
 - Then fix underlying issue and re-run the MoveTables command
@@ -164,8 +164,8 @@ The MoveTables workflow is done when the state has transitioned to “Running”
 
 Depending on the size of the table(s), the VDiff process may need increased timeouts for two things:
 
-- If you are running VDiff using vtctlclient (i.e. vtctld is doing the VDiff) you will need to increase the vtctlclient gRPC action timeout. This increase could be something like `-action_timeout 12h` as the default is 1 hour.
-- Increase the `-filtered_replication_wait_time` parameter for VDiff as the default is 30 seconds. You many need to increase this to hours on large and/or busy tables.
+- If you are running VDiff using vtctlclient (i.e. vtctld is doing the VDiff) you will need to increase the vtctlclient gRPC action timeout. This increase could be something like `--action_timeout 12h` as the default is 1 hour.
+- Increase the `--filtered_replication_wait_time` parameter for VDiff as the default is 30 seconds. You many need to increase this to hours on large and/or busy tables.
 
 {{< info >}}
 Note that running VDiff via vtctld can lead to vtctld consuming significantly more memory than usual. 
@@ -198,7 +198,7 @@ You may want to keep this in mind when choosing the vtctld instance that you are
 1. Timeouts or network interruptions
 
 VDiff may not start because tablets of the `-tablet_type` specified may not be available in the cells specified. 
-This is often the case if you are using the optional parameters of `-source_cell` and `-target_cell`. 
+This is often the case if you are using the optional parameters of `--source_cell` and `--target_cell`. 
 In a case like this VDiff will appear to run, but will not actually make any progress. 
 This can be observed via messages in the vtctld log like:
 
@@ -251,17 +251,17 @@ Usually, it is also advisable to save the routing rules before starting your Mov
 2. To save or dump routing rules:
 
 ```sh
-vtctlclient -server ...  GetRoutingRules > /path/to/save/routingrules.json
+vtctlclient --server ...  GetRoutingRules > /path/to/save/routingrules.json
 ```
 
 3. You should then be able to edit the routingrules.json file and then apply the new routing rules using:
 
 ```sh
-vtctlclient -server ...  ApplyRoutingRules -rules=($cat /path/to/save/routingrules.json) -dry-run
+vtctlclient --server ...  ApplyRoutingRules -- --rules=($cat /path/to/save/routingrules.json) --dry-run
 ```
-That will not actually execute ApplyRoutingRules due to the `-dry-run` flag, instead it will enable you to see what would happen when you run that command and address any issues that may occur.
+That will not actually execute ApplyRoutingRules due to the `--dry-run` flag, instead it will enable you to see what would happen when you run that command and address any issues that may occur.
 
-4. Once you have verified the command works as intended run it without -dry-run:
+4. Once you have verified the command works as intended run it without --dry-run:
 
 ```sh
 vtctlclient -server ...  ApplyRoutingRules -rules=($cat /path/to/save/routingrules.json) 
@@ -281,46 +281,46 @@ This will result in you dropping your source/original table.
 
 ## Begin your cutover
 
-### When using -v2 commands
+### When using --v2 commands
 
 With MoveTables v2 instead of performing SwitchReads/Writes you will use MoveTables --SwitchTraffic. 
-It is recommended you first run SwitchTraffic with -dry_run so you understand what actions are going to be taken before actually taking them. 
-`-dry_run` needs to be added before SwitchTraffic along with any other [SwitchTraffic parameters](../../../reference/vreplication/switchtraffic) you want to pass.
+It is recommended you first run SwitchTraffic with --dry_run so you understand what actions are going to be taken before actually taking them. 
+`--dry_run` needs to be added before SwitchTraffic along with any other [SwitchTraffic parameters](../../../reference/vreplication/switchtraffic) you want to pass.
 Reads and writes no longer need to be switched in specific order, but both will need to be completed to run MoveTables Complete. 
 The default SwitchTraffic behavior is to switch all traffic in a single command, Vitess switches all reads and then writes if you use this default option.
 
-1. Depending on what `-table_type` you are using, you will use one of the four following commands:
+1. Depending on what `--table_type` you are using, you will use one of the four following commands:
 
 - Default (switches all tablet types)
 
 ```
-vtctlclient -server vtctld.host:15999 MoveTables -dry_run SwitchTraffic targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 MoveTables -- --dry_run SwitchTraffic targetkeyspace.workflowname
 ```
 
 - RDONLY:
   
 ```
-vtctlclient -server vtctld.host:15999 MoveTables -tablet_types=rdonly -dry_run SwitchTraffic targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=rdonly --dry_run SwitchTraffic targetkeyspace.workflowname
 ```
 
 - REPLICA:
   
 ```
-vtctlclient -server vtctld.host:15999 MoveTables -tablet_types=replica -dry_run SwitchTraffic targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=replica --dry_run SwitchTraffic targetkeyspace.workflowname
 ```
 
 - PRIMARY:  
 
 ```
-vtctlclient -server vtctld.host:15999 MoveTables -tablet_types=primary -dry_run SwitchTraffic targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=primary --dry_run SwitchTraffic targetkeyspace.workflowname
 ```
 
 The output of these commands will look similar to the following:
 
 ```sh
-$ vtctlclient -server localhost:15999 MoveTables -tablet_types=rdonly -dry_run SwitchTraffic targetkeyspace.workflowname 
+$ vtctlclient --server localhost:15999 MoveTables -- --tablet_types=rdonly --dry_run SwitchTraffic targetkeyspace.workflowname 
 Dry Run results for SwitchReads run at 02 Jan 06 15:04 MST
-Parameters: -tablet_types=rdonly -dry_run targetkeyspace.workflowname
+Parameters: --tablet_types=rdonly --dry_run targetkeyspace.workflowname
 
 Lock keyspace sourcekeyspace
 Switch reads for tables [t1] to keyspace targetkeyspace for tablet types [RDONLY]
@@ -328,30 +328,30 @@ Routing rules for tables [t1] will be updated
 Unlock keyspace sourcekeyspace
 ```
 
-After you have tried the above command(s) with `-dry_run` remove just that flag to then actually run the command.
+After you have tried the above command(s) with `--dry_run` remove just that flag to then actually run the command.
 
-### When using -v1 commands
+### When using --v1 commands
 
-1. Depending on what `-table_type` you are using, you will use one of the two following commands:
+1. Depending on what `--table_type` you are using, you will use one of the two following commands:
 
 - RDONLY:
   
 ```
-vtctlclient -server vtctld.host:15999 SwitchReads -tablet_type=rdonly targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 SwitchReads -- --tablet_type=rdonly targetkeyspace.workflowname
 ```
 
 - REPLICA:  
 
 ```
-vtctlclient -server vtctld.host:15999 SwitchReads -tablet_type=replica targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 SwitchReads -- --tablet_type=replica targetkeyspace.workflowname
 ```
 
 The output of these commands will look similar to the following:
 
 ```sh
-$ vtctlclient -server localhost:15999 SwitchReads -tablet_type=rdonly -reverse -dry_run targetkeyspace.workflowname
+$ vtctlclient --server localhost:15999 SwitchReads -- --tablet_type=rdonly --reverse --dry_run targetkeyspace.workflowname
 Dry Run results for SwitchReads run at 02 Jan 06 15:04 MST
-Parameters: -tablet_type=rdonly -reverse -dry_run targetkeyspace.workflowname
+Parameters: --tablet_type=rdonly --reverse --dry_run targetkeyspace.workflowname
 
 Lock keyspace sourcekeyspace
 Switch reads for tables [t1] to keyspace sourcekeyspace for tablet types [RDONLY]
@@ -359,22 +359,22 @@ Routing rules for tables [t1] will be updated
 Unlock keyspace sourcekeyspace
 ```
  
- After you have tried the above command(s) with `-dry_run` remove just that flag to then actually run the command.
+ After you have tried the above command(s) with `--dry_run` remove just that flag to then actually run the command.
  
 2. You will then need to switch your writes using the following command:
 
-It is recommended you first run SwitchWrites with -dry_run, so you understand what actions are going to be taken before actually taking them. 
-`-dry_run` needs to be added before targetkeyspace.workflowname.
+It is recommended you first run SwitchWrites with --dry_run, so you understand what actions are going to be taken before actually taking them. 
+`--dry_run` needs to be added before targetkeyspace.workflowname.
 
 ```
-$ vtctlclient -server localhost:15999 SwitchWrites -dry_run targetkeyspace.workflowname 
+$ vtctlclient --server localhost:15999 SwitchWrites -- --dry_run targetkeyspace.workflowname 
 ```
 The output of this command will look similar to the following:
 
 ```sh
-$ vtctlclient -server localhost:15999 SwitchWrites -dry_run targetkeyspace.workflowname
+$ vtctlclient --server localhost:15999 SwitchWrites -- --dry_run targetkeyspace.workflowname
 Dry Run results for SwitchWrites run at 02 Jan 06 15:04 MST
-Parameters: -dry_run targetkeyspace.workflowname
+Parameters: --dry_run targetkeyspace.workflowname
 
 Lock keyspace sourcekeyspace
 Lock keyspace targetkeyspace
@@ -396,7 +396,7 @@ Unlock keyspace targetkeyspace
 Unlock keyspace sourcekeyspace
 ```
 
-After you have tried the above command(s) with `-dry_run` remove just that flag to then actually run the command.
+After you have tried the above command(s) with `--dry_run` remove just that flag to then actually run the command.
 
 ### Potential errors or issues during the cutover
 
@@ -412,7 +412,7 @@ At a minimum, you can use the `Workflow … show` command to validate that the w
 This example shows a healthy, completed MoveTables workflow:
 
 ```sh
-$ vtctlclient -server localhost:15999 Workflow show targetkeyspace.workflowname
+$ vtctlclient --server localhost:15999 Workflow show targetkeyspace.workflowname
 {
     "Workflow": "workflowname",
     "SourceLocation": {
@@ -469,7 +469,7 @@ $ vtctlclient -server localhost:15999 Workflow show targetkeyspace.workflowname
 If the VReplication of changes from the sourcekeyspace to the targetkeyspace are lagging (possibly because of high write rate to the source keyspace), the SwitchWrites operation may fail.
 This is because as part of SwitchWrites, traffic is paused, and Vitess then waits a short amount of time for the targetkeyspace shards to catch up to the point(s) where the sourcekeyspace shard(s) were stopped.
 If this does not happen within that timeout period, the SwitchWrites will fail. 
-The default for this wait period is 30 seconds;  and can be adjusted upwards or downwards by passing the -timeout flag to the SwitchWrites command.
+The default for this wait period is 30 seconds;  and can be adjusted upwards or downwards by passing the --timeout flag to the SwitchWrites command.
 
 {{< info >}}
 Note that the above limitation does not apply to SwitchReads, since replica/rdonly instances are assumed to lag anyway.  You should accordingly manually validate that the replica lag is within acceptable limits for your purposes before you run SwitchReads.   You can do this by inspecting the MaxVReplicationLag value in the Workflow … show output (cf. above).  This value represents the maximum lag, in seconds, of the underlying streams.
@@ -477,40 +477,40 @@ Note that the above limitation does not apply to SwitchReads, since replica/rdon
 
 ## Cutover rollback
 
-### When using -v2 commands
+### When using --v2 commands
 
 MoveTables v2 supports cutover rollbacks via the MoveTables --ReverseTraffic command. 
-ReverseTraffic supports the `-dry_run` flag and we recommend using it to verify what actions ReverseTraffic will take. 
-Then remove -dry_run when you are prepared to actually ReverseTraffic.
+ReverseTraffic supports the `--dry_run` flag and we recommend using it to verify what actions ReverseTraffic will take. 
+Then remove --dry_run when you are prepared to actually ReverseTraffic.
 The default ReverseTraffic behavior is to switch all traffic in a single command, meaning that Vitess switches all reads and then writes if you use this default option.
 
-1. Depending on what `-table_type` you are using, you will use one of the four following commands:
+1. Depending on what `--table_type` you are using, you will use one of the four following commands:
 
 - Default (switches all tablet types)
 
 ```
-vtctlclient -server vtctld.host:15999 MoveTables -dry_run ReverseTraffic targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 MoveTables -- --dry_run ReverseTraffic targetkeyspace.workflowname
 ```
 
 - RDONLY:
   
 ```
-vtctlclient -server vtctld.host:15999 MoveTables -tablet_types=rdonly -dry_run ReverseTraffic targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=rdonly --dry_run ReverseTraffic targetkeyspace.workflowname
 ```
 
 - REPLICA:
   
 ```
-vtctlclient -server vtctld.host:15999 MoveTables -tablet_types=replica -dry_run ReverseTraffic targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=replica --dry_run ReverseTraffic targetkeyspace.workflowname
 ```
 
 - PRIMARY:  
 
 ```
-vtctlclient -server vtctld.host:15999 MoveTables -tablet_types=primary -dry_run ReverseTraffic targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=primary --dry_run ReverseTraffic targetkeyspace.workflowname
 ```
 
-### When using -v1 commands
+### When using --v1 commands
 
 #### Writes have not been switched 
 
@@ -518,18 +518,18 @@ vtctlclient -server vtctld.host:15999 MoveTables -tablet_types=primary -dry_run 
 Only follow these steps if SwitchWrites has not yet been run.
 {{< /warning >}}
 
-1. Depending on what `-table_type` you are using, you will use one of the two following commands:
+1. Depending on what `--table_type` you are using, you will use one of the two following commands:
 
 - RDONLY:
   
 ```
-vtctlclient -server localhost:15999 SwitchReads -tablet_type=rdonly -dry_run sourcekeyspace.workflowname_reverse
+vtctlclient --server localhost:15999 SwitchReads -- --tablet_type=rdonly --dry_run sourcekeyspace.workflowname_reverse
 ```
 
 - REPLICA:  
 
 ```
-vtctlclient -server localhost:15999 SwitchReads -tablet_type=replica -dry_run sourcekeyspace.workflowname_reverse
+vtctlclient --server localhost:15999 SwitchReads -- --tablet_type=replica --dry_run sourcekeyspace.workflowname_reverse
 ```
 
 #### Writes have been switched:
@@ -538,26 +538,26 @@ vtctlclient -server localhost:15999 SwitchReads -tablet_type=replica -dry_run so
 Only follow these steps if SwitchWrites has already been run.
 {{< /warning >}}
 
-1. Depending on what `-table_type` you are using, you will use one of the two following commands:
+1. Depending on what `--table_type` you are using, you will use one of the two following commands:
 
 - RDONLY:
   
 ```
-vtctlclient -server vtctld.host:15999 SwitchReads -tablet_type=rdonly -reverse targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 SwitchReads -- --tablet_type=rdonly --reverse targetkeyspace.workflowname
 ```
 
 - REPLICA:  
 
 ```
-vtctlclient -server vtctld.host:15999 SwitchReads -tablet_type=replica -reverse targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 SwitchReads -- --tablet_type=replica --reverse targetkeyspace.workflowname
 ```
 
 The output of this command will look similar to the following:
 
 ```sh
-$ vtctlclient -server localhost:15999 SwitchReads -tablet_type=rdonly -dry_run sourcekeyspace.workflowname_reverse
+$ vtctlclient --server localhost:15999 SwitchReads -- --tablet_type=rdonly --dry_run sourcekeyspace.workflowname_reverse
 Dry Run results for SwitchReads run at 02 Jan 06 15:04 MST
-Parameters: -tablet_type=rdonly -dry_run sourcekeyspace.workflowname_reverse
+Parameters: --tablet_type=rdonly --dry_run sourcekeyspace.workflowname_reverse
 
 Lock keyspace targetkeyspace
 Switch reads for tables [t1] to keyspace sourcekeyspace for tablet types [RDONLY]
@@ -566,10 +566,10 @@ Unlock keyspace targetkeyspace
 ```
 
 ```sh
-$ vtctlclient -server localhost:15999 SwitchReads -tablet_type=replica -dry_run sourcekeyspace.workflowname_reverse
+$ vtctlclient --server localhost:15999 SwitchReads -- --tablet_type=replica --dry_run sourcekeyspace.workflowname_reverse
 *** SwitchReads is deprecated. Consider using v2 commands instead, see https://vitess.io/docs/reference/vreplication/ ***
 Dry Run results for SwitchReads run at 02 Jan 06 15:04 MST
-Parameters: -tablet_type=replica -dry_run sourcekeyspace.workflowname_reverse
+Parameters: --tablet_type=replica --dry_run sourcekeyspace.workflowname_reverse
 
 Lock keyspace targetkeyspace
 Switch reads for tables [t1] to keyspace sourcekeyspace for tablet types [REPLICA]
@@ -580,15 +580,15 @@ Unlock keyspace targetkeyspace
 2. After the reads are switched you will then need to reverse the writes:
 
 ```
-vtctlclient -server vtctld.host:15999 SwitchWrites sourcekeyspace.workflowname_reverse
+vtctlclient --server vtctld.host:15999 SwitchWrites sourcekeyspace.workflowname_reverse
 ```
 
 The output of this command will look similar to the following:
 
 ```sh
-$ vtctlclient -server localhost:15999 SwitchWrites -dry_run sourcekeyspace.workflowname_reverse
+$ vtctlclient --server localhost:15999 SwitchWrites --dry_run sourcekeyspace.workflowname_reverse
 Dry Run results for SwitchWrites run at 02 Jan 06 15:04 MST
-Parameters: -dry_run sourcekeyspace.workflowname_reverse
+Parameters: --dry_run sourcekeyspace.workflowname_reverse
 
 Lock keyspace targetkeyspace
 Lock keyspace sourcekeyspace
@@ -621,14 +621,14 @@ This should not be an issue if the amount of writes to the keyspaces are similar
 
 ## Clean up of the cutover
 
-### When using -v2 commands
+### When using --v2 commands
 
 #### After a successful cutover
 
 If the cutover was successful, the MoveTables --Complete command will do the following:
 
 ```
-vtctlclient -server vtctld.host:15999 MoveTables -dry_run Complete targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 MoveTables -- --dry_run Complete targetkeyspace.workflowname
 ```
 
 1. Drop the tables involved in the MoveTables in the original keyspace (sourcekeyspace)
@@ -640,21 +640,21 @@ vtctlclient -server vtctld.host:15999 MoveTables -dry_run Complete targetkeyspac
 If a cutover was rolled back via ReverseTraffic, the MoveTables --Cancel command will clean up the targetkeyspace:
 
 ```
-vtctlclient -server vtctld.host:15999 MoveTables Cancel targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 MoveTables Cancel targetkeyspace.workflowname
 ```
 
 1. Drop the tables involved in the MoveTables in the new keyspace (targetkeyspace)
 2. Remove the workflows related to the MoveTables operation
 3. Clean up the routing rules. Applications pointed to the targetkeyspace will no longer be transparently redirected to the sourcekeyspace
 
-### When using -v1 commands
+### When using --v1 commands
 
 #### After a successful cutover
 
 If the cutover was successful, the DropSources command will do the following:
 
 ```
-vtctlclient -server vtctld.host:15999 DropSources targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 DropSources targetkeyspace.workflowname
 ```
 
 1. Drop the tables involved in the MoveTables in the original keyspace (sourcekeyspace)
@@ -666,7 +666,7 @@ vtctlclient -server vtctld.host:15999 DropSources targetkeyspace.workflowname
 If a cutover was rolled back, a DropSources will clean up the targetkeyspace:
 
 ```
-vtctlclient -server vtctld.host:15999 DropSources sourcekeyspace.workflowname_reverse
+vtctlclient --server vtctld.host:15999 DropSources sourcekeyspace.workflowname_reverse
 ```
 
 1. Drop the tables involved in the MoveTables in the new keyspace (targetkeyspace)

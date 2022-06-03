@@ -49,27 +49,27 @@ mysql> drop table customer;
 ```
 
 - `@@ddl_strategy` behaves like a MySQL session variable, though is only recognized by `VTGate`. Setting `@@ddl_strategy` only applies to that same connection and does not affect other connections. The strategy applies to all migrations executed in that session. You may subsequently set `@@ddl_strategy` to different value.
-- If you run `vtgate` without `-ddl_strategy`, then `@@ddl_strategy` defaults to `'direct'`, which implies schema migrations are synchronous. You will need to `set @@ddl_strategy='gh-ost'` to run followup `ALTER TABLE` statements via `gh-ost`.
-- If you run `vtgate -ddl_strategy "gh-ost"`, then `@@ddl_strategy` defaults to `'gh-ost'` in each new session. Any `ALTER TABLE` will run via `gh-ost`. You may `set @@ddl_strategy='pt-osc'` to make migrations run through `pt-online-schema-change`, or `set @@ddl_strategy='direct'` to run migrations synchronously.
+- If you run `vtgate` without `--ddl_strategy`, then `@@ddl_strategy` defaults to `'direct'`, which implies schema migrations are synchronous. You will need to `set @@ddl_strategy='gh-ost'` to run followup `ALTER TABLE` statements via `gh-ost`.
+- If you run `vtgate --ddl_strategy "gh-ost"`, then `@@ddl_strategy` defaults to `'gh-ost'` in each new session. Any `ALTER TABLE` will run via `gh-ost`. You may `set @@ddl_strategy='pt-osc'` to make migrations run through `pt-online-schema-change`, or `set @@ddl_strategy='direct'` to run migrations synchronously.
 
 #### Via vtctl/ApplySchema
 
-You may use `vtctl` or `vtctlclient` (the two are interchangeable for the purpose of this document) to apply schema changes. The `ApplySchema` command supports both synchronous and online schema migrations. To run an online schema migration you will supply the `-ddl_strategy` command line flag:
+You may use `vtctl` or `vtctlclient` (the two are interchangeable for the purpose of this document) to apply schema changes. The `ApplySchema` command supports both synchronous and online schema migrations. To run an online schema migration you will supply the `--ddl_strategy` command line flag:
 
 ```shell
-$ vtctlclient ApplySchema -ddl_strategy "vitess" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
+$ vtctlclient ApplySchema -- --ddl_strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
 a2994c92_f1d4_11ea_afa3_f875a4d24e90
 ```
 
  You my run multiple migrations withing the same `ApplySchema` command:
 ```shell
-$ vtctlclient ApplySchema -skip_preflight -ddl_strategy "vitess" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED; CREATE TABLE sample (id int PRIMARY KEY); DROP TABLE another;" commerce
+$ vtctlclient ApplySchema -skip_preflight --ddl_strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED; CREATE TABLE sample (id int PRIMARY KEY); DROP TABLE another;" commerce
 3091ef2a_4b87_11ec_a827_0a43f95f28a3
 ```
 
 `ApplySchema` accepts the following flags:
 
-- `-ddl_strategy`: by default migrations run directly via MySQL standard DDL. This flag must be aupplied to indicate an online strategy. See also [DDL strategies](../ddl-strategies) and [ddl_strategy flags](../ddl-strategy-flags).
+- `--ddl_strategy`: by default migrations run directly via MySQL standard DDL. This flag must be aupplied to indicate an online strategy. See also [DDL strategies](../ddl-strategies) and [ddl_strategy flags](../ddl-strategy-flags).
 - `-migration_context <unique-value>`: all migrations in a `ApplySchema` command are logically grouped via a unique _context_. A unique value will be supplied automatically. The user may choose to supply their own value, and it's their responsibility to provide with a unique value. Any string format is accepted.
   The context can then be used to search for migrations, via `SHOW VITESS_MIGRATIONS LIKE 'the-context'`. It is visible in `SHOW VITESS_MIGRATIONS ...` output as the `migration_context` column.
 - `-skip_preflight`: skip an internal Vitess schema validation. When running an online DDL it's recommended to add `-skip_preflight`. In future Vitess versions this flag may be removed or default to `true`.
@@ -614,7 +614,7 @@ Create Table: CREATE TABLE `corder` (
 ### Via vtctl/ApplySchema
 
 ```
-$ vtctlclient ApplySchema -ddl_strategy "vitess" -sql "revert vitess_migration '1a689113_8d77_11eb_815f_f875a4d24e90'" commerce
+$ vtctlclient ApplySchema -- --ddl_strategy "vitess" --sql "revert vitess_migration '1a689113_8d77_11eb_815f_f875a4d24e90'" commerce
 ```
 
 ## Controlling throttling

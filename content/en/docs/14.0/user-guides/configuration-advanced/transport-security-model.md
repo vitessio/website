@@ -260,7 +260,7 @@ This will differ in your environment:
 Now, we can add the options to vtgate to use the above private key and server certificate.  Modify the vtgate commandline or startup script to add the following parameters:
 
 ```
-  -mysql_server_ssl_key ~/config/vtgate1.key -mysql_server_ssl_cert ~/config/vtgate1.crt -mysql_server_require_secure_transport
+  --mysql_server_ssl_key ~/config/vtgate1.key --mysql_server_ssl_cert ~/config/vtgate1.crt --mysql_server_require_secure_transport
 ```
 
 {{< info >}}
@@ -315,7 +315,7 @@ A common Vitess deployment model is to co-locate vttablet and MySQL on the same 
 
 We will not cover configuring MySQL to use TLS certificates extensively here, just the minimum.  Please consult the MySQL documentation for further information. Again, we will also assume that vttablet will be using MySQL username/password client authentication.
 
-Note that when you are configuring TLS and MySQL you will need to be aware of what TLS versions are supported. You may be using an [older version of MySQL that does not have TLS 1.2 support](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_MySQL.html#MySQL.Concepts.SSLSupport). If you need to support pre 1.2 TLS [vtgate supports ](https://github.com/vitessio/vitess/blob/de7f133dbe2dd6a7910f13c682910a4f5c0ac0df/go/vt/vtgate/plugin_mysql_server.go#L67)that setting using `-mysql_server_tls_min_version` and vttablet supports that setting using `-db_tls_min_version=TLSv1.1`
+Note that when you are configuring TLS and MySQL you will need to be aware of what TLS versions are supported. You may be using an [older version of MySQL that does not have TLS 1.2 support](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_MySQL.html#MySQL.Concepts.SSLSupport). If you need to support pre 1.2 TLS [vtgate supports ](https://github.com/vitessio/vitess/blob/de7f133dbe2dd6a7910f13c682910a4f5c0ac0df/go/vt/vtgate/plugin_mysql_server.go#L67)that setting using `--mysql_server_tls_min_version` and vttablet supports that setting using `--db_tls_min_version=TLSv1.1`
 
 Generate a server certificate for our MySQL instance using our CA:
 
@@ -356,7 +356,7 @@ Now, configure vttablet to connect to MySQL using the necessary parameters, veri
 Add the vttablet parameters:
 
 ```
-  -db_ssl_ca /home/user/config/ca.crt -db_flags 1073743872 -db_server_name mysql1
+  --db_ssl_ca /home/user/config/ca.crt --db_flags 1073743872 --db_server_name mysql1
 ```
   
 Restart the vttablet. Note that the `db_server_name` parameter value will differ depending on your issued certificate common name; and is unnecessary if the certificate common name matches the DNS name vttablet is using to connect to the MySQL server.
@@ -366,7 +366,7 @@ The `1073743872` is a combination of the MySQL `CLIENT_SSL` (2048) and `CLIENT_S
 If you just wish to encrypt the vttablet -> MySQL server communication and you do not care about server certificate validation, you can just use this vttablet flag instead:
 
 ```
-  -db_flags 2048
+  --db_flags 2048
 ```
 
 Note that using the above `db_flags` will also result in the MySQL to MySQL communication for replication between the replica/rdonly instances of a Vitess shard and its primary to be encrypted, as long as the upstream MySQL instance the replica is connecting to has been configured correctly to support TLS MySQL protocol connections (see above).
@@ -463,7 +463,7 @@ First, generate a certificate for use by vttablet:
 To configure vttablet to use a server certificate for its gRPC server, add the below to the vttablet parameters:
 
 ```
-  -grpc_cert /home/user/config/vttablet1.crt -grpc_key /home/user/config/vttablet1.key 
+  --grpc_cert /home/user/config/vttablet1.crt --grpc_key /home/user/config/vttablet1.key 
 ```
 
 Note that adding these options **enforces** TLS only gRPC connections to this vttablet instace from that point onwards.
@@ -471,7 +471,7 @@ Note that adding these options **enforces** TLS only gRPC connections to this vt
 This means that you will need to add the following option to your vtgate instances to successfully connect to this vttablet instance from this point forward:
 
 ```
-  -tablet_grpc_server_name vttablet1 -tablet_grpc_ca /home/user/config/ca.crt 
+  --tablet_grpc_server_name vttablet1 --tablet_grpc_ca /home/user/config/ca.crt 
 ```
 
 Adding this option to a vtgate instance will require all vttablet instances this vtgate connects to to be configured for TLS as well. This is unfortunately an all-or-nothing proposition, there is no incremental migration to using TLS in this case.
@@ -494,13 +494,13 @@ Conversely, if you have configured the TLS parameters on the vtgate side and the
 For vreplication to work between vttablet instances once the gRPC server TLS options above are activated, you will need to add the following additional vttablet options:
 
 ```
-  -tablet_grpc_server_name vttablet1 -tablet_grpc_ca /home/user/config/ca.crt 
+  --tablet_grpc_server_name vttablet1 --tablet_grpc_ca /home/user/config/ca.crt 
 ```
 
 Since each vttablet instance may need to talk to more than one other vttablet instances for vreplication streams, the implication is that each vttablet instances needs to either:
 
   * Use the same vttablet server key material and server certificate common name for each vttablet instance. This is obviously the easiest option, but might not conform to your compliance requirements.
-  * or, ensure each vttablet server certificate common name or IP SAN matches the DNS name or IP it it accessed via. In this case, you can omit the use of the `-tablet_grpc_server_name` above for vttablet, and also for vtgate.
+  * or, ensure each vttablet server certificate common name or IP SAN matches the DNS name or IP it it accessed via. In this case, you can omit the use of the `--tablet_grpc_server_name` above for vttablet, and also for vtgate.
   
 #### vtctld to vttablet
 
@@ -511,7 +511,7 @@ unable to connect to your vttablet(s).
 * To achieve this, add the following options to the vtctld commandline:
 
 ```
-  -tablet_grpc_server_name vttablet1 -tablet_grpc_ca /home/user/config/ca.crt -tablet_manager_grpc_server_name vttablet1 -tablet_manager_grpc_ca /home/user/config/ca.crt
+  --tablet_grpc_server_name vttablet1 --tablet_grpc_ca /home/user/config/ca.crt --tablet_manager_grpc_server_name vttablet1 --tablet_manager_grpc_ca /home/user/config/ca.crt
 ```
 
 ### vtctlclient to vtctld
@@ -601,13 +601,13 @@ Generate a server certificate for vtctld:
 Add TLS gRPC server options to vtctld commandline and restart vtctld:
 
 ```
-  -grpc_cert /home/user/config/vtctld1.crt -grpc_key /home/user/config/vtctld1.key
+  --grpc_cert /home/user/config/vtctld1.crt --grpc_key /home/user/config/vtctld1.key
 ```
 
 At this point, all vtctlclient connections to vtctld will need the appropriate additional TLS gRPC options, or they will fail.  Add these options:
 
 ```
-  -vtctld_grpc_ca /home/user/config/ca.crt -vtctld_grpc_server_name vtctld1
+  --vtctld_grpc_ca /home/user/config/ca.crt --vtctld_grpc_server_name vtctld1
 ```
 
 ## Topology server data paths
@@ -630,9 +630,9 @@ We will not cover setting up `etcd` with certificates in this guide. You can con
 
 The Vitess servers (vtgate/vttablet/vtctld) share the same set of parameters to connect via TLS to `etcd`:
 
- * `-topo_etcd_tls_ca` : Path to the PEM certificate used to authenticate the TLS CA certificate presented by the `etcd` server.  Enables TLS to `etcd` if present.
- * `-topo_etcd_tls_cert` : Path to a PEM client certificate (mTLS) used to authenticate this client to the `etcd` server. Only necessary if your `etcd` server requires client authentication.
- * `-topo_etcd_tls_key` : Path to a PEM private key used for signing the client certificate (mTLS) exchange with the `etcd` server. Only necessary if your `etcd` server requires client authentication.
+ * `--topo_etcd_tls_ca` : Path to the PEM certificate used to authenticate the TLS CA certificate presented by the `etcd` server.  Enables TLS to `etcd` if present.
+ * `--topo_etcd_tls_cert` : Path to a PEM client certificate (mTLS) used to authenticate this client to the `etcd` server. Only necessary if your `etcd` server requires client authentication.
+ * `--topo_etcd_tls_key` : Path to a PEM private key used for signing the client certificate (mTLS) exchange with the `etcd` server. Only necessary if your `etcd` server requires client authentication.
 
 As is necessary for your design/architecture, add one or more of the above options to your vtgate, vttablet and vtctld instances.
 
@@ -660,10 +660,10 @@ We will not cover setting up `Zookeeper` with certificates in this guide. You ca
 
 The Vitess servers (vtgate/vttablet/vtctld) share the same set of parameters to connect via TLS to `Zookeeper`:
 
- * `-topo_zk_tls_ca` : Path to the PEM certificate used to authenticate the TLS CA certificate presented by the `Zookeeper` server.  Enables TLS to `etcd` if present.
- * `-topo_zk_tls_cert` : Path to a PEM client certificate (mTLS) used to authenticate this client to the `Zookeeper` server. Only necessary if your `Zookeeper` server requires client authentication.
- * `-topo_zk_tls_key` : Path to a PEM private key used for signing the client certificate (mTLS) exchange with the `Zookeeper` server. Only necessary if your `Zookeeper` server requires client certificate authentication.
- * `-topo_zk_auth_file` : Unlike `etcd`, `Zookeeper` also supports username/password authentication from clients. This option is used to pass the combination of authentication schema, username and password to the client to connect with to the server, e.g. with a value like `digest:username:password`.
+ * `--topo_zk_tls_ca` : Path to the PEM certificate used to authenticate the TLS CA certificate presented by the `Zookeeper` server.  Enables TLS to `etcd` if present.
+ * `--topo_zk_tls_cert` : Path to a PEM client certificate (mTLS) used to authenticate this client to the `Zookeeper` server. Only necessary if your `Zookeeper` server requires client authentication.
+ * `--topo_zk_tls_key` : Path to a PEM private key used for signing the client certificate (mTLS) exchange with the `Zookeeper` server. Only necessary if your `Zookeeper` server requires client certificate authentication.
+ * `--topo_zk_auth_file` : Unlike `etcd`, `Zookeeper` also supports username/password authentication from clients. This option is used to pass the combination of authentication schema, username and password to the client to connect with to the server, e.g. with a value like `digest:username:password`.
 
 As is necessary for your design/architecture, add one or more of the above options to your vtgate, vttablet and vtctld instances.
 

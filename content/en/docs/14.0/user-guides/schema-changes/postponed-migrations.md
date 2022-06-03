@@ -17,11 +17,11 @@ This lets an engineer observe the change of schema at a point when they're comfo
 
 ## Postpone completion
 
-Add `-postpone-completion` to any* (see [supported migrations](#supported-migrations)) of the online DDL strategies. Example:
+Add `--postpone-completion` to any* (see [supported migrations](#supported-migrations)) of the online DDL strategies. Example:
 
 ```sql
 
-mysql> set @@ddl_strategy='vitess -postpone-completion';
+mysql> set @@ddl_strategy='vitess --postpone-completion';
 
 -- The migration is tracked, but the table won't get created
 mysql> create table mytable(id int primary key);
@@ -32,7 +32,7 @@ mysql> create table mytable(id int primary key);
 +--------------------------------------+
 ```
 
-Migrations executed with `-postpone-completion` are visible on `show vitess_migrations` just as normal. They will present either as `queued`, `ready` or `running`, at the scheduler's discretion. But they will not actually make changes to affected tables. The column `postpone_completion` indicates that the migration will not auto-complete:
+Migrations executed with `--postpone-completion` are visible on `show vitess_migrations` just as normal. They will present either as `queued`, `ready` or `running`, at the scheduler's discretion. But they will not actually make changes to affected tables. The column `postpone_completion` indicates that the migration will not auto-complete:
 
 ```sql
 mysql> show vitess_migrations like 'a1dac193_4b86_11ec_a827_0a43f95f28a3' \G

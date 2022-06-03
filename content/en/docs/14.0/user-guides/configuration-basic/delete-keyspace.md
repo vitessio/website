@@ -8,12 +8,12 @@ Although adding a keyspace is implicit, deleting one is not. In order to delete 
 Following this, you should delete all shards of a keyspace. In the current example, `commerce` has only one shard (`0`). You can use the following command to delete it:
 
 ```text
-vtctlclient DeleteShard -recursive commerce/0
+vtctlclient DeleteShard -- --recursive commerce/0
 ```
 
 The `recursive` flag is required to ensure that the shard is deleted from all cells. If there are tablets still running against the shard, the command will fail.
 
-You can add an `-even_if_serving` flag to ignore running tablets, but it is not recommended. Otherwise, this would cause existing vttablets to get confused about their tablet records being deleted.
+You can add an `--even_if_serving` flag to ignore running tablets, but it is not recommended. Otherwise, this would cause existing vttablets to get confused about their tablet records being deleted.
 
 If a keyspace has more than one shard, each one must be deleted individually.
 

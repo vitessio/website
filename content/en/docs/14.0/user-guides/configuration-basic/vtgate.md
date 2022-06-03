@@ -7,7 +7,7 @@ VTGates are the primary interface to the application. They do not have any persi
 
 It is better to bring up multiple vtgates within a single machine rather than trying to run a single instance that tries to use all the resources. This approach enables better amortization of Go’s garbage collector.
 
-You can bring up the vtgates before creating any keyspaces or bringing up vttablets. The advantage of bringing up the vtgates last is that it allows them to immediately discover the existing vttablets. Otherwise, it will take up to one polling cycle before they are discovered. The default value for this flag (`-tablet_refresh_interval`) is one minute. If you intend to reduce this value, ensure that the increased polling frequency will not overwhelm the toposerver.
+You can bring up the vtgates before creating any keyspaces or bringing up vttablets. The advantage of bringing up the vtgates last is that it allows them to immediately discover the existing vttablets. Otherwise, it will take up to one polling cycle before they are discovered. The default value for this flag (`--tablet_refresh_interval`) is one minute. If you intend to reduce this value, ensure that the increased polling frequency will not overwhelm the toposerver.
 
 VTGate requires a cell to operate in. A vtgate’s main job is to forward requests to the vttablets in the local cell. However, vtgates can go cross-cell in two situations:
 
@@ -18,17 +18,17 @@ Here is a sample vtgate invocation:
 
 ```text
 vtgate <topo_flags> \
-  -log_dir=${VTDATAROOT}/tmp \
-  -cell=cell1 \
-  -cells_to_watch=cell1 \
-  -tablet_types_to_wait=PRIMARY,REPLICA \
-  -port=15001 \
-  -mysql_server_port=15306 \
-  -mysql_auth_server_impl=static \
-  -mysql_auth_server_static_file=mysql_creds.json \
-  -grpc_port=15991 \
-  -service_map='grpc-vtgateservice' \
-  -vschema_ddl_authorized_users='dba%'
+  --log_dir=${VTDATAROOT}/tmp \
+  --cell=cell1 \
+  --cells_to_watch=cell1 \
+  --tablet_types_to_wait=PRIMARY,REPLICA \
+  --port=15001 \
+  --mysql_server_port=15306 \
+  --mysql_auth_server_impl=static \
+  --mysql_auth_server_static_file=mysql_creds.json \
+  --grpc_port=15991 \
+  --service_map='grpc-vtgateservice' \
+  --vschema_ddl_authorized_users='dba%'
 ```
 VTGate uses the global topo to get the topo addresses of the cells it has to watch. For this reason, you do not need to specify the topo addresses for the current cell.
 

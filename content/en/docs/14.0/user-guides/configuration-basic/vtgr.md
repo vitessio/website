@@ -7,8 +7,8 @@ weight: 10
 
 In order to configure `vtgr`, you have to make the following changes to `vttablet`:
 
-* Add `-db_flavor=MysqlGR`: This will allow vttablet to understand stats in group replication.
-* Add `-disable_active_reparents=true`: This part will prevent vttablet from fixing replication, and will rely on vtgr instead.
+* Add `--db_flavor=MysqlGR`: This will allow vttablet to understand stats in group replication.
+* Add `--disable_active_reparents=true`: This part will prevent vttablet from fixing replication, and will rely on vtgr instead.
 
 `vtgr` requires two config files `vtgr_config` and `db_config` to be launched:
 
@@ -31,10 +31,10 @@ You can bring `vtgr` using the following invocation:
 
 ```sh
 vtgr <topo_flags> \
-  -log_dir=${VTDATAROOT}/tmp \
-  -vtgr_config vtgr.json \
-  -db_config db.json \
-  -clusters_to_watch ks/0 \
+  --log_dir=${VTDATAROOT}/tmp \
+  --vtgr_config vtgr.json \
+  --db_config db.json \
+  --clusters_to_watch ks/0 \
  ```
 
 Bringing up `vtgr` should immediately cause a primary to be elected among the vttablets that have come up.

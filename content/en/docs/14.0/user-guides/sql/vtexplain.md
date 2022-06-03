@@ -131,7 +131,7 @@ To explain a query, pass the SQL schema and VSchema files as arguments to the `V
 In the following example, the `VTExplain` command takes a `SELECT` query and returns the sequence of queries that Vitess runs in order to execute the query:
 
 ```
-vtexplain -shards 8 -vschema-file vschema.json -schema-file schema.sql -replication-mode "ROW" -output-mode text -sql "SELECT * from users"
+vtexplain --shards 8 --vschema-file vschema.json --schema-file schema.sql --replication-mode "ROW" --output-mode text -sql "SELECT * from users"
 ----------------------------------------------------------------------
 SELECT * from users
 
@@ -177,7 +177,7 @@ In this example, each query has sequence number `1`, which shows that Vitess exe
 In the following example, the `VTExplain` command takes an `INSERT` query and returns the sequence of queries that Vitess runs in order to execute the query:
 
 ```
-vtexplain -shards 128 -vschema-file vschema.json -schema-file schema.sql -replication-mode "ROW" -output-mode text -sql "INSERT INTO users (user_id, name) VALUES(1, 'john')"
+vtexplain --shards 128 --vschema-file vschema.json --schema-file schema.sql --replication-mode "ROW" --output-mode text --sql "INSERT INTO users (user_id, name) VALUES(1, 'john')"
 ----------------------------------------------------------------------
 INSERT INTO users (user_id, name) VALUES(1, 'john')
 
@@ -293,7 +293,7 @@ The shardrange map has the same structure as the output of running `vtctl FindAl
 After having saved that to a file called `shardmaps.json`:
 
 ```
-vtexplain -vschema-file vschema.json -schema-file schema.sql -ks-shard-map "$(cat shardmaps.json)" -replication-mode "ROW" -output-mode text -sql "SELECT * FROM users; SELECT * FROM users WHERE id IN (10, 17, 42, 1000);"
+vtexplain --vschema-file vschema.json --schema-file schema.sql --ks-shard-map "$(cat shardmaps.json)" --replication-mode "ROW" --output-mode text --sql "SELECT * FROM users; SELECT * FROM users WHERE id IN (10, 17, 42, 1000);"
 ----------------------------------------------------------------------
 SELECT * FROM users
 

@@ -4,7 +4,7 @@ weight: 15
 aliases: ['/docs/user-guides/schema-changes/concurrent-migrations/']
 ---
 
-By default, Vitess schedules all migrations to run sequentially. Only a single migration is expected to run at any given time. However, there are cases for concurrent execution of migrations, and the user may request concurrent execution via `-allow-concurrent` flag in `ddl_strategy`.
+By default, Vitess schedules all migrations to run sequentially. Only a single migration is expected to run at any given time. However, there are cases for concurrent execution of migrations, and the user may request concurrent execution via `--allow-concurrent` flag in `ddl_strategy`.
 
 ## Why not run concurrent migrations by default
 
@@ -21,22 +21,22 @@ There are valid, even essential cases to running multiple migrations concurrentl
 
 ## Running a concurrent migration
 
-To run a migration concurrently, the user will add `-allow-concurrent` to the `ddl_strategy`. For example:
+To run a migration concurrently, the user will add `--allow-concurrent` to the `ddl_strategy`. For example:
 
 ```sql
-mysql> set @@ddl_strategy='vitess -allow-concurrent';
+mysql> set @@ddl_strategy='vitess --allow-concurrent';
 mysql> create table sample_table(id int primary key);
 ```
 
 or, via `vtctl`:
 
 ```shell
-vtctl ApplySchema -skip_preflight -ddl_strategy "vitess -allow-concurrent" -sql "REVERT VITESS_MIGRATION '3091ef2a_4b87_11ec_a827_0a43f95f28a3'"
+vtctl ApplySchema -- --skip_preflight --ddl_strategy "vitess --allow-concurrent" -sql "REVERT VITESS_MIGRATION '3091ef2a_4b87_11ec_a827_0a43f95f28a3'"
 ```
 
 ## Restrictions and eligibility
 
-- To be eligible for concurrent execution, `-allow-concurrent` must be supplied.
+- To be eligible for concurrent execution, `--allow-concurrent` must be supplied.
 - Any `CREATE` and `DROP` DDL is eligible for concurrent execution.
 - Any `REVERT` request is eligible for concurrent execution.
 - There can be at most one non-concurrent (regular) migration running at any given time.

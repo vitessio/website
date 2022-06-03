@@ -7,22 +7,22 @@ weight: 15
 To add a cell after a cluster is up and running, you start off by creating one using the same steps previously performed to create the first cell:
 
 ```sh
-vtctlclient AddCellInfo \
-  -root /vitess/cell2 \
-  -server_address <cell2_topo_address> \
+vtctlclient AddCellInfo -- \
+  --root /vitess/cell2 \
+  --server_address <cell2_topo_address> \
   cell2
 ```
 
 Additionally, you will need to make the keyspace info visible in the cell. For every keyspace, issue the following:
 
 ```text
-vtctlclient RebuildKeyspaceGraph -cells=cell2 <keyspace>
+vtctlclient RebuildKeyspaceGraph -- --cells=cell2 <keyspace>
 ```
 
 And finally, deploy the VSchema with
 
 ```text
-vtctlclient RebuildVSchemaGraph -cells=cell2
+vtctlclient RebuildVSchemaGraph -- --cells=cell2
 ```
 
 {{< info >}}
@@ -36,10 +36,10 @@ Once these steps are done, you can bring up the necessary mysqls, vttablets and 
 To delete a cell, bring down all servers in that cell, and then remove its entry from the global topo with:
 
 ```
-vtctlclient DeleteCellInfo -force cell2
+vtctlclient DeleteCellInfo -- --force cell2
 ```
 
-If `-force` is not used the command will error out if any keyspace was deployed to that cell. There is currently no clean way to undeploy a keyspace from a cell. So, `-force` will need to be used for most use cases.
+If `-force` is not used the command will error out if any keyspace was deployed to that cell. There is currently no clean way to undeploy a keyspace from a cell. So, `--force` will need to be used for most use cases.
 
 VTGates and vtctlds do not refresh themselves after a cell is deleted or updated. It is recommended that you restart them.
 

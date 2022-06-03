@@ -16,24 +16,24 @@ In this guide, we will walk through the process of using the `CreateLookupVindex
 
 `vtctlclient CreateLookupVindex` has the following syntax:
 
-```CreateLookupVindex  [-cells=<source_cells>] [-continue_after_copy_with_owner=false] [-tablet_types=<source_tablet_types>] <keyspace> <json_spec>```
+```CreateLookupVindex  [--cells=<source_cells>] [--continue_after_copy_with_owner=false] [--tablet_types=<source_tablet_types>] <keyspace> <json_spec>```
 
  * `<json_spec>`:  Use the lookup Vindex specified in `<json_spec>` along with
 VReplication to populate/backfill the lookup Vindex from the source table.
  * `<keyspace>`:  The Vitess keyspace we are creating the lookup Vindex in.
 The source table is expected to also be in this keyspace.
- * `-tablet-types`:  Provided to specify the tablet types
+ * `--tablet-types`:  Provided to specify the tablet types
 (e.g. `PRIMARY`, `REPLICA`, `RDONLY`) that are acceptable
 as source tablets for the VReplication stream(s) that this command will
 create. If not specified, the tablet type used will default to the value
 of the vttablet `-vreplication_tablet_type` option, which defaults to
 `in_order:REPLICA,PRIMARY`.
- * `-cells`: By default VReplication streams, such as used by
+ * `--cells`: By default VReplication streams, such as used by
 `CreateLookupVindex` will not cross cell boundaries.  If you want the
 VReplication streams to source their data from tablets in cells other
-than the local cell, you can use the `-cells` option to specify a
+than the local cell, you can use the `--cells` option to specify a
 comma-separated list of cells.
-* `-continue_after_copy_with_owner`: By default, when an owner is provided,
+* `--continue_after_copy_with_owner`: By default, when an owner is provided,
 the VReplication streams will stop after the backfill completes. Set this flag if
 you don't want this to happen. This is useful if, for example,
 the owner table is being migrated from an unsharded keyspace to a sharded keyspace
@@ -182,7 +182,7 @@ any schema to create as it will do it automatically.  Now, let us
 actually execute the `CreateLookupVindex` command:
 
 ```sh
-$ vtctlclient -server localhost:15999 CreateLookupVindex -tablet_types=RDONLY customer "$(cat lookup_vindex.json)"
+$ vtctlclient --server localhost:15999 CreateLookupVindex -- --tablet_types=RDONLY customer "$(cat lookup_vindex.json)"
 ```
 
 Note:
@@ -200,7 +200,7 @@ which tablets we have in our environment, so we know which tablets to
 issue commands against:
 
 ```sh
-$ vtctlclient -server localhost:15999 ListAllTablets | grep customer
+$ vtctlclient --server localhost:15999 ListAllTablets | grep customer
 zone1-0000000300 customer -80 primary localhost:15300 localhost:17300 [] 2020-08-13T01:23:15Z
 zone1-0000000301 customer -80 replica localhost:15301 localhost:17301 [] <null>
 zone1-0000000302 customer -80 rdonly localhost:15302 localhost:17302 [] <null>
@@ -222,7 +222,7 @@ Lets observe the VReplication streams that got created using the
 to the first primary tablet `zone1-0000000300`:
 
 ```sql
-$ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000300 "select * from _vt.vreplication"
+$ vtctlclient --server localhost:15999 VReplicationExec zone1-0000000300 "select * from _vt.vreplication"
 +----+-------------------+--------------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------------------+-------------+
 | id |     workflow      |                source                |                        pos                        | stop_pos |       max_tps       | max_replication_lag | cell | tablet_types | time_updated | transaction_timestamp |  state  |       message       |   db_name   |
 +----+-------------------+--------------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------------------+-------------+
@@ -248,7 +248,7 @@ $ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000300 "select 
 And now the streams to the second primary tablet `zone1-0000000400`:
 
 ```sql
-$ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000400 "select * from _vt.vreplication"
+$ vtctlclient --server localhost:15999 VReplicationExec zone1-0000000400 "select * from _vt.vreplication"
 +----+-------------------+--------------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------------------+-------------+
 | id |     workflow      |                source                |                        pos                        | stop_pos |       max_tps       | max_replication_lag | cell | tablet_types | time_updated | transaction_timestamp |  state  |       message       |   db_name   |
 +----+-------------------+--------------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------------------+-------------+
@@ -281,7 +281,7 @@ Note that if the tables were large and the copy was still in progress, the
 the copy by looking at the `_vt.copy_state` table, e.g.:
 
 ```sql
-$ vtctlclient -server localhost:15999 VReplicationExec zone1-0000000300 "select * from _vt.copy_state"
+$ vtctlclient --server localhost:15999 VReplicationExec zone1-0000000300 "select * from _vt.copy_state"
 +----------+------------+--------+
 | vrepl_id | table_name | lastpk |
 +----------+------------+--------+
@@ -336,7 +336,7 @@ the vreplication streams and also clear the `write_only` flag from the
 vindex indicating that it is not backfilling any more.
 
 ```sh
-$ vtctlclient -server localhost:15999 ExternalizeVindex customer.corder_lookup
+$ vtctlclient --server localhost:15999 ExternalizeVindex customer.corder_lookup
 ```
 
 Next, to confirm the lookup Vindex is doing what we think it should, we can

@@ -3,7 +3,7 @@ title: Comment Directives
 weight: 13
 ---
 
-Vitess supports a small set of meta-directives that can be passed from the application to Vitess as SQL comments in the application. These directives can be used to alter the behavior of Vitess on a per-query basis. This is often used by advanced Vitess users to obtain finely granular control over the behavior of Vitess, often for the purposes of optimizing performance.
+Vitess supports a small set of meta-directives that can be passed from the application to Vitess as SQL comments in the application. These directives can be used to alter the behavior of Vitess on a per--query basis. This is often used by advanced Vitess users to obtain finely granular control over the behavior of Vitess, often for the purposes of optimizing performance.
 
 All the comment directives, included as part of the query, take the form:
 
@@ -15,7 +15,7 @@ One thing to note when experimenting with query comments is that various MySQL c
 
 ## Query timeouts (`QUERY_TIMEOUT_MS`)
 
-In Vitess, individual non-streaming queries are subject to query timeouts. This are typically set by the vttablet option `-queryserver-config-query-timeout`. Whole transactions are also subject to the vttablet timeout setting `-queryserver-config-transaction-timeout`.
+In Vitess, individual non-streaming queries are subject to query timeouts. This are typically set by the vttablet option `--queryserver-config--query-timeout`. Whole transactions are also subject to the vttablet timeout setting `--queryserver-config-transaction-timeout`.
 
 However, for read (`SELECT`) queries, it is also possible to use a special Vitess query comment format to set a lower timeout for certain queries, e.g.:
 
@@ -30,7 +30,7 @@ As indicated by the comment name (QUERY_TIMEOUT_MS), this timeout is in millisec
 
 - Only works for `SELECT` (read) queries.
 - Does not work when doing manual shard-targeting. See [this issue](https://github.com/vitessio/vitess/issues/7031).
-- Cannot set a higher limit to evade the settings for `-queryserver-config-query-timeout` and/or `-queryserver-config-transaction-timeout`.
+- Cannot set a higher limit to evade the settings for `--queryserver-config--query-timeout` and/or `--queryserver-config-transaction-timeout`.
 
 ## Multi-shard Autocommit (`MULTI_SHARD_AUTOCOMMIT`)
 
@@ -55,18 +55,18 @@ The `SCATTER_ERRORS_AS_WARNINGS` comment directive enables exactly this, by retu
 
 ## Ignore max payload size (`IGNORE_MAX_PAYLOAD_SIZE`)
 
-By default, Vitess will try to handle queries of any size. It is possible to use the `vtgate` parameter `-max_payload_size` (default unlimited) to limit the size of an incoming query to a certain number of bytes. Queries larger than this limit will then be rejected by `vtgate`.
+By default, Vitess will try to handle queries of any size. It is possible to use the `vtgate` parameter `--max_payload_size` (default unlimited) to limit the size of an incoming query to a certain number of bytes. Queries larger than this limit will then be rejected by `vtgate`.
 
 The `IGNORE_MAX_PAYLOAD_SIZE` comment directive allows a Vitess-aware application to bypass this limit, essentially setting it to the default of unlimited for that query.
 
 ## Ignore max memory rows (`IGNORE_MAX_MEMORY_ROWS`)
 
-By default, `vtgate` will allow intermediate results for things like in-vtgate sorting and joining, up to a maximum of number of rows per query. This is to avoid using massive amounts of memory in `vtgate`. This limit is set using the `vtgate` parameter `-max_memory_rows`, which defaults to 300,000. Note that this limit is not a direct memory usage limit, since 300,000 very large rows could still be a huge amount of memory.
+By default, `vtgate` will allow intermediate results for things like in-vtgate sorting and joining, up to a maximum of number of rows per query. This is to avoid using massive amounts of memory in `vtgate`. This limit is set using the `vtgate` parameter `--max_memory_rows`, which defaults to 300,000. Note that this limit is not a direct memory usage limit, since 300,000 very large rows could still be a huge amount of memory.
 
 The `IGNORE_MAX_MEMORY_ROWS` comment directive allows a Vitess-aware application to bypass this limit, essentially setting it to an unlimited number of rows for that query. Since this override can result in very large, and even potentially effectively unbounded, amounts of memory being used by `vtgate`, it should be used with extreme caution.
 
 ## Allow scatter (ALLOW_SCATTER)
 
-In Vitess, it is possible to use the `vtgate` parameter `-no_scatter` to prevent `vtgate` from issuing scatter queries. Thus only queries that target a single shard will be allowed.
+In Vitess, it is possible to use the `vtgate` parameter `--no_scatter` to prevent `vtgate` from issuing scatter queries. Thus only queries that target a single shard will be allowed.
 
 This comment directive is used to override that limitation, allowing application code to be customized to allow scatters for certain chosen use-cases, but not for the general case.

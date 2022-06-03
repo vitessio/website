@@ -78,7 +78,7 @@ For ease-of-use, Vitess provides a script to port-forward from Kubernetes to you
 
 ```bash
 ./pf.sh &
-alias vtctlclient="vtctlclient -server=localhost:15999"
+alias vtctlclient="vtctlclient --server=localhost:15999"
 alias mysql="mysql -h 127.0.0.1 -P 15306 -u user"
 ```
 
@@ -89,8 +89,8 @@ Setting up aliases changes `mysql` to always connect to Vitess for your current 
 Load our initial schema:
 
 ```bash
-vtctlclient ApplySchema -sql="$(cat create_commerce_schema.sql)" commerce
-vtctlclient ApplyVSchema -vschema="$(cat vschema_commerce_initial.json)" commerce
+vtctlclient ApplySchema -- --sql="$(cat create_commerce_schema.sql)" commerce
+vtctlclient ApplyVSchema -- --vschema="$(cat vschema_commerce_initial.json)" commerce
 ```
 
 ### Connect to your cluster

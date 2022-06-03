@@ -56,35 +56,35 @@ The variables `TOPOLOGY_FLAGS` and `VTDATAROOT` should already be in the environ
 mkdir -p $VTDATAROOT/vt_0000000401
 vttablet \
  $TOPOLOGY_FLAGS \
- -logtostderr \
- -log_queries_to_file $VTDATAROOT/tmp/vttablet_0000000401_querylog.txt \
- -tablet-path "zone1-0000000401" \
- -init_keyspace legacy \
- -init_shard 0 \
- -init_tablet_type replica \
- -port 15401 \
- -grpc_port 16401 \
- -service_map 'grpc-queryservice,grpc-tabletmanager,grpc-updatestream' \
- -pid_file $VTDATAROOT/vt_0000000401/vttablet.pid \
- -vtctld_addr http://localhost:15000/ \
- -db_host 127.0.0.1 \
- -db_port 5726 \
- -db_app_user msandbox \
- -db_app_password msandbox \
- -db_dba_user msandbox \
- -db_dba_password msandbox \
- -db_repl_user msandbox \
- -db_repl_password msandbox \
- -db_filtered_user msandbox \
- -db_filtered_password msandbox \
- -db_allprivs_user msandbox \
- -db_allprivs_password msandbox \
- -init_db_name_override legacy \
- -init_populate_metadata &
+ --logtostderr \
+ --log_queries_to_file $VTDATAROOT/tmp/vttablet_0000000401_querylog.txt \
+ --tablet-path "zone1-0000000401" \
+ --init_keyspace legacy \
+ --init_shard 0 \
+ --init_tablet_type replica \
+ --port 15401 \
+ --grpc_port 16401 \
+ --service_map 'grpc-queryservice,grpc-tabletmanager,grpc-updatestream' \
+ --pid_file $VTDATAROOT/vt_0000000401/vttablet.pid \
+ --vtctld_addr http://localhost:15000/ \
+ --db_host 127.0.0.1 \
+ --db_port 5726 \
+ --db_app_user msandbox \
+ --db_app_password msandbox \
+ --db_dba_user msandbox \
+ --db_dba_password msandbox \
+ --db_repl_user msandbox \
+ --db_repl_password msandbox \
+ --db_filtered_user msandbox \
+ --db_filtered_password msandbox \
+ --db_allprivs_user msandbox \
+ --db_allprivs_password msandbox \
+ --init_db_name_override legacy \
+ --init_populate_metadata &
 ```
 
 Note that if your tablet is using a MySQL instance type where you do not have `SUPER` privileges to the database 
-(e.g. AWS RDS, AWS Aurora or Google CloudSQL), you should omit the `-init_populate_metadata` flag. The `-init_populate_metadata` flag should only be enabled if the cluster is being managed through Vitess.
+(e.g. AWS RDS, AWS Aurora or Google CloudSQL), you should omit the `--init_populate_metadata` flag. The `--init_populate_metadata` flag should only be enabled if the cluster is being managed through Vitess.
 
 You should be able to see debug information written to screen confirming Vitess can reach the unmanaged server. A common problem is that you may need to change the authentication plugin to `mysql_native_password` (MySQL 8.0).
 
@@ -122,13 +122,13 @@ Empty set (0.01 sec)
 Move the table:
 
 ```bash
-vtctlclient MoveTables -source legacy -tables 'legacytable' Create commerce.legacy2commerce 
+vtctlclient MoveTables -- --source legacy --tables 'legacytable' Create commerce.legacy2commerce 
 ```
 
 Switch traffic:
 
 ```bash
-vtctlclient MoveTables -tablet_type=rdonly,replica SwitchTraffic commerce.legacy2commerce
+vtctlclient MoveTables -- --tablet_type=rdonly,replica SwitchTraffic commerce.legacy2commerce
 ```
 
 Complete the MoveTables

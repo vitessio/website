@@ -23,7 +23,7 @@ CREATE TABLE `demo` (
 Consider the following examples:
 
 ```shell
-$ vtctlclient ApplySchema -sql "ALTER TABLE demo modify id bigint unsigned" commerce
+$ vtctlclient ApplySchema -- --sql "ALTER TABLE demo modify id bigint unsigned" commerce
 ```
 ```sql
 SHOW CREATE TABLE demo;
@@ -40,7 +40,7 @@ In the above, we run a direct, synchronous, blocking `ALTER TABLE` statement. Kn
 Vitess will run some validations:
 
 ```shell
-$ vtctlclient ApplySchema -sql "ALTER TABLE demo add column status int" commerce
+$ vtctlclient ApplySchema -- --sql "ALTER TABLE demo add column status int" commerce
 E0908 10:35:53.478462 3711762 main.go:67] remote error: rpc error: code = Unknown desc = schema change failed, ExecuteResult: {
   "FailedShards": null,
   "SuccessShards": null,
@@ -55,10 +55,10 @@ E0908 10:35:53.478462 3711762 main.go:67] remote error: rpc error: code = Unknow
 
 Vitess was able to determine that the migration is invalid because a column named `status` already exists. The statement never made it to the MySQL servers. These checks are not thorough, though they cover common scenarios.
 
-If the table is large, then `ApplySchema` will reject the statement, try to protect the user from blocking their production servers. You may override that by supplying `-allow_long_unavailability` as follows:
+If the table is large, then `ApplySchema` will reject the statement, try to protect the user from blocking their production servers. You may override that by supplying `--allow_long_unavailability` as follows:
 
 ```shell
-$ vtctlclient ApplySchema -allow_long_unavailability -sql "ALTER TABLE demo modify id bigint unsigned" commerce
+$ vtctlclient ApplySchema -- --allow_long_unavailability --sql "ALTER TABLE demo modify id bigint unsigned" commerce
 ```
 
 
@@ -94,7 +94,7 @@ Please do note that if VTGate does not recognize a DDL syntax, the statement wil
 
 You can apply schema changes directly to the underlying MySQL shard primary instances. 
 
-VTTablet will eventually notice the change and update itself. This is controlled by the `-queryserver-config-schema-reload-time` parameter which defaults to 1800 seconds.
+VTTablet will eventually notice the change and update itself. This is controlled by the `--queryserver-config-schema-reload-time` parameter which defaults to 1800 seconds.
 
 You can also explicitly issue the `vtctlclient` `ReloadSchema` command to make it reload immediately. Specify a tablet to reload the schema from, as in:
 

@@ -12,8 +12,8 @@ As soon as the first query returns from the underlying database, the result is s
 
 Flags:
 
-* `-enable_consolidator`: Defaults to true.
-* `-enable_consolidator_replicas`: Only enable query consolidation on non-primary tablets.
+* `--enable_consolidator`: Defaults to true.
+* `--enable_consolidator_replicas`: Only enable query consolidation on non-primary tablets.
 
 ## Consistency
 
@@ -23,5 +23,5 @@ For example, if user1 issues a read query and user2 issues a write, that changes
 
 In this case the consolidator will kick in and user2 will get the result of user1's query thereby losing read-after-write consistency.
 
-If the application is sensitive to this behavior then you can specify that consolidation should be disabled on the primary using the following flags: `-enable_consolidator=false` and `-enable_consolidator_replicas=true`
+If the application is sensitive to this behavior then you can specify that consolidation should be disabled on the primary using the following flags: `--enable_consolidator=false` and `--enable_consolidator_replicas=true`
 
