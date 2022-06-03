@@ -67,7 +67,7 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 
 | Name | Example Usage |
 | :-------- | :--------------- |
-| [CreateKeyspace](../vtctl/keyspaces#createkeyspace) | `CreateKeyspace  -- [--sharding_column_name=name] [--sharding_column_type=type] [--served_from=tablettype1:ks1,tablettype2:ks2,...] [--force] [--keyspace_type=type] [--base_keyspace=base_keyspace] [--snapshot_time=time] <keyspace name>` |
+| [CreateKeyspace](../vtctl/keyspaces#createkeyspace) | `CreateKeyspace  -- [--sharding_column_name=name] [--sharding_column_type=type] [--served_from=tablettype1:ks1,tablettype2:ks2,...] [--force] [--keyspace_type=type] [--base_keyspace=base_keyspace] [--snapshot_time=time] [--durability-policy=policy_name] <keyspace name>` |
 | [DeleteKeyspace](../vtctl/keyspaces#deletekeyspace) | `DeleteKeyspace  -- [--recursive] <keyspace>` |
 | [RemoveKeyspaceCell](../vtctl/keyspaces#removekeyspacesell) | `RemoveKeyspaceCell  -- [--force] [--recursive] <keyspace> <cell>` |
 | [GetKeyspace](../vtctl/keyspaces#getkeyspace) | `GetKeyspace  <keyspace>` |
