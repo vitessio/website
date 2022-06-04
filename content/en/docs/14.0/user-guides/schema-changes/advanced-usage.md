@@ -102,7 +102,7 @@ $ vtctlclient ApplySchema -- --skip_preflight --ddl_strategy='vitess --postpone-
 3cc4ae0e_776f_11ec_a656_0a43f95f28a3
 ```
 
-The above begins a `REVERT` migration that is open-ended (does not complete), via `--postpone-completion`. We also request the migration to run concurrently via `-allow-concurrent` such that it does not block any further "normal" migrations on other tables. Note `3cc4ae0e_776f_11ec_a656_0a43f95f28a3` is the UUID for the reverted migration.
+The above begins a `REVERT` migration that is open-ended (does not complete), via `--postpone-completion`. We also request the migration to run concurrently via `--allow-concurrent` such that it does not block any further "normal" migrations on other tables. Note `3cc4ae0e_776f_11ec_a656_0a43f95f28a3` is the UUID for the reverted migration.
 
 Finally, if we are satisfied that the `drop index` migration went well, we issue:
 

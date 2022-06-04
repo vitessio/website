@@ -140,7 +140,7 @@ vtctlclient --server vtctld.host:15999 Workflow targetkeyspace.workflowname show
 - Use `Workflow .. listall` and `Workflow .. show` as described above to determine what happened 
 - You may need to collect vttablet log information on the source(s) and/or target(s) to diagnose some issues
 
-For example, if you set your `--vreplication_tablet_type` for your vttablets to RDONLY and you are not passing an override `-tablet_types` for MoveTables.  
+For example, if you set your `--vreplication_tablet_type` for your vttablets to RDONLY and you are not passing an override `--tablet_types` for MoveTables.  
 
 The result will be that the MoveTables vreplication streams will only use RDONLY tablet types as their source. 
 If no tablets of this type are available in the same cell as the target keyspace’s primary tablet, the vreplication streams will never start and will loop while searching for eligible tablets to copy from. 
@@ -197,7 +197,7 @@ You may want to keep this in mind when choosing the vtctld instance that you are
 
 1. Timeouts or network interruptions
 
-VDiff may not start because tablets of the `-tablet_type` specified may not be available in the cells specified. 
+VDiff may not start because tablets of the `--tablet_type` specified may not be available in the cells specified. 
 This is often the case if you are using the optional parameters of `--source_cell` and `--target_cell`. 
 In a case like this VDiff will appear to run, but will not actually make any progress. 
 This can be observed via messages in the vtctld log like:
@@ -469,7 +469,7 @@ $ vtctlclient --server localhost:15999 Workflow show targetkeyspace.workflowname
 If the VReplication of changes from the sourcekeyspace to the targetkeyspace are lagging (possibly because of high write rate to the source keyspace), the SwitchWrites operation may fail.
 This is because as part of SwitchWrites, traffic is paused, and Vitess then waits a short amount of time for the targetkeyspace shards to catch up to the point(s) where the sourcekeyspace shard(s) were stopped.
 If this does not happen within that timeout period, the SwitchWrites will fail. 
-The default for this wait period is 30 seconds;  and can be adjusted upwards or downwards by passing the --timeout flag to the SwitchWrites command.
+The default for this wait period is 30 seconds; and can be adjusted upwards or downwards by passing the --timeout flag to the SwitchWrites command.
 
 {{< info >}}
 Note that the above limitation does not apply to SwitchReads, since replica/rdonly instances are assumed to lag anyway.  You should accordingly manually validate that the replica lag is within acceptable limits for your purposes before you run SwitchReads.   You can do this by inspecting the MaxVReplicationLag value in the Workflow … show output (cf. above).  This value represents the maximum lag, in seconds, of the underlying streams.

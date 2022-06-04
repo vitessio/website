@@ -39,7 +39,7 @@ To delete a cell, bring down all servers in that cell, and then remove its entry
 vtctlclient DeleteCellInfo -- --force cell2
 ```
 
-If `-force` is not used the command will error out if any keyspace was deployed to that cell. There is currently no clean way to undeploy a keyspace from a cell. So, `--force` will need to be used for most use cases.
+If `--force` is not used the command will error out if any keyspace was deployed to that cell. There is currently no clean way to undeploy a keyspace from a cell. So, `--force` will need to be used for most use cases.
 
 VTGates and vtctlds do not refresh themselves after a cell is deleted or updated. It is recommended that you restart them.
 

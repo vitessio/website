@@ -42,7 +42,7 @@ Terminal 1
     $ vtgate --topo_implementation etcd2 --topo_global_server_address localhost:2379 \
     --topo_global_root /vitess/global --log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
     --log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
-    --port 15001 --grpc_port 15991 --mysql_server_port 15306 -mysql_server_socket_path /tmp/mysql.sock \
+    --port 15001 --grpc_port 15991 --mysql_server_port 15306 --mysql_server_socket_path /tmp/mysql.sock \
     --cell zone1 --cells_to_watch zone1 --tablet_types_to_wait PRIMARY,REPLICA \
     --service_map grpc-vtgateservice --pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
     --mysql_auth_server_impl none
@@ -273,7 +273,7 @@ Terminal 1:
     $ vtgate --topo_implementation etcd2 --topo_global_server_address localhost:2379 \
     --topo_global_root /vitess/global --log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
     --log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
-    --port 15001 -grpc_port 15991 --mysql_server_port 15306 -mysql_server_socket_path /tmp/mysql.sock \
+    --port 15001 -grpc_port 15991 --mysql_server_port 15306 --mysql_server_socket_path /tmp/mysql.sock \
     --cell zone1 -cells_to_watch zone1 --tablet_types_to_wait PRIMARY,REPLICA \
     --service_map grpc-vtgateservice -pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
     --mysql_auth_server_impl none --enable_buffer=1
@@ -403,7 +403,7 @@ Terminal 1:
     $ vtgate --topo_implementation etcd2 --topo_global_server_address localhost:2379 \
     --topo_global_root /vitess/global --log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
     --log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
-    --port 15001 --grpc_port 15991 --mysql_server_port 15306 -mysql_server_socket_path /tmp/mysql.sock \
+    --port 15001 --grpc_port 15991 --mysql_server_port 15306 --mysql_server_socket_path /tmp/mysql.sock \
     --cell zone1 --cells_to_watch zone1 --tablet_types_to_wait PRIMARY,REPLICA \
     --service_map grpc-vtgateservice --pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
     --mysql_auth_server_impl none --enable_buffer=1 --buffer_window=1s
