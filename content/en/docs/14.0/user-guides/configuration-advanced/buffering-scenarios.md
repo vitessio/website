@@ -1,12 +1,12 @@
 ---
 title: VTGate Buffering Scenarios
 weight: 1
-aliases: ['/docs/reference/features/vtgate--buffering',
+aliases: ['/docs/reference/features/vtgate-buffering',
 '/docs/reference/programs/vtgate']
 ---
 
 For documentation on buffering behaviors please see
-[VTGate Buffering](../../../reference/features/vtgate--buffering/).
+[VTGate Buffering](../../../reference/features/vtgate-buffering/).
 In this guide we are going to go through a few scenarios involving buffering to
 see the practical behaviors. There are several parameters to tune for buffering
 so, we will be using a python utility [gateslap](https://github.com/planetscale/gateslap)
@@ -40,12 +40,12 @@ the terminal window and hit enter:
 ```
 Terminal 1
     $ vtgate --topo_implementation etcd2 --topo_global_server_address localhost:2379 \
-    --topo_global_root /vitess/global -log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
-    -log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
-    -port 15001 -grpc_port 15991 -mysql_server_port 15306 -mysql_server_socket_path /tmp/mysql.sock \
-    -cell zone1 -cells_to_watch zone1 -tablet_types_to_wait PRIMARY,REPLICA \
-    -service_map grpc-vtgateservice -pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
-    -mysql_auth_server_impl none
+    --topo_global_root /vitess/global --log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
+    --log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
+    --port 15001 --grpc_port 15991 --mysql_server_port 15306 -mysql_server_socket_path /tmp/mysql.sock \
+    --cell zone1 --cells_to_watch zone1 --tablet_types_to_wait PRIMARY,REPLICA \
+    --service_map grpc-vtgateservice --pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
+    --mysql_auth_server_impl none
 ```
 
 #### Terminal 2:
@@ -84,7 +84,7 @@ for measuring how long the operation takes.
 
 ```
 Terminal 3
-    $ time vtctlclient --server localhost:15999 PlannedReparentShard -keyspace_shard=commerce/0
+    $ time vtctlclient --server localhost:15999 PlannedReparentShard -- --keyspace_shard=commerce/0
 ```
 ---
 
@@ -105,7 +105,7 @@ As soon as traffic is sent issue the PlannedReparentShard command:
 
 ```
 Terminal 3:
-    $ time vtctlclient --server localhost:15999 PlannedReparentShard -keyspace_shard=commerce/0
+    $ time vtctlclient --server localhost:15999 PlannedReparentShard -- --keyspace_shard=commerce/0
 ```
 
 #### Results:
@@ -153,7 +153,7 @@ As soon as traffic is sent issue the PlannedReparentShard command:
 
 ```
 Terminal 3:
-    $ time vtctlclient --server localhost:15999 PlannedReparentShard -keyspace_shard=commerce/0
+    $ time vtctlclient --server localhost:15999 PlannedReparentShard -- --keyspace_shard=commerce/0
 ```
 
 #### Results:
@@ -203,12 +203,12 @@ to our vtgate process: `-enable_buffer=1`
 ```
 Terminal 1:
     $ vtgate --topo_implementation etcd2 --topo_global_server_address localhost:2379 \
-    --topo_global_root /vitess/global -log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
-    -log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
-    -port 15001 -grpc_port 15991 -mysql_server_port 15306 -mysql_server_socket_path /tmp/mysql.sock \
-    -cell zone1 -cells_to_watch zone1 -tablet_types_to_wait PRIMARY,REPLICA \
-    -service_map grpc-vtgateservice -pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
-    -mysql_auth_server_impl none -enable_buffer=1
+    --topo_global_root /vitess/global --log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
+    --log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
+    --port 15001 --grpc_port 15991 --mysql_server_port 15306 --mysql_server_socket_path /tmp/mysql.sock \
+    --cell zone1 --cells_to_watch zone1 --tablet_types_to_wait PRIMARY,REPLICA \
+    --service_map grpc-vtgateservice --pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
+    --mysql_auth_server_impl none --enable_buffer=1
 ```
 
 We're using the `01_light_traffic.ini` which has error handling disabled.
@@ -223,7 +223,7 @@ As soon as traffic is sent issue the PlannedReparentShard command:
 
 ```
 Terminal 3:
-    $ time vtctlclient --server localhost:15999 PlannedReparentShard -keyspace_shard=commerce/0
+    $ time vtctlclient --server localhost:15999 PlannedReparentShard -- --keyspace_shard=commerce/0
 ```
 
 #### Results:
@@ -271,12 +271,12 @@ Restart the vtgate process to clear metrics:
 Terminal 1:
     Ctrl + C
     $ vtgate --topo_implementation etcd2 --topo_global_server_address localhost:2379 \
-    --topo_global_root /vitess/global -log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
-    -log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
-    -port 15001 -grpc_port 15991 -mysql_server_port 15306 -mysql_server_socket_path /tmp/mysql.sock \
-    -cell zone1 -cells_to_watch zone1 -tablet_types_to_wait PRIMARY,REPLICA \
-    -service_map grpc-vtgateservice -pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
-    -mysql_auth_server_impl none -enable_buffer=1
+    --topo_global_root /vitess/global --log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
+    --log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
+    --port 15001 -grpc_port 15991 --mysql_server_port 15306 -mysql_server_socket_path /tmp/mysql.sock \
+    --cell zone1 -cells_to_watch zone1 --tablet_types_to_wait PRIMARY,REPLICA \
+    --service_map grpc-vtgateservice -pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
+    --mysql_auth_server_impl none --enable_buffer=1
 ```
 
 ```
@@ -291,7 +291,7 @@ is a 5 second sleep commands between the PRS statements.
 
 ```
 Terminal 3:
-    $ time vtctlclient --server localhost:15999 PlannedReparentShard -keyspace_shard=commerce/0 && sleep 5 && time vtctlclient --server localhost:15999 PlannedReparentShard -keyspace_shard=commerce/0
+    $ time vtctlclient --server localhost:15999 PlannedReparentShard -- --keyspace_shard=commerce/0 && sleep 5 && time vtctlclient --server localhost:15999 PlannedReparentShard -- --keyspace_shard=commerce/0
 ```
 
 #### Results:
@@ -343,12 +343,12 @@ Terminal 1:
     Hit "Ctrl + C" to kill the vtgate process
 
     $ vtgate --topo_implementation etcd2 --topo_global_server_address localhost:2379 \
-    --topo_global_root /vitess/global -log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
-    -log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
-    -port 15001 -grpc_port 15991 -mysql_server_port 15306 -mysql_server_socket_path /tmp/mysql.sock \
-    -cell zone1 -cells_to_watch zone1 -tablet_types_to_wait PRIMARY,REPLICA \
-    -service_map grpc-vtgateservice -pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
-    -mysql_auth_server_impl none -enable_buffer=1 --buffer_size=4
+    --topo_global_root /vitess/global --log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
+    --log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
+    --port 15001 --grpc_port 15991 --mysql_server_port 15306 --mysql_server_socket_path /tmp/mysql.sock \
+    --cell zone1 --cells_to_watch zone1 --tablet_types_to_wait PRIMARY,REPLICA \
+    --service_map grpc-vtgateservice --pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
+    --mysql_auth_server_impl none --enable_buffer=1 --buffer_size=4
 ```
 
 ```
@@ -359,7 +359,7 @@ Terminal 2:
 
 ```
 Terminal 3:
-    $ time vtctlclient --server localhost:15999 PlannedReparentShard -keyspace_shard=commerce/0
+    $ time vtctlclient --server localhost:15999 PlannedReparentShard -- --keyspace_shard=commerce/0
 ```
 
 #### Results:
@@ -401,12 +401,12 @@ Terminal 1:
     Hit "Ctrl + C" to kill the vtgate process
 
     $ vtgate --topo_implementation etcd2 --topo_global_server_address localhost:2379 \
-    --topo_global_root /vitess/global -log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
-    -log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
-    -port 15001 -grpc_port 15991 -mysql_server_port 15306 -mysql_server_socket_path /tmp/mysql.sock \
-    -cell zone1 -cells_to_watch zone1 -tablet_types_to_wait PRIMARY,REPLICA \
-    -service_map grpc-vtgateservice -pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
-    -mysql_auth_server_impl none -enable_buffer=1 --buffer_window=1s
+    --topo_global_root /vitess/global --log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
+    --log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
+    --port 15001 --grpc_port 15991 --mysql_server_port 15306 -mysql_server_socket_path /tmp/mysql.sock \
+    --cell zone1 --cells_to_watch zone1 --tablet_types_to_wait PRIMARY,REPLICA \
+    --service_map grpc-vtgateservice --pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
+    --mysql_auth_server_impl none --enable_buffer=1 --buffer_window=1s
 ```
 
 ```
@@ -417,7 +417,7 @@ Terminal 2:
 
 ```
 Terminal 3:
-    $ time vtctlclient --server localhost:15999 PlannedReparentShard -keyspace_shard=commerce/0
+    $ time vtctlclient --server localhost:15999 PlannedReparentShard -- --keyspace_shard=commerce/0
 ```
 
 #### Results:
@@ -467,7 +467,7 @@ Terminal 1:
     $ ./401_teardown.sh
     $ rm -rf ./vtdataroot
 
-    $ sudo apt-get install mysql-client-core-8.0=8.0.19-0ubuntu5 mysql--server-core-8.0=8.0.19-0ubuntu5
+    $ sudo apt-get install mysql-client-core-8.0=8.0.19-0ubuntu5 mysql-server-core-8.0=8.0.19-0ubuntu5
 
     $ ./101_initial_cluster.sh
     $ ps aux | grep [v]tgate
