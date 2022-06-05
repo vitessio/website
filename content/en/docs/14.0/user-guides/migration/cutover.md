@@ -197,7 +197,7 @@ You may want to keep this in mind when choosing the vtctld instance that you are
 
 1. Timeouts or network interruptions
 
-VDiff may not start because tablets of the `--tablet_type` specified may not be available in the cells specified. 
+VDiff may not start because tablets of the `--tablet_types` specified may not be available in the cells specified. 
 This is often the case if you are using the optional parameters of `--source_cell` and `--target_cell`. 
 In a case like this VDiff will appear to run, but will not actually make any progress. 
 This can be observed via messages in the vtctld log like:
@@ -289,7 +289,7 @@ It is recommended you first run SwitchTraffic with --dry_run so you understand w
 Reads and writes no longer need to be switched in specific order, but both will need to be completed to run MoveTables Complete. 
 The default SwitchTraffic behavior is to switch all traffic in a single command, Vitess switches all reads and then writes if you use this default option.
 
-1. Depending on what `--table_types` you are using, you will use one of the four following commands:
+1. Depending on what `--tablet_types` you are using, you will use one of the four following commands:
 
 - Default (switches all tablet types)
 
@@ -332,26 +332,26 @@ After you have tried the above command(s) with `--dry_run` remove just that flag
 
 ### When using --v1 commands
 
-1. Depending on what `--table_types` you are using, you will use one of the two following commands:
+1s. Depending on what `--tablet_types` you are using, you will use one of the two following commands:
 
 - RDONLY:
   
 ```
-vtctlclient --server vtctld.host:15999 SwitchReads -- --tablet_type=rdonly targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 SwitchReads -- --tablet_types=rdonly targetkeyspace.workflowname
 ```
 
 - REPLICA:  
 
 ```
-vtctlclient --server vtctld.host:15999 SwitchReads -- --tablet_type=replica targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 SwitchReads -- --tablet_types=replica targetkeyspace.workflowname
 ```
 
 The output of these commands will look similar to the following:
 
 ```sh
-$ vtctlclient --server localhost:15999 SwitchReads -- --tablet_type=rdonly --reverse --dry_run targetkeyspace.workflowname
+$ vtctlclient --server localhost:15999 SwitchReads -- --tablet_types=rdonly --reverse --dry_run targetkeyspace.workflowname
 Dry Run results for SwitchReads run at 02 Jan 06 15:04 MST
-Parameters: --tablet_type=rdonly --reverse --dry_run targetkeyspace.workflowname
+Parameters: --tablet_types=rdonly --reverse --dry_run targetkeyspace.workflowname
 
 Lock keyspace sourcekeyspace
 Switch reads for tables [t1] to keyspace sourcekeyspace for tablet types [RDONLY]
@@ -484,7 +484,7 @@ ReverseTraffic supports the `--dry_run` flag and we recommend using it to verify
 Then remove --dry_run when you are prepared to actually ReverseTraffic.
 The default ReverseTraffic behavior is to switch all traffic in a single command, meaning that Vitess switches all reads and then writes if you use this default option.
 
-1. Depending on what `--table_types` you are using, you will use one of the four following commands:
+1. Depending on what `--tablet_types` you are using, you will use one of the four following commands:
 
 - Default (switches all tablet types)
 
@@ -518,18 +518,18 @@ vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=primary --dr
 Only follow these steps if SwitchWrites has not yet been run.
 {{< /warning >}}
 
-1. Depending on what `--table_types` you are using, you will use one of the two following commands:
+1. Depending on what `--tablet_types` you are using, you will use one of the two following commands:
 
 - RDONLY:
   
 ```
-vtctlclient --server localhost:15999 SwitchReads -- --tablet_type=rdonly --dry_run sourcekeyspace.workflowname_reverse
+vtctlclient --server localhost:15999 SwitchReads -- --tablet_types=rdonly --dry_run sourcekeyspace.workflowname_reverse
 ```
 
 - REPLICA:  
 
 ```
-vtctlclient --server localhost:15999 SwitchReads -- --tablet_type=replica --dry_run sourcekeyspace.workflowname_reverse
+vtctlclient --server localhost:15999 SwitchReads -- --tablet_types=replica --dry_run sourcekeyspace.workflowname_reverse
 ```
 
 #### Writes have been switched:
@@ -538,26 +538,26 @@ vtctlclient --server localhost:15999 SwitchReads -- --tablet_type=replica --dry_
 Only follow these steps if SwitchWrites has already been run.
 {{< /warning >}}
 
-1. Depending on what `--table_type` you are using, you will use one of the two following commands:
+1. Depending on what `--tablet_types` you are using, you will use one of the two following commands:
 
 - RDONLY:
   
 ```
-vtctlclient --server vtctld.host:15999 SwitchReads -- --tablet_type=rdonly --reverse targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 SwitchReads -- --tablet_types=rdonly --reverse targetkeyspace.workflowname
 ```
 
 - REPLICA:  
 
 ```
-vtctlclient --server vtctld.host:15999 SwitchReads -- --tablet_type=replica --reverse targetkeyspace.workflowname
+vtctlclient --server vtctld.host:15999 SwitchReads -- --tablet_types=replica --reverse targetkeyspace.workflowname
 ```
 
 The output of this command will look similar to the following:
 
 ```sh
-$ vtctlclient --server localhost:15999 SwitchReads -- --tablet_type=rdonly --dry_run sourcekeyspace.workflowname_reverse
+$ vtctlclient --server localhost:15999 SwitchReads -- --tablet_types=rdonly --dry_run sourcekeyspace.workflowname_reverse
 Dry Run results for SwitchReads run at 02 Jan 06 15:04 MST
-Parameters: --tablet_type=rdonly --dry_run sourcekeyspace.workflowname_reverse
+Parameters: --tablet_types=rdonly --dry_run sourcekeyspace.workflowname_reverse
 
 Lock keyspace targetkeyspace
 Switch reads for tables [t1] to keyspace sourcekeyspace for tablet types [RDONLY]
@@ -566,10 +566,10 @@ Unlock keyspace targetkeyspace
 ```
 
 ```sh
-$ vtctlclient --server localhost:15999 SwitchReads -- --tablet_type=replica --dry_run sourcekeyspace.workflowname_reverse
+$ vtctlclient --server localhost:15999 SwitchReads -- --tablet_types=replica --dry_run sourcekeyspace.workflowname_reverse
 *** SwitchReads is deprecated. Consider using v2 commands instead, see https://vitess.io/docs/reference/vreplication/ ***
 Dry Run results for SwitchReads run at 02 Jan 06 15:04 MST
-Parameters: --tablet_type=replica --dry_run sourcekeyspace.workflowname_reverse
+Parameters: --tablet_types=replica --dry_run sourcekeyspace.workflowname_reverse
 
 Lock keyspace targetkeyspace
 Switch reads for tables [t1] to keyspace sourcekeyspace for tablet types [REPLICA]
