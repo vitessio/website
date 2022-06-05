@@ -63,7 +63,7 @@ a2994c92_f1d4_11ea_afa3_f875a4d24e90
 
  You my run multiple migrations withing the same `ApplySchema` command:
 ```shell
-$ vtctlclient ApplySchema -skip_preflight --ddl_strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED; CREATE TABLE sample (id int PRIMARY KEY); DROP TABLE another;" commerce
+$ vtctlclient ApplySchema -- --skip_preflight --ddl_strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED; CREATE TABLE sample (id int PRIMARY KEY); DROP TABLE another;" commerce
 3091ef2a_4b87_11ec_a827_0a43f95f28a3
 ```
 

@@ -144,7 +144,7 @@ $ vtctlclient ApplySchema -- --skip_preflight --ddl_strategy "vitess" --sql "ALT
 
 `ApplySchema` accepts the following flags:
 
-- `--ddl_strategy`: by default migrations run directly via MySQL standard DDL. This flag must be aupplied to indicate an online strategy. See also [DDL strategies](../ddl-strategies) and [ddl_strategy flags](../ddl-strategy-flags).
+- `--ddl_strategy`: by default migrations run directly via MySQL standard DDL. This flag must be applied to indicate an online strategy. See also [DDL strategies](../ddl-strategies) and [ddl_strategy flags](../ddl-strategy-flags).
 - `-migration_context <unique-value>`: all migrations in a `ApplySchema` command are logically grouped via a unique _context_. A unique value will be supplied automatically. The user may choose to supply their own value, and it's their responsibility to provide with a unique value. Any string format is accepted.
   The context can then be used to search for migrations, via `SHOW VITESS_MIGRATIONS LIKE 'the-context'`. It is visible in `SHOW VITESS_MIGRATIONS ...` output as the `migration_context` column.
 - `--skip_preflight`: skip an internal Vitess schema validation. When running an online DDL it's recommended to add `--skip_preflight`. In future Vitess versions this flag may be removed or default to `true`.
@@ -162,7 +162,7 @@ A migration can be in any one of these states:
 
 A migration is said to be _pending_ if we expect it to run and complete. Pending migrations are those in `queued`, `ready` and `running` states.
 
-For more about internals of the scheduler and how migration states are controlled, see [Online DDL Scheduler](../../../design-docs/online--ddl/scheduler)
+For more about internals of the scheduler and how migration states are controlled, see [Online DDL Scheduler](../../../design-docs/online-ddl/scheduler)
 
 ## Configuration
 
@@ -174,7 +174,7 @@ For more about internals of the scheduler and how migration states are controlle
 
   Example: `vttablet --migration_check_interval 30s`
 
-- `-enable_online_ddl`: (`vtgate`) whether Online DDL operations are at all possible through `VTGate`. Type: boolean. Default: `true`
+- `--enable_online_ddl`: (`vtgate`) whether Online DDL operations are at all possible through `VTGate`. Type: boolean. Default: `true`
 
   Example: `vtgate --enable_online_ddl=false` to disable access to Online DDL via `VTGate`.
  

@@ -283,13 +283,13 @@ This will result in you dropping your source/original table.
 
 ### When using --v2 commands
 
-With MoveTables v2 instead of performing SwitchReads/Writes you will use MoveTables --SwitchTraffic. 
+With MoveTables v2 instead of performing SwitchReads/Writes you will use MoveTables SwitchTraffic.
 It is recommended you first run SwitchTraffic with --dry_run so you understand what actions are going to be taken before actually taking them. 
 `--dry_run` needs to be added before SwitchTraffic along with any other [SwitchTraffic parameters](../../../reference/vreplication/switchtraffic) you want to pass.
 Reads and writes no longer need to be switched in specific order, but both will need to be completed to run MoveTables Complete. 
 The default SwitchTraffic behavior is to switch all traffic in a single command, Vitess switches all reads and then writes if you use this default option.
 
-1. Depending on what `--table_type` you are using, you will use one of the four following commands:
+1. Depending on what `--table_types` you are using, you will use one of the four following commands:
 
 - Default (switches all tablet types)
 
@@ -332,7 +332,7 @@ After you have tried the above command(s) with `--dry_run` remove just that flag
 
 ### When using --v1 commands
 
-1. Depending on what `--table_type` you are using, you will use one of the two following commands:
+1. Depending on what `--table_types` you are using, you will use one of the two following commands:
 
 - RDONLY:
   
@@ -484,7 +484,7 @@ ReverseTraffic supports the `--dry_run` flag and we recommend using it to verify
 Then remove --dry_run when you are prepared to actually ReverseTraffic.
 The default ReverseTraffic behavior is to switch all traffic in a single command, meaning that Vitess switches all reads and then writes if you use this default option.
 
-1. Depending on what `--table_type` you are using, you will use one of the four following commands:
+1. Depending on what `--table_types` you are using, you will use one of the four following commands:
 
 - Default (switches all tablet types)
 
@@ -518,7 +518,7 @@ vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=primary --dr
 Only follow these steps if SwitchWrites has not yet been run.
 {{< /warning >}}
 
-1. Depending on what `--table_type` you are using, you will use one of the two following commands:
+1. Depending on what `--table_types` you are using, you will use one of the two following commands:
 
 - RDONLY:
   

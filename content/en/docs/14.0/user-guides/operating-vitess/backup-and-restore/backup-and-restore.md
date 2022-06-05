@@ -71,7 +71,7 @@ The following options can be used to configure VTTablet and Vtctld for backups:
         be printed in the vttablet logs.<br>
         Hooks should be located in the <code>vthook</code> subdirectory of the
         <code>VTROOT</code> directory.<br>
-        The hook receives a <code>--operation write</code> or a
+        The hook receives a <code>-operation write</code> or a
         <code>-operation read</code> parameter depending on the direction
         of the data processing. For instance, <code>write</code> would be for
         encryption, and <code>read</code> would be for decryption.</br>

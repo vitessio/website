@@ -38,7 +38,7 @@ $ vtctlclient ApplySchema -- --migration_context="1111-2222" --skip_preflight --
 $ vtctlclient ApplySchema -- --migration_context="1111-2222" --skip_preflight --ddl_strategy='vitess' --sql "alter table customer add column status int unsigned not null" commerce
 ```
 
-In the above, the two calls are identical. Specifically, they share the exact same `--migration_context` value of `1111-2222`, and the exact same `-sql`.
+In the above, the two calls are identical. Specifically, they share the exact same `--migration_context` value of `1111-2222`, and the exact same `--sql`.
 
 Notes:
 
@@ -69,7 +69,7 @@ Notes:
 
 - `--uuid_list` accepts zero or more comma separated UUID values
 - If empty, Vitess calculates UUID for the migrations
-- Number of supplied UUIDs must match the number of DDL statements in `-sql`
+- Number of supplied UUIDs must match the number of DDL statements in `--sql`
 - Each UUID must be in [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt) format, with underscored instead of dashes. Examples of valid UUIDs: `73380089_7764_11ec_a656_0a43f95f28a3`  and `28dc5ebc_78e6_11ec_accf_ab29e6ca1002`.
 - If multiple UUIDs are given, they must all be different from one another.
 - It is the caller's responsibility to ensure the UUIDs are indeed unique. If the user submits an `ApplySchema` with an already existing `--uuid_list=<UUID>` value, Vitess takes no steps to validate whether the DDL is identical to the already existing submission.

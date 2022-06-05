@@ -163,7 +163,7 @@ vttablet <topo_flags> <backup_flags> \
   --restore_from_backup=true \
   --queryserver-config-pool-size=16 \
   --queryserver-config-transaction-cap=300 \
-  -queryserver-config-stream-pool-size= 16
+  --queryserver-config-stream-pool-size= 16
 ```
 
 ### Key configuration notes

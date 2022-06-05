@@ -177,7 +177,7 @@ Once you have your full output in vtexplain.output, use `grep` to search for the
 In the following example, VTGate scatters the example query across both shards, and then aggregates the query results.
 
 ```shell
-$ vtexplain --schema-file schema.sql --vschema-file vschema.json --shards 2 -sql 'SELECT * FROM user;'
+$ vtexplain --schema-file schema.sql --vschema-file vschema.json --shards 2 --sql 'SELECT * FROM user;'
 ----------------------------------------------------------------------
 SELECT * FROM user
 

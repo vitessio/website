@@ -131,7 +131,7 @@ To explain a query, pass the SQL schema and VSchema files as arguments to the `V
 In the following example, the `VTExplain` command takes a `SELECT` query and returns the sequence of queries that Vitess runs in order to execute the query:
 
 ```
-vtexplain --shards 8 --vschema-file vschema.json --schema-file schema.sql --replication-mode "ROW" --output-mode text -sql "SELECT * from users"
+vtexplain --shards 8 --vschema-file vschema.json --schema-file schema.sql --replication-mode "ROW" --output-mode text --sql "SELECT * from users"
 ----------------------------------------------------------------------
 SELECT * from users
 

@@ -172,5 +172,5 @@ There are pros and cons to using any of the strategies. Some notable differences
 - **Trackable**: able to determine migration state (`ready`, `running`, `complete` etc)
   - `vitess` and `gh-ost` strategies also makes available _progress %_ and _ETA seconds_
 - **Declarative**: support `--declarative` flag
-- **Revertible**: `vitess` strategy supports [revertible](../revertible-migrations/) `ALTER` statements (or `ALTER`s implied by `-declarative` migrations). All managed strategies supports revertible `CREATE` and `DROP`.
+- **Revertible**: `vitess` strategy supports [revertible](../revertible-migrations/) `ALTER` statements (or `ALTER`s implied by `--declarative` migrations). All managed strategies supports revertible `CREATE` and `DROP`.
 - **Recoverable**: a `vitess` migration interrupted by planned/unplanned failover, [automatically resumes](../recoverable-migrations/) work from point of interruption. `gh-ost` and `pt-osc` will not resume after failover, but Vitess will automatically retry the migration (by marking the migration as failed and by initiating a `RETRY`), exactly once for any migration.

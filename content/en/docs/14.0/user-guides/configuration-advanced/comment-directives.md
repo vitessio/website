@@ -15,7 +15,7 @@ One thing to note when experimenting with query comments is that various MySQL c
 
 ## Query timeouts (`QUERY_TIMEOUT_MS`)
 
-In Vitess, individual non-streaming queries are subject to query timeouts. This are typically set by the vttablet option `--queryserver-config--query-timeout`. Whole transactions are also subject to the vttablet timeout setting `--queryserver-config-transaction-timeout`.
+In Vitess, individual non-streaming queries are subject to query timeouts. This are typically set by the vttablet option `--queryserver-config-query-timeout`. Whole transactions are also subject to the vttablet timeout setting `--queryserver-config-transaction-timeout`.
 
 However, for read (`SELECT`) queries, it is also possible to use a special Vitess query comment format to set a lower timeout for certain queries, e.g.:
 
@@ -30,7 +30,7 @@ As indicated by the comment name (QUERY_TIMEOUT_MS), this timeout is in millisec
 
 - Only works for `SELECT` (read) queries.
 - Does not work when doing manual shard-targeting. See [this issue](https://github.com/vitessio/vitess/issues/7031).
-- Cannot set a higher limit to evade the settings for `--queryserver-config--query-timeout` and/or `--queryserver-config-transaction-timeout`.
+- Cannot set a higher limit to evade the settings for `--queryserver-config-query-timeout` and/or `--queryserver-config-transaction-timeout`.
 
 ## Multi-shard Autocommit (`MULTI_SHARD_AUTOCOMMIT`)
 
