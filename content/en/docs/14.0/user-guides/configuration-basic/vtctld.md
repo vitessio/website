@@ -9,11 +9,11 @@ Even if brought up within each cell, vtctld itself is not tied to that cell. It 
 
 ```sh
 vtctld <topo_flags> <backup_flags> \
-  -log_dir=${VTDATAROOT}/tmp \
-  -port=15000 \
-  -grpc_port=15999 \
-  -service_map='grpc-vtctl' \
-  -durability_policy='none'
+  --log_dir=${VTDATAROOT}/tmp \
+  --port=15000 \
+  --grpc_port=15999 \
+  --service_map='grpc-vtctl' \
+  --durability_policy='none'
 ```
 
 Look at [Durability Policies](../durability_policy) for more information on the available durability policies.
@@ -33,7 +33,7 @@ vtctld is usually not very resource intensive. But you may need to provision mor
 Since we will be using `vtctlclient` often, it will be convenient to configure an alias for it:
 
 ```sh
-alias vtctlclient="command vtctlclient -server <vtctld_grpc_address> -log_dir ${VTDATAROOT}/tmp -alsologtostderr"
+alias vtctlclient="command vtctlclient --server <vtctld_grpc_address> --log_dir ${VTDATAROOT}/tmp --alsologtostderr"
 ```
 
 {{< info >}}

@@ -81,8 +81,8 @@ The following options can be used to configure VTTablet and Vtctld for backups:
       <td><code>backup_storage_compress</code></td>
       <td>This flag controls if the backups are compressed by the Vitess code.
         By default it is set to true. Use
-        <code>-backup_storage_compress=false</code> to disable.</br>
-        This is meant to be used with a <code>-backup_storage_hook</code>
+        <code>--backup_storage_compress=false</code> to disable.</br>
+        This is meant to be used with a <code>--backup_storage_hook</code>
         hook that already compresses the data, to avoid compressing the data
         twice.
       </td>
@@ -189,7 +189,7 @@ For example, suppose you typically keep four days of replication logs and you cr
 
 The backup and restore processes simultaneously copy and either compress or decompress multiple files to increase throughput. You can control the concurrency using command-line flags:
 
-* The vtctl [Backup](https://vitess.io/docs/reference/programs/vtctl/tablets/#backup) command uses the `-concurrency` flag.
-* vttablet uses the `-restore_concurrency` flag.
+* The vtctl [Backup](https://vitess.io/docs/reference/programs/vtctl/tablets/#backup) command uses the `--concurrency` flag.
+* vttablet uses the `--restore_concurrency` flag.
 
 If the network link is fast enough, the concurrency matches the CPU usage of the process during the backup or restore process.

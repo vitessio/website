@@ -15,8 +15,8 @@ The command for `InitShardPrimary` is as follows:
 
 ```text
 vtctlclient \
-  InitShardPrimary \
-  -force \
+  InitShardPrimary -- \
+  --force \
   commerce/0 \
   cell1-100
 ```

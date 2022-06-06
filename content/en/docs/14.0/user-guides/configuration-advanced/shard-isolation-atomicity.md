@@ -63,7 +63,7 @@ In the [local examples](https://github.com/vitessio/vitess/tree/main/examples/lo
 
 ```sh
 $ ./method1.sh
-+ vtexplain -vschema-file vschema.json -schema-file schema.sql -shards 4 -sql 'INSERT /*vt+ MULTI_SHARD_AUTOCOMMIT=1 */ INTO t1 (c1) values (1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12),(13),(14),(15),(16),(17),(18),(19),(20);'
++ vtexplain --vschema-file vschema.json --schema-file schema.sql --shards 4 --sql 'INSERT /*vt+ MULTI_SHARD_AUTOCOMMIT=1 */ INTO t1 (c1) values (1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12),(13),(14),(15),(16),(17),(18),(19),(20);'
 ----------------------------------------------------------------------
 INSERT /*vt+ MULTI_SHARD_AUTOCOMMIT=1 */ INTO t1 (c1) values (1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12),(13),(14),(15),(16),(17),(18),(19),(20)
 
@@ -85,7 +85,7 @@ Here is our example for this case using `vtexplain` and [`method2.sh`](https://g
 
 ```sh
 $ ./method2.sh
-+ vtexplain -vschema-file vschema.json -schema-file schema.sql -shards 4 -sql 'SET transaction_mode="single"; INSERT INTO t1 (c1) values (1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12),(13),(14),(15),(16),(17),(18),(19),(20);'
++ vtexplain --vschema-file vschema.json --schema-file schema.sql --shards 4 --sql 'SET transaction_mode="single"; INSERT INTO t1 (c1) values (1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12),(13),(14),(15),(16),(17),(18),(19),(20);'
 E0803 16:54:09.738322   89168 tabletserver.go:1368] unknown error: unsupported query rollback (errno 1105) (sqlstate HY000): Sql: "rollback", BindVars: {}
 E0803 16:54:09.738352   89168 tabletserver.go:1368] unknown error: unsupported query rollback (errno 1105) (sqlstate HY000): Sql: "rollback", BindVars: {}
 E0803 16:54:09.738431   89168 tabletserver.go:1368] unknown error: unsupported query rollback (errno 1105) (sqlstate HY000): Sql: "rollback", BindVars: {}
@@ -101,7 +101,7 @@ If we limited ourselves to writes that only target a single one of the multiple 
 
 ```sh
 $ ./method2_working.sh
-+ vtexplain -vschema-file vschema.json -schema-file schema.sql -shards 4 -sql 'SET transaction_mode="single"; INSERT INTO t1 (c1) values (10),(14),(15),(16);'
++ vtexplain --vschema-file vschema.json --schema-file schema.sql --shards 4 --sql 'SET transaction_mode="single"; INSERT INTO t1 (c1) values (10),(14),(15),(16);'
 ----------------------------------------------------------------------
 SET transaction_mode="single"
 
@@ -118,7 +118,7 @@ Here is the result if we attempted a transactional read across shards while in `
 
 ```sh
 $ ./method2_reads.sh
-+ vtexplain -vschema-file vschema.json -schema-file schema.sql -shards 4 -sql 'SET transaction_mode="single"; BEGIN; SELECT * from t1; COMMIT;'
++ vtexplain --vschema-file vschema.json --schema-file schema.sql --shards 4 --sql 'SET transaction_mode="single"; BEGIN; SELECT * from t1; COMMIT;'
 E0803 17:00:49.524545   89777 tabletserver.go:1368] unknown error: unsupported query rollback (errno 1105) (sqlstate HY000): Sql: "rollback", BindVars: {}
 E0803 17:00:49.524549   89777 tabletserver.go:1368] unknown error: unsupported query rollback (errno 1105) (sqlstate HY000): Sql: "rollback", BindVars: {}
 E0803 17:00:49.524581   89777 tabletserver.go:1368] unknown error: unsupported query rollback (errno 1105) (sqlstate HY000): Sql: "rollback", BindVars: {}
@@ -146,7 +146,7 @@ Let's run our example for this case [`method3.sh`](https://github.com/vitessio/v
 
 ```sh
 $ ./method3.sh
-+ vtexplain -vschema-file vschema.json -schema-file schema.sql -shards 4 -sql 'INSERT INTO t1 (c1) values (1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12),(13),(14),(15),(16),(17),(18),(19),(20);'
++ vtexplain --vschema-file vschema.json --schema-file schema.sql --shards 4 --sql 'INSERT INTO t1 (c1) values (1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12),(13),(14),(15),(16),(17),(18),(19),(20);'
 ----------------------------------------------------------------------
 INSERT INTO t1 (c1) values (1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12),(13),(14),(15),(16),(17),(18),(19),(20)
 

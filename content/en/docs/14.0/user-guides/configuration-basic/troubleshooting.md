@@ -148,7 +148,7 @@ Eventually, the new primary will inform the vtgates of its existence, and they w
 
 ### Local TopoServer of a Cell is getting overloaded
 
-This situation can happen if a large number of vtgates continuously spam the local toposerver to check for changes in the list of tablet servers. If this is the case, you may have to reduce the polling frequency of the vtgates by reducing the `-tablet_refresh_interval` value.
+This situation can happen if a large number of vtgates continuously spam the local toposerver to check for changes in the list of tablet servers. If this is the case, you may have to reduce the polling frequency of the vtgates by reducing the `--tablet_refresh_interval` value.
 
 ### Global Topo or Cell Topo is down
 

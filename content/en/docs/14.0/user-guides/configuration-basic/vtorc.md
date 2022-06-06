@@ -7,8 +7,8 @@ weight: 10
 
 In order to configure `vtorc`, you have to make the following changes to `vttablet`:
 
-* Remove `-enable_semi_sync=true`: This part will be managed by vtorc instead.
-* Add `-disable_active_reparents=true`: This part will prevent vttablet from fixing replication, and will rely on vtorc instead.
+* Remove `--enable_semi_sync=true`: This part will be managed by vtorc instead.
+* Add `--disable_active_reparents=true`: This part will prevent vttablet from fixing replication, and will rely on vtorc instead.
 
 As mentioned before, bringing up `vtorc` also lets you avoid performing the `InitShardPrimary` step.
 
@@ -33,9 +33,9 @@ You can bring `vtorc` using the following invocation:
 
 ```sh
 vtorc <topo_flags> \
-  -log_dir=${VTDATAROOT}/tmp \
-  -config orc_config.json \
-  -orc_web_dir ${VTROOT}/web/orchestrator
+  --log_dir=${VTDATAROOT}/tmp \
+  --config orc_config.json \
+  --orc_web_dir ${VTROOT}/web/orchestrator
  ```
 `orc_web_dir` must point at the contents of the orchestrator web files. The source can be found [here](https://github.com/vitessio/vitess/tree/main/web/orchestrator).
 

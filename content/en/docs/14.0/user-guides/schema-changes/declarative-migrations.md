@@ -20,11 +20,11 @@ Declarative DDLs have the property of being idempotent. For example, a user may 
 
 ## Usage
 
-Add `-declarative` to any of the online DDL strategies. Example:
+Add `--declarative` to any of the online DDL strategies. Example:
 
 ```sql
 
-mysql> set @@ddl_strategy='vitess -declarative';
+mysql> set @@ddl_strategy='vitess --declarative';
 
 -- The following migration creates a new table:
 mysql> create table decl_table(id int primary key);
@@ -67,7 +67,7 @@ migration_statement: create table decl_table (
 	ts timestamp not null
 )
            strategy: vitess
-            options: -declarative
+            options: --declarative
     added_timestamp: 2021-03-21 20:39:08
 requested_timestamp: 2021-03-21 20:39:07
     ready_timestamp: 2021-03-21 20:39:10
@@ -91,7 +91,7 @@ Note how while the migration statement is `create`, the migration's `ddl_action`
 
 You may add `-declarative` even if you otherwise supply flags to your favorite strategy. For example, the following is valid:
 ```sql
-set @@ddl_strategy='gh-ost -declarative -max-load=Threads_running=100';
+set @@ddl_strategy='gh-ost --declarative --max-load=Threads_running=100';
 ```
 
 Vitess notes down the `-declarative` flag and does not pass it to `gh-ost`, `pt-osc` or `VReplication`.

@@ -34,7 +34,7 @@ To configure `vtgate` to integrate with LDAP you will have to perform various ta
     * The CA certificate, that your LDAP server TLS certificate is signed by, in PEM format
     * Make sure that you are accessing the LDAP server via a hostname or IP SAN that is defined in your LDAP server TLS certificate. If not, you will not be able to use your LDAP server as-is from `vtgate`.
 
-Once you have your prerequisites above ready, you can now construct your JSON configuration file for `vtgate` using the command line parameter `-mysql_ldap_auth_config_file`. The content of this file is a JSON format object with string key/value members as follows:
+Once you have your prerequisites above ready, you can now construct your JSON configuration file for `vtgate` using the command line parameter `--mysql_ldap_auth_config_file`. The content of this file is a JSON format object with string key/value members as follows:
 
 ```shell
 {
@@ -68,13 +68,13 @@ For debugging this, it is useful to have access to the logs from your LDAP serve
 
 Once you have constructed the above file, you will need to remove any options that references static authentication from your `vtgate` command line such as:
 
-  * `-mysql_auth_server_static_file`
-  * `-mysql_auth_server_static_string`
-  * `-mysql_auth_static_reload_interval`
-  * `-mysql_auth_server_impl static`
+  * `--mysql_auth_server_static_file`
+  * `--mysql_auth_server_static_string`
+  * `--mysql_auth_static_reload_interval`
+  * `--mysql_auth_server_impl static`
 
 and add the following new options:
 
 ```shell
--mysql_auth_server_impl ldap -mysql_ldap_auth_config_file /path/to/ldapconfig.json
+--mysql_auth_server_impl ldap --mysql_ldap_auth_config_file /path/to/ldapconfig.json
 ```

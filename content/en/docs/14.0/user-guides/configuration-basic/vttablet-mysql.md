@@ -21,9 +21,9 @@ The necessary arguments to a `mysqlctl` are the `tablet_uid` and `mysql_port`. H
 
 ```sh
 mysqlctl \
-  -log_dir=${VTDATAROOT}/tmp \
-  -tablet_uid=100 \
-  -mysql_port=17100 \
+  --log_dir=${VTDATAROOT}/tmp \
+  --tablet_uid=100 \
+  --mysql_port=17100 \
   init
 ```
 
@@ -40,9 +40,9 @@ And then launch mysqlctl with as follows:
 
 ```sh
 EXTRA_MY_CNF=”/path/to/common.cnf” mysqlctl \
-  -log_dir=${VTDATAROOT}/tmp \
-  -tablet_uid=100 \
-  -mysql_port=17100 \
+  --log_dir=${VTDATAROOT}/tmp \
+  --tablet_uid=100 \
+  --mysql_port=17100 \
   init
 ```
 
@@ -108,16 +108,16 @@ To enable communication with vttablet, the server must be configured to receive 
 
 ```
 mysqlctld \
-  -log_dir=${VTDATAROOT}/tmp \
-  -tablet_uid=100 \
-  -mysql_port=17100 \
-  -socket_file=/path/to/socket_file
+  --log_dir=${VTDATAROOT}/tmp \
+  --tablet_uid=100 \
+  --mysql_port=17100 \
+  --socket_file=/path/to/socket_file
 ```
 
 When starting vttablet, the following additional flag must be specified:
 
 ```
--mysqlctl_socket=/path/to/socket_file
+--mysqlctl_socket=/path/to/socket_file
 ```
 ## Starting vttablet
 
@@ -128,7 +128,7 @@ VTTablet should be brought up on the same machine as the MySQL instance. It need
 * `init_keyspace`: The keyspace that the tablet is going to serve. This will cause a keyspace to be created if one is not present.
 * `init_shard`: The shard that the tablet is going to serve. This will cause a shard to be created if one is not present.
 * `init_tablet_type`: This will typically be REPLICA. You may use other tablet types like “RDONLY”. Those tablet types will be deprecated in favor of newer ways to achieve their functionality. Note that you are not allowed to start a tablet as a MASTER.
-* `port`, `grpc_port`, and `-service_map` `'grpc-queryservice,grpc-tabletmanager'`
+* `port`, `grpc_port`, and `--service_map` `'grpc-queryservice,grpc-tabletmanager'`
 
 There are some additional parameters that we recommend setting:
 
@@ -149,21 +149,21 @@ Here is a typical vttablet invocation:
 
 ```text
 vttablet <topo_flags> <backup_flags> \
-  -log_dir=${VTDATAROOT}/tmp \
-  -cell=cell1 \
-  -tablet-path=cell1-100 \
-  -init_keyspace=commerce \
-  -init_shard=0 \
-  -init_tablet_type=replica \
-  -port=15100 \
-  -grpc_port=16100 \
-  -service_map 'grpc-queryservice,grpc-tabletmanager’ \
-  -enable_semi_sync=true \
-  -enable_replication_reporter=true \
-  -restore_from_backup=true \
-  -queryserver-config-pool-size=16 \
-  -queryserver-config-transaction-cap=300 \
-  -queryserver-config-stream-pool-size= 16
+  --log_dir=${VTDATAROOT}/tmp \
+  --cell=cell1 \
+  --tablet-path=cell1-100 \
+  --init_keyspace=commerce \
+  --init_shard=0 \
+  --init_tablet_type=replica \
+  --port=15100 \
+  --grpc_port=16100 \
+  --service_map 'grpc-queryservice,grpc-tabletmanager’ \
+  --enable_semi_sync=true \
+  --enable_replication_reporter=true \
+  --restore_from_backup=true \
+  --queryserver-config-pool-size=16 \
+  --queryserver-config-transaction-cap=300 \
+  --queryserver-config-stream-pool-size= 16
 ```
 
 ### Key configuration notes

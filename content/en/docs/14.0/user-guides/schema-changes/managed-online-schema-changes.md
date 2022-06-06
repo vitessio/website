@@ -80,7 +80,7 @@ Vitess may modify your queries to qualify for online DDL statement. Modification
 
 ## ddl_strategy
 
-You will set either `@@ddl_strategy` session variable, or `-ddl_strategy` command line flag, to control your schema migration strategy, and specifically, to enable and configure online DDL. Details in [DDL Strategies](../ddl-strategies). A quick overview:
+You will set either `@@ddl_strategy` session variable, or `--ddl_strategy` command line flag, to control your schema migration strategy, and specifically, to enable and configure online DDL. Details in [DDL Strategies](../ddl-strategies). A quick overview:
 
 - The value `"direct"`, means not an online DDL. The empty value (`""`) is also interpreted as `direct`. A query is immediately pushed and applied on backend servers. This is the default strategy.
 - The value `"vitess"` instructs Vitess to run an `ALTER TABLE` online DDL via `VReplication`.
@@ -133,21 +133,21 @@ mysql> drop table customer;
 #### Executing an Online DDL via vtctl/ApplySchema
 
 ```shell
-$ vtctlclient ApplySchema -skip_preflight -ddl_strategy "vitess" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
+$ vtctlclient ApplySchema -- --skip_preflight --ddl_strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
 a2994c92_f1d4_11ea_afa3_f875a4d24e90
 ```
 You my run multiple migrations withing the same `ApplySchema` command:
 ```shell
-$ vtctlclient ApplySchema -skip_preflight -ddl_strategy "vitess" -sql "ALTER TABLE demo MODIFY id bigint UNSIGNED; CREATE TABLE sample (id int PRIMARY KEY); DROP TABLE another;" commerce
+$ vtctlclient ApplySchema -- --skip_preflight --ddl_strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED; CREATE TABLE sample (id int PRIMARY KEY); DROP TABLE another;" commerce
 3091ef2a_4b87_11ec_a827_0a43f95f28a3
 ```
 
 `ApplySchema` accepts the following flags:
 
-- `-ddl_strategy`: by default migrations run directly via MySQL standard DDL. This flag must be aupplied to indicate an online strategy. See also [DDL strategies](../ddl-strategies) and [ddl_strategy flags](../ddl-strategy-flags).
+- `--ddl_strategy`: by default migrations run directly via MySQL standard DDL. This flag must be applied to indicate an online strategy. See also [DDL strategies](../ddl-strategies) and [ddl_strategy flags](../ddl-strategy-flags).
 - `-migration_context <unique-value>`: all migrations in a `ApplySchema` command are logically grouped via a unique _context_. A unique value will be supplied automatically. The user may choose to supply their own value, and it's their responsibility to provide with a unique value. Any string format is accepted.
   The context can then be used to search for migrations, via `SHOW VITESS_MIGRATIONS LIKE 'the-context'`. It is visible in `SHOW VITESS_MIGRATIONS ...` output as the `migration_context` column.
-- `-skip_preflight`: skip an internal Vitess schema validation. When running an online DDL it's recommended to add `-skip_preflight`. In future Vitess versions this flag may be removed or default to `true`.
+- `--skip_preflight`: skip an internal Vitess schema validation. When running an online DDL it's recommended to add `--skip_preflight`. In future Vitess versions this flag may be removed or default to `true`.
 
 ## Migration flow and states
 
@@ -166,17 +166,17 @@ For more about internals of the scheduler and how migration states are controlle
 
 ## Configuration
 
-- `-retain_online_ddl_tables`: (`vttablet`) determines how long vttablet should keep an old migrated table before purging it. Type: duration. Default: 24 hours.
+- `--retain_online_ddl_tables`: (`vttablet`) determines how long vttablet should keep an old migrated table before purging it. Type: duration. Default: 24 hours.
 
   Example: `vttablet -retain_online_ddl_tables 48h`
 
-- `-migration_check_interval`: (`vttablet`) interval between checks for submitted migrations. Type: duration. Default: 1 hour. 
+- `--migration_check_interval`: (`vttablet`) interval between checks for submitted migrations. Type: duration. Default: 1 hour. 
 
-  Example: `vttablet -migration_check_interval 30s`
+  Example: `vttablet --migration_check_interval 30s`
 
-- `-enable_online_ddl`: (`vtgate`) whether Online DDL operations are at all possible through `VTGate`. Type: boolean. Default: `true`
+- `--enable_online_ddl`: (`vtgate`) whether Online DDL operations are at all possible through `VTGate`. Type: boolean. Default: `true`
 
-  Example: `vtgate -enable_online_ddl=false` to disable access to Online DDL via `VTGate`.
+  Example: `vtgate --enable_online_ddl=false` to disable access to Online DDL via `VTGate`.
  
 ## Auto resume after failure
 

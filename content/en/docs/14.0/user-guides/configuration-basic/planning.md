@@ -40,14 +40,14 @@ Setting up a few environment variables upfront will improve the manageability of
 * `VTDATAROOT`: Setting up this value will make Vitess create the MySQL data files under this directory. Other Vitess binaries will also use this variable to locate such files as needed. If not specified, the default value is `/vt`. Typically, no other files get stored under this directory. However, many idiomatic deployments tend to reuse this as root directory for other purposes like log files, etc.
 * `VT_MYSQL_ROOT`: Informs Vitess about where to find the `mysqld` binary. If this is not specified, Vitess will try to find `mysqld` in the current `PATH`.
 
-Vitess will automatically detect the flavor of MySQL and will adjust its behavior accordingly. You can override this behavior by specifying an explicit flavor with the `-db_flavor` command line argument to the various components.
+Vitess will automatically detect the flavor of MySQL and will adjust its behavior accordingly. You can override this behavior by specifying an explicit flavor with the `--db_flavor` command line argument to the various components.
 
 ## Backups
 
 Backups will need to be shared across vttablet instances and multiple cells. You need to plan and allocate shared storage that must be accessible from all cells. Depending on the choice made, you will need to prepare a group of command line arguments to include with the Vitess components to launch. Here is an example:
 
 ```text
--backup_storage_implementation file -file_backup_storage_root <mounted_path_dir>
+--backup_storage_implementation file --file_backup_storage_root <mounted_path_dir>
 ```
 
 {{< warning >}}
@@ -62,8 +62,8 @@ To avoid repetition we will use `<backup_flags>` in our examples to signify the 
 
 Vitess servers write to log files, and they are rotated when they reach a maximum size. It’s recommended that you run at INFO level logging. The information printed in the log files can come in handy for troubleshooting. You can limit the disk usage by running cron jobs that periodically purge or archive them.
 
-All Vitess servers accept a `-log_dir` argument and will create the log files in that specified directory. For example:
+All Vitess servers accept a `--log_dir` argument and will create the log files in that specified directory. For example:
 
 ```text
--log_dir=${VTDATAROOT}/tmp
+--log_dir=${VTDATAROOT}/tmp
 ```

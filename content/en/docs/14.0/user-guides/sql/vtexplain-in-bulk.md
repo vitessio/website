@@ -103,7 +103,7 @@ In order to analyze every query in your list, create and run a script. The follo
 $ cat testfull.py
 for line in open("queries_for_vtexplain.txt", "r").readlines():
     sql = line.strip()
-    print("vtexplain -schema-file schema.sql -vschema-file vschema.json -shards 4 -sql '%s'" % sql)
+    print("vtexplain --schema-file schema.sql --vschema-file vschema.json --shards 4 --sql '%s'" % sql)
 x
 $ python testfull.py > run_vtexplain.sh
 ```
@@ -113,7 +113,7 @@ An alternative method is to use the `-sql-file` option for `vtexplain` to pass t
 If you choose to use the single invocation, it would look something like:
 
 ```shell
-$ vtexplain -schema-file schema.sql -vschema-file vschema.json -shards 4 -sql-file queries_for_vtexplain.txt
+$ vtexplain --schema-file schema.sql --vschema-file vschema.json --shards 4 --sql-file queries_for_vtexplain.txt
 ```
 
 ## 5. Add your SQL schema to the output file
@@ -177,7 +177,7 @@ Once you have your full output in vtexplain.output, use `grep` to search for the
 In the following example, VTGate scatters the example query across both shards, and then aggregates the query results.
 
 ```shell
-$ vtexplain -schema-file schema.sql -vschema-file vschema.json -shards 2 -sql 'SELECT * FROM user;'
+$ vtexplain --schema-file schema.sql --vschema-file vschema.json --shards 2 --sql 'SELECT * FROM user;'
 ----------------------------------------------------------------------
 SELECT * FROM user
 
@@ -199,7 +199,7 @@ This is not an error, but illustrates a few things about the query:
 The following query produces an error because Vitess does not support the `AVG` function for scatter queries across multiple shards.
 
 ```shell
-$ vtexplain -schema-file schema.sql -vschema-file vschema.json -shards 4 -sql 'SELECT AVG(balance) FROM user;'
+$ vtexplain --schema-file schema.sql --vschema-file vschema.json --shards 4 --sql 'SELECT AVG(balance) FROM user;'
 ERROR: vtexplain execute error in 'SELECT AVG(balance) FROM user': unsupported: in scatter query: complex aggregate expression
 ```
 
@@ -208,7 +208,7 @@ ERROR: vtexplain execute error in 'SELECT AVG(balance) FROM user': unsupported: 
 The following query only targets a single shard because the query supplies the sharding key.
 
 ```shell
-$ vtexplain -schema-file schema.sql -vschema-file vschema.json -shards 2 -sql 'SELECT * FROM user WHERE user_id = 100;'
+$ vtexplain --schema-file schema.sql --vschema-file vschema.json --shards 2 --sql 'SELECT * FROM user WHERE user_id = 100;'
 ----------------------------------------------------------------------
 SELECT * FROM user WHERE user_id = 100
 

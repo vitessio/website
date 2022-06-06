@@ -82,7 +82,7 @@ As can be seen, we have 3 tablets running, with tablet ids 100, 101 and 102;  wh
 
 ## Create new tablets
 
-The first step in our MoveTables operation is to deploy new tablets for our `customer` keyspace. By the convention used in our examples, we are going to use the tablet ids 200-202 as the `commerce` keyspace previously used `100-102`. Once the tablets have started, we can force the first tablet to be the primary using the `InitShardPrimary` `-force` flag:
+The first step in our MoveTables operation is to deploy new tablets for our `customer` keyspace. By the convention used in our examples, we are going to use the tablet ids 200-202 as the `commerce` keyspace previously used `100-102`. Once the tablets have started, we can force the first tablet to be the primary using the `InitShardPrimary` `--force` flag:
 
 ### Using Operator
 
@@ -124,7 +124,7 @@ for i in 200 201 202; do
  CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
 done
 
-vtctlclient InitShardPrimary -force customer/0 zone1-200
+vtctlclient InitShardPrimary -- --force customer/0 zone1-200
 vtctlclient ReloadSchemaKeyspace customer
 ```
 
@@ -359,7 +359,7 @@ $ vtctlclient MoveTables -- --tablet_types=primary SwitchTraffic customer.commer
 
 ## Note
 
-While we have switched reads and writes separately in this example, you can also switch all traffic, read and write, at the same time. If you don't specify the `-tablet_types` parameter `SwitchTraffic` will start serving traffic from the target for all tablet types.
+While we have switched reads and writes separately in this example, you can also switch all traffic, read and write, at the same time. If you don't specify the `--tablet_types` parameter `SwitchTraffic` will start serving traffic from the target for all tablet types.
 
 ## Interlude: check the routing rules (optional)
 

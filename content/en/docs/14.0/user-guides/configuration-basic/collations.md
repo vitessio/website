@@ -10,7 +10,7 @@ Likewise, Vitess is also Unicode-aware, and it supports the vast majority of the
 
 ### Supported collations
 
-The collation environment (i.e. the set of support collations and charsets) of a Vitess cluster is defined by the MySQL server version flag (`-mysql_server_version`) provided to the VTGate and VTTablet instances in the cluster. Higher (newer) MySQL versions will enable built-in support for more collations.
+The collation environment (i.e. the set of support collations and charsets) of a Vitess cluster is defined by the MySQL server version flag (`--mysql_server_version`) provided to the VTGate and VTTablet instances in the cluster. Higher (newer) MySQL versions will enable built-in support for more collations.
 
 The following table lists all of the supported collations in the current release of Vitess:
 
@@ -402,8 +402,8 @@ Using collations that are not supported by Vitess but implemented in the underly
 
 ### Configuring the default connection charset for a Vitess cluster
 
-**The default connection charset for a Vitess cluster is configured in your VTTablet instances** via the `-db_charset` flag. This flag modifies the behavior of the _connections_ that the tablet creates, not the underlying MySQL instance: it defines the charset that VTTablet uses when opening connections to MySQL.
-If the `-db_charset` flag is left empty, VTTablet will default to an `utf8mb4` charset based on the underlying MySQL version. For instance, MySQL 5.x will default to `utf8mb4_general_ci`, while MySQL 8.x defaults to `utf8mb4_0900_ai_ci`. Because the handshake packet of MySQL leaves only 1 byte to reference the charset ID, only charset IDs <= 255 are supported.
+**The default connection charset for a Vitess cluster is configured in your VTTablet instances** via the `--db_charset` flag. This flag modifies the behavior of the _connections_ that the tablet creates, not the underlying MySQL instance: it defines the charset that VTTablet uses when opening connections to MySQL.
+If the `--db_charset` flag is left empty, VTTablet will default to an `utf8mb4` charset based on the underlying MySQL version. For instance, MySQL 5.x will default to `utf8mb4_general_ci`, while MySQL 8.x defaults to `utf8mb4_0900_ai_ci`. Because the handshake packet of MySQL leaves only 1 byte to reference the charset ID, only charset IDs <= 255 are supported.
 
 The `@character_set_client` of a VTTablet is automatically propagated to all the VTGates that connect to it, and hence to all the MySQL clients connected to the VTGates. It is a configuration error to deploy several VTTablets in the same Vitess cluster with different connection charset: it will cause warning messages in the VTGates and lead to inconsistent behaviors. 
 
@@ -411,4 +411,4 @@ The `@character_set_client` of a VTTablet is automatically propagated to all the
 
 Do note that, as the MySQL documentation explains, the `@character_set_client` setting only applies when performing character comparisons in SQL queries that don't have explicit collation information. For instance, a query such as `SELECT 'foo' = 'FOO'` will use the default `@character_set_client` for the cluster when picking the charset and collation for the two string literals, because these literals contain no explicit charset or collation information. A query such as `SELECT c FROM t WHERE c = 'foo'` will **not** use the `@character_set_client`; it will use the charset and collation that was defined for column `c` when creating table `t`.
 
-Vitess has extensive support for creating collation-aware tables and columns in your SQL database, using any charset, and performing collation-aware operations in SQL queries. Any of the supported collations and charsets in Vitess can be used when declaring a table or a row in your database -- it does not need to match the specific value of `@character_set_client`. Generally speaking, setting `@character_set_client` to a charset not based on `utf8mb4` is a mistake. We strongly encourage you to leave the `-db_charset` flag to its default value.
+Vitess has extensive support for creating collation-aware tables and columns in your SQL database, using any charset, and performing collation-aware operations in SQL queries. Any of the supported collations and charsets in Vitess can be used when declaring a table or a row in your database -- it does not need to match the specific value of `@character_set_client`. Generally speaking, setting `@character_set_client` to a charset not based on `utf8mb4` is a mistake. We strongly encourage you to leave the `--db_charset` flag to its default value.

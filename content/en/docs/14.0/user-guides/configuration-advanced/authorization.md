@@ -30,27 +30,27 @@ level, as opposed to on VTGate, where authentication is enforced.
 There are a number of VTTablet command line parameters that control the
 behavior of ACLs.  Let's review these:
 
- * `-enforce-tableacl-config`:  Set this to `true` to ensure VTTablet will not
+ * `--enforce-tableacl-config`:  Set this to `true` to ensure VTTablet will not
    start unless there is a valid ACL configuration. This is used to
    catch misconfigurations resulting in blanket access to authenticated
    users.
- * `-queryserver-config-enable-table-acl-dry-run`:  Set to `true` to check the
+ * `--queryserver-config-enable-table-acl-dry-run`:  Set to `true` to check the
    table ACL at runtime, and only emit the
    [TableACLPseudoDenied](../../configuration-basic/monitoring)
    metric if a request would have been blocked. The request is then
    allowed to pass, even if the ACL determined it should
    be blocked.  This can be used for testing new or updated ACL policies.
    Default is `false`.
- * `-queryserver-config-strict-table-acl`: Set to `true` to enforce table ACL
+ * `--queryserver-config-strict-table-acl`: Set to `true` to enforce table ACL
    checking.  **This needs to be enabled for your ACLs to have any effect.**
    Any users that are not specified in an ACL policy will be denied.
    Default is `false`.
- * `-queryserver-config-acl-exempt-acl`:  Allows you to specify the name
+ * `--queryserver-config-acl-exempt-acl`:  Allows you to specify the name
    of an ACL (see below for format) that is exempt from enforcement.
    Allows you to separate the rollout and the subsequent enforcement of
    a specific ACL.
- * `-table-acl-config`: Path to a file defining the table ACL config.
- * `-table-acl-config-reload-interval`:  How often the `table-acl-config`
+ * `--table-acl-config`: Path to a file defining the table ACL config.
+ * `--table-acl-config-reload-interval`:  How often the `table-acl-config`
    should be reloaded.  Set this to allow you to update the ACL file on
    disk, and then have VTTablet automatically reload the file within this
    period.  Default is not to reload the ACL file after VTTablet startup.
@@ -77,7 +77,7 @@ for your ACL config in the VTGate `-schema_change_signal_user` parameter.
 
 ## Format of the table ACL config file
 
-The file specified in the `-table-acl-config` parameter above is a JSON
+The file specified in the `--table-acl-config` parameter above is a JSON
 file with the following example to explain the format:
 
 ```json
@@ -106,7 +106,7 @@ file with the following example to explain the format:
 Notes:
 
  * `name`: This is the name of the ACL (`aclname` in the example above) and is
-   what needs to be specified in `-queryserver-config-acl-exempt-acl`,
+   what needs to be specified in `--queryserver-config-acl-exempt-acl`,
    if you need to exempt a specific ACL from enforcement.
  * `table_names_or_prefixes`:  A list of strings and/or regexes that allow
    a rule to target a specific table or set of tables.  Use `%` as in the
@@ -154,7 +154,7 @@ $ cat > acls_for_keyspace1.json << EOF
 }
 EOF
 
-$ vttablet -init_keyspace "keyspace1" -table-acl-config=acls_for_keyspace1.json -enforce-tableacl-config -queryserver-config-strict-table-acl ........
+$ vttablet --init_keyspace "keyspace1" --table-acl-config=acls_for_keyspace1.json --enforce-tableacl-config --queryserver-config-strict-table-acl ........
 ```
 
 Note that the `%` specifier for `table_names_or_prefixes` translates to
@@ -176,7 +176,7 @@ $ cat > acls_for_keyspace2.json << EOF
 }
 EOF
 
-$ vttablet -init_keyspace "keyspace2" -table-acl-config=acls_for_keyspace2.json -enforce-tableacl-config -queryserver-config-strict-table-acl ........
+$ vttablet --init_keyspace "keyspace2" --table-acl-config=acls_for_keyspace2.json --enforce-tableacl-config --queryserver-config-strict-table-acl ........
 ```
 
 With this setup, the `myuser1` and `myuser2` users can only access their respective keyspaces, but the `vitess`
