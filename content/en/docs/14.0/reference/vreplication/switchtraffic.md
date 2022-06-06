@@ -36,7 +36,7 @@ specified tablet types.
 
 #### --tablet_types
 **optional**\
-**default** all (replica,rdonly,primary)
+**default** all (in_order:RDONLY,REPLICA,PRIMARY)
 
 <div class="cmd">
 
