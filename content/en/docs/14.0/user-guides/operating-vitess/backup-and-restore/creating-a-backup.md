@@ -14,9 +14,8 @@ A compatible version of [xtrabackup](https://www.percona.com/doc/percona-xtrabac
 
 ### Supported Versions of Xtrabackup
 
-* [For MySQL 5.7 and MariaDB 10](https://www.percona.com/doc/percona-xtrabackup/2.4/index.html#installation)
+* [For MySQL 5.7](https://www.percona.com/doc/percona-xtrabackup/2.4/index.html#installation)
 * [MySQL 8.0](https://www.percona.com/doc/percona-xtrabackup/8.0/index.html#installation)
-* MariaDB 10.3 is not compatible with xtrabackup
 
 ### Basic VTTablet and Vtctld Configuration
 

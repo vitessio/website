@@ -18,7 +18,7 @@ can be copies, aggregations or views. The target tables are kept in sync in near
 You can specify multiple tables to materialize using the json_spec parameter.
 
 {{< warning >}}
-Be careful to avoid using the `INSTANT ADD COLUMN` feature in [MySQL 8.0+](https://mysqlserverteam.com/mysql-8-0-innodb-now-supports-instant-add-column/) and [MariaDB 10.3+](https://mariadb.com/kb/en/instant-add-column-for-innodb/) with materialization source tables as this can cause the vreplication based materialization workflow to break.
+Be careful to avoid using the `INSTANT ADD COLUMN` feature in [MySQL 8.0+](https://mysqlserverteam.com/mysql-8-0-innodb-now-supports-instant-add-column/) with materialization source tables as this can cause the vreplication based materialization workflow to break.
 {{< /warning >}}
 
 ### Parameters

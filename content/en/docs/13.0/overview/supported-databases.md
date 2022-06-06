@@ -18,7 +18,7 @@ Vitess supports the core features of MySQL versions 5.7 to 8.0, with [some limit
 
 Vitess supports the core features of MariaDB versions 10.0 to 10.3. Vitess [does not yet](https://github.com/vitessio/vitess/issues/5362) support later versions of MariaDB.
 
-{{< warning >}}MariaDB support is likely to end in the the future. You can view and comment on [the relevant proposal here](https://github.com/vitessio/vitess/issues/9518).{{< /warning >}}
+{{< warning >}}MariaDB support has been EOL'd in Vitess 14.0.{{< /warning >}}
 
 ## See also
 
