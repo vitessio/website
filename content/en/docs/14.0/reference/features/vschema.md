@@ -22,7 +22,7 @@ A Vitess Keyspace is the logical equivalent to a MySQL database. The usual synta
 
 ### Tablet Types
 
-Unlike MySQL, the vitess servers unify all types of mysql servers. You can ask vitess to target a specific tablet type by qualifying it as part of the database name. For example, to access replica tablets, you may specify the database name as `keyspace@replica`. This name can also be specified in the connection string. If no tablet type is specified in the database name, then the value specified in VTGate's `-default_tablet_type` flag is used.
+Unlike MySQL, the vitess servers unify all types of mysql servers. You can ask vitess to target a specific tablet type by qualifying it as part of the database name. For example, to access replica tablets, you may specify the database name as `keyspace@replica`. This name can also be specified in the connection string. If no tablet type is specified in the database name, then the value specified in VTGate's `--default_tablet_type` flag is used.
 
 ### Unspecified Mode
 
@@ -80,8 +80,8 @@ The configuration of your VSchema reflects the desired sharding configuration fo
 You can use the following commands for maintaining the VSchema:
 
 * `GetVSchema <keyspace>`
-* `ApplyVSchema {-vschema=<vschema> || -vschema_file=<vschema file> || -sql=<sql> || -sql_file=<sql file>} [-cells=c1,c2,...] [-skip_rebuild] [-dry-run] <keyspace>`
-* `RebuildVSchemaGraph [-cells=c1,c2,...]`
+* `ApplyVSchema -- {--vschema=<vschema> || --vschema_file=<vschema file> || --sql=<sql> || --sql_file=<sql file>} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run] <keyspace>`
+* `RebuildVSchemaGraph [--cells=c1,c2,...]`
 * `GetSrvVSchema <cell>`
 * `DeleteSrvVSchema <cell>`
 
@@ -370,4 +370,4 @@ If the `to_tables` have special characters that need escaping, you can use the m
 You can use the following commands to maintain routing rules:
 
 * `GetRoutingRules`
-* `ApplyRoutingRules {-rules=<rules> || -rules_file=<rules_file>} [-cells=c1,c2,...] [-skip_rebuild] [-dry-run]`
+* `ApplyRoutingRules -- {--rules=<rules> || --rules_file=<rules_file>} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run]`
