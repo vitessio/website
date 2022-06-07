@@ -39,7 +39,6 @@ Lists all tablets in an awk-friendly way.
 
 | Name | Type | Definition |
 | :-------- | :--------- | :---------- |
-| root | string | The root path the topology service is using for that cell. |
 | keyspace | string | (Optional) A keyspace is a logical database. This allows you to request server side filtering to exlude tablets not in this keyspace. |
 | tablet_type | string | (Optional) A tablet type is one of PRIMARY,REPLICA,RDONLY,SPARE. This allows you to request server side filtering to exlude tablets not of this type. |
 

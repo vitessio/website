@@ -7,7 +7,7 @@ weight: 70
 ### Command
 
 ```
-VReplicationExec [--json] <tablet alias> <query>
+VReplicationExec -- [--json] <tablet alias> <query>
 ```
 
 ### Description

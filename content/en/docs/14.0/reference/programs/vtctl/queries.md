@@ -13,7 +13,7 @@ The following `vtctl` commands are available for administering queries.
 Executes the given SQL query with the provided bound variables against the vtgate server.
 
 {{< warning >}}
-These commands have been deprecated and will be removed in a future release.
+These commands have been deprecated and will be removed in a future release!
 {{< /warning >}}
 
 #### Example
