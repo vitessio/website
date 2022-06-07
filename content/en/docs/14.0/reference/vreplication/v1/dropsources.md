@@ -11,7 +11,7 @@ Starting with Vitess 11.0 you should use the [VReplication v2 commands](../../co
 ### Command
 
 ```
-DropSources [-dry_run] [-rename_tables] [-keep_data] <keyspace.workflow>
+DropSources -- [--dry_run] [--rename_tables] [--keep_data] <keyspace.workflow>
 ```
 
 ### Description
@@ -22,11 +22,11 @@ cleans up other artifacts of the workflow, deleting forward and reverse replicat
 blacklisted tables.
 
 ***Warning***: This command actually deletes data. We recommend that you run this
-with the -dry_run parameter first and reads its output so that you know which actions will be performed.
+with the --dry_run parameter first and reads its output so that you know which actions will be performed.
 
 ### Parameters
 
-#### -rename_tables
+#### --rename_tables
 **optional**\
 **default** all
 
@@ -35,7 +35,7 @@ Only applies for a MoveTables workflow. Instead of deleting the tables in the so
 using the template _&lt;tableName&gt;_old, the same scheme followed by pt-osc
 </div>
 
-#### -dry-run
+#### --dry-run
 **optional**\
 **default** false
 
@@ -44,7 +44,7 @@ You can do a dry run where no actual action is taken but the command logs all th
 by SwitchReads.
 </div>
 
-#### -keep_data
+#### --keep_data
 **optional**\
 **default** false
 

@@ -23,7 +23,7 @@ MoveTables/Reshard -- [--tablet_types <tablet_types_csv>] [--cells <cells>]
 
 ### Parameters
 
-#### -cells
+#### --cells
 **optional**\
 **default** all cells
 
@@ -36,7 +36,7 @@ specified tablet types.
 
 #### --tablet_types
 **optional**\
-**default** all (replica,rdonly,primary)
+**default** all (in_order:RDONLY,REPLICA,PRIMARY)
 
 <div class="cmd">
 

@@ -87,7 +87,7 @@ On the source, events are buffered where applicable, to minimize network overhea
 **Default** false\
 **Applicable on** source
 
-By default vttablets reload their schema every `queryserver-config-schema-reload-time` seconds (default 30 minutes). This can cause a problem while streaming events if DDLs are applied on the source and streaming is started _after_ the DDL was applied but _before_ vttablet refreshed its schema. This is alleviated by the _watcher_.
+By default vttablets reload their schema every `--queryserver-config-schema-reload-time` seconds (default 30 minutes). This can cause a problem while streaming events if DDLs are applied on the source and streaming is started _after_ the DDL was applied but _before_ vttablet refreshed its schema. This is alleviated by the _watcher_.
 
 When enabled, vttablet will start the _watcher_ which streams the MySQL replication stream from the local database, and uses it to proactively update its schema when it encounters a DDL.
 

@@ -14,7 +14,7 @@ Validates that all nodes reachable from the global replication graph and that al
 
 #### Example
 
-<pre class="command-example">Validate [-ping-tablets]</pre>
+<pre class="command-example">Validate -- [--ping-tablets]</pre>
 
 #### Flags
 
@@ -29,13 +29,19 @@ Lists all tablets in an awk-friendly way.
 
 #### Example
 
-<pre class="command-example">ListAllTablets [-keyspace=''] [-tablet_type=&lt;primary,replica,rdonly,spare&gt;] [&lt;cell_name1&gt;,&lt;cell_name2&gt;,...]</pre>
+<pre class="command-example">ListAllTablets -- [--keyspace=''] [--tablet_type=&lt;primary,replica,rdonly,spare&gt;] [&lt;cell_name1&gt;,&lt;cell_name2&gt;,...]</pre>
 
 #### Arguments
 
 * <code>&lt;cell_name&gt;</code> &ndash; Optional. A cell is a location for a service. Generally, a cell resides in only one cluster. In Vitess, the terms "cell" and "data center" are interchangeable. The argument value is a string that does not contain whitespace. This allows you to request server side filtering to exlude tablets in cells not explicitly specified.
-* <code>keyspace</code> &ndash; Optional. A keyspace is a logical database. This allows you to request server side filtering to exlude tablets not in this keyspace.
-* <code>tablet_type</code> &ndash; Optional. A tablet type is one of PRIMARY,REPLICA,RDONLY,SPARE. This allows you to request server side filtering to exlude tablets not of this type.
+
+#### Flags
+
+| Name | Type | Definition |
+| :-------- | :--------- | :---------- |
+| root | string | The root path the topology service is using for that cell. |
+| keyspace | string | (Optional) A keyspace is a logical database. This allows you to request server side filtering to exlude tablets not in this keyspace. |
+| tablet_type | string | (Optional) A tablet type is one of PRIMARY,REPLICA,RDONLY,SPARE. This allows you to request server side filtering to exlude tablets not of this type. |
 
 #### Errors
 

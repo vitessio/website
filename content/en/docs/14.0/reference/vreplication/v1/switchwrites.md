@@ -12,7 +12,7 @@ Starting with Vitess 11.0 you should use the [SwitchTraffic VReplication v2 comm
 ### Command
 
 ```
-SwitchWrites  [-timeout=30s] [-cancel] [-reverse] [-reverse_replication=false] -tablet_types={replica|rdonly} [-dry-run] <keyspace.workflow>
+SwitchWrites -- [--timeout=30s] [--cancel] [--reverse] [--reverse_replication=false] --tablet_types=primary [--dry-run] <keyspace.workflow>
 ```
 
 ### Description
@@ -22,7 +22,7 @@ Reshard workflow away from the primary in the source keyspace to the primary in 
 
 ### Parameters
 
-#### -timeout 
+#### --timeout 
 **optional**\
 **default** 30s
 
@@ -31,7 +31,7 @@ Specifies the maximum time to wait, in seconds, for vreplication to catch up on 
 </div>
 
 
-#### -filtered_replication_wait_time 
+#### --filtered_replication_wait_time 
 **DEPRECATED**\
 **default** 30s
 
@@ -42,7 +42,7 @@ the command will error out.
 For setups with high write qps you may need to increase this value.
 </div>
 
-#### -cancel 
+#### --cancel 
 **optional**\
 **default** false
 
@@ -52,7 +52,7 @@ the issue that caused the failure) or the SwitchWrites can be canceled using thi
 is cancelled: the workflow is set to Running so that replication continues.
 </div>
 
-#### -reverse 
+#### --reverse 
 **optional**\
 **default** false
 
@@ -60,7 +60,7 @@ is cancelled: the workflow is set to Running so that replication continues.
 Reverse a previous SwitchWrites serve from source
 </div>
 
-#### -reverse_replication 
+#### --reverse_replication 
 **optional**\
 **default** true
 
@@ -70,21 +70,21 @@ back to the original source. This enables a quick and simple rollback. This reve
 of the original workflow concatenated with \_reverse.
 </div>
 
-#### -tablet_types
+#### --tablet_types
 **mandatory**
 
 <div class="cmd">
-Tablet types to switch one or both or rdonly/replica (default "rdonly,replica")
+Tablet types to switch traffic for. For writes that will only be primary tablets.
 Note: For tablet type rdonly you must [SwitchReads](../switchreads) before you can SwitchWrites
 </div>
 
-#### -dry-run 
+#### --dry-run 
 **optional**\
 **default** false
 
 <div class="cmd">
 You can do a dry run where no actual action is taken but the command logs all the actions that would be taken
-by SwitchReads.
+by SwitchWrites.
 </div>
 
 #### keyspace.workflow 

@@ -12,7 +12,7 @@ Starting with Vitess 11.0 you should use the [SwitchTraffic VReplication v2 comm
 ### Command
 
 ```
-SwitchReads  [-cells=c1,c2,...] [-reverse] -tablet_types={replica|rdonly} [-dry-run] <keyspace.workflow>
+SwitchReads -- [--cells=c1,c2,...] [--reverse] --tablet_types={replica|rdonly} [--dry-run] <keyspace.workflow>
 ```
 
 ### Description
@@ -22,7 +22,7 @@ to the target keyspace in a Reshard workflow.
 
 ### Parameters
 
-#### -cells 
+#### --cells 
 **optional**\
 **default** all
 
@@ -30,7 +30,7 @@ to the target keyspace in a Reshard workflow.
 Comma separated list of cells or cell aliases in which reads should be switched in the target keyspace
 </div>
 
-#### -reverse 
+#### --reverse 
 **optional**\
 **default** false
 
@@ -40,13 +40,13 @@ still go to the source shard since the target is not yet setup. If SwitchReads i
 -reverse then the routing rules for the target keyspace are setup to actually use it. It is assumed
 that the workflow was successful and user is ready to use the target keyspace now.
 
-However if, for any reason, we want to abort this workflow using the -reverse flag deletes the
+However if, for any reason, we want to abort this workflow using the --reverse flag deletes the
 rules that were setup and vtgate will route the queries to this table to the the source table.
 There is no way to reverse the use of the -reverse flag other than by recreating the routing rules
 again using the vtctl ApplyRoutingRules command.
 </div>
 
-#### -dry-run 
+#### --dry-run 
 **optional**\
 **default** false
 
@@ -55,14 +55,14 @@ You can do a dry run where no actual action is taken but the command logs all th
 by SwitchReads.
 </div>
 
-#### -tablet_types
+#### --tablet_types
 **mandatory**
 
 <div class="cmd">
 Tablet types to switch one or both or rdonly/replica (default "rdonly,replica")
 </div>
 
-#### -tablet_type 
+#### --tablet_type 
 **DEPRECATED**
 
 <div class="cmd">

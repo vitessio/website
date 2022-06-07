@@ -11,8 +11,8 @@ Starting with Vitess 11.0 you should use the [VReplication v2 commands](../../mo
 ### Command
 
 ```
-MoveTables -v1 [-cells=<cells>] [-tablet_types=<source_tablet_types>] -workflow=<workflow>
-            [-all] [-exclude=<tables>]  [-auto_start] [-stop_after_copy]
+MoveTables -- --v1 [--cells=<cells>] [--tablet_types=<source_tablet_types>] --workflow=<workflow>
+            [--all] [--exclude=<tables>]  [--auto_start] [--stop_after_copy]
             <source_keyspace> <target_keyspace> <table_specs>
 ```
 
@@ -26,7 +26,7 @@ first start using Vitess and the latter if you want to distribute your load acro
 
 ### Parameters
 
-#### -cells
+#### --cells
 **optional**\
 **default** local cell
 
@@ -42,7 +42,7 @@ cells should be used to pick a tablet for selecting data from the source keyspac
 * Select cells where replica lags are lower
 </div>
 
-#### -tablet_types
+#### --tablet_types
 **optional**\
 **default** replica
 
@@ -82,7 +82,7 @@ Name of existing keyspace to which the tables will be moved
 </div>
 
 #### table_specs
-**optional**  one of `table_specs` or `-all` needs to be specified
+**optional**  one of `table_specs` or `--all` needs to be specified
 <div class="cmd">
 
 _Either_
@@ -99,29 +99,29 @@ _Or_
   * if target keyspace is sharded AND
   * tables being moved are not yet present in the target's vschema
 
-  Example: `MoveTables -workflow=commerce2customer commerce customer '{"t1":{"column_vindexes": [{"column": "id", "name": "hash"}]}}}'`
+  Example: `MoveTables -- --workflow=commerce2customer commerce customer '{"t1":{"column_vindexes": [{"column": "id", "name": "hash"}]}}}'`
 
 </div>
 
-#### -all
+#### --all
 
-**optional** cannot specify `table_specs` if `-all` is specified
+**optional** cannot specify `table_specs` if `--all` is specified
 <div class="cmd">
 
 Move all tables from the source keyspace.
 
 </div>
 
-#### -exclude
+#### --exclude
 
-**optional** only applies if `-all` is specified
+**optional** only applies if `--all` is specified
 <div class="cmd">
 
 If moving all tables, specifies tables to be skipped.
 
 </div>
 
-#### -auto_start
+#### --auto_start
 
 **optional**
 **default** true
@@ -143,7 +143,7 @@ Materialize and then start the workflow.
 * changing the `copy_state` and/or `pos` values to restart a broken MoveTables workflow
 from a specific point of time.
 
-#### -stop_after_copy
+#### --stop_after_copy
 
 **optional**
 **default** false

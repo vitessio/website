@@ -39,7 +39,7 @@ VDiff will choose a tablet from this cell to diff the source table(s) with the t
 
 #### --tablet_types
 **optional**\
-**default** primary,replica,rdonly
+**default** in_order:RDONLY,REPLICA,PRIMARY
 
 <div class="cmd">
 A comma separated list of tablet types that are used while picking a tablet for sourcing data.
@@ -115,7 +115,7 @@ Adds a MySQL query to the report that can be used for further debugging.
 </div>
 
 #### --only_pks
-**optional**\
+**optional**
 
 <div class="cmd">
 When reporting missing rows, only show primary keys in the report.

@@ -12,9 +12,13 @@ The following `vtctl` commands are available for administering queries.
 
 Executes the given SQL query with the provided bound variables against the vtgate server.
 
+{{< warning >}}
+These commands have been deprecated and will be removed in a future release.
+{{< /warning >}}
+
 #### Example
 
-<pre class="command-example">VtGateExecute -server &lt;vtgate&gt; [-bind_variables &lt;JSON map&gt;] [-keyspace &lt;default keyspace&gt;] [-tablet_type &lt;tablet type&gt;] [-options &lt;proto text options&gt;] [-json] &lt;sql&gt;</pre>
+<pre class="command-example">VtGateExecute -- --server &lt;vtgate&gt; [--bind_variables &lt;JSON map&gt;] [--keyspace &lt;default keyspace&gt;] [--tablet_type &lt;tablet type&gt;] [--options &lt;proto text options&gt;] [--json] &lt;sql&gt;</pre>
 
 #### Flags
 
@@ -34,17 +38,17 @@ Executes the given SQL query with the provided bound variables against the vtgat
 #### Errors
 
 * the <code>&lt;sql&gt;</code> argument is required for the <code>&lt;VtGateExecute&gt;</code> command This error occurs if the command is not called with exactly one argument.
-* query commands are disabled (set the -enable_queries flag to enable)
+* query commands are disabled (set the --enable_queries flag to enable)
 * error connecting to vtgate '%v': %v
 * Execute failed: %v
 
 ### VtTabletExecute
 
-Executes the given query on the given tablet. -transaction_id is optional. Use VtTabletBegin to start a transaction.
+Executes the given query on the given tablet. --transaction_id is optional. Use VtTabletBegin to start a transaction.
 
 #### Example
 
-<pre class="command-example">VtTabletExecute [-username &lt;TableACL user&gt;] [-transaction_id &lt;transaction_id&gt;] [-options &lt;proto text options&gt;] [-json] &lt;tablet alias&gt; &lt;sql&gt;</pre>
+<pre class="command-example">VtTabletExecute -- [--username &lt;TableACL user&gt;] [--transaction_id &lt;transaction_id&gt;] [--options &lt;proto text options&gt;] [--json] &lt;tablet alias&gt; &lt;sql&gt;</pre>
 
 #### Flags
 
@@ -75,7 +79,7 @@ Starts a transaction on the provided server.
 
 #### Example
 
-<pre class="command-example">VtTabletBegin [-username &lt;TableACL user&gt;] &lt;tablet alias&gt;</pre>
+<pre class="command-example">VtTabletBegin -- [--username &lt;TableACL user&gt;] &lt;tablet alias&gt;</pre>
 
 #### Flags
 
@@ -92,7 +96,7 @@ Starts a transaction on the provided server.
 #### Errors
 
 * the <code>&lt;tablet_alias&gt;</code> argument is required for the <code>&lt;VtTabletBegin&gt;</code> command This error occurs if the command is not called with exactly one argument.
-* query commands are disabled (set the -enable_queries flag to enable)
+* query commands are disabled (set the --enable_queries flag to enable)
 * cannot connect to tablet %v: %v
 * Begin failed: %v
 
@@ -102,7 +106,7 @@ Commits the given transaction on the provided server.
 
 #### Example
 
-<pre class="command-example">VtTabletCommit [-username &lt;TableACL user&gt;] &lt;transaction_id&gt;</pre>
+<pre class="command-example">VtTabletCommit -- [--username &lt;TableACL user&gt;] &lt;transaction_id&gt;</pre>
 
 #### Flags
 
@@ -128,7 +132,7 @@ Rollbacks the given transaction on the provided server.
 
 #### Example
 
-<pre class="command-example">VtTabletRollback [-username &lt;TableACL user&gt;] &lt;tablet alias&gt; &lt;transaction_id&gt;</pre>
+<pre class="command-example">VtTabletRollback -- [--username &lt;TableACL user&gt;] &lt;tablet alias&gt; &lt;transaction_id&gt;</pre>
 
 #### Flags
 
@@ -146,7 +150,7 @@ Rollbacks the given transaction on the provided server.
 #### Errors
 
 * the <code>&lt;tablet_alias&gt;</code> and <code>&lt;transaction_id&gt;</code> arguments are required for the <code>&lt;VtTabletRollback&gt;</code> command This error occurs if the command is not called with exactly 2 arguments.
-* query commands are disabled (set the -enable_queries flag to enable)
+* query commands are disabled (set the --enable_queries flag to enable)
 * cannot connect to tablet %v: %v
 
 ### VtTabletStreamHealth
@@ -155,7 +159,7 @@ Executes the StreamHealth streaming query to a vttablet process. Will stop after
 
 #### Example
 
-<pre class="command-example">VtTabletStreamHealth [-count &lt;count, default 1&gt;] &lt;tablet alias&gt;</pre>
+<pre class="command-example">VtTabletStreamHealth -- [--count &lt;count, default 1&gt;] &lt;tablet alias&gt;</pre>
 
 #### Flags
 
@@ -172,7 +176,7 @@ Executes the StreamHealth streaming query to a vttablet process. Will stop after
 #### Errors
 
 * the <code>&lt;tablet alias&gt;</code> argument is required for the <code>&lt;VtTabletStreamHealth&gt;</code> command This error occurs if the command is not called with exactly one argument.
-* query commands are disabled (set the -enable_queries flag to enable)
+* query commands are disabled (set the --enable_queries flag to enable)
 * cannot connect to tablet %v: %v
 
 ## See Also
