@@ -89,7 +89,7 @@ Vitess' schema modification functionality is designed the following goals in min
 
 Note that, at this time, Vitess only supports [data definition statements](https://dev.mysql.com/doc/refman/5.6/en/sql-data-definition-statements.html) that create, modify, or delete database tables. For instance, `ApplySchema` does not affect stored procedures or grants.
 
-The [ApplySchema](../../../reference/programs/vtctl/#applyvschema) command applies a schema change to the specified keyspace on every primary tablet, running in parallel on all shards. Changes are then propagated to replicas. The command format is: `ApplySchema {-sql=<sql> || -sql_file=<filename>} <keyspace>`
+The [ApplySchema](../../../reference/programs/vtctl/#applyvschema) command applies a schema change to the specified keyspace on every primary tablet, running in parallel on all shards. Changes are then propagated to replicas. The command format is: `ApplySchema -- {--sql=<sql> || --sql_file=<filename>} <keyspace>`
 
 When the `ApplySchema` action actually applies a schema change to the specified keyspace, it performs the following steps:
 
@@ -100,7 +100,7 @@ When the `ApplySchema` action actually applies a schema change to the specified 
 
 The following sample command applies the SQL in the **user_table.sql** file to the **user** keyspace:
 
-`ApplySchema -sql_file=user_table.sql user`
+`ApplySchema -- --sql_file=user_table.sql user`
 
 #### Permitted schema changes
 
@@ -124,7 +124,7 @@ In addition, Vitess applies the following rules when assessing the impact of a p
 * `ALTER` statements are only allowed if the table on the shard's primary tablet has 100,000 rows or less.
 * For all other statements, the table on the shard's primary tablet must have 2 million rows or less.
 
-If a schema change gets rejected because it affects too many rows, you can specify the flag `-allow_long_unavailability` to tell `ApplySchema` to skip this check. However, we do not recommend this. Instead, you should apply large schema changes by using an external tool such as `gh-ost` or `pt-online-schema-change`.
+If a schema change gets rejected because it affects too many rows, you can specify the flag `--allow_long_unavailability` to tell `ApplySchema` to skip this check. However, we do not recommend this. Instead, you should apply large schema changes by using an external tool such as `gh-ost` or `pt-online-schema-change`.
 
 ### ApplyVSchema
 

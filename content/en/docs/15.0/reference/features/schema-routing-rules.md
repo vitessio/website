@@ -19,7 +19,7 @@ It fulfils the following use cases:
 You can use the vtctlclient command to apply routing rules:
 
 ```
-ApplyRoutingRules {-rules=<rules> || -rules_file=<rules_json_file>} [-cells=c1,c2,...] [-skip_rebuild] [-dry-run]
+ApplyRoutingRules -- {--rules=<rules> || --rules_file=<rules_json_file>} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run]
 ```
 
 ## Syntax

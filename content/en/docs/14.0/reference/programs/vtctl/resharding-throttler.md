@@ -89,11 +89,11 @@ Returns the current configuration of the MaxReplicationLag module. If no throttl
 
 ### UpdateThrottlerConfiguration
 
-Updates the configuration of the MaxReplicationLag module. The configuration must be specified as protobuf text. If a field is omitted or has a zero value, it will be ignored unless -copy_zero_values is specified. If no throttler name is specified, all throttlers will be updated.
+Updates the configuration of the MaxReplicationLag module. The configuration must be specified as protobuf text. If a field is omitted or has a zero value, it will be ignored unless --copy_zero_values is specified. If no throttler name is specified, all throttlers will be updated.
 
 #### Example
 
-<pre class="command-example">UpdateThrottlerConfiguration `-- --server &lt;vttablet&gt; [--copy_zero_values] "&lt;configuration protobuf text&gt;" [&lt;throttler name&gt;]`</pre>
+<pre class="command-example">UpdateThrottlerConfiguration -- --server &lt;vttablet&gt; [--copy_zero_values] "&lt;configuration protobuf text&gt;" [&lt;throttler name&gt;]</pre>
 
 #### Flags
 

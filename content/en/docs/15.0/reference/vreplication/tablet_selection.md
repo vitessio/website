@@ -13,7 +13,7 @@ To select the tablets we get a set of viable -- healthy and serving -- candidate
 
 ### Cell considerations
 
-VReplication will only look for tablet pairings within the same cell. If you want to have cross-cell streams then you will need to [create a CellAlias](https://vitess.io/docs/reference/programs/vtctl/cell-aliases/) that contains the list of potential cells and specify that using the `-cell` flag in your VReplication workflow commands.
+VReplication will only look for tablet pairings within the same cell. If you want to have cross-cell streams then you will need to [create a CellAlias](https://vitess.io/docs/reference/programs/vtctl/cell-aliases/) that contains the list of potential cells and specify that using the `--cell` flag in your VReplication workflow commands.
 
 ### Tablet types
 

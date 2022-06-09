@@ -65,6 +65,7 @@ Comma separated shard names to reshard to.
 
 #### --cells
 **optional**\
+**default** local cell
 
 <div class="cmd">
 Comma separated Cell(s) or CellAlias(es) to replicate from.
@@ -182,7 +183,7 @@ All workflows are identified by `targetKeyspace.workflow` where `targetKeyspace`
 ### The most basic Reshard Workflow lifecycle
 
 1. Initiate the migration using [Create](../create)<br/>
-`Reshard --source_shards=<source_shards> --target_shards=<target_shards> Create <keyspace.workflow>`
+`Reshard -- --source_shards=<source_shards> --target_shards=<target_shards> Create <keyspace.workflow>`
 1. Monitor the workflow using [Show](../show) or [Progress](../progress)<br/>
 `Reshard Show <keyspace.workflow>` _*or*_ <br/>
 `Reshard Progress <keyspace.workflow>`<br/>

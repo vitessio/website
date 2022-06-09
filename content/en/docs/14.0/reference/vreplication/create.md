@@ -17,8 +17,8 @@ MoveTables -- [--source=<sourceKs>] [--tables=<tableSpecs>] [--cells=<cells>]
    [--auto_start] [--stop_after_copy]
   Create <targetKs.workflow>
 
-Reshard [--source_shards=<source_shards>] [--target_shards=<target_shards>]
-  [--cells=<cells>] [--tablet_types=<source_tablet_types>]  [--skip_schema_copy]
+Reshard -- [--source_shards=<source_shards>] [--target_shards=<target_shards>]
+  [--cells=<cells>] [--tablet_types=<source_tablet_types>] [--skip_schema_copy]
   Create <keyspace.workflow>
 
 ```

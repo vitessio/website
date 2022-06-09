@@ -14,7 +14,7 @@ Displays the full schema for a tablet, or just the schema for the specified tabl
 
 #### Example
 
-<pre class="command-example">GetSchema [-tables=&lt;table1&gt;,&lt;table2&gt;,...] [-exclude_tables=&lt;table1&gt;,&lt;table2&gt;,...] [-include-views] &lt;tablet alias&gt;</pre>
+<pre class="command-example">GetSchema -- [--tables=&lt;table1&gt;,&lt;table2&gt;,...] [--exclude_tables=&lt;table1&gt;,&lt;table2&gt;,...] [--include-views] &lt;tablet alias&gt;</pre>
 
 #### Flags
 
@@ -57,7 +57,7 @@ Reloads the schema on all the tablets in a shard.
 
 #### Example
 
-<pre class="command-example">ReloadSchemaShard [-concurrency=10] [-include_primary=false] &lt;keyspace/shard&gt;</pre>
+<pre class="command-example">ReloadSchemaShard -- [--concurrency=10] [--include_primary=false] &lt;keyspace/shard&gt;</pre>
 
 #### Flags
 
@@ -81,7 +81,7 @@ Reloads the schema on all the tablets in a keyspace.
 
 #### Example
 
-<pre class="command-example">ReloadSchemaKeyspace [-concurrency=10] [-include_primary=false] &lt;keyspace&gt;</pre>
+<pre class="command-example">ReloadSchemaKeyspace -- [--concurrency=10] [--include_primary=false] &lt;keyspace&gt;</pre>
 
 #### Flags
 
@@ -105,7 +105,7 @@ Validates that the schema on the primary tablet matches all of the replicas.
 
 #### Example
 
-<pre class="command-example">ValidateSchemaShard [-exclude_tables=''] [-include-views] &lt;keyspace/shard&gt;</pre>
+<pre class="command-example">ValidateSchemaShard -- [--exclude_tables=''] [-include-views] &lt;keyspace/shard&gt;</pre>
 
 #### Flags
 
@@ -129,7 +129,7 @@ Validates that the schema on the primary tablet for shard 0 matches the schema o
 
 #### Example
 
-<pre class="command-example">ValidateSchemaKeyspace [-exclude_tables=''] [-include-views] &lt;keyspace name&gt;</pre>
+<pre class="command-example">ValidateSchemaKeyspace -- [--exclude_tables=''] [--include-views] &lt;keyspace name&gt;</pre>
 
 #### Flags
 
@@ -149,11 +149,11 @@ Validates that the schema on the primary tablet for shard 0 matches the schema o
 
 ### ApplySchema
 
-Applies the schema change to the specified keyspace on every primary, running in parallel on all shards. The changes are then propagated to replicas via replication. If -allow_long_unavailability is set, schema changes affecting a large number of rows (and possibly incurring a longer period of unavailability) will not be rejected. -ddl_strategy is used to instruct migrations via vreplication, gh-ost or pt-osc with optional parameters. -request_context allows the user to specify a custom request context for online DDL migrations. If -skip_preflight, SQL goes directly to shards without going through sanity checks.
+Applies the schema change to the specified keyspace on every primary, running in parallel on all shards. The changes are then propagated to replicas via replication. If -allow_long_unavailability is set, schema changes affecting a large number of rows (and possibly incurring a longer period of unavailability) will not be rejected. --ddl_strategy is used to instruct migrations via vreplication, gh-ost or pt-osc with optional parameters. -request_context allows the user to specify a custom request context for online DDL migrations. If --skip_preflight, SQL goes directly to shards without going through sanity checks.
 
 #### Example
 
-<pre class="command-example">ApplySchema [-allow_long_unavailability] [-wait_replicas_timeout=10s] [-ddl_strategy=<ddl_strategy>] [-request_context=<unique-request-context>] [-skip_preflight] {-sql=&lt;sql&gt; || -sql-file=&lt;filename&gt;} &lt;keyspace&gt;</pre>
+<pre class="command-example">ApplySchema -- [--allow_long_unavailability] [--wait_replicas_timeout=10s] [--ddl_strategy=<ddl_strategy>] [--request_context=<unique-request-context>] [--skip_preflight] {--sql=&lt;sql&gt; || --sql-file=&lt;filename&gt;} &lt;keyspace&gt;</pre>
 
 #### Flags
 
@@ -183,7 +183,7 @@ Copies the schema from a source shard's primary (or a specific tablet) to a dest
 
 #### Example
 
-<pre class="command-example">CopySchemaShard [-tables=&lt;table1&gt;,&lt;table2&gt;,...] [-exclude_tables=&lt;table1&gt;,&lt;table2&gt;,...] [-include-views] [-wait_replicas_timeout=10s] {&lt;source keyspace/shard&gt; || &lt;source tablet alias&gt;} &lt;destination keyspace/shard&gt;</pre>
+<pre class="command-example">CopySchemaShard -- [--tables=&lt;table1&gt;,&lt;table2&gt;,...] [--exclude_tables=&lt;table1&gt;,&lt;table2&gt;,...] [--include-views] [--wait_replicas_timeout=10s] {&lt;source keyspace/shard&gt; || &lt;source tablet alias&gt;} &lt;destination keyspace/shard&gt;</pre>
 
 #### Flags
 
@@ -307,7 +307,7 @@ Applies the VTGate routing schema to the provided keyspace. Shows the result aft
 
 #### Example
 
-<pre class="command-example">ApplyVSchema {-vschema=&lt;vschema&gt; || -vschema_file=&lt;vschema file&gt; || -sql=&lt;sql&gt; || -sql_file=&lt;sql file&gt;} [-cells=c1,c2,...] [-skip_rebuild] [-dry-run]&lt;keyspace&gt;</pre>
+<pre class="command-example">ApplyVSchema -- {--vschema=&lt;vschema&gt; || --vschema_file=&lt;vschema file&gt; || --sql=&lt;sql&gt; || --sql_file=&lt;sql file&gt;} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run]&lt;keyspace&gt;</pre>
 
 #### Flags
 
@@ -344,7 +344,7 @@ Applies the VSchema routing rules.
 #### Example
 
 ```
-ApplyRoutingRules  {-rules=<rules> | -rules_file=<rules_file>} [-cells=c1,c2,...] [-skip_rebuild] [-dry-run]
+ApplyRoutingRules -- {--rules=<rules> | --rules_file=<rules_file>} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run]
 ```
 
 #### Flags
@@ -354,8 +354,8 @@ ApplyRoutingRules  {-rules=<rules> | -rules_file=<rules_file>} [-cells=c1,c2,...
 | cells | string | If specified, limits the rebuild to the cells, after upload. Ignored if skip_rebuild is set. |
 | dry-run | Boolean | If set, do not save the altered vschema, simply echo to console. |
 | skip_rebuild | Boolean | If set, do not rebuild the SrvSchema objects. |
-| -rules | string | Specify rules as a string. |
-| -rules_file | string | Specify rules in a file. |
+| rules | string | Specify rules as a string. |
+| rules_file | string | Specify rules in a file. |
 
 
 ### RebuildVSchemaGraph
@@ -364,7 +364,7 @@ Rebuilds the cell-specific SrvVSchema from the global VSchema objects in the pro
 
 #### Example
 
-<pre class="command-example">RebuildVSchemaGraph [-cells=c1,c2,...]</pre>
+<pre class="command-example">RebuildVSchemaGraph -- [--cells=c1,c2,...]</pre>
 
 #### Flags
 

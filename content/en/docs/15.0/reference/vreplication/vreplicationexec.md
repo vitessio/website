@@ -7,7 +7,7 @@ weight: 70
 ### Command
 
 ```
-VReplicationExec [-json] <tablet alias> <sql command>
+VReplicationExec -- [--json] <tablet alias> <query>
 ```
 
 ### Description
@@ -16,7 +16,7 @@ The VReplicationExec command is used to view or manage vreplication streams. Mor
 
 ### Parameters
 
-#### -json
+#### --json
 **optional**
 
 <div class="cmd">
@@ -31,7 +31,7 @@ Id of the target tablet on which to run the sql query, specified using the vites
 cell-uid (see example below).
 </div>
 
-#### sql query
+#### query
 **mandatory**
 
 <div class="cmd">
@@ -41,5 +41,5 @@ A limited set of queries are allowed.
 
 #### Example
 ```
-vtctlclient  VReplicationExec 'zone1-100' 'select * from _vt.vreplication'
+vtctlclient VReplicationExec 'zone1-100' 'select * from _vt.vreplication'
 ```

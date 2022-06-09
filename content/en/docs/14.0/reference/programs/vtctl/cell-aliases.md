@@ -15,7 +15,7 @@ Defines a group of cells within which replica/rdonly traffic can be routed acros
 
 #### Example
 
-<pre class="command-example">AddCellsAlias [-cells &lt;cell1,cell2,cell3&gt;] &lt;alias&gt;</pre>
+<pre class="command-example">AddCellsAlias -- [--cells &lt;cell1,cell2,cell3&gt;] &lt;alias&gt;</pre>
 
 #### Flags
 
@@ -38,7 +38,7 @@ Updates the content of a CellAlias with the provided parameters. Empty values an
 
 #### Example
 
-<pre class="command-example">UpdateCellsAliases [-cells &lt;cell1,cell2,cell3&gt;] &lt;alias&gt;</pre>
+<pre class="command-example">UpdateCellsAliases -- [--cells &lt;cell1,cell2,cell3&gt;] &lt;alias&gt;</pre>
 
 #### Flags
 

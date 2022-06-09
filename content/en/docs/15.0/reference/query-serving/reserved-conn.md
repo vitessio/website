@@ -18,7 +18,7 @@ so that it does not actually do anything with user variables. Instead it keeps
 the state in the Vitess layer.
 
 In other cases, this approach is not enough, and Vitess can use 
-**reserved connections**, which are controlled via the `-enable_system_settings` vtgate flag.
+**reserved connections**, which are controlled via the `--enable_system_settings` vtgate flag.
 Enabling reserved connections means a dedicated connection is maintained for 
 the `vtgate` session from the relevant `vttablet` to the MySQL server. Reserved 
 connections are used when changing system variables, using temporary tables, 
@@ -56,7 +56,7 @@ disconnects from `vtgate`.
 ### Enabling reserved connections
 
 Use of reserved connections are controlled by the `vtgate` flag
-`-enable_system_settings`.  This flag has traditionally defaulted to **false**
+`--enable_system_settings`.  This flag has traditionally defaulted to **false**
 (or off) in release versions (i.e. `x.0` and `x.0.y`) of Vitess, and to
 **true** (or on) in development versions. 
 
@@ -90,7 +90,7 @@ For example, executing: `set @@sql_mode = 'NO_ZERO_DATE'` will not create a rese
 If we execute a `select` statement like: `select foo from bar`, VTGate will rewrite the query as 
 `select /*+ SET_VAR(sql_mode = 'NO_ZERO_DATE') foo from bar */`.
 
-This feature can be disabled using the VTGate flag `-enable_set_var` (by default set to true).
+This feature can be disabled using the VTGate flag `--enable_set_var` (by default set to true).
 
 ### Temporary tables and reserved connections
 

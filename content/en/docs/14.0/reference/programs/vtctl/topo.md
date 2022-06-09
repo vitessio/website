@@ -14,7 +14,7 @@ Retrieves the file(s) at &lt;path&gt; from the topo service, and displays it. It
 
 #### Example
 
-<pre class="command-example">TopoCat [-cell &lt;cell&gt;] [-decode_proto] [-long] &lt;path&gt; [&lt;path&gt;...]</pre>
+<pre class="command-example">TopoCat -- [--cell &lt;cell&gt;] [--decode_proto] [--long] &lt;path&gt; [&lt;path&gt;...]</pre>
 
 #### Flags
 
@@ -40,7 +40,7 @@ Retrieves the file(s) at &lt;path&gt; from the topo service, and displays it. It
 ### TopoCp
 
 ```
-TopoCp  [-cell <cell>] [-to_topo] <src> <dst>
+TopoCp -- [--cell <cell>] [--to_topo] <src> <dst>
 ```
 
 
