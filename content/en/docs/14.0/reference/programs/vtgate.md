@@ -131,7 +131,7 @@ The following global options apply to `vtgate`:
 | --normalize_queries | boolean | Rewrite queries with bind vars. Turn this off if the app itself sends normalized queries with bind vars. (default true) |
 | --onterm_timeout | duration | wait no more than this for OnTermSync handlers before stopping (default 10s) |
 | --opentsdb_uri | string | URI of opentsdb /api/put method |
-| --planner_version | string | Sets the default planner to use when the session has not changed it. Valid values are: V3, Gen4, Gen4Greedy and Gen4Fallback. Gen4Fallback tries the gen4 planner and falls back to the V3 planner if the gen4 fails. |
+| --planner-version | string | Sets the default planner to use when the session has not changed it. Valid values are: V3, Gen4, Gen4Greedy and Gen4Fallback. Gen4Fallback tries the gen4 planner and falls back to the V3 planner if the gen4 fails. |
 | --pid_file | string | If set, the process will write its pid to the named file, and delete it on graceful shutdown. |
 | --port | int | port for the server |
 | --proxy_protocol | boolean | Enable HAProxy PROXY protocol on MySQL listener socket |
