@@ -14,6 +14,8 @@ VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=primary,replic
 
 ### Description
 
+###### [VDiff2](./vdiff2.md): an _experimental_ version of VDiff which run on tablets is now available in 14.0. Feedback and suggestions on it are welcome!
+
 VDiff does a row by row comparison of all tables associated with the workflow, diffing the
 source keyspace and the target keyspace and reporting counts of missing/extra/unmatched rows.
 
@@ -149,4 +151,4 @@ You may need to use one or more of the following recommendations while running l
 * VDiff is currently not resumable, so any timeouts or errors mean that you will need to rerun the entire VDiff again.
 * VDiff runs one table at a time.
 
-VDiff2 (vdiff2.md) which fixes these is now available for experimental use.
+[VDiff2](./vdiff2.md) which fixes these is now available for experimental use.

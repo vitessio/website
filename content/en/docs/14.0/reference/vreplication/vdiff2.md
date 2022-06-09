@@ -4,7 +4,7 @@ description: Compare the source and target in a workflow to ensure integrity
 weight: 40
 ---
 
-_Experimental_ version of VDiff which run on tablets as compared with VDiff1 (./vdiff.md) which runs on `vtctld`.
+_Experimental_ version of VDiff which run on tablets as compared with [VDiff1](./vdiff.md) which runs on `vtctld`.
 
 NOTE: even before it's marked as production-ready (feature complete and tested widely in 1+ releases), it should be safe to use and is likely to provide much better results for very large tables.
 
