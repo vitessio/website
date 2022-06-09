@@ -7,10 +7,14 @@ weight: 40
 ### Command
 
 ```
-VDiff  -- [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=primary,replica,rdonly]
+VDiff -- [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=primary,replica,rdonly]
        [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--max_extra_rows_to_compare=1000]
        [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow>
 ```
+
+{{< info >}}
+**[VDiff2](../vdiff2/)**: an _experimental_ version of VDiff, which runs on tablets, is now available in 14.0. Feedback and suggestions on it are welcome!
+{{< /info >}}
 
 ### Description
 
@@ -26,7 +30,7 @@ It is highly recommended that you do this before you finalize a workflow with `S
 **default** all
 
 <div class="cmd">
-VDiff will choose a tablet from this cell to diff the source table(s) with the target tables
+VDiff will choose a tablet from this cell to diff the source tables with the target tables
 </div>
 
 #### --target_cell
@@ -34,7 +38,7 @@ VDiff will choose a tablet from this cell to diff the source table(s) with the t
 **default** all
 
 <div class="cmd">
-VDiff will choose a tablet from this cell to diff the source table(s) with the target tables
+VDiff will choose a tablet from this cell to diff the target tables with the source tables
 </div>
 
 #### --tablet_types
@@ -102,13 +106,14 @@ Only other format supported is json
 
 #### --max_extra_rows_to_compare
 **optional**\
+**default** 1000
 
 <div class="cmd">
 Limits the number of extra rows on both the source and target that we will perform a second compare pass on to confirm that the rows are in fact different in content and not simply returned in a different order on the source and target (which can happen when there are collation differences, e.g. different MySQL versions).
 </div>
 
 #### --debug_query
-**optional**\
+**optional**
 
 <div class="cmd">
 Adds a MySQL query to the report that can be used for further debugging.
@@ -156,4 +161,6 @@ You may need to use one or more of the following recommendations while running l
 * VDiff is currently not resumable, so any timeouts or errors mean that you will need to rerun the entire VDiff again.
 * VDiff runs one table at a time.
 
-_VReplication and VDiff performance improvements, resumability and throttling support are on the roadmap!_
+{{< info >}}
+**[VDiff2](../vdiff2/)**, which addresses these issues, is now available for experimental use in 14.0.
+{{< /info >}}
