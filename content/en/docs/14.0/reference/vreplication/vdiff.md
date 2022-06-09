@@ -7,14 +7,16 @@ weight: 40
 ### Command
 
 ```
-VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=primary,replica,rdonly]
-       [-limit=<max rows to diff>] [-tables=<table list>] [-format=json]
-       [-filtered_replication_wait_time=30s] [-debug_query] [-only_pks] <keyspace.workflow>
+VDiff -- [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=primary,replica,rdonly]
+       [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--max_extra_rows_to_compare=1000]
+       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow>
 ```
 
-### Description
+{{< info >}}
+**[VDiff2](../vdiff2/)**: an _experimental_ version of VDiff, which runs on tablets, is now available in 14.0. Feedback and suggestions on it are welcome!
+{{< /info >}}
 
-###### [VDiff2](./vdiff2.md): an _experimental_ version of VDiff which run on tablets is now available in 14.0. Feedback and suggestions on it are welcome!
+### Description
 
 VDiff does a row by row comparison of all tables associated with the workflow, diffing the
 source keyspace and the target keyspace and reporting counts of missing/extra/unmatched rows.
@@ -23,32 +25,32 @@ It is highly recommended that you do this before you finalize a workflow with `S
 
 ### Parameters
 
-#### -source_cell
+#### --source_cell
 **optional**\
 **default** all
 
 <div class="cmd">
-VDiff will choose a tablet from this cell to diff the source table(s) with the target tables
+VDiff will choose a tablet from this cell to diff the source tables with the target tables
 </div>
 
-#### -target_cell
+#### --target_cell
 **optional**\
 **default** all
 
 <div class="cmd">
-VDiff will choose a tablet from this cell to diff the source table(s) with the target tables
+VDiff will choose a tablet from this cell to diff the target tables with the source tables
 </div>
 
-#### -tablet_types
+#### --tablet_types
 **optional**\
-**default** primary,replica,rdonly
+**default** in_order:RDONLY,REPLICA,PRIMARY
 
 <div class="cmd">
 A comma separated list of tablet types that are used while picking a tablet for sourcing data.
 One or more from PRIMARY, REPLICA, RDONLY.<br><br>
 </div>
 
-#### -filtered_replication_wait_time
+#### --filtered_replication_wait_time
 **optional**\
 **default** 30s
 
@@ -58,7 +60,7 @@ that position for _filtered_replication_wait_time_. If the target is much behind
 a high write qps on the source then this time will need to be increased.
 </div>
 
-#### -limit
+#### --limit
 **optional**\
 **default** 9223372036854775807
 
@@ -67,7 +69,7 @@ Maximum number of rows to run vdiff on (across all tables specified).
 This limit is usually set while diffing a large table as a quick consistency check.
 </div>
 
-#### -tables
+#### --tables
 **optional**\
 **default** all tables in the workflow
 
@@ -76,7 +78,7 @@ A comma separated list of tables to run vdiff on.
 </div>
 
 
-#### -format
+#### --format
 **optional**\
 **default** unstructured text output
 
@@ -102,15 +104,23 @@ Only other format supported is json
 }]
 ```
 
-#### -debug_query
+#### --max_extra_rows_to_compare
 **optional**\
+**default** 1000
 
 <div class="cmd">
-Adds a MySQL query to the report that can be used for further debugging
+Limits the number of extra rows on both the source and target that we will perform a second compare pass on to confirm that the rows are in fact different in content and not simply returned in a different order on the source and target (which can happen when there are collation differences, e.g. different MySQL versions).
 </div>
 
-#### -only_pks
-**optional**\
+#### --debug_query
+**optional**
+
+<div class="cmd">
+Adds a MySQL query to the report that can be used for further debugging.
+</div>
+
+#### --only_pks
+**optional**
 
 <div class="cmd">
 When reporting missing rows, only show primary keys in the report.
@@ -141,8 +151,8 @@ Actual VDiff speeds are of course dependent on several factors in your cluster. 
 You may need to use one or more of the following recommendations while running long VDiffs:
 
 * If VDiff takes more than an hour `vtctlclient` will hit grpc/http timeouts of 1 hour. In that case you can use `vtctl` (the bundled `vctlclient` + `vtctld`) instead.
-* VDiff also synchronizes sources and targets to get consistent snapshots. If you have a high write QPS then you may encounter timeouts during the sync. Use higher values of `-filtered_replication_wait_time` to prevent that, for example `-filtered_replication_wait_time=4h`.
-* If VDiff takes more than a day set the `-wait-time` parameter, which is the maximum time a vtctl command can run for, to a value comfortably higher than the expected run time, for example `-wait-time=168h`.
+* VDiff also synchronizes sources and targets to get consistent snapshots. If you have a high write QPS then you may encounter timeouts during the sync. Use higher values of `--filtered_replication_wait_time` to prevent that, for example `--filtered_replication_wait_time=4h`.
+* If VDiff takes more than a day set the `--wait-time` parameter, which is the maximum time a vtctl command can run for, to a value comfortably higher than the expected run time, for example `--wait-time=168h`.
 * You can follow the progress of the command by tailing the vtctld logs. VDiff logs progress every 10 million rows. This can also give you an early indication of how long it will run for, allowing you to increase your settings if needed.
 
 ### Note
@@ -151,4 +161,6 @@ You may need to use one or more of the following recommendations while running l
 * VDiff is currently not resumable, so any timeouts or errors mean that you will need to rerun the entire VDiff again.
 * VDiff runs one table at a time.
 
-[VDiff2](./vdiff2.md) which fixes these is now available for experimental use.
+{{< info >}}
+**[VDiff2](../vdiff2/)**, which addresses these issues, is now available for experimental use in 14.0.
+{{< /info >}}
