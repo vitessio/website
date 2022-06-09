@@ -37,7 +37,7 @@ by VExec.
 Name of target keyspace and the associated workflow
 </div>
 
-#### sql query
+#### query
 **mandatory**
 
 <div class="cmd">

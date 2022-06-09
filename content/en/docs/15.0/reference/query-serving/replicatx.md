@@ -7,7 +7,7 @@ aliases: ['/docs/design-docs/query-serving/replicatx/']
 
 ### Feature Description
 
-Vitess supports transactions through vtgate on PRIMARY and read REPLICA tablets as of v7.0. 
+Vitess supports transactions through vtgate on PRIMARY and read REPLICA tablets.
 
 ### Use Case(s)
 

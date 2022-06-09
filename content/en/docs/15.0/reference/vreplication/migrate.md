@@ -68,7 +68,7 @@ Each `action` has additional options/parameters that can be used to modify its b
 
 The options for the supported commands are the same as [MoveTables](../movetables), with the exception of `reverse_replication`.
 
-A common option to give if migrating all of the tables from a source keyspace is the `-all` option.
+A common option to give if migrating all of the tables from a source keyspace is the `--all` option.
 
 
 #### workflow identifier

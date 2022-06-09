@@ -11,7 +11,7 @@ Starting with Vitess 11.0 you should use the [VReplication v2 commands](../../re
 ### Command
 
 ```
-Reshard -v1 [-cells=<cells>] [-tablet_types=<source_tablet_types>] [-skip_schema_copy] [-auto_start] [-stop_after_copy] <keyspace.workflow> <source_shards> <target_shards>
+Reshard -- --v1 [--cells=<cells>] [--tablet_types=<source_tablet_types>] [--skip_schema_copy] [--auto_start] [--stop_after_copy] <keyspace.workflow> <source_shards> <target_shards>
 ```
 
 ### Description
@@ -20,14 +20,14 @@ Reshard support horizontal sharding by letting you change the sharding ranges of
 
 ### Parameters
 
-#### -cells
+#### --cells
 **optional**\
 
 <div class="cmd">
 Comma separated Cell(s) or CellAlias(es) to replicate from.
 </div>
 
-#### -tablet_types
+#### --tablet_types
 **optional**\
 **default** empty
 
@@ -35,7 +35,7 @@ Comma separated Cell(s) or CellAlias(es) to replicate from.
 Source Vitess tablet_type, or comma separated list of tablet types, that should be used for choosing source tablet(s) for the reshard.
 </div>
 
-#### -skip_schema_copy
+#### --skip_schema_copy
 **optional**\
 **default** false
 
@@ -44,7 +44,7 @@ If true the source schema is copied to the target shards. If false, you need to 
 before calling reshard.
 </div>
 
-#### -auto_start
+#### --auto_start
 **optional**\
 **default** true
 
@@ -52,7 +52,7 @@ before calling reshard.
 If false, streams will start in the Stopped state and will need to be explicitly started (default true).
 </div>
 
-#### -stop_after_copy
+#### --stop_after_copy
 **optional**\
 **default** false
 

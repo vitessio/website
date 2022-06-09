@@ -98,7 +98,7 @@ Vitess supports the `mysql_native_password` authentication plugin. Support for `
 
 ### Transport Security
 
-To configure VTGate to support `TLS` set `-mysql_server_ssl_cert` and `-mysql_server_ssl_key`. Client certificates can also be mandated by setting `-mysql_server_ssl_ca`. If there is no CA specified then TLS is optional.
+To configure VTGate to support `TLS` set `--mysql_server_ssl_cert` and `--mysql_server_ssl_key`. Client certificates can also be mandated by setting `--mysql_server_ssl_ca`. If there is no CA specified then TLS is optional.
 
 ### X Dev API
 
@@ -164,7 +164,7 @@ type DBDDLPlugin interface {
 
 It must then register itself calling `DBDDLRegister`. 
 You can take a look at the `dbddl_plugin.go` in the engine package for an example of how it's done.
-Finally, you need to add a command line flag to vtgate to have it use the new plugin: `-dbddl_plugin=myPluginName`
+Finally, you need to add a command line flag to vtgate to have it use the new plugin: `--dbddl_plugin=myPluginName`
 
 
 

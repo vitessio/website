@@ -13,11 +13,11 @@ The following `vtctl` commands are available for administering workflows.
 
 ### WorkflowCreate
 
-Creates the workflow with the provided parameters. The workflow is also started, unless -skip_start is specified.
+Creates the workflow with the provided parameters. The workflow is also started, unless --skip_start is specified.
 
 #### Example
 
-<pre class="command-example">WorkflowCreate [-skip_start] &lt;factoryName&gt; [parameters...]</pre>
+<pre class="command-example">WorkflowCreate -- [--skip_start] &lt;factoryName&gt; [parameters...]</pre>
 
 #### Flags
 

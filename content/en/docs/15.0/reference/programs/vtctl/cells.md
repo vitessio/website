@@ -14,7 +14,7 @@ Registers a local topology service in a new cell by creating the CellInfo with t
 
 #### Example
 
-<pre class="command-example">AddCellInfo [-server_address &lt;addr&gt;] [-root &lt;root&gt;] &lt;cell&gt;</pre>
+<pre class="command-example">AddCellInfo -- [--server_address &lt;addr&gt;] [--root &lt;root&gt;] &lt;cell&gt;</pre>
 
 #### Flags
 
@@ -77,12 +77,12 @@ Updates the content of a CellInfo with the provided parameters. If a value is em
 
 #### Example
 
-<pre class="command-example">UpdateCellInfo [-server_address &lt;addr&gt;] [-root &lt;root&gt;] &lt;cell&gt;</pre>
+<pre class="command-example">UpdateCellInfo -- [--server_address &lt;addr&gt;] [--root &lt;root&gt;] &lt;cell&gt;</pre>
 
 #### Flags
 
 | Name | Type | Definition |
-| :-------- | :--------- | :--------- |
+| :-------- | :--------- | :----------- |
 | root | string | The root path the topology service is using for that cell. |
 | server_address | string | The address the topology service is using for that cell. |
 

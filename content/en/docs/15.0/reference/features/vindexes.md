@@ -151,7 +151,7 @@ In the above case, the name of the vindex is `name_keyspace_idx`. It is of type 
 
 Every Vindex has an optional `params` section that contains a map of string key-value pairs. The keys and values differ depending on the vindex type and are explained below. 
 
-Since Vitess 12.0 there is an optional fourth parameter: `batch_lookup`. To read more about how to use `batch_lookup` see our [Unique Lookup user guide](../../../user-guides/vschema-guide/unique-lookup/).
+There is an optional fourth parameter: `batch_lookup`. To read more about how to use `batch_lookup` see our [Unique Lookup user guide](../../../user-guides/vschema-guide/unique-lookup/).
 
 ### How Vindexes are used
 
