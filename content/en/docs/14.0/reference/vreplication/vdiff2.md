@@ -28,7 +28,7 @@ then `Create` is assumed (this eases the transition from VDiff1 to VDiff2).
 ```
 VDiff -- --v2 [-source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=primary,replica,rdonly]
        [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--max_extra_rows_to_compare=1000]
-       [--filtered_replication_wait_time=30s] [-debug_query] [--only_pks] <keyspace.workflow>  Create
+       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow>  Create
 ```
 
 Each scheduled VDiff has an associated VDiff UUID which is returned by the Create command. You can use it
@@ -111,7 +111,7 @@ One or more from PRIMARY, REPLICA, RDONLY.<br><br>
 
 <div class="cmd">
 VDiff finds the current position of the source primary and then waits for the target replication to reach
-that position for _filtered_replication_wait_time_. If the target is much behind the source or if there is
+that position for `--filtered_replication_wait_time`. If the target is much behind the source or if there is
 a high write qps on the source then this time will need to be increased.
 </div>
 

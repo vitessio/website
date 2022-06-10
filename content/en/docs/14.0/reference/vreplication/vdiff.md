@@ -56,7 +56,7 @@ One or more from PRIMARY, REPLICA, RDONLY.<br><br>
 
 <div class="cmd">
 VDiff finds the current position of the source primary and then waits for the target replication to reach
-that position for _filtered_replication_wait_time_. If the target is much behind the source or if there is
+that position for `--filtered_replication_wait_time`. If the target is much behind the source or if there is
 a high write qps on the source then this time will need to be increased.
 </div>
 
