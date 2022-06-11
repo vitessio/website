@@ -12,7 +12,7 @@ Who: [Deepthi Sigireddi](https://twitter.com/ATechGirl), [Harshit Gangal](https:
 What: Vitess project booth, maintainer talk, office hours
 
 # Event Details
-May 16-17 were co-located events. We were there for the main conference which was May 18-20. There were 7000+ attendees. Accounting for booth staff there were probably 6000+ who were really attending the conference.  
+May 16-17 were co-located events. We were there for the main conference which was May 18-20. There were 7000+ attendees.
 The Vitess team were attending in their capacity as project maintainers to staff a booth in the Project Pavilion, hold office hours and to give a talk.
 <figure>
     <img src="/files/2022-kubecon-eu/vitess-booth.jpg" alt="Vitess Project Booth"/>
@@ -37,13 +37,13 @@ The Vitess team were attending in their capacity as project maintainers to staff
     <img src="/files/2022-kubecon-eu/vitess-talk.jpg" alt="Vitess Talk"/>
     <figcaption>Photo credit: Deepthi Sigireddi</figcaption>
 </figure>
-{{< youtube id="HgSlmzC7O-E" autoplay="false" >}}
+{{< youtube id="HgSlmzC7O-E" autoplay="false" title="Scaling Databases With Vitess">}}
 
 - Deepthi made an appearance on the [TechStrongTV Livestream](https://www.youtube.com/watch?v=AEKl9TofdQc&t=1340s) and recorded a [podcast](https://thenewstack.io/the-future-of-open-source-contributions-from-kubecon-europe/) with TheNewStack
 
-{{< youtube id="AEKl9TofdQc" autoplay="false" >}} (Starts at t=1340s)
+{{< youtube id="AEKl9TofdQc" autoplay="false" title="TechStrongTV Livestream">}} (Starts at t=1340s)
 
-{{< youtube id="fa-9gIx5cAg" autoplay="false" >}}
+{{< youtube id="fa-9gIx5cAg" autoplay="false" title="TheNewStack: The Future of Open Source Contributions">}}
 
 # Learnings
 - Producing content really helps spread the word. At least two people referenced [The Story of Vitess podcast by Deepthi on Changelog](https://changelog.com/podcast/485). 
@@ -53,6 +53,6 @@ The Vitess team were attending in their capacity as project maintainers to staff
 
 # What’s next
 The [2022 North American event](https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/) is scheduled for October 24-28 in Detroit, Michigan. We will most likely have a Vitess booth again.
-The [2023 EU event](https://events.linuxfoundation.org/kubecon-cloudnativecon-europe-2023/) is scheduled for April 17-21 in Amsterdam, The Netherlands
+The [2023 EU event](https://events.linuxfoundation.org/kubecon-cloudnativecon-europe-2023/) is scheduled for April 17-21 in Amsterdam, The Netherlands.
 
 Special thanks to Harshit Gangal for organizing the Vitess presence at this conference.
