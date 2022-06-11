@@ -41,7 +41,7 @@ The Vitess team were attending in their capacity as project maintainers to staff
 
 - Deepthi made an appearance on the [TechStrongTV Livestream](https://www.youtube.com/watch?v=AEKl9TofdQc&t=1340s) and recorded a [podcast](https://thenewstack.io/the-future-of-open-source-contributions-from-kubecon-europe/) with TheNewStack
 
-{{< youtube id="AEKl9TofdQc" autoplay="false" title="TechStrongTV Livestream">}} (Starts at t=1340s)
+{{< youtube id="AEKl9TofdQc" autoplay="false" title="TechStrongTV Livestream" start="1340">}}
 
 {{< youtube id="fa-9gIx5cAg" autoplay="false" title="TheNewStack: The Future of Open Source Contributions">}}
 
