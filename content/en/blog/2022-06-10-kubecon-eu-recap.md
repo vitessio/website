@@ -15,29 +15,29 @@ What: Vitess project booth, maintainer talk, office hours
 May 16-17 were co-located events. We were there for the main conference which was May 18-20. There were 7000+ attendees. Accounting for booth staff there were probably 6000+ who were really attending the conference.  
 The Vitess team were attending in their capacity as project maintainers to staff a booth in the Project Pavilion, hold office hours and to give a talk.
 <figure>
-    <img src="/files/2022-kubecon-eu/vitess-booth.jpg"/>
-    <figcaption><div class="figure-title">Vitess Project Booth. Photo Credit: Harshit Gangal</div></figcaption>
+    <img src="/files/2022-kubecon-eu/vitess-booth.jpg" alt="Vitess Project Booth"/>
+    <figcaption>Photo Credit: Harshit Gangal</figcaption>
 </figure>
 <figure>
-    <img src="/files/2022-kubecon-eu/maintainers.jpg"/>
-    <figcaption><div class="figure-title">Maintainers at Project Booth. Photo Credit: Nick van Wiggeren</div></figcaption>
+    <img src="/files/2022-kubecon-eu/maintainers.jpg" alt="Maintainers at Project Booth"/>
+    <figcaption>Photo Credit: Nick van Wiggeren</figcaption>
 </figure>
 
 # Highlights
 - A number of people stopped by the Vitess booth. This included Vinted, an open source user of Vitess.
 <figure>
-    <img src="/files/2022-kubecon-eu/vinted.jpg"/>
-    <figcaption><div class="figure-title">Vinted + Maintainers. Photo credit: Vaidas Balys</div></figcaption>
+    <img src="/files/2022-kubecon-eu/vinted.jpg" alt="Vinted + Maintainers"/>
+    <figcaption>Photo credit: Vaidas Balys</figcaption>
 </figure>
 
 - Office hours were well-attended. They also helped some attendees find us when they couldn't find us at the Project Pavilion.
 - Some of them were Cloud Architects and were excited about Vitess. They did not know that something like this exists for MySQL and were only aware of solutions for scaling out PostgreSQL.
 - The Vitess talk was well-attended and people asked pointed questions, including about comparisons with competing databases - Cockroach, Yugabyte etc. Recording is available on YouTube.
 <figure>
-    <img src="/files/2022-kubecon-eu/vitess-talk.jpg"/>
-    <figcaption><div class="figure-title">Vitess Talk. Photo credit: Deepthi Sigireddi</div></figcaption>
+    <img src="/files/2022-kubecon-eu/vitess-talk.jpg" alt="Vitess Talk"/>
+    <figcaption>Photo credit: Deepthi Sigireddi</figcaption>
 </figure>
-{{< youtube id="HgSlmzC7O" autoplay="false" >}}
+{{< youtube id="HgSlmzC7O-E" autoplay="false" >}}
 
 - Deepthi made an appearance on the [TechStrongTV Livestream](https://www.youtube.com/watch?v=AEKl9TofdQc&t=1340s) and recorded a [podcast](https://thenewstack.io/the-future-of-open-source-contributions-from-kubecon-europe/) with TheNewStack
 
