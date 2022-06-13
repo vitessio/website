@@ -18,14 +18,14 @@ The Vitess team were attending in their capacity as project maintainers to staff
 <tr>
 <td> 
   <p style="padding: 10px">
-  <img src="/files/2022-kubecon-eu/vitess-booth.jpg" alt="Vitess Project Booth"/>
+  <img src="/files/2022-kubecon-eu/vitess-booth.jpg" alt="Vitess Project Booth" style="width:600px"/>
   <br>
   <em style="color: grey">Credit: Deepthi Sigireddi</em>
 </p>
 </td>
 <td> 
   <p style="padding: 10px">
-  <img src="/files/2022-kubecon-eu/maintainers.jpg" alt="Maintainers at Project Booth"/> 
+  <img src="/files/2022-kubecon-eu/maintainers.jpg" alt="Maintainers at Project Booth" style="width:600px"/> 
   <br>
   <em style="color: grey">Credit: Nick van Wiggeren</em>
 </p>
@@ -53,13 +53,13 @@ The Vitess team were attending in their capacity as project maintainers to staff
 <tr>
 <td> 
   <p style="padding: 10px">
-<img src="/files/2022-kubecon-eu/vinted.jpg" alt="Vinted + Maintainers"/> 
+<img src="/files/2022-kubecon-eu/vinted.jpg" alt="Vinted + Maintainers" style="width:600px"/> 
   <br>
   <em style="color: grey">Credit: Vaidas Balys</em>
 </td>
 <td> 
   <p style="padding: 10px">
-<img src="/files/2022-kubecon-eu/vitess-talk.jpg" alt="Vitess Talk: Scaling Databases with Vitess"/> 
+<img src="/files/2022-kubecon-eu/vitess-talk.jpg" alt="Vitess Talk: Scaling Databases with Vitess" style="width:600px"/> 
   <br>
   <em style="color: grey">Credit: Deepthi Sigireddi</em>
 </td>
