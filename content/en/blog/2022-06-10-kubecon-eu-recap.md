@@ -18,7 +18,7 @@ The Vitess team were attending in their capacity as project maintainers to staff
 <tr>
 <td> 
   <p style="padding: 10px">
-  <img src="/files/2022-kubecon-eu/vitess-booth.jpg" alt="Vitess Project Booth" style="width:600px"/>
+  <img src="/files/2022-kubecon-eu/vitess-booth.jpg" alt="Vitess Project Booth" style="width:300px"/>
   <br>
   <em style="color: grey">Credit: Deepthi Sigireddi</em>
 </p>
@@ -47,8 +47,8 @@ The Vitess team were attending in their capacity as project maintainers to staff
 - A number of people stopped by the Vitess booth. This included Vinted, an open source user of Vitess.
 - Office hours were well-attended. They also helped some attendees find us when they couldn't find us at the Project Pavilion.
 - Some of them were Cloud Architects and were excited about Vitess. They did not know that something like this exists for MySQL and were only aware of solutions for scaling out PostgreSQL.
-- The [Vitess talk](https://www.youtube.com/watch?v=HgSlmzC7O-E) was well-attended and people asked pointed questions, including about comparisons with competing databases - Cockroach, Yugabyte etc.
-- Deepthi made an appearance on the [TechStrongTV Livestream](https://www.youtube.com/watch?v=AEKl9TofdQc&t=1340s) and recorded a [podcast](https://thenewstack.io/the-future-of-open-source-contributions-from-kubecon-europe/) with TheNewStack
+- The **[Vitess talk](https://www.youtube.com/watch?v=HgSlmzC7O-E)** was well-attended and people asked pointed questions, including about comparisons with competing databases - Cockroach, Yugabyte etc.
+- Deepthi made an appearance on the **[TechStrongTV Livestream](https://www.youtube.com/watch?v=AEKl9TofdQc&t=1340s)** and recorded a **[podcast](https://thenewstack.io/the-future-of-open-source-contributions-from-kubecon-europe/)** with TheNewStack
 <table>
 <tr>
 <td> 
@@ -78,13 +78,13 @@ The Vitess team were attending in their capacity as project maintainers to staff
 
 
 # Learnings
-- Producing content really helps spread the word. At least two people referenced [The Story of Vitess podcast by Deepthi on Changelog](https://changelog.com/podcast/485). 
+- Producing content really helps spread the word. At least two people referenced **[The Story of Vitess podcast by Deepthi on Changelog](https://changelog.com/podcast/485)**. 
 - In previous conferences, many people asked about “Vitess Support”. The conversation has now shifted to “Managed Vitess” / “Managed Database”. This is a sign of increased cloud adoption in the database services space.
 - We saw multiple vendors who were offering cloud services only in the EU with the promise that all the servers live in the EU so that there’s no way they can ever be in violation of the GDPR Data Residency rules.
 - Project booths were not on the main schedule and people reported trying to find us at times when we weren’t supposed to be at the booth. We need to work with CNCF to improve this.
 
 # What’s next
-The [2022 North American event](https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/) is scheduled for October 24-28 in Detroit, Michigan. We will most likely have a Vitess booth again.
-The [2023 EU event](https://events.linuxfoundation.org/kubecon-cloudnativecon-europe-2023/) is scheduled for April 17-21 in Amsterdam, The Netherlands.
+The **[2022 North American event](https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/)** is scheduled for October 24-28 in Detroit, Michigan. We will most likely have a Vitess booth again.
+The **[2023 EU event](https://events.linuxfoundation.org/kubecon-cloudnativecon-europe-2023/)** is scheduled for April 17-21 in Amsterdam, The Netherlands.
 
-Special thanks to Harshit Gangal for organizing the Vitess presence at this conference.
+Special thanks to **Harshit Gangal** for organizing the Vitess presence at this conference.
