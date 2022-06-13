@@ -16,12 +16,20 @@ May 16-17 were co-located events. We were there for the main conference which wa
 The Vitess team were attending in their capacity as project maintainers to staff a booth in the Project Pavilion, hold office hours and to give a talk.
 <table>
 <tr>
-<td> <img src="/files/2022-kubecon-eu/vitess-booth.jpg" alt="Vitess Project Booth" style="width: 250px;"/> </td>
-<td> <img src="/files/2022-kubecon-eu/maintainers.jpg" alt="Maintainers at Project Booth"style="width: 250px;"/> </td>
-</tr>
-<tr>
-<td>Photo Credit: Deepthi Sigireddi</td>
-<td>Photo Credit: Nick van Wiggeren</td>
+<td> 
+  <p style="padding: 10px">
+  <img src="/files/2022-kubecon-eu/vitess-booth.jpg" alt="Vitess Project Booth"/>
+  <br>
+  <em style="color: grey">Credit: Deepthi Sigireddi</em>
+</p>
+</td>
+<td> 
+  <p style="padding: 10px">
+  <img src="/files/2022-kubecon-eu/maintainers.jpg" alt="Maintainers at Project Booth"/> 
+  <br>
+  <em style="color: grey">Credit: Nick van Wiggeren</em>
+</p>
+</td>
 </tr>
 </table>
 <!--
@@ -43,12 +51,18 @@ The Vitess team were attending in their capacity as project maintainers to staff
 - Deepthi made an appearance on the [TechStrongTV Livestream](https://www.youtube.com/watch?v=AEKl9TofdQc&t=1340s) and recorded a [podcast](https://thenewstack.io/the-future-of-open-source-contributions-from-kubecon-europe/) with TheNewStack
 <table>
 <tr>
-<td> <img src="/files/2022-kubecon-eu/vinted.jpg" alt="Vinted + Maintainers" style="width: 250px;"/> </td>
-<td> <img src="/files/2022-kubecon-eu/vitess-talk.jpg" alt="Vitess Talk: Scaling Databases with Vitess"style="width: 250px;"/> </td>
-</tr>
-<tr>
-<td>Photo Credit: Vaidas Balys</td>
-<td>Photo Credit: Deepthi Sigireddi</td>
+<td> 
+  <p style="padding: 10px">
+<img src="/files/2022-kubecon-eu/vinted.jpg" alt="Vinted + Maintainers"/> 
+  <br>
+  <em style="color: grey">Credit: Vaidas Balys</em>
+</td>
+<td> 
+  <p style="padding: 10px">
+<img src="/files/2022-kubecon-eu/vitess-talk.jpg" alt="Vitess Talk: Scaling Databases with Vitess"/> 
+  <br>
+  <em style="color: grey">Credit: Deepthi Sigireddi</em>
+</td>
 </tr>
 </table>
 <!--
