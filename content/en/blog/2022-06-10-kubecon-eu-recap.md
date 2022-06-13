@@ -14,36 +14,54 @@ What: Vitess project booth, maintainer talk, office hours
 # Event Details
 May 16-17 were co-located events. We were there for the main conference which was May 18-20. There were 7000+ attendees.
 The Vitess team were attending in their capacity as project maintainers to staff a booth in the Project Pavilion, hold office hours and to give a talk.
+<table>
+<tr>
+<td> <img src="/files/2022-kubecon-eu/vitess-booth.jpg" alt="Vitess Project Booth" style="width: 250px;"/> </td>
+<td> <img src="/files/2022-kubecon-eu/maintainers.jpg" alt="Maintainers at Project Booth"style="width: 250px;"/> </td>
+</tr>
+<tr>
+<td>Photo Credit: Deepthi Sigireddi</td>
+<td>Photo Credit: Nick van Wiggeren</td>
+</tr>
+</table>
+<!--
 <figure>
     <img src="/files/2022-kubecon-eu/vitess-booth.jpg" alt="Vitess Project Booth"/>
-    <figcaption>Photo Credit: Harshit Gangal</figcaption>
+    <figcaption>Photo Credit: Deepthi Sigireddi</figcaption>
 </figure>
 <figure>
     <img src="/files/2022-kubecon-eu/maintainers.jpg" alt="Maintainers at Project Booth"/>
     <figcaption>Photo Credit: Nick van Wiggeren</figcaption>
 </figure>
+-->
 
 # Highlights
 - A number of people stopped by the Vitess booth. This included Vinted, an open source user of Vitess.
+- Office hours were well-attended. They also helped some attendees find us when they couldn't find us at the Project Pavilion.
+- Some of them were Cloud Architects and were excited about Vitess. They did not know that something like this exists for MySQL and were only aware of solutions for scaling out PostgreSQL.
+- The [Vitess talk](https://www.youtube.com/watch?v=HgSlmzC7O-E) was well-attended and people asked pointed questions, including about comparisons with competing databases - Cockroach, Yugabyte etc.
+- Deepthi made an appearance on the [TechStrongTV Livestream](https://www.youtube.com/watch?v=AEKl9TofdQc&t=1340s) and recorded a [podcast](https://thenewstack.io/the-future-of-open-source-contributions-from-kubecon-europe/) with TheNewStack
+<table>
+<tr>
+<td> <img src="/files/2022-kubecon-eu/vinted.jpg" alt="Vinted + Maintainers" style="width: 250px;"/> </td>
+<td> <img src="/files/2022-kubecon-eu/vitess-talk.jpg" alt="Vitess Talk: Scaling Databases with Vitess"style="width: 250px;"/> </td>
+</tr>
+<tr>
+<td>Photo Credit: Vaidas Balys</td>
+<td>Photo Credit: Deepthi Sigireddi</td>
+</tr>
+</table>
+<!--
 <figure>
     <img src="/files/2022-kubecon-eu/vinted.jpg" alt="Vinted + Maintainers"/>
     <figcaption>Photo credit: Vaidas Balys</figcaption>
 </figure>
-
-- Office hours were well-attended. They also helped some attendees find us when they couldn't find us at the Project Pavilion.
-- Some of them were Cloud Architects and were excited about Vitess. They did not know that something like this exists for MySQL and were only aware of solutions for scaling out PostgreSQL.
-- The Vitess talk was well-attended and people asked pointed questions, including about comparisons with competing databases - Cockroach, Yugabyte etc. Recording is available on YouTube.
 <figure>
     <img src="/files/2022-kubecon-eu/vitess-talk.jpg" alt="Vitess Talk"/>
     <figcaption>Photo credit: Deepthi Sigireddi</figcaption>
 </figure>
-{{< youtube id="HgSlmzC7O-E" autoplay="false" title="Scaling Databases With Vitess">}}
+-->
 
-- Deepthi made an appearance on the [TechStrongTV Livestream](https://www.youtube.com/watch?v=AEKl9TofdQc&t=1340s) and recorded a [podcast](https://thenewstack.io/the-future-of-open-source-contributions-from-kubecon-europe/) with TheNewStack
-
-{{< youtube id="AEKl9TofdQc" autoplay="false" title="TechStrongTV Livestream" start="1340">}}
-
-{{< youtube id="fa-9gIx5cAg" autoplay="false" title="TheNewStack: The Future of Open Source Contributions">}}
 
 # Learnings
 - Producing content really helps spread the word. At least two people referenced [The Story of Vitess podcast by Deepthi on Changelog](https://changelog.com/podcast/485). 
