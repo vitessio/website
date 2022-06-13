@@ -18,7 +18,7 @@ The Vitess team were attending in their capacity as project maintainers to staff
 <tr>
 <td> 
   <p style="padding: 10px">
-  <img src="/files/2022-kubecon-eu/vitess-booth.jpg" alt="Vitess Project Booth" style="width:300px"/>
+  <img src="/files/2022-kubecon-eu/vitess-booth.jpg" alt="Vitess Project Booth" style="width:400px"/>
   <br>
   <em style="color: grey">Credit: Deepthi Sigireddi</em>
 </p>
