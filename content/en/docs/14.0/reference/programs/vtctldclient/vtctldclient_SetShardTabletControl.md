@@ -44,7 +44,7 @@ vtctldclient SetShardTabletControl [--cells=c1,c2...] [--denied-tables=t1,t2,...
 
 ```
       --action_timeout duration   timeout for the total command (default 1h0m0s)
-      --server string             server to use for connection
+      --server string             server to use for connection (required)
 ```
 
 ### SEE ALSO

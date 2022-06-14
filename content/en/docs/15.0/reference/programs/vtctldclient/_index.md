@@ -12,7 +12,7 @@ Executes a cluster management command on the remote vtctld server.
 ```
       --action_timeout duration   timeout for the total command (default 1h0m0s)
   -h, --help                      help for vtctldclient
-      --server string             server to use for connection
+      --server string             server to use for connection (required)
 ```
 
 ### SEE ALSO

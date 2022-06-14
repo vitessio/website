@@ -23,7 +23,7 @@ vtctldclient SourceShardAdd [--key-range <keyrange>] [--tables <table1,table2,..
 
 ```
       --action_timeout duration   timeout for the total command (default 1h0m0s)
-      --server string             server to use for connection
+      --server string             server to use for connection (required)
 ```
 
 ### SEE ALSO

@@ -22,7 +22,7 @@ vtctldclient ValidateKeyspace [--ping-tablets] <keyspace>
 
 ```
       --action_timeout duration   timeout for the total command (default 1h0m0s)
-      --server string             server to use for connection
+      --server string             server to use for connection (required)
 ```
 
 ### SEE ALSO
