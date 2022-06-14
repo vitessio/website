@@ -24,7 +24,7 @@ vtctldclient ExecuteFetchAsApp [--max-rows <max-rows>] [--json|-j] [--use-pool] 
 
 ```
       --action_timeout duration   timeout for the total command (default 1h0m0s)
-      --server string             server to use for connection
+      --server string             server to use for connection (required)
 ```
 
 ### SEE ALSO

@@ -44,7 +44,7 @@ vtctldclient GetTablets [--strict] [{--cell $c1 [--cell $c2 ...], --keyspace $ks
 
 ```
       --action_timeout duration   timeout for the total command (default 1h0m0s)
-      --server string             server to use for connection
+      --server string             server to use for connection (required)
 ```
 
 ### SEE ALSO
