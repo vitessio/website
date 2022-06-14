@@ -14,7 +14,7 @@ Output is sorted by tablet type, then replication position.
 Use ctrl-C to interrupt the command and see partial results if needed.
 
 ```
-vtctldclient ShardReplicationPositions <keyspace/shard> [flags]
+vtctldclient ShardReplicationPositions <keyspace/shard>
 ```
 
 ### Options

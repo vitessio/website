@@ -5,10 +5,10 @@ description:
 ---
 ## vtctldclient GetCellsAliases
 
-
+Gets all CellsAlias objects in the cluster.
 
 ```
-vtctldclient GetCellsAliases [flags]
+vtctldclient GetCellsAliases
 ```
 
 ### Options

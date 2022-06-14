@@ -33,15 +33,15 @@ Executes a cluster management command on the remote vtctld server.
 * [vtctldclient DeleteShards](./vtctldclient_deleteshards/)	 - Deletes the specified shards from the topology.
 * [vtctldclient DeleteSrvVSchema](./vtctldclient_deletesrvvschema/)	 - Deletes the SrvVSchema object in the given cell.
 * [vtctldclient DeleteTablets](./vtctldclient_deletetablets/)	 - Deletes tablet(s) from the topology.
-* [vtctldclient EmergencyReparentShard](./vtctldclient_emergencyreparentshard/)	 - 
+* [vtctldclient EmergencyReparentShard](./vtctldclient_emergencyreparentshard/)	 - Reparents the shard to the new primary. Assumes the old primary is dead and not responding.
 * [vtctldclient ExecuteFetchAsApp](./vtctldclient_executefetchasapp/)	 - Executes the given query as the App user on the remote tablet.
 * [vtctldclient ExecuteFetchAsDBA](./vtctldclient_executefetchasdba/)	 - Executes the given query as the DBA user on the remote tablet.
 * [vtctldclient ExecuteHook](./vtctldclient_executehook/)	 - Runs the specified hook on the given tablet.
 * [vtctldclient FindAllShardsInKeyspace](./vtctldclient_findallshardsinkeyspace/)	 - Returns a map of shard names to shard references for a given keyspace.
-* [vtctldclient GetBackups](./vtctldclient_getbackups/)	 - 
-* [vtctldclient GetCellInfo](./vtctldclient_getcellinfo/)	 - 
-* [vtctldclient GetCellInfoNames](./vtctldclient_getcellinfonames/)	 - 
-* [vtctldclient GetCellsAliases](./vtctldclient_getcellsaliases/)	 - 
+* [vtctldclient GetBackups](./vtctldclient_getbackups/)	 - Lists backups for the given shard.
+* [vtctldclient GetCellInfo](./vtctldclient_getcellinfo/)	 - Gets the CellInfo object for the given cell.
+* [vtctldclient GetCellInfoNames](./vtctldclient_getcellinfonames/)	 - Lists the names of all cells in the cluster.
+* [vtctldclient GetCellsAliases](./vtctldclient_getcellsaliases/)	 - Gets all CellsAlias objects in the cluster.
 * [vtctldclient GetKeyspace](./vtctldclient_getkeyspace/)	 - Returns information about the given keyspace from the topology.
 * [vtctldclient GetKeyspaces](./vtctldclient_getkeyspaces/)	 - Returns information about every keyspace in the topology.
 * [vtctldclient GetPermissions](./vtctldclient_getpermissions/)	 - Displays the permissions for a tablet.
@@ -56,11 +56,11 @@ Executes a cluster management command on the remote vtctld server.
 * [vtctldclient GetTabletVersion](./vtctldclient_gettabletversion/)	 - Print the version of a tablet from its debug vars.
 * [vtctldclient GetTablets](./vtctldclient_gettablets/)	 - Looks up tablets according to filter criteria.
 * [vtctldclient GetVSchema](./vtctldclient_getvschema/)	 - Prints a JSON representation of a keyspace's topo record.
-* [vtctldclient GetWorkflows](./vtctldclient_getworkflows/)	 - 
-* [vtctldclient InitShardPrimary](./vtctldclient_initshardprimary/)	 - 
+* [vtctldclient GetWorkflows](./vtctldclient_getworkflows/)	 - Gets all vreplication workflows (Reshard, MoveTables, etc) in the given keyspace.
+* [vtctldclient InitShardPrimary](./vtctldclient_initshardprimary/)	 - Sets the initial primary for the shard.
 * [vtctldclient LegacyVtctlCommand](./vtctldclient_legacyvtctlcommand/)	 - Invoke a legacy vtctlclient command. Flag parsing is best effort.
 * [vtctldclient PingTablet](./vtctldclient_pingtablet/)	 - Checks that the specified tablet is awake and responding to RPCs. This command can be blocked by other in-flight operations.
-* [vtctldclient PlannedReparentShard](./vtctldclient_plannedreparentshard/)	 - 
+* [vtctldclient PlannedReparentShard](./vtctldclient_plannedreparentshard/)	 - Reparents the shard to a new primary, or away from an old primary. Both the old and new primaries must be up and running.
 * [vtctldclient RebuildKeyspaceGraph](./vtctldclient_rebuildkeyspacegraph/)	 - Rebuilds the serving data for the keyspace(s). This command may trigger an update to all connected clients.
 * [vtctldclient RebuildVSchemaGraph](./vtctldclient_rebuildvschemagraph/)	 - Rebuilds the cell-specific SrvVSchema from the global VSchema objects in the provided cells (or all cells if none provided).
 * [vtctldclient RefreshState](./vtctldclient_refreshstate/)	 - Reloads the tablet record on the specified tablet.
@@ -71,7 +71,7 @@ Executes a cluster management command on the remote vtctld server.
 * [vtctldclient RemoveBackup](./vtctldclient_removebackup/)	 - Removes the given backup from the BackupStorage used by vtctld.
 * [vtctldclient RemoveKeyspaceCell](./vtctldclient_removekeyspacecell/)	 - Removes the specified cell from the Cells list for all shards in the specified keyspace (by calling RemoveShardCell on every shard). It also removes the SrvKeyspace for that keyspace in that cell.
 * [vtctldclient RemoveShardCell](./vtctldclient_removeshardcell/)	 - Remove the specified cell from the specified shard's Cells list.
-* [vtctldclient ReparentTablet](./vtctldclient_reparenttablet/)	 - 
+* [vtctldclient ReparentTablet](./vtctldclient_reparenttablet/)	 - Reparent a tablet to the current primary in the shard.
 * [vtctldclient RestoreFromBackup](./vtctldclient_restorefrombackup/)	 - Stops mysqld on the specified tablet and restores the data from either the latest backup or closest before `backup-timestamp`.
 * [vtctldclient RunHealthCheck](./vtctldclient_runhealthcheck/)	 - Runs a healthcheck on the remote tablet.
 * [vtctldclient SetKeyspaceDurabilityPolicy](./vtctldclient_setkeyspacedurabilitypolicy/)	 - Sets the durability-policy used by the specified keyspace.
@@ -85,12 +85,12 @@ Executes a cluster management command on the remote vtctld server.
 * [vtctldclient SourceShardDelete](./vtctldclient_sourcesharddelete/)	 - Deletes the SourceShard record with the provided index. This should only be used for emergency cleanup. It does not call RefreshState for the shard primary.
 * [vtctldclient StartReplication](./vtctldclient_startreplication/)	 - Starts replication on the specified tablet.
 * [vtctldclient StopReplication](./vtctldclient_stopreplication/)	 - Stops replication on the specified tablet.
-* [vtctldclient TabletExternallyReparented](./vtctldclient_tabletexternallyreparented/)	 - 
+* [vtctldclient TabletExternallyReparented](./vtctldclient_tabletexternallyreparented/)	 - Updates the topology record for the tablet's shard to acknowledge that an external tool made this tablet the primary.
 * [vtctldclient UpdateCellInfo](./vtctldclient_updatecellinfo/)	 - Updates the content of a CellInfo with the provided parameters, creating the CellInfo if it does not exist.
 * [vtctldclient UpdateCellsAlias](./vtctldclient_updatecellsalias/)	 - Updates the content of a CellsAlias with the provided parameters, creating the CellsAlias if it does not exist.
 * [vtctldclient Validate](./vtctldclient_validate/)	 - Validates that all nodes reachable from the global replication graph, as well as all tablets in discoverable cells, are consistent.
 * [vtctldclient ValidateKeyspace](./vtctldclient_validatekeyspace/)	 - Validates that all nodes reachable from the specified keyspace are consistent.
-* [vtctldclient ValidateSchemaKeyspace](./vtctldclient_validateschemakeyspace/)	 - 
+* [vtctldclient ValidateSchemaKeyspace](./vtctldclient_validateschemakeyspace/)	 - Validates that the schema on the primary tablet for shard 0 matches the schema on all other tablets in the keyspace.
 * [vtctldclient ValidateShard](./vtctldclient_validateshard/)	 - Validates that all nodes reachable from the specified shard are consistent.
-* [vtctldclient ValidateVersionKeyspace](./vtctldclient_validateversionkeyspace/)	 - 
+* [vtctldclient ValidateVersionKeyspace](./vtctldclient_validateversionkeyspace/)	 - Validates that the version on the primary tablet of shard 0 matches all of the other tablets in the keyspace.
 

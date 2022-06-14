@@ -27,7 +27,7 @@ the client-side flag parsing library we are using will attempt to parse those
 flags (and fail).
 
 ```
-vtctldclient LegacyVtctlCommand -- <command> [flags ...] [args ...] [flags]
+vtctldclient LegacyVtctlCommand -- <command> [flags ...] [args ...]
 ```
 
 ### Examples

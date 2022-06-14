@@ -5,14 +5,10 @@ description:
 ---
 ## vtctldclient ReparentTablet
 
-
-
-### Synopsis
-
-Reparent a tablet to the current primary in the shard. This only works if the current replica position matches the last known reparent action.
+Reparent a tablet to the current primary in the shard.
 
 ```
-vtctldclient ReparentTablet <alias> [flags]
+vtctldclient ReparentTablet <alias>
 ```
 
 ### Options

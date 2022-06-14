@@ -16,7 +16,7 @@ Otherwise, the shard must be empty (have no tablets) or returns an error for
 that shard.
 
 ```
-vtctldclient DeleteShards [--recursive|-r] [--even-if-serving] [--force|-f] <keyspace/shard> [<keyspace/shard> ...] [flags]
+vtctldclient DeleteShards [--recursive|-r] [--even-if-serving] [--force|-f] <keyspace/shard> [<keyspace/shard> ...]
 ```
 
 ### Options

@@ -5,10 +5,17 @@ description:
 ---
 ## vtctldclient TabletExternallyReparented
 
+Updates the topology record for the tablet's shard to acknowledge that an external tool made this tablet the primary.
+
+### Synopsis
+
+Updates the topology record for the tablet's shard to acknowledge that an external tool made this tablet the primary.
+
+See the Reparenting guide for more information: https://vitess.io/docs/user-guides/reparenting/#external-reparenting.
 
 
 ```
-vtctldclient TabletExternallyReparented <alias> [flags]
+vtctldclient TabletExternallyReparented <alias>
 ```
 
 ### Options

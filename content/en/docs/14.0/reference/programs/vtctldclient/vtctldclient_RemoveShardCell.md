@@ -8,7 +8,7 @@ description:
 Remove the specified cell from the specified shard's Cells list.
 
 ```
-vtctldclient RemoveShardCell [--force|-f] [--recursive|-r] <keyspace/shard> <cell> [flags]
+vtctldclient RemoveShardCell [--force|-f] [--recursive|-r] <keyspace/shard> <cell>
 ```
 
 ### Options

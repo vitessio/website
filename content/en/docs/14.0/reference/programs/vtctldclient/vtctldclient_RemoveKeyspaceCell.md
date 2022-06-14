@@ -8,7 +8,7 @@ description:
 Removes the specified cell from the Cells list for all shards in the specified keyspace (by calling RemoveShardCell on every shard). It also removes the SrvKeyspace for that keyspace in that cell.
 
 ```
-vtctldclient RemoveKeyspaceCell [--force|-f] [--recursive|-r] <keyspace> <cell> [flags]
+vtctldclient RemoveKeyspaceCell [--force|-f] [--recursive|-r] <keyspace> <cell>
 ```
 
 ### Options

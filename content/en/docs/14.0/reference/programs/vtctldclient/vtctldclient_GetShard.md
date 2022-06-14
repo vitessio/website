@@ -8,7 +8,7 @@ description:
 Returns information about a shard in the topology.
 
 ```
-vtctldclient GetShard <keyspace/shard> [flags]
+vtctldclient GetShard <keyspace/shard>
 ```
 
 ### Options

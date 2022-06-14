@@ -14,7 +14,7 @@ vtctldclient RebuildVSchemaGraph [--cells=c1,c2,...]
 ### Options
 
 ```
-  -c, --cells strings   Specifies a comma-separated list of cells to look for tablets
+  -c, --cells strings   Specifies a comma-separated list of cells to look for tablets.
   -h, --help            help for RebuildVSchemaGraph
 ```
 

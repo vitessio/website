@@ -5,10 +5,10 @@ description:
 ---
 ## vtctldclient GetCellInfoNames
 
-
+Lists the names of all cells in the cluster.
 
 ```
-vtctldclient GetCellInfoNames [flags]
+vtctldclient GetCellInfoNames
 ```
 
 ### Options

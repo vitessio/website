@@ -5,18 +5,18 @@ description:
 ---
 ## vtctldclient GetBackups
 
-
+Lists backups for the given shard.
 
 ```
-vtctldclient GetBackups <keyspace/shard> [flags]
+vtctldclient GetBackups [--limit <limit>] [--json] <keyspace/shard>
 ```
 
 ### Options
 
 ```
   -h, --help           help for GetBackups
-  -j, --json           Output backup info in JSON format rather than a list of backups
-  -l, --limit uint32   Retrieve only the most recent N backups
+  -j, --json           Output backup info in JSON format rather than a list of backups.
+  -l, --limit uint32   Retrieve only the most recent N backups.
 ```
 
 ### Options inherited from parent commands

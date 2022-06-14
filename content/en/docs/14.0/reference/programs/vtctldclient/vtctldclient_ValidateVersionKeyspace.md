@@ -5,10 +5,10 @@ description:
 ---
 ## vtctldclient ValidateVersionKeyspace
 
-
+Validates that the version on the primary tablet of shard 0 matches all of the other tablets in the keyspace.
 
 ```
-vtctldclient ValidateVersionKeyspace <keyspace> [flags]
+vtctldclient ValidateVersionKeyspace <keyspace>
 ```
 
 ### Options

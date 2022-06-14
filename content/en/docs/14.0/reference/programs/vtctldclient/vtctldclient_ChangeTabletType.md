@@ -21,7 +21,7 @@ vtctldclient ChangeTabletType [--dry-run] <alias> <tablet-type>
 ### Options
 
 ```
-  -d, --dry-run   Shows the proposed change without actually executing it
+  -d, --dry-run   Shows the proposed change without actually executing it.
   -h, --help      help for ChangeTabletType
 ```
 

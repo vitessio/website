@@ -23,7 +23,7 @@ vtctldclient SetKeyspaceDurabilityPolicy [--durability-policy=policy_name] <keys
 ### Options
 
 ```
-      --durability-policy string   type of durability to enforce for this keyspace. Default is none. Other values include 'semi_sync' and others as dictated by registered plugins (default "none")
+      --durability-policy string   Type of durability to enforce for this keyspace. Default is none. Other values include 'semi_sync' and others as dictated by registered plugins. (default "none")
   -h, --help                       help for SetKeyspaceDurabilityPolicy
 ```
 

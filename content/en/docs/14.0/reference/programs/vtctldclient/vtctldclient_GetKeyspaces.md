@@ -8,7 +8,7 @@ description:
 Returns information about every keyspace in the topology.
 
 ```
-vtctldclient GetKeyspaces [flags]
+vtctldclient GetKeyspaces
 ```
 
 ### Options

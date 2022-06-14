@@ -5,14 +5,10 @@ description:
 ---
 ## vtctldclient PlannedReparentShard
 
-
-
-### Synopsis
-
-string
+Reparents the shard to a new primary, or away from an old primary. Both the old and new primaries must be up and running.
 
 ```
-vtctldclient PlannedReparentShard <keyspace/shard> [flags]
+vtctldclient PlannedReparentShard <keyspace/shard>
 ```
 
 ### Options

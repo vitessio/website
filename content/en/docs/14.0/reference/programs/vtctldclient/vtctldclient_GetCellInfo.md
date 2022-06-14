@@ -5,10 +5,10 @@ description:
 ---
 ## vtctldclient GetCellInfo
 
-
+Gets the CellInfo object for the given cell.
 
 ```
-vtctldclient GetCellInfo cell [flags]
+vtctldclient GetCellInfo <cell>
 ```
 
 ### Options

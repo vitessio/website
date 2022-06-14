@@ -23,7 +23,7 @@ vtctldclient AddCellInfo --root <root> [--server-address <addr>] <cell>
 
 ```
   -h, --help                    help for AddCellInfo
-  -r, --root string             The root path the topology server will use for this cell
+  -r, --root string             The root path the topology server will use for this cell.
   -a, --server-address string   The address the topology server will connect to for this cell.
 ```
 

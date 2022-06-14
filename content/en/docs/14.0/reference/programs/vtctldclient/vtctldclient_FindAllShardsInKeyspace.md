@@ -8,7 +8,7 @@ description:
 Returns a map of shard names to shard references for a given keyspace.
 
 ```
-vtctldclient FindAllShardsInKeyspace <keyspace> [flags]
+vtctldclient FindAllShardsInKeyspace <keyspace>
 ```
 
 ### Options

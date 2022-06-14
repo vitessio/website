@@ -14,14 +14,14 @@ vtctldclient ApplyVSchema {--vschema=<vschema> || --vschema-file=<vschema file> 
 ### Options
 
 ```
-      --cells strings                           If specified, limits the rebuild to the cells, after upload. Ignored if skipRebuild is set.
+      --cells strings                           Limits the rebuild to the specified cells, after application. Ignored if --skip-rebuild is set.
       --dry-run                                 If set, do not save the altered vschema, simply echo to console.
   -h, --help                                    help for ApplyVSchema
-      --skip-rebuild                            If set, do no rebuild the SrvSchema objects.
-      --sql alter table t add vindex hash(id)   A VSchema DDL SQL statement, e.g. alter table t add vindex hash(id)
-      --sql-file string                         A file containing VSchema DDL SQL
-      --vschema string                          VSchema
-      --vschema-file string                     VSchema File
+      --skip-rebuild                            Skip rebuilding the SrvSchema objects.
+      --sql alter table t add vindex hash(id)   A VSchema DDL SQL statement, e.g. alter table t add vindex hash(id).
+      --sql-file string                         Path to a file containing a VSchema DDL SQL.
+      --vschema string                          VSchema to apply, in JSON form.
+      --vschema-file string                     Path to a file containing the vschema to apply, in JSON form.
 ```
 
 ### Options inherited from parent commands

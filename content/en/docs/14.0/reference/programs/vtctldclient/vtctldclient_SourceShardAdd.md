@@ -15,7 +15,7 @@ vtctldclient SourceShardAdd [--key-range <keyrange>] [--tables <table1,table2,..
 
 ```
   -h, --help               help for SourceShardAdd
-      --key-range string   Key range to use for the SourceShard
+      --key-range string   Key range to use for the SourceShard.
       --tables strings     Comma-separated lists of tables to replicate (for MoveTables). Each table name is either an exact match, or a regular expression of the form "/regexp/".
 ```
 

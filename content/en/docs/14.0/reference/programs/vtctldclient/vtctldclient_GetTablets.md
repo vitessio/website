@@ -31,13 +31,13 @@ vtctldclient GetTablets [--strict] [{--cell $c1 [--cell $c2 ...], --keyspace $ks
 ### Options
 
 ```
-  -c, --cell strings           List of cells to filter tablets by
-      --format string          Output format to use; valid choices are (json, awk) (default "awk")
+  -c, --cell strings           List of cells to filter tablets by.
+      --format string          Output format to use; valid choices are (json, awk). (default "awk")
   -h, --help                   help for GetTablets
-  -k, --keyspace string        Keyspace to filter tablets by
-  -s, --shard string           Shard to filter tablets by
+  -k, --keyspace string        Keyspace to filter tablets by.
+  -s, --shard string           Shard to filter tablets by.
       --strict                 Require all cells to return successful tablet data. Without --strict, tablet listings may be partial.
-  -t, --tablet-alias strings   List of tablet aliases to filter by
+  -t, --tablet-alias strings   List of tablet aliases to filter by.
 ```
 
 ### Options inherited from parent commands

@@ -15,7 +15,7 @@ In recursive mode, it also recursively deletes all shards in the keyspace.
 Otherwise, the keyspace must be empty (have no shards), or returns an error.
 
 ```
-vtctldclient DeleteKeyspace [--recursive|-r] [--force|-f] <keyspace> [flags]
+vtctldclient DeleteKeyspace [--recursive|-r] [--force|-f] <keyspace>
 ```
 
 ### Options

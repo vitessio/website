@@ -17,8 +17,8 @@ vtctldclient ApplyRoutingRules {--rules RULES | --rules-file RULES_FILE} [--cell
   -c, --cells strings       Limit the VSchema graph rebuildingg to the specified cells. Ignored if --skip-rebuild is specified.
   -d, --dry-run             Load the specified routing rules as a validation step, but do not actually apply the rules to the topo.
   -h, --help                help for ApplyRoutingRules
-  -r, --rules string        Routing rules, specified as a string
-  -f, --rules-file string   Path to a file containing routing rules specified as JSON
+  -r, --rules string        Routing rules, specified as a string.
+  -f, --rules-file string   Path to a file containing routing rules specified as JSON.
       --skip-rebuild        Skip rebuilding the SrvVSchema objects.
 ```
 
