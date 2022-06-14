@@ -1,4 +1,5 @@
-{{ $pages := where .Pages "Params.series" "!=" "vtctl" }}
+{{ $skipSections := slice "vtctl" "vtctldclient" }}
+{{ $pages := where .RegularPages "Params.series" "not in" $skipSections }}
 
 {{ if gt (len $pages) 0 }}
   <h3>
