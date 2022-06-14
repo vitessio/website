@@ -4,7 +4,7 @@ description: The Vitess Cluster Management Daemon
 ---
 
 `vtctld` provides web and gRPC interfaces to manage a single Vitess cluster.
-It is usually the first Vitess component to be started after a valid [global topology service](../../user-guides/configuration-basic/global-topo/) has been created.
+It is usually the first Vitess component to be started after a valid [global topology service](../../../user-guides/configuration-basic/global-topo/) has been created.
 
 ## `grpc-vtctld` &mdash; New in v14
 
