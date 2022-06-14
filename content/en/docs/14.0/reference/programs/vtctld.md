@@ -3,19 +3,17 @@ title: vtctld
 description: The Vitess Cluster Management Daemon
 ---
 
-`vtctld` is a dual web- and grpc-server interface to manage a single Vitess cluster. 
-It is usually the first Vitess component to be started after a valid global topology service has been created.
+`vtctld` provides web and gRPC interfaces to manage a single Vitess cluster.
+It is usually the first Vitess component to be started after a valid [global topology service](../../user-guides/configuration-basic/global-topo/) has been created.
 
 ## `grpc-vtctld` &mdash; New in v14
 
 For the last several releases, `vtctld` has been transitioning to a newer gRPC service for well-typed cluster management requests.
 To enable this newer service, include `"grpc-vtctld"` in the `--service_map` argument.
 
-This is **required** to use programs such as [`vtadmin`](../vtadmin/) and `vtctldclient`.
+This is **required** to use programs such as [`vtadmin`](../vtadmin/) and [`vtctldclient`](../vtctldclient/).
 While the old API and service are deprecated and will be removed in a future release, they are still required for certain cluster management commands (e.g. `OnlineDDL` and `Reshard`) as well as the vtctld web UI, so most users will want to include both in their `--service_map`.
 This is demonstrated in the example usage below:
-
-<!--TODO (andrew): include link to vtctldclient docs after that PR has landed.-->
 
 ## Example Usage
 
