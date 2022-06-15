@@ -223,20 +223,42 @@ Note that it's technically possible to specify a rule for an action that cannot 
 | `DeleteKeyspace` | `(delete, Keyspace)` |
 | `DeleteShards` | `(delete, Shard)` |
 | `DeleteTablet` | `(delete, Tablet)` |
-| `EmergencyReparentShard` | `(emergency_reparent_shard, Shard)` |
+| `EmergencyFailoverShard` | `(emergency_failover_shard, Shard)` |
 | `FindSchema` | `(get, Schema)` |
 | `GetBackups` | `(get, Backup)` |
 | `GetCellInfos` | `(get, CellInfo)` |
 | `GetCellsAliases` | `(get, CellsAlias)` |
 | `GetClusters` | `(get, Cluster)` |
 | `GetGates` | `(get, VTGate)` |
-| `GetVtctlds` | `(get, Vtctld)` |
 | `GetKeyspace` | `(get, Keyspace)` |
 | `GetKeyspaces` | `(get, Keyspace)` |
 | `GetSchema` | `(get, Schema)` |
 | `GetSchemas` | `(get, Schema)` |
-| and so on ... (TODO: finish this table if we like the structure/format)
-
+| `GetShardReplicationPositions` | `(get, ShardReplicationPosition)` |
+| `GetSrvVSchema` | `(get, SrvVSchema)` |
+| `GetSrvVSchemas` | `(get, SrvVSchema)` |
+| `GetTablet` | `(get, Tablet)` |
+| `GetTablets` | `(get, Tablet)` |
+| `GetVSchema` | `(get, VSchema)` |
+| `GetVSchemas` | `(get, VSchema)` |
+| `GetVtctlds` | `(get, Vtctld)` |
+| `GetWorkflow` | `(get, Workflow)` |
+| `GetWorkflows` | `(get, Workflow)` |
+| `PingTablet` | `(ping, Tablet)` |
+| `PlannedFailoverShard` | `(planned_failover_shard, Shard)` |
+| `RefreshState` | `(put, Tablet)` |
+| `RefreshTabletReplicationSource` | `(refresh_tablet_replication_source, Tablet)` |
+| `ReloadSchemas` | `(reload, Schema)` |
+| `RunHealthCheck` | `(get, Tablet)` |
+| `SetReadOnly` | `(manage_tablet_writability, Tablet)` |
+| `SetReadWrite` | `(manage_tablet_writability, Tablet)` |
+| `StartReplication` | `(manage_tablet_replication, Tablet)` |
+| `StopReplication` | `(manage_tablet_replication, Tablet)` |
+| `TabletExternallyPromoted` | `(tablet_externally_promoted, Shard)` |
+| `VTExplain` | `(get, VTExplain)` |
+| `ValidateKeyspace` | `(put, Keyspace)` |
+| `ValidateSchemaKeyspace` | `(put, Keyspace)` |
+| `ValidateVersionKeyspace` | `(put, Keyspace)` |
 
 [authn_interface]: https://github.com/vitessio/vitess/blob/46cb4679c198c96fbe7b51f40219d8196f4284a7/go/vt/vtadmin/rbac/authentication.go#L34-L50
 [example_authn]: https://gist.github.com/ajm188/5b2c7d3ca76004a297e6e279a54c2299
