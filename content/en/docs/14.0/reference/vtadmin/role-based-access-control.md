@@ -158,8 +158,8 @@ rules:
 
   - resource: "Shard"
     actions:
-    - "emergency_reparent_shard"
-    - "planned_reparent_shard"
+    - "emergency_failover_shard"
+    - "planned_failover_shard"
     subjects:
 	- "role:admin"
     clusters:
@@ -169,7 +169,7 @@ rules:
 This permits the following:
 1. Any subject can `get` or `ping` any resource in any cluster.
 2. Any user with the name "andrew" or role of "admin" can `create`, `delete`, or `put` any resource in any cluster.
-3. Any user with the role of "admin" can perform ERS and PRS operations on a `Shard` in _only_ the cluster with the id of "local".
+3. Any user with the role of "admin" can perform both emergency and planned failover operations on a `Shard` in _only_ the cluster with the id of "local".
 
 ### Clusters and Subjects
 
@@ -214,7 +214,7 @@ Note that if you are using just authorization without authentication, you must u
 ### Resources and Actions
 
 The following table lists all current resources vtadmin has, and the actions that can be performed on them.
-Note that it's technically possible to specify a rule for an action that cannot actually be performed on a particular resource (e.g. an action of `planned_reparent_shard` on a resource of `Schema`), but this has no effect on the rest of your rules.
+Note that it's technically possible to specify a rule for an action that cannot actually be performed on a particular resource (e.g. an action of `planned_failover_shard` on a resource of `Schema`), but this has no effect on the rest of your rules.
 
 | API | Rule(s) Needed `(<action>, <resource>)` form |
 | :--- | :--- |
