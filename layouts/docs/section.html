@@ -23,6 +23,7 @@
           {{ if .RegularPages }}
             {{ partial "docs/regular-pages-in-section.html" . }}
           {{ end }}
+          {{ .Content }}
         {{ else }}
           {{ partial "docs/pages-in-section.html" . }}
           {{ .Content }}
