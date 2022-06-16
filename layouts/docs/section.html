@@ -19,11 +19,11 @@
         {{ if eq .CurrentSection.Params.skip_sections true }}
           {{ partial "docs/pages-in-section.html" . }}
         {{ else if .Sections }}
+          {{ .Content }}
           {{ partial "docs/landing-page.html" . }}
           {{ if .RegularPages }}
             {{ partial "docs/regular-pages-in-section.html" . }}
           {{ end }}
-          {{ .Content }}
         {{ else }}
           {{ partial "docs/pages-in-section.html" . }}
           {{ .Content }}
