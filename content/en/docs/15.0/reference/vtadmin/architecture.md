@@ -10,7 +10,7 @@ VTAdmin is made up of two components:
 
 The `vtadmin-web` front-end queries its data from `vtadmin-api`. In turn, `vtadmin-api` issues queries against the vtgates and vtctlds across one or more Vitess clusters. The [clusters.yaml config file](https://github.com/vitessio/vitess/blob/main/doc/vtadmin/clusters.yaml) defines this mapping from VTAdmin to cluster(s).
 
-Single-cluster deployments are the simplest and most common configuration. The local example in the ["Get Started" documentation](../../get-started/) is a good example of a single-cluster deployment.
+Single-cluster deployments are the simplest and most common configuration. The local example in the ["Get Started" documentation](../../../get-started/) is a good example of a single-cluster deployment.
 
 ```mermaid
 flowchart LR
@@ -57,7 +57,7 @@ flowchart LR
 
 # The Life Cycle of a VTAdmin Request
 
-To understand how data moves through VTAdmin, let's look at life cycle of a typical request: fetching a list of all of the schemas. We'll use the single-cluster ["Get Started"](../../get-started/) environment as an example:
+To understand how data moves through VTAdmin, let's look at life cycle of a typical request: fetching a list of all of the schemas. We'll use the single-cluster ["Get Started"](../../../get-started/) environment as an example:
 
 <img src="../img/schemas.png" width="960" alt="A list of schemas in VTAdmin" />
 
