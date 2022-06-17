@@ -1,5 +1,7 @@
 ---
 title: Coding Standards
+description: Coding and code review guidelines
+weight: 5
 ---
 
 ## Backwards Compatibility

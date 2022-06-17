@@ -6,15 +6,16 @@ weight: 6
 
 You want to contribute to Vitess? That's awesome!
 
-In the past we have reviewed and accepted many external contributions. Examples are the Java JDBC driver, the PHP PDO driver or VTGate v3 improvements.
+In the past the maintainers have reviewed and accepted many contributions. Examples are the Java JDBC driver, the PHP PDO driver or VTGate v3 improvements.
 
-We're looking forward to any contribution! Before you start larger contributions, make sure to reach out first and discuss your plans with us.
+We welcome any contribution! Before you start on larger contributions, make sure to reach out first and discuss your plans with us. 
+The slack `#developers` channel is a good venue for reaching out to maintainers.
 
-This page describes for new contributors how to make yourself familiar with Vitess and the programming language Go.
+For someone new to Vitess, here are some basic pre-requisites.
 
 ## Learning Go
 
-Vitess was one of the early adaptors of [Google's programming language Go](https://golang.org/). We love it for its simplicity (e.g. compared to C++ or Java) and performance (e.g. compared to Python).
+Vitess server code is all written in [Go aka golang](https://golang.org/). We love it for its simplicity (e.g. compared to C++ or Java) and performance (e.g. compared to Python).
 
 Contributing to our server code will require you to learn Go. We recommend that you follow the [Go Tour](https://tour.golang.org/) to get started.
 
@@ -28,7 +29,7 @@ Before diving into the Vitess codebase, make yourself familiar with the system a
 
 * Read the [Concepts](../concepts) and [Sharding](../reference/sharding) pages.
 
-  * We also recommend to look at our [latest presentations](../resources/presentations). They contain many illustrations which help understanding how Vitess works in detail.
+  * We also recommend watching our [latest presentations](../resources/presentations).
 
   * After studying the pages, try to answer the following question (click expand to see the answer):
     <details>
@@ -38,6 +39,19 @@ Before diving into the Vitess codebase, make yourself familiar with the system a
       -01, 01-02, ff-
     </details>
 
-* Go through the [Kubernetes](../get-started/kubernetes) and [local](../get-started/local) get started guides.
+* Go through the [Kubernetes](../get-started/kubernetes) and [local](../get-started/local) getting started guides.
 
   * While going through the tutorial, look back at the [architecture](../overview/architecture) and match the processes you start in Kubernetes with the boxes in the diagram.
+
+## Building Vitess
+
+How-to-build guides are available for Ubuntu, MacOS and CentOS. Most of the maintainers are building on Ubuntu or Mac.
+
+## GitHub workflow
+
+Vitess is hosted on GitHub and the project uses the [Pull Request workflow](github-workflow).
+
+## Coding Guidelines
+
+Pull Requests should follow these [guidelines](code-reviews).
+

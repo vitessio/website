@@ -2,6 +2,7 @@
 title: Build on Ubuntu/Debian
 description: Instructions for building Vitess on your machine for testing and development purposes
 aliases: ['/docs/contributing/build-from-source/']
+weight: 2
 ---
 
 {{< info >}}
