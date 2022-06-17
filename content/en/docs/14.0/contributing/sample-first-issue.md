@@ -1,6 +1,7 @@
 ---
 title: Sample First Issue
 description: Walkthrough on how to fix an issue in Vitess and create a pull request.
+weight: 4
 ---
 
 After having Vitess locally setup for development, you can go ahead and choose an issue to work on from [here](https://github.com/vitessio/vitess/issues).
