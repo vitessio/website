@@ -9,7 +9,7 @@ This is the new _experimental_ version of VDiff which runs on `vttablets` as com
 {{< /warning >}}
 
 {{< info >}}
-Even before it's marked as production-ready (feature complete and tested widely in 1+ releases), it should be safe to use and is likely to provide much better results for very large tables.
+Even before it's marked as production-ready (feature complete and tested widely in 1+ releases), it should be safe to use and is likely to provide much better results for very large tables. It also offers the ability to resume a VDiff that may have encountered an error which is extremely helpful when working with very large tables.
 {{< /info >}}
 
 For additional details, please see the [RFC](https://github.com/vitessio/vitess/issues/10134) and the [README](https://github.com/vitessio/vitess/tree/main/go/vt/vttablet/tabletmanager/vdiff/README.md).
@@ -23,7 +23,7 @@ is the <keyspace.workflow> followed by <action>. The following actions are suppo
 
 These take the same parameters as VDiff1 and schedule VDiff to run on the primary tablet of each target shard to verify
 the subset of data that will live on the given shard. Please note that if you do not specify a sub-command or action
-then `Create` is assumed (this eases the transition from VDiff1 to VDiff2). If you do not pass a specific UUID then one
+then `create` is assumed (this eases the transition from VDiff1 to VDiff2). If you do not pass a specific UUID then one
 will be generated.
 
 ```
@@ -32,7 +32,7 @@ VDiff -- --v2 [-source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_or
        [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow>  create [<uuid>]
 ```
 
-Each scheduled VDiff has an associated VDiff UUID which is returned by the `Create` command. You can use it
+Each scheduled VDiff has an associated VDiff UUID which is returned by the `create` action. You can use it
 to monitor progress. Example:
 
 ```
@@ -62,7 +62,7 @@ VDiff 4c664dc2-eba9-11ec-9ef7-920702940ee0 resumed on target shards, use show to
 #### Show progress/status of a VDiff
 
 ```
-VDiff  -- --v2  <keyspace.workflow> Show [<uuid> | last | all]
+VDiff  -- --v2  <keyspace.workflow> show [<uuid> | last | all]
 ```
 
 You can either show a specific UUID or use the `last` convenience shorthand to look at the most recently created VDiff. Example:
@@ -91,7 +91,7 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.comm
 }
 ```
 
-`Show all` lists all vdiffs created for the specified keyspace and workflow.
+`show all` lists all vdiffs created for the specified keyspace and workflow.
 
 ### Description
 
