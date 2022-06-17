@@ -29,7 +29,7 @@ will be generated.
 ```
 VDiff -- --v2 [-source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
        [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--max_extra_rows_to_compare=1000]
-       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow>  create [<uuid>]
+       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow>  create [<UUID>]
 ```
 
 Each scheduled VDiff has an associated VDiff UUID which is returned by the `create` action. You can use it
@@ -49,7 +49,7 @@ This allows you to explicitly resume an existing VDiff workflow. VDiff will then
 ```
 VDiff -- --v2 [-source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
        [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--max_extra_rows_to_compare=1000]
-       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow> resume <uuid>
+       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow> resume <UUID>
 ```
 
 Example:
@@ -62,7 +62,7 @@ VDiff 4c664dc2-eba9-11ec-9ef7-920702940ee0 resumed on target shards, use show to
 #### Show progress/status of a VDiff
 
 ```
-VDiff  -- --v2  <keyspace.workflow> show [<uuid> | last | all]
+VDiff  -- --v2  <keyspace.workflow> show [<UUID> | last | all]
 ```
 
 You can either show a specific UUID or use the `last` convenience shorthand to look at the most recently created VDiff. Example:
