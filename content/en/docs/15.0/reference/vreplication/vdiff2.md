@@ -19,19 +19,20 @@ For additional details, please see the [RFC](https://github.com/vitessio/vitess/
 VDiff2 takes different sub-commands or actions similar to how the [`MoveTables`](../movetables/)/[`Reshard`](../reshard/) commands work. The first argument
 is the <keyspace.workflow> followed by <action>. The following actions are supported:
 
-#### Start a new vdiff
+#### Start a new VDiff
 
-These take the same parameters as VDiff1 and schedule vdiff to run on the primary tablet of each target shard to verify
-the subset of data that will be live on the given shard. Please note that if you do not specify a sub-command or action
-then `Create` is assumed (this eases the transition from VDiff1 to VDiff2).
+These take the same parameters as VDiff1 and schedule VDiff to run on the primary tablet of each target shard to verify
+the subset of data that will live on the given shard. Please note that if you do not specify a sub-command or action
+then `Create` is assumed (this eases the transition from VDiff1 to VDiff2). If you do not pass a specific UUID then one
+will be generated.
 
 ```
-VDiff -- --v2 [-source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=primary,replica,rdonly]
+VDiff -- --v2 [-source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
        [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--max_extra_rows_to_compare=1000]
-       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow>  Create
+       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow>  create [<uuid>]
 ```
 
-Each scheduled VDiff has an associated VDiff UUID which is returned by the Create command. You can use it
+Each scheduled VDiff has an associated VDiff UUID which is returned by the `Create` command. You can use it
 to monitor progress. Example:
 
 ```
@@ -39,20 +40,41 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2 customer.commerce2customer
 VDiff bf9dfc5f-e5e6-11ec-823d-0aa62e50dd24 scheduled on target shards, use show to view progress
 ```
 
-#### Show progress/status of a vdiff
+#### Resume a previous VDiff
+
+This allows you to explicitly resume an existing VDiff workflow. VDiff will then resume, picking up where it left off and comparing the records where the Primary Key column(s) are greater than the last record processed — with the progress and other status information saved when the run ends. This allows you to:
+  1. Resume a VDiff that may have encountered an ephemeral error
+  2. Do approximate rolling or differential VDiffs (e.g. done after MoveTables finishes the initial copy phase and then again just before SwitchTraffic)
 
 ```
-VDiff  -- --v2  <keyspace.workflow> Show [<vdiff uuid> | last | all]
+VDiff -- --v2 [-source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
+       [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--max_extra_rows_to_compare=1000]
+       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow> resume <uuid>
 ```
 
-You can either Show a specific UUID or use the `last` convenience shorthand to look at the most recently created VDiff. Example:
+Example:
+
+```
+$ vtctlclient --server=localhost:15999 VDiff -- --v2 customer.commerce2customer resume 4c664dc2-eba9-11ec-9ef7-920702940ee0
+VDiff 4c664dc2-eba9-11ec-9ef7-920702940ee0 resumed on target shards, use show to view progress
+```
+
+#### Show progress/status of a VDiff
+
+```
+VDiff  -- --v2  <keyspace.workflow> Show [<uuid> | last | all]
+```
+
+You can either show a specific UUID or use the `last` convenience shorthand to look at the most recently created VDiff. Example:
 
 ```
 $ vtctlclient --server=localhost:15999 VDiff -- --v2 customer.commerce2customer show last
 
-VDiff Summary for customer.commerce2customer (bf9dfc5f-e5e6-11ec-823d-0aa62e50dd24)
+VDiff Summary for customer.commerce2customer (4c664dc2-eba9-11ec-9ef7-920702940ee0)
 State: completed
-HasMismatch: false
+RowsCompared: 196
+CompletedAt:  2022-06-17 14:37:25
+HasMismatch:  false
 
 Use "--format=json" for more detailed output.
 
@@ -61,13 +83,15 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.comm
 	"Workflow": "commerce2customer",
 	"Keyspace": "customer",
 	"State": "completed",
-	"UUID": "bf9dfc5f-e5e6-11ec-823d-0aa62e50dd24",
+	"UUID": "4c664dc2-eba9-11ec-9ef7-920702940ee0",
+	"RowsCompared": 196,
 	"HasMismatch": false,
-	"Shards": "0"
+	"Shards": "0",
+	"CompletedAt": "2022-06-17 14:37:25"
 }
 ```
 
-`Show all` shows all vdiffs created for the specified keyspace and workflow.
+`Show all` lists all vdiffs created for the specified keyspace and workflow.
 
 ### Description
 
@@ -152,7 +176,7 @@ Limits the number of extra rows on both the source and target that we will perfo
 **optional**
 
 <div class="cmd">
-Adds a MySQL query to the report that can be used for further debugging
+Adds the MySQL query to the report that can be used for further debugging
 </div>
 
 #### --only_pks
