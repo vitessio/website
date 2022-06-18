@@ -38,7 +38,7 @@ type Authenticator interface {
 
 If running with an authentication plugin installed, VTAdmin will invoke its `Authenticate` method on all incoming gRPC requests, and its `AuthenticateHTTP` method on all incoming HTTP requests.
 
-Returning an error from either of these methods will fail the request with either an `UNAUTHENTICATED` code for gRPC requests and an `UNAUTHORIZED` response for HTTP requests.
+Returning an error from either of these methods will fail the request with an `UNAUTHENTICATED` code for gRPC requests and an `UNAUTHORIZED` response for HTTP requests.
 In order to indicate "no authenticated actor" to the authorization layer, the methods must return `(nil, nil)` instead.
 
 ### Available Plugins
