@@ -148,20 +148,20 @@ rules:
 
   - resource: "*"
     actions:
-	- "create"
-	- "delete"
-	- "put"
-	subjects:
-	- "user:andrew"
-	- "role:admin"
-	clusters: ["*"]
+    - "create"
+    - "delete"
+    - "put"
+    subjects:
+    - "user:andrew"
+    - "role:admin"
+    clusters: ["*"]
 
   - resource: "Shard"
     actions:
     - "emergency_failover_shard"
     - "planned_failover_shard"
     subjects:
-	- "role:admin"
+    - "role:admin"
     clusters:
     - "local"
 ```
