@@ -487,7 +487,7 @@ etcd --enable-v2=true --data-dir ${VTDATAROOT}/etcd/global --listen-client-urls 
 
 ``` sh
 vtctld --topo_implementation=etcd2 --topo_global_server_address=${GLOBAL_ETCD_SERVER} \
-  --topo_global_root=/vitess/global --port=15000 --grpc_port=15999 --service_map='grpc-vtctl' \
+  --topo_global_root=/vitess/global --port=15000 --grpc_port=15999 --service_map='grpc-vtctl,grpc-vtctld' \
   ${OTHER_VTCTLD_FLAGS}
 ```
 

@@ -12,7 +12,7 @@ vtctld <topo_flags> <backup_flags> \
   --log_dir=${VTDATAROOT}/tmp \
   --port=15000 \
   --grpc_port=15999 \
-  --service_map='grpc-vtctl' \
+  --service_map='grpc-vtctl,grpc-vtctld' \
   --durability_policy='none'
 ```
 
