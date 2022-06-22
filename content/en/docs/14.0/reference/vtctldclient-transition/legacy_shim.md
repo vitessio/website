@@ -3,7 +3,7 @@ title: Legacy Shim
 weight: 2
 ---
 
-To make transitioning from `vtctlclient` to `vtctldclient` easier, both binaries provide shim mechanisms to run commands with each others' CLI syntaxes (and backing RPC interfaces).
+To make transitioning from `vtctlclient` to `vtctldclient` easier, both binaries provide shim mechanisms to run commands with each other's CLI syntaxes (and backing RPC interfaces).
 Let's take each in turn.
 
 ### `vtctldclient LegacyVtctlCommand`
@@ -14,7 +14,7 @@ This is useful to be able to use the new client "everywhere" but still be able t
 For example:
 
 ```
-$ vtctldclient --server ":15999" LegacyVtctlCommand -- Reshard show
+$ vtctldclient --server ":15999" LegacyVtctlCommand -- Reshard show <keyspace.workflow_name>
 ```
 
 You can also use this to transition a command in two phases, for example:
@@ -28,7 +28,7 @@ vtctlclient --server ":15999" -- AddCellInfo --root /mycell --server_address "${
 2. Then "switch" to the new client but use the old code and syntax:
 
 ```shell
-vtctldclient --server ":15999" LegacyVtctldCommand -- AddCellInfo --root /mycell --server_address "${some_topo_server}:1234"
+vtctldclient --server ":15999" LegacyVtctlCommand -- AddCellInfo --root /mycell --server_address "${some_topo_server}:1234"
 ```
 
 3. Finally, update the command to use the new code and CLI (notice the flag change from `--server_address` to `--server-address` and the removal of the `--`):
