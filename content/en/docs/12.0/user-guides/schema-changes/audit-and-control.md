@@ -460,8 +460,8 @@ completed_timestamp: NULL
    migration_status: running
 ...
 ```
-- `alter vitess_migration ... cancel` takes exactly one migration's UUID.
-- `alter vitess_migration ... cancel` responds with number of affected migrations.
+- `alter vitess_migration ... retry` takes exactly one migration's UUID.
+- `alter vitess_migration ... retry` responds with number of affected migrations.
 
 #### Via vtctl/ApplySchema
 
