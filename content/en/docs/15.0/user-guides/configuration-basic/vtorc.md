@@ -7,7 +7,6 @@ weight: 10
 
 In order to configure `vtorc`, you have to make the following changes to `vttablet`:
 
-* Remove `--enable_semi_sync=true`: This part will be managed by vtorc instead.
 * Add `--disable_active_reparents=true`: This part will prevent vttablet from fixing replication, and will rely on vtorc instead.
 
 As mentioned before, bringing up `vtorc` also lets you avoid performing the `InitShardPrimary` step.
@@ -16,7 +15,6 @@ As mentioned before, bringing up `vtorc` also lets you avoid performing the `Ini
 
 ```json
 {
-  "Debug": true,
   "MySQLTopologyUser": "orc_client_user",
   "MySQLTopologyPassword": "orc_client_user_password",
   "MySQLReplicaUser": "vt_repl",
@@ -41,10 +39,8 @@ vtorc <topo_flags> \
 
 Bringing up `vtorc` should immediately cause a primary to be elected among the vttablets that have come up.
 
-The `vtorc` config supports `Durability` setting. Look at [Durability Policies](../durability_policy) for more information on the available durability policies.
-
 You can optionally add a `clusters_to_watch` flag that contains a comma separated list of keyspaces or `keyspace/shard` values. If specified, `vtorc` will manage only those clusters.
 
-You can perform planned failovers using `vtorc`. Additionally, `vtorc` will also perform failure detection with automatic failovers while honoring the `Durability` rules.
+You can perform planned failovers using `vtorc`. Additionally, `vtorc` will also perform failure detection with automatic failovers while honoring the [durability policies](../../configuration-basic/durability_policy).
 
 Other Orchestrator settings may also be carefully added to the config. However, some of them may not be compatible with Vitess. These will be documented soon.
