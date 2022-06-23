@@ -1,5 +1,7 @@
 ---
 title: GitHub Workflow
+description: Pull request workflow used in Vitess
+weight: 4
 ---
 
 If you are new to Git and GitHub, we recommend to read this page. Otherwise, you may skip it.
