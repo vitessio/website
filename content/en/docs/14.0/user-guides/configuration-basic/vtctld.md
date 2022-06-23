@@ -12,11 +12,8 @@ vtctld <topo_flags> <backup_flags> \
   --log_dir=${VTDATAROOT}/tmp \
   --port=15000 \
   --grpc_port=15999 \
-  --service_map='grpc-vtctl,grpc-vtctld' \
-  --durability_policy='none'
+  --service_map='grpc-vtctl,grpc-vtctld'
 ```
-
-Look at [Durability Policies](../durability_policy) for more information on the available durability policies.
 
 If the TopoServer is unreachable, or if the topo flags are incorrectly configured, vtctld will fail to start. You may see an error message like the following in the logs:
 

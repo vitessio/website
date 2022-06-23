@@ -14,7 +14,7 @@ Creates the specified keyspace.
 
 #### Example
 
-<pre class="command-example">CreateKeyspace -- [--sharding_column_name=name] [--sharding_column_type=type] [--served_from=tablettype1:ks1,tablettype2,ks2,...] [--force] &lt;keyspace name&gt;
+<pre class="command-example">CreateKeyspace -- [--sharding_column_name=name] [--sharding_column_type=type] [--served_from=tablettype1:ks1,tablettype2,ks2,...] [--force] [--durability-policy=policy_name] &lt;keyspace name&gt;
 Creates the specified keyspace. keyspace_type can be NORMAL or SNAPSHOT. For a SNAPSHOT keyspace you must specify the name of a base_keyspace, and a snapshot_time in UTC, in RFC3339 time format, e.g. 2006-01-02T15:04:05+00:00</pre>
 
 #### Flags
@@ -22,6 +22,7 @@ Creates the specified keyspace. keyspace_type can be NORMAL or SNAPSHOT. For a S
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | force | Boolean | Proceeds even if the keyspace already exists |
+| durability-policy | string | Specifies the [durability policy](../../../../user-guides/configuration-basic/durability_policy) to use for the keyspace |
 | served_from | string | Specifies a comma-separated list of dbtype:keyspace pairs used to serve traffic |
 | sharding_column_name | string | Specifies the column to use for sharding operations |
 | sharding_column_type | string | Specifies the type of the column to use for sharding operations |
