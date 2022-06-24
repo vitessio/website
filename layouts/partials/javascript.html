@@ -2,7 +2,7 @@
 {{ range $jsFiles }}
 {{ $path := printf "js/%s.js" . }}
 {{ $js := resources.Get $path | minify | fingerprint }}
-<!-- Parse the url for the version the user is currently look at to use in search. If there is no version use the stable version. -->
+<!-- Parse the url for the version the user is currently look at to use in search. If there is no version use the current version. -->
 {{ $version := replaceRE `.*?/docs/(\d+\.0)/.*` "$1" $.Page.Permalink }}
 <!-- We detect a missing version of the regex essentially fails and the version is the same as the url -->
 {{ $version = cond (eq $version $.Page.Permalink) site.Params.versions.current $version }}
