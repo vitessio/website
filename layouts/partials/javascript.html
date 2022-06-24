@@ -2,18 +2,25 @@
 {{ range $jsFiles }}
 {{ $path := printf "js/%s.js" . }}
 {{ $js := resources.Get $path | minify | fingerprint }}
+<!-- Parse the url for the version the user is currently look at to use in search. If there is no version use the stable version. -->
+{{ $version := replaceRE `.*?/docs/(\d+\.0)/.*` "$1" $.Page.Permalink }}
+<!-- We detect a missing version of the regex essentially fails and the version is the same as the url -->
+{{ $version = cond (eq $version $.Page.Permalink) site.Params.versions.current $version }}
+
 <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
-{{ end }}
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
 <script type="text/javascript">
-docsearch({
-  apiKey: '1d13fc4b241cae42000f422300df8931',
-  indexName: 'vitess',
-  inputSelector: '#search-bar',
-  debug: false
-});
+  docsearch({
+    appId: 'M3VVUUQDHP',
+    apiKey: '58ebeeb1b7061e03fdfeb0f1011e2117',
+    indexName: 'vitess_web',
+    inputSelector: '#search-bar',
+    debug: false,
+    algoliaOptions: { 'facetFilters': ["version:  {{ $version }}"] }
+  });
 </script>
+{{ end }}
 
 <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 <script>

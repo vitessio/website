@@ -1,0 +1,29 @@
+
+{
+  "index_name": "vitess",
+  "start_urls": [{
+    "url": "https://vitess.io/docs/(?P<version>.*?)/",
+    "variables": {
+      "version": ["11.0", "12.0", "13.0", "14.0", "15.0"]
+    }
+  }],
+  "stop_urls": [],
+  "selectors": {
+    "lvl0": {
+      "selector": ".docs-section-title.is-active",
+      "global": true,
+      "default_value": "Documentation"
+    },
+    "lvl1": "header .title",
+    "lvl2": "article h2",
+    "lvl3": "article h3",
+    "lvl4": "article h4",
+    "lvl5": "article h5",
+    "lvl6": "article h6",
+    "text": "article p, article li"
+  },
+  "conversation_id": [
+    "1052071460"
+  ],
+  "nb_hits": 3936
+}
