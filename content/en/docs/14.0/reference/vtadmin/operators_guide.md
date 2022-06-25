@@ -40,7 +40,7 @@ The following is from the [local example][local_example] showing a minimal set o
 ```
 vtadmin \
   --addr ":14200" \
-  --http-origin "http://localhost:14201" \
+  --http-origin "https://vtadmin.example.com:14201" \
   --http-tablet-url-tmpl "http://{{ .Tablet.Hostname }}:15{{ .Tablet.Alias.Uid }}" \
   --tracer "opentracing-jaeger" \
   --grpc-tracing \
@@ -61,12 +61,12 @@ Unlike other Vitess components, `vtadmin-web` is not distributed as a binary. Th
 
 Environment variables can be defined in a `.env` file or passed inline to the `npm run build` command. The full list of flags is given in the [vtadmin-web reference documentation][vtadmin_web_env_ref].
 
-The following is from the [local example][local_example] showing a minimal set of environment variables. `$web_dir`, in this case, refers to the [vtadmin-web source directory][vtadmin_web_src] but could equally apply to the `web/vtadmin/` directory copied into a Docker container, for example. 
+The following is from the [local example][local_example] showing a minimal set of environment variables. `$web_dir`, in this case, refers to the [vtadmin-web source directory][vtadmin_web_src] but could equally apply to the `web/vtadmin/` directory copied into a Docker container, for example. `REACT_APP_VTADMIN_API_ADDRESS` uses 
 
 ```
 npm --prefix $web_dir --silent install
 
-REACT_APP_VTADMIN_API_ADDRESS="http://localhost:${vtadmin_api_port}" \
+REACT_APP_VTADMIN_API_ADDRESS="https://vtadmin-api.example.com:14200" \
   REACT_APP_ENABLE_EXPERIMENTAL_TABLET_DEBUG_VARS="true" \
   npm run --prefix $web_dir build
 ```
