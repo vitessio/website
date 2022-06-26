@@ -47,7 +47,7 @@ Each `action` has additional options/parameters that can be used to modify its b
 
 `actions` are common to both MoveTables and Reshard v2 workflows. Only the `create` action has different parameters, all other actions have common options and similar semantics. These actions are documented separately.
 
-#### source_keyspace
+#### --source
 **mandatory**
 <div class="cmd">
 
@@ -55,7 +55,7 @@ Name of existing keyspace that contains the tables to be moved
 
 </div>
 
-#### table_specs
+#### --tables
 **optional**  one of `table_specs` or `--all` needs to be specified
 <div class="cmd">
 
