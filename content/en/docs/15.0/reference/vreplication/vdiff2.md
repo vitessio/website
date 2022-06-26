@@ -75,10 +75,11 @@ You can either `show` a specific UUID or use the `last` convenience shorthand to
 $ vtctlclient --server=localhost:15999 VDiff -- --v2 customer.commerce2customer show last
 
 VDiff Summary for customer.commerce2customer (4c664dc2-eba9-11ec-9ef7-920702940ee0)
-State: completed
+State:        completed
 RowsCompared: 196
-CompletedAt:  2022-06-17 14:37:25
 HasMismatch:  false
+StartedAt:    2022-06-26 22:44:29
+CompletedAt:  2022-06-26 22:44:31
 
 Use "--format=json" for more detailed output.
 
@@ -91,7 +92,8 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.comm
 	"RowsCompared": 196,
 	"HasMismatch": false,
 	"Shards": "0",
-	"CompletedAt": "2022-06-17 14:37:25"
+	"StartedAt": "2022-06-26 22:44:29",
+	"CompletedAt": "2022-06-26 22:44:31"
 }
 ```
 
