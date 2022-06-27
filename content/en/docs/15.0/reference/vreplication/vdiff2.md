@@ -9,7 +9,7 @@ This is the new _experimental_ version of VDiff which runs on `vttablets` as com
 {{< /warning >}}
 
 {{< info >}}
-Even before it's marked as production-ready (feature complete and tested widely in 1+ releases), it should be safe to use and is likely to provide much better results for very large tables.
+Even before it's marked as production-ready (feature complete and tested widely in 1+ releases), it should be safe to use and is likely to provide much better results for very large tables. It also offers the ability to resume a VDiff that may have encountered an error, which is especially useful when working with very large tables.
 {{< /info >}}
 
 For additional details, please see the [RFC](https://github.com/vitessio/vitess/issues/10134) and the [README](https://github.com/vitessio/vitess/tree/main/go/vt/vttablet/tabletmanager/vdiff/README.md).
@@ -19,19 +19,20 @@ For additional details, please see the [RFC](https://github.com/vitessio/vitess/
 VDiff2 takes different sub-commands or actions similar to how the [`MoveTables`](../movetables/)/[`Reshard`](../reshard/) commands work. The first argument
 is the <keyspace.workflow> followed by <action>. The following actions are supported:
 
-#### Start a new vdiff
+#### Start a new VDiff
 
-These take the same parameters as VDiff1 and schedule vdiff to run on the primary tablet of each target shard to verify
-the subset of data that will be live on the given shard. Please note that if you do not specify a sub-command or action
-then `Create` is assumed (this eases the transition from VDiff1 to VDiff2).
+These take the same parameters as VDiff1 and schedule VDiff to run on the primary tablet of each target shard to verify
+the subset of data that will live on the given shard. Please note that if you do not specify a sub-command or action
+then `create` is assumed (this eases the transition from VDiff1 to VDiff2). If you do not pass a specific UUID then one
+will be generated.
 
 ```
-VDiff -- --v2 [-source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=primary,replica,rdonly]
+VDiff -- --v2 [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
        [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--max_extra_rows_to_compare=1000]
-       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow>  Create
+       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow>  create [<UUID>]
 ```
 
-Each scheduled VDiff has an associated VDiff UUID which is returned by the Create command. You can use it
+Each scheduled VDiff has an associated UUID which is returned by the `create` action. You can use it
 to monitor progress. Example:
 
 ```
@@ -39,20 +40,46 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2 customer.commerce2customer
 VDiff bf9dfc5f-e5e6-11ec-823d-0aa62e50dd24 scheduled on target shards, use show to view progress
 ```
 
-#### Show progress/status of a vdiff
+#### Resume a previous VDiff
+
+Allows you to resume an existing VDiff workflow, picking up where it left off and comparing the records where the Primary Key column(s) are greater than the last record processed — with the progress and other status information saved when the run ends. This allows you to:
+  1. Resume a VDiff that may have encountered an ephemeral error
+  2. Do approximate rolling or differential VDiffs (e.g. done after MoveTables finishes the initial copy phase and then again just before SwitchTraffic)
 
 ```
-VDiff  -- --v2  <keyspace.workflow> Show [<vdiff uuid> | last | all]
+VDiff -- --v2 [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
+       [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--max_extra_rows_to_compare=1000]
+       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow> resume <UUID>
 ```
 
-You can either Show a specific UUID or use the `last` convenience shorthand to look at the most recently created VDiff. Example:
+Example:
+
+```
+$ vtctlclient --server=localhost:15999 VDiff -- --v2 customer.commerce2customer resume 4c664dc2-eba9-11ec-9ef7-920702940ee0
+VDiff 4c664dc2-eba9-11ec-9ef7-920702940ee0 resumed on target shards, use show to view progress
+```
+
+{{< warning >}}
+We cannot guarantee accurate results for `resume` when different collations are used for a table between the source and target keyspaces (more details can be seen [here](https://github.com/vitessio/vitess/pull/10497)).
+{{< /warning >}}
+
+#### Show progress/status of a VDiff
+
+```
+VDiff  -- --v2  <keyspace.workflow> show [<UUID> | last | all]
+```
+
+You can either `show` a specific UUID or use the `last` convenience shorthand to look at the most recently created VDiff. Example:
 
 ```
 $ vtctlclient --server=localhost:15999 VDiff -- --v2 customer.commerce2customer show last
 
-VDiff Summary for customer.commerce2customer (bf9dfc5f-e5e6-11ec-823d-0aa62e50dd24)
-State: completed
-HasMismatch: false
+VDiff Summary for customer.commerce2customer (4c664dc2-eba9-11ec-9ef7-920702940ee0)
+State:        completed
+RowsCompared: 196
+HasMismatch:  false
+StartedAt:    2022-06-26 22:44:29
+CompletedAt:  2022-06-26 22:44:31
 
 Use "--format=json" for more detailed output.
 
@@ -61,13 +88,16 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.comm
 	"Workflow": "commerce2customer",
 	"Keyspace": "customer",
 	"State": "completed",
-	"UUID": "bf9dfc5f-e5e6-11ec-823d-0aa62e50dd24",
+	"UUID": "4c664dc2-eba9-11ec-9ef7-920702940ee0",
+	"RowsCompared": 196,
 	"HasMismatch": false,
-	"Shards": "0"
+	"Shards": "0",
+	"StartedAt": "2022-06-26 22:44:29",
+	"CompletedAt": "2022-06-26 22:44:31"
 }
 ```
 
-`Show all` shows all vdiffs created for the specified keyspace and workflow.
+`show all` lists all vdiffs created for the specified keyspace and workflow.
 
 ### Description
 
@@ -152,7 +182,7 @@ Limits the number of extra rows on both the source and target that we will perfo
 **optional**
 
 <div class="cmd">
-Adds a MySQL query to the report that can be used for further debugging
+Adds the MySQL query to the report that can be used for further debugging
 </div>
 
 #### --only_pks
