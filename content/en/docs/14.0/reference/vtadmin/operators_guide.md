@@ -17,7 +17,7 @@ minimal invocation of the `vtadmin` and `vtadmin-web` binaries.
 
 ## Prerequisites
 
-- Building `vtadmin-web` requires [node](https://nodejs.org/en/) v16.
+- Building `vtadmin-web` requires [node](https://nodejs.org/en/) at the version given in the [package.json file](https://github.com/vitessio/vitess/blob/main/web/vtadmin/package.json).
 
 ## 1. Define the cluster configuration
 
