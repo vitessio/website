@@ -12,7 +12,7 @@ This is the new _experimental_ version of VDiff which runs on `vttablets` as com
 Even before it's marked as production-ready (feature complete and tested widely in 1+ releases), it should be safe to use and is likely to provide much better results for very large tables. It also offers the ability to resume a VDiff that may have encountered an error, which is especially useful when working with very large tables.
 {{< /info >}}
 
-For additional details, please see the [RFC](https://github.com/vitessio/vitess/issues/10134) and the [README](https://github.com/vitessio/vitess/tree/main/go/vt/vttablet/tabletmanager/vdiff/README.md).
+For additional details, please see the [RFC](https://github.com/vitessio/vitess/issues/10134) and the [README](https://github.com/vitessio/vitess/blob/release-14.0/go/vt/vttablet/tabletmanager/vdiff/README.md).
 
 ### Command
 
