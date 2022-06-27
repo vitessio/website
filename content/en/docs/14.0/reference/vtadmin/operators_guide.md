@@ -4,7 +4,7 @@ description: How to configure and run VTAdmin
 ---
 
 {{< info >}}
-If you run into issues or have questions, we recommend posting in our [#feat-vtadmin Slack channel](https://vitess.slack.com). Click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
+If you run into issues or have questions, we recommend posting in our [#feat-vtadmin Slack channel](https://vitess.slack.com/archives/C01H307F68J). Click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
 {{< /info >}}
 
 ## Get Started
@@ -13,27 +13,27 @@ This guide describes how to configure and build the VTAdmin API server (`vtadmin
 
 The simplest VTAdmin deployment involves a single Vitess cluster. You can look
 at the [local example][local_example] for a
-minimal invocation of the `vtadmin-api` and `vtadmin-web` binaries.
+minimal invocation of the `vtadmin` and `vtadmin-web` binaries.
 
 ## Prerequisites
 
-- Building `vtadmin-web` requires [node](https://nodejs.org/en/) >= v16.13.0.
+- Building `vtadmin-web` requires [node](https://nodejs.org/en/) v16.
 
 ## 1. Define the cluster configuration
 
 VTAdmin is mapped to one or more Vitess clusters two ways:
 
-- Add a `clusters.yaml` file and pass its path to `vtadmin-api` with the `--cluster-config` build flag
-- Set the `--cluster` and/or `--cluster-defaults` flags when running `vtadmin-api`, described in the next section.
+- Add a `clusters.yaml` file and pass its path to `vtadmin` with the `--cluster-config` build flag
+- Set the `--cluster` and/or `--cluster-defaults` flags when running `vtadmin`, described in the next section.
 
 When both command-line cluster configs and a config file are provided, any options for a given cluster on the command-line take precedence over options for that cluster in the config file. 
 
 For a well-commented example enumerating the cluster configuration options, see [clusters.example.yaml](https://github.com/vitessio/vitess/blob/main/doc/vtadmin/clusters.yaml).
 
 
-## 2. Configure `vtadmin-api`
+## 2. Configure `vtadmin`
 
-Configure the flags for the `vtadmin`process. The full list of flags is given in the [vtadmin reference documentation][vtadmin_flag_ref].
+Configure the flags for the `vtadmin` process. The full list of flags is given in the [`vtadmin` reference documentation][vtadmin_flag_ref].
 
 The following is from the [local example][local_example] showing a minimal set of flags. Here, we define the cluster configuration with the `--cluster` flag and use static (file-based) discovery configured in the [local example's `discovery.json` file][discovery_json]. 
 
@@ -56,12 +56,12 @@ To optionally configure role-based access control (RBAC), refer to the [RBAC doc
 ## 3. Configure and build `vtadmin-web`
 
 {{< info >}}
-Unlike other Vitess components, `vtadmin-web` is not distributed as a binary. This is because environment variables specific to a Vitess environment (such as the hostname for `vtadmin-api`) are embedded during build time. Since `vtadmin-web` produces a static HTML/CSS/JS build, it's not possible to read these values at run-time.
+Unlike other Vitess components, `vtadmin-web` is not distributed as a binary. This is because environment variables specific to a Vitess environment (such as the hostname for `vtadmin`) are embedded during build time. Since `vtadmin-web` produces a static HTML/CSS/JS build, it's not possible to read these values at run-time.
 {{< /info >}}
 
-Environment variables can be defined in a `.env` file or passed inline to the `npm run build` command. The full list of flags is given in the [vtadmin-web reference documentation][vtadmin_web_env_ref].
+Environment variables can be defined in a `.env` file or passed inline to the `npm run build` command. The full list of flags is given in the [`vtadmin-web` reference documentation][vtadmin_web_env_ref].
 
-The following is from the [local example][local_example] showing a minimal set of environment variables. `$web_dir`, in this case, refers to the [vtadmin-web source directory][vtadmin_web_src] but could equally apply to the `web/vtadmin/` directory copied into a Docker container, for example. `REACT_APP_VTADMIN_API_ADDRESS` uses 
+The following is from the [local example][local_example] showing a minimal set of environment variables. `$web_dir`, in this case, refers to the [`vtadmin-web` source directory][vtadmin_web_src] but could equally apply to the `web/vtadmin/` directory copied into a Docker container, for example. `REACT_APP_VTADMIN_API_ADDRESS` uses the same hostname as the `--addr` flag passed to `vtadmin` in the previous step. 
 
 ```
 npm --prefix $web_dir --silent install
