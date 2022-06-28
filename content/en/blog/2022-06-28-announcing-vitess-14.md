@@ -1,5 +1,5 @@
 ---
-author: 'Vitess Engineering Team'
+author: 'Vitess Maintainer Team'
 date: 2022-06-28
 slug: '2022-06-28-announcing-vitess-14'
 tags: ['release','Vitess','MySQL','kubernetes','operator','cloud','GKE','sharding']
