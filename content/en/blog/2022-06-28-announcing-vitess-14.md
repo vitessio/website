@@ -11,9 +11,9 @@ We are pleased to announce the general availability of [Vitess 14](https://githu
 
 ## Major Themes #  
 In this new release, major improvements have been made in several areas of Vitess, including usability and reliability.
-Online DDL is now GA
-Gen4 planner is the new default planner.
-VTAdmin and VTOrc are officially in beta with Vitess 14.
+- Online DDL is now GA
+- Gen4 planner is the new default planner.
+- VTAdmin and VTOrc are officially in beta with Vitess 14.
 
 ## Usability #
 ### Command-Line Syntax Deprecation #
@@ -43,8 +43,8 @@ The Vitess team started working on a new query planner two years ago for [severa
 ## Reliability #
 ### VTOrc #
 [VTOrc](https://vitess.io/docs/14.0/user-guides/configuration-basic/vtorc/) remains experimental in Vitess 14. In this release, the work to make VTOrc a first-class component of Vitess is taken a step further.
-VTOrc now integrates cleanly with VTCtld and running cluster operations from VTCtld does not cause VTOrc to take unnecessary actions.
-Federation has been addressed in this release. It is now possible to run multiple instances of VTOrc watching the same set of keyspaces without them stepping on each other's toes.
+- VTOrc now integrates cleanly with VTCtld and running cluster operations from VTCtld does not cause VTOrc to take unnecessary actions.
+- Federation has been addressed in this release. It is now possible to run multiple instances of VTOrc watching the same set of keyspaces without them stepping on each other's toes.
 
 The durability policy configuration has been refactored. Instead of being provided as command-line configuration, it is now stored in the topology server. Both VTOrc and VTCtld will read it from there and honor the provided durability policies.
 
