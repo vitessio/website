@@ -28,7 +28,7 @@ will be generated.
 
 ```
 VDiff -- --v2 [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
-       [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--max_extra_rows_to_compare=1000]
+       [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--verbose] [--max_extra_rows_to_compare=1000]
        [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow>  create [<UUID>]
 ```
 
@@ -99,6 +99,30 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.comm
 
 `show all` lists all vdiffs created for the specified keyspace and workflow.
 
+#### Delete VDiff results
+
+```
+VDiff  -- --v2  <keyspace.workflow> delete [<UUID> | all]
+```
+
+You can either delete a specific UUID or use the `all` shorthand to delete all VDiffs created for the specified keyspace and workflow. Example:
+
+```
+$ vtctlclient --server=localhost:15999 VDiff -- --v2 customer.commerce2customer delete all
+VDiff delete is completed on target shards
+
+$ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.commerce2customer delete all
+{
+	"Action": "delete",
+	"Status": "completed"
+}
+```
+
+{{ <info> }}
+Deletes are idempotent, so attempting to delete VDiff data that does not exist is a no-op.
+{{ </info> }}
+
+
 ### Description
 
 VDiff does a row by row comparison of all tables associated with the workflow, diffing the
@@ -164,10 +188,17 @@ A comma separated list of tables to run vdiff on.
 
 #### --format
 **optional**\
-**default** unstructured text output
+**default** text (unstructured text output)
 
 <div class="cmd">
-Only other format supported is json
+Only other format supported is JSON
+</div>
+
+#### --verbose
+**optional**\
+
+<div class="cmd">
+Show full vdiff output in summaries (only applicable when using `JSON` format)
 </div>
 
 #### --max_extra_rows_to_compare
