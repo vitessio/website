@@ -11,6 +11,8 @@ If you run into issues or have questions, we recommend posting in our [#feat-vta
 
 This guide describes how to configure and build the VTAdmin API server (`vtadmin`) and front-end (`vtadmin-web`).
 
+If you intend to use the Vitess operator to deploy VTAdmin please also read the page [Running VTAdmin in VTop](../running_vtadmin_in_vtop).
+
 The simplest VTAdmin deployment involves a single Vitess cluster. You can look
 at the [local example][local_example] for a
 minimal invocation of the `vtadmin` and `vtadmin-web` binaries.
