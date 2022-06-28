@@ -11,7 +11,7 @@ We are pleased to announce the general availability of [Vitess 14](https://githu
 
 ## Major Themes #  
 In this new release, major improvements have been made in several areas of Vitess, including usability and reliability.
-- Online DDL is now GA
+- Online DDL is now GA.
 - Gen4 planner is the new default planner.
 - VTAdmin and VTOrc are officially in beta with Vitess 14.
 
