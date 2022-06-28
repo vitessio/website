@@ -4,10 +4,6 @@ weight: 16
 aliases: ['/docs/reference/schema-tracking/']
 ---
 
-{{< warning >}}
-This feature is experimental.
-{{< /warning >}}
-
 VTGate does not natively track table schema. Users are allowed to provide an authoritative list of columns through a VSchema which is then used to enhance query planning. If no such list is provided, a set of queries will not be supported by VTGate due to a lack of information on the underlying tables/columns.
 
 The schema tracking functionality alleviates this issue and enable VTGate to plan more queries. When using schema tracking, VTGate keeps an authoritative list of columns on all tables. The following query set can be planned:
