@@ -17,7 +17,7 @@ Support for deploying VTAdmin in VTop has been added in [release 2.7.1](https://
 
 ## Overview
 
-VTop deploys VTAdmin in 2 separate containers running on the same pod. One for running the `vtadmin-api` and one for `vtadmin-web`. Please look at the [architecture docs](../architecture) for details on how they interact with each other.
+VTop deploys VTAdmin in two separate containers running on the same pod. One for running the `vtadmin-api` and one for `vtadmin-web`. Please look at the [architecture docs](../architecture) for details on how they interact with each other.
 
 VTop then creates services on top of both `vtadmin-api` and `vtadmin-web`, which can be used to access them after either port-forwarding or assigning an external IP address to the service.
 
@@ -27,7 +27,7 @@ Finally, VTop creates the `discovery.json` file automatically which is needed to
 
 The VTAdmin configuration section lives at the same level as the `vtctld` configuration in the cluster specification.
 
-The following options are available for configuring VTAdmin - 
+The following options are available for configuring VTAdmin:
 
 - `RBAC` is a secret source. It is the role-based access control rules to use for VTAdmin API. More information on role-based access control can be found [here](../role-based-access-control).
 - `Cells` is a list of strings. It is the cells where VTAdmin must be deployed. Defaults to deploying instances of VTAdmin in all cells.
@@ -41,7 +41,7 @@ Apart from the VTAdmin configuration, the image to use for the containers also n
 
 ## Example Configuration
 
-The VTAdmin configuration that is used in VTop [end to end tests](https://github.com/planetscale/vitess-operator/tree/main/test/endtoend) looks like - 
+The VTAdmin configuration that is used in VTop [end to end tests](https://github.com/planetscale/vitess-operator/tree/main/test/endtoend) looks like:
 
 ```yaml
 spec:
