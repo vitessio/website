@@ -22,37 +22,37 @@ with the simplest case: that of buffering during a PRS (PlannedReparentShard)
 operation. Examples of various edge cases can be found in
 [Buffering Scenarios](../../../user-guides/configuration-advanced/buffering-scenarios/).
 
-## VTGate parameters to enable buffering
+## VTGate flags to enable buffering
 
-First, let us cover the parameters that need to be set in VTGate to enable
+First, let us cover the flags that need to be set in VTGate to enable
 buffering:
 
-  * `-enable_buffer`:  Enables buffering.  **Not enabled by default**
-  * `-enable_buffer_dry_run`:  Enable logging of if/when buffering would
+  * `--enable_buffer`:  Enables buffering.  **Not enabled by default**
+  * `--enable_buffer_dry_run`:  Enable logging of if/when buffering would
   trigger, without actually buffering anything. Useful for testing.
   Default: `false`
-  * `-buffer_implementation`:  Default: `keyspace_events`.  More consistent results
+  * `--buffer_implementation`:  Default: `keyspace_events`.  More consistent results
   have been seen with `keyspace_events`. However, if the legacy behavior is needed
   you may use `healthcheck`.
-  * `-buffer_size`:  Default: `1000` This should be sized to the appropriate
+  * `--buffer_size`:  Default: `1000` This should be sized to the appropriate
   number of expected request during a buffering event. Typically, if each
   connection has one request then, each connection will consume one buffer slot
   of the `buffer_size` and be put in a "pause" state as it is buffered on the
-  vtgate. The resource consideration for setting this parameter are memory resources.
-  * `-buffer_drain_concurrency`:  Default: `1`.  If the buffer is of any
+  vtgate. The resource consideration for setting this flag are memory resources.
+  * `--buffer_drain_concurrency`:  Default: `1`.  If the buffer is of any
   significant size, you probably want to increase this proportionally.
-  * `-buffer_keyspace_shards`:  Can be used to limit buffering to only
+  * `--buffer_keyspace_shards`:  Can be used to limit buffering to only
   certain keyspaces. Should not be necessary in most cases, defaults to watching
   all keyspaces.
-  * `-buffer_max_failover_duration`:  Default: `20s`.  If buffering is active
+  * `--buffer_max_failover_duration`:  Default: `20s`.  If buffering is active
   longer than this set duration, stop buffering and return errors to the client.
-  * `-buffer_window`: Default: `10s`.  The maximum time any individual request
+  * `--buffer_window`: Default: `10s`.  The maximum time any individual request
   should be buffered for. Should probably be less than the value for
-  `-buffer_max_failover_duration`. Adjust according to your application
+  `--buffer_max_failover_duration`. Adjust according to your application
   requirements. Be aware, if your MySQL client has  `write_timeout` or
   `read_timeout` settings those values should be greater than the
   `buffer_max_failover_duration`.
-  * `-buffer_min_time_between_failover`: Default `1m`. If consecutive
+  * `--buffer_min_time_between_failover`: Default `1m`. If consecutive
   fail overs for a shard happens within less than this duration, do **not**
   buffer again. The purpose of this setting is to avoid consecutive fail over
   events where vtgate may be buffering, but never purging the buffer.
@@ -100,9 +100,9 @@ overview of how buffering works:
   start "too long" ago.
   * When the failover is complete, and the tablet starts accepting queries
   again, we start draining the buffered queries, with a concurrency as
-  indicated by the `-buffer_drain_concurrency` parameter.
+  indicated by the `buffer_drain_concurrency` value.
   * When the buffer is drained, the buffering is complete.  We maintain a
-  timer based on `-buffer_min_time_between_fail overs` to make sure we
+  timer based on `buffer_min_time_between_failovers` to make sure we
   do not buffer again if another fail over starts within that period.
 
 
@@ -133,8 +133,8 @@ Error Message: Lost connection to MySQL server during query (timed out)
 
 Due to the nature of buffering and pausing your queries the MySQL client will see
 delays in their query request. If your client has a `read_timeout` or
-`write_timeout` set, the value should be greater than the value set
-`buffer_window` in vtgate `buffer_window`.
+`write_timeout` set, the value should be greater than the `buffer_window` value set
+in vtgate.
 
 ### Primary not serving
 
