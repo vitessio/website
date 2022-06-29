@@ -5,7 +5,9 @@ description: How to configure VTop to run VTAdmin
 
 ## Get Started
 
+{{< info >}}
 VTAdmin only runs in a single Vitess cluster configuration in the Vitess operator.
+{{< /info >}}
 
 Please also read the [Operator's Guide](../operators_guide) to learn more about configurations available and how to use them.
 
