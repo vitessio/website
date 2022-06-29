@@ -120,6 +120,8 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.comm
 
 {{ <info> }}
 Deletes are idempotent, so attempting to delete VDiff data that does not exist is a no-op.
+
+All VDiff data associated with a VReplication workflow is deleted when the workflow is deleted.
 {{ </info> }}
 
 
@@ -198,7 +200,7 @@ Only other format supported is JSON
 **optional**\
 
 <div class="cmd">
-Show full vdiff output in summaries (only applicable when using `JSON` format)
+Show verbose vdiff output in summaries
 </div>
 
 #### --max_extra_rows_to_compare
