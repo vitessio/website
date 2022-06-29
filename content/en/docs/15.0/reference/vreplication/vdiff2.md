@@ -109,7 +109,7 @@ You can either delete a specific UUID or use the `all` shorthand to delete all V
 
 ```
 $ vtctlclient --server=localhost:15999 VDiff -- --v2 customer.commerce2customer delete all
-VDiff delete is completed on target shards
+VDiff delete status is completed on target shards
 
 $ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.commerce2customer delete all
 {
@@ -118,12 +118,11 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.comm
 }
 ```
 
-{{ <info> }}
+{{< info >}}
 Deletes are idempotent, so attempting to delete VDiff data that does not exist is a no-op.
 
 All VDiff data associated with a VReplication workflow is deleted when the workflow is deleted.
-{{ </info> }}
-
+{{< /info >}}
 
 ### Description
 
@@ -197,7 +196,7 @@ Only other format supported is JSON
 </div>
 
 #### --verbose
-**optional**\
+**optional**
 
 <div class="cmd">
 Show verbose vdiff output in summaries
