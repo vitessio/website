@@ -12,6 +12,8 @@ Quick links:
 - Vitess supports [managed, online schema changes](../schema-changes/managed-online-schema-changes/) using different [strategies](../schema-changes/ddl-strategies/), and with visibility and control over the migration process
 - Multiple approaches to [unmanaged schema changes](../schema-changes/unmanaged-schema-changes/), either blocking, or owned by the user/DBA.
 
+It is recommended to use Vitess' managed, online schema changes.
+
 Some background on schema changes follows.
 
 ## The schema change problem
