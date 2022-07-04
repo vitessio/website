@@ -6,9 +6,9 @@ weight: 11
 Creating a lookup vindex after the main table already contains rows does not automatically backfill the lookup table for the existing entries. 
 Only newer inserts cause automatic population of the lookup table. 
 
-This backfill can be set up using the `CreateLookupVindex` command covered below.
+This backfill can be set up using the [CreateLookupVindex](#CreateLookupVindex) command covered below.
 
-### Checklist
+### Manual Backfill Checklist
 
 Creating a unique lookup Vindex is an elaborate process. It is good to use the following checklist if this is done manually:
 
@@ -16,18 +16,28 @@ Creating a unique lookup Vindex is an elaborate process. It is good to use the f
 * Create a VSchema entry for the lookup table. If sharded, assign a Primary Vindex for the `from` column.
 * Create the lookup vindex in the VSchema of the sharded keyspace:
   * Give it a distinct name
-  * Specify the type as `consistent_lookup_unique`
+  * Specify the type from one of [predefined vindex](https://vitess.io/docs/13.0/reference/features/vindexes/#predefined-vindexes)
   * Under `params`: specify the properties of the lookup table
   * Specify the `Owner` as the main table
 * Associate the column of the owner table with the new Vindex.
 
-### CreateLookupVindex command
+### CreateLookupVindex
 
 vtctld supports the [CreateLookupVindex](../../configuration-advanced/createlookupvindex) command that can perform all the above steps as well as the backfill.
 
 {{< warning >}}
 This will not work against the `vtcombo` based demo app because it does not support vreplication. You can only try this against a real Vitess cluster.
 {{< /warning >}}
+
+The workflow automatically infers the schema and vschema for the lookup table and creates it. It also sets up the necessary VReplication streams to backfill the lookup table.
+
+After the backfill is done, you should clean up the workflow. More detailed instructions are available in the  [CreateLookupVindex Reference](../../configuration-advanced/createlookupvindex)
+
+To create such a lookup vindex on a real Vitess cluster, you can use the following instructions:
+
+#### Unique Lookup Vindex Example
+
+*Continued from [Unique Lookup Vindex Page](../unique-lookup)*
 
 Save the following json into a file, say `corder_keyspace_idx.json`:
 
@@ -62,6 +72,43 @@ And issue the vtctlclient command:
 $ vtctlclient -server <vtctld_grpc_address> CreateLookupVindex -tablet_types=REPLICA customer "$(cat corder_keyspace_idx.json)"
 ```
 
-The workflow automatically infers the schema and vschema for the lookup table and creates it. It also sets up the necessary VReplication streams to backfill the lookup table.
+The workflow will automatically create the necessary Primary Vindex entries for vindex table `corder_keyspace_idx` knowing that it is sharded.
 
-After the backfill is done, you should clean up the workflow. More detailed instructions are available in the  [CreateLookupVindex Reference](../../configuration-advanced/createlookupvindex)
+#### Non Unique Lookup Vindex Example
+
+*Continued from [Non Unique Lookup Vindex Page](../non-unique-lookup)*
+
+Save the following json into a file, say `oname_keyspace_idx.json`:
+
+```json
+{
+  "sharded": true,
+  "vindexes": {
+    "oname_keyspace_idx": {
+      "type": "consistent_lookup",
+      "params": {
+        "table": "customer.oname_keyspace_idx",
+        "from": "oname,corder_id",
+        "to": "keyspace_id"
+      },
+      "owner": "corder"
+    }
+  },
+  "tables": {
+    "corder": {
+      "column_vindexes": [{
+        "columns": ["oname", "corder_id"],
+        "name": "oname_keyspace_idx"
+      }]
+    }
+  }
+}
+```
+
+And issue the vtctlclient command:
+
+```sh
+$ vtctlclient --server <vtctld_grpc_port> CreateLookupVindex -- --tablet_types=REPLICA customer "$(cat oname_keyspace_idx.json)"
+```
+
+The workflow will automatically create the necessary Primary Vindex entries for vindex table `oname_keyspace_idx` knowing that it is sharded.
