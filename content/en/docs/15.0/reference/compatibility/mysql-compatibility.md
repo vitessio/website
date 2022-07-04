@@ -14,9 +14,9 @@ Vitess provides `READ COMMITTED` semantics when executing cross-shard queries. T
 
 The following describes some of the major differences in SQL Syntax handling between Vitess and MySQL. For a list of unsupported queries, check out the [test-suite cases](https://github.com/vitessio/vitess/blob/main/go/vt/vtgate/planbuilder/testdata/unsupported_cases.txt).
 
-### DDL                                                                      
+### DDL
 
-Vitess supports MySQL DDL, and will send `ALTER TABLE` statements to each of the underlying tablet servers. For large tables it is recommended to use an external schema deployment tool and apply directly to the underlying MySQL shard instances. This is discussed further in [Applying MySQL Schema](../../../user-guides/schema-changes).
+Vitess supports MySQL DDL. It offers both [managed, online schema changes](../../../user-guides/schema-changes/managed-online-schema-changes), or non-managed DDL. It is recommended to use Vitess's managed schema changes, which offer non-blocking, trackable, failure agnostic, revertible, concurrent changes, and more. Read more about [making schema changes](../../../user-guides/schema-changes).
 
 ### Join Queries
 
