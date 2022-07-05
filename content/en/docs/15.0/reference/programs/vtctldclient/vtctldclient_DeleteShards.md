@@ -1,7 +1,6 @@
 ---
 title: DeleteShards
 series: vtctldclient
-description:
 ---
 ## vtctldclient DeleteShards
 

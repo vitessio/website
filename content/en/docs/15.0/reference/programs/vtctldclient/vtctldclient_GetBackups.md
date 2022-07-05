@@ -1,7 +1,6 @@
 ---
 title: GetBackups
 series: vtctldclient
-description:
 ---
 ## vtctldclient GetBackups
 

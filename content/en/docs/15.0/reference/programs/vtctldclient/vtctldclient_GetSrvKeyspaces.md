@@ -1,7 +1,6 @@
 ---
 title: GetSrvKeyspaces
 series: vtctldclient
-description:
 ---
 ## vtctldclient GetSrvKeyspaces
 

@@ -1,7 +1,6 @@
 ---
 title: ReloadSchemaKeyspace
 series: vtctldclient
-description:
 ---
 ## vtctldclient ReloadSchemaKeyspace
 

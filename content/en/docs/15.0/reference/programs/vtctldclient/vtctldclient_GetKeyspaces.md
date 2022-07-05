@@ -1,7 +1,6 @@
 ---
 title: GetKeyspaces
 series: vtctldclient
-description:
 ---
 ## vtctldclient GetKeyspaces
 

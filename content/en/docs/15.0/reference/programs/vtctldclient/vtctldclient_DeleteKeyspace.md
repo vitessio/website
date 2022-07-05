@@ -1,7 +1,6 @@
 ---
 title: DeleteKeyspace
 series: vtctldclient
-description:
 ---
 ## vtctldclient DeleteKeyspace
 

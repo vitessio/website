@@ -1,7 +1,6 @@
 ---
 title: LegacyVtctlCommand
 series: vtctldclient
-description:
 ---
 ## vtctldclient LegacyVtctlCommand
 

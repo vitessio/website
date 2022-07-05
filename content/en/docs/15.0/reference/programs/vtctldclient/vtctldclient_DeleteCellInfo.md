@@ -1,7 +1,6 @@
 ---
 title: DeleteCellInfo
 series: vtctldclient
-description:
 ---
 ## vtctldclient DeleteCellInfo
 

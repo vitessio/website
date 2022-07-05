@@ -1,7 +1,6 @@
 ---
 title: StartReplication
 series: vtctldclient
-description:
 ---
 ## vtctldclient StartReplication
 

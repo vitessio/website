@@ -1,7 +1,6 @@
 ---
 title: Validate
 series: vtctldclient
-description:
 ---
 ## vtctldclient Validate
 

@@ -1,7 +1,6 @@
 ---
 title: ValidateShard
 series: vtctldclient
-description:
 ---
 ## vtctldclient ValidateShard
 

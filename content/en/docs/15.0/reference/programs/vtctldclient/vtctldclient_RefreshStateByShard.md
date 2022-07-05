@@ -1,7 +1,6 @@
 ---
 title: RefreshStateByShard
 series: vtctldclient
-description:
 ---
 ## vtctldclient RefreshStateByShard
 

@@ -1,7 +1,6 @@
 ---
 title: ValidateSchemaKeyspace
 series: vtctldclient
-description:
 ---
 ## vtctldclient ValidateSchemaKeyspace
 

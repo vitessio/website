@@ -1,7 +1,6 @@
 ---
 title: AddCellsAlias
 series: vtctldclient
-description:
 ---
 ## vtctldclient AddCellsAlias
 

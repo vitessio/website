@@ -1,7 +1,6 @@
 ---
 title: GetVSchema
 series: vtctldclient
-description:
 ---
 ## vtctldclient GetVSchema
 

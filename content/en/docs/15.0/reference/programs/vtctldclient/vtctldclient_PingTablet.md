@@ -1,7 +1,6 @@
 ---
 title: PingTablet
 series: vtctldclient
-description:
 ---
 ## vtctldclient PingTablet
 

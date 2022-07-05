@@ -1,7 +1,6 @@
 ---
 title: RunHealthCheck
 series: vtctldclient
-description:
 ---
 ## vtctldclient RunHealthCheck
 

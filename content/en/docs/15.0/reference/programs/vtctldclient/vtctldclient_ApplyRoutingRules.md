@@ -1,7 +1,6 @@
 ---
 title: ApplyRoutingRules
 series: vtctldclient
-description:
 ---
 ## vtctldclient ApplyRoutingRules
 

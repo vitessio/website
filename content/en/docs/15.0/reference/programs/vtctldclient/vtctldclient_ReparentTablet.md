@@ -1,7 +1,6 @@
 ---
 title: ReparentTablet
 series: vtctldclient
-description:
 ---
 ## vtctldclient ReparentTablet
 

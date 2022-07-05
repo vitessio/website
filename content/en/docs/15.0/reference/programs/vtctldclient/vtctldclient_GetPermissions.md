@@ -1,7 +1,6 @@
 ---
 title: GetPermissions
 series: vtctldclient
-description:
 ---
 ## vtctldclient GetPermissions
 

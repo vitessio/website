@@ -1,7 +1,6 @@
 ---
 title: SleepTablet
 series: vtctldclient
-description:
 ---
 ## vtctldclient SleepTablet
 

@@ -1,7 +1,6 @@
 ---
 title: SetKeyspaceDurabilityPolicy
 series: vtctldclient
-description:
 ---
 ## vtctldclient SetKeyspaceDurabilityPolicy
 

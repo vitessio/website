@@ -1,7 +1,6 @@
 ---
 title: ChangeTabletType
 series: vtctldclient
-description:
 ---
 ## vtctldclient ChangeTabletType
 

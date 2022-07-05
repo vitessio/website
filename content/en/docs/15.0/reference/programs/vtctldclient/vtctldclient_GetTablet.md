@@ -1,7 +1,6 @@
 ---
 title: GetTablet
 series: vtctldclient
-description:
 ---
 ## vtctldclient GetTablet
 

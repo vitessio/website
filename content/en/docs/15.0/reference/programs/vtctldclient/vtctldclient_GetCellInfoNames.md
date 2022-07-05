@@ -1,7 +1,6 @@
 ---
 title: GetCellInfoNames
 series: vtctldclient
-description:
 ---
 ## vtctldclient GetCellInfoNames
 

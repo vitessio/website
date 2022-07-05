@@ -1,7 +1,6 @@
 ---
 title: CreateKeyspace
 series: vtctldclient
-description:
 ---
 ## vtctldclient CreateKeyspace
 

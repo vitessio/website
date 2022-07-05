@@ -1,7 +1,6 @@
 ---
 title: UpdateCellsAlias
 series: vtctldclient
-description:
 ---
 ## vtctldclient UpdateCellsAlias
 

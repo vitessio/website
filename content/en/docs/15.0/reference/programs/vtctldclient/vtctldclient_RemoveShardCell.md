@@ -1,7 +1,6 @@
 ---
 title: RemoveShardCell
 series: vtctldclient
-description:
 ---
 ## vtctldclient RemoveShardCell
 

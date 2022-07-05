@@ -1,7 +1,6 @@
 ---
 title: RemoveKeyspaceCell
 series: vtctldclient
-description:
 ---
 ## vtctldclient RemoveKeyspaceCell
 

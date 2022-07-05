@@ -1,7 +1,6 @@
 ---
 title: CreateShard
 series: vtctldclient
-description:
 ---
 ## vtctldclient CreateShard
 

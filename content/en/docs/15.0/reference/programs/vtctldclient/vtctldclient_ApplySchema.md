@@ -1,7 +1,6 @@
 ---
 title: ApplySchema
 series: vtctldclient
-description:
 ---
 ## vtctldclient ApplySchema
 

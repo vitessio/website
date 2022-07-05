@@ -1,7 +1,6 @@
 ---
 title: RefreshState
 series: vtctldclient
-description:
 ---
 ## vtctldclient RefreshState
 

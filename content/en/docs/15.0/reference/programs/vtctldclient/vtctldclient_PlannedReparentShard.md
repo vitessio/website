@@ -1,7 +1,6 @@
 ---
 title: PlannedReparentShard
 series: vtctldclient
-description:
 ---
 ## vtctldclient PlannedReparentShard
 
