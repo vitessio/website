@@ -154,4 +154,4 @@ You would typically have to create a MySQL non-unique index on `oname` for queri
 
 ### Backfill
 
-To Backfill the vindex on already existing table refer to [Backfill Vindexes](../backfill-vindexes)
+To Backfill the vindex on an existing table refer to [Backfill Vindexes](../backfill-vindexes)
