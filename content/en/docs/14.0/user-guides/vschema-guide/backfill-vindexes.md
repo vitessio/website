@@ -69,7 +69,7 @@ Save the following json into a file, say `corder_keyspace_idx.json`:
 And issue the vtctlclient command:
 
 ```sh
-$ vtctlclient -server <vtctld_grpc_address> CreateLookupVindex -tablet_types=REPLICA customer "$(cat corder_keyspace_idx.json)"
+$ vtctldclient --server <vtctld_grpc_address> CreateLookupVindex -- --tablet_types=REPLICA customer "$(cat corder_keyspace_idx.json)"
 ```
 
 The workflow will automatically create the necessary Primary Vindex entries for vindex table `corder_keyspace_idx` knowing that it is sharded.
