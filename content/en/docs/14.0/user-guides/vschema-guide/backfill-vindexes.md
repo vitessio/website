@@ -74,7 +74,7 @@ $ vtctlclient -server <vtctld_grpc_address> CreateLookupVindex -tablet_types=REP
 
 The workflow will automatically create the necessary Primary Vindex entries for vindex table `corder_keyspace_idx` knowing that it is sharded.
 
-#### Non Unique Lookup Vindex Example
+#### Non-unique Lookup Vindex Example
 
 *Continued from [Non Unique Lookup Vindex Page](../non-unique-lookup)*
 
