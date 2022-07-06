@@ -76,7 +76,7 @@ The workflow will automatically create the necessary Primary Vindex entries for 
 
 #### Non-unique Lookup Vindex Example
 
-*Continued from [Non Unique Lookup Vindex Page](../non-unique-lookup)*
+*Continued from [Non-unique Lookup Vindex Page](../non-unique-lookup)*
 
 Save the following json into a file, say `oname_keyspace_idx.json`:
 
