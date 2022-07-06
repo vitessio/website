@@ -109,4 +109,4 @@ Vindexes that do have a one-to-one correspondence between the input value and ke
 
 ### Backfill
 
-To Backfill the vindex on already existing table refer to [Backfill Vindexes](../backfill-vindexes)
+To Backfill the vindex on an existing table refer to [Backfill Vindexes](../backfill-vindexes)
