@@ -1,7 +1,6 @@
 ---
 title: GetSrvVSchema
 series: vtctldclient
-description:
 ---
 ## vtctldclient GetSrvVSchema
 

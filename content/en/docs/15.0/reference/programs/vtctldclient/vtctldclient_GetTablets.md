@@ -1,7 +1,6 @@
 ---
 title: GetTablets
 series: vtctldclient
-description:
 ---
 ## vtctldclient GetTablets
 

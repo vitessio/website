@@ -1,7 +1,6 @@
 ---
 title: TabletExternallyReparented
 series: vtctldclient
-description:
 ---
 ## vtctldclient TabletExternallyReparented
 

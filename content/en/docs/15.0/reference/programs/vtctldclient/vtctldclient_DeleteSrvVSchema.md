@@ -1,7 +1,6 @@
 ---
 title: DeleteSrvVSchema
 series: vtctldclient
-description:
 ---
 ## vtctldclient DeleteSrvVSchema
 

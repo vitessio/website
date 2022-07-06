@@ -1,7 +1,6 @@
 ---
 title: GetTabletVersion
 series: vtctldclient
-description:
 ---
 ## vtctldclient GetTabletVersion
 

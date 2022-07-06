@@ -1,7 +1,6 @@
 ---
 title: RestoreFromBackup
 series: vtctldclient
-description:
 ---
 ## vtctldclient RestoreFromBackup
 

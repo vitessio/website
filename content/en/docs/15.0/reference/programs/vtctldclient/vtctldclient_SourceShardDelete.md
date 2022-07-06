@@ -1,7 +1,6 @@
 ---
 title: SourceShardDelete
 series: vtctldclient
-description:
 ---
 ## vtctldclient SourceShardDelete
 

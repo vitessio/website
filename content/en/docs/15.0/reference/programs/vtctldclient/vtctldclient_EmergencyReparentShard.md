@@ -1,7 +1,6 @@
 ---
 title: EmergencyReparentShard
 series: vtctldclient
-description:
 ---
 ## vtctldclient EmergencyReparentShard
 

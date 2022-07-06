@@ -1,7 +1,6 @@
 ---
 title: GetShard
 series: vtctldclient
-description:
 ---
 ## vtctldclient GetShard
 

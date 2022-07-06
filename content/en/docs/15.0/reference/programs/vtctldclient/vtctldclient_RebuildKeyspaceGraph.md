@@ -1,7 +1,6 @@
 ---
 title: RebuildKeyspaceGraph
 series: vtctldclient
-description:
 ---
 ## vtctldclient RebuildKeyspaceGraph
 

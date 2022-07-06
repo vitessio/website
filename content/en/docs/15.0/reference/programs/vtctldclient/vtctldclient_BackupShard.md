@@ -1,7 +1,6 @@
 ---
 title: BackupShard
 series: vtctldclient
-description:
 ---
 ## vtctldclient BackupShard
 

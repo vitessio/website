@@ -1,7 +1,6 @@
 ---
 title: FindAllShardsInKeyspace
 series: vtctldclient
-description:
 ---
 ## vtctldclient FindAllShardsInKeyspace
 

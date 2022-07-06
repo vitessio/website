@@ -1,7 +1,6 @@
 ---
 title: ReloadSchema
 series: vtctldclient
-description:
 ---
 ## vtctldclient ReloadSchema
 

@@ -1,7 +1,6 @@
 ---
 title: ShardReplicationPositions
 series: vtctldclient
-description:
 ---
 ## vtctldclient ShardReplicationPositions
 

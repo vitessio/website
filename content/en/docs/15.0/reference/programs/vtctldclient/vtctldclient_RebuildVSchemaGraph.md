@@ -1,7 +1,6 @@
 ---
 title: RebuildVSchemaGraph
 series: vtctldclient
-description:
 ---
 ## vtctldclient RebuildVSchemaGraph
 

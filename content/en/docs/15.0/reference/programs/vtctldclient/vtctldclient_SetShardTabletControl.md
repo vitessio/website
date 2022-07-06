@@ -1,7 +1,6 @@
 ---
 title: SetShardTabletControl
 series: vtctldclient
-description:
 ---
 ## vtctldclient SetShardTabletControl
 

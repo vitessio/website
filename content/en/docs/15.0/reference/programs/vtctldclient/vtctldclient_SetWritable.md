@@ -1,7 +1,6 @@
 ---
 title: SetWritable
 series: vtctldclient
-description:
 ---
 ## vtctldclient SetWritable
 

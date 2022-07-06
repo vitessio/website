@@ -1,7 +1,6 @@
 ---
 title: GetRoutingRules
 series: vtctldclient
-description:
 ---
 ## vtctldclient GetRoutingRules
 

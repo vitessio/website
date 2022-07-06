@@ -1,7 +1,6 @@
 ---
 title: ReloadSchemaShard
 series: vtctldclient
-description:
 ---
 ## vtctldclient ReloadSchemaShard
 

@@ -1,7 +1,6 @@
 ---
 title: InitShardPrimary
 series: vtctldclient
-description:
 ---
 ## vtctldclient InitShardPrimary
 

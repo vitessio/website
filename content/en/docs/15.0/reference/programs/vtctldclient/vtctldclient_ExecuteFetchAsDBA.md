@@ -1,7 +1,6 @@
 ---
 title: ExecuteFetchAsDBA
 series: vtctldclient
-description:
 ---
 ## vtctldclient ExecuteFetchAsDBA
 

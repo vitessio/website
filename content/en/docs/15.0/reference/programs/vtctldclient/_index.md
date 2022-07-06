@@ -1,7 +1,6 @@
 ---
 title: vtctldclient
 series: vtctldclient
-description:
 ---
 ## vtctldclient
 

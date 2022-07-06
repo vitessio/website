@@ -1,7 +1,6 @@
 ---
 title: ExecuteHook
 series: vtctldclient
-description:
 ---
 ## vtctldclient ExecuteHook
 

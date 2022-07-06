@@ -1,7 +1,6 @@
 ---
 title: GetCellsAliases
 series: vtctldclient
-description:
 ---
 ## vtctldclient GetCellsAliases
 

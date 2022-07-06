@@ -1,7 +1,6 @@
 ---
 title: ShardReplicationFix
 series: vtctldclient
-description:
 ---
 ## vtctldclient ShardReplicationFix
 

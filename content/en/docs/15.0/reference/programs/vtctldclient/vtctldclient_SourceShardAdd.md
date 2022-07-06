@@ -1,7 +1,6 @@
 ---
 title: SourceShardAdd
 series: vtctldclient
-description:
 ---
 ## vtctldclient SourceShardAdd
 

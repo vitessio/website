@@ -1,7 +1,6 @@
 ---
 title: DeleteCellsAlias
 series: vtctldclient
-description:
 ---
 ## vtctldclient DeleteCellsAlias
 

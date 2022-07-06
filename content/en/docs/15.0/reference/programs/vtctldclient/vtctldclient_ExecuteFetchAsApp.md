@@ -1,7 +1,6 @@
 ---
 title: ExecuteFetchAsApp
 series: vtctldclient
-description:
 ---
 ## vtctldclient ExecuteFetchAsApp
 

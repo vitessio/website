@@ -1,7 +1,6 @@
 ---
 title: AddCellInfo
 series: vtctldclient
-description:
 ---
 ## vtctldclient AddCellInfo
 

@@ -1,7 +1,6 @@
 ---
 title: Backup
 series: vtctldclient
-description:
 ---
 ## vtctldclient Backup
 

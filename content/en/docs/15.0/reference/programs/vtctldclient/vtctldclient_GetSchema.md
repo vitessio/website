@@ -1,7 +1,6 @@
 ---
 title: GetSchema
 series: vtctldclient
-description:
 ---
 ## vtctldclient GetSchema
 
@@ -18,6 +17,7 @@ vtctldclient GetSchema [--tables TABLES ...] [--exclude-tables EXCLUDE_TABLES ..
   -h, --help                      help for GetSchema
       --include-views             Includes views in the output in addition to base tables.
   -n, --table-names-only          Display only table names in the result.
+      --table-schema-only         Skip introspecting columns and fields metadata.
   -s, --table-sizes-only          Display only size information for matching tables. Ignored if --table-names-only is set.
       --tables /regexp/           List of tables to display the schema for. Each is either an exact match, or a regular expression of the form /regexp/.
 ```

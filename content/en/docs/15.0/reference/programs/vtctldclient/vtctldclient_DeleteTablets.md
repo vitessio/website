@@ -1,7 +1,6 @@
 ---
 title: DeleteTablets
 series: vtctldclient
-description:
 ---
 ## vtctldclient DeleteTablets
 

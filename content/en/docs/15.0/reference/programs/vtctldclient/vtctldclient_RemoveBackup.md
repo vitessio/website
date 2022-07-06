@@ -1,7 +1,6 @@
 ---
 title: RemoveBackup
 series: vtctldclient
-description:
 ---
 ## vtctldclient RemoveBackup
 

@@ -1,7 +1,6 @@
 ---
 title: UpdateCellInfo
 series: vtctldclient
-description:
 ---
 ## vtctldclient UpdateCellInfo
 

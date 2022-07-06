@@ -1,7 +1,6 @@
 ---
 title: StopReplication
 series: vtctldclient
-description:
 ---
 ## vtctldclient StopReplication
 

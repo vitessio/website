@@ -1,7 +1,6 @@
 ---
 title: SetShardIsPrimaryServing
 series: vtctldclient
-description:
 ---
 ## vtctldclient SetShardIsPrimaryServing
 

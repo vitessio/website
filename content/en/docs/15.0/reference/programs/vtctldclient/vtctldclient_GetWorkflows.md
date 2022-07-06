@@ -1,7 +1,6 @@
 ---
 title: GetWorkflows
 series: vtctldclient
-description:
 ---
 ## vtctldclient GetWorkflows
 
