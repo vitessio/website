@@ -57,10 +57,6 @@ To optionally configure role-based access control (RBAC), refer to the [RBAC doc
 
 ## 3. Configure and build `vtadmin-web`
 
-{{< info >}}
-Unlike other Vitess components, `vtadmin-web` is not distributed as a binary. This is because environment variables specific to a Vitess environment (such as the hostname for `vtadmin`) are embedded during build time. Since `vtadmin-web` produces a static HTML/CSS/JS build, it's not possible to read these values at run-time.
-{{< /info >}}
-
 Environment variables can be defined in a `.env` file or passed inline to the `npm run build` command. The full list of flags is given in the [`vtadmin-web` reference documentation][vtadmin_web_env_ref].
 
 The following is from the [local example][local_example] showing a minimal set of environment variables. `$web_dir`, in this case, refers to the [`vtadmin-web` source directory][vtadmin_web_src] but could equally apply to the `web/vtadmin/` directory copied into a Docker container, for example. `REACT_APP_VTADMIN_API_ADDRESS` uses the same hostname as the `--addr` flag passed to `vtadmin` in the previous step. 
@@ -73,7 +69,21 @@ REACT_APP_VTADMIN_API_ADDRESS="https://vtadmin-api.example.com:14200" \
   npm run --prefix $web_dir build
 ```
 
-After running `build` command, the production build of the front-end assets will be in the `$web_dir/build` directory. They can be served as any other static content; for example, [Go's embed package][go_embed] or npm's [serve package][npm_serve]. Each filename inside of build/static will contain a unique hash of the file contents. This hash in the file name enables [long term caching techniques][web_caching].
+If you want to overwrite or set environment variables after the build you can use the `$web_dir/build/config/config.js` file. 
+For example:
+
+```javascript
+window.env = {
+    'REACT_APP_VTADMIN_API_ADDRESS': "https://vtadmin-api.example.com:14200",
+    'REACT_APP_FETCH_CREDENTIALS': "omit",
+    'REACT_APP_ENABLE_EXPERIMENTAL_TABLET_DEBUG_VARS': true,
+    'REACT_APP_BUGSNAG_API_KEY': "",
+    'REACT_APP_DOCUMENT_TITLE': "",
+    'REACT_APP_READONLY_MODE': false,
+};
+```
+
+After running `build` command, the production build of the front-end assets will be in the `$web_dir/build` directory. They can be served as any other static content; for example, [Go's embed package][go_embed] or npm's [serve package][npm_serve]. Each filename inside of `$web_dir/build/static` will contain a unique hash of the file contents. This hash in the file name enables [long term caching techniques][web_caching].
 
 
 [discovery_json]: https://github.com/vitessio/vitess/blob/main/examples/local/vtadmin/discovery.json
