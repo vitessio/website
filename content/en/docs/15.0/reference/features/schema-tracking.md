@@ -10,6 +10,7 @@ The schema tracking functionality alleviates this issue and enable VTGate to pla
 
 * `SELECT *` cross-shard queries that need evaluation at the VTGate level.
 * Queries that are not able to resolve columns dependencies. For instance: queries with no table qualifier in the projection/filter list.
+* Evaluation improvement in Aggregations, Group By, Having, Limit, etc. clauses that require processing of records at VTGate level.
 
 ## VTGate
 
