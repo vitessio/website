@@ -113,7 +113,7 @@ SetShardIsPrimaryServing <keyspace/shard> <is_serving>
 
 ### SetShardTabletControl
 
-Sets the shardTabletControls or the tabletControls records for a shard and tablet type in the topology service. Only use this for an emergency fix or after a finished vertical split or after a corrupted MoveTables action. The [MigrateServedFrom](../keyspaces#migrateservedfrom) and [MigrateServedType](../keyspaces#migrateservedtype) commands set this field appropriately already. Always specify the `denied_tables` flag for MoveTables, but never for Reshard operations.
+Sets the shardTabletControls or the tabletControls records for a shard and tablet type in the topology service. Only use this for an emergency fix or after a finished vertical split or after a corrupted MoveTables action. Always specify the `denied_tables` flag for MoveTables, but never for Reshard operations.
 
 To set the `queryServiceDisabled` for the tablet, set `disable_query_service` to true; to unset the queryServiceDisabled provide `denied_tables` with an empty table set. Useful to fix vReplication operations gone wrong. These specific flags update the values for `shardTabletControls` in the topology path: `/keyspaces/<keyspace>/SrvKeyspace`.
 

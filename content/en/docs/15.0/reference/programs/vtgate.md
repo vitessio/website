@@ -141,7 +141,7 @@ The following global options apply to `vtgate`:
 | --retry-count | int | retry count (default 2) |
 | --schema_change_signal | boolean | enable schema tracking |
 | --security_policy | string | the name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only) |
-| --service_map | value | comma separated list of services to enable (or disable if prefixed with '-') Example: grpc-vtworker |
+| --service_map | value | comma separated list of services to enable (or disable if prefixed with '-') Example: grpc-queryservice |
 | --sql-max-length-errors | int | truncate queries in error logs to the given length (default unlimited) |
 | --sql-max-length-ui | int | truncate queries in debug UIs to the given length (default 512) (default 512) |
 | --srv_topo_cache_refresh | duration | how frequently to refresh the topology for cached entries (default 1s) |

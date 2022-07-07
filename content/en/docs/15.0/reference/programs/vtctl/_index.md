@@ -72,8 +72,6 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [RemoveKeyspaceCell](../vtctl/keyspaces#removekeyspacesell) | `RemoveKeyspaceCell  -- [--force] [--recursive] <keyspace> <cell>` |
 | [GetKeyspace](../vtctl/keyspaces#getkeyspace) | `GetKeyspace  <keyspace>` |
 | [GetKeyspaces](../vtctl/keyspaces#getkeyspaces) | `GetKeyspaces  ` |
-| (DEPRECATED) [SetKeyspaceShardingInfo](../vtctl/keyspaces#setkeyspaceshardinginfo) DEPRECATED | `SetKeyspaceShardingInfo  -- [--force] <keyspace name> [<column name>] [<column type>]` |
-| (DEPRECATED) [SetKeyspaceServedFrom](../vtctl/keyspaces#setkeyspaceservedfrom) DEPRECATED | `SetKeyspaceServedFrom  -- [--source=<source keyspace name>] [--remove] [--cells=c1,c2,...] <keyspace name> <tablet type>` |
 | [RebuildKeyspaceGraph](../vtctl/keyspaces#rebuildkeyspacegraph) | `RebuildKeyspaceGraph  -- [--cells=c1,c2,...] <keyspace> ...` |
 | [ValidateKeyspace](../vtctl/keyspaces#validatekeyspace) | `ValidateKeyspace  -- [--ping-tablets] <keyspace name>` |
 | [Reshard (v1)](../../vreplication/v1/reshard) | `Reshard  -- --v1 [--skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>` |
@@ -84,17 +82,10 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [CreateLookupVindex](../vtctl/keyspaces#createLookupvindex) | `CreateLookupVindex  -- [--cell=<cell>] [--tablet_types=<source_tablet_types>] <keyspace> <json_spec>` |
 | [ExternalizeVindex](../vtctl/keyspaces#externalizevindex) | `ExternalizeVindex  <keyspace>.<vindex>` |
 | [Materialize](../vtctl/keyspaces#materialize) | `Materialize  <json_spec>, example : '{"workflow": "aaa", "source_keyspace": "source", "target_keyspace": "target", "table_settings": [{"target_table": "customer", "source_expression": "select * from customer", "create_ddl": "copy"}]}'` |
-| (DEPRECATED) [SplitClone](../vtctl/keyspaces#splitclone) DEPRECATED | `SplitClone  <keyspace> <from_shards> <to_shards>` |
-| (DEPRECATED) [VerticalSplitClone](../vtctl/keyspaces#verticalsplitclone) DEPRECATED | `VerticalSplitClone  <from_keyspace> <to_keyspace> <tables>` |
 | [VDiff](../vtctl/keyspaces#VDiff) | `VDiff -- [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=<source_tablet_types>] [--filtered_replication_wait_time=30s] [--max_extra_rows_to_compare=1000] <keyspace.workflow>` |
-| (DEPRECATED) [MigrateServedTypes](../vtctl/keyspaces#migrateservedtypes) DEPRECATED | `MigrateServedTypes  -- [--cells=c1,c2,...] [--reverse] [--skip-refresh-state] <keyspace/shard> <served tablet type>` |
-| (DEPRECATED) [MigrateServedFrom](../vtctl/keyspaces#migrateservedfrom) DEPRECATED | `MigrateServedFrom  -- [--cells=c1,c2,...] [--reverse] <destination keyspace/shard> <served tablet type>` |
 | [SwitchReads](../../vreplication/v1/switchreads) | `SwitchReads  -- [--cells=c1,c2,...] [--reverse] -tablet_type={replica|rdonly} [--dry-run] <keyspace.workflow>` |
 | [SwitchWrites](../../vreplication/v1/switchwrites) | `SwitchWrites  -- [--filtered_replication_wait_time=30s] [--cancel] [--reverse_replication=false] [--dry-run] <keyspace.workflow>` |
-| [CancelResharding](../vtctl/keyspaces#cancelresharding) | `CancelResharding  <keyspace/shard>` |
-| [ShowResharding](../vtctl/keyspaces#showresharding) | `ShowResharding  <keyspace/shard>` |
 | [FindAllShardsInKeyspace](../vtctl/keyspaces#findallshardsinkeyspace) | `FindAllShardsInKeyspace  <keyspace>` |
-| (DEPRECATED) [WaitForDrain](../vtctl/keyspaces#waitfordrain) DEPRECATED | `WaitForDrain  -- [--timeout <duration>] [--retry_delay <duration>] [--initial_wait <duration>] <keyspace/shard> <served tablet type>` |
 
 ### Generic
 
@@ -224,7 +215,6 @@ The following global options apply to `vtctl`:
 | --backup_storage_implementation | string | which implementation to use for the backup storage feature |
 | --backup_storage_number_blocks | int | if backup_storage_compress is true, backup_storage_number_blocks sets the number of blocks that can be processed, at once, before the writer blocks, during compression (default is 2). It should be equal to the number of CPUs available for compression (default 2) |
 | --binlog_player_protocol | string | the protocol to download binlogs from a vttablet (default "grpc") |
-| --binlog_use_v3_resharding_mode | | (DEPRECATED) True iff the binlog streamer should use V3-style sharding, which doesn't require a preset sharding key column. (default true)|
 | --ceph_backup_storage_config | string | Path to JSON config file for ceph backup storage (default "ceph_backup_config.json") |
 | --consul_auth_static_file | string | JSON File to read the topos/tokens from. |
 | --cpu_profile | string | write cpu profile to file |
@@ -424,8 +414,6 @@ The following global options apply to `vtctl`:
 | --vtgate_grpc_server_name | string | the server name to use to validate server certificate |
 | --vtgate_protocol | string | how to talk to vtgate (default "grpc") |
 | --wait-time | duration | time to wait on an action (default 24h0m0s) |
-| --wait_for_drain_sleep_rdonly | duration | (DEPRECATED) time to wait before shutting the query service on old RDONLY tablets during MigrateServedTypes (default 5s) |
-| --wait_for_drain_sleep_replica | duration | (DEPRECATED) time to wait before shutting the query service on old REPLICA tablets during MigrateServedTypes (default 15s) |
 | --watch_replication_stream | | When enabled, vttablet will stream the MySQL replication stream from the local server, and use it to support the include_event_token ExecuteOptions. |
 | --xbstream_restore_flags | string | flags to pass to xbstream command during restore. These should be space separated and will be added to the end of the command. These need to match the ones used for backup e.g. --compress / --decompress, --encrypt / --decrypt |
 | --xtrabackup_backup_flags | string | flags to pass to backup command. These should be space separated and will be added to the end of the command |

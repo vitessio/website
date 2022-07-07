@@ -268,13 +268,6 @@ vtctld \
 | --vtgate_grpc_key | string | the key to use to connect |
 | --vtgate_grpc_server_name | string | the server name to use to validate server certificate |
 | --vtgate_protocol | string | how to talk to vtgate (default "grpc") |
-| --vtworker_client_grpc_ca | string | (DEPRECATED) the server ca to use to validate servers when connecting |
-| --vtworker_client_grpc_cert | string | (DEPRECATED) the cert to use to connect |
-| --vtworker_client_grpc_key | string | (DEPRECATED) the key to use to connect |
-| --vtworker_client_grpc_server_name | string | (DEPRECATED) the server name to use to validate server certificate |
-| --vtworker_client_protocol | string | (DEPRECATED) the protocol to use to talk to the vtworker server (default "grpc") |
-| --wait_for_drain_sleep_rdonly | duration | (DEPRECATED) time to wait before shutting the query service on old RDONLY tablets during MigrateServedTypes (default 5s) |
-| --wait_for_drain_sleep_replica | duration | (DEPRECATED) time to wait before shutting the query service on old REPLICA tablets during MigrateServedTypes (default 15s) |
 | --watch_replication_stream | boolean | When enabled, vttablet will stream the MySQL replication stream from the local server, and use it to support the include_event_token ExecuteOptions. |
 | --workflow_manager_disable | value | comma separated list of workflow types to disable |
 | --workflow_manager_init | boolean | Initialize the workflow manager in this vtctld instance. |
