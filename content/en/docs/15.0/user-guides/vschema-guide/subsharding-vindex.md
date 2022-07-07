@@ -1,6 +1,6 @@
 ---
 title: Subsharding Vindex
-weight: 11
+weight: 15
 ---
 
 ### Introduction

@@ -1,6 +1,6 @@
 ---
 title: Advanced VSchema Properties
-weight: 12
+weight: 20
 ---
 
 With the exception of Multi-Column Vindexes, advanced VSchema Properties do not have DDL constructs. They can only be updated through `vtctld` CLI commands.

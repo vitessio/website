@@ -152,43 +152,6 @@ mysql> select oname, corder_id, hex(keyspace_id) from oname_keyspace_idx where o
 You would typically have to create a MySQL non-unique index on `oname` for queries to work efficiently. While these vindexes and indexes improve read performance, the trade-off is that they also increase storage requirements and amplify writes when inserting rows.
 {{< /info >}}
 
-### CreateLookupVindex
+### Backfill
 
-To create such a lookup vindex on a real Vitess cluster, you can use the following instructions:
-
-Save the following json into a file, say `oname_keyspace_idx.json`:
-
-```json
-{
-  "sharded": true,
-  "vindexes": {
-    "oname_keyspace_idx": {
-      "type": "consistent_lookup",
-      "params": {
-        "table": "customer.oname_keyspace_idx",
-        "from": "oname,corder_id",
-        "to": "keyspace_id"
-      },
-      "owner": "corder"
-    }
-  },
-  "tables": {
-    "corder": {
-      "column_vindexes": [{
-        "columns": ["oname", "corder_id"],
-        "name": "oname_keyspace_idx"
-      }]
-    }
-  }
-}
-```
-
-And issue the vtctlclient command:
-
-```sh
-$ vtctlclient --server <vtctld_grpc_port> CreateLookupVindex -- --tablet_types=REPLICA customer "$(cat oname_keyspace_idx.json)"
-```
-
-The workflow will automatically create the necessary Primary Vindex entries for `oname_keyspace_idx` knowing that it is sharded.
-
-After the backfill is done, you should clean up the workflow. More detailed instructions are available in the  [CreateLookupVindex Reference](../../configuration-advanced/createlookupvindex)
+To Backfill the vindex on an existing table refer to [Backfill Vindexes](../backfill-vindexes)
