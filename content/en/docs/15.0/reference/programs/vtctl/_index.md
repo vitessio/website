@@ -162,27 +162,6 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [DeleteCellsAlias](../vtctl/cell-aliases#deletecellsalias) | `DeleteCellsAlias  <alias>` |
 | [GetCellsAliases](../vtctl/cell-aliases#getcellsaliases) | `GetCellsAliases  ` |
 
-### Queries
-
-| Name | Example Usage |
-| :-------- | :--------------- |
-| [VtGateExecute](../vtctl/queries#vtgateexecute) | `VtGateExecute  -- --server <vtgate> [--bind_variables <JSON map>] [--keyspace <default keyspace>] [--tablet_type <tablet type>] [--options <proto text options>] [--json] <sql>` |
-| [VtTabletExecute](../vtctl/queries#vttabletexecute) | `VtTabletExecute  -- [--username <TableACL user>] [--transaction_id <transaction_id>] [--options <proto text options>] [--json] <tablet alias> <sql>` |
-| [VtTabletBegin](../vtctl/queries#vttabletbegin) | `VtTabletBegin  -- [--username <TableACL user>] <tablet alias>` |
-| [VtTabletCommit](../vtctl/queries#vttabletcommit) | `VtTabletCommit  -- [--username <TableACL user>] <transaction_id>` |
-| [VtTabletRollback](../vtctl/queries#vttabletrollback) | `VtTabletRollback  -- [--username <TableACL user>] <tablet alias> <transaction_id>` |
-| [VtTabletStreamHealth](../vtctl/queries#vttabletstreamhealth) | `VtTabletStreamHealth  -- [--count <count, default 1>] <tablet alias>` |
-
-### Resharding Throttler
-
-| Name | Example Usage |
-| :-------- | :--------------- |
-| [ThrottlerMaxRates](../vtctl/resharding-throttler#throttlermaxrates) | `ThrottlerMaxRates  -- --server <vttablet>` |
-| [ThrottlerSetMaxRate](../vtctl/resharding-throttler#throttlersetmaxrate) | `ThrottlerSetMaxRate  -- --server <vttablet> <rate>` |
-| [GetThrottlerConfiguration](../vtctl/resharding-throttler#getthrottlerconfiguration) | `GetThrottlerConfiguration  -- --server <vttablet> [<throttler name>]` |
-| [UpdateThrottlerConfiguration](../vtctl/resharding-throttler#updatethrottlerconfiguration) | `UpdateThrottlerConfiguration  -- --server <vttablet> [--copy_zero_values] "<configuration protobuf text>" [<throttler name>]` |
-| [ResetThrottlerConfiguration](../vtctl/resharding-throttler#resetthrottlerconfiguration) | `ResetThrottlerConfiguration  -- --server <vttablet> [<throttler name>]` |
-
 ### Topo
 
 | Name | Example Usage |
@@ -245,7 +224,6 @@ The following global options apply to `vtctl`:
 | --enable-tx-throttler | | If true replication-lag-based throttling on transactions will be enabled. |
 | --enable_hot_row_protection | | If true, incoming transactions for the same row (range) will be queued and cannot consume all txpool slots. |
 | --enable_hot_row_protection_dry_run | | If true, hot row protection is not enforced but logs if transactions would have been queued. |
-| --enable_queries | | if set, allows vtgate and vttablet queries. May have security implications, as the queries will be run from this process. |
 | --enable_transaction_limit | | If true, limit on number of transactions open at the same time will be enforced for all users. User trying to open a new transaction after exhausting their limit will receive an error immediately, regardless of whether there are available slots or not. |
 | --enable_transaction_limit_dry_run | | If true, limit on number of transactions open at the same time will be tracked for all users, but not enforced. |
 | --enforce_strict_trans_tables | | If true, vttablet requires MySQL to run with STRICT_TRANS_TABLES or STRICT_ALL_TABLES on. It is recommended to not turn this flag off. Otherwise MySQL may alter your supplied values before saving them to the database. (default true)|
@@ -370,11 +348,6 @@ The following global options apply to `vtctl`:
 | --tablet_manager_protocol | string | the protocol to use to talk to vttablet (default "grpc") |
 | --tablet_protocol | string | how to talk to the vttablets (default "grpc") |
 | --tablet_url_template | string | format string describing debug tablet url formatting. See the Go code for getTabletDebugURL() how to customize this. (default "http://{{.GetTabletHostPort}}") |
-| --throttler_client_grpc_ca | string | the server ca to use to validate servers when connecting |
-| --throttler_client_grpc_cert | string | the cert to use to connect |
-| --throttler_client_grpc_key | string | the key to use to connect |
-| --throttler_client_grpc_server_name | string | the server name to use to validate server certificate |
-| --throttler_client_protocol | string | the protocol to use to talk to the integrated throttler service (default "grpc") |
 | --topo_consul_watch_poll_duration | duration | time of the long poll for watch queries. (default 30s) |
 | --topo_etcd_lease_ttl | int | Lease TTL for locks and leader election. The client will use KeepAlive to keep the lease going. (default 30) |
 | --topo_etcd_tls_ca | string | path to the ca to use to validate the server cert when connecting to the etcd topo server |
