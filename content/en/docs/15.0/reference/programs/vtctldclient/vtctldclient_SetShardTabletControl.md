@@ -4,14 +4,13 @@ series: vtctldclient
 ---
 ## vtctldclient SetShardTabletControl
 
-Sets the TabletControl record for a shard and tablet type. Only use this for an emergency fix or after a finished MoveTables. The MigrateServedFrom and MigrateServedType commands set this record appropriately already.
+Sets the TabletControl record for a shard and tablet type. Only use this for an emergency fix or after a finished MoveTables.
 
 ### Synopsis
 
 Sets the TabletControl record for a shard and tablet type.
 
-Only use this for an emergency fix or after a finished MoveTables. The MigrateServedFrom
-and MigrateServedType commands set this record appropriately already.
+Only use this for an emergency fix or after a finished MoveTables.
 
 Always specify the denied-tables flag for MoveTables, but never for Reshard operations.
 

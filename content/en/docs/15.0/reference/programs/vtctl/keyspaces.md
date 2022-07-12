@@ -107,82 +107,6 @@ Outputs a JSON structure that contains information about the Keyspace.</pre>
 
 Outputs a sorted list of all keyspaces.
 
-#### Errors
-
-* the <code>&lt;destination keyspace/shard&gt;</code> and <code>&lt;served tablet type&gt;</code> arguments are both required for the <code>&lt;MigrateServedFrom&gt;</code> command This error occurs if the command is not called with exactly 2 arguments.
-
-### SetKeyspaceShardingInfo
-
-Deprecated.
-
-Updates the sharding information for a keyspace.
-
-#### Example
-
-<pre class="command-example">SetKeyspaceShardingInfo -- [--force] &lt;keyspace name&gt; [&lt;column name&gt;] [&lt;column type&gt;]
-
-Deprecated.
-
-Updates the sharding information for a keyspace.</pre>
-
-#### Flags
-
-| Name | Type | Definition |
-| :-------- | :--------- | :--------- |
-| force | Boolean | Updates fields even if they are already set. Use caution before calling this command. |
-
-
-#### Arguments
-
-* <code>&lt;keyspace name&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables. Vitess distributes keyspace shards into multiple machines and provides an SQL interface to query the data. The argument value must be a string that does not contain whitespace.
-* <code>&lt;column name&gt;</code> &ndash; Optional.
-* <code>&lt;column type&gt;</code> &ndash; Optional.
-
-#### Errors
-
-* the <code>&lt;keyspace name&gt;</code> argument is required for the <code>&lt;SetKeyspaceShardingInfo&gt;</code> command. The <code>&lt;column name&gt;</code> and <code>&lt;column type&gt;</code> arguments are both optional This error occurs if the command is not called with between 1 and 3 arguments.
-* both <code>&lt;column name&gt;</code> and <code>&lt;column type&gt;</code> must be set, or both must be unset
-
-
-### SetKeyspaceServedFrom
-
-Changes the ServedFromMap manually. This command is intended for emergency fixes. This field is automatically set when you call the [*MigrateServedFrom*](https://vitess.io/docs/reference/programs/vtctl/keyspaces/#migrateservedfrom) command. This command does not rebuild the serving graph.
-
-#### Example
-
-<pre class="command-example">SetKeyspaceServedFrom -- [--source=&lt;source keyspace name&gt;] [--remove] [--cells=c1,c2,...] &lt;keyspace name&gt; &lt;tablet type&gt;
-Changes the ServedFromMap manually. This command is intended for emergency fixes. This field is automatically set when you call the *MigrateServedFrom* command. This command does not rebuild the serving graph.</pre>
-
-#### Flags
-
-| Name | Type | Definition |
-| :-------- | :--------- | :--------- |
-| cells | string | Specifies a comma-separated list of cells to affect |
-| remove | Boolean | Indicates whether to add (default) or remove the served from record |
-| source | string | Specifies the source keyspace name |
-
-
-#### Arguments
-
-* <code>&lt;keyspace name&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables. Vitess distributes keyspace shards into multiple machines and provides an SQL interface to query the data. The argument value must be a string that does not contain whitespace.
-* <code>&lt;tablet type&gt;</code> &ndash; Required. The vttablet's role. Valid values are:
-
-    * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
-    * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
-    * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
-    * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential primary. Vitess also does not worry about lag for experimental tablets when reparenting.
-    * <code>primary</code> &ndash; A primary copy of data
-    * <code>master</code> &ndash; Deprecated, same as primary
-    * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
-    * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to primary
-    * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
-    * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential primary tablet.
-
-
-#### Errors
-
-* the <code>&lt;keyspace name&gt;</code> and <code>&lt;tablet type&gt;</code> arguments are required for the <code>&lt;SetKeyspaceServedFrom&gt;</code> command This error occurs if the command is not called with exactly 2 arguments.
-
 ### RebuildKeyspaceGraph
 
 Rebuilds the serving data for the keyspace. This command may trigger an update to all connected clients.
@@ -302,111 +226,12 @@ Materialize  <json_spec>, example : '{"workflow": "aaa", "source_keyspace": "sou
 Performs materialization based on the json spec. Is used directly to form VReplication rules, with an optional step to copy table structure/DDL.
 ```
 
-### SplitClone
-
-Deprecated.
-
-```shell
-SplitClone  <keyspace> <from_shards> <to_shards>
-Start the SplitClone process to perform horizontal resharding. Example: SplitClone ks '0' '-80,80-'
-```
-
-### VerticalSplitClone
-
-Deprecated.
-
-```shell
-VerticalSplitClone  <from_keyspace> <to_keyspace> <tables>
-Start the VerticalSplitClone process to perform vertical resharding. Example: SplitClone from_ks to_ks 'a,/b.*/'
-```
-
 ### VDiff
 
 ```shell
 VDiff  -- [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=<source_tablet_types>] [--filtered_replication_wait_time=30s] [--max_extra_rows_to_compare=1000] <keyspace.workflow>
 Perform a diff of all tables in the workflow
 ```
-
-### MigrateServedTypes
-
-Migrates a serving type from the source shard to the shards that it replicates to. This command also rebuilds the serving graph. The &lt;keyspace/shard&gt; argument can specify any of the shards involved in the migration.
-
-#### Example
-
-<pre class="command-example">MigrateServedTypes -- [--cells=c1,c2,...] [--reverse] [--skip-refresh-state] &lt;keyspace/shard&gt; &lt;served tablet type&gt;
-Migrates a serving type from the source shard to the shards that it replicates to. This command also rebuilds the serving graph. The <keyspace/shard> argument can specify any of the shards involved in the migration.</pre>
-
-#### Flags
-
-| Name | Type | Definition |
-| :-------- | :--------- | :--------- |
-| cells | string | Specifies a comma-separated list of cells to update |
-| filtered\_replication\_wait\_time | Duration | Specifies the maximum time to wait, in seconds, for filtered replication to catch up on primary migrations |
-| reverse | Boolean | Moves the served tablet type backward instead of forward. Use in case of trouble |
-| skip-refresh-state | Boolean | Skips refreshing the state of the source tablets after the migration, meaning that the refresh will need to be done manually, replica and rdonly only) |
-| reverse\_replication | Boolean | For primary migration, enabling this flag reverses replication which allows you to rollback |
-
-
-#### Arguments
-
-* <code>&lt;keyspace/shard&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables as well as the shard associated with the command. The keyspace must be identified by a string that does not contain whitespace, while the shard is typically identified by a string in the format <code>&lt;range start&gt;-&lt;range end&gt;</code>.
-* <code>&lt;served tablet type&gt;</code> &ndash; Required. The vttablet's role. Valid values are:
-
-    * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
-    * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
-    * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
-    * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential primary. Vitess also does not worry about lag for experimental tablets when reparenting.
-    * <code>primary</code> &ndash; A primary copy of data
-    * <code>master</code> &ndash; Deprecated, same as primary
-    * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
-    * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to primary
-    * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
-    * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential primary tablet.
-
-
-#### Errors
-
-* the <code>&lt;source keyspace/shard&gt;</code> and <code>&lt;served tablet type&gt;</code> arguments are both required for the <code>&lt;MigrateServedTypes&gt;</code> command This error occurs if the command is not called with exactly 2 arguments.
-* the <code>&lt;skip-refresh-state&gt;</code> flag can only be specified for non-primary migrations
-
-
-### MigrateServedFrom
-
-Makes the &lt;destination keyspace/shard&gt; serve the given type. This command also rebuilds the serving graph.
-
-#### Example
-
-<pre class="command-example">MigrateServedFrom -- [--cells=c1,c2,...] [--reverse] &lt;destination keyspace/shard&gt; &lt;served tablet type&gt;</pre>
-
-#### Flags
-
-| Name | Type | Definition |
-| :-------- | :--------- | :--------- |
-| cells | string | Specifies a comma-separated list of cells to update |
-| filtered_replication_wait_time | Duration | Specifies the maximum time to wait, in seconds, for filtered replication to catch up on primary migrations |
-| reverse | Boolean | Moves the served tablet type backward instead of forward. Use in case of trouble |
-
-
-#### Arguments
-
-* <code>&lt;destination keyspace/shard&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables as well as the shard associated with the command. The keyspace must be identified by a string that does not contain whitespace, while the shard is typically identified by a string in the format <code>&lt;range start&gt;-&lt;range end&gt;</code>.
-* <code>&lt;served tablet type&gt;</code> &ndash; Required. The vttablet's role. Valid values are:
-
-    * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
-    * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
-    * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
-    * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential primary. Vitess also does not worry about lag for experimental tablets when reparenting.
-    * <code>primary</code> &ndash; A primary copy of data
-    * <code>master</code> &ndash; Deprecated, same as primary
-    * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
-    * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to primary
-    * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
-    * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential primary tablet.
-
-
-#### Errors
-
-* the <code>&lt;destination keyspace/shard&gt;</code> and <code>&lt;served tablet type&gt;</code> arguments are both required for the <code>&lt;MigrateServedFrom&gt;</code> command This error occurs if the command is not called with exactly 2 arguments.
 
 ### SwitchReads
 
@@ -430,23 +255,6 @@ Switch write traffic for the specified workflow.
 
 * This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/switchtraffic) in Vitess 11.0 and later
 
-### CancelResharding
-
-Permanently cancels a resharding in progress. All resharding related metadata will be deleted.
-
-#### Arguments
-
-* <code>&lt;keyspace/shard&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables as well as the shard associated with the command. The keyspace must be identified by a string that does not contain whitespace, while the shard is typically identified by a string in the format <code>&lt;range start&gt;-&lt;range end&gt;</code>.
-
-### ShowResharding
-
-Displays all metadata about a resharding in progress.
-
-#### Arguments
-
-* <code>&lt;keyspace/shard&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables as well as the shard associated with the command. The keyspace must be identified by a string that does not contain whitespace, while the shard is typically identified by a string in the format <code>&lt;range start&gt;-&lt;range end&gt;</code>.
-
-
 ### FindAllShardsInKeyspace
 
 Displays all of the shards in the specified keyspace.
@@ -463,48 +271,6 @@ Displays all of the shards in the specified keyspace.</pre>
 #### Errors
 
 * the <code>&lt;keyspace&gt;</code> argument is required for the <code>&lt;FindAllShardsInKeyspace&gt;</code> command This error occurs if the command is not called with exactly one argument.
-
-
-### WaitForDrain
-
-Deprecated.
-
-Blocks until no new queries were observed on all tablets with the given tablet type in the specified keyspace.  This can be used as sanity check to ensure that the tablets were drained after running vtctl MigrateServedTypes  and vtgate is no longer using them. If -timeout is set, it fails when the timeout is reached.
-
-#### Example
-
-<pre class="command-example">WaitForDrain -- [--timeout &lt;duration&gt;] [--retry_delay &lt;duration&gt;] [--initial_wait &lt;duration&gt;] &lt;keyspace/shard&gt; &lt;served tablet type&gt;
-Blocks until no new queries were observed on all tablets with the given tablet type in the specified keyspace. This can be used as sanity check to ensure that the tablets were drained after running vtctl MigrateServedTypes and vtgate is no longer using them. If --timeout is set, it fails when the timeout is reached."</pre>
-
-#### Flags
-
-| Name | Type | Definition |
-| :-------- | :--------- | :--------- |
-| cells | string | Specifies a comma-separated list of cells to look for tablets |
-| initial_wait | Duration | Time to wait for all tablets to check in |
-| retry_delay | Duration | Time to wait between two checks |
-| timeout | Duration | Timeout after which the command fails |
-
-
-#### Arguments
-
-* <code>&lt;keyspace/shard&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables as well as the shard associated with the command. The keyspace must be identified by a string that does not contain whitespace, while the shard is typically identified by a string in the format <code>&lt;range start&gt;-&lt;range end&gt;</code>.
-* <code>&lt;served tablet type&gt;</code> &ndash; Required. The vttablet's role. Valid values are:
-
-  * <code>backup</code> &ndash; A replicated copy of data that is offline to queries other than for backup purposes
-  * <code>batch</code> &ndash; A replicated copy of data for OLAP load patterns (typically for MapReduce jobs)
-  * <code>drained</code> &ndash; A tablet that is reserved for a background process. For example, a tablet used by a vtworker process, where the tablet is likely lagging in replication.
-  * <code>experimental</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The value indicates a special characteristic of the tablet that indicates the tablet should not be considered a potential primary. Vitess also does not worry about lag for experimental tablets when reparenting.
-  * <code>primary</code> &ndash; A primary copy of data
-  * <code>master</code> &ndash; Deprecated, same as primary
-  * <code>rdonly</code> &ndash; A replicated copy of data for OLAP load patterns
-  * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to primary
-  * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
-  * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential primary tablet.
-
-#### Errors
-
-* the <code>&lt;keyspace/shard&gt;</code> and <code>&lt;tablet type&gt;</code> arguments are both required for the <code>&lt;WaitForDrain&gt;</code> command This error occurs if the command is not called with exactly 2 arguments.
 
 
 ## See Also
