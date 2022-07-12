@@ -113,7 +113,7 @@ SetShardIsPrimaryServing <keyspace/shard> <is_serving>
 
 ### SetShardTabletControl
 
-Sets the shardTabletControls or the tabletControls records for a shard and tablet type in the topology service. Only use this for an emergency fix or after a finished vertical split or after a corrupted MoveTables action. Always specify the `denied_tables` flag for MoveTables, but never for Reshard operations.
+Sets the shardTabletControls or the tabletControls records for a shard and tablet type in the topology service. Only use this for an emergency fix or after a corrupted MoveTables action. Always specify the `denied_tables` flag for MoveTables, but never for Reshard operations.
 
 To set the `queryServiceDisabled` for the tablet, set `disable_query_service` to true; to unset the queryServiceDisabled provide `denied_tables` with an empty table set. Useful to fix vReplication operations gone wrong. These specific flags update the values for `shardTabletControls` in the topology path: `/keyspaces/<keyspace>/SrvKeyspace`.
 
@@ -121,7 +121,7 @@ To set the `queryServiceDisabled` for the tablet, set `disable_query_service` to
 It is important to note here the queryServiceDisabled can not be removed by `disable_query_service=false` or the `remove` flags. Only `denied_tables=""` will remove this setting.
 {{< /warning >}}
 
-To change the `deniedTables` list, specify the `denied_tables` parameter with the new list, this is useful to fix tables that are being blocked after a vertical split. To remove the tabletControls for selected tables, use the `remove` flag, useful after a vertical split is finished to remove serving restrictions. These specific flags update the values for `tabletControls` in the topology path: `/keyspaces/<keyspace>/shards/<shard>/Shard`.
+To change the `deniedTables` list, specify the `denied_tables` parameter with the new list, this is useful to fix tables that are being errantly blocked. To remove the tabletControls for selected tables, use the `remove` flag. These specific flags update the values for `tabletControls` in the topology path: `/keyspaces/<keyspace>/shards/<shard>/Shard`.
 
 The `SetShardTabletControl` only updates the topology records for a given shard and type, you still need to run [RefreshStateByShard](../tablets#refreshstatebyshard) to inform the vttablets of the topology change.
 
@@ -153,7 +153,7 @@ RefreshStateByShard &lt;keyspace/shard&gt;</pre>
 
 | Name | Type | Definition                                                                                                                                                              |
 | :-------- | :--------- |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| denied_tables | string | Specifies a comma-separated list of tables to deny queries on (used for vertical split). Each is either an exact match, or a regular expression of the form '/regexp/'. |
+| denied_tables | string | Specifies a comma-separated list of tables to deny queries on. Each is either an exact match, or a regular expression of the form '/regexp/'. |
 | cells | string | Specifies a comma-separated list of cells to update                                                                                                                     |
 | disable_query_service | Boolean | Disables query service on the provided nodes. This flag requires 'denied_tables' and 'remove' to be unset, otherwise it's ignored.                                      |
 | remove | Boolean | Removes cells for MoveTables.                                                                                                                                           |
@@ -215,7 +215,7 @@ Adds the SourceShard record with the provided index. This is meant as an emergen
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | key_range | string | Identifies the key range to use for the SourceShard |
-| tables | string | Specifies a comma-separated list of tables to replicate (used for vertical split). Each is either an exact match, or a regular expression of the form /regexp/ |
+| tables | string | Specifies a comma-separated list of tables to replicate. Each is either an exact match, or a regular expression of the form /regexp/ |
 
 
 #### Arguments
