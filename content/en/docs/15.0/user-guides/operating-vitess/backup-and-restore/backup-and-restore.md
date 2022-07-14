@@ -87,56 +87,49 @@ The following options can be used to configure VTTablet and Vtctld for backups:
         twice.
       </td>
     </tr>
-    <td><code>compression_level</code></td>
+    <td><code>compression-level</code></td>
       <td>Select what it the compression level (from `1..9`) to be used with the builtin compressors.
         It doesn't have any effect if you are using an external compressor. Defaults to
         <code>1</code> (fastest compression).
       </td>
     </tr>
     <tr>
-      <td><code>builtin_compressor</code></td>
+      <td><code>builtin-compressor</code></td>
       <td>
         This sets the compression engine used to compress backups. Supported compressors are:
         <code>pgzip</code>, <code>pargzip</code>, <code>lz4</code> and <code>zstd</code>.
         Defaults to <code>pgzip</code>. <br/>
-        Not used if <code>--external_compressor</code> is present.
+        Not used if <code>--external-compressor</code> is present.
       </td>
     </tr>
     <tr>
-      <td><code>builtin_decompressor</code></td>
-      <td>
-      Set which decompressor engine to use for backups. Defaults to <code>auto</code>, which causes
-      it to be infered from the MANIFEST (for the <code>builtinbackupengine</code>) or from the
-      file extension (for the <code>xtrabackupengine</code>). Not used if <code>--external_decompressor</code> is present.
-      </td>
-    </tr>
-    <tr>
-      <td><code>external_compressor</code></td>
+      <td><code>external-compressor</code></td>
       <td>
       Instead of compressing inside the <code>vttablet</code> process, use the external command to
-      compress the input; this overrides the <code>--builtin_compressor</code>. The compressed stream
+      compress the input; this overrides the <code>--builtin-compressor</code>. The compressed stream
       needs to be written to <code>STDOUT</code>.</br></br>
       An example command to compress with an external compressor using the fastest mode and lowest CPU priority: </br>
-      <code>--external_compressor "nice -n 19 pigz -1 -c"</code>
+      <code>--external-compressor "nice -n 19 pigz -1 -c"</code>
       </td>
     </tr>
     <tr>
-      <td><code>external_compressor_extension</code></td>
+      <td><code>external-compressor-extension</code></td>
       <td>
-      If using the <code>--external_compressor_extension</code>, this will use the correct extension when
-      writing the file, which can also be used by a builtin decompressor if supported (e.g. you can use an
+      Using the <code>--external-compressor-extension</code> flag will set the correct extension when
+      writing the file, which can also be used by a builtin decompressor if supported (e.g. you use an
       external compressor like <code>pigz</code> but choose to decompress with <code>pargzip</code>
       inside the vttablet). </br></br>
-      Example: <code>--external_compressor_extension ".gz"</code>
+      Example: <code>--external-compressor-extension ".gz"</code>
       </td>
     </tr>
     <tr>
-      <td><code>external_decompressor</code></td>
+      <td><code>external-decompressor</code></td>
       <td>
-      Use an external decompressor to process the backups. This will override <code>--builtin_decompressor</code>.
+      Use an external decompressor to process the backups. This overrides the builtin
+      decompressor which would be automatically select the best engine based on the MANIFEST information.
       The decompressed stream needs to be written to <code>STDOUT</code>.</br></br>
       An example of how to use an external decompressor:</br>
-      <code>--external_decompressor "pigz -d -c"</code>
+      <code>--external-decompressor "pigz -d -c"</code>
       </td>
     </tr>
     <tr>
@@ -248,4 +241,33 @@ If the network link is fast enough, the concurrency matches the CPU usage of the
 
 ### Backup Compression
 
-WIP
+By default, `vttablet` backups are compressed using `pargzip` that generates `gzip` compatible files. 
+You can select other builtin engines that are supported, or choose to use an external process to do the
+compression/decompression for you. There are some advantages of doing this, like being able to set the
+scheduling priority or even to choose dedicated CPU cores to do the compression, things that are not possible when runningg inside the `vttablet` process.
+
+The built-in supported engines are:
+
+__Compression:__
+- `pargzip`
+- `pgzip`
+- `lz4`
+- `zstd`
+
+__Decompression:__
+- `pgzip`
+- `lz4`
+- `zstd`
+
+To change which compression engine to use, you can use the `--builtin-compressor` flag. The compression
+engine is also saved to the backup manifest, which is read during the decompression process to select
+the right engine to decompress.
+
+If you want to use an external compressor/decompressor, you can you can do this by setting:
+- `--external-compressor` with the command that will actually compress the stream;
+- `--external-compressor-extension` with the extension to be used. this will be saved in the backup MANIFEST;
+- `--external-decompressor` with the command used to decompress the files;
+
+The `vttablet` process will launch the external process and pass the input stream via STDIN and expects
+the process will write the compressed/decompressed stream to STDOUT.
+
