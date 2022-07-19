@@ -108,7 +108,7 @@ feature more consistent, very resilient, fast, and transparent to sharding.
 
 If you tell Vitess to enforce semi-sync
 ([semisynchronous replication](https://dev.mysql.com/doc/refman/5.7/en/replication-semisync.html))
-by passing the `-enable_semi_sync` flag to vttablets,
+by setting the `semi_sync` or `cross_cell` [durability policy](../../../content/docs/15.0/user-guides/configuration-basic/durability_policy),
 then the following will happen:
 
 *   The master will only accept writes if it has at least one slave connected
