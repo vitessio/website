@@ -5,7 +5,7 @@ aliases: ['/docs/reference/mysql-server-protocol/', '/docs/reference/mysql-compa
 ---
 
 Vitess exports MySQL and gRPC server protocol. This allows Vitess to be a drop-in replacement for MySQL Server without any changes to application code.
-As Vitess supports distributed MySQL, it is important to understand the differences between Vitess and MySQL on compatibility.
+As Vitess is a distributed system, it is important to understand the differences between Vitess and MySQL on compatibility.
 
 ## Transaction Model
 
