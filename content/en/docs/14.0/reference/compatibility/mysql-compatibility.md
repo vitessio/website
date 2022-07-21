@@ -132,7 +132,7 @@ There are more improvements planned which can be tracked through [this issue](ht
 
 ## Auto Increment
 
-Tables in sharded keyspaces are discouraged to use `auto_increment` column attribute, as the values generated would be local to the shard.
+Tables in sharded keyspaces should not be defined using the `auto_increment` column attribute, as the values generated will not be unique across shards.
 Instead, [Vitess Sequences](../../features/vitess-sequences) are provided as an alternative, which have very close semantics to `auto_increment`.
 
 ## Character Set and Collation
