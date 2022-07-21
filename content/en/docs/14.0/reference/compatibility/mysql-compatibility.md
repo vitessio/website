@@ -117,7 +117,7 @@ type DBDDLPlugin interface {
 }
 ```
 
-It must then register itself calling `DBDDLRegister`.
+It must then register itself by calling `DBDDLRegister`.
 You can take a look at the `dbddl_plugin.go` in the engine package for an example of how it's done.
 Finally, you need to add a command line flag to vtgate to have it use the new plugin: `--dbddl_plugin=myPluginName`
 
