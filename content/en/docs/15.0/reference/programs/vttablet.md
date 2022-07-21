@@ -127,7 +127,7 @@ The following global options apply to `vttablet`:
 | --enable_hot_row_protection |  | If true, incoming transactions for the same row (range) will be queued and cannot consume all txpool slots. |
 | --enable_hot_row_protection_dry_run |  | If true, hot row protection is not enforced but logs if transactions would have been queued. |
 | --enable_replication_reporter |  | Register the health check module that monitors MySQL replication |
-| --enable_semi_sync |  | DEPRECATED - Set the correct durability policy in the keyspace information instead |
+| --enable_semi_sync |  | DEPRECATED - Set the correct durability policy on the keyspace instead. |
 | --enable_transaction_limit |  | If true, limit on number of transactions open at the same time will be enforced for all users. User trying to open a new transaction after exhausting their limit will receive an error immediately, regardless of whether there are available slots or not. |
 | --enable_transaction_limit_dry_run |  | If true, limit on number of transactions open at the same time will be tracked for all users, but not enforced. |
 | --enforce-tableacl-config |  | if this flag is true, vttablet will fail to start if a valid tableacl config does not exist |
