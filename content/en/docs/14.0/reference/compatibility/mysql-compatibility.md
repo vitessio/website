@@ -125,7 +125,7 @@ Finally, you need to add a command line flag to vtgate to have it use the new pl
 ## Cross-shard Transactions
 
 Vitess supports multiple transaction modes. More details [here](../../../user-guides/configuration-advanced/shard-isolation-atomicity).
-The default mode is MULTI i.e. cross-shard transactions in best-effort way. A transaction that spans single shard will be fully ACID complaint.
+The default mode is MULTI i.e. multi-shard transactions as best-effort. A transaction that affects only one shard will be fully ACID complaint.
 When a transactions affects multiple shards, any failure on one or more shards will rollback the effect of that query.
 Committing the multi-shard transaction issues commits to the participating shards in a particular order. This allows the application or user to undo the effects of partial commits in case of failures.
 There are more improvements planned which can be tracked through [this issue](https://github.com/vitessio/vitess/issues/10692)
