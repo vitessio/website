@@ -137,7 +137,7 @@ It is recommended to use [Vitess Sequences](../../features/vitess-sequences) ins
 
 ## Character Set and Collation
 
-Vitess supports ~99% MySQL collations. More details can be found [here](../../../user-guides/configuration-basic/collations).
+Vitess supports ~99% of MySQL collations. More details can be found [here](../../../user-guides/configuration-basic/collations).
 
 ## Data Types
 
