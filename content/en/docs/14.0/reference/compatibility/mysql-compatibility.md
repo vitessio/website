@@ -9,7 +9,7 @@ As Vitess is a distributed system, it is important to understand the differences
 
 ## Transaction Model
 
-Vitess at the shard level provides MySQL default i.e. `REPEATABLE READ`. At cross-shard level the semantics changes to `READ COMMITTED`.
+Vitess provides MySQL default semantics i.e. `REPEATABLE READ` for single-shard transactions. For multi-shard transactions the semantics change to `READ COMMITTED`.
 
 ## SQL Support
 
