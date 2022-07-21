@@ -14,7 +14,7 @@ Vitess provides MySQL default semantics i.e. `REPEATABLE READ` for single-shard 
 ## SQL Support
 
 The following describes some differences in query handling between Vitess and MySQL.
-Vitess maintains a list of unsupported queries which it keeps moving forward to add support for it. Check the updated [test-suite cases](https://github.com/vitessio/vitess/blob/main/go/vt/vtgate/planbuilder/testdata/unsupported_cases.txt).
+The Vitess team maintains a list of [unsupported queries](https://github.com/vitessio/vitess/blob/main/go/vt/vtgate/planbuilder/testdata/unsupported_cases.txt) which is kept up-to-date as we add support for new constructs. 
 
 This is the area where Vitess team actively works on. Any unsupported query can be raised as an issue in [Vitess Project](https://github.com/vitessio/vitess/issues).
 
