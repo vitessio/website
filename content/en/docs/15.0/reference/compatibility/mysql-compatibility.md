@@ -4,29 +4,28 @@ weight: 1
 aliases: ['/docs/reference/mysql-server-protocol/', '/docs/reference/mysql-compatibility/']
 ---
 
-Vitess exports MySQL and gRPC server protocol. This allows Vitess to be drop in replacement for MySQL Server without any changes to application code.
-As Vitess supports distributed MySQL, it is important to understand the differences between Vitess and MySQL on compatibility.
+Vitess supports MySQL and gRPC server protocol. This allows Vitess to be a drop-in replacement for MySQL Server without any changes to application code.
+As Vitess is a distributed system, it is important to understand the differences between Vitess and MySQL on compatibility.
 
 ## Transaction Model
 
-Vitess at the shard level provides MySQL default i.e. `REPEATABLE READ`. At cross-shard level the semantics changes to `READ COMMITTED`.
+Vitess provides MySQL default semantics i.e. `REPEATABLE READ` for single-shard transactions. For multi-shard transactions the semantics change to `READ COMMITTED`.
 
 ## SQL Support
 
-The following describes some differences in query handling between Vitess and MySQL. 
-Vitess maintains a list of unsupported queries which it keeps moving forward to add support for it. Check the updated [test-suite cases](https://github.com/vitessio/vitess/blob/main/go/vt/vtgate/planbuilder/testdata/unsupported_cases.txt).
+The following describes some differences in query handling between Vitess and MySQL.
+The Vitess team maintains a list of [unsupported queries](https://github.com/vitessio/vitess/blob/main/go/vt/vtgate/planbuilder/testdata/unsupported_cases.txt) which is kept up-to-date as we add support for new constructs. 
 
-This is the area where Vitess team actively works on. Any unsupported query can be raised as an issue in [Vitess Project](https://github.com/vitessio/vitess/issues).
+This is an area of active development in Vitess. Any unsupported query can be raised as an issue in the [Vitess GitHub Project](https://github.com/vitessio/vitess/issues).
 
 ### DDL
 
-Vitess supports all DDL queries. It also offers both [managed, online schema changes](../../../user-guides/schema-changes/managed-online-schema-changes) and non-managed DDL.
+Vitess supports all DDL queries. It offers both [managed, online schema changes](../../../user-guides/schema-changes/managed-online-schema-changes) and non-managed DDL.
 It is recommended to use Vitess's managed schema changes, which offer non-blocking, trackable, failure agnostic, revertible, concurrent changes, and more. Read more about [making schema changes](../../../user-guides/schema-changes).
 
 ### Join, Subqueries, Aggregation, Grouping, Having, Ordering, Limit Queries
 
-Vitess support good set of these queries. To get the full set of these supported queries it is advisable to enable schema tracking in Vitess.
-v14.0 onwards this is enabled by default. More details in [schema tracking section](../../features/schema-tracking).
+Vitess supports most of these types of queries. It is recommended to leave [schema tracking]((../../features/schema-tracking) enabled in order to fully utilize the available support.
 
 ### Stored Procedures
 
@@ -39,9 +38,9 @@ There are further limitations to calling stored procedures using CALL:
 
 * The stored procedure CALL cannot return any results
 * Only IN parameters are supported
-* If you use transactions, the transaction state cannot be changed by the stored procedure. 
+* If you use transactions, the transaction state cannot be changed by the stored procedure.
 
-	For example, if there is a transaction open at the beginning of the CALL, a transaction must still be open after the procedure finishes. Likewise, if no transaction is open at the beginning of the CALL, the stored procedure must not leave an open transaction after execution finishes.
+  For example, if there is a transaction open at the beginning of the CALL, a transaction must still be open after the procedure finishes. Likewise, if no transaction is open at the beginning of the CALL, the stored procedure must not leave an open transaction after execution finishes.
 
 CREATE PROCEDURE is not supported. You have to create the procedure directly on the underlying MySQL servers and not through Vitess.
 
@@ -106,7 +105,7 @@ A similar effect can be achieved by using a database name like `mykeyspace:-80@r
 
 Vitess does not support CREATE and DROP DATABASE queries out of the box.
 
-But, to make it possible to provision databases, a plugin mechanism exists.
+However, a plugin mechanism is available that can be used to provision databases.
 The plugin has to take care of creating and dropping the database, and update the topology & VSchema so that Vitess can start receiving queries for the new keyspace.
 
 The plugin should implement the `DBDDLPlugin` interface, and be saved into a new file in the `go/vt/vtgate/engine/` directory.
@@ -118,26 +117,26 @@ type DBDDLPlugin interface {
 }
 ```
 
-It must then register itself calling `DBDDLRegister`.
+It must then register itself by calling `DBDDLRegister`.
 You can take a look at the `dbddl_plugin.go` in the engine package for an example of how it's done.
 Finally, you need to add a command line flag to vtgate to have it use the new plugin: `--dbddl_plugin=myPluginName`
 
 ## Cross-shard Transactions
 
-Vitess supports multiple transaction modes. More details [here](../../../user-guides/configuration-advanced/shard-isolation-atomicity).
-The default mode is MULTI i.e. cross-shard transactions in best-effort way. A transaction that spans single shard will be fully ACID complaint.
-When it goes multi-shard then if any query fails on one/more shard then it rollbacks the effect of that query.
-On commit, it follows a commit order to provide the application/user to undo the effect of partial commit failure if any.
+Vitess supports multiple [transaction modes](../../../user-guides/configuration-advanced/shard-isolation-atomicity).
+The default mode is MULTI i.e. multi-shard transactions as best-effort. A transaction that affects only one shard will be fully ACID complaint.
+When a transactions affects multiple shards, any failure on one or more shards will rollback the effect of that query.
+Committing the multi-shard transaction issues commits to the participating shards in a particular order. This allows the application or user to undo the effects of partial commits in case of failures.
 There are more improvements planned which can be tracked through [this issue](https://github.com/vitessio/vitess/issues/10692)
 
 ## Auto Increment
 
-Tables in sharded keyspaces are discouraged to use `auto_increment` column attribute, as the values generated would be local to the shard.
-Instead, [Vitess Sequences](../../features/vitess-sequences) are provided as an alternative, which have very close semantics to `auto_increment`.
+Tables in sharded keyspaces should not be defined using the `auto_increment` column attribute, as the values generated will not be unique across shards.
+It is recommended to use [Vitess Sequences](../../features/vitess-sequences) instead. The semantics are very similar to `auto_increment` and the differences are documented.
 
 ## Character Set and Collation
 
-Vitess supports ~99% MySQL collations. More details can be found [here](../../../user-guides/configuration-basic/collations).
+Vitess supports ~99% of MySQL collations. More details can be found [here](../../../user-guides/configuration-basic/collations).
 
 ## Data Types
 
