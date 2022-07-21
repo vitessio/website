@@ -20,7 +20,7 @@ This is an area of active development in Vitess. Any unsupported query can be ra
 
 ### DDL
 
-Vitess supports all DDL queries. It also offers both [managed, online schema changes](../../../user-guides/schema-changes/managed-online-schema-changes) and non-managed DDL.
+Vitess supports all DDL queries. It offers both [managed, online schema changes](../../../user-guides/schema-changes/managed-online-schema-changes) and non-managed DDL.
 It is recommended to use Vitess's managed schema changes, which offer non-blocking, trackable, failure agnostic, revertible, concurrent changes, and more. Read more about [making schema changes](../../../user-guides/schema-changes).
 
 ### Join, Subqueries, Aggregation, Grouping, Having, Ordering, Limit Queries
