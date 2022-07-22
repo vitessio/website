@@ -9,7 +9,7 @@ This is the new _experimental_ version of VDiff which runs on `vttablets` as com
 {{< /warning >}}
 
 {{< info >}}
-Even before it's marked as production-ready (feature complete and tested widely in 1+ releases), it should be safe to use and is likely to provide much better results for very large tables. It also offers the ability to resume a VDiff that may have encountered an error, which is especially useful when working with very large tables.
+Even before it's marked as production-ready (feature complete and tested widely in 1+ releases), it should be safe to use and is likely to provide much better results for very large tables. It offers the ability to automatically retry a VDiff that encountered an ephemeral error, which is especially useful when working with very large tables. It offers the ability to resume a previously completed VDiff where it left off, allowing you to perform ongoing or differential VDiffs. Lastly, it offers ongoing progress reporting to help plan your next steps.
 {{< /info >}}
 
 For additional details, please see the [RFC](https://github.com/vitessio/vitess/issues/10134) and the [README](https://github.com/vitessio/vitess/tree/main/go/vt/vttablet/tabletmanager/vdiff/README.md).
@@ -21,14 +21,11 @@ is the <keyspace.workflow> followed by <action>. The following actions are suppo
 
 #### Start a new VDiff
 
-These take the same parameters as VDiff1 and schedule VDiff to run on the primary tablet of each target shard to verify
-the subset of data that will live on the given shard. Please note that if you do not specify a sub-command or action
-then `create` is assumed (this eases the transition from VDiff1 to VDiff2). If you do not pass a specific UUID then one
-will be generated.
+These take the same parameters as VDiff1 and schedule VDiff to run on the primary tablet of each target shard to verify the subset of data that will live on the given shard. Please note that if you do not specify a sub-command or action then `create` is assumed (this eases the transition from VDiff1 to VDiff2). If you do not pass a specific UUID then one will be generated.
 
 ```
 VDiff -- --v2 [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
-       [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--verbose] [--max_extra_rows_to_compare=1000]
+       [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--auto-retry] [--verbose] [--max_extra_rows_to_compare=1000]
        [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow>  create [<UUID>]
 ```
 
@@ -42,14 +39,11 @@ VDiff bf9dfc5f-e5e6-11ec-823d-0aa62e50dd24 scheduled on target shards, use show 
 
 #### Resume a previous VDiff
 
-Allows you to resume an existing VDiff workflow, picking up where it left off and comparing the records where the Primary Key column(s) are greater than the last record processed — with the progress and other status information saved when the run ends. This allows you to:
-  1. Resume a VDiff that may have encountered an ephemeral error
-  2. Do approximate rolling or differential VDiffs (e.g. done after MoveTables finishes the initial copy phase and then again just before SwitchTraffic)
+The `resume` action allows you to resume a previously completed VDiff, picking up where it left off and comparing the records where the Primary Key column(s) are greater than the last record processed — with the progress and other status information saved when the run ends. This allows you to do approximate rolling or differential VDiffs (e.g. done after MoveTables finishes the initial copy phase and then again just before SwitchTraffic).
 
 ```
 VDiff -- --v2 [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
-       [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--max_extra_rows_to_compare=1000]
-       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow> resume <UUID>
+       [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--max_extra_rows_to_compare=1000] [--auto-retry] [--verbose] [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow> resume <UUID>
 ```
 
 Example:
@@ -105,7 +99,7 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.comm
 VDiff  -- --v2  <keyspace.workflow> delete [<UUID> | all]
 ```
 
-You can either delete a specific UUID or use the `all` shorthand to delete all VDiffs created for the specified keyspace and workflow. Example:
+You can either `delete` a specific UUID or use the `all` shorthand to delete all VDiffs created for the specified keyspace and workflow. Example:
 
 ```
 $ vtctlclient --server=localhost:15999 VDiff -- --v2 customer.commerce2customer delete all
@@ -119,7 +113,7 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.comm
 ```
 
 {{< info >}}
-Deletes are idempotent, so attempting to delete VDiff data that does not exist is a no-op.
+Deletes are idempotent, so attempting to `delete` VDiff data that does not exist is a no-op.
 
 All VDiff data associated with a VReplication workflow is deleted when the workflow is deleted.
 {{< /info >}}
@@ -195,8 +189,17 @@ A comma separated list of tables to run vdiff on.
 Only other format supported is JSON
 </div>
 
+#### --auto-retry
+**optional**
+**default** true
+
+<div class="cmd">
+Automatically retry vdiffs that end with an error
+</div>
+
 #### --verbose
 **optional**
+**default** false
 
 <div class="cmd">
 Show verbose vdiff output in summaries
