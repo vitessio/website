@@ -26,7 +26,8 @@ These take the same parameters as VDiff1 and schedule VDiff to run on the primar
 ```
 VDiff -- --v2 [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
        [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--auto-retry] [--verbose] [--max_extra_rows_to_compare=1000]
-       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] [--wait] <keyspace.workflow>  create [<UUID>]
+       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] [--wait] [--wait-update-interval=1m]
+       <keyspace.workflow> create [<UUID>]
 ```
 
 Each scheduled VDiff has an associated UUID which is returned by the `create` action. You can use it
@@ -44,7 +45,8 @@ The `resume` action allows you to resume a previously completed VDiff, picking u
 ```
 VDiff -- --v2 [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
        [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--auto-retry] [--verbose] [--max_extra_rows_to_compare=1000]
-       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] [--wait] <keyspace.workflow> resume <UUID>
+       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] [--wait] [--wait-update-interval=1m]
+       <keyspace.workflow> resume <UUID>
 ```
 
 Example:
