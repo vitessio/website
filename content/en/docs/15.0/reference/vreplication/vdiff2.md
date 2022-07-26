@@ -26,7 +26,8 @@ These take the same parameters as VDiff1 and schedule VDiff to run on the primar
 ```
 VDiff -- --v2 [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
        [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--auto-retry] [--verbose] [--max_extra_rows_to_compare=1000]
-       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow>  create [<UUID>]
+       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] [--wait] [--wait-update-interval=1m]
+       <keyspace.workflow> create [<UUID>]
 ```
 
 Each scheduled VDiff has an associated UUID which is returned by the `create` action. You can use it
@@ -43,7 +44,9 @@ The `resume` action allows you to resume a previously completed VDiff, picking u
 
 ```
 VDiff -- --v2 [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
-       [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--max_extra_rows_to_compare=1000] [--auto-retry] [--verbose] [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow> resume <UUID>
+       [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--auto-retry] [--verbose] [--max_extra_rows_to_compare=1000]
+       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] [--wait] [--wait-update-interval=1m]
+       <keyspace.workflow> resume <UUID>
 ```
 
 Example:
@@ -60,7 +63,7 @@ We cannot guarantee accurate results for `resume` when different collations are 
 #### Show progress/status of a VDiff
 
 ```
-VDiff  -- --v2  <keyspace.workflow> show [<UUID> | last | all]
+VDiff  -- --v2  <keyspace.workflow> show {<UUID> | last | all}
 ```
 
 You can either `show` a specific UUID or use the `last` convenience shorthand to look at the most recently created VDiff. Example:
@@ -93,10 +96,31 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.comm
 
 `show all` lists all vdiffs created for the specified keyspace and workflow.
 
+#### Stopping a VDiff
+
+```
+VDiff  -- --v2  <keyspace.workflow> stop <UUID>
+```
+
+The `stop` action allows you to stop a running VDiff for any reason — for example, the load on the system(s) may be too high at the moment and you want to postpone the work until off hours. You can then later use the `resume` action to start the VDiff again from where it left off. Example:
+
+```
+$ vtctlclient VDiff -- --v2  --format=json customer.commerce2customer stop ad9bd40e-0c92-11ed-b568-920702940ee0
+{
+	"UUID": "ad9bd40e-0c92-11ed-b568-920702940ee0",
+	"Action": "stop",
+	"Status": "completed"
+}
+```
+
+{{< info >}}
+Attempting to `stop` a VDiff that is already completed is a no-op.
+{{< /info >}}
+
 #### Delete VDiff results
 
 ```
-VDiff  -- --v2  <keyspace.workflow> delete [<UUID> | all]
+VDiff  -- --v2  <keyspace.workflow> delete {<UUID> | all}
 ```
 
 You can either `delete` a specific UUID or use the `all` shorthand to delete all VDiffs created for the specified keyspace and workflow. Example:
@@ -160,7 +184,7 @@ One or more from PRIMARY, REPLICA, RDONLY.<br><br>
 
 <div class="cmd">
 VDiff finds the current position of the source primary and then waits for the target replication to reach
-that position for `--filtered_replication_wait_time`. If the target is much behind the source or if there is
+that position for --filtered_replication_wait_time. If the target is much behind the source or if there is
 a high write qps on the source then this time will need to be increased.
 </div>
 
@@ -190,7 +214,7 @@ Only other format supported is JSON
 </div>
 
 #### --auto-retry
-**optional**
+**optional**\
 **default** true
 
 <div class="cmd">
@@ -199,10 +223,24 @@ Automatically retry vdiffs that end with an error
 
 #### --verbose
 **optional**
-**default** false
 
 <div class="cmd">
 Show verbose vdiff output in summaries
+</div>
+
+#### --wait
+**optional**
+
+<div class="cmd">
+When creating or resuming a vdiff, wait for the vdiff to finish before exiting. This will print the current status of the vdiff every --wait-update-interval.
+</div>
+
+#### --wait-update-interval
+**optional**\
+**default** 1m (1 minute)
+
+<div class="cmd">
+When waiting for a vdiff to finish, check and display the current status this often.
 </div>
 
 #### --max_extra_rows_to_compare
