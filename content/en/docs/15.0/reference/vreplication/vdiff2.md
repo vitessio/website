@@ -113,6 +113,10 @@ $ vtctlclient VDiff -- --v2  --format=json customer.commerce2customer stop ad9bd
 }
 ```
 
+{{< info >}}
+Attempting to `stop` a VDiff that is already completed is a no-op.
+{{< /info >}}
+
 #### Delete VDiff results
 
 ```
