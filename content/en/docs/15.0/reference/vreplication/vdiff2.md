@@ -96,6 +96,23 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.comm
 
 `show all` lists all vdiffs created for the specified keyspace and workflow.
 
+#### Stopping a VDiff
+
+```
+VDiff  -- --v2  <keyspace.workflow> stop <UUID>
+```
+
+The `stop` action allows you to stop a running VDiff for any reason — for example, the load on the system(s) may be too high at the moment and you want to postpone the work until off hours. You can then later use the `resume` action to start the VDiff again from where it left off. Example:
+
+```
+$ vtctlclient VDiff -- --v2  --format=json customer.commerce2customer stop ad9bd40e-0c92-11ed-b568-920702940ee0
+{
+	"UUID": "ad9bd40e-0c92-11ed-b568-920702940ee0",
+	"Action": "stop",
+	"Status": "completed"
+}
+```
+
 #### Delete VDiff results
 
 ```
