@@ -58,3 +58,5 @@ The Vitess website uses [Bulma](https://bulma.io/), a CSS (and SASS) framework t
 1. (optional) Remove any version of the documenation that is no longer supported
   `git rm -rf content/en/docs/v0.0`
   `git rm -rf content/zh/docs/v0.0`
+
+Test
