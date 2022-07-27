@@ -342,6 +342,7 @@ The following global options apply to `vttablet`:
 | -v | value | log level for V logs |
 | -version |  | print binary version |
 | -vmodule | value | comma-separated list of pattern=N settings for file-filtered logging |
+| -vreplication_copy_phase_duration | duration | Duration for each copy phase loop (before running the next catchup: default 1h) (default 1h0m0s) |
 | -vreplication_healthcheck_retry_delay | duration | healthcheck retry delay (default 5s) |
 | -vreplication_healthcheck_timeout | duration | healthcheck retry delay (default 1m0s) |
 | -vreplication_healthcheck_topology_refresh | duration | refresh interval for re-reading the topology (default 30s) |

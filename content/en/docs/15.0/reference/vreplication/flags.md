@@ -22,6 +22,20 @@ The relay log buffers events on the target as they are received from the source.
 **relay_log_max_size** defines the maximum buffer size (in bytes). As events arrive they are stored in the relay log. The apply thread consumes these events as fast as it can. When the relay log fills up we no longer pull
 events from the source until some events are consumed. If single rows are larger than the specified buffer size, a single row is buffered at a time.
 
+#### vreplication_copy_phase_duration
+
+**Type** duration\
+**Default** 1h (1 hour)\
+**Applicable on** target
+
+When copying the contents of a table we go through 1+ cycles of copying rows, catching up on changes made (binlog events) while we copied rows, and applying those changes to the rows that have been copied (copy,catchup,fastforward). This flag determines at most how long we copy rows before moving through the other stages in the cycle. These cycles will continue until all of the rows have been copied.
+
+* You can see metrics related to the copy phase in the following values at the `/debug/vars` vttablet endpoint: `VReplicationPhaseTimings`, `VReplicationPhaseTimingsCounts`, `VReplicationPhaseTimingsTotal`, `VReplicationCopyLoopCount`, `VReplicationCopyLoopCountTotal`, `VReplicationCopyRowCount`, `VReplicationCopyRowCountTotal`, `VStreamerPhaseTiming`, and `VStreamerErrors`
+
+{{< info >}}
+You should not generally need to change this. But, you may want to increase this duration if the source has little to no write traffic occurring during the copy phase (to speed things along) and you may want to decrease it if the write rate is very high on the source during the copy phase (to ensure we can stay caught up with changes that are happening).
+{{< /info >}}
+
 #### vreplication_copy_phase_max_innodb_history_list_length
 
 **Type** integer\

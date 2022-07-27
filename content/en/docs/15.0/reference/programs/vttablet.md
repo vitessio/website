@@ -341,6 +341,7 @@ The following global options apply to `vttablet`:
 | -v | value | log level for V logs |
 | --version |  | print binary version |
 | --vmodule | value | comma-separated list of pattern=N settings for file-filtered logging |
+| --vreplication_copy_phase_duration | duration | Duration for each copy phase loop (before running the next catchup: default 1h) (default 1h0m0s) |
 | --vreplication_copy_phase_max_innodb_history_list_length | int | The maximum InnoDB transaction history that can exist on a vstreamer (source) before starting another round of copying rows. This helps to limit the impact on the source tablet. (default 1000000) |
 | --vreplication_copy_phase_max_mysql_replication_lag | int | The maximum MySQL replication lag (in seconds) that can exist on a vstreamer (source) before starting another round of copying rows. This helps to limit the impact on the source tablet. (default 43200) |
 | --vreplication_healthcheck_retry_delay | duration | healthcheck retry delay (default 5s) |
