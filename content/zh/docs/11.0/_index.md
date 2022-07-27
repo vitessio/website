@@ -1,5 +1,5 @@
 ---
-title: v11.0
+title: v11.0 (存档版本)
 description: 因为这些文档不维护，所以它们是旧的。你想了解的有关世界上最具扩展性的开源MySQL平台的一切，都在这里
 cascade:
   version: v11.0
