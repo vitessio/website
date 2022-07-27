@@ -1,11 +1,11 @@
 {{ $year       := now.Year }}
 {{ $footerLogo := "img/logos/vitess-horizontal.png" | relURL }}
 {{ $social     := site.Params.social }}
-<footer class="footer has-background-black">
+<footer class="footer has-background">
   <div class="container">
     <img class="is-footer-logo" src="{{ $footerLogo }}">
 
-    <hr class="has-background-orange">
+    <hr class="has-background-black">
 
     <nav class="level">
       <div class="level-left">
@@ -31,16 +31,16 @@
 
     <br /><br />
 
-    <div class="has-text-centered has-text-grey-light">
+    <div class="has-text-centered has-text-white">
       <p class="is-size-5">
         &copy; Vitess Authors {{ $year }} | Documentation Distributed under <a href="https://creativecommons.org/licenses/by/4.0" target="_blank">CC-BY-4.0</a>
       </p>
 
       <br />
-  
+
       <p>
         &copy; {{ $year }} The Linux Foundation. All rights reserved. The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation, please see our <a href="https://www.linuxfoundation.org/trademark-usage/" target="_blank">Trademark Usage</a> page.
-      </p> 
+      </p>
     </div>
   </div>
 </footer>

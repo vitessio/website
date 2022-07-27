@@ -31,6 +31,7 @@ $navbar-dropdown-arrow: $primary !important
 $navbar-dropdown-radius: none
 $input-radius: 0
 $input-shadow: none
+$input-placeholder-color: black
 $footer-background-color: $white
 
 @import "bulma/sass/utilities/derived-variables"
@@ -198,13 +199,13 @@ figure
 
 .header-link
   color: $dark
-  opacity: 0.3 
+  opacity: 0.3
 
   &:hover
     opacity: 1
 
 // When jumping to anchor links, we need to account for the height of the sticky navbar.
-// Otherwise, the anchored header will be occluded by the navbar. 
+// Otherwise, the anchored header will be occluded by the navbar.
 // See https://css-tricks.com/hash-tag-links-padding/
 $navbar-anchor-offset: calc(#{$navbar-height} + 16px)
 
@@ -220,5 +221,5 @@ h1, h2, h3, h4, h5, h6
 details summary
   cursor: pointer
 
-.mermaid 
+.mermaid
   margin: 2rem 0 4rem 0
