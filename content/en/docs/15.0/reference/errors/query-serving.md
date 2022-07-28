@@ -22,5 +22,4 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT06001 | aa | Can't create database '%s'; database exists | 1007 | HY000 |
 | VT12001 | aa | unsupported: %s |  |  |
 | VT13001 | aa | [BUG] %s |  |  |
-| VT13002 | aa | [BUG] %s |  |  |
 <!-- end -->
