@@ -92,6 +92,22 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.comm
 	"StartedAt": "2022-06-26 22:44:29",
 	"CompletedAt": "2022-06-26 22:44:31"
 }
+
+$ vtctlclient VDiff -- --v2 --format=json customer.p1c2 show daf1f03a-03ed-11ed-9ab8-920702940ee0
+{
+	"Workflow": "p1c2",
+	"Keyspace": "customer",
+	"State": "started",
+	"UUID": "daf1f03a-03ed-11ed-9ab8-920702940ee0",
+	"RowsCompared": 51,
+	"HasMismatch": false,
+	"Shards": "-80,80-",
+	"StartedAt": "2022-07-15 03:26:03",
+	"Progress": {
+		"Percentage": 48.57,
+		"ETA": "2022-07-15 03:26:10"
+	}
+}
 ```
 
 `show all` lists all vdiffs created for the specified keyspace and workflow.
