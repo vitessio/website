@@ -543,7 +543,7 @@ TABLET_ALIAS="${CELL_NAME}-${TABLET_UID}"
 KEYSPACE="CustomerInfo"
 
 vttablet ${GLBOAL_TOPOLOGY} --tablet-path=${TABLET_ALIAS} --tablet_dir=${VTDATAROOT}/${TABLET_ALIAS} \
-  --mycnf-file=${VTDATAROOT}/${TABLET_ALIAS}/my.cnf --init_keyspace=${KEYSPACE} --enable_semi_sync=true \
+  --mycnf-file=${VTDATAROOT}/${TABLET_ALIAS}/my.cnf --init_keyspace=${KEYSPACE} \
   --init_shard=0 --init_tablet_type=replica --port=15100 --grpc_port=16100 \
   --service_map='grpc-queryservice,grpc-tabletmanager,grpc-updatestream' \
   ${OTHER_VTTABLET_FLAGS}

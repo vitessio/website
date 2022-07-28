@@ -132,7 +132,6 @@ VTTablet should be brought up on the same machine as the MySQL instance. It need
 
 There are some additional parameters that we recommend setting:
 
-* `enable_semi_sync`: The recommended value for this is TRUE. You will need to bring up at least three vttablets for this setting to work correctly. This flag will be deprecated once `vtorc` takes over the management of MySQL instances.
 * `enable_replication_reporter`: Enabling this flag will make vttablet send its replication lag information to the vtgates, and they will use this information to avoid sending queries to replicas that are lagged beyond a threshold.
 * `unhealthy_threshold`: If `enable_replication_reporter` is enabled, and the replication lag exceeds this threshold, then vttablet stops serving queries. This value is meant to match the vtgate `discovery_high_replication_lag_minimum_serving` flag.
 * `degraded_threshold`: This flag does not change vttablet’s behavior. This threshold is used to report a warning in the status page if the replication lag exceeds this threshold. This value is meant to match the vtgate `discovery_low_replication_lag` flag.
@@ -158,7 +157,6 @@ vttablet <topo_flags> <backup_flags> \
   --port=15100 \
   --grpc_port=16100 \
   --service_map 'grpc-queryservice,grpc-tabletmanager’ \
-  --enable_semi_sync=true \
   --enable_replication_reporter=true \
   --restore_from_backup=true \
   --queryserver-config-pool-size=16 \
