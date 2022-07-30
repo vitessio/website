@@ -2,11 +2,11 @@
 publish = "public"
 command = "make production-build"
 
-[context.production]
-HUGO_ENVIRONMENT = "production"
-
 [context.deploy-preview]
 command = "make preview-build"
 
 [context.branch-deploy]
 command = "make preview-build"
+
+[context.production.environment]
+HUGO_ENV = "production"

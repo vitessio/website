@@ -1,4 +1,5 @@
 HUGO?=npx hugo
+DEPLOY_PRIME_URL?=/
 
 production-build:
 	$(HUGO) --cleanDestinationDir \
@@ -9,7 +10,7 @@ preview-build:
 	$(HUGO) --cleanDestinationDir \
 	--buildDrafts \
 	--buildFuture \
-	--baseURL $(DEPLOY_PRIME_URL:-/) \
+	--baseURL $(DEPLOY_PRIME_URL) \
 	--minify
 
 serve:
