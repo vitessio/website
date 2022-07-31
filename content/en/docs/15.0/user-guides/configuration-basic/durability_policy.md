@@ -15,31 +15,13 @@ type Durabler interface {
 }
 ```
 
-There are 2 implementations supported in this release:
- - ***semi_sync*** - This durability policy sets the number of required semi-sync ACKers to 1. It only allows Primary and Replica type servers to acknowledge semi sync. It returns NeutralPromoteRule for Primary and Replica tablet types, MustNotPromoteRule for everything else
+There are 3 implementations supported in this release:
+ - ***semi_sync*** - This durability policy sets the number of required semi-sync ACKers to 1. It only allows Primary and Replica type servers to acknowledge semi sync. It returns NeutralPromoteRule for replica tablet types, MustNotPromoteRule for everything else.
  - ***none** (default)* - This durability policy does not set any semi-sync configurations. It returns NeutralPromoteRule for Primary and Replica tablet types, MustNotPromoteRule for everything else
+ - ***cross_cell*** - This durability policy sets the number of required semi-sync ACKers to 1. It only allows Primary and Replica type servers from a different cell than the current primary to acknowledge semi sync. It returns NeutralPromoteRule for replica tablet types, MustNotPromoteRule for everything else.
 
 
 [EmergencyReparentShard](../../configuration-advanced/reparenting/#emergencyreparentshard-emergency-reparenting) and [PlannedReparentShard](../../configuration-advanced/reparenting/#plannedreparentshard-planned-reparenting) will use the durability rules while choosing the correct candidate for promotion.
 
 This configuration must be stored in the topo server in the keyspace record using the command [CreateKeyspace](../../../reference/programs/vtctldclient/vtctldclient_createkeyspace/) or [SetKeyspaceDurabilityPolicy](../../../reference/programs/vtctldclient/vtctldclient_setkeyspacedurabilitypolicy/).
 
-{{< info >}}
-Currently the durability policies are not used to setup semi-sync in EmergencyReparentShard or PlannedReparentShard. All the RPCs are still using the `--enable_semi_sync` flag on vttablet to setup semi-sync. This flag is currently being used for promotion rules and to log discrepancies in semi-sync setup. Nonetheless, this flag should be specified correctly for upgrade considerations to future releases when the durability policies will be used to setup semi-sync and `--enable_semi_sync` is deprecated.
-{{< /info >}}
-
-If you notice any logs like the following, please verify that your vttablet configuration and keyspace record in topo match:
-```
-invalid configuration - semi-sync should be setup according to durability policies, but enable_semi_sync is not set
-```
-```
-invalid configuration - semi-sync should be setup according to durability policies, but the tablet is not primaryEligible
-```
-If `--enable_semi_sync` is set on the vttablets, then `semi_sync` durability policy must be stored in the keyspace record. If semi-sync is not being used then the durability policy must be `none`.
-
-If the configurations are in order , then you should create an issue [here](https://github.com/vitessio/vitess/issues) and report it.
-
-If the following log is noticed when all the components are upgraded, then it should also be reported:
-```
-invalid configuration - enabling semi sync even though not specified by durability policies. Possibly in the process of upgrading
-```

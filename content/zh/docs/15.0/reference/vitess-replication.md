@@ -68,7 +68,7 @@ We have plans to make this Update Stream feature more consistent, very resilient
 
 ## Semi-Sync
 
-If you tell Vitess to enforce semi-sync ([semisynchronous replication](https://www.percona.com/doc/percona-toolkit/LATEST/pt-online-schema-change.html)) by passing the -enable_semi_sync flag to vttablets, then the following will happen:
+If you tell Vitess to enforce semi-sync ([semisynchronous replication](https://dev.mysql.com/doc/refman/8.0/en/replication-semisync.html)) by setting the `semi_sync` or `cross_cell` [durability policy](../../../../../docs/15.0/user-guides/configuration-basic/durability_policy), then the following will happen:
 
 * The master will only accept writes if it has at least one slave connected and sending semi-sync ACK. It will never fall back to asynchronous (not requiring ACKs) because of timeouts while waiting for ACK, nor because of having zero slaves connected (although it will fall back to asynchronous in case of shutdown, abrupt or graceful).
 

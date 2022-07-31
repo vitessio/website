@@ -44,7 +44,6 @@ Even if a MySQL is external, you can still make vttablet perform some management
 * `--disable_active_reparents`: If this flag is set, then any reparent or replica commands will not be allowed. These are InitShardMaster, PlannedReparent, PlannedReparent, EmergencyReparent, and ReparentTablet. In this mode, you should use the TabletExternallyReparented command to inform vitess of the current primary.
 * `--replication_connect_retry`: This value is give to mysql when it connects a replica to the primary as the retry duration parameter.
 * `--enable_replication_reporter`: If this flag is set, then vttablet will transmit replica lag related information to the vtgates, which will allow it to balance load better. Additionally, enabling this will also cause vttablet to restart replication if it was stopped. However, it will do this only if --disable_active_reparents was not turned on.
-* `--enable_semi_sync`: This option will automatically enable semi-sync on new replicas as well as on any tablet that transitions into a replica type. This includes the demotion of a primary to a replica.
 * `--heartbeat_enable` and `--heartbeat interval duration`: cause vttablet to write heartbeats to the sidecar database. This information is also used by the replication reporter to assess replica lag.
 
 ## Options
@@ -128,7 +127,7 @@ The following global options apply to `vttablet`:
 | --enable_hot_row_protection |  | If true, incoming transactions for the same row (range) will be queued and cannot consume all txpool slots. |
 | --enable_hot_row_protection_dry_run |  | If true, hot row protection is not enforced but logs if transactions would have been queued. |
 | --enable_replication_reporter |  | Register the health check module that monitors MySQL replication |
-| --enable_semi_sync |  | Enable semi-sync when configuring replication, on primary and replica tablets only (rdonly tablets will not ack). |
+| --enable_semi_sync |  | DEPRECATED - Set the correct durability policy on the keyspace instead. |
 | --enable_transaction_limit |  | If true, limit on number of transactions open at the same time will be enforced for all users. User trying to open a new transaction after exhausting their limit will receive an error immediately, regardless of whether there are available slots or not. |
 | --enable_transaction_limit_dry_run |  | If true, limit on number of transactions open at the same time will be tracked for all users, but not enforced. |
 | --enforce-tableacl-config |  | if this flag is true, vttablet will fail to start if a valid tableacl config does not exist |
