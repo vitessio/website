@@ -1,11 +1,11 @@
 {{ $logoUrl := "img/logos/vitess.png" | relURL }}
 {{ $title   := site.Params.description | markdownify }}
-<section class="hero is-dark">
+<section class="hero has-background is-dark">
   <div class="container">
     <div class="hero-body has-text-centered">
       <img class="title is-home-hero-logo" src="{{ $logoUrl }}">
 
-      <p class="title is-size-2 is-size-3-mobile has-text-weight-light">
+      <p class="title is-size-2 is-size-3-mobile has-text-weight-medium">
         {{ $title }}
       </p>
 
@@ -32,7 +32,7 @@
 
         <a class="button is-light is-medium has-text-weight-bold" href="{{ "/docs" | relLangURL }}">
           <span class="icon has-text-primary">
-            <i class="fas fa-university"></i>
+            <i class="fa-solid fa-book"></i>
           </span>
           <span>
             {{ T "documentation" }}
