@@ -1,5 +1,5 @@
 ---
-title: Analyzing SQL statements in bulk
+title: Analyzing SQL statements in bulk using VTEXPLAIN
 weight: 2
 aliases: ['/docs/user-guides/vtexplain-in-bulk/'] 
 ---
