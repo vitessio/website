@@ -31,10 +31,10 @@ This creates a docker image named `vitess/local` (aka `vitess/local:latest`)
 
 ## Run the docker image
 
-Execute: 
+In your shell, execute:
 
 ```shell
-./docker/local/run.sh
+make docker_run_local
 ```
 
 This will set up a MySQL replication topology, as well as `etcd`, `vtctld` and `vtgate` services. 
