@@ -399,7 +399,7 @@ $ vtctlclient GetRoutingRules commerce
 
 ## Reverse workflow
 
-As part of the `SwitchTraffic` operation above, Vitess will automatically (unless you supply the `-reverse_replication false` flag) setup a reverse VReplication workflow to copy changes now applied to the moved tables in the target keyspace (i.e. tables `customer` and `corder` in the `customer` keyspace) back to the original source tables in the source keyspace (`customer`).  This allows us to reverse the process using additional `SwitchTraffic` commands without data loss, even after we have started writing to the new copy of the table in the new keyspace.  Note that the workflow for this reverse process is given the name of the original workflow with `_reverse` appended.  So in our example where the MoveTables workflow was called `commerce2customer`;  the reverse workflow would be `commerce2customer_reverse`.
+As part of the `SwitchTraffic` operation above, Vitess will automatically (unless you supply the `-reverse_replication false` flag) setup a reverse VReplication workflow to copy changes now applied to the moved tables in the target keyspace (i.e. tables `customer` and `corder` in the `customer` keyspace) back to the original source tables in the source keyspace (`commerce`).  This allows us to reverse the process using additional `SwitchTraffic` commands without data loss, even after we have started writing to the new copy of the table in the new keyspace.  Note that the workflow for this reverse process is given the name of the original workflow with `_reverse` appended.  So in our example where the MoveTables workflow was called `commerce2customer`;  the reverse workflow would be `commerce2customer_reverse`.
 
 ## Finalize and Cleanup
 
