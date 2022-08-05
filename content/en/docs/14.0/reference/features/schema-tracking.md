@@ -8,8 +8,9 @@ VTGate does not natively track table schema. Users are allowed to provide an aut
 
 The schema tracking functionality alleviates this issue and enable VTGate to plan more queries. When using schema tracking, VTGate keeps an authoritative list of columns on all tables. The following query set can be planned:
 
-* `SELECT *` cross-shard queries that need evaluation at the VTGate level.
-* Queries that are not able to resolve columns dependencies. For instance: queries with no table qualifier in the projection/filter list.
+1. `SELECT *` cross-shard queries that need evaluation at the VTGate level.
+2. Queries which reference columns without a table qualifier as long as the column names are unique across the tables involved in the query.
+3. Evaluation improvement in Aggregations, Group By, Having, Limit, etc. clauses that require processing of records at VTGate level. VTGate will not require `weight_string()` value for the evaluation and can compare the values directly. 
 
 ## VTGate
 

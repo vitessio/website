@@ -1,8 +1,12 @@
-	---
+---
 title: Backup and Restore
 weight: 1
 aliases: ['/docs/user-guides/backup-and-restore/']
 ---
+
+{{< warning >}}
+Vitess 12.0 does not support backups of MySQL 8.0.30 and later. You can see additional details [here](https://github.com/vitessio/vitess/pull/10847).
+{{< /warning >}}
 
 Backup and Restore are integrated features provided by tablets managed by Vitess. As well as using _backups_ for data integrity, Vitess will also create and restore backups for provisioning new tablets in an existing shard.
 
