@@ -5,7 +5,7 @@
 {{ $currentLang  := .Language.LanguageName }}
 {{ $translations := site.Home.Translations }}
 
-<nav class="navbar is-fixed-top is-dark">
+<nav class="navbar is-fixed-top is-black p-2" id="mainnav">
   <div class="container {{if $isDocs}} navbar-container-docs {{end}}">
     <div class="navbar-brand">
       <a class="navbar-item" href="{{ site.BaseURL }}">
@@ -24,7 +24,7 @@
         {{ partial "search-bar.html" . }}
     
         {{ partial "search-results.html" . }}
-		
+	
       <div class="navbar-end">
         <a class="navbar-item has-text-weight-bold" href="{{ "/docs" | relLangURL }}">
           {{ T "docs" }}
@@ -47,7 +47,7 @@
             {{ range $translations }}
             {{ $lang := .Language.LanguageName }}
             {{ $url  := .RelPermalink }}
-            <a class="navbar-item" href="{{ $url }}">
+            <a class="navbar-item has-text-black" href="{{ $url }}">
               {{ $lang }}
             </a>
             {{ end }}

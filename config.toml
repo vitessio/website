@@ -20,7 +20,7 @@ next = "15.0"
 
 [params.assets]
 js = ["app"]
-fontawesomeversion = "5.7.2"
+fontawesomeversion = "6.1.2"
 
 [params.social]
 github        = "vitessio/vitess"
