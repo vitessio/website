@@ -20,7 +20,10 @@
     </div>
 
     <div id="navbar-menu" class="navbar-menu">
-		{{ partial "search-bar.html" . }}
+
+        {{ partial "search-bar.html" . }}
+    
+        {{ partial "search-results.html" . }}
 		
       <div class="navbar-end">
         <a class="navbar-item has-text-weight-bold" href="{{ "/docs" | relLangURL }}">

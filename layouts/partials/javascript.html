@@ -1,11 +1,12 @@
-{{ $jsFiles := site.Params.assets.js }}
-{{ range $jsFiles }}
-{{ $path := printf "js/%s.js" . }}
-{{ $js := resources.Get $path | minify | fingerprint }}
-<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
+{{ $jsFiles := site.Params.assets.js }} {{ range $jsFiles }} {{ $path := printf
+"js/%s.js" . }} {{ $js := resources.Get $path | minify | fingerprint }}
+<script
+  src="{{ $js.RelPermalink }}"
+  integrity="{{ $js.Data.Integrity }}"
+></script>
 {{ end }}
 
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+<!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
 <script type="text/javascript">
 docsearch({
   apiKey: '1d13fc4b241cae42000f422300df8931',
@@ -13,14 +14,136 @@ docsearch({
   inputSelector: '#search-bar',
   debug: false
 });
-</script>
+</script> -->
 
 <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 <script>
   mermaid.initialize({
     flowchart: {
-      curve: 'linear',
+      curve: "linear",
     },
     startOnLoad: true,
   });
+</script>
+
+{{/* In-built Scalers Search */}}
+<script src="https://unpkg.com/lunr/lunr.js"></script>
+<script>
+  window.addEventListener(
+    "DOMContentLoaded",
+    () => {
+      "use strict";
+      let index;
+      const form = document.getElementById("search");
+      const input = document.getElementById("search-bar");
+      const target = document.querySelector(".is-search-result");
+      const searchResultCount = document.querySelector(".results");
+      const template = document.getElementById("is-search-template");
+      let searchPopover = document.querySelector(".search-popover");
+      let query = input.value.trim();
+      let parse = {};
+
+      input.addEventListener(
+        "input",
+        function (event) {
+          event.preventDefault();
+          const keywords = input.value.trim();
+
+          // automatically perform wildcard search when the input receives a value
+          query = keywords;
+          if (query.length >= 1) {
+            searchPopover.style.display = "inline-block";
+
+            searchPopover.style.right = `${0}px`;
+            initSearchIndex();
+          } else {
+            searchPopover.style.display = "none";
+          }
+
+          while (target.firstChild.nextSibling) {
+            target.removeChild(template.nextSibling.nextElementSibling);
+            searchResultCount.firstChild.textContent = "Loading...";
+          }
+        },
+        false
+      );
+
+      async function initSearchIndex() {
+        console.log("ghdfhhd");
+        const scalers = await fetch("/index.json", { method: "GET" })
+          .then((response) => response.json())
+          .then((data) => {
+            return data;
+          })
+          .catch((err) => console.error("error:", err));
+        console.log(scalers);
+        index = lunr(function () {
+          const documents = scalers;
+
+          this.ref("href");
+          this.field("title", {
+            boost: 20,
+            usePipeline: true,
+            wildcard: lunr.Query.wildcard.TRAILING,
+            presence: lunr.Query.presence.REQUIRED,
+          });
+          this.field("content", {
+            boost: 15,
+          });
+          this.field("summary", {
+            boost: 10,
+          });
+
+          documents.forEach(function (doc) {
+            this.add(doc);
+            parse[doc.href] = {
+              title: doc.title,
+              content: doc.content,
+              summary: doc.summary,
+              href: doc.href,
+            };
+          }, this);
+        });
+
+        search(query);
+      }
+
+      function search(keywords) {
+        const results = index.search(keywords);
+
+        console.log(results, "sdsf");
+
+        if ("content" in template) {
+          // show result count
+          const title = document.createElement("h3");
+          title.id = "search-results";
+          title.className = "subtitle is-size-3";
+
+          if (results.length == 0)
+            title.textContent = `No results found for "${keywords}"`;
+          else if (results.length == 1)
+            title.textContent = `Found one result for "${keywords}"`;
+          else if (results.length > 1 && keywords === "")
+            title.textContent = "Enter search keyword";
+          else
+            title.textContent = `Found ${results.length} results for "${keywords}"`;
+          searchResultCount.replaceChildren(title);
+
+          // show the matched result
+          results.forEach(function (result) {
+            const doc = parse[result.ref];
+            const element = template.content.cloneNode(true);
+            element
+              .querySelector(".is-read-more")
+              .setAttribute("href", doc.href);
+
+            element.querySelector(".title").textContent = doc.title;
+            element.querySelector(".summary").textContent = doc.summary;
+            target.appendChild(element);
+          }, this);
+        }
+      }
+    },
+    false
+  );
 </script>
