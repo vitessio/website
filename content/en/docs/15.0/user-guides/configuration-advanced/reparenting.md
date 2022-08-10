@@ -46,7 +46,7 @@ This command performs the following actions when used to change the current prim
 3. Retrieves the current primary's replication position.
 4. Instructs the primary-elect tablet to wait for replication data and then begin functioning as the new primary after that data is fully transferred.
 5. Ensures replication is functioning properly via the following steps:
-    - On the primary-elect tablet, insert a row into an internal tabkle and then update the global shard object's PrimaryAlias record.
+    - On the primary-elect tablet, insert a row into an internal table and then update the global shard object's PrimaryAlias record.
     - In parallel on each replica, including the old primary, set the new primary and wait for the inserted row to replicate to the replica tablet. Replica tablets that had not been replicating before the command was called are left in their current state and do not start replication after the reparenting process.
     - Start replication on the old primary tablet so it catches up to the new primary.
 
