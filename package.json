@@ -3,6 +3,7 @@
     "yarn": "^1.22.11"
   },
   "devDependencies": {
-    "bulma": "^0.9.3"
+    "bulma": "^0.9.3",
+    "hugo-extended": "^0.96.0"
   }
 }

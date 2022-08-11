@@ -1,17 +1,20 @@
+HUGO?=npx hugo
+DEPLOY_PRIME_URL?=/
+
 production-build:
-	hugo \
+	$(HUGO) --cleanDestinationDir \
 	--minify \
 	--verbose
 
 preview-build:
-	hugo \
+	$(HUGO) --cleanDestinationDir \
 	--buildDrafts \
 	--buildFuture \
 	--baseURL $(DEPLOY_PRIME_URL) \
 	--minify
 
 serve:
-	hugo server \
+	$(HUGO) server \
 	--buildDrafts \
 	--buildFuture \
 	--ignoreCache \
@@ -22,7 +25,7 @@ clean:
 	rm -rf public
 
 build:
-	hugo
+	$(HUGO) --cleanDestinationDir -e dev -DFE
 
 link-checker-setup:
 	curl https://raw.githubusercontent.com/wjdp/htmltest/master/godownloader.sh | bash
