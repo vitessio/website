@@ -6,19 +6,12 @@ This repo houses the assets used to build the website at https://vitess.io.
 
 ## Running the site locally
 
-First install `npm` or `yarn`, then fetch dependencies, including
+First install `npm`, then fetch dependencies, including
 [Hugo](https://gohugo.io) by running these commands:
 
 ```bash
 cd website
 npm install
-```
-
-or
-
-```bash
-cd website
-yarn
 ```
 
 To build a development version of the site, run the following command:
@@ -34,7 +27,6 @@ make serve
 ```
 
 View the locally served site at http://localhost:1313.
-
 
 ## Adding a user logo
 
