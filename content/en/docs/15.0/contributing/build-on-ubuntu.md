@@ -180,7 +180,7 @@ E0316 20:47:00.173050   63268 local_cluster.go:313] Mysqlctl failed to start: fo
 could not launch mysql: fork/exec bin/mysqlctl: no such file or directory
 FAIL    vitess.io/vitess/go/vt/vtgate/evalengine/integration    0.018s
 ```
-If you use IDE to run these tests, you need to set `VTROOT` previously. For example, in VScode
+If you use an IDE to run these tests, you need to set `VTROOT` previously. For example, in VScode
 ```
 "go.testEnvVars": {
     "VTROOT": "<path to my vitess checkout>"
