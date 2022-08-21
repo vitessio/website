@@ -128,7 +128,7 @@ stalled streams after _vreplication_retry_delay_ seconds
 #### vreplication_max_time_to_retry_on_error
 
 **Type** duration\
-**Default** 0\
+**Default** 0 (unlimited)\
 **Applicable on** target
 
 Stop automatically retrying when we've had consecutive failures with the same error for this long after the first occurrence (default 0, meaning no time limit).
