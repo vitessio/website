@@ -144,3 +144,13 @@ Features that are not field-tested, that are not backward-compatible, or need to
 This will be a bit-mask for each such feature. The ones currently defined:
 
 bitmask: *0x1* => If set then we optimize the catchup phase by not sending inserts for rows that are outside the range of primary keys already copied. More details at https://github.com/vitessio/vitess/pull/7708
+
+bitmask: *0x2* => If set then we enable parallel bulk inserts during the copy phase of VReplication. More details at https://github.com/vitessio/vitess/pull/10828
+
+#### vreplication_parallel_bulk_inserts
+
+**Type** string\
+**Default** auto\
+**Applicable on** target
+
+This parameter specifies the degree of parallelism when parallel bulk inserts is enabled via `--vreplication_experimental_flags`. When parallel bulk inserts are not enabled via `--vreplication_experimental_flags`, this value is unused. The default value of `auto` will set the parallelism to the value of `GOMAXPROCS`, unless that value is greater than `4`, in which case the parallelism is set to `4`. In addition to `auto`, this flag accepts integer values greater than or equal to `1`.

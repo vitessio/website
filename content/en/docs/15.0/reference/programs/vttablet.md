@@ -343,9 +343,11 @@ The following global options apply to `vttablet`:
 | --vreplication_copy_phase_duration | duration | Duration for each copy phase loop (before running the next catchup: default 1h) (default 1h0m0s) |
 | --vreplication_copy_phase_max_innodb_history_list_length | int | The maximum InnoDB transaction history that can exist on a vstreamer (source) before starting another round of copying rows. This helps to limit the impact on the source tablet. (default 1000000) |
 | --vreplication_copy_phase_max_mysql_replication_lag | int | The maximum MySQL replication lag (in seconds) that can exist on a vstreamer (source) before starting another round of copying rows. This helps to limit the impact on the source tablet. (default 43200) |
+| --vreplication_experimental_flags | int | (Bitmask) of experimental features in vreplication to enable (default 1) |
 | --vreplication_healthcheck_retry_delay | duration | healthcheck retry delay (default 5s) |
 | --vreplication_healthcheck_timeout | duration | healthcheck retry delay (default 1m0s) |
 | --vreplication_healthcheck_topology_refresh | duration | refresh interval for re-reading the topology (default 30s) |
+| --vreplication_parallel_bulk_inserts | string | Number of parallel insertion workers to use during copy phase. Set to a number >= 1 or to "auto". "auto" uses GOMAXPROCS or 4, whichever is smaller. (default "auto") |
 | --vreplication_retry_delay | duration | delay before retrying a failed binlog connection (default 5s) |
 | --vreplication_tablet_type | string | comma separated list of tablet types used as a source (default "in_order:REPLICA,PRIMARY") |
 | --vstream_packet_size | int | Suggested packet size for VReplication streamer. This is used only as a recommendation. The actual packet size may be more or less than this amount. (default 30000) |

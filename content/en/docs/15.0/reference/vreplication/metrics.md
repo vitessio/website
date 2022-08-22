@@ -8,6 +8,10 @@ VReplication exports several metrics using the expvars interface. These are avai
 
 ## Target Metrics
 
+#### VReplicationBulkInsertConcurrency
+
+The number of concurrent inserts enabled during the copy phase. This value is determined by the `vreplication_experimental_flags` and `vreplication_parallel_bulk_inserts` flags specified for this tablet combined with the value of `GOMAXPROCS`.
+
 #### VReplicationCopyLoopCount, VReplicationCopyLoopCountTotal
 
 During the copy phase we run one loop of bulk copy for approximately an hour at a time before running catchup. _VReplicationCopyLoopCount_ counts the number of times this loop has run for each stream and _VReplicationCopyLoopCountTotal_ the total across all streams.
@@ -39,6 +43,15 @@ This metric relates to the times each phase is run during the lifetime of a stre
 _VReplicationPhaseTimings_ counts the total time taken by the runs,
 VReplicationPhaseTimingsCounts the number of runs and _VReplicationPhaseTimingsTotals_ the total
 runs across all streams.
+
+#### VReplicationTableCopyRowCounts
+
+_VReplicationTableCopyRowCounts_ counts the number of rows copied during the copy phase per table per stream.
+
+#### VReplicationTableCopyTimings
+
+_VReplicationTableCopyTimings_ counts the accumulated, per-table time taken by
+the copy phase of a stream.
 
 #### VReplicationQPS
 
@@ -104,6 +117,7 @@ The total number of vstreamer created during the lifetime of this tablet
 **A snippet from tablet 200 from the local example after running the MoveTables step**
 
 ```
+"VReplicationBulkInsertConcurrency": 4,
 "VReplicationCopyLoopCount": {"commerce.0.commerce2customer.1": 2},
 "VReplicationCopyLoopCountTotal": 2,
 "VReplicationCopyRowCount": {"commerce.0.commerce2customer.1": 10},
@@ -124,6 +138,8 @@ The total number of vstreamer created during the lifetime of this tablet
 "VReplicationSourceTablet": {"1": "cell:\"zone1\" uid:100 "},
 "VReplicationStreamCount": 1,
 "VReplicationStreamState": {"commerce2customer.1": "Running"},
+"VReplicationTableCopyRowCounts": {"commerce.0.commerce2customer.1.customer": 5, "commerce.0.commerce2customer.1.corder": 5},
+"VReplicationTableCopyTimings": {"commerce.0.commerce2customer.1.corder": 703958, "commerce.0.commerce2customer.1.customer": 724916},
 "VStreamPacketSize": 250000,
 "VStreamerErrors": {"Catchup": 0, "Copy": 0, "Send": 0, "TablePlan": 0},
 "VStreamerEventsStreamed": 0,
