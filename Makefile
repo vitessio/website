@@ -1,19 +1,19 @@
 HUGO?=npx hugo
 DEPLOY_PRIME_URL?=/
 
-production-build:
+production-build: install
 	$(HUGO) --cleanDestinationDir \
 	--minify \
 	--verbose
 
-preview-build:
+preview-build: install
 	$(HUGO) --cleanDestinationDir \
 	--buildDrafts \
 	--buildFuture \
 	--baseURL $(DEPLOY_PRIME_URL) \
 	--minify
 
-serve:
+serve: install
 	$(HUGO) server \
 	--buildDrafts \
 	--buildFuture \
@@ -21,10 +21,13 @@ serve:
 	--disableFastRender \
 	--verbose
 
+install:
+	npm install
+
 clean:
 	rm -rf public
 
-build:
+build: install
 	$(HUGO) --cleanDestinationDir -e dev -DFE
 
 link-checker-setup:
