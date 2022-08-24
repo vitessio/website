@@ -25,7 +25,7 @@ It is recommended to use Vitess's managed schema changes, which offer non-blocki
 
 ### Join, Subqueries, Aggregation, Grouping, Having, Ordering, Limit Queries
 
-Vitess supports most of these types of queries. It is recommended to leave [schema tracking]((../../features/schema-tracking) enabled in order to fully utilize the available support.
+Vitess supports most of these types of queries. It is recommended to leave [schema tracking](../../features/schema-tracking) enabled in order to fully utilize the available support.
 
 ### Stored Procedures
 
