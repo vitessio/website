@@ -88,7 +88,7 @@ The following options can be used to configure VTTablet and Vtctld for backups:
       </td>
     </tr>
     <td><code>compression-level</code></td>
-      <td>Select what it the compression level (from `1..9`) to be used with the builtin compressors.
+      <td>Select what is the compression level (from `1..9`) to be used with the builtin compressors.
         It doesn't have any effect if you are using an external compressor. Defaults to
         <code>1</code> (fastest compression).
       </td>
@@ -105,11 +105,10 @@ The following options can be used to configure VTTablet and Vtctld for backups:
       <td><code>external-compressor</code></td>
       <td>
       Instead of compressing inside the <code>vttablet</code> process, use the external command to
-      compress the input; this overrides the <code>--builtin-compressor</code>. The compressed stream
-      needs to be written to <code>STDOUT</code>.</br></br>
+      compress the input. The compressed stream needs to be written to <code>STDOUT</code>.</br></br>
       An example command to compress with an external compressor using the fastest mode and lowest CPU priority: </br>
       <code>--external-compressor "nice -n 19 pigz -1 -c"</code><br/><br/>
-      If the backup is supported by one of the builtin engines, make sure to pass <code>--compression-engine-name	</code>
+      If the backup is supported by one of the builtin engines, make sure to use <code>--compression-engine-name</code>
       so it can be restored without requiring to pass 
       </td>
     </tr>
@@ -259,16 +258,24 @@ __Decompression:__
 - `zstd`
 
 To change which compression engine to use, you can use the `--compression-engine-name` flag. The compression
-engine is also be saved to the backup manifest, which is read during the decompression process to select
+engine will also be saved to the backup manifest, which is read during the decompression process to select
 the right engine to decompress (so even if it gets changed, the `vttablet` will still be able to restore
 previous backups).
 
 If you want to use an external compressor/decompressor, you can you can do this by setting:
 - `--external-compressor` with the command that will actually compress the stream;
 - `--external-compressor-extension` (only if using xtrabackupengine): this will let you use the extension of the file saved
-- `--compression-engine-name` with the compatible engine that can decompress it. This will be saved in the backup MANIFEST; If you don't add this, backups won't be able to restore unless you pass the parameter below:
+- `--compression-engine-name` with the compatible engine that can decompress it. Use `external` if you are using an external engine not included in the above supported list. This value will be saved to the backup
+MANIFEST; If it is not added (or engine is `external`), backups won't be able to restore unless you pass the parameter below:
 - `--external-decompressor` with the command used to decompress the files;
 
 The `vttablet` process will launch the external process and pass the input stream via STDIN and expects
 the process will write the compressed/decompressed stream to STDOUT.
 
+If you are using an external compressor and want to move to a builtin engine:
+- If the engine is supported according to the list above, you just need to make sure your `--compression-engine-name` is correct and you can remove
+the `--external-compressor` parameter
+- If you want to move away from an unsupported engine to a builtin one, then you have to:
+    - First change the `--compression-engine-name` to a supported one and remove the `--external-compressor`
+    - Once the first backup is completed, you can then remove `--external-decompressor`
+    - After this all new backups will be done using the new engine. Older backup will still required the `--external-decompressor`
