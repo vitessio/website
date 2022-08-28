@@ -262,7 +262,7 @@ engine will also be saved to the backup manifest, which is read during the decom
 the right engine to decompress (so even if it gets changed, the `vttablet` will still be able to restore
 previous backups).
 
-If you want to use an external compressor/decompressor, you can you can do this by setting:
+If you want to use an external compressor/decompressor, you can do this by setting:
 - `--external-compressor` with the command that will actually compress the stream;
 - `--external-compressor-extension` (only if using xtrabackupengine): this will let you use the extension of the file saved
 - `--compression-engine-name` with the compatible engine that can decompress it. Use `external` if you are using an external engine not included in the above supported list. This value will be saved to the backup
