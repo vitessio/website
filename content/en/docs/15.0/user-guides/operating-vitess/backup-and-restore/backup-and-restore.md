@@ -109,7 +109,7 @@ The following options can be used to configure VTTablet and Vtctld for backups:
       An example command to compress with an external compressor using the fastest mode and lowest CPU priority: </br>
       <code>--external-compressor "nice -n 19 pigz -1 -c"</code><br/><br/>
       If the backup is supported by one of the builtin engines, make sure to use <code>--compression-engine-name</code>
-      so it can be restored without requiring to pass 
+      so it can be restored without requiring <code>--external-decompressor</code> to be defined.
       </td>
     </tr>
     <tr>
