@@ -30,10 +30,10 @@ Add `mysql@5.7` to your `PATH`:
 echo 'export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"' >> ~/.bash_profile
 ```
 
-[Download and install](http://golang.org/doc/install) Golang 1.17. For example, at writing:
+[Download and install](http://golang.org/doc/install) Golang 1.18.5. For example, at writing:
 ```shell
-curl -LO https://golang.org/dl/go1.17.darwin-amd64.pkg
-sudo installer -pkg go1.17.darwin-amd64.pkg -target /
+curl -LO https://golang.org/dl/go1.18.5.darwin-amd64.pkg
+sudo installer -pkg go1.18.5.darwin-amd64.pkg -target /
 ```
 
 Do not install etcd via brew otherwise it will not be the version that is supported. Let it be installed when running make build.
