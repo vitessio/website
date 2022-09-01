@@ -235,7 +235,7 @@ This data directory `vtdataroot` will get recreated when you run the 101_initial
 user@computer:~/Github/vitess/examples/local$ pwd
 /home/user/Github/vitess/examples/local
 
-user@computer:~/Github/vitess/examples/local$ pkill -9 -e -f '(vtdataroot|VTDATAROOT|vitess|vtadmin)'
+user@computer:~/Github/vitess/examples/local$ pkill -9 -f '(vtdataroot|VTDATAROOT|vitess|vtadmin)'
 etcd killed (pid 224091)
 vtctld killed (pid 224154)
 mysqld_safe killed (pid 224247)

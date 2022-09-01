@@ -196,7 +196,7 @@ _The exact list of processes will vary. For example, you may not see `mysqld_saf
 If you encounter any errors, such as ports already in use, you can kill the processes and start over:
 
 ```bash
-pkill -9 -e -f '(vtdataroot|VTDATAROOT|vitess|vtadmin)' # kill Vitess processes
+pkill -9 -f '(vtdataroot|VTDATAROOT|vitess|vtadmin)' # kill Vitess processes
 rm -rf /usr/local/Cellar/vitess/15.0.0/share/vitess/examples/local/vtdataroot
 ```
 
