@@ -102,7 +102,7 @@ $ ./101_initial_cluster.sh
 $ source env.sh
 ```
 
-You should see output similar to the following:
+You should see an output similar to the following:
 
 ```text
 ~/my-vitess-example> ./101_initial_cluster.sh
@@ -110,29 +110,122 @@ $ ./101_initial_cluster.sh
 add /vitess/global
 add /vitess/zone1
 add zone1 CellInfo
+Created cell: zone1
 etcd start done...
 Starting vtctld...
 Starting MySQL for tablet zone1-0000000100...
 Starting vttablet for zone1-0000000100...
 HTTP/1.1 200 OK
-Date: Wed, 25 Mar 2020 17:32:45 GMT
+Date: Thu, 01 Sep 2022 12:49:50 GMT
 Content-Type: text/html; charset=utf-8
 
 Starting MySQL for tablet zone1-0000000101...
 Starting vttablet for zone1-0000000101...
 HTTP/1.1 200 OK
-Date: Wed, 25 Mar 2020 17:32:53 GMT
+Date: Thu, 01 Sep 2022 12:49:55 GMT
 Content-Type: text/html; charset=utf-8
 
 Starting MySQL for tablet zone1-0000000102...
 Starting vttablet for zone1-0000000102...
 HTTP/1.1 200 OK
-Date: Wed, 25 Mar 2020 17:33:01 GMT
+Date: Thu, 01 Sep 2022 12:50:00 GMT
 Content-Type: text/html; charset=utf-8
 
-W0325 11:33:01.932674   16036 main.go:64] W0325 17:33:01.930970 reparent.go:185] primary-elect tablet zone1-0000000100 is not the shard primary, proceeding anyway as -force was used
-W0325 11:33:01.933188   16036 main.go:64] W0325 17:33:01.931580 reparent.go:191] primary-elect tablet zone1-0000000100 is not a primary in the shard, proceeding anyway as -force was used
-..
+{
+  "keyspace": {
+    "served_froms": [],
+    "keyspace_type": 0,
+    "base_keyspace": "",
+    "snapshot_time": null,
+    "durability_policy": "semi_sync"
+  }
+}
+I0901 12:50:00.758543 planned_reparenter.go:517] Getting a new durability policy for semi_sync
+I0901 12:50:00.874136 planned_reparenter.go:682] populating reparent journal on new primary zone1-0000000100
+I0901 12:50:00.874197 planned_reparenter.go:661] setting new primary on replica zone1-0000000102
+I0901 12:50:00.874200 planned_reparenter.go:661] setting new primary on replica zone1-0000000101
+
+New VSchema object:
+{
+  "sharded": false,
+  "vindexes": {},
+  "tables": {
+    "corder": {
+      "type": "",
+      "column_vindexes": [],
+      "auto_increment": null,
+      "columns": [],
+      "pinned": "",
+      "column_list_authoritative": false
+    },
+    "customer": {
+      "type": "",
+      "column_vindexes": [],
+      "auto_increment": null,
+      "columns": [],
+      "pinned": "",
+      "column_list_authoritative": false
+    },
+    "product": {
+      "type": "",
+      "column_vindexes": [],
+      "auto_increment": null,
+      "columns": [],
+      "pinned": "",
+      "column_list_authoritative": false
+    }
+  },
+  "require_explicit_routing": false
+}
+If this is not what you expected, check the input data (as JSON parsing will skip unexpected fields).
+Waiting for vtgate to be up...
+vtgate is up!
+Access vtgate at http://Manans-MacBook-Pro.local:15001/debug/status
+vtadmin-api is running!
+  - API: http://localhost:14200
+  - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtadmin-api.out
+  - PID: 74039
+
+
+> vtadmin@0.1.0 build
+> react-scripts build
+
+Creating an optimized production build...
+Browserslist: caniuse-lite is outdated. Please run:
+  npx browserslist@latest --update-db
+  Why you should do it regularly: https://github.com/browserslist/browserslist#browsers-data-updating
+Browserslist: caniuse-lite is outdated. Please run:
+  npx browserslist@latest --update-db
+  Why you should do it regularly: https://github.com/browserslist/browserslist#browsers-data-updating
+Compiled successfully.
+
+File sizes after gzip:
+
+  385.49 kB  build/static/js/main.044e444c.js
+  15.4 kB    build/static/css/main.a46ccb6f.css
+
+The project was built assuming it is hosted at /.
+You can control this with the homepage field in your package.json.
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  https://cra.link/deployment
+
+vtadmin-web is running!
+  - Browser: http://localhost:14201
+  - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtadmin-web.out
+  - PID: 74070
+
+vtorc is running!
+  - UI: http://localhost:16000
+  - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtorc.out
+  - PID: 74088
 ```
 
 If you encounter any errors, such as ports already in use, you can kill the processes and start over. Ensure you're in the vitess/examples/local directory, then issue the statement to kill the processes and remove the data directory. 
@@ -142,7 +235,7 @@ This data directory `vtdataroot` will get recreated when you run the 101_initial
 user@computer:~/Github/vitess/examples/local$ pwd
 /home/user/Github/vitess/examples/local
 
-user@computer:~/Github/vitess/examples/local$ pkill -e -f ./vtdataroot
+user@computer:~/Github/vitess/examples/local$ pkill -9 -f '(vtdataroot|VTDATAROOT|vitess|vtadmin)'
 etcd killed (pid 224091)
 vtctld killed (pid 224154)
 mysqld_safe killed (pid 224247)
@@ -155,6 +248,8 @@ mysqld_safe killed (pid 225529)
 mysqld killed (pid 225995)
 vttablet killed (pid 226045)
 vtgate killed (pid 226204)
+vtadmin killed (pid 226391)
+vtorc killed (pid 226397)
 
 user@computer:~/Github/vitess/examples/local$ rm -rf ./vtdataroot
 ```
@@ -171,6 +266,12 @@ You can also browse to the vtctld console using the following URL:
 
 ```text
 http://localhost:15000
+```
+
+VTOrc is also setup as part of the initialization. You can look at its user-interface at:
+
+```text
+http://localhost:16000
 ```
 
 ## Summary
