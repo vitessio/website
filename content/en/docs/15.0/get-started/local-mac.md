@@ -102,7 +102,7 @@ $ ./101_initial_cluster.sh
 $ source env.sh
 ```
 
-You should see output similar to the following:
+You should see an output similar to the following:
 
 ```text
 ~/my-vitess-example> ./101_initial_cluster.sh
