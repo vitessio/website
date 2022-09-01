@@ -31,6 +31,9 @@ MySQL connector and/or ORM sends to MySQL/`vtgate`. Or if those settings will
 result in reserved connections being employed for some/all of the application's
 sessions.
 
+To avoid issue with reserved connection highlighted below. A new pool is added that can manage the 
+connections with system settings. It can be enabled with flag `--enable_settings_pool` on vttablet.
+
 ### System variables and reserved connections
 
 If a user changes a system variable and reserved connections are enabled, 
