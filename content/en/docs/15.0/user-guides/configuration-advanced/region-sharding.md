@@ -119,29 +119,80 @@ HTTP/1.1 200 OK
 Date: Mon, 17 Aug 2020 14:20:08 GMT
 Content-Type: text/html; charset=utf-8
 
-W0817 07:20:08.822742    7735 main.go:64] W0817 14:20:08.821985 reparent.go:185] primary-elect tablet zone1-0000000100 is not the shard primary, proceeding anyway as -force was used
-W0817 07:20:08.823004    7735 main.go:64] W0817 14:20:08.822370 reparent.go:191] primary-elect tablet zone1-0000000100 is not a primary in the shard, proceeding anyway as -force was used
-I0817 07:20:08.823239    7735 main.go:64] I0817 14:20:08.823075 reparent.go:222] resetting replication on tablet zone1-0000000100
-I0817 07:20:08.833215    7735 main.go:64] I0817 14:20:08.833019 reparent.go:241] initializing primary on zone1-0000000100
-I0817 07:20:08.849955    7735 main.go:64] I0817 14:20:08.849736 reparent.go:274] populating reparent journal on new primary zone1-0000000100
+{
+  "keyspace": {
+    "served_froms": [],
+    "keyspace_type": 0,
+    "base_keyspace": "",
+    "snapshot_time": null,
+    "durability_policy": "none"
+  }
+}
+
 New VSchema object:
 {
+  "sharded": false,
+  "vindexes": {},
   "tables": {
     "customer": {
-
+      "type": "",
+      "column_vindexes": [],
+      "auto_increment": null,
+      "columns": [],
+      "pinned": "",
+      "column_list_authoritative": false
     }
-  }
+  },
+  "require_explicit_routing": false
 }
 If this is not what you expected, check the input data (as JSON parsing will skip unexpected fields).
 Waiting for vtgate to be up...
 vtgate is up!
-Access vtgate at http://localhost:15001/debug/status
+Access vtgate at http://Manans-MacBook-Pro.local:15001/debug/status
+vtadmin-api is running!
+  - API: http://localhost:14200
+  - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtadmin-api.out
+  - PID: 69392
+
+> vtadmin@0.1.0 build
+> react-scripts build
+
+Creating an optimized production build...
+Compiled successfully.
+
+File sizes after gzip:
+
+  385.49 kB  build/static/js/main.044e444c.js
+  15.4 kB    build/static/css/main.a46ccb6f.css
+
+The project was built assuming it is hosted at /.
+You can control this with the homepage field in your package.json.
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  https://cra.link/deployment
+
+vtadmin-web is running!
+  - Browser: http://localhost:14201
+  - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtadmin-web.out
+  - PID: 69422
+
+vtorc is running!
+  - UI: http://localhost:16000
+  - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtorc.out
+  - PID: 69430
 ```
 
 You can also verify that the processes have started with `pgrep`:
 
 ```bash
-~/my-vitess-example> pgrep -fl vtdataroot
+~/my-vitess-example> pgrep -fl vitess
 9160 etcd
 9222 vtctld
 9280 mysqld_safe
@@ -149,6 +200,7 @@ You can also verify that the processes have started with `pgrep`:
 9905 vttablet
 10040 vtgate
 10224 mysqld
+10323 vtorc
 ```
 
 _The exact list of processes will vary. For example, you may not see `mysqld_safe` listed._
@@ -156,7 +208,7 @@ _The exact list of processes will vary. For example, you may not see `mysqld_saf
 If you encounter any errors, such as ports already in use, you can kill the processes and start over:
 
 ```sh
-pkill -9 -e -f '(vtdataroot|VTDATAROOT)' # kill Vitess processes
+pkill -9 -f '(vtdataroot|VTDATAROOT|vitess|vtadmin)' # kill Vitess processes
 rm -rf vtdataroot
 ```
 
