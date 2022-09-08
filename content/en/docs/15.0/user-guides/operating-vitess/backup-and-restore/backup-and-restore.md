@@ -242,7 +242,7 @@ If the network link is fast enough, the concurrency matches the CPU usage of the
 By default, `vttablet` backups are compressed using `pargzip` that generates `gzip` compatible files. 
 You can select other builtin engines that are supported, or choose to use an external process to do the
 compression/decompression for you. There are some advantages of doing this, like being able to set the
-scheduling priority or even to choose dedicated CPU cores to do the compression, things that are not possible when runningg inside the `vttablet` process.
+scheduling priority or even to choose dedicated CPU cores to do the compression, things that are not possible when running inside the `vttablet` process.
 
 The built-in supported engines are:
 
