@@ -278,4 +278,4 @@ the `--external-compressor` parameter
 - If you want to move away from an unsupported engine to a builtin one, then you have to:
     - First change the `--compression-engine-name` to a supported one and remove the `--external-compressor`
     - Once the first backup is completed, you can then remove `--external-decompressor`
-    - After this all new backups will be done using the new engine. Older backup will still required the `--external-decompressor`
+    - After this all new backups will be done using the new engine. Restoring an older backup will still require the `--external-decompressor` flag to be provided
