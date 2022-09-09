@@ -1,7 +1,7 @@
 ---
 author: 'Yang Wu'
-date: 2022-08-25
-slug: '2022-08-25-vitess-group-replication'
+date: 2022-09-12
+slug: '2022-09-12-vitess-group-replication'
 tags: ['Vitess','MySQL','Group Replication']
 title: 'VTGR: Vitess with Group Replication'
 description: "VTGR: an orchestration component for Vitess with Group Replication"
@@ -17,8 +17,7 @@ for semi-sync replication, it needs sophisticated orchestration tooling to make 
 
 This means that two pieces of interesting technology, Vitess and MySQL group replication, do not play along with each other. This was the motivation to develop VTGR: an orchestration component that integrates Vitess and group replication.
 ## Vitess
-Vitess adds two more components in the serving path: VTGate and VTTablet. VTGate is a proxy layer of a Vitess cluster, it knows how to route the query based on schema. VTTablet is the component that runs together with the mysqld process. VTTablet is the one that manages the mysqld for a shard and it talks to mysqld via local sockets. VTTablet has different types, the primary tablet needs to sit on top of a writable mysqld. Thus, write requests have to be routed to primary tablets.
-https://vitess.io/files/2019-sugu-highload.pdf#viewer.action=download
+Vitess adds two more components in the serving path: VTGate and VTTablet. VTGate is a proxy layer of a Vitess cluster, it knows how to route the query based on the schema and [VSchema](https://vitess.io/docs/13.0/reference/features/vschema/). VTTablet is the component that runs together with the mysqld process. VTTablet is the one that manages the mysqld for a shard and it talks to mysqld via local sockets. VTTablet has different types, the primary tablet needs to sit on top of a writable mysqld. Thus, write requests have to be routed to primary tablets.
 
 A replication group constitutes a shard. Nodes within a shard share the same data through replication. The membership of the shard is stored in a topology server.
 ## Group replication
@@ -29,7 +28,7 @@ With the single primary mode, there is a single writable node and all replicas w
 VTGR is a stateless orchestration component that glues Vitess with group replication. It acts a bit like a mechanic on an assembly line, checking the functioning of the system and repairing parts of it as needed. For every shard, VTGR will periodically pull Vitess topology and mysql group for diagnosis. Based on the diagnosed result, VTGR will execute corresponding repair actions. 
 <td> 
   <p style="padding: 10px">
-  <img src="/files/2022-08-25-vitess-group-replication/architecture.jpeg" alt="VTGR architecture" style="width:400px"/>
+  <img src="/files/2022-09-12-vitess-group-replication/architecture.jpeg" alt="VTGR architecture" style="width:400px"/>
   <br>
 </p>
 </td>
@@ -49,7 +48,7 @@ If the primary tablet crashes but the mysqld underneath is still running, VTGR w
 The failover behavior above can be captured in the following activity diagram:
 <td> 
   <p style="padding: 10px">
-  <img src="/files/2022-08-25-vitess-group-replication/activity.png" alt="VTGR activity flow" style="width:400px"/>
+  <img src="/files/2022-09-12-vitess-group-replication/activity.png" alt="VTGR activity flow" style="width:400px"/>
   <br>
 </p>
 </td>
@@ -58,7 +57,7 @@ Group replication is configured in single primary mode. From our experiment, VTG
 ### Future improvements
 The existing VTGR has run through multiple rounds of integration testing and chaos testing, but there is more work to be done:
 The current version of VTGR only supports group replication in single primary mode. It would be valuable to explore the multi-primary mode in the future, which should provide lower failover time.
-There are strict compatibility requirements for a MySQL group. Currently, we need to instruct VTGR to follow those rules to support operations like version upgrade.
+There are strict compatibility requirements for a MySQL group. This can be improved by fetching MySQL version in VTGR and instructing VTGR to follow those rules to support operations like version upgrade.
 ## Summary
 It is subjective which MySQL replication mechanism fits your use case better. But VTGR bridges the gap between Vitess and group replication, making it possible to do horizontal sharding easily with group replication. 
 
