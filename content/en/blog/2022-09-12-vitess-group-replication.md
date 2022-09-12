@@ -38,7 +38,7 @@ VTGR provides two key capabilities:
 **Group maintenance**<br />
 After collecting information from the topology server and all the nodes within the shard:
 If there is no active MySQL group, VTGR will bootstrap one.
-If there is a replica in the shard that is not in the group, VTGR will add the replica into the group.
+If there is a replica in the shard that is not in the group, VTGR will add the replica into the group.<br />
 **Automatic failover**<br />
 The MySQL group will failover automatically. VTGR is responsible for reconciling Vitess and the MySQL group to make sure that the primary VTTablet is pointing to a writable mysqld. To do that, VTGR uses group information to identify primary SQL node and compare it with the primary tablet from the topology server:
 If there is no primary tablet, VTGR will set the primary according to the MySQL group.
