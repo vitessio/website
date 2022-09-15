@@ -109,23 +109,30 @@ As a result, connection pools should be sized mindful of the capacity of the und
 
 ## Other relevant pool-related variables
 
-### vttablet user limit flag:
+### vttablet user limit
+Flag: `--transaction_limit_per_user` 
 
-#### `--transaction_limit_per_user` 
-            
  * (default 0.4)
  * This flag determines the fraction of connections in the **transaction_pool** and **found_rows_pool** that can be used by a single user. 
  The username is passed to vttablet from vtgate.  
  If you are using a limited set of users, you may want to increase this limit.  
  Or disable this limit feature by setting `--transaction_limit_by_username` to `false` as the default is `true`.
  This option only comes into play if the TX limiter is enabled by `--enable_transaction_limit`, which it is not by default.
- 
- ## `--enable_system_settings`
 
-This vtgate flag converts pool connections into [reserved/dedicated session connections](../../query-serving/reserved-conn/#enabling-reserved-connections) that live for the life of the vtgate session.  The pool is then refilled.  Thus their lifecycle is outside of that of the usual pool
-connections. As a result, the number of MySQL server connections used by
-vttablet may be significantly higher than expected from the pool settings if
-you have `--enable_system_settings` enabled.
+### vtgate system settings
+Flag: `--enable_system_settings`
+
+This vtgate flag enables the user to modify a [subset of system settings](https://github.com/vitessio/vitess/blob/main/go/vt/sysvars/sysvars.go#L166-L211) on the MySQL. This is done using the mechanism of [reserved connection](../../query-serving/reserved-conn/#enabling-reserved-connections).
+Once a reserved connection is created, it lives for the life of the vtgate session. These connections lives outside of the connection pool and as a result, the number of MySQL server connections used by
+vttablet may become significantly higher than expected connection based on the pool settings.
+
+### vttablet settings pool
+Flag: `--queryserver-enable-settings-pool`
+
+This vttablet flag enables pooling of connections with modified settings.
+This overcomes the issue described in [vtgate system settings](#vtgate-system-settings).
+Both of these should be enabled to keep the feature of modifying system settings without foregoing the benefits of connection pooling.
+
 
 ## Calculating maximum db connections used by vttablet
 
