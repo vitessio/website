@@ -2,12 +2,12 @@
 author: 'Manan Gupta'
 date: 2022-09-21
 slug: '2022-09-21-vtorc-vs-orchestrator'
-tags: ['Vitess','Orchestrator','VTOrc']
+tags: ['Vitess','Orchestrator','VTOrc', 'MySQL', 'Cluster Management']
 title: 'VTOrc Vs Orchestrator'
 description: "The differences between VTOrc and Orchestrator"
 ---
 
-There was an idea. An idea to make Vitess self-reliant. An idea to get rid of the friction between Vitess and an external fault-detection-and-repair tool. An idea that gave birth to VTOrc…
+There was an idea. An idea to make Vitess self-reliant. An idea to get rid of the friction between Vitess and external fault-detection-and-repair tools. An idea that gave birth to VTOrc…
 
 Both [VTOrc](https://vitess.io/docs/user-guides/configuration-basic/vtorc/) and [Orchestrator](https://github.com/openark/orchestrator) are tools for managing MySQL instances. If I were to describe these tools using a metaphor, I would say that they are kinda like the monitor of a class of students. They are responsible for keeping the MySQL instances in check and fixing them up in case they misbehave, just like how a monitor ensures that no mischief happens in the classroom. 
 
@@ -18,7 +18,7 @@ Most of the differences between the two derive largely from the fact that VTOrc 
 # Discovery
 The first point of difference between the two applications is that Orchestrator is a complete tool in itself while VTOrc is part of a much larger framework, Vitess. So VTOrc can rely on other components of Vitess to simplify its design even further. Let us look at MySQL instance discovery to understand this better.
 
-From the Orchestrator documentation on [Discovery](https://github.com/openark/orchestrator#discovery), `Orchestrator actively crawls through your topologies and maps them. It reads basic MySQL info such as replication status and configuration`. VTOrc here takes a completely different approach. In Vitess, all MySQL instances have a sidecar associated with them called [VTTablets](https://vitess.io/docs/reference/programs/vttablet/) and these VTTablets register themselves in the [topo server](https://vitess.io/docs/concepts/topology-service/). So VTOrc can just go ahead and ask the topo server for the exhaustive list of VTTablets for the shards that it is concerned with and use those records to discover and poll the underlying MySQL instances.
+From the Orchestrator documentation on [Discovery](https://github.com/openark/orchestrator#discovery), `Orchestrator actively crawls through your topologies and maps them. It reads basic MySQL info such as replication status and configuration`. On the other hand, VTOrc here takes a completely different approach. In Vitess, all MySQL instances have a sidecar associated with them called [VTTablets](https://vitess.io/docs/reference/programs/vttablet/) and these VTTablets register themselves in the [topo server](https://vitess.io/docs/concepts/topology-service/). So VTOrc can just go ahead and ask the topo server for the exhaustive list of VTTablets for the shards that it is concerned with and use those records to discover and poll the underlying MySQL instances.
 
 What we discussed now was the discovery of the MySQL instances, but there is another dimension to discovery. It is the topology that the MySQL instances are supposed to be running in. From the VTOrc standpoint, we already know Vitess only supports a single hierarchy of MySQL replication with no co-primary scenarios, so there is only supposed to be one primary and all the other MySQL instances replicating from it. As to who the primary is, that information is stored in the topo-server. For Orchestrator, however, there is no central location where the desired topology is stored, it has to infer that based on the current topology configuration as it stands and any changes the user might make going forward. In other words, VTOrc’s topology discovery and maintenance are somewhat declarative in nature whereas Orchestrator works in a more imperative fashion.
 
