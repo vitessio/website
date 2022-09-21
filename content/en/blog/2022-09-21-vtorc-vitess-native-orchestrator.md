@@ -1,9 +1,9 @@
 ---
 author: 'Manan Gupta'
 date: 2022-09-21
-slug: '2022-09-21-vtorc-vs-orchestrator'
+slug: '2022-09-21-vtorc-vitess-native-orchestrator'
 tags: ['Vitess','Orchestrator','VTOrc', 'MySQL', 'Cluster Management', 'Failover', 'Fault tolerance', 'Distributed Systems', 'Cloud Native']
-title: 'VTOrc Vs Orchestrator'
+title: 'VTOrc: Vitess-native Orchestrator'
 description: "The differences between VTOrc and Orchestrator"
 ---
 
