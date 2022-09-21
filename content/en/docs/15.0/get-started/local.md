@@ -210,6 +210,7 @@ vtadmin-web is running!
 
 vtorc is running!
   - UI: http://localhost:16000
+  - Debug UI: http://localhost:16001
   - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtorc.out
   - PID: 74088
 ```
