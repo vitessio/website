@@ -140,10 +140,13 @@ Content-Type: text/html; charset=utf-8
     "durability_policy": "semi_sync"
   }
 }
-I0901 12:50:00.758543 planned_reparenter.go:517] Getting a new durability policy for semi_sync
-I0901 12:50:00.874136 planned_reparenter.go:682] populating reparent journal on new primary zone1-0000000100
-I0901 12:50:00.874197 planned_reparenter.go:661] setting new primary on replica zone1-0000000102
-I0901 12:50:00.874200 planned_reparenter.go:661] setting new primary on replica zone1-0000000101
+vtorc is running!
+  - UI: http://localhost:16000
+  - Debug UI: http://localhost:16001
+  - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtorc.out
+  - PID: 74088
+
+zone1-0000000100 commerce 0 primary localhost:15100 localhost:17100 [] 2022-09-23T05:48:52Z
 
 New VSchema object:
 {
@@ -221,12 +224,6 @@ vtadmin-web is running!
   - Browser: http://localhost:14201
   - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtadmin-web.out
   - PID: 74070
-
-vtorc is running!
-  - UI: http://localhost:16000
-  - Debug UI: http://localhost:16001
-  - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtorc.out
-  - PID: 74088
 ```
 
 If you encounter any errors, such as ports already in use, you can kill the processes and start over. Ensure you're in the vitess/examples/local directory, then issue the statement to kill the processes and remove the data directory. 

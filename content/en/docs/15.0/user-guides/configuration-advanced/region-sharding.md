@@ -128,6 +128,13 @@ Content-Type: text/html; charset=utf-8
     "durability_policy": "none"
   }
 }
+vtorc is running!
+  - UI: http://localhost:16000
+  - Debug UI: http://localhost:16001
+  - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtorc.out
+  - PID: 69430
+
+zone1-0000000100 main 0 primary localhost:15100 localhost:17100 [] 2020-09-23T05:57:17Z
 
 New VSchema object:
 {
@@ -182,12 +189,6 @@ vtadmin-web is running!
   - Browser: http://localhost:14201
   - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtadmin-web.out
   - PID: 69422
-
-vtorc is running!
-  - UI: http://localhost:16000
-  - Debug UI: http://localhost:16001
-  - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtorc.out
-  - PID: 69430
 ```
 
 You can also verify that the processes have started with `pgrep`:
