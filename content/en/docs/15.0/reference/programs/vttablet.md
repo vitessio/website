@@ -349,6 +349,7 @@ The following global options apply to `vttablet`:
 | --vreplication_max_time_to_retry_on_error | duration | stop automatically retrying when we've had consecutive failures with the same error for this long after the first occurrence (default 0, unlimited) |
 | --vreplication_retry_delay | duration | delay before retrying a failed binlog connection (default 5s) |
 | --vreplication_tablet_type | string | comma separated list of tablet types used as a source (default "in_order:REPLICA,PRIMARY") |
+| --vstream-binlog-rotation-threshold | int | Byte size at which a VStreamer will attempt to rotate the source's open binary log before starting a GTID snapshot based stream (e.g. a ResultStreamer or RowStreamer) (default 67108864 (64MiB)) |
 | --vstream_packet_size | int | Suggested packet size for VReplication streamer. This is used only as a recommendation. The actual packet size may be more or less than this amount. (default 30000) |
 | --vtctld_addr | string | address of a vtctld instance |
 | --vtgate_protocol | string | how to talk to vtgate (default "grpc") |
