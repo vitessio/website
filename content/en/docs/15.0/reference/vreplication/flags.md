@@ -80,9 +80,20 @@ For an idle source shard, the source vstreamer sends a heartbeat. Currently, tha
 **vreplicationHeartbeatUpdateInterval** determines how often the time_updated column is updated if there is no activity on the source and the source vstream is only sending heartbeats. Use a low value if you expect a high QPS or you are monitoring this column to alert about potential outages. Keep this high if:
 
 * you have too many streams and the extra write QPS or CPU load due to these updates is unacceptable OR
- * you have too many streams and/or a large binlogsource field (i.e., there are a lot of participating tables) which generates unacceptable increase in your binlog size
+* you have too many streams and/or a large binlogsource field (i.e., there are a lot of participating tables) which generates unacceptable increase in your binlog size
 
 Some internal processes (like online ddl) depend on the heartbeat updates for operating properly. Hence there is an upper limit on this interval, which is 60 seconds.
+
+#### vstream-binlog-rotation-threshold
+
+**Type** integer\
+**Unit** bytes\
+**Default** 67108864 (64MiB)\
+**Applicable on** source
+
+When starting a vstream which executes a query based on a [GTID](https://dev.mysql.com/doc/refman/en/replication-gtids-concepts.html) snapshot/position (e.g. RowStreamers and ResultStreamers) we will attempt to rotate the binary log (binlog) file if the currently open binlog file on the source is larger than this value in order to limit the [GTID auto positioning](https://dev.mysql.com/doc/refman/en/replication-gtids-auto-positioning.html) overhead. The currently open binlog file — [which can be up to 1GiB in size by default](https://dev.mysql.com/doc/refman/en/replication-options-binary-log.html#sysvar_max_binlog_size) — will always need to be scanned *even when there is little to no replication lag* and empty events will be streamed for those GTIDs in the log that we are skipping. In total, this can add significant overhead on both the `mysqld` instance and the `vttablet` when starting a number of vstreams. Rotating the binlog when it's above this size helps to ensure that we are processing a relatively small open binary log file that will be minimal in both size and number of GTID events. Attempting to rotate the log if the current binlog file is of any significant size (64MiB by default) avoids too many unecessary rotations. If you're on a very fast network with low latency — and plenty of spare CPU capacity — then you may want to increase this size even further to avoid unnecessary rotations. Conversely, if you're on a very slow network with high latency then you may want to decrease this size even further to avoid longer delays when vstreams start (e.g. you may see this exhibited as a slow [`VDiff`](../vdiff) or [`MoveTables`](../movetables) operation on a number of very small tables).
+
+* You can see the number of successful binlog rotations that vstreams have performed (an attempt can fail e.g. due to lack of permissions) using the `VStreamerFlushedBinlogs` status variable in the running process at the [`/debug/vars` `vttablet` endpoint](../../../user-guides/configuration-basic/monitoring/#debugvars)
 
 #### vstream_packet_size
 
