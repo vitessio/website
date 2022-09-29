@@ -26,8 +26,9 @@ docsearch({
   });
 </script>
 
-{{/* In-built Scalers Search */}} {{ $versions := site.Params.versions }} {{
-$latest := $versions.current}}
+{{/* Lunr Search */}} 
+{{ $versions := site.Params.versions }} 
+{{ $latest := $versions.current}}
 <script src="https://unpkg.com/lunr/lunr.js"></script>
 <script>
   window.addEventListener(
@@ -38,7 +39,6 @@ $latest := $versions.current}}
       const currentUrl = window.location.pathname;
       const currentLocation = String(currentUrl).split("/");
       const currentVersion = currentLocation[2];
-      const form = document.getElementById("search");
       const input = document.getElementById("search-bar");
       const target = document.querySelector(".is-search-result");
       const searchResultCount = document.querySelector(".results");
@@ -52,11 +52,10 @@ $latest := $versions.current}}
           event.preventDefault();
           const keywords = input.value.trim();
 
-          // automatically perform wildcard search when the input receives a value
+          // automatically show search result when the input receives a value
           query = keywords;
           if (query.length >= 1) {
             searchPopover.style.display = "inline-block";
-
             searchPopover.style.right = `${0}px`;
             initSearchIndex();
           } else {
@@ -72,14 +71,12 @@ $latest := $versions.current}}
       );
 
       async function initSearchIndex() {
-        console.log("ghdfhhd");
         const scalers = await fetch("/index.json", { method: "GET" })
           .then((response) => response.json())
           .then((data) => {
             return data;
           })
           .catch((err) => console.error("error:", err));
-        console.log(scalers);
         index = lunr(function () {
           const documents = scalers;
 
@@ -111,16 +108,16 @@ $latest := $versions.current}}
             }, this);
           } else {
             documents.forEach(function (doc) {
-            if (doc.version === "{{ $latest }}") {
-              this.add(doc);
-              parse[doc.href] = {
-                title: doc.title,
-                content: doc.content,
-                summary: doc.summary,
-                href: doc.href,
-              };
-            }
-          }, this);
+              if (doc.version === "{{ $latest }}") {
+                this.add(doc);
+                parse[doc.href] = {
+                  title: doc.title,
+                  content: doc.content,
+                  summary: doc.summary,
+                  href: doc.href,
+                };
+              }
+            }, this);
           }
         });
 
@@ -129,8 +126,6 @@ $latest := $versions.current}}
 
       function search(keywords) {
         const results = index.search(keywords);
-
-        console.log(results, "sdsf");
 
         if ("content" in template) {
           // show result count
