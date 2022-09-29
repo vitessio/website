@@ -96,7 +96,7 @@ $latest := $versions.current}}
           this.field("summary", {
             boost: 10,
           });
-          // make search to query results depending on the docs verision
+          // make search to query results depending on the version of the docs
           if (currentVersion) {
             documents.forEach(function (doc) {
               if (doc.version === currentVersion) {
