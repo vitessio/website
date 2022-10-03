@@ -124,7 +124,7 @@ Flag: `--enable_system_settings`
 
 This vtgate flag allows clients to modify a [subset of system settings](https://github.com/vitessio/vitess/blob/main/go/vt/sysvars/sysvars.go#L166-L211) on the MySQL. This is done using the mechanism of [reserved connection](../../query-serving/reserved-conn/#enabling-reserved-connections).
 Once a reserved connection is created, it lives for the life of the vtgate client session. These connections live outside of the regular connection pool and as a result, the number of MySQL server connections used by
-vttablet may become significantly higher than expected connection based on the pool settings.
+vttablet may become significantly higher than what you might expect based on the pool settings.
 
 ### vttablet settings pool
 Flag: `--queryserver-enable-settings-pool`
