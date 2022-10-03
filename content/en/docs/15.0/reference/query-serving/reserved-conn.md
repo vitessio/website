@@ -38,7 +38,6 @@ What we want to highlight at the beginning is that there is a known issue when a
 
 To solve this problem, the connection pool implementation used by vttablet has been enhanced to keep the connections with settings in the pool and not to pin the connection to the client session.
 With this enhancement, we reduce the likelihood of MySQL running out of connections due to reserved connections, because the scenarios where we still need reserved connections are sharply reduced.
-This also helps in retaining the other benefits of having a connection pool.
 
 This feature is currently disabled by default and can be enabled with a flag `--queryserver-enable-settings-pool` on vttablet.
 This only works for the cases when the system variables need a reserved connection.
