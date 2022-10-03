@@ -34,7 +34,7 @@ sessions.
 ### Settings pool and reserved connections
 
 We will see how reserved connections get triggered for different use cases in subsequent sections of this document.
-There is an issue when a reserved connection is used as it turns off the reuse of connection in the vttablet. More details about it are given [below](#number-of-vttablet---mysql-connections).
+What we want to highlight at the beginning is that there is a known issue when a reserved connection is used as it cannot be reused by vttablet. More details about it are given [below](#number-of-vttablet---mysql-connections).
 
 The current pool implementation is enhanced to keep the connections with settings in the pool and not to pin the connection to the session.
 This will avoid the pitfall of reserved connection i.e. blocking MySQL connection which leads to MySQL running out of connections.
