@@ -131,7 +131,7 @@ Flag: `--queryserver-enable-settings-pool`
 
 This vttablet flag enables pooling of connections with modified settings.
 This overcomes the issue described with the number of MySQL connections in [vtgate system settings](#vtgate-system-settings).
-Both of these should be enabled to keep the feature of modifying system settings without foregoing the benefits of connection pooling.
+Both these flags should be enabled for clients to be able to modify system settings without foregoing the benefits of connection pooling.
 
 
 ## Calculating maximum db connections used by vttablet
