@@ -153,4 +153,3 @@ You can use the following formula to approximate the maximum MySQL connections p
 {{< info >}}
 Note that most servers will not use this many connections, since most workloads do not exercise all the pools.
 {{< /info >}}
-   

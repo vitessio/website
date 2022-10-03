@@ -14,7 +14,7 @@ database session to MySQL. To make this process as transparent as possible
 to users, Vitess removes all query constructs that would normally
 need to change the state in the MySQL connection. For example, when a user 
 sets or evaluates a user defined variable, the `vtgate` will rewrite the query 
-so that it does not actually do anything with user variables. Instead it keeps 
+so that it does not actually do anything with user variables. Instead, it keeps 
 the state in the Vitess layer.
 
 In other cases, this approach is not enough, and Vitess can use 
@@ -30,6 +30,18 @@ MySQL. As such, take note of the `SET` statements that your application's
 MySQL connector and/or ORM sends to MySQL/`vtgate`. Or if those settings will
 result in reserved connections being employed for some/all of the application's
 sessions.
+
+### Settings pool and reserved connections
+
+We will see how reserved connections get triggered for different use cases in subsequent sections of this document.
+What we want to highlight at the beginning is that there is a known issue when a reserved connection is used as it cannot be reused by vttablet. More details about it are given [below](#number-of-vttablet---mysql-connections).
+
+To solve this problem, the connection pool implementation used by vttablet has been enhanced to keep the connections with settings in the pool and not to pin the connection to the client session.
+With this enhancement, we reduce the likelihood of MySQL running out of connections due to reserved connections, because the scenarios where we still need reserved connections are sharply reduced.
+
+Since this is a new feature, it is currently disabled by default. It can be enabled by setting the flag `--queryserver-enable-settings-pool` on vttablet.
+This change takes effect only for the cases when system variable changes need a reserved connection.
+There are still cases like [temporary tables](#temporary-tables-and-reserved-connections) and [advisory locks](#get_lock-and-reserved-connections) where reserved connections will continue to be used.
 
 ### System variables and reserved connections
 
