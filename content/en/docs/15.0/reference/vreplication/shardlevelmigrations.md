@@ -2,7 +2,7 @@
 title: Shard Level Migrations
 description: Move shards between keyspaces without downtime
 weight: 120
-aliases: ['/docs/reference/vreplication/v2/shardmigrations/']
+aliases: ['/docs/reference/vreplication/v2/shardlevelmigrations/']
 ---
 
 {{< warning >}}
@@ -42,7 +42,11 @@ A list of 1 or more shards that you want to migrate from the source keyspace to 
 
 ## Related Vitess Flags
 
-In order to support the shard level routing during the migration, the `--enable_partial_keyspace_migration` flag must be set for all of the [`vtgate`](../../programs/vtgate/) instances in the target Vitess cluster.
+In order to support the shard level query routing during the migration, the `--enable_partial_keyspace_migration` flag must be set for all of the [`vtgate`](../../programs/vtgate/) instances in the target Vitess cluster.
+
+{{< warning >}}
+This routing support has a performance impact for all traffic and thus you should only use this flag during the migration period and remove it once the migration is complete.
+{{< /warning >}}
 
 ## Related Commands
 
