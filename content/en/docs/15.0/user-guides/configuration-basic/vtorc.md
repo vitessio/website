@@ -1,6 +1,6 @@
 ---
 title: VTOrc
-weight: 10
+weight: 8
 ---
 
 `VTOrc` is the automated fault detection and repair tool of Vitess. It started off as a fork of the [Orchestrator](https://github.com/openark/orchestrator), which was then custom-fitted to the Vitess use-case running as a Vitess component. It has reached general availablity with this release of Vitess.
@@ -38,6 +38,8 @@ The config file will be deprecated and removed in upcoming releases. The followi
 |      WaitReplicasTimeoutSeconds       |       `--wait-replicas-timeout`       | Duration for which to wait for replica's to respond when issuing RPCs                                                                  |
 |     TopoInformationRefreshSeconds     | `--topo-information-refresh-duration` | Timer duration on which VTOrc refreshes the keyspace and vttablet records from the topology server                                     |
 |          RecoveryPollSeconds          |      `--recovery-poll-duration`       | Timer duration on which VTOrc polls its database to run a recovery                                                                     |
+
+For a full list of supported flags, please look at [VTOrc reference page](../../../reference/programs/vtorc).
 
 Apart from configurations, some flags from VTOrc have also been removed -
 - `sibling`
