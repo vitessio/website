@@ -1,7 +1,7 @@
 ---
-title: v15.0 (Development)
-description: > 
-  Under construction, development release.
+title: v15.0 (RC)
+description: >
+  Release candidate.
   Everything you need to know about scaling MySQL with Vitess.
 notoc: true
 cascade:
