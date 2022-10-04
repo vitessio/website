@@ -9,7 +9,7 @@ aliases: ['/docs/reference/vreplication/v2/shardlevelmigrations/']
 This feature is an **experimental** variant of the `MoveTables` command that allows you to migrate individual shards from one keyspace to another. Please be sure to understand the limitations and requirements below.
 {{< /warning >}}
 
-The full set of options for the `MoveTables` command [can be found here](../movetables/). The options specific to shard level migrations will be covered here.
+The full set of options for the `MoveTables` command [can be found here](../movetables/). The options and other aspects specific to shard level migrations will be covered here.
 
 ## Use Case
 
