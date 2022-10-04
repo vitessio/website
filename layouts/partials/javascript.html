@@ -159,3 +159,24 @@
     false
   );
 </script>
+
+{{/* Dynamic positioning of the search popover using popperjs */}} 
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script>
+  const input = document.querySelector(".navbar-item-search");
+  const searchPopover = document.querySelector(".search-popover");
+  const isMobile = Math.max(window.screen.width, window.screen.height) < 1024;
+
+  // Pass the input, the searchPopover, and some options, and Popper will do the
+  // magic positioning for you:
+  if (isMobile){
+    searchPopover.style.position = 'absolute';
+    searchPopover.style.top = '110px';
+    searchPopover.style.left = '10px';
+  } else {
+    Popper.createPopper(input, searchPopover, {
+      placement: 'bottom-end',
+      strategy: 'fixed',
+    });
+  }
+</script>
