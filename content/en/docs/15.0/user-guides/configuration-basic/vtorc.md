@@ -7,7 +7,7 @@ weight: 10
 
 In order to configure `VTOrc`, you have to make the following changes to `vttablet`:
 
-* Add `--disable_active_reparents=true`: This part will prevent vttablet from fixing replication, and will rely on vtorc instead.
+* Add `--disable_active_reparents=true`: This part will prevent vttablet from fixing replication, and will rely on VTOrc instead.
 
 This is recommended but not required to run `VTOrc`.
 
@@ -98,7 +98,7 @@ vtorc --topo_implementation etcd2 \
   --alsologtostderr
  ```
 
-You can optionally add a `clusters_to_watch` flag that contains a comma separated list of keyspaces or `keyspace/shard` values. If specified, `vtorc` will manage only those clusters.
+You can optionally add a `clusters_to_watch` flag that contains a comma separated list of keyspaces or `keyspace/shard` values. If specified, `VTOrc` will manage only those clusters.
 
 
 ### Durability Policies
