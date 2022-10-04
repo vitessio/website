@@ -4,7 +4,7 @@ series: vtctldclient
 ---
 ## vtctldclient GetShardRoutingRules
 
-Shows the currently active shard routing rules. See the documentation on [shard level migrations](../../../vreplication/shardlevelmigrations/) for more information.
+Returns the currently active shard routing rules as a JSON document. See the documentation on [shard level migrations](../../../vreplication/shardlevelmigrations/) for more information.
 
 ```
 vtctldclient GetShardRoutingRules
