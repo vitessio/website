@@ -31,7 +31,7 @@ Some high level decisions have to be made about the number of cells you plan to 
 
 Vitess resource consumption is mostly driven by QPS, but there may be variations depending on your use case. As a starting point, you can use a rule of thumb of provisioning about 1 CPU for every 1000QPS. This CPU will be divided between MySQL, vttablets and vtgates, about 1/3 each. As for memory, you can start with approximately 1GB per CPU provisioned for Vitess components. MySQL memory will be largely guided by the buffer pool size, which may take some trial and error or prior experience to tune.
 
-Resources for other servers like the toposerver, vtctld and vtorc are minimal. They are likely not going to exceed one CPU per server instance.
+Resources for other servers like the toposerver, vtctld and VTOrc are minimal. They are likely not going to exceed one CPU per server instance.
 
 ## Environment variables
 
