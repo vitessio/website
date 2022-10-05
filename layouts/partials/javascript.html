@@ -1,26 +1,182 @@
-{{ $jsFiles := site.Params.assets.js }}
-{{ range $jsFiles }}
-{{ $path := printf "js/%s.js" . }}
-{{ $js := resources.Get $path | minify | fingerprint }}
-<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
+{{ $jsFiles := site.Params.assets.js }} {{ range $jsFiles }} {{ $path := printf
+"js/%s.js" . }} {{ $js := resources.Get $path | minify | fingerprint }}
+<script
+  src="{{ $js.RelPermalink }}"
+  integrity="{{ $js.Data.Integrity }}"
+></script>
 {{ end }}
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
-<script type="text/javascript">
-docsearch({
-  apiKey: '1d13fc4b241cae42000f422300df8931',
-  indexName: 'vitess',
-  inputSelector: '#search-bar',
-  debug: false
-});
-</script>
 
 <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 <script>
   mermaid.initialize({
     flowchart: {
-      curve: 'linear',
+      curve: "linear",
     },
     startOnLoad: true,
   });
+</script>
+
+{{/* Lunr Search */}} 
+{{ $versions := site.Params.versions }} 
+{{ $latest := $versions.current}}
+<script src="https://unpkg.com/lunr/lunr.js"></script>
+<script>
+  window.addEventListener(
+    "DOMContentLoaded",
+    () => {
+      "use strict";
+      let index;
+      const currentUrl = window.location.pathname;
+      const currentLocation = String(currentUrl).split("/");
+      const currentVersion = currentLocation[2];
+      const input = document.getElementById("search-bar");
+      const target = document.querySelector(".is-search-result");
+      const searchResultCount = document.querySelector(".results");
+      const template = document.getElementById("is-search-template");
+      let searchPopover = document.querySelector(".search-popover");
+      let query = input.value.trim();
+      let parse = {};
+      input.addEventListener(
+        "input",
+        function (event) {
+          event.preventDefault();
+          const keywords = input.value.trim();
+
+          // automatically show search result when the input receives a value
+          query = keywords;
+          if (query.length >= 1) {
+            searchPopover.style.display = "inline-block";
+            searchPopover.style.right = `${0}px`;
+            initSearchIndex();
+          } else {
+            searchPopover.style.display = "none";
+          }
+
+          while (target.firstChild.nextSibling) {
+            target.removeChild(template.nextSibling.nextElementSibling);
+            searchResultCount.firstChild.textContent = "Loading...";
+          }
+        },
+        false
+      );
+
+      async function initSearchIndex() {
+        const scalers = await fetch("/index.json", { method: "GET" })
+          .then((response) => response.json())
+          .then((data) => {
+            return data;
+          })
+          .catch((err) => console.error("error:", err));
+        index = lunr(function () {
+          const documents = scalers;
+
+          this.ref("href");
+          this.field("title", {
+            boost: 20,
+            usePipeline: true,
+            wildcard: lunr.Query.wildcard.TRAILING,
+            presence: lunr.Query.presence.REQUIRED,
+          });
+          this.field("content", {
+            boost: 15,
+          });
+          this.field("summary", {
+            boost: 10,
+          });
+          // make search to query results depending on the version of the docs
+          if (currentVersion) {
+            documents.forEach(function (doc) {
+              if (doc.version === currentVersion) {
+                this.add(doc);
+                parse[doc.href] = {
+                  title: doc.title,
+                  version: doc.version,
+                  content: doc.content,
+                  summary: doc.summary,
+                  href: doc.href,
+                };
+              }
+            }, this);
+          } else {
+            documents.forEach(function (doc) {
+              if (doc.version === "{{ $latest }}") {
+                this.add(doc);
+                parse[doc.href] = {
+                  title: doc.title,
+                  version: doc.version,
+                  content: doc.content,
+                  summary: doc.summary,
+                  href: doc.href,
+                };
+              }
+            }, this);
+          }
+        });
+
+        search(query);
+      }
+
+      function search(keywords) {
+        const results = index.search(keywords);
+        const firstSearchResult = results[0];
+        const currentVersion = parse[firstSearchResult.ref].version;
+
+        if ("content" in template) {
+          // show result count
+          const title = document.createElement("h3");
+          const subTitle = document.createElement("h5");
+          title.id = "search-results";
+          subTitle.id = "search-results";
+          title.className = "subtitle is-size-3";
+          subTitle.className = "subtitle is-size-4";
+
+          if (results.length == 0)
+            title.textContent = `No results found for "${keywords}"`;
+          else if (results.length == 1)
+            title.textContent = `Found one result for "${keywords}"`;
+          else if (results.length > 1 && keywords === "")
+            title.textContent = "Enter search keyword";
+          else
+            title.textContent = `Found ${results.length} results for "${keywords}"`;
+            subTitle.textContent = `Showing results for v${currentVersion}`;
+          searchResultCount.replaceChildren(title, subTitle);
+
+          // show the matched result
+          results.forEach(function (result) {
+            const doc = parse[result.ref];
+            const element = template.content.cloneNode(true);
+            element
+              .querySelector(".is-read-more")
+              .setAttribute("href", doc.href);
+
+            element.querySelector(".title").textContent = doc.title;
+            element.querySelector(".summary").textContent = doc.summary;
+            target.appendChild(element);
+          }, this);
+        }
+      }
+    },
+    false
+  );
+</script>
+
+{{/* Dynamic positioning of the search popover using popperjs */}} 
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script>
+  const input = document.querySelector(".navbar-item-search");
+  const searchPopover = document.querySelector(".search-popover");
+  const isMobile = Math.max(window.screen.width, window.screen.height) < 1024;
+
+  // Pass the input, the searchPopover, and some options, and Popper will do the
+  // magic positioning for you:
+  if (isMobile){
+    searchPopover.style.position = 'absolute';
+    searchPopover.style.top = '110px';
+    searchPopover.style.left = '10px';
+  } else {
+    Popper.createPopper(input, searchPopover, {
+      placement: 'bottom-end',
+      strategy: 'fixed',
+    });
+  }
 </script>

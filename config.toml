@@ -139,4 +139,13 @@ baseName = "_redirects"
 notAlternative = true
 
 [outputs]
-home = [ "HTML", "REDIRECTS", "RSS" ]
+home = [ "HTML", "REDIRECTS", "RSS", "Lunr" ]
+
+[outputFormats.Lunr]
+baseName = "index"
+isPlainText = true
+mediaType = "application/json"
+notAlternative = true
+
+[params.lunr]
+vars = ["title", "summary", "date", "publishdate", "expirydate", "permalink"]
