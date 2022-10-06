@@ -125,3 +125,7 @@ Now you can upgrade your VTOrc version continuing to use the same flags and conf
 
 After upgrading, you can drop the configuration entirely and only use the new flags like `--clusters_to_watch="ks/0" --recovery-period-block-duration=1s --instance-poll-time=1s --prevent-cross-cell-failover`. This is the desired state
 because the support for the configuration file will be removed in upcoming releases.
+
+### Running VTOrc using the Vitess Operator
+
+To find information about deploying `VTOrc` using VTop please take a look at this [page](../../../reference/vtorc/running_in_vtop).

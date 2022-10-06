@@ -46,3 +46,7 @@ You can optionally add a `clusters_to_watch` flag that contains a comma separate
 
 All the failovers that `VTOrc` performs will be honoring the [durability policies](../../configuration-basic/durability_policy). Please be careful in setting the
 desired durability policies for your keyspace because this will affect what situations VTOrc can recover from and what situations will require manual intervention.
+
+### Running VTOrc using the Vitess Operator
+
+To find information about deploying `VTOrc` using VTop please take a look at this [page](../../../reference/vtorc/running_in_vtop).
