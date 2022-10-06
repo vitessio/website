@@ -113,9 +113,9 @@ An errant GTID incident is one where the MySQL instances of a shard do not agree
 
 In Vitess, you can get into an errant GTID situation if a primary is network partitioned and you make a decision to proceed forward with an `EmergencyReparentShard`. This will essentially cause the old primary to get indefinitely stuck due to transactions waiting for a semi-sync ack. The natural instinct would be to restart that server. However, such a restart will cause MySQL to go into recovery mode and complete those pending transactions thereby causing divergence.
 
-`vtorc` can be used to detect errant GTIDs. You can also set up your own monitoring to detect this situation. This can be performed by ensuring that the GTIDs of the replicas are always a subset of the primary.
+`VTOrc` can be used to detect errant GTIDs. You can also set up your own monitoring to detect this situation. This can be performed by ensuring that the GTIDs of the replicas are always a subset of the primary.
 
-If an errant GTID is detected, the first task is to identify the GTIDs that are diverged. If the divergence did not cause any data skew, you could choose to create dummy transactions with those extra GTIDs on instances that do not contain them. If you are running `vtorc`, you can use it to perform this fix.
+If an errant GTID is detected, the first task is to identify the GTIDs that are diverged. If the divergence did not cause any data skew, you could choose to create dummy transactions with those extra GTIDs on instances that do not contain them.
 
 If the data has diverged, you have to make a decision about which one is authoritative. Once that is decided, it is recommended that you first take a backup of the instance that you have determined to be authoritative. Following this, you can bring down the instances that were non-authoritative and restart them with empty directories. This will trigger the restore workflow that will start with the authoritative backup. Once restored, the MySQL will point itself to the current primary and catch up to a consistent state.
 
@@ -140,7 +140,7 @@ If you see the following error string `The MySQL server is running with the --re
 
 Re-executing `PlannedReparentShard` against that primary should fix the problem. If this operation fails with an error saying that there is no current primary, you may have to issue an `EmergencyReparentShard` to safely elect a primary.
 
-If `vtorc` is running, no action is needed because `vtorc` will notice this state and fix it in a safe manner.
+If `VTOrc` is running, no action is needed because `VTOrc` will notice this state and fix it in a safe manner.
 
 This error can also be encountered if a new primary has been elected, but the older vttablet continues to think that it is still the primary. If this is the situation, then it is transient and will heal itself as long as components are able to communicate with each other. In this situation, the older vttablet will be in read-only mode. VTGates that are trying to send the writes to it will fail.
 
