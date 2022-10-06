@@ -12,10 +12,8 @@ You can also perform a "Planned Reparent" through the browser from the `vtctld` 
 ![vtctld-reparenting](../img/vtctld-reparenting.png)
 
 {{< info >}}
-The Vitess operator performs this step automatically when a container is gracefully brought down by Kubernetes, which also takes care of the use case of a software rollout. If a container or pod is brought down abruptly or crashes, then the primary will be unavailable until Kubernetes restarts it. However, if `vtorc` is also deployed, it will detect this and failover to another eligible replica as the primary. `vtorc` will not intervene during a graceful shut down.
+The Vitess operator performs this step automatically when a container is gracefully brought down by Kubernetes, which also takes care of the use case of a software rollout. If a container or pod is brought down abruptly or crashes, then the primary will be unavailable until Kubernetes restarts it. However, if `VTOrc` is also deployed, it will detect this and failover to another eligible replica as the primary. `VTOrc` will not intervene during a graceful shut down.
 {{< /info >}}
-
-If you are running `vtorc`, you can perform the same function from the dashboard by doing a drag-and-drop operation of the nodes.
 
 For more information, please refer to the [Reparenting](../../configuration-advanced/reparenting) section.
 
