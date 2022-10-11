@@ -37,7 +37,7 @@ and durability requirements ([SetKeyspaceDurabilityPolicy](../../programs/vtctld
 
 The most logical question that arises is how do we ensure coordination between multiple `VTOrc` instances and `vtctld`.
 
-We do so by using the central topology-server. Each of these services, acquire a shard lock before it proceeds to run any fixes.
+We do so by using the existing central topology-server. Each of these services, acquire a shard lock before it proceeds to run any fixes.
 This ensures that there is only one actor at any given point of time trying to alter the cluster.
 
 Another cause of concern could be recoveries run on stale data collected by `VTOrc`.
