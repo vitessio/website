@@ -4,6 +4,7 @@ weight: 8
 ---
 
 `VTOrc` is the automated fault detection and repair tool of Vitess. It started off as a fork of the [Orchestrator](https://github.com/openark/orchestrator), which was then custom-fitted to the Vitess use-case running as a Vitess component. It has reached general availablity with this release of Vitess.
+An overview of the architecture of `VTOrc` can be found on this [page](../../../reference/vtorc/architecture).
 
 In order to configure `VTOrc`, you have to make the following changes to `vttablet`:
 
@@ -75,14 +76,7 @@ Along with the UI, the old APIs have also been deprecated. However, some of them
 
 Apart from these APIs, we also now have `/debug/status`, `/debug/vars` and `/debug/liveness` available in the new UI.
 
-Currently, the `/debug/status` lists the recent recoveries that VTOrc has performed.
-
-![VTOrc-recent-recoveries](../img/VTOrc-Recent-Recoveries.png)
-
-If there is some information about VTOrc that you would like to see
-on the `/debug/status` page or support for some API to be added, please let us know in [slack](https://vitess.io/slack) 
-in the [#feat-vtorc](https://vitess.slack.com/archives/C02GSRZ8XAN) channel
-
+For more information about the UI, API and metrics that `VTOrc` exports, please consult this [page](../../../reference/vtorc/ui_api_metrics).
 
 ### Example invocation of VTOrc
 
@@ -131,3 +125,7 @@ Now you can upgrade your VTOrc version continuing to use the same flags and conf
 
 After upgrading, you can drop the configuration entirely and only use the new flags like `--clusters_to_watch="ks/0" --recovery-period-block-duration=1s --instance-poll-time=1s --prevent-cross-cell-failover`. This is the desired state
 because the support for the configuration file will be removed in upcoming releases.
+
+### Running VTOrc using the Vitess Operator
+
+To find information about deploying `VTOrc` using VTop please take a look at this [page](../../../reference/vtorc/running_in_vtop).
