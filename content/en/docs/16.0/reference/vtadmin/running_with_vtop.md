@@ -1,5 +1,5 @@
 ---
-title: Running in VTop
+title: Running with Vitess Operator
 description: How to configure VTop to run VTAdmin
 ---
 

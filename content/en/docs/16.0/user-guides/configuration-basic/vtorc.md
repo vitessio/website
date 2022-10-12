@@ -6,12 +6,6 @@ weight: 8
 `VTOrc` is the automated fault detection and repair tool of Vitess. It started off as a fork of the [Orchestrator](https://github.com/openark/orchestrator), which was then custom-fitted to the Vitess use-case running as a Vitess component.
 An overview of the architecture of `VTOrc` can be found on this [page](../../../reference/vtorc/architecture).
 
-In order to configure `VTOrc`, you have to make the following changes to `vttablet`:
-
-* Add `--disable_active_reparents=true`: This part will prevent vttablet from fixing replication, and will rely on VTOrc instead.
-
-This is recommended but not required to run `VTOrc`.
-
 Setting up `VTOrc` lets you avoid performing the `InitShardPrimary` step. It automatically detects that the new shard doesn't have a primary and elects one for you.
 
 

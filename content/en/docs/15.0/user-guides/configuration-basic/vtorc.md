@@ -6,12 +6,6 @@ weight: 8
 `VTOrc` is the automated fault detection and repair tool of Vitess. It started off as a fork of the [Orchestrator](https://github.com/openark/orchestrator), which was then custom-fitted to the Vitess use-case running as a Vitess component. It has reached general availablity with this release of Vitess.
 An overview of the architecture of `VTOrc` can be found on this [page](../../../reference/vtorc/architecture).
 
-In order to configure `VTOrc`, you have to make the following changes to `vttablet`:
-
-* Add `--disable_active_reparents=true`: This part will prevent vttablet from fixing replication, and will rely on VTOrc instead.
-
-This is recommended but not required to run `VTOrc`.
-
 Setting up `VTOrc` lets you avoid performing the `InitShardPrimary` step. It automatically detects that the new shard doesn't have a primary and elects one for you.
 
 
@@ -61,7 +55,7 @@ Apart from configurations, some flags from VTOrc have also been removed -
 
 ### Old UI Removal and Replacement
 
-The old UI that VTOrc inherited from `Orchestrator` has been removed. A replacement UI, more consistent with the other Vitess binaries has been created.
+The old UI that VTOrc inherited from `Orchestrator` has been removed. A debug UI, more consistent with the other Vitess binaries has been created.
 In order to use the new UI, `--port` flag has to be provided.
 
 Along with the UI, the old APIs have also been deprecated. However, some of them have been ported over to the new UI -
@@ -77,6 +71,8 @@ Along with the UI, the old APIs have also been deprecated. However, some of them
 Apart from these APIs, we also now have `/debug/status`, `/debug/vars` and `/debug/liveness` available in the new UI.
 
 For more information about the UI, API and metrics that `VTOrc` exports, please consult this [page](../../../reference/vtorc/ui_api_metrics).
+
+In order to change the primary of a running cluster, instead of drag and drop from the old UI or using the `graceful-primary-takeover` API, please use [VTAdmin](../../../reference/vtadmin/) or [vtctldclient](../../../reference/programs/vtctldclient/) to execute [PlannedReparentShard](../../configuration-advanced/reparenting/#plannedreparentshard-planned-reparenting).
 
 ### Example invocation of VTOrc
 

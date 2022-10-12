@@ -1,5 +1,5 @@
 ---
-title: VTOrc
+title: vtorc
 ---
 
 `VTOrc` is the automated fault detection and repair tool of Vitess.
