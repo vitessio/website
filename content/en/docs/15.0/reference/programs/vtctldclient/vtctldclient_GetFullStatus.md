@@ -1,19 +1,19 @@
 ---
-title: GetShardRoutingRules
+title: GetFullStatus
 series: vtctldclient
 ---
-## vtctldclient GetShardRoutingRules
+## vtctldclient GetFullStatus
 
-Displays VSchema shard routing rules.
+Outputs a JSON structure that contains full status of MySQL including the replication information, semi-sync information, GTID information among others.
 
 ```
-vtctldclient GetShardRoutingRules
+vtctldclient GetFullStatus <alias>
 ```
 
 ### Options
 
 ```
-  -h, --help   help for GetShardRoutingRules
+  -h, --help   help for GetFullStatus
 ```
 
 ### Options inherited from parent commands
