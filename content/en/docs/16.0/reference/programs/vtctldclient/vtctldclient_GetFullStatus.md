@@ -1,19 +1,19 @@
 ---
-title: GetSrvVSchemas
+title: GetFullStatus
 series: vtctldclient
 ---
-## vtctldclient GetSrvVSchemas
+## vtctldclient GetFullStatus
 
-Returns the SrvVSchema for all cells, optionally filtered by the given cells.
+Outputs a JSON structure that contains full status of MySQL including the replication information, semi-sync information, GTID information among others.
 
 ```
-vtctldclient GetSrvVSchemas [<cell> ...]
+vtctldclient GetFullStatus <alias>
 ```
 
 ### Options
 
 ```
-  -h, --help   help for GetSrvVSchemas
+  -h, --help   help for GetFullStatus
 ```
 
 ### Options inherited from parent commands

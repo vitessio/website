@@ -1,19 +1,19 @@
 ---
-title: GetSrvVSchemas
+title: GenerateShardRanges
 series: vtctldclient
 ---
-## vtctldclient GetSrvVSchemas
+## vtctldclient GenerateShardRanges
 
-Returns the SrvVSchema for all cells, optionally filtered by the given cells.
+Print a set of shard ranges assuming a keyspace with N shards.
 
 ```
-vtctldclient GetSrvVSchemas [<cell> ...]
+vtctldclient GenerateShardRanges <num_shards>
 ```
 
 ### Options
 
 ```
-  -h, --help   help for GetSrvVSchemas
+  -h, --help   help for GenerateShardRanges
 ```
 
 ### Options inherited from parent commands

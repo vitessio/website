@@ -1,19 +1,19 @@
 ---
-title: GetSrvVSchemas
+title: ValidateVersionShard
 series: vtctldclient
 ---
-## vtctldclient GetSrvVSchemas
+## vtctldclient ValidateVersionShard
 
-Returns the SrvVSchema for all cells, optionally filtered by the given cells.
+Validates that the version on the primary matches all of the replicas.
 
 ```
-vtctldclient GetSrvVSchemas [<cell> ...]
+vtctldclient ValidateVersionShard <keyspace/shard>
 ```
 
 ### Options
 
 ```
-  -h, --help   help for GetSrvVSchemas
+  -h, --help   help for ValidateVersionShard
 ```
 
 ### Options inherited from parent commands
