@@ -53,8 +53,8 @@
           }
 
           while (target.firstChild.nextSibling) {
-            target.removeChild(template.nextSibling.nextElementSibling);
             searchResultCount.firstChild.textContent = "Loading...";
+            target.removeChild(template.nextSibling.nextElementSibling);
           }
         },
         false
@@ -112,14 +112,13 @@
             }, this);
           }
         });
-
         search(query);
       }
 
       function search(keywords) {
         const results = index.search(keywords);
         const firstSearchResult = results[0];
-        const currentVersion = parse[firstSearchResult.ref].version;
+        const currentVersion = parse[firstSearchResult?.ref]?.version;
 
         if ("content" in template) {
           // show result count
@@ -136,9 +135,10 @@
             title.textContent = `Found one result for "${keywords}"`;
           else if (results.length > 1 && keywords === "")
             title.textContent = "Enter search keyword";
-          else
+          else {
             title.textContent = `Found ${results.length} results for "${keywords}"`;
             subTitle.textContent = `Showing results for v${currentVersion}`;
+          }
           searchResultCount.replaceChildren(title, subTitle);
 
           // show the matched result
