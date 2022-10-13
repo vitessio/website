@@ -1,6 +1,6 @@
 ---
 title: Running with Vitess Operator
-description: How to configure VTop to run VTAdmin
+description: How to configure Vitess Kubernetes Operator to run VTAdmin
 ---
 
 ## Get Started

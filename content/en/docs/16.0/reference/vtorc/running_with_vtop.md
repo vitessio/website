@@ -1,6 +1,6 @@
 ---
 title: Running with Vitess Operator
-description: How to configure VTop to run `VTOrc`
+description: How to configure Vitess Kubernetes Operator to run `VTOrc`
 ---
 
 ## Get Started

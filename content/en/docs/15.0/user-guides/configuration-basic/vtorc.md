@@ -72,7 +72,7 @@ Apart from these APIs, we also now have `/debug/status`, `/debug/vars` and `/deb
 
 For more information about the UI, API and metrics that `VTOrc` exports, please consult this [page](../../../reference/vtorc/ui_api_metrics).
 
-In order to change the primary of a running cluster, instead of drag and drop from the old UI or using the `graceful-primary-takeover` API, please use [VTAdmin](../../../reference/vtadmin/) or [vtctldclient](../../../reference/programs/vtctldclient/) to execute [PlannedReparentShard](../../configuration-advanced/reparenting/#plannedreparentshard-planned-reparenting).
+In order to change the primary tablet of a running cluster, instead of drag and drop from the old UI or using the `graceful-primary-takeover` API, please use [VTAdmin](../../../reference/vtadmin/) or [vtctldclient](../../../reference/programs/vtctldclient/) to execute [PlannedReparentShard](../../configuration-advanced/reparenting/#plannedreparentshard-planned-reparenting).
 
 ### Example invocation of VTOrc
 
