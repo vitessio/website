@@ -13,7 +13,89 @@ In both cases, it takes an explicit user interaction to launch or to complete th
 
 Normally, migrations are executed by Vitess and are launched and completed automatically. For example, an `ALTER` on a large table can take hours or more to complete. Vitess automatically instates the new schema in place whenever it is satisfied that the `ALTER` is complete. Or, a `DROP` statement could wait in queue while other statements are running, only to actually execute hours later.
 
-We begin discussing the latter of the two: postponed completion, as it solves a widely known problem.
+## Postpone launch
+
+A postponed-launch migration will remain in queued state and will not start executing, until instructed to launch.
+
+Add `--postpone-launch` to any of the online DDL strategies. Example:
+
+```sql
+
+mysql> set @@ddl_strategy='vitess --postpone-launch';
+
+-- The migration is tracked, but the ALTER process won't start running.
+mysql> alter table mytable add column i int not null;
++--------------------------------------+
+| uuid                                 |
++--------------------------------------+
+| 9e8a9249_3976_11ed_9442_0a43f95f28a3 |
++--------------------------------------+
+```
+
+Migrations executed with `--postpone-launch` are visible on `show vitess_migrations` just as normal. They will present as `queued`. The column `postpone_launch` indicates that the migration will not auto-start:
+
+
+```sql
+mysql> show vitess_migrations like '9e8a9249_3976_11ed_9442_0a43f95f28a3' \G
+*************************** 1. row ***************************
+                             id: 3
+                 migration_uuid: 9e8a9249_3976_11ed_9442_0a43f95f28a3
+                       keyspace: commerce
+                          shard: 0
+                   mysql_schema: vt_commerce
+                    mysql_table: mytable
+            migration_statement: alter table mytable add column i int not null
+                       strategy: vitess
+                        options: --postpone-launch
+                added_timestamp: 2022-09-21 06:28:34
+            requested_timestamp: 2022-09-21 06:28:34
+                ready_timestamp: NULL
+              started_timestamp: NULL
+             liveness_timestamp: NULL
+            completed_timestamp: NULL
+              cleanup_timestamp: NULL
+               migration_status: queued
+                            ...
+                postpone_launch: 1
+```
+
+### Use case
+
+The use case is specific to multi sharded environments. In some cases, a user may wish to experiment a migration on a single shard:
+
+- To see how long it takes to run.
+- To see what impact it has on production traffic.
+- To see what impact the schema change has.
+
+Postponed launch migrations make it possible to launch a migration on specific shards, while the migration remains `queued` on the rest of the shards.
+
+{{< warning >}}
+Completing a migration on a subset of the shards means different shards will have different schemas. Do not do this when adding/removing columns, because the table on affected shards will be inconsistent with that of unaffected shards. This feature can be useful to experiment with adding/removing (ideally non-unique) indexes.
+{{< /warning >}}
+
+### Launching a postponed migration
+
+Launching a postponed-launch migration is achieved by the following commands:
+
+```sql
+mysql> alter vitess_migration '9e8a9249_3976_11ed_9442_0a43f95f28a3' launch;
+```
+
+The above unblocks the specific migration on all shards. The migration will execute at the discretion of the Online DDL executor.
+
+```sql
+mysql> alter vitess_migration '9e8a9249_3976_11ed_9442_0a43f95f28a3' launch vitess_shards '-40,40-80';
+```
+
+This variation accepts a comma delimited list of shard names. The migration will only launch on the specified shards. the rest of the shards ignore the command. An empty list of shards lets the command run on all shards.
+
+```sql
+mysql> alter vitess_migration launch all;
+```
+
+Launches all currently postponed migrations on all shards.
+
+Postponed launch is supported for all migrations.
 
 ## Postpone completion
 
@@ -189,90 +271,6 @@ The two strong cases for postponed migrations are `DROP` and log `ALTER`s. Both 
 Postponed `ALTER` migrations (in `vitess` and `gh-ost` strategies) are actually executed, and begin copying table data as well as track ongoing changes. But as they reach the point where cut-over is agreeable, they stall, and keep waiting until the user issues the `alter vitess_migration ... complete` statement. Assuming the user runs the statement when all data has already been copied, it is typically a matter of seconds until the migration completes and the new schema is instated.
 
 For `CREATE` and `DROP` statements, there's no such backfill process as with `ALTER`, and the migrations are simply not scheduled, until the user issues the `complete` statement. Once the statement is issued, the migrations still need to be scheduled, and may be possibly delayed by an existing queue of migrations.
-
-## Postpone launch
-
-A postponed-launch migration will remain in queued state and will not start executing, until instructed to launch.
-
-Add `--postpone-launch` to any of the online DDL strategies. Example:
-
-```sql
-
-mysql> set @@ddl_strategy='vitess --postpone-launch';
-
--- The migration is tracked, but the ALTER process won't start running.
-mysql> alter table mytable add column i int not null;
-+--------------------------------------+
-| uuid                                 |
-+--------------------------------------+
-| 9e8a9249_3976_11ed_9442_0a43f95f28a3 |
-+--------------------------------------+
-```
-
-Migrations executed with `--postpone-launch` are visible on `show vitess_migrations` just as normal. They will present as `queued`. The column `postpone_launch` indicates that the migration will not auto-start:
-
-
-```sql
-mysql> show vitess_migrations like '9e8a9249_3976_11ed_9442_0a43f95f28a3' \G
-*************************** 1. row ***************************
-                             id: 3
-                 migration_uuid: 9e8a9249_3976_11ed_9442_0a43f95f28a3
-                       keyspace: commerce
-                          shard: 0
-                   mysql_schema: vt_commerce
-                    mysql_table: mytable
-            migration_statement: alter table mytable add column i int not null
-                       strategy: vitess
-                        options: --postpone-launch
-                added_timestamp: 2022-09-21 06:28:34
-            requested_timestamp: 2022-09-21 06:28:34
-                ready_timestamp: NULL
-              started_timestamp: NULL
-             liveness_timestamp: NULL
-            completed_timestamp: NULL
-              cleanup_timestamp: NULL
-               migration_status: queued
-                            ...
-                postpone_launch: 1
-```
-
-### Use case
-
-The use case is specific to multi sharded environments. In some cases, a user may wish to experiment a migration on a single shard:
-
-- To see how long it takes to run.
-- To see what impact it has on production traffic.
-- To see what impact the schema change has.
-
-Postponed launch migrations make it possible to launch a migration on specific shards, while the migration remains `queued` on the rest of the shards.
-
-{{< warning >}}
-Completing a migration on a subset of the shards means different shards will have different schemas. Do not do this when adding/removing columns, because the table on affected shards will be inconsistent with that of unaffected shards. This feature can be useful to experiment with adding/removing (ideally non-unique) indexes.
-{{< /warning >}}
-
-### Launching a postponed migration
-
-Launching a postponed-launch migration is achieved by the following commands:
-
-```sql
-mysql> alter vitess_migration '9e8a9249_3976_11ed_9442_0a43f95f28a3' launch;
-```
-
-The above unblocks the specific migration on all shards. The migration will execute at the discretion of the Online DDL executor.
-
-```sql
-mysql> alter vitess_migration '9e8a9249_3976_11ed_9442_0a43f95f28a3' launch vitess_shards '-40,40-80';
-```
-
-This variation accepts a comma delimited list of shard names. The migration will only launch on the specified shards. the rest of the shards ignore the command. An empty list of shards lets the command run on all shards.
-
-```sql
-mysql> alter vitess_migration launch all;
-```
-
-Launches all currently postponed migrations on all shards.
-
-Postponed launch is supported for all migrations.
 
 ## Mixing postponed launch and completion
 
