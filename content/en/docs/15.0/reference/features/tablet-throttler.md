@@ -151,8 +151,8 @@ In the first two above examples we can see that the tablet is configured to thro
 
 ### Instructions
 
-- `/throttler/throttle-app?app=<name>[&duration=<duration>][&ratio=<ratio>][&p=low]`: instructs the throttler to begin throttling requests from given app.
-  - An optional `duration` value auto expires the throttling after indicated time. You may specify these units: `s` (seconds), `m` (minutes), `h` (hours) or combinations. Example values: `90s`, `30m`, `1h`, `1h30m`, etc.
+- `/throttler/throttle-app?app=<name>&duration=<duration>[&ratio=<ratio>][&p=low]`: instructs the throttler to begin throttling requests from given app.
+  - A mandatory `duration` value auto expires the throttling after indicated time. You may specify these units: `s` (seconds), `m` (minutes), `h` (hours) or combinations. Example values: `90s`, `30m`, `1h`, `1h30m`, etc.
   - An optional `ratio` value indicates the throttling intensity, ranging from `0` (no throttling at all) to `1.0` (the default, full throttle).
     With a value of `0.3`, for example, `3` out of `10`, on average, checks by the app, are flat out denied, regardless of present metrics and threshold. The remaining `7` out of `10` checks, will get a response that is based on the actual metrics and threshold (thereby, thay may be approved, or they may be rejected).
   - Applications may also declare themselves to be _low priority_ via `?p=low` param. Managed online schema migrations (`gh-ost`, `pt-online-schema-change`) do so, as does the table purge process.
@@ -160,8 +160,16 @@ In the first two above examples we can see that the tablet is configured to thro
 
 #### Examples:
 
-- `/throttler/throttle-app?app=vreplication&ratio=0.75` rejects on average 3 out of 4 requests made by `vreplication`.
-- `/throttler/throttle-app?app=vreplication&ratio=0.25&duration=2h` rejects on average 1 out of 4 requests made by `vreplication` for the next `2` hours, after which the app is unthrottled.
+- `/throttler/throttle-app?app=vreplication&duration=2h` rejects all requests made by `vreplication` for the next `2` hours, after which the app is unthrottled.
+- `/throttler/throttle-app?app=vreplication&duration=2h&ratio=0.25` rejects on average 1 out of 4 requests made by `vreplication` for the next `2` hours, after which the app is unthrottled.
+
+{{< info >}}
+If using `curl` from a shell prompt/script, make sure to enclose URL with quotes, like so:
+
+```
+$ curl -s 'http://localhost:15000/throttler/throttle-app?app=test&ratio=0.25'
+```
+{{< /info >}}
 
 ### Information
 
