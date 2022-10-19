@@ -8,7 +8,7 @@ description: How to configure Vitess Kubernetes Operator to run VTOrc
 The Vitess operator deploys one VTOrc instance for each keyspace that it is configured for. Please look at the [VTOrc reference page](../../programs/vtorc)
 to know all the flags that VTOrc accepts.
 
-## Configuring VTOrc in VTop
+## Configuring VTOrc in Vitess Operator
 
 The VTOrc can be configured to run for a given keyspace by specifying the `vitessOrchestrator` specification as part of the `keyspace` spec.
 Resource limits and requests can be specified as part of the configuration and the default behaviour of VTOrc can be changed by specifying any 

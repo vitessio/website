@@ -10,10 +10,10 @@ to know all the flags that VTOrc accepts.
 
 ## Compatibility
 
-v15 version of VTOrc is incompatible with 2.7.* versions of VTop and v14 version of VTOrc is incompatible with 2.8.* versions of VTOrc.
-So when the users upgrade from 2.7.* version of VTop to 2.8.*, they should also update their deployment of VTOrc.
+v15 version of VTOrc is incompatible with 2.7.* versions of Vitess Operator and v14 version of VTOrc is incompatible with 2.8.* versions of VTOrc.
+So when the users upgrade from 2.7.* version of Vitess Operator to 2.8.*, they should also update their deployment of VTOrc.
 
-## Configuring VTOrc in VTop
+## Configuring VTOrc in Vitess Operator
 
 The VTOrc can be configured to run for a given keyspace by specifying the `vitessOrchestrator` specification as part of the `keyspace` spec.
 Resource limits and requests can be specified as part of the configuration and the default behaviour of VTOrc can be changed by specifying any 
@@ -21,7 +21,7 @@ desired flags in the `extraFlags` field.
 
 The VTOrc UI runs on the port `15000` of the container and port-forwarding can be setup to access it.
 
-Previously, VTOrc deployment also took a configuration file as a secret specified in the `configSecret` parameter. This field has been removed in this release of VTop.
+Previously, VTOrc deployment also took a configuration file as a secret specified in the `configSecret` parameter. This field has been removed in this release of Vitess Operator.
 
 ## Example Configuration
 

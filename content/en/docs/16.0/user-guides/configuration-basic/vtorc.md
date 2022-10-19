@@ -43,4 +43,4 @@ desired durability policies for your keyspace because this will affect what situ
 
 ### Running VTOrc using the Vitess Operator
 
-To find information about deploying VTOrc using VTop please take a look at this [page](../../../reference/vtorc/running_with_vtop).
+To find information about deploying VTOrc using Vitess Operator please take a look at this [page](../../../reference/vtorc/running_with_vtop).

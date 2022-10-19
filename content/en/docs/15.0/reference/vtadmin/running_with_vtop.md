@@ -13,17 +13,17 @@ Please also read the [Operator's Guide](../operators_guide) to learn more about 
 
 ## Compatibility
 
-Support for deploying VTAdmin in VTop has been added in [release 2.7.1](https://github.com/planetscale/vitess-operator/releases/tag/v2.7.1) onwards.
+Support for deploying VTAdmin in Vitess Operator has been added in [release 2.7.1](https://github.com/planetscale/vitess-operator/releases/tag/v2.7.1) onwards.
 
 ## Overview
 
-VTop deploys VTAdmin in two separate containers running on the same pod. One for running the `vtadmin-api` and one for `vtadmin-web`. Please look at the [architecture docs](../architecture) for details on how they interact with each other.
+Vitess Operator deploys VTAdmin in two separate containers running on the same pod. One for running the `vtadmin-api` and one for `vtadmin-web`. Please look at the [architecture docs](../architecture) for details on how they interact with each other.
 
-VTop then creates services on top of both `vtadmin-api` and `vtadmin-web`, which can be used to access them after either port-forwarding or assigning an external IP address to the service.
+Vitess Operator then creates services on top of both `vtadmin-api` and `vtadmin-web`, which can be used to access them after either port-forwarding or assigning an external IP address to the service.
 
-Finally, VTop creates the `discovery.json` file automatically which is needed to connect to `vtctld` and `vtgate` services. It connects to the global `vtctld` service and per-cell service of `vtgates`, both of which VTop creates automatically. No configuration from the users is required for discovering these components.
+Finally, Vitess Operator creates the `discovery.json` file automatically which is needed to connect to `vtctld` and `vtgate` services. It connects to the global `vtctld` service and per-cell service of `vtgates`, both of which Vitess Operator creates automatically. No configuration from the users is required for discovering these components.
 
-## Configuring VTAdmin in VTop
+## Configuring VTAdmin in Vitess Operator
 
 The VTAdmin configuration section lives at the same level as the `vtctld` configuration in the cluster specification.
 
@@ -41,7 +41,7 @@ Apart from the VTAdmin configuration, the image to use for the containers also n
 
 ## Example Configuration
 
-The VTAdmin configuration that is used in VTop [end to end tests](https://github.com/planetscale/vitess-operator/tree/main/test/endtoend) looks like:
+The VTAdmin configuration that is used in Vitess Operator [end to end tests](https://github.com/planetscale/vitess-operator/tree/main/test/endtoend) looks like:
 
 ```yaml
 spec:
