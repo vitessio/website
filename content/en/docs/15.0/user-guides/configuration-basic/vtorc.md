@@ -124,4 +124,4 @@ because the support for the configuration file will be removed in upcoming relea
 
 ### Running VTOrc using the Vitess Operator
 
-To find information about deploying VTOrc using VTop please take a look at this [page](../../../reference/vtorc/running_in_vtop).
+To find information about deploying VTOrc using VTop please take a look at this [page](../../../reference/vtorc/running_with_vtop).
