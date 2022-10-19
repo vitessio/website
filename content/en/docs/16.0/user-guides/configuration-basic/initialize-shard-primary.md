@@ -34,5 +34,5 @@ After this step, visiting the `/debug/status` page on the vttablets should show 
 {{< /warning >}}
 
 {{< info >}}
-`InitShardPrimary` will soon be deprecated. This action will be performed automatically by `VTOrc` once it is released as production-ready.
+`InitShardPrimary` will soon be deprecated. This action will be performed automatically by VTOrc once it is released as production-ready.
 {{< /info >}}

@@ -12,7 +12,7 @@ Currently, the `/debug/status` lists the recent recoveries that VTOrc has perfor
 
 # APIs
 
-`VTOrc` supports the following APIs which can be used for monitoring and changing the behaviour of `VTOrc`.
+VTOrc supports the following APIs which can be used for monitoring and changing the behaviour of VTOrc.
 
  | New API                          | Additional notes                                                                                                                                                                                        |
 |----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -25,7 +25,7 @@ Currently, the `/debug/status` lists the recent recoveries that VTOrc has perfor
 
 # Metrics
 
-Metrics are available to be seen on the `/debug/vars` page. `VTOrc` exports the following metrics:
+Metrics are available to be seen on the `/debug/vars` page. VTOrc exports the following metrics:
 
 | Metric                 | Usage                                                                                                |
 |------------------------|------------------------------------------------------------------------------------------------------|

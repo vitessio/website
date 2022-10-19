@@ -1,31 +1,31 @@
 ---
 title: Running with Vitess Operator
-description: How to configure Vitess Kubernetes Operator to run `VTOrc`
+description: How to configure Vitess Kubernetes Operator to run VTOrc
 ---
 
 ## Get Started
 
-The Vitess operator deploys one `VTOrc` instance for each keyspace that it is configured for. Please look at the [VTOrc reference page](../../programs/vtorc)
-to know all the flags that `VTOrc` accepts.
+The Vitess operator deploys one VTOrc instance for each keyspace that it is configured for. Please look at the [VTOrc reference page](../../programs/vtorc)
+to know all the flags that VTOrc accepts.
 
 ## Compatibility
 
-v15 version of `VTOrc` is incompatible with 2.7.* versions of VTop and v14 version of `VTOrc` is incompatible with 2.8.* versions of `VTOrc`.
-So when the users upgrade from 2.7.* version of VTop to 2.8.*, they should also update their deployment of `VTOrc`.
+v15 version of VTOrc is incompatible with 2.7.* versions of VTop and v14 version of VTOrc is incompatible with 2.8.* versions of VTOrc.
+So when the users upgrade from 2.7.* version of VTop to 2.8.*, they should also update their deployment of VTOrc.
 
-## Configuring `VTOrc` in VTop
+## Configuring VTOrc in VTop
 
-The `VTOrc` can be configured to run for a given keyspace by specifying the `vitessOrchestrator` specification as part of the `keyspace` spec.
-Resource limits and requests can be specified as part of the configuration and the default behaviour of `VTOrc` can be changed by specifying any 
+The VTOrc can be configured to run for a given keyspace by specifying the `vitessOrchestrator` specification as part of the `keyspace` spec.
+Resource limits and requests can be specified as part of the configuration and the default behaviour of VTOrc can be changed by specifying any 
 desired flags in the `extraFlags` field.
 
-The `VTOrc` UI runs on the port `15000` of the container and port-forwarding can be setup to access it.
+The VTOrc UI runs on the port `15000` of the container and port-forwarding can be setup to access it.
 
-Previously, `VTOrc` deployment also took a configuration file as a secret specified in the `configSecret` parameter. This field has been removed in this release of VTop.
+Previously, VTOrc deployment also took a configuration file as a secret specified in the `configSecret` parameter. This field has been removed in this release of VTop.
 
 ## Example Configuration
 
-An example deployment from the `VTOrc` [end to end test](https://github.com/planetscale/vitess-operator/tree/release-2.8/test/endtoend) on the Vitess Operator looks like:
+An example deployment from the VTOrc [end to end test](https://github.com/planetscale/vitess-operator/tree/release-2.8/test/endtoend) on the Vitess Operator looks like:
 ```yaml
 keyspaces:
   - name: commerce
