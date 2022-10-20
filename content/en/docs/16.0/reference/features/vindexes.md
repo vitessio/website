@@ -230,8 +230,9 @@ Lookup Vindexes support the following parameters:
 * `table`: The backing table for the lookup vindex. It is recommended that the table name be qualified by its keyspace.
 * `from`: The list of "from" columns. The first column is used for routing, and the rest of the columns are used for identifying the owner row.
 * `to`: The name of the "to" keyspace\_id column.
-* `autocommit` (false): if true, specific vindex entries are updated in their own autocommit transaction. This is useful if values never get remapped to different values. For example, if the input column comes from an auto-increment value. Note that the autocommit option does not affect `consistent_lookup` or `consistent_lookup_unique` vindexes, but is for use with `lookup` or `lookup_unique` vindexes..
+* `autocommit` (false): if true, specific vindex entries are updated in their own autocommit transaction. This is useful if values never get remapped to different values. For example, if the input column comes from an auto-increment value. Note that the autocommit option does not affect `consistent_lookup` or `consistent_lookup_unique` vindexes, but is for use with `lookup` or `lookup_unique` vindexes.
 * `write_only` (false): if true, the vindex is kept updated, but a lookup will return all shards if the key is not found. This mode is used while the vindex is being populated and backfilled.
+* `no_verify` (false): if true, Vitess will not internally verify lookup results. This mode is a performance optimization that is unsafe to use unless the `from` columns in the `owner` table rows are never updated.
 * `ignore_nulls` (false): if true, null values in input columns do not create entries in the lookup table. Otherwise, a null input results in an error.
 
 The `numeric_static_map` vindex requires a `json_path` parameter. The file must contain a json that maps input numeric values to keyspace ids.
