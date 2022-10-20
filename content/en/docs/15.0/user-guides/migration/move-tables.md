@@ -124,8 +124,24 @@ for i in 200 201 202; do
  CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
 done
 
-vtctlclient InitShardPrimary -- --force customer/0 zone1-200
-vtctlclient ReloadSchemaKeyspace customer
+# Set the correct durability policy for the keyspace
+vtctldclient SetKeyspaceDurabilityPolicy --durability-policy=semi_sync customer
+
+# Wait for all the tablets to be up and registered in the topology server
+for _ in $(seq 0 200); do
+	vtctldclient GetTablets --keyspace customer --shard 0 | wc -l | grep -q "3" && break
+	sleep 1
+done;
+vtctldclient GetTablets --keyspace customer --shard 0 | wc -l | grep -q "3" || (echo "Timed out waiting for tablets to be up in customer/0" && exit 1)
+
+# Wait for a primary tablet to be elected in the shard
+for _ in $(seq 0 200); do
+	vtctldclient GetTablets --keyspace customer --shard 0 | grep -q "primary" && break
+	sleep 1
+done;
+vtctldclient GetTablets --keyspace customer --shard 0 | grep "primary" || (echo "Timed out waiting for primary to be elected in customer/0" && exit 1)
+
+vtctldclient ReloadSchemaKeyspace customer
 ```
 
 ## Show our old and new tablets
@@ -152,7 +168,7 @@ __Note:__ The following change does not change actual routing yet. We will use a
 In this step we will initiate the MoveTables, which copies tables from the commerce keyspace into customer. This operation does not block any database activity; the MoveTables operation is performed online:
 
 ```bash
-$ vtctlclient MoveTables -- --source commerce --tables 'customer,corder' Create customer.commerce2customer
+$ vtctldclient LegacyVtctlCommand -- MoveTables --source commerce --tables 'customer,corder' Create customer.commerce2customer
 ```
 
 You can read this command as:  "Start copying the tables called **customer** and **corder** from the **commerce** keyspace to the **customer** keyspace."
@@ -167,7 +183,7 @@ A few things to note:
 To see what happens under the covers, let's look at the **routing rules** that the `MoveTables` operation created.  These are instructions used by VTGate to determine which backend keyspace to send requests for a given table or schema/table combo:
 
 ```sh
-$ vtctlclient GetRoutingRules commerce
+$ vtctldclient GetRoutingRules commerce
 {
   "rules": [
     {
@@ -205,7 +221,7 @@ Basically what the `MoveTables` operation has done is to create routing rules to
 In this example there are only a few rows in the tables, so the `MoveTables` operation only takes seconds. If the tables were large, you may need to monitor the progress of the operation.  There is no simple way to get a percentage complete status, but you can estimate the progress by running the following against the primary tablet of the target keyspace:
 
 ```sh
-$ vtctlclient VReplicationExec zone1-0000000200 "select * from _vt.copy_state"
+$ vtctldclient LegacyVtctlCommand -- VReplicationExec zone1-0000000200 "select * from _vt.copy_state"
 +----------+------------+--------+
 | vrepl_id | table_name | lastpk |
 +----------+------------+--------+
@@ -219,7 +235,7 @@ In the above case the copy is already complete, but if it was still ongoing, the
 We can use VDiff to checksum the two sources and confirm they are in sync:
 
 ```bash
-$ vtctlclient VDiff customer.commerce2customer
+$ vtctldclient LegacyVtctlCommand -- VDiff customer.commerce2customer
 ```
 
 You should see output similar to the following:
@@ -236,7 +252,7 @@ This can obviously take a long time on very large tables.
 Once the MoveTables operation is complete, the first step in making the changes live is to _switch_ `SELECT` statements to read from the new keyspace. Other statements will continue to route to the `commerce` keyspace. By staging this as two operations, Vitess allows you to test the changes and reduce the associated risks. For example, you may have a different configuration of hardware or software on the new keyspace.
 
 ```bash
-vtctlclient MoveTables -- --tablet_types=rdonly,replica SwitchTraffic customer.commerce2customer
+vtctldclient LegacyVtctlCommand -- MoveTables --tablet_types=rdonly,replica SwitchTraffic customer.commerce2customer
 ```
 
 ## Interlude: check the routing rules (optional)
@@ -244,7 +260,7 @@ vtctlclient MoveTables -- --tablet_types=rdonly,replica SwitchTraffic customer.c
 Lets look at what has happened to the routing rules since we checked the last time.  The `SwitchTraffic` commands above added a number of new routing rules for the tables involved in the `MoveTables` operation/workflow, e.g.:
 
 ```sh
-$ vtctlclient GetRoutingRules commerce
+$ vtctldclient GetRoutingRules commerce
 {
   "rules": [
     {
@@ -354,7 +370,7 @@ As you can see, we now have requests to the `rdonly` and `replica` tablets for t
 After the replica/rdonly reads have been _switched_, and you have verified that the system is operating as expected, it is time to _switch_ the _write_ and primary read operations. The command to execute the switch is very similar to the one in Phase 1:
 
 ```bash
-$ vtctlclient MoveTables -- --tablet_types=primary SwitchTraffic customer.commerce2customer
+$ vtctldclient LegacyVtctlCommand -- MoveTables --tablet_types=primary SwitchTraffic customer.commerce2customer
 ```
 
 ## Note
@@ -366,7 +382,7 @@ While we have switched reads and writes separately in this example, you can also
 Again, if we look at the routing rules after the `SwitchTraffic` process, we will find that it has been cleaned up, and replaced with a blanket redirect for the moved tables (`customer` and `corder`) from the source keyspace (`commerce`) to the target keyspace (`customer`), e.g.:
 
 ```sh
-$ vtctlclient GetRoutingRules commerce
+$ vtctldclient GetRoutingRules commerce
 {
   "rules": [
     {
@@ -406,7 +422,7 @@ As part of the `SwitchTraffic` operation above, Vitess will automatically (unles
 The final step is to **remove** the data from the original keyspace. As well as freeing space on the original tablets, this is an important step to eliminate potential future confusion. If you have a misconfiguration down the line and accidentally route queries for the  `customer` and `corder` tables to `commerce`, it is much better to return a *"table not found"* error, rather than return stale data:
 
 ```sh
-$ vtctlclient MoveTables Complete customer.commerce2customer
+$ vtctldclient LegacyVtctlCommand -- MoveTables Complete customer.commerce2customer
 ```
 
 After this step is complete, you should see an error (in Vitess 9.0 and later) similar to:
@@ -423,7 +439,7 @@ ERROR 1146 (42S02) at line 4: vtgate: http://localhost:15001/: target: commerce.
 
 This confirms that the data has been correctly cleaned up.  Note that the `Complete` process also cleans up the reverse VReplication workflow mentioned above. Regarding the routing rules, Vitess behavior here has changed recently:
 
-  * Before Vitess 9.0, the the routing rules from the source keyspace to the target keyspace was not cleaned up.  The assumption was that you might still have applications that refer to the tables by their explicit `schema.table` designation, and you want these applications to (still) transparently be forwarded to the new location of the data.  When you are absolutely sure that no applications are using this access pattern, you can clean up the routing rules by manually adjusting the routing rules via the `vtctlclient ApplyRoutingRules` command.
+  * Before Vitess 9.0, the the routing rules from the source keyspace to the target keyspace was not cleaned up.  The assumption was that you might still have applications that refer to the tables by their explicit `schema.table` designation, and you want these applications to (still) transparently be forwarded to the new location of the data.  When you are absolutely sure that no applications are using this access pattern, you can clean up the routing rules by manually adjusting the routing rules via the `vtctldclient ApplyRoutingRules` command.
   * From Vitess 9.0 onwards, the routing rules from the source keyspace to the target keyspace are also cleaned up as part of the `Complete` operation. If this is not the behavior you want, you can choose to either delay the `Complete` until you are sure the routing rules (and source data) are no longer required; or you can perform the same steps as `Complete` manually.
 
 ## Next Steps
