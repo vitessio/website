@@ -198,9 +198,9 @@ This process starts the reshard operation. It occurs online, and will not block 
 
 ```bash
 # With Helm and Local Installation
-vtctldclient LegacyVtctlCommand -- Reshard --source_shards '0' --target_shards '-80,80-' Create customer.cust2cust
+vtctlclient Reshard -- --source_shards '0' --target_shards '-80,80-' Create customer.cust2cust
 # With Operator
-vtctldclient LegacyVtctlCommand -- Reshard --source_shards '-' --target_shards '-80,80-' Create customer.cust2cust
+vtctlclient Reshard -- --source_shards '-' --target_shards '-80,80-' Create customer.cust2cust
 ```
 
 All of the command options and parameters for `Reshard` are listed in our [reference page for Reshard](../../../reference/vreplication/reshard).
@@ -210,7 +210,7 @@ All of the command options and parameters for `Reshard` are listed in our [refer
 After the reshard is complete, we can use VDiff to check data integrity and ensure our source and target shards are consistent:
 
 ```bash
-vtctldclient LegacyVtctlCommand -- VDiff customer.cust2cust
+vtctlclient VDiff -- customer.cust2cust
 ```
 
 You should see output similar to the following:
@@ -224,7 +224,7 @@ Summary for corder: {ProcessedRows:5 MatchingRows:5 MismatchedRows:0 ExtraRowsSo
 After validating for correctness, the next step is to switch read operations to occur at the new location. By switching read operations first, we are able to verify that the new tablet servers are healthy and able to respond to requests:
 
 ```bash
-vtctldclient LegacyVtctlCommand -- Reshard --tablet_types=rdonly,replica SwitchTraffic customer.cust2cust
+vtctlclient Reshard -- --tablet_types=rdonly,replica SwitchTraffic customer.cust2cust
 ```
 
 ## Switch Writes and Primary Reads
@@ -232,12 +232,12 @@ vtctldclient LegacyVtctlCommand -- Reshard --tablet_types=rdonly,replica SwitchT
 After the replica/rdonly reads have been switched, and the health of the system has been verified, it's time to switch writes. The usage is very similar to switching reads:
 
 ```bash
-vtctldclient LegacyVtctlCommand -- Reshard --tablet_types=primary SwitchTraffic customer.cust2cust
+vtctlclient Reshard -- --tablet_types=primary SwitchTraffic customer.cust2cust
 ```
 
 ## Note
 
-While we have switched reads and writes separately in this example, you can also switch all traffic, read and write, at the same time. If you don't specify the `-tablet_types` parameter `SwitchTraffic` will start serving traffic from the target for all tablet types.
+While we have switched reads and writes separately in this example, you can also switch all traffic, read and write, at the same time. If you don't specify the `--tablet_types` parameter `SwitchTraffic` will start serving traffic from the target for all tablet types.
 
 
 You should now be able to see the data that has been copied over to the new shards:
@@ -294,7 +294,7 @@ kubectl apply -f 306_down_shard_0.yaml
 ### Using a Local Deployment
 
 ``` sh
-vtctldclient LegacyVtctlCommand -- Reshard Complete customer.cust2cust
+vtctlclient Reshard -- Complete customer.cust2cust
 
 for i in 200 201 202; do
  CELL=zone1 TABLET_UID=$i ./scripts/vttablet-down.sh

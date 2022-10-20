@@ -168,7 +168,7 @@ __Note:__ The following change does not change actual routing yet. We will use a
 In this step we will initiate the MoveTables, which copies tables from the commerce keyspace into customer. This operation does not block any database activity; the MoveTables operation is performed online:
 
 ```bash
-$ vtctldclient LegacyVtctlCommand -- MoveTables --source commerce --tables 'customer,corder' Create customer.commerce2customer
+$ vtctlclient MoveTables -- --source commerce --tables 'customer,corder' Create customer.commerce2customer
 ```
 
 You can read this command as:  "Start copying the tables called **customer** and **corder** from the **commerce** keyspace to the **customer** keyspace."
@@ -221,7 +221,7 @@ Basically what the `MoveTables` operation has done is to create routing rules to
 In this example there are only a few rows in the tables, so the `MoveTables` operation only takes seconds. If the tables were large, you may need to monitor the progress of the operation.  There is no simple way to get a percentage complete status, but you can estimate the progress by running the following against the primary tablet of the target keyspace:
 
 ```sh
-$ vtctldclient LegacyVtctlCommand -- VReplicationExec zone1-0000000200 "select * from _vt.copy_state"
+$ vtctlclient VReplicationExec -- zone1-0000000200 "select * from _vt.copy_state"
 +----------+------------+--------+
 | vrepl_id | table_name | lastpk |
 +----------+------------+--------+
@@ -235,7 +235,7 @@ In the above case the copy is already complete, but if it was still ongoing, the
 We can use VDiff to checksum the two sources and confirm they are in sync:
 
 ```bash
-$ vtctldclient LegacyVtctlCommand -- VDiff customer.commerce2customer
+$ vtctlclient VDiff -- customer.commerce2customer
 ```
 
 You should see output similar to the following:
@@ -252,7 +252,7 @@ This can obviously take a long time on very large tables.
 Once the MoveTables operation is complete, the first step in making the changes live is to _switch_ `SELECT` statements to read from the new keyspace. Other statements will continue to route to the `commerce` keyspace. By staging this as two operations, Vitess allows you to test the changes and reduce the associated risks. For example, you may have a different configuration of hardware or software on the new keyspace.
 
 ```bash
-vtctldclient LegacyVtctlCommand -- MoveTables --tablet_types=rdonly,replica SwitchTraffic customer.commerce2customer
+vtctlclient MoveTables -- --tablet_types=rdonly,replica SwitchTraffic customer.commerce2customer
 ```
 
 ## Interlude: check the routing rules (optional)
@@ -370,7 +370,7 @@ As you can see, we now have requests to the `rdonly` and `replica` tablets for t
 After the replica/rdonly reads have been _switched_, and you have verified that the system is operating as expected, it is time to _switch_ the _write_ and primary read operations. The command to execute the switch is very similar to the one in Phase 1:
 
 ```bash
-$ vtctldclient LegacyVtctlCommand -- MoveTables --tablet_types=primary SwitchTraffic customer.commerce2customer
+$ vtctlclient MoveTables -- --tablet_types=primary SwitchTraffic customer.commerce2customer
 ```
 
 ## Note
@@ -422,7 +422,7 @@ As part of the `SwitchTraffic` operation above, Vitess will automatically (unles
 The final step is to **remove** the data from the original keyspace. As well as freeing space on the original tablets, this is an important step to eliminate potential future confusion. If you have a misconfiguration down the line and accidentally route queries for the  `customer` and `corder` tables to `commerce`, it is much better to return a *"table not found"* error, rather than return stale data:
 
 ```sh
-$ vtctldclient LegacyVtctlCommand -- MoveTables Complete customer.commerce2customer
+$ vtctlclient MoveTables -- Complete customer.commerce2customer
 ```
 
 After this step is complete, you should see an error (in Vitess 9.0 and later) similar to:
