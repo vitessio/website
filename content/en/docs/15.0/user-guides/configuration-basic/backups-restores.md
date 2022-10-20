@@ -8,7 +8,7 @@ The default settings created by `mysqlctl` set the binlog `expire_logs_days` to 
 So, you need to take regular backups, probably through a cron job. Assuming that you’ve configured the shared storage and provided the correct parameters to the Vitess components, you should be able to create a backup as follows:
 
 ```text
-vtctlclient Backup cell1-101
+vtctldclient Backup cell1-101
 ```
 
 {{< warning >}}

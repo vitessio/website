@@ -132,7 +132,7 @@ If the vttablet entry is absent, then it means that vtgate has not discovered th
 
 It may be worth proactively monitoring `TopologyWatcherErrors` and `TopologyWatcherOperations`. Alerting on errors can help identify these problems early.
 
-If there are no topo errors in vtgate, check to see if the tablet record has been created by vttablet using the `vtctlclient ListAllTablets` command. If the tablet record is absent or does not contain the correct host and port info, check the vttablet logs to see if it has trouble connecting to the topo and is unable to publish its existence. If there are errors, fixing the issue should resolve the problem.
+If there are no topo errors in vtgate, check to see if the tablet record has been created by vttablet using the `vtctldclient GetTablets` command. If the tablet record is absent or does not contain the correct host and port info, check the vttablet logs to see if it has trouble connecting to the topo and is unable to publish its existence. If there are errors, fixing the issue should resolve the problem.
 
 ### Read-only errors
 
