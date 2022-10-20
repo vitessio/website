@@ -57,6 +57,7 @@ Executes a cluster management command on the remote vtctld server.
 * [vtctldclient GetTablet](./vtctldclient_gettablet/)	 - Outputs a JSON structure that contains information about the tablet.
 * [vtctldclient GetTabletVersion](./vtctldclient_gettabletversion/)	 - Print the version of a tablet from its debug vars.
 * [vtctldclient GetTablets](./vtctldclient_gettablets/)	 - Looks up tablets according to filter criteria.
+* [vtctldclient GetTopologyPath](./vtctldclient_gettopologypath/)	 - Gets the file located at the specified path in the topology server.
 * [vtctldclient GetVSchema](./vtctldclient_getvschema/)	 - Prints a JSON representation of a keyspace's topo record.
 * [vtctldclient GetWorkflows](./vtctldclient_getworkflows/)	 - Gets all vreplication workflows (Reshard, MoveTables, etc) in the given keyspace.
 * [vtctldclient InitShardPrimary](./vtctldclient_initshardprimary/)	 - Sets the initial primary for the shard.
