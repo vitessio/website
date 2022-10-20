@@ -1,12 +1,12 @@
 ---
-title: VTOrc
+title: vtorc
 ---
 
-`VTOrc` is the automated fault detection and repair tool of Vitess.
+VTOrc is the automated fault detection and repair tool of Vitess.
 
 ## Example Usage
 
-Start `VTOrc` as follows:
+Start VTOrc as follows:
 
 ```bash
 export TOPOLOGY_FLAGS="--topo_implementation etcd2 --topo_global_server_address localhost:2379 --topo_global_root /vitess/global"
@@ -24,7 +24,7 @@ vtorc \
 
 ## Options
 
-The following command line options apply to `VTOrc`:
+The following command line options apply to VTOrc:
 
 | Name                                | Type          | Definition                                                                                                                                                                                                                                                                                                                        |
 |:------------------------------------|:--------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
