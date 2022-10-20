@@ -128,19 +128,19 @@ Applying the new VSchema instructs Vitess that the keyspace is sharded, which ma
 ### Using Operator
 
 ```bash
-vtctlclient ApplySchema -- --sql="$(cat create_commerce_seq.sql)" commerce
-vtctlclient ApplyVSchema -- --vschema="$(cat vschema_commerce_seq.json)" commerce
-vtctlclient ApplyVSchema -- --vschema="$(cat vschema_customer_sharded.json)" customer
-vtctlclient ApplySchema -- --sql="$(cat create_customer_sharded.sql)" customer
+vtctldclient ApplySchema --sql="$(cat create_commerce_seq.sql)" commerce
+vtctldclient ApplyVSchema --vschema="$(cat vschema_commerce_seq.json)" commerce
+vtctldclient ApplyVSchema --vschema="$(cat vschema_customer_sharded.json)" customer
+vtctldclient ApplySchema --sql="$(cat create_customer_sharded.sql)" customer
 ```
 
 ### Using a Local Deployment
 
 ``` sh
-vtctlclient ApplySchema -- --sql-file create_commerce_seq.sql commerce
-vtctlclient ApplyVSchema -- --vschema_file vschema_commerce_seq.json commerce
-vtctlclient ApplyVSchema -- --vschema_file vschema_customer_sharded.json customer
-vtctlclient ApplySchema -- --sql-file create_customer_sharded.sql customer
+vtctldclient ApplySchema --sql-file create_commerce_seq.sql commerce
+vtctldclient ApplyVSchema --vschema_file vschema_commerce_seq.json commerce
+vtctldclient ApplyVSchema --vschema_file vschema_customer_sharded.json customer
+vtctldclient ApplySchema --sql-file create_customer_sharded.sql customer
 ```
 
 ## Create new shards
@@ -175,8 +175,21 @@ for i in 400 401 402; do
  SHARD=80- CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
 done
 
-vtctlclient InitShardPrimary -- --force customer/-80 zone1-300
-vtctlclient InitShardPrimary -- --force customer/80- zone1-400
+for shard in "-80" "80-"; do
+  # Wait for all the tablets to be up and registered in the topology server
+  for _ in $(seq 0 200); do
+    vtctldclient GetTablets --keyspace customer --shard $shard | wc -l | grep -q "3" && break
+    sleep 1
+  done;
+  vtctldclient GetTablets --keyspace customer --shard $shard | wc -l | grep -q "3" || (echo "Timed out waiting for tablets to be up in customer/$shard" && exit 1)
+
+  # Wait for a primary tablet to be elected in the shard
+  for _ in $(seq 0 200); do
+    vtctldclient GetTablets --keyspace customer --shard $shard | grep -q "primary" && break
+    sleep 1
+  done;
+  vtctldclient GetTablets --keyspace customer --shard $shard | grep "primary" || (echo "Timed out waiting for primary to be elected in customer/$shard" && exit 1)
+done;
 ```
 
 ## Start the Reshard
@@ -185,9 +198,9 @@ This process starts the reshard operation. It occurs online, and will not block 
 
 ```bash
 # With Helm and Local Installation
-vtctlclient Reshard -- --source_shards '0' --target_shards '-80,80-' Create customer.cust2cust
+vtctldclient LegacyVtctlCommand -- Reshard --source_shards '0' --target_shards '-80,80-' Create customer.cust2cust
 # With Operator
-vtctlclient Reshard -- --source_shards '-' --target_shards '-80,80-' Create customer.cust2cust
+vtctldclient LegacyVtctlCommand -- Reshard --source_shards '-' --target_shards '-80,80-' Create customer.cust2cust
 ```
 
 All of the command options and parameters for `Reshard` are listed in our [reference page for Reshard](../../../reference/vreplication/reshard).
@@ -197,7 +210,7 @@ All of the command options and parameters for `Reshard` are listed in our [refer
 After the reshard is complete, we can use VDiff to check data integrity and ensure our source and target shards are consistent:
 
 ```bash
-vtctlclient VDiff customer.cust2cust
+vtctldclient LegacyVtctlCommand -- VDiff customer.cust2cust
 ```
 
 You should see output similar to the following:
@@ -211,7 +224,7 @@ Summary for corder: {ProcessedRows:5 MatchingRows:5 MismatchedRows:0 ExtraRowsSo
 After validating for correctness, the next step is to switch read operations to occur at the new location. By switching read operations first, we are able to verify that the new tablet servers are healthy and able to respond to requests:
 
 ```bash
-vtctlclient Reshard -- --tablet_types=rdonly,replica SwitchTraffic customer.cust2cust
+vtctldclient LegacyVtctlCommand -- Reshard --tablet_types=rdonly,replica SwitchTraffic customer.cust2cust
 ```
 
 ## Switch Writes and Primary Reads
@@ -219,7 +232,7 @@ vtctlclient Reshard -- --tablet_types=rdonly,replica SwitchTraffic customer.cust
 After the replica/rdonly reads have been switched, and the health of the system has been verified, it's time to switch writes. The usage is very similar to switching reads:
 
 ```bash
-vtctlclient Reshard -- --tablet_types=primary SwitchTraffic customer.cust2cust
+vtctldclient LegacyVtctlCommand -- Reshard --tablet_types=primary SwitchTraffic customer.cust2cust
 ```
 
 ## Note
@@ -281,7 +294,7 @@ kubectl apply -f 306_down_shard_0.yaml
 ### Using a Local Deployment
 
 ``` sh
-vtctlclient Reshard Complete customer.cust2cust
+vtctldclient LegacyVtctlCommand -- Reshard Complete customer.cust2cust
 
 for i in 200 201 202; do
  CELL=zone1 TABLET_UID=$i ./scripts/vttablet-down.sh

@@ -195,7 +195,7 @@ The next step is to bring up the rest of the vttablet-MySQL pairs on other machi
 You can find out the current state of all vttablets with the following command:
 
 ```sh
-$ vtctlclient ListAllTablets
+$ vtctldclient GetTablets
 cell1-0000000100 commerce 0 primary sougou-lap1:15100 sougou-lap1:17100 [] 2021-01-02T22:27:11Z
 cell1-0000000101 commerce 0 replica sougou-lap1:15101 sougou-lap1:17101 [] <null>
 cell1-0000000102 commerce 0 rdonly sougou-lap1:15102 sougou-lap1:17102 [] <null>
@@ -214,6 +214,6 @@ If a vttablet crashes, the address info will remain in the topo. However, vtgate
 It is recommended that you delete the tablet record if you intend to bring down a vttablet permanently. The command to delete a tablet is:
 
 ```text
-vtctlclient DeleteTablet cell1-100
+vtctldclient DeleteTablets cell1-100
 ```
 

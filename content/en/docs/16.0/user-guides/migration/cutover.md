@@ -18,7 +18,7 @@ Before starting the cutover process you will want to:
 1.  Save your routing rules just in case the are needed to revert the process:
 
 ```sh
-vtctlclient --server vtctld.host:15999 GetRoutingRules > /var/tmp/routingrules.backup.json
+vtctldclient --server vtctld.host:15999 GetRoutingRules > /var/tmp/routingrules.backup.json
 ```
 
 2. Check that the source keyspace(s) have the necessary tablet types in them (e.g. RDONLY).
@@ -37,20 +37,20 @@ vtctlclient --server vtctld.host:15999 GetRoutingRules > /var/tmp/routingrules.b
 To begin MoveTables run the following command:
 
 ```sh
-vtctlclient --server vtctld.host:15999 MoveTables -- --source sourcekeyspace --tables 'table1,table2,table3' Create targetkeyspace.workflowname
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- MoveTables --source sourcekeyspace --tables 'table1,table2,table3' Create targetkeyspace.workflowname
 ```
 
 You can then monitor the workflow status:
 
 ```sh
-vtctlclient --server vtctld.host:15999 Workflow targetkeyspace listall
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- Workflow targetkeyspace listall
 Following workflow(s) found in keyspace targetkeyspace.workflowname
-vtctlclient --server vtctld.host:15999 MoveTables Progress targetkeyspace.workflowname
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- MoveTables Progress targetkeyspace.workflowname
 ```
 If you want more detailed information you can also run:
 
 ```sh
-vtctlclient --server vtctld.host:15999 Workflow targetkeyspace.workflowname show 
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- Workflow targetkeyspace.workflowname show
 ```
 The output for `Workflow ... show` is shown below in the --v1 commands.
 
@@ -59,15 +59,15 @@ The output for `Workflow ... show` is shown below in the --v1 commands.
 To begin MoveTables run the following command:
 
 ```sh
-vtctlclient --server vtctld.host:15999 MoveTables -- --workflow=workflowname sourcekeyspace targetkeyspace table1,table2,table3
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- MoveTables --workflow=workflowname sourcekeyspace targetkeyspace table1,table2,table3
 ```
 
 You can then monitor the workflow status:
 
 ```sh
-vtctlclient --server vtctld.host:15999 Workflow targetkeyspace listall
+vtctlclient --server vtctld.host:15999 LegacyVtctlCommand -- Workflow targetkeyspace listall
 Following workflow(s) found in keyspace targetkeyspace: workflowname
-vtctlclient --server vtctld.host:15999 Workflow targetkeyspace.workflowname show
+vtctlclient --server vtctld.host:15999 LegacyVtctlCommand -- Workflow targetkeyspace.workflowname show
     {
     "Workflow": "workflowname",
     "SourceLocation": {
@@ -149,8 +149,8 @@ You would only be able to diagnose this problem by looking at the vttablet logs 
 - In most cases, it would be appropriate to stop and delete the workflow using the following:
 
 ```sh
-vtctlclient --server vtctld.host:15999 Workflow targetkeyspace.workflowname stop
-vtctlclient --server vtctld.host:15999 Workflow targetkeyspace.workflowname delete
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- Workflow targetkeyspace.workflowname stop
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- Workflow targetkeyspace.workflowname delete
 ```
 
 - Then fix underlying issue and re-run the MoveTables command
@@ -164,7 +164,7 @@ The MoveTables workflow is done when the state has transitioned to “Running”
 
 Depending on the size of the table(s), the VDiff process may need increased timeouts for two things:
 
-- If you are running VDiff using vtctlclient (i.e. vtctld is doing the VDiff) you will need to increase the vtctlclient gRPC action timeout. This increase could be something like `--action_timeout 12h` as the default is 1 hour.
+- If you are running VDiff using vtctldclient (i.e. vtctld is doing the VDiff) you will need to increase the vtctldclient gRPC action timeout. This increase could be something like `--action_timeout 12h` as the default is 1 hour.
 - Increase the `--filtered_replication_wait_time` parameter for VDiff as the default is 30 seconds. You many need to increase this to hours on large and/or busy tables.
 
 {{< info >}}
@@ -210,22 +210,22 @@ In a case like this, you should stop the VDiff, then adjust the options appropri
 
 ### How do you stop and restart VDiff
 
-Since VDiff is synchronous, just using CTRL-C on the vtctlclient VDiff command is sufficient.
+Since VDiff is synchronous, just using CTRL-C on the vtctldclient VDiff command is sufficient.
 Executing another VDiff immediately afterwards will return the workflow back to the proper state.  
 
-If you do NOT plan to execute another VDiff, you will need to double check the current state of the workflow to ensure that it’s running after you interrupted the vtctlclient process. 
+If you do NOT plan to execute another VDiff, you will need to double check the current state of the workflow to ensure that it’s running after you interrupted the vtctldclient process. 
 If a VDiff is interrupted in certain phases it can leave the workflow stopped.
 
 To check workflow state:
 
 ```sh
-vtctlclient … Workflow targetkeyspace.workflowname show
+vtctldclient … LegacyVtctlCommand -- Workflow targetkeyspace.workflowname show
 ```
 
 If the workflow state is STOPPED and the message field is empty you can simply start the workflow again:
 
 ```sh
-vtctlclient … Workflow targetkeyspace.workflowname start
+vtctldclient … LegacyVtctlCommand -- Workflow targetkeyspace.workflowname start
 ```
 
 If the workflow state is STOPPED and the message field is “Stop position … already reached”, then you will have to clear the stop_pos field in the _vt.vreplication table before starting the workflow again.
@@ -239,9 +239,9 @@ Depending on the use-case, additional or alternative cleanup methods may be avai
 1. The general procedure is as follows:
 
 ```sh
-vtctlclient … Workflow targetkeyspace.workflowname show
-vtctlclient … Workflow targetkeyspace.workflowname stop
-vtctlclient … Workflow targetkeyspace.workflowname delete
+vtctldclient … LegacyVtctlCommand -- Workflow targetkeyspace.workflowname show
+vtctldclient … LegacyVtctlCommand -- Workflow targetkeyspace.workflowname stop
+vtctldclient … LegacyVtctlCommand -- Workflow targetkeyspace.workflowname delete
 ```
 
 In the case of MoveTables, additional operations are done at various stages against the Vitess routing rules, which are global for a Vitess cluster.
@@ -251,20 +251,20 @@ Usually, it is also advisable to save the routing rules before starting your Mov
 2. To save or dump routing rules:
 
 ```sh
-vtctlclient --server ...  GetRoutingRules > /path/to/save/routingrules.json
+vtctldclient --server ...  GetRoutingRules > /path/to/save/routingrules.json
 ```
 
 3. You should then be able to edit the routingrules.json file and then apply the new routing rules using:
 
 ```sh
-vtctlclient --server ...  ApplyRoutingRules -- --rules=($cat /path/to/save/routingrules.json) --dry-run
+vtctldclient --server ...  ApplyRoutingRules -- --rules=($cat /path/to/save/routingrules.json) --dry-run
 ```
 That will not actually execute ApplyRoutingRules due to the `--dry-run` flag, instead it will enable you to see what would happen when you run that command and address any issues that may occur.
 
 4. Once you have verified the command works as intended run it without --dry-run:
 
 ```sh
-vtctlclient -server ...  ApplyRoutingRules -rules=($cat /path/to/save/routingrules.json) 
+vtctldclient -server ...  ApplyRoutingRules -rules=($cat /path/to/save/routingrules.json) 
 ```
 
 Some Vreplication workflows (e.g. MoveTables and Resharding) have their own DropSources cleanup command, which can take care of much of the above.
@@ -294,31 +294,31 @@ The default SwitchTraffic behavior is to switch all traffic in a single command,
 - Default (switches all tablet types)
 
 ```
-vtctlclient --server vtctld.host:15999 MoveTables -- --dry_run SwitchTraffic targetkeyspace.workflowname
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- MoveTables --dry_run SwitchTraffic targetkeyspace.workflowname
 ```
 
 - RDONLY:
   
 ```
-vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=rdonly --dry_run SwitchTraffic targetkeyspace.workflowname
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- MoveTables --tablet_types=rdonly --dry_run SwitchTraffic targetkeyspace.workflowname
 ```
 
 - REPLICA:
   
 ```
-vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=replica --dry_run SwitchTraffic targetkeyspace.workflowname
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- MoveTables --tablet_types=replica --dry_run SwitchTraffic targetkeyspace.workflowname
 ```
 
 - PRIMARY:  
 
 ```
-vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=primary --dry_run SwitchTraffic targetkeyspace.workflowname
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- MoveTables --tablet_types=primary --dry_run SwitchTraffic targetkeyspace.workflowname
 ```
 
 The output of these commands will look similar to the following:
 
 ```sh
-$ vtctlclient --server localhost:15999 MoveTables -- --tablet_types=rdonly --dry_run SwitchTraffic targetkeyspace.workflowname 
+$ vtctldclient --server localhost:15999 LegacyVtctlCommand -- MoveTables --tablet_types=rdonly --dry_run SwitchTraffic targetkeyspace.workflowname 
 Dry Run results for SwitchReads run at 02 Jan 06 15:04 MST
 Parameters: --tablet_types=rdonly --dry_run targetkeyspace.workflowname
 
@@ -337,19 +337,19 @@ After you have tried the above command(s) with `--dry_run` remove just that flag
 - RDONLY:
   
 ```
-vtctlclient --server vtctld.host:15999 SwitchReads -- --tablet_types=rdonly targetkeyspace.workflowname
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- SwitchReads --tablet_types=rdonly targetkeyspace.workflowname
 ```
 
 - REPLICA:  
 
 ```
-vtctlclient --server vtctld.host:15999 SwitchReads -- --tablet_types=replica targetkeyspace.workflowname
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- SwitchReads --tablet_types=replica targetkeyspace.workflowname
 ```
 
 The output of these commands will look similar to the following:
 
 ```sh
-$ vtctlclient --server localhost:15999 SwitchReads -- --tablet_types=rdonly --reverse --dry_run targetkeyspace.workflowname
+$ vtctldclient --server localhost:15999 LegacyVtctlCommand -- SwitchReads --tablet_types=rdonly --reverse --dry_run targetkeyspace.workflowname
 Dry Run results for SwitchReads run at 02 Jan 06 15:04 MST
 Parameters: --tablet_types=rdonly --reverse --dry_run targetkeyspace.workflowname
 
@@ -367,12 +367,12 @@ It is recommended you first run SwitchWrites with --dry_run, so you understand w
 `--dry_run` needs to be added before targetkeyspace.workflowname.
 
 ```
-$ vtctlclient --server localhost:15999 SwitchWrites -- --dry_run targetkeyspace.workflowname 
+$ vtctldclient --server localhost:15999 LegacyVtctlCommand -- SwitchWrites --dry_run targetkeyspace.workflowname 
 ```
 The output of this command will look similar to the following:
 
 ```sh
-$ vtctlclient --server localhost:15999 SwitchWrites -- --dry_run targetkeyspace.workflowname
+$ vtctldclient --server localhost:15999 LegacyVtctlCommand -- SwitchWrites --dry_run targetkeyspace.workflowname
 Dry Run results for SwitchWrites run at 02 Jan 06 15:04 MST
 Parameters: --dry_run targetkeyspace.workflowname
 
@@ -412,7 +412,7 @@ At a minimum, you can use the `Workflow … show` command to validate that the w
 This example shows a healthy, completed MoveTables workflow:
 
 ```sh
-$ vtctlclient --server localhost:15999 Workflow show targetkeyspace.workflowname
+$ vtctldclient --server localhost:15999 LegacyVtctlCommand -- Workflow show targetkeyspace.workflowname
 {
     "Workflow": "workflowname",
     "SourceLocation": {
@@ -489,25 +489,25 @@ The default ReverseTraffic behavior is to switch all traffic in a single command
 - Default (switches all tablet types)
 
 ```
-vtctlclient --server vtctld.host:15999 MoveTables -- --dry_run ReverseTraffic targetkeyspace.workflowname
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- MoveTables --dry_run ReverseTraffic targetkeyspace.workflowname
 ```
 
 - RDONLY:
   
 ```
-vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=rdonly --dry_run ReverseTraffic targetkeyspace.workflowname
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- MoveTables --tablet_types=rdonly --dry_run ReverseTraffic targetkeyspace.workflowname
 ```
 
 - REPLICA:
   
 ```
-vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=replica --dry_run ReverseTraffic targetkeyspace.workflowname
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- MoveTables --tablet_types=replica --dry_run ReverseTraffic targetkeyspace.workflowname
 ```
 
 - PRIMARY:  
 
 ```
-vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=primary --dry_run ReverseTraffic targetkeyspace.workflowname
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- MoveTables --tablet_types=primary --dry_run ReverseTraffic targetkeyspace.workflowname
 ```
 
 ### When using --v1 commands
@@ -523,13 +523,13 @@ Only follow these steps if SwitchWrites has not yet been run.
 - RDONLY:
   
 ```
-vtctlclient --server localhost:15999 SwitchReads -- --tablet_types=rdonly --dry_run sourcekeyspace.workflowname_reverse
+vtctldclient --server localhost:15999 LegacyVtctlCommand -- SwitchReads --tablet_types=rdonly --dry_run sourcekeyspace.workflowname_reverse
 ```
 
 - REPLICA:  
 
 ```
-vtctlclient --server localhost:15999 SwitchReads -- --tablet_types=replica --dry_run sourcekeyspace.workflowname_reverse
+vtctldclient --server localhost:15999 LegacyVtctlCommand -- SwitchReads --tablet_types=replica --dry_run sourcekeyspace.workflowname_reverse
 ```
 
 #### Writes have been switched:
@@ -543,19 +543,19 @@ Only follow these steps if SwitchWrites has already been run.
 - RDONLY:
   
 ```
-vtctlclient --server vtctld.host:15999 SwitchReads -- --tablet_types=rdonly --reverse targetkeyspace.workflowname
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- SwitchReads --tablet_types=rdonly --reverse targetkeyspace.workflowname
 ```
 
 - REPLICA:  
 
 ```
-vtctlclient --server vtctld.host:15999 SwitchReads -- --tablet_types=replica --reverse targetkeyspace.workflowname
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- SwitchReads --tablet_types=replica --reverse targetkeyspace.workflowname
 ```
 
 The output of this command will look similar to the following:
 
 ```sh
-$ vtctlclient --server localhost:15999 SwitchReads -- --tablet_types=rdonly --dry_run sourcekeyspace.workflowname_reverse
+$ vtctldclient --server localhost:15999 LegacyVtctlCommand -- SwitchReads --tablet_types=rdonly --dry_run sourcekeyspace.workflowname_reverse
 Dry Run results for SwitchReads run at 02 Jan 06 15:04 MST
 Parameters: --tablet_types=rdonly --dry_run sourcekeyspace.workflowname_reverse
 
@@ -566,7 +566,7 @@ Unlock keyspace targetkeyspace
 ```
 
 ```sh
-$ vtctlclient --server localhost:15999 SwitchReads -- --tablet_types=replica --dry_run sourcekeyspace.workflowname_reverse
+$ vtctldclient --server localhost:15999 LegacyVtctlCommand -- SwitchReads --tablet_types=replica --dry_run sourcekeyspace.workflowname_reverse
 *** SwitchReads is deprecated. Consider using v2 commands instead, see https://vitess.io/docs/reference/vreplication/ ***
 Dry Run results for SwitchReads run at 02 Jan 06 15:04 MST
 Parameters: --tablet_types=replica --dry_run sourcekeyspace.workflowname_reverse
@@ -580,13 +580,13 @@ Unlock keyspace targetkeyspace
 2. After the reads are switched you will then need to reverse the writes:
 
 ```
-vtctlclient --server vtctld.host:15999 SwitchWrites sourcekeyspace.workflowname_reverse
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- SwitchWrites sourcekeyspace.workflowname_reverse
 ```
 
 The output of this command will look similar to the following:
 
 ```sh
-$ vtctlclient --server localhost:15999 SwitchWrites --dry_run sourcekeyspace.workflowname_reverse
+$ vtctldclient --server localhost:15999 LegacyVtctlCommand -- SwitchWrites --dry_run sourcekeyspace.workflowname_reverse
 Dry Run results for SwitchWrites run at 02 Jan 06 15:04 MST
 Parameters: --dry_run sourcekeyspace.workflowname_reverse
 
@@ -628,7 +628,7 @@ This should not be an issue if the amount of writes to the keyspaces are similar
 If the cutover was successful, the MoveTables --Complete command will do the following:
 
 ```
-vtctlclient --server vtctld.host:15999 MoveTables -- --dry_run Complete targetkeyspace.workflowname
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- MoveTables --dry_run Complete targetkeyspace.workflowname
 ```
 
 1. Drop the tables involved in the MoveTables in the original keyspace (sourcekeyspace)
@@ -640,7 +640,7 @@ vtctlclient --server vtctld.host:15999 MoveTables -- --dry_run Complete targetke
 If a cutover was rolled back via ReverseTraffic, the MoveTables --Cancel command will clean up the targetkeyspace:
 
 ```
-vtctlclient --server vtctld.host:15999 MoveTables Cancel targetkeyspace.workflowname
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- MoveTables Cancel targetkeyspace.workflowname
 ```
 
 1. Drop the tables involved in the MoveTables in the new keyspace (targetkeyspace)
@@ -654,7 +654,7 @@ vtctlclient --server vtctld.host:15999 MoveTables Cancel targetkeyspace.workflow
 If the cutover was successful, the DropSources command will do the following:
 
 ```
-vtctlclient --server vtctld.host:15999 DropSources targetkeyspace.workflowname
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- DropSources targetkeyspace.workflowname
 ```
 
 1. Drop the tables involved in the MoveTables in the original keyspace (sourcekeyspace)
@@ -666,7 +666,7 @@ vtctlclient --server vtctld.host:15999 DropSources targetkeyspace.workflowname
 If a cutover was rolled back, a DropSources will clean up the targetkeyspace:
 
 ```
-vtctlclient --server vtctld.host:15999 DropSources sourcekeyspace.workflowname_reverse
+vtctldclient --server vtctld.host:15999 LegacyVtctlCommand -- DropSources sourcekeyspace.workflowname_reverse
 ```
 
 1. Drop the tables involved in the MoveTables in the new keyspace (targetkeyspace)
