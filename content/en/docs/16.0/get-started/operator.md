@@ -15,7 +15,7 @@ Before we get started, let’s get a few pre-requisites out of the way:
 
 1. Install [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) and start a Minikube engine:
     ```bash
-    minikube start --kubernetes-version=v1.19.16 --cpus=4 --memory=4000 --disk-size=32g
+    minikube start --kubernetes-version=v1.24.0 --cpus=4 --memory=8000 --disk-size=32g
     ```
 
 2. Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and ensure it is in your `PATH`.
