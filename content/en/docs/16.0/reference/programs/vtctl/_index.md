@@ -57,7 +57,7 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [ListBackups](../vtctl/shards#listbackups) | `ListBackups <keyspace/shard>` |
 | [BackupShard](../vtctl/shards#backupshard) | `BackupShard  -- [--allow_primary=false] <keyspace/shard>` |
 | [RemoveBackup](../vtctl/shards#removebackup) | `RemoveBackup <keyspace/shard> <backup name>` |
-| [InitShardPrimary](../vtctl/shards#initshardprimary) | `InitShardPrimary  -- [--force] [--wait_replicas_timeout=<duration>] <keyspace/shard> <tablet alias>` |
+| (DEPRECATED) [InitShardPrimary](../vtctl/shards#initshardprimary) | `InitShardPrimary  -- [--force] [--wait_replicas_timeout=<duration>] <keyspace/shard> <tablet alias>` |
 | [PlannedReparentShard](../vtctl/shards#plannedreparentshard) | `PlannedReparentShard  -- --keyspace_shard=<keyspace/shard> [--new_primary=<tablet alias>] [--avoid_tablet=<tablet alias>] [--wait_replicas_timeout=<duration>]` |
 | [EmergencyReparentShard](../vtctl/shards#emergencyreparentshard) | `EmergencyReparentShard  -- --keyspace_shard=<keyspace/shard> [--new_primary=<tablet alias>] [--wait_replicas_timeout=<duration>] [--ignore_replicas=<tablet alias list>] [--prevent_cross_cell_promotion=<true/false>]`
 | [TabletExternallyReparented](../vtctl/shards#tabletexternallyreparented) | `TabletExternallyReparented <tablet alias>` |

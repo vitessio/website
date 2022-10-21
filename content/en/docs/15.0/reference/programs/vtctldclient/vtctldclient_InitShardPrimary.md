@@ -8,11 +8,12 @@ Sets the initial primary for the shard.
 
 ### Synopsis
 
+This command has been deprecated. Please use PlannedReparentShard instead.
+
 Sets the initial primary for the shard.
 
 This will make all other tablets in the shard become replicas of the promoted tablet.
-WARNING: this can cause data loss on an already-replicating shard. PlannedReparentShard or
-EmergencyReparentShard should be used instead.
+WARNING: this can cause data loss on an already-replicating shard.
 
 
 ```
