@@ -215,12 +215,12 @@ rm -rf vtdataroot
 
 ## Aliases
 
-For ease-of-use, Vitess provides aliases for `mysql` and `vtctlclient`. These are automatically created when you start the cluster.
+For ease-of-use, Vitess provides aliases for `mysql`, `vtctlclient`, and `vtctldclient`. These are automatically created when you start the cluster.
 ```bash
 source ./env.sh
 ```
 
-Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctlclient` or close your session.
+Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctlclient && unalias vtctldclient` or close your session.
 
 ## Connect to your cluster
 
@@ -350,7 +350,7 @@ Putting this all together, we run the script that combines the above steps.
 ```
 Once this is complete, we can view the new vschema. Note that it now includes both region_vdx and a lookup vindex.
 ```text
-~/my-vitess-example> vtctlclient GetVSchema main
+~/my-vitess-example> vtctldclient GetVSchema main
 {
   "sharded": true,
   "vindexes": {
