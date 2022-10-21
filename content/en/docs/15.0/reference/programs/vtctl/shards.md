@@ -346,7 +346,9 @@ Removes a backup from the BackupStorage.
 
 ### InitShardPrimary
 
-Sets the initial primary for a shard. Will make all other tablets in the shard replicas of the provided primary. WARNING: this could cause data loss on an already replicating shard. PlannedReparentShard or EmergencyReparentShard should be used instead.
+This command has been deprecated. Please use PlannedReparentShard instead.
+
+Sets the initial primary for a shard. Will make all other tablets in the shard replicas of the provided primary. WARNING: this could cause data loss on an already replicating shard.
 
 #### Example
 
