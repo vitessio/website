@@ -82,7 +82,7 @@ As can be seen, we have 3 tablets running, with tablet ids 100, 101 and 102;  wh
 
 ## Create new tablets
 
-The first step in our MoveTables operation is to deploy new tablets for our `customer` keyspace. By the convention used in our examples, we are going to use the tablet ids 200-202 as the `commerce` keyspace previously used `100-102`. Once the tablets have started, we can force the first tablet to be the primary using the `InitShardPrimary` `--force` flag:
+The first step in our MoveTables operation is to deploy new tablets for our `customer` keyspace. By the convention used in our examples, we are going to use the tablet ids 200-202 as the `commerce` keyspace previously used `100-102`. Once the tablets have started, we will wait for `vtorc` to promote one of them to `PRIMARY` before proceeding.:
 
 ### Using Operator
 
@@ -107,7 +107,7 @@ example-zone1-vtgate-bc6cde92-6bd99c6888-csnkj   1/1     Running   2          8m
 vitess-operator-8454d86687-4wfnc                 1/1     Running   0          22m
 ```
 
-Again, the operator will perform `InitShardMaster` implicitly for you.
+Again, the operator will promote one of the tablets to `PRIMARY` implicitly for you.
 
 Make sure that you restart the port-forward after launching the pods has completed:
 
@@ -119,29 +119,8 @@ killall kubectl
 ### Using a Local Deployment
 
 ```bash
-for i in 200 201 202; do
- CELL=zone1 TABLET_UID=$i ./scripts/mysqlctl-up.sh
- CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
-done
-
-# Set the correct durability policy for the keyspace
-vtctldclient SetKeyspaceDurabilityPolicy --durability-policy=semi_sync customer
-
-# Wait for all the tablets to be up and registered in the topology server
-for _ in $(seq 0 200); do
-	vtctldclient GetTablets --keyspace customer --shard 0 | wc -l | grep -q "3" && break
-	sleep 1
-done;
-vtctldclient GetTablets --keyspace customer --shard 0 | wc -l | grep -q "3" || (echo "Timed out waiting for tablets to be up in customer/0" && exit 1)
-
-# Wait for a primary tablet to be elected in the shard
-for _ in $(seq 0 200); do
-	vtctldclient GetTablets --keyspace customer --shard 0 | grep -q "primary" && break
-	sleep 1
-done;
-vtctldclient GetTablets --keyspace customer --shard 0 | grep "primary" || (echo "Timed out waiting for primary to be elected in customer/0" && exit 1)
-
-vtctldclient ReloadSchemaKeyspace customer
+$ ./201_customer_tablets.sh
+$ vtctldclient ReloadSchemaKeyspace customer
 ```
 
 ## Show our old and new tablets
