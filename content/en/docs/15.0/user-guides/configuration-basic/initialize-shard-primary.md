@@ -3,9 +3,9 @@ title: Initialize Shard Primary
 weight: 9
 ---
 
-A new primary is elected automatically by VTOrc and no user action is required. However, a shard can be initialized manually as well using the following steps.
+A new primary is elected automatically by VTOrc and no user action is required.
 
-The InitShardPrimary command can be used to do the same operation. However, it is a destructive command and should only be used by advanced users. This command copies over the `executed_gtid_set` from the primary to the replica which can break replication if the user isn't careful.
+The InitShardPrimary command can be used to do the same operation manually. However, it is a destructive command and should only be used by advanced users. This command copies over the `executed_gtid_set` from the primary to the replica which can break replication if the user isn't careful.
 
 The command for `InitShardPrimary` is as follows:
 
@@ -30,5 +30,5 @@ After this step, visiting the `/debug/status` page on the vttablets should show 
 {{< /warning >}}
 
 {{< info >}}
-`InitShardPrimary` is deprecated. This action is performed automatically by VTOrc.
+`InitShardPrimary` is deprecated. This action is performed automatically by VTOrc. If manual action is needed, it is recommended to use `PlannedReparentShard`.
 {{< /info >}}
