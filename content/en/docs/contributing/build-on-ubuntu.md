@@ -36,6 +36,27 @@ export GOROOT=/usr/local/go/
 export GOPATH=/home/<user>/go
 ```
 
+### Install Node 16.13.0+
+
+```
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+```
+
+Ensure the following is in your bashrc/zshrc or similar:
+```
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+```
+
+Finally, install [node](https://nodejs.org/):
+
+```
+nvm install --lts 16.13.0
+nvm use 16.13.0
+```
+
+See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
 ### Packages from apt repos
 
 Install dependencies required to build and run Vitess:

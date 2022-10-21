@@ -21,7 +21,7 @@ The following has been verified to work on __macOS Mojave__. If you are new to V
 [Install Homebrew](http://brew.sh/). From here you should be able to install:
 
 ```shell
-brew install automake git curl wget mysql@5.7
+brew install automake git curl wget mysql@5.7 nvm
 ```
 
 Add `mysql@5.7` to your `PATH`:
@@ -39,6 +39,15 @@ sudo installer -pkg go1.18.5.darwin-amd64.pkg -target /
 Do not install etcd via brew otherwise it will not be the version that is supported. Let it be installed when running make build.
 
 Do not set up MySQL or etcd to restart at login.
+
+[Install node](https://nodejs.org/) >= `16.13.0 LTS` (note you also need `npm >= 8.1.0`, which will come with `node`). For example, using `nvm` (which we installed earlier with homebrew):
+
+```shell
+nvm install --lts 16.13.0
+nvm use 16.13.0
+```
+
+See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
 
 ## Build Vitess
 
