@@ -35,6 +35,16 @@ Already downloaded: /Users/askdba/Library/Caches/Homebrew/downloads/45991b27589a
 ```
 At this point Vitess binaries installed under default Homebrew install location at /usr/local/share/vitess.
 
+### Install Node 16.13.0+ (required to run VTAdmin)
+
+```bash
+$ brew install nvm
+$ nvm install --lts 16.13.0
+$ nvm use 16.13.0
+```
+
+See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
+
 ## Start a Single Keyspace Cluster
 
 For testing purposes initiate following example;
@@ -195,7 +205,7 @@ If you encounter any errors, such as ports already in use, you can kill the proc
 
 ```bash
 pkill -9 -f '(vtdataroot|VTDATAROOT|vitess|vtadmin)' # kill Vitess processes
-rm -rf /usr/local/Cellar/vitess/16.0.0/share/vitess/examples/local/vtdataroot
+rm -rf /usr/local/Cellar/vitess/15.0.0/share/vitess/examples/local/vtdataroot
 ```
 
 ## Setup Aliases

@@ -32,6 +32,16 @@ When MySQL installs with brew it will startup, you will want to shut this proces
 $ brew services stop mysql@5.7
 ```
 
+### Install Node 16.13.0+ (required to run VTAdmin)
+
+```bash
+$ brew install nvm
+$ nvm install --lts 16.13.0
+$ nvm use 16.13.0
+```
+
+See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
+
 ## PATH Settings
 
 With the tools you’ve just installed via brew, you will next update your PATH variable so your shell knows where to find the binaries:
@@ -57,6 +67,8 @@ $ mysqld --version
 $ mysql --version
 $ go version
 $ etcd --version
+$ node --version
+$ npm --version
 ```
 
 ## Install Vitess
