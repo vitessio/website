@@ -66,7 +66,7 @@ Save the following json into a file, say `corder_keyspace_idx.json`:
 }
 ```
 
-And issue the vtctlclient command:
+And issue the vtctldclient command:
 
 ```sh
 $ vtctldclient --server <vtctld_grpc_address> CreateLookupVindex -- --tablet_types=REPLICA customer "$(cat corder_keyspace_idx.json)"
@@ -105,7 +105,7 @@ Save the following json into a file, say `oname_keyspace_idx.json`:
 }
 ```
 
-And issue the vtctlclient command:
+And issue the vtctldclient command:
 
 ```sh
 $ vtctldclient --server <vtctld_grpc_address> CreateLookupVindex -- --tablet_types=REPLICA customer "$(cat oname_keyspace_idx.json)"

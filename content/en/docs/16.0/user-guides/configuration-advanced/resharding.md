@@ -128,19 +128,19 @@ Applying the new VSchema instructs Vitess that the keyspace is sharded, which ma
 ### Using Operator
 
 ```bash
-vtctlclient ApplySchema -- --sql="$(cat create_commerce_seq.sql)" commerce
-vtctlclient ApplyVSchema -- --vschema="$(cat vschema_commerce_seq.json)" commerce
-vtctlclient ApplyVSchema -- --vschema="$(cat vschema_customer_sharded.json)" customer
-vtctlclient ApplySchema -- --sql="$(cat create_customer_sharded.sql)" customer
+vtctldclient ApplySchema --sql="$(cat create_commerce_seq.sql)" commerce
+vtctldclient ApplyVSchema --vschema="$(cat vschema_commerce_seq.json)" commerce
+vtctldclient ApplyVSchema --vschema="$(cat vschema_customer_sharded.json)" customer
+vtctldclient ApplySchema --sql="$(cat create_customer_sharded.sql)" customer
 ```
 
 ### Using a Local Deployment
 
 ``` sh
-vtctlclient ApplySchema -- --sql-file create_commerce_seq.sql commerce
-vtctlclient ApplyVSchema -- --vschema_file vschema_commerce_seq.json commerce
-vtctlclient ApplyVSchema -- --vschema_file vschema_customer_sharded.json customer
-vtctlclient ApplySchema -- --sql-file create_customer_sharded.sql customer
+vtctldclient ApplySchema --sql-file create_commerce_seq.sql commerce
+vtctldclient ApplyVSchema --vschema_file vschema_commerce_seq.json commerce
+vtctldclient ApplyVSchema --vschema_file vschema_customer_sharded.json customer
+vtctldclient ApplySchema --sql-file create_customer_sharded.sql customer
 ```
 
 ## Create new shards
@@ -164,19 +164,8 @@ killall kubectl
 
 ### Using a Local Deployment
 
-``` sh
-for i in 300 301 302; do
- CELL=zone1 TABLET_UID=$i ./scripts/mysqlctl-up.sh
- SHARD=-80 CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
-done
-
-for i in 400 401 402; do
- CELL=zone1 TABLET_UID=$i ./scripts/mysqlctl-up.sh
- SHARD=80- CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
-done
-
-vtctlclient InitShardPrimary -- --force customer/-80 zone1-300
-vtctlclient InitShardPrimary -- --force customer/80- zone1-400
+```bash
+./302_new_shards.sh
 ```
 
 ## Start the Reshard
@@ -197,7 +186,7 @@ All of the command options and parameters for `Reshard` are listed in our [refer
 After the reshard is complete, we can use VDiff to check data integrity and ensure our source and target shards are consistent:
 
 ```bash
-vtctlclient VDiff customer.cust2cust
+vtctlclient VDiff -- customer.cust2cust
 ```
 
 You should see output similar to the following:
@@ -224,7 +213,7 @@ vtctlclient Reshard -- --tablet_types=primary SwitchTraffic customer.cust2cust
 
 ## Note
 
-While we have switched reads and writes separately in this example, you can also switch all traffic, read and write, at the same time. If you don't specify the `-tablet_types` parameter `SwitchTraffic` will start serving traffic from the target for all tablet types.
+While we have switched reads and writes separately in this example, you can also switch all traffic, read and write, at the same time. If you don't specify the `--tablet_types` parameter `SwitchTraffic` will start serving traffic from the target for all tablet types.
 
 
 You should now be able to see the data that has been copied over to the new shards:
@@ -281,7 +270,7 @@ kubectl apply -f 306_down_shard_0.yaml
 ### Using a Local Deployment
 
 ``` sh
-vtctlclient Reshard Complete customer.cust2cust
+vtctlclient Reshard -- Complete customer.cust2cust
 
 for i in 200 201 202; do
  CELL=zone1 TABLET_UID=$i ./scripts/vttablet-down.sh

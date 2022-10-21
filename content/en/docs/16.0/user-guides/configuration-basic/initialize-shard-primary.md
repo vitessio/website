@@ -14,8 +14,8 @@ If using a custom `init_db.sql` that omits `SET sql_log_bin = 0`, then InitShard
 The command for `InitShardPrimary` is as follows:
 
 ```text
-vtctlclient \
-  InitShardPrimary -- \
+vtctldclient \
+  InitShardPrimary \
   --force \
   commerce/0 \
   cell1-100

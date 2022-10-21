@@ -7,12 +7,12 @@ A Vitess [cell](../../../concepts/cell) is a logical grouping of servers that ty
 
 Even if you do not want a multi-cell deployment, you still need to create at least one cell before bringing up the rest of the Vitess servers. If you do not plan to deploy multiple cells, you can reuse the global toposerver as the cell-specific one also.
 
-You can use the `vtctlclient` alias to create one:
+You can use the `vtctldclient` alias to create one:
 
 ```sh
-vtctlclient AddCellInfo -- \
+vtctldclient AddCellInfo \
   --root /vitess/cell1 \
-  --server_address <cell_topo_address> \
+  --server-address <cell_topo_address> \
   cell1
 ```
 
