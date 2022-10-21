@@ -78,13 +78,13 @@ Terminal 2
 
 #### Terminal 3:
 
-5.) In a third terminal window we will prepare the vtctlclient to do a
+5.) In a third terminal window we will prepare the vtctldclient to do a
 PlannedReparentShard (PRS). Note, `time` is optional but it is useful
 for measuring how long the operation takes.
 
 ```
 Terminal 3
-    $ time vtctlclient --server localhost:15999 PlannedReparentShard -- --keyspace_shard=commerce/0
+    $ time vtctldclient --server localhost:15999 PlannedReparentShard commerce/0
 ```
 ---
 
@@ -105,7 +105,7 @@ As soon as traffic is sent issue the PlannedReparentShard command:
 
 ```
 Terminal 3:
-    $ time vtctlclient --server localhost:15999 PlannedReparentShard -- --keyspace_shard=commerce/0
+    $ time vtctldclient --server localhost:15999 PlannedReparentShard commerce/0
 ```
 
 #### Results:
@@ -153,7 +153,7 @@ As soon as traffic is sent issue the PlannedReparentShard command:
 
 ```
 Terminal 3:
-    $ time vtctlclient --server localhost:15999 PlannedReparentShard -- --keyspace_shard=commerce/0
+    $ time vtctldclient --server localhost:15999 PlannedReparentShard commerce/0
 ```
 
 #### Results:
@@ -223,7 +223,7 @@ As soon as traffic is sent issue the PlannedReparentShard command:
 
 ```
 Terminal 3:
-    $ time vtctlclient --server localhost:15999 PlannedReparentShard -- --keyspace_shard=commerce/0
+    $ time vtctldclient --server localhost:15999 PlannedReparentShard commerce/0
 ```
 
 #### Results:
@@ -291,7 +291,7 @@ is a 5 second sleep commands between the PRS statements.
 
 ```
 Terminal 3:
-    $ time vtctlclient --server localhost:15999 PlannedReparentShard -- --keyspace_shard=commerce/0 && sleep 5 && time vtctlclient --server localhost:15999 PlannedReparentShard -- --keyspace_shard=commerce/0
+    $ time vtctldclient --server localhost:15999 PlannedReparentShard commerce/0 && sleep 5 && time vtctldclient --server localhost:15999 PlannedReparentShard commerce/0
 ```
 
 #### Results:
@@ -359,7 +359,7 @@ Terminal 2:
 
 ```
 Terminal 3:
-    $ time vtctlclient --server localhost:15999 PlannedReparentShard -- --keyspace_shard=commerce/0
+    $ time vtctldclient --server localhost:15999 PlannedReparentShard commerce/0
 ```
 
 #### Results:
@@ -417,7 +417,7 @@ Terminal 2:
 
 ```
 Terminal 3:
-    $ time vtctlclient --server localhost:15999 PlannedReparentShard -- --keyspace_shard=commerce/0
+    $ time vtctldclient --server localhost:15999 PlannedReparentShard commerce/0
 ```
 
 #### Results:
@@ -491,7 +491,7 @@ As soon as the heavy traffic starts to generate send the PRS command.
 
 ```
 Terminal 3:
-    $ time vtctlclient --server localhost:15999 PlannedReparentShard -- --keyspace_shard=commerce/0  
+    $ time vtctldclient --server localhost:15999 PlannedReparentShard commerce/0  
 ```
 
 #### Results:
@@ -507,7 +507,7 @@ relevant. In this scenario vtgate bailed on the PlannedReparentShard as the
 primary candidate `REPLICA` failed to catch up to the `PRIMARY`.
 
 ```
-$ time vtctlclient --server localhost:15999 PlannedReparentShard -- --keyspace_shard=commerce/0
+$ time vtctldclient --server localhost:15999 PlannedReparentShard commerce/0
 PlannedReparentShard Error: rpc error: code = Unknown desc = primary-elect tablet zone1-0000000101 failed
 to catch up with replication MySQL56/4fb7c72c-62c8-11ec-8287-8cae4cdeeda4:1-1677: rpc error: code = Unknown
 desc = TabletManager.WaitForPosition on zone1-0000000101 error: timed out waiting for position

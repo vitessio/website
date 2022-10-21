@@ -4,7 +4,7 @@ description: 因为这些文档不维护，所以它们是旧的。你想了解�
 notoc: true
 cascade:
   version: v12.0
-weight: 2000
+weight: 88
 ---
 
 Vitess是一个用于部署、扩展和管理大型MySQL实例集群的数据库解决方案。它可以运行在本地硬件环境、私有云、公用云架构上，效率相差无几。

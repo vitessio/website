@@ -91,7 +91,7 @@ You should be able to see debug information written to screen confirming Vitess 
 Assuming that there are no errors, after a few seconds you can mark the server as externally promoted to primary:
 
 ```bash
-vtctlclient TabletExternallyReparented zone1-401
+vtctldclient TabletExternallyReparented zone1-401
 ```
 
 ## Connect via VTGate

@@ -158,7 +158,7 @@ $ cat vschema.json
     }
 }
 ```
-Note that unlike the VSchema used in Vitess, e.g. in `vtctlclient GetVSchema` and `vtctlclient ApplyVSchema`, the format required by `vtexplain` differs slightly. There is an extra level of JSON objects at the top-level of the JSON format to allow you to have a single file that represents the VSchema for multiple Vitess keyspaces. In the above example, there is just a single keyspace called `ks1`.
+Note that unlike the VSchema used in Vitess, e.g. in `vtctldclient GetVSchema` and `vtctldclient ApplyVSchema`, the format required by `vtexplain` differs slightly. There is an extra level of JSON objects at the top-level of the JSON format to allow you to have a single file that represents the VSchema for multiple Vitess keyspaces. In the above example, there is just a single keyspace called `ks1`.
 
 ## 7. Run the VTexplain tool and capture the output
 

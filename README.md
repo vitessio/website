@@ -42,14 +42,13 @@ The Vitess website uses [Bulma](https://bulma.io/), a CSS (and SASS) framework t
 
 # Releasing a new version of the documentation
 
-1. Copy the most recent docs version folder to a new folder named for the new upcoming version (for each language)
-  `cp -R content/en/docs/v1.0 content/en/docs/v2.0`
-  `cp -R content/zh/docs/v1.0 content/zh/docs/v2.0`
+To release a new version of the documentation you can use one of the following two scripts:
 
-1. Update `config.toml`
-  Set `[params.versions]` `current` to the value of the new release number.
-  Set `[params.versions]` `next` to the value of the upcoming planned version.
+- `./tools/rc_release.sh`: for RC release.
+  - Takes one argument, the number of the next release.
+  - Usage when releasing v16.0.0-rc1: `./tools/rc_release.sh "17"`
 
-1. (optional) Remove any version of the documentation that is no longer supported
-  `git rm -rf content/en/docs/v0.0`
-  `git rm -rf content/zh/docs/v0.0`
+
+- `./tools/ga_release.sh`: when a version becomes GA.
+  - Takes one argument too, the number of the version we are making GA.
+  - Usage when releasing v16.0.0 GA: `./tools/ga_release.sh "16"`

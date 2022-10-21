@@ -22,15 +22,16 @@ F0426 11:11:40.363545   14833 server.go:223] Failed to open topo server (etcd2,l
 ```
 
 The `service_map` flag allows you to configure the grpc APIs that a Vitess server exposes as grpc. If grpc-vtctl is not specified as a service\_map for vtctld, you will not be able to access it using `vtctlclient`.
+Similarly, if grpc-vtctld is not specified as a service\_map for vtctld, you will not be able to access it using `vtctldclient`.
 
 vtctld is usually not very resource intensive. But you may need to provision more if you plan to run the `VDiff` command. This functionality will soon be moved to vttablet.
 
-## vtctlclient
+## vtctldclient
 
-Since we will be using `vtctlclient` often, it will be convenient to configure an alias for it:
+Since we will be using `vtctldclient` often, it will be convenient to configure an alias for it:
 
 ```sh
-alias vtctlclient="command vtctlclient --server <vtctld_grpc_address> --log_dir ${VTDATAROOT}/tmp --alsologtostderr"
+alias vtctldclient="command vtctldclient --server <vtctld_grpc_address>"
 ```
 
 {{< info >}}

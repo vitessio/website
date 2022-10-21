@@ -200,7 +200,7 @@ which tablets we have in our environment, so we know which tablets to
 issue commands against:
 
 ```sh
-$ vtctlclient --server localhost:15999 ListAllTablets | grep customer
+$ vtctldclient --server localhost:15999 GetTablets --keyspace customer
 zone1-0000000300 customer -80 primary localhost:15300 localhost:17300 [] 2020-08-13T01:23:15Z
 zone1-0000000301 customer -80 replica localhost:15301 localhost:17301 [] <null>
 zone1-0000000302 customer -80 rdonly localhost:15302 localhost:17302 [] <null>
