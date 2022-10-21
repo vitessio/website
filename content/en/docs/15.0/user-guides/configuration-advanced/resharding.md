@@ -164,32 +164,8 @@ killall kubectl
 
 ### Using a Local Deployment
 
-``` sh
-for i in 300 301 302; do
- CELL=zone1 TABLET_UID=$i ./scripts/mysqlctl-up.sh
- SHARD=-80 CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
-done
-
-for i in 400 401 402; do
- CELL=zone1 TABLET_UID=$i ./scripts/mysqlctl-up.sh
- SHARD=80- CELL=zone1 KEYSPACE=customer TABLET_UID=$i ./scripts/vttablet-up.sh
-done
-
-for shard in "-80" "80-"; do
-  # Wait for all the tablets to be up and registered in the topology server
-  for _ in $(seq 0 200); do
-    vtctldclient GetTablets --keyspace customer --shard $shard | wc -l | grep -q "3" && break
-    sleep 1
-  done;
-  vtctldclient GetTablets --keyspace customer --shard $shard | wc -l | grep -q "3" || (echo "Timed out waiting for tablets to be up in customer/$shard" && exit 1)
-
-  # Wait for a primary tablet to be elected in the shard
-  for _ in $(seq 0 200); do
-    vtctldclient GetTablets --keyspace customer --shard $shard | grep -q "primary" && break
-    sleep 1
-  done;
-  vtctldclient GetTablets --keyspace customer --shard $shard | grep "primary" || (echo "Timed out waiting for primary to be elected in customer/$shard" && exit 1)
-done;
+```bash
+./302_new_shards.sh
 ```
 
 ## Start the Reshard
