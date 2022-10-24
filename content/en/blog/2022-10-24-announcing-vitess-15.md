@@ -28,7 +28,7 @@ VTAdmin is built on a modern UI technology stack that will allow us to maintain 
 
 **New UI:**
 
-<img src="/files/2022-10-26-announcing-vitess-15/announcing-vitess-15/new-ui-commerce-0.png" alt="New UI showing keyspace commerce 0" style="width:600px"/>
+<img src="/files/2022-10-26-announcing-vitess-15/new-ui-commerce-0.png" alt="New UI showing keyspace commerce 0" style="width:600px"/>
 
 <img src="/files/2022-10-26-announcing-vitess-15/new-ui-commerce-0-and-settings.png" alt="New UI showing keyspace commerce 0 and settings" style="width:600px"/>
 
