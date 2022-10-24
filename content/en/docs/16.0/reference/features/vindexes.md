@@ -233,6 +233,7 @@ Lookup Vindexes support the following parameters:
 * `autocommit` (false): if true, specific vindex entries are updated in their own autocommit transaction. This is useful if values never get remapped to different values. For example, if the input column comes from an auto-increment value. Note that the autocommit option does not affect `consistent_lookup` or `consistent_lookup_unique` vindexes, but is for use with `lookup` or `lookup_unique` vindexes.
 * `write_only` (false): if true, the vindex is kept updated, but a lookup will return all shards if the key is not found. This mode is used while the vindex is being populated and backfilled.
 * `no_verify` (false): if true, Vitess will not internally verify lookup results. This mode is a performance optimization that is unsafe to use unless the `from` columns in the `owner` table rows are never updated.
+* `read_lock` (exclusive): determines the type of locking read Vitess uses when querying the backing table. Valid options are `exclusive` (translates to a MySQL `FOR UPDATE` lock), `shared` (`LOCK IN SHARE MODE`) or `none`. Relaxing the default (`exclusive`) may improve performance, but is unsafe if concurrent queries can select and delete the same rows from the backing table.
 * `ignore_nulls` (false): if true, null values in input columns do not create entries in the lookup table. Otherwise, a null input results in an error.
 
 The `numeric_static_map` vindex requires a `json_path` parameter. The file must contain a json that maps input numeric values to keyspace ids.
