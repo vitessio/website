@@ -1,7 +1,7 @@
 ---
 author: 'Vitess Maintainer Team'
-date: 2022-10-26
-slug: '2022-10-26-announcing-vitess-15'
+date: 2022-10-24
+slug: '2022-10-24-announcing-vitess-15'
 tags: ['release','Vitess','MySQL','kubernetes','operator','cloud','GKE','sharding']
 title: 'Announcing Vitess 15'
 description: "Vitess 15 is now Generally Available"
