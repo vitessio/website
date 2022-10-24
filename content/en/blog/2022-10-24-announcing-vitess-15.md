@@ -22,15 +22,15 @@ VTAdmin is built on a modern UI technology stack that will allow us to maintain 
 
 **Old UI:**
 
-<img src="/files/2022-10-26-announcing-vitess-15/old-ui-commerce-0.png" alt="Old UI showing keyspace commerce 0" style="width:600px"/>
+<img src="/files/2022-10-26-announcing-vitess-15/old-ui-commerce-0.png" alt="Old UI showing keyspace commerce 0"/>
 
-<img src="/files/2022-10-26-announcing-vitess-15/old-ui-commerce-0-and-dropdown.png" alt="Old UI showing keyspace commerce 0 and dropdown" style="width:600px"/>
+<img src="/files/2022-10-26-announcing-vitess-15/old-ui-commerce-0-and-dropdown.png" alt="Old UI showing keyspace commerce 0 and dropdown"/>
 
 **New UI:**
 
-<img src="/files/2022-10-26-announcing-vitess-15/new-ui-commerce-0.png" alt="New UI showing keyspace commerce 0" style="width:600px"/>
+<img src="/files/2022-10-26-announcing-vitess-15/new-ui-commerce-0.png" alt="New UI showing keyspace commerce 0"/>
 
-<img src="/files/2022-10-26-announcing-vitess-15/new-ui-commerce-0-and-settings.png" alt="New UI showing keyspace commerce 0 and settings" style="width:600px"/>
+<img src="/files/2022-10-26-announcing-vitess-15/new-ui-commerce-0-and-settings.png" alt="New UI showing keyspace commerce 0 and settings"/>
 
 
 In addition to these major streams of work, we have made tremendous progress on [VEP-4, aka The Flag Situation](https://github.com/vitessio/enhancements/blob/main/veps/vep-4.md), reorganizing our code so that Vitess binaries and their flags are clearly aligned in help text.
