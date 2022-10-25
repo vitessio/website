@@ -12,7 +12,7 @@ Vitess provides `READ COMMITTED` semantics when executing cross-shard queries. T
 
 ## SQL Syntax
 
-The following describes some of the major differences in SQL Syntax handling between Vitess and MySQL. For a list of unsupported queries, check out the [test-suite cases](https://github.com/vitessio/vitess/blob/main/go/vt/vtgate/planbuilder/testdata/unsupported_cases.txt).
+The following describes some of the major differences in SQL Syntax handling between Vitess and MySQL. For a list of unsupported queries, check out the [test-suite cases](https://github.com/vitessio/vitess/blob/main/go/vt/vtgate/planbuilder/testdata/unsupported_cases.json).
 
 ### DDL                                                                      
 
@@ -165,6 +165,3 @@ type DBDDLPlugin interface {
 It must then register itself calling `DBDDLRegister`. 
 You can take a look at the `dbddl_plugin.go` in the engine package for an example of how it's done.
 Finally, you need to add a command line flag to vtgate to have it use the new plugin: `-dbddl_plugin=myPluginName`
-
-
-
