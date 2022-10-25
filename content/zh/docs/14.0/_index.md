@@ -1,6 +1,6 @@
 ---
 title: v14.0 (Stable)
-description: Latest stable release. 因为这些文档不维护，所以它们是旧的。你想了解的有关世界上最具扩展性的开源MySQL平台的一切，都在这里
+description:  因为这些文档不维护，所以它们是旧的。你想了解的有关世界上最具扩展性的开源MySQL平台的一切，都在这里
 notoc: true
 cascade:
   version: v14.0
