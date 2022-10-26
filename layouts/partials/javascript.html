@@ -26,6 +26,7 @@
     () => {
       "use strict";
       let index;
+      let debounceTimer;
       const currentUrl = window.location.pathname;
       const currentLocation = String(currentUrl).split("/");
       const currentVersion = currentLocation[2];
@@ -33,6 +34,7 @@
       const target = document.querySelector(".is-search-result");
       const searchResultCount = document.querySelector(".results");
       const template = document.getElementById("is-search-template");
+      const interval = 500;
       let searchPopover = document.querySelector(".search-popover");
       let query = input.value.trim();
       let parse = {};
@@ -40,6 +42,7 @@
         "input",
         function (event) {
           event.preventDefault();
+          clearTimeout(debounceTimer);
           const keywords = input.value.trim();
 
           // automatically show search result when the input receives a value
@@ -47,7 +50,7 @@
           if (query.length >= 1) {
             searchPopover.style.display = "inline-block";
             searchPopover.style.right = `${0}px`;
-            initSearchIndex();
+            debounceTimer = setTimeout(initSearchIndex, interval);
           } else {
             searchPopover.style.display = "none";
           }
