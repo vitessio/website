@@ -77,9 +77,6 @@
             wildcard: lunr.Query.wildcard.TRAILING,
             presence: lunr.Query.presence.REQUIRED,
           });
-          this.field("content", {
-            boost: 15,
-          });
           this.field("summary", {
             boost: 10,
           });
@@ -91,9 +88,9 @@
                 parse[doc.href] = {
                   title: doc.title,
                   version: doc.version,
-                  content: doc.content,
-                  summary: doc.summary,
                   href: doc.href,
+                  summary: doc.summary,
+                  path: doc.path
                 };
               }
             }, this);
@@ -104,9 +101,9 @@
                 parse[doc.href] = {
                   title: doc.title,
                   version: doc.version,
-                  content: doc.content,
-                  summary: doc.summary,
                   href: doc.href,
+                  summary: doc.summary,
+                  path: doc.path
                 };
               }
             }, this);
@@ -122,12 +119,12 @@
 
         if ("content" in template) {
           // show result count
-          const title = document.createElement("h3");
-          const subTitle = document.createElement("h5");
+          const title = document.createElement("h6");
+          const subTitle = document.createElement("h6");
           title.id = "search-results";
           subTitle.id = "search-results";
-          title.className = "subtitle is-size-3";
-          subTitle.className = "subtitle is-size-4";
+          title.className = "title is-5";
+          subTitle.className = "title is-5";
 
           if (results.length == 0)
             title.textContent = `No results found for "${keywords}"`;
@@ -145,12 +142,20 @@
           results.forEach(function (result) {
             const doc = parse[result.ref];
             const element = template.content.cloneNode(true);
+            element.querySelector(".title").textContent = doc.title;
+            element.querySelector(".subtitle").textContent = doc.summary;
+            element
+              .querySelector(".subtitle")
+              .setAttribute("href", doc.href);
             element
               .querySelector(".is-read-more")
               .setAttribute("href", doc.href);
+            element
+              .querySelector(".search-path").textContent = doc.path;
+            element
+              .querySelector(".search-path")
+              .setAttribute("href", doc.href);
 
-            element.querySelector(".title").textContent = doc.title;
-            element.querySelector(".summary").textContent = doc.summary;
             target.appendChild(element);
           }, this);
         }
