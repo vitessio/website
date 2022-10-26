@@ -15,6 +15,8 @@ Vitess respects the following flags. They can be combined unless specifically in
 
 - `--declarative`: mark the migration as declarative. You will define a desired schema state by supplying `CREATE` and `DROP` statements, ad Vitess will infer how to achieve the desired schema. If need be, it will generate an `ALTER` migration to convert to the new schema. See [declarative migrations](../declarative-migrations).
 
+-- `--fast-range-rotation`: when the migration runs on a table partitioned by `RANGE`, and the migration either runs a single `DROP PARTITION` or a single `ADD PARTITION`, and nothing other than that, then this flags instructs Vitess to run the `ALTER TABLE` statement directly against MySQL, as opposed to running an Online DDL with a shadow table. For `DROP PARTITION`, this flag is actually always desired, and will possibly become default/redundant in the future. If all conditions are indeed met, then the migration is not revertible.
+
 - `--postpone-completion`: initiate a migration that will only cut-over per user command, i.e. will not auto-complete. This gives the user control over the time when the schema change takes effect. See [postponed migrations](../postponed-migrations).
 
   `--declarative` migrations are only evaluated when scheduled to run. If a migrations is both `--declarative` and `--postpone-completion` then it will remain in `queued` state until the user issues a `ALTER VITESS_MIGRATION ... COMPLETE`. If it turns out that Vitess should run the migration as an `ALTER` then it is only at that time that the migration starts.
