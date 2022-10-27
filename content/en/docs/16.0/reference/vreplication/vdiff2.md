@@ -17,7 +17,7 @@ For additional details, please see the [RFC](https://github.com/vitessio/vitess/
 ### Command
 
 VDiff2 takes different sub-commands or actions similar to how the [`MoveTables`](../movetables/)/[`Reshard`](../reshard/) commands work. The first argument
-is the <keyspace.workflow> followed by <action>. The following actions are supported:
+is the &lt;keyspace.workflow&gt; followed by an &lt;action&gt;. The following actions are supported:
 
 #### Start a new VDiff
 
@@ -164,8 +164,6 @@ VDiff does a row by row comparison of all tables associated with the workflow, d
 source keyspace and the target keyspace and reporting counts of missing/extra/unmatched rows.
 
 It is highly recommended that you do this before you finalize a workflow with `SwitchTraffic`.
-
-The actions supported
 
 ### Parameters
 
