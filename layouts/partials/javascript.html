@@ -55,8 +55,9 @@
             searchPopover.style.display = "none";
           }
 
-          while (target.firstChild.nextSibling) {
+          while (target.firstChild) {
             searchResultCount.firstChild.textContent = "Loading...";
+            searchResultCount.firstChild.nextSibling.textContent = "";
             target.removeChild(template.nextSibling.nextElementSibling);
           }
         },
