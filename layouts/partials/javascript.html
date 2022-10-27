@@ -163,6 +163,11 @@
           }, this);
         }
       }
+
+      // click outside the search modal to close
+      document.addEventListener("click", () => {
+       searchPopover.style.display = "none";
+      })
     },
     false
   );
