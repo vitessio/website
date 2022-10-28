@@ -51,6 +51,8 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09005 | A database must be selected. | No database selected: use keyspace<:shard><@type> or keyspace<[range]><@type> (<> are optional) | 1046 | 3D000 |
 | VT09006 | VITESS_MIGRATION works only on primary tablet. | %s VITESS_MIGRATION works only on primary tablet |  |  |
 | VT09007 | VITESS_THROTTLED_APPS works only on primary tablet. | %s VITESS_THROTTLED_APPS works only on primary tablet |  |  |
+| VT09008 | explain format = vtexplain will actually run queries. `/*vt+ EXECUTE_DML_QUERIES */` must be set to run DML queries in vtexplain. Example: `explain /*vt+ EXECUTE_DML_QUERIES */ format = vtexplain delete from t1` | explain format = vtexplain will actually run queries. `/*vt+ EXECUTE_DML_QUERIES */` must be set to run DML queries in vtexplain. Example: `explain /*vt+ EXECUTE_DML_QUERIES */ format = vtexplain delete from t1` |  |  |
+| VT09009 | Stream is only supported for primary tablets, please use a stream on those tablets. | stream is supported only for primary tablet type, current type: %v |  |  |
 | VT10001 | foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/ | foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/ |  |  |
 | VT12001 | This statement is unsupported by Vitess. Please use an alternative. | unsupported: %s |  |  |
 | VT13001 | This error should not happen and is a bug. Please fill an issue on GitHub. | [BUG] %s |  |  |
@@ -58,6 +60,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT14001 | The connection failed. | Connection error |  |  |
 | VT14002 | No available connection. | No available connection |  |  |
 | VT14003 | No connection for the given tablet. | No connection for tablet %v |  |  |
+| VT14004 | The specified keyspace could not be found. | Cannot find keyspace for: %s |  |  |
 | VT17001 | The given operation can only be done in a non-NOT_SERVING state. | operation not allowed in state NOT_SERVING during query: %s |  |  |
 | VT17002 | A PRIMARY tablet is required for this operation. | invalid tablet type: REPLICA, want: PRIMARY |  |  |
 <!-- end -->
