@@ -16,9 +16,8 @@
   });
 </script>
 
-{{/* Lunr Search */}} 
-{{ $versions := site.Params.versions }} 
-{{ $latest := $versions.current}}
+{{/* Lunr Search */}} {{ $versions := site.Params.versions }} {{ $latest :=
+$versions.current}}
 <script src="https://unpkg.com/lunr/lunr.js"></script>
 <script>
   window.addEventListener(
@@ -26,7 +25,7 @@
     () => {
       "use strict";
       let index;
-      let debounceTimer;
+      let debounceTimer = null;
       const currentUrl = window.location.pathname;
       const currentLocation = String(currentUrl).split("/");
       const currentVersion = currentLocation[2];
@@ -56,9 +55,12 @@
           }
 
           while (target.firstChild) {
-            searchResultCount.firstChild.textContent = "Loading...";
-            searchResultCount.firstChild.nextSibling.textContent = "";
-            target.removeChild(template.nextSibling.nextElementSibling);
+            if (searchResultCount.firstChild) {
+              searchResultCount.firstChild.textContent = "Loading...";
+            }
+            searchResultCount.firstChild.nextSibling.textContent = " ";
+
+            target.removeChild(target.firstChild);
           }
         },
         false
@@ -94,7 +96,7 @@
                   version: doc.version,
                   href: doc.href,
                   summary: doc.summary,
-                  path: doc.path
+                  path: doc.path,
                 };
               }
             }, this);
@@ -107,7 +109,7 @@
                   version: doc.version,
                   href: doc.href,
                   summary: doc.summary,
-                  path: doc.path
+                  path: doc.path,
                 };
               }
             }, this);
@@ -130,13 +132,14 @@
           title.className = "title is-5";
           subTitle.className = "title is-5";
 
-          if (results.length == 0)
+          if (results.length == 0) {
             title.textContent = `No results found for "${keywords}"`;
-          else if (results.length == 1)
+          } else if (results.length == 1) {
             title.textContent = `Found one result for "${keywords}"`;
-          else if (results.length > 1 && keywords === "")
+            subTitle.textContent = `Showing results for v${currentVersion}`;
+          } else if (results.length > 1 && keywords === "") {
             title.textContent = "Enter search keyword";
-          else {
+          } else {
             title.textContent = `Found ${results.length} results for "${keywords}"`;
             subTitle.textContent = `Showing results for v${currentVersion}`;
           }
@@ -148,14 +151,11 @@
             const element = template.content.cloneNode(true);
             element.querySelector(".title").textContent = doc.title;
             element.querySelector(".subtitle").textContent = doc.summary;
-            element
-              .querySelector(".subtitle")
-              .setAttribute("href", doc.href);
+            element.querySelector(".subtitle").setAttribute("href", doc.href);
             element
               .querySelector(".is-read-more")
               .setAttribute("href", doc.href);
-            element
-              .querySelector(".search-path").textContent = doc.path;
+            element.querySelector(".search-path").textContent = doc.path;
             element
               .querySelector(".search-path")
               .setAttribute("href", doc.href);
@@ -167,14 +167,14 @@
 
       // click outside the search modal to close
       document.addEventListener("click", () => {
-       searchPopover.style.display = "none";
-      })
+        searchPopover.style.display = "none";
+      });
     },
     false
   );
 </script>
 
-{{/* Dynamic positioning of the search popover using popperjs */}} 
+{{/* Dynamic positioning of the search popover using popperjs */}}
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script>
   const input = document.querySelector(".navbar-item-search");
@@ -183,14 +183,14 @@
 
   // Pass the input, the searchPopover, and some options, and Popper will do the
   // magic positioning for you:
-  if (isMobile){
-    searchPopover.style.position = 'absolute';
-    searchPopover.style.top = '110px';
-    searchPopover.style.left = '10px';
+  if (isMobile) {
+    searchPopover.style.position = "absolute";
+    searchPopover.style.top = "110px";
+    searchPopover.style.left = "10px";
   } else {
     Popper.createPopper(input, searchPopover, {
-      placement: 'bottom-end',
-      strategy: 'fixed',
+      placement: "bottom-end",
+      strategy: "fixed",
     });
   }
 </script>
