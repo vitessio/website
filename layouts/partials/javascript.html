@@ -67,14 +67,14 @@ $versions.current}}
       );
 
       async function initSearchIndex() {
-        const scalers = await fetch("/index.json", { method: "GET" })
+        const searchResults = await fetch("/index.json", { method: "GET" })
           .then((response) => response.json())
           .then((data) => {
             return data;
           })
           .catch((err) => console.error("error:", err));
         index = lunr(function () {
-          const documents = scalers;
+          const documents = searchResults;
 
           this.ref("href");
           this.field("title", {
