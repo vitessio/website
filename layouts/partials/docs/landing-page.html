@@ -42,7 +42,9 @@
   {{ end }}
   {{ end }}
 </div>
+{{ if not (isset .Page.Params "version") }}
 <h1>Versions</h1>
+{{ end }}
 <div class="columns is-2 is-multiline is-desktop is-landingpage">
   {{ $maxPages := 10 }}
   {{ range .Sections }}
