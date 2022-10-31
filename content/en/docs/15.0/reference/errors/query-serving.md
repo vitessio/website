@@ -35,7 +35,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT03020 | The given symbol was not found in the subquery. | symbol %s not found in subquery |  |  |
 | VT03021 | The given symbol is ambiguous. You can use a table qualifier to make unambiguous. | ambiguous symbol reference: %v |  |  |
 | VT03022 | The given column cannot be found. | column %v not found in %v |  |  |
-| VT03023 | INSERTs are not supported with key range targets. | INSERT not supported when targetting a key range: %s |  |  |
+| VT03023 | INSERTs are not supported with key range targets. | INSERT not supported when targeting a key range: %s |  |  |
 | VT05001 | The given database does not exist, Vitess cannot drop it. | Can't drop database '%s'; database doesn't exists | 1008 | HY000 |
 | VT05002 | The given database does not exist, Vitess cannot alter it. | Can't alter database '%s'; unknown database | 1049 | 42000 |
 | VT05003 | The given database does not exist in the VSchema. | Unknown database '%s' in vschema | 1049 | 42000 |
