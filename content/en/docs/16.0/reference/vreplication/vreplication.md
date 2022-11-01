@@ -8,10 +8,9 @@ aliases: ['/docs/reference/features/vreplication/']
 VReplication is a core component of Vitess that can be used to compose
 many features. It can be used for the following use cases:
 
-* **Resharding**: Legacy workflows of vertical and horizontal resharding.
-  New workflows of resharding from an unsharded to a sharded keyspace and
-  vice-versa. Resharding from an unsharded to an unsharded keyspace using
-  a different vindex than the source keyspace.
+* **Resharding**: Use workflows to reshard, for example, from an unsharded
+  to a sharded keyspace and vice-versa, or between unsharded keyspaces using
+  different vindexes.
 * **Materialized Views**: You can specify a materialization rule that creates
   a view of the source table into a target keyspace. This materialization
   can use a different primary vindex than the source. It can also materialize
