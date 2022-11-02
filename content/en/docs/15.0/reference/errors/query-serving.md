@@ -61,6 +61,4 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT14002 | No available connection. | No available connection |  |  |
 | VT14003 | No connection for the given tablet. | No connection for tablet %v |  |  |
 | VT14004 | The specified keyspace could not be found. | Cannot find keyspace for: %s |  |  |
-| VT17001 | The given operation can only be done in a non-NOT_SERVING state. | operation not allowed in state NOT_SERVING during query: %s |  |  |
-| VT17002 | A PRIMARY tablet is required for this operation. | invalid tablet type: REPLICA, want: PRIMARY |  |  |
 <!-- end -->
