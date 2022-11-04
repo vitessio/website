@@ -49,7 +49,7 @@ languageName = "English"
 weight = 1
 
 [languages.en.params]
-description = "A database clustering system for horizontal scaling of MySQL"
+description = "Scalable. Reliable. MySQL-compatible. Cloud-native. Database."
 
 # Chinese
 [languages.zh]
