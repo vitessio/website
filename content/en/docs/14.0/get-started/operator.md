@@ -29,7 +29,7 @@ Before we get started, let’s get a few pre-requisites out of the way:
 Change to the operator example directory:
 
 ```bash
-git clone git@github.com:vitessio/vitess.git
+git clone https://github.com/vitessio/vitess
 cd vitess/examples/operator
 ```
 
