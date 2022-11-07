@@ -12,25 +12,23 @@ many features. It can be used for the following use cases:
   Vitess or across [`Keyspaces`](../../../concepts/keyspace/) with online revertable workflows.
 * **Resharding**: Use [`Reshard`](../reshard/) to scale [`Keyspaces`](../../../concepts/keyspace/)
   up or down as needed with automated online revertable workflows.
-* **Data Materialization**: Use [`Materialize`](../materialize/) to materialize
-  data across [`Keyspaces`](../../../concepts/keyspace/) for a variety of use cases.
-  * **Materialized Views**: You can specify a materialization rule which creates
+* **Materialized Views**: Use [`Materialize`](../materialize/) to create
   a view of the source table in a target keyspace. This materialization
   can use a different primary [`vindex`](../../features/vindexes/) than the source.
   It can also materialize a subset of the source columns, or add new expressions from
   the source. This view will be kept up-to-date in real time. One can also materialize
   reference tables onto all shards for improved data locality, allowing
   Vitess to perform efficient local joins with those materialized tables.
-  * **Realtime rollups**: The materialization expression can include aggregation
+* **Realtime Rollups**: Use [`Materialize`](../materialize/) with aggregation
   expressions in which case Vitess will create a rolled up version of the
   source table which can be used for realtime analytics.
-  * **Backfilling lookup vindexes**: VReplication can be used to backfill a
+* **Lookup Vindexes**: Use [`CreateLookupVindex`](../../../user-guides/vschema-guide/backfill-vindexes/#createlookupvindex) to backfill a
   newly created [`lookup vindex`](../../features/vindexes/#functional-and-lookup-vindex).
-* **Online Schema Changes**: VReplication provides [online non-blocking schema
+* **Online Schema Changes**: Use [`ddl_stragegy=vitess`](../../../user-guides/schema-changes/ddl-strategies/) for native [online non-blocking schema
   migrations](../../../user-guides/schema-changes/managed-online-schema-changes/) that are trackable, cancellable, revertible, and retryable.
   All being safe to run in production due to intelligent throttling and
   resource management.
-* **Change Notification (CDC)**: The [`VStream`](../../../concepts/vstream/)
+* **Change Notifications (CDC)**: The [`VStream`](../../../concepts/vstream/)
   component of VReplication can be used for the application or a systems
   operator to subscribe to change notifications and use it to keep downstream
   systems up-to-date with the source.
@@ -175,7 +173,8 @@ VReplication throttles operations when the source or target appear to be overloa
 
 ### VTAdmin
 
-VTAdmin provides views into the current workflows running within a Vitess cluster. It also provides a way to start and stop workflows, as well as to view the current state of a workflow. See [`VTAdmin`](../../vtadmin).
+VTAdmin provides views into the current workflows running within a Vitess cluster.
+See [`VTAdmin`](../../vtadmin).
 
 ### VTTablet /debug/status
 
