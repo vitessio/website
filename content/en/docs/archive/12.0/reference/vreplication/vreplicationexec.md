@@ -12,7 +12,7 @@ VReplicationExec [-json] <tablet alias> <sql command>
 
 ### Description
 
-The VReplicationExec command is used to view or manage vreplication streams. More details are [here](../vreplication#exec). You would typically use one of the higher-level commands like the [WorkFlow](../workflow) command accomplish the same task.
+The VReplicationExec command is used to view or manage vreplication streams. More details are [here](#exec). You would typically use one of the higher-level commands like the [WorkFlow](../workflow) command accomplish the same task.
 
 ### Parameters
 
