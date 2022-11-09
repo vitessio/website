@@ -96,7 +96,43 @@ Vitess only supports gauges for custom metrics: the user may define a query whic
 
 ## Configuration
 
-- The throttler is currently **disabled** by default. Use the `vttablet` option `-enable-lag-throttler` to enable the throttler.
+{{< warning >}}
+Configuration in v16 differs from v15 and earlier. Please note the different configuration options for your version.{{< /warning >}}
+
+### v16 and forward
+
+In `v16`, throttler configuration is found in the local topology server. There is one configuration per keyspace. All shards and all tablets in all cells have the same throttler configuration: they are all enabled or disabled, and all share the same threshold or custom query. Since configuration is stored outside the tablet, it survives tablet restarts.
+
+`v16` is backward compliant with `v15` and therefore to use the new configuration you must opt-in with the `vttablet` flag `--throttler-config-via-topo` (boolean, disabled by default). With `--throttler-config-via-topo` set, the tablet will look for configuration in the topology server, and will watch and apply any changes made there.
+
+Updating the throttler config is done via `vtctlclient` or `vtctldclient`. For example:
+
+```sh
+$ vtctlclient -- UpdateThrottlerConfig --enable --threshold 3.0 commerce
+$ vtctldclient UpdateThrottlerConfig --disable commerce
+```
+
+The command `UpdateThrottlerConfig` requires a keyspace, and will affect all tablets associated with this keyspace.
+
+Flag breakdown:
+
+- `--enable`: enable the throttler. Once enabled, the throttler probes the MySQL servers for metrics, and responds to `check` requests according to those metrics.
+- `--disable`: disables the throttler. Once disabled, the throttler responds to all `check` requests with `200 OK`. It will not probe the MySQL servers for metrics.
+- `--threshold`: set a new threshold. Unless specified otherwise, the throttler measures replication lag by querying for heartbeat values, and the threshold stands of _seconds_ of lag (i.e. the value `2.5` stands for two and a half seconds)
+- `--custom-query`: override the default replication lag measurement, and suggest a different query. Valid values are:
+  - _empty_, meaning the throttler should use the default replication lag query
+  - A `SELECT` that returns a single line, single column, floating point value
+  - A `SHOW GLOBAL STATUS|VARIABLES LIKE '...'`, for example `show global status like 'threads_running'`
+- `--check-as-check-shard`: this is the default behavior. A `/throttler/check` request checks the shard health. When using the default replication lag query, this is the desired check: the primary tablet's throttler responds by evaluating the overall lag throughout the shard/replicas.
+- `--check-as-check-self`: override default behavior, and this can be useful when a `--custom-query` is set. A `/throttler/check` request will only consider the tablet's own metrics, and not the overall shard metrics.
+
+### v15 and before
+
+In `v15` and earlier versions, the throttler is configured per tablet. Each tablet can have throttler enabled/disabled independently, or have different thresholds.
+
+`v16` supports the `v15` configuration, but this support may be removed in `v17`.
+
+- The throttler is **disabled** by default. Use the `vttablet` option `-enable-lag-throttler` to enable the throttler.
   When the throttler is disabled, it still serves `/throttler/check` and `/throttler/check-self` API endpoints, and responds with `HTTP 200 OK` to all requests.
   When the throttler is enabled, it implicitly also runs heartbeat injections.
 - Use the `vttablet` flag `--throttle_threshold` to set a lag threshold value. The default threshold is `1sec` and is set upon tablet startup. For example, to set a half-second lag threshold, use the flag `--throttle_threshold=0.5s`.
@@ -176,12 +212,16 @@ $ curl -s 'http://localhost:15000/throttler/throttle-app?app=test&ratio=0.25'
 - `/throttler/status` endpoint. This is useful for monitoring and management purposes.
 - `/throttler/throttled-apps` endpoint, listing all apps for which there's a throttling instruction
 
+Vitess also accepts the SQL syntax:
+
+- `SHOW VITESS_THROTTLER STATUS`: returns the status for all primary tables in the keyspace. The result has one row per tablet, and indicates whether it's enabled and what's the threshold being used.
+
 #### Example: Healthy primary tablet
 
 The following command gets throttler status on a primary tablet hosted on `tablet1`, serving on port `15100`.
 
 ```shell
-$ curl -s http://tablet1:15100/throttler/status | jq .
+$ curl -s 'http://tablet1:15100/throttler/status' | jq .
 ```
 
 This API call returns the following JSON object:
@@ -227,7 +267,7 @@ The primary tablet serves two types of metrics:
 The following command gets throttler status on a replica tablet hosted on `tablet2`, serving on port `15100`.
 
 ```shell
-$ curl -s http://tablet2:15100/throttler/status | jq .
+$ curl -s 'http://tablet2:15100/throttler/status' | jq .
 ```
 
 This API call returns the following JSON object:
@@ -259,7 +299,7 @@ The replica tablet only presents `mysql/self` metric (measurement of its own bac
 #### Example: throttled-apps
 
 ```sh
-$ curl -s http://127.0.0.1:15100/throttler/throttled-apps
+$ curl -s 'http://127.0.0.1:15100/throttler/throttled-apps'
 ```
 
 ```json
