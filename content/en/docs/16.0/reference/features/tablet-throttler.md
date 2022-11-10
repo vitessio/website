@@ -214,7 +214,7 @@ $ curl -s 'http://localhost:15000/throttler/throttle-app?app=test&ratio=0.25'
 
 Vitess also accepts the SQL syntax:
 
-- `SHOW VITESS_THROTTLER STATUS`: returns the status for all primary tables in the keyspace. The result has one row per tablet, and indicates whether it's enabled and what's the threshold being used.
+- `SHOW VITESS_THROTTLER STATUS`: returns the status for all primary tables in the keyspace. See [MySQL Query Extensions](../mysql-query-extensions/#show-statements).
 
 #### Example: Healthy primary tablet
 
