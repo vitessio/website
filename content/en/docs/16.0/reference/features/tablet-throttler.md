@@ -132,7 +132,7 @@ In `v15` and earlier versions, the throttler is configured per tablet. Each tabl
 
 `v16` supports the `v15` configuration, but this support may be removed in `v17`.
 
-- The throttler is **disabled** by default. Use the `vttablet` option `-enable-lag-throttler` to enable the throttler.
+- The throttler is **disabled** by default. Use the `vttablet` option `--enable-lag-throttler` to enable the throttler.
   When the throttler is disabled, it still serves `/throttler/check` and `/throttler/check-self` API endpoints, and responds with `HTTP 200 OK` to all requests.
   When the throttler is enabled, it implicitly also runs heartbeat injections.
 - Use the `vttablet` flag `--throttle_threshold` to set a lag threshold value. The default threshold is `1sec` and is set upon tablet startup. For example, to set a half-second lag threshold, use the flag `--throttle_threshold=0.5s`.
