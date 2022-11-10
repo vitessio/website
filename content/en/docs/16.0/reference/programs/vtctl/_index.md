@@ -172,6 +172,12 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [WorkflowTree](../vtctl/workflows#workflowtree) | `WorkflowTree  ` |
 | [WorkflowAction](../vtctl/workflows#workflowaction) | `WorkflowAction  <path> <name>` |
 
+### Throttler
+
+| Name | Example Usage |
+| :-------- | :--------------- |
+| [UpdateThrottlerConfig](../vtctl/throttler#updatethrottlerconfig) | `UpdateThrottlerConfig  -- [--enable\|--disable] [--threshold=<float64>] [--custom-query=<query>] [--check-as-check-self\|--check-as-check-shard] <keyspace>`
+
 ## Options
 
 The following global options apply to `vtctl`:

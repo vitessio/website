@@ -114,19 +114,7 @@ $ vtctlclient -- UpdateThrottlerConfig --enable --threshold 3.0 commerce
 $ vtctldclient UpdateThrottlerConfig --disable commerce
 ```
 
-The command `UpdateThrottlerConfig` requires a keyspace, and will affect all tablets associated with this keyspace.
-
-Flag breakdown:
-
-- `--enable`: enable the throttler. Once enabled, the throttler probes the MySQL servers for metrics, and responds to `check` requests according to those metrics.
-- `--disable`: disables the throttler. Once disabled, the throttler responds to all `check` requests with `200 OK`. It will not probe the MySQL servers for metrics.
-- `--threshold`: set a new threshold. Unless specified otherwise, the throttler measures replication lag by querying for heartbeat values, and the threshold stands of _seconds_ of lag (i.e. the value `2.5` stands for two and a half seconds)
-- `--custom-query`: override the default replication lag measurement, and suggest a different query. Valid values are:
-  - _empty_, meaning the throttler should use the default replication lag query
-  - A `SELECT` that returns a single line, single column, floating point value
-  - A `SHOW GLOBAL STATUS|VARIABLES LIKE '...'`, for example `show global status like 'threads_running'`
-- `--check-as-check-shard`: this is the default behavior. A `/throttler/check` request checks the shard health. When using the default replication lag query, this is the desired check: the primary tablet's throttler responds by evaluating the overall lag throughout the shard/replicas.
-- `--check-as-check-self`: override default behavior, and this can be useful when a `--custom-query` is set. A `/throttler/check` request will only consider the tablet's own metrics, and not the overall shard metrics.
+See [vtctl UpdateThrottlerConfig](../../programs/vtctl/throttler#updatethrottlerconfig).
 
 To transition from a `v15` configuration to `v16`, first populate topo with a new throttler configuration. At the very least, set a `--threshold`. You likely also want to `--enable`. Then, reconfigure `vttablet`s with `--throttler-config-via-topo`, and restart them.
 
