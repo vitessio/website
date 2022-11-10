@@ -24,7 +24,7 @@ or
 MoveTables -- [--source=<sourceKs>] [--tables=<tableSpecs>] [--cells=<cells>] 
   [--tablet_types=<source_tablet_types>] [--all] [--exclude=<tables>] [--auto_start] 
   [--stop_after_copy] [--timeout=timeoutDuration] [--reverse_replication] [--keep_data] 
-  [--keep_routing_rules] [--on-ddl=<action>] [--source_time_zone=<mysql_time_zone>]
+  [--keep_routing_rules] [--on-ddl=<ddl-action>] [--source_time_zone=<mysql_time_zone>]
   <action> <workflow identifier>
 ```
 
