@@ -99,6 +99,8 @@ Vitess only supports gauges for custom metrics: the user may define a query whic
 {{< warning >}}
 Configuration in v16 differs from v15 and earlier. Please note the different configuration options for your version.{{< /warning >}}
 
+`v16` is backwards compliant with `v15` and still default to the `v15` configuration. We illustrate both configurations so that you understand how to transition from one to the other.
+
 ### v16 and forward
 
 In `v16`, throttler configuration is found in the [local topology server](../../../concepts/topology-service/). There is one configuration per keyspace. All shards and all tablets in all cells have the same throttler configuration: they are all enabled or disabled, and all share the same threshold or custom query. Since configuration is stored outside the tablet, it survives tablet restarts.
@@ -125,6 +127,8 @@ Flag breakdown:
   - A `SHOW GLOBAL STATUS|VARIABLES LIKE '...'`, for example `show global status like 'threads_running'`
 - `--check-as-check-shard`: this is the default behavior. A `/throttler/check` request checks the shard health. When using the default replication lag query, this is the desired check: the primary tablet's throttler responds by evaluating the overall lag throughout the shard/replicas.
 - `--check-as-check-self`: override default behavior, and this can be useful when a `--custom-query` is set. A `/throttler/check` request will only consider the tablet's own metrics, and not the overall shard metrics.
+
+To transition from a `v15` configuration to `v16`, first populate topo with a new throttler configuration. At the very least, set a `--threshold`. You likely also want to `--enable`. Then, reconfigure `vttablet`s with `--throttler-config-via-topo`, and restart them.
 
 ### v15 and before
 
