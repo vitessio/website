@@ -101,7 +101,7 @@ Configuration in v16 differs from v15 and earlier. Please note the different con
 
 ### v16 and forward
 
-In `v16`, throttler configuration is found in the local topology server. There is one configuration per keyspace. All shards and all tablets in all cells have the same throttler configuration: they are all enabled or disabled, and all share the same threshold or custom query. Since configuration is stored outside the tablet, it survives tablet restarts.
+In `v16`, throttler configuration is found in the [local topology server](../../../concepts/topology-service/). There is one configuration per keyspace. All shards and all tablets in all cells have the same throttler configuration: they are all enabled or disabled, and all share the same threshold or custom query. Since configuration is stored outside the tablet, it survives tablet restarts.
 
 `v16` is backward compliant with `v15` and therefore to use the new configuration you must opt-in with the `vttablet` flag `--throttler-config-via-topo` (boolean, disabled by default). With `--throttler-config-via-topo` set, the tablet will look for configuration in the topology server, and will watch and apply any changes made there.
 
