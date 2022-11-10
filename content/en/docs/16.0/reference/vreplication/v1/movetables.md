@@ -12,7 +12,7 @@ Starting with Vitess 11.0 you should use the [VReplication v2 commands](../../mo
 
 ```
 MoveTables -- --v1 [--cells=<cells>] [--tablet_types=<source_tablet_types>] --workflow=<workflow>
-            [--all] [--exclude=<tables>]  [--auto_start] [--stop_after_copy]
+            [--all] [--exclude=<tables>]  [--auto_start] [--stop_after_copy] [--on-ddl=<action>]
             <source_keyspace> <target_keyspace> <table_specs>
 ```
 
@@ -131,8 +131,6 @@ If moving all tables, specifies tables to be skipped.
 Normally the workflow starts immediately after it is created. If this flag is set
 to false then the workflow is in a Stopped state until you explicitly start it.
 
-</div>
-
 ###### Uses
 * allows updating the rows in `_vt.vreplication` after MoveTables has setup the
 streams. For example, you can add some filters to specific tables or change the
@@ -142,6 +140,8 @@ MoveTables with auto_start false, updating the BinlogSource as required by your
 Materialize and then start the workflow.
 * changing the `copy_state` and/or `pos` values to restart a broken MoveTables workflow
 from a specific point of time.
+
+</div>
 
 #### --stop_after_copy
 
@@ -157,6 +157,34 @@ is small enough to start replicating, the workflow state will be set to Stopped.
 ###### Uses
 * If you just want a consistent snapshot of all the tables you can set this flag. The workflow
 will stop once the copy is done and you can then mark the workflow as `Complete`d
+
+</div>
+
+#### --on-ddl
+**optional**\
+**default** IGNORE
+
+<div class="cmd">
+
+This flag allows you to specify what to do with DDL SQL statements when they are encountered
+in the replication stream from the source. The values can be as follows:
+
+* `IGNORE`: Ignore all DDLs (this is also the default, if a value for `on-ddl`
+  is not provided).
+* `STOP`: Stop when DDL is encountered. This allows you to make any necessary
+  changes to the target. Once changes are made, updating the workflow state to
+  `Running` will cause VReplication to continue from just after the point where
+  it encountered the DDL. Alternatively you may want to `Cancel` the workflow
+  and create a new one to fully resync with the source.
+* `EXEC`: Apply the DDL, but stop if an error is encountered while applying it.
+* `EXEC_IGNORE`: Apply the DDL, but ignore any errors and continue replicating.
+
+{{< warning >}}
+We caution against against using `EXEC` or `EXEC_IGNORE` for the following reasons:
+  * You may want a different schema on the target.
+  * You may want to apply the DDL in a different way on the target.
+  * The DDL may take a long time to apply on the target and may disrupt replication, performance, and query execution (if serving  traffic from the target) while it is being applied.
+{{< /warning >}}
 
 </div>
 
