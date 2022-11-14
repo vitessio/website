@@ -80,11 +80,11 @@ sudo setenforce 0
 
 ## Install Vitess
 
-Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux. For example with Vitess 13:
+Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux. For example with Vitess 15:
 
 ```sh
-version=13.0.0
-file=vitess-${version}-bc4a960.tar.gz
+version=15.0.0
+file=vitess-${version}-e8c7e27.tar.gz
 wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
 tar -xzf ${file}
 cd ${file/.tar.gz/}
@@ -105,8 +105,10 @@ You are now ready to start your first cluster! Open a new terminal window to ens
 Start by copying the local examples included with Vitess to your preferred location. For our first example we will deploy a [single unsharded keyspace](../../concepts/keyspace). The file `101_initial_cluster.sh` is for example `1` phase `01`. Lets execute it now:
 
 ```sh
-cp -r /usr/local/vitess/examples/local ~/my-vitess-example
-cd ~/my-vitess-example
+mkdir -p ~/my-vitess-example/examples/local
+cp -r /usr/local/vitess/examples/local ~/my-vitess-example/examples
+cp -r /usr/local/vitess/web ~/my-vitess-example
+cd ~/my-vitess-example/examples/local
 ./101_initial_cluster.sh
 ```
 
