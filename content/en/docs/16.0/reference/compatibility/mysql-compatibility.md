@@ -121,6 +121,25 @@ It must then register itself by calling `DBDDLRegister`.
 You can take a look at the `dbddl_plugin.go` in the engine package for an example of how it's done.
 Finally, you need to add a command line flag to vtgate to have it use the new plugin: `--dbddl_plugin=myPluginName`
 
+### Start Transaction
+There are multiple ways to start a transaction like `begin`, `start transaction` and `start transaction [transaction_characteristic [, transaction_characteristic] ...]` with several modifiers that control transaction characteristics.
+```sql
+transaction_characteristic: {
+    WITH CONSISTENT SNAPSHOT
+  | READ WRITE
+  | READ ONLY
+}
+```
+The scope of these modification is limited to next transaction only.
+These modification have a special purpose and more can be read about in [MySQL reference manual](https://dev.mysql.com/doc/refman/8.0/en/commit.html).
+
+### Set Transaction
+Set Transaction statement is used to change the isolation level or access mode for transactions.
+Vitess as of now **only** supports modification of isolation level at the session scope.
+The change in isolation level only changes the shard level transaction isolation level and not the global Vitess level.
+
+More details about the isolation level can be read on [MySQL reference manual](https://dev.mysql.com/doc/refman/8.0/en/set-transaction.html).
+
 ## Cross-shard Transactions
 
 Vitess supports multiple [transaction modes](../../../user-guides/configuration-advanced/shard-isolation-atomicity).
