@@ -130,7 +130,7 @@ transaction_characteristic: {
   | READ ONLY
 }
 ```
-The scope of these modification is limited to next transaction only.
+The scope of these modifications is limited to the next transaction only.
 These modifications have a special purpose and more can be read about in the [MySQL reference manual](https://dev.mysql.com/doc/refman/8.0/en/commit.html).
 
 ### Set Transaction
