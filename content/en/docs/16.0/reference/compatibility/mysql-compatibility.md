@@ -131,7 +131,7 @@ transaction_characteristic: {
 }
 ```
 The scope of these modification is limited to next transaction only.
-These modification have a special purpose and more can be read about in [MySQL reference manual](https://dev.mysql.com/doc/refman/8.0/en/commit.html).
+These modifications have a special purpose and more can be read about in the [MySQL reference manual](https://dev.mysql.com/doc/refman/8.0/en/commit.html).
 
 ### Set Transaction
 Set Transaction statement is used to change the isolation level or access mode for transactions.
