@@ -138,7 +138,7 @@ Set Transaction statement is used to change the isolation level or access mode f
 Vitess as of now **only** supports modification of isolation level at the session scope.
 The change in isolation level only changes the shard level transaction isolation level and not the global Vitess level.
 
-More details about the isolation level can be read on [MySQL reference manual](https://dev.mysql.com/doc/refman/8.0/en/set-transaction.html).
+More details about the isolation level can be read in the [MySQL reference manual](https://dev.mysql.com/doc/refman/8.0/en/set-transaction.html).
 
 ## Cross-shard Transactions
 
