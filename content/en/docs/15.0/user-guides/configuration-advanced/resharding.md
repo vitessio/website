@@ -128,10 +128,10 @@ Applying the new VSchema instructs Vitess that the keyspace is sharded, which ma
 ### Using Operator
 
 ```bash
-vtctldclient ApplySchema --sql="$(cat create_commerce_seq.sql)" commerce
-vtctldclient ApplyVSchema --vschema="$(cat vschema_commerce_seq.json)" commerce
-vtctldclient ApplyVSchema --vschema="$(cat vschema_customer_sharded.json)" customer
-vtctldclient ApplySchema --sql="$(cat create_customer_sharded.sql)" customer
+vtctldclient ApplySchema -- --sql="$(cat create_commerce_seq.sql)" commerce
+vtctldclient ApplyVSchema -- --vschema="$(cat vschema_commerce_seq.json)" commerce
+vtctldclient ApplyVSchema -- --vschema="$(cat vschema_customer_sharded.json)" customer
+vtctldclient ApplySchema -- --sql="$(cat create_customer_sharded.sql)" customer
 ```
 
 ### Using a Local Deployment
