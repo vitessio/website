@@ -40,6 +40,14 @@ _VReplicationPhaseTimings_ counts the total time taken by the runs,
 VReplicationPhaseTimingsCounts the number of runs and _VReplicationPhaseTimingsTotals_ the total
 runs across all streams.
 
+#### VReplicationTableCopyRowCounts
+
+_VReplicationTableCopyRowCounts_ counts the number of rows copied during the copy phase per table per stream.
+
+#### VReplicationTableCopyTimings
+
+_VReplicationTableCopyTimings_ counts the time taken per table per stream during the copy phase of the stream. Unlike _VReplicationPhaseTimings_, this metric updates continuously, rather than being set once at the end of the copy phase.
+
 #### VReplicationQPS
 
 _VReplicationQPS_ is a list of QPS values for each loop of each phase of the workflow.
@@ -111,10 +119,10 @@ The total number of vstreamer created during the lifetime of this tablet
 "VReplicationErrors": {},
 "VReplicationHeartbeat": {"commerce.0.commerce2customer.1": 1618681048},
 "VReplicationMessages": {"1": "2021-04-17T19:36:13.003858838+02:00:Picked source tablet: cell:\"zone1\" uid:100 "},
-"VReplicationPhaseTimings": {"commerce.0.commerce2customer.1.catchup": 948, "commerce.0.commerce2customer.1.fastforward": 555, "commerce.0.commerce2customer.1.copy": 615},
-"VReplicationPhaseTimingsCounts": {"commerce.0.commerce2customer.1.fastforward": 2, "commerce.0.commerce2customer.1.copy": 2, "commerce.0.commerce2customer.1.All": 6, "commerce.0.commerce2customer.1.catchup": 2},
-"VReplicationPhaseTimingsTotal": 2118,
-"VReplicationQPS": {"All":[7.2,1,1.2,1,1.2,1,1.2,1.2,1,1.2,1,1.2,1,1.2,1],"Query":[6.6,1,1.2,1,1.2,1,1.2,1.2,1,1.2,1,1.2,1,1.2,1],"Transaction":[0.6,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+"VReplicationPhaseTimings": {"commerce.0.commerce2customer.1.catchup": 1000935083, "commerce.0.commerce2customer.1.fastforward": 15349583, "commerce.0.commerce2customer.1.copy": 63353125},
+"VReplicationPhaseTimingsCounts": {"commerce.0.commerce2customer.1.copy": 2, "commerce.0.commerce2customer.1.All": 6, "commerce.0.commerce2customer.1.catchup": 2, "commerce.0.commerce2customer.1.fastforward": 2},
+"VReplicationPhaseTimingsTotal": 1079637791,
+"VReplicationQPS": {"All":[11.8,1,1.2,1.2,1,1.2,1,1.2,1,1.2,1,1.2,1.2,1,1.2,1,1.2],"Query":[11.2,1,1.2,1.2,1,1.2,1,1.2,1,1.2,1,1.2,1.2,1,1.2,1,1.2],"Transaction":[0.6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
 "VReplicationQueryCount": {"commerce.0.commerce2customer.1.copy": 2},
 "VReplicationQueryCountTotal": 2,
 "VReplicationLagSeconds": {"commerce.0.commerce2customer.1": 0},
@@ -124,6 +132,8 @@ The total number of vstreamer created during the lifetime of this tablet
 "VReplicationSourceTablet": {"1": "cell:\"zone1\" uid:100 "},
 "VReplicationStreamCount": 1,
 "VReplicationStreamState": {"commerce2customer.1": "Running"},
+"VReplicationTableCopyRowCounts": {"commerce.0.commerce2customer.1.corder": 4, "commerce.0.commerce2customer.1.customer": 2},
+"VReplicationTableCopyTimings": {"commerce.0.commerce2customer.1.customer": 6707583, "commerce.0.commerce2customer.1.corder": 13254250},
 "VStreamPacketSize": 250000,
 "VStreamerErrors": {"Catchup": 0, "Copy": 0, "Send": 0, "TablePlan": 0},
 "VStreamerEventsStreamed": 0,
