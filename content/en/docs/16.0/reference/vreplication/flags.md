@@ -22,6 +22,28 @@ The relay log buffers events on the target as they are received from the source.
 **relay_log_max_size** defines the maximum buffer size (in bytes). As events arrive they are stored in the relay log. The apply thread consumes these events as fast as it can. When the relay log fills up we no longer pull
 events from the source until some events are consumed. If single rows are larger than the specified buffer size, a single row is buffered at a time.
 
+#### vreplication-parallel-insert-workers
+
+**Type** integer\
+**Default** 1\
+**Applicable on** target
+
+This flag is intended as an option to improve the performance of the [VReplication copy phase](https://vitess.io/docs/design-docs/vreplication/life-of-a-stream/#copy).
+
+During the VReplication copy phase, the target tablet reads batches of rows in VStream packets (the size of which is managed by the [`--vstream_packet_size` flag](#vstream_packet_size)) from the source tablet and inserts them on the target. By default, the target does this sequentially: it reads a batch, then it inserts a batch, then it reads a batch, etc. This flag adds a degree of parallelism so that, while a new batch is being read from the source, up to `--vreplication-parallel-insert-workers` may be inserting previously read batches.
+
+{{< info >}}
+Batches of rows insert in parallel, but commit in order. In other words, given two batches B1 and B2 with all primary key IDs in B1 less than those in B2, rows in B2 may be inserted before those in B1, but the B1 transaction will commit before the B2 transaction.
+
+Though this limits performance, it ensures the target will be eventually consistent.
+{{< /info >}}
+
+The performance of a VReplication stream is dependent on a number of factors, such as the hardware of the source and target tablets, the latency of the network between them, and utilization of those resources by the VReplication stream and concurrent workloads. Whether this flag improves performance depends on those factors and many others not mentioned here.
+
+A rule of thumb to follow is to see if there are idle resources (especially CPU and disk IO) on both the source and target side. If so, then increasing this flag may increase utilization of those resources, and improve copy phase performance. To measure effectiveness of the flag, compare the values of the [`VReplicationCopyRowCount` metric](../metrics/#vreplicationcopyrowcount-vreplicationcopyrowcounttotal) or [`VReplicationPhaseTimings` metric](../metrics/#vreplicationphasetimings-vreplicationphasetimingscounts-vreplicationphasetimingstotal) with and without the flag.
+
+It is recommended **not** to increase this flag beyond the number of vCPUs available to the target tablet.
+
 #### vreplication_copy_phase_duration
 
 **Type** duration\
