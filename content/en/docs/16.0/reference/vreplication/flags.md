@@ -35,7 +35,7 @@ During the VReplication copy phase, the target tablet reads batches of rows in V
 {{< info >}}
 Batches of rows insert in parallel, but commit in order. In other words, given two batches B1 and B2 with all primary key IDs in B1 less than those in B2, rows in B2 may be inserted before those in B1, but the B1 transaction will commit before the B2 transaction.
 
-Though this limits performance, it ensures that there are no "gaps" in data on the target side.
+Though this limits performance, it ensures the target will be eventually consistent.
 {{< /info >}}
 
 The performance of a VReplication stream is dependent on a number of factors, such as the hardware of the source and target tablets, the latency of the network between them, and utilization of those resources by the VReplication stream and concurrent workloads. Whether this flag improves performance depends on those factors and many others not mentioned here.
