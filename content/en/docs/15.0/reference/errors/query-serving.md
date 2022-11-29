@@ -19,12 +19,12 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT03004 | You cannot delete something that is not a real MySQL table. | the target table %s of the DELETE is not updatable | 1288 | HY000 |
 | VT03005 | The planner does not allow grouping on certain field. For instance, aggregation function. | cannot group on '%s' | 1056 | 42000 |
 | VT03006 | The number of columns you want to insert do not match the number of columns of your SELECT query. | column count doesn't match value count at row 1 | 1136 | 21S01 |
-| VT03007 | You need to explicitly add a keyspace qualifier. | keyspace not specified |  |  |
+| VT03007 | You need to add a keyspace qualifier. | keyspace not specified |  |  |
 | VT03008 | The given token is not usable in this situation. Please refer to the MySQL documentation to learn more about your token's syntax. | incorrect usage/placement of '%s' | 1234 | 42000 |
 | VT03009 | You cannot assign this type to the given variable. | unexpected value type for '%s': %v | 1231 | 42000 |
 | VT03010 | You cannot set the given variable as it is a read-only variable. | variable '%s' is a read only variable | 1238 | HY000 |
 | VT03011 | The given value type is not accepted. | invalid value type: %v |  |  |
-| VT03012 | The syntax is invalid. Please refer to the MySQL documentation to learn the proper syntax. | invalid syntax: %s |  |  |
+| VT03012 | The syntax is invalid. Please refer to the MySQL documentation for the proper syntax. | invalid syntax: %s |  |  |
 | VT03013 | This table or alias name is already use. Please use another one that is unique. | not unique table/alias: '%s' | 1066 | 42000 |
 | VT03014 | The given column is unknown. | unknown column '%d' in '%s' | 1054 | 42S22 |
 | VT03015 | You cannot assign more than one value to the same vindex. | column has duplicate set values: '%v' |  |  |
@@ -33,7 +33,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT03018 | You cannot use the NEXT syntax on a table that is not a sequence table. | NEXT used on a non-sequence table |  |  |
 | VT03019 | The given symbol was not found or is not available. | symbol %s not found |  |  |
 | VT03020 | The given symbol was not found in the subquery. | symbol %s not found in subquery |  |  |
-| VT03021 | The given symbol is ambiguous. You can use a table qualifier to make unambiguous. | ambiguous symbol reference: %v |  |  |
+| VT03021 | The given symbol is ambiguous. You can use a table qualifier to make it unambiguous. | ambiguous symbol reference: %v |  |  |
 | VT03022 | The given column cannot be found. | column %v not found in %v |  |  |
 | VT03023 | INSERTs are not supported with key range targets. | INSERT not supported when targeting a key range: %s |  |  |
 | VT05001 | The given database does not exist, Vitess cannot drop it. | can't drop database '%s'; database doesn't exists | 1008 | HY000 |
