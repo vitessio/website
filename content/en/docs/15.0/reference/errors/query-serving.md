@@ -54,9 +54,9 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09008 | explain format = vtexplain will actually run queries. `/*vt+ EXECUTE_DML_QUERIES */` must be set to run DML queries in vtexplain. Example: `explain /*vt+ EXECUTE_DML_QUERIES */ format = vtexplain delete from t1` | explain format = vtexplain will actually run queries |  |  |
 | VT09009 | Stream is only supported for primary tablets, please use a stream on those tablets. | stream is supported only for primary tablet type, current type: %v |  |  |
 | VT10001 | foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/ | foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/ |  |  |
-| VT12001 | This statement is unsupported by Vitess. Please use an alternative. | unsupported: %s |  |  |
-| VT13001 | This error should not happen and is a bug. Please fill an issue on GitHub. | [BUG] %s |  |  |
-| VT13002 | This error should not happen and is a bug. Please fill an issue on GitHub. | unexpected AST struct for query: %s |  |  |
+| VT12001 | This statement is unsupported by Vitess. Please rewrite your query to use supported syntax. | unsupported: %s |  |  |
+| VT13001 | This error should not happen and is a bug. Please file an issue on GitHub: https://github.com/vitessio/vitess/issues/new/choose. | [BUG] %s |  |  |
+| VT13002 | This error should not happen and is a bug. Please file an issue on GitHub: https://github.com/vitessio/vitess/issues/new/choose. | unexpected AST struct for query: %s |  |  |
 | VT14001 | The connection failed. | connection error |  |  |
 | VT14002 | No available connection. | no available connection |  |  |
 | VT14003 | No connection for the given tablet. | no connection for tablet %v |  |  |
