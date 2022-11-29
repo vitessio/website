@@ -13,22 +13,22 @@ These error messages are internal to Vitess. If you are getting other errors fro
 
 | ID | Description | Error | MySQL Error Code | SQL State |
 | --- | --- | --- | --- | --- |
-| VT03001 | The planner accepts aggregate functions that take a single argument only. | Aggregate functions take a single argument '%s' | 1149 | 42000 |
-| VT03002 | This schema change is not allowed. You cannot change the keyspace of a table. | Changing schema from '%s' to '%s' is not allowed | 1450 | HY000 |
-| VT03003 | The specified table in this DELETE statement is unknown. | Unknown table '%s' in MULTI DELETE | 1109 | 42S02 |
-| VT03004 | You cannot delete something that is not a real MySQL table. | The target table %s of the DELETE is not updatable | 1288 | HY000 |
-| VT03005 | The planner does not allow grouping on such field. | Can't group on '%s' | 1056 | 42000 |
-| VT03006 | The number of columns you want to insert do not match the number of columns of your SELECT query. | Column count doesn't match value count at row 1 | 1136 | 21S01 |
-| VT03007 | You need to explicitly add a keyspace qualifier. | Keyspace not specified |  |  |
-| VT03008 | The given token is not usable in this situation. Please refer to the MySQL documentation to learn more about your token's syntax. | Incorrect usage/placement of '%s' | 1234 | 42000 |
-| VT03009 | You cannot assign this type to the given variable. | Unexpected value type for '%s': %v | 1231 | 42000 |
-| VT03010 | You cannot set the given variable as it is a read-only variable. | Variable '%s' is a read only variable | 1238 | HY000 |
-| VT03011 | The given value type is not accepted. | Invalid value type: %v |  |  |
-| VT03012 | The syntax is invalid. Please refer to the MySQL documentation to learn the proper syntax. | Invalid syntax: %s |  |  |
-| VT03013 | This table or alias name is already use. Please use another one that is unique. | Not unique table/alias: '%s' | 1066 | 42000 |
-| VT03014 | The given column is unknown. | Unknown column '%d' in '%s' | 1054 | 42S22 |
-| VT03015 | You cannot assign more than one value to the same vindex. | Column has duplicate set values: '%v' |  |  |
-| VT03016 | The given column is unknown in the vindex table. | Unknown vindex column: '%s' |  |  |
+| VT03001 | The planner accepts aggregate functions that take a single argument only. | aggregate functions take a single argument '%s' | 1149 | 42000 |
+| VT03002 | This schema change is not allowed. You cannot change the keyspace of a table. | changing schema from '%s' to '%s' is not allowed | 1450 | HY000 |
+| VT03003 | The specified table in this DELETE statement is unknown. | unknown table '%s' in MULTI DELETE | 1109 | 42S02 |
+| VT03004 | You cannot delete something that is not a real MySQL table. | the target table %s of the DELETE is not updatable | 1288 | HY000 |
+| VT03005 | The planner does not allow grouping on such field. | can't group on '%s' | 1056 | 42000 |
+| VT03006 | The number of columns you want to insert do not match the number of columns of your SELECT query. | column count doesn't match value count at row 1 | 1136 | 21S01 |
+| VT03007 | You need to explicitly add a keyspace qualifier. | keyspace not specified |  |  |
+| VT03008 | The given token is not usable in this situation. Please refer to the MySQL documentation to learn more about your token's syntax. | incorrect usage/placement of '%s' | 1234 | 42000 |
+| VT03009 | You cannot assign this type to the given variable. | unexpected value type for '%s': %v | 1231 | 42000 |
+| VT03010 | You cannot set the given variable as it is a read-only variable. | variable '%s' is a read only variable | 1238 | HY000 |
+| VT03011 | The given value type is not accepted. | invalid value type: %v |  |  |
+| VT03012 | The syntax is invalid. Please refer to the MySQL documentation to learn the proper syntax. | invalid syntax: %s |  |  |
+| VT03013 | This table or alias name is already use. Please use another one that is unique. | not unique table/alias: '%s' | 1066 | 42000 |
+| VT03014 | The given column is unknown. | unknown column '%d' in '%s' | 1054 | 42S22 |
+| VT03015 | You cannot assign more than one value to the same vindex. | column has duplicate set values: '%v' |  |  |
+| VT03016 | The given column is unknown in the vindex table. | unknown vindex column: '%s' |  |  |
 | VT03017 | This vstream where clause can only be a greater than filter. | where clause can only be of the type 'pos > <value>' | 1149 | 42000 |
 | VT03018 | You cannot use the NEXT syntax on a table that is not a sequence table. | NEXT used on a non-sequence table |  |  |
 | VT03019 | The given symbol was not found or is not available. | symbol %s not found |  |  |
@@ -36,19 +36,19 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT03021 | The given symbol is ambiguous. You can use a table qualifier to make unambiguous. | ambiguous symbol reference: %v |  |  |
 | VT03022 | The given column cannot be found. | column %v not found in %v |  |  |
 | VT03023 | INSERTs are not supported with key range targets. | INSERT not supported when targeting a key range: %s |  |  |
-| VT05001 | The given database does not exist, Vitess cannot drop it. | Can't drop database '%s'; database doesn't exists | 1008 | HY000 |
-| VT05002 | The given database does not exist, Vitess cannot alter it. | Can't alter database '%s'; unknown database | 1049 | 42000 |
-| VT05003 | The given database does not exist in the VSchema. | Unknown database '%s' in vschema | 1049 | 42000 |
-| VT05004 | The given table is unknown. | Table '%s' does not exist | 1109 | 42S02 |
-| VT05005 | The given table does not exist in this keyspace. | Table '%s' does not exist in keyspace '%s' | 1146 | 42S02 |
-| VT05006 | The given system variable is unknown. | Unknown system variable '%s' | 1193 | HY000 |
-| VT05007 | There are no available table information. | No table info |  |  |
+| VT05001 | The given database does not exist, Vitess cannot drop it. | can't drop database '%s'; database doesn't exists | 1008 | HY000 |
+| VT05002 | The given database does not exist, Vitess cannot alter it. | can't alter database '%s'; unknown database | 1049 | 42000 |
+| VT05003 | The given database does not exist in the VSchema. | unknown database '%s' in vschema | 1049 | 42000 |
+| VT05004 | The given table is unknown. | table '%s' does not exist | 1109 | 42S02 |
+| VT05005 | The given table does not exist in this keyspace. | table '%s' does not exist in keyspace '%s' | 1146 | 42S02 |
+| VT05006 | The given system variable is unknown. | unknown system variable '%s' | 1193 | HY000 |
+| VT05007 | There are no available table information. | no table info |  |  |
 | VT06001 | The given database name already exists, its creation is impossible. | Can't create database '%s'; database exists | 1007 | HY000 |
-| VT09001 | The table does not a primary vindex, the operation is impossible. | table '%s' does not have a primary vindex | 1173 | 42000 |
+| VT09001 | the table does not a primary vindex, the operation is impossible. | table '%s' does not have a primary vindex | 1173 | 42000 |
 | VT09002 | This type of DML is not allowed on replica target. | %s statement with a replica target | 1874 | HY000 |
-| VT09003 | A sharding column is mandatory for the insert, please provide one. | Insert query does not have sharding column '%v' in the column list |  |  |
-| VT09004 | You need to provide the list of columns you want to insert, or provide an VSchema with authoritative columns. You can also turn on schema tracking to automatically have authoritative columns. | Insert should contain column list or the table should have authoritative columns in vschema |  |  |
-| VT09005 | A database must be selected. | No database selected: use keyspace<:shard><@type> or keyspace<[range]><@type> (<> are optional) | 1046 | 3D000 |
+| VT09003 | A sharding column is mandatory for the insert, please provide one. | insert query does not have sharding column '%v' in the column list |  |  |
+| VT09004 | You need to provide the list of columns you want to insert, or provide an VSchema with authoritative columns. You can also turn on schema tracking to automatically have authoritative columns. | insert should contain column list or the table should have authoritative columns in vschema |  |  |
+| VT09005 | A database must be selected. | no database selected: use keyspace<:shard><@type> or keyspace<[range]><@type> (<> are optional) | 1046 | 3D000 |
 | VT09006 | VITESS_MIGRATION works only on primary tablet. | %s VITESS_MIGRATION works only on primary tablet |  |  |
 | VT09007 | VITESS_THROTTLED_APPS works only on primary tablet. | %s VITESS_THROTTLED_APPS works only on primary tablet |  |  |
 | VT09008 | explain format = vtexplain will actually run queries. `/*vt+ EXECUTE_DML_QUERIES */` must be set to run DML queries in vtexplain. Example: `explain /*vt+ EXECUTE_DML_QUERIES */ format = vtexplain delete from t1` | explain format = vtexplain will actually run queries. `/*vt+ EXECUTE_DML_QUERIES */` must be set to run DML queries in vtexplain. Example: `explain /*vt+ EXECUTE_DML_QUERIES */ format = vtexplain delete from t1` |  |  |
@@ -57,8 +57,8 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT12001 | This statement is unsupported by Vitess. Please use an alternative. | unsupported: %s |  |  |
 | VT13001 | This error should not happen and is a bug. Please fill an issue on GitHub. | [BUG] %s |  |  |
 | VT13002 | This error should not happen and is a bug. Please fill an issue on GitHub. | unexpected AST struct for query: %s |  |  |
-| VT14001 | The connection failed. | Connection error |  |  |
-| VT14002 | No available connection. | No available connection |  |  |
-| VT14003 | No connection for the given tablet. | No connection for tablet %v |  |  |
-| VT14004 | The specified keyspace could not be found. | Cannot find keyspace for: %s |  |  |
+| VT14001 | The connection failed. | connection error |  |  |
+| VT14002 | No available connection. | no available connection |  |  |
+| VT14003 | No connection for the given tablet. | no connection for tablet %v |  |  |
+| VT14004 | The specified keyspace could not be found. | cannot find keyspace for: %s |  |  |
 <!-- end -->
