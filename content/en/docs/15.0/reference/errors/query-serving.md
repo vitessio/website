@@ -36,18 +36,18 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT03021 | The given symbol is ambiguous. You can use a table qualifier to make it unambiguous. | ambiguous symbol reference: %v |  |  |
 | VT03022 | The given column cannot be found. | column %v not found in %v |  |  |
 | VT03023 | INSERTs are not supported with key range targets. | INSERT not supported when targeting a key range: %s |  |  |
-| VT05001 | The given database does not exist, Vitess cannot drop it. | can't drop database '%s'; database doesn't exists | 1008 | HY000 |
-| VT05002 | The given database does not exist, Vitess cannot alter it. | can't alter database '%s'; unknown database | 1049 | 42000 |
+| VT05001 | The given database does not exist; Vitess cannot drop it. | cannot drop database '%s'; database does not exists | 1008 | HY000 |
+| VT05002 | The given database does not exist; Vitess cannot alter it. | cannot alter database '%s'; unknown database | 1049 | 42000 |
 | VT05003 | The given database does not exist in the VSchema. | unknown database '%s' in vschema | 1049 | 42000 |
 | VT05004 | The given table is unknown. | table '%s' does not exist | 1109 | 42S02 |
 | VT05005 | The given table does not exist in this keyspace. | table '%s' does not exist in keyspace '%s' | 1146 | 42S02 |
 | VT05006 | The given system variable is unknown. | unknown system variable '%s' | 1193 | HY000 |
-| VT05007 | There are no available table information. | no table info |  |  |
-| VT06001 | The given database name already exists, its creation is impossible. | Can't create database '%s'; database exists | 1007 | HY000 |
-| VT09001 | the table does not a primary vindex, the operation is impossible. | table '%s' does not have a primary vindex | 1173 | 42000 |
-| VT09002 | This type of DML is not allowed on replica target. | %s statement with a replica target | 1874 | HY000 |
-| VT09003 | A sharding column is mandatory for the insert, please provide one. | insert query does not have sharding column '%v' in the column list |  |  |
-| VT09004 | You need to provide the list of columns you want to insert, or provide an VSchema with authoritative columns. You can also turn on schema tracking to automatically have authoritative columns. | insert should contain column list or the table should have authoritative columns in vschema |  |  |
+| VT05007 | Table information is not available. | no table info |  |  |
+| VT06001 | The given database name already exists. | cannot create database '%s'; database exists | 1007 | HY000 |
+| VT09001 | the table does not have a primary vindex, the operation is impossible. | table '%s' does not have a primary vindex | 1173 | 42000 |
+| VT09002 | This type of DML statement is not allowed on a replica target. | %s statement with a replica target | 1874 | HY000 |
+| VT09003 | A sharding column is mandatory for the insert, please provide one. | INSERT query does not have sharding column '%v' in the column list |  |  |
+| VT09004 | You need to provide the list of columns you want to insert, or provide a VSchema with authoritative columns. You can also turn on schema tracking to automatically have authoritative columns. | INSERT should contain column list or the table should have authoritative columns in vschema |  |  |
 | VT09005 | A database must be selected. | no database selected: use keyspace<:shard><@type> or keyspace<[range]><@type> (<> are optional) | 1046 | 3D000 |
 | VT09006 | VITESS_MIGRATION works only on primary tablet. | %s VITESS_MIGRATION works only on primary tablet |  |  |
 | VT09007 | VITESS_THROTTLED_APPS works only on primary tablet. | %s VITESS_THROTTLED_APPS works only on primary tablet |  |  |
