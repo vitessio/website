@@ -51,7 +51,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09005 | A database must be selected. | no database selected: use keyspace<:shard><@type> or keyspace<[range]><@type> (<> are optional) | 1046 | 3D000 |
 | VT09006 | VITESS_MIGRATION works only on primary tablet. | %s VITESS_MIGRATION works only on primary tablet |  |  |
 | VT09007 | VITESS_THROTTLED_APPS works only on primary tablet. | %s VITESS_THROTTLED_APPS works only on primary tablet |  |  |
-| VT09008 | explain format = vtexplain will actually run queries. `/*vt+ EXECUTE_DML_QUERIES */` must be set to run DML queries in vtexplain. Example: `explain /*vt+ EXECUTE_DML_QUERIES */ format = vtexplain delete from t1` | explain format = vtexplain will actually run queries. `/*vt+ EXECUTE_DML_QUERIES */` must be set to run DML queries in vtexplain. Example: `explain /*vt+ EXECUTE_DML_QUERIES */ format = vtexplain delete from t1` |  |  |
+| VT09008 | explain format = vtexplain will actually run queries. `/*vt+ EXECUTE_DML_QUERIES */` must be set to run DML queries in vtexplain. Example: `explain /*vt+ EXECUTE_DML_QUERIES */ format = vtexplain delete from t1` | explain format = vtexplain will actually run queries |  |  |
 | VT09009 | Stream is only supported for primary tablets, please use a stream on those tablets. | stream is supported only for primary tablet type, current type: %v |  |  |
 | VT10001 | foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/ | foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/ |  |  |
 | VT12001 | This statement is unsupported by Vitess. Please use an alternative. | unsupported: %s |  |  |
