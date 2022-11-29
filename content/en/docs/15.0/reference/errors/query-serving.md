@@ -13,11 +13,11 @@ These error messages are internal to Vitess. If you are getting other errors fro
 
 | ID | Description | Error | MySQL Error Code | SQL State |
 | --- | --- | --- | --- | --- |
-| VT03001 | The planner accepts aggregate functions that take a single argument only. | aggregate functions take a single argument '%s' | 1149 | 42000 |
+| VT03001 | The planner only accepts aggregate functions that take a single argument. | aggregate functions take a single argument '%s' | 1149 | 42000 |
 | VT03002 | This schema change is not allowed. You cannot change the keyspace of a table. | changing schema from '%s' to '%s' is not allowed | 1450 | HY000 |
 | VT03003 | The specified table in this DELETE statement is unknown. | unknown table '%s' in MULTI DELETE | 1109 | 42S02 |
 | VT03004 | You cannot delete something that is not a real MySQL table. | the target table %s of the DELETE is not updatable | 1288 | HY000 |
-| VT03005 | The planner does not allow grouping on such field. | can't group on '%s' | 1056 | 42000 |
+| VT03005 | The planner does not allow grouping on certain field. For instance, aggregation function. | cannot group on '%s' | 1056 | 42000 |
 | VT03006 | The number of columns you want to insert do not match the number of columns of your SELECT query. | column count doesn't match value count at row 1 | 1136 | 21S01 |
 | VT03007 | You need to explicitly add a keyspace qualifier. | keyspace not specified |  |  |
 | VT03008 | The given token is not usable in this situation. Please refer to the MySQL documentation to learn more about your token's syntax. | incorrect usage/placement of '%s' | 1234 | 42000 |
