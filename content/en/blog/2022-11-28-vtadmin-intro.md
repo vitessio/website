@@ -14,7 +14,29 @@ VTAdmin is made up of two components:
 - VTAdmin API: An HTTP(S) and gRPC API server
 - VTAdmin Web: A React + Typescript web client built with [Create React App](https://create-react-app.dev/)
 
-### Architecture
+## What can you do with VTAdmin?
+VTAdmin can do everything the old vtctld2 UI could do, now that the [vtctld2 parity project](https://github.com/vitessio/vitess/projects/13) has been completed. For a complete list of supported API methods, refer [here](https://github.com/vitessio/vitess/blob/main/go/vt/vtadmin/api.go#L332).
+
+The following are just a few examples of what VTAdmin can do!
+### Tablet Management
+VTAdmin provides a variety of Tablet management tools - from starting and stopping replication, setting to read/write, reparenting, deleting, pinging, refreshing Tablets to experimental features like tablet and VReplication QPS. 
+<img src="/files/2022-11-28-vtadmin-intro/tablets.gif" alt="GIF of tablets features in VTAdmin Web"/>
+
+_Note: To use experimental features, make sure to set `REACT_APP_ENABLE_EXPERIMENTAL_TABLET_DEBUG_VARS` in VTAdmin Web and `--http-tablet-url-tmpl` in VTAdmin API, as experimental tablet features work by making an HTTP call to the VTTablets._
+
+### Keyspace Management
+In VTAdmin, keyspace actions like validate keyspace/schema/version, reloading schemas, rebuilding keyspace graphs and cells, and creating new shards are made easy.
+<img src="/files/2022-11-28-vtadmin-intro/keyspaces.gif" alt="GIF of keyspace features in VTAdmin Web"/>
+
+## Workflow Management
+VTAdmin also allows you to view all your workflows and monitor workflow streams.
+<img src="/files/2022-11-28-vtadmin-intro/workflows.gif" alt="GIF of workflow features in VTAdmin Web"/>
+
+### Topology
+The old topology browser in vtctld2 has also been reimagined into a graph-traversal UI, that allows you to explore topology across single and multi-cluster deployments.
+<img src="/files/2022-11-28-vtadmin-intro/topology.gif" alt="GIF of topology in VTAdmin Web"/>
+
+## How does VTAdmin work?
 VTAdmin Web is a web client that queries data from VTAdmin API via HTTP protocol. VTAdmin API in turn, is a mostly stateless API server that fetches data from VTGates and Vtctlds via gRPC. It returns this data to the frontend, VTAdmin Web. In a multi-cluster environment, that might look like:
 <img src="/files/2022-11-28-vtadmin-intro/architecture.png" alt="Architecture diagram for VTAdmin API and Web"/>
 
@@ -103,9 +125,6 @@ vtadmin \
 The above multi-cluster configuration would show up in VTAdmin Web as:
 
 <img src="/files/2022-11-28-vtadmin-intro/multiclusters.png" alt="Multiple clusters on the /clusters page in VTAdmin"/>
-
-## What can you do with VTAdmin?
-VTAdmin can do everything the old vtctld2 UI could do, now that the [vtctld2 parity project](https://github.com/vitessio/vitess/projects/13) has been completed. For a complete list of supported API methods, refer [here](https://github.com/vitessio/vitess/blob/main/go/vt/vtadmin/api.go#L332).
 
 ## What's next?
 
