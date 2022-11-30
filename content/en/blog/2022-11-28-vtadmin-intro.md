@@ -25,7 +25,7 @@ VTAdmin provides a variety of Tablet management tools, from starting and stoppin
 _Note: To use experimental features, make sure to set `REACT_APP_ENABLE_EXPERIMENTAL_TABLET_DEBUG_VARS` in VTAdmin Web and `--http-tablet-url-tmpl` in VTAdmin API, as experimental tablet features work by making HTTP requests to the VTTablets._
 
 ### Keyspace Management
-In VTAdmin, keyspace actions like validate keyspace/schema/version, reloading schemas, rebuilding keyspace graphs and cells, and creating new shards are made easy.
+In VTAdmin, keyspace actions like validating keyspace/schema/version, reloading schemas, rebuilding keyspace graphs and cells, and creating new shards are made easy.
 <img src="/files/2022-11-28-vtadmin-intro/keyspaces.gif" alt="GIF of keyspace features in VTAdmin Web"/>
 
 ## Workflow Management
