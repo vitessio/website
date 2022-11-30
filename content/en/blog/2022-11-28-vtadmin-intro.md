@@ -36,6 +36,9 @@ VTAdmin also allows you to view all your workflows and monitor workflow streams.
 The old topology browser in vtctld2 has also been reimagined into a graph-traversal UI, that allows you to explore topology across single and multi-cluster deployments.
 <img src="/files/2022-11-28-vtadmin-intro/topology.gif" alt="GIF of topology in VTAdmin Web"/>
 
+### Role-based access control
+VTAdmin also supports role-based access control (RBAC). This allows you to restrict access to, and actions on certain resources to a subset of users for an added layer of security. For more information on how to configure RBAC in VTAdmin, refer to our documentation [here](https://vitess.io/docs/15.0/reference/vtadmin/role-based-access-control/).
+
 ## How does VTAdmin work?
 VTAdmin Web is a web client that queries data from VTAdmin API via HTTP protocol. VTAdmin API in turn, is a mostly stateless API server that fetches data from VTGates and Vtctlds via gRPC. It returns this data to the frontend, VTAdmin Web. In a multi-cluster environment, that might look like:
 <img src="/files/2022-11-28-vtadmin-intro/architecture.png" alt="Architecture diagram for VTAdmin API and Web"/>
@@ -136,7 +139,6 @@ There a number of things the team is excited to do next! Some of those things in
 - **Making it easier to deploy**: Since VTAdmin recently went GA, we'd like to work on making the developer experience around deploying VTAdmin much easier. That means adding VTAdmin to existing Makefile workflows and other deployment optimizations.
 ## Stay in touch with VTAdmin
 We welcome you to stay in touch with VTAdmin development in the #feat-vtadmin channel in the Vitess Slack. Here are some other ways you can stay up-to-date:
-
+- **Vitess Docs**: https://vitess.io/docs/15.0/reference/vtadmin/
 - **Github Repo**: https://github.com/vitessio/vitess/tree/main/web/vtadmin
 - **Github Project**: https://github.com/vitessio/vitess/projects/12
-- **Vitess Docs**: https://vitess.io/docs/15.0/reference/vtadmin/
