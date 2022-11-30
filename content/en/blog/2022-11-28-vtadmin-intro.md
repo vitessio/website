@@ -127,7 +127,11 @@ The above multi-cluster configuration would show up in VTAdmin Web as:
 <img src="/files/2022-11-28-vtadmin-intro/multiclusters.png" alt="Multiple clusters on the /clusters page in VTAdmin"/>
 
 ## What's next?
-
+There a number of things the team is excited to do next! Some of those things include:
+- **Single component VTAdmin**: VTAdmin is currently deployed as two separate components: the Web client and the API server. We're working on packaging these up into a single component much like how the old vtctld2 UI was packaged with Vtctld.
+- **Adding VTOrc UI**: We'd also like to combine VTOrc management capabilities into VTAdmin, primarily [the VTOrc UI](https://vitess.io/docs/15.0/user-guides/configuration-basic/vtorc/#old-ui-removal-and-replacement). That means instead of having to access two web applications to manage your Vitess clusters, you'll be able to do it all from VTAdmin.
+- **Adding VTTablet and VTGate features**: VTGate and VTTablet also come with their own web UIs and management APIs - we'd also like to combine these into VTAdmin someday. This includes being able to use the experimental tablet features without providing tablet FQDN templates.
+- **Making it easier to deploy**: Since VTAdmin recently went GA, we'd like to work on making the developer experience around deploying VTAdmin much easier. That means adding VTAdmin to existing Makefile workflows and other deployment optimizations.
 ## Stay in touch
 We welcome you to stay in touch with VTAdmin development in the #feat-vtadmin channel in the Vitess Slack. Here are some other ways you can stay up-to-date:
 
