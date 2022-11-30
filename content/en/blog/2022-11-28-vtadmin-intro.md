@@ -19,10 +19,10 @@ VTAdmin can do everything the old vtctld2 UI could do, now that the [vtctld2 par
 
 The following are just a few examples of what VTAdmin can do!
 ### Tablet Management
-VTAdmin provides a variety of Tablet management tools - from starting and stopping replication, setting to read/write, reparenting, deleting, pinging, refreshing Tablets to experimental features like tablet and VReplication QPS. 
+VTAdmin provides a variety of Tablet management tools, from starting and stopping replication, setting Tablets to read/write, reparenting, deleting, pinging, and refreshing Tablets, to experimental features like tablet and VReplication QPS. 
 <img src="/files/2022-11-28-vtadmin-intro/tablets.gif" alt="GIF of tablets features in VTAdmin Web"/>
 
-_Note: To use experimental features, make sure to set `REACT_APP_ENABLE_EXPERIMENTAL_TABLET_DEBUG_VARS` in VTAdmin Web and `--http-tablet-url-tmpl` in VTAdmin API, as experimental tablet features work by making an HTTP call to the VTTablets._
+_Note: To use experimental features, make sure to set `REACT_APP_ENABLE_EXPERIMENTAL_TABLET_DEBUG_VARS` in VTAdmin Web and `--http-tablet-url-tmpl` in VTAdmin API, as experimental tablet features work by making HTTP requests to the VTTablets._
 
 ### Keyspace Management
 In VTAdmin, keyspace actions like validate keyspace/schema/version, reloading schemas, rebuilding keyspace graphs and cells, and creating new shards are made easy.
@@ -33,7 +33,7 @@ VTAdmin also allows you to view all your workflows and monitor workflow streams.
 <img src="/files/2022-11-28-vtadmin-intro/workflows.gif" alt="GIF of workflow features in VTAdmin Web"/>
 
 ### Topology
-The old topology browser in vtctld2 has also been reimagined into a graph-traversal UI, that allows you to explore topology across single and multi-cluster deployments.
+The old topology browser in vtctld2 has also been reimagined into a graph-traversal UI that allows you to explore topology across single and multi-cluster deployments.
 <img src="/files/2022-11-28-vtadmin-intro/topology.gif" alt="GIF of topology in VTAdmin Web"/>
 
 ### Role-based access control
@@ -49,7 +49,7 @@ _This is taken from the VTAdmin architecture doc [here](https://vitess.io/docs/r
 As an example, take the `/schemas` page in VTAdmin Web:
 <img src="/files/2022-11-28-vtadmin-intro/schemas.png" alt="The /schemas page in VTAdmin Web"/>
 
-When a user loads the `/schemas` page in the browser, VTAdmin Web makes an HTTP `GET` `/api/schema/local/commerce/corder` request to VTAdmin API. VTAdmin API then issues gRPC requests to the vtgates and vtctlds in the cluster to construct the list of schemas. Here's what that looks like in detail:
+When a user loads the `/schemas` page in the browser, VTAdmin Web makes an HTTP `GET` `/api/schema/local/commerce/corder` request to VTAdmin API. VTAdmin API then issues gRPC requests to the VTGates and Vtctlds in the cluster to construct the list of schemas. Here's what that looks like in detail:
 <img src="/files/2022-11-28-vtadmin-intro/requests.png" alt="Lifecycle of a request to the /schemas page in VTAdmin"/>
 
 ### Cluster configuration and discovery
