@@ -41,7 +41,7 @@ Action must be one of the following: Create, Complete, Cancel, SwitchTraffic, Re
 
 Each `action` has additional options/parameters that can be used to modify its behavior.
 
-`actions` are common to both MoveTables and Reshard workflows. Only the `create` action has different parameters, all other actions have common options and similar semantics. These actions are documented separately.
+`actions` are common to both `MoveTables` and `Reshard` workflows. Only the `create` action has different parameters, all other actions have common options and similar semantics. These actions are documented separately.
 
 #### --source
 **mandatory**
@@ -182,7 +182,7 @@ If set to false these reverse replication streams will not be created and you wi
 
 <div class="cmd">
 
-Usually, any data created by the workflow in the source and target (tables or shards) are deleted by Complete or Cancel. If this flag is used the data will be left in place.
+Usually, the target tables are deleted by `Cancel`. If this flag is used the target tables will not be deleted.
 
 </div>
 
@@ -192,7 +192,7 @@ Usually, any data created by the workflow in the source and target (tables or sh
 
 <div class="cmd">
 
-Usually, any routing rules created by the workflow in the source and target keyspace are removed by Complete or Cancel. If this flag is used the routing rules will be left in place.
+Usually, any routing rules created by the workflow in the source and target keyspace are removed by `Complete` or `Cancel`. If this flag is used the routing rules will be left in place.
 
 </div>
 
