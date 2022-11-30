@@ -5,10 +5,6 @@ weight: 10
 aliases: ['/docs/reference/vreplication/v2/movetables/']
 ---
 
-{{< info >}}
-This documentation is for a new (v2) set of vtctld commands that start in Vitess 11.0. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
-{{< /info >}}
-
 {{< warning >}}
 These workflows can have a significant impact on the source tablets (which are often in production) — especially when a PRIMARY tablet is used as a source. You can limit the impact on the source tablets using the [`--vreplication_copy_phase_max_*` vttablet flags](../flags/#vreplication_copy_phase_max_innodb_history_list_length)
 {{< /warning >}}
@@ -45,7 +41,7 @@ Action must be one of the following: Create, Complete, Cancel, SwitchTraffic, Re
 
 Each `action` has additional options/parameters that can be used to modify its behavior.
 
-`actions` are common to both MoveTables and Reshard v2 workflows. Only the `create` action has different parameters, all other actions have common options and similar semantics. These actions are documented separately.
+`actions` are common to both MoveTables and Reshard workflows. Only the `create` action has different parameters, all other actions have common options and similar semantics. These actions are documented separately.
 
 #### --source
 **mandatory**
@@ -62,7 +58,7 @@ Name of existing keyspace that contains the tables to be moved
 _Either_
 
 * a comma-separated list of tables
-  * if target keyspace is unsharded OR '
+  * if target keyspace is unsharded OR
   * if target keyspace is sharded AND the tables being moved are already defined in the target's vschema
 
   Example: `MoveTables -- --source commerce --tables 'customer,corder' Create customer.commerce2customer`
@@ -79,12 +75,12 @@ _Or_
 
 #### --cells
 **optional**\
-**default** local cell\
+**default** local cell (of source tablet)\
 **string**
 
 <div class="cmd">
 
-Cell(s) or CellAlias(es) (comma-separated) to replicate from.
+Comma seperated list of Cell(s) and/or CellAlias(es) to replicate from.
 
 </div>
 
@@ -130,13 +126,13 @@ to false then the workflow is in a Stopped state until you explicitly start it.
 </div>
 
 ###### Uses
-* allows updating the rows in `_vt.vreplication` after MoveTables has setup the
+* allows updating the rows in `_vt.vreplication` after `MoveTables` has setup the
 streams. For example, you can add some filters to specific tables or change the
 projection clause to modify the values on the target. This
 provides an easier way to create simpler Materialize workflows by first using
-MoveTables with auto_start false, updating the BinlogSource as required by your
-Materialize and then start the workflow.
-* changing the `copy_state` and/or `pos` values to restart a broken MoveTables workflow
+`MoveTables` with `--auto_start false`, updating the BinlogSource as required by your
+`Materialize` and then start the workflow.
+* changing the `copy_state` and/or `pos` values to restart a broken `MoveTables` workflow
 from a specific point of time.
 
 #### --stop_after_copy
@@ -255,7 +251,7 @@ We caution against against using `EXEC` or `EXEC_IGNORE` for the following reaso
 
 <div class="cmd">
 
-All workflows are identified by `targetKeyspace.workflow` where `targetKeyspace` is the name of the keyspace to which the tables are being moved. `workflow` is a name you assign to the MoveTables workflow to identify it.
+All workflows are identified by `targetKeyspace.workflow` where `targetKeyspace` is the name of the keyspace to which the tables are being moved. `workflow` is a name you assign to the `MoveTables` workflow to identify it.
 
 </div>
 
@@ -278,16 +274,16 @@ All workflows are identified by `targetKeyspace.workflow` where `targetKeyspace`
 
 ### Adopting Vitess
 
-For those wanting to try out Vitess for the first time, MoveTables provides an easy way to route part of their workload to Vitess with the ability to migrate back at any time without any risk. You point a vttablet to your existing MySQL installation, spin up an unsharded Vitess cluster and use a MoveTables workflow to start serving some tables from Vitess. You can also go further and use a Reshard workflow to experiment with a sharded version of a part of your database.
+For those wanting to try out Vitess for the first time, `MoveTables` provides an easy way to route part of their workload to Vitess with the ability to migrate back at any time without any risk. You point a vttablet to your existing MySQL installation, spin up an unsharded Vitess cluster and use a `MoveTables` workflow to start serving some tables from Vitess. You can also go further and use a Reshard workflow to experiment with a sharded version of a part of your database.
 
-See this [user guide](../../../../../docs/user-guides/configuration-advanced/unmanaged-tablet/#move-legacytable-to-the-commerce-keyspace) for detailed steps.
+See this [user guide](../../../user-guides/configuration-advanced/unmanaged-tablet/#move-legacytable-to-the-commerce-keyspace) for detailed steps.
 
 ### Vertical Sharding
 
 For existing Vitess users you can easily move one or more tables to another keyspace, either for balancing load or as preparation for sharding your tables.
 
-See this [user guide](../../../../../docs/user-guides/migration/move-tables/) which describes how MoveTables works in the local example provided in the Vitess repo.
+See this [user guide](../../../user-guides/migration/move-tables/) which describes how `MoveTables` works in the local example provided in the Vitess repo.
 
 ### More Reading
 
-* [MoveTables in practice](../../../../../docs/concepts/move-tables/)
+* [`MoveTables` in practice](../../../concepts/move-tables/)
