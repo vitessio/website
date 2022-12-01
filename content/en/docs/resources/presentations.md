@@ -4,6 +4,34 @@ weight: 1
 aliases: ['/resources/presentations.html', '/docs/resources/presentations/']
 ---
 
+## KubeCon NA 2022
+
+One VTOrc To Rule Them All – High Availability In a Distributed Database System - Deepthi Sigireddi & Manan Gupta, PlanetScale, Inc.
+
+{{< youtube id="upmByX8uD6E" autoplay="false" >}}
+
+Vitess: Introduction and New Features - Deepthi Sigireddi & Matt Lord & Rohit Nayak, PlanetScale, Inc.
+
+{{< youtube id="cPQuj4eTCdY" autoplay="false" >}}
+
+## KubeCon EU 2022
+
+Scaling Databases with Vitess - Harshit Gangal & Manan Gupta, PlanetScale, Inc.
+
+{{< youtube id="HgSlmzC7O-E" autoplay="false" >}}
+
+## Percona Live 2022
+
+Vitess VReplication: Standing on the Shoulders of a MySQL Giant - Matt Lord, PlanetScale, Inc.
+
+{{< youtube id="ltoJ8gxs0YU" autoplay="false" >}}
+
+## KubeCon China 2021
+
+Continuous Performance Benchmarking for Vitess - Alkin Tezuysal & Florent Poinsard & Manan Gupta, PlanetScale, Inc.
+
+{{< youtube id="fLullHPddvg" autoplay="false" >}}
+
 ## KubeCon NA 2021
 
 Vitess: Introduction and New Features - Deepthi Sigireddi & Alkin Tezuysal, PlanetScale, Inc.; Andrew Mason & Malcolm Akinje, Slack Corp.
