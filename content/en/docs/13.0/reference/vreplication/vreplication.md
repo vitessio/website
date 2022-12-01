@@ -94,10 +94,7 @@ VReplication performs the following essential functions:
   functionality of VReplication, it works hand in hand with it. It allows
   you to specify sophisticated rules about where to route queries
   depending on the type of workflow being performed. For example,
-  it can be used to control the cut-over during resharding. In
-  the case of materialized views, it can be used to establish
-  equivalence of tables, which will allow VTGate to compute the most optimal
-  plans given the available options.
+  it can be used to control the cut-over during resharding.
 
 <a name="exec"></a>
 
