@@ -18,8 +18,8 @@ VTAdmin is made up of two components:
 VTAdmin can do everything the old vtctld2 UI could do, now that the [vtctld2 parity project](https://github.com/vitessio/vitess/projects/13) has been completed. For a complete list of supported API methods, refer [here](https://github.com/vitessio/vitess/blob/main/go/vt/vtadmin/api.go#L332).
 
 The following are just a few examples of what VTAdmin can do!
-### Tablet Management
-VTAdmin provides a variety of Tablet management tools, from starting and stopping replication, setting Tablets to read/write, reparenting, deleting, pinging, and refreshing Tablets, to experimental features like tablet and VReplication QPS. 
+### VTTablet Management
+VTAdmin provides a variety of VTTablet management tools, from starting and stopping replication, setting VTTablets to read/write, reparenting, deleting, pinging, and refreshing VTTablets, to experimental features like VTTablet QPS and VReplication QPS. 
 <img src="/files/2022-11-28-vtadmin-intro/tablets.gif" alt="GIF of tablets features in VTAdmin Web"/>
 
 _Note: To use experimental features, make sure to set `REACT_APP_ENABLE_EXPERIMENTAL_TABLET_DEBUG_VARS` in VTAdmin Web and `--http-tablet-url-tmpl` in VTAdmin API, as experimental tablet features work by making HTTP requests to the VTTablets._
@@ -29,11 +29,11 @@ In VTAdmin, keyspace actions like validate keyspace/schema/version, reloading sc
 <img src="/files/2022-11-28-vtadmin-intro/keyspaces.gif" alt="GIF of keyspace features in VTAdmin Web"/>
 
 ## Workflow Management
-VTAdmin also allows you to view all your workflows and monitor workflow streams.
+VTAdmin allows you to view all your VReplication workflows and monitor workflow streams.
 <img src="/files/2022-11-28-vtadmin-intro/workflows.gif" alt="GIF of workflow features in VTAdmin Web"/>
 
 ### Topology
-The old topology browser in vtctld2 has also been reimagined into a graph-traversal UI that allows you to explore topology across single and multi-cluster deployments.
+The old topology browser in vtctld2 has been reimagined into a graph-traversal UI, which allows you to explore the full topology across single and multi-cluster deployments.
 <img src="/files/2022-11-28-vtadmin-intro/topology.gif" alt="GIF of topology in VTAdmin Web"/>
 
 ### Role-based access control
@@ -73,8 +73,6 @@ vtadmin \
 where, in this example, `discovery=staticfile` is specifying static file discovery.
 
 VTAdmin API currently supports a few methods for discovery:
-#### Consul discovery
-With **Consul discovery**, VTGate and Vtctld addresses are discovered via requests to [Consul](https://www.consul.io/). For a full list of supported flags for Consul discovery, refer [here](https://github.com/vitessio/vitess/blob/main/go/vt/vtadmin/cluster/discovery/discovery_consul.go#L83-L118), or refer to the [test examples](https://github.com/vitessio/vitess/blob/main/go/vt/vtadmin/cluster/discovery/discovery_consul_test.go#L102-L110).
 
 #### Static file discovery
 With **static file discovery**, VTGate and Vtctld addresses are specified in a static file, whose path is provided as a parameter to the `--cluster` command line argument:
@@ -129,12 +127,13 @@ The above multi-cluster configuration would show up in VTAdmin Web as:
 
 <img src="/files/2022-11-28-vtadmin-intro/multiclusters.png" alt="Multiple clusters on the /clusters page in VTAdmin"/>
 
+### Dynamic discovery
 ## How do I operate VTAdmin?
 We have a complete [operator's guide](https://vitess.io/docs/15.0/reference/vtadmin/operators_guide/) to setting up VTAdmin in your Vitess cluster. If you intend to use VTAdmin with the Vitess Operator instead, follow [these instructions](https://vitess.io/docs/15.0/reference/vtadmin/running_with_vtop/).
 ## What's next?
 There a number of things the team is excited to do next! Some of those things include:
 - **Single component VTAdmin**: VTAdmin is currently deployed as two separate components: the Web client and the API server. We're working on packaging these up into a single component much like how the old vtctld2 UI was packaged with Vtctld.
-- **Adding VTOrc UI**: We'd also like to combine VTOrc management capabilities into VTAdmin, primarily [the VTOrc UI](https://vitess.io/docs/15.0/user-guides/configuration-basic/vtorc/#old-ui-removal-and-replacement). That means instead of having to access two web applications to manage your Vitess clusters, you'll be able to do it all from VTAdmin.
+- **Adding VTOrc UI**: We'd also like to combine VTOrc management capabilities into VTAdmin, primarily [the VTOrc UI](https://vitess.io/docs/15.0/user-guides/configuration-basic/vtorc/#old-ui-removal-and-replacement). 
 - **Adding VTTablet and VTGate features**: VTGate and VTTablet also come with their own web UIs and management APIs - we'd also like to combine these into VTAdmin someday. This includes being able to use the experimental tablet features without providing tablet FQDN templates.
 - **Making it easier to deploy**: Since VTAdmin recently went GA, we'd like to work on making the developer experience around deploying VTAdmin much easier. That means adding VTAdmin to existing Makefile workflows and other deployment optimizations.
 ## Stay in touch with VTAdmin
