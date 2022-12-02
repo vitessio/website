@@ -56,7 +56,7 @@ VTAdmin API manages to be mostly stateless because it works by proxying requests
 
 The method by which VTAdmin API discovers VTGate and Vtctld addresses to create those gRPC connections is called **cluster discovery**. Users can pass VTGate and Vtctld addresses to VTAdmin API in two ways:
 1. As command line arguments at initialization time
-2. As an HTTP header cookier or gRPC metadata _after_ initialization time
+2. As an HTTP header cookie or gRPC metadata _after_ initialization time
 
 More information on the different clustser discovery methods, and how to use them, can be found in our [cluster discovery documentation](/docs/15.0/reference/vtadmin//cluster_discovery).
 
