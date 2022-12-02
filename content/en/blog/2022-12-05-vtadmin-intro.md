@@ -1,7 +1,7 @@
 ---
 author: 'Frances Thai'
-date: 2022-12-01
-slug: '2022-12-01-vtadmin-intro'
+date: 2022-12-05
+slug: '2022-12-05-vtadmin-intro'
 tags: ['Vitess','VTAdmin','vtctld','vtctld2']
 title: 'Introducing VTAdmin'
 description: "Vitess's cluster management API and UI"
@@ -20,34 +20,34 @@ VTAdmin can do everything the old vtctld2 UI could do, now that the [vtctld2 par
 The following are just a few examples of what VTAdmin can do!
 ### VTTablet Management
 VTAdmin provides a variety of VTTablet management tools, from starting and stopping replication, setting VTTablets to read/write, reparenting, deleting, pinging, and refreshing VTTablets, to experimental features like VTTablet QPS and VReplication QPS. 
-<img src="/files/2022-12-01-vtadmin-intro/tablets.gif" alt="GIF of tablets features in VTAdmin Web"/>
+<img src="/files/2022-12-05-vtadmin-intro/tablets.gif" alt="GIF of tablets features in VTAdmin Web"/>
 
 _Note: To use experimental features, make sure to set `REACT_APP_ENABLE_EXPERIMENTAL_TABLET_DEBUG_VARS` in VTAdmin Web and `--http-tablet-url-tmpl` in VTAdmin API, as experimental tablet features work by making HTTP requests to the VTTablets._
 
 ### Keyspace Management
 In VTAdmin, keyspace actions like validating keyspace/schema/version, reloading schemas, rebuilding keyspace graphs and cells, and creating new shards are made easy.
-<img src="/files/2022-12-01-vtadmin-intro/keyspaces.gif" alt="GIF of keyspace features in VTAdmin Web"/>
+<img src="/files/2022-12-05-vtadmin-intro/keyspaces.gif" alt="GIF of keyspace features in VTAdmin Web"/>
 
 ## Workflow Management
 VTAdmin allows you to view all your VReplication workflows and monitor workflow streams.
-<img src="/files/2022-12-01-vtadmin-intro/workflows.gif" alt="GIF of workflow features in VTAdmin Web"/>
+<img src="/files/2022-12-05-vtadmin-intro/workflows.gif" alt="GIF of workflow features in VTAdmin Web"/>
 
 ### Topology
 The old topology browser in vtctld2 has been reimagined into a graph-traversal UI, which allows you to explore the full topology across single and multi-cluster deployments.
-<img src="/files/2022-12-01-vtadmin-intro/topology.gif" alt="GIF of topology in VTAdmin Web"/>
+<img src="/files/2022-12-05-vtadmin-intro/topology.gif" alt="GIF of topology in VTAdmin Web"/>
 
 ## How does VTAdmin work?
 VTAdmin Web is a web client that queries data from VTAdmin API via HTTP protocol. VTAdmin API in turn, is a mostly stateless API server that fetches data from VTGates and Vtctlds via gRPC. It returns this data to the frontend, VTAdmin Web. In a multi-cluster environment, that might look like:
-<img src="/files/2022-12-01-vtadmin-intro/architecture.png" alt="Architecture diagram for VTAdmin API and Web"/>
+<img src="/files/2022-12-05-vtadmin-intro/architecture.png" alt="Architecture diagram for VTAdmin API and Web"/>
 
 ### Lifecycle of a Request
 _This is taken from the VTAdmin architecture doc [here](https://vitess.io/docs/reference/vtadmin/architecture/)_.
 
 As an example, take the `/schemas` page in VTAdmin Web:
-<img src="/files/2022-12-01-vtadmin-intro/schemas.png" alt="The /schemas page in VTAdmin Web"/>
+<img src="/files/2022-12-05-vtadmin-intro/schemas.png" alt="The /schemas page in VTAdmin Web"/>
 
 When a user loads the `/schemas` page in the browser, VTAdmin Web makes an HTTP `GET` `/api/schema/local/commerce/corder` request to VTAdmin API. VTAdmin API then issues gRPC requests to the VTGates and Vtctlds in the cluster to construct the list of schemas. Here's what that looks like in detail:
-<img src="/files/2022-12-01-vtadmin-intro/requests.png" alt="Lifecycle of a request to the /schemas page in VTAdmin"/>
+<img src="/files/2022-12-05-vtadmin-intro/requests.png" alt="Lifecycle of a request to the /schemas page in VTAdmin"/>
 
 ## How do I operate VTAdmin?
 We have a complete [operator's guide](https://vitess.io/docs/15.0/reference/vtadmin/operators_guide/) to setting up VTAdmin in your Vitess cluster. If you intend to use VTAdmin with the Vitess Operator instead, follow [these instructions](https://vitess.io/docs/15.0/reference/vtadmin/running_with_vtop/).

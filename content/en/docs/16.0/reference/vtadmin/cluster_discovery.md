@@ -75,7 +75,7 @@ vtadmin \
 <br/>
 The above multi-cluster configuration would show up in VTAdmin Web as:
 
-<img src="/files/2022-12-01-vtadmin-intro/multiclusters.png" alt="Multiple clusters on the /clusters page in VTAdmin"/>
+<img src="/files/2022-12-05-vtadmin-intro/multiclusters.png" alt="Multiple clusters on the /clusters page in VTAdmin"/>
 
 ### Dynamic discovery
 It is possible to discover clusters _after_ VTAdmin API has been initialized through **dynamic discovery**. When using dynamic discovery, a cluster configuration is passed as either [gRPC metadata](https://github.com/grpc/grpc-go/blob/master/Documentation/grpc-metadata.md) or an HTTP header cookie.
