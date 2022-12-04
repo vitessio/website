@@ -7,7 +7,7 @@ weight: 23
 Vitess has an implicit feature of routing the queries to the appropriate keyspace based on the table specified in the `from` list.
 This differs from the standard mysql, in mysql unqualified tables will fail if the correct database is not set on the connection.
 
-This feature works only for unique table names provided in the [VSchema](https://vitess.io/docs/concepts/vschema/), and only when no default keyspace is set on the connection.
+This feature works only for unique table names provided in the [VSchema](https://vitess.io/docs/concepts/vschema/), and only when no default keyspace is set on the connection. One exception to the uniqueness rule is [Reference Tables](../../../user-guides/vschema-guide/advanced-vschema/#reference-tables) that share a name with an explicitly specified `source` table.
 
 Example:
 ```sql
