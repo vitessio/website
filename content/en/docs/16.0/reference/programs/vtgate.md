@@ -59,6 +59,7 @@ The following global options apply to `vtgate`:
 | --enable_set_var | boolean | This will enable the use of MySQL's SET_VAR query hint for certain system variables instead of using reserved connections. |
 | --gate_query_cache_size | int | gate server query cache size, maximum number of queries to be cached. vtgate analyzes every incoming query and generate a query plan, these plans are being cached in a lru cache. This config controls the capacity of the lru cache. (default 10000) |
 | --gateway_initial_tablet_timeout | duration | At startup, the gateway will wait up to that duration to get one tablet per keyspace/shard/tablettype (default 30s) |
+| --global-keyspace | strings | Global routing behavior applies when no default keyspace is set on a connection, or when a global keyspace is used. Multiple global keyspaces may defined by specifying this flag multiple times. |
 | --grpc_auth_mode | string | Which auth plugin implementation to use (eg: static) |
 | --grpc_auth_mtls_allowed_substrings | string | List of substrings of at least one of the client certificate names (separated by colon). |
 | --grpc_auth_static_client_creds | string | when using grpc_static_auth in the server, this file provides the credentials to use to authenticate with server |
