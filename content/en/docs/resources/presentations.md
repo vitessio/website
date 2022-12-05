@@ -6,11 +6,11 @@ aliases: ['/resources/presentations.html', '/docs/resources/presentations/']
 
 ## KubeCon NA 2022
 
-One VTOrc To Rule Them All – High Availability In a Distributed Database System - Deepthi Sigireddi & Manan Gupta, PlanetScale, Inc.
+One VTOrc To Rule Them All – High Availability In a Distributed Database System - Deepthi Sigireddi & Manan Gupta, PlanetScale.
 
 {{< youtube id="upmByX8uD6E" autoplay="false" >}}
 
-Vitess: Introduction and New Features - Deepthi Sigireddi & Matt Lord & Rohit Nayak, PlanetScale, Inc.
+Vitess: Introduction and New Features - Deepthi Sigireddi, Matt Lord & Rohit Nayak, PlanetScale, Inc.
 
 {{< youtube id="cPQuj4eTCdY" autoplay="false" >}}
 
@@ -28,7 +28,7 @@ Vitess VReplication: Standing on the Shoulders of a MySQL Giant - Matt Lord, Pla
 
 ## KubeCon China 2021
 
-Continuous Performance Benchmarking for Vitess - Alkin Tezuysal & Florent Poinsard & Manan Gupta, PlanetScale, Inc.
+Continuous Performance Benchmarking for Vitess - Alkin Tezuysal, Florent Poinsard & Manan Gupta, PlanetScale, Inc.
 
 {{< youtube id="fLullHPddvg" autoplay="false" >}}
 

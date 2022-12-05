@@ -94,9 +94,9 @@ If you want to receive notifications even when you aren't mentioned, you can go 
 
 ## Reviewing a Pull Request
 
-The [Vitess bot](https://github.com/apps/vitess-bot) will comment a check-list on every pull request which contains a list of things to verify as a reviewer.
-The reviews should go through this list and mark the items as checked as they go along. If anything is incomplete, changes to the PR can be requested until 
-all the points on the checklist are satisfied.
+The [Vitess bot](https://github.com/apps/vitess-bot) will add a comment with a review checklist on every pull request.
+Reviewers should go through this list and mark the items as checked as they go along. If anything is incomplete, changes to the PR can be requested until 
+all the items on the checklist are satisfied.
 
 ## Approving a Pull Request
 
