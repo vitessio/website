@@ -26,16 +26,16 @@ MoveTables -- [--source=<sourceKs>] [--tables=<tableSpecs>] [--cells=<cells>]
 
 ## Description
 
-MoveTables is used to start and manage workflows to move one or more tables from an external database or an existing Vitess keyspace into a new Vitess keyspace. The target keyspace can be unsharded or sharded.
+`MoveTables` is used to start and manage workflows to move one or more tables from an external database or an existing Vitess keyspace into a new Vitess keyspace. The target keyspace can be unsharded or sharded.
 
-MoveTables is typically used for migrating data into Vitess or to implement vertical sharding. You might use the former when you first start using Vitess and the latter if you want to distribute your load across servers without sharding tables.
+`MoveTables` is typically used for migrating data into Vitess or to implement vertical sharding. You might use the former when you first start using Vitess and the latter if you want to distribute your load across servers without sharding tables.
 
 ## Parameters
 
 ### action
 
-MoveTables is an "umbrella" command. The `action` sub-command defines the operation on the workflow.
-Action must be one of the following: Create, Show, Progress, SwitchTraffic, ReverseTrafffic, Complete, or Cancel.
+`MoveTables` is an "umbrella" command. The `action` sub-command defines the operation on the workflow.
+Action must be one of the following: `Create`, `Show`, `Progress`, `SwitchTraffic`, `ReverseTrafffic`, `Complete`, or `Cancel`.
 
 #### Create
 <div class="cmd">
@@ -85,7 +85,7 @@ It is too expensive to get real-time row counts of tables, using _count(*)_, say
 
 Each `action` has additional options/parameters that can be used to modify its behavior.
 
-`actions` are common to both `MoveTables` and `Reshard` workflows. Only the `create` action has different parameters, all other actions have common options and similar semantics. These actions are documented separately.
+`actions` are common to both `MoveTables` and `Reshard` workflows. Only the `create` action has different parameters, all other actions have common options and similar semantics.
 
 #### --all
 
@@ -97,7 +97,7 @@ Move all tables from the source keyspace.
 </div>
 
 #### --auto_start
-**optional**
+**optional**\
 **default** true
 
 <div class="cmd">
@@ -109,13 +109,13 @@ to false then the workflow is in a Stopped state until you explicitly start it.
 
 ###### Uses
 
-* Allows updating the rows in `_vt.vreplication` after MoveTables has setup the
+* Allows updating the rows in `_vt.vreplication` after `MoveTables` has setup the
 streams. For example, you can add some filters to specific tables or change the
 projection clause to modify the values on the target. This
 provides an easier way to create simpler Materialize workflows by first using
-MoveTables with auto_start false, updating the BinlogSource as required by your
-Materialize and then start the workflow.
-* Changing the `copy_state` and/or `pos` values to restart a broken MoveTables workflow
+`MoveTables` with auto_start false, updating the BinlogSource as required by your
+`Materialize` and then start the workflow.
+* Changing the `copy_state` and/or `pos` values to restart a broken `MoveTables` workflow
 from a specific point of time
 
 #### --cells
