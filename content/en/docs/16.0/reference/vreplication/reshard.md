@@ -264,7 +264,7 @@ Comma separated shard names to reshard from.
 
 <div class="cmd">
 
-Source tablet types to replicate from (e.g. PRIMARY, REPLICA, RDONLY). Defaults to --vreplication_tablet_type parameter value for the tablet, which has the default value of "in_order:REPLICA,PRIMARY".
+Source tablet types to replicate from (e.g. PRIMARY, REPLICA, RDONLY).
 
 </div>
 
@@ -311,13 +311,13 @@ All workflows are identified by `targetKeyspace.workflow` where `targetKeyspace`
 
 ### The most basic Reshard Workflow lifecycle
 
-1. Initiate the migration using [Create](../create)<br/>
+1. Initiate the migration using `Create`<br/>
 `Reshard -- --source_shards=<source_shards> --target_shards=<target_shards> Create <keyspace.workflow>`
-1. Monitor the workflow using [Show](../show) or [Progress](../progress)<br/>
+1. Monitor the workflow using `Show` or `Progress`<br/>
 `Reshard Show <keyspace.workflow>` _*or*_ <br/>
 `Reshard Progress <keyspace.workflow>`<br/>
 1. Confirm that data has been copied over correctly using [VDiff](../vdiff)
-1. Cutover to the target keyspace with [SwitchTraffic](../switchtraffic) <br/>
+1. Cutover to the target keyspace with `SwitchTraffic`<br/>
 `Reshard SwitchTraffic <keyspace.workflow>`
-1. Cleanup vreplication artifacts and source shards with [Complete](../complete) <br/>
+1. Cleanup vreplication artifacts and source shards with `Complete`<br/>
 `Reshard Complete <keyspace.workflow>`

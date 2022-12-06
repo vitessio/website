@@ -87,16 +87,16 @@ NOTE: there is no reverse replication flow with Migrate. After the `Migrate Comp
 `Mount -- --type vitess --topo_type etcd2 --topo_server localhost:12379 --topo_root /vitess/global ext1`
 1. Apply source vSchema to the Target's Keyspace.<br/>
 `ApplyVSchema -- --vschema_file commerceVschema.json commerce`
-1. Initiate the migration using [Create](../create).<br/>
+1. Initiate the migration using `Create`.<br/>
 `Migrate -- --all --source ext1.commerce Create commerce.wf`
-1. Monitor the workflow using [Show](../show).<br/>
+1. Monitor the workflow using `Show`.<br/>
 `Workflow commerce.wf Show`
 1. Confirm that data has been copied over correctly using [VDiff](../vdiff).<br/>
 `VDiff commerce.wf`
 1. Stop the application from writing to the source Vitess cluster.<br/>
 1. Confirm again the data has been copied over correctly using [VDiff](../vdiff).<br/>
 `VDiff commerce.wf`
-1. Cleanup vreplication artifacts and source tables with [Complete](../complete).<br />
+1. Cleanup vreplication artifacts and source tables with `Complete`.<br />
 `Migrate Complete commerce.wf`
 1. Start the application pointed to the target Vitess Cluster.
 1. Unmount the source cluster.<br/>
