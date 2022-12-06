@@ -34,7 +34,7 @@ Reshard -- [--source_shards=<source_shards>] [--target_shards=<target_shards>] [
 ### action
 
 `Reshard` is an "umbrella" command. The `action` sub-command defines the operation on the workflow.
-Action must be one of the following: `Create`, `Show`, `Progress`, `SwitchTraffic`, `ReverseTrafffic`, `Complete`, or `Cancel`.
+Action must be one of the following: `Create`, `Show`, `Progress`, `SwitchTraffic`, `ReverseTrafffic`, `Cancel`, or `Complete`.
 
 #### Create
 <div class="cmd">
@@ -76,7 +76,20 @@ It is too expensive to get real-time row counts of tables, using _count(*)_, say
 #### Cancel
 <div class="cmd">
 
-`Cancel` can be used if a workflow was created in error or was misconfigured and you prefer to create a new workflow instead of fixing this one. Cancel can only be called if no traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with routing rules and blacklisted tables from the topo and, by default, the target tables from the target keyspace.
+`Cancel` can be used if a workflow was created in error or was misconfigured and you prefer to create a new workflow instead of fixing this one. Cancel can only be called if no traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with the new target shards from the topo and, by default, the target tables on the target keyspace
+(see [`--keep_data`](./#--keep_data) and [`--rename_tables`](#--rename_tables)).
+
+</div>
+
+#### Complete
+<div class="cmd">
+
+{{< warning >}}
+This is a destructive command
+{{< /warning >}}
+
+`Complete` is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with the original source shards from the topo. By default, the source tables are also dropped on the source shards
+(see [`--keep_data`](./#--keep_data) and [`--rename_tables`](#--rename_tables)) .
 
 </div>
 
