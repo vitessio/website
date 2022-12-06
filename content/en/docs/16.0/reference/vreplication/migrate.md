@@ -4,10 +4,6 @@ description: Move tables from an external cluster
 weight: 85
 ---
 
-{{< info >}}
-This documentation is for a new (v2) set of vtctld commands that start in Vitess 11.0. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
-{{< /info >}}
-
 ### Command
 
 ```
@@ -17,8 +13,8 @@ Migrate -- <options> <action> <workflow identifier>
 
 ### Description
 
-Migrate is used to start and manage vReplication workflows for copying keyspaces and/or tables from a source Vitess cluster, to a target Vitess cluster.
-This command is built off of [MoveTables](../movetables) but has been extended to work with source and target topology services. It should be 
+Migrate is used to start and manage VReplication workflows for copying keyspaces and/or tables from a source Vitess cluster, to a target Vitess cluster.
+This command is built off of [MoveTables](../movetables) but has been extended to work with independent source and target topology services. It should be 
 utilized when moving Keyspaces or Tables between two separate Vitess environments. Migrate is an advantageous strategy for large sharded environments
 for a few reasons:
 
@@ -30,20 +26,20 @@ for a few reasons:
 * Could be used for configuring lower environments with production data.
 
 Please note the Migrate command works with an externally mounted source cluster. See the related [Mount command](../mount) for more information
-on external Vitess clusters.
+on working with external Vitess clusters.
 
-#### Differences between Migrate and MoveTables
+#### Differences Between Migrate and MoveTables
 
-Migrate has separate semantics and behaviors from MoveTables:
+`Migrate` has separate semantics and behaviors from `MoveTables`:
 
-* MoveTables migrates data from one keyspace to another, within the same Vitess cluster; Migrate functions between two separated Vitess clusters. 
-* MoveTables erases the source data upon completion by default; Migrate keeps the source data intact.
+* `MoveTables` migrates data from one keyspace to another, within the same Vitess cluster; `Migrate` functions between two separated Vitess clusters. 
+* `MoveTables` erases the source data upon completion by default; Migrate keeps the source data intact.
     * There are flags available in MoveTables to change the default behavior in regards to the source data.
-* MoveTables sets up routing rules and reverse replication, allowing for rollback prior to completion.
-    * Switching read/write traffic is not meaningful in the case of Migrate, as the Source is in a different cluster.
-    * Switching traffic requires the Target to have the ability to create vreplication streams (in the _vt database) on the Source;
+* `MoveTables` sets up routing rules and reverse replication, allowing for rollback prior to completion.
+    * Switching read/write traffic is not meaningful in the case of `Migrate`, as the Source is in a different cluster.
+    * Switching traffic requires the Target to have the ability to create vreplication streams (in the `_vt` database) on the Source;
       this may not always be possible on production systems.
-* Not all MoveTables options work with Migrate; for example [Progress](../progress) is unavailable with Migrate. 
+* Not all `MoveTables` options work with `Migrate`; for example [`Progress`](../progress) is unavailable with `Migrate`. 
 
 
 ### Parameters
@@ -66,7 +62,9 @@ If needed, you can rename the keyspace while migrating, simply provide a differe
 
 Each `action` has additional options/parameters that can be used to modify its behavior.
 
-The options for the supported commands are the same as [MoveTables](../movetables), with the exception of `reverse_replication`.
+The options for the supported commands are the same as [MoveTables](../movetables), with the exception of `--reverse_replication` as setting
+up the reverse vreplication streams requires modifying the source cluster's `_vt` sidecar database which we cannot do as that database is
+specific to a single Vitess cluster and these streams belong to a different one (the target cluster).
 
 A common option to give if migrating all of the tables from a source keyspace is the `--all` option.
 
@@ -80,7 +78,7 @@ All workflows are identified by `targetKeyspace.workflow` where `targetKeyspace`
 ### A Migrate Workflow lifecycle
 
 {{< info >}}
-NOTE: there is no reverse replication flow with Migrate. After the `Migrate Complete` command is given; no writes will be replicated between the Source and Target Vitess clusters. They are essentially two identical Vitess clusters running in two different environments. Once writing resumes on one of the clusters they will begin to drift apart. 
+NOTE: there is no reverse vreplication flow with `Migrate`. After the `Migrate Complete` command is given; no writes will be replicated between the Source and Target Vitess clusters. They are essentially two identical Vitess clusters running in two different environments. Once writing resumes on one of the clusters they will begin to drift apart. 
 {{< /info >}}
 
 1. Mount the source Vitess cluster using [Mount](../mount).<br/>
@@ -114,29 +112,29 @@ For Migrate to function properly, you will need to ensure communication is possi
 If you're migrating a keyspace from a production system, you may want to target a replica to reduce your load on the primary vttablets. This will also assist you in reducing the number of network considerations you need to make. 
 
 ```
-Migrate -- --all --tablet_types "REPLICA" --source <mount name>.<source keyspace> Create <workflow identifier>
+Migrate -- --all --tablet_types REPLICA --source <mount name>.<source keyspace> Create <workflow identifier>
 ```
 
 To verify the Migration you can also perform VDiff with the `--tablet_types` option:
 
 ```
-VDiff -- --tablet_types "REPLICA"  <target keyspace>.<workflow identifier>
+VDiff -- --tablet_types REPLICA  <target keyspace>.<workflow identifier>
 ```
 
 ### Troubleshooting Errors
 
-Migrate fails right away with error:
+`Migrate` fails right away with error:
 
 ```sh
 E0224 23:51:45.312536     138 main.go:76] remote error: rpc error: code = Unknown desc = table table1 not found in vschema for keyspace sharded
 ```
 <br />Solution:
-* The target table has a vSchema which does not match the source vSchema
-* Upload the source vSchema to the target vSchema and try the migrate again
+* The target table has a VSchema which does not match the source VSchema
+* Upload the source VSchema to the target VSchema and try the `Migrate` again
 
 ---
 
-Migrate fails right away with error:
+`Migrate` fails right away with error:
 
 ```sh
 E0224 18:55:29.275019     578 main.go:76] remote error: rpc error: code = Unknown desc = node doesn't exist
@@ -148,7 +146,7 @@ E0224 18:55:29.275019     578 main.go:76] remote error: rpc error: code = Unknow
 
 ---
 
-After issuing Migrate command everything is stuck at 0% progress 
+After issuing `Migrate` command everything is stuck at 0% progress 
 with errors found in target vttablet logs:
 
 ```sh

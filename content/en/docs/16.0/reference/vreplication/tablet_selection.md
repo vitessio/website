@@ -8,14 +8,14 @@ weight: 300
 For [VReplication streams](../../../concepts/vstream/), we must choose a tablet to serve the role of source (vstreamer) and target (vapplier) in the replication stream and this is done automatically.
 
 To select the tablets we get a set of viable -- healthy and serving -- candidates for the source and target of the stream:
-  * **Source**: a random tablet is selected from the viable candidates of the specified types (see [tablet types](./#tablet-types))
+  * **Source**: a random tablet is selected from the viable candidates of the specified tablet types in the given cells
   * **Target**: a viable primary tablet is chosen, as we need to do writes that are then replicated within the target shard
 
-### Cell considerations
+### Cells
 
-VReplication will only look for tablet pairings within the same cell. If you want to have cross-cell streams then you will need to [create a CellAlias](https://vitess.io/docs/reference/programs/vtctl/cell-aliases/) that contains the list of potential cells and specify that using the `--cell` flag in your VReplication workflow commands.
+VReplication will only look for source and target tablet pairings within the same cell by default — so if the target primary is in the `zone1` cell it will only look for source tablets in `zone1` cell. If you want to have cross-cell streams then you will need to specify the list of cells or any [CellAlias](https://vitess.io/docs/reference/programs/vtctl/cell-aliases/) that contain the list of potential cells using the `--cell` flag in your VReplication workflow commands.
 
-### Tablet types
+### Tablet Types
 
 The server side default which determines the candidate types made available for potential selection in a stream is set using the [vttablet's `--vreplication_tablet_type` flag](../flags/#vreplication_tablet_type) (default value is `in_order:REPLICA,PRIMARY`). The target tablet will use this when finding the viable source tablet candidates.
 
