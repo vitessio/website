@@ -65,9 +65,9 @@ Depending on the size of the table(s), the VDiff process may need increased time
 - Increase the `--filtered_replication_wait_time` parameter for VDiff as the default is 30 seconds. You many need to increase this to hours on large and/or busy tables.
 
 {{< info >}}
-Note that running VDiff via vtctld can lead to vtctld consuming significantly more memory than usual. 
-We've found this to be around 1 GB plus, instead of the a few hundred MB that it normally uses. 
-If you run your vtctld in a memory limited container, you may want to take this into account. 
+Note that running VDiff via vtctld can lead to vtctld consuming significantly more memory than usual.
+We've found this to be around 1 GB plus, instead of the a few hundred MB that it normally uses.
+If you run your vtctld in a memory limited container, you may want to take this into account.
 Similarly, while a VDiff is in progress, vtctld will consume significantly more CPU than usual.
 {{< /info >}}
 
@@ -269,7 +269,7 @@ vtctlclient --server vtctld.host:15999 MoveTables -- --dry_run Complete targetke
 
 1. Drop the tables involved in the MoveTables in the original keyspace (sourcekeyspace)
 2. Remove the workflows related to the MoveTables operation
-3. Clean up the routing rules. Applications pointed to the sourcekeyspace will no longer be transparently redirected to the targetkeyspace
+3. Clean up the [routing rules](../../../reference/features/schema-routing-rules/). Applications pointed to the sourcekeyspace will no longer be transparently redirected to the targetkeyspace.
 
 #### After a cutover rollback
 
@@ -281,4 +281,4 @@ vtctlclient --server vtctld.host:15999 MoveTables -- Cancel targetkeyspace.workf
 
 1. Drop the tables involved in the MoveTables in the new keyspace (targetkeyspace)
 2. Remove the workflows related to the MoveTables operation
-3. Clean up the routing rules. Applications pointed to the targetkeyspace will no longer be transparently redirected to the sourcekeyspace
+3. Clean up the [routing rules](../../../reference/features/schema-routing-rules/). Applications pointed to the targetkeyspace will no longer be transparently redirected to the sourcekeyspace.
