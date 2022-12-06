@@ -12,7 +12,7 @@ These workflows can have a significant impact on the source tablets (which are o
 ## Command
 
 ```
-Reshard <options> <action> <workflow identifier>
+Reshard -- <options> <action> <workflow identifier>
 ```
 
 or
@@ -214,7 +214,7 @@ We caution against against using `EXEC` or `EXEC_IGNORE` for the following reaso
   * You may want to apply the DDL in a different way on the target.
   * The DDL may take a long time to apply on the target and may disrupt replication, performance, and query execution (if serving  traffic from the target) while it is being applied.
 
-If you do use one of these two DDL actions then you should also enable the [VReplication Schema Tracker](../../../../design-docs/vreplication/vstream/tracker/).
+If you do use one of these two DDL actions then you should also enable the [VReplication Schema Tracking](../../../../design-docs/vreplication/vstream/tracker/).
 {{< /warning >}}
 
 </div>

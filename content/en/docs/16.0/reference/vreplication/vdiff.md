@@ -47,7 +47,7 @@ VDiff will choose a tablet from this cell to diff the target tables with the sou
 
 <div class="cmd">
 A comma separated list of tablet types that are used while picking a tablet for sourcing data.
-One or more from PRIMARY, REPLICA, RDONLY.<br><br>
+One or more from PRIMARY, REPLICA, RDONLY.
 </div>
 
 #### --filtered_replication_wait_time
@@ -56,7 +56,7 @@ One or more from PRIMARY, REPLICA, RDONLY.<br><br>
 
 <div class="cmd">
 VDiff finds the current position of the source primary and then waits for the target replication to reach
-that position for `--filtered_replication_wait_time`. If the target is much behind the source or if there is
+that position for --filtered_replication_wait_time. If the target is much behind the source or if there is
 a high write qps on the source then this time will need to be increased.
 </div>
 
@@ -142,9 +142,9 @@ Summary for corder: {ProcessedRows:10 MatchingRows:10 MismatchedRows:0 ExtraRows
 Summary for customer: {ProcessedRows:11 MatchingRows:11 MismatchedRows:0 ExtraRowsSource:0 ExtraRowsTarget:0}
 ```
 
-### Using VDiff with huge tables
+### Using VDiff With Huge Tables
 
-Currently VDiff runs within vtctd. Each VDiff will stream rows from all sources and targets and then compare them row by row after assembling the rows in order. Since there are no database transactions, VDiff will run much faster than the actual workflow. However, for huge tables (billions of rows or terabytes in size) this can take several hours or even days depending on the number of rows, row composition, server configurations and the topology of the cluster. If your sources and/or targets are across multiple cells, for example, this can slow down the VDiff considerably.
+Currently VDiff runs within vtctld. Each VDiff will stream rows from all sources and targets and then compare them row by row after assembling the rows in order. Since there are no database transactions, VDiff will run much faster than the actual workflow. However, for huge tables (billions of rows or terabytes in size) this can take several hours or even days depending on the number of rows, row composition, server configurations and the topology of the cluster. If your sources and/or targets are across multiple cells, for example, this can slow down the VDiff considerably.
 
 Actual VDiff speeds are of course dependent on several factors in your cluster. But as a reference, we have seen VDiffs run as fast as 400mrph (million rows per hour) (~9B rows/day) for tables with short rows, or as slow as 60mrph (~1.5B rows/day), for tables with larger width and complex columns.
 
