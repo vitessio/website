@@ -29,6 +29,8 @@ for the various components:
       * TCP port 16000 + vttablet UID (gRPC); e.g port 16100 for UID 100
     * vtctldclient &rarr; vtctld
       * TCP port 15999 (gRPC)
+    * vtadmin &rarr;
+      * TCP port 14200 (gRPC and HTTP)
     * vtgate &rarr; topology server
       * Depends on topology server, e.g.:
          * for etcd typically TCP port 2379
@@ -38,8 +40,8 @@ for the various components:
       * TCP port 15001 (HTTP)
     * administrator using web browser &rarr; vttablet web UI
       * TCP port 15000 + vttablet UID (HTTP); e.g port 15100 for UID 100
-    * administrator using web browser &rarr; vtctld web UI
-      * TCP port 15000 (HTTP)
+    * administrator using web browser &rarr; vtadmin web UI
+      * TCP port 14201 (HTTP)
     * Metrics scraper (e.g. Prometheus) &rarr; vtgate web port
       * TCP port 15001 (HTTP)
     * Metrics scraper (e.g. Prometheus) &rarr; vttablet web port

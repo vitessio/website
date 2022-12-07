@@ -45,14 +45,12 @@ If you have deployed in multiple regions and would like the flexibility of queri
 ## Checklist
 
 * Ensure that vtctlds come up successfully. If there is a failure, check the log files for any errors.
-* Ensure that you can browse to the http port of vtctld. The dashboard should appear, after which you should be able to browse under the `Topology` tab and verify that the cell information is as you created it.
+* Ensure that you can query the http port of vtctld: `curl http://localhost:15000/cells/`
 * If you configured a separate cell-specific topo, ensure that you can connect to it using the parameters in the cell information.
 * Ensure that the cell-specific topos are reachable from other cells.
 
+If you have VTAdmin running, open the VTAdmin application in your browser. Go to Topology > View Topology
 Browsing to the cell information should look like this screenshot:
 
 ![cell-in-topo](../img/cell-in-topo.png)
 
-{{< info >}}
-Clicking on the `cell1` link will fail because metadata under that path will be created only when we bring up cell-specific Vitess components.
-{{< /info >}}
