@@ -9,7 +9,7 @@ A typical use case for `PlannedReparentShard` is to use it during software updat
 
 You can also perform a "Planned Reparent" through the browser from the VTAdmin Dashboard.
 
-![vtctld-reparenting](../img/vtadmin-reparenting.png)
+![vtadmin-reparenting](../img/vtadmin-reparenting.png)
 
 {{< info >}}
 The Vitess operator performs this step automatically when a container is gracefully brought down by Kubernetes, which also takes care of the use case of a software rollout. If a container or pod is brought down abruptly or crashes, then the primary will be unavailable until Kubernetes restarts it. However, if VTOrc is also deployed, it will detect this and failover to another eligible replica as the primary. VTOrc will not intervene during a graceful shut down.
