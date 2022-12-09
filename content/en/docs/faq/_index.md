@@ -18,6 +18,8 @@ Please do note that we request that you do not ask individual project members fo
 
 There are many channels available and we encourage you to join as many or as few as interest you. Some of the most popular channels are listed below:
 
+* #general
+* #developers
 * #kubernetes
 * #monitoring
 * #operator
