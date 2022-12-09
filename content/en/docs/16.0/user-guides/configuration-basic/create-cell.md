@@ -49,7 +49,7 @@ If you have deployed in multiple regions and would like the flexibility of queri
 * If you configured a separate cell-specific topo, ensure that you can connect to it using the parameters in the cell information.
 * Ensure that the cell-specific topos are reachable from other cells.
 
-If you have VTAdmin running, open the VTAdmin application in your browser. Go to Topology > View Topology
+Open the VTAdmin application in your browser. Go to Topology > View Topology
 Browsing to the cell information should look like this screenshot:
 
 ![cell-in-topo](../img/cell-in-topo.png)
