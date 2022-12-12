@@ -49,12 +49,12 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09003 | A sharding column is mandatory for the insert, please provide one. | INSERT query does not have sharding column '%v' in the column list | 0 |  |
 | VT09004 | You need to provide the list of columns you want to insert, or provide a VSchema with authoritative columns. If schema tracking is disabled you can enable it to automatically have authoritative columns. | INSERT should contain column list or the table should have authoritative columns in vschema | 0 |  |
 | VT09005 | A database must be selected. | no database selected: use keyspace<:shard><@type> or keyspace<[range]><@type> (<> are optional) | 1046 | 3D000 |
-| VT09006 | VITESS_MIGRATION works only on primary tablet. | %s VITESS_MIGRATION works only on primary tablet | 0 |  |
-| VT09007 | VITESS_THROTTLED_APPS works only on primary tablet. | %s VITESS_THROTTLED_APPS works only on primary tablet | 0 |  |
-| VT09008 | explain format = vtexplain will actually run queries. `/*vt+ EXECUTE_DML_QUERIES */` must be set to run DML queries in vtexplain. Example: `explain /*vt+ EXECUTE_DML_QUERIES */ format = vtexplain delete from t1` | explain format = vtexplain will actually run queries | 0 |  |
+| VT09006 | VITESS_MIGRATION commands work only on primary tablets, you must send such commands to a primary tablet. | %s VITESS_MIGRATION works only on primary tablet | 0 |  |
+| VT09007 | VITESS_THROTTLED_APPS commands work only on primary tablet, you must send such commands to a primary tablet. | %s VITESS_THROTTLED_APPS works only on primary tablet | 0 |  |
+| VT09008 | explain format = vtexplain will actually run queries. `/*vt+ EXECUTE_DML_QUERIES */` must be set to run DML queries in vtexplain. Example: `explain /*vt+ EXECUTE_DML_QUERIES */ format = vtexplain delete from t1`. | explain format = vtexplain will actually run queries | 0 |  |
 | VT09009 | Stream is only supported for primary tablets, please use a stream on those tablets. | stream is supported only for primary tablet type, current type: %v | 0 |  |
-| VT09010 | SHOW VITESS_THROTTLER STATUS works only on primary tablet | SHOW VITESS_THROTTLER STATUS works only on primary tablet | 0 |  |
-| VT10001 | foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/ | foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/ | 0 |  |
+| VT09010 | SHOW VITESS_THROTTLER STATUS works only on primary tablet. | SHOW VITESS_THROTTLER STATUS works only on primary tablet | 0 |  |
+| VT10001 | Foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/. | foreign key constraints are not allowed | 0 |  |
 | VT12001 | This statement is unsupported by Vitess. Please rewrite your query to use supported syntax. | unsupported: %s | 0 |  |
 | VT13001 | This error should not happen and is a bug. Please file an issue on GitHub: https://github.com/vitessio/vitess/issues/new/choose. | [BUG] %s | 0 |  |
 | VT13002 | This error should not happen and is a bug. Please file an issue on GitHub: https://github.com/vitessio/vitess/issues/new/choose. | unexpected AST struct for query: %s | 0 |  |
