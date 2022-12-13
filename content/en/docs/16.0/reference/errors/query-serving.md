@@ -8,7 +8,12 @@ description: Errors a users might encounter while querying Vitess
 These error messages are internal to Vitess. If you are getting other errors from MySQL you can check them on this MySQL error [page](https://dev.mysql.com/doc/mysql-errors/5.7/en/server-error-reference.html).
 {{< /info >}}
 
+## New Errors
 <!-- start -->
+
+<!-- end -->
+
+## Old Errors
 | Error Number | Error State |  Message | Meaning |
 | :--: |:--: | :-- | -- |
 | 1105 | HY000 | INSERT not supported when targeting a key range: %s | When targeting a range of shards, Vitess doesn't know which shard to send the INSERT to, so this is not supported.  |
@@ -51,4 +56,3 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | 1105 | HY000 | require sql_mode to be STRICT_TRANS_TABLES or STRICT_ALL_TABLES: got '%s' | Vitess requires the connection to be in STRICT mode; either or both of these settings need to be enabled. |
 | 1105 | HY000 | unexpected rows from reading sequence %s (possible mis-route): %d | The sequence table used returned invalid results. |
 | 1105 | HY000 | unsigned number overflows int64 value: %d | Tried to convert an unsigned integer into a signed integer, and the value overflows |
-<!-- end -->
