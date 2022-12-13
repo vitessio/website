@@ -41,9 +41,9 @@ environments by many Vitess users.
  * VTGate `Vstream` gRPC
 
 #### Types
- * [VStreamClient](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgateservice#Vitess_VStreamClient)
- * [VStreamRequest](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#VStreamRequest)
- * [VStreamResponse](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#VStreamResponse)
+ * [VStreamRequest](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamRequest)
+ * [VStreamResponse](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamResponse)
+ * [VStreamFlags](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags)
  * [VGtid](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#VGtid)
  * [LastPKEvent](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#LastPKEvent)
  * [TableLastPK](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#TableLastPK)
