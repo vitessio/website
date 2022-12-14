@@ -28,6 +28,7 @@ Last Updated: Dec 13, 2022
   - Vtctld Server API including online DDL
   - Benchmarking
   - Performance improvements
+  - Remove deprecated v1 commands
 - VTAdmin
   - Single component
   - Ease of deployment
