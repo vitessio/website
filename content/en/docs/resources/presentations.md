@@ -6,35 +6,38 @@ aliases: ['/resources/presentations.html', '/docs/resources/presentations/']
 
 ## KubeCon NA 2022
 
-One VTOrc To Rule Them All – High Availability In a Distributed Database System - Deepthi Sigireddi & Manan Gupta, PlanetScale.
+One VTOrc To Rule Them All – High Availability In a Distributed Database System - Deepthi Sigireddi & Manan Gupta, PlanetScale
 
 {{< youtube id="upmByX8uD6E" autoplay="false" >}}
 
-Vitess: Introduction and New Features - Deepthi Sigireddi, Matt Lord & Rohit Nayak, PlanetScale, Inc.
+Vitess: Introduction and New Features - Deepthi Sigireddi, Matt Lord & Rohit Nayak, PlanetScale
 
 {{< youtube id="cPQuj4eTCdY" autoplay="false" >}}
 
 ## KubeCon EU 2022
 
-Scaling Databases with Vitess - Harshit Gangal & Manan Gupta, PlanetScale, Inc.
+Scaling Databases with Vitess - Harshit Gangal & Manan Gupta, PlanetScale
 
 {{< youtube id="HgSlmzC7O-E" autoplay="false" >}}
 
 ## Percona Live 2022
 
-Vitess VReplication: Standing on the Shoulders of a MySQL Giant - Matt Lord, PlanetScale, Inc.
+Vitess VReplication: Standing on the Shoulders of a MySQL Giant - Matt Lord, PlanetScale
 
 {{< youtube id="ltoJ8gxs0YU" autoplay="false" >}}
 
+## FOSDEM 2022
+
+* [The relational model in the modern development age](https://video.fosdem.org/2022/D.mysql/relational_model_dev.webm) - Shlomi Noach, PlanetScale
 ## KubeCon China 2021
 
-Continuous Performance Benchmarking for Vitess - Alkin Tezuysal, Florent Poinsard & Manan Gupta, PlanetScale, Inc.
+Continuous Performance Benchmarking for Vitess - Alkin Tezuysal, Florent Poinsard & Manan Gupta, PlanetScale
 
 {{< youtube id="fLullHPddvg" autoplay="false" >}}
 
 ## KubeCon NA 2021
 
-Vitess: Introduction and New Features - Deepthi Sigireddi & Alkin Tezuysal, PlanetScale, Inc.; Andrew Mason & Malcolm Akinje, Slack Corp.
+Vitess: Introduction and New Features - Deepthi Sigireddi & Alkin Tezuysal, PlanetScale; Andrew Mason & Malcolm Akinje, Slack Corp.
 
 {{< youtube id="uKdMR89mfdE" autoplay="false" >}}
 
@@ -58,7 +61,7 @@ Revertible, Recoverable Schema Migrations in Vitess - Shlomi Noach, PlanetScale
 
 ## Rawkode Live
 
-Introduction to Vitess.  Deepthi Sigireddi, Alkin Tezuysal - PlanetScale, David McKay @rawkode
+Introduction to Vitess.  Deepthi Sigireddi, Alkin Tezuysal - PlanetScale with David McKay @rawkode
 
 {{< youtube id="Cwpu0y119I0" autoplay="false" >}}
 
@@ -79,7 +82,6 @@ KubeCon featured several Vitess talks, including:
 
 * [Keynote: CNCF Projects Update](https://youtu.be/uNpZA5fz5o8) - CNCF
 * [Vitess: Introduction and New Features](https://youtu.be/Nqzhgzg5WCw) - Sugu Sougoumarane & Deepthi Sigireddi, PlanetScale
-* [Introduction to Vitess](https://youtu.be/Sny8rITrdvE) - Deepthi Sigireddi, PlanetScale
 * [Codename VIFL - How to Migrate MySQL Database Clusters to Vitess](https://youtu.be/k51L0xdClGQ) - Guido Iaquinti & Rafael Chacon , Slack
 
 ## Perconalive Europe Online 2020
@@ -94,7 +96,7 @@ Vitess Online Schema Migration Automation - Shlomi Noach, PlanetScale
 
 ## Quarantine 2020 Database Talks, Carnegie Mellon University
 
-Query Planning for a Sharded System like Vitess - Sugu Sougoumarane - CTO,Planetscale
+Query Planning for a Sharded System like Vitess - Sugu Sougoumarane - CTO, PlanetScale
 
 {{< youtube id="TZb6m5ACIsA" autoplay="false" >}}
 
@@ -244,6 +246,12 @@ Jiten Vaidya from PlanetScale explains how you can use both OLTP and OLAP on Vit
 {{< youtube id="bhzJJF82mFc" autoplay="false" >}}
 
 ## Kubecon 19 Barcelona
+
+**Vitess Intro**
+
+Deepthi Sigireddi and Sugu Sougoumarane of PlanetScale give an introduction to Vitess.
+
+{{< youtube id="H4B5zLBfGN8" autoplay="false" >}}
 
 **Vitess Deep Dive**
 
