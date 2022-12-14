@@ -1,28 +1,34 @@
-production-build:
-	hugo \
+HUGO?=npx hugo
+DEPLOY_PRIME_URL?=/
+
+production-build: install
+	$(HUGO) --cleanDestinationDir \
 	--minify \
 	--verbose
 
-preview-build:
-	hugo \
+preview-build: install
+	$(HUGO) --cleanDestinationDir \
 	--buildDrafts \
 	--buildFuture \
 	--baseURL $(DEPLOY_PRIME_URL) \
 	--minify
 
-serve:
-	hugo server \
+serve: install
+	$(HUGO) server \
 	--buildDrafts \
 	--buildFuture \
 	--ignoreCache \
 	--disableFastRender \
 	--verbose
 
+install:
+	npm install
+
 clean:
 	rm -rf public
 
-build:
-	hugo
+build: install
+	$(HUGO) --cleanDestinationDir -e dev -DFE
 
 link-checker-setup:
 	curl https://raw.githubusercontent.com/wjdp/htmltest/master/godownloader.sh | bash

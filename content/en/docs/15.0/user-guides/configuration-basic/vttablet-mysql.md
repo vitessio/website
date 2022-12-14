@@ -127,7 +127,7 @@ VTTablet should be brought up on the same machine as the MySQL instance. It need
 * `tablet-path`: This should be the cell name followed by a `-` and the tablet UID used for `mysqlctl`. VTTablet will infer the `cell` name from this. Example: `cell1-100`.
 * `init_keyspace`: The keyspace that the tablet is going to serve. This will cause a keyspace to be created if one is not present.
 * `init_shard`: The shard that the tablet is going to serve. This will cause a shard to be created if one is not present.
-* `init_tablet_type`: This will typically be REPLICA. You may use other tablet types like “RDONLY”. Those tablet types will be deprecated in favor of newer ways to achieve their functionality. Note that you are not allowed to start a tablet as a MASTER.
+* `init_tablet_type`: This will typically be REPLICA. You may use other tablet types like “RDONLY”. Note that you are not allowed to start a tablet as a "PRIMARY".
 * `port`, `grpc_port`, and `--service_map` `'grpc-queryservice,grpc-tabletmanager'`
 
 There are some additional parameters that we recommend setting:
@@ -195,7 +195,7 @@ The next step is to bring up the rest of the vttablet-MySQL pairs on other machi
 You can find out the current state of all vttablets with the following command:
 
 ```sh
-$ vtctlclient ListAllTablets
+$ vtctldclient GetTablets
 cell1-0000000100 commerce 0 primary sougou-lap1:15100 sougou-lap1:17100 [] 2021-01-02T22:27:11Z
 cell1-0000000101 commerce 0 replica sougou-lap1:15101 sougou-lap1:17101 [] <null>
 cell1-0000000102 commerce 0 rdonly sougou-lap1:15102 sougou-lap1:17102 [] <null>
@@ -214,6 +214,6 @@ If a vttablet crashes, the address info will remain in the topo. However, vtgate
 It is recommended that you delete the tablet record if you intend to bring down a vttablet permanently. The command to delete a tablet is:
 
 ```text
-vtctlclient DeleteTablet cell1-100
+vtctldclient DeleteTablets cell1-100
 ```
 

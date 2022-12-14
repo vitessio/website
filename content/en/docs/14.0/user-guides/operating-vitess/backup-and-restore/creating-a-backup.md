@@ -1,8 +1,12 @@
-	---
+---
 title: Creating a Backup
 weight: 2
 aliases: ['/docs/user-guides/backup-and-restore/']
 ---
+
+{{< warning >}}
+Backups of MySQL 8.0.30 and later are only supported in Vitess 14.0.2 and later. You can see additional details [here](https://github.com/vitessio/vitess/pull/10847).
+{{< /warning >}}
 
 ## Creating a backup
 

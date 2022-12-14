@@ -35,64 +35,139 @@ Already downloaded: /Users/askdba/Library/Caches/Homebrew/downloads/45991b27589a
 ```
 At this point Vitess binaries installed under default Homebrew install location at /usr/local/share/vitess.
 
+### Install Node 16.13.0+ (required to run VTAdmin)
+
+```bash
+$ brew install nvm
+$ nvm install --lts 16.13.0
+$ nvm use 16.13.0
+```
+
+See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
+
 ## Start a Single Keyspace Cluster
 
 For testing purposes initiate following example;
 ```bash
-$ cd /usr/local/share/vitess/examples/local/
+$ cd $HOMEBREW_PREFIX/share/vitess/examples/local/
 $ ./101_initial_cluster.sh
 add /vitess/global
 add /vitess/zone1
 add zone1 CellInfo
+Created cell: zone1
 etcd start done...
 Starting vtctld...
 Starting MySQL for tablet zone1-0000000100...
 Starting vttablet for zone1-0000000100...
 HTTP/1.1 200 OK
-Date: Wed, 17 Feb 2021 13:09:54 GMT
+Date: Thu, 01 Sep 2022 12:49:50 GMT
 Content-Type: text/html; charset=utf-8
 
 Starting MySQL for tablet zone1-0000000101...
 Starting vttablet for zone1-0000000101...
 HTTP/1.1 200 OK
-Date: Wed, 17 Feb 2021 13:10:03 GMT
+Date: Thu, 01 Sep 2022 12:49:55 GMT
 Content-Type: text/html; charset=utf-8
 
 Starting MySQL for tablet zone1-0000000102...
 Starting vttablet for zone1-0000000102...
 HTTP/1.1 200 OK
-Date: Wed, 17 Feb 2021 13:10:12 GMT
+Date: Thu, 01 Sep 2022 12:50:00 GMT
 Content-Type: text/html; charset=utf-8
-W0217 16:10:13.075530   65562 main.go:67] W0217 13:10:13.074510 reparent.go:188] primary-elect tablet zone1-0000000100 is not the shard primary, proceeding anyway as -force was used
-W0217 16:10:13.076472   65562 main.go:67] W0217 13:10:13.075483 reparent.go:194] primary-elect tablet zone1-0000000100 is not a primary in the shard, proceeding anyway as -force was used
-I0217 16:10:13.076498   65562 main.go:67] I0217 13:10:13.075729 reparent.go:225] resetting replication on tablet zone1-0000000102
-I0217 16:10:13.076503   65562 main.go:67] I0217 13:10:13.075730 reparent.go:225] resetting replication on tablet zone1-0000000101
-I0217 16:10:13.076508   65562 main.go:67] I0217 13:10:13.075732 reparent.go:225] resetting replication on tablet zone1-0000000100
-I0217 16:10:13.649509   65562 main.go:67] I0217 13:10:13.649327 reparent.go:244] initializing primary on zone1-0000000100
-I0217 16:10:13.819282   65562 main.go:67] I0217 13:10:13.818887 reparent.go:277] populating reparent journal on new primary zone1-0000000100
-I0217 16:10:13.819341   65562 main.go:67] I0217 13:10:13.818928 reparent.go:284] initializing replica zone1-0000000101
-I0217 16:10:13.819363   65562 main.go:67] I0217 13:10:13.819005 reparent.go:284] initializing replica zone1-0000000102
-I0217 16:10:15.913013   65563 main.go:67] I0217 13:10:15.912595 tablet_executor.go:240] Received DDL request. strategy=direct
-I0217 16:10:16.020590   65563 main.go:67] I0217 13:10:16.020461 tablet_executor.go:240] Received DDL request. strategy=direct
-I0217 16:10:16.189170   65563 main.go:67] I0217 13:10:16.189044 tablet_executor.go:240] Received DDL request. strategy=direct
+
+{
+  "keyspace": {
+    "served_froms": [],
+    "keyspace_type": 0,
+    "base_keyspace": "",
+    "snapshot_time": null,
+    "durability_policy": "semi_sync"
+  }
+}
+vtorc is running!
+  - UI: http://localhost:16000
+  - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtorc.out
+  - PID: 74088
+
+zone1-0000000100 commerce 0 primary localhost:15100 localhost:17100 [] 2022-09-23T05:48:52Z
+
 New VSchema object:
 {
+  "sharded": false,
+  "vindexes": {},
   "tables": {
     "corder": {
-
+      "type": "",
+      "column_vindexes": [],
+      "auto_increment": null,
+      "columns": [],
+      "pinned": "",
+      "column_list_authoritative": false
     },
     "customer": {
-
+      "type": "",
+      "column_vindexes": [],
+      "auto_increment": null,
+      "columns": [],
+      "pinned": "",
+      "column_list_authoritative": false
     },
     "product": {
-
+      "type": "",
+      "column_vindexes": [],
+      "auto_increment": null,
+      "columns": [],
+      "pinned": "",
+      "column_list_authoritative": false
     }
-  }
+  },
+  "require_explicit_routing": false
 }
 If this is not what you expected, check the input data (as JSON parsing will skip unexpected fields).
 Waiting for vtgate to be up...
 vtgate is up!
-Access vtgate at http://askdba:15001/debug/status
+Access vtgate at http://Manans-MacBook-Pro.local:15001/debug/status
+vtadmin-api is running!
+  - API: http://localhost:14200
+  - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtadmin-api.out
+  - PID: 74039
+
+
+> vtadmin@0.1.0 build
+> react-scripts build
+
+Creating an optimized production build...
+Browserslist: caniuse-lite is outdated. Please run:
+  npx browserslist@latest --update-db
+  Why you should do it regularly: https://github.com/browserslist/browserslist#browsers-data-updating
+Browserslist: caniuse-lite is outdated. Please run:
+  npx browserslist@latest --update-db
+  Why you should do it regularly: https://github.com/browserslist/browserslist#browsers-data-updating
+Compiled successfully.
+
+File sizes after gzip:
+
+  385.49 kB  build/static/js/main.044e444c.js
+  15.4 kB    build/static/css/main.a46ccb6f.css
+
+The project was built assuming it is hosted at /.
+You can control this with the homepage field in your package.json.
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  https://cra.link/deployment
+
+vtadmin-web is running!
+  - Browser: http://localhost:14201
+  - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtadmin-web.out
+  - PID: 74070
+
 ```
 Verify your initial cluster:
 ```sql
@@ -108,7 +183,7 @@ $ mysql -e "show vitess_tablets"
 You can also verify that the processes have started with `pgrep`:
 
 ```bash
-$ pgrep -fl vtdataroot | awk '{print $2,$3}'
+$ pgrep -fl vitess | awk '{print $2,$3}'
 etcd --enable-v2=true
 vtctld -topo_implementation
 /bin/sh /usr/local/opt/mysql@5.7/bin/mysqld_safe
@@ -121,6 +196,7 @@ vttablet -topo_implementation
 /usr/local/opt/mysql@5.7/bin/mysqld --defaults-file=/usr/local/Cellar/vitess/9.0.0/share/vitess/examples/local/vtdataroot/vt_0000000102/my.cnf
 vttablet -topo_implementation
 vtgate -topo_implementation
+vtorc --topo_implementation
 ```
 
 _The exact list of processes will vary. For example, you may not see `mysqld_safe` listed._
@@ -128,8 +204,8 @@ _The exact list of processes will vary. For example, you may not see `mysqld_saf
 If you encounter any errors, such as ports already in use, you can kill the processes and start over:
 
 ```bash
-pkill -9 -f '(vtdataroot|VTDATAROOT)' # kill Vitess processes
-rm -rf /usr/local/Cellar/vitess/9.0.0/share/vitess/examples/local/vtdataroot
+pkill -9 -f '(vtdataroot|VTDATAROOT|vitess|vtadmin)' # kill Vitess processes
+rm -rf /usr/local/Cellar/vitess/15.0.0/share/vitess/examples/local/vtdataroot
 ```
 
 ## Setup Aliases
@@ -175,6 +251,12 @@ You can also browse to the vtctld console using the following URL:
 
 ```text
 http://localhost:15000
+```
+
+VTOrc is also setup as part of the initialization. You can look at its user-interface at:
+
+```text
+http://localhost:16000
 ```
 
 ## Summary

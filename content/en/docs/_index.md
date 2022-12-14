@@ -1,5 +1,5 @@
 ---
-title: Documentation versions
+title: Documentation
 linkTitle: versions
 ---
 

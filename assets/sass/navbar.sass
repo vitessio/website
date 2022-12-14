@@ -17,12 +17,36 @@
     .navbar-container-docs
       max-width: 100% !important
       padding: 0 8px 0 24px
-      
+
     // On mobile (and by default), the search input is displayed at the top of the menu,
     // whereas on desktop, it's displayed at the right side of the menu bar (i.e., flex-end)
     .navbar-menu
       flex-direction: row-reverse
 
-    // Cuddle up the search input + social icons for the full-width navbar  	
+    // Cuddle up the search input + social icons for the full-width navbar
     .navbar-item-search
       padding-left: 0
+
+.search-popover
+  color: #000
+  background-color: #E8F0F8
+  border: 1px solid #CCC
+  max-width: 600px
+  min-width: 500px
+  min-height: auto
+  height: auto
+  max-height: 500px
+  overflow-y: scroll
+  padding: .4rem
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2)
+  z-index: 10
+
+.search-title
+  padding-top: 5px
+
+.search-path
+  font-size: 12px
+  font-weight: bold
+
+.search-result-item
+   margin-top: 20px

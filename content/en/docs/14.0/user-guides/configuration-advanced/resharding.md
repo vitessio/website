@@ -176,7 +176,7 @@ for i in 400 401 402; do
 done
 
 vtctlclient InitShardPrimary -- --force customer/-80 zone1-300
-vtctlclient InitShardPrimary -force customer/80- zone1-400
+vtctlclient InitShardPrimary -- --force customer/80- zone1-400
 ```
 
 ## Start the Reshard
