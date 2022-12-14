@@ -10,7 +10,6 @@ These error messages are internal to Vitess. If you are getting other errors fro
 
 ## New Errors
 <!-- start -->
-## Errors
 
 | ID | Description | Error | MySQL Error Code | SQL State |
 | --- | --- | --- | --- | --- |
