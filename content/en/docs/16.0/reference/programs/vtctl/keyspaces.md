@@ -191,17 +191,6 @@ Move table(s) to another keyspace, table_specs is a list of tables or the tables
 MoveTables <options> <action> <workflow identifier>
 ```
 
-### DropSources
-
-```shell
-DropSources  -- [--dry_run] [--rename_tables] <keyspace.workflow>
-After a MoveTables or Resharding workflow cleanup unused artifacts like source tables, source shards and blacklists.
-```
-
-#### Notes
-
-* This command is part of the [VReplication v1 workflow](../../../vreplication/v1) -- we recommend that you use the [v2 workflow](../../../vreplication/complete) in Vitess 11.0 and later
-
 ### CreateLookupVindex
 
 ```shell
