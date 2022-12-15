@@ -222,6 +222,8 @@ The following global options apply to `vtctl`:
 | --log_err_stacks | | log stack traces for errors |
 | --log_rotate_max_size | uint | size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800) |
 | --logtostderr | | log to standard error instead of files |
+| --mysql_server_version | string | MySQL server version to advertise. |
+| --pprof | strings | enable profiling |
 | --purge_logs_interval | duration | how often try to remove old logs (default 1h0m0s) |
 | --remote_operation_timeout | duration | time to wait for a remote operation (default 30s) |
 | --s3_backup_aws_endpoint | string | endpoint of the S3 backend (region must be provided) |
@@ -240,15 +242,19 @@ The following global options apply to `vtctl`:
 | --stderrthreshold | value | logs at or above this threshold go to stderr (default 1) |
 | --tablet_grpc_ca | string | the server ca to use to validate servers when connecting |
 | --tablet_grpc_cert | string | the cert to use to connect |
+| --tablet_grpc_crl | string | the server crl to use to validate server certificates when connecting |
 | --tablet_grpc_key | string | the key to use to connect |
 | --tablet_grpc_server_name | string | the server name to use to validate server certificate |
 | --tablet_manager_grpc_ca | string | the server ca to use to validate servers when connecting |
 | --tablet_manager_grpc_cert | string | the cert to use to connect |
 | --tablet_manager_grpc_concurrency | int | concurrency to use to talk to a vttablet server for performance-sensitive RPCs (like ExecuteFetchAs{Dba,AllPrivs,App}) (default 8) |
+| --tablet_manager_grpc_connpool_size | int | number of tablets to keep tmclient connections open to (default 100) |
+| --tablet_manager_grpc_crl | string | the server crl to use to validate server certificates when connecting |
 | --tablet_manager_grpc_key | string | the key to use to connect |
 | --tablet_manager_grpc_server_name | string | the server name to use to validate server certificate |
 | --tablet_manager_protocol | string | the protocol to use to talk to vttablet (default "grpc") |
 | --tablet_protocol | string | how to talk to the vttablets (default "grpc") |
+| --topo_consul_lock_session_ttl | string | TTL for consul session. |
 | --topo_consul_watch_poll_duration | duration | time of the long poll for watch queries. (default 30s) |
 | --topo_etcd_lease_ttl | int | Lease TTL for locks and leader election. The client will use KeepAlive to keep the lease going. (default 30) |
 | --topo_etcd_tls_ca | string | path to the ca to use to validate the server cert when connecting to the etcd topo server |
@@ -267,7 +273,9 @@ The following global options apply to `vtctl`:
 | --topo_zk_tls_cert | string | the cert to use to connect to the zk topo server, requires topo_zk_tls_key, enables TLS |
 | --topo_zk_tls_key | string | the key to use to connect to the zk topo server, enables TLS |
 | --tracer | string | tracing service to use (default "noop") |
+| --tracing-enable-logging | | whether to enable logging in the tracing service |
 | --tracing-sampling-rate | float | sampling rate for the probabilistic jaeger sampler (default 0.1) |
+| --tracing-sampling-type | string | sampling strategy to use for |
 | --v | value | log level for V logs |
 | --version | | print binary version |
 | --vmodule | value | comma-separated list of pattern=N settings for file-filtered logging |
@@ -276,6 +284,7 @@ The following global options apply to `vtctl`:
 | --vtctl_healthcheck_topology_refresh | duration | refresh interval for re-reading the topology (default 30s) |
 | --vtgate_grpc_ca | string | the server ca to use to validate servers when connecting |
 | --vtgate_grpc_cert | string | the cert to use to connect |
+| --vtgate_grpc_crl | string | the server crl to use to validate server certificates when connecting |
 | --vtgate_grpc_key | string | the key to use to connect |
 | --vtgate_grpc_server_name | string | the server name to use to validate server certificate |
 | --wait-time | duration | time to wait on an action (default 24h0m0s) |
