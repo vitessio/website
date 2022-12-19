@@ -52,7 +52,7 @@ If your application is tenant-based, it is possible that a single tenant may gro
 
 The question to ask oneself is: if the tenant were a single application by themselves, what would be their sharding key, and then shard by that key instead of the tenant id.
 
-Vitess has started rolling out support for multi-column Vindexes. Once this feature is fully done, you will be able to shard by the tenant id and a secondary key. The two-column sharding approach will allow you to group all data for a given tenant into a smaller set of shards rather than a random distribution. This may be beneficial for security or compliance reasons, in case the tenant would want their data to be physically isolated from other tenants.
+Vitess now has support for multi-column Vindexes. You can now shard by the tenant id and a secondary key. The two-column sharding approach allows you to group all data for a given tenant into a smaller set of shards rather than a random distribution. This may be beneficial for security or compliance reasons, in case the tenant would want their data to be physically isolated from other tenants.
 
 ### Region Sharding
 
