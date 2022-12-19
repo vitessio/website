@@ -299,6 +299,8 @@ If a query goes across multiple shards and ordering is needed on the `name` colu
 
 If `column_list_authoritative` is false or not specified, then VTGate will treat the list of columns as partial and will not automatically expand open-ended constructs like `select *`.
 
+Vtgates also have the capability to track the schema changes and populate the columns list on its own. To know more about this feature, read [here](../schema-tracking).
+
 ### Advanced usage
 
 The examples/demo also shows more tricks you can perform:
