@@ -29,7 +29,7 @@ As general overview:
   - `ALTER TABLE` statements run via `VReplication`, `gh-ost` or `pt-online-schema-change`, as per selected [strategy](../ddl-strategies)
   - `CREATE TABLE` statements run directly.
   - `DROP TABLE` statements run [safely and lazily](../../../design-docs/table-lifecycle/safe-lazy-drop-tables/).
-- Vitess provides the user a mechanism to view migration status, cancel or retry migrations, based on the job ID.
+- Vitess provides the user a mechanism to view migration status, launch (if required), complete (if required), cancel or retry migrations, based on the job ID.
 
 ## Syntax
 
@@ -56,7 +56,7 @@ ALTER TABLE demo MODIFY id bigint UNSIGNED;
 
 This statement can be executed as:
 
-- a `VReplication`, managed online migration
+- a `vitess` (aka `online`), managed online migration
 - a `gh-ost`, managed online migration
 - a `pt-online-schema-change`, managed online migration (**experimental**)
 - a synchronous, [unmanaged schema change](../unmanaged-schema-changes/)
@@ -82,11 +82,11 @@ Vitess may modify your queries to qualify for online DDL statement. Modification
 
 You will set either `@@ddl_strategy` session variable, or `--ddl_strategy` command line flag, to control your schema migration strategy, and specifically, to enable and configure online DDL. Details in [DDL Strategies](../ddl-strategies). A quick overview:
 
-- The value `"direct"`, means not an online DDL. The empty value (`""`) is also interpreted as `direct`. A query is immediately pushed and applied on backend servers. This is the default strategy.
-- The value `"vitess"` instructs Vitess to run an `ALTER TABLE` online DDL via `VReplication`.
+- The value `"vitess"` instructs Vitess to run an `ALTER TABLE` online DDL via `VReplication`. This is the preferred method.
 - The value `"gh-ost"` instructs Vitess to run an `ALTER TABLE` online DDL via `gh-ost`.
 - The value `"pt-osc"` instructs Vitess to run an `ALTER TABLE` online DDL via `pt-online-schema-change`.
 - You may specify arguments for your tool of choice, e.g. `"gh-ost --max-load Threads_running=200"`. Details follow.
+- The value `"direct"`, means not an online DDL. The empty value (`""`) is also interpreted as `direct`. A query is immediately pushed and applied on backend servers. This is the default strategy. The migration is not managed and is not trackable.
 
 `CREATE` and `DROP` statements run in the same way for `"vitess"`, `"gh-ost"` and `"pt-osc"` strategies, and we consider them all to be _online_.
 
@@ -97,12 +97,14 @@ See also [ddl_strategy flags](../ddl-strategy-flags).
 Vitess provides two interfaces to interacting with Online DDL:
 
 - SQL commands, via `VTGate`
-- Command line interface, via `vtctl`
+- Command line interface, via `vtctlclient`
 
 Supported interactions are:
 
 - [Running migrations](../audit-and-control/#running-migrations) (submitting Online DDL requests)
 - [Tracking migrations](../audit-and-control/#tracking-migrations)
+- [Launching a migration](../audit-and-control/#launching-a-migration) or all migrations, if explicitly set to postpone launch.
+- [Completing a migration](../audit-and-control/#completing-a-migration) or all migrations, if explicitly set to postpone completion.
 - [Cancelling a migration](../audit-and-control/#cancelling-a-migration)
 - [Cancelling all pending migrations](../audit-and-control/#cancelling-all-keyspace-migrations)
 - [Retrying a migration](../audit-and-control/#retrying-a-migration)
@@ -130,7 +132,7 @@ mysql> drop table customer;
 +--------------------------------------+
 ```
 
-#### Executing an Online DDL via vtctl/ApplySchema
+#### Executing an Online DDL via vtctlclient/ApplySchema
 
 ```shell
 $ vtctlclient ApplySchema -- --skip_preflight --ddl_strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
@@ -170,7 +172,7 @@ For more about internals of the scheduler and how migration states are controlle
 
   Example: `vttablet -retain_online_ddl_tables 48h`
 
-- `--migration_check_interval`: (`vttablet`) interval between checks for submitted migrations. Type: duration. Default: 1 hour. 
+- `--migration_check_interval`: (`vttablet`) interval between checks for submitted migrations. Type: duration Default: 1 minute.
 
   Example: `vttablet --migration_check_interval 30s`
 
@@ -219,7 +221,7 @@ All three strategies: `vitess`, `gh-ost` and `pt-osc` utilize the tablet throttl
 All `ALTER` strategies leave artifacts behind. Whether successful or failed, either the original table or the _ghost_ table is left still populated at the end of the migration. Vitess explicitly makes sure the tables are not dropped at the end of the migration. This is for two reasons:
 
 - Make the table/data still available for a while, and
-- in MySQL pre `8.0.23`, a `DROP TABLE` operation can be dangerous in production as it commonly locks the buffer pool for a substantial period.
+- In MySQL pre `8.0.23`, a `DROP TABLE` operation can be dangerous in production as it commonly locks the buffer pool for a substantial period.
 
 The tables are kept for 24 hours after migration completion. Vitess automatically cleans up those tables as soon as a migration completes (either successful or failed). You will normally not need to do anything.
 

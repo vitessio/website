@@ -13,6 +13,9 @@ Supported interactions are:
 
 - [Running migrations](#running-migrations) (submitting Online DDL requests)
 - [Tracking migrations](#tracking-migrations)
+- [Launching a migration](#launching-a-migration) or all migrations, if explicitly set to postpone launch.
+- [Completing a migration](#completing-a-migration) or all migrations, if explicitly set to postpone completion.
+- [Cancelling a migration](#cancelling-a-migration)
 - [Cancelling a migration](#cancelling-a-migration)
 - [Cancelling all pending migrations](#cancelling-all-keyspace-migrations)
 - [Retrying a migration](#retrying-a-migration)
@@ -52,18 +55,18 @@ mysql> drop table customer;
 - If you run `vtgate` without `--ddl_strategy`, then `@@ddl_strategy` defaults to `'direct'`, which implies schema migrations are synchronous. You will need to `set @@ddl_strategy='gh-ost'` to run followup `ALTER TABLE` statements via `gh-ost`.
 - If you run `vtgate --ddl_strategy "gh-ost"`, then `@@ddl_strategy` defaults to `'gh-ost'` in each new session. Any `ALTER TABLE` will run via `gh-ost`. You may `set @@ddl_strategy='pt-osc'` to make migrations run through `pt-online-schema-change`, or `set @@ddl_strategy='direct'` to run migrations synchronously.
 
-#### Via vtctl/ApplySchema
+#### Via vtctlclient/ApplySchema
 
 You may use `vtctl` or `vtctlclient` (the two are interchangeable for the purpose of this document) to apply schema changes. The `ApplySchema` command supports both synchronous and online schema migrations. To run an online schema migration you will supply the `--ddl_strategy` command line flag:
 
 ```shell
-$ vtctlclient ApplySchema -- --ddl_strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
+$ vtctlclient -- ApplySchema --ddl_strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
 a2994c92_f1d4_11ea_afa3_f875a4d24e90
 ```
 
  You my run multiple migrations withing the same `ApplySchema` command:
 ```shell
-$ vtctlclient ApplySchema -- --skip_preflight --ddl_strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED; CREATE TABLE sample (id int PRIMARY KEY); DROP TABLE another;" commerce
+$ vtctlclient -- ApplySchema --skip_preflight --ddl_strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED; CREATE TABLE sample (id int PRIMARY KEY); DROP TABLE another;" commerce
 3091ef2a_4b87_11ec_a827_0a43f95f28a3
 ```
 
@@ -171,7 +174,7 @@ mysql> show vitess_migrations where completed_timestamp > now() - interval 1 day
 - `show vitess_migrations where ...` lets the user specify arbitrary conditions.
 - All commands return results for the keyspace (schema) in use.
 
-#### Via vtctl/ApplySchema
+#### Via vtctlclient/ApplySchema
 
 Examples for a 4-shard cluster:
 
@@ -302,6 +305,76 @@ ok
 ...
 ```
 
+## Launching a migration
+
+Migrations submitted with [`--postpone-launch`](../postponed-migrations) remain `queued` or `ready` until told to launch. The user may launch a specific migration or they may launch all postponed migrations:
+
+#### Via VTGate/SQL
+
+```sql
+mysql> alter vitess_migration 'aa89f255_8d68_11eb_815f_f875a4d24e90' launch;
+Query OK, 1 row affected (0.01 sec)
+```
+
+or
+
+```sql
+mysql> alter vitess_migration launch all;
+Query OK, 1 row affected (0.01 sec)
+```
+
+#### Via vtctlclient/ApplySchema
+
+Launch a specific migration:
+
+```shell
+$ vtctlclient -- ApplySchema --sql "alter vitess_migration '9e8a9249_3976_11ed_9442_0a43f95f28a3' launch" commerce
+```
+
+Or launch a specific migration on a specific shard:
+
+```shell
+$ vtctlclient -- ApplySchema --sql "alter vitess_migration '9e8a9249_3976_11ed_9442_0a43f95f28a3' launch vitess_shards '-40,40-80'" commerce
+```
+
+Or launch all:
+
+```shell
+$ vtctlclient -- ApplySchema --sql "alter vitess_migration launch all" commerce
+```
+
+## Completing a migration
+
+Migrations submitted with [`--postpone-completion`](../postponed-migrations) remain `ready` or `running` until told to complete. The user may complete a specific migration or they may complete all postponed migrations:
+
+#### Via VTGate/SQL
+
+```sql
+mysql> alter vitess_migration 'aa89f255_8d68_11eb_815f_f875a4d24e90' complete;
+Query OK, 1 row affected (0.01 sec)
+```
+
+or
+
+```sql
+mysql> alter vitess_migration complete all;
+Query OK, 1 row affected (0.01 sec)
+```
+
+#### Via vtctlclient/ApplySchema
+
+Complete a specific migration:
+
+```shell
+$ vtctlclient -- ApplySchema --sql "alter vitess_migration '9e8a9249_3976_11ed_9442_0a43f95f28a3' complete" commerce
+```
+
+Or complete all:
+
+```shell
+$ vtctlclient -- ApplySchema --sql "alter vitess_migration complete all" commerce
+```
+
 ## Cancelling a migration
 
 The user may cancel a migration, as follows:
@@ -363,7 +436,7 @@ completed_timestamp: NULL
 - `alter vitess_migration ... cancel` takes exactly one migration's UUID.
 - `alter vitess_migration ... cancel` responds with number of affected migrations.
 
-#### Via vtctl/ApplySchema
+#### Via vtctlclient/ApplySchema
 
 Examples for a 4-shard cluster:
 
@@ -385,14 +458,6 @@ $ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
 +-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
 
 $ vtctlclient OnlineDDL commerce cancel 2201058f_f266_11ea_bab4_0242c0a8b007
-+-----------------+--------------+
-|     Tablet      | RowsAffected |
-+-----------------+--------------+
-| test-0000000401 |            1 |
-| test-0000000101 |            1 |
-| test-0000000201 |            1 |
-| test-0000000301 |            1 |
-+-----------------+--------------+
 
 $ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
 +-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
@@ -419,9 +484,16 @@ mysql> alter vitess_migration cancel all;
 Query OK, 1 row affected (0.02 sec)
 ```
 
-#### Via vtctl/ApplySchema
+#### Via vtctlclient/ApplySchema
 
 Examples for a 4-shard cluster:
+
+
+```shell
+$ vtctlclient -- ApplySchema --sql "alter vitess_migration cancel all" commerce
+```
+
+Also available via `vtctlclient OnlineDDL` command:
 
 ```
 vtctlclient OnlineDDL <keyspace> cancel-all
@@ -441,14 +513,9 @@ $ vtctlclient OnlineDDL commerce show all
 | zone1-0000000100 |     0 | vt_commerce  | corder      | 2c87f7cd_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | queued           |
 +------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
 
-$  vtctlclient OnlineDDL commerce cancel-all
-+------------------+--------------+
-|      Tablet      | RowsAffected |
-+------------------+--------------+
-| zone1-0000000100 |            5 |
-+------------------+--------------+
+$ vtctlclient OnlineDDL commerce cancel-all
 
- vtctlclient OnlineDDL commerce show all
+$ vtctlclient OnlineDDL commerce show all
 +------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
 |      Tablet      | shard | mysql_schema | mysql_table |            migration_uuid            | strategy | started_timestamp | completed_timestamp | migration_status |
 +------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
@@ -518,7 +585,14 @@ completed_timestamp: NULL
 - `alter vitess_migration ... retry` takes exactly one migration's UUID.
 - `alter vitess_migration ... retry` responds with number of affected migrations.
 
-#### Via vtctl/ApplySchema
+#### Via vtctlclient/ApplySchema
+
+
+```shell
+$ vtctlclient -- ApplySchema --sql "alter vitess_migration '2201058f_f266_11ea_bab4_0242c0a8b007' retry" commerce
+```
+
+Also available via `vtctlclient OnlineDDL` command:
 
 Examples for a 4-shard cluster:
 
@@ -535,14 +609,6 @@ $ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
 +-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
 
 $ vtctlclient OnlineDDL commerce retry 2201058f_f266_11ea_bab4_0242c0a8b007
-+-----------------+--------------+
-|     Tablet      | RowsAffected |
-+-----------------+--------------+
-| test-0000000101 |            1 |
-| test-0000000201 |            1 |
-| test-0000000301 |            1 |
-| test-0000000401 |            1 |
-+-----------------+--------------+
 
 $ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
 +-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+-------------------+---------------------+------------------+
@@ -652,10 +718,10 @@ Create Table: CREATE TABLE `corder` (
 
 - A `revert` is its own migration, hence has its own UUID
 
-### Via vtctl/ApplySchema
+### Via vtctlclient/ApplySchema
 
 ```
-$ vtctlclient ApplySchema -- --ddl_strategy "vitess" --sql "revert vitess_migration '1a689113_8d77_11eb_815f_f875a4d24e90'" commerce
+$ vtctlclient -- ApplySchema --ddl_strategy "vitess" --sql "revert vitess_migration '1a689113_8d77_11eb_815f_f875a4d24e90'" commerce
 ```
 
 ## Controlling throttling
