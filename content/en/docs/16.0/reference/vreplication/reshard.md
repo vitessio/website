@@ -277,19 +277,10 @@ Comma separated shard names to reshard from.
 
 <div class="cmd">
 
-Source tablet types to replicate from (e.g. PRIMARY, REPLICA, RDONLY).
+Source tablet types to replicate from (e.g. PRIMARY, REPLICA, RDONLY). The value
+specified impacts [tablet selection](../tablet_selection/) for the workflow.
 
 </div>
-
-###### Uses
-* allows updating the rows in `_vt.vreplication` after `Reshard` has setup the
-streams. For example, you can add some filters to specific tables or change the
-projection clause to modify the values on the target. This
-provides an easier way to create simpler Materialize workflows by first using
-`Reshard` with `--auto_start false`, updating the BinlogSource as required by your
-`Materialize` and then start the workflow.
-* changing the `copy_state` and/or `pos` values to restart a broken `Reshard` workflow
-from a specific point of time.
 
 #### --target_shards
 **mandatory**
