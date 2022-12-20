@@ -49,7 +49,7 @@ See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmi
 
 For testing purposes initiate following example;
 ```bash
-$ cd /usr/local/share/vitess/examples/local/
+$ cd $HOMEBREW_PREFIX/share/vitess/examples/local/
 $ ./101_initial_cluster.sh
 add /vitess/global
 add /vitess/zone1

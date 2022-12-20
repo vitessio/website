@@ -40,10 +40,47 @@ A reference table should not have any vindex, and is defined in the VSchema as a
 {
   "sharded": true,
   "tables": {
-    "zip_detail": { "type": "reference" }
+    "zip_detail": {
+      "type": "reference"
+    }
   }
 }
 ```
+<br/>
+
+#### Source Tables
+
+Vitess will optimize reference tables routing when joined to a table within the same keyspace. Additional routing optimizations can be enabled by specifying the `source` of a reference table. When a reference table specifies a `source` table:
+
+ * A `SELECT ... JOIN` (or equivalent `SELECT ... WHERE`) will try to route the
+   query to the keyspace of the table to which the reference (or source) table
+   is being joined.
+ * An `INSERT`, `UPDATE`, or `DELETE` uses the keyspace of the source table.
+
+For example:
+
+```json
+{
+  "sharded": true,
+  "tables": {
+    "zip_detail": {
+      "type": "reference",
+      "source": "unsharded_is.zip_detail"
+    }
+  }
+}
+```
+<br/>
+
+There are some constraints on `source`:
+
+ * It must be a keyspace-qualified table name, e.g. `unsharded_ks.zip_detail`.
+ * It must refer to an existing table in an existing keyspace.
+ * It must refer to a table in a different keyspace.
+ * It must refer to a table in an unsharded keyspace.
+ * Any given value for `source` may appear at most once per-keyspace.
+
+#### Materialization
 
 It may become a challenge to keep a reference table correctly updated across all shards. Vitess supports the [Materialize](../../migration/materialize) feature that allows you to maintain the original table in an unsharded keyspace and automatically propagate changes to that table in real-time across all shards.
 

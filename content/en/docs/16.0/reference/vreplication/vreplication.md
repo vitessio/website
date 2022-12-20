@@ -90,9 +90,6 @@ VReplication performs the following essential functions:
   automatically manages sophisticated rules about where to route queries
   depending on the type of workflow being performed. For example,
   it is used to control the cut-over during [`MoveTables`](../movetables/).
-  In the case of materialized views, they can be used to establish
-  equivalence of tables, which will allow [`VTGate`](../../../concepts/vtgate/)
-  to compute the most optimal plans given the available options.
 
 <a name="exec"></a>
 

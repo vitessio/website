@@ -201,9 +201,9 @@ cell1-0000000101 commerce 0 replica sougou-lap1:15101 sougou-lap1:17101 [] <null
 cell1-0000000102 commerce 0 rdonly sougou-lap1:15102 sougou-lap1:17102 [] <null>
 ```
 
-This information is extracted from the “tablet record” in the cell specific topo. You can also browse to this information in vtctld either from the Dashboard or from the Topology tab.
+This information is extracted from the “tablet record” in the cell specific topo. You can also browse to this information in VTAdmin either from the Tablets page or from the Topology page.
 
-![vtctld-tablet-list](../img/vtctld-tablet-list.png)
+![vtctld-tablet-list](../img/vtadmin-tablet-list.png)
 
 You can move a vttablet-MySQL pair to a new host after shutting them down on the current host. Bringing up the new pair with the same UID will update the tablet record with the new address and ports. This will be noticed by the vtgates and they will adjust their traffic accordingly. However, you must not move a tablet to another cell.
 

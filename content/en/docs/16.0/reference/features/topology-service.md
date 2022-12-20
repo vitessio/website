@@ -224,7 +224,7 @@ path=/keyspaces/ks2/Keyspace version=55
 sharding_column_name: "col2"
 ```
 
-The `vtctld` web tool also contains a topology browser (use the `Topology`
+The VTAdmin web tool also contains a topology browser (use the `Topology`
 tab on the left side). It will display the various proto files, decoded.
 
 ## Implementations
@@ -253,7 +253,7 @@ ZK server that serves both global and local cells.
 We provide the `zk` utility for easy access to the topology data in
 Zookeeper. It can list, read and write files inside any Zoopeeker server. Just
 specify the `-server` parameter to point to the Zookeeper servers. Note the
-vtctld UI can also be used to see the contents of the topology data.
+VTAdmin UI can also be used to see the contents of the topology data.
 
 To configure a Zookeeper installation, let's start with the global cell
 service. It is described by the addresses of the servers (comma separated list),
