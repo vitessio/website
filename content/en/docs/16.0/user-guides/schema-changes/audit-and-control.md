@@ -646,16 +646,14 @@ Once cleanup is requested, the migration cannot be reverted.
 The artifact tables are not purged immediately. Rather, they are sent for processing into the lifecycle mechanism.
 {{< /info >}}
 
-
 #### Via VTGate/SQL
 
 Per migration, request artifact cleanup via:
+
 ```sql
 mysql> alter vitess_migration 'aa89f255_8d68_11eb_815f_f875a4d24e90' cleanup;
 Query OK, 1 row affected (0.00 sec)
 ```
-
-
 
 ## Reverting a migration
 
