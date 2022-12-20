@@ -86,6 +86,10 @@ This shows the state of each stream.
 
 The value of the `vstream_packet_size` flag specified for this tablet
 
+#### VStreamerCount
+
+The current number of running vstreamers
+
 #### VStreamerErrors
 
 The number of errors per category across workflows
@@ -135,6 +139,7 @@ The total number of vstreamer created during the lifetime of this tablet
 "VReplicationTableCopyRowCounts": {"commerce.0.commerce2customer.1.corder": 4, "commerce.0.commerce2customer.1.customer": 2},
 "VReplicationTableCopyTimings": {"commerce.0.commerce2customer.1.customer": 6707583, "commerce.0.commerce2customer.1.corder": 13254250},
 "VStreamPacketSize": 250000,
+"VStreamerCount": 0,
 "VStreamerErrors": {"Catchup": 0, "Copy": 0, "Send": 0, "TablePlan": 0},
 "VStreamerEventsStreamed": 0,
 "VStreamerNumPackets": 0,
