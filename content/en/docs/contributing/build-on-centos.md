@@ -13,13 +13,13 @@ The following has been verified to work on __CentOS 7__. If you are new to Vites
 
 ## Install Dependencies
 
-### Install Go 1.17+
+### Install Go 1.19+
 
-[Download and install](http://golang.org/doc/install) Golang 1.17. For example, at writing:
+[Download and install](http://golang.org/doc/install) Golang 1.19.4. For example, at writing:
 
 ```
-curl -LO https://golang.org/dl/go1.17.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.17.linux-amd64.tar.gz
+curl -LO https://golang.org/dl/go1.19.4.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.19.4.linux-amd64.tar.gz
 ```
 
 Make sure to add go to your bashrc:
@@ -60,10 +60,10 @@ See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmi
 
 ### Packages from CentOS repos
 
-First install the MySQL 5.7 repository from Oracle:
+First install the MySQL repository from Oracle:
 
 ```
-sudo yum localinstall -y https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
+sudo yum localinstall -y https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
 sudo yum install -y mysql-community-server
 ```
 
@@ -76,7 +76,6 @@ sudo yum install -y make unzip g++ etcd curl git wget
 **Notes:**
 
 * We will be using etcd as the topology service. The command `make tools` can also install Zookeeper or Consul for you, which requires additional dependencies.
-* Vitess currently has some additional tests written in Python, but we will be skipping this step for simplicity.
 
 ### Disable SELinux
 
