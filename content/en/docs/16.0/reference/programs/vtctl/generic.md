@@ -62,6 +62,20 @@ Lists specified tablets in an awk-friendly way.
 
 * the <code>&lt;tablet alias&gt;</code> argument is required for the <code>&lt;ListTablets&gt;</code> command This error occurs if the command is not called with at least one argument.
 
+### GenerateShardRanges
+
+Generates shard ranges assuming a keyspace with N shards.
+
+#### Example
+
+<pre class="command-example">GenerateShardRanges [--num_shards 2]</pre>
+
+#### Flags
+
+| Name | Type    | Definition |
+| :-------- |:--------| :---------- |
+| num_shards | Integer | Number of shards to generate shard ranges for. (default 2) |
+
 ### Help
 
 Provides help for a command.
