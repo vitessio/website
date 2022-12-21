@@ -1,7 +1,7 @@
 ---
 title: Locking functions
 description:
-weight: 1
+weight: 4
 ---
 # Locking Functions
 
