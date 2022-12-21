@@ -1,7 +1,7 @@
 ---
 title: Replica Transactions
 description:
-weight: 1
+weight: 3
 aliases: ['/docs/design-docs/query-serving/replicatx/'] 
 ---
 

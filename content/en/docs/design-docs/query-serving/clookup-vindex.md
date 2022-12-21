@@ -1,7 +1,7 @@
 ---
 title: Consistent lookup vindexes
 description:
-weight: 1
+weight: 2
 ---
 ## Problem
 
