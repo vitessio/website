@@ -16,7 +16,7 @@ A [Homebrew](https://brew.sh/) package manager is also available, which requires
 
 ## Install Vitess with Homebrew
 
-Vitess supports the databases listed [here](../../../overview/supported-databases/). Homebrew will install latest tagged Vitess Release.
+Vitess supports the databases listed [here](../../overview/supported-databases/). Homebrew will install latest tagged Vitess Release.
 
 ```bash
 $ brew install vitess
