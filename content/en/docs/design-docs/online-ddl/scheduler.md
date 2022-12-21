@@ -8,7 +8,7 @@ weight: 30
 
 The DDL scheduler is a control plane that runs on a `PRIMARY` vttablet, as part of the state manager. It is responsible for identifying new migration requests, to choose and execute the next migration, to review running migrations, cleaning up after completion, etc.
 
-This document explain the general logic behind `onlineddl.Executor` and, in particular, the scheduling aspect.
+This document explains the general logic behind `onlineddl.Executor` and, in particular, the scheduling aspect.
 
 ## OnlineDDL & VTTablet state manager
 
@@ -50,7 +50,7 @@ A migration can be in any one of these states:
 - `ready`: a migration is picked from the queue to run
 - `running`: a migration was started. It is periodically tested to be making progress.
 - `complete`: a migration completed successfully
-- `failed`: a migration started running and failed due to whatever reason
+- `failed`: a migration failed due to whatever reason. It may have ran for a while, or it may have been marked as `failed` before even running.
 - `cancelled`: a _pending_ migration was cancelled
 
 A migration is said to be _pending_ if we expect it to run and complete. Pending migrations are those in `queued`, `ready` and `running` states.
@@ -68,7 +68,7 @@ Some possible state transitions are:
 
 ## General logic
 
-The scheduler works by periodic sampling of known migration states. Normally there's a once per minute tick that kicks in a series of checks. You may imagine a state machine that advances once per minute. However, some steps:
+The scheduler works by periodically sampling the known migrations. Normally there's a once per minute tick that kicks in a series of checks. You may imagine a state machine that advances once per minute. However, some steps such as:
 
 - Submission of a new migration
 - Migration execution start
@@ -78,11 +78,7 @@ The scheduler works by periodic sampling of known migration states. Normally the
 
 will kick a burst of additional ticks. This is done to speed up the progress of the state machine. For example, if a new migration is submitted, there's a good chance it will be clear to execute, so an increase in ticks will start the migration within a few seconds rather than one minute later.
 
-The scheduler only runs a single migration at a time. This could be a simple `CREATE TABLE` or a hours-long running `ALTER TABLE`. Noteworthy:
-
-- Two parallel `ALTER TABLE` are likely to interfere with each other, competing for same resources, causing total runtime to be longer than sequential run. This is the reasoning for only running a single migration at a time.
-- `CREATE TABLE` does not interfere in the same fashion. Generally speaking, there shouldn't be a problem running a `CREATE TABLE` while a hours-long `ALTER TABLE` is in mid-run. The current logic still only allows one migration at a time. In the future we may change that.
-- `DROP TABLE` is implemented by `RENAME TABLE`, and is therefore also a lightweight operation similarly to `CREATE TABLE`. Again, current logic still only allows one migration at a time. In the future we may change that.
+By default, Vitess schedules all migrations to run sequentially. Only a single migration is expected to run at any given time. However, there are cases for concurrent execution of migrations, and the user may request concurrent execution via `--allow-concurrent` flag in `ddl_strategy`. Some migrations are eligible to run concurrently, other migrations are eligible to run specific phases concurrently, and some do not allow concurrency. See the user guides for up-to-date information.
 
 ## Who runs the migration
 
@@ -91,19 +87,19 @@ Some migrations are executed by the scheduler itself, some by a sub-process, and
 - `CREATE TABLE` migrations are executed by the scheduler.
 - `DROP TABLE` migrations are executed by the scheduler.
 - `ALTER TABLE` migrations depend on `ddl_strategy`:
+  - `vitess`/`online`: the scheduler configures, creates and starts a VReplication stream. From that point on, the tablet manager's VReplication logic takes ownership of the execution. The scheduler periodically checks progress. The scheduler identifies an end-of-migration scenario and finalizes the cut-over and termination of the VReplication stream. It is possible for a VReplication migration to span multiple tablets, detailed below. In this case, if the tablet goes down, then the migration will not be lost. It will be continued on another tablet, as described below.
+  - `gh-ost`: the executor runs `gh-ost` via `os.Exec`. It runs the entire flow within a single function. Thus, `gh-ost` completes within the same lifetime of the scheduler (and the tablet space in which is operates). To clarify, if the tablet goes down, then the migration is deemed lost.
   - `pt-osc`: the executor runs `pt-online-schema-change` via `os.Exec`. It runs the entire flow within a single function. Thus, `pt-online-schema-change` completes within the same lifetime of the scheduler (and the tablet space in which is operates). To clarify, if the tablet goes down, then the migration is deemed lost.
-  - `gh-ost`: the executor runs `pt-online-schema-change` via `os.Exec`. It runs the entire flow within a single function. Thus, `pt-online-schema-change` completes within the same lifetime of the scheduler (and the tablet space in which is operates). To clarify, if the tablet goes down, then the migration is deemed lost.
-  - `online`: the scheduler configures, creates and starts a VReplication stream. From that point on, the tablet manager's VReplication logic takes ownership of the execution. The scheduler periodically checks progress. The scheduler identifies an end-of-migration scenario and finalizes the cut-over and termination of the VReplication stream. It is possible for a VReplication migration to span multiple tablets, detailed below. In this case, if the tablet goes down, then the migration will not be lost. It will be continued on another tablet, as described below.
 
 ## Stale migrations
 
 The scheduler maintains a _liveness_ timestamp for running migrations:
 
+- `vitess`/`online` migrations are based on VReplication, which reports last timestamp/transaction timestamp. The scheduler infers migration liveness based on these and on the stream status.
 - `gh-ost` migrations report liveness via `/schema-migration/report-status`
 - `pt-osc` does not report liveness. The scheduler actively checks for liveness by looking up the `pt-online-schema-change` process.
-- `online` migrations are based on VReplication, which reports last timestamp/transaction timestamp. The scheduler infers migration liveness based on these and on the stream status.
 
-One way or another, we expect at most (roughly) a 1 minute interval between a running migration's liveness reports. When a migration is expected to be running, and does not have a _liveness_ report for `10` minutes, then it is considered _stale_.
+One way or another, we expect at most (roughly) a 1 minute interval between a running migration's liveness reports. When a migration is expected to be running, and does not have a liveness report for `10` minutes, then it is considered _stale_.
 
 A stale migration can happen for various reasons. Perhaps a `pt-osc` process went zombie. Or a `gh-ost` process was locked.
 
@@ -125,7 +121,7 @@ To avoid a cascading failure scenario, a migration is only auto-retried _once_. 
 
 ## Cross tablet VReplication migrations
 
-VReplication is more capable than `gh-ost` and `pt-osc`, since it tracks its state transactionally in the same database server as the migration/ghost table. This means a stream can automatically recover after e.g. a failover. The new `primary` has all the information in `_vt.vreplication`, `_vt.copy_state` to keep on running the stream.
+VReplication is more capable than `gh-ost` and `pt-osc`, since it tracks its state transactionally in the same database server as the migration/ghost table. This means a stream can automatically recover after e.g. a failover. The new `primary` tablet has all the information in `_vt.vreplication`, `_vt.copy_state` to keep on running the stream.
 
 The scheduler supports that. It is able to identify a stream which started with a previous tablet, and is able to take ownership of such a stream. Because VReplication will recover/resume a stream independently of the scheduler, the scheduler will then implicitly find that the stream is _running_ and be able to assert its _liveness_.
 
