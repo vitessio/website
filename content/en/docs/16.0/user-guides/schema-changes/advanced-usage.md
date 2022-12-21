@@ -101,7 +101,7 @@ When all migrations for the relevant UUIDs show `1` for `ready_to_complete`, the
 $ vtctlclient -- ApplySchema --skip_preflight --sql "alter vitess_migration complete all" commerce
 ```
 
-assuming these are the only migrations swaiting completion, or, explicitly issue a complete for each of the migrations:
+Assuming these are the only migrations awaiting completion, or, explicitly issue a complete for each of the migrations:
 
 ```sh
 $ vtctlclient -- ApplySchema --skip_preflight --sql "alter vitess_migration '29231906_776f_11ec_a656_0a43f95f28a3' complete all" commerce
