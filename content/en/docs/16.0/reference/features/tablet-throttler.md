@@ -4,7 +4,7 @@ weight: 21
 aliases: ['/docs/user-guides/tablet-throttler/','/docs/reference/tablet-throttler/']
 ---
 
-VTTablet runs a cooperative throttling service. This service probes the shard's MySQL topology and observes health, measure by replication lag, or by another metric delivered by custom query, on servers. This throttler is derived from GitHub's [freno](https://github.com/github/freno).
+VTTablet runs a cooperative throttling service. This service probes the shard's MySQL topology and observes health, measure by replication lag, or by another metric delivered by custom query, on servers. The throttler is derived from GitHub's [freno](https://github.com/github/freno).
 
 ## Why throttler: maintaining shard health via low replication lag
 
@@ -29,7 +29,7 @@ Other operations include mass reads from the database:
 
 These operations can easily incur replication lag. However, these operations are typically not time-limited. It is possible to rate-limit them to reduce database load.
 
-This is where a throttler becomes useful. A throttler can detect when replication lag is low, a cluster is healthy, and operations can proceed. It can also detect when replication lag is high and advise applications to hold the next operation.
+This is where a throttler becomes useful. A throttler can detect when replication lag is low, a cluster is healthy, and operations can proceed. It can also detect when replication lag is high and advise applications to withhold the next operation.
 
 Applications are expected to break down their tasks into small sub-tasks. For example, instead of deleting `1,000,000` rows, an application should only delete `50` at a time. Between these sub-tasks, the application should check in with the throttler.
 
@@ -48,7 +48,7 @@ In addition, the primary tablet is responsible for the overall health of the clu
 - The throttler probes all `REPLICA` tablets for their replication lag. This is done by querying the `_vt.heartbeat` table.
   - The throttler begins in dormant probe mode. As long as no application or client is actually looking for metrics, it probes the servers at multi-second intervals.
   - When applications check for throttle advice, the throttler begins probing servers in subsecond intervals. It reverts to dormant probe mode if no requests are made in the duration of `1min`.
-- The throttler aggregates the last probed values from all relevant tablets. This is _the cluster's metric _.
+- The throttler aggregates the last probed values from all relevant tablets. This is _the cluster's metric_.
 
 The cluster's metric is only as accurate as the following metrics:
 
@@ -160,8 +160,8 @@ Applications use these API endpoints:
 
 ### Checks
 
-- `/throttler/check?app=<name>`, for apps that wish to write mass amounts of data to a shard, and wish to maintain the overall health of the shard.
-- `/throttler/check-self`, for apps that wish to perform some operation (e.g. a massive _read_) on a specific tablet and only wish to maintain the health of that tablet.
+- `/throttler/check?app=<name>`, for apps that wish to write mass amounts of data to a shard, and wish to maintain the overall health of the shard. This check is only applicable on the `PRIMARY` tablet.
+- `/throttler/check-self`, for apps that wish to perform some operation (e.g. a massive _read_) on a specific tablet and only wish to maintain the health of that tablet. This check is applicable on all tablets.
 
 #### Examples:
 
