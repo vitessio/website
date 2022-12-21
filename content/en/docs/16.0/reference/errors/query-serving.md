@@ -51,7 +51,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09005 | A database must be selected. | no database selected: use keyspace<:shard><@type> or keyspace<[range]><@type> (<> are optional) | 1046 | 3D000 |
 | VT09006 | VITESS_MIGRATION commands work only on primary tablets, you must send such commands to a primary tablet. | %s VITESS_MIGRATION works only on primary tablet | 0 |  |
 | VT09007 | VITESS_THROTTLED_APPS commands work only on primary tablet, you must send such commands to a primary tablet. | %s VITESS_THROTTLED_APPS works only on primary tablet | 0 |  |
-| VT09008 | explain format = vtexplain will actually run queries. `/*vt+ EXECUTE_DML_QUERIES */` must be set to run DML queries in vtexplain. Example: `explain /*vt+ EXECUTE_DML_QUERIES */ format = vtexplain delete from t1`. | explain format = vtexplain will actually run queries | 0 |  |
+| VT09008 | vexplain queries/all will actually run queries. `/*vt+ EXECUTE_DML_QUERIES */` must be set to run DML queries in vtexplain. Example: `vexplain /*vt+ EXECUTE_DML_QUERIES */ queries delete from t1` | vexplain queries/all will actually run queries | 0 |  |
 | VT09009 | Stream is only supported for primary tablets, please use a stream on those tablets. | stream is supported only for primary tablet type, current type: %v | 0 |  |
 | VT09010 | SHOW VITESS_THROTTLER STATUS works only on primary tablet. | SHOW VITESS_THROTTLER STATUS works only on primary tablet | 0 |  |
 | VT10001 | Foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/. | foreign key constraints are not allowed | 0 |  |
