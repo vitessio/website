@@ -113,14 +113,16 @@ We can now verify that our added unit test in *token_test.go* works perfectly an
 As a final step, we run the *parse_test.go* file to ensure that everything works. We fix any tests whose expectations have changed or any incorrect tests to reflect the change and commit it.
 
 With these changes, the issue is resolved! But our work is not yet complete...  
-We need to create a pull request for our changes and address any review comments. 
+
+If the changes in the PR are significant enough to warrant adding a section for it in the release notes, then we should do that.
+After that, we need to create a pull request for our changes and address any review comments. 
 While creating the pull request, we need to take care of a few things -
 
 1. Follow the existing template for pull requests
 2. Add a description of what has been fixed
 3. Add the label for the correct component affected by the changes. In our case that is `Component: Query Serving`.
 4. Add the label for the type of changes in the PR. In our case that is `Type: Enhancement`.
-5. Add the label describing whether this PR should be included in the release notes or not. In our case that is `release notes`.
+5. Add the label describing whether this PR should be backported to some of the previous releases as well. The labels look like `Backport to: release-15.0`
 6. Codeowners will be automatically requested for reviews.
 
 The final PR that has been created by following these steps would look like [this](https://github.com/vitessio/vitess/pull/9456).
