@@ -19,7 +19,7 @@ By default the `TabletPicker` will only look for viable (healthy and serving) so
 managing the VStream or the target `vttablet` for the VReplication stream — and it will select a random one from the candidate list. If you want to support
 cross-cell streams then you will need to specify the list of cells or any [CellAlias](https://vitess.io/docs/reference/programs/vtctl/cell-aliases/) that
 contain the list of potential cells using the `--cells` flag in your VReplication workflow commands like [`MoveTables`](../movetables/) or the
-[`VStreamFlags.Cell`](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags) field in a
+[`VStreamFlags.Cells`](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags) field in a
 [`VStreamRequest`](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamRequest).
 
 ### Tablet Types
