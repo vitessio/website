@@ -58,7 +58,7 @@ This way, no session state is needed to evaluate the query in MySQL.
 ### Server System Variables
 
 A user might also want to change one of the many different system variables that MySQL exposes.
-Vitess handles system variables in one of four different ways:
+Vitess handles system variables in one of five different ways:
 
   * *No op*. For some settings, Vitess will just silently ignore the setting. This is for system variables that don't make much sense in a sharded setting, and don't change the behaviour of MySQL in an interesting way. 
   * *Check and fail if not already set*. These are settings that should not change, but Vitess will allow SET statements that try to set the variable to whatever it already is.
