@@ -64,6 +64,7 @@ The docker image expects some of the environment variables to be set to function
 | *ENABLE_ONLINE_DDL* | no | Allow users to submit, review and control Online DDL. Valid values are: true (default), false. |
 | *ENABLE_DIRECT_DDL* | no | Allow users to submit direct DDL statements. Valid values are: true (default), false. |
 | *PLANNER_VERSION* | no | Sets the default planner to use when the session has not changed it. Valid values are: V3 (default), Gen4, Gen4Greedy and Gen4Fallback. Gen4Fallback tries the new gen4 planner and falls back to the V3 planner if the gen4 fails. |
+| *TABLET_REFRESH_INTERVAL* | no | Interval at which vtgate refreshes tablet information from topology server. default is 10s |
 
 Environment variables in docker can be specified using the `-e` aka `--env` flag.
 
