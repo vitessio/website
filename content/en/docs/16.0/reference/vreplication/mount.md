@@ -4,10 +4,6 @@ description: Link an external cluster to the current one
 weight: 90
 ---
 
-{{< info >}}
-This documentation is for a new (v2) set of vtctld commands that start in Vitess 11.0. See [RFC](https://github.com/vitessio/vitess/issues/7225) for more details.
-{{< /info >}}
-
 ### Command
 
 ```
@@ -17,12 +13,12 @@ Mount -- [--type vitess] [--topo_type=etcd2|consul|zookeeper] [--topo_server=top
 
 ### Description
 
-Mount is used to link external Vitess clusters to the current cluster. (In the future we will also support mounting external MySQL servers.)
+Mount is used to link external Vitess clusters to the current cluster.
 
-Mounting Vitess clusters requires the topology information of the external cluster to be specified. Used in conjunction with [the Migrate command](../migrate).
+Mounting Vitess clusters requires the topology information of the external cluster to be specified. Used in conjunction with [the `Migrate` command](../migrate).
 
 {{< info >}}
-No validation is performed when using the Mount command. You must ensure your values are correct, or you may get errors when initializing a migration.
+No validation is performed when using the `Mount` command. You must ensure your values are correct, or you may get errors when initializing a migration.
 {{< /info >}}
 
 
@@ -36,18 +32,18 @@ The name that will be used in VReplication workflows to refer to the mounted clu
 
 Unmount an already mounted cluster. Requires `cluster_name` to be specified.
 
-#### show
+#### --show
 
 Show details of an already mounted cluster. Requires `cluster_name` to be specified.
 
-#### list
+#### --list
 
-List all mounted clusters
+List all mounted clusters.
 
-### Topo parameters
+### Topo Parameters
 
-##### topo_type=[etcd2|consul|zookeeper]
-##### topo_server=<topo_url>
-##### topo_root=<root_topo_node>
+##### --topo_type=[etcd2|consul|zookeeper]
+##### --topo_server=<topo_url>
+##### --topo_root=<root_topo_node>
 
 Mandatory (and only specified) while mounting a Vitess cluster. These should specify the topology parameters of the cluster being mounted.

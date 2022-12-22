@@ -12,22 +12,23 @@ VExec  -- [--dry_run] <keyspace.workflow> <query>
 
 ### Description
 
+{{< warning >}}
 Deprecated in version 12.0.
+{{</ warning >}}
 
 VExec is a wrapper over [VReplicationExec](../vreplicationexec).
 Given a workflow it executes the provided query on all primary tablets in the target keyspace that participate
-in the workflow. Internally it calls VReplicationExec for running the query.
+in the workflow. Internally it calls `VReplicationExec` for running the query.
 
 ### Parameters
 
-#### --dry-run
+#### --dry_run
 **optional**\
 **default** false
 
 <div class="cmd">
 You can do a dry run where no actual action is taken but the command logs the queries and the tablets
  on which the query would be run.
-by VExec.
 </div>
 
 #### keyspace.workflow

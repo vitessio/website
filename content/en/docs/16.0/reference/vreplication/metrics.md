@@ -4,13 +4,13 @@ description: Metrics related to vreplication functionality
 weight: 85
 ---
 
-VReplication exports several metrics using the expvars interface. These are available at the `debug/vars` endpoint of vttablet's http status pages. [More details here](../../features/monitoring/#3-push-based-metrics-system#3-push-based-metrics-system)
+VReplication exports several metrics using the expvars interface. These are available at the `/debug/vars` endpoint of vttablet's http status pages. [More details can be found here](../../features/monitoring/#3-push-based-metrics-system).
 
-## Target Metrics
+## Target Tablet Metrics
 
 #### VReplicationCopyLoopCount, VReplicationCopyLoopCountTotal
 
-During the copy phase we run one loop of bulk copy for approximately an hour at a time before running catchup. _VReplicationCopyLoopCount_ counts the number of times this loop has run for each stream and _VReplicationCopyLoopCountTotal_ the total across all streams.
+During the copy phase we run one loop of bulk copy for approximately an hour at a time (by default) before running catchup. _VReplicationCopyLoopCount_ counts the number of times this loop has run for each stream and _VReplicationCopyLoopCountTotal_ the total across all streams.
 
 #### VReplicationCopyRowCount, VReplicationCopyRowCountTotal
 
@@ -19,15 +19,11 @@ _VReplicationCopyRowCount_ counts the number of rows copied during the copy phas
 #### VReplicationErrors
 
 _VReplicationErrors_ counts the number of times errors occurred during vreplication. Errors are keyed
-with the type of error.
+by the type of error.
 
 #### VReplicationHeartbeat
 
 _VReplicationHeartbeat_ records, for each stream, the timestamp sent by the last heartbeat event for that stream.
-
-#### VReplicationMessages
-
-_VReplicationMessages_ contains a stack of the last N (currently 3) messages of a vreplication stream.
 
 #### VReplicationMessages
 
@@ -56,10 +52,6 @@ _VReplicationQPS_ is a list of QPS values for each loop of each phase of the wor
 
 _VReplicationQueryCount_ is the total number of queries in each phase of a workflow. _VReplicationQueryCountTotal_ is the total queries across all phases and workflows.
 
-#### VReplicationSecondsBehindMaster, VReplicationSecondsBehindMasterMax, VReplicationSecondsBehindMasterTotal
-
-Deprecated. See next section.
-
 #### VReplicationLagSeconds, VReplicationLagSecondsMax, VReplicationLagSecondsTotal
 
 These metrics show the replication lag of the target stream with respect to the source stream. _VReplicationLagSeconds_ shows the current replication lag and _VReplicationLagSecondsMax_ has the maximum lag in this stream. Note that these values are only valid during the replication phase of a workflow.
@@ -80,7 +72,7 @@ The number of streams running on this target
 
 This shows the state of each stream.
 
-## Source Metrics
+## Source Tablet Metrics
 
 #### VStreamPacketSize
 
@@ -108,7 +100,7 @@ The total number of packets sent by this vttablet across all workflows
 
 #### VStreamersCreated
 
-The total number of vstreamer created during the lifetime of this tablet
+The total number of vstreamers created during the lifetime of this tablet
 
 <hr style="border-top: 2px dashed brown">
 

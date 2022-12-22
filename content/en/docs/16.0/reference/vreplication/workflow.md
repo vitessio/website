@@ -17,7 +17,7 @@ actually specifying a query to VReplication.
 
 ### Parameters
 
-#### --dry-run
+#### --dry_run
 **optional**\
 **default** false
 
@@ -36,15 +36,15 @@ Name of target keyspace and the associated workflow to take action on.
 **mandatory**
 
 <div class="cmd">
-action is one of
+The Action is one of:
 
 * **stop**: sets the state of the workflow to Stopped: no further vreplication will happen until workflow is restarted
-* **start**: restarts a Stopped workflows
-* **delete**: removes the entries for this workflow in \_vt.vreplication
+* **start**: restarts a Stopped workflow
+* **delete**: removes the entries for this workflow in the `_vt.vreplication` table
 * **show**: returns a JSON object with details about the associated shards and also with all the columns
-    from the \_vt.vreplication table
+    from the `_vt.vreplication` table
 * **listall**: returns a comma separated list of all *running* workflows in a keyspace
-* **tags**: a comma-separated list of key:value pairs that are used to tag the tablet
+* **tags**: a comma-separated list of key:value pairs that are used to tag the workflow
 </div>
 
 #### Example
