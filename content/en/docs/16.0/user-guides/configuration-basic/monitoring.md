@@ -162,31 +162,45 @@ This variable used to report connection pool waits, but a refactor moved those v
 
 ``` json
   "Errors": {
-    "Deadlock": 0,
-    "Fail": 1,
-    "NotInTx": 0,
-    "TxPoolFull": 0
+    "OK": 0,
+    "CANCELED": 0,
+    "UNKNOWN": 0,
+    "INVALID_ARGUMENT": 1,
+    "DEADLINE_EXCEEDED": 0,
+    "NOT_FOUND": 0,
+    "ALREADY_EXISTS": 0,
+    "PERMISSION_DENIED": 0,
+    "RESOURCE_EXHAUSTED": 0,
+    "FAILED_PRECONDITION": 0,
+    "ABORTED": 0,
+    "OUT_OF_RANGE": 0,
+    "UNIMPLEMENTED": 0,
+    "INTERNAL": 0,
+    "UNAVAILABLE": 0,
+    "DATA_LOSS": 0,
+    "UNAUTHENTICATED": 0,
+    "CLUSTER_EVENT": 0,
+    "READ_ONLY": 0,
   },
 ```
 
-Errors are reported under different categories. It’s beneficial to track each category separately as it will be more helpful for troubleshooting. Right now, there are four categories. The category list may vary as Vitess evolves.
+Errors are reported under different categories. It’s beneficial to track each category separately as it will be more helpful for troubleshooting. Right now, there are eighteen categories. The category list may vary as Vitess evolves.
 
 Errors/Query is a useful stat to track.
-
-VTTablet also exports an InfoErrors variable that tracks inconsequential errors that don’t signify any kind of problem with the system. For example, a dup key on insert is considered normal because apps tend to use that error to instead update an existing row. So, no monitoring is needed for that variable.
 
 #### InternalErrors
 
 ``` json
   "InternalErrors": {
-    "HungQuery": 0,
-    "Invalidation": 0,
-    "MemcacheStats": 0,
-    "Mismatch": 0,
-    "Panic": 0,
-    "Schema": 0,
+    "Task": 0,
     "StrayTransactions": 0,
-    "Task": 0
+    "Panic": 0,
+    "HungQuery": 0,
+    "Schema": 0,
+    "TwopcCommit": 0,
+    "TwopcResurrection": 0,
+    "WatchdogFail": 0,
+    "Messages": 0,
   },
 ```
 
@@ -209,20 +223,40 @@ Kills reports the queries, transactions and reserved connections killed by vttab
 There are a few variables with the above prefixes that report the status of the two transaction pools:
 
 ``` json
-  "TransactionPoolAvailable": 300,
-  "TransactionPoolCapacity": 300,
-  "TransactionPoolIdleTimeout": 600000000000,
-  "TransactionPoolMaxCap": 300,
-  "TransactionPoolTimeout": 30000000000,
+  "TransactionPoolActive": 0,
+  "TransactionPoolAvailable": 20,
+  "TransactionPoolCapacity": 20,
+  "TransactionPoolDiffSetting": 0,
+  "TransactionPoolExhausted": 0,
+  "TransactionPoolGet": 0,
+  "TransactionPoolGetConnTime": {"TotalCount":0,"TotalTime":0,"Histograms":{}},
+  "TransactionPoolGetSetting": 0,
+  "TransactionPoolIdleClosed": 0,
+  "TransactionPoolIdleTimeout": 1800000000000,
+  "TransactionPoolInUse": 0,
+  "TransactionPoolMaxCap": 20,
+  "TransactionPoolMaxLifetimeClosed": 0,
+  "TransactionPoolResetSetting": 0,
   "TransactionPoolWaitCount": 0,
   "TransactionPoolWaitTime": 0,
-  "FoundRowsPoolAvailable": 300,
-  "FoundRowsPoolCapacity": 300,
-  "FoundRowsPoolIdleTimeout": 600000000000,
-  "FoundRowsPoolMaxCap": 300,
-  "FoundRowsPoolTimeout": 30000000000,
+  "TransactionPoolWaiterQueueFull": 0,
+  "FoundRowsPoolActive": 0,
+  "FoundRowsPoolAvailable": 20,
+  "FoundRowsPoolCapacity": 20,
+  "FoundRowsPoolDiffSetting": 0,
+  "FoundRowsPoolExhausted": 0,
+  "FoundRowsPoolGet": 0,
+  "FoundRowsPoolGetConnTime": {"TotalCount":0,"TotalTime":0,"Histograms":{}},
+  "FoundRowsPoolGetSetting": 0,
+  "FoundRowsPoolIdleClosed": 0,
+  "FoundRowsPoolIdleTimeout": 1800000000000,
+  "FoundRowsPoolInUse": 0,
+  "FoundRowsPoolMaxCap": 20,
+  "FoundRowsPoolMaxLifetimeClosed": 0,
+  "FoundRowsPoolResetSetting": 0,
   "FoundRowsPoolWaitCount": 0,
   "FoundRowsPoolWaitTime": 0,
+  "FoundRowsPoolWaiterQueueFull": 0,
 ```
 
 The choice of which pool gets used depends on whether the application connected with the `CLIENT_FOUND_ROWS` flag or not.
@@ -278,12 +312,12 @@ This URL prints out a JSON object that lists the state of all the variables that
 
 * /queryz is a human-readable version of /debug/query\_stats. If a graph shows a table as a possible source of problems, this is the next place to look to see if a specific query is the root cause. This is list is sorted in descending order of query latency. If the value is greater than 100 milliseconds, it's color-coded red. If it is greater than 10 milliseconds, it is color coded yellow. Otherwise, it is color coded gray.
 * /debug/query\_stats is a JSON view of the per-query stats. This information is pulled in real-time from the query cache. The per-table stats in /debug/vars are a roll-up of this information.
-* /debug/table\_plans is a more static view of the query cache. It just shows how vttablet will process or rewrite the input query.
+* /debug/tablet\_plans is a more static view of the query cache. It just shows how vttablet will process or rewrite the input query.
 * /livequeryz lists the currently running queries. You have the option to kill any of them from this page.
 
 #### /querylogz, /debug/querylog, /txlogz, /debug/txlog
 
-* /debug/querylog is a continuous stream of verbose execution info as each query is executed. This URL can generate a lot of data because it streams every query processed by vttablet. The details are as per this function: https://github.com/vitessio/vitess/blob/main/go/vt/vttablet/tabletserver/tabletenv/logstats.go#L202
+* /debug/querylog is a continuous stream of verbose execution info as each query is executed. This URL can generate a lot of data because it streams every query processed by vttablet. The details are as per this function: https://github.com/vitessio/vitess/blob/main/go/vt/vttablet/tabletserver/tabletenv/logstats.go#L179
 * /querylogz is a limited human readable version of /debug/querylog. It prints the next 300 queries by default. The limit can be specified with a limit=N parameter on the URL.
 * /txlogz is like /querylogz, but for transactions.
 * /debug/txlog is the JSON counterpart to /txlogz.
@@ -315,7 +349,7 @@ Alerting is built on top of the variables you monitor. Before setting up alerts,
 * Transaction pool full error rate
 * Any internal error
 * Traffic out of balance among replicas
-* Qps/core too high
+* QPS/core too high
 * High replication lag
 * Errant transactions
 * Primary is in read-only mode
@@ -360,6 +394,6 @@ For vtgate, here’s a list of possible variables to alert on:
 * Error/query rate
 * Error/query/tablet-type rate
 * vtgate serving graph is stale by x minutes (topology service is down)
-* Qps/core
+* QPS/core
 * Latency
 
