@@ -94,6 +94,14 @@ The default behavior is to measure replication lag and throttle based on that la
 
 Vitess only supports gauges for custom metrics: the user may define a query which returns a gauge value, an absolute metric by which Vitess can throttle. See [#Configuration](#configuration), below.
 
+## App management
+
+It is possible for the throttler to respond differently -- to some extent -- to different clients, or _apps_. When a client asks for the throttler's advice, it may identify itself by any arbitrary name, which the throttler terms the _app_. For example, `vreplication` workflows identify by the name "vreplication", and Online DDL operations use "online-ddl", etc.
+
+It is possible to _restrict_ the throttler's response to one or more apps. For example, it's possible to completely throttle "vreplication" while still responding `HTTP 200` to other apps. This is typically used to give way or precedence to one or two apps, or otherwise to further reduce the incoming load from a specific app.
+
+It is _not possible_ to give an app more way than the throttler's standard behavior. That is, if the throttler is set to throttler at `5s` replication lag, it is _not possible_ to respond wih `HTTP 200` to a specific app with replication lag at `7s`.
+
 ## Configuration
 
 {{< warning >}}
@@ -160,7 +168,7 @@ Applications use these API endpoints:
 
 ### Checks
 
-- `/throttler/check?app=<name>`, for apps that wish to write mass amounts of data to a shard, and wish to maintain the overall health of the shard. This check is only applicable on the `PRIMARY` tablet.
+- `/throttler/check?app=<app-name>`, for apps that wish to write mass amounts of data to a shard, and wish to maintain the overall health of the shard. This check is only applicable on the `PRIMARY` tablet.
 - `/throttler/check-self`, for apps that wish to perform some operation (e.g. a massive _read_) on a specific tablet and only wish to maintain the health of that tablet. This check is applicable on all tablets.
 
 #### Examples:
