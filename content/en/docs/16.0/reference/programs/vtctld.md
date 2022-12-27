@@ -25,8 +25,6 @@ export VTDATAROOT="/tmp"
 
 vtctld \
  $TOPOLOGY_FLAGS \
- --workflow_manager_init \
- --workflow_manager_use_election \
  --service_map 'grpc-vtctl,grpc-vtctld' \
  --backup_storage_implementation file \
  --file_backup_storage_root $VTDATAROOT/backups \
@@ -269,9 +267,6 @@ vtctld \
 | --vtgate_grpc_server_name | string | the server name to use to validate server certificate |
 | --vtgate_protocol | string | how to talk to vtgate (default "grpc") |
 | --watch_replication_stream | boolean | When enabled, vttablet will stream the MySQL replication stream from the local server, and use it to support the include_event_token ExecuteOptions. |
-| --workflow_manager_disable | value | comma separated list of workflow types to disable |
-| --workflow_manager_init | boolean | Initialize the workflow manager in this vtctld instance. |
-| --workflow_manager_use_election | boolean | if specified, will use a topology server-based leader election to ensure only one workflow manager is active at a time. |
 | --xbstream_restore_flags | string | flags to pass to xbstream command during restore. These should be space separated and will be added to the end of the command. These need to match the ones used for backup e.g. --compress / --decompress, --encrypt / --decrypt |
 | --xtrabackup_backup_flags | string | flags to pass to backup command. These should be space separated and will be added to the end of the command |
 | --xtrabackup_prepare_flags | string | flags to pass to prepare command. These should be space separated and will be added to the end of the command |

@@ -4,19 +4,50 @@ weight: 1
 aliases: ['/resources/presentations.html', '/docs/resources/presentations/']
 ---
 
+## KubeCon NA 2022
+
+One VTOrc To Rule Them All – High Availability In a Distributed Database System - Deepthi Sigireddi & Manan Gupta, PlanetScale
+
+{{< youtube id="upmByX8uD6E" autoplay="false" >}}
+
+Vitess: Introduction and New Features - Deepthi Sigireddi, Matt Lord & Rohit Nayak, PlanetScale
+
+{{< youtube id="cPQuj4eTCdY" autoplay="false" >}}
+
+## KubeCon EU 2022
+
+Scaling Databases with Vitess - Harshit Gangal & Manan Gupta, PlanetScale
+
+{{< youtube id="HgSlmzC7O-E" autoplay="false" >}}
+
+## Percona Live 2022
+
+Vitess VReplication: Standing on the Shoulders of a MySQL Giant - Matt Lord, PlanetScale
+
+{{< youtube id="ltoJ8gxs0YU" autoplay="false" >}}
+
+## FOSDEM 2022
+
+* [The relational model in the modern development age](https://video.fosdem.org/2022/D.mysql/relational_model_dev.webm) - Shlomi Noach, PlanetScale
+## KubeCon China 2021
+
+Continuous Performance Benchmarking for Vitess - Alkin Tezuysal, Florent Poinsard & Manan Gupta, PlanetScale
+
+{{< youtube id="fLullHPddvg" autoplay="false" >}}
+
 ## KubeCon NA 2021
 
-Vitess: Introduction and New Features - Deepthi Sigireddi & Alkin Tezuysal, PlanetScale, Inc.; Andrew Mason & Malcolm Akinje, Slack Corp.
+Vitess: Introduction and New Features - Deepthi Sigireddi & Alkin Tezuysal, PlanetScale; Andrew Mason & Malcolm Akinje, Slack Corp.
 
 {{< youtube id="uKdMR89mfdE" autoplay="false" >}}
 
 ## Perconalive 2021
 
-Deploying a Sharded Vitess Sandbox Cluster in Public Cloud Kubernetes in 10 Minutes. - Jordan Moldow, Box
+Deploying a Sharded Vitess Sandbox Cluster in Public Cloud Kubernetes in 10 Minutes - Jordan Moldow, Box
 
 {{< youtube id="Bllc-u_cCGA" autoplay="false" >}}
 
-Scaling MySQL @LinkedIn with Vitess. - Apoorv Purohit and Karthik Appigatla, LinkedIn
+Scaling MySQL @LinkedIn with Vitess - Apoorv Purohit and Karthik Appigatla, LinkedIn
 
 {{< youtube id="fbI6wIIKs50" autoplay="false" >}}
 
@@ -30,13 +61,13 @@ Revertible, Recoverable Schema Migrations in Vitess - Shlomi Noach, PlanetScale
 
 ## Rawkode Live
 
-Introduction to Vitess.  Deepthi Sigireddi, Alkin Tezuysal - PlanetScale, David McKay @rawkode
+Introduction to Vitess - Deepthi Sigireddi & Alkin Tezuysal, PlanetScale with David McKay @rawkode
 
 {{< youtube id="Cwpu0y119I0" autoplay="false" >}}
 
-## Percona FOSS Talks 2021
+## Percona HOSS Talks FOSS! 2021
 
-All Things Vitess, MySQL, and Sailing: Alkin Tezuysal on Percona’s HOSS Talks FOSS!
+All Things Vitess, MySQL, and Sailing Passion - Alkin Tezuysal, PlanetScale
 
 {{< youtube id="8e3IC-lAgXs" autoplay="false" >}}
 
@@ -51,7 +82,6 @@ KubeCon featured several Vitess talks, including:
 
 * [Keynote: CNCF Projects Update](https://youtu.be/uNpZA5fz5o8) - CNCF
 * [Vitess: Introduction and New Features](https://youtu.be/Nqzhgzg5WCw) - Sugu Sougoumarane & Deepthi Sigireddi, PlanetScale
-* [Introduction to Vitess](https://youtu.be/Sny8rITrdvE) - Deepthi Sigireddi, PlanetScale
 * [Codename VIFL - How to Migrate MySQL Database Clusters to Vitess](https://youtu.be/k51L0xdClGQ) - Guido Iaquinti & Rafael Chacon , Slack
 
 ## Perconalive Europe Online 2020
@@ -66,11 +96,11 @@ Vitess Online Schema Migration Automation - Shlomi Noach, PlanetScale
 
 ## Quarantine 2020 Database Talks, Carnegie Mellon University
 
-Query Planning for a Sharded System like Vitess - Sugu Sougoumarane - CTO,Planetscale
+Query Planning for a Sharded System like Vitess - Sugu Sougoumarane, CTO, PlanetScale
 
 {{< youtube id="TZb6m5ACIsA" autoplay="false" >}}
 
-## KubeCon Europe 2020
+## KubeCon EU 2020
 
 KubeCon featured several Vitess talks, including:
 
@@ -80,13 +110,13 @@ KubeCon featured several Vitess talks, including:
 
 ## Online Demo
 
-A demo of the new Vitess-native Orchestrator. Sugu Sougoumarane - CTO, PlanetScale 
+A demo of the new Vitess-native Orchestrator - Sugu Sougoumarane, CTO, PlanetScale
 
 {{< youtube id="JVHi2oN3lxM" autoplay="false" >}}
 
 ## Perconalive NA Online 2020
 
-Unbounded scale: Using Vitess for scaling write intensive workloads.  Morgan Tocker , Daniel Guzman Burgos
+Unbounded scale: Using Vitess for scaling write intensive workloads - Morgan Tocker, PlanetScale; Daniel Guzman Burgos, Percona
 
 {{< youtube id="kHPSp8coQ5g" autoplay="false" >}}
 
@@ -215,7 +245,13 @@ Jiten Vaidya from PlanetScale explains how you can use both OLTP and OLAP on Vit
 
 {{< youtube id="bhzJJF82mFc" autoplay="false" >}}
 
-## Kubecon 19 Barcelona
+## KubeCon EU 2019
+
+**Vitess Intro**
+
+Deepthi Sigireddi and Sugu Sougoumarane of PlanetScale give an introduction to Vitess.
+
+{{< youtube id="H4B5zLBfGN8" autoplay="false" >}}
 
 **Vitess Deep Dive**
 

@@ -16,7 +16,7 @@ Vitess provides MySQL default semantics i.e. `REPEATABLE READ` for single-shard 
 The following describes some differences in query handling between Vitess and MySQL.
 The Vitess team maintains a list of [unsupported queries](https://github.com/vitessio/vitess/blob/main/go/vt/vtgate/planbuilder/testdata/unsupported_cases.json) which is kept up-to-date as we add support for new constructs. 
 
-This is an area of active development in Vitess. Any unsupported query can be raised as an issue in the [Vitess GitHub Project](https://github.com/vitessio/vitess/issues).
+This is an area of active development in Vitess. Any unsupported query can be raised as an issue in the [Vitess GitHub Project](https://github.com/vitessio/vitess/issues/new/choose).
 
 ### DDL
 
@@ -121,13 +121,32 @@ It must then register itself by calling `DBDDLRegister`.
 You can take a look at the `dbddl_plugin.go` in the engine package for an example of how it's done.
 Finally, you need to add a command line flag to vtgate to have it use the new plugin: `--dbddl_plugin=myPluginName`
 
+### Start Transaction
+There are multiple ways to start a transaction like `begin`, `start transaction` and `start transaction [transaction_characteristic [, transaction_characteristic] ...]` with several modifiers that control transaction characteristics.
+```sql
+transaction_characteristic: {
+    WITH CONSISTENT SNAPSHOT
+  | READ WRITE
+  | READ ONLY
+}
+```
+The scope of these modifications is limited to the next transaction only.
+These modifications have a special purpose and more can be read about in the [MySQL reference manual](https://dev.mysql.com/doc/refman/8.0/en/commit.html).
+
+### Set Transaction
+Set Transaction statement is used to change the isolation level or access mode for transactions.
+Vitess as of now **only** supports modification of isolation level at the session scope.
+The change in isolation level only changes the shard level transaction isolation level and not the global Vitess level.
+
+More details about the isolation level can be read in the [MySQL reference manual](https://dev.mysql.com/doc/refman/8.0/en/set-transaction.html).
+
 ## Cross-shard Transactions
 
 Vitess supports multiple [transaction modes](../../../user-guides/configuration-advanced/shard-isolation-atomicity).
 The default mode is MULTI i.e. multi-shard transactions as best-effort. A transaction that affects only one shard will be fully ACID complaint.
 When a transactions affects multiple shards, any failure on one or more shards will rollback the effect of that query.
 Committing the multi-shard transaction issues commits to the participating shards in a particular order. This allows the application or user to undo the effects of partial commits in case of failures.
-There are more improvements planned which can be tracked through [this issue](https://github.com/vitessio/vitess/issues/10692)
+There are more improvements planned which can be tracked through [this issue](https://github.com/vitessio/vitess/issues/10692).
 
 ## Auto Increment
 

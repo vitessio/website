@@ -13,7 +13,7 @@ It is very important the changes made by contributors do not break any existing 
 In order to avoid disruption, the following concerns need to be kept in mind:
 
 * Does the change affect any external APIs? If so, make sure the change satisfies the [compatibility rules](https://github.com/vitessio/enhancements/blob/main/veps/vep-3.md).
-* Can the change introduce a performance regression? If so, it will be good to measure the impact using benchmarks.
+* Can the change introduce a performance regression? If so, it will be good to measure the impact using benchmarks. To run the micro and macro benchmarks via [arewefastyet](https://github.com/vitessio/arewefastyet) just add the label `Benchmark me` to the PR.
 * If the change is substantial or is a breaking change, you must publish the proposal as an issue with a title like `RFC: Changing behavior of feature xxx`. Following this, sufficient time has to be given for others to give feedback. A breaking change must still satisfy the compatibility rules.
 * New features that affect existing behavior must be introduced "behind a flag". Users will then be encouraged to enable them, but will have the option to fallback to the old behavior if issues are found.
 
@@ -29,6 +29,7 @@ Every pull request should meet the following requirements:
 * Pass all CI tests that run on PRs.
 * For bigger changes, it is a good idea to start by creating an RFC (Request for Comment) issue - this is where you can discuss the feature and why it's important.
 Once that is in place, you can create the PR, as a solution to the problem described in the issue. Separating the need and the solution this way makes discussions easier and more focused.
+* All PRs that make a change to production code, require a linked GitHub issue describing the bug being fixed or the enhancement being made.
 
 ### Testing
 
@@ -90,6 +91,12 @@ Vitess uses [code owners](https://github.blog/2017-07-06-introducing-code-owners
 During discussions, you can also refer to somebody using the *@username* syntax and they'll receive an email as well.
 
 If you want to receive notifications even when you aren't mentioned, you can go to the [repository page](https://github.com/vitessio/vitess) and click *Watch*.
+
+## Reviewing a Pull Request
+
+The [Vitess bot](https://github.com/apps/vitess-bot) will add a comment with a review checklist on every pull request.
+Reviewers should go through this list and mark the items as checked as they go along. If anything is incomplete, changes to the PR can be requested until 
+all the items on the checklist are satisfied.
 
 ## Approving a Pull Request
 

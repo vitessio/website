@@ -22,6 +22,28 @@ The relay log buffers events on the target as they are received from the source.
 **relay_log_max_size** defines the maximum buffer size (in bytes). As events arrive they are stored in the relay log. The apply thread consumes these events as fast as it can. When the relay log fills up we no longer pull
 events from the source until some events are consumed. If single rows are larger than the specified buffer size, a single row is buffered at a time.
 
+#### vreplication-parallel-insert-workers
+
+**Type** integer\
+**Default** 1\
+**Applicable on** target
+
+This flag is intended as an option to improve the performance of the [VReplication copy phase](https://vitess.io/docs/design-docs/vreplication/life-of-a-stream/#copy).
+
+During the VReplication copy phase, the target tablet reads batches of rows in VStream packets (the size of which is managed by the [`--vstream_packet_size` flag](#vstream_packet_size)) from the source tablet and inserts them on the target. By default, the target does this sequentially: it reads a batch, then it inserts a batch, then it reads a batch, etc. This flag adds a degree of parallelism so that, while a new batch is being read from the source, up to `--vreplication-parallel-insert-workers` may be inserting previously read batches.
+
+{{< info >}}
+Batches of rows insert in parallel, but commit in order. In other words, given two batches B1 and B2 with all primary key IDs in B1 less than those in B2, rows in B2 may be inserted before those in B1, but the B1 transaction will commit before the B2 transaction.
+
+Though this limits performance, it ensures the target will be eventually consistent.
+{{< /info >}}
+
+The performance of a VReplication stream is dependent on a number of factors, such as the hardware of the source and target tablets, the latency of the network between them, and utilization of those resources by the VReplication stream and concurrent workloads. Whether this flag improves performance depends on those factors and many others not mentioned here.
+
+A rule of thumb to follow is to see if there are idle resources (especially CPU and disk IO) on both the source and target side. If so, then increasing this flag may increase utilization of those resources, and improve copy phase performance. To measure effectiveness of the flag, compare the values of the [`VReplicationCopyRowCount` metric](../metrics/#vreplicationcopyrowcount-vreplicationcopyrowcounttotal) or [`VReplicationPhaseTimings` metric](../metrics/#vreplicationphasetimings-vreplicationphasetimingscounts-vreplicationphasetimingstotal) with and without the flag.
+
+It is recommended **not** to increase this flag beyond the number of vCPUs available to the target tablet.
+
 #### vreplication_copy_phase_duration
 
 **Type** duration\
@@ -71,18 +93,18 @@ When copying the contents of a table we go through 1+ cycles of copy,catchup,fas
 **Maximum** 60 (one minute)\
 **Applicable on** target
 
-For an idle source shard, the source vstreamer sends a heartbeat. Currently, that is once per second. On receiving the heartbeat the target VReplication module updates the time_updated column of the relevant row of `\_vt.vreplication`. For some setups this is a problem, for example:
+For an idle source shard, the source vstreamer sends a heartbeat. Currently, that is once per second. On receiving the heartbeat the target VReplication module updates the time_updated column of the relevant row of `_vt.vreplication`. For some setups this is a problem, for example:
 
-* if there are too many streams the extra write QPS or CPU load due to these updates are unacceptable
-* if there are too many streams and/or a large source field (lot of participating tables) which generates unacceptable increase in the binlog size
-* even for a single stream, if the server is of a lower configuration, then the resulting increase in the QPS or binlog increase may become significant as a percentage of resources
+* If there are too many streams the extra write QPS or CPU load due to these updates are unacceptable
+* If there are too many streams and/or a large source field (lot of participating tables) which generates unacceptable increase in the binlog size
+* Even for a single stream, if the server is of a lower configuration, then the resulting increase in the QPS or binlog increase may become significant as a percentage of resources
 
-**vreplicationHeartbeatUpdateInterval** determines how often the time_updated column is updated if there is no activity on the source and the source vstream is only sending heartbeats. Use a low value if you expect a high QPS or you are monitoring this column to alert about potential outages. Keep this high if:
+_vreplication_heartbeat_update_interval_ determines how often the time_updated column is updated if there is no activity on the source and the source vstream is only sending heartbeats. Use a low value if you expect a high QPS or you are monitoring this column to alert about potential outages. Keep this high if:
 
-* you have too many streams and the extra write QPS or CPU load due to these updates is unacceptable OR
-* you have too many streams and/or a large binlogsource field (i.e., there are a lot of participating tables) which generates unacceptable increase in your binlog size
+* You have too many streams and the extra write QPS or CPU load due to these updates is unacceptable OR
+* You have too many streams and/or a large binlogsource field (i.e., there are a lot of participating tables) which generates unacceptable increase in your binlog size
 
-Some internal processes (like online ddl) depend on the heartbeat updates for operating properly. Hence there is an upper limit on this interval, which is 60 seconds.
+Some internal processes (like OnlineDDL) depend on the heartbeat updates for operating properly. Hence there is an upper limit on this interval, which is 60 seconds.
 
 #### vstream-binlog-rotation-threshold
 
@@ -102,9 +124,9 @@ When starting a vstream which executes a query based on a [GTID](https://dev.mys
 **Default** 250000\
 **Applicable on** source
 
-On the source, events are buffered where applicable, to minimize network overhead. For example, multiple row events in a transaction or the set of begin/dml/commit event sets are buffered and sent together. Commits, DDLs, and synthetic events generated by VReplication like heartbeats, resharding journals cause the events buffered on the source to be sent immediately.
+On the source, events are buffered and batched where applicable, to minimize network overhead. For example, multiple row events in a transaction or the set of begin/dml/commit event sets are buffered and sent together. Commits, DDLs, and synthetic events generated by VReplication like heartbeats and resharding journals cause the events buffered on the source to be sent immediately.
 
-**vstream_packet_size** specifies the suggested packet size for VReplication streamer. This is used only as a recommendation. The actual packet size may be more or less than this amount depending on the number and type of events yet to be sent on the source.
+**vstream_packet_size** specifies the suggested packet size for VReplication vstreamer. This is used only as a recommendation. The actual packet size may be more or less than this amount depending on the number and type of events yet to be sent on the source.
 
 #### watch_replication_stream
 
@@ -112,7 +134,7 @@ On the source, events are buffered where applicable, to minimize network overhea
 **Default** false\
 **Applicable on** source
 
-By default vttablets reload their schema every `--queryserver-config-schema-reload-time` seconds (default 30 minutes). This can cause a problem while streaming events if DDLs are applied on the source and streaming is started _after_ the DDL was applied but _before_ vttablet refreshed its schema. This is alleviated by the _watcher_.
+By default vttablets reload their schema every `--queryserver-config-schema-reload-time` seconds (default 30 minutes). This can cause a problem while streaming events if DDLs are applied on the source and streaming is started _after_ the DDL was applied but _before_ vttablet refreshed its schema. This is alleviated by enabling the _watcher_.
 
 When enabled, vttablet will start the _watcher_ which streams the MySQL replication stream from the local database, and uses it to proactively update its schema when it encounters a DDL.
 
@@ -150,7 +172,7 @@ Stop automatically retrying when we've had consecutive failures with the same er
 **Default** in_order:REPLICA,PRIMARY\
 **Applicable on** target
 
-This parameter specifies the default tablet_types that will be used by the tablet picker to find sources for a VReplication stream. It can be overridden, per workflow, by passing a different list to the workflow commands like MoveTables and Reshard.
+This parameter specifies the default tablet_types that will be used by the tablet picker to find sources for a VReplication stream. It can be overridden, per workflow, by passing a different list to the workflow commands like `MoveTables` and `Reshard`.
 
 #### vreplication_experimental_flags
 

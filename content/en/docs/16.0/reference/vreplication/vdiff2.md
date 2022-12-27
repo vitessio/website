@@ -19,7 +19,7 @@ For additional details, please see the [RFC](https://github.com/vitessio/vitess/
 VDiff2 takes different sub-commands or actions similar to how the [`MoveTables`](../movetables/)/[`Reshard`](../reshard/) commands work. The first argument
 is the &lt;keyspace.workflow&gt; followed by an &lt;action&gt;. The following actions are supported:
 
-#### Start a new VDiff
+#### Start a New VDiff
 
 These take the same parameters as VDiff1 and schedule VDiff to run on the primary tablet of each target shard to verify the subset of data that will live on the given shard. Please note that if you do not specify a sub-command or action then `create` is assumed (this eases the transition from VDiff1 to VDiff2). If you do not pass a specific UUID then one will be generated.
 
@@ -38,7 +38,7 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2 customer.commerce2customer
 VDiff bf9dfc5f-e5e6-11ec-823d-0aa62e50dd24 scheduled on target shards, use show to view progress
 ```
 
-#### Resume a previous VDiff
+#### Resume a Previous VDiff
 
 The `resume` action allows you to resume a previously completed VDiff, picking up where it left off and comparing the records where the Primary Key column(s) are greater than the last record processed — with the progress and other status information saved when the run ends. This allows you to do approximate rolling or differential VDiffs (e.g. done after MoveTables finishes the initial copy phase and then again just before SwitchTraffic).
 
@@ -60,7 +60,7 @@ VDiff 4c664dc2-eba9-11ec-9ef7-920702940ee0 resumed on target shards, use show to
 We cannot guarantee accurate results for `resume` when different collations are used for a table between the source and target keyspaces (more details can be seen [here](https://github.com/vitessio/vitess/pull/10497)).
 {{< /warning >}}
 
-#### Show progress/status of a VDiff
+#### Show Progress/Status of a VDiff
 
 ```
 VDiff  -- --v2  <keyspace.workflow> show {<UUID> | last | all}
@@ -133,7 +133,7 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2  --format=json customer.com
 Attempting to `stop` a VDiff that is already completed is a no-op.
 {{< /info >}}
 
-#### Delete VDiff results
+#### Delete VDiff Results
 
 ```
 VDiff  -- --v2  <keyspace.workflow> delete {<UUID> | all}

@@ -96,3 +96,14 @@ Example Output:
 | customer | hash | hash |        |       |
 +----------+------+------+--------+-------+
 ```
+
+* `SHOW vitess_throttler STATUS` -- shows status for all tablet throttlers in current keyspace
+```shell
+Example Output:
++-------+---------+-----------+
+| shard | enabled | threshold |
++-------+---------+-----------+
+| -80   |       1 |       1.5 |
+| 80-   |       1 |       1.5 |
++-------+---------+-----------+
+```

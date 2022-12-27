@@ -10,7 +10,7 @@ Vitess exposes a few RPC services and internally uses RPCs. These RPCs can optio
 
 The following diagram represents all the RPCs we use in a Vitess cluster via gRPC:
 
-![Vitess Transport Security Model Diagram](../../img/vitesstransportsecuritymodel.svg)
+![Vitess Transport Security Model Diagram](../../img/vitesstransportsecuritymodel.png)
 
 There are two main categories:
 

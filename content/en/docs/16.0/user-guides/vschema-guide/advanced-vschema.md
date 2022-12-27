@@ -14,17 +14,13 @@ Multi-Column Vindexes are useful in the following two use cases:
 
 In both cases the leading column is the region or tenant, and is used to form the first few bits of the `keyspace_id`. The second column is used for the bits that follow. Since Vitess shards by keyrange, this approach will naturally group all rows of a region or tenant within the same shard, or within a group of consecutive shards. Since each shard is its own MySQL cluster, these can then be deployed to different regions as needed.
 
-Please refer to [Region-based Sharding](../../configuration-advanced/region-sharding) for an example on how to use the `region_json` vindex.
-
-Currently, the Vindex gets used for assigning a `keyspace_id` at the time of insert and at the time of resharding. Additional vindexes need to be added to the table for routing query constructs that contain WHERE clauses.
-
-Vitess does not have the capability to route a query based on multiple values of a multi-column vindex in a where clause yet. This feature will be added soon.
+Please refer to [Region-based Sharding](../../configuration-advanced/region-sharding) for an example on how to use the `region_json` vindex and [Subsharding Vindex](../subsharding-vindex) for the more generic multicol vindex.
 
 #### Alternate approach
 
-You have the option to pre-combine the region and id bits into a single column and use that as an input for a single column vindex. This approach achieves the same goals as a multi-column vindex. Moreover, you avoid having to define additional vindexes for query routing.
+You have the option to pre-combine the region and id bits into a single column and use that as an input for a single column vindex. This approach achieves the same goals as a multi-column vindex.
 
-The downside of this approach is that it is harder to migrate an id to a different region.
+The downside of this approach is that it is harder to migrate an id to a different region and you won't get the query serving support for routing queries to subset of shards if only the first few columns of a multicol vindex are provided.
 
 ## Reference Tables
 
@@ -40,10 +36,47 @@ A reference table should not have any vindex, and is defined in the VSchema as a
 {
   "sharded": true,
   "tables": {
-    "zip_detail": { "type": "reference" }
+    "zip_detail": {
+      "type": "reference"
+    }
   }
 }
 ```
+<br/>
+
+#### Source Tables
+
+Vitess will optimize reference tables routing when joined to a table within the same keyspace. Additional routing optimizations can be enabled by specifying the `source` of a reference table. When a reference table specifies a `source` table:
+
+ * A `SELECT ... JOIN` (or equivalent `SELECT ... WHERE`) will try to route the
+   query to the keyspace of the table to which the reference (or source) table
+   is being joined.
+ * An `INSERT`, `UPDATE`, or `DELETE` uses the keyspace of the source table.
+
+For example:
+
+```json
+{
+  "sharded": true,
+  "tables": {
+    "zip_detail": {
+      "type": "reference",
+      "source": "unsharded_is.zip_detail"
+    }
+  }
+}
+```
+<br/>
+
+There are some constraints on `source`:
+
+ * It must be a keyspace-qualified table name, e.g. `unsharded_ks.zip_detail`.
+ * It must refer to an existing table in an existing keyspace.
+ * It must refer to a table in a different keyspace.
+ * It must refer to a table in an unsharded keyspace.
+ * Any given value for `source` may appear at most once per-keyspace.
+
+#### Materialization
 
 It may become a challenge to keep a reference table correctly updated across all shards. Vitess supports the [Materialize](../../migration/materialize) feature that allows you to maintain the original table in an unsharded keyspace and automatically propagate changes to that table in real-time across all shards.
 
@@ -146,7 +179,10 @@ This flag causes VTGate to automatically expand expressions like `select *` or i
 
 The caveat about using this feature is that you have to keep this column list in sync with the underlying schema.
 
-In the future, Vitess will allow you to pull this information from the vttablets and automatically keep it up-to-date.
+#### Automatic Schema Tracking
+
+Vtgates now also have the capability to track the schema changes and populate the columns list on its own by contacting the vttablets. To know more about this feature, read [here](../../../reference/features/schema-tracking).
+This feature tracks the underlying schema and sets the authoritative column list.
 
 ## Routing Rules
 
