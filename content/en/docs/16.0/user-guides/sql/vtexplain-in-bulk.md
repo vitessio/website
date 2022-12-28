@@ -12,7 +12,7 @@ This document covers the way the [VTexplain tool](../../../reference/programs/vt
 
 You can find a prebuilt binary version of the VTexplain tool in [the most recent release of Vitess](https://github.com/vitessio/vitess/releases/).
 
-You can also build the `vtexplain` binary in your environment. To build this binary, refer to the [build guide](../../../contributing) for your OS.
+You can also build the `vtexplain` binary in your environment. To build this binary, refer to the [build guide](/docs/contributing) for your OS.
 
 ## Overview
 
@@ -108,7 +108,7 @@ x
 $ python testfull.py > run_vtexplain.sh
 ```
 
-An alternative method is to use the `-sql-file` option for `vtexplain` to pass the whole file to a single vtexplain invocation. This is much more efficient, but we have found that it can be easier to find errors if you perform one `vtexplain` invocation per SQL query.
+An alternative method is to use the `--sql-file` option for `vtexplain` to pass the whole file to a single vtexplain invocation. This is much more efficient, but we have found that it can be easier to find errors if you perform one `vtexplain` invocation per SQL query.
 
 If you choose to use the single invocation, it would look something like:
 
