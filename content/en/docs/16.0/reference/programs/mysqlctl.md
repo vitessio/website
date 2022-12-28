@@ -89,7 +89,7 @@ The following global parameters apply to `mysqlctl`:
 | --alsologtostderr | boolean | log to standard error as well as files |
 | --app_idle_timeout | duration | Idle timeout for app connections (default 1m0s) |
 | --app_pool_size | int | Size of the connection pool for app connections (default 40) |
-| --catch-sigpipe | boolean | catch and ignore SIGPIPE on stdout and stderr if specified (default false) |
+| --catch-sigpipe | boolean | catch and ignore SIGPIPE on stdout and stderr if specified |
 | --db-credentials-file | string | db credentials file; send SIGHUP to reload this file |
 | --db-credentials-server | string | db credentials server type (use 'file' for the file implementation) (default "file") |
 | --db-credentials-vault-addr | string | URL to Vault server |
@@ -105,7 +105,7 @@ The following global parameters apply to `mysqlctl`:
 | --db_conn_query_info | boolean | enable parsing and processing of QUERY_OK info fields |
 | --db_connect_timeout_ms | int | connection timeout to mysqld in milliseconds (0 for no timeout) |
 | --db_dba_password | string | db dba password |
-| --db_dba_use_ssl | boolean | Set this flag to false to make the dba connection to not use ssl (default true) |
+| --db_dba_use_ssl | boolean | Set this flag to false to make the dba connection not use ssl (default true) |
 | --db_dba_user | string | db dba user userKey (default "vt_dba") |
 | --db_flags | uint | Flag values as defined by MySQL. |
 | --db_flavor | string | Flavor overrid. Valid value is FilePos. |

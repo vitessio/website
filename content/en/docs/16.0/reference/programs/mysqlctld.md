@@ -2,7 +2,7 @@
 title: mysqlctld
 ---
 
-`mysqlctld` is a gRPC server that can be used instead of `mysqlctl`. If the target directories are empty when it is invoked, it automatically performs an `init`. The process can subsequently receive gRPC commands from a `vttablet` to perform housekeeping operations like shutting down and restarting the `mysqld` instance as needed.
+`mysqlctld` is a gRPC server that can be used instead of the [`mysqlctl`](../mysqlctl/) client tool. If the target directories are empty when it is invoked, it automatically performs initialization operations to bootstrap the `mysqld` instance before starting it. The `mysqlctld` process can subsequently receive gRPC commands from a `vttablet` to perform housekeeping operations like shutting down and restarting the `mysqld` instance as needed.
 
 {{< warning >}}
 `mysqld_safe` is not used so the `mysqld` process will not be automatically restarted in case of a failure.
@@ -28,7 +28,7 @@ The following global parameters apply to `mysqlctld`:
 | --alsologtostderr | boolean | log to standard error as well as files |
 | --app_idle_timeout | duration | Idle timeout for app connections (default 1m0s) |
 | --app_pool_size | int | Size of the connection pool for app connections (default 40) |
-| --catch-sigpipe | boolean | catch and ignore SIGPIPE on stdout and stderr if specified (default false) |
+| --catch-sigpipe | boolean | catch and ignore SIGPIPE on stdout and stderr if specified |
 | --db-credentials-file | string | db credentials file; send SIGHUP to reload this file |
 | --db-credentials-server | string | db credentials server type (use 'file' for the file implementation) (default "file") |
 | --db-credentials-vault-addr | string | URL to Vault server |
@@ -68,7 +68,7 @@ The following global parameters apply to `mysqlctld`:
 | --grpc_cert | string | server certificate to use for gRPC connections, requires grpc_key, enables TLS |
 | --grpc_compression | string | Which protocol to use for compressing gRPC. Default: nothing. Supported: snappy |
 | --grpc_crl | string | path to a certificate revocation list in PEM format, client certificates will be further verified against this file during TLS handshake |
-| --grpc_enable_optional_tls | boolean | enable optional TLS mode when a server accepts both TLS and plain-text connections on the same port (default: false) |
+| --grpc_enable_optional_tls | boolean | enable optional TLS mode when a server accepts both TLS and plain-text connections on the same port |
 | --grpc_initial_conn_window_size | int | gRPC initial connection window size |
 | --grpc_initial_window_size | int | gRPC initial window size |
 | --grpc_keepalive_time | duration | After a duration of this time, if the client doesn't see any activity, it pings the server to see if the transport is still alive. (default 10s) |
@@ -81,7 +81,7 @@ The following global parameters apply to `mysqlctld`:
 | --grpc_server_initial_conn_window_size | int | gRPC server initial connection window size |
 | --grpc_server_initial_window_size | int | gRPC server initial window size |
 | --grpc_server_keepalive_enforcement_policy_min_time | duration | gRPC server minimum keepalive time (default 10s) |
-| --grpc_server_keepalive_enforcement_policy_permit_without_stream | boolean | gRPC server permit client keepalive pings even when there are no active streams (RPCs) (default: false)
+| --grpc_server_keepalive_enforcement_policy_permit_without_stream | boolean | gRPC server permit client keepalive pings even when there are no active streams (RPCs) |
 | -h, --help | display usage and exit |
 | --init_db_sql_file | string | Path to .sql file to run after mysqld initialization |
 | --keep_logs | duration | keep logs for this long (using ctime) (zero to keep forever) |
