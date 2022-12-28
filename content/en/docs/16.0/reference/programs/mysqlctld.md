@@ -1,88 +1,27 @@
 ---
-title: mysqlctl
+title: mysqlctld
 ---
 
-`mysqlctl` is a command-line client used for managing `mysqld` instances. It is responsible for bootstrapping tasks such as generating a configuration file for `mysqld` and initializing the instance and its data directory.
-
-The `mysqld_safe` watchdog is utilized when present. This helps ensure that `mysqld` is automatically restarted after failures.
-
-## Commands
-
-### init [--wait_time=5m] [--init_db_sql_file=(default)]
-
-Bootstraps a new `mysqld` instance, initializes its data directory, and starts the instance. The MySQL version and flavor will be auto-detected, with a minimal configuration file applied. For example:
-
-```bash
-export VTDATAROOT=/tmp
-mysqlctl \
- --alsologtostderr \
- --tablet_uid 101 \
- --mysql_port 12345 \
- init
-```
-
-### init_config
-
-Bootstraps the configuration for a new `mysqld` instance and initializes its data directory. This command is the same as `init` except the `mysqld` server will not be started. For example:
-
-```bash
-export VTDATAROOT=/tmp
-mysqlctl \
- --alsologtostderr \
- --tablet_uid 101 \
- --mysql_port 12345 \
- init_config
-```
-
-### reinit_config
-
-Regenerate new configuration files for an existing `mysqld` instance (generating new server_id and server_uuid values). This could be helpful to revert configuration changes, or to pick up changes made to the bundled config in newer Vitess versions. For example:
-
-```bash
-export VTDATAROOT=/tmp
-mysqlctl \
- --alsologtostderr \
- --tablet_uid 101 \
- --mysql_port 12345 \
- reinit_config
-```
-
-### teardown [--wait_time=5m] [--force]
+`mysqlctld` is a gRPC server that can be used instead of `mysqlctl`. If the target directories are empty when it is invoked, it automatically performs an `init`. The process can subsequently receive gRPC commands from a `vttablet` to perform housekeeping operations like shutting down and restarting the `mysqld` instance as needed.
 
 {{< warning >}}
-This is a destructive operation.
-{{</ warning >}}
+`mysqld_safe` is not used so the `mysqld` process will not be automatically restarted in case of a failure.
+{{</ warning>}}
 
-Shuts down a `mysqld` instance and removes its data directory. For example:
-
-```bash
-export VTDATAROOT=/tmp
-mysqlctl --tablet_uid 101 --alsologtostderr teardown
-```
-
-### start [--wait_time=5m]
-
-Resume an existing `mysqld` instance that was previously bootstrapped with `init` or `init_config`:
+To enable communication with a `vttablet`, the server must be configured to receive gRPC messages on a unix domain socket. For example:
 
 ```bash
 export VTDATAROOT=/tmp
-mysqlctl --tablet_uid 101 --alsologtostderr start
-```
-
-### shutdown [--wait_time=5m]
-
-Stop a `mysqld` instance that was previously started with `init` or `start`.
-
-For large `mysqld` instances, you may need to extend the `wait_time` to shutdown cleanly.
-
-```bash
-export VTDATAROOT=/tmp
-mysqlctl --tablet_uid 101 --alsologtostderr shutdown
+mysqlctld \
+  --log_dir=${VTDATAROOT}/logs \
+  --tablet_uid=100 \
+  --mysql_port=17100 \
+  --socket_file=/path/to/socket_file
 ```
 
 ## Options
 
-The following global parameters apply to `mysqlctl`:
+The following global parameters apply to `mysqlctld`:
 
 | Name | Type | Definition |
 | :-------------------------------- | :--------- | :--------- |
@@ -121,7 +60,30 @@ The following global parameters apply to `mysqlctl`:
 | --db_tls_min_version | string | Configures the minimal TLS version negotiated when SSL is enabled. Defaults to TLSv1.2.  Options: TLSv1.0, TLSv1.1, TLSv1.2, TLSv1.3. |
 | --dba_idle_timeout | duration | Idle timeout for dba connections (default 1m0s) |
 | --dba_pool_size | int | Size of the connection pool for dba connections (default 20) |
+| --grpc_auth_mode | string | Which auth plugin implementation to use (eg: static) |
+| --grpc_auth_mtls_allowed_substrings | string | List of substrings of at least one of the client certificate names (separated by colon). |
+| --grpc_auth_static_client_creds | string | When using grpc_static_auth in the server, this file provides the credentials to use to authenticate with server. |
+| --grpc_auth_static_password_file | string | JSON File to read the users/passwords from. |
+| --grpc_ca | string | server CA to use for gRPC connections, requires TLS, and enforces client certificate check |
+| --grpc_cert | string | server certificate to use for gRPC connections, requires grpc_key, enables TLS |
+| --grpc_compression | string | Which protocol to use for compressing gRPC. Default: nothing. Supported: snappy |
+| --grpc_crl | string | path to a certificate revocation list in PEM format, client certificates will be further verified against this file during TLS handshake |
+| --grpc_enable_optional_tls | boolean | enable optional TLS mode when a server accepts both TLS and plain-text connections on the same port (default: false) |
+| --grpc_initial_conn_window_size | int | gRPC initial connection window size |
+| --grpc_initial_window_size | int | gRPC initial window size |
+| --grpc_keepalive_time | duration | After a duration of this time, if the client doesn't see any activity, it pings the server to see if the transport is still alive. (default 10s) |
+| --grpc_keepalive_timeout | duration | After having pinged for keepalive check, the client waits for a duration of Timeout and if no activity is seen even after that the connection is closed. (default 10s) |
+| --grpc_key | string | server private key to use for gRPC connections, requires grpc_cert, enables TLS |
+| --grpc_max_connection_age | duration | Maximum age of a client connection before GoAway is sent. (default 2562047h47m16.854775807s) |
+| --grpc_max_connection_age_grace | duration | Additional grace period after grpc_max_connection_age, after which connections are forcibly closed. (default 2562047h47m16.854775807s) |
+| --grpc_port | int | Port to listen on for gRPC calls. If zero, do not listen. |
+| --grpc_server_ca | string | path to server CA in PEM format, which will be combine with server cert, return full certificate chain to clients |
+| --grpc_server_initial_conn_window_size | int | gRPC server initial connection window size |
+| --grpc_server_initial_window_size | int | gRPC server initial window size |
+| --grpc_server_keepalive_enforcement_policy_min_time | duration | gRPC server minimum keepalive time (default 10s) |
+| --grpc_server_keepalive_enforcement_policy_permit_without_stream | boolean | gRPC server permit client keepalive pings even when there are no active streams (RPCs) (default: false)
 | -h, --help | display usage and exit |
+| --init_db_sql_file | string | Path to .sql file to run after mysqld initialization |
 | --keep_logs | duration | keep logs for this long (using ctime) (zero to keep forever) |
 | --keep_logs_by_mtime | duration | keep logs for this long (using mtime) (zero to keep forever) |
 | --lameduck-period | duration | keep running at least this long after SIGTERM before stopping (default 50ms) |
@@ -135,15 +97,16 @@ The following global parameters apply to `mysqlctl`:
 | --mysql_server_version | string | MySQL server version to advertise. |
 | --mysql_server_flush_delay | duration | Delay after which buffered response will be flushed to the client. (default 100ms) |
 | --mysql_socket | string | path to the mysql socket |
-| --mysqlctl_client_protocol | string | the protocol to use to talk to the mysqlctl server (default "grpc") |
 | --mysqlctl_mycnf_template | string | template file to use for generating the my.cnf file during server init |
 | --mysqlctl_socket | string | socket file to use for remote mysqlctl actions (empty for local actions) | 
 | --mysqlctl_client_protocol | string | the protocol to use to talk to the mysqlctl server (default "grpc") |
 | --mysqlctl_mycnf_template | string | template file to use for generating the my.cnf file during server init |
 | --mysqlctl_socket | string | socket file to use for remote mysqlctl actions (empty for local actions) |
+| --onclose_timeout | duration | wait no more than this for OnClose handlers before stopping (default 10s) |
 | --onterm_timeout | duration | wait no more than this for OnTermSync handlers before stopping (default 10s) |
 | --pid_file | string | If set, the process will write its pid to the named file, and delete it on graceful shutdown. |
 | --pool_hostname_resolve_interval | duration | if set force an update to all hostnames and reconnect if changed, defaults to 0 (disabled) |
+| --port | int | vttablet port (default 6612) |
 | --pprof | strings | enable profiling |
 | --purge_logs_interval | duration | how often try to remove old logs (default 1h0m0s) |
 | --replication_connect_retry | duration | how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s) |
@@ -156,3 +119,4 @@ The following global parameters apply to `mysqlctl`:
 | --v | value | log level for V logs |
 | -v, --version | boolean | print binary version |
 | --vmodule | string | comma-separated list of pattern=N settings for file-filtered logging |
+| --wait_time | duration | How long to wait for mysqld startup or shutdown (default 5m0s) |
