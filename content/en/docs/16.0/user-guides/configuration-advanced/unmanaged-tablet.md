@@ -1,7 +1,7 @@
 ---
 title: Unmanaged Tablet
 weight: 15
-aliases: ['/docs/user-guides/unmanaged-tablet/'] 
+aliases: ['/docs/user-guides/unmanaged-tablet/']
 ---
 
 {{< info >}}
@@ -83,7 +83,7 @@ vttablet \
  --init_populate_metadata &
 ```
 
-Note that if your tablet is using a MySQL instance type where you do not have `SUPER` privileges to the database 
+Note that if your tablet is using a MySQL instance type where you do not have `SUPER` privileges to the database
 (e.g. AWS RDS, AWS Aurora or Google CloudSQL), you should omit the `--init_populate_metadata` flag. The `--init_populate_metadata` flag should only be enabled if the cluster is being managed through Vitess.
 
 You should be able to see debug information written to screen confirming Vitess can reach the unmanaged server. A common problem is that you may need to change the authentication plugin to `mysql_native_password` (MySQL 8.0).
@@ -120,18 +120,29 @@ Empty set (0.01 sec)
 ## Move legacytable to the commerce keyspace
 
 Move the table:
-
 ```bash
 vtctlclient MoveTables -- --source legacy --tables 'legacytable' Create commerce.legacy2commerce 
 ```
 
+Monitor the workflow:
+
+use 'Show' or 'Progress'
+
+```bash
+vtctlclient MoveTables -- Show commerce.legacy2commerce
+vtctlclient MoveTables -- Progress commerce.legacy2commerce
+```
+
+Sometime the workflow fails because 'GTID_MODE' is not set correctly. In order to MoveTables we need to set 'GTID_MODE' to 'ON'. Follow instructions [here](https://dev.mysql.com/doc/refman/5.7/en/replication-mode-change-online-enable-gtids.html) to set
+'GTID_MODE' to 'ON'.
+
 Switch traffic:
 
 ```bash
-vtctlclient MoveTables -- --tablet_type=rdonly,replica SwitchTraffic commerce.legacy2commerce
+vtctlclient MoveTables -- SwitchTraffic commerce.legacy2commerce
 ```
 
-Complete the MoveTables
+Complete the MoveTables:
 
 ```bash
 vtctlclient MoveTables Complete commerce.legacy2commerce
