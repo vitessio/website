@@ -133,7 +133,7 @@ vtctlclient MoveTables -- Show commerce.legacy2commerce
 vtctlclient MoveTables -- Progress commerce.legacy2commerce
 ```
 
-Sometime the workflow fails because 'GTID_MODE' is not set correctly. In order to MoveTables we need to set 'GTID_MODE' to 'ON'. Follow instructions [here](https://dev.mysql.com/doc/refman/5.7/en/replication-mode-change-online-enable-gtids.html) to set
+Sometime the workflow fails because the 'GTID_MODE' is not set correctly. In order to move tables we need to set 'GTID_MODE' to 'ON'. Follow instructions [here](https://dev.mysql.com/doc/refman/5.7/en/replication-mode-change-online-enable-gtids.html) to set
 'GTID_MODE' to 'ON'.
 
 Switch traffic:
