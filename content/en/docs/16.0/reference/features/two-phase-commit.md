@@ -9,7 +9,7 @@ aliases: ['/docs/launching/twopc/','/docs/reference/two-phase-commit/']
 {{< /warning >}}
 
 {{< info >}}
-Transaction commit is much slower when using 2PC. The authors of Vitess recommend that you design your VSchema so that cross-shard updates (and 2PC) are not required.
+Transaction commit is much slower when using 2PC. The maintainers of Vitess recommend that you design your VSchema so that cross-shard updates (and 2PC) are not required.
 {{< /info >}}
 
 Vitess 2PC allows you to perform atomic distributed commits. The feature is implemented using traditional MySQL transactions, and hence inherits the same guarantees. With this addition, Vitess can be configured to support the following three levels of atomicity:
@@ -51,15 +51,15 @@ set transaction_mode='twopc';
 
 #### Go driver
 
-For the Go driver, you request the atomicity by adding it to the context using the WithAtomicity function. For more details, please refer to the respective GoDocs.
+For the Go driver, you request the atomicity by adding it to the context using the `WithAtomicity` function. For more details, please refer to the respective GoDocs.
 
 #### Python driver
 
-For Python, the begin function of the cursor has an optional single_db flag. If the flag is True, then the request is for a single-db transaction. If False (or unspecified), then the following commit call's twopc flag decides if the commit is 2PC or Best Effort (multi).
+For Python, the begin function of the cursor has an optional `single_db` flag. If the flag is True, then the request is for a single-db transaction. If False (or unspecified), then the following commit call's twopc flag decides if the commit is 2PC or Best Effort (multi).
 
 #### Adding support in a new driver
 
-The VTGate RPC API extends the Begin and Commit functions to specify atomicity. The API mimics the Python driver: The BeginRequest message provides a single_db flag and the CommitRequest message provides an atomic flag which is synonymous to twopc.
+The VTGate RPC API extends the Begin and Commit functions to specify atomicity. The API mimics the Python driver: The BeginRequest message provides a `single_db` flag and the `CommitRequest` message provides an atomic flag which is synonymous to twopc.
 
 ## Configuring VTTablet
 
@@ -69,15 +69,15 @@ The following flags need to be set to enable 2PC support in VTTablet:
 * **twopc_coordinator_address**: This should specify the address (or VIP) of the VTGate that VTTablet will use to resolve abandoned transactions.
 * **twopc_abandon_age**: This is the time in seconds that specifies how long to wait before asking a VTGate to resolve an abandoned transaction.
 
-With the above flags specified, every primary VTTablet also turns into a watchdog. If any 2PC transaction is left lingering for longer than twopc_abandon_age seconds, then VTTablet invokes VTGate and requests it to resolve it. Typically, the abandon_age needs to be substantially longer than the time it takes for a typical 2PC commit to complete (10s of seconds).
+With the above flags specified, every primary VTTablet also turns into a watchdog. If any 2PC transaction is left lingering for longer than `twopc_abandon_age` seconds, then VTTablet invokes VTGate and requests it to resolve it. Typically, the `twopc_abandon_age` needs to be substantially longer than the time it takes for a typical 2PC commit to complete (10s of seconds).
 
 ## Configuring MySQL
 
-The usual default values of MySQL are sufficient. However, it is important to verify that the `wait_timeout` (28800) has not been changed. If this value was changed to be too short, then MySQL could prematurely kill a prepared transaction causing data loss.
+The usual default values of MySQL are sufficient. However, it is important to verify that the `wait_timeout` (28800 seconds by default) has not been changed. If this value was changed to be too short, then MySQL could prematurely kill a prepared transaction causing data loss.
 
 ## Monitoring
 
-A few additional variables have been added to /debug/vars. Failures described below should be rare. But these variables are present so you can build an alert mechanism if anything were to go wrong.
+A few additional variables have been added to `/debug/vars`. Failures described below should be rare. But these variables are present so you can build an alert mechanism if anything were to go wrong.
 
 ## Critical failures
 
@@ -95,7 +95,7 @@ The following failures are not urgent, but require investigation:
 
 ## Repairs
 
-If any of the alerts fire, it is time to investigate. Once you identify the dtid or the VTTablet that originated the alert, you can navigate to the /twopcz URL. This will display three lists:
+If any of the alerts fire, it is time to investigate. Once you identify the dtid or the VTTablet that originated the alert, you can navigate to the `/twopcz` URL. This will display three lists:
 
 * **Failed Transactions**: A transaction reaches this state if it failed to commit. The only action allowed for such transactions is that you can discard it. However, you can record the DMLs that were involved and have someone come up with a plan to repair the partial commit.
 * **Prepared Transactions**: Prepared transactions can be rolled back or committed. Prepared transactions must be remedied only if their root Distributed Transaction has been lost or resolved.
