@@ -4,7 +4,7 @@ description: Change event streams
 weight: 75
 ---
 
-Vitess Gateways (`vtgate`) provide a [`VStream` service](../../../concepts/vstream/)
+[Vitess Gateways](../../../concepts/vtgate/) (`vtgate`) provide a [`VStream` service](../../../concepts/vstream/)
 that allows clients to subscribe to a change event stream for a set of tables.
 
 ## Use Cases
@@ -33,12 +33,9 @@ environments by many Vitess users.
 
 ## API Details
 
-`VStream` is a gRPC that is part of the `vtgate` service. You would send a
-[VStreamRequest](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamRequest)
-to a `vtgate` process's `--grpc_port` and receive a
-[VStreamResponse](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamResponse).
-As part of the gRPC request, you can specify optional
-[flags](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags).
+[`VStream` is a gRPC](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate/vtgateconn#VTGateConn.VStream)
+that is part of the [`vtgate`](../../../concepts/vtgate/) service and is accessible via a
+[`vtgate`](../../../concepts/vtgate/) process's `--grpc_port`.
 
 ### RPC Parameters
 
@@ -48,13 +45,15 @@ As part of the gRPC request, you can specify optional
 **Required**\
 **Default** none
 
-In addition to the typical Context fields, it can contain CallerID keys — the immedate caller ID being key `0`
-and the effective caller ID being key `1` — and those values are passed along to identify the originating client
-for a request. It is not meant to be secure, but only informational. The client can put whatever info they want
-in these fields, and they will be trusted by the servers. The fields will just be used for logging purposes, and
-to easily find a client. The `vtgate` propagates it to the source `vttablet` processes and the tablets may use
-this information for monitoring purposes, to display on dashboards, or for denying access to tables during a
-migration.
+In addition to the typical `Context` usage, it can contain a custom key-value pair where the key is `1` and the value is a
+[`CallerID`](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtrpc#CallerID). This value is then passed along to
+[tablets](../../../concepts/tablet/) to identify the originating client for the request. It is not meant to be secure, but
+primarily informational. The client can provide whatever info they want in the
+[`CallerID`](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtrpc#CallerID) fields and they will be trusted by the servers
+as this information is primarily used to aid in monitoring and debugging. The [`vtgate`](../../../concepts/vtgate/) propagates
+the value to the source [`vttablet`](../../../concepts/tablet/) processes and the tablets may use this information for various
+monitoring, metrics, and logging purposes. It can, however, also be used for other purposes such as denying the client
+access to tables during a migration ([`MoveTables`](../movetables/) or [`Reshard`](../reshard/)).
 
 #### TabletType
 
@@ -111,8 +110,9 @@ send.
 **Type** bool\
 **Default** false
 
-When enabled the `vtgate` will send reshard events to the client and stop sending any further events for the current
-[VStreamRequest](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamRequest).
+When enabled the `vtgate` will send a reshard event to the client along with an `EOF`
+`error` in the [`VStreamReader.Recv`](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate/vtgateconn#VStreamReader)
+response and stop sending any further events.
 
 ##### Cells
 
@@ -123,20 +123,33 @@ If specified, these cells (comma-separated list) are used
 [when selecting stream source tablets](../tablet_selection/). When no value is specified the `vtgate` will
 default to looking for source tablets within its own local cell.
 
-### Service Types
- * [VStreamRequest](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamRequest)
- * [VStreamResponse](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamResponse)
- * [VStreamFlags](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags)
- * [VEvent](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#VEvent)
+### RPC Response
+
+The [`VStream` gRPC](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate/vtgateconn#VTGateConn.VStream) returns
+a [`VStreamReader`](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate/vtgateconn#VStreamReader) and a non-nil `error` if
+the stream could not be initialized. You would call the `Recv` method on that
+[`VStreamReader`](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate/vtgateconn#VStreamReader) in a for loop and
+responses will be sent when available. Each response consisting of the following two parameters:
+  * An array of [`VEvent`](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#VEvent) objects — the new messages to process in the stream
+  * An `error` — an error that, if non-nil, indicates the stream has been closed (`EOF`) or an error occurred
+
+### API Types
+ * [TabletType](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/topodata#TabletType)
  * [VGtid](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#VGtid)
- * [LastPKEvent](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#LastPKEvent)
- * [TableLastPK](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#TableLastPK)
  * [ShardGtid](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#ShardGtid)
  * [Filter.Rule](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#Rule)
- * [TabletType](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/topodata#TabletType)
+ * [LastPKEvent](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#LastPKEvent)
+ * [TableLastPK](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#TableLastPK)
+ * [VStreamFlags](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags)
+ * [VStreamReader](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate/vtgateconn#VStreamReader)
+ * [VEvent](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#VEvent)
 
 ### Example Usage
-```
+
+You can find a full example go client [here](https://github.com/vitessio/vitess/blob/main/examples/local/vstream_client.go).
+
+Below is a snippet showing how to use the `VStream` API in go:
+```go
 gconn, err := vtgateconn.Dial(ctx, grpcAddress)
 if err != nil {
     t.Fatal(err)
@@ -186,7 +199,7 @@ for {
 ## Debugging
 
 There is also an SQL interface that can be used for testing and debugging from a `vtgate`. Here's an example:
-```
+```mysql
 $ mysql --quick <vtgate params>
 
 mysql> SET WORKLOAD=OLAP;
