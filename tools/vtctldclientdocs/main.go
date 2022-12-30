@@ -10,6 +10,7 @@ import (
 )
 
 var (
+	usage       = "Generates website documentation for the `vtctldclient` binary for a given set of <vitessio/vitess-gitref>:<vitessio/website-version> pairs."
 	debug       = flag.Bool("debug", false, "log debug info")
 	vitessDir   = flag.String("vitess-dir", "", "path to vitess checkout")
 	docGenPath  = flag.String("vtctldclientdocgen-path", "./go/cmd/vtctldclient/docgen", "path to the vtctldclient doc generator, **relative to** --vitess-dir")
@@ -51,6 +52,11 @@ func unwrap[T any](t T, err error) T {
 }
 
 func main() {
+	flag.Usage = func() {
+		fmt.Fprintf(flag.CommandLine.Output(), "Usage of %s:\n", os.Args[0])
+		fmt.Fprintf(flag.CommandLine.Output(), "\n%s\n\n", usage)
+		flag.PrintDefaults()
+	}
 	flag.Parse()
 
 	wd := unwrap(getValidWorkdir())
