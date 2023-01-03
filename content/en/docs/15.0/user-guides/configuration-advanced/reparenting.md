@@ -98,4 +98,5 @@ Active reparenting might be a dangerous practice in any system that depends on e
 
 ## Fixing Replication
 
-A tablet can be orphaned after a reparenting if it is unavailable when the reparent operation is running but then recovers later on. In that case, you can manually reset the tablet's primary to the current shard primary using the `vtctldclient ReparentTablet` command. You can then restart replication on the tablet if it was stopped by calling the `vtctldclient StartReplication` command.
+A tablet can be orphaned after a reparenting if it is unavailable when the reparent operation is running but then recovers later on. Its replication will be automatically fixed by the replication manager or [VTOrc](../../configuration-basic/vtorc).
+You can also manually reset the tablet's primary to the current shard primary using the `vtctldclient ReparentTablet` command. You can then restart replication on the tablet if it was stopped by calling the `vtctldclient StartReplication` command.
