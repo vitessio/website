@@ -108,21 +108,21 @@ The Tablet record has a lot of information about each vttablet process
 making up each tablet (along with the MySQL process):
 
 * the Tablet Alias (cell+unique id) that uniquely identifies the Tablet.
-* the Hostname, IP address and port map of the Tablet.
-* the current Tablet type (primary, replica, batch, spare, …).
-* which Keyspace / Shard the tablet is part of.
-* the sharding Key Range served by this Tablet.
-* user-specified tag map (e.g. to store per-installation data).
+* the **Hostname**, **IP address** and **port map** of the Tablet.
+* the current **Tablet type** (primary, replica, batch, spare, …).
+* which **Keyspace / Shard** the tablet is part of.
+* the sharding **Key Range** served by this Tablet.
+* user-specified **tag map** (e.g. to store per-installation data).
 
-A Tablet record is created before a tablet can be running (by passing the `init_*` parameters to the vttablet process).
-The only way a Tablet record will be updated is one of:
+A Tablet record can be created before a tablet starts running (by passing the `init_*` parameters to the vttablet process).
+The only way a tablet record will be updated is one of:
 
 * The vttablet process itself owns the record while it is running, and can
-  change it.
-* At init time, before the tablet starts.
-* After shutdown, when the tablet gets deleted.
-* If a tablet becomes unresponsive, it may be forced to spare to make it
-  unhealthy when it restarts.
+  change it:
+  * At init time, before the Tablet starts.
+  * After shutdown, when the Tablet gets deleted.
+  * If a Tablet becomes unresponsive, it may be forced to spare to make it
+    unhealthy when it restarts.
 
 ### Replication graph
 
@@ -143,7 +143,7 @@ It is the local representation of a Keyspace. It contains information on what
 shard to use for getting to the data (but not information about each individual
 shard):
 
-* the partitions map is keyed by the tablet type (primary, replica, batch, …) and
+* the partitions map is keyed by the Tablet type (primary, replica, batch, …) and
   the value is a list of shards to use for serving.
 * it also contains the global Keyspace fields, copied for fast access.
 
