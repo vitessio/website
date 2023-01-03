@@ -64,6 +64,7 @@ The docker image expects some of the environment variables to be set to function
 | *ENABLE_ONLINE_DDL* | no | Allow users to submit, review and control Online DDL. Valid values are: true (default), false. |
 | *ENABLE_DIRECT_DDL* | no | Allow users to submit direct DDL statements. Valid values are: true (default), false. |
 | *PLANNER_VERSION* | no | Sets the default planner to use when the session has not changed it. Valid values are: Gen4 (default), v3, Gen4Greedy and Gen4Fallback. Gen4Fallback tries the new gen4 planner and falls back to the V3 planner if the gen4 fails. |
+| *TABLET_REFRESH_INTERVAL* | no | Interval at which vtgate refreshes tablet information from topology server. |
 
 Environment variables in docker can be specified using the `-e` aka `--env` flag.
 
@@ -77,7 +78,7 @@ run` command will publish the container's 33577 port to your local 33577 port, w
 An example command to run the docker image is as follows :
 
 ```shell
-docker run --name=vttestserver -p 33577:33577 -e PORT=33574 -e PLANNER_VERSION=gen4fallback -e KEYSPACES=test,unsharded -e NUM_SHARDS=2,1 -e MYSQL_MAX_CONNECTIONS=70000 -e MYSQL_BIND_HOST=0.0.0.0 --health-cmd="mysqladmin ping -h127.0.0.1 -P33577" --health-interval=5s --health-timeout=2s --health-retries=5 vitess/vttestserver:mysql57
+docker run --name=vttestserver -p 33577:33577 -e PORT=33574 -e KEYSPACES=test,unsharded -e NUM_SHARDS=2,1 -e MYSQL_MAX_CONNECTIONS=70000 -e MYSQL_BIND_HOST=0.0.0.0 --health-cmd="mysqladmin ping -h127.0.0.1 -P33577" --health-interval=5s --health-timeout=2s --health-retries=5 vitess/vttestserver:mysql80
 ```
 
 Now, we can connect to the vtgate from a MySQL client as follows :
