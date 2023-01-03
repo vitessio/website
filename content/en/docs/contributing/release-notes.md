@@ -17,13 +17,13 @@ First, we need to `git fetch` the remote we want to work with and make sure we a
 Then, we use the Makefile command `release-notes` as followed:
 
 ```shell
-make release-notes FROM="v11.0.0" TO="upstream/main" VERSION="v12.0.0" SUMMARY="./my_summary.md"
+make VERSION="v15.0.0" FROM="v14.0.0" TO="HEAD" SUMMARY="./doc/releasenotes/15_0_0_summary.md" release-notes
 ```
 
-> In this example we are generating release notes for `v12.0.0`.
+> In this example we are generating release notes for `v15.0.0`.
 
 The `FROM` argument is required, it tells the tool from which point in time we need to analyze the different pull requests.
-The value here is `v11.0.0` which corresponds to the `v11.0.0` release git tag.
+The value here is `v14.0.0` which corresponds to the `v14.0.0` release git tag.
 
 The `TO` argument is not required and defaults to `HEAD`.
 It tells the tool the upper limit point in time for the pull request analysis.
@@ -31,12 +31,4 @@ Here the value is `upstream/main` corresponding to the main branch of `vitessio/
 
 The `VERSION` argument is the name of the new release.
 
-The `SUMMARY` argument is optional, it is a path to a README file that contains a text that will added in the `Announcement` section of the release notes.
-
-### How to add pull requests to the release notes?
-
-When generating the release notes, only the pull requests labeled with `release notes` will be listed.
-
-Pull requests can also be labeled with `release notes (needs details)`.
-Those will be listed in the `Announcement` section of the release note with a special `TODO` that requires human intervention for further explanation on what the pull request do.
-For instance, it can be an important pull request that deprecates a part of Vitess, or an important feature that we want to talk about.
+The `SUMMARY` argument is optional, it is a path to a README file that contains text to prefix the release notes with what the maintainers wrote before the release.

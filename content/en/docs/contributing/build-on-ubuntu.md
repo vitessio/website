@@ -13,13 +13,13 @@ The following has been verified to work on __Ubuntu 19.10__ and __Debian 10__. I
 
 ## Install Dependencies
 
-### Install Go 1.17+
+### Install Go 1.19+
 
-[Download and install](http://golang.org/doc/install) Golang 1.17. For example, at writing:
+[Download and install](http://golang.org/doc/install) Golang 1.19. For example, at writing:
 
 ```
-curl -LO https://dl.google.com/go/go1.17.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.17.linux-amd64.tar.gz
+curl -LO https://dl.google.com/go/go1.19.4.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.19.4.linux-amd64.tar.gz
 ```
 
 Make sure to add go to your bashrc:
@@ -81,7 +81,6 @@ sudo systemctl disable etcd
 **Notes:**
 
 * We will be using etcd as the topology service. The command `make tools` can also install Zookeeper or Consul for you, which requires additional dependencies.
-* Vitess currently has some additional tests written in Python, but we will be skipping this step for simplicity.
 
 ### Disable mysqld AppArmor Profile
 

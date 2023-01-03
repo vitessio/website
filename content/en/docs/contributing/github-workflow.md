@@ -84,8 +84,8 @@ the unit tests for that package by running `go test` from within that package.
 
 When you're ready to test the whole system, run the full test suite with `make
 test` from the root of the Git tree.
-If you haven't installed all dependencies for `make test`, you can rely on the Travis CI test results as well.
-These results will be linked on your pull request.
+If you haven't installed all dependencies for `make test`, you can rely on the CI test results as well.
+These results will be present on your pull request.
 
 ## Committing your work
 
