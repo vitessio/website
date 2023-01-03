@@ -55,7 +55,7 @@ For the Go driver, you request the atomicity by adding it to the context using t
 
 #### Python driver
 
-For Python, the begin function of the cursor has an optional `single_db` flag. If the flag is True, then the request is for a single-db transaction. If False (or unspecified), then the following commit call's twopc flag decides if the commit is 2PC or Best Effort (multi).
+For Python, the begin function of the cursor has an optional `single_db` flag. If the flag is `True`, then the request is for a single-db transaction. If `False` (or unspecified), then the following commit call's twopc flag decides if the commit is 2PC or Best Effort (multi).
 
 #### Adding support in a new driver
 
