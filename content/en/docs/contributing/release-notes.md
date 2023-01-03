@@ -31,4 +31,4 @@ Here the value is `upstream/main` corresponding to the main branch of `vitessio/
 
 The `VERSION` argument is the name of the new release.
 
-The `SUMMARY` argument is optional, it is a path to a README file that contains text to prefix the release notes with that the maintainers wrote before the release.
+The `SUMMARY` argument is optional, it is a path to a README file that contains text to prefix the release notes with what the maintainers wrote before the release.

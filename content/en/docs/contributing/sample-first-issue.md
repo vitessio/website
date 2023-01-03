@@ -122,7 +122,7 @@ While creating the pull request, we need to take care of a few things -
 2. Add a description of what has been fixed
 3. Add the label for the correct component affected by the changes. In our case that is `Component: Query Serving`.
 4. Add the label for the type of changes in the PR. In our case that is `Type: Enhancement`.
-5. Add the label describing whether this PR should be backported to some of the previous releases as well. The labels look like `Backport to: release-15.0`
+5. Add the label describing whether this PR should be backported to some of the previous releases as well. For example, in order to back port to release 15.0 we use the label `Backport to: release-15.0`.
 6. Codeowners will be automatically requested for reviews.
 
 The final PR that has been created by following these steps would look like [this](https://github.com/vitessio/vitess/pull/9456).
