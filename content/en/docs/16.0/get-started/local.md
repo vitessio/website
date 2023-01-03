@@ -80,7 +80,7 @@ sudo setenforce 0
 
 ## Install Vitess
 
-Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux. For example with Vitess 15:
+Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux, note that only Ubuntu is fully supported, for another OS please [build Vitess by yourself](/docs/contributing) or use the Docker images. For example with Vitess 15:
 
 **Notes:**
 
