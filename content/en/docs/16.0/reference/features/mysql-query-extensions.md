@@ -8,8 +8,8 @@ Vitess uses the MySQL [client server protocol](https://dev.mysql.com/doc/interna
 
 ## Extensions to the MySQL Query Language
 
-* [SHOW](show.md) has some additional functionality.
-* [VEXPLAIN](../../user-guides/sql/explain-format-vtexplain.md) is similar to `EXPLAIN` but specifically for Vitess plans
+* [SHOW](../show) has some additional functionality.
+* [VEXPLAIN](../../../user-guides/sql/explain-format-vtexplain) is similar to `EXPLAIN` but specifically for Vitess plans
 * You can use a special `SELECT` query to see the next value from a sequence:
 
 ```sql
