@@ -10,11 +10,11 @@ The default backup implementation is `builtin`, however we strongly recommend us
 
 ### Prerequisite
 
-A compatible version of [xtrabackup](https://www.percona.com/doc/percona-xtrabackup/LATEST/index.html) and [xbstream](https://www.percona.com/doc/percona-xtrabackup/LATEST/xtrabackup_bin/backup.streaming.html), if needed, must be present in your `$PATH` prior to running the `Backup[Shard]` command.
+A compatible version of [xtrabackup](https://www.percona.com/doc/percona-xtrabackup/latest/index.html) and [xbstream](https://docs.percona.com/percona-xtrabackup/8.0/xtrabackup_bin/backup.streaming.html), if needed, must be present in your `$PATH` prior to running the `Backup[Shard]` command.
 
 ### Supported Versions of Xtrabackup
 
-* [For MySQL 5.7](https://www.percona.com/doc/percona-xtrabackup/2.4/index.html#installation)
+* [MySQL 5.7](https://www.percona.com/doc/percona-xtrabackup/2.4/index.html#installation)
 * [MySQL 8.0](https://www.percona.com/doc/percona-xtrabackup/8.0/index.html#installation)
 
 ### Basic VTTablet and Vtctld Configuration
