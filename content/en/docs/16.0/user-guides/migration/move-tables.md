@@ -5,7 +5,11 @@ aliases: ['/docs/user-guides/move-tables/']
 ---
 
 {{< info >}}
-This guide follows on from the [Get Started](../../../get-started/) guides. Please make sure that you have an [Kubernetes Operator](../../../get-started/operator) or [local](../../../get-started/local) installation ready after having done the `101_initial_cluster` step.
+This guide follows on from the [Get Started](../../../get-started/) guides. Please make sure that you have an
+[Kubernetes Operator](../../../get-started/operator) or [local](../../../get-started/local) installation ready.
+Make sure you have only run the "101" step of the examples, for example `101_initial_cluster.sh` in the
+[local](../../../get-started/local) example. The commands in this guide also assume you have setup the shell
+aliases from the example, e.g. `env.sh` in the [local](../../../get-started/local) example.
 {{< /info >}}
 
 [MoveTables](../../../concepts/move-tables) is a [VReplication](../../../reference/vreplication/) workflow that enables you to move all or a subset of
@@ -21,7 +25,7 @@ Let's start by simulating this situation by loading sample data:
 
 ```bash
 # On local and operator installs:
-$ mysql --table < ../common/insert_commerce_data.sql
+$ mysql < ../common/insert_commerce_data.sql
 ```
 
 We can look at what we just inserted:
