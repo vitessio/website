@@ -50,7 +50,7 @@ Executes a cluster management command on the remote vtctld server.
 * [vtctldclient GetRoutingRules](./vtctldclient_getroutingrules/)	 - Displays the VSchema routing rules.
 * [vtctldclient GetSchema](./vtctldclient_getschema/)	 - Displays the full schema for a tablet, optionally restricted to the specified tables/views.
 * [vtctldclient GetShard](./vtctldclient_getshard/)	 - Returns information about a shard in the topology.
-* [vtctldclient GetShardRoutingRules](./vtctldclient_getshardroutingrules/)	 - Displays VSchema shard routing rules.
+* [vtctldclient GetShardRoutingRules](./vtctldclient_getshardroutingrules/)	 - Displays the currently active shard routing rules as a JSON document.
 * [vtctldclient GetSrvKeyspaceNames](./vtctldclient_getsrvkeyspacenames/)	 - Outputs a JSON mapping of cell=>keyspace names served in that cell. Omit to query all cells.
 * [vtctldclient GetSrvKeyspaces](./vtctldclient_getsrvkeyspaces/)	 - Returns the SrvKeyspaces for the given keyspace in one or more cells.
 * [vtctldclient GetSrvVSchema](./vtctldclient_getsrvvschema/)	 - Returns the SrvVSchema for the given cell.
@@ -58,7 +58,7 @@ Executes a cluster management command on the remote vtctld server.
 * [vtctldclient GetTablet](./vtctldclient_gettablet/)	 - Outputs a JSON structure that contains information about the tablet.
 * [vtctldclient GetTabletVersion](./vtctldclient_gettabletversion/)	 - Print the version of a tablet from its debug vars.
 * [vtctldclient GetTablets](./vtctldclient_gettablets/)	 - Looks up tablets according to filter criteria.
-* [vtctldclient GetTopologyPath](./vtctldclient_gettopologypath/)	 - Gets the file located at the specified path in the topology server.
+* [vtctldclient GetTopologyPath](./vtctldclient_gettopologypath/)	 - Gets the value associated with the particular path (key) in the topology server.
 * [vtctldclient GetVSchema](./vtctldclient_getvschema/)	 - Prints a JSON representation of a keyspace's topo record.
 * [vtctldclient GetWorkflows](./vtctldclient_getworkflows/)	 - Gets all vreplication workflows (Reshard, MoveTables, etc) in the given keyspace.
 * [vtctldclient LegacyVtctlCommand](./vtctldclient_legacyvtctlcommand/)	 - Invoke a legacy vtctlclient command. Flag parsing is best effort.
@@ -91,7 +91,7 @@ Executes a cluster management command on the remote vtctld server.
 * [vtctldclient TabletExternallyReparented](./vtctldclient_tabletexternallyreparented/)	 - Updates the topology record for the tablet's shard to acknowledge that an external tool made this tablet the primary.
 * [vtctldclient UpdateCellInfo](./vtctldclient_updatecellinfo/)	 - Updates the content of a CellInfo with the provided parameters, creating the CellInfo if it does not exist.
 * [vtctldclient UpdateCellsAlias](./vtctldclient_updatecellsalias/)	 - Updates the content of a CellsAlias with the provided parameters, creating the CellsAlias if it does not exist.
-* [vtctldclient UpdateThrottlerConfig](./vtctldclient_updatethrottlerconfig/)	 - Update the table throttler configuration for all cells and tablets of a given keyspace
+* [vtctldclient UpdateThrottlerConfig](./vtctldclient_updatethrottlerconfig/)	 - Update the tablet throttler configuration for all tablets in the given keyspace (across all cells)
 * [vtctldclient Validate](./vtctldclient_validate/)	 - Validates that all nodes reachable from the global replication graph, as well as all tablets in discoverable cells, are consistent.
 * [vtctldclient ValidateKeyspace](./vtctldclient_validatekeyspace/)	 - Validates that all nodes reachable from the specified keyspace are consistent.
 * [vtctldclient ValidateSchemaKeyspace](./vtctldclient_validateschemakeyspace/)	 - Validates that the schema on the primary tablet for shard 0 matches the schema on all other tablets in the keyspace.

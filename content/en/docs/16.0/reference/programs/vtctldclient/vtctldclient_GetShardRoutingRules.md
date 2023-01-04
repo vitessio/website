@@ -4,7 +4,15 @@ series: vtctldclient
 ---
 ## vtctldclient GetShardRoutingRules
 
-Displays VSchema shard routing rules.
+Displays the currently active shard routing rules as a JSON document.
+
+### Synopsis
+
+Displays the currently active shard routing rules as a JSON document.
+
+See the documentation on shard level migrations[1] for more information.
+
+[1]: https://vitess.io/docs/reference/vreplication/shardlevelmigrations/
 
 ```
 vtctldclient GetShardRoutingRules

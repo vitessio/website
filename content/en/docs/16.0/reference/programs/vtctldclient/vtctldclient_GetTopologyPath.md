@@ -4,7 +4,7 @@ series: vtctldclient
 ---
 ## vtctldclient GetTopologyPath
 
-Gets the file located at the specified path in the topology server.
+Gets the value associated with the particular path (key) in the topology server.
 
 ```
 vtctldclient GetTopologyPath <path>

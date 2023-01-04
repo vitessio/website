@@ -4,7 +4,7 @@ series: vtctldclient
 ---
 ## vtctldclient UpdateThrottlerConfig
 
-Update the table throttler configuration for all cells and tablets of a given keyspace
+Update the tablet throttler configuration for all tablets in the given keyspace (across all cells)
 
 ```
 vtctldclient UpdateThrottlerConfig [--enable|--disable] [--threshold=<float64>] [--custom-query=<query>] [--check-as-check-self|--check-as-check-shard] <keyspace>

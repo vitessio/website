@@ -4,7 +4,7 @@ series: vtctldclient
 ---
 ## vtctldclient ApplyShardRoutingRules
 
-Applies VSchema shard routing rules.
+Applies the provided shard routing rules.
 
 ```
 vtctldclient ApplyShardRoutingRules {--rules RULES | --rules-file RULES_FILE} [--cells=c1,c2,...] [--skip-rebuild] [--dry-run]
