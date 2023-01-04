@@ -1,36 +1,37 @@
 ---
-title: MoveTables
+title: Moving the Tables
 weight: 2
 aliases: ['/docs/user-guides/move-tables/']
 ---
 
 {{< info >}}
-This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../../get-started/operator) or [local](../../../get-started/local) installation ready after the `101_initial_cluster` step, and making sure you have setup aliases and port-forwarding (if necessary).
+This guide follows on from the [Get Started](../../../get-started/) guides. Please make sure that you have an [Kubernetes Operator](../../../get-started/operator) or [local](../../../get-started/local) installation ready after having done the `101_initial_cluster` step.
 {{< /info >}}
 
-[MoveTables](../../../concepts/move-tables) is a new VReplication workflow in Vitess 6 and later, and obsoletes Vertical Split from earlier releases.
+[MoveTables](../../../concepts/move-tables) is a [VReplication](../../../reference/vreplication/) workflow that enables you to move all or a subset of
+tables between [keyspaces](../../../concepts/keyspace) without downtime. For example, after
+[initially deploying Vitess](../../../get-started/local), your single `commerce` schema may grow so large that it needs
+to be split into multiple [keyspaces](../../../concepts/keyspace) (often times referred to as vertical or functional sharding).
 
-This feature enables you to move a subset of tables between keyspaces without downtime. For example, after [Initially deploying Vitess](../../../get-started/local), your single commerce schema may grow so large that it needs to be split into multiple keyspaces.
+All of the command options and parameters are listed in our [reference page for `MoveTables`](../../../reference/vreplication/movetables).
 
-All of the command options and parameters are listed in our [reference page for MoveTables](../../../reference/vreplication/movetables).
-
-As a stepping stone towards splitting a single table across multiple servers (sharding), it usually makes sense to first split from having a single monolithic keyspace (`commerce`) to having multiple keyspaces (`commerce` and `customer`). For example, in our hypothetical ecommerce system we may know that `customer` and `corder` tables are closely related and both growing quickly.
+As a stepping stone towards splitting a single table across multiple servers (sharding), it usually makes sense to first split from having a single monolithic keyspace (`commerce`) to having multiple keyspaces (`commerce` and `customer`). For example, in our hypothetical ecommerce system we may know that the `customer` and `corder` tables are closely related and both growing quickly.
 
 Let's start by simulating this situation by loading sample data:
 
-```sh
+```bash
 # On local and operator installs:
-mysql --table < ../common/insert_commerce_data.sql
+$ mysql --table < ../common/insert_commerce_data.sql
 ```
 
 We can look at what we just inserted:
 
-```sh
+```bash
 # On local and operator installs:
-mysql --table < ../common/select_commerce_data.sql
+$ mysql --table < ../common/select_commerce_data.sql
 
-Using commerce/0
-customer
+Using commerce
+Customer
 +-------------+--------------------+
 | customer_id | email              |
 +-------------+--------------------+
@@ -40,14 +41,14 @@ customer
 |           4 | dan@domain.com     |
 |           5 | eve@domain.com     |
 +-------------+--------------------+
-product
+Product
 +----------+-------------+-------+
 | sku      | description | price |
 +----------+-------------+-------+
 | SKU-1001 | Monitor     |   100 |
 | SKU-1002 | Keyboard    |    30 |
 +----------+-------------+-------+
-corder
+COrder
 +----------+-------------+----------+-------+
 | order_id | customer_id | sku      | price |
 +----------+-------------+----------+-------+
@@ -59,30 +60,30 @@ corder
 +----------+-------------+----------+-------+
 ```
 
-Notice that we are using keyspace `commerce/0` to select data from our tables.
+Notice that all of the tables are currently in the `commerce` schema/keyspace here.
 
 ## Planning to Move Tables
 
-In this scenario, we are going to add the `customer` keyspace to the `commerce` keyspace we already have.  This new keyspace will be backed by its own set of mysqld instances. We will then move the tables `customer` and `corder` from the `commerce` keyspace into the newly created `customer`. The `product` table will remain in the `commerce` keyspace. This operation happens online, which means that it does not block either read or write operations to the tables, __except__ for a small window during the final cut-over.
+In this scenario, we are going to add the `customer` [keyspace](../../../concepts/keyspace) in addition to the `commerce` keyspace we already have.  This new keyspace will be backed by its own set of mysqld instances. We will then move the `customer` and `corder` tables from the `commerce` keyspace to the newly created `customer` keyspace while the `product` table will remain in the `commerce` keyspace. This operation happens online, which means that it does not block either read or write operations to the tables, *except* for a very small window during the final cut-over.
 
 ## Show our current tablets
 
-```sh
-$ mysql --table --execute="show vitess_tablets"
+```bash
+$ mysql -e "show vitess_tablets"
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
 | Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname  | PrimaryTermStartTime |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
-| zone1 | commerce | 0     | PRIMARY    | SERVING | zone1-0000000100 | localhost | 2020-08-26T00:37:21Z |
+| zone1 | commerce | 0     | PRIMARY    | SERVING | zone1-0000000100 | localhost | 2023-01-04T17:59:37Z |
 | zone1 | commerce | 0     | REPLICA    | SERVING | zone1-0000000101 | localhost |                      |
 | zone1 | commerce | 0     | RDONLY     | SERVING | zone1-0000000102 | localhost |                      |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
 ```
 
-As can be seen, we have 3 tablets running, with tablet ids 100, 101 and 102;  which we use in the examples to form the tablet alias/names like `zone1-0000000100`, etc.
+As can be seen, we have 3 tablets running, with tablet ids 100, 101 and 102; which we use in the examples to form the tablet alias/names like `zone1-0000000100`, etc.
 
-## Create new tablets
+## Create New Tablets
 
-The first step in our MoveTables operation is to deploy new tablets for our `customer` keyspace. By the convention used in our examples, we are going to use the tablet ids 200-202 as the `commerce` keyspace previously used `100-102`. Once the tablets have started, we will wait for `vtorc` to promote one of them to `PRIMARY` before proceeding.:
+The first step in our MoveTables operation is to deploy new tablets for our `customer` keyspace. By the convention used in our examples, we are going to use the tablet ids 200-202 as the `commerce` keyspace previously used `100-102`. Once the tablets have started, we will wait for the operator (k8s install) or `vtorc` (local install) to promote one of the new tablets to `PRIMARY` before proceeding:
 
 ### Using Operator
 
@@ -120,51 +121,61 @@ killall kubectl
 
 ```bash
 $ ./201_customer_tablets.sh
-$ vtctldclient ReloadSchemaKeyspace customer
 ```
 
-## Show our old and new tablets
+## Show All Tablets
 
-```sh
-$ mysql --table --execute="show vitess_tablets"
+```bash
+$ mysql -e "show vitess_tablets"
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
 | Cell  | Keyspace | Shard | TabletType | State   | Alias            | Hostname  | PrimaryTermStartTime |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
-| zone1 | commerce | 0     | PRIMARY    | SERVING | zone1-0000000100 | localhost | 2020-08-26T00:37:21Z |
+| zone1 | commerce | 0     | PRIMARY    | SERVING | zone1-0000000100 | localhost | 2023-01-04T17:59:37Z |
 | zone1 | commerce | 0     | REPLICA    | SERVING | zone1-0000000101 | localhost |                      |
 | zone1 | commerce | 0     | RDONLY     | SERVING | zone1-0000000102 | localhost |                      |
-| zone1 | customer | 0     | PRIMARY    | SERVING | zone1-0000000200 | localhost | 2020-08-26T00:52:39Z |
-| zone1 | customer | 0     | REPLICA    | SERVING | zone1-0000000201 | localhost |                      |
+| zone1 | customer | 0     | PRIMARY    | SERVING | zone1-0000000201 | localhost | 2023-01-04T18:00:22Z |
+| zone1 | customer | 0     | REPLICA    | SERVING | zone1-0000000200 | localhost |                      |
 | zone1 | customer | 0     | RDONLY     | SERVING | zone1-0000000202 | localhost |                      |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
 ```
 
-
-__Note:__ The following change does not change actual routing yet. We will use a _switch_ directive to achieve that shortly.
+{{< info >}}
+The following change does not change actual query routing yet. We will later use the _SwitchTraffic_ command to perform that.
+{{</ info >}}
 
 ## Start the Move
 
-In this step we will initiate the MoveTables, which copies tables from the commerce keyspace into customer. This operation does not block any database activity; the MoveTables operation is performed online:
+In this step we will create the `MoveTables` workflow, which copies the tables from the `commerce` keyspace into
+`customer`. This operation does not block any database activity; the `MoveTables` operation is performed online:
 
 ```bash
 $ vtctlclient MoveTables -- --source commerce --tables 'customer,corder' Create customer.commerce2customer
 ```
 
-You can read this command as:  "Start copying the tables called **customer** and **corder** from the **commerce** keyspace to the **customer** keyspace."
-
 A few things to note:
+ * In a real-world situation this process can take hours or even days to complete depending on the size of the table.
+ * The workflow name (`commerce2customer` in this case) is arbitrary, you can name it whatever you like. You will use this name for the other `MoveTables` subcommands like in the upcoming `SwitchTraffic` step.
 
- * In a real-world situation this process might take hours/days to complete if the table has millions or billions of rows.
- * The workflow name (`commerce2customer` in this case) is arbitrary, you can name it whatever you want.  You will use this handle/alias for the other `MoveTables` related commands like `SwitchTraffic` in the next steps.
+## Check Routing Rules (Optional)
 
-## Check routing rules (optional)
+To see what happens under the covers, let's look at the [**routing rules**](../../../reference/features/schema-routing-rules/) that the `MoveTables` operation created.  These are instructions used by a [`VTGate`](../../../concepts/vtgate) to determine which backend keyspace to send requests to for a given table — even when using a fully qualified table name such as `commerce.customer`:
 
-To see what happens under the covers, let's look at the **routing rules** that the `MoveTables` operation created.  These are instructions used by VTGate to determine which backend keyspace to send requests for a given table or schema/table combo:
-
-```sh
-$ vtctldclient GetRoutingRules commerce
+```json
+$ vtctldclient GetRoutingRules
 {
   "rules": [
+    {
+      "fromTable": "customer.customer@rdonly",
+      "toTables": [
+        "commerce.customer"
+      ]
+    },
+    {
+      "fromTable": "commerce.corder@rdonly",
+      "toTables": [
+        "commerce.corder"
+      ]
+    },
     {
       "fromTable": "customer",
       "toTables": [
@@ -172,126 +183,43 @@ $ vtctldclient GetRoutingRules commerce
       ]
     },
     {
-      "fromTable": "customer.customer",
+      "fromTable": "customer.customer@replica",
+      "toTables": [
+        "commerce.customer"
+      ]
+    },
+    {
+      "fromTable": "corder@replica",
+      "toTables": [
+        "commerce.corder"
+      ]
+    },
+    {
+      "fromTable": "customer.corder",
+      "toTables": [
+        "commerce.corder"
+      ]
+    },
+    {
+      "fromTable": "commerce.corder@replica",
+      "toTables": [
+        "commerce.corder"
+      ]
+    },
+    {
+      "fromTable": "customer@rdonly",
+      "toTables": [
+        "commerce.customer"
+      ]
+    },
+    {
+      "fromTable": "commerce.customer@replica",
       "toTables": [
         "commerce.customer"
       ]
     },
     {
       "fromTable": "corder",
-      "toTables": [
-        "commerce.corder"
-      ]
-    },
-    {
-      "fromTable": "customer.corder",
-      "toTables": [
-        "commerce.corder"
-      ]
-    }
-  ]
-}
-```
-
-Basically what the `MoveTables` operation has done is to create routing rules to explicitly route queries to the tables `customer` and `corder`, as well as the schema/table combos of `customer.customer` and `customer.corder` to the respective tables in the `commerce` keyspace.  This is done so that when `MoveTables` creates the new copy of the tables in the `customer` keyspace, there is no ambiguity about where to route requests for the `customer` and `corder` tables.  All requests for those tables will keep going to the original instance of those tables in `commerce` keyspace.  Any changes to the tables after the `MoveTables` is executed will be copied faithfully to the new copy of these tables in the `customer` keyspace.
-
-## Monitoring Progress (optional)
-
-In this example there are only a few rows in the tables, so the `MoveTables` operation only takes seconds. If the tables were large, you may need to monitor the progress of the operation.  There is no simple way to get a percentage complete status, but you can estimate the progress by running the following against the primary tablet of the target keyspace:
-
-```sh
-$ vtctlclient VReplicationExec -- zone1-0000000200 "select * from _vt.copy_state"
-+----------+------------+--------+
-| vrepl_id | table_name | lastpk |
-+----------+------------+--------+
-+----------+------------+--------+
-```
-
-In the above case the copy is already complete, but if it was still ongoing, there would be details about the last PK (primary key) copied by the VReplication copy process.  You could use information about the last copied PK along with the max PK and data distribution of the source table to estimate progress.
-
-## Validate Correctness (optional)
-
-We can use VDiff to checksum the two sources and confirm they are in sync:
-
-```bash
-$ vtctlclient VDiff -- customer.commerce2customer
-```
-
-You should see output similar to the following:
-
-```bash
-Summary for corder: {ProcessedRows:5 MatchingRows:5 MismatchedRows:0 ExtraRowsSource:0 ExtraRowsTarget:0}
-Summary for customer: {ProcessedRows:5 MatchingRows:5 MismatchedRows:0 ExtraRowsSource:0 ExtraRowsTarget:0}
-```
-
-This can obviously take a long time on very large tables.
-
-## Phase 1: Switch Non-Primary Reads
-
-Once the MoveTables operation is complete, the first step in making the changes live is to _switch_ `SELECT` statements to read from the new keyspace. Other statements will continue to route to the `commerce` keyspace. By staging this as two operations, Vitess allows you to test the changes and reduce the associated risks. For example, you may have a different configuration of hardware or software on the new keyspace.
-
-```bash
-vtctlclient MoveTables -- --tablet_types=rdonly,replica SwitchTraffic customer.commerce2customer
-```
-
-## Interlude: check the routing rules (optional)
-
-Lets look at what has happened to the routing rules since we checked the last time.  The `SwitchTraffic` commands above added a number of new routing rules for the tables involved in the `MoveTables` operation/workflow, e.g.:
-
-```sh
-$ vtctldclient GetRoutingRules commerce
-{
-  "rules": [
-    {
-      "fromTable": "commerce.corder@rdonly",
-      "toTables": [
-        "customer.corder"
-      ]
-    },
-    {
-      "fromTable": "commerce.corder@replica",
-      "toTables": [
-        "customer.corder"
-      ]
-    },
-    {
-      "fromTable": "customer.customer@rdonly",
-      "toTables": [
-        "customer.customer"
-      ]
-    },
-    {
-      "fromTable": "customer@rdonly",
-      "toTables": [
-        "customer.customer"
-      ]
-    },
-    {
-      "fromTable": "commerce.customer@replica",
-      "toTables": [
-        "customer.customer"
-      ]
-    },
-    {
-      "fromTable": "corder",
-      "toTables": [
-        "commerce.corder"
-      ]
-    },
-    {
-      "fromTable": "customer.corder@replica",
-      "toTables": [
-        "customer.corder"
-      ]
-    },
-    {
-      "fromTable": "customer.customer@replica",
-      "toTables": [
-        "customer.customer"
-      ]
-    },
-    {
-      "fromTable": "customer.corder",
       "toTables": [
         "commerce.corder"
       ]
@@ -299,17 +227,17 @@ $ vtctldclient GetRoutingRules commerce
     {
       "fromTable": "corder@rdonly",
       "toTables": [
-        "customer.corder"
+        "commerce.corder"
       ]
     },
     {
       "fromTable": "customer.corder@rdonly",
       "toTables": [
-        "customer.corder"
+        "commerce.corder"
       ]
     },
     {
-      "fromTable": "customer",
+      "fromTable": "customer@replica",
       "toTables": [
         "commerce.customer"
       ]
@@ -323,104 +251,447 @@ $ vtctldclient GetRoutingRules commerce
     {
       "fromTable": "commerce.customer@rdonly",
       "toTables": [
-        "customer.customer"
+        "commerce.customer"
       ]
     },
     {
-      "fromTable": "corder@replica",
+      "fromTable": "customer.corder@replica",
       "toTables": [
-        "customer.corder"
-      ]
-    },
-    {
-      "fromTable": "customer@replica",
-      "toTables": [
-        "customer.customer"
+        "commerce.corder"
       ]
     }
   ]
 }
 ```
 
-As you can see, we now have requests to the `rdonly` and `replica` tablets for the source `commerce` keyspace being redirected to the in-sync copy of the table in the target `customer` keyspace.
+The `MoveTables` operation has created routing rules to explicitly route queries against the `customer` and `corder`
+tables — including the fully qualified `customer.customer` and `customer.corder` names — to the respective tables in
+the `commerce` keyspace so that currently all requests go to the original keyspace.  This is done so that when
+`MoveTables` creates the new copy of the tables in the `customer` keyspace, there is no ambiguity about where to
+route requests for the `customer` and `corder` tables. All requests for those tables will keep going to the original
+instance of those tables in `commerce` keyspace. Any changes to the tables after the `MoveTables` is executed will
+be copied faithfully to the new copy of these tables in the `customer` keyspace.
 
-## Phase 2: Switch Writes and Primary Reads
+## Monitoring Progress (Optional)
 
-After the replica/rdonly reads have been _switched_, and you have verified that the system is operating as expected, it is time to _switch_ the _write_ and primary read operations. The command to execute the switch is very similar to the one in Phase 1:
+In this example there are only a few rows in the tables, so the `MoveTables` operation only takes seconds. If the tables were large, however, you may need to monitor the progress of the operation. You can get a basic summary of the progress using the [`Progress`](../../../reference/vreplication/movetables/#progress) subcommand:
 
 ```bash
-$ vtctlclient MoveTables -- --tablet_types=primary SwitchTraffic customer.commerce2customer
+$ vtctlclient MoveTables -- Progress customer.commerce2customer
+
+Copy Completed.
+
+Following vreplication streams are running for workflow customer.commerce2customer:
+
+id=1 on 0/zone1-0000000201: Status: Running. VStream Lag: 0s.
 ```
 
-## Note
+You can get detailed status and progress information using the
+[`Workflow show`](../../../reference/vreplication/workflow/) command: 
+```json
+$ vtctlclient Workflow customer.commerce2customer show
+{
+	"Workflow": "commerce2customer",
+	"SourceLocation": {
+		"Keyspace": "commerce",
+		"Shards": [
+			"0"
+		]
+	},
+	"TargetLocation": {
+		"Keyspace": "customer",
+		"Shards": [
+			"0"
+		]
+	},
+	"MaxVReplicationLag": 1,
+	"MaxVReplicationTransactionLag": 1,
+	"Frozen": false,
+	"ShardStatuses": {
+		"0/zone1-0000000201": {
+			"PrimaryReplicationStatuses": [
+				{
+					"Shard": "0",
+					"Tablet": "zone1-0000000201",
+					"ID": 1,
+					"Bls": {
+						"keyspace": "commerce",
+						"shard": "0",
+						"filter": {
+							"rules": [
+								{
+									"match": "customer",
+									"filter": "select * from customer"
+								},
+								{
+									"match": "corder",
+									"filter": "select * from corder"
+								}
+							]
+						}
+					},
+					"Pos": "7e765c5c-8c59-11ed-9d2e-7c501ea4de6a:1-83",
+					"StopPos": "",
+					"State": "Running",
+					"DBName": "vt_customer",
+					"TransactionTimestamp": 0,
+					"TimeUpdated": 1672857697,
+					"TimeHeartbeat": 1672857697,
+					"TimeThrottled": 0,
+					"ComponentThrottled": "",
+					"Message": "",
+					"Tags": "",
+					"WorkflowType": "MoveTables",
+					"WorkflowSubType": "None",
+					"CopyState": null
+				}
+			],
+			"TabletControls": null,
+			"PrimaryIsServing": true
+		}
+	},
+	"SourceTimeZone": "",
+	"TargetTimeZone": ""
+}
+```
 
-While we have switched reads and writes separately in this example, you can also switch all traffic, read and write, at the same time. If you don't specify the `--tablet_types` parameter `SwitchTraffic` will start serving traffic from the target for all tablet types.
+## Validate Correctness (Optional)
 
-## Interlude: check the routing rules (optional)
+We can use [`VDiff`](../../../reference/vreplication/vdiff/) to perform a logical diff between the sources and target
+to confirm that they are fully in sync:
 
-Again, if we look at the routing rules after the `SwitchTraffic` process, we will find that it has been cleaned up, and replaced with a blanket redirect for the moved tables (`customer` and `corder`) from the source keyspace (`commerce`) to the target keyspace (`customer`), e.g.:
+```bash
+$ vtctlclient VDiff -- --v2 customer.commerce2customer create
+{
+	"UUID": "d050262e-8c5f-11ed-ac72-920702940ee0"
+}
 
-```sh
-$ vtctldclient GetRoutingRules commerce
+$ vtctlclient VDiff -- --v2 --format=json --verbose customer.commerce2customer show last
+{
+	"Workflow": "commerce2customer",
+	"Keyspace": "customer",
+	"State": "completed",
+	"UUID": "d050262e-8c5f-11ed-ac72-920702940ee0",
+	"RowsCompared": 10,
+	"HasMismatch": false,
+	"Shards": "0",
+	"StartedAt": "2023-01-04 18:44:26",
+	"CompletedAt": "2023-01-04 18:44:26",
+	"TableSummary": {
+		"corder": {
+			"TableName": "corder",
+			"State": "completed",
+			"RowsCompared": 5,
+			"MatchingRows": 5,
+			"MismatchedRows": 0,
+			"ExtraRowsSource": 0,
+			"ExtraRowsTarget": 0
+		},
+		"customer": {
+			"TableName": "customer",
+			"State": "completed",
+			"RowsCompared": 5,
+			"MatchingRows": 5,
+			"MismatchedRows": 0,
+			"ExtraRowsSource": 0,
+			"ExtraRowsTarget": 0
+		}
+	},
+	"Reports": {
+		"corder": {
+			"0": {
+				"TableName": "corder",
+				"ProcessedRows": 5,
+				"MatchingRows": 5,
+				"MismatchedRows": 0,
+				"ExtraRowsSource": 0,
+				"ExtraRowsTarget": 0
+			}
+		},
+		"customer": {
+			"0": {
+				"TableName": "customer",
+				"ProcessedRows": 5,
+				"MatchingRows": 5,
+				"MismatchedRows": 0,
+				"ExtraRowsSource": 0,
+				"ExtraRowsTarget": 0
+			}
+		}
+	}
+}
+```
+
+{{< info >}}
+This can take a long time to complete on very large tables.
+{{</ info >}}
+
+## Switching Traffic
+
+Once the `MoveTables` operation is complete ([in the "running" or replicating phase](../../../../design-docs/vreplication/life-of-a-stream/)), the first step in making the changes live is to _switch_ all query serving
+traffic from the old `commerce` keyspace to the `customer` keyspace for the tables we moved. Queries against the other
+tables will continue to route to the `commerce` keyspace.
+
+```bash
+$ vtctlclient MoveTables -- SwitchTraffic customer.commerce2customer
+
+SwitchTraffic was successful for workflow customer.commerce2customer
+Start State: Reads Not Switched. Writes Not Switched
+Current State: All Reads Switched. Writes Switched
+```
+
+{{< info >}}
+While we have switched all traffic in this example, you can also switch non-primary reads and writes seperately by
+specifying the [`--tablet_types`](../../../reference/vreplication/movetables/#--tablet_types) parameter to
+`SwitchTraffic`.
+{{</ info >}}
+
+## Check the Routing Rules (Optional)
+
+If we now look at the routing rules after the `SwitchTraffic` step, we will see that all queries against the
+`customer` and `corder` tables will get routed to the `customer` keyspace:
+
+```json
+$ vtctldclient GetRoutingRules
 {
   "rules": [
     {
-      "fromTable": "commerce.customer",
-      "toTables": [
-        "customer.customer"
-      ]
-    },
-    {
-      "fromTable": "customer",
-      "toTables": [
-        "customer.customer"
-      ]
-    },
-    {
-      "fromTable": "commerce.corder",
-      "toTables": [
+      "from_table": "commerce.corder@rdonly",
+      "to_tables": [
         "customer.corder"
       ]
     },
     {
-      "fromTable": "corder",
-      "toTables": [
+      "from_table": "corder@rdonly",
+      "to_tables": [
         "customer.corder"
+      ]
+    },
+    {
+      "from_table": "customer.corder@replica",
+      "to_tables": [
+        "customer.corder"
+      ]
+    },
+    {
+      "from_table": "commerce.corder@replica",
+      "to_tables": [
+        "customer.corder"
+      ]
+    },
+    {
+      "from_table": "customer.corder@rdonly",
+      "to_tables": [
+        "customer.corder"
+      ]
+    },
+    {
+      "from_table": "customer@replica",
+      "to_tables": [
+        "customer.customer"
+      ]
+    },
+    {
+      "from_table": "customer.customer@replica",
+      "to_tables": [
+        "customer.customer"
+      ]
+    },
+    {
+      "from_table": "corder@replica",
+      "to_tables": [
+        "customer.corder"
+      ]
+    },
+    {
+      "from_table": "commerce.customer@rdonly",
+      "to_tables": [
+        "customer.customer"
+      ]
+    },
+    {
+      "from_table": "customer@rdonly",
+      "to_tables": [
+        "customer.customer"
+      ]
+    },
+    {
+      "from_table": "customer.customer@rdonly",
+      "to_tables": [
+        "customer.customer"
+      ]
+    },
+    {
+      "from_table": "commerce.customer@replica",
+      "to_tables": [
+        "customer.customer"
+      ]
+    },
+    {
+      "from_table": "corder",
+      "to_tables": [
+        "customer.corder"
+      ]
+    },
+    {
+      "from_table": "commerce.corder",
+      "to_tables": [
+        "customer.corder"
+      ]
+    },
+    {
+      "from_table": "customer",
+      "to_tables": [
+        "customer.customer"
+      ]
+    },
+    {
+      "from_table": "commerce.customer",
+      "to_tables": [
+        "customer.customer"
       ]
     }
   ]
 }
 ```
 
-## Reverse workflow
+## Reverting the Switch (Optional)
 
-As part of the `SwitchTraffic` operation above, Vitess will automatically (unless you supply the `--reverse_replication false` flag) setup a reverse VReplication workflow to copy changes now applied to the moved tables in the target keyspace (i.e. tables `customer` and `corder` in the `customer` keyspace) back to the original source tables in the source keyspace (`commerce`).  This allows us to reverse the process using additional `SwitchTraffic` commands without data loss, even after we have started writing to the new copy of the table in the new keyspace.  Note that the workflow for this reverse process is given the name of the original workflow with `_reverse` appended.  So in our example where the MoveTables workflow was called `commerce2customer`;  the reverse workflow would be `commerce2customer_reverse`.
+As part of the `SwitchTraffic` operation, Vitess will automatically setup a reverse VReplication workflow (unless
+you supply the [`--reverse_replication false` flag](../../../reference/vreplication/movetables/#--reverse_replication))
+to copy changes now applied to the moved tables in the target keyspace — `customer` and `corder` in the
+`customer` keyspace — back to the original source tables in the source `commerce` keyspace. This allows us to
+reverse or revert the cutover using the [`ReverseTraffic`](../../../reference/vreplication/movetables/#reversetraffic)
+subcommand, without data loss, even after we have started writing to the new `customer` keyspace. Note that the
+workflow for this reverse workflow is created in the original source keyspace and given the name of the original
+workflow with `_reverse` appended. So in our example where the `MoveTables` workflow was in the `customer` keyspace
+and called `commerce2customer`, the reverse workflow is in the `commerce` keyspace and called
+`commerce2customer_reverse`. We can see the details of this auto-created workflow using the
+[`Workflow show`](../../../reference/vreplication/workflow/) command:
+
+```json
+$ vtctlclient Workflow commerce.commerce2customer_reverse show
+{
+	"Workflow": "commerce2customer_reverse",
+	"SourceLocation": {
+		"Keyspace": "customer",
+		"Shards": [
+			"0"
+		]
+	},
+	"TargetLocation": {
+		"Keyspace": "commerce",
+		"Shards": [
+			"0"
+		]
+	},
+	"MaxVReplicationLag": 1,
+	"MaxVReplicationTransactionLag": 1,
+	"Frozen": false,
+	"ShardStatuses": {
+		"0/zone1-0000000100": {
+			"PrimaryReplicationStatuses": [
+				{
+					"Shard": "0",
+					"Tablet": "zone1-0000000100",
+					"ID": 1,
+					"Bls": {
+						"keyspace": "customer",
+						"shard": "0",
+						"filter": {
+							"rules": [
+								{
+									"match": "customer",
+									"filter": "select * from `customer`"
+								},
+								{
+									"match": "corder",
+									"filter": "select * from `corder`"
+								}
+							]
+						}
+					},
+					"Pos": "9fb1be70-8c59-11ed-9ef5-c05f9df6f7f3:1-2361",
+					"StopPos": "",
+					"State": "Running",
+					"DBName": "vt_commerce",
+					"TransactionTimestamp": 1672858428,
+					"TimeUpdated": 1672859207,
+					"TimeHeartbeat": 1672859207,
+					"TimeThrottled": 0,
+					"ComponentThrottled": "",
+					"Message": "",
+					"Tags": "",
+					"WorkflowType": "MoveTables",
+					"WorkflowSubType": "None",
+					"CopyState": null
+				}
+			],
+			"TabletControls": [
+				{
+					"tablet_type": 1,
+					"denied_tables": [
+						"corder",
+						"customer"
+					]
+				}
+			],
+			"PrimaryIsServing": true
+		}
+	},
+	"SourceTimeZone": "",
+	"TargetTimeZone": ""
+}
+```
 
 ## Finalize and Cleanup
 
-The final step is to **remove** the data from the original keyspace. As well as freeing space on the original tablets, this is an important step to eliminate potential future confusion. If you have a misconfiguration down the line and accidentally route queries for the  `customer` and `corder` tables to `commerce`, it is much better to return a *"table not found"* error, rather than return stale data:
+The final step is to complete the migration using the [`Complete`](../../../reference/vreplication/movetables/#complete) subcommand. This will (by default) get rid of the routing rules that were created and `DROP` the original tables in
+the source keyspace (`commerce`). Along with freeing up space on the original tablets, this is an important step to
+eliminate potential future confusion. If you have a misconfiguration down the line and accidentally route queries
+for the  `customer` and `corder` tables to the `commerce` keyspace, it is much better to return a *"table not found"*
+error, rather than return incorrect/stale data:
 
-```sh
+```bash
 $ vtctlclient MoveTables -- Complete customer.commerce2customer
+
+Complete was successful for workflow customer.commerce2customer
+Start State: All Reads Switched. Writes Switched
+Current State: Workflow Not Found
 ```
 
-After this step is complete, you should see an error (in Vitess 9.0 and later) similar to:
+{{< info >}}
+This command will return an error if you have not already switched all traffic.
+{{</ info >}}
 
-```sh
+After this step is complete, you should see an error if you try to query the moved tables in the original `commerce`
+keyspace:
+
+```bash
 # Expected to fail!
-mysql --table < ../common/select_commerce_data.sql
-Using commerce/0
+$ mysql < ../common/select_commerce_data.sql
+Using commerce
 Customer
-ERROR 1146 (42S02) at line 4: vtgate: http://localhost:15001/: target: commerce.0.primary, used tablet: zone1-100
-(localhost): vttablet: rpc error: code = NotFound desc = Table 'vt_commerce.customer' doesn't exist (errno 1146)
-(sqlstate 42S02) (CallerID: userData1): Sql: "select * from customer", BindVars: {}
+ERROR 1146 (42S02) at line 4: target: commerce.0.primary: vttablet: rpc error: code = NotFound desc = Table 'vt_commerce.customer' doesn't exist (errno 1146) (sqlstate 42S02) (CallerID: userData1): Sql: "select * from customer", BindVars: {}
+
+# Expected to be empty
+$ vtctldclient GetRoutingRules
+{
+  "rules": []
+}
+
+# Workflow is gone
+$ vtctlclient Workflow customer listall
+No workflows found in keyspace customer
+
+# Reverse workflow is also gone
+$ vtctlclient Workflow commerce listall
+No workflows found in keyspace commerce
 ```
 
-This confirms that the data has been correctly cleaned up.  Note that the `Complete` process also cleans up the reverse VReplication workflow mentioned above. Regarding the routing rules, Vitess behavior here has changed recently:
-
-  * Before Vitess 9.0, the the routing rules from the source keyspace to the target keyspace was not cleaned up.  The assumption was that you might still have applications that refer to the tables by their explicit `schema.table` designation, and you want these applications to (still) transparently be forwarded to the new location of the data.  When you are absolutely sure that no applications are using this access pattern, you can clean up the routing rules by manually adjusting the routing rules via the `vtctldclient ApplyRoutingRules` command.
-  * From Vitess 9.0 onwards, the routing rules from the source keyspace to the target keyspace are also cleaned up as part of the `Complete` operation. If this is not the behavior you want, you can choose to either delay the `Complete` until you are sure the routing rules (and source data) are no longer required; or you can perform the same steps as `Complete` manually.
+This confirms that the data and routing rules have been properly cleaned up. Note that the `Complete` process also cleans up the reverse VReplication workflow mentioned above.
 
 ## Next Steps
 
-Congratulations! You've successfully moved tables between keyspaces. The next step to try out is to shard one of your keyspaces in [Resharding](../../configuration-advanced/resharding).
+Congratulations! You've successfully moved tables between into Vitess or between keyspaces. The next step to try out is
+sharding one of your keyspaces using [Resharding](../../configuration-advanced/resharding).

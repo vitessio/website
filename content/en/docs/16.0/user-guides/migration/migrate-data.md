@@ -65,7 +65,7 @@ serving data from the original MySQL instance before later attempt another cutov
 If you require transforming your data while migrating it into Vitess then the [`Materialize`](../../../reference/vreplication/materialize/) command offers an alternative to [`MoveTables`](../../../reference/vreplication/movetables/).
 {{</ info >}}
 
-The remaining pages in this guide walk you through the key steps of this native Vitess migration process:
-1. [Moving the tables](../move-tables/)
+The remaining pages in this guide walk you through an example of the key steps for this native Vitess migration process:
+1. [Moving your tables](../move-tables/)
 2. [Materializing data if needed](../materialize/)
 3. [Cutting over traffic](../cutover)
