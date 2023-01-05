@@ -51,7 +51,7 @@ exposed to the clients only when safe.
 Alternative to auto-incrementing IDs are:
 
 * Using a 64 bit random generator number. Try to insert a new row with that
-  ID. If taken (because the statement returns an integrity error), try another
+  ID. If already taken (the statement returns an integrity error), try another
   ID.
 
 * Using a UUID scheme, and generate truly unique IDs.
