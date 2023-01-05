@@ -92,24 +92,25 @@ The first step in our MoveTables operation is to deploy new tablets for our `cus
 ### Using Operator
 
 ```bash
-kubectl apply -f 201_customer_tablets.yaml
+$ kubectl apply -f 201_customer_tablets.yaml
 ```
 
 After a few minutes the pods should appear running:
 
 ```bash
 $ kubectl get pods
-NAME                                             READY   STATUS    RESTARTS   AGE
-example-etcd-faf13de3-1                          1/1     Running   0          8m11s
-example-etcd-faf13de3-2                          1/1     Running   0          8m11s
-example-etcd-faf13de3-3                          1/1     Running   0          8m11s
-example-vttablet-zone1-1250593518-17c58396       3/3     Running   1          2m20s
-example-vttablet-zone1-2469782763-bfadd780       3/3     Running   1          7m57s
-example-vttablet-zone1-2548885007-46a852d0       3/3     Running   1          7m47s
-example-vttablet-zone1-3778123133-6f4ed5fc       3/3     Running   1          2m20s
-example-zone1-vtctld-1d4dcad0-59d8498459-kdml8   1/1     Running   1          8m11s
-example-zone1-vtgate-bc6cde92-6bd99c6888-csnkj   1/1     Running   2          8m11s
-vitess-operator-8454d86687-4wfnc                 1/1     Running   0          22m
+example-commerce-x-x-zone1-vtorc-c13ef6ff-5d658d78d8-dvmnn   1/1     Running   1 (4m39s ago)   65d
+example-etcd-faf13de3-1                                      1/1     Running   1 (4m39s ago)   65d
+example-etcd-faf13de3-2                                      1/1     Running   1 (4m39s ago)   65d
+example-etcd-faf13de3-3                                      1/1     Running   1 (4m39s ago)   65d
+example-vttablet-zone1-1250593518-17c58396                   3/3     Running   1 (27s ago)     32s
+example-vttablet-zone1-2469782763-bfadd780                   3/3     Running   3 (4m39s ago)   65d
+example-vttablet-zone1-2548885007-46a852d0                   3/3     Running   3 (4m39s ago)   65d
+example-vttablet-zone1-3778123133-6f4ed5fc                   3/3     Running   1 (26s ago)     32s
+example-zone1-vtadmin-c03d7eae-7dcd4d75c7-szbwv              2/2     Running   2 (4m39s ago)   65d
+example-zone1-vtctld-1d4dcad0-6b9cd54f8f-jmdt9               1/1     Running   2 (4m39s ago)   65d
+example-zone1-vtgate-bc6cde92-856d44984b-lqfvg               1/1     Running   2 (4m6s ago)    65d
+vitess-operator-8df7cc66b-6vtk6                              1/1     Running   0               55s
 ```
 
 Again, the operator will promote one of the tablets to `PRIMARY` implicitly for you.
@@ -117,7 +118,7 @@ Again, the operator will promote one of the tablets to `PRIMARY` implicitly for 
 Make sure that you restart the port-forward after launching the pods has completed:
 
 ```bash
-killall kubectl
+$ killall kubectl
 ./pf.sh &
 ```
 
@@ -144,7 +145,7 @@ $ mysql -e "show vitess_tablets"
 ```
 
 {{< info >}}
-The following change does not change actual query routing yet. We will later use the _SwitchTraffic_ command to perform that.
+The following change does not change actual query routing yet. We will later use the _SwitchTraffic_ action to perform that.
 {{</ info >}}
 
 ## Start the Move
@@ -158,7 +159,7 @@ $ vtctlclient MoveTables -- --source commerce --tables 'customer,corder' Create 
 
 A few things to note:
  * In a real-world situation this process can take hours or even days to complete depending on the size of the table.
- * The workflow name (`commerce2customer` in this case) is arbitrary, you can name it whatever you like. You will use this name for the other `MoveTables` subcommands like in the upcoming `SwitchTraffic` step.
+ * The workflow name (`commerce2customer` in this case) is arbitrary, you can name it whatever you like. You will use this name for the other `MoveTables` actions like in the upcoming `SwitchTraffic` step.
 
 ## Check Routing Rules (Optional)
 
@@ -278,7 +279,7 @@ be copied faithfully to the new copy of these tables in the `customer` keyspace.
 
 ## Monitoring Progress (Optional)
 
-In this example there are only a few rows in the tables, so the `MoveTables` operation only takes seconds. If the tables were large, however, you may need to monitor the progress of the operation. You can get a basic summary of the progress using the [`Progress`](../../../reference/vreplication/movetables/#progress) subcommand:
+In this example there are only a few rows in the tables, so the `MoveTables` operation only takes seconds. If the tables were large, however, you may need to monitor the progress of the operation. You can get a basic summary of the progress using the [`Progress`](../../../reference/vreplication/movetables/#progress) action:
 
 ```bash
 $ vtctlclient MoveTables -- Progress customer.commerce2customer
@@ -566,7 +567,7 @@ you supply the [`--reverse_replication false` flag](../../../reference/vreplicat
 to copy changes now applied to the moved tables in the target keyspace — `customer` and `corder` in the
 `customer` keyspace — back to the original source tables in the source `commerce` keyspace. This allows us to
 reverse or revert the cutover using the [`ReverseTraffic`](../../../reference/vreplication/movetables/#reversetraffic)
-subcommand, without data loss, even after we have started writing to the new `customer` keyspace. Note that the
+action, without data loss, even after we have started writing to the new `customer` keyspace. Note that the
 workflow for this reverse workflow is created in the original source keyspace and given the name of the original
 workflow with `_reverse` appended. So in our example where the `MoveTables` workflow was in the `customer` keyspace
 and called `commerce2customer`, the reverse workflow is in the `commerce` keyspace and called
@@ -650,7 +651,7 @@ $ vtctlclient Workflow commerce.commerce2customer_reverse show
 
 ## Finalize and Cleanup
 
-The final step is to complete the migration using the [`Complete`](../../../reference/vreplication/movetables/#complete) subcommand. This will (by default) get rid of the routing rules that were created and `DROP` the original tables in
+The final step is to complete the migration using the [`Complete`](../../../reference/vreplication/movetables/#complete) action. This will (by default) get rid of the routing rules that were created and `DROP` the original tables in
 the source keyspace (`commerce`). Along with freeing up space on the original tablets, this is an important step to
 eliminate potential future confusion. If you have a misconfiguration down the line and accidentally route queries
 for the  `customer` and `corder` tables to the `commerce` keyspace, it is much better to return a *"table not found"*

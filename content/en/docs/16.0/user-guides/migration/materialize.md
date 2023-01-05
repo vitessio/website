@@ -227,7 +227,7 @@ $ vtctlclient Workflow -- commerce.copy_corder_1 show
 }
 ```
 
-We can now also use the `Workflow` `stop`/`start` subcommands to temporarily stop the materialization workflow. For
+We can now also use the `Workflow` `stop`/`start` actions to temporarily stop the materialization workflow. For
 example:
 
 ```bash
