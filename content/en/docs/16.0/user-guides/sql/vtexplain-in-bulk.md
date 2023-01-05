@@ -172,12 +172,12 @@ $ sh -x run_vtexplain.sh 2> vtexplain.output
 
 Once you have your full output in vtexplain.output, use `grep` to search for the string "ERROR" to review any issues that VTExplain found.
 
-### Example: Scatted across shards
+### Example: Scattered across shards
 
 In the following example, VTGate scatters the example query across both shards, and then aggregates the query results.
 
 ```shell
-$ vtexplain --schema-file schema.sql --vschema-file vschema.json --shards 2 --sql 'SELECT * FROM user;'
+$ vtexplain --schema-file schema.sql --vschema-file vschema.json --shards 4 --sql 'SELECT * FROM user;'
 ----------------------------------------------------------------------
 SELECT * FROM user
 
