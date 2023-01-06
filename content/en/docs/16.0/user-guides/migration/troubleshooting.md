@@ -3,9 +3,10 @@ title: Troubleshooting
 weight: 4
 ---
 
-## Prerequisites
+## Overview
 
-In this guide we assume that the change being done is going from unsharded to unsharded keyspace and that all of the following names are used:
+Here we will cover some common issues seen during a migration, how to avoid them, how to detect them, and how to address them.
+So in this page we want to go into assume that the change being done is going from unsharded to unsharded keyspace and that all of the following names are used:
 
 - The source keyspace is called:  sourcekeyspace
 - The target keyspace is called:  targetkeyspace

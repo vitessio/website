@@ -5,7 +5,7 @@ aliases: ['/docs/user-guides/materialize/']
 ---
 
 {{< info >}}
-This guide follows on from the [Get Started](../../../get-started/) guides. Please make sure that you have an
+This guide follows on from the [Get Started](../../../get-started/) guides. Please make sure that you have a
 [Kubernetes Operator](../../../get-started/operator) or [local](../../../get-started/local) installation ready.
 Make sure you have only run the "101" step of the examples, for example `101_initial_cluster.sh` in the
 [local](../../../get-started/local) example. The commands in this guide also assume you have setup the shell
@@ -318,7 +318,7 @@ target keyspace's primary tablet, e.g. in this case:
 ```bash
 $ SOCKETPATH=${VTDATAROOT}/$(vtctlclient ListAllTablets -- --keyspace=commerce --tablet_type=primary | awk '$1 sub(/zone1-/, "vt_") {print $1}')
 
-$ mysql -u root --socket=${SOCKETPATH}/mysql.sock --binary-as-hex=false -e "select * from _vt.vreplication\G" 
+$ mysql -u root -h localhost --socket=${SOCKETPATH}/mysql.sock --binary-as-hex=false -e "select * from _vt.vreplication\G"
 *************************** 1. row ***************************
                    id: 2
              workflow: copy_corder_2
