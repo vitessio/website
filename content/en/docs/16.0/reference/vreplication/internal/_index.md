@@ -1,7 +1,7 @@
 ---
-title: VReplication
-description: VReplication related design docs
-weight: 3
+title: Internals
+description: Selected vreplication-related design docs and implementation details
+weight: 1000
 skip_sections: true
-aliases: ['/docs/design/vreplication/']
+aliases: ['/docs/reference/vreplication/internal']
 ---
