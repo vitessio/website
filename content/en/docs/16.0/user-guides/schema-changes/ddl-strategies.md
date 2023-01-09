@@ -6,10 +6,10 @@ aliases: ['/docs/user-guides/schema-changes/ddl-strategies/']
 
 Vitess supports both managed, online schema migrations (aka Online DDL) as well as unmanaged migrations. How Vitess runs a schema migration depends on the _DDL strategy_. Vitess allows these strategies:
 
-- `direct`: the direct apply of DDL to your database. This is not an online DDL. It is a synchronous and blocking operation. This is the default strategy. 
-- `vitess` (formerly known as `online`): utilizes Vitess's built in [VReplication](../../../reference/vreplication/vreplication/) mechanism. This is the preferred strategy in Vitess.
+- `vitess` (formerly known as `online`): utilizes Vitess's built-in [VReplication](../../../reference/vreplication/vreplication/) mechanism. This is the preferred strategy in Vitess.
 - `gh-ost`: uses 3rd party GitHub's [gh-ost](https://github.com/github/gh-ost) tool.
 - `pt-osc`: uses 3rd party Percona's [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html) as part of [Percona Toolkit](https://www.percona.com/doc/percona-toolkit/3.0/index.html). `pt-osc` strategy is **experimental**.
+- `direct`: unmanaged. The direct apply of DDL to your database. This is not an online DDL. It is a synchronous and blocking operation. This is the default strategy. 
 
 `CREATE` and `DROP` are managed in the same way, by Vitess, whether strategy is `vitess`, `gh-ost` or `pt-osc`.
 
@@ -19,19 +19,18 @@ See also [ddl_strategy flags](../ddl-strategy-flags).
 
 You will set either `@@ddl_strategy` session variable, or `--ddl_strategy` command line flag. Examples:
 
-#### Via vtctl/vtctlclient
+#### Via vtctlclient
 
 ```shell
-$ vtctlclient ApplySchema -- --ddl_strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
+$ vtctlclient -- ApplySchema --ddl_strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
 a2994c92_f1d4_11ea_afa3_f875a4d24e90
 ```
 
 ```shell
-$ vtctlclient ApplySchema -- --ddl_strategy "gh-ost --max-load Threads_running=200" --sql "ALTER TABLE demo add column status int" commerce
+$ vtctlclient -- ApplySchema --ddl_strategy "gh-ost --max-load Threads_running=200" --sql "ALTER TABLE demo add column status int" commerce
 ```
 
 #### Via VTGate
-
 
 ```shell
 $ mysql -h 127.0.0.1 -P 15306 commerce
@@ -78,15 +77,15 @@ To be able to run online schema migrations via `gh-ost`:
 - If you're on Linux/amd64 architecture, and on `glibc` `2.3` or similar, there are no further dependencies. Vitess comes with a built-in `gh-ost` binary, that is compatible with your system. Note that the Vitess Docker images use this architecture, and `gh-ost` comes pre-bundled and compatible.
 - On other architectures:
   - Have `gh-ost` executable installed
-  - Run `vttablet` with `-gh-ost-path=/full/path/to/gh-ost` flag
+  - Run `vttablet` with `--gh-ost-path=/full/path/to/gh-ost` flag
 
 Vitess automatically creates a MySQL account for the migration, with a randomly generated password. The account is destroyed at the end of the migration.
 
-Vitess takes care of setting up the necessary command line flags. It automatically creates a hooks directory and populates it with hooks that report `gh-ost`'s progress back to Vitess. You may supply additional flags for your migration as part of `@@ddl_strategy` session variable (using `VTGate`) or `-ddl_strategy` command line flag (using `vtctl`). Examples:
+Vitess takes care of setting up the necessary command line flags. It automatically creates a hooks directory and populates it with hooks that report `gh-ost`'s progress back to Vitess. You may supply additional flags for your migration as part of `@@ddl_strategy` session variable (using `VTGate`) or `--ddl_strategy` command line flag (using `vtctlclient`). Examples:
 
 - `set @@ddl_strategy='gh-ost --max-load Threads_running=200';`
 - `set @@ddl_strategy='gh-ost --max-load Threads_running=200 --critical-load Threads_running=500 --critical-load-hibernate-seconds=60 --default-retries=512';`
-- `vtctl ApplySchema -- --ddl_strategy "gh-ost --allow-nullable-unique-key --chunk-size 200" ...`
+- `vtctlclient -- ApplySchema --ddl_strategy "gh-ost --allow-nullable-unique-key --chunk-size 200" ...`
 
 **Note:** Do not override the following flags: `alter, database, table, execute, max-lag, force-table-names, serve-socket-file, hooks-path, hooks-hint-token, panic-flag-file`. Overriding any of these may cause Vitess to lose control and track of the migration, or even to migrate the wrong table.
 
@@ -104,17 +103,21 @@ Note that on Vitess Docker images, `pt-online-schema-change` and dependencies ar
 
 Vitess automatically creates a MySQL account for the migration, with a randomly generated password. The account is destroyed at the end of the migration.
 
-Vitess takes care of supplying the command line flags, the DSN, the username & password. It also sets up `PLUGINS` used to communicate migration progress back to the tablet. You may supply additional flags for your migration as part of `@@ddl_strategy` session variable (using `VTGate`) or `-ddl_strategy` command line flag (using `vtctl`). Examples:
+Vitess takes care of supplying the command line flags, the DSN, the username & password. It also sets up `PLUGINS` used to communicate migration progress back to the tablet. You may supply additional flags for your migration as part of `@@ddl_strategy` session variable (using `VTGate`) or `-ddl_strategy` command line flag (using `vtctlclient`). Examples:
 
 - `set @@ddl_strategy='pt-osc --null-to-not-null';`
 - `set @@ddl_strategy='pt-osc --max-load Threads_running=200';`
-- `vtctl ApplySchema -- --ddl_strategy "pt-osc --alter-foreign-keys-method auto --chunk-size 200" ...`
+- `vtctlclient -- ApplySchema --ddl_strategy "pt-osc --alter-foreign-keys-method auto --chunk-size 200" ...`
 
 Vitess tracks the state of the `pt-osc` migration. If it fails, Vitess makes sure to drop the migration triggers. Vitess keeps track of the migration even if the tablet itself restarts for any reason. Normally that would terminate the migration; Vitess will cleanup the triggers if so, or will happily let the migration run to completion if not.
 
 Do not override the following flags: `alter, pid, plugin, dry-run, execute, new-table-name, [no-]drop-new-table, [no-]drop-old-table`.
 
 `pt-osc` throttling is done via Vitess's own tablet throttler, based on replication lag, and via a `pt-online-schema-change` plugin.
+
+{{< warning >}}
+The integration with `pt-online-schema-change` is **experimental**
+{{< /warning >}}
 
 ### Comparing the options
 
@@ -145,11 +148,8 @@ There are pros and cons to using any of the strategies. Some notable differences
 
 #### Cut-over
 
-- Both `pt-online-schema-change` and `gh-ost` have an atomic cut-over based on MySQL locking. At the end of the migration, the tables are switched, and incoming queries are momentarily blocked, but not lost.
-- `vitess` offers a combined Vitess/MySQL locking logic ([read more](https://vitess.io/blog/2022-04-06-online-ddl-vitess-cut-over/)):
-  - To queries on the migrated table, that are going through Vitess (ie route through `VTGate`), the cut-over is blocking. Vitess will buffer incoming queries during cut-over, and will allow them to operate once the cut-over is complete.
-  - Any queries on the migrated table that are not going through Vitess and which operate directly on the MySQL server will experience a brief outage: the queries will notice the table does not exist momentarily.
-  - It is at any case safe, in terms of data consistency, to run both types of queries throughout the migration and specifically during the cut-over.
+- All strategies use an atomic cut-over based on MySQL locking. At the end of the migration, the tables are switched, and incoming queries are momentarily blocked, but not lost.
+- In addition, `vitess` offers a buffering layer, that reduces the contention on the database server at cut-over time.
 
 #### MySQL compatibility
 

@@ -15,10 +15,11 @@ Revertible migrations supported for:
 
 ## Behavior and limitations
 
-- A revert is a migration of its own, with a migration UUID, similarly to "normal" migrations.
+- A revert is a migration of its own, with a migration UUID, similarly to normal migrations.
 - Migrations are only for revertible for `24h` since completion.
 - It's only possible to revert the last successful migration on a given table. Illustrated following.
   - In the future it may be possible to revert down the stack of completed migrations.
+  - To clarify, it's possibly to revert multiple migrations, even concurrently, but for each table you may only revert the last successful migration on that table.
 - `ALTER` migrations are revertible only in `vitess` strategy.
 - If a DDL is a noop, then so is its revert:
   - If a table `t` exists, and an online DDL is `CREATE TABLE IF NOT EXISTS t (...)`, then the DDL does nothing, and its revert will do nothing.
@@ -42,8 +43,9 @@ As of Vitess 12.0 `vtctl OnlineDDL revert` is deprecated. Use the `REVERT VITESS
 {{< /warning >}}
 
 Via `vtctl`:
-```shell
-$ vtctlclient OnlineDDL commerce revert 69b17887_8a62_11eb_badd_f875a4d24e90
+
+```
+$ vtctlclient -- ApplySchema --ddl_strategy "vitess" --sql "revert vitess_migration '69b17887_8a62_11eb_badd_f875a4d24e90'" commerce
 ```
 
 Both operations return a UUID for the revert migration. The user can track the revert migration to find its state.
