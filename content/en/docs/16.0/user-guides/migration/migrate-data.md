@@ -55,10 +55,10 @@ and perform final testing on the Vitess keyspace before cutting over your applic
 
 Once your testing has completed, application traffic can be moved from the source MySQL database itself and switched to the Vitess cluster's [`vtgate`](../../../reference/programs/vtgate/) instance(s). For this switch, a small amount of downtime will likely be necessary. This downtime could be seconds or minutes, depending on the application and application automation.
 
-Once your application traffic is going to Vitess — while your original MySQL instance is still serving the queries — you can prepare to fully cutover all traffic and query serving using the [`SwitchTraffic`](../../../reference/vreplication/movetables/#switchtraffic) subcommand. This will cause the Vitess cluster to start serving all traffic for the tables that were migrated. At this point the VReplication workflow automatically reverses and the original MySQL instance is automatically kept in sync with Vitess. Once the switch is complete and you have confirmed that everything is working
+Once your application traffic is going to Vitess — while your original MySQL instance is still serving the queries — you can prepare to fully cutover all traffic and query serving using the [`SwitchTraffic`](../../../reference/vreplication/movetables/#switchtraffic) action. This will cause the Vitess cluster to start serving all traffic for the tables that were migrated. At this point the VReplication workflow automatically reverses and the original MySQL instance is automatically kept in sync with Vitess. Once the switch is complete and you have confirmed that everything is working
 correctly you can complete the migration using the [`Complete`](../../../reference/vreplication/movetables/#complete)
-subcommand and the original MySQL instance can be shut down. If for any reason you need to reverse the migration, you
-can use the [`ReverseTraffic`](../../../reference/vreplication/movetables/#reversetraffic) subcommand to switch back to
+action and the original MySQL instance can be shut down. If for any reason you need to reverse the migration, you
+can use the [`ReverseTraffic`](../../../reference/vreplication/movetables/#reversetraffic) action to switch back to
 serving data from the original MySQL instance before later attempt another cutover using [`SwitchTraffic`](../../../reference/vreplication/movetables/#switchtraffic).
 
 {{< info >}}

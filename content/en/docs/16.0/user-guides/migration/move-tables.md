@@ -33,7 +33,6 @@ We can look at what we just inserted:
 ```bash
 # On local and operator installs:
 $ mysql --table < ../common/select_commerce_data.sql
-
 Using commerce
 Customer
 +-------------+--------------------+
@@ -286,7 +285,7 @@ $ vtctlclient MoveTables -- Progress customer.commerce2customer
 
 Copy Completed.
 
-Following vreplication streams are running for workflow customer.commerce2customer:
+The following vreplication streams exist for workflow customer.commerce2customer:
 
 id=1 on 0/zone1-0000000201: Status: Running. VStream Lag: 0s.
 ```

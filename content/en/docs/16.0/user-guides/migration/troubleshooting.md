@@ -6,13 +6,16 @@ weight: 4
 ## Overview
 
 Here we will cover some common issues seen during a migration, how to avoid them, how to detect them, and how to address them.
-So in this page we want to go into assume that the change being done is going from unsharded to unsharded keyspace and that all of the following names are used:
 
-- The source keyspace is called:  sourcekeyspace
-- The target keyspace is called:  targetkeyspace
-- The tables to be moved:  table1, table2, table3
+{{< info >}}
+This guide follows on from the [Get Started](../../../get-started/) guides. Please make sure that you have a
+[Kubernetes Operator](../../../get-started/operator) or [local](../../../get-started/local) installation ready.
+Make sure you have run the "101" and "201" steps of the examples, for example the "101" step is
+`101_initial_cluster.sh` in the [local](../../../get-started/local) example. The commands in this guide also assume
+you have setup the shell aliases from the example, e.g. `env.sh` in the [local](../../../get-started/local) example.
+{{< /info >}}
 
-## Setup
+## 
 
 Before starting the cutover process you will want to:
  

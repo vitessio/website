@@ -316,6 +316,7 @@ As with [`MoveTables`](../../../reference/vreplication/movetables/), a VReplicat
 target keyspace's primary tablet, e.g. in this case:
 
 ```bash
+# We want to connect directly to the primary mysqld
 $ SOCKETPATH=${VTDATAROOT}/$(vtctlclient ListAllTablets -- --keyspace=commerce --tablet_type=primary | awk '$1 sub(/zone1-/, "vt_") {print $1}')
 
 $ mysql -u root -h localhost --socket=${SOCKETPATH}/mysql.sock --binary-as-hex=false -e "select * from _vt.vreplication\G"
