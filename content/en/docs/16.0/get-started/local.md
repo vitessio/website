@@ -86,6 +86,7 @@ Download the [latest binary release](https://github.com/vitessio/vitess/releases
 
 * Release 15.0 has a bug because of which the local example fails when try to run vtadmin web. [Issue#11679](https://github.com/vitessio/vitess/issues/11679)
 * Please use release [15.0.2](https://github.com/vitessio/vitess/releases/tag/v15.0.2) instead.
+* Ubuntu is the only fully supported OS, for another OS please [build Vitess by yourself](/docs/contributing) or use the Docker images.
 
 ```sh
 version=15.0.2
