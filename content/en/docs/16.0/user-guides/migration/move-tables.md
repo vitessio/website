@@ -268,11 +268,11 @@ $ vtctldclient GetRoutingRules
 }
 ```
 
-The `MoveTables` operation has created routing rules to explicitly route queries against the `customer` and `corder`
-tables — including the fully qualified `customer.customer` and `customer.corder` names — to the respective tables in
-the `commerce` keyspace so that currently all requests go to the original keyspace.  This is done so that when
-`MoveTables` creates the new copy of the tables in the `customer` keyspace, there is no ambiguity about where to
-route requests for the `customer` and `corder` tables. All requests for those tables will keep going to the original
+The `MoveTables` operation has created [routing rules](../../../reference/features/schema-routing-rules/) to explicitly route
+queries against the `customer` and `corder` tables — including the fully qualified `customer.customer` and `customer.corder`
+names — to the respective tables in the `commerce` keyspace so that currently all requests go to the original keyspace.  This
+is done so that when `MoveTables` creates the new copy of the tables in the `customer` keyspace, there is no ambiguity about
+where to route requests for the `customer` and `corder` tables. All requests for those tables will keep going to the original
 instance of those tables in `commerce` keyspace. Any changes to the tables after the `MoveTables` is executed will
 be copied faithfully to the new copy of these tables in the `customer` keyspace.
 
@@ -452,8 +452,8 @@ specifying the [`--tablet_types`](../../../reference/vreplication/movetables/#--
 
 ## Check the Routing Rules (Optional)
 
-If we now look at the routing rules after the `SwitchTraffic` step, we will see that all queries against the
-`customer` and `corder` tables will get routed to the `customer` keyspace:
+If we now look at the [routing rules](../../../reference/features/schema-routing-rules/) after the `SwitchTraffic`
+step, we will see that all queries against the `customer` and `corder` tables will get routed to the `customer` keyspace:
 
 ```json
 $ vtctldclient GetRoutingRules
@@ -650,9 +650,10 @@ $ vtctlclient Workflow commerce.commerce2customer_reverse show
 
 ## Finalize and Cleanup
 
-The final step is to complete the migration using the [`Complete`](../../../reference/vreplication/movetables/#complete) action. This will (by default) get rid of the routing rules that were created and `DROP` the original tables in
-the source keyspace (`commerce`). Along with freeing up space on the original tablets, this is an important step to
-eliminate potential future confusion. If you have a misconfiguration down the line and accidentally route queries
+The final step is to complete the migration using the [`Complete`](../../../reference/vreplication/movetables/#complete) action.
+This will (by default) get rid of the [routing rules](../../../reference/features/schema-routing-rules/) that were created and
+`DROP` the original tables in the source keyspace (`commerce`). Along with freeing up space on the original tablets, this is an
+important step to eliminate potential future confusion. If you have a misconfiguration down the line and accidentally route queries
 for the  `customer` and `corder` tables to the `commerce` keyspace, it is much better to return a *"table not found"*
 error, rather than return incorrect/stale data:
 

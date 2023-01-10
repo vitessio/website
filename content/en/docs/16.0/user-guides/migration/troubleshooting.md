@@ -15,46 +15,80 @@ Make sure you have run the "101" and "201" steps of the examples, for example th
 you have setup the shell aliases from the example, e.g. `env.sh` in the [local](../../../get-started/local) example.
 {{< /info >}}
 
-## 
+## General Precautionary Steps
 
-Before starting the cutover process you will want to:
- 
-1.  Save your routing rules just in case the are needed to revert the process:
+### Save Routing Rules
 
-```sh
-vtctldclient --server vtctld.host:15999 GetRoutingRules > /var/tmp/routingrules.backup.json
+The `Create`, `SwitchTraffic`/`ReverseTraffic`, and `Cancel`/`Complete` actions modify the
+[routing rules](../../../reference/features/schema-routing-rules/). You may want to save the routing rules before
+taking an action just in case you want to restore them for any reason (note that e.g. the `ReverseTraffic` will
+also properly revert the routing rules):
+```bash
+$ vtctldclient GetRoutingRules > /tmp/routingrules.backup.json
 ```
 
-2. Check that the source keyspace(s) have the necessary tablet types in them (e.g. RDONLY).
-3. Check that there is free diskspace in the target keyspace (i.e. on the target keyspace tablets). This is because the process will use at least as much diskspace as is in the source keyspace for the tables being moved.
-
-### Performance notes
-
-- In newer Vitess versions (e.g. v7, v8, or v9) MoveTable performance is usually limited by the downstream MySQL instance insert performance.
-- In very recent Vitess versions (e.g. v10 or v11), the various database row and gRPC packet buffers are sized dynamically for improved performance.
-- With Vitess versions before v10, be careful of making the row and packet buffers too large, since you might run into an issue where [vreplication catchup mode may be unable to terminate](https://github.com/vitessio/vitess/issues/8104).
-
-## Start MoveTables
-
-To begin MoveTables run the following command:
-
-```sh
-vtctlclient --server vtctld.host:15999 MoveTables -- --source sourcekeyspace --tables 'table1,table2,table3' Create targetkeyspace.workflowname
+Those can later be applied this way:
+```bash
+$ vtctldclient ApplyRoutingRules --rules-file=/tmp/routingrules.backup.json
 ```
 
-You can then monitor the workflow status:
+### Execute a Dry Run
 
-```sh
-vtctlclient --server vtctld.host:15999 Workflow -- targetkeyspace listall
-Following workflow(s) found in keyspace targetkeyspace.workflowname
-vtctldclient --server vtctld.host:15999 MoveTables -- Progress targetkeyspace.workflowname
-```
-If you want more detailed information you can also run:
+The `SwitchTraffic`/`ReverseTraffic` and `Complete` actions support a dry run using the `--dry_run` flag where no
+actual steps are taken but instead the command logs all the steps that *would* be taken. This command will also
+verify that the cluster is generally in a state where it can perform the action successfully without timing out
+along the way. Given that traffic cutovers can potentially cause read/write pauses or outages this can be
+particularly helpful during the final cutover stage.
 
-```sh
-vtctlclient --server vtctld.host:15999 Workflow -- targetkeyspace.workflowname show
+
+## Performance Notes
+
+- ...
+
+## Specific Errors and Issues
+
+### Stream Never Starts
+
+This can be exhibited in one of two ways:
+1. This error is shown in the `Progress`/`Show` action output or the `Workflow show` output: `Error picking tablet: context has expired`
+2. The stream never starts, which can be seen in the following ways:
+    1. The `Workflow show` output is showing an empty value in the `Pos` field for the stream
+    2. The `Progress`/`Show` action output is showing `VStream has not started` for the stream
+
+When a VReplication workflow starts or restarts the [tablet selection process](../../../reference/vreplication/tablet_selection/)
+runs to find a viable source tablet for the stream. The `cell` and `tablet_types` play a key role in this process and
+if we cannot ever find a viable source tablet for the stream then you may want to expand the cells and/or tablet types
+made available for the selection process.
+
+#### Corrective Action
+
+If the workflow was only created and has not yet made any progress then you should `Cancel` the workflow and `Create` a new
+one using different values for the `--cells` and `--tablet_types` flags. If, however, this workflow has made significant
+progress that you do not wish you lose, you can update the underlying workflow record directly to modify either of those
+values. For example:
+```bash
+$ vtctlclient MoveTables -- Progress customer.commerce2customer
+
+The following vreplication streams exist for workflow customer.commerce2customer:
+
+id=1 on 0/zone1-0000000200: Status: Running. VStream has not started.
+
+
+$ vtctlclient VExec -- customer.commerce2customer 'update _vt.vreplication set tablet_types="replica,primary" where workflow="commerce2customer"'
++------------------+--------------+
+|      Tablet      | RowsAffected |
++------------------+--------------+
+| zone1-0000000201 |            1 |
++------------------+--------------+
+
+
+$ vtctlclient MoveTables -- Progress customer.commerce2customer
+
+The following vreplication streams exist for workflow customer.commerce2customer:
+
+id=1 on 0/zone1-0000000201: Status: Running. VStream Lag: 0s.
 ```
-The output for `Workflow ... show` is shown below in the --v1 commands.
+
 
 ## Confirm MoveTables has completed
 
@@ -65,8 +99,10 @@ The MoveTables workflow is done when the state has transitioned to “Running”
 
 Depending on the size of the table(s), the VDiff process may need increased timeouts for two things:
 
-- If you are running VDiff using vtctldclient (i.e. vtctld is doing the VDiff) you will need to increase the vtctldclient gRPC action timeout. This increase could be something like `--action_timeout 12h` as the default is 1 hour.
-- Increase the `--filtered_replication_wait_time` parameter for VDiff as the default is 30 seconds. You many need to increase this to hours on large and/or busy tables.
+- If you are running VDiff using vtctldclient (i.e. vtctld is doing the VDiff) you will need to increase the vtctldclient
+gRPC action timeout. This increase could be something like `--action_timeout 12h` as the default is 1 hour.
+- Increase the `--filtered_replication_wait_time` parameter for VDiff as the default is 30 seconds. You many need to
+increase this to hours on large and/or busy tables.
 
 {{< info >}}
 Note that running VDiff via vtctld can lead to vtctld consuming significantly more memory than usual.
