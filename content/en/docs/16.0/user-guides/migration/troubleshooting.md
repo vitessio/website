@@ -74,12 +74,9 @@ The following vreplication streams exist for workflow customer.commerce2customer
 id=1 on 0/zone1-0000000200: Status: Running. VStream has not started.
 
 
-$ vtctlclient VExec -- customer.commerce2customer 'update _vt.vreplication set tablet_types="replica,primary" where workflow="commerce2customer"'
-+------------------+--------------+
-|      Tablet      | RowsAffected |
-+------------------+--------------+
-| zone1-0000000201 |            1 |
-+------------------+--------------+
+$ for tablet in $(vtctlclient ListAllTablets -- --keyspace=customer --tablet_type=primary | awk '{print $1}'); do
+    vtctlclient VReplicationExec -- ${tablet} 'update _vt.vreplication set tablet_types="replica,primary" where workflow="commerce2customer"'
+  done
 
 
 $ vtctlclient MoveTables -- Progress customer.commerce2customer
