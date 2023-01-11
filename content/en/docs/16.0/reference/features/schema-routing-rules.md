@@ -4,12 +4,13 @@ weight: 15
 aliases: ['/docs/schema-management/routing-rules/','/docs/reference/schema-routing-rules/']
 ---
 
-The Vitess routing rules feature is a powerful mechanism for directing query traffic to the right keyspaces, shards, and tablet types.
-Their primary usage today is for the following use case:
+The Vitess routing rules feature is a powerful mechanism for directing query traffic to the right keyspaces, shards, and tablet types in
+[Vitess Gateways](../../../concepts/vtgate/) (`vtgate`). Their primary usage today is for the following use case:
 
 * **Routing traffic during data migrations**: during e.g. [`MoveTables`](../../vreplication/movetables/) and
   [`Reshard`](../../vreplication/reshard/) operations, routing rules dictate where to send reads and writes. These routing rules are managed
-  automatically by VReplication. You can see an example of their usage in the [MoveTables](../../../user-guides/migration/move-tables/) user guide.
+  automatically by [VReplication](../../vreplication/vreplication/). You can see an example of their usage in the
+  [MoveTables](../../../user-guides/migration/move-tables/) user guide.
 
 Understanding the routing rules can help you debug migration related issues as well as provide you with another powerful tool as
 you operate Vitess.
@@ -131,3 +132,10 @@ $ vtctldclient --server=localhost:15999 GetRoutingRules
   ]
 }
 ```
+
+## When Routing Rules Are Applied
+
+In the above example, we send all query traffic for the `customer` or `corder` tables to the `commerce` keyspace regardless of how
+the client specifies the database/schema and table qualifiers. There is, however, one important exception and that is when the client
+explicitly requests the usage of a specific shard, also known as "shard targeting". For example, if the client specifies the database
+as `customer:0` or `customer:0@replica` then the query will get run against that shard in the customer keyspace.
