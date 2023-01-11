@@ -36,9 +36,9 @@ $ vtctldclient ApplyRoutingRules --rules-file=/tmp/routingrules.backup.json
 
 The `SwitchTraffic`/`ReverseTraffic` and `Complete` actions support a dry run using the `--dry_run` flag where no
 actual steps are taken but instead the command logs all the steps that *would* be taken. This command will also
-verify that the cluster is generally in a state where it can perform the action successfully without timing out
-along the way. Given that traffic cutovers can potentially cause read/write pauses or outages this can be
-particularly helpful during the final cutover stage.
+verify that the cluster is generally in a state where it can perform the action successfully without potentially
+timing out along the way. Given that traffic cutovers can potentially cause read/write pauses or outages this can
+be particularly helpful during the final cutover stage.
 
 
 ## Performance Notes
@@ -56,7 +56,7 @@ This can be exhibited in one of two ways:
     2. The `Progress`/`Show` action output is showing `VStream has not started` for the stream
 
 When a VReplication workflow starts or restarts the [tablet selection process](../../../reference/vreplication/tablet_selection/)
-runs to find a viable source tablet for the stream. The `cell` and `tablet_types` play a key role in this process and
+runs to find a viable source tablet for the stream. The `cells` and `tablet_types` play a key role in this process and
 if we cannot ever find a viable source tablet for the stream then you may want to expand the cells and/or tablet types
 made available for the selection process.
 

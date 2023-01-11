@@ -33,12 +33,13 @@ Be careful to avoid using the `INSTANT ADD COLUMN` feature in [MySQL 8.0+](https
 A comma-separated list of cell names or cell aliases. This list is used by VReplication to determine which
 cells should be used to pick a tablet for selecting data from the source keyspace.<br><br>
 
+</div>
+
 ###### Uses
 
 * Improve performance by using picking a tablet in cells in network proximity with the target
 * To reduce bandwidth costs by skipping cells that are in different availability zones
 * Select cells where replica lags are lower
-</div>
 
 #### --tablet_types 
 **optional**\
@@ -47,7 +48,8 @@ cells should be used to pick a tablet for selecting data from the source keyspac
 
 <div class="cmd">
 
-Source tablet types to replicate from (e.g. PRIMARY, REPLICA, RDONLY).
+Source tablet types to replicate from (e.g. PRIMARY, REPLICA, RDONLY). The value
+specified impacts [tablet selection](../tablet_selection/) for the workflow.
 
 </div>
 
@@ -55,8 +57,6 @@ Source tablet types to replicate from (e.g. PRIMARY, REPLICA, RDONLY).
 
 * To reduce the load on PRIMARY tablets by using REPLICAs or RDONLYs
 * Reducing lag by pointing to PRIMARY
-
-</div>
 
 #### JSON spec details
 <div class="cmd">
@@ -88,7 +88,6 @@ Materialize '{"workflow": "product_sales", "source_keyspace": "commerce", "targe
     "source_expression": "select sku, count(*), sum(price) from corder group by order_id"}],
     "cell": "zone1", "tablet_types": "REPLICA"}'
 ```
-
 
 ### A Materialize Workflow
 
