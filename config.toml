@@ -75,7 +75,7 @@ icon = "fighter-jet"
 
 [[languages.en.params.features]]
 title = "Manageability"
-description = "Vitess automatically handles functions like failovers and backups. It uses a lock server to track and administer servers, letting your application be blissfully ignorant of database topology."
+description = "Vitess automatically handles functions like failovers and backups. It uses a topology server to track and administer servers, letting your application be blissfully ignorant of database topology."
 icon = "tachometer-alt"
 
 [[languages.en.params.features]]
@@ -85,7 +85,7 @@ icon = "share-alt"
 
 [[languages.en.params.features]]
 title = "Shard management"
-description = "MySQL doesn't natively support sharding, but you will likely need it as your database grows. Vitess saves you from having to add sharding logic to your app and also enables live resharding with minimal read-only downtime."
+description = "MySQL doesn't natively support sharding, but you will likely need it as your database grows. Vitess saves you from having to add sharding logic to your application. It also enables live resharding with minimal read-only downtime."
 icon = "object-ungroup"
 
 [[languages.en.params.features]]
