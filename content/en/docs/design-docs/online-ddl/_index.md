@@ -9,5 +9,5 @@ This is a list of docs on the Vitess github site that have been, or are used as 
 
 Some of these documents might not be representative of the current state of Vitess.
 
-- [Online DDL Scheduler](https://github.com/vitessio/vitess/blob/main/doc/OnlineDDLScheduler.md)
-- [Safe Lazy DROP Tables](https://github.com/vitessio/vitess/blob/main/doc/SafeLazyDropTables.md)
+- [Online DDL Scheduler](https://github.com/vitessio/vitess/blob/main/doc/design-docs/OnlineDDLScheduler.md)
+- [Safe Lazy DROP Tables](https://github.com/vitessio/vitess/blob/main/doc/design-docs/SafeLazyDropTables.md)
