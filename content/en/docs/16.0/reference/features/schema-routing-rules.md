@@ -4,52 +4,130 @@ weight: 15
 aliases: ['/docs/schema-management/routing-rules/','/docs/reference/schema-routing-rules/']
 ---
 
-The Vitess routing rules feature is a powerful mechanism for directing traffic to the right keyspaces, shards or tablet types.
-It fulfils the following use cases:
+The Vitess routing rules feature is a powerful mechanism for directing query traffic to the right keyspaces, shards, and tablet types.
+Their primary usage today is for the following use case:
 
-* **Routing traffic during resharding**: During resharding, you can specify rules that decide where to send reads and writes. For example,
-  you can move traffic from the source shard to the destination shards, but only for the `rdonly` or `replica` types. This gives you
-  the option to try out the new shards and make sure they will work as intended before committing to move the rest of the traffic.
+* **Routing traffic during data migrations**: during e.g. [`MoveTables`](../../vreplication/movetables/) and
+  [`Reshard`](../../vreplication/reshard/) operations, routing rules dictate where to send reads and writes. These routing rules are managed
+  automatically by VReplication. You can see an example of their usage in the [MoveTables](../../../user-guides/migration/move-tables/) user guide.
 
-## ApplyRoutingRules
+Understanding the routing rules can help you debug migration related issues as well as provide you with another powerful tool as
+you operate Vitess.
 
-You can use the vtctlclient command to apply routing rules:
+## Viewing Routing Rules
 
-```
-ApplyRoutingRules -- {--rules=<rules> || --rules_file=<rules_json_file>} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run]
-```
+The routing rules are global and can be viewed using the [`GetRoutingRules` client command](../../programs/vtctldclient/vtctldclient_getroutingrules/).
+
+## Updating Routing Rules
+
+You can update the routing rules using the [`ApplyRoutingRules` client command](../../programs/vtctldclient/vtctldclient_applyroutingrules/).
 
 ## Syntax
 
-### Resharding 
-
-Routing rules can be specified using JSON format. Here's an example:
-
-``` json
-{"rules": [
-  {
-    "from_table": "t@rdonly",
-    "to_tables": ["target.t"]
-  }, {
-    "from_table": "target.t",
-    "to_tables": ["source.t"]
-  }, {
-    "from_table": "t",
-    "to_tables": ["source.t"]
-  }
-]}
+Routing rules are managed using the JSON format. Here's an example, using the routing rules that are put in place by `MoveTables`
+in the [local examples](../../../get-started/local/) where the `customer` and `corder` tables are being moved from the `commerce`
+keyspace to the `customer` keyspace and we have not yet switched traffic from the `commerce` keyspace to the `customer` keyspace — so all
+traffic, regardless of which keyspace a client uses, are sent to the `commerce` keyspace:
+```json
+$ vtctldclient --server=localhost:15999 GetRoutingRules
+{
+  "rules": [
+    {
+      "from_table": "customer.customer",
+      "to_tables": [
+        "commerce.customer"
+      ]
+    },
+    {
+      "from_table": "commerce.corder@replica",
+      "to_tables": [
+        "commerce.corder"
+      ]
+    },
+    {
+      "from_table": "customer.customer@rdonly",
+      "to_tables": [
+        "commerce.customer"
+      ]
+    },
+    {
+      "from_table": "commerce.corder@rdonly",
+      "to_tables": [
+        "commerce.corder"
+      ]
+    },
+    {
+      "from_table": "corder@replica",
+      "to_tables": [
+        "commerce.corder"
+      ]
+    },
+    {
+      "from_table": "commerce.customer@replica",
+      "to_tables": [
+        "commerce.customer"
+      ]
+    },
+    {
+      "from_table": "commerce.customer@rdonly",
+      "to_tables": [
+        "commerce.customer"
+      ]
+    },
+    {
+      "from_table": "customer.corder@replica",
+      "to_tables": [
+        "commerce.corder"
+      ]
+    },
+    {
+      "from_table": "customer.corder@rdonly",
+      "to_tables": [
+        "commerce.corder"
+      ]
+    },
+    {
+      "from_table": "customer.customer@replica",
+      "to_tables": [
+        "commerce.customer"
+      ]
+    },
+    {
+      "from_table": "customer.corder",
+      "to_tables": [
+        "commerce.corder"
+      ]
+    },
+    {
+      "from_table": "corder@rdonly",
+      "to_tables": [
+        "commerce.corder"
+      ]
+    },
+    {
+      "from_table": "customer@replica",
+      "to_tables": [
+        "commerce.customer"
+      ]
+    },
+    {
+      "from_table": "customer@rdonly",
+      "to_tables": [
+        "commerce.customer"
+      ]
+    },
+    {
+      "from_table": "corder",
+      "to_tables": [
+        "commerce.corder"
+      ]
+    },
+    {
+      "from_table": "customer",
+      "to_tables": [
+        "commerce.customer"
+      ]
+    }
+  ]
+}
 ```
-
-The above JSON specifies the following rules:
-
-* If you sent a query accessing `t` for an `rdonly` instance, then it would be sent to table `t` in the `target` keyspace.
-* If you sent a query accessing `target.t` for anything other than `rdonly`, it would be sent `t` in the `source` keyspace.
-* If you sent a query accessing `t` without any qualification, it would be sent to `t` in the `source` keyspace.
-
-These rules are an example of how they can be used to shift traffic for a table during a vertical resharding process.
-In this case, the assumption is that we are moving `t` from `source` to `target`, and so far, we've shifted traffic
-for just the `rdonly` tablet types.
-
-By updating these rules, you can eventually move all traffic to `target.t`
-
-The rules are applied only once. The resulting targets need to specify fully qualified table names.
