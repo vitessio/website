@@ -135,7 +135,19 @@ $ vtctldclient --server=localhost:15999 GetRoutingRules
 
 ## When Routing Rules Are Applied
 
-In the above example, we send all query traffic for the `customer` or `corder` tables to the `commerce` keyspace regardless of how
+In the above example, we send all query traffic for the `customer` and `corder` tables to the `commerce` keyspace regardless of how
 the client specifies the database/schema and table qualifiers. There is, however, one important exception and that is when the client
 explicitly requests the usage of a specific shard, also known as "shard targeting". For example, if the client specifies the database
 as `customer:0` or `customer:0@replica` then the query will get run against that shard in the customer keyspace.
+
+{{< warning >}}
+You should exercise _extreme_ caution when executing ad-hoc *write* queries during this time as you may think that you're deleting data
+from the target keyspace, that is as of yet unused, when in reality you're deleting it from the source keyspace that is currently
+serving production traffic.
+{{</ warning >}}
+
+{{< info >}}
+You can leverage shard targeting to perform ad-hoc *read-only* queries against the target and source keyspace/shards to perform any
+additional data validation or checks that you want (beyond [`VDiff`](../../vreplication/vdiff/)). You can also use this shard targeting
+to see how your data is distributed across the keyspace's shards.
+{{</ info >}}
