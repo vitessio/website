@@ -174,239 +174,34 @@ id=2 on 0/zone1-0000000201: Status: Running. VStream Lag: 0s.
 
 ### Switching Traffic Fails
 
+You can encounter a variety of failures during the `SwitchTraffic`/`ReverseTraffic` step as a number of operations are performed. To
+demonstrate that we can look at the dry run output:
+```bash
+$ vtctlclient MoveTables -- --dry_run SwitchTraffic customer.commerce2customer
+Dry Run results for SwitchTraffic run at 11 Jan 23 08:51 EST
+Parameters: --dry_run SwitchTraffic customer.commerce2customer
 
-
-# OLD CONTENT
-
-## Confirm MoveTables has completed
-
-You can tell if the MoveTables workflow is done copying by inspecting workflow “State” and “CopyState” fields.  
-The MoveTables workflow is done when the state has transitioned to “Running” from “Copying”, and the CopyState is empty (null).
-
-### Performing the VDiff
-
-Depending on the size of the table(s), the VDiff process may need increased timeouts for two things:
-
-- If you are running VDiff using vtctldclient (i.e. vtctld is doing the VDiff) you will need to increase the vtctldclient
-gRPC action timeout. This increase could be something like `--action_timeout 12h` as the default is 1 hour.
-- Increase the `--filtered_replication_wait_time` parameter for VDiff as the default is 30 seconds. You many need to
-increase this to hours on large and/or busy tables.
-
-{{< info >}}
-Note that running VDiff via vtctld can lead to vtctld consuming significantly more memory than usual.
-We've found this to be around 1 GB plus, instead of the a few hundred MB that it normally uses.
-If you run your vtctld in a memory limited container, you may want to take this into account.
-Similarly, while a VDiff is in progress, vtctld will consume significantly more CPU than usual.
-{{< /info >}}
-
-Since a VDiff is a synchronous operation, but does not report results until it has completed, which might be after many hours, you have to follow its progress indirectly. 
-This can be done by inspecting the vtctld logs, which will print progress every 10 million rows when running VDiff on a large table. 
-This can also be used to estimate how long the operation may take.
-You will also need to run VDiff from somewhere where it can keep running uninterrupted for hours. 
-For example, in a screen or tmux session on a server with stable network connectivity to vtctld. 
-
-### What happens during a VDiff
-
-VDiff uses the same VReplication and VStreamer infrastructure as MoveTables, Materialize, etc.  
-As such, it will use consistent snapshot read queries against both sets of tablets that host the data being compared. 
-If either side of these tablets are actively being used to serve queries, which usually occurs on the source side, this may lead to impact to that workload. 
-This is why we recommend running VDiff against RDONLY tablet types, to reduce the chance of impacting performance-sensitive applications that may be accessing the keyspace(s).
-
-{{< info >}}
-Note that the VDiff operation (i.e. the process streaming the data from the two sets of tablets where tables are being compared) actually runs inside vtctld. 
-As a result, a large amount of data is potentially transferred between the tablets and vtctld. 
-You may want to keep this in mind when choosing the vtctld instance that you are going to run the VDiff against.
-{{< /info >}}
-
-### Potential errors or issues when running VDiff
-
-1. Timeouts or network interruptions
-
-VDiff may not start because tablets of the `--tablet_types` specified may not be available in the cells specified. 
-This is often the case if you are using the optional parameters of `--source_cell` and `--target_cell`. 
-In a case like this VDiff will appear to run, but will not actually make any progress. 
-This can be observed via messages in the vtctld log like:
-
-```sh
-`I0804 14:43:46.664273   64656 tablet_picker.go:146] No tablet found for streaming, shard keyspacename.0, cells [cellname], tabletTypes [RDONLY], sleeping for 30 seconds`
+Lock keyspace commerce
+Switch reads for tables [corder,customer] to keyspace customer for tablet types [RDONLY,REPLICA]
+Routing rules for tables [corder,customer] will be updated
+Unlock keyspace commerce
+Lock keyspace commerce
+Lock keyspace customer
+Stop writes on keyspace commerce, tables [corder,customer]:
+	Keyspace commerce, Shard 0 at Position MySQL56/a2d90338-916d-11ed-820a-498bdfbb0b03:1-94
+Wait for VReplication on stopped streams to catchup for up to 30s
+Create reverse replication workflow commerce2customer_reverse
+Create journal entries on source databases
+Enable writes on keyspace customer tables [corder,customer]
+Switch routing from keyspace commerce to keyspace customer
+Routing rules for tables [corder,customer] will be updated
+Switch writes completed, freeze and delete vreplication streams on:
+	tablet 201
+Start reverse replication streams on:
+	tablet 101
+Mark vreplication streams frozen on:
+	Keyspace customer, Shard 0, Tablet 201, Workflow commerce2customer, DbName vt_customer
+Unlock keyspace customer
+Unlock keyspace commerce
 ```
 
-In a case like this, you should stop the VDiff, then adjust the options appropriately, and restart.
-
-### How do you stop and restart VDiff
-
-Since VDiff is synchronous, just using CTRL-C on the vtctldclient VDiff command is sufficient.
-Executing another VDiff immediately afterwards will return the workflow back to the proper state.  
-
-If you do NOT plan to execute another VDiff, you will need to double check the current state of the workflow to ensure that it’s running after you interrupted the vtctldclient process. 
-If a VDiff is interrupted in certain phases it can leave the workflow stopped.
-
-To check workflow state:
-
-```sh
-vtctlclient … Workflow -- targetkeyspace.workflowname show
-```
-
-If the workflow state is STOPPED and the message field is empty you can simply start the workflow again:
-
-```sh
-vtctlclient … Workflow -- targetkeyspace.workflowname start
-```
-
-If the workflow state is STOPPED and the message field is “Stop position … already reached”, then you will have to clear the stop_pos field in the _vt.vreplication table before starting the workflow again.
-There are detailed notes and test cases on interrupted VDiffs for further reading [here](https://gist.github.com/mattlord/2205e7b4e5c7e393fe645122ea869e8b).
-
-### How do you stop and restart Workflows
-
-For general Workflow-based operations (MoveTables, Materialize and CreateLookupVindex), cleanup can be performed directly against the underlying workflows. 
-Depending on the use-case, additional or alternative cleanup methods may be available.
-
-1. The general procedure is as follows:
-
-```sh
-vtctlclient … Workflow -- targetkeyspace.workflowname show
-vtctlclient … Workflow -- targetkeyspace.workflowname stop
-vtctlclient … Workflow -- targetkeyspace.workflowname delete
-```
-
-In the case of MoveTables, additional operations are done at various stages against the Vitess routing rules, which are global for a Vitess cluster.
-As a result, you may have to dump the routing rules, edit them, and then apply the edited routing rules in order to fully clean up your workflows. 
-Usually, it is also advisable to save the routing rules before starting your MoveTables operation.
-
-2. To save or dump routing rules:
-
-```sh
-vtctldclient --server ...  GetRoutingRules > /path/to/save/routingrules.json
-```
-
-3. You should then be able to edit the routingrules.json file and then apply the new routing rules using:
-
-```sh
-vtctldclient --server ...  ApplyRoutingRules -- --rules=($cat /path/to/save/routingrules.json) --dry-run
-```
-That will not actually execute ApplyRoutingRules due to the `--dry-run` flag, instead it will enable you to see what would happen when you run that command and address any issues that may occur.
-
-4. Once you have verified the command works as intended run it without --dry-run:
-
-```sh
-vtctldclient -server ...  ApplyRoutingRules -rules=($cat /path/to/save/routingrules.json) 
-```
-
-Some Vreplication workflows (e.g. MoveTables and Resharding) have their own DropSources cleanup command, which can take care of much of the above.
-
-### How do you clean the tables in the target keyspace
-
-If traffic is not flowing against the target keyspace, you can drop the tables without being concerned about the locking/performance effects.
-
-{{< warning >}}
-Be very careful with the routing rules. 
-If the routing rules are not correctly cleaned up first, the action of dropping a table in the target keyspace will be re-routed to the source keyspace. 
-This will result in you dropping your source/original table.
-{{< /warning >}}
-
-## Begin your cutover
-
-It is recommended you first run SwitchTraffic with --dry_run so you understand what actions are going to be taken before actually taking them. 
-`--dry_run` needs to be added before SwitchTraffic along with any other [SwitchTraffic parameters](../../../reference/vreplication/switchtraffic) you want to pass.
-Reads and writes no longer need to be switched in specific order, but both will need to be completed to run MoveTables Complete. 
-The default SwitchTraffic behavior is to switch all traffic in a single command, Vitess switches all reads and then writes if you use this default option.
-
-1. Depending on what `--tablet_types` you are using, you will use one of the four following commands:
-
-- Default (switches all tablet types)
-
-```
-vtctlclient --server vtctld.host:15999 MoveTables -- --dry_run SwitchTraffic targetkeyspace.workflowname
-```
-
-- RDONLY:
-  
-```
-vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=rdonly --dry_run SwitchTraffic targetkeyspace.workflowname
-```
-
-- REPLICA:
-  
-```
-vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=replica --dry_run SwitchTraffic targetkeyspace.workflowname
-```
-
-- PRIMARY:  
-
-```
-vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=primary --dry_run SwitchTraffic targetkeyspace.workflowname
-```
-
-The output of these commands will look similar to the following:
-
-```sh
-$ vtctlclient --server localhost:15999 MoveTables -- --tablet_types=rdonly --dry_run SwitchTraffic targetkeyspace.workflowname 
-Dry Run results for SwitchReads run at 02 Jan 06 15:04 MST
-Parameters: --tablet_types=rdonly --dry_run targetkeyspace.workflowname
-
-Lock keyspace sourcekeyspace
-Switch reads for tables [t1] to keyspace targetkeyspace for tablet types [RDONLY]
-Routing rules for tables [t1] will be updated
-Unlock keyspace sourcekeyspace
-```
-
-After you have tried the above command(s) with `--dry_run` remove just that flag to then actually run the command.
-
-## Cutover rollback
-
-MoveTables v2 supports cutover rollbacks via the MoveTables --ReverseTraffic command. 
-ReverseTraffic supports the `--dry_run` flag and we recommend using it to verify what actions ReverseTraffic will take. 
-Then remove --dry_run when you are prepared to actually ReverseTraffic.
-The default ReverseTraffic behavior is to switch all traffic in a single command, meaning that Vitess switches all reads and then writes if you use this default option.
-
-1. Depending on what `--tablet_types` you are using, you will use one of the four following commands:
-
-- Default (switches all tablet types)
-
-```
-vtctlclient --server vtctld.host:15999 MoveTables -- --dry_run ReverseTraffic targetkeyspace.workflowname
-```
-
-- RDONLY:
-  
-```
-vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=rdonly --dry_run ReverseTraffic targetkeyspace.workflowname
-```
-
-- REPLICA:
-  
-```
-vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=replica --dry_run ReverseTraffic targetkeyspace.workflowname
-```
-
-- PRIMARY:  
-
-```
-vtctlclient --server vtctld.host:15999 MoveTables -- --tablet_types=primary --dry_run ReverseTraffic targetkeyspace.workflowname
-```
-
-## Clean up of the cutover
-
-#### After a successful cutover
-
-If the cutover was successful, the MoveTables Complete command will do the following:
-
-```
-vtctlclient --server vtctld.host:15999 MoveTables -- --dry_run Complete targetkeyspace.workflowname
-```
-
-1. Drop the tables involved in the MoveTables in the original keyspace (sourcekeyspace)
-2. Remove the workflows related to the MoveTables operation
-3. Clean up the [routing rules](../../../reference/features/schema-routing-rules/). Applications pointed to the sourcekeyspace will no longer be transparently redirected to the targetkeyspace.
-
-#### After a cutover rollback
-
-If a cutover was rolled back via ReverseTraffic, the MoveTables Cancel command will clean up the targetkeyspace:
-
-```
-vtctlclient --server vtctld.host:15999 MoveTables -- Cancel targetkeyspace.workflowname
-```
-
-1. Drop the tables involved in the MoveTables in the new keyspace (targetkeyspace)
-2. Remove the workflows related to the MoveTables operation
-3. Clean up the [routing rules](../../../reference/features/schema-routing-rules/). Applications pointed to the targetkeyspace will no longer be transparently redirected to the sourcekeyspace.
