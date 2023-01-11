@@ -60,8 +60,8 @@ It's important to properly monitor your VReplication workflows in order to detec
 
 The `Create`, `SwitchTraffic`/`ReverseTraffic`, and `Cancel`/`Complete` actions modify the
 [routing rules](../../../reference/features/schema-routing-rules/). You may want to save the routing rules before
-taking an action just in case you want to restore them for any reason (note that e.g. the `ReverseTraffic` will
-also properly revert the routing rules):
+taking an action just in case you want to restore them for any reason (note that e.g. the `ReverseTraffic` action
+will automatically revert the routing rules):
 ```bash
 $ vtctldclient GetRoutingRules > /tmp/routingrules.backup.json
 ```
@@ -209,7 +209,7 @@ Unlock keyspace commerce
 
 If your queries start failing with this error then you most likely had some leftover artifacts from a previous `MoveTables` operation
 that were not properly cleaned up by running [`MoveTables -- Cancel`](../../../reference/vreplication/movetables/#cancel). For
-`MoveTables` operations shard query serving control records (denied tables lists) are used in addition to
+`MoveTables` operations, shard query serving control records (denied tables lists) are used in addition to
 [routing rules](../../../reference/features/schema-routing-rules/) to ensure that all query traffic is managed by the correct keyspace
 as you are often only moving some tables from one keyspace to another. If those control records are not properly cleaned up then
 queries may be incorrectly denied when traffic is switched. If you e.g. were to see the following error for queries after switching
