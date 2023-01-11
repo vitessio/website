@@ -5,7 +5,7 @@ weight: 4
 
 ## Overview
 
-Here we will cover some common issues seen during a migration, how to avoid them, how to detect them, and how to address them.
+Here we will cover some common issues seen during a migration — how to avoid them, how to detect them, and how to address them.
 
 {{< info >}}
 This guide follows on from the [Get Started](../../../get-started/) guides. Please make sure that you have a
@@ -15,22 +15,8 @@ Make sure you have run the "101" and "201" steps of the examples, for example th
 you have setup the shell aliases from the example, e.g. `env.sh` in the [local](../../../get-started/local) example.
 {{< /info >}}
 
-## General Precautionary Steps
 
-### Save Routing Rules
-
-The `Create`, `SwitchTraffic`/`ReverseTraffic`, and `Cancel`/`Complete` actions modify the
-[routing rules](../../../reference/features/schema-routing-rules/). You may want to save the routing rules before
-taking an action just in case you want to restore them for any reason (note that e.g. the `ReverseTraffic` will
-also properly revert the routing rules):
-```bash
-$ vtctldclient GetRoutingRules > /tmp/routingrules.backup.json
-```
-
-Those can later be applied this way:
-```bash
-$ vtctldclient ApplyRoutingRules --rules-file=/tmp/routingrules.backup.json
-```
+## General and Precautionary Info
 
 ### Execute a Dry Run
 
@@ -48,9 +34,43 @@ to be replicated to the target keyspace then you will need to use one of the `EX
 [`on-ddl` flag documentation](../../../reference/vreplication/vreplication/#handle-ddl) for additional details and
 related considerations.
 
+## Running a Diff
+
+In most cases you should run a [`VDiff`](../../../reference/vreplication/vdiff/) before switching traffic to ensure
+that nothing unexpected happened which caused the data to diverge during the migration.
+
 ## Performance Notes
 
-- ...
+- VReplication workflows (including [`VDiff`](../../../reference/vreplication/vdiff/)) can have a major impact on the
+tablet so it's recommended to use non-PRIMARY tablets whenever possible to limit any impact on production traffic
+    - You can see the key related tablet flags and when/why you may want to set them in the [VReplication tablet flag docs](../../../reference/vreplication/flags/)
+    - You can further control any impact on the source and target tablets using [the tablet throttler](../../../reference/features/tablet-throttler/)
+- VReplication workflows can generate a lot of network traffic
+    - You should strive to keep the source and target tablets in the same [cell](../../../concepts/cell) whenever possible to limit performance and cost impacts
+
+## Monitoring
+
+It's important to properly monitor your VReplication workflows in order to detect any issues. Your primary tools for this are:
+  - The [`Workflow show`](../../../reference/vreplication/workflow/) command
+  - The `Progress`/`Show` action (e.g. [`MoveTables -- Progress`](../../../reference/vreplication/movetables/#progress))
+  - The [VReplication related metrics](../../../reference/vreplication/metrics/)
+    - Note that in most production systems the tablet endpoints would be scraped and stored in something like Prometheues where you can build dashboards and alerting on the data
+
+### Save Routing Rules
+
+The `Create`, `SwitchTraffic`/`ReverseTraffic`, and `Cancel`/`Complete` actions modify the
+[routing rules](../../../reference/features/schema-routing-rules/). You may want to save the routing rules before
+taking an action just in case you want to restore them for any reason (note that e.g. the `ReverseTraffic` will
+also properly revert the routing rules):
+```bash
+$ vtctldclient GetRoutingRules > /tmp/routingrules.backup.json
+```
+
+Those can later be applied this way:
+```bash
+$ vtctldclient ApplyRoutingRules --rules-file=/tmp/routingrules.backup.json
+```
+
 
 ## Specific Errors and Issues
 
@@ -151,6 +171,9 @@ The following vreplication streams exist for workflow customer.commerce2customer
 
 id=2 on 0/zone1-0000000201: Status: Running. VStream Lag: 0s.
 ```
+
+### Switching Traffic Fails
+
 
 
 # OLD CONTENT
