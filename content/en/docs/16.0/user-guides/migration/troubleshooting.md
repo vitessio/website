@@ -40,7 +40,6 @@ verify that the cluster is generally in a state where it can perform the action 
 timing out along the way. Given that traffic cutovers can potentially cause read/write pauses or outages this can
 be particularly helpful during the final cutover stage.
 
-
 ## Performance Notes
 
 - ...
@@ -86,6 +85,67 @@ The following vreplication streams exist for workflow customer.commerce2customer
 id=1 on 0/zone1-0000000201: Status: Running. VStream Lag: 0s.
 ```
 
+### Workflow Has SQL Errors
+
+We can encounter persistent SQL errors when applying replicated events on the target for a variety of reasons, but
+the most common cause is incompatible DDL having been executed against the source table while the workflow is running. 
+You would see this error in the `Show`/`Progress` or `Workflow show` output. For example:
+```bash
+$ vtctlclient MoveTables -- Progress customer.commerce2customer
+
+The following vreplication streams exist for workflow customer.commerce2customer:
+
+id=1 on 0/zone1-0000000201: Status: Error: Unknown column 'notes' in 'field list' (errno 1054) (sqlstate 42S22) during query: insert into customer(customer_id,email,notes) values (100,'test@tester.com','Lots of notes').
+
+# OR a variant
+
+$ vtctlclient MoveTables -- Progress customer.commerce2customer
+
+The following vreplication streams exist for workflow customer.commerce2customer:
+
+id=1 on 0/zone1-0000000201: Status: Error: vttablet: rpc error: code = Unknown desc = stream (at source tablet) error @ a2d90338-916d-11ed-820a-498bdfbb0b03:1-90: cannot determine table columns for customer: event has [8 15 15], schema has [name:"customer_id" type:INT64 table:"customer" org_table:"customer" database:"vt_commerce" org_name:"customer_id" column_length:20 charset:63 flags:49667 name:"email" type:VARBINARY table:"customer" org_table:"customer" database:"vt_commerce" org_name:"email" column_length:128 charset:63 flags:128].
+```
+
+This can be caused by a DDL executed on the source table as by default — controlled by the
+[`on-ddl` flag value](../../../reference/vreplication/vreplication/#handle-ddl) — DDL is ignored in the stream.
+
+#### Corrective Action
+If you want the same or similar DDL to be applied on the target then you can apply that DDL on the target keyspace
+and then restart the workflow. For example, using the example above:
+```bash
+$ vtctlclient ApplySchema -- --allow_long_unavailability --ddl_strategy=direct --sql="alter table customer add notes varchar(100) not null" customer
+
+$ vtctlclient Workflow -- customer.commerce2customer start
+``` 
+
+If the tables are not very large or the workflow has not made much progress, you can alternatively `Cancel` the current
+worfklow and `Create` another. For example:
+```bash
+$ vtctlclient MoveTables -- Cancel customer.commerce2customer
+Cancel was successful for workflow customer.commerce2customer
+Start State: Reads Not Switched. Writes Not Switched
+Current State: Workflow Not Found
+
+
+$ vtctlclient MoveTables -- --source commerce --tables 'customer,corder' Create customer.commerce2customer
+Waiting for workflow to start:
+
+Workflow started successfully with 1 stream(s)
+
+The following vreplication streams exist for workflow customer.commerce2customer:
+
+id=2 on 0/zone1-0000000201: Status: Copying. VStream Lag: 0s.
+
+
+$ vtctlclient MoveTables -- Progress customer.commerce2customer
+
+The following vreplication streams exist for workflow customer.commerce2customer:
+
+id=2 on 0/zone1-0000000201: Status: Running. VStream Lag: 0s.
+```
+
+
+# OLD CONTENT
 
 ## Confirm MoveTables has completed
 
