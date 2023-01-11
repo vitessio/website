@@ -230,4 +230,25 @@ $ vtctldclient RefreshStateByShard customer/0
 
 ### Completion and Cleanup Failures
 
-???
+The completion action performs a number of steps that could potentially fail. We can again use the dry run output to demonstrate the
+various actions that are taken:
+```bash
+$ vtctlclient MoveTables -- --dry_run Complete customer.commerce2customer
+Dry Run results for Complete run at 11 Jan 23 10:22 EST
+Parameters: --dry_run Complete customer.commerce2customer
+
+Lock keyspace commerce
+Lock keyspace customer
+Dropping these tables from the database and removing them from the vschema for keyspace commerce:
+	Keyspace commerce Shard 0 DbName vt_commerce Tablet 101 Table corder
+	Keyspace commerce Shard 0 DbName vt_commerce Tablet 101 Table customer
+Denied tables [corder,customer] will be removed from:
+	Keyspace commerce Shard 0 Tablet 101
+Delete reverse vreplication streams on source:
+	Keyspace commerce Shard 0 Workflow commerce2customer_reverse DbName vt_commerce Tablet 101
+Delete vreplication streams on target:
+	Keyspace customer Shard 0 Workflow commerce2customer DbName vt_customer Tablet 201
+Routing rules for participating tables will be deleted
+Unlock keyspace customer
+Unlock keyspace commerce
+```
