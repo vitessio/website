@@ -54,7 +54,7 @@ It's important to properly monitor your VReplication workflows in order to detec
   - The [`Workflow show`](../../../reference/vreplication/workflow/) command
   - The `Progress`/`Show` action (e.g. [`MoveTables -- Progress`](../../../reference/vreplication/movetables/#progress))
   - The [VReplication related metrics](../../../reference/vreplication/metrics/)
-    - Note that in most production systems the tablet endpoints would be scraped and stored in something like Prometheues where you can build dashboards and alerting on the data
+    - Note that in most production systems the tablet endpoints would be scraped and stored in something like [Prometheues](https://prometheus.io) where you can build dashboards and alerting on the data
 
 ### Save Routing Rules
 
@@ -175,7 +175,7 @@ id=2 on 0/zone1-0000000201: Status: Running. VStream Lag: 0s.
 ### Switching Traffic Fails
 
 You can encounter a variety of failures during the `SwitchTraffic`/`ReverseTraffic` step as a number of operations are performed. To
-demonstrate that we can look at the dry run output:
+demonstrate that we can look at an example dry run output:
 ```bash
 $ vtctlclient MoveTables -- --dry_run SwitchTraffic customer.commerce2customer
 Dry Run results for SwitchTraffic run at 11 Jan 23 08:51 EST
@@ -205,3 +205,29 @@ Unlock keyspace customer
 Unlock keyspace commerce
 ```
 
+#### disallowed due to rule: enforce denied tables
+
+If your queries start failing with this error then you most likely had some leftover artifacts from a previous `MoveTables` operation
+that were not properly cleaned up by running [`MoveTables -- Cancel`](../../../reference/vreplication/movetables/#cancel). For
+`MoveTables` operations shard query serving control records (denied tables lists) are used in addition to
+[routing rules](../../../reference/features/schema-routing-rules/) to ensure that all query traffic is managed by the correct keyspace
+as you are often only moving some tables from one keyspace to another. If those control records are not properly cleaned up then
+queries may be incorrectly denied when traffic is switched. If you e.g. were to see the following error for queries after switching
+traffic for the customer table from the commerce keyspace to the customer keyspace:
+```
+code = FailedPrecondition desc = disallowed due to rule: enforce denied tables (CallerID: matt) for query SELECT * FROM customer WHERE customer_id = 1
+```
+
+Then you can remove those unwanted/errant denied table rules from the customer keyspace this way:
+```bash
+$ for type in primary replica rdonly; do
+    vtctldclient SetShardTabletControl --remove customer/0 ${type}
+  done
+
+# Ensure that these changes are in place everywhere
+$ vtctldclient RefreshStateByShard customer/0
+```
+
+### Completion and Cleanup Failures
+
+???
