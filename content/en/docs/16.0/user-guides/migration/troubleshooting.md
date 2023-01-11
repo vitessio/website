@@ -40,6 +40,14 @@ verify that the cluster is generally in a state where it can perform the action 
 timing out along the way. Given that traffic cutovers can potentially cause read/write pauses or outages this can
 be particularly helpful during the final cutover stage.
 
+### DDL Handling
+
+If you expect DDL to be executed on the source table(s) while the workflow runs and you want those DDL statements
+to be replicated to the target keyspace then you will need to use one of the `EXEC*` options for the workflow's
+[`on-ddl`](../../../reference/vreplication/vreplication/#handle-ddl) flag. Please see the
+[`on-ddl` flag documentation](../../../reference/vreplication/vreplication/#handle-ddl) for additional details and
+related considerations.
+
 ## Performance Notes
 
 - ...
