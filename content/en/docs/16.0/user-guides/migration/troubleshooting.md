@@ -54,7 +54,7 @@ It's important to properly monitor your VReplication workflows in order to detec
   - The [`Workflow show`](../../../reference/vreplication/workflow/) command
   - The `Progress`/`Show` action (e.g. [`MoveTables -- Progress`](../../../reference/vreplication/movetables/#progress))
   - The [VReplication related metrics](../../../reference/vreplication/metrics/)
-    - Note that in most production systems the tablet endpoints would be scraped and stored in something like [Prometheues](https://prometheus.io) where you can build dashboards and alerting on the data
+    - Note that in most production systems the tablet endpoints would be scraped and stored in something like [Prometheus](https://prometheus.io) where you can build dashboards and alerting on the data
 
 ### Save Routing Rules
 
@@ -204,6 +204,8 @@ Mark vreplication streams frozen on:
 Unlock keyspace customer
 Unlock keyspace commerce
 ```
+
+</br>
 
 #### disallowed due to rule: enforce denied tables
 
