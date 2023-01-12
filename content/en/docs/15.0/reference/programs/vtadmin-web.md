@@ -28,3 +28,10 @@ These environment variables can be passed inline to the `npm run build` command 
 [operators_guide]: ../../vtadmin/operators_guide
 [rbac]: ../../vtadmin/role-based-access-control
 [vtadmin_env_ref]: https://github.com/vitessio/vitess/blob/main/web/vtadmin/src/react-app-env.d.ts
+
+These environment variables are automatically [filled in by create-react-app](https://create-react-app.dev/docs/adding-custom-environment-variables/#:~:text=By%20default%20you%20will%20have,by%20inspecting%20your%20app's%20files.) and you do not have to provide them. They are available in the `process.env` object at run time, and listed here for full coverage of environment variables:
+
+| Name | Type | Default | Definition |
+| -------- | --------- | --------- | --------- |--------- |
+| `NODE_ENV` | string | "production", "staging", or "test" | The current node environment set by create-react-app | 
+| `PUBLIC_URL` | string | - | The path to the `public` folder within the build files |
