@@ -353,25 +353,33 @@ Example:
 
 Perform a diff of all tables in the workflow
 
+#### Example
+
 <pre class="command-example">
-Vdiff -- [--source_cell=&lt;cell&gt;] [--target_cell=&lt;cell&gt;] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY] [--filtered_replication_wait_time=30s] [--max_extra_rows_to_compare=1000] &lt;keyspace.workflow&gt;
+VDiff -- [--source_cell=&lt;cell&gt;] [--target_cell=&lt;cell&gt;] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY] [--limit=&lt;max rows to diff&gt;] [--tables=&lt;table list&gt;] [--format=json] [--auto-retry] [--verbose] [--max_extra_rows_to_compare=1000] [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] [--wait] [--wait-update-interval=1m] &lt;keyspace.workflow&gt; [&lt;action&gt;] [&lt;UUID&gt;]
 </pre>
 
 #### Flags
 
-| Name                           | Type     | Definition                                                                                                                                                                                                                                                                                                                                 |
-|:-------------------------------|:---------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| debug_query                    | Boolean  | Adds a mysql query to the report that can be used for further debugging                                                                                                                                                                                                                                                                    |
-| filtered_replication_wait_time | Duration | Specifies the maximum time to wait, in seconds, for filtered replication to catch up on primary migrations. The migration will be cancelled on a timeout. (default 30s)                                                                                                                                                                    |
-| format                         | String   | Format of report                                                                                                                                                                                                                                                                                                                           |
-| limit                          | Int      | Max rows to stop comparing after (default 9223372036854775807)                                                                                                                                                                                                                                                                             |
-| max_extra_rows_to_compare      | Int      | If there are collation differences between the source and target, you can have rows that are identical but simply returned in a different order from MySQL. We will do a second pass to compare the rows for any actual differences in this case and this flag allows you to control the resources used for this operation. (default 1000) |
-| only_pks                       | Boolean  | When reporting missing rows, only show primary keys in the report.                                                                                                                                                                                                                                                                         |
-| source_cell                    | String   | The source cell to compare from; default is any available cell                                                                                                                                                                                                                                                                             |
-| tables                         | String   | Only run vdiff for these tables in the workflow                                                                                                                                                                                                                                                                                            |
-| tablet_types                   | String   | Tablet types for source and target (default "in_order:RDONLY,REPLICA,PRIMARY")                                                                                                                                                                                                                                                             |
-| target_cell                    | String   | The target cell to compare with; default is any available cell                                                                                                                                                                                                                                                                             |
-| v2                             | Boolean  | Use VDiff2                                                                                                                                                                                                                                                                                                                                 |
+| Name         | Type   | Definition                             |
+|:-------------|:-------|:---------------------------------------|
+| auto-retry | Boolean | Should this vdiff automatically retry and continue in case of recoverable errors (default true) |
+| checksum  | Boolean | Use row-level checksums to compare, not yet implemented |
+| debug_query | Boolean | Adds a mysql query to the report that can be used for further debugging |
+| filtered_replication_wait_time | Duration | Specifies the maximum time to wait, in seconds, for filtered replication to catch up on primary migrations. The migration will be cancelled on a timeout. (default 30s) |
+| format | String | Format of report (default "text") |
+| limit | Int | Max rows to stop comparing after (default 9223372036854775807) |
+| max_extra_rows_to_compare | Int | If there are collation differences between the source and target, you can have rows that are identical but simply returned in a different order from MySQL. We will do a second pass to compare the rows for any actual differences in this case and this flag allows you to control the resources used for this operation. (default 1000) |
+| only_pks | Boolean | When reporting missing rows, only show primary keys in the report. |
+| sample_pct | Int | How many rows to sample, not yet implemented (default 100) |
+| source_cell | String | The source cell to compare from; default is any available cell |
+| tables | String | Only run vdiff for these tables in the workflow |
+| tablet_types | String | Tablet types for source (PRIMARY is always used on target) (default "in_order:RDONLY,REPLICA,PRIMARY") |
+| target_cell | String | The target cell to compare with; default is any available cell |
+| v1 | Boolean | Use legacy VDiff v1 |
+| verbose | Boolean | Show verbose vdiff output in summaries |
+| wait | Boolean | When creating or resuming a vdiff, wait for it to finish before exiting |
+| wait-update-interval | Duration |When waiting on a vdiff to finish, check and display the current status this often (default 1m0s) |
 
 
 ## See Also
