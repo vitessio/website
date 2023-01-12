@@ -151,3 +151,28 @@ You can leverage shard targeting to perform ad-hoc *read-only* queries against t
 additional data validation or checks that you want (beyond [`VDiff`](../../vreplication/vdiff/)). You can also use this shard targeting
 to see how your data is distributed across the keyspace's shards.
 {{</ info >}}
+
+## Additional Details
+
+There are some key details to keep in mind if you will be creating and managing your own custom routing rules.
+- The `to_tables` field must contain only one entry and the table name must be fully qualified.
+
+- If the `from_table` is qualified by a keyspace, then a query that references that table will get redirected to the corresponding target table. The reference need not be explicit. For example, if you are connected to the `customer` keyspace, then an unqualified reference to the `customer` table is interpreted as a qualified reference to `customer.customer`.
+
+- You may further add a tablet type to the `from_table` field using the `@<type>` syntax seen in the example above. If so, only queries that target that tablet type will get redirected. Although you can qualify a table by its keyspace in a query, there is no equivalent syntax for specifying the tablet type. The only way to choose a tablet type is through the `use` statement, like `use customer@replica`, or by specifying it in the connection string.
+
+- The more specific rules supercede the less specific one. For example, `customer.customer@replica` is chosen over `customer.customer` if the current tablet type is a `replica`.
+
+- If the `to_tables` have special characters that need escaping, you can use the mysql backtick syntax to do so. As for the `from_tables`, the table name should *not* be escaped. Instead, you should just concatenate the table with the keyspace without the backticks. In the following example, we are redirecting the `b.c` table to the `c.b` table in keyspace `a`:
+    ``` json
+    {
+      "rules": [
+        {
+          "from_table": "a.b.c",
+          "to_tables": [
+            "a.`c.b`"
+          ]
+        }
+      ]
+    }
+    ```
