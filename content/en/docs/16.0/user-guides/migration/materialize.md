@@ -150,8 +150,8 @@ $ mysql --binary-as-hex=false commerce -e "select * from corder_view"
 
 Note that the target table is just a normal table, there is nothing that prevents you from writing to it directly.
 While you might not want to do that in this in the "materialized view" use-case, in certain other use-cases it might
-be completely acceptable to write to the table on other cases. Doing so is completedly fine as long as you don't end
-up altering or removing rows in a fashion that would break the "replication" part of the VReplication workflow
+be completely acceptable to write to the table. Doing so is completedly fine as long as you don't end up altering
+or removing rows in a fashion that would break the "replication" part of the VReplication workflow
 (e.g. removing a row in the target table directly that is later updated in the source table).
 
 ## Viewing the Workflow While in Progress
