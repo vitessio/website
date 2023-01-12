@@ -5,13 +5,13 @@ weight: 40
 ---
 
 {{< info >}}
-This is the legacy v1 VDiff. [VDiff2](../vdiff2/), which runs on tablets, is now production-ready. We recommend that you begin using v2 instead.
+This is the legacy v1 VDiff. [VDiff v2](../vdiff/), which runs on tablets, is now production-ready. We recommend that you begin using v2 instead.
 {{< /info >}} 
 
 ### Command
 
 ```
-VDiff -- [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=primary,replica,rdonly]
+VDiff -- --v1 [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=primary,replica,rdonly]
        [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--max_extra_rows_to_compare=1000]
        [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow>
 ```
@@ -162,5 +162,5 @@ You may need to use one or more of the following recommendations while running l
 * VDiff runs one table at a time.
 
 {{< info >}}
-**[VDiff2](../vdiff2/)**, which addresses these issues, is now available for experimental use.
+**[VDiff v2](../vdiff/)**, which addresses these issues, is now production-ready and we recommend you use that instead.
 {{< /info >}}

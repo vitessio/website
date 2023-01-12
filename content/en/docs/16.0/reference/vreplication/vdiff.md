@@ -2,10 +2,11 @@
 title: VDiff
 description: Compare the source and target in a workflow to ensure integrity
 weight: 40
+aliases: ['/docs/reference/vreplication/vdiff2/']
 ---
 
 {{< info >}}
-This is VDiff v2 which runs on `vttablets` as compared with the legacy [VDiff1](../vdiffv1/) which runs on `vtctld`.
+This is VDiff v2 which runs on `vttablets` as compared with the legacy [VDiff v1](../vdiffv1/) which runs on `vtctld`.
 {{< /info >}}
 
 ### Command
@@ -18,7 +19,7 @@ is the &lt;keyspace.workflow&gt; followed by an &lt;action&gt;. The following ac
 These take the same parameters as VDiff1 and schedule VDiff to run on the primary tablet of each target shard to verify the subset of data that will live on the given shard. Please note that if you do not specify a sub-command or action then `create` is assumed (this eases the transition from VDiff1 to VDiff2). If you do not pass a specific UUID then one will be generated.
 
 ```
-VDiff -- --v2 [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
+VDiff -- [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
        [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--auto-retry] [--verbose] [--max_extra_rows_to_compare=1000]
        [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] [--wait] [--wait-update-interval=1m]
        <keyspace.workflow> create [<UUID>]
@@ -28,7 +29,7 @@ Each scheduled VDiff has an associated UUID which is returned by the `create` ac
 to monitor progress. Example:
 
 ```
-$ vtctlclient --server=localhost:15999 VDiff -- --v2 customer.commerce2customer
+$ vtctlclient --server=localhost:15999 VDiff --  customer.commerce2customer
 VDiff bf9dfc5f-e5e6-11ec-823d-0aa62e50dd24 scheduled on target shards, use show to view progress
 ```
 
@@ -37,7 +38,7 @@ VDiff bf9dfc5f-e5e6-11ec-823d-0aa62e50dd24 scheduled on target shards, use show 
 The `resume` action allows you to resume a previously completed VDiff, picking up where it left off and comparing the records where the Primary Key column(s) are greater than the last record processed — with the progress and other status information saved when the run ends. This allows you to do approximate rolling or differential VDiffs (e.g. done after MoveTables finishes the initial copy phase and then again just before SwitchTraffic).
 
 ```
-VDiff -- --v2 [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
+VDiff --  [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
        [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--auto-retry] [--verbose] [--max_extra_rows_to_compare=1000]
        [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] [--wait] [--wait-update-interval=1m]
        <keyspace.workflow> resume <UUID>
@@ -46,7 +47,7 @@ VDiff -- --v2 [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_o
 Example:
 
 ```
-$ vtctlclient --server=localhost:15999 VDiff -- --v2 customer.commerce2customer resume 4c664dc2-eba9-11ec-9ef7-920702940ee0
+$ vtctlclient --server=localhost:15999 VDiff --  customer.commerce2customer resume 4c664dc2-eba9-11ec-9ef7-920702940ee0
 VDiff 4c664dc2-eba9-11ec-9ef7-920702940ee0 resumed on target shards, use show to view progress
 ```
 
@@ -57,13 +58,13 @@ We cannot guarantee accurate results for `resume` when different collations are 
 #### Show Progress/Status of a VDiff
 
 ```
-VDiff  -- --v2  <keyspace.workflow> show {<UUID> | last | all}
+VDiff  --   <keyspace.workflow> show {<UUID> | last | all}
 ```
 
 You can either `show` a specific UUID or use the `last` convenience shorthand to look at the most recently created VDiff. Example:
 
 ```
-$ vtctlclient --server=localhost:15999 VDiff -- --v2 customer.commerce2customer show last
+$ vtctlclient --server=localhost:15999 VDiff --  customer.commerce2customer show last
 
 VDiff Summary for customer.commerce2customer (4c664dc2-eba9-11ec-9ef7-920702940ee0)
 State:        completed
@@ -74,7 +75,7 @@ CompletedAt:  2022-06-26 22:44:31
 
 Use "--format=json" for more detailed output.
 
-$ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.commerce2customer show last
+$ vtctlclient --server=localhost:15999 VDiff --  --format=json customer.commerce2customer show last
 {
 	"Workflow": "commerce2customer",
 	"Keyspace": "customer",
@@ -87,7 +88,7 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.comm
 	"CompletedAt": "2022-06-26 22:44:31"
 }
 
-$ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.p1c2 show daf1f03a-03ed-11ed-9ab8-920702940ee0
+$ vtctlclient --server=localhost:15999 VDiff --  --format=json customer.p1c2 show daf1f03a-03ed-11ed-9ab8-920702940ee0
 {
 	"Workflow": "p1c2",
 	"Keyspace": "customer",
@@ -109,13 +110,13 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.p1c2
 #### Stopping a VDiff
 
 ```
-VDiff  -- --v2  <keyspace.workflow> stop <UUID>
+VDiff  --   <keyspace.workflow> stop <UUID>
 ```
 
 The `stop` action allows you to stop a running VDiff for any reason — for example, the load on the system(s) may be too high at the moment and you want to postpone the work until off hours. You can then later use the `resume` action to start the VDiff again from where it left off. Example:
 
 ```
-$ vtctlclient --server=localhost:15999 VDiff -- --v2  --format=json customer.commerce2customer stop ad9bd40e-0c92-11ed-b568-920702940ee0
+$ vtctlclient --server=localhost:15999 VDiff --   --format=json customer.commerce2customer stop ad9bd40e-0c92-11ed-b568-920702940ee0
 {
 	"UUID": "ad9bd40e-0c92-11ed-b568-920702940ee0",
 	"Action": "stop",
@@ -130,16 +131,16 @@ Attempting to `stop` a VDiff that is already completed is a no-op.
 #### Delete VDiff Results
 
 ```
-VDiff  -- --v2  <keyspace.workflow> delete {<UUID> | all}
+VDiff  --   <keyspace.workflow> delete {<UUID> | all}
 ```
 
 You can either `delete` a specific UUID or use the `all` shorthand to delete all VDiffs created for the specified keyspace and workflow. Example:
 
 ```
-$ vtctlclient --server=localhost:15999 VDiff -- --v2 customer.commerce2customer delete all
+$ vtctlclient --server=localhost:15999 VDiff --  customer.commerce2customer delete all
 VDiff delete status is completed on target shards
 
-$ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.commerce2customer delete all
+$ vtctlclient --server=localhost:15999 VDiff --  --format=json customer.commerce2customer delete all
 {
 	"Action": "delete",
 	"Status": "completed"
