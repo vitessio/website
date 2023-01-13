@@ -155,18 +155,6 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [TopoCat](../vtctl/topo#topocat) | `TopoCat  -- [--cell <cell>] [--decode_proto] [--decode_proto_json] [--long] <path> [<path>...]` |
 | [TopoCp](../vtctl/topo#topocp) | `TopoCp  -- [--cell <cell>] [--to_topo] <src> <dst>` |
 
-### Workflows
-
-| Name | Example Usage |
-| :-------- | :--------------- |
-| [WorkflowCreate](../vtctl/workflows#workflowcreate) | `WorkflowCreate  -- [--skip_start] <factoryName> [parameters...]` |
-| [WorkflowStart](../vtctl/workflows#workflowstart) | `WorkflowStart  <uuid>` |
-| [WorkflowStop](../vtctl/workflows#workflowstop) | `WorkflowStop  <uuid>` |
-| [WorkflowDelete](../vtctl/workflows#workflowdelete) | `WorkflowDelete  <uuid>` |
-| [WorkflowWait](../vtctl/workflows#workflowwait) | `WorkflowWait  <uuid>` |
-| [WorkflowTree](../vtctl/workflows#workflowtree) | `WorkflowTree  ` |
-| [WorkflowAction](../vtctl/workflows#workflowaction) | `WorkflowAction  <path> <name>` |
-
 ### Throttler
 
 | Name | Example Usage |
