@@ -1,20 +1,25 @@
 ---
 title: VStream API and Resharding
 description: How VStream API handles a reshard
-weight: 3
+weight: 8
 ---
 
 ## Stream migration on a resharding operation
 
-While subscribing to the VStream API you need to specify the shards from which to stream events. While streaming it is possible that the underlying keyspace is resharded. Thus some or all of the shards which were specified may be replaced by new shards after the resharding is completed.
+While subscribing to the VStream API you need to specify the shards from which to stream events. While streaming it is
+possible that the underlying keyspace is resharded. Thus some or all of the shards which were specified may be replaced
+by new shards after the resharding is completed.
 
-Stream migration logic within VReplication handles this transparently within VTGate. Event sending will be put on hold momentarily during the actual cutover (when writes are switched) and you will start getting the events (and vgtids) for the new set of shards once the cutover is completed.
+Stream migration logic within VReplication handles this transparently within VTGate. Event sending will be put on hold
+momentarily during the actual cutover (when writes are switched) and you will start getting the events (and vgtids) for
+the new set of shards once the cutover is completed.
 
 ### An illustration
 
 Here is a sample session using the scripts from the [local example](/docs/get-started/local).
 
-Run the steps up to and including `205_clean_commerce.sh`. Now start a vstream api client in a separate terminal to stream events from the customer table in the customer keyspace, which is currently unsharded.
+Run the steps up to and including `205_clean_commerce.sh`. Now start a vstream api client in a separate terminal to
+stream events from the customer table in the customer keyspace, which is currently unsharded.
 
 ```
 {
@@ -54,11 +59,13 @@ Run the 305 script to switch writes. You will see that vgtids will include the n
 [type:BEGIN timestamp:1616748733 current_time:1616748733520355854  type:VGTID vgtid:<shard_gtids:<keyspace:"customer" shard:"80-" gtid:"MySQL56/6a60d315-8e10-11eb-b894-04ed332e05c2:1-76" > shard_gtids:<keyspace:"customer" shard:"-80" gtid:"MySQL56/629442b7-8e10-11eb-a0bb-04ed332e05c2:1-76" > >  type:COMMIT timestamp:1616748733 current_time:1616748733520403210 ]
 ```
 
-Insert new rows: this will result in row events from the new shards. Shards will only stream changes from the point of resharding.
+Insert new rows: this will result in row events from the new shards. Shards will only stream changes from the point of
+resharding.
 
 ```
 $ mysql -u root --host=127.0.0.1 -P 15306 -e "insert into customer(customer_id, email) values(6,'sougou@planetscale.com'), (7, 'deepthi@planetscale.com');"
 ```
+
 ```
 [type:BEGIN timestamp:1616749631 current_time:1616749631516372189  type:FIELD timestamp:1616749631 field_event:<table_name:"customer.customer" fields:<name:"customer_id" type:INT64 table:"customer" org_table:"customer" database:"vt_customer" org_name:"customer_id" column_length:20 charset:63 flags:53251 > fields:<name:"email" type:VARBINARY table:"customer" org_table:"customer" database:"vt_customer" org_name:"email" column_length:128 charset:63 flags:128 > > current_time:1616749631517765487  type:ROW timestamp:1616749631 row_event:<table_name:"customer.customer" row_changes:<after:<lengths:1 lengths:22 values:"6sougou@planetscale.com" > > row_changes:<after:<lengths:1 lengths:23 values:"7deepthi@planetscale.com" > > > current_time:1616749631517779353  type:VGTID vgtid:<shard_gtids:<keyspace:"customer" shard:"80-" gtid:"MySQL56/6a60d315-8e10-11eb-b894-04ed332e05c2:1-77" > shard_gtids:<keyspace:"customer" shard:"-80" gtid:"MySQL56/629442b7-8e10-11eb-a0bb-04ed332e05c2:1-76" > >  type:COMMIT timestamp:1616749631 current_time:1616749631517789376 ]
 ```

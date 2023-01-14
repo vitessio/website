@@ -1,7 +1,7 @@
 ---
 title: How traffic is switched
 description: How Vitess signals traffic cutover for Reshard and MoveTables
-weight: 30
+weight: 2
 ---
 
 # Related persistent Vitess objects
