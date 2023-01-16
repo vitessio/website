@@ -148,17 +148,21 @@ This flag is currently experimental.
 
 <div class="cmd">
 
-If true, any secondary keys are dropped from the table definition on the target shard(s) as we first initialize the
-table for the [copy phase](../../../../design-docs/vreplication/life-of-a-stream/#copy). The exact same key definitions
-are then re-added when the copy phase completes for the table.
+If true, any secondary keys are dropped from the table definitions on the target shard(s) as we first initialize the
+tables for the [copy phase](../../../../design-docs/vreplication/life-of-a-stream/#copy). The exact same key definitions
+are then re-added when the copy phase completes for each table.
 
-With this method all secondary key records for the table are generated in one bulk operation. This should significantly
+With this method all secondary index records for the table are generated in one bulk operation. This should significantly
 improve the overall copy phase execution time on large tables with many secondary keys — especially with
 [MySQL 8.0.31](https://dev.mysql.com/doc/relnotes/mysql/8.0/en/news-8-0-31.html) and later due to InnoDB's support for
 parallel index builds. This is logically similar to the
 [`mysqldump` `--disable-keys` option](https://dev.mysql.com/doc/refman/en/mysqldump.html#option_mysqldump_disable-keys).
 
 </div>
+
+{{< info >}}
+This flag is ignored when performing shard merges or consolidations such as e.g. when Resharding a keyspace from 2 shards to 1.
+{{< /info >}}
 
 #### --drop_foreign_keys
 **optional**
