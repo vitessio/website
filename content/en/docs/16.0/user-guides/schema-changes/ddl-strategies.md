@@ -9,7 +9,8 @@ Vitess supports both managed, online schema migrations (aka Online DDL) as well 
 - `vitess` (formerly known as `online`): utilizes Vitess's built-in [VReplication](../../../reference/vreplication/vreplication/) mechanism. This is the preferred strategy in Vitess.
 - `gh-ost`: uses 3rd party GitHub's [gh-ost](https://github.com/github/gh-ost) tool.
 - `pt-osc`: uses 3rd party Percona's [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html) as part of [Percona Toolkit](https://www.percona.com/doc/percona-toolkit/3.0/index.html). `pt-osc` strategy is **experimental**.
-- `direct`: unmanaged. The direct apply of DDL to your database. This is not an online DDL. It is a synchronous and blocking operation. This is the default strategy. 
+- `mysql`: managed by the Online DDL scheduler, but executed via normal MySQL statement. Whether it is blocking or not is up to the specific query.
+- `direct`: unmanaged. The direct apply of DDL to your database. Whether it is blocking or not is up to the specific query.
 
 `CREATE` and `DROP` are managed in the same way, by Vitess, whether strategy is `vitess`, `gh-ost` or `pt-osc`.
 
@@ -160,13 +161,14 @@ There are pros and cons to using any of the strategies. Some notable differences
 | Strategy | Managed | Online | Trackable | Declarative | Revertible          | Recoverable |
 |----------|---------|--------|-----------|-------------|---------------------|-------------|
 | `direct` | No      | MySQL* | No        | No          | No                  | No          |
+| `mysql`  | Yes     | MySQL* | Yes       | Yes         | No                  | No          |
 | `pt-osc` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP`       | No*         |
 | `gh-ost` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP`       | No*         |
 | `vitess` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP,ALTER` | Yes         |
 
 - **Managed**: whether Vitess schedules and operates the migration
 - **Online**:
-  - MySQL supports limited online ("In place") DDL and instant DDL. See [support chart](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html).
+  - MySQL supports limited online (`INPLACE`) DDL as well as `INSTANT` DDL. See [support chart](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html). `INSTANT` DDL is instant on both primary and replicas. `INPLACE` is non-blocking on parent but serialized on replicas, causing replication lag. Otherwise migrations are blocking on both primary and replicas.
   - `gh-ost`, `vitess` do not support foreign keys
   - `pt-osc` has support for foreign keys (may apply collateral blocking operations)
 - **Trackable**: able to determine migration state (`ready`, `running`, `complete` etc)

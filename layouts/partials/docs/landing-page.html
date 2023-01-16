@@ -42,7 +42,10 @@
   {{ end }}
   {{ end }}
 </div>
-{{ if not (isset .Page.Params "version") }}
+{{ if and
+  (not (isset .Page.Params "version"))
+  (not (isset .Page.Params "designdoc"))
+}}
 <h1>Versions</h1>
 {{ end }}
 <div class="columns is-2 is-multiline is-desktop is-landingpage">
