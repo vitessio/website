@@ -4,7 +4,7 @@ weight: 2
 aliases: ['/docs/user-guides/managed-online-schema-changes/']
 ---
 
-Vitess offers managed, online schema migrations (aka Online DDL), transparently to the user. Vitess Onine DDL offers:
+Vitess offers managed, online schema migrations (aka Online DDL), transparently to the user. Vitess Online DDL offers:
 
 - Non-blocking migrations
 - Migrations are asyncronously auto-scheduled, queued and executed by tablets
@@ -21,14 +21,15 @@ Vitess offers managed, online schema migrations (aka Online DDL), transparently 
 As general overview:
 
 - User chooses a [strategy](../ddl-strategies) for online DDL (online DDL is opt in)
-- User submits one or more schema change queries, using the standard MySQL `CREATE TABLE`, `ALTER TABLE` and `DROP TABLE` syntax.
+- User submits one or more schema change queries, using the standard MySQL `CREATE TABLE`, `ALTER TABLE`, `DROP TABLE`, `CREATE VIEW`, `ALTER VIEW`, `DROP VIEW` syntax.
 - Vitess responds with a Job ID for each schema change query.
 - Vitess resolves affected shards.
 - A shard's `primary` tablet schedules the migration to run when possible.
 - Tablets will independently run schema migrations:
   - `ALTER TABLE` statements run via `VReplication`, `gh-ost` or `pt-online-schema-change`, as per selected [strategy](../ddl-strategies)
-  - `CREATE TABLE` statements run directly.
+  - `CREATE TABLE` and `CREATE VIEW` statements run directly.
   - `DROP TABLE` statements run [safely and lazily](../../../design-docs/table-lifecycle/safe-lazy-drop-tables/).
+  - `ALTER VIEW` and `DROP VIEW` are internally modified to allow quick revert.
 - Vitess provides the user a mechanism to view migration status, launch (if required), complete (if required), cancel or retry migrations, based on the job ID.
 
 ## Syntax
