@@ -1,19 +1,19 @@
 ---
-title: GetShardRoutingRules
+title: ValidateVersionShard
 series: vtctldclient
 ---
-## vtctldclient GetShardRoutingRules
+## vtctldclient ValidateVersionShard
 
-Displays VSchema shard routing rules.
+Validates that the version on the primary matches all of the replicas.
 
 ```
-vtctldclient GetShardRoutingRules
+vtctldclient ValidateVersionShard <keyspace/shard>
 ```
 
 ### Options
 
 ```
-  -h, --help   help for GetShardRoutingRules
+  -h, --help   help for ValidateVersionShard
 ```
 
 ### Options inherited from parent commands

@@ -1,19 +1,19 @@
 ---
-title: GetShardRoutingRules
+title: GetTopologyPath
 series: vtctldclient
 ---
-## vtctldclient GetShardRoutingRules
+## vtctldclient GetTopologyPath
 
-Displays VSchema shard routing rules.
+Gets the value associated with the particular path (key) in the topology server.
 
 ```
-vtctldclient GetShardRoutingRules
+vtctldclient GetTopologyPath <path>
 ```
 
 ### Options
 
 ```
-  -h, --help   help for GetShardRoutingRules
+  -h, --help   help for GetTopologyPath
 ```
 
 ### Options inherited from parent commands

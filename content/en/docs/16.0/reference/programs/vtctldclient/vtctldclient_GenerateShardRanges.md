@@ -1,19 +1,19 @@
 ---
-title: GetShardRoutingRules
+title: GenerateShardRanges
 series: vtctldclient
 ---
-## vtctldclient GetShardRoutingRules
+## vtctldclient GenerateShardRanges
 
-Displays VSchema shard routing rules.
+Print a set of shard ranges assuming a keyspace with N shards.
 
 ```
-vtctldclient GetShardRoutingRules
+vtctldclient GenerateShardRanges <num_shards>
 ```
 
 ### Options
 
 ```
-  -h, --help   help for GetShardRoutingRules
+  -h, --help   help for GenerateShardRanges
 ```
 
 ### Options inherited from parent commands
