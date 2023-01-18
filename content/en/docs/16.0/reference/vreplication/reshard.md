@@ -160,10 +160,6 @@ parallel index builds. This is logically similar to the
 
 </div>
 
-{{< info >}}
-This flag is ignored when performing shard merges or consolidations such as e.g. when Resharding a keyspace from 2 shards to 1.
-{{< /info >}}
-
 #### --drop_foreign_keys
 **optional**
 **default** false
