@@ -12,8 +12,9 @@ weight: 4
 Currently, Vstreams work with a single (the latest) database schema. On every DDL the schema engine reloads the schema
 from the database engine.
 
-All Vstreams on a tablet share a common schema engine. Vstreams that are lagging might be seeing a newer (and hence
-incorrect) version of the schema in case ddls were applied in between.
+All Vstreams on a tablet share a common schema engine. Vstreams that are lagging can see a more recent schema than when
+the older binlog events occurred. So the lagging vstreams will see an incorrect version of the schema in case ddls were
+applied in between that affect the schema of the tables involved in those lagging events.
 
 In addition, reloading schemas is an expensive operation. If there are multiple Vstreams each of them will separately
 receive a DDL event resulting in multiple reloads for the same DDL.
@@ -55,7 +56,8 @@ Version tracker runs on the primary. It subscribes to the replication watcher an
 
 Version historian runs on both primary and replica and handles DDL events. For a given GTID it looks up its cache to
 check if it has a schema valid for that GTID. If not, on the replica, it looks up the schema_version table. If no schema
-is found then it provides the latest schema -- which is updated by subscribing to the schema engine’s change notification.
+is found then it provides the latest schema -- which is updated by subscribing to the schema engine’s change
+notification.
 
 ### Notes
 
@@ -74,8 +76,8 @@ is found then it provides the latest schema -- which is updated by subscribing t
    subscribes to the watcher.
 1. Say, a DDL is applied
 1. The watcher Vstream sees the DDL and
-1. asks the schema engine to reload the schema, also providing the corresponding gtid position
-1  notifies the tracker of a schema change
+1. Asks the schema engine to reload the schema, also providing the corresponding gtid position
+1. Notifies the tracker of a schema change
 1. Tracker stores its latest schema into the \_vt.schema_version table associated with the given GTID and DDL
 
 #### Historian/Vstreams:
