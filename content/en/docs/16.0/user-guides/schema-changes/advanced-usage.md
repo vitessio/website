@@ -153,3 +153,28 @@ $ vtctlclient -- ApplySchema --skip_preflight --sql "alter vitess_migration '3cc
 ```
 
 Which means we want to apply the revert. Since the revert is already running in the background, it is likely that binary log processing is up to date, and cut-over is near instantaneous.
+
+## Inter-dependent migrations
+
+It is possible to submit inter-dependent migrations within the same `ApplySchema` command, and have them complete in the correct order, even if they run concurrently. Examples for inter-dependent migrations:
+
+- Creating two new views, one of which reads from the other.
+- Adding a column to a table, and creating a new view that reads from that column.
+- Adding a column to a table, altering an existing view that reads from that table, to now read the new column.
+
+In the above examples there has to be a strict ordering to the migrations. You cannot just create a view that reads from a yet non-existent column.
+
+`vitess` offers the `--in-order-completion` DDL strategy flag. It is the responsibility of the user to supply the migrations in a valid ordering, and it is `vitess`'s responsibility to _complete_ the migrations in that same order.
+
+Note that there can be scenarios with impossible ordering. Those hardly make sense in production, in the first place, and it is the user's responsibility to supply a sequence that works. When in doubt, it's advisable to submit migrations in stages: only apply one migration to completion, and then apply another.
+
+An example for in-order submission:
+
+```sh
+$ vtctlclient -- ApplySchema --skip_preflight --ddl_strategy='vitess --allow-concurrent --in-order-completion' --sql "create table t1 (id int primary key); create view v1 as select id from t1;" commerce
+```
+
+Notes:
+
+- `--allow-concurrent` is optional, but is likely to be the main use case for using in-order completion.
+- in-order completion also works with `--postpone-launch` and `--postpone-completion`.

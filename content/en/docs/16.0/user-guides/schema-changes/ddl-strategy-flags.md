@@ -17,6 +17,11 @@ Vitess respects the following flags. They can be combined unless specifically in
 
 - `--fast-range-rotation`: when the migration runs on a table partitioned by `RANGE`, and the migration either runs a single `DROP PARTITION` or a single `ADD PARTITION`, and nothing other than that, then this flags instructs Vitess to run the `ALTER TABLE` statement directly against MySQL, as opposed to running an Online DDL with a shadow table. For `DROP PARTITION`, this flag is actually always desired, and will possibly become default/redundant in the future. If all conditions are indeed met, then the migration is not revertible.
 
+- `--in-order-completion`: a migration that runs with this DDL strategy flag may only complete if no prior migrations are still pending (pending means either `queued`, `ready` or `running` states). `--in-order-completion` considers the order by which migrations were submitted. Note that `--in-order-completion` still allows concurrency. In fact, it is designed to work with concurrent migrations. The idea is that as many migrations may run concurrently, but they way they finally _complete_ is in-order.
+  - This lets the user submit multiple migrations which may have some dependencies (for example, introduce two views, one of which reads from the other). As long as the migrations are submitted in a valid order, the user can then expect `vitess` to complete the migrations successfully (and in that order).
+  - This strategy flag applies to any `CREATE|DROP TABLE|VIEW` statements, and to `ALTER TABLE` with `vitess|online` strategy.
+  - It _does not_ apply to `ALTER TABLE` in `gh-ost`, `pt-osc`, `mysql` and `direct` strategies.
+
 - `--postpone-completion`: initiate a migration that will only cut-over per user command, i.e. will not auto-complete. This gives the user control over the time when the schema change takes effect. See [postponed migrations](../postponed-migrations).
 
   `--declarative` migrations are only evaluated when scheduled to run. If a migrations is both `--declarative` and `--postpone-completion` then it will remain in `queued` state until the user issues a `ALTER VITESS_MIGRATION ... COMPLETE`. If it turns out that Vitess should run the migration as an `ALTER` then it is only at that time that the migration starts.
