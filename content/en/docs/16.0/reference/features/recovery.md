@@ -7,11 +7,6 @@ aliases: ['/docs/recovery/pitr','/docs/reference/pitr/']
 ## Point in Time Recovery
 
 ### Supported Databases
-
-- MySQL 5.7
-
-### Believed to work, but untested
-
 - MySQL 8.0
 
 ### Introduction
@@ -42,11 +37,11 @@ To use this feature, you need a usable backup of Vitess data and continuous binl
 Here is how you can create a backup.
 
 ```sh
-$ vtctlclient --server <vtctld_host>:<vtctld_port> Backup zone1-101
+$ vtctldclient --server <vtctld_host>:<vtctld_port> Backup zone1-101
 ```
 
 Here `zone1-101` is the tablet alias of a replica tablet in the shard that you
-want to back up.  Note that you can also use `vtctlclient BackupShard` to just
+want to back up.  Note that you can also use `vtctldclient BackupShard` to just
 specify a keyspace and shard, and have Vitess choose the tablet to run the
 backup for you, instead of having to specify the tablet alias explicitly.
 
@@ -74,18 +69,18 @@ Once the above is done, you can proceed with doing a recovery.
 
 #### Recovery Procedure
 
-First, you need to create a `SNAPSHOT` keyspace with a `base_keyspace`
+First, you need to create a `SNAPSHOT` keyspace with a `base-keyspace`
 pointing to the original keyspace you are recovering the backup of.
 This can be done by using following:
 
 ```sh
-$ vtctlclient --server <vtctld_host>:<vtctld_port> CreateKeyspace -- --keyspace_type=SNAPSHOT --base_keyspace=originalks --snapshot_time=2020-07-17T18:25:20Z restoreks
+$ vtctldclient --server <vtctld_host>:<vtctld_port> CreateKeyspace --type=SNAPSHOT --base-keyspace=originalks --snapshot-time=2020-07-17T18:25:20Z restoreks
 ```
 
  Here:
  - `originalks` is the base keyspace, i.e. the keyspace we took a backup of,
  and are trying to recover.
- - `snapshot_time` is the timestamp of the point in time to we want to recover
+ - `snapshot-time` is the timestamp of the point in time to we want to recover
  to. Note the use of the `Z` in the timestamp, indicating it is expressed
  in UTC.
  - `restoreks` is the name of recovery keyspace, i.e. the keyspace to which
@@ -148,7 +143,7 @@ You will also probably want to use other flags for backup and restore like:
 
 You need to be consistent in your use of these flags for backup and restore.
 
-Once the restore of the last backup earlier than the `snapshot_time` timestamp
+Once the restore of the last backup earlier than the `snapshot-time` timestamp
 is completed, the vttablet proceeds to use the `binlog_*` parameters to
 connect to the binlog server and then apply all binlog events from the time
 of the backup until the timestamp provided.
@@ -157,7 +152,7 @@ Since the last backup for each shard making up the keyspace could be taken at
 different points in time, the amount of time that it takes to apply these events
 may differ between restores of different shards in the keyspace.
 
-Note that to restore to the specified `snapshot_time` timestamp, vttablet needs
+Note that to restore to the specified `snapshot-time` timestamp, vttablet needs
 to find the GTID corresponding to the last event before this timestamp from
 the binlog server. This is an expensive operation and may take some time. By
 default the timeout for this operation is one minute (1m). This can be changed

@@ -4,15 +4,19 @@ description: Low level command to run a query on vreplication related tables
 weight: 70
 ---
 
+{{< warning >}}
+This command was deprecated in v16.0 and will be removed in a future release.
+{{< /warning >}}
+
 ### Command
 
 ```
-VReplicationExec -- [--json] <tablet alias> <query>
+VReplicationExec -- [--json] <tablet_alias> <query>
 ```
 
 ### Description
 
-The VReplicationExec command is used to view or manage vreplication streams. More details are [here](../vreplication#exec). You would typically use one of the higher-level commands like the [WorkFlow](../workflow) command accomplish the same task.
+The `VReplicationExec` command is used to view or manage vreplication streams. You would typically use one of the higher-level commands like the [WorkFlow](../workflow) command accomplish the same task.
 
 ### Parameters
 
@@ -23,12 +27,12 @@ The VReplicationExec command is used to view or manage vreplication streams. Mor
 The output of the command is json formatted: to be readable by scripts.
 </div>
 
-#### tablet alias
+#### tablet_alias
 **mandatory**
 
 <div class="cmd">
 Id of the target tablet on which to run the sql query, specified using the vitess tablet id format
-cell-uid (see example below).
+&lt;cell&gt;-&lt;uid&gt; (see example below).
 </div>
 
 #### query

@@ -74,10 +74,6 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [GetKeyspaces](../vtctl/keyspaces#getkeyspaces) | `GetKeyspaces  ` |
 | [RebuildKeyspaceGraph](../vtctl/keyspaces#rebuildkeyspacegraph) | `RebuildKeyspaceGraph  -- [--cells=c1,c2,...] <keyspace> ...` |
 | [ValidateKeyspace](../vtctl/keyspaces#validatekeyspace) | `ValidateKeyspace  -- [--ping-tablets] <keyspace name>` |
-| [Reshard (v1)](../../vreplication/v1/reshard) | `Reshard  -- --v1 [--skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>` |
-| [Reshard (v2)](../../vreplication/reshard) | `Reshard <options> <action> <workflow identifier>` |
-| [MoveTables (v1)](../../vreplication/v1/movetables) | `MoveTables  -- --v1 [--cell=<cell>] [--tablet_types=<source_tablet_types>] --workflow=<workflow> <source_keyspace> <target_keyspace> <table_specs>` |
-| [MoveTables (v2)](../../vreplication/movetables) | `MoveTables  <options> <action> <workflow identifier>` |
 | [CreateLookupVindex](../vtctl/keyspaces#createLookupvindex) | `CreateLookupVindex  -- [--cell=<cell>] [--tablet_types=<source_tablet_types>] <keyspace> <json_spec>` |
 | [ExternalizeVindex](../vtctl/keyspaces#externalizevindex) | `ExternalizeVindex  <keyspace>.<vindex>` |
 | [Materialize](../vtctl/keyspaces#materialize) | `Materialize  <json_spec>, example : '{"workflow": "aaa", "source_keyspace": "source", "target_keyspace": "target", "table_settings": [{"target_table": "customer", "source_expression": "select * from customer", "create_ddl": "copy"}]}'` |

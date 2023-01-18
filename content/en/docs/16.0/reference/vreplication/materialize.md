@@ -12,10 +12,10 @@ Materialize -- [--cells=<cells>] [--tablet_types=<source_tablet_types>] <json_sp
 
 ### Description
 
-Materialize is a low level vreplication API that allows for generalized materialization of tables. The target tables
-can be copies, aggregations or views. The target tables are kept in sync in near-realtime.
+`Materialize` is a lower level vreplication command that allows for generalized materialization of tables. The target tables
+can be copies, aggregations, or views. The target tables are kept in sync in near-realtime.
 
-You can specify multiple tables to materialize using the json_spec parameter.
+You can specify multiple tables to materialize using the `json_spec` parameter.
 
 {{< warning >}}
 Be careful to avoid using the `INSTANT ADD COLUMN` feature in [MySQL 8.0+](https://mysqlserverteam.com/mysql-8-0-innodb-now-supports-instant-add-column/) with materialization source tables as this can cause the vreplication based materialization workflow to break.
@@ -40,19 +40,22 @@ cells should be used to pick a tablet for selecting data from the source keyspac
 * Select cells where replica lags are lower
 </div>
 
-#### --tablet_types
+#### --tablet_types 
 **optional**\
-**default** replica
+**default** `--vreplication_tablet_type` parameter value for the tablet. `--vreplication_tablet_type` has the default value of "in_order:REPLICA,PRIMARY".\
+**string**
 
 <div class="cmd">
 
-A comma-separated list of tablet types that are used while picking a tablet for sourcing data.
-One or more from PRIMARY, REPLICA, RDONLY.<br><br>
+Source tablet types to replicate from (e.g. PRIMARY, REPLICA, RDONLY).
+
+</div>
 
 ###### Uses
 
 * To reduce the load on PRIMARY tablets by using REPLICAs or RDONLYs
 * Reducing lag by pointing to PRIMARY
+
 </div>
 
 #### JSON spec details
@@ -91,14 +94,14 @@ Materialize '{"workflow": "product_sales", "source_keyspace": "commerce", "targe
 
 Once you decide on your materialization requirements, you need to initiate a VReplication workflow as follows:
 
-1. Initiate the migration using Materialize
-2. Monitor the workflow using [Workflow](../workflow) or [VExec](../vexec)
+1. Initiate the migration using `Materialize`
+2. Monitor the workflow using [Workflow](../workflow)
 3. Start accessing your views once the workflow has started Replicating
 
 ### Notes
 
 There are special commands to perform common materialization tasks and you should prefer them
-to using Materialize directly.
+to using `Materialize` directly.
 
-* If you just want to copy tables to a different keyspace use [MoveTables](../movetables).
+* If you just want to copy tables to a different keyspace use [MoveTables](../movetables)
 * If you want to change sharding strategies use [Reshard](../reshard) instead

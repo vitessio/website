@@ -42,6 +42,8 @@ for the various components:
       * TCP port 15000 + vttablet UID (HTTP); e.g port 15100 for UID 100
     * administrator using web browser &rarr; vtadmin web UI
       * TCP port 14201 (HTTP)
+    * administrator using web browser &rarr; vtorc web UI
+      * TCP port 16000 (HTTP)
     * Metrics scraper (e.g. Prometheus) &rarr; vtgate web port
       * TCP port 15001 (HTTP)
     * Metrics scraper (e.g. Prometheus) &rarr; vttablet web port

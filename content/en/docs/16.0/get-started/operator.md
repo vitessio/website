@@ -22,7 +22,7 @@ Before we get started, let’s get a few pre-requisites out of the way:
 
 1. Install [the MySQL client](https://dev.mysql.com/doc/mysql-getting-started/en/) locally.
 
-1. Install [vtctlclient](https://vitess.io/docs/get-started/local/#install-vitess) locally.
+1. Install [vtctldclient](https://vitess.io/docs/get-started/local/#install-vitess) locally.
 
 ## Install the Operator
 
@@ -76,11 +76,12 @@ For ease-of-use, Vitess provides a script to port-forward from Kubernetes to you
 
 ```bash
 ./pf.sh &
+alias vtctldclient="vtctldclient --server=localhost:15999"
 alias vtctlclient="vtctlclient --server=localhost:15999"
 alias mysql="mysql -h 127.0.0.1 -P 15306 -u user"
 ```
 
-Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctlclient` or close your session.
+Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctlclient && unalias vtctldclient` or close your session.
 
 Once the port-forward starts running, the VTAdmin UI will be available at [http://localhost:14000/](http://localhost:14000/)
 
@@ -89,8 +90,8 @@ Once the port-forward starts running, the VTAdmin UI will be available at [http:
 Load our initial schema:
 
 ```bash
-vtctlclient ApplySchema -- --sql="$(cat create_commerce_schema.sql)" commerce
-vtctlclient ApplyVSchema -- --vschema="$(cat vschema_commerce_initial.json)" commerce
+vtctldclient ApplySchema --sql-file="create_commerce_schema.sql" commerce
+vtctldclient ApplyVSchema --vschema-file="vschema_commerce_initial.json" commerce
 ```
 
 ### Connect to your cluster

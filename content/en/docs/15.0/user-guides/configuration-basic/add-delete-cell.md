@@ -29,7 +29,7 @@ vtctldclient RebuildVSchemaGraph --cells=cell2
 If the `cells` option is not specified, the rebuild deploys to all cells.
 {{< /info >}}
 
-Once these steps are done, you can bring up the necessary mysqls, vttablets and vtgates under that cell.
+Once these steps are done, you can bring up the necessary MySQLs, vttablets and vtgates under that cell.
 
 ## Delete
 

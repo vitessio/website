@@ -9,7 +9,7 @@ aliases: ['/docs/user-guides/vtexplain/']
 This document covers the way Vitess executes a particular SQL statement using the [VTExplain tool](../../../reference/programs/vtexplain). 
 This tool works similarly to the MySQL `EXPLAIN` statement.
 You can run `vtexplain` before you have a running Vitess cluster, which lets you quickly try different schema/vschema.
-If you're already running a cluster, you can also use the [`EXPLAIN format=vtexplain...`](./explain-format-vtexplain) command from a SQL console.
+If you're already running a cluster, you can also use the [VEXPLAIN QUERIES|ALL|PLAN](../vexplain) command from a SQL console.
 
 ## Prerequisites
 

@@ -4,6 +4,10 @@ description: Wrapper on VReplicationExec to run query on all participating prima
 weight: 60
 ---
 
+{{< warning >}}
+This command was deprecated in v12.0 and has been removed in v16.0.
+{{< /warning >}}
+
 ### Command
 
 ```

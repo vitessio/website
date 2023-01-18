@@ -70,3 +70,13 @@ The `IGNORE_MAX_MEMORY_ROWS` comment directive allows a Vitess-aware application
 In Vitess, it is possible to use the `vtgate` parameter `--no_scatter` to prevent `vtgate` from issuing scatter queries. Thus only queries that target a single shard will be allowed.
 
 This comment directive is used to override that limitation, allowing application code to be customized to allow scatters for certain chosen use-cases, but not for the general case.
+
+## Consolidator (CONSOLIDATOR)
+
+In `vttablet`, the consolidator is enabled with the `--enable_consolidator` and `--enable_consolidator_replicas` flags. Those settings may be overridden with this comment directive, allowing application code to opt into (or out of) consolidation for individual `SELECT` queries.
+
+This directive requires one of the following values:
+
+ * `disabled`
+ * `enabled`
+ * `enabled_replicas`

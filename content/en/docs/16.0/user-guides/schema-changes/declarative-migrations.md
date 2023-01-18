@@ -89,12 +89,12 @@ completed_timestamp: 2021-03-21 20:39:13
 ```
 Note how while the migration statement is `create`, the migration's `ddl_action` ends up being `alter`, and `message` indicates the alter options.
 
-You may add `-declarative` even if you otherwise supply flags to your favorite strategy. For example, the following is valid:
+You may add `--declarative` even if you otherwise supply flags to your favorite strategy. For example, the following is valid:
 ```sql
 set @@ddl_strategy='gh-ost --declarative --max-load=Threads_running=100';
 ```
 
-Vitess notes down the `-declarative` flag and does not pass it to `gh-ost`, `pt-osc` or `VReplication`.
+Vitess notes down the `--declarative` flag and does not pass it to `gh-ost`, `pt-osc` or `VReplication`.
 
 ## Implementation details
 

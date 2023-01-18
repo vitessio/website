@@ -85,11 +85,12 @@ Download the [latest binary release](https://github.com/vitessio/vitess/releases
 **Notes:**
 
 * Release 15.0 has a bug because of which the local example fails when try to run vtadmin web. [Issue#11679](https://github.com/vitessio/vitess/issues/11679)
-* Please use release [15.0.1](https://github.com/vitessio/vitess/releases/tag/v15.0.1) instead.
+* Please use release [15.0.2](https://github.com/vitessio/vitess/releases/tag/v15.0.2) instead.
+* Ubuntu is the only fully supported OS, for another OS please [build Vitess by yourself](/docs/contributing) or use the Docker images.
 
 ```sh
-version=15.0.1
-file=vitess-${version}-13ee9c8.tar.gz
+version=15.0.2
+file=vitess-${version}-a914f40.tar.gz
 wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
 tar -xzf ${file}
 cd ${file/.tar.gz/}
@@ -270,13 +271,13 @@ rm -rf vtdataroot
 
 ## Setup Aliases
 
-For ease-of-use, Vitess provides aliases for `mysql` and `vtctlclient`:
+For ease-of-use, Vitess provides aliases for `mysql`, `vtctlclient` and `vtcltdclient`:
 
 ```bash
 source ./env.sh
 ```
 
-Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctlclient` or close your session.
+Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctlclient && unalias vtctldclient` or close your session.
 
 ## Connect to your cluster
 
@@ -286,7 +287,7 @@ You should now be able to connect to the VTGate server that was started in `101_
 ~/my-vitess-example> mysql
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 2
-Server version: 5.7.9-Vitess (Ubuntu)
+Server version: 8.0.31-Vitess (Ubuntu)
 
 Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.
 
