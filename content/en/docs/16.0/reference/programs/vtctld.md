@@ -92,7 +92,7 @@ vtctld \
 | --grpc_server_initial_conn_window_size | int | grpc server initial connection window size |
 | --grpc_server_initial_window_size | int | grpc server initial window size |
 | --grpc_server_keepalive_enforcement_policy_min_time | duration | grpc server minimum keepalive time (default 5m0s) |
-| --grpc_server_keepalive_enforcement_policy_permit_without_strea | m | grpc server permit client keepalive pings even when there are no active streams (RPCs) |
+| --grpc_server_keepalive_enforcement_policy_permit_without_stream | boolean | grpc server permit client keepalive pings even when there are no active streams (RPCs) |
 | --jaeger-agent-host | string | host and port to send spans to. if empty, no tracing will be done |
 | --keep_logs | duration | keep logs for this long (using ctime) (zero to keep forever) |
 | --keep_logs_by_mtime | duration | keep logs for this long (using mtime) (zero to keep forever) |
@@ -140,7 +140,6 @@ vtctld \
 | --tablet_grpc_ca | string | the server ca to use to validate servers when connecting |
 | --tablet_grpc_cert | string | the cert to use to connect |
 | --tablet_grpc_crl | string | the server crl to use to validate server certificates when connecting |
-
 | --tablet_grpc_key | string | the key to use to connect |
 | --tablet_grpc_server_name | string | the server name to use to validate server certificate |
 | --tablet_health_keep_alive | duration | close streaming tablet health connection if there are no requests for this long (default 5m0s) |
