@@ -39,7 +39,7 @@ many features. It can be used for the following use cases:
 
 ## Feature Description
 
-VReplication works as [a stream or set of streams](../../../../design-docs/vreplication/life-of-a-stream/).
+VReplication works as [a stream or set of streams](../internal/life-of-a-stream/).
 Each stream establishes replication from a source keyspace/shard to a
 target keyspace/shard.
 
@@ -62,14 +62,14 @@ the relationship between them may not be one to one.
 
 VReplication performs the following essential functions:
 
-* [Copy data](../../../../design-docs/vreplication/life-of-a-stream/#copy)
+* [Copy data](../internal/life-of-a-stream/#copy)
   from the source to the destination table in a consistent
   fashion. For a large table, this copy can be long-running. It can be
   interrupted and resumed. If interrupted, VReplication can keep
   the copied portion up-to-date with respect to the source, and it can
   resume the copy process at a point that is consistent with the
   current replication position.
-* After copying is finished, it can continuously [replicate](../../../../design-docs/vreplication/life-of-a-stream/#replicate)
+* After copying is finished, it can continuously [replicate](../internal/life-of-a-stream/#replicate)
   the data from the source to destination.
 * The copying rule can be expressed as a `SELECT` statement. The
   statement should be simple enough that the materialized table can
@@ -153,6 +153,13 @@ in the replication stream from the source. The values can be as follows:
   encountered the DDL.
 * `EXEC`: Apply the DDL, but stop if an error is encountered while applying it.
 * `EXEC_IGNORE`: Apply the DDL, but ignore any errors and continue replicating.
+
+{{< warning >}}
+We caution against against using `EXEC` or `EXEC_IGNORE` for the following reasons:
+  * You may want a different schema on the target
+  * You may want to apply the DDL in a different way on the target
+  * The DDL may take a long time to apply on the target and may disrupt replication, performance, and query execution while it is being applied (if serving traffic from the target)
+{{< /warning >}}
 
 ### Failover Continuation
 
