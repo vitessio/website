@@ -143,7 +143,7 @@ Comma seperated list of Cell(s) and/or CellAlias(es) to replicate from.
 **default** false
 
 {{< warning >}}
-This flag is currently experimental.
+This flag is currently **experimental**.
 {{< /warning >}}
 
 <div class="cmd">
