@@ -149,7 +149,7 @@ This flag is currently experimental.
 <div class="cmd">
 
 If true, any secondary keys are dropped from the table definitions on the target shard(s) as we first initialize the
-tables for the [copy phase](../../../../design-docs/vreplication/life-of-a-stream/#copy). The exact same key definitions
+tables for the [copy phase](../internal/life-of-a-stream/#copy). The exact same key definitions
 are then re-added when the copy phase completes for each table.
 
 With this method all secondary index records for the table are generated in one bulk operation. This should significantly
