@@ -154,6 +154,13 @@ in the replication stream from the source. The values can be as follows:
 * `EXEC`: Apply the DDL, but stop if an error is encountered while applying it.
 * `EXEC_IGNORE`: Apply the DDL, but ignore any errors and continue replicating.
 
+{{< warning >}}
+We caution against against using `EXEC` or `EXEC_IGNORE` for the following reasons:
+  * You may want a different schema on the target
+  * You may want to apply the DDL in a different way on the target
+  * The DDL may take a long time to apply on the target and may disrupt replication, performance, and query execution while it is being applied (if serving traffic from the target)
+{{< /warning >}}
+
 ### Failover Continuation
 
 If a failover is performed on the target keyspace/shard, the new primary will

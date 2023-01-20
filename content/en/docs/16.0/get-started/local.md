@@ -86,6 +86,7 @@ Download the [latest binary release](https://github.com/vitessio/vitess/releases
 
 * Release 15.0 has a bug because of which the local example fails when try to run vtadmin web. [Issue#11679](https://github.com/vitessio/vitess/issues/11679)
 * Please use release [15.0.2](https://github.com/vitessio/vitess/releases/tag/v15.0.2) instead.
+* Ubuntu is the only fully supported OS, for another OS please [build Vitess by yourself](/docs/contributing) or use the Docker images.
 
 ```sh
 version=15.0.2
@@ -286,7 +287,7 @@ You should now be able to connect to the VTGate server that was started in `101_
 ~/my-vitess-example> mysql
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 2
-Server version: 5.7.9-Vitess (Ubuntu)
+Server version: 8.0.31-Vitess (Ubuntu)
 
 Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.
 

@@ -4,7 +4,15 @@ series: vtctldclient
 ---
 ## vtctldclient GetShardRoutingRules
 
-Returns the currently active shard routing rules as a JSON document. See the documentation on [shard level migrations](../../../vreplication/shardlevelmigrations/) for more information.
+Displays the currently active shard routing rules as a JSON document.
+
+### Synopsis
+
+Displays the currently active shard routing rules as a JSON document.
+
+See the documentation on shard level migrations[1] for more information.
+
+[1]: https://vitess.io/docs/reference/vreplication/shardlevelmigrations/
 
 ```
 vtctldclient GetShardRoutingRules
@@ -13,7 +21,7 @@ vtctldclient GetShardRoutingRules
 ### Options
 
 ```
-  -h, --help               help for GetShardRoutingRules
+  -h, --help   help for GetShardRoutingRules
 ```
 
 ### Options inherited from parent commands

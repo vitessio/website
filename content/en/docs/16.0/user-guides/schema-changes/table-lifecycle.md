@@ -26,17 +26,17 @@ There are two locking aspects to dropping tables:
 The exact locking behavior and duration can vary depending on
 various factors:
 
-- Which filesystem is used
-- Whether the MySQL adaptive hash index is used
+- Which filesystem is used.
+- Whether the MySQL adaptive hash index is used.
 - Whether you are attempting to hack around some of the MySQL `DROP TABLE`
-  performance problems using hard links
+  performance problems using hard links.
 
 It is common practice to avoid direct `DROP TABLE` statements and to follow
 a more elaborate table lifecycle.
 
 ## Vitess table lifecycle
 
-The lifecycle offered by Vitess consists of the following stages or some subset:
+The lifecycle offered by Vitess consists of the following stages or some subset of them:
 
 > _in use_ -> hold -> purge -> evac -> drop -> _removed_
 
@@ -82,7 +82,7 @@ Vitess does not track the state of the table lifecycle. The process is stateless
 
 ## Automated lifecycle
 
-Vitess internally uses the above table lifecycle for [online, managed schema migrations](../../../user-guides/schema-changes/managed-online-schema-changes/). Online schema migration tools `gh-ost` and `pt-online-schema-change` create artifact tables or end with leftover tables: Vitess automatically collects those tables. The artifact or leftover tables are immediate moved to `purge` state. Depending on `--table_gc_lifecycle`, they may spend time in this state, getting purged, or immediately transitioned to the next state.
+Vitess internally uses the above table lifecycle for [online, managed schema migrations](../../../user-guides/schema-changes/managed-online-schema-changes/). All online strategies: `vitess`, `gh-ost`, and `pt-online-schema-change`, create artifact tables or end with leftover tables: Vitess automatically collects those tables. The artifact or leftover tables are immediate moved to `hold` state. Depending on `--table_gc_lifecycle`, they may spend time in this state, getting purged, or immediately transitioned to the next state.
 
 ## User-facing DROP TABLE lifecycle
 

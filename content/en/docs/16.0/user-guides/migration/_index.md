@@ -1,5 +1,5 @@
 ---
 title: Migration
-description: User guides covering migration to Vitess
+description: User guides covering data migrations into Vitess
 weight: 3
 ---
