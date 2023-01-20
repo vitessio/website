@@ -70,6 +70,8 @@ $ vtctlclient --server=localhost:15999 TopoCat -- --decode_proto '/RoutingRules'
 rules:{from_table:"corder@rdonly" to_tables:"commerce.corder"} rules:{from_table:"customer.corder" to_tables:"commerce.corder"} rules:{from_table:"customer.corder@replica" to_tables:"commerce.corder"} rules:{from_table:"customer@rdonly" to_tables:"commerce.customer"} rules:{from_table:"customer.customer@rdonly" to_tables:"commerce.customer"} rules:{from_table:"customer.corder@rdonly" to_tables:"commerce.corder"} rules:{from_table:"customer@replica" to_tables:"commerce.customer"} rules:{from_table:"corder@replica" to_tables:"commerce.corder"} rules:{from_table:"commerce.corder@replica" to_tables:"commerce.corder"} rules:{from_table:"commerce.corder@rdonly" to_tables:"commerce.corder"} rules:{from_table:"commerce.customer@rdonly" to_tables:"commerce.customer"} rules:{from_table:"corder" to_tables:"commerce.corder"} rules:{from_table:"customer.customer@replica" to_tables:"commerce.customer"} rules:{from_table:"commerce.customer@replica" to_tables:"commerce.customer"} rules:{from_table:"customer" to_tables:"commerce.customer"} rules:{from_table:"customer.customer" to_tables:"commerce.customer"}
 ```
 
+</br>
+
 {{< info >}}
 In practice you would instead typically view the routing rules via the
 dedicated [`GetRoutingRules`](../../../programs/vtctl/schema-version-permissions/#getroutingrules)
@@ -122,6 +124,8 @@ primary_term_start_time:{seconds:1627465761 nanoseconds:600070156}
 is_primary_serving:true
 ```
 
+</br>
+
 *global/keyspaces/customer/shards/80-/Shard*
 
 ```proto
@@ -129,6 +133,8 @@ primary_alias:{cell:"zone1" uid:400}
 primary_term_start_time:{seconds:1627465833 nanoseconds:536524508}
 key_range:{start:"\x80"}
 ```
+
+</br>
 
 *zone1/keyspaces/customer/SrvKeyspace*
 
@@ -156,6 +162,8 @@ primary_term_start_time:{seconds:1627466189 nanoseconds:587021377}
 is_primary_serving:true
 ```
 
+</br>
+
 *global/keyspaces/customer/shards/80-/Shard*
 
 ```proto
@@ -163,6 +171,8 @@ primary_alias:{cell:"zone1" uid:400}
 primary_term_start_time:{seconds:1627466263 nanoseconds:16201490}
 key_range:{start:"\x80"}``
 ```
+
+</br>
 
 _zone1/keyspaces/customer/SrvKeyspace_
 
@@ -177,6 +187,8 @@ partitions:{served_type:REPLICA
   shard_tablet_controls:{name:"80-" key_range:{start:"\x80"}}
 }
 ```
+
+</br>
 
 #### After Primary Traffic Is Switched Using `SwitchTraffic` (Previously Known as SwitchWrites)
 
@@ -193,6 +205,8 @@ primary_alias:{cell:"zone1" uid:200}
 primary_term_start_time:{seconds:1627466636 nanoseconds:405646818}
 ```
 
+</br>
+
 *global/keyspaces/customer/shards/80-/Shard*
 
 ```proto
@@ -201,6 +215,8 @@ primary_term_start_time:{seconds:1627466710 nanoseconds:579634511}
 key_range:{start:"\x80"}
 is_primary_serving:true
 ```
+
+</br>
 
 *zone1/keyspaces/customer/SrvKeyspace*
 
@@ -241,6 +257,8 @@ rules:{from_table:"customer@replica" to_tables:"commerce.customer"}
 rules:{from_table:"customer.customer@replica" to_tables:"commerce.customer"}
 ```
 
+</br>
+
 #### On Switching Replica Traffic to Target
 
 The routing rules for replica targeted reads are updated to map the table on the source to the target.
@@ -252,6 +270,8 @@ rules:{from_table:"customer.customer" to_tables:"commerce.customer"} rules:{from
 rules:{from_table:"customer" to_tables:"commerce.customer"}
 rules:{from_table:"customer@replica" to_tables:"customer.customer"}
 ```
+
+</br>
 
 #### On Switching Primary Traffic
 
@@ -267,6 +287,8 @@ rules:{from_table:"customer.customer@replica" to_tables:"customer.customer"}
 rules:{from_table:"commerce.customer" to_tables:"customer.customer"}
 rules:{from_table:"customer" to_tables:"customer.customer"}
 ```
+
+</br>
 
 *global/keyspaces/commerce/shards/0/Shard*
 

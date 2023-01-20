@@ -35,6 +35,8 @@ separate terminal to stream events from the `customer` table in the `customer` k
 }
 ```
 
+</br>
+
 Initial events will be streamed:
 
 ```proto
@@ -44,12 +46,16 @@ Initial events will be streamed:
 [type:BEGIN  type:VGTID vgtid:<shard_gtids:<keyspace:"customer" shard:"0" gtid:"MySQL56/060a409d-8e10-11eb-9bb5-04ed332e05c2:1-45" > >  type:COMMIT ]
 ```
 
+</br>
+
 Now run the resharding scripts and switch reads (steps/scripts 301, 302, 303, and 304). The following events are now seen:
 
 ```proto
 [type:VGTID vgtid:<shard_gtids:<keyspace:"customer" shard:"0" gtid:"MySQL56/060a409d-8e10-11eb-9bb5-04ed332e05c2:1-46" > >  type:DDL timestamp:1616748652 statement:"alter table customer change customer_id customer_id bigint not null" current_time:1616748652480051077 ]
 [type:VGTID vgtid:<shard_gtids:<keyspace:"customer" shard:"0" gtid:"MySQL56/060a409d-8e10-11eb-9bb5-04ed332e05c2:1-47" > >  type:OTHER timestamp:1616748652 current_time:1616748652553883482 ]
 ```
+
+</br>
 
 Run the 305 step/script to switch writes. You will see that the [`VGTID`](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#VGtid)s)
 will include the new shards `-80` and `80-` instead of `0`:
@@ -61,6 +67,8 @@ will include the new shards `-80` and `80-` instead of `0`:
 [type:BEGIN timestamp:1616748733 current_time:1616748733519198641  type:VGTID vgtid:<shard_gtids:<keyspace:"customer" shard:"80-" gtid:"MySQL56/6a60d315-8e10-11eb-b894-04ed332e05c2:1-76" > shard_gtids:<keyspace:"customer" shard:"-80" gtid:"MySQL56/629442b7-8e10-11eb-a0bb-04ed332e05c2:1-75" > >  type:COMMIT timestamp:1616748733 current_time:1616748733519244822 ]
 [type:BEGIN timestamp:1616748733 current_time:1616748733520355854  type:VGTID vgtid:<shard_gtids:<keyspace:"customer" shard:"80-" gtid:"MySQL56/6a60d315-8e10-11eb-b894-04ed332e05c2:1-76" > shard_gtids:<keyspace:"customer" shard:"-80" gtid:"MySQL56/629442b7-8e10-11eb-a0bb-04ed332e05c2:1-76" > >  type:COMMIT timestamp:1616748733 current_time:1616748733520403210 ]
 ```
+
+</br>
 
 Insert new rows: this will result in row events from the new shards. Shards will only stream changes from the point of
 resharding.

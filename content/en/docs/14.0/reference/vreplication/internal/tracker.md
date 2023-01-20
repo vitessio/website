@@ -168,6 +168,8 @@ T4: DML1 on table1
 T5: Version Event DDL2 // gets written AFTER DML1
 ```
 
+</br>
+
 So now on the `REPLICA`, at T4, the version historian will incorrectly provide the schema from T1 after DDL1 was applied.
 
 ### Situation 2

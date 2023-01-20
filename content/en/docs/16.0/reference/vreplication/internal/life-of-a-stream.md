@@ -99,6 +99,8 @@ T2: select * from X where pk > 10 limit 10; GTID: 110, Last PK 20
    send rows to target
 ```
 
+</br>
+
 There is a gotcha here: onsider that there are 10 new transactions or GTIDs between times T1 and T2. Some of these
 can potentially modify the rows returned from the query at T1. Hence if we just return the rows from T2 (which have
 only rows from PK 11 to 20) then we will have an inconsistent state on the target: the updates to rows with PK
@@ -120,6 +122,8 @@ T3: select * from X where pk > 10 limit 10; GTID: 112, Last PK 20
 
    send rows to target
 ```
+
+</br>
 
 Another gotcha: note that at time T3 when we selected the PKs from 11 to 20 the GTID position could have moved further!
 This could be due to transactions that were applied between T2 and T3. So if we just applied the rows from T3 we would
@@ -144,6 +148,8 @@ T4: replicate from 111 to 112
 
 T5: Send rows for pks 11 to 20 to target
 ```
+
+</br>
 
 This flow actually works and is the one used in Vitess VReplication!
 

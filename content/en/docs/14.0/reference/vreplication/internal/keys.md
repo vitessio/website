@@ -108,6 +108,8 @@ CREATE TABLE `entry` (
 )
 ```
 
+</br>
+
 The above is a trivial scenario.
 
 #### Source Table and Target table Share the Same PRIMARY KEY
@@ -131,6 +133,8 @@ CREATE TABLE `target` (
 )
 ```
 
+</br>
+
 The differences in structure are interesting but irrelevant to VReplication's ability to copy the data.
 
 #### Subset PRIMARY KEY
@@ -153,6 +157,8 @@ CREATE TABLE `target` (
 )
 ```
 
+</br>
+
 #### Superset PRIMARY KEY
 
 ```sql
@@ -173,6 +179,8 @@ CREATE TABLE `target` (
 )
 ```
 
+</br>
+
 #### Different PRIMARY KEYs
 
 ```sql
@@ -192,6 +200,8 @@ CREATE TABLE `target` (
   PRIMARY KEY (`uuid`)
 )
 ```
+
+</br>
 
 No columns are shared between the `PRIMARY KEY`s in the above. However:
 
@@ -217,6 +227,8 @@ CREATE TABLE `target` (
   UNIQUE KEY uuid_idx(`uuid`)
 )
 ```
+
+</br>
 
 The only eligible solution in the above is:
 
@@ -249,6 +261,8 @@ CREATE TABLE `target` (
 )
 ```
 
+</br>
+
 The only `UNIQUE KEY` on `target` is `NULL`able, hence _not_ eligible.
 
 #### Missing columns
@@ -269,6 +283,8 @@ CREATE TABLE `target` (
   PRIMARY KEY (`id`)
 )
 ```
+
+</br>
 
 `target` only has one possible key, the `PRIMARY KEY`, covering `id`. But `id` is not found in `source`.
 
@@ -293,6 +309,8 @@ CREATE TABLE `corder` (
 )
 ```
 
+</br>
+
 And even though we don't _have to_, here's how we could manually configure the VReplication workflow definition
 (prettified for readability):
 
@@ -307,6 +325,8 @@ keyspace:"commerce" shard:"0" filter:{
   }
 }
 ```
+
+</br>
 
 In the above:
 
@@ -340,6 +360,8 @@ keyspace:"commerce" shard:"0" filter:{
 }
 ```
 
+</br>
+
 Not much changed from the previous example, just note how we comma separate `"order_id,customer_id"`.
 
 ### Example 3
@@ -366,6 +388,8 @@ keyspace:"commerce" shard:"0" filter:{
   }
 }
 ```
+
+</br>
 
 Note:
 
