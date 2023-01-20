@@ -2,6 +2,7 @@
 title: VStream
 description: Change event streams
 weight: 75
+aliases: ['/docs/design-docs/vreplication/vstream/vscopy/']
 ---
 
 [Vitess Gateways](../../../concepts/vtgate/) (`vtgate`) provide a [`VStream` service](../../../concepts/vstream/)
@@ -69,8 +70,8 @@ The tablet type to use [when selecting stream source tablets](../tablet_selectio
 **Required**
 
 The keyspace, shard, and GTID position list to start streaming from. If no `ShardGtid.Gtid` value is provided
-then a [table copy phase](https://vitess.io/docs/design-docs/vreplication/vstream/vscopy/) will be initiated
-for the tables matched by the provided [filter](#filter) on the given shard.
+then a [table copy phase](https://github.com/vitessio/vitess/issues/6277) will be initiated for the tables matched
+by the provided [filter](#filter) on the given shard.
 
 #### Filter
 
@@ -228,7 +229,9 @@ customer_id: 1
 
 ## More Reading
 
-  * [VStream Copy design doc](https://vitess.io/docs/design-docs/vreplication/vstream/vscopy/)
+  * [VStream Copy](https://github.com/vitessio/vitess/issues/6277)
+  * [VStream API and Resharding](../internal/vstream-stream-migration/)
+  * [VStream Skew Minimization](../internal/vstream-skew-detection/)
   * Debezium Connector for Vitess
     * [Docs](https://debezium.io/documentation/reference/stable/connectors/vitess.html)
     * [Source](https://github.com/debezium/debezium-connector-vitess/)
