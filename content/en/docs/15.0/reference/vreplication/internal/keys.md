@@ -1,11 +1,11 @@
 ---
-title: Role of table keys in VReplication
+title: Role of Table Keys in VReplication
 description: Uses and requirements for primary and unique keys in source and target tables in VReplication Workflows
 weight: 3
 aliases: ['/docs/design-docs/vreplication/keys/']
 ---
 
-# The use of unique keys
+# The Use of Unique Keys
 
 A VReplication stream copies data from a table on a source tablet to a table on a target tablet. In some cases, the two
 tablets may be the same one, but the stream is oblivious to such nuance. VReplication needs to be able to copy existing
@@ -23,7 +23,7 @@ In fact, in the most common use case, both tables will have the same `PRIMARY KE
 the same order. This is the default assumption and expectation by VReplication. But this doesn't have to be the case,
 and it is possible to have different keys on the source and the target table.
 
-## Which keys are eligible?
+## Which Keys Are Eligible?
 
 Any `UNIQUE KEY` that is non-`NULL`able potentially qualifies. A `NULL`able `UNIQUE KEY` is a key that covers one or
 more `NULL`able columns. It doesn't matter if column values do or do not actually contain `NULL`s. If a column is `NULL`
@@ -38,7 +38,7 @@ prioritizes smaller data types over larger data types.
 However, not all eligible `UNIQUE KEY`s, or even `PRIMARY KEY`s are usable for all VReplication streams, as described
 below.
 
-## Comparable rows
+## Comparable Rows
 
 VReplication needs to be able to determine, given a row in the source table, which row it maps to in the target table.
 
@@ -94,9 +94,9 @@ To clarify, it is **OK** if:
 All it takes is _one_ viable key that can be used to uniquely identify rows in the source table, and one such viable key
 in the target table to allow VReplication to work.
 
-### Examples of valid cases
+### Examples of Valid Cases
 
-#### Source table and target table are the same
+#### Source Table and Target Table Are the Same
 
 ```sql
 CREATE TABLE `entry` (
@@ -110,7 +110,7 @@ CREATE TABLE `entry` (
 
 The above is a trivial scenario.
 
-#### Source table and target table share the same PRIMARY KEY
+#### Source Table and Target table Share the Same PRIMARY KEY
 
 ```sql
 CREATE TABLE `source` (
@@ -227,7 +227,7 @@ The only eligible solution in the above is:
 
 Incidentally, in the above, the chosen keys differ by name, but share the same columns (`uuid`).
 
-### Examples of invalid cases
+### Examples of Invalid Cases
 
 #### NULLable columns
 
@@ -272,7 +272,7 @@ CREATE TABLE `target` (
 
 `target` only has one possible key, the `PRIMARY KEY`, covering `id`. But `id` is not found in `source`.
 
-## Configuring the stream
+## Configuring The Stream
 
 If both source and target table share the same `PRIMARY KEY` (covering the same columns in the same order) then there's
 nothing to be done. VReplication will pick `PRIMARY KEY` on both ends by default.
@@ -396,7 +396,7 @@ With the introduction of mechanisms to automatically determine the optimal key t
 the `source_unique_key_columns`, `target_unique_key_columns`, and `source_unique_key_target_columns` fields for more
 fine-grained control, VReplication changes its behavior as needed.
 
-#### Notes about the code
+#### Notes About The Code
 
 Much of the code uses "PK" terminology. With the introduction of _any_ unique key utilization the "PK" terminology
 becomes incorrect. However, to avoid mass rewrites we kept this terminology, and wherever VReplication discusses

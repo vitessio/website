@@ -1,11 +1,11 @@
 ---
-title: How traffic is switched
+title: How Traffic Is Switched
 description: How Vitess signals traffic cutover for Reshard and MoveTables
 weight: 2
 aliases: ['/docs/design-docs/vreplication/cutover/']
 ---
 
-# Related persistent Vitess objects
+# Related Persistent Vitess Objects
 
 {{< info >}}
 As the objects or keys noted below are stored in [the topo server](../../../features/topology-service/) and
@@ -76,7 +76,7 @@ dedicated [`GetRoutingRules`](../../../programs/vtctl/schema-version-permissions
 vtctl client command which will return the rules for all keyspaces in the topo.
 {{< /info >}}
 
-# How VTGate routes a query
+# How VTGate Routes a Query
 
 This section walks through a simplified version of the logic used to determine which keyspace and table vtgate will route
 a simple query of the form `select * from t1 where id = 1` (a _read_ query) or `insert into t1 (id, val) values (1,'abc')`
@@ -93,7 +93,7 @@ and selecting the ones whose `query_service_disabled` field is *not* set and who
 [`VSchema`](../../../features/vschema/) (stored in the `global` topo), the shard for the relevant row is computed based
 on the keyrange to which the id is mapped to using the declared [`VIndex` function/type](../../../features/vindexes/#predefined-vindexes).
 
-# Changes made to the topo when traffic is switched
+# Changes Made to the Topo When Traffic Is Switched
 
 This document outlines the steps involved in the cutover process
 of [`MoveTables`](../../movetables/) and [`Reshard`](../../reshard/)
@@ -105,11 +105,11 @@ in the workflow.
 Items in italics are topo keys and the following snippet the value of the key
 {{< /info >}}
 
-## What happens when a Reshard is cutover
+## What Happens When a Reshard Is Cutover
 
 For brevity we only show the records for the `80-` shard. There will be similar records for the `-80` shard.
 
-#### Before Resharding, after -80/80- shards are created
+#### Before Resharding, After -80/80- Shards Are Created
 
 Only shard `0` has `is_primary_serving` set to true. The `SrvKeyspace` record only has references to `0` for both `PRIMARY`
 and `REPLICA` tablet types.
@@ -137,7 +137,7 @@ partitions:{served_type:PRIMARY shard_references:{name:"0"}}
 partitions:{served_type:REPLICA shard_references:{name:"0"}}
 ```
 
-### After replica traffic is switched using `SwitchTraffic` (previously known as SwitchReads)
+### After Replica Traffic Is Switched Using `SwitchTraffic` (Previously Known as SwitchReads)
 
 Shard `0` still has the `is_primary_serving` set as true. The primary partition is still the same.
 
@@ -178,7 +178,7 @@ partitions:{served_type:REPLICA
 }
 ```
 
-#### After primary traffic is switched using `SwitchTraffic` (previously known as SwitchWrites)
+#### After Primary Traffic Is Switched Using `SwitchTraffic` (Previously Known as SwitchWrites)
 
 * `is_primary_serving` is removed from shard `0`
 * `is_primary_serving` is added to shards `-80` and `80-`
@@ -220,9 +220,9 @@ partitions:{served_type:REPLICA
 }
 ```
 
-## What happens when a MoveTables workflow is cutover
+## What Happens When a MoveTables Workflow Is Cutover
 
-#### Before MoveTables is initiated
+#### Before MoveTables Is Initiated
 
 The [`VSchema`](../../../features/vschema/) for the source keyspace contains the table name, so vtgate routes queries to that
 keyspace.
@@ -241,7 +241,7 @@ rules:{from_table:"customer@replica" to_tables:"commerce.customer"}
 rules:{from_table:"customer.customer@replica" to_tables:"commerce.customer"}
 ```
 
-#### On switching replica traffic to target
+#### On Switching Replica Traffic to Target
 
 The routing rules for replica targeted reads are updated to map the table on the source to the target.
 
@@ -253,7 +253,7 @@ rules:{from_table:"customer" to_tables:"commerce.customer"}
 rules:{from_table:"customer@replica" to_tables:"customer.customer"}
 ```
 
-#### On switching primary traffic
+#### On Switching Primary Traffic
 
 The routing rules for default read-write traffic are updated to map the table on the source to the target. In addition the
 tables are added to the “denylist” on the source keyspace which `vttablet` uses to reject queries for these tables on the
@@ -277,7 +277,7 @@ tablet_controls:{tablet_type:PRIMARY denylisted_tables:"customer"}
 is_primary_serving:true
 ```
 
-# Miscellaneous Notes:
+# Miscellaneous Notes
 
 * In VReplication workflows, cutovers are performed manually by the user executing the `SwitchTraffic` and `ReverseTraffic`
 actions e.g. for a [`MoveTables`](../../movetables/#switchtraffic) or [`Reshard`](../../reshard/#reversetraffic) vtctl

@@ -1,5 +1,5 @@
 ---
-title: Life of a stream
+title: Life of a Stream
 description: How VReplication replicates data
 weight: 1
 aliases: ['/docs/design-docs/vreplication/life-of-a-stream/']
@@ -18,7 +18,7 @@ streams events from the binlog.
 
 ![VReplication Flow](/img/VReplicationFlow.png)
 
-#### Full table copy
+#### Full Table Copy
 
 If the entire table data is requested then the simple streaming done by the _replication_ mode can create an avalanche
 of events (think 100s of millions of rows). Moreover, and more importantly, it is highly likely that necesasry older
@@ -54,7 +54,7 @@ not able to process them in time. For example, in resharding workflows we need t
 statements and execute them on the target's mysqld instance, which are usually much slower than just selecting data on
 the source.
 
-### Modes, in detail
+### Modes, in Detail
 
 #### Replicate
 
@@ -158,7 +158,7 @@ As detailed above the catchup phase runs between copy phase cycles (time limited
 GTID position can move significantly ahead. So we run a catchup and fast-forward phase until we come close to the current
 position — i.e. the replication lag is small. At that point we execute another Copy cycle.
 
-#### Fast forward
+#### Fast Forward
 
 During the copy phase we first take a snapshot. Then we fast-forward: we replicate from the gtid position where we stopped
 the Catchup to the position of the new snapshot.

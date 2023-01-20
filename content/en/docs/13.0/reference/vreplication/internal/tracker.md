@@ -176,7 +176,7 @@ If version tracking is turned off on the `PRIMARY` for some time, correct versio
 which will always return the latest schema. This might result in an incorrect schema when a vstream is processing events
 in the past.
 
-#### Possible new features around this functionality
+#### Possible New Features Around This Functionality
 
 - Schema tracking vstream client for notifications of all ddls
 - Raw history of schema changes for auditing, root cause analysis, etc.
