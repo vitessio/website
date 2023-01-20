@@ -39,7 +39,7 @@ many features. It can be used for the following use cases:
 
 ## Feature Description
 
-VReplication works as [a stream or set of streams](../../../../design-docs/vreplication/life-of-a-stream/).
+VReplication works as [a stream or set of streams](../internal/life-of-a-stream/).
 Each stream establishes replication from a source keyspace/shard to a
 target keyspace/shard.
 
@@ -62,14 +62,14 @@ the relationship between them may not be one to one.
 
 VReplication performs the following essential functions:
 
-* [Copy data](../../../../design-docs/vreplication/life-of-a-stream/#copy)
+* [Copy data](../internal/life-of-a-stream/#copy)
   from the source to the destination table in a consistent
   fashion. For a large table, this copy can be long-running. It can be
   interrupted and resumed. If interrupted, VReplication can keep
   the copied portion up-to-date with respect to the source, and it can
   resume the copy process at a point that is consistent with the
   current replication position.
-* After copying is finished, it can continuously [replicate](../../../../design-docs/vreplication/life-of-a-stream/#replicate)
+* After copying is finished, it can continuously [replicate](../internal/life-of-a-stream/#replicate)
   the data from the source to destination.
 * The copying rule can be expressed as a `SELECT` statement. The
   statement should be simple enough that the materialized table can

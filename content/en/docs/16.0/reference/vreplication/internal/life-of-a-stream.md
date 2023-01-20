@@ -2,7 +2,7 @@
 title: Life of a stream
 description: How VReplication replicates data
 weight: 1
-aliases: ['/docs/reference/vreplication/internals']
+aliases: ['/docs/design-docs/vreplication/life-of-a-stream/']
 ---
 
 ### Introduction
