@@ -208,7 +208,7 @@ No columns are shared between the `PRIMARY KEY`s in the above. However:
 - `id`, covered by `source`'s PK, is found in `target`
 - `uuid`, covered by `target`'s PK, is found in `source`
 
-#### Mixed keys
+#### Mixed Keys
 
 ```sql
 CREATE TABLE `source` (
@@ -241,7 +241,7 @@ Incidentally, in the above, the chosen keys differ by name, but share the same c
 
 ### Examples of Invalid Cases
 
-#### NULLable columns
+#### NULLable Columns
 
 ```sql
 CREATE TABLE `source` (
@@ -265,7 +265,7 @@ CREATE TABLE `target` (
 
 The only `UNIQUE KEY` on `target` is `NULL`able, hence _not_ eligible.
 
-#### Missing columns
+#### Missing Columns
 
 ```sql
 CREATE TABLE `source` (
