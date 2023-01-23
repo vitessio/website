@@ -520,11 +520,10 @@ Then we have the source shard `0` and target shards `-40,40-80,80-c0,c0-`
 
 This step copies all the data from source to target and sets up vreplication to keep the targets in sync with the source
 
-We can check the correctness of the copy using `VDiff` and the `keyspace.workflow` we used for `Reshard`
+We can check the correctness of the copy using [VDiff](../../../reference/vreplication/vdiff2) and the `keyspace.workflow` we used for `Reshard`
 ```bash
-vtctlclient VDiff main.main2regions
-I0817 08:22:53.958578   16065 main.go:64] I0817 15:22:53.956743 traffic_switcher.go:389] Migration ID for workflow main2regions: 7369191857547657706
-Summary for customer: {ProcessedRows:16 MatchingRows:16 MismatchedRows:0 ExtraRowsSource:0 ExtraRowsTarget:0}
+vtctlclient VDiff -- main.main2regions create
+VDiff bf9dfc5f-e5e6-11ec-823d-0aa62e50dd24 scheduled on target shards, use show to view progress
 ```
 Let's take a look at the vreplication streams
 ```bash
@@ -602,9 +601,9 @@ mysql> select id, hex(keyspace_id) from customer_lookup;
 7 rows in set (0.00 sec)
 ```
 
-## Drop source
+## Cleanup
 
-Once resharding is complete, we can teardown the source shard:
+Once resharding is complete, we can delete the source shard:
 
 ```bash
 ./206_down_shard_0.sh
