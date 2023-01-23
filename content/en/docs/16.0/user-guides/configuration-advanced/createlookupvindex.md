@@ -10,17 +10,20 @@ an [Operator](../../../get-started/operator) or [local](../../../get-started/loc
 are at the point where you have the sharded keyspace called `customer` setup.
 {{< /info >}}
 
-**CreateLookupVindex** is a new VReplication workflow in Vitess 6. It is used to create **and** backfill a lookup Vindex
-automatically for a table that already exists, and may have a significant amount of data in it already.
+**CreateLookupVindex** is a [VReplication](../../../reference/vreplication/) workflow used to create **and** backfill
+a [lookup Vindex](../../../reference/features/vindexes/#lookup-vindex-types) automatically for a table that already
+exists, and may have a significant amount of data in it already.
 
-Internally, the `CreateLookupVindex` process uses VReplication for the backfill process, until the lookup Vindex is "in
-sync". Then the normal process for adding/deleting/updating rows in the lookup Vindex via the usual transactional flow
-when updating the "owner" table for the Vindex takes over.
+Internally, the [`CreateLookupVindex`](../../../reference/vreplication/createlookupvindex/) process uses
+VReplication for the backfill process, until the lookup Vindex is "in sync". Then the normal process for
+adding/deleting/updating rows in the lookup Vindex via the usual
+[transactional flow when updating the "owner" table for the Vindex](../../../reference/features/vindexes/#lookup-vindex-types)
+takes over.
 
-In this guide, we will walk through the process of using the `CreateLookupVindex` workflow, and give some insight into
-what happens underneath the covers.
+In this guide, we will walk through the process of using the [`CreateLookupVindex`](../../../reference/vreplication/createlookupvindex/)
+workflow, and give some insight into what happens underneath the covers.
 
-`vtctlclient CreateLookupVindex` has the following syntax:
+The `CreateLookupVindex` `vtctl` client command has the following syntax:
 
 ```CreateLookupVindex -- [--cells=<source_cells>] [--continue_after_copy_with_owner=false] [--tablet_types=<source_tablet_types>] <keyspace> <json_spec>```
 
@@ -32,18 +35,18 @@ what happens underneath the covers.
   (e.g. `PRIMARY`, `REPLICA`, `RDONLY`) that are acceptable
   as source tablets for the VReplication stream(s) that this command will
   create. If not specified, the tablet type used will default to the value
-  of the vttablet `-vreplication_tablet_type` option, which defaults to
-  `in_order:REPLICA,PRIMARY`.
+  of the [`vttablet --vreplication_tablet_type` flag](../../../reference/vreplication/flags/#vreplication_tablet_type)
+  value, which defaults to `in_order:REPLICA,PRIMARY`.
 * `--cells`: By default VReplication streams, such as used by
-  `CreateLookupVindex` will not cross cell boundaries. If you want the
+  `CreateLookupVindex`, will not cross cell boundaries. If you want the
   VReplication streams to source their data from tablets in cells other
   than the local cell, you can use the `--cells` option to specify a
-  comma-separated list of cells.
-* `--continue_after_copy_with_owner`: By default, when an owner is provided,
-  the VReplication streams will stop after the backfill completes. Set this flag if
-  you don't want this to happen. This is useful if, for example,
-  the owner table is being migrated from an unsharded keyspace to a sharded keyspace
-  using MoveTables.
+  comma-separated list of cells (see [VReplication tablet selection](../../../reference/vreplication/tablet_selection/)).
+* `--continue_after_copy_with_owner`: By default, when an owner is provided in the `<json_spec>`,
+  the VReplication streams will stop after the backfill completes. Specify this flag if
+  you don't want this to happen. This is useful if, for example, the owner table is being
+  migrated from an unsharded keyspace to a sharded keyspace using
+  [`MoveTables`](../../../reference/vreplication/movetables/).
 
 The `<json_spec>` describes the lookup Vindex to be created, and details about
 the table it is to be created against (on which column, etc.). However,
@@ -51,16 +54,17 @@ you do not have to specify details about the actual lookup table, Vitess
 will create that automatically based on the type of the column you are
 creating the Vindex column on, etc.
 
-In the context of the regular `customer` database that is part of the Vitess
-examples we started earlier, let's add some rows into the `customer.corder`
-table, and then look at an example `<json_spec>`:
+In the context of the `customer` database that is part of the Vitess examples we
+started earlier, let's add some rows into the `customer.corder` table, and then
+look at an example `<json_spec>`:
 
-```sql
+```bash
 $ mysql -P 15306 -h 127.0.0.1 -u root --binary-as-hex=false -A
 Welcome to the MySQL monitor.  Commands end with ; or \g.
-.
-.
-.
+...
+```
+
+```mysql
 mysql> use customer;
 Database changed
 
@@ -112,9 +116,68 @@ mysql> select * from corder;
 5 rows in set (0.01 sec)
 ```
 
-If we look at the VSchema for the `customer.corder` table, we
-will see there is a `hash` index on the `customer_id` table,
-and 4 of our 5 rows have ended up on the `-80` shard, and the
+</br>
+
+If we look at the [VSchema](../../../reference/features/vschema/) for the
+`customer.corder` table, we will see there is a `hash` index on the
+`customer_id` column:
+
+```json
+$ vtctldclient GetVSchema customer
+{
+  "sharded": true,
+  "vindexes": {
+    "hash": {
+      "type": "hash",
+      "params": {},
+      "owner": ""
+    }
+  },
+  "tables": {
+    "corder": {
+      "type": "",
+      "column_vindexes": [
+        {
+          "column": "customer_id",
+          "name": "hash",
+          "columns": []
+        }
+      ],
+      "auto_increment": {
+        "column": "order_id",
+        "sequence": "order_seq"
+      },
+      "columns": [],
+      "pinned": "",
+      "column_list_authoritative": false,
+      "source": ""
+    },
+    "customer": {
+      "type": "",
+      "column_vindexes": [
+        {
+          "column": "customer_id",
+          "name": "hash",
+          "columns": []
+        }
+      ],
+      "auto_increment": {
+        "column": "customer_id",
+        "sequence": "customer_seq"
+      },
+      "columns": [],
+      "pinned": "",
+      "column_list_authoritative": false,
+      "source": ""
+    }
+  },
+  "require_explicit_routing": false
+}
+```
+
+</br>
+
+We can now see that 4 of our 5 rows have ended up on the `-80` shard with the
 5th row on the `80-` shard:
 
 ```sql
@@ -144,17 +207,19 @@ mysql> select * from corder;
 1 row in set (0.01 sec)
 ```
 
-Note that this skewed distribution is completely coincidental, for larger
-numbers of rows, we would expect the distribution to be approximately even
+</br>
+
+Note that this skewed distribution is completely coincidental — for larger
+numbers of rows we would expect the distribution to be approximately even
 for a `hash` index.
 
 Now let's say we want to add a lookup Vindex on the `sku` column.
-We can use a `consistent_lookup` or `consistent_lookup_unique`
+We can use a [`consistent_lookup` or `consistent_lookup_unique`](../../vschema-guide/unique-lookup/)
 Vindex type. In our example we will use `consistent_lookup_unique`.
 
 Here is our example `<json_spec>`:
 
-```sh
+```json
 $ cat lookup_vindex.json
 {
     "sharded": true,
@@ -182,14 +247,18 @@ $ cat lookup_vindex.json
 }
 ```
 
+</br>
+
 Note that as mentioned above, we do not have to tell Vitess about
 how to shard the actual backing table for the lookup Vindex or
 any schema to create as it will do it automatically. Now, let us
 actually execute the `CreateLookupVindex` command:
 
-```sh
+```bash
 $ vtctlclient --server localhost:15999 CreateLookupVindex -- --tablet_types=RDONLY customer "$(cat lookup_vindex.json)"
 ```
+
+</br>
 
 Note:
 
@@ -205,7 +274,7 @@ status commands needs to operate on individual tablets. Let's check
 which tablets we have in our environment, so we know which tablets to
 issue commands against:
 
-```sh
+```bash
 $ vtctldclient --server localhost:15999 GetTablets --keyspace customer
 zone1-0000000300 customer -80 primary localhost:15300 localhost:17300 [] 2020-08-13T01:23:15Z
 zone1-0000000301 customer -80 replica localhost:15301 localhost:17301 [] <null>
@@ -214,6 +283,8 @@ zone1-0000000400 customer 80- primary localhost:15400 localhost:17400 [] 2020-08
 zone1-0000000401 customer 80- replica localhost:15401 localhost:17401 [] <null>
 zone1-0000000402 customer 80- rdonly localhost:15402 localhost:17402 [] <null>
 ```
+
+</br>
 
 i.e. now we can see what will happen:
 
@@ -225,6 +296,11 @@ i.e. now we can see what will happen:
 
 Lets observe the VReplication streams that got created using the
 `vtctlclient Workflow show` command.
+
+{{< info >}}
+The created vreplication workflow will have a generated name of `<target_table_name>_vdx`.
+So in our example here: `corder_lookup_vdx`.
+{{< /info >}}
 
 ```json
 $ vtctlclient --server localhost:15999 Workflow customer.corder_lookup_vdx show
@@ -392,16 +468,18 @@ $ vtctlclient --server localhost:15999 Workflow customer.corder_lookup_vdx show
 	"SourceTimeZone": "",
 	"TargetTimeZone": ""
 }
-
 ```
+
+</br>
 
 There is a lot going on in this output, but the most important parts are the
 `state` and `message` fields which say `Stopped` and `Stopped after copy.`
-for all four the streams. This means that the VReplication streams finished
+for all four of the streams. This means that the VReplication streams finished
 their copying/backfill of the lookup table.
 
 Note that if the tables were large and the copy was still in progress, the
-`state` field would say `Copying`, and you can see the state/progress as part of the json output.
+`state` field would say `Copying` — you can see the state/progress as part
+of `Workflow show` json output.
 
 We can verify the result of the backfill by looking at the `customer`
 keyspace again in the MySQL client:
@@ -417,6 +495,8 @@ mysql> show tables;
 +-----------------------+
 3 rows in set (0.01 sec)
 ```
+
+</br>
 
 Note there is now a new table, `corder_lookup`; which was created as the
 backing table for the lookup Vindex. Lets look at this table:
@@ -443,27 +523,47 @@ mysql> select sku, hex(keyspace_id) from corder_lookup;
 +-----------+------------------+
 ```
 
+</br>
+
 Basically, this shows exactly what we expected. Now, we have to clean-up
 the artifacts of the backfill. The `ExternalizeVindex` command will delete
-the vreplication streams and also clear the `write_only` flag from the
-vindex indicating that it is not backfilling any more.
+the VReplication streams and also clear the `write_only` flag from the
+Vindex indicating that it is *not* backfilling anymore.
 
-```sh
+```bash
 $ vtctlclient --server localhost:15999 ExternalizeVindex customer.corder_lookup
 ```
 
+</br>
+
 Next, to confirm the lookup Vindex is doing what we think it should, we can
-use the Vitess MySQL explain format, e.g.:
+use the [`vexplain plan` SQL statement](../../sql/vexplain/):
 
 ```sql
-mysql> explain format=vitess select * from corder where customer_id = 1;
-+----------+-------------------+----------+-------------+------------+--------------------------------------------+
-| operator | variant           | keyspace | destination | tabletType | query                                      |
-+----------+-------------------+----------+-------------+------------+--------------------------------------------+
-| Route    | SelectEqualUnique | customer |             | UNKNOWN    | select * from corder where customer_id = 1 |
-+----------+-------------------+----------+-------------+------------+--------------------------------------------+
+mysql> vexplain plan select * from corder where customer_id = 1;
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| JSON                                                                                                                                                                                                                                                                                                                                                                |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| {
+	"OperatorType": "Route",
+	"Variant": "EqualUnique",
+	"Keyspace": {
+		"Name": "customer",
+		"Sharded": true
+	},
+	"FieldQuery": "select order_id, customer_id, sku, price from corder where 1 != 1",
+	"Query": "select order_id, customer_id, sku, price from corder where customer_id = 1",
+	"Table": "corder",
+	"Values": [
+		"INT64(1)"
+	],
+	"Vindex": "hash"
+} |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 1 row in set (0.00 sec)
 ```
+
+</br>
 
 Since the above `select` statement is doing a lookup using the primary Vindex
 on the `corder` table, this query does not Scatter (variant is
@@ -471,46 +571,104 @@ on the `corder` table, this query does not Scatter (variant is
 looks like:
 
 ```sql
-mysql> explain format=vitess select * from corder;
-+----------+---------------+----------+-------------+------------+----------------------+
-| operator | variant       | keyspace | destination | tabletType | query                |
-+----------+---------------+----------+-------------+------------+----------------------+
-| Route    | SelectScatter | customer |             | UNKNOWN    | select * from corder |
-+----------+---------------+----------+-------------+------------+----------------------+
+mysql> vexplain select * from corder;
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| JSON                                                                                                                                                                                                                                                                                     |
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| {
+	"OperatorType": "Route",
+	"Variant": "Scatter",
+	"Keyspace": {
+		"Name": "customer",
+		"Sharded": true
+	},
+	"FieldQuery": "select order_id, customer_id, sku, price from corder where 1 != 1",
+	"Query": "select order_id, customer_id, sku, price from corder",
+	"Table": "corder"
+} |
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 1 row in set (0.00 sec)
 ```
 
-OK, variant is `SelectScatter` for a scatter query. Let's try a lookup on
-a column that does not have a primary or secondary (lookup) Vindex, e.g.
-the `price` column:
+So now we see the expectied variant of `SelectScatter` for a scatter query.
+Let's try a lookup on a column that does *not* have a primary or secondary
+(lookup) Vindex, e.g. the `price` column:
 
 ```sql
-mysql> explain format=vitess select * from corder where price = 103;
-+----------+---------------+----------+-------------+------------+----------------------------------------+
-| operator | variant       | keyspace | destination | tabletType | query                                  |
-+----------+---------------+----------+-------------+------------+----------------------------------------+
-| Route    | SelectScatter | customer |             | UNKNOWN    | select * from corder where price = 103 |
-+----------+---------------+----------+-------------+------------+----------------------------------------+
+mysql> vexplain select * from corder where price = 103\G
+*************************** 1. row ***************************
+JSON: {
+	"OperatorType": "Route",
+	"Variant": "Scatter",
+	"Keyspace": {
+		"Name": "customer",
+		"Sharded": true
+	},
+	"FieldQuery": "select order_id, customer_id, sku, price from corder where 1 != 1",
+	"Query": "select order_id, customer_id, sku, price from corder where price = 103",
+	"Table": "corder"
+}
 1 row in set (0.00 sec)
 ```
 
-That also scatters, as expected.
+That also scatters, as expected, because there's no Vindex on the column.
 
 Now, let's try a lookup on the `sku` column, which we have created our lookup
 Vindex on:
 
 ```sql
-mysql> explain format=vitess select * from corder where sku = "Product_1";
-+----------+-------------------+----------+-------------+------------+----------------------------------------------+
-| operator | variant           | keyspace | destination | tabletType | query                                        |
-+----------+-------------------+----------+-------------+------------+----------------------------------------------+
-| Route    | SelectEqualUnique | customer |             | UNKNOWN    | select * from corder where sku = 'Product_1' |
-+----------+-------------------+----------+-------------+------------+----------------------------------------------+
+mysql> vexplain select * from corder where sku = "Product_1";
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| JSON                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| {
+	"OperatorType": "VindexLookup",
+	"Variant": "EqualUnique",
+	"Keyspace": {
+		"Name": "customer",
+		"Sharded": true
+	},
+	"Values": [
+		"VARCHAR(\"Product_1\")"
+	],
+	"Vindex": "corder_lookup",
+	"Inputs": [
+		{
+			"OperatorType": "Route",
+			"Variant": "IN",
+			"Keyspace": {
+				"Name": "customer",
+				"Sharded": true
+			},
+			"FieldQuery": "select sku, keyspace_id from corder_lookup where 1 != 1",
+			"Query": "select sku, keyspace_id from corder_lookup where sku in ::__vals",
+			"Table": "corder_lookup",
+			"Values": [
+				":sku"
+			],
+			"Vindex": "binary_md5"
+		},
+		{
+			"OperatorType": "Route",
+			"Variant": "ByDestination",
+			"Keyspace": {
+				"Name": "customer",
+				"Sharded": true
+			},
+			"FieldQuery": "select order_id, customer_id, sku, price from corder where 1 != 1",
+			"Query": "select order_id, customer_id, sku, price from corder where sku = 'Product_1'",
+			"Table": "corder"
+		}
+	]
+} |
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 1 row in set (0.00 sec)
 ```
 
+</br>
+
 As expected, we can see it is not scattering anymore, which it would have
-before we did `CreateLookupVindex`.
+before we executed the `CreateLookupVindex` command.
 
 Lastly, let's ensure that the lookup Vindex is being updated appropriately
 when we insert and delete rows:
@@ -554,8 +712,10 @@ mysql> select sku, hex(keyspace_id) from corder_lookup;
 4 rows in set (0.01 sec)
 ```
 
+</br>
+
 We deleted a row from the `corder` table, and the matching lookup Vindex row
-is gone.
+is gone. Now we can try adding a row:
 
 ```sql
 mysql> insert into corder (order_id, customer_id, sku, price) values (6, 1, "Product_6", 105);
@@ -586,6 +746,7 @@ mysql> select sku, hex(keyspace_id) from corder_lookup;
 5 rows in set (0.00 sec)
 ```
 
-We added a new row to the `corder` table, and now we have a new row in the
-lookup table.
+</br>
 
+We added a new row to the `corder` table, and now we have a new row in the
+lookup table!
