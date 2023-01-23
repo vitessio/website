@@ -77,7 +77,7 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [CreateLookupVindex](../vtctl/keyspaces#createLookupvindex) | `CreateLookupVindex  -- [--cell=<cell>] [--tablet_types=<source_tablet_types>] <keyspace> <json_spec>` |
 | [ExternalizeVindex](../vtctl/keyspaces#externalizevindex) | `ExternalizeVindex  <keyspace>.<vindex>` |
 | [Materialize](../vtctl/keyspaces#materialize) | `Materialize  <json_spec>, example : '{"workflow": "aaa", "source_keyspace": "source", "target_keyspace": "target", "table_settings": [{"target_table": "customer", "source_expression": "select * from customer", "create_ddl": "copy"}]}'` |
-| [VDiff](../vtctl/keyspaces#VDiff) | `VDiff -- [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=<source_tablet_types>] [--filtered_replication_wait_time=30s] [--max_extra_rows_to_compare=1000] <keyspace.workflow>` |
+| [VDiff](../vtctl/keyspaces#VDiff) | `VDiff -- [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY] [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--auto-retry] [--verbose] [--max_extra_rows_to_compare=1000] [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] [--wait] [--wait-update-interval=1m] <keyspace.workflow> [<action>] [<UUID>]` |
 | [FindAllShardsInKeyspace](../vtctl/keyspaces#findallshardsinkeyspace) | `FindAllShardsInKeyspace  <keyspace>` |
 
 ### Generic
