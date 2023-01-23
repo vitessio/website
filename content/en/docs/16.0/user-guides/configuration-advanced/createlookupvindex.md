@@ -286,16 +286,15 @@ zone1-0000000402 customer 80- rdonly localhost:15402 localhost:17402 [] <null>
 
 </br>
 
-i.e. now we can see what will happen:
+Now we can look what happened in greater detail:
 
-* VReplication streams will be setup from the primary tablets
+* VReplication streams were setup from the primary tablets
   `zone1-0000000300` and `zone1-0000000400`; pulling data from the `RDONLY`
   source tablets `zone1-0000000302` and `zone1-0000000402`.
 * Note that each primary tablet will start streams from each source
   tablet, for a total of 4 streams in this case.
 
-Lets observe the VReplication streams that got created using the
-`vtctlclient Workflow show` command.
+Lets observe the VReplication streams that got created using the `vtctlclient Workflow show` command.
 
 {{< info >}}
 The created vreplication workflow will have a generated name of `<target_table_name>_vdx`.
