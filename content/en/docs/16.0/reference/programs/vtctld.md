@@ -185,4 +185,3 @@ vtctld \
 | --vmodule | value | comma-separated list of pattern=N settings for file-filtered logging |
 | --vtctl_healthcheck_topology_refresh | duration | refresh interval for re-reading the topology (default 30s) |
 | --vtctld_sanitize_log_messages | | When true, vtctld sanitizes logging. |
-| --vtctld_show_topology_crud | boolean | Controls the display of the CRUD topology actions in the vtctld UI. (default true) |
