@@ -5,42 +5,48 @@ aliases: ['/docs/user-guides/createlookupvindex/']
 ---
 
 {{< info >}}
-This guide follows on from the Get Started guides. Please make sure that you have an [Operator](../../../get-started/operator) or [local](../../../get-started/local) installation ready.  Make sure you are at the point where you have the sharded keyspace called `customer` setup.
+This guide follows on from the Get Started guides. Please make sure that you have
+an [Operator](../../../get-started/operator) or [local](../../../get-started/local) installation ready. Make sure you
+are at the point where you have the sharded keyspace called `customer` setup.
 {{< /info >}}
 
-**CreateLookupVindex** is a new VReplication workflow in Vitess 6.  It is used to create **and** backfill a lookup Vindex automatically for a table that already exists, and may have a significant amount of data in it already.
+**CreateLookupVindex** is a new VReplication workflow in Vitess 6. It is used to create **and** backfill a lookup Vindex
+automatically for a table that already exists, and may have a significant amount of data in it already.
 
-Internally, the `CreateLookupVindex` process uses VReplication for the backfill process, until the lookup Vindex is "in sync". Then the normal process for adding/deleting/updating rows in the lookup Vindex via the usual transactional flow when updating the "owner" table for the Vindex takes over.
+Internally, the `CreateLookupVindex` process uses VReplication for the backfill process, until the lookup Vindex is "in
+sync". Then the normal process for adding/deleting/updating rows in the lookup Vindex via the usual transactional flow
+when updating the "owner" table for the Vindex takes over.
 
-In this guide, we will walk through the process of using the `CreateLookupVindex` workflow, and give some insight into what happens underneath the covers.
+In this guide, we will walk through the process of using the `CreateLookupVindex` workflow, and give some insight into
+what happens underneath the covers.
 
 `vtctlclient CreateLookupVindex` has the following syntax:
 
 ```CreateLookupVindex -- [--cells=<source_cells>] [--continue_after_copy_with_owner=false] [--tablet_types=<source_tablet_types>] <keyspace> <json_spec>```
 
- * `<json_spec>`:  Use the lookup Vindex specified in `<json_spec>` along with
-VReplication to populate/backfill the lookup Vindex from the source table.
- * `<keyspace>`:  The Vitess keyspace we are creating the lookup Vindex in.
-The source table is expected to also be in this keyspace.
- * `--tablet-types`:  Provided to specify the tablet types
-(e.g. `PRIMARY`, `REPLICA`, `RDONLY`) that are acceptable
-as source tablets for the VReplication stream(s) that this command will
-create. If not specified, the tablet type used will default to the value
-of the vttablet `-vreplication_tablet_type` option, which defaults to
-`in_order:REPLICA,PRIMARY`.
- * `--cells`: By default VReplication streams, such as used by
-`CreateLookupVindex` will not cross cell boundaries.  If you want the
-VReplication streams to source their data from tablets in cells other
-than the local cell, you can use the `--cells` option to specify a
-comma-separated list of cells.
+* `<json_spec>`:  Use the lookup Vindex specified in `<json_spec>` along with
+  VReplication to populate/backfill the lookup Vindex from the source table.
+* `<keyspace>`:  The Vitess keyspace we are creating the lookup Vindex in.
+  The source table is expected to also be in this keyspace.
+* `--tablet-types`:  Provided to specify the tablet types
+  (e.g. `PRIMARY`, `REPLICA`, `RDONLY`) that are acceptable
+  as source tablets for the VReplication stream(s) that this command will
+  create. If not specified, the tablet type used will default to the value
+  of the vttablet `-vreplication_tablet_type` option, which defaults to
+  `in_order:REPLICA,PRIMARY`.
+* `--cells`: By default VReplication streams, such as used by
+  `CreateLookupVindex` will not cross cell boundaries. If you want the
+  VReplication streams to source their data from tablets in cells other
+  than the local cell, you can use the `--cells` option to specify a
+  comma-separated list of cells.
 * `--continue_after_copy_with_owner`: By default, when an owner is provided,
-the VReplication streams will stop after the backfill completes. Set this flag if
-you don't want this to happen. This is useful if, for example,
-the owner table is being migrated from an unsharded keyspace to a sharded keyspace
-using MoveTables.
+  the VReplication streams will stop after the backfill completes. Set this flag if
+  you don't want this to happen. This is useful if, for example,
+  the owner table is being migrated from an unsharded keyspace to a sharded keyspace
+  using MoveTables.
 
 The `<json_spec>` describes the lookup Vindex to be created, and details about
-the table it is to be created against (on which column, etc.).  However,
+the table it is to be created against (on which column, etc.). However,
 you do not have to specify details about the actual lookup table, Vitess
 will create that automatically based on the type of the column you are
 creating the Vindex column on, etc.
@@ -144,7 +150,7 @@ for a `hash` index.
 
 Now let's say we want to add a lookup Vindex on the `sku` column.
 We can use a `consistent_lookup` or `consistent_lookup_unique`
-Vindex type.  In our example we will use `consistent_lookup_unique`.
+Vindex type. In our example we will use `consistent_lookup_unique`.
 
 Here is our example `<json_spec>`:
 
@@ -178,7 +184,7 @@ $ cat lookup_vindex.json
 
 Note that as mentioned above, we do not have to tell Vitess about
 how to shard the actual backing table for the lookup Vindex or
-any schema to create as it will do it automatically.  Now, let us
+any schema to create as it will do it automatically. Now, let us
 actually execute the `CreateLookupVindex` command:
 
 ```sh
@@ -187,14 +193,14 @@ $ vtctlclient --server localhost:15999 CreateLookupVindex -- --tablet_types=RDON
 
 Note:
 
- * We are specifying a tablet_type of `RDONLY`; meaning it is going to
-run the VReplication streams from tablets of the `RDONLY` type **only**.
-If tablets of this type cannot be found, in a shard, the lookup Vindex
-population will fail.
+* We are specifying a tablet_type of `RDONLY`; meaning it is going to
+  run the VReplication streams from tablets of the `RDONLY` type **only**.
+  If tablets of this type cannot be found, in a shard, the lookup Vindex
+  population will fail.
 
 Now, in our case, the table is tiny, so the copy will be instant, but
-in a real-world case this might take hours.  To monitor the process,
-we can use the usual VReplication commands.  However, the VReplication
+in a real-world case this might take hours. To monitor the process,
+we can use the usual VReplication commands. However, the VReplication
 status commands needs to operate on individual tablets. Let's check
 which tablets we have in our environment, so we know which tablets to
 issue commands against:
@@ -211,84 +217,191 @@ zone1-0000000402 customer 80- rdonly localhost:15402 localhost:17402 [] <null>
 
 i.e. now we can see what will happen:
 
-  * VReplication streams will be setup from the primary tablets
-`zone1-0000000300` and `zone1-0000000400`; pulling data from the `RDONLY`
-source tablets `zone1-0000000302` and `zone1-0000000402`.
-  * Note that each primary tablet will start streams from each source
-tablet, for a total of 4 streams in this case.
+* VReplication streams will be setup from the primary tablets
+  `zone1-0000000300` and `zone1-0000000400`; pulling data from the `RDONLY`
+  source tablets `zone1-0000000302` and `zone1-0000000402`.
+* Note that each primary tablet will start streams from each source
+  tablet, for a total of 4 streams in this case.
 
 Lets observe the VReplication streams that got created using the
-`vtctlclient VReplicationExec` command.  First let's look at the streams
-to the first primary tablet `zone1-0000000300`:
+`vtctlclient Workflow show` command.
 
-```sql
-$ vtctlclient --server localhost:15999 VReplicationExec zone1-0000000300 "select * from _vt.vreplication"
-+----+-------------------+--------------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------------------+-------------+
-| id |     workflow      |                source                |                        pos                        | stop_pos |       max_tps       | max_replication_lag | cell | tablet_types | time_updated | transaction_timestamp |  state  |       message       |   db_name   |
-+----+-------------------+--------------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------------------+-------------+
-|  2 | corder_lookup_vdx | keyspace:"customer" shard:"-80"      | MySQL56/68da1cdd-dd03-11ea-95de-68a86d2718b0:1-43 |          | 9223372036854775807 | 9223372036854775807 |      | RDONLY       |   1597282811 |                     0 | Stopped | Stopped after copy. | vt_customer |
-|    |                   | filter:<rules:<match:"corder_lookup" |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | filter:"select sku as sku,           |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | keyspace_id() as keyspace_id from    |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | corder where in_keyrange(sku,        |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | 'customer.binary_md5', '-80')        |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | group by sku, keyspace_id" > >       |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | stop_after_copy:true                 |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|  3 | corder_lookup_vdx | keyspace:"customer" shard:"80-"      | MySQL56/7d2c819e-dd03-11ea-92e4-68a86d2718b0:1-38 |          | 9223372036854775807 | 9223372036854775807 |      | RDONLY       |   1597282811 |                     0 | Stopped | Stopped after copy. | vt_customer |
-|    |                   | filter:<rules:<match:"corder_lookup" |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | filter:"select sku as sku,           |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | keyspace_id() as keyspace_id from    |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | corder where in_keyrange(sku,        |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | 'customer.binary_md5', '-80')        |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | group by sku, keyspace_id" > >       |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | stop_after_copy:true                 |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-+----+-------------------+--------------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------------------+-------------+
-```
+```json
+$ vtctlclient --server localhost:15999 Workflow customer.corder_lookup_vdx show
+{
+	"Workflow": "corder_lookup_vdx",
+	"SourceLocation": {
+		"Keyspace": "customer",
+		"Shards": [
+			"-80",
+			"80-"
+		]
+	},
+	"TargetLocation": {
+		"Keyspace": "customer",
+		"Shards": [
+			"-80",
+			"80-"
+		]
+	},
+	"MaxVReplicationLag": 78,
+	"MaxVReplicationTransactionLag": 1674479901,
+	"Frozen": false,
+	"ShardStatuses": {
+		"-80/zone1-0000000300": {
+			"PrimaryReplicationStatuses": [
+				{
+					"Shard": "-80",
+					"Tablet": "zone1-0000000300",
+					"ID": 1,
+					"Bls": {
+						"keyspace": "customer",
+						"shard": "-80",
+						"filter": {
+							"rules": [
+								{
+									"match": "corder_lookup",
+									"filter": "select sku as sku, keyspace_id() as keyspace_id from corder where in_keyrange(sku, 'customer.binary_md5', '-80') group by sku, keyspace_id"
+								}
+							]
+						},
+						"stop_after_copy": true
+					},
+					"Pos": "cb8ae288-9b1f-11ed-84ff-04ed332e05c2:1-117",
+					"StopPos": "",
+					"State": "Stopped",
+					"DBName": "vt_customer",
+					"TransactionTimestamp": 0,
+					"TimeUpdated": 1674479823,
+					"TimeHeartbeat": 0,
+					"TimeThrottled": 0,
+					"ComponentThrottled": "",
+					"Message": "Stopped after copy.",
+					"Tags": "",
+					"WorkflowType": "CreateLookupIndex",
+					"WorkflowSubType": "None",
+					"CopyState": null
+				},
+				{
+					"Shard": "-80",
+					"Tablet": "zone1-0000000300",
+					"ID": 2,
+					"Bls": {
+						"keyspace": "customer",
+						"shard": "80-",
+						"filter": {
+							"rules": [
+								{
+									"match": "corder_lookup",
+									"filter": "select sku as sku, keyspace_id() as keyspace_id from corder where in_keyrange(sku, 'customer.binary_md5', '-80') group by sku, keyspace_id"
+								}
+							]
+						},
+						"stop_after_copy": true
+					},
+					"Pos": "de051c70-9b1f-11ed-832d-04ed332e05c2:1-121",
+					"StopPos": "",
+					"State": "Stopped",
+					"DBName": "vt_customer",
+					"TransactionTimestamp": 0,
+					"TimeUpdated": 1674479823,
+					"TimeHeartbeat": 0,
+					"TimeThrottled": 0,
+					"ComponentThrottled": "",
+					"Message": "Stopped after copy.",
+					"Tags": "",
+					"WorkflowType": "CreateLookupIndex",
+					"WorkflowSubType": "None",
+					"CopyState": null
+				}
+			],
+			"TabletControls": null,
+			"PrimaryIsServing": true
+		},
+		"80-/zone1-0000000401": {
+			"PrimaryReplicationStatuses": [
+				{
+					"Shard": "80-",
+					"Tablet": "zone1-0000000401",
+					"ID": 1,
+					"Bls": {
+						"keyspace": "customer",
+						"shard": "-80",
+						"filter": {
+							"rules": [
+								{
+									"match": "corder_lookup",
+									"filter": "select sku as sku, keyspace_id() as keyspace_id from corder where in_keyrange(sku, 'customer.binary_md5', '80-') group by sku, keyspace_id"
+								}
+							]
+						},
+						"stop_after_copy": true
+					},
+					"Pos": "cb8ae288-9b1f-11ed-84ff-04ed332e05c2:1-117",
+					"StopPos": "",
+					"State": "Stopped",
+					"DBName": "vt_customer",
+					"TransactionTimestamp": 0,
+					"TimeUpdated": 1674479823,
+					"TimeHeartbeat": 0,
+					"TimeThrottled": 0,
+					"ComponentThrottled": "",
+					"Message": "Stopped after copy.",
+					"Tags": "",
+					"WorkflowType": "CreateLookupIndex",
+					"WorkflowSubType": "None",
+					"CopyState": null
+				},
+				{
+					"Shard": "80-",
+					"Tablet": "zone1-0000000401",
+					"ID": 2,
+					"Bls": {
+						"keyspace": "customer",
+						"shard": "80-",
+						"filter": {
+							"rules": [
+								{
+									"match": "corder_lookup",
+									"filter": "select sku as sku, keyspace_id() as keyspace_id from corder where in_keyrange(sku, 'customer.binary_md5', '80-') group by sku, keyspace_id"
+								}
+							]
+						},
+						"stop_after_copy": true
+					},
+					"Pos": "de051c70-9b1f-11ed-832d-04ed332e05c2:1-123",
+					"StopPos": "",
+					"State": "Stopped",
+					"DBName": "vt_customer",
+					"TransactionTimestamp": 0,
+					"TimeUpdated": 1674479823,
+					"TimeHeartbeat": 0,
+					"TimeThrottled": 0,
+					"ComponentThrottled": "",
+					"Message": "Stopped after copy.",
+					"Tags": "",
+					"WorkflowType": "CreateLookupIndex",
+					"WorkflowSubType": "None",
+					"CopyState": null
+				}
+			],
+			"TabletControls": null,
+			"PrimaryIsServing": true
+		}
+	},
+	"SourceTimeZone": "",
+	"TargetTimeZone": ""
+}
 
-And now the streams to the second primary tablet `zone1-0000000400`:
-
-```sql
-$ vtctlclient --server localhost:15999 VReplicationExec zone1-0000000400 "select * from _vt.vreplication"
-+----+-------------------+--------------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------------------+-------------+
-| id |     workflow      |                source                |                        pos                        | stop_pos |       max_tps       | max_replication_lag | cell | tablet_types | time_updated | transaction_timestamp |  state  |       message       |   db_name   |
-+----+-------------------+--------------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------------------+-------------+
-|  2 | corder_lookup_vdx | keyspace:"customer" shard:"-80"      | MySQL56/68da1cdd-dd03-11ea-95de-68a86d2718b0:1-43 |          | 9223372036854775807 | 9223372036854775807 |      | RDONLY       |   1597282811 |                     0 | Stopped | Stopped after copy. | vt_customer |
-|    |                   | filter:<rules:<match:"corder_lookup" |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | filter:"select sku as sku,           |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | keyspace_id() as keyspace_id from    |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | corder where in_keyrange(sku,        |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | 'customer.binary_md5', '80-')        |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | group by sku, keyspace_id" > >       |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | stop_after_copy:true                 |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|  3 | corder_lookup_vdx | keyspace:"customer" shard:"80-"      | MySQL56/7d2c819e-dd03-11ea-92e4-68a86d2718b0:1-38 |          | 9223372036854775807 | 9223372036854775807 |      | RDONLY       |   1597282811 |                     0 | Stopped | Stopped after copy. | vt_customer |
-|    |                   | filter:<rules:<match:"corder_lookup" |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | filter:"select sku as sku,           |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | keyspace_id() as keyspace_id from    |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | corder where in_keyrange(sku,        |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | 'customer.binary_md5', '80-')        |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | group by sku, keyspace_id" > >       |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-|    |                   | stop_after_copy:true                 |                                                   |          |                     |                     |      |              |              |                       |         |                     |             |
-+----+-------------------+--------------------------------------+---------------------------------------------------+----------+---------------------+---------------------+------+--------------+--------------+-----------------------+---------+---------------------+-------------+
 ```
 
 There is a lot going on in this output, but the most important parts are the
 `state` and `message` fields which say `Stopped` and `Stopped after copy.`
-for all four the streams.  This means that the VReplication streams finished
+for all four the streams. This means that the VReplication streams finished
 their copying/backfill of the lookup table.
 
 Note that if the tables were large and the copy was still in progress, the
-`state` field would say `Copying`, and you can see the state/progress of
-the copy by looking at the `_vt.copy_state` table, e.g.:
-
-```sql
-$ vtctlclient --server localhost:15999 VReplicationExec zone1-0000000300 "select * from _vt.copy_state"
-+----------+------------+--------+
-| vrepl_id | table_name | lastpk |
-+----------+------------+--------+
-+----------+------------+--------+
-```
-
-(In this case this table is empty, because the copy has finished already).
+`state` field would say `Copying`, and you can see the state/progress as part of the json output.
 
 We can verify the result of the backfill by looking at the `customer`
 keyspace again in the MySQL client:
@@ -306,7 +419,7 @@ mysql> show tables;
 ```
 
 Note there is now a new table, `corder_lookup`; which was created as the
-backing table for the lookup Vindex.  Lets look at this table:
+backing table for the lookup Vindex. Lets look at this table:
 
 ```sql
 mysql> desc corder_lookup;
@@ -330,7 +443,7 @@ mysql> select sku, hex(keyspace_id) from corder_lookup;
 +-----------+------------------+
 ```
 
-Basically, this shows exactly what we expected.  Now, we have to clean-up
+Basically, this shows exactly what we expected. Now, we have to clean-up
 the artifacts of the backfill. The `ExternalizeVindex` command will delete
 the vreplication streams and also clear the `write_only` flag from the
 vindex indicating that it is not backfilling any more.
@@ -354,7 +467,7 @@ mysql> explain format=vitess select * from corder where customer_id = 1;
 
 Since the above `select` statement is doing a lookup using the primary Vindex
 on the `corder` table, this query does not Scatter (variant is
-`SelectEqualUnique`), as expected.  Let's try a scatter query to see what that
+`SelectEqualUnique`), as expected. Let's try a scatter query to see what that
 looks like:
 
 ```sql
@@ -367,7 +480,7 @@ mysql> explain format=vitess select * from corder;
 1 row in set (0.00 sec)
 ```
 
-OK, variant is `SelectScatter` for a scatter query.  Let's try a lookup on
+OK, variant is `SelectScatter` for a scatter query. Let's try a lookup on
 a column that does not have a primary or secondary (lookup) Vindex, e.g.
 the `price` column:
 
