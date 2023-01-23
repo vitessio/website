@@ -1,5 +1,5 @@
 ---
-title: Region-based Sharding
+title: Region Based Sharding
 weight: 10
 aliases: ['/docs/user-guides/region-sharding/'] 
 ---
@@ -18,7 +18,7 @@ The location will be denoted by a `country` column.
 
 We will create one table in the unsharded keyspace to start with:
 
-```text
+```mysql
 CREATE TABLE customer (
   id int NOT NULL,
   fullname varbinary(256),
@@ -35,7 +35,7 @@ The customer table is the main table we want to shard using country.
 We will use a `region_json` vindex to compute the keyspace_id for a customer row using the (id, country) fields.
 Here's what the vindex definition looks like:
 
-```text
+```json
     "region_vdx": {
 	    "type": "region_json",
 	    "params": {
@@ -47,7 +47,7 @@ Here's what the vindex definition looks like:
 
 And we use it thus:
 
-```text
+```json
     "customer": {
       "column_vindexes": [
         {
@@ -55,10 +55,11 @@ And we use it thus:
 	        "name": "region_vdx"
         },
 ```
+
 This vindex uses a byte mapping of countries provided in a JSON file and combines that with the id column in the customer table to compute the keyspace_id. 
 This is what the JSON file contains:
 
-```text
+```json
 {
     "United States": 1,
     "Canada": 2,
@@ -79,14 +80,13 @@ However, we don't yet support updates and deletes using a multi-column vindex.
 In order for those to work, we need to create a lookup vindex that can used to find the correct rows by id.
 The lookup vindex also makes querying by id efficient. Without it, queries that provided id but not country will scatter to all shards.
 
-
 To do this, we will use the new vreplication workflow `CreateLookupVindex`. This workflow will create the lookup table and a lookup vindex. It will also associate the lookup vindex with the `customer` table.
 
 ## Start the Cluster
 
 Start by copying the region_sharding example included with Vitess to your preferred location:
 
-```sh
+```bash
 cp -r /usr/local/vitess/examples/region_sharding ~/my-vitess/examples/region_sharding
 cd ~/my-vitess/examples/region_sharding
 ```
@@ -94,13 +94,13 @@ cd ~/my-vitess/examples/region_sharding
 The VSchema for this tutorial uses a config file. You will need to edit the value of the `region_map` parameter in the vschema file `main_vschema_sharded.json`.
 For example:
 
-```text
+```json
 "region_map": "/home/user/my-vitess/examples/region_sharding/countries.json",
 ```
 
 Now start the cluster:
 
-```sh
+```bash
 ./101_initial_cluster.sh
 ```
 
@@ -208,7 +208,7 @@ _The exact list of processes will vary. For example, you may not see `mysqld_saf
 
 If you encounter any errors, such as ports already in use, you can kill the processes and start over:
 
-```sh
+```bash
 pkill -9 -f '(vtdataroot|VTDATAROOT|vitess|vtadmin)' # kill Vitess processes
 rm -rf vtdataroot
 ```
@@ -216,6 +216,7 @@ rm -rf vtdataroot
 ## Aliases
 
 For ease-of-use, Vitess provides aliases for `mysql`, `vtctlclient`, and `vtctldclient`. These are automatically created when you start the cluster.
+
 ```bash
 source ./env.sh
 ```
@@ -257,11 +258,8 @@ mysql> show tables;
 
 ## Examine the data we just inserted
 
-```bash
-~/my-vitess-example> mysql --table < show_initial_data.sql
-```
-
-```text
+```mysql
+$ mysql --table < show_initial_data.sql
 +----+------------------+-------------+---------------+
 | id | fullname         | nationalid  | country       |
 +----+------------------+-------------+---------------+
@@ -284,12 +282,13 @@ mysql> show tables;
 +----+------------------+-------------+---------------+
 ```
 
-## Prepare for resharding
+## Prepare For Resharding
 
 Now that we have some data in our unsharded cluster, let us go ahead and perform the setup needed for resharding.
 The initial vschema is unsharded and simply lists the customer table (see script output above).
 We are going to first apply the sharding vschema to the cluster from `main_vschema_sharded.json`
-```text
+
+```json
 {
   "sharded": true,
   "vindexes": {
@@ -313,10 +312,12 @@ We are going to first apply the sharding vschema to the cluster from `main_vsche
   }
 }
 ```
+
 Then we will create a lookup vindex (`CreateLookupVindex`) using the definition in `lookup_vindex.json`
 
 Here is the lookup vindex definition. Here we both define the lookup vindex, and associate it with the customer table.
-```text
+
+```json
 {
   "sharded": true,
   "vindexes": {
@@ -342,15 +343,18 @@ Here is the lookup vindex definition. Here we both define the lookup vindex, and
   }
 }
 ```
+
 Once the vindex is available, we have to `Externalize` it for it to be usable.
 Putting this all together, we run the script that combines the above steps.
 
 ```sh
 ./201_main_sharded.sh
 ```
+
 Once this is complete, we can view the new vschema. Note that it now includes both region_vdx and a lookup vindex.
-```text
-~/my-vitess-example> vtctldclient GetVSchema main
+
+```json
+$ vtctldclient GetVSchema main
 {
   "sharded": true,
   "vindexes": {
@@ -401,11 +405,12 @@ Once this is complete, we can view the new vschema. Note that it now includes bo
   }
 }
 ```
+
 Notice that the vschema shows a hash vindex on the lookup table. This is automatically created by the workflow.
 Creating a lookup vindex via `CreateLookupVindex` also creates the backing table needed to hold the vindex, and populates it with the correct rows.
 We can see that by checking the database.
 
-```text
+```mysql
 mysql> show tables;
 +-------------------+
 | Tables_in_vt_main |
@@ -450,10 +455,10 @@ mysql> select id, hex(keyspace_id) from customer_lookup;
 
 Once the sharding vschema and lookup vindex (+table) are ready, we can bring up the sharded cluster.
 Since we have 4 shards, we will bring up 4 sets of vttablets, 1 per shard. In this example, we are deploying only 1 tablet per shard and disabling semi-sync, but in general each shard will consist of at least 3 tablets.
+
 ```bash
 ./202_new_tablets.sh
-```
-```text
+
 Starting MySQL for tablet zone1-0000000200...
 Starting vttablet for zone1-0000000200...
 HTTP/1.1 200 OK
@@ -478,7 +483,7 @@ HTTP/1.1 200 OK
 Date: Mon, 17 Aug 2020 15:07:55 GMT
 Content-Type: text/html; charset=utf-8
 
-W0817 08:07:55.217317   15230 main.go:64] W0817 15:07:55.215654 reparent.go:185] primary-elect tablet zone1-0000000200 is not the shard primary, proceeding anyway as -force was used
+W0817 08:07:55.217317   15230 main.go:64] W0817 15:07:55.215654 reparent.go:185] primary-elect tablet zone1-0000000200 is not the shard primary, proceeding anyway as --force was used
 W0817 08:07:55.218083   15230 main.go:64] W0817 15:07:55.215771 reparent.go:191] primary-elect tablet zone1-0000000200 is not a primary in the shard, proceeding anyway as -force was used
 I0817 08:07:55.218121   15230 main.go:64] I0817 15:07:55.215918 reparent.go:222] resetting replication on tablet zone1-0000000200
 I0817 08:07:55.229794   15230 main.go:64] I0817 15:07:55.229416 reparent.go:241] initializing primary on zone1-0000000200
@@ -582,7 +587,7 @@ The lookup table, however, has a different number of rows.
 This is because we are using a `hash` vindex to shard the lookup table which means that it is distributed differently from the customer table.
 If we look at the next shard 40-80:
 
-```text
+```mysql
 mysql> use main/40-80;
 
 Database changed
@@ -609,6 +614,7 @@ Once resharding is complete, we can delete the source shard:
 ./206_down_shard_0.sh
 ./207_delete_shard_0.sh
 ```
+
 What we have now is a sharded keyspace. The original unsharded keyspace no longer exists.
 
 ## Teardown
