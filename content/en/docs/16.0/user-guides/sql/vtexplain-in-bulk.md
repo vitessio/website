@@ -12,7 +12,7 @@ This document covers the way the [VTexplain tool](../../../reference/programs/vt
 
 You can find a prebuilt binary version of the VTexplain tool in [the most recent release of Vitess](https://github.com/vitessio/vitess/releases/).
 
-You can also build the `vtexplain` binary in your environment. To build this binary, refer to the [build guide](../../../contributing) for your OS.
+You can also build the `vtexplain` binary in your environment. To build this binary, refer to the [build guide](/docs/contributing) for your OS.
 
 ## Overview
 
@@ -108,7 +108,7 @@ x
 $ python testfull.py > run_vtexplain.sh
 ```
 
-An alternative method is to use the `-sql-file` option for `vtexplain` to pass the whole file to a single vtexplain invocation. This is much more efficient, but we have found that it can be easier to find errors if you perform one `vtexplain` invocation per SQL query.
+An alternative method is to use the `--sql-file` option for `vtexplain` to pass the whole file to a single vtexplain invocation. This is much more efficient, but we have found that it can be easier to find errors if you perform one `vtexplain` invocation per SQL query.
 
 If you choose to use the single invocation, it would look something like:
 
@@ -172,12 +172,12 @@ $ sh -x run_vtexplain.sh 2> vtexplain.output
 
 Once you have your full output in vtexplain.output, use `grep` to search for the string "ERROR" to review any issues that VTExplain found.
 
-### Example: Scatted across shards
+### Example: Scattered across shards
 
 In the following example, VTGate scatters the example query across both shards, and then aggregates the query results.
 
 ```shell
-$ vtexplain --schema-file schema.sql --vschema-file vschema.json --shards 2 --sql 'SELECT * FROM user;'
+$ vtexplain --schema-file schema.sql --vschema-file vschema.json --shards 4 --sql 'SELECT * FROM user;'
 ----------------------------------------------------------------------
 SELECT * FROM user
 
