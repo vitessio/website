@@ -7,7 +7,8 @@ aliases: ['/docs/user-guides/resharding/']
 {{< info >}}
 This guide follows on from the Get Started guides. Please make sure that you have
 an [Operator](../../../get-started/operator) or [local](../../../get-started/local) installation ready. It also assumes
-that the [MoveTables](../../migration/move-tables/) user guide has been followed.
+that the [MoveTables](../../migration/move-tables/) user guide has been followed (which take you through
+steps `101`-`205` and more).
 {{< /info >}}
 
 ## Preparation
@@ -181,8 +182,8 @@ vtctldclient ApplySchema --sql="$(cat create_customer_sharded.sql)" customer
 
 ```bash
 vtctldclient ApplySchema --sql-file create_commerce_seq.sql commerce
-vtctldclient ApplyVSchema --vschema_file vschema_commerce_seq.json commerce
-vtctldclient ApplyVSchema --vschema_file vschema_customer_sharded.json customer
+vtctldclient ApplyVSchema --vschema-file vschema_commerce_seq.json commerce
+vtctldclient ApplyVSchema --vschema-file vschema_customer_sharded.json customer
 vtctldclient ApplySchema --sql-file create_customer_sharded.sql customer
 ```
 
@@ -220,7 +221,7 @@ killall kubectl
 
 ## Start the Reshard
 
-This process starts the [Reshard](../../../reference/vreplication/reshard/) operation. It occurs online, and
+Now we can start the [Reshard](../../../reference/vreplication/reshard/) operation. It occurs online, and
 will not block any read or write operations to your database:
 
 ```bash
@@ -238,7 +239,20 @@ After the reshard is complete, we can use [VDiff](../../../reference/vreplicatio
 
 ```bash
 $ vtctlclient VDiff -- customer.cust2cust
-VDiff bf9dfc5f-e5e6-11ec-823d-0aa62e50dd24 scheduled on target shards, use show to view progress
+VDiff 60fa5738-9bad-11ed-b6de-920702940ee0 scheduled on target shards, use show to view progress
+
+$ vtctlclient VDiff -- --format=json customer.cust2cust show last
+{
+	"Workflow": "cust2cust",
+	"Keyspace": "customer",
+	"State": "completed",
+	"UUID": "60fa5738-9bad-11ed-b6de-920702940ee0",
+	"RowsCompared": 10,
+	"HasMismatch": false,
+	"Shards": "-80,80-",
+	"StartedAt": "2023-01-24 06:07:27",
+	"CompletedAt": "2023-01-24 06:07:28"
+} 
 ```
 
 ## Switch Non-Primary Reads
@@ -267,7 +281,8 @@ While we have switched tablet type targeted reads and writes separately in this 
 all traffic at the same time. This is done by default as if you don't specify the `--tablet_types` parameter
 then `SwitchTraffic` will start serving all traffic from the target for all tablet types.
 
-You should now be able to see the data that has been copied over to the new shards:
+You should now be able to see the data that has been copied over to the new shards (assuming you 
+previously loaded this data in the [`MoveTable` user-guide](../../migration/move-tables/)):
 
 ```bash
 $ mysql --table < ../common/select_customer-80_data.sql
@@ -326,14 +341,16 @@ for i in 200 201 202; do
  CELL=zone1 TABLET_UID=$i ./scripts/vttablet-down.sh
  CELL=zone1 TABLET_UID=$i ./scripts/mysqlctl-down.sh
 done
+
+vtctldclient DeleteShards --recursive customer/0
 ```
 
 </br>
 
-These are the steps taken in the `306_down_shard_0.sh` script. In this script, we stop all tablet instances
-for shard 0. This will cause all those `vttablet` and `mysqld` processes to be stopped. Beyond this, you will
-also want to manually delete the on-disk directories associated with this shard. With the local examples that
-would be:
+These are the steps taken in the `306_down_shard_0.sh` and `307_delete_shard_0.sh` scripts. In the first script (`306`)
+we stop all tablet instances for shard 0. This will cause all those `vttablet` and `mysqld` processes to be stopped.
+In the second script (`307`) we delete the shard records from our Vitess cluster topology.
+Beyond this, you will also want to manually delete the on-disk directories associated with this shard. With the local examples that would be:
 
 ```bash
 rm -rf ${VTDATAROOT}/vt_000000020{0,1,2}/
