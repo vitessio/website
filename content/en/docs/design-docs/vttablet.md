@@ -1,7 +1,7 @@
 ---
 title: VTTablet
 description: VTTablet related documents
-weight: 2
+weight: 4
 aliases: ['/docs/design/vttablet/']
 ---
 

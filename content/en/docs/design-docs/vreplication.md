@@ -1,7 +1,7 @@
 ---
 title: VReplication
 description: Selected VReplication related design docs
-weight: 100
+weight: 3
 aliases: ['/docs/design/vreplication/']
 ---
 
