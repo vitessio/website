@@ -341,7 +341,7 @@ Generate a server certificate for our MySQL instance using our CA:
 
 Copy the files `/home/user/CA/pki/private/mysql1.key` and `/home/user/CA/pki/issued/mysql1.crt` to the MySQL server in the appropriate locations, securing their ownership and permissions appropriately.
 
-Configure the MySQL server options `ssl-key` and `ssl-cert` appropriately to point to where you placed the private key and certificate above. You can read more about it [here](https://dev.mysql.com/doc/mysql-security-excerpt/5.7/en/using-encrypted-connections.html)
+Configure the MySQL server options `ssl-key` and `ssl-cert` appropriately to point to where you placed the private key and certificate above. You can read more about it [here](https://dev.mysql.com/doc/mysql-security-excerpt/8.0/en/using-encrypted-connections.html)
 
 Note that these options do not require clients to use TLS, but is optional. If you need to require all TCP/IP clients to use TLS, you can use the MySQL server option `require_secure_transport`, or you can enforce it on a per MySQL user basis by using the `REQUIRE SSL` option when creating or altering a MySQL-level user. See the MySQL documentation for details.
 
