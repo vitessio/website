@@ -5,7 +5,7 @@ weight: 1
 aliases: ['/docs/design/query-serving/']
 ---
 
-This is a list of issues on the Vitess github site that have been, or are used as design documents and RFCs for various query serving features.
+This is a list of issues on the Vitess GitHub repo that have been, or are used as design documents and RFCs for various query serving features.
 
 Some of these documents might not be representative of the current state of Vitess.
 
