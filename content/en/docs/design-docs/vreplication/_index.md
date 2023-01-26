@@ -1,7 +1,8 @@
 ---
-title: Selected VReplication RFCs
-description: Links to the RFC Issues in the vitess repo, for convenience
+title: VReplication
+description: Selected links to RFCs and key issues in the Vitess repo
 weight: 100
+aliases: ['/docs/design/vreplication/']
 ---
 
 - [VDiff2: Reimplementing VDiff on tablets](https://github.com/vitessio/vitess/issues/10134)
