@@ -5,7 +5,7 @@ weight: 2
 aliases: ['/docs/design/vttablet/']
 ---
 
-This is a list of docs on the Vitess github site that have been, or are used as design documents and RFCs for various VTTablet features.
+This is a list of docs on the Vitess GitHub repo that have been, or are used as design documents and RFCs for various VTTablet features.
 
 Some of these documents might not be representative of the current state of Vitess.
 

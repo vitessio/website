@@ -5,7 +5,7 @@ weight: 100
 aliases: ['/docs/design/vreplication/']
 ---
 
-This is a list of issues on the Vitess github site that have been, or are used as design documents and RFCs for various
+This is a list of issues on the Vitess GitHub repo that have been, or are used as design documents and RFCs for various
 vreplication features.
 
 Some of these documents might not be representative of the current state of Vitess.

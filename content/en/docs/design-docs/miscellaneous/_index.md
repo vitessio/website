@@ -5,7 +5,7 @@ weight: 5
 aliases: ['/docs/design/benchmark/']
 ---
 
-This is a list of docs on the Vitess GitHub organisation that have been, or are used as design documents and RFCs for various miscellaneous features.
+This is a list of docs on the Vitess GitHub repo that have been, or are used as design documents and RFCs for various miscellaneous features.
 
 Some of these documents might not be representative of the current state of Vitess.
 
