@@ -1,5 +1,5 @@
 ---
 title: Query Serving
 description: Query Serving related reference docs
-weight: 1
+weight: 2
 ---
