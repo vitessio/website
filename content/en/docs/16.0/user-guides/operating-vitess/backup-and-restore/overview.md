@@ -77,12 +77,6 @@ All three programs can be made aware of Backup Engine and Backup Storage using t
       </td>
     </tr>
     <tr>
-      <td><code>backup_storage_hook</code></td>
-      <td><code>backup_storage_hook</code> is deprecated. <br>
-      Consider using one of the builtin compression algorithms or <code>--external-compressor</code> and <code>--external-decompressor</code> instead.
-      </td>
-    </tr>
-    <tr>
       <td><code>backup_storage_compress</code></td>
       <td>This flag controls if the backups are compressed by the Vitess code.
         By default it is set to true. Use
