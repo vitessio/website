@@ -13,7 +13,7 @@ cached locally, the processes involved will refresh their topo data throughout t
 tablet on the source and target shards that are involved in a [VReplication](../../) workflow
 will refresh their topo data multiple times as the state of things transition during the cutover. If we are *not* able
 to confirm that all tablets involved in a VReplication worfklow are able to refresh their topo data then the cutover
-command — e.g. [`vtctlclient SwitchTraffic`](../../../reference/vreplication/switchtraffic/) — will cancel the operation
+command — e.g. [`vtctlclient SwitchTraffic`](../../switchtraffic) — will cancel the operation
 and return an error indicating which tablet(s) are unhealthy (including for `--dry_run` executions).
 {{< /info >}}
 
@@ -62,7 +62,7 @@ partitions:{served_type:PRIMARY shard_references:{name:"0"}} partitions:{served_
 [Routing Rules](../../../features/schema-routing-rules) are stored in the `RoutingRules` key within
 the `global` topo. Routing Rules contain a list of table-specific routes. You can route a table for all or specific
 tablet types to another table in the same or different keyspace. Here is an example using the same commerce keyspace
-where we have an active [`MoveTables`](../../../reference/vreplication/movetables/) workflow to move tables to the
+where we have an active [`MoveTables`](../../../vreplication/movetables/) workflow to move tables to the
 customer keyspace but we have not switched any traffic yet:
 
 ```bash
@@ -302,7 +302,7 @@ is_primary_serving:true
 # Miscellaneous Notes
 
 * In VReplication workflows, cutovers are performed manually by the user executing the `SwitchTraffic` and `ReverseTraffic`
-actions e.g. for a [`MoveTables`](../../movetables/#switchtraffic) or [`Reshard`](../../reshard/#reversetraffic) vtctl
+actions e.g. for a [`MoveTables`](../../movetables/) or [`Reshard`](../../reshard/) vtctl
 client command.
 * When traffic for `REPLICA` and `RDONLY` tablets is switched not all read traffic is switched: primary/default reads will
 still be served from the source shards, until `PRIMARY` tablet traffic is also switched.

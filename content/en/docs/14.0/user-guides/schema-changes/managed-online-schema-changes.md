@@ -28,7 +28,7 @@ As general overview:
 - Tablets will independently run schema migrations:
   - `ALTER TABLE` statements run via `VReplication`, `gh-ost` or `pt-online-schema-change`, as per selected [strategy](../ddl-strategies)
   - `CREATE TABLE` statements run directly.
-  - `DROP TABLE` statements run [safely and lazily](../../../design-docs/table-lifecycle/safe-lazy-drop-tables/).
+  - `DROP TABLE` statements run [safely and lazily](https://github.com/vitessio/vitess/blob/main/doc/design-docs/SafeLazyDropTables.md).
 - Vitess provides the user a mechanism to view migration status, cancel or retry migrations, based on the job ID.
 
 ## Syntax
@@ -162,7 +162,7 @@ A migration can be in any one of these states:
 
 A migration is said to be _pending_ if we expect it to run and complete. Pending migrations are those in `queued`, `ready` and `running` states.
 
-For more about internals of the scheduler and how migration states are controlled, see [Online DDL Scheduler](../../../design-docs/online-ddl/scheduler)
+For more about internals of the scheduler and how migration states are controlled, see [Online DDL Scheduler](https://github.com/vitessio/vitess/blob/main/doc/design-docs/OnlineDDLScheduler.md)
 
 ## Configuration
 
