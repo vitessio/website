@@ -19,5 +19,5 @@ VTGate supports multiple types of authentication:
 * none - No authentication is performed. This is the default.
 * static - [File-based authentication](../static-auth)
 * ldap - [LDAP-based authentication](../ldap_auth)
-* clientcert - [TLS client certificate-based authentication](../clientcert-auth)
-* vault - [Vault-based authentication](../vault-auth)
+* clientcert - TLS client certificate-based authentication
+* vault - Vault-based authentication
