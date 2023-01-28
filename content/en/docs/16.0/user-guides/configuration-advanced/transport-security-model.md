@@ -1,6 +1,6 @@
 ---
 title: Securing Vitess Using TLS
-weight: 25
+weight: 60
 ---
 
 ## Introduction

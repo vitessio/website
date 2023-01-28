@@ -1,6 +1,6 @@
 ---
 title: CreateLookupVindex
-weight: 11
+weight: 30
 aliases: ['/docs/user-guides/createlookupvindex/']
 ---
 

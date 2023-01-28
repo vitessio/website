@@ -1,6 +1,6 @@
 ---
 title: Comment Directives
-weight: 13
+weight: 35
 ---
 
 Vitess supports a small set of meta-directives that can be passed from the application to Vitess as SQL comments in the application. These directives can be used to alter the behavior of Vitess on a per-query basis. This is often used by advanced Vitess users to obtain finely granular control over the behavior of Vitess, often for the purposes of optimizing performance.
