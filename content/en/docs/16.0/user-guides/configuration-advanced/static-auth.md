@@ -1,10 +1,9 @@
 ---
 title: File based authentication
 weight: 2
-aliases: ['/docs/user-guides/static-auth/']
 ---
 
-The simplest way to configure users is using a `static` auth method and we
+The simplest way to configure users is using a `static` auth method, and we
 can define the users in a JSON formatted file or string.
 
 ```sh
@@ -63,9 +62,10 @@ ERROR 1045 (28000): Access denied for user 'myuser1'
 In the above example we used plaintext passwords.  Vitess supports the
 MySQL [mysql_native_password](https://dev.mysql.com/doc/refman/8.0/en/native-pluggable-authentication.html)
 hash format, and you should always specify your passwords using this
-in a non-test or external environment.  Vitess does not yet support the
-[caching_sha2_password](https://dev.mysql.com/doc/refman/8.0/en/caching-sha2-pluggable-authentication.html)
-format that became the default for MySQL in 8.0.
+in a non-test or external environment. 
+
+Vitess does not support the full [caching_sha2_password](https://dev.mysql.com/doc/refman/8.0/en/caching-sha2-pluggable-authentication.html) 
+authentication cycle, it is only supported through ssl.
 
 To use a `mysql_native_password` hash, your user section in your static
 JSON authentication file would look something like this instead:
