@@ -38,7 +38,7 @@ Not all commands are currently implemented, but both the old ([`vtctlclient`][vt
 That is to say: `vtctlclient VtctldCommand ...` allows you to run new `vtctldclient` CLI commands, and `vtctldclient LegacyVtctlCommand ...` allows you to run old `vtctlclient` CLI commands.
 For more details, refer to [the documentation][legacy_shim_docs].
 
-[grpc_vtctld_server]: ../../programs/vtctld/#grpc-vtctld-mdash-new-in-v14
+[grpc_vtctld_server]: ../../programs/vtctld/#grpc-vtctld-mdash-new-as-of-v14
 [vtctld_server_rfc]: https://github.com/vitessio/vitess/issues/7058
 [vtctldclient_docs]: ../../programs/vtctldclient/
 [vtctlclient_docs]: ../../programs/vtctl/
