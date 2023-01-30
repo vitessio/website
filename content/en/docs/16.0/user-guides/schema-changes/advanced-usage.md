@@ -174,7 +174,7 @@ An example for in-order submission:
 $ vtctlclient -- ApplySchema --skip_preflight --ddl_strategy='vitess --allow-concurrent --in-order-completion' --sql "create table t1 (id int primary key); create view v1 as select id from t1;" commerce
 ```
 
-Notes:
-
+{{< info >}}
 - `--allow-concurrent` is optional, but is likely to be the main use case for using in-order completion.
 - in-order completion also works with `--postpone-launch` and `--postpone-completion`.
+{{< /info >}}
