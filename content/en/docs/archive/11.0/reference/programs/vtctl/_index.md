@@ -68,7 +68,7 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 | :-------- | :--------------- |
 | [CreateKeyspace](../vtctl/keyspaces#createkeyspace) | `CreateKeyspace  [-sharding_column_name=name] [-sharding_column_type=type] [-served_from=tablettype1:ks1,tablettype2:ks2,...] [-force] [-keyspace_type=type] [-base_keyspace=base_keyspace] [-snapshot_time=time] <keyspace name>` |
 | [DeleteKeyspace](../vtctl/keyspaces#deletekeyspace) | `DeleteKeyspace  [-recursive] <keyspace>` |
-| [RemoveKeyspaceCell](../vtctl/keyspaces#removekeyspacesell) | `RemoveKeyspaceCell  [-force] [-recursive] <keyspace> <cell>` |
+| [RemoveKeyspaceCell](../vtctl/keyspaces#removekeyspacecell) | `RemoveKeyspaceCell  [-force] [-recursive] <keyspace> <cell>` |
 | [GetKeyspace](../vtctl/keyspaces#getkeyspace) | `GetKeyspace  <keyspace>` |
 | [GetKeyspaces](../vtctl/keyspaces#getkeyspaces) | `GetKeyspaces  ` |
 | [SetKeyspaceShardingInfo](../vtctl/keyspaces#setkeyspaceshardinginfo) | `SetKeyspaceShardingInfo  [-force] <keyspace name> [<column name>] [<column type>]` |
@@ -80,12 +80,12 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 | [MoveTables (v1)](../../vreplication/v1/movetables) | `MoveTables  -v1 [-cell=<cell>] [-tablet_types=<source_tablet_types>] -workflow=<workflow> <source_keyspace> <target_keyspace> <table_specs>` |
 | [MoveTables (v2)](../../vreplication/movetables) | `MoveTables  <options> <action> <workflow identifier>` |
 | [DropSources](../../vreplication/v1/dropsources) | `DropSources  [-dry_run] <keyspace.workflow>` |
-| [CreateLookupVindex](../vtctl/keyspaces#createLookupvindex) | `CreateLookupVindex  [-cell=<cell>] [-tablet_types=<source_tablet_types>] <keyspace> <json_spec>` |
+| [CreateLookupVindex](../vtctl/keyspaces#createlookupvindex) | `CreateLookupVindex  [-cell=<cell>] [-tablet_types=<source_tablet_types>] <keyspace> <json_spec>` |
 | [ExternalizeVindex](../vtctl/keyspaces#externalizevindex) | `ExternalizeVindex  <keyspace>.<vindex>` |
 | [Materialize](../vtctl/keyspaces#materialize) | `Materialize  <json_spec>, example : '{"workflow": "aaa", "source_keyspace": "source", "target_keyspace": "target", "table_settings": [{"target_table": "customer", "source_expression": "select * from customer", "create_ddl": "copy"}]}'` |
 | [SplitClone](../vtctl/keyspaces#splitclone) | `SplitClone  <keyspace> <from_shards> <to_shards>` |
 | [VerticalSplitClone](../vtctl/keyspaces#verticalsplitclone) | `VerticalSplitClone  <from_keyspace> <to_keyspace> <tables>` |
-| [VDiff](../vtctl/keyspaces#VDiff) | `VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=<source_tablet_types>] [-filtered_replication_wait_time=30s] <keyspace.workflow>` |
+| [VDiff](../vtctl/keyspaces#vdiff) | `VDiff  [-source_cell=<cell>] [-target_cell=<cell>] [-tablet_types=<source_tablet_types>] [-filtered_replication_wait_time=30s] <keyspace.workflow>` |
 | [MigrateServedTypes](../vtctl/keyspaces#migrateservedtypes) | `MigrateServedTypes  [-cells=c1,c2,...] [-reverse] [-skip-refresh-state] <keyspace/shard> <served tablet type>` |
 | [MigrateServedFrom](../vtctl/keyspaces#migrateservedfrom) | `MigrateServedFrom  [-cells=c1,c2,...] [-reverse] <destination keyspace/shard> <served tablet type>` |
 | [SwitchReads](../../vreplication/v1/switchreads) | `SwitchReads  [-cells=c1,c2,...] [-reverse] -tablet_type={replica\|rdonly} [-dry-run] <keyspace.workflow>` |
@@ -133,7 +133,7 @@ aliases: ['/docs/reference/vitess-api/','/docs/reference/vtctl/']
 | :-------- | :--------------- |
 | [GetSrvKeyspaceNames](../vtctl/serving-graph#getsrvkeyspacenames) | `GetSrvKeyspaceNames  <cell>` |
 | [GetSrvKeyspace](../vtctl/serving-graph#getsrvkeyspace) | `GetSrvKeyspace  <cell> <keyspace>` |
-| [GetSrvVSchema](../vtctl/serving-graph#getsrvsvchema) | `GetSrvVSchema  <cell>` |
+| [GetSrvVSchema](../vtctl/serving-graph#getsrvvschema) | `GetSrvVSchema  <cell>` |
 | [DeleteSrvVSchema](../vtctl/serving-graph#deletesrvvschema) | `DeleteSrvVSchema  <cell>` |
 
 ### Replication Graph
