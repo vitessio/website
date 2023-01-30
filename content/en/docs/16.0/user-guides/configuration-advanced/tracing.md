@@ -1,6 +1,6 @@
 ---
 title: Tracing
-weight: 14
+weight: 40
 aliases: ['/docs/user-guides/tracing/'] 
 ---
 
