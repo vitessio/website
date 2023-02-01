@@ -110,7 +110,19 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.p1c2
 }
 ```
 
-`show all` lists all vdiffs created for the specified keyspace and workflow.
+`show all` lists all VDiffs created for the specified keyspace and workflow.
+
+{{< info >}}
+It is too expensive to get exact real-time row counts for tables, using e.g. `SELECT COUNT(*)`.
+So we instead use the statistics available in the `information_schema` to approximate
+the number of rows in each table when initializing a VDiff on the target primary tablet(s).
+This data is then used in the progress report and it can be significantly off (up to 50-60+%)
+depending on the utilization of the underlying MySQL server resources and the age of the
+tables. You can manually run
+[`ANALYZE TABLE`](https://dev.mysql.com/doc/refman/en/analyze-table.html) to update the
+statistics for the tables involved on the target primary tablet(s) before creating the
+VDiff, if so desired, in order to improve the accuracy of the progress report.
+{{< /info >}}
 
 #### Stopping a VDiff
 

@@ -119,7 +119,6 @@ statistics for the tables involved on the target primary tablet(s) before creati
 VDiff, if so desired, in order to improve the accuracy of the progress report.
 {{< /info >}}
 
-
 #### Stopping a VDiff
 
 ```
