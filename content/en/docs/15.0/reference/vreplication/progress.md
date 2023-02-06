@@ -16,7 +16,7 @@ MoveTables/Reshard Progress <targetKs.workflow>
 ```
 
 ### Description
-Workflows start in the copy state, (details in [VReplication Life of a stream](../../../design-docs/vreplication/life-of-a-stream), doing a bulk copy of the tables involved until they reach a low replication lag, after which we stream binlog events. Tables are copied sequentially.
+Workflows start in the copy state, (details in [VReplication Life of a stream](../internal/life-of-a-stream/), doing a bulk copy of the tables involved until they reach a low replication lag, after which we stream binlog events. Tables are copied sequentially.
 
 `Progress` reports the progress of a workflow by showing the percentage of data copied across targets, if workflow is in copy state, and the replication lag between the target and the source once the copy phase is completed.
 

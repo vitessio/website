@@ -1,7 +1,7 @@
 ---
 title: Unmanaged Tablet
-weight: 15
-aliases: ['/docs/user-guides/unmanaged-tablet/']
+weight: 45
+aliases: ['/docs/user-guides/unmanaged-tablet/'] 
 ---
 
 {{< info >}}
@@ -145,7 +145,7 @@ it to 'ON'.
 Switch traffic:
 
 ```bash
-vtctlclient MoveTables -- SwitchTraffic commerce.legacy2commerce
+vtctlclient MoveTables -- --tablet_type=rdonly,replica SwitchTraffic commerce.legacy2commerce
 ```
 
 Complete the MoveTables:

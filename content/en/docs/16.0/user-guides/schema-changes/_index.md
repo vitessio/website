@@ -20,17 +20,19 @@ Some background on schema changes follows.
 
 ## The schema change problem
 
-Schema change is one of the oldest problems in MySQL. With accelerated development and deployment flows, engineers find they need to deploy schema changes sometimes on a daily basis. With the growth of data this task becomes more and more difficult. A direct MySQL `ALTER TABLE` statement is a blocking (no reads nor writes are possible on the migrated table) and resource heavy operation; variants of `ALTER TABLE` include `InnoDB` [Online DDL](https://dev.mysql.com/doc/refman/5.7/en/innodb-online-ddl-operations.html), which allows for some concurrency on a `primary` (aka `master`) server, but still blocking on replicas, leading to unacceptable replication lags once the statement hits the replicas.
+Schema change is one of the oldest problems in MySQL and in the relational world in general. With accelerated development and deployment flows, engineers find they need to deploy schema changes sometimes on a daily basis. With the growth of data this task becomes more and more difficult. A direct MySQL `ALTER TABLE` statement is a blocking (no reads nor writes are possible on the migrated table) and resource heavy operation; variants of `ALTER TABLE` include `InnoDB` [Online DDL](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html), which allows for some concurrency on a `primary` server, but still blocking on replicas, leading to unacceptable replication lags once the statement hits the replicas. 
 
-`ALTER TABLE` operations are greedy, consume as much CPU/Disk IO as needed, are uninterruptible and uncontrollable. Once the operation has begun, it must run to completion; aborting an `ALTER TABLE` may be more expensive than letting it run through, depending on the progress the migration has made.
+MySQL's [Instant DDL](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html) brings a much better experience where supported migrations run instantly and without additional load. Where possible, these are generally desired.
 
-Direct `ALTER TABLE` is fine in development or possibly staging environments, where datasets are either small, or where table locking is acceptable.
+`ALTER TABLE` (non-`INSTANT`) operations are greedy, consume as much CPU/Disk IO as needed, are uninterruptible and uncontrollable. Once the operation has begun, it must run to completion; aborting an `ALTER TABLE` may be more expensive than letting it run through, depending on the progress the migration has made.
+
+Such direct `ALTER TABLE` is fine in development or possibly staging environments, where datasets are either small, or where table locking is acceptable.
 
 ## ALTER TABLE solutions
 
 Busy production systems tend to use either of these two approaches, to make schema changes less disruptive to ongoing production traffic:
 
-- Using online schema change tools, such as [gh-ost](https://github.com/github/gh-ost) and [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html). These tools _emulate_ an `ALTER TABLE` statement by creating a _ghost_ table in the new desired format, and slowly working through copying data from the existing table, while also applying ongoing changes throughout the migration.
+- Using general purpose online schema change tools, such as [gh-ost](https://github.com/github/gh-ost) and [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html). These tools _emulate_ an `ALTER TABLE` statement by creating a _ghost_ table in the new desired format, and slowly working through copying data from the existing table, while also applying ongoing changes throughout the migration.
   - Vitess offers a built in online schema change flow based on VReplication, and additionally supports `gh-ost` and `pt-online-schema-change`.
   - Online schema change tools can be throttled on high load, and can be interrupted at will.
 - Run the migration independently on replicas; when all replicas have the new schema, demote the `primary` and promote a `replica` as the new `primary`; then, at leisure, run the migration on the demoted server. Two considerations if using this approach are:
@@ -42,7 +44,7 @@ Busy production systems tend to use either of these two approaches, to make sche
 The cycle of schema changes, from idea to production, is complex, involves multiple environments and possibly multiple teams. Below is one possible breakdown common in production. Notice how even interacting with the database itself takes multiple steps:
 
 1. Design: the developer designs a change, tests locally
-2. Publish: the developer calls for review of their changes (e.g. on a Pull Request)
+2. Publish: the developer requests a review of their changes (e.g. on a Pull Request)
 3. Review: developer's colleagues and database engineers to check the changes and their impact
 4. Formalize: what is the precise `ALTER TABLE` statement to be executed? If running with `gh-ost` or `pt-online-schema-change`, what are the precise command line flags?
 5. Locate: where does this change need to go? Which keyspace/cluster? Is this cluster sharded? What are the shards?
@@ -63,7 +65,7 @@ Vitess solves or automates multiple parts of the flow:
 
 ### Formalize
 
-In [managed, online schema changes](../schema-changes/managed-online-schema-changes/) the user supplies a valid SQL `ALTER TABLE` statement, and Vitess generates the `gh-ost` or `pt-online-schema-change` command line invocation, or `vitess` internal instructions. It will also auto generate config files and set up the environment for those tools. This is hidden from the user.
+In [managed, online schema changes](../schema-changes/managed-online-schema-changes/) the user supplies a valid SQL `ALTER TABLE` statement, and Vitess [schedules and runs](../../../design-docs/online-ddl/scheduler/) the migration, based on a specified [strategy](../schema-changes/ddl-strategies/).
 
 In addition, `vitess` strategy migrations offer [declarative](../schema-changes/declarative-migrations/) changes, where the user only needs to supply the desired `CREATE TABLE` or `DROP TABLE` statements, and Vitess computes the correct migration needed.
 
@@ -78,7 +80,7 @@ When using either managed schema changes, or direct schema changes via `vtctl` o
 
 ### Schedule
 
-In managed, online schema changes, Vitess owns and tracks all pending and active migrations. As a rule of thumb, it is generally advisable to only run one online schema change at a time on a given server. Following that rule of thumb, Vitess will by default queue incoming schema change requests and schedule them to run sequentially. There are cases for concurrent execution, and Vitess is able to run some types of migrations concurrently. See [concurrent migrations](../schema-changes/concurrent-migrations/).
+In managed, online schema changes, Vitess owns and tracks all pending and active migrations. Vitess schedules migrations to run, either sequentially or, where possible, [concurrently](../schema-changes/concurrent-migrations/).
 
 ### Execute
 
@@ -92,13 +94,13 @@ In managed, online schema changes, Vitess keeps track of the state of the migrat
 
 ### Cut-over/complete
 
-Vitess runs automated cut-overs. The migration will complete as soon as it's able to.
+By default, Vitess runs automated cut-overs. The migration will complete as soon as it's able to. Optionally, the user may request to [postpone](../schema-changes/postponed-migrations/) the migration's completion until an explicit `COMPLETE` command is given.
 
 ### Cleanup
 
-In the case of managed, online schema changes via `pt-online-schema-change`, Vitess will ensure to drop the triggers in case the tool failed to do so for whatever reason.
-
 Vitess automatically garbage-collects the "old" tables, artifacts of `vitess`, `gh-ost` and `pt-online-schema-change` migrations. It drops those tables in an incremental, non blocking method.
+
+In the case of managed, online schema changes via `pt-online-schema-change`, Vitess will ensure to drop the triggers in case the tool failed to do so for whatever reason.
 
 ## The various approaches
 

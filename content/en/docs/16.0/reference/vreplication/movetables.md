@@ -148,8 +148,30 @@ Comma seperated list of Cell(s) and/or CellAlias(es) to replicate from.
 * Reduce bandwidth costs by skipping cells that are in different availability zones
 * Select cells where replica lags are lower
 
+#### --defer-secondary-keys
+**optional**\
+**default** false
+
+{{< warning >}}
+This flag is currently **experimental**.
+{{< /warning >}}
+
+<div class="cmd">
+
+If true, any secondary keys are dropped from the table definitions on the target shard(s) as we first initialize the
+tables for the [copy phase](../internal/life-of-a-stream/#copy). The exact same key definitions
+are then re-added when the copy phase completes for each table.
+
+With this method all secondary index records for the table are generated in one bulk operation. This should significantly
+improve the overall copy phase execution time on large tables with many secondary keys — especially with
+[MySQL 8.0.31](https://dev.mysql.com/doc/relnotes/mysql/8.0/en/news-8-0-31.html) and later due to InnoDB's support for
+parallel index builds. This is logically similar to the
+[`mysqldump` `--disable-keys` option](https://dev.mysql.com/doc/refman/en/mysqldump.html#option_mysqldump_disable-keys).
+
+</div>
+
 #### --drop_foreign_keys
-**optional**
+**optional**\
 **default** false
 
 <div class="cmd">
@@ -233,11 +255,9 @@ in the replication stream from the source. The values can be as follows:
 
 {{< warning >}}
 We caution against against using `EXEC` or `EXEC_IGNORE` for the following reasons:
-  * You may want a different schema on the target.
-  * You may want to apply the DDL in a different way on the target.
-  * The DDL may take a long time to apply on the target and may disrupt replication, performance, and query execution (if serving  traffic from the target) while it is being applied.
-
-If you do use one of these two DDL actions then you should also enable the [VReplication Schema Tracking](../../../../design-docs/vreplication/vstream/tracker/).
+  * You may want a different schema on the target
+  * You may want to apply the DDL in a different way on the target
+  * The DDL may take a long time to apply on the target and may disrupt replication, performance, and query execution while it is being applied (if serving traffic from the target)
 {{< /warning >}}
 
 </div>

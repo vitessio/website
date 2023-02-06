@@ -70,7 +70,7 @@ Here are the contents of an example file that shows the ability to specify MySQL
 }
 ```
 
-For those who wish to use the Java or Go grpc clients to vtgate, you must also configure `grpc_port` and specify the service map as `service_map='grpc-vtgateservice'`. Note that the `VStream` feature is only available via grpc.
+For those who wish to use the Java or Go grpc clients to vtgate, you must also configure `grpc_port` and specify the service map as `service_map='grpc-vtgateservice'`. Note that the MySQL protocol support for `VStream` feature is currently experimental.
 
 You can also set the following flags to control load-balancing for replicas:
 

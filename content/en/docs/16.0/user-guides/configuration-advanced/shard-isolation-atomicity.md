@@ -1,6 +1,6 @@
 ---
 title: Shard Isolation and Atomicity Model
-weight: 20
+weight: 55
 aliases: ['/docs/user-guides/shard-isolation-atomicity/'] 
 ---
 

@@ -31,7 +31,7 @@ This section describes the following vtctl commands, which let you look at the s
 
 ### GetSchema
 
-The [GetSchema](../../../reference/programs/vtctl/#getschema) command displays the full schema for a tablet or a subset of the tablet's tables. When you call `GetSchema`, you specify the tablet alias that uniquely identifies the tablet. The `<tablet alias>` argument value has the format `<cell name>-<uid>`.
+The [GetSchema](../../programs/vtctl/schema-version-permissions#getschema) command displays the full schema for a tablet or a subset of the tablet's tables. When you call `GetSchema`, you specify the tablet alias that uniquely identifies the tablet. The `<tablet alias>` argument value has the format `<cell name>-<uid>`.
 
 **Note**: You can use the [`vtctl ListAllTablets`](../../../reference/programs/vtctl/#listalltablets) command to retrieve a list of tablets in a cell and their unique IDs.
 
@@ -79,52 +79,35 @@ This section describes the following commands:
 
 ### ApplySchema
 
-Vitess' schema modification functionality is designed the following goals in mind:
+Vitess offers [managed schema migration](../../../user-guides/schema-changes/managed-online-schema-changes/), and notably supports online schema migrations (aka Online DDL), transparently to the user. Vitess Online DDL offers:
 
-* Enable simple updates that propagate to your entire fleet of servers.
-* Require minimal human interaction.
-* Minimize errors by testing changes against a temporary database.
-* Guarantee very little downtime (or no downtime) for most schema updates.
-* Do not store permanent schema data in the topology service.
+* Non-blocking migrations
+* Migrations are asyncronously auto-scheduled, queued and executed by tablets
+* Migration state is trackable
+* Migrations are cancellable
+* Migrations are retry-able
+* Lossless, [revertible migrations](../../../user-guides/schema-changes/revertible-migrations/)
+* Support for [declarative migrations](../../../user-guides/schema-changes/declarative-migrations/)
+* Support for [postponed migrations](../../../user-guides/schema-changes/postponed-migrations/)
+* Support for [failover agnostic migrations](../../../user-guides/schema-changes/recoverable-migrations/)
+* Support for [concurrent migrations](../../../user-guides/schema-changes/concurrent-migrations/)
 
-Note that, at this time, Vitess only supports [data definition statements](https://dev.mysql.com/doc/refman/5.6/en/sql-data-definition-statements.html) that create, modify, or delete database tables. For instance, `ApplySchema` does not affect stored procedures or grants.
+The [ApplySchema](../../../reference/programs/vtctl/schema-version-permissions/#applyschema) command applies a schema change to the specified keyspace on all shards. The command format is: `ApplySchema -- {--sql=<sql> || --sql_file=<filename>} <keyspace>`
 
-The [ApplySchema](../../../reference/programs/vtctl/#applyvschema) command applies a schema change to the specified keyspace on every primary tablet, running in parallel on all shards. Changes are then propagated to replicas. The command format is: `ApplySchema -- {--sql=<sql> || --sql_file=<filename>} <keyspace>`
+Further reading:
 
-When the `ApplySchema` action actually applies a schema change to the specified keyspace, it performs the following steps:
-
-1. It finds shards that belong to the keyspace, including newly added shards if a [resharding event](../sharding/#resharding) has taken place.
-2. It validates the SQL syntax and determines the impact of the schema change. If the scope of the change is too large, Vitess rejects it. See the [permitted schema changes](#permitted-schema-changes) section for more detail.
-3. It employs a pre-flight check to ensure that a schema update will succeed before the change is actually applied to the live database. In this stage, Vitess copies the current schema into a temporary database, applies the change there to validate it, and retrieves the resulting schema. By doing so, Vitess verifies that the change succeeds without actually touching live database tables.
-4. It applies the SQL command on the primary tablet in each shard.
-
-The following sample command applies the SQL in the **user_table.sql** file to the **user** keyspace:
-
-`ApplySchema -- --sql_file=user_table.sql user`
+* [Making schema changes](../../../user-guides/schema-changes/)
+* [Managed schema changes](../../../user-guides/schema-changes/managed-online-schema-changes/)
+* [DDL strategies](../../../user-guides/schema-changes/ddl-strategies/)
 
 #### Permitted schema changes
 
-The `ApplySchema` command supports a limited set of DDL statements. In addition, Vitess rejects some schema changes because large changes can slow replication and may reduce the availability of your overall system.
+The `ApplySchema` command supports these commands:
 
-The following list identifies types of DDL statements that Vitess supports:
+* `CREATE TABLE`, `ALTER TABLE`, `DROP TABLE`, `CREATE VIEW`, `ALTER VIEW`, `DROP VIEW` in Online DDL
+* In addition, `CREATE INDEX`, `DROP INDEX`, `RENAME TABLE`, in non Online DDL
 
-* `CREATE TABLE`
-* `CREATE INDEX`
-* `CREATE VIEW`
-* `ALTER TABLE`
-* `ALTER VIEW`
-* `RENAME TABLE`
-* `DROP TABLE`
-* `DROP INDEX`
-* `DROP VIEW`
-
-In addition, Vitess applies the following rules when assessing the impact of a potential change:
-
-* `DROP` statements are always allowed, regardless of the table's size.
-* `ALTER` statements are only allowed if the table on the shard's primary tablet has 100,000 rows or less.
-* For all other statements, the table on the shard's primary tablet must have 2 million rows or less.
-
-If a schema change gets rejected because it affects too many rows, you can specify the flag `--allow_long_unavailability` to tell `ApplySchema` to skip this check. However, we do not recommend this. Instead, you should apply large schema changes by using an external tool such as `gh-ost` or `pt-online-schema-change`.
+`ApplySchema` does not support creation or modifications of stored routines, including functions, procedures, triggers, and events.
 
 ### ApplyVSchema
 

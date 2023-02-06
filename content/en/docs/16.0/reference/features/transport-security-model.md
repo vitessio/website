@@ -40,13 +40,13 @@ Caller ID is a feature provided by the Vitess stack to identify the source of qu
 When using gRPC transport, Vitess can use the usual TLS security features. Please note that familiarity with TLS is necessary here:
 
 * Any Vitess server can be configured to use TLS with the following command line parameters:
-  - `grpc_cert`, `grpc_key`: server cert and key to use.
-  - `grpc_ca` (optional): client cert chains to trust. If specified, the client must then use a certificate signed by one of the CA certs in the provided file.
+  - `--grpc_cert`, `--grpc_key`: server cert and key to use.
+  - `--grpc_ca` (optional): client cert chains to trust. If specified, the client must then use a certificate signed by one of the CA certs in the provided file.
 * A Vitess go client can be configured with symmetrical parameters to enable
   TLS:
-  - `xxxx_grpc_ca`: list of server cert signers to trust. I.E. the client will only connect to servers presenting a cert signed by one of the CAs in this file.
-  - `xxxx_grpc_server_name`: common name of the server cert to trust. Instead of the hostname used to connect or IP SAN if using an IP to connect.
-  - `xxxx_grpc_cert`, `xxxx_grpc_key`: client side cert and key to use in cases when the server requires client authentication.
+  - `--[vtgate|tablet]_grpc_ca`: list of server cert signers to trust. I.E. the client will only connect to servers presenting a cert signed by one of the CAs in this file.
+  - `--[vtgate|tablet]_grpc_server_name`: common name of the server cert to trust. Instead of the hostname used to connect or IP SAN if using an IP to connect.
+  - `--[vtgate|tablet]_grpc_cert`, `--[vtgate|tablet]_grpc_key`: client side cert and key to use in cases when the server requires client authentication.
   * Other clients can take similar parameters, in various ways. Please view each client's parameters for more information.
 
 With these options, it is possible to use TLS-secured connections for all parts of the gRPC system. This enables the server side to authenticate the client, and/or the client to authenticate the server.
