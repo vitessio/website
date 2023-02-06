@@ -7,7 +7,7 @@ production-build: install
 	--verbose
 
 preview-build: install
-	$(HUGO) --cleanDestinationDir \
+	$(HUGO) --cleanDestinationDir -e dev \
 	--buildDrafts \
 	--buildFuture \
 	--baseURL $(DEPLOY_PRIME_URL) \
