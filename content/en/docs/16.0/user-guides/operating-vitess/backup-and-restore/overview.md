@@ -85,12 +85,12 @@ All three programs can be made aware of Backup Engine and Backup Storage using t
     </tr>
     <tr>
       <td><code>backup_storage_block_size</code></td>
-      <td>If <code>--backup_storage_compress</code> is true, <code>backup_storage_block_size</code> sets the byte size for each block while compressing (default is 250000).
+      <td>If <code>--backup_storage_compress</code> is true, <code>backup_storage_block_size</code> sets the block size in bytes to use while compressing (default is 250000).
       </td>
     </tr>
     <tr>
       <td><code>backup_storage_number_blocks</code></td>
-      <td>If <code>--backup_storage_compress</code> is true, <code>backup_storage_number_blocks</code> sets the number of blocks that can be processed, at once, before the writer blocks, during compression. It should be equal to the number of CPUs available for compression. (default 2)
+      <td>If <code>--backup_storage_compress</code> is true, <code>backup_storage_number_blocks</code> sets the number of blocks that can be processed, in parallel, before the writer blocks, during compression. It should be equal to the number of CPUs available for compression. (default 2)
       </td>
     </tr>
     <td><code>compression-level</code></td>
