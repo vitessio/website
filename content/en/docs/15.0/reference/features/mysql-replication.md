@@ -19,7 +19,7 @@ Some characteristics are shared by all the policies -
 
 * All pre-configured durability policies do not allow tablets of type rdonly to send semi-sync ACKs. This is intentional because rdonly tablets are not eligible to be promoted to primary, so Vitess avoids the case where a rdonly tablet is the single best candidate for election at the time of primary failure.
 
-Having semi-sync enabled, gives you the property that, in case of primary failure, there is at least one other replica that has every transaction that was ever reported to clients as having completed. You can then wait for [VTOrc](../../../user-guides/configuration-basic/vtorc) to repair it, or ([manually](../../programs/vtctl/#emergencyreparentshard) pick the replica that is farthest ahead in GTID position and promote that to be the new primary.
+Having semi-sync enabled, gives you the property that, in case of primary failure, there is at least one other replica that has every transaction that was ever reported to clients as having completed. You can then wait for [VTOrc](../../../user-guides/configuration-basic/vtorc) to repair it, or ([manually](../../programs/vtctl/shards/#emergencyreparentshard) pick the replica that is farthest ahead in GTID position and promote that to be the new primary.
 
 Thus, you can survive sudden primary failure without losing any transactions that were reported to clients as completed. In MySQL 5.7+, this guarantee is strengthened slightly to preventing loss of any transactions that were ever **committed** on the original primary, eliminating so-called [phantom reads](http://bugs.mysql.com/bug.php?id=62174).
 

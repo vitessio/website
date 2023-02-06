@@ -31,9 +31,9 @@ This section describes the following vtctl commands, which let you look at the s
 
 ### GetSchema
 
-The [GetSchema](../../../reference/programs/vtctl/#getschema) command displays the full schema for a tablet or a subset of the tablet's tables. When you call `GetSchema`, you specify the tablet alias that uniquely identifies the tablet. The `<tablet alias>` argument value has the format `<cell name>-<uid>`.
+The [GetSchema](../../programs/vtctl/schema-version-permissions#getschema) command displays the full schema for a tablet or a subset of the tablet's tables. When you call `GetSchema`, you specify the tablet alias that uniquely identifies the tablet. The `<tablet alias>` argument value has the format `<cell name>-<uid>`.
 
-**Note**: You can use the [`vtctl ListAllTablets`](../../../reference/programs/vtctl/#listalltablets) command to retrieve a list of tablets in a cell and their unique IDs.
+**Note**: You can use the [`vtctl ListAllTablets`](../../programs/vtctl/generic#listalltablets) command to retrieve a list of tablets in a cell and their unique IDs.
 
 The following example retrieves the schema for the tablet with the unique ID test-000000100:
 
@@ -43,7 +43,7 @@ GetSchema test-000000100
 
 ### ValidateSchemaShard
 
-The [`ValidateSchemaShard`](../../../reference/programs/vtctl/#validateschemashard) command confirms that for a given keyspace, all of the replica tablets in a specified shard have the same schema as the primary tablet in that shard. When you call `ValidateSchemaShard`, you specify both the keyspace and the shard that you are validating.
+The [`ValidateSchemaShard`](../../programs/vtctl/schema-version-permissions#validateschemashard) command confirms that for a given keyspace, all of the replica tablets in a specified shard have the same schema as the primary tablet in that shard. When you call `ValidateSchemaShard`, you specify both the keyspace and the shard that you are validating.
 
 The following command confirms that the primary and replica tablets in shard `0` all have the same schema for the `user` keyspace:
 
@@ -53,7 +53,7 @@ ValidateSchemaShard user/0
 
 ### ValidateSchemaKeyspace
 
-The [`ValidateSchemaKeyspace`](../../../reference/programs/vtctl/#validateschemakeyspace) command confirms that all of the tablets in a given keyspace have the the same schema as the primary tablet on shard `0` in that keyspace. Thus, whereas the `ValidateSchemaShard` command confirms the consistency of the schema on tablets within a shard for a given keyspace, `ValidateSchemaKeyspace` confirms the consistency across all tablets in all shards for that keyspace.
+The [`ValidateSchemaKeyspace`](../../programs/vtctl/schema-version-permissions#validateschemakeyspace) command confirms that all of the tablets in a given keyspace have the the same schema as the primary tablet on shard `0` in that keyspace. Thus, whereas the `ValidateSchemaShard` command confirms the consistency of the schema on tablets within a shard for a given keyspace, `ValidateSchemaKeyspace` confirms the consistency across all tablets in all shards for that keyspace.
 
 The following command confirms that all tablets in all shards have the same schema as the primary tablet in shard 0 for the user keyspace:
 
@@ -63,11 +63,11 @@ ValidateSchemaKeyspace user
 
 ### GetVSchema
 
-The [`GetVSchema`](../../../reference/programs/vtctl/#getvschema) command displays the global VSchema for the specified keyspace.
+The [`GetVSchema`](../../programs/vtctl/schema-version-permissions#getvschema) command displays the global VSchema for the specified keyspace.
 
 ### GetSrvVSchema
 
-The [`GetSrvVSchema`](../../../reference/programs/vtctl/#getsrvvschema) command displays the combined VSchema for a given cell.
+The [`GetSrvVSchema`](../../programs/vtctl/serving-graph#getsrvvschema) command displays the combined VSchema for a given cell.
 
 ## Changing your schema
 
@@ -128,8 +128,8 @@ If a schema change gets rejected because it affects too many rows, you can speci
 
 ### ApplyVSchema
 
-The [`ApplyVSchema`](../../../reference/programs/vtctl/#applyvschema) command applies the specified VSchema to the keyspace. The VSchema can be specified as a string or in a file.
+The [`ApplyVSchema`](../../programs/vtctl/schema-version-permissions#applyvschema) command applies the specified VSchema to the keyspace. The VSchema can be specified as a string or in a file.
 
 ### RebuildVSchemaGraph
 
-The [`RebuildVSchemaGraph`](../../../reference/programs/vtctl/#rebuildvschemagraph) command propagates the global VSchema to a specific cell or the list of specified cells.
+The [`RebuildVSchemaGraph`](../../programs/vtctl/schema-version-permissions#rebuildvschemagraph) command propagates the global VSchema to a specific cell or the list of specified cells.

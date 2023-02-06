@@ -1,6 +1,6 @@
 ---
 title: Comment Directives
-weight: 13
+weight: 35
 ---
 
 Vitess supports a small set of meta-directives that can be passed from the application to Vitess as SQL comments in the application. These directives can be used to alter the behavior of Vitess on a per-query basis. This is often used by advanced Vitess users to obtain finely granular control over the behavior of Vitess, often for the purposes of optimizing performance.
@@ -65,13 +65,13 @@ By default, `vtgate` will allow intermediate results for things like in-vtgate s
 
 The `IGNORE_MAX_MEMORY_ROWS` comment directive allows a Vitess-aware application to bypass this limit, essentially setting it to an unlimited number of rows for that query. Since this override can result in very large, and even potentially effectively unbounded, amounts of memory being used by `vtgate`, it should be used with extreme caution.
 
-## Allow scatter (ALLOW_SCATTER)
+## Allow scatter (`ALLOW_SCATTER`)
 
 In Vitess, it is possible to use the `vtgate` parameter `--no_scatter` to prevent `vtgate` from issuing scatter queries. Thus only queries that target a single shard will be allowed.
 
 This comment directive is used to override that limitation, allowing application code to be customized to allow scatters for certain chosen use-cases, but not for the general case.
 
-## Consolidator (CONSOLIDATOR)
+## Consolidator (`CONSOLIDATOR`)
 
 In `vttablet`, the consolidator is enabled with the `--enable_consolidator` and `--enable_consolidator_replicas` flags. Those settings may be overridden with this comment directive, allowing application code to opt into (or out of) consolidation for individual `SELECT` queries.
 
@@ -80,3 +80,13 @@ This directive requires one of the following values:
  * `disabled`
  * `enabled`
  * `enabled_replicas`
+
+### Planner (`PLANNER`)
+
+Overrides the default planner to the one specified by the directive. Example query:
+
+```sql
+select /*vt+ PLANNER=gen4 */ * from user;
+```
+
+Valid values are the same as for the planner flag - `v3` and `gen4`.

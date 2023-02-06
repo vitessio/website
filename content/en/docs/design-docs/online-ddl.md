@@ -5,7 +5,7 @@ weight: 2
 aliases: ['/docs/design/lifecycle/', '/docs/reference/features/table-lifecycle']
 ---
 
-This is a list of docs on the Vitess github site that have been, or are used as design documents and RFCs for various online DDL features.
+This is a list of docs on the Vitess GitHub repo that have been, or are used as design documents and RFCs for various online DDL features.
 
 Some of these documents might not be representative of the current state of Vitess.
 

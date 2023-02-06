@@ -1,6 +1,6 @@
 ---
 title: VTGate Buffering Scenarios
-weight: 1
+weight: 12
 aliases: ['/docs/reference/features/vtgate-buffering',
 '/docs/reference/programs/vtgate']
 ---
