@@ -24,7 +24,7 @@ You can only run this change successfully once. Once it it applied, the column `
 
 Sometimes it is desirable to be able to retry a migration. For example, if you apply a migration on a sharded keyspace, where one or more of the shards can be down. In such scenario some shards receive and apply the DDL, while other shards do not, and are not aware of its existence. Attempting to re-apply the same DDL will generate errors on the shards that have received and applied it on the first attempt.
 
-`vtctlclient -- ApplySchema` accepts a `--migration_context` flag. By default, Vitess auto-generates a unique context per execution of `vtctlclient -- ApplySchema`. You may supply your own value, which can be an arbitrary text (limited to `1024` characters). You may search for migrations with a particular context via `SHOW VITESS_MIGRATIONS LIKE '<context-value>'`. Also, any `SHOW VITESS_MIGRATIONS ...` command outputs the context value in the `migration_context` column.
+`vtctldclient ApplySchema` accepts a `--migration_context` flag. By default, Vitess auto-generates a unique context per execution of `vtctldclient ApplySchema`. You may supply your own value, which can be an arbitrary text (limited to `1024` characters). You may search for migrations with a particular context via `SHOW VITESS_MIGRATIONS LIKE '<context-value>'`. Also, any `SHOW VITESS_MIGRATIONS ...` command outputs the context value in the `migration_context` column.
 
 When Vitess meets a migration which has exact same DDL and exact same (non-empty) context as some older migration, it considers it as a _duplicate_. The new migration does get a `UUID` of its own, and is tracked as a new migration. But if the previous migration (or, if there are multiple past duplicate migrations with same DDL and context, _any one of those_) is `complete`, then the new migration is also implicitly assumed to be `complete`.
 
@@ -33,9 +33,9 @@ Thus, the new migration does not get to execute if an identical previous migrati
 Usage:
 
 ```sh
-$ vtctlclient -- ApplySchema -- --migration_context="1111-2222" --skip_preflight --ddl_strategy='vitess' --sql "alter table customer add column status int unsigned not null" commerce
+$ vtctldclient ApplySchema -- --migration_context="1111-2222" --skip_preflight --ddl_strategy='vitess' --sql "alter table customer add column status int unsigned not null" commerce
 
-$ vtctlclient -- ApplySchema -- --migration_context="1111-2222" --skip_preflight --ddl_strategy='vitess' --sql "alter table customer add column status int unsigned not null" commerce
+$ vtctldclient ApplySchema -- --migration_context="1111-2222" --skip_preflight --ddl_strategy='vitess' --sql "alter table customer add column status int unsigned not null" commerce
 ```
 
 In the above, the two calls are identical. Specifically, they share the exact same `--migration_context` value of `1111-2222`, and the exact same `--sql`.
@@ -56,9 +56,9 @@ You may go one step beyond [duplicate migration detection](#duplicate-migration-
 Consider the following example, note `--uuid_list` flag:
 
 ```sh
-$ vtctlclient -- ApplySchema -- --uuid_list "73380089_7764_11ec_a656_0a43f95f28a3" --skip_preflight --ddl_strategy='vitess' --sql "alter table customer add column status int unsigned not null" commerce
+$ vtctldclient ApplySchema -- --uuid_list "73380089_7764_11ec_a656_0a43f95f28a3" --skip_preflight --ddl_strategy='vitess' --sql "alter table customer add column status int unsigned not null" commerce
 
-$ vtctlclient -- ApplySchema -- --uuid_list "73380089_7764_11ec_a656_0a43f95f28a3" --skip_preflight --ddl_strategy='vitess' --sql "alter table customer add column status int unsigned not null" commerce
+$ vtctldclient ApplySchema -- --uuid_list "73380089_7764_11ec_a656_0a43f95f28a3" --skip_preflight --ddl_strategy='vitess' --sql "alter table customer add column status int unsigned not null" commerce
 ```
 
 Normally Vitess generates a `UUID` for each migration, thus having a new, unique ID per migration. With `-uuid_list`, you can force Vitess into using your own supplied UUID. There cannot be two migrations with the same `UUID`. Therefore, any subsequent submission of a migration with an already existing `UUID` is implicitly discarded. The 2nd call does return the migration `UUID`, but is internally discarded.
@@ -86,7 +86,7 @@ The user may submit multiple migrations such that non auto-completes. The user c
 Consider the following:
 
 ```sh
-$ vtctlclient -- ApplySchema --skip_preflight --ddl_strategy='vitess --postpone-completion --allow-concurrent' --sql "alter table customer add column country int not null default 0; alter table order add column shipping_country int not null default 0" commerce
+$ vtctldclient ApplySchema --skip_preflight --ddl_strategy='vitess --postpone-completion --allow-concurrent' --sql "alter table customer add column country int not null default 0; alter table order add column shipping_country int not null default 0" commerce
 29231906_776f_11ec_a656_0a43f95f28a3
 3cc4ae0e_776f_11ec_a656_0a43f95f28a3
 ```
@@ -98,14 +98,14 @@ A `show vitess_migrations like '29231906_776f_11ec_a656_0a43f95f28a3'` presents 
 When all migrations for the relevant UUIDs show `1` for `ready_to_complete`, the user can then either:
 
 ```sh
-$ vtctlclient -- ApplySchema --skip_preflight --sql "alter vitess_migration complete all" commerce
+$ vtctldclient ApplySchema --skip_preflight --sql "alter vitess_migration complete all" commerce
 ```
 
 Assuming these are the only migrations awaiting completion, or, explicitly issue a complete for each of the migrations:
 
 ```sh
-$ vtctlclient -- ApplySchema --skip_preflight --sql "alter vitess_migration '29231906_776f_11ec_a656_0a43f95f28a3' complete all" commerce
-$ vtctlclient -- ApplySchema --skip_preflight --sql "alter vitess_migration '3cc4ae0e_776f_11ec_a656_0a43f95f28a3' complete all" commerce
+$ vtctldclient ApplySchema --skip_preflight --sql "alter vitess_migration '29231906_776f_11ec_a656_0a43f95f28a3' complete all" commerce
+$ vtctldclient ApplySchema --skip_preflight --sql "alter vitess_migration '3cc4ae0e_776f_11ec_a656_0a43f95f28a3' complete all" commerce
 ```
 
 ## Near instant REVERTs
@@ -125,14 +125,14 @@ The use case and workflow is as follows:
 Consider the following example. We run a 5 hour long migration to drop an index:
 
 ```sh
-$ vtctlclient -- ApplySchema --skip_preflight --ddl_strategy='vitess' --sql "alter table customer drop index joined_timestamp_idx" commerce
+$ vtctldclient ApplySchema --skip_preflight --ddl_strategy='vitess' --sql "alter table customer drop index joined_timestamp_idx" commerce
 29231906_776f_11ec_a656_0a43f95f28a3
 ```
 
 As soon as the migration completes, we run:
 
 ```sh
-$ vtctlclient -- ApplySchema --skip_preflight --ddl_strategy='vitess --postpone-completion --allow-concurrent' --sql "revert vitess_migration '29231906_776f_11ec_a656_0a43f95f28a3'" commerce
+$ vtctldclient ApplySchema --skip_preflight --ddl_strategy='vitess --postpone-completion --allow-concurrent' --sql "revert vitess_migration '29231906_776f_11ec_a656_0a43f95f28a3'" commerce
 3cc4ae0e_776f_11ec_a656_0a43f95f28a3
 ```
 
@@ -141,7 +141,7 @@ The above begins a `REVERT` migration that is open-ended (does not complete), vi
 Finally, if we are satisfied that the `drop index` migration went well, we issue:
 
 ```sh
-$ vtctlclient -- ApplySchema --skip_preflight --sql "alter vitess_migration '3cc4ae0e_776f_11ec_a656_0a43f95f28a3' cancel" commerce
+$ vtctldclient ApplySchema --skip_preflight --sql "alter vitess_migration '3cc4ae0e_776f_11ec_a656_0a43f95f28a3' cancel" commerce
 ```
 
 That is, we cancel the `REVERT` operation.
@@ -149,7 +149,7 @@ That is, we cancel the `REVERT` operation.
 Or, should we have not dropped the index? If our migration seems to have been wrong, we run:
 
 ```sh
-$ vtctlclient -- ApplySchema --skip_preflight --sql "alter vitess_migration '3cc4ae0e_776f_11ec_a656_0a43f95f28a3' complete" commerce
+$ vtctldclient ApplySchema --skip_preflight --sql "alter vitess_migration '3cc4ae0e_776f_11ec_a656_0a43f95f28a3' complete" commerce
 ```
 
 Which means we want to apply the revert. Since the revert is already running in the background, it is likely that binary log processing is up to date, and cut-over is near instantaneous.
@@ -171,7 +171,7 @@ Note that there can be scenarios with impossible ordering. Those hardly make sen
 An example for in-order submission:
 
 ```sh
-$ vtctlclient -- ApplySchema --skip_preflight --ddl_strategy='vitess --allow-concurrent --in-order-completion' --sql "create table t1 (id int primary key); create view v1 as select id from t1;" commerce
+$ vtctldclient ApplySchema --skip_preflight --ddl_strategy='vitess --allow-concurrent --in-order-completion' --sql "create table t1 (id int primary key); create view v1 as select id from t1;" commerce
 ```
 
 {{< info >}}
