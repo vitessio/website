@@ -85,12 +85,12 @@ Global topology service contains:
 * if using filtered replication, the source shards this shard is replicating
   from.
 * the list of cells that have tablets in this shard.
-* shard-global tablet controls, like denied tables no tablet should serve
+* shard-global tablet controls, like `DeniedTable`s, which no tablet should serve
   in this shard.
 
 A Shard can be locked. We use this during operations that affect either the
 Shard record, or multiple tablets within a Shard (like reparenting), so multiple
-tasks cannot concurrently alter the data.
+tasks cannot concurrently alter the same data.
 
 ### VSchema data
 
@@ -211,7 +211,7 @@ We use the following paths for the data, in all implementations:
 * SrvKeyspace: `keyspaces/<keyspace>/SrvKeyspace`
 * SrvVSchema: `SvrVSchema`
 
-The `vtctl TopoCat` utility can decode these files when using the
+The [`vtctl TopoCat`](https://vitess.io/docs/16.0/reference/programs/vtctl/topo/#topocat) utility can decode these files when using the
 `--decode_proto` option:
 
 ``` sh
@@ -445,7 +445,7 @@ etcd, zookeeper, or consul. At a higher level overview:
   `/vitess/${CELL_NAME}` (on consul this should be `vitess/${CELL_NAME}`) where `${CELL_NAME}` is the location of the cell
   `us-east-1, eu-west-2, etc`.
 * When starting a vttablet instance you must provide the global topology service
-  as well as the `-tablet-path`, which implicitly includes the cell details.
+  as well as the `--tablet-path`, which implicitly includes the cell details.
   With this information the vttablet process will read the local topology
   details from the global topology server.
 * When starting a vtgate instance, you will provide the global topology
@@ -644,7 +644,7 @@ After this split, the configuration is completely symmetrical:
 
 ## Migration between implementations
 
-We provide the `topo2topo` utility to migrate between one implementation
+We provide the [`topo2topo`](https://vitess.io/docs/16.0/reference/features/topology-service/#migration-between-implementations) utility to migrate between one implementation
 and another of the topology service.
 
 The process to follow in that case is:
