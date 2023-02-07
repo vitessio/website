@@ -11,7 +11,7 @@ Sharding is a method of horizontally partitioning a database to store data acros
 
 A keyspace in Vitess can be sharded or unsharded. An unsharded keyspace maps directly to a MySQL database. If sharded, the rows of the keyspace are partitioned into different databases of identical schema.
 
-For example, if an application's "user" keyspace is split into two shards, each shard contains records for approximately half of the application's users. Similarly, each user's information is stored in only one shard.
+For example, if an application's "user" keyspace is split into two shards, each shard contains records for approximately half of the application's users. Each single user's information however, is stored in only one shard.
 
 Note that sharding is orthogonal to (MySQL) replication. A Vitess shard typically contains one MySQL primary and many MySQL replicas. The primary handles write operations, while replicas handle read-only traffic, batch processing operations, and other tasks. Each MySQL instance within the shard should have the same data, excepting some replication lag.
 
@@ -43,7 +43,7 @@ When building the serving graph for a sharded keyspace, Vitess ensures that each
 * An empty start value represents the lowest value, and all values are greater than it.
 * An empty end value represents a value larger than the highest possible value, and all values are strictly lower than it.
 
-Vitess always converts sharding keys to a left-justified binary string for computing a shard. This left-justification makes the right-most zeroes insignificant and optional. Therefore, the value `0x80` is always the middle value for sharding keys. So, in a keyspace with two shards, sharding keys that have a binary value lower than 0x80 are assigned to one shard. Keys with a binary value equal to or higher than 0x80 are assigned to the other shard.
+Vitess always converts sharding keys to a left-justified binary string for computing a shard. This left-justification makes the right-most zeroes insignificant and optional. Therefore, the value `0x80` is the middle value for sharding keys. So, in a keyspace with two shards, sharding keys that have a binary value lower than 0x80 are assigned to the first shard. Keys with a binary value equal to or higher than 0x80 are assigned to the other shard.
 
 Several sample key ranges are shown below:
 

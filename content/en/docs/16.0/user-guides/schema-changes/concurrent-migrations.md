@@ -10,14 +10,29 @@ By default, Vitess schedules all migrations to run sequentially. Only a single m
 
 At the heart of schema migration management we are interested in `ALTER` DDLs that run for long periods of time. These will copy large amounts of data, perform many reads and writes, and overall affect the production server. They use built-in throttling mechanism to prevent harming production. The migration essentially competes with production traffic over resources.
 
-We have found that running multiple such migrations concurrently increases resource competition substantially, and yields with overall higher wall clock migrations runtime compared with sequential execution.
+Generally speaking, running multiple such migrations concurrently increases resource competition substantially, and yields with overall higher wall clock migrations runtime compared with sequential execution. However, this depends on the _phases_ of the running migrations, as explained next.
 
-## Cases for concurrent migrations, supported by Vitess
+## Phases of a Vitess migration
+
+A `vitess` `ALTER TABLE` migration runs through several phases, and the two notable ones are:
+
+- The copy phase
+- The tailing phase
+
+While the two interleave to some extent, it is illustrative to think of a migration as first copying the already existing rows of a table into the shadow table, then proceeding to tail the changelog (the binary logs) and apply events onto the shadow table.
+
+The copy phase is generally a heavyweight operation, as it incurs a massive copy of data in a greedy (though throttled) approach. The tailing phase could be intensive or relaxed, depending on the incoming production traffic (`INSERT`, `DELETE`, `UPDATE`) to the migrated table.
+
+Running two concurrent copy phases is, generally speaking, a very heavyweight operation and the two tasks interfere with each other. However, running two or more concurrent tailing phases could be lightweight, depending on incoming traffic.
+
+## Types of migrations that may run concurrnetly
 
 There are valid, even essential cases to running multiple migrations concurrently. Vitess supports the following scenarios:
 
 - Even though a long running `ALTER` may be running, a `CREATE` or `DROP` can be issued concurrently, with little to no effect on the migration and without competing over resources.
 - There can be an urgent need to [revert a migration](../revertible-migrations). Vitess can allow reverting a migration (or even multiple migrations) even as some other unrelated migration is in process.
+- Two `vitess` migrations could run concurrently: `vitess` will make sure only a single copy-phase runs at a time, but as many (up to some limit, in the dozens) tail phases may run concurrently to each other.
+  This plays well with [postponed migrations](../postponed-migrations).
 
 ## Running a concurrent migration
 
@@ -46,7 +61,6 @@ vtctl ApplySchema -- --skip_preflight --ddl_strategy "vitess --allow-concurrent"
 To clarify:
 
 - `gh-ost` and `pt-osc` `ALTER` migrations are not eligible to run concurrently
-- A "normal" `vitess` `ALTER` migration is not eligible to run concurrently. A `REVERT` of a `vitess` migration _is_ eligible though.
 
 ## Scheduling notes
 

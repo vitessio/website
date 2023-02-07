@@ -52,7 +52,7 @@ buffering:
   requirements. Be aware, if your MySQL client has  `write_timeout` or
   `read_timeout` settings those values should be greater than the
   `buffer_max_failover_duration`.
-  * `--buffer_min_time_between_failover`: Default `1m`. If consecutive
+  * `--buffer_min_time_between_failovers`: Default `1m`. If consecutive
   fail overs for a shard happens within less than this duration, do **not**
   buffer again. The purpose of this setting is to avoid consecutive fail over
   events where vtgate may be buffering, but never purging the buffer.
@@ -113,9 +113,9 @@ query processing. Each query will consume a slot from the configured
 `buffer_size` and will be paused for the duration of `buffer_window` before
 errors are returned. Once the failover event completes, the buffer will begin to
 drain at a concurrency set by the `buffer_drain_concurrency` value. Next a
-countdown timer will start set by `buffer_min_time_between_failover`. During
+countdown timer will start set by `buffer_min_time_between_failovers`. During
 this period any future buffers will be disabled. Once the
-`buffer_min_time_between_failover` timer expires, buffering will be enabled
+`buffer_min_time_between_failovers` timer expires, buffering will be enabled
 once again.
 
 ## Potential Errors

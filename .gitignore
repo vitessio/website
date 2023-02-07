@@ -1,5 +1,5 @@
 node_modules/
-public/
+/public
 resources/
 !content/en/docs/resources
 

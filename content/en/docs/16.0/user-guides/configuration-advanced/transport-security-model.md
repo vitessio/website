@@ -1,6 +1,6 @@
 ---
 title: Securing Vitess Using TLS
-weight: 25
+weight: 60
 ---
 
 ## Introduction
@@ -267,7 +267,7 @@ Now, we can add the options to vtgate to use the above private key and server ce
 You can now start/restart the vtgate instance. Any vtgate connections from now on will be required to use TLS, so you may have to reconfigure your applications/clients. In addition, to avoid man-in-the-middle attacks, you may want the clients to verify the server by validating the server certificate against the CA cert. 
 {{< /info >}}
 
-Here is an example using the MySQL CLI client.  Exact options will vary between MySQL versions, this is using a recent (8.0.21) MySQL client:
+Here is an example using the MySQL CLI client.  Exact options will vary between MySQL versions, this is using MySQL (8.0.21) client:
 
 ```bash
   $ cp /home/user/CA/pki/ca.crt /var/tmp/ca.crt
@@ -341,7 +341,7 @@ Generate a server certificate for our MySQL instance using our CA:
 
 Copy the files `/home/user/CA/pki/private/mysql1.key` and `/home/user/CA/pki/issued/mysql1.crt` to the MySQL server in the appropriate locations, securing their ownership and permissions appropriately.
 
-Configure the MySQL server options `ssl-key` and `ssl-cert` appropriately to point to where you placed the private key and certificate above. 
+Configure the MySQL server options `ssl-key` and `ssl-cert` appropriately to point to where you placed the private key and certificate above. You can read more about it [here](https://dev.mysql.com/doc/mysql-security-excerpt/8.0/en/using-encrypted-connections.html)
 
 Note that these options do not require clients to use TLS, but is optional. If you need to require all TCP/IP clients to use TLS, you can use the MySQL server option `require_secure_transport`, or you can enforce it on a per MySQL user basis by using the `REQUIRE SSL` option when creating or altering a MySQL-level user. See the MySQL documentation for details.
 
@@ -489,6 +489,12 @@ Conversely, if you have configured the TLS parameters on the vtgate side and the
   vttablet: rpc error: code = Unavailable desc = all SubConns are in TransientFailure, latest connection error: connection error: desc = "transport: authentication handshake failed: tls: first record does not look like a TLS handshake"
 ```
 
+In case of VTOrc, you will need to add following to VTOrc instance to successfully connect to this vttablet instance
+
+```
+  --tablet_manager_grpc_server_name vttablet1 --tablet_manager_grpc_ca /home/user/config/ca.crt
+```
+
 #### vttablet to vtablet:  vreplication within or across shards
 
 For vreplication to work between vttablet instances once the gRPC server TLS options above are activated, you will need to add the following additional vttablet options:
@@ -514,9 +520,9 @@ unable to connect to your vttablet(s).
   --tablet_grpc_server_name vttablet1 --tablet_grpc_ca /home/user/config/ca.crt --tablet_manager_grpc_server_name vttablet1 --tablet_manager_grpc_ca /home/user/config/ca.crt
 ```
 
-### vtctlclient to vtctld
+### vtctldclient to vtctld
 
-The communication from vtctlclient to vtctld is also via gRPC, so the method for securing it is similar to vtctld to vttablet above. 
+The communication from vtctldclient to vtctld is also via gRPC, so the method for securing it is similar to vtctld to vttablet above.
 
 Generate a server certificate for vtctld:
 
@@ -604,7 +610,7 @@ Add TLS gRPC server options to vtctld commandline and restart vtctld:
   --grpc_cert /home/user/config/vtctld1.crt --grpc_key /home/user/config/vtctld1.key
 ```
 
-At this point, all vtctlclient connections to vtctld will need the appropriate additional TLS gRPC options, or they will fail.  Add these options:
+At this point, all vtctldclient connections to vtctld will need the appropriate additional TLS gRPC options, or they will fail.  Add these options:
 
 ```
   --vtctld_grpc_ca /home/user/config/ca.crt --vtctld_grpc_server_name vtctld1
@@ -624,7 +630,7 @@ It should be noted that regardless of the implementation, no sensitive data is s
 
 ### Configuring etcd for secure connections
 
-We will not cover setting up `etcd` with certificates in this guide. You can consult the `etcd` documenation [here](https://etcd.io/docs/v3.2.17/op-guide/security/). Note that you can use `easy-rsa` as above to generate your server private key and certificate pairs. If you do not require client authentication, that is sufficient, and you then just have to distribute your CA certificate (`/home/user/CA/pki/ca.crt` in the examples above) to your clients, and proceed as in the next section.
+We will not cover setting up `etcd` with certificates in this guide. You can consult the `etcd` documenation [here](https://etcd.io/docs/v3.5/op-guide/security/). Note that you can use `easy-rsa` as above to generate your server private key and certificate pairs. If you do not require client authentication, that is sufficient, and you then just have to distribute your CA certificate (`/home/user/CA/pki/ca.crt` in the examples above) to your clients, and proceed as in the next section.
 
 ### Configuring secure connectivity between vtgate/vttablet/vtctld and etcd
 

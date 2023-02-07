@@ -6,7 +6,7 @@ weight: 11
 Creating a lookup vindex after the main table already contains rows does not automatically backfill the lookup table for the existing entries.
 Only newer inserts cause automatic population of the lookup table.
 
-This backfill can be set up using the [CreateLookupVindex](#CreateLookupVindex) command covered below.
+This backfill can be set up using the [CreateLookupVindex](#createlookupvindex) command covered below.
 
 ### Manual Backfill Checklist
 

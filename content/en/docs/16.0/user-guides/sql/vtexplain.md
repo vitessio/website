@@ -15,7 +15,7 @@ If you're already running a cluster, you can also use the [VEXPLAIN QUERIES|ALL|
 
 You can find a prebuilt binary version of the VTExplain tool in [the most recent release of Vitess](https://github.com/vitessio/vitess/releases/).
 
-You can also build the `vtexplain` binary in your environment. To build this binary, refer to the [build guide](../../../contributing) for your OS.
+You can also build the `vtexplain` binary in your environment. To build this binary, refer to the [build guide](/docs/contributing) for your OS.
 
 ## Overview
 
@@ -138,29 +138,13 @@ vtexplain --shards 8 --vschema-file vschema.json --schema-file schema.sql --repl
 ----------------------------------------------------------------------
 SELECT * from users
 
-1 mainkeyspace/-20: SET collation_connection = utf8mb4_general_ci
-1 mainkeyspace/-20: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/-20: select * from users limit 10001
-1 mainkeyspace/20-40: SET collation_connection = utf8mb4_general_ci
-1 mainkeyspace/20-40: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/20-40: select * from users limit 10001
-1 mainkeyspace/40-60: SET collation_connection = utf8mb4_general_ci
-1 mainkeyspace/40-60: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/40-60: select * from users limit 10001
-1 mainkeyspace/60-80: SET collation_connection = utf8mb4_general_ci
-1 mainkeyspace/60-80: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/60-80: select * from users limit 10001
-1 mainkeyspace/80-a0: SET collation_connection = utf8mb4_general_ci
-1 mainkeyspace/80-a0: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/80-a0: select * from users limit 10001
-1 mainkeyspace/a0-c0: SET collation_connection = utf8mb4_general_ci
-1 mainkeyspace/a0-c0: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/a0-c0: select * from users limit 10001
-1 mainkeyspace/c0-e0: SET collation_connection = utf8mb4_general_ci
-1 mainkeyspace/c0-e0: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/c0-e0: select * from users limit 10001
-1 mainkeyspace/e0-: SET collation_connection = utf8mb4_general_ci
-1 mainkeyspace/e0-: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/e0-: select * from users limit 10001
 
 ----------------------------------------------------------------------
@@ -184,10 +168,8 @@ vtexplain --shards 128 --vschema-file vschema.json --schema-file schema.sql --re
 ----------------------------------------------------------------------
 INSERT INTO users (user_id, name) VALUES(1, 'john')
 
-1 mainkeyspace/22-24: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/22-24: begin
 1 mainkeyspace/22-24: insert into users_name_idx(`name`, user_id) values ('john', 1)
-2 mainkeyspace/16-18: SET collation_connection = utf8mb4_general_ci
 2 mainkeyspace/16-18: begin
 2 mainkeyspace/16-18: insert into users(user_id, `name`) values (1, 'john')
 3 mainkeyspace/22-24: commit
@@ -206,7 +188,7 @@ The example above shows how Vitess handles an insert into a table with a seconda
 
 ### Example: Explaining an uneven keyspace
 
-In previous examples, we used the `-shards` flag to set up an evenly-sharded keyspace, where each shard covers the same fraction of the keyrange.
+In previous examples, we used the `--shards` flag to set up an evenly-sharded keyspace, where each shard covers the same fraction of the keyrange.
 `VTExplain` also supports receiving a JSON mapping of shard ranges to see how Vitess would handle a query against an arbitrarly-sharded keyspace.
 
 To do this, we first create a JSON file containing a mapping of keyspace names to shardrange maps.
@@ -300,39 +282,19 @@ vtexplain --vschema-file vschema.json --schema-file schema.sql --ks-shard-map "$
 ----------------------------------------------------------------------
 SELECT * FROM users
 
-1 mainkeyspace/-80: SET collation_connection = utf8mb4_general_ci
-1 mainkeyspace/-80: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/-80: select * from users limit 10001
-1 mainkeyspace/80-90: SET collation_connection = utf8mb4_general_ci
-1 mainkeyspace/80-90: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/80-90: select * from users limit 10001
-1 mainkeyspace/90-a0: SET collation_connection = utf8mb4_general_ci
-1 mainkeyspace/90-a0: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/90-a0: select * from users limit 10001
-1 mainkeyspace/a0-e8: SET collation_connection = utf8mb4_general_ci
-1 mainkeyspace/a0-e8: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/a0-e8: select * from users limit 10001
-1 mainkeyspace/e8-: SET collation_connection = utf8mb4_general_ci
-1 mainkeyspace/e8-: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/e8-: select * from users limit 10001
 
 ----------------------------------------------------------------------
 SELECT * FROM users WHERE id IN (10, 17, 42, 1000)
 
-1 mainkeyspace/-80: SET collation_connection = utf8mb4_general_ci
-1 mainkeyspace/-80: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/-80: select * from users where id in (10, 17, 42, 1000) limit 10001
-1 mainkeyspace/80-90: SET collation_connection = utf8mb4_general_ci
-1 mainkeyspace/80-90: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/80-90: select * from users where id in (10, 17, 42, 1000) limit 10001
-1 mainkeyspace/90-a0: SET collation_connection = utf8mb4_general_ci
-1 mainkeyspace/90-a0: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/90-a0: select * from users where id in (10, 17, 42, 1000) limit 10001
-1 mainkeyspace/a0-e8: SET collation_connection = utf8mb4_general_ci
-1 mainkeyspace/a0-e8: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/a0-e8: select * from users where id in (10, 17, 42, 1000) limit 10001
-1 mainkeyspace/e8-: SET collation_connection = utf8mb4_general_ci
-1 mainkeyspace/e8-: SET collation_connection = utf8mb4_general_ci
 1 mainkeyspace/e8-: select * from users where id in (10, 17, 42, 1000) limit 10001
 
 ----------------------------------------------------------------------

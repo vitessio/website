@@ -4,6 +4,10 @@ description: Low level command to run a query on vreplication related tables
 weight: 70
 ---
 
+{{< warning >}}
+This command was deprecated in v16.0 and will be removed in a future release.
+{{< /warning >}}
+
 ### Command
 
 ```

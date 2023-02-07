@@ -6,7 +6,7 @@ featured: true
 
 Vitess deploys, scales and manages clusters of open-source SQL database instances. Currently, Vitess supports the [MySQL](https://www.mysql.com/) and [Percona Server for MySQL](https://www.percona.com/software/mysql-database/percona-server) databases.
 
-The [VTGate](../../concepts/vtgate/) proxy server advertises its version as MySQL 5.7.
+The [VTGate](../../concepts/vtgate/) proxy server advertises its version as MySQL 8.0.
 
 ## MySQL versions 5.7 to 8.0
 

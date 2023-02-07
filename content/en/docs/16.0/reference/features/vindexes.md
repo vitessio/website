@@ -64,7 +64,7 @@ The lookup table that implements a Lookup Vindex can be sharded or unsharded.  N
 
 Vitess allows for the transparent population of these lookup table rows by assigning an owner table, which is the main table that requires this lookup. When a row is inserted into this owner table, the lookup row for it is created in the lookup table. The lookup row is also deleted upon a delete of the corresponding row in the owner table. These essentially result in distributed transactions, which traditionally require 2PC to guarantee atomicity.
 
-Consistent lookup vindexes use an alternate approach that makes use of careful locking and transaction sequences to guarantee consistency without using 2PC. This gives the best of both worlds, with the benefit of a consistent cross-shard vindex without paying the price of 2PC. To read more about what makes a consistent lookup vindex different from a standard lookup vindex read our [consistent lookup vindexes design documentation](../../../design-docs/query-serving/clookup-vindex/).
+Consistent lookup vindexes use an alternate approach that makes use of careful locking and transaction sequences to guarantee consistency without using 2PC. This gives the best of both worlds, with the benefit of a consistent cross-shard vindex without paying the price of 2PC. To read more about what makes a consistent lookup vindex different from a standard lookup vindex read our [consistent lookup vindexes design documentation](https://github.com/vitessio/vitess/issues/4855).
 
 There are currently two vindex types in Vitess for consistent lookup:
 
@@ -170,7 +170,7 @@ Vindex Type | Cost
 
 In the case of a simple select, Vitess scans the WHERE clause to match references to Vindex columns and chooses the best one to use. If there is no match and the query is simple without complex constructs like aggregates, etc., it is sent to all shards.
 
-Vitess can handle more complex queries. For now, refer to the [design doc](https://github.com/vitessio/vitess/blob/main/doc/V3HighLevelDesign.md) for background information on how it handles them.
+Vitess can handle more complex queries with the new Gen4 planner.
 
 #### Insert
 
