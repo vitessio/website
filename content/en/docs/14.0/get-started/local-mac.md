@@ -20,7 +20,7 @@ $ bash brew-install.sh
 
 ## Install MySQL and etcd
 
-Once brew is installed you will need to install some dependencies for Vitess. Vitess supports the databases listed [here](../../../overview/supported-databases/): 
+Once brew is installed you will need to install some dependencies for Vitess. Vitess supports the databases listed [here](../../overview/supported-databases/):
 
 ```sh
 $ brew install automake go mysql@5.7 mysql-client etcd

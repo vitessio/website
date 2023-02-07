@@ -1,5 +1,5 @@
 ---
-title: Backup and Restore
+title: Overview
 weight: 1
 aliases: ['/docs/user-guides/backup-and-restore/']
 ---
@@ -9,8 +9,6 @@ Backup and Restore are integrated features provided by tablets managed by Vitess
 ## Concepts
 
 Vitess supports pluggable interfaces for both [Backup Storage Services](https://github.com/vitessio/vitess/blob/main/go/vt/mysqlctl/backupstorage/interface.go) and [Backup Engines](https://github.com/vitessio/vitess/blob/main/go/vt/mysqlctl/backupengine.go).
-
-Before backing up or restoring a tablet, you need to ensure that the tablet is aware of the Backup Storage system and Backup engine that you are using. To do so, use the following command-line flags when starting a vttablet or vtctld that has access to the location where you are storing backups.
 
 ### Backup Storage Services
 
@@ -28,14 +26,29 @@ The engine is the techology used for generating the backup. Currently Vitess has
 * Builtin: Shutdown an instance and copy all the database files (default)
 * XtraBackup: An online backup using Percona's [XtraBackup](https://www.percona.com/software/mysql-database/percona-xtrabackup)
 
-## VTTablet and Vtctld configuration
+## Vtbackup, VTTablet and Vtctld
 
-The following options can be used to configure VTTablet and Vtctld for backups:
+Vtbackup, VTTablet, and Vtctld may all participate in backups and restores.
+
+ * Vtbackup is a standalone program that restores the last backup into an empty mysqld installation, replicates new changes into that installation, and takes a new backup from that installation.
+ * VTTablet can be configured to restore from a backup, or to take a new backup.
+ * Vtctld can be instructed to take backups with commands like `Backup` and `BackupShard`.
+
+### Configuration
+
+Before backing up or restoring a tablet, you need to ensure that the tablet is aware of the Backup Storage system and Backup Engine that you are using.
+
+To do so, use command-line flags to configure vtbackup, vttablet, or vtctld programs that have access to the location where you are storing backups.
+
+__Common flags:__
+
+All three programs can be made aware of Backup Engine and Backup Storage using these common flags.
 
 <table class="responsive">
   <thead>
     <tr>
-      <th colspan="2">Flags</th>
+      <th>Name</th>
+      <th>Definition</th>
     </tr>
   </thead>
   <tbody>
@@ -64,27 +77,20 @@ The following options can be used to configure VTTablet and Vtctld for backups:
       </td>
     </tr>
     <tr>
-      <td><code>backup_storage_hook</code></td>
-      <td>If set, the content of every file to backup is sent to a hook. The
-        hook receives the data for each file on stdin. It should echo the
-        transformed data to stdout. Anything the hook prints to stderr will
-        be printed in the vttablet logs.<br>
-        Hooks should be located in the <code>vthook</code> subdirectory of the
-        <code>VTROOT</code> directory.<br>
-        The hook receives a <code>-operation write</code> or a
-        <code>-operation read</code> parameter depending on the direction
-        of the data processing. For instance, <code>write</code> would be for
-        encryption, and <code>read</code> would be for decryption.</br>
-      </td>
-    </tr>
-    <tr>
       <td><code>backup_storage_compress</code></td>
       <td>This flag controls if the backups are compressed by the Vitess code.
         By default it is set to true. Use
         <code>--backup_storage_compress=false</code> to disable.</br>
-        This is meant to be used with a <code>--backup_storage_hook</code>
-        hook that already compresses the data, to avoid compressing the data
-        twice.
+      </td>
+    </tr>
+    <tr>
+      <td><code>backup_storage_block_size</code></td>
+      <td>If <code>--backup_storage_compress</code> is true, <code>backup_storage_block_size</code> sets the block size in bytes to use while compressing (default is 250000).
+      </td>
+    </tr>
+    <tr>
+      <td><code>backup_storage_number_blocks</code></td>
+      <td>If <code>--backup_storage_compress</code> is true, <code>backup_storage_number_blocks</code> sets the number of blocks that can be processed, in parallel, before the writer blocks, during compression. It should be equal to the number of CPUs available for compression. (default 2)
       </td>
     </tr>
     <td><code>compression-level</code></td>
@@ -167,18 +173,6 @@ The following options can be used to configure VTTablet and Vtctld for backups:
 	DDL issues.</a></td>
     </tr>
     <tr>
-      <td><code>restore_from_backup</code></td>
-      <td>Indicates that, when started with an empty MySQL instance, the
-        tablet should restore the most recent backup from the specified
-        storage plugin.</td>
-    </tr>
-    <tr>
-      <td><code>restore_from_backup_ts</code></td>
-      <td>If set, restore the latest backup taken at or before this timestamp
-        rather than using the most recent one. Example: ‘2021-04-29.133050’.
-        (Vitess 12.0+)</td>
-    </tr>
-    <tr>
       <td><code>xbstream_restore_flags</code></td>
       <td>The flags to pass to the xbstream command during restore. These should be space separated and will be added to the end of the command. These need to match the ones used for backup e.g. <code>--compress</code> / <code>--decompress</code>, <code>--encrypt</code> / <code>--decrypt</code></td>
     </tr>
@@ -210,6 +204,33 @@ The following options can be used to configure VTTablet and Vtctld for backups:
       <td><code>xtrabackup_prepare_flags</code></td>
       <td>Flags to pass to the prepare command. These should be space separated and will be added to the end of the command.</td>
     </tr> 
+  </tbody>
+</table>
+
+__Restore flags:__
+
+Only VTTablet can be configured to restore from a previous backup. The flags below only apply to VTTablet.
+
+<table class="responsive">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Definition</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>restore_from_backup</code></td>
+      <td>Indicates that, when started with an empty MySQL instance, the
+        tablet should restore the most recent backup from the specified
+        storage plugin. This flag only applies to VTTablet.</td>
+    </tr>
+    <tr>
+      <td><code>restore_from_backup_ts</code></td>
+      <td>If set, restore the latest backup taken at or before this timestamp
+        rather than using the most recent one. Example: ‘2021-04-29.133050’.
+        (Vitess 12.0+)</td>
+    </tr>
   </tbody>
 </table>
 

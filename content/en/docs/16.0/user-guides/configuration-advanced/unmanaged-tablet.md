@@ -1,6 +1,6 @@
 ---
 title: Unmanaged Tablet
-weight: 15
+weight: 45
 aliases: ['/docs/user-guides/unmanaged-tablet/'] 
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: Authorization
-weight: 3
+weight: 10
 aliases: ['/docs/user-guides/authorization/'] 
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: Errors
 description: Detailed information about errors that the user might run into
-weight: 5 
+weight: 6
 ---
 
