@@ -1,7 +1,7 @@
 ---
 title: Unmanaged Tablet
 weight: 45
-aliases: ['/docs/user-guides/unmanaged-tablet/'] 
+aliases: ['/docs/user-guides/unmanaged-tablet/']
 ---
 
 {{< info >}}
@@ -24,7 +24,7 @@ mysql commerce -e 'show tables'
 mysql -h 127.0.0.1 -P 5726 -umsandbox -pmsandbox legacy -e 'show tables'
 ```
 
-Output:
+<br>Output:
 
 ```text
 ~/vitess/examples/local$ source env.sh
@@ -123,39 +123,29 @@ Move the table:
 ```bash
 vtctlclient MoveTables -- --source legacy --tables 'legacytable' Create commerce.legacy2commerce 
 ```
-
+<br>
 Monitor the workflow:
 
-use 'Show' or 'Progress'
-
+use `Show` or `Progress`
 ```bash
 vtctlclient MoveTables -- Show commerce.legacy2commerce
 vtctlclient MoveTables -- Progress commerce.legacy2commerce
 ```
 
-You can also use `Workflow` command to get the progress as it has much more info as well.
+You can also use `Workflow show` command to get the progress as it has much more info as well.
 
 ```bash
 vtctlclient Workflow commerce.legacy2commerce show
 ```
-
-The workflow might fail for variety of reasons. For example, it might fail due to 'GTID_MODE' is not set correctly on unmanaged server. In order to move tables we need to set 'GTID_MODE' to 'ON'. Follow instructions [here](https://dev.mysql.com/doc/refman/5.7/en/replication-mode-change-online-enable-gtids.html) to set
-it to 'ON'.
-
-Switch traffic:
-
+<br>Switch traffic:
 ```bash
 vtctlclient MoveTables -- --tablet_type=rdonly,replica SwitchTraffic commerce.legacy2commerce
 ```
-
-Complete the MoveTables:
-
+<br>Complete the MoveTables:
 ```bash
 vtctlclient MoveTables Complete commerce.legacy2commerce
 ```
-
-Verify that the table was moved:
-
+<br>Verify that the table was moved:
 ```bash
 source env.sh
 
@@ -165,8 +155,7 @@ mysql commerce -e 'show tables'
 # verify my unmanaged mysql is running
 mysql -h 127.0.0.1 -P 5726 -umsandbox -pmsandbox legacy -e 'show tables'
 ```
-
-Output:
+<br>Output:
 
 ```text
 ~/vitess/examples/local$ source env.sh
