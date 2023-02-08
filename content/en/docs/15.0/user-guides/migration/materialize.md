@@ -205,7 +205,8 @@ $ vtctlclient Workflow -- commerce.copy_corder_1 show
                             "Table": "corder_view",
                             "LastPK": "fields:<name:\"order_id\" type:INT64 > rows:<lengths:5 values:\"37014\" >"
                         }
-                    ]
+                    ],
+                    "RowsCopied": 1000
                 }
             ],
             "TabletControls": null,
