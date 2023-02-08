@@ -1,5 +1,5 @@
 ---
-title: 私有云
+title: 云原生
 ---
 
 Vitess非常适合云部署，因为它使数据库能够逐步增加容量。运行Vitess的最简单方法是通过Kubernetes。

@@ -1,6 +1,6 @@
 ---
 title: v16.0 (Development)
-description: Under construction, development release. 因为这些文档不维护，所以它们是旧的。你想了解的有关世界上最具扩展性的开源MySQL平台的一切，都在这里
+description: 正在建设之中, 开发人发布. 因为这些文档不维护，所以它们是旧的。你想了解的有关世界上最具扩展性的开源MySQL平台的一切，都在这里
 notoc: true
 cascade:
   version: v16.0

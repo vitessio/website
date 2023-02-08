@@ -1,5 +1,5 @@
 ---
-title: Reference
+title: 参考
 description: Detailed information about specific Vitess functionality
 weight: 5 
 ---
