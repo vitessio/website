@@ -20,8 +20,9 @@ Start by copying the [`region_sharding` examples](https://github.com/vitessio/vi
 included with Vitess to your preferred location and running the `101_initial_cluster.sh` script:
 
 ```bash
-cp -r <vitess source path>/examples/region_sharding ~/my-vitess-region_sharding-example
-cd ~/my-vitess-region_sharding-example
+cp -r <vitess source path>/examples ~/my-vitess-example/examples
+cp -r <vitess source path>/web ~/my-vitess-example
+cd ~/my-vitess-example/examples/region_sharding
 ./101_initial_cluster.sh
 ```
 

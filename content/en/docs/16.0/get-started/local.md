@@ -111,9 +111,9 @@ You are now ready to start your first cluster! Open a new terminal window to ens
 Start by copying the local examples included with Vitess to your preferred location. For our first example we will deploy a [single unsharded keyspace](../../concepts/keyspace). The file `101_initial_cluster.sh` is for example `1` phase `01`. Lets execute it now:
 
 ```sh
-mkdir -p ~/my-vitess-example/examples/local
-cp -r /usr/local/vitess/examples/local ~/my-vitess-example/examples
-cp -r /usr/local/vitess/web ~/my-vitess-example
+mkdir -p ~/my-vitess-example/examples
+cp -r <vitess source path>/examples ~/my-vitess-example/examples
+cp -r <vitess source path>/web ~/my-vitess-example
 cd ~/my-vitess-example/examples/local
 ./101_initial_cluster.sh
 ```
