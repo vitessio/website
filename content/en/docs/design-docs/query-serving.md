@@ -26,3 +26,5 @@ Some of these documents might not be representative of the current state of Vite
 - [RFC: SET Statements](https://github.com/vitessio/vitess/issues/6107)
 - [RFC: Locking functions](https://github.com/vitessio/vitess/issues/6367)
 - [RFC: Replica transactions](https://github.com/vitessio/vitess/issues/6166)
+- [Consistent Lookup Vindexes](https://github.com/vitessio/vitess/issues/4855)
+- [Owned Primary Vindex](https://github.com/vitessio/vitess/blob/main/doc/design-docs/OwnedPrimaryVindexes.md)
