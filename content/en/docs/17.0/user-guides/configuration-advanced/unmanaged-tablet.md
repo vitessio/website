@@ -1,7 +1,7 @@
 ---
 title: Unmanaged Tablet
 weight: 45
-aliases: ['/docs/user-guides/unmanaged-tablet/'] 
+aliases: ['/docs/user-guides/unmanaged-tablet/']
 ---
 
 {{< info >}}
@@ -24,7 +24,7 @@ mysql commerce -e 'show tables'
 mysql -h 127.0.0.1 -P 5726 -umsandbox -pmsandbox legacy -e 'show tables'
 ```
 
-Output:
+<br>Output:
 
 ```text
 ~/vitess/examples/local$ source env.sh
@@ -83,7 +83,7 @@ vttablet \
  --init_populate_metadata &
 ```
 
-Note that if your tablet is using a MySQL instance type where you do not have `SUPER` privileges to the database 
+Note that if your tablet is using a MySQL instance type where you do not have `SUPER` privileges to the database
 (e.g. AWS RDS, AWS Aurora or Google CloudSQL), you should omit the `--init_populate_metadata` flag. The `--init_populate_metadata` flag should only be enabled if the cluster is being managed through Vitess.
 
 You should be able to see debug information written to screen confirming Vitess can reach the unmanaged server. A common problem is that you may need to change the authentication plugin to `mysql_native_password` (MySQL 8.0).
@@ -120,25 +120,32 @@ Empty set (0.01 sec)
 ## Move legacytable to the commerce keyspace
 
 Move the table:
-
 ```bash
 vtctlclient MoveTables -- --source legacy --tables 'legacytable' Create commerce.legacy2commerce 
 ```
+<br>
+Monitor the workflow:
 
-Switch traffic:
+use `Show` or `Progress`
+```bash
+vtctlclient MoveTables -- Show commerce.legacy2commerce
+vtctlclient MoveTables -- Progress commerce.legacy2commerce
+```
 
+You can also use the [`Workflow show`](../../../reference/vreplication/workflow/) command to get the progress as it has much more info as well.
+
+```bash
+vtctlclient Workflow commerce.legacy2commerce show
+```
+<br>Switch traffic:
 ```bash
 vtctlclient MoveTables -- --tablet_type=rdonly,replica SwitchTraffic commerce.legacy2commerce
 ```
-
-Complete the MoveTables
-
+<br>Complete the `MoveTables`:
 ```bash
 vtctlclient MoveTables Complete commerce.legacy2commerce
 ```
-
-Verify that the table was moved:
-
+<br>Verify that the table was moved:
 ```bash
 source env.sh
 
@@ -148,8 +155,7 @@ mysql commerce -e 'show tables'
 # verify my unmanaged mysql is running
 mysql -h 127.0.0.1 -P 5726 -umsandbox -pmsandbox legacy -e 'show tables'
 ```
-
-Output:
+<br>Output:
 
 ```text
 ~/vitess/examples/local$ source env.sh
