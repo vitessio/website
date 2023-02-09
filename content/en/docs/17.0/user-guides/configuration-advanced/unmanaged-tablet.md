@@ -132,7 +132,7 @@ vtctlclient MoveTables -- Show commerce.legacy2commerce
 vtctlclient MoveTables -- Progress commerce.legacy2commerce
 ```
 
-You can also use `Workflow show` command to get the progress as it has much more info as well.
+You can also use the [`Workflow show`](../../../reference/vreplication/workflow/) command to get the progress as it has much more info as well.
 
 ```bash
 vtctlclient Workflow commerce.legacy2commerce show
@@ -141,7 +141,7 @@ vtctlclient Workflow commerce.legacy2commerce show
 ```bash
 vtctlclient MoveTables -- --tablet_type=rdonly,replica SwitchTraffic commerce.legacy2commerce
 ```
-<br>Complete the MoveTables:
+<br>Complete the `MoveTables`:
 ```bash
 vtctlclient MoveTables Complete commerce.legacy2commerce
 ```
