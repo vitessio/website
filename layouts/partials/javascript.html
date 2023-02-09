@@ -83,6 +83,12 @@ $versions.current}}
             wildcard: lunr.Query.wildcard.TRAILING,
             presence: lunr.Query.presence.REQUIRED,
           });
+          this.field("content", {
+            boost: 20,
+            usePipeline: true,
+            wildcard: lunr.Query.wildcard.TRAILING,
+            presence: lunr.Query.presence.REQUIRED,
+          });
           this.field("summary", {
             boost: 10,
           });
@@ -96,6 +102,7 @@ $versions.current}}
                   version: doc.version,
                   href: doc.href,
                   summary: doc.summary,
+                  content: doc.content,
                   path: doc.path,
                 };
               }
@@ -109,6 +116,7 @@ $versions.current}}
                   version: doc.version,
                   href: doc.href,
                   summary: doc.summary,
+                  content: doc.content,
                   path: doc.path,
                 };
               }

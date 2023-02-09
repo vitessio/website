@@ -12,7 +12,7 @@ This document covers the way the [VTexplain tool](../../../reference/programs/vt
 
 You can find a prebuilt binary version of the VTexplain tool in [the most recent release of Vitess](https://github.com/vitessio/vitess/releases/).
 
-You can also build the `vtexplain` binary in your environment. To build this binary, refer to the [build guide](../../../contributing) for your OS.
+You can also build the `vtexplain` binary in your environment. To build this binary, refer to the [build guide](../../../../contributing) for your OS.
 
 ## Overview
 
