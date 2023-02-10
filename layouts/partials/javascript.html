@@ -30,6 +30,7 @@ $versions.current}}
       const currentLocation = String(currentUrl).split("/");
       const currentVersion = currentLocation[2];
       const loadingIcon = document.createElement("i");
+      const spinnerContainer = document.createElement("p");
       const input = document.getElementById("search-bar");
       const target = document.querySelector(".is-search-result");
       const searchResultCount = document.querySelector(".results");
@@ -43,6 +44,9 @@ $versions.current}}
       // set class name for icon
       loadingIcon.className = "fa fa-spinner fa-spin is-size-4";
 
+      // set class name for spinner
+      spinnerContainer.className = "has-text-centered";
+
       input.addEventListener(
         "input",
         function (event) {
@@ -54,7 +58,8 @@ $versions.current}}
           title.textContent = " ";
 
           // show loading state
-          searchResultCount.appendChild(loadingIcon);
+          spinnerContainer.appendChild(loadingIcon);
+          searchResultCount.appendChild(spinnerContainer);
 
           // automatically show search result when the input receives a value
           query = keywords;
