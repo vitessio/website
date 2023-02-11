@@ -81,7 +81,7 @@ vttablet \
  -db_allprivs_password msandbox \
  -init_db_name_override legacy \
  -init_populate_metadata \
- --disable_active_reparents &
+ -disable_active_reparents &
 ```
 
 Note that if your tablet is using a MySQL instance type where you do not have `SUPER` privileges to the database 
