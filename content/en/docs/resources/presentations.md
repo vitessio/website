@@ -4,6 +4,10 @@ weight: 1
 aliases: ['/resources/presentations.html', '/docs/resources/presentations/']
 ---
 
+## FOSDEM 2023
+
+[Life of a Query in Vitess](https://ftp.fau.de/fosdem/2023/K.3.201/life_query_vitess.webm) - Harshit Gangal, PlanetScale
+
 ## KubeCon NA 2022
 
 One VTOrc To Rule Them All – High Availability In a Distributed Database System - Deepthi Sigireddi & Manan Gupta, PlanetScale
