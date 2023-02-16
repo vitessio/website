@@ -29,20 +29,37 @@ $versions.current}}
       const currentUrl = window.location.pathname;
       const currentLocation = String(currentUrl).split("/");
       const currentVersion = currentLocation[2];
+      const loadingIcon = document.createElement("i");
+      const spinnerContainer = document.createElement("p");
       const input = document.getElementById("search-bar");
       const target = document.querySelector(".is-search-result");
       const searchResultCount = document.querySelector(".results");
       const template = document.getElementById("is-search-template");
+      const title = document.getElementById("search-results");
       const interval = 500;
       let searchPopover = document.querySelector(".search-popover");
       let query = input.value.trim();
       let parse = {};
+
+      // set class name for icon
+      loadingIcon.className = "fa fa-spinner fa-spin is-size-4";
+
+      // set class name for spinner
+      spinnerContainer.className = "has-text-centered";
+
       input.addEventListener(
         "input",
         function (event) {
           event.preventDefault();
           clearTimeout(debounceTimer);
           const keywords = input.value.trim();
+
+          // clear search results title
+          title.textContent = " ";
+
+          // show loading state
+          spinnerContainer.appendChild(loadingIcon);
+          searchResultCount.appendChild(spinnerContainer);
 
           // automatically show search result when the input receives a value
           query = keywords;
@@ -55,10 +72,8 @@ $versions.current}}
           }
 
           while (target.firstChild) {
-            if (searchResultCount.firstChild) {
-              searchResultCount.firstChild.textContent = "Loading...";
-            }
             searchResultCount.firstChild.nextSibling.textContent = " ";
+            searchResultCount.firstChild.textContent = " ";
 
             target.removeChild(target.firstChild);
           }
@@ -133,11 +148,9 @@ $versions.current}}
 
         if ("content" in template) {
           // show result count
-          const title = document.createElement("h6");
+          const title = document.getElementById("search-results");
           const subTitle = document.createElement("h6");
-          title.id = "search-results";
           subTitle.id = "search-results";
-          title.className = "title is-5";
           subTitle.className = "title is-5";
 
           if (results.length == 0) {
