@@ -6,7 +6,7 @@ aliases: ['/docs/user-guides/topology-service/','/docs/reference/topology-servic
 
 This document describes the Topology Service, a key part of the Vitess architecture. This service is exposed to all Vitess processes, and is used to store small pieces of configuration data about the Vitess cluster, and provide cluster-wide locks. It also supports watches, and primary election.
 
-Vitess uses a plugin implementation to support multiple backend technologies for the Topology Service (etcd, ZooKeeper, Consul). Concretely, the Topology Service handles two functions: it is both a [distributed lock manager](http://en.wikipedia.org/wiki/Distributed_lock_manager) and a repository for topology metadata. In earlier versions of Vitess, the Topology Serice was also referred to as the Lock Service.
+Vitess uses a plugin implementation to support multiple backend technologies for the Topology Service (etcd, ZooKeeper, Consul, Kubernetes). Concretely, the Topology Service handles two functions: it is both a [distributed lock manager](http://en.wikipedia.org/wiki/Distributed_lock_manager) and a repository for topology metadata. In earlier versions of Vitess, the Topology Serice was also referred to as the Lock Service.
 
 ## Requirements and usage
 
