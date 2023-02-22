@@ -141,7 +141,7 @@ The change in isolation level only changes the shard level transaction isolation
 More details about the isolation level can be read in the [MySQL reference manual](https://dev.mysql.com/doc/refman/8.0/en/set-transaction.html).
 
 ### Views
-Views are supported for sharded keyspaces as an experimental feature, it has to be enabled using: `--enable-views` on VTGate and `--queryserver-enable-views` on VTTablet. Views are only readable.
+Views are supported for sharded keyspaces as an experimental feature, it has to be enabled using: `--enable-views` on VTGate and `--queryserver-enable-views` on VTTablet.
 
 Here is an example of how to create a view:
 
@@ -165,6 +165,8 @@ SELECT id FROM (SELECT id, col FROM user) as my_view;
 > - If you reshard your Vitess cluster, you will have to recreate your views. All previous views are not copied to the new shards.
 >
 > - The table referenced by the view must belong to the same keyspace as the view's.
+>
+> - Views are only readable. Updatable views are not supported.
 
 The [RFC for views support](https://github.com/vitessio/vitess/issues/11559) is available on GitHub.
 

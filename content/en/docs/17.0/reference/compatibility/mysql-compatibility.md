@@ -165,6 +165,8 @@ SELECT id FROM (SELECT id, col FROM user) as my_view;
 > - If you reshard your Vitess cluster, you will have to recreate your views. All previous views are not copied to the new shards.
 > 
 > - The table referenced by the view must belong to the same keyspace as the view's.
+>
+> - Views are only readable. Updatable views are not supported.
 
 The [RFC for views support](https://github.com/vitessio/vitess/issues/11559) is available on GitHub.
 
