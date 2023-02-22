@@ -140,6 +140,26 @@ The change in isolation level only changes the shard level transaction isolation
 
 More details about the isolation level can be read in the [MySQL reference manual](https://dev.mysql.com/doc/refman/8.0/en/set-transaction.html).
 
+### Views
+Views are supported for sharded keyspaces, it has to be enabled using: `--enable-views` on VTGate and `--queryserver-enable-views` on VTTablet. Views are only readable.
+
+Here is an example of how to create a view:
+
+```sql
+CREATE VIEW my_view AS SELECT id, col FROM user
+```
+
+When using the view in a `SELECT` statement it will be rewritten to a derived table:
+
+```sql
+-- the query:
+SELECT id FROM my_view
+-- will be rewritten to:
+SELECT id FROM (SELECT id, col FROM user) as my_view;
+```
+
+The [RFC for views support](https://github.com/vitessio/vitess/issues/11559) is available on GitHub.
+
 ## Cross-shard Transactions
 
 Vitess supports multiple [transaction modes](../../../user-guides/configuration-advanced/shard-isolation-atomicity).
