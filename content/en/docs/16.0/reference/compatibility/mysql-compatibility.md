@@ -158,7 +158,7 @@ SELECT id FROM my_view
 SELECT id FROM (SELECT id, col FROM user) as my_view;
 ```
 
-> Once views are enabled, they are managed by Vitess. They do not go through [online schema change](../../user-guides/schema-changes/managed-online-schema-changes/), if enabled.
+> Once views are enabled, they are managed by Vitess. They do not go through [online schema change](../../../user-guides/schema-changes/managed-online-schema-changes/), if enabled.
 
 The [RFC for views support](https://github.com/vitessio/vitess/issues/11559) is available on GitHub.
 
