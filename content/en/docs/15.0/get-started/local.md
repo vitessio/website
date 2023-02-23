@@ -36,7 +36,7 @@ sudo systemctl disable mysql
 sudo systemctl disable etcd
 ```
 
-### Install Node 16.13.0+
+### Install Node 16+
 
 ```
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
@@ -52,8 +52,8 @@ export NVM_DIR="$HOME/.nvm"
 Finally, install [node](https://nodejs.org/):
 
 ```
-nvm install --lts 16.13.0
-nvm use 16.13.0
+nvm install 16
+nvm use 16
 ```
 
 See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
@@ -202,18 +202,6 @@ vtadmin-api is running!
   - API: http://localhost:14200
   - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtadmin-api.out
   - PID: 74039
-
-Installing nvm...
-
-nvm is installed!
-
-Configuring Node.js 16
-
-Downloading and installing node v16.19.1...
-Local cache found: ${NVM_DIR}/.cache/bin/node-v16.19.1-darwin-x64/node-v16.19.1-darwin-x64.tar.xz
-Checksums match! Using existing downloaded archive ${NVM_DIR}/.cache/bin/node-v16.19.1-darwin-x64/node-v16.19.1-darwin-x64.tar.xz
-Now using node v16.19.1 (npm v8.19.3)
-Now using node v16.19.1 (npm v8.19.3)
 
 > vtadmin@0.1.0 build
 > react-scripts build

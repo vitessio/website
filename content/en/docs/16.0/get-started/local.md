@@ -36,7 +36,7 @@ sudo systemctl disable mysql
 sudo systemctl disable etcd
 ```
 
-### Install Node 16.13.0+
+### Install Node 16
 
 ```
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
@@ -52,8 +52,8 @@ export NVM_DIR="$HOME/.nvm"
 Finally, install [node](https://nodejs.org/):
 
 ```
-nvm install --lts 16.13.0
-nvm use 16.13.0
+nvm install --lts 16
+nvm use 16
 ```
 
 See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.

@@ -36,7 +36,7 @@ sudo systemctl disable mysql
 sudo systemctl disable etcd
 ```
 
-### Install Node 16.13.0+
+### Install Node 16+
 
 ```
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
