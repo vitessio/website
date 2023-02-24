@@ -37,12 +37,14 @@ In your shell, execute:
 make docker_run_local
 ```
 
-This will set up a MySQL replication topology, as well as `etcd`, `vtctld` and `vtgate` services. 
+This will set up a MySQL replication topology, as well as `etcd`, `vtctld`, `vtgate`,
+`vtorc`, and `vtadmin` services.
 
-- `vtgate` listens on [http://127.0.0.1:15001/debug/status](http://127.0.0.1:15001/debug/status) 
-- `vtctld` listens on [http://127.0.0.1:15000/debug/status](http://127.0.0.1:15000/debug/status) 
+- `vtgate` listens on [http://127.0.0.1:15001/debug/status](http://127.0.0.1:15001/debug/status)
+- `vtctld` listens on [http://127.0.0.1:15000/debug/status](http://127.0.0.1:15000/debug/status)
 - Control panel is available at [http://localhost:15000/app/](http://localhost:15000/app/)
 - `VTOrc` page is available at [http://localhost:16000](http://localhost:16000)
+- `VTadmin` web application is available [http://localhost:14201](http://localhost:14201)
 
 From within the docker shell, aliases are set up for your convenience. Try the following `mysql` commands to connect to various tablets:
 
