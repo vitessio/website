@@ -42,7 +42,7 @@ sudo systemctl disable etcd
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 ```
 
-Ensure the following is in your bashrc/zshrc or similar. `nvm` automatically adds these:
+Ensure the following is in your bashrc/zshrc or similar. `nvm` automatically attempts adds these there:
 ```
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -52,11 +52,11 @@ export NVM_DIR="$HOME/.nvm"
 Finally, install [node](https://nodejs.org/):
 
 ```
-nvm install --lts 16
+nvm install 16
 nvm use 16
 ```
 
-See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
+See the [vtadmin README](https://github.com/vitessio/vitess/blob/f928f8a211bf352a4272eed84e76bb064df154c2/web/vtadmin/README.md) for more details.
 
 ## Disable AppArmor or SELinux
 
