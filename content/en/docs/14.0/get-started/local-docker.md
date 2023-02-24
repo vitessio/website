@@ -38,7 +38,7 @@ make docker_run_local
 ```
 
 This will set up a MySQL replication topology, as well as `etcd`, `vtctld`, `vtgate`,
-`vtadmin` services.
+and `vtadmin` services.
 
 - `vtgate` listens on [http://127.0.0.1:15001/debug/status](http://127.0.0.1:15001/debug/status)
 - `vtctld` listens on [http://127.0.0.1:15000/debug/status](http://127.0.0.1:15000/debug/status)
