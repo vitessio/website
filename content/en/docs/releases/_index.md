@@ -1,6 +1,6 @@
 ---
 title: Releases
-description: Learn about how Vitess releases
+description: Learn about how Vitess releases work
 weight: 3000
 ---
 
@@ -16,29 +16,27 @@ Each major release is maintained for 1 year.
 ## Release History
 
 ### v16.0
-- **Current version:** v16.0.0
-- **Release date:** 2023-02-28
+- **Current version:** [v16.0.0](https://github.com/vitessio/vitess/releases/tag/v16.0.0) (2023-02-28)
+- **GA release:** [v16.0.0](https://github.com/vitessio/vitess/releases/tag/v16.0.0) (2023-02-28)
 - **End of life:** 2024-02-28
-- **Patch releases:** v16.0.0 
-
-[//]: # (TODO: add a link to the v16.0.0 release above)
+- **Patch releases:** n/a 
 
 ### v15.0
-- **Current version:** v15.0.2
-- **Release date:** 2022-12-14
+- **Current version:** [v15.0.2](https://github.com/vitessio/vitess/releases/tag/v15.0.2) (2022-12-14)
+- **GA release:** [v15.0.0](https://github.com/vitessio/vitess/releases/tag/v15.0.0) (2022-10-25)
 - **End of life:** 2023-10-25
-- **Patch releases:** [v15.0.0](https://github.com/vitessio/vitess/releases/tag/v15.0.0), [v15.0.1](https://github.com/vitessio/vitess/releases/tag/v15.0.1), [v15.0.2](https://github.com/vitessio/vitess/releases/tag/v15.0.2)
+- **Patch releases:** [v15.0.1](https://github.com/vitessio/vitess/releases/tag/v15.0.1), [v15.0.2](https://github.com/vitessio/vitess/releases/tag/v15.0.2)
 
 ### v14.0
-- **Current version:** v14.0.4
-- **Release date:** 2022-11-29
+- **Current version:** [v14.0.4](https://github.com/vitessio/vitess/releases/tag/v14.0.4) (2022-11-29)
+- **GA release:** [v14.0.0](https://github.com/vitessio/vitess/releases/tag/v14.0.0) (2022-06-28)
 - **End of life:** 2023-06-28
-- **Patch releases:** [v14.0.0](https://github.com/vitessio/vitess/releases/tag/v14.0.0), [v14.0.1](https://github.com/vitessio/vitess/releases/tag/v14.0.1), [v14.0.2](https://github.com/vitessio/vitess/releases/tag/v14.0.2), [v14.0.3](https://github.com/vitessio/vitess/releases/tag/v14.0.3), [v14.0.4](https://github.com/vitessio/vitess/releases/tag/v14.0.4)
+- **Patch releases:** [v14.0.1](https://github.com/vitessio/vitess/releases/tag/v14.0.1), [v14.0.2](https://github.com/vitessio/vitess/releases/tag/v14.0.2), [v14.0.3](https://github.com/vitessio/vitess/releases/tag/v14.0.3), [v14.0.4](https://github.com/vitessio/vitess/releases/tag/v14.0.4)
 
 ### v13.0
-- **Current version:** v13.0.3
-- **Release date:** 2022-09-01
+- **Current version:** [v13.0.3](https://github.com/vitessio/vitess/releases/tag/v13.0.3) (2022-09-01)
+- **GA release:** [v13.0.0](https://github.com/vitessio/vitess/releases/tag/v13.0.0) (2022-02-22)
 - **End of life:** 2023-02-22
-- **Patch releases:** [v13.0.0](https://github.com/vitessio/vitess/releases/tag/v13.0.0), [v13.0.1](https://github.com/vitessio/vitess/releases/tag/v13.0.1), [v13.0.2](https://github.com/vitessio/vitess/releases/tag/v13.0.2), [v13.0.3](https://github.com/vitessio/vitess/releases/tag/v13.0.3)
+- **Patch releases:** [v13.0.1](https://github.com/vitessio/vitess/releases/tag/v13.0.1), [v13.0.2](https://github.com/vitessio/vitess/releases/tag/v13.0.2), [v13.0.3](https://github.com/vitessio/vitess/releases/tag/v13.0.3)
 
 
