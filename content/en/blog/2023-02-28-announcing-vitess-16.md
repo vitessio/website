@@ -2,7 +2,7 @@
 author: 'Vitess Maintainer Team'
 date: 2023-02-28
 slug: '2023-02-28-announcing-vitess-16'
-tags: ['release','Vitess','MySQL','kubernetes','operator','cloud','GKE','sharding']
+tags: ['release','Vitess','MySQL','kubernetes','operator','cloud','GKE','sharding', 'Orchestration', 'Failover', 'High-Availability', 'Backup']
 title: 'Announcing Vitess 16'
 description: "Vitess 16 is now Generally Available"
 ---
@@ -37,6 +37,7 @@ It is now possible to create views that access data across shards and they will 
 Support for native incremental backups and point in time recoveries has been added. It is now possible to take an incremental backup, starting with the last known (full or incremental) backup, 
 and up to either a specified (GTID) position, or the current ("auto") position. Using these incremental backups it is then possible to restore a backup up to a given point in time (GTID position) without 
 relying on a binlog server. Note that this is only supported for the file-based builtin backup method, not for xtrabackup.
+
 A [new `VEXPLAIN` command](https://vitess.io/docs/16.0/user-guides/sql/vexplain/) has been introduced to help the users gain more insight into query planning in Vitess. 
 This gives users the ability to inspect the query plan produced by vtgate, all the queries executed on the MySQL instances, and the MySQL explain output for the executed queries.
 
