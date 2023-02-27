@@ -33,7 +33,11 @@ During the 17th week, the last week of the fourth month, we enter the code freez
 This is usually done right before the weekend, on a Thursday or a Friday.
 
 At this time, the release team creates the release branch (`release-xx.0`) from `main`.
-Creating a release branch implies that `main` moves into the next release cycle.  
+Creating a release branch implies that `main` moves into the next release cycle.
+
+The RC-1 code freeze implies a minor change to the website documentation.
+A new version-specific folder is created for the next release cycle (the one on `main`).
+The current version folder is updated to mention it's in RC-phase. 
 
 The release team freezes the release branch until the RC-1 release.
 This process leaves enough time to the team to fix and avoid unexpected issues.
@@ -69,6 +73,9 @@ This week closes our five month release cycle.
 We publish the GA release of our newest major version.
 
 At the same time, the release team will officially announce the newest release through a blog post, a Slack message, and a Tweet.
+
+The documentation website slightly changes during this phase.
+This release cycle's version-specific documentation is marked as `General Availability` instead of `Release Candidate` and becomes the default documentation.
 
 Step-by-step breakdown of how the release team achieves this step can be found in the [release instructions](https://github.com/vitessio/vitess/blob/main/doc/internal/ReleaseInstructions.md#release).
 
