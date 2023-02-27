@@ -1,5 +1,5 @@
 ---
-title: Release
+title: Releases
 description: Learn about how Vitess releases
 weight: 3000
 ---
