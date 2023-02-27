@@ -36,28 +36,6 @@ sudo systemctl disable mysql
 sudo systemctl disable etcd
 ```
 
-### Install Node 16.13.0+
-
-```
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-```
-
-Ensure the following is in your bashrc/zshrc or similar:
-```
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-```
-
-Finally, install [node](https://nodejs.org/):
-
-```
-nvm install --lts 16.13.0
-nvm use 16.13.0
-```
-
-See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
-
 ## Disable AppArmor or SELinux
 
 AppArmor/SELinux will not allow Vitess to launch MySQL in any data directory by default. You will need to disable it:
@@ -204,6 +182,17 @@ vtadmin-api is running!
   - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtadmin-api.out
   - PID: 74039
 
+Installing nvm...
+
+nvm is installed!
+
+Configuring Node.js 16
+
+Downloading and installing node v16.19.1...
+Local cache found: ${NVM_DIR}/.cache/bin/node-v16.19.1-darwin-x64/node-v16.19.1-darwin-x64.tar.xz
+Checksums match! Using existing downloaded archive ${NVM_DIR}/.cache/bin/node-v16.19.1-darwin-x64/node-v16.19.1-darwin-x64.tar.xz
+Now using node v16.19.1 (npm v8.19.3)
+Now using node v16.19.1 (npm v8.19.3)
 
 > vtadmin@0.1.0 build
 > react-scripts build
