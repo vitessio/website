@@ -13,7 +13,7 @@ Each major release is maintained by the maintainers during 1 year.
 > 
 > The last up-to-date VEP is [VEP #5](https://github.com/vitessio/enhancements/blob/main/veps/vep-5.md).
 
-
+Learn more about how we release a major version of Vitess by reading the [release cycle documentation](./release-cycle.md).
 
 ## Release History
 
