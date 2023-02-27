@@ -56,7 +56,7 @@ nvm install 16
 nvm use 16
 ```
 
-See the [vtadmin README](https://github.com/vitessio/vitess/blob/f928f8a211bf352a4272eed84e76bb064df154c2/web/vtadmin/README.md) for more details.
+See the [vtadmin README](https://github.com/vitessio/vitess/blob/release-14.0/web/vtadmin/README.md) for more details.
 
 ## Disable AppArmor or SELinux
 
