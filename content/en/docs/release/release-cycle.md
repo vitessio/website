@@ -1,6 +1,6 @@
 ---
 title: Release Cycle
-description: Learn about the release cycle of Vitess
+description: Learn how our release cycle works
 weight: 1
 ---
 
@@ -21,23 +21,32 @@ Below is a breakdown of how these weeks are planned.
 The cycle begins as soon as we branch out the previous major version.
 
 At the beginning of the cycle the maintainers gather to establish the roadmap of the upcoming release.
+A [public GitHub project](https://github.com/orgs/vitessio/projects) is then created to track the progress of different teams.
 
 ### Week 2 - 17 (Development)
 
-From the first month of the cycle until the end of the fourth month, the maintainer team contribute to the release according to the roadmap and incoming priorities.
+From the first month of the cycle until the end of the fourth month, the maintainers team contribute to the release according to the roadmap and incoming priorities.
 
 ### Week 17 (Code Freeze RC-1)
 
 During the 17th week, the last week of the fourth month, we enter the code freeze of the RC-1 release.
 This is usually done right before the weekend, on a Thursday or Friday depending on availabilities.
-At this time, the release team creates the release branch (`release-xx.0`) and branch out from `main`.
 
-From this moment on, the release branch is frozen until the RC-1 release.
-This leaves enough time for the release team to fix any unexpected issues.
+At this time, the release team creates the release branch (`release-xx.0`) from `main`.
+Creating a release branch implies that `main` moves into the next release cycle.  
+
+The release team freezes the release branch until the RC-1 release.
+This process leaves enough time to the team to fix and avoid unexpected issues.
+
+Step-by-step breakdown of how the release team achieves this step can be found on the [pre-release instructions](https://github.com/vitessio/vitess/blob/main/doc/internal/ReleaseInstructions.md#pre-release).
 
 ### Week 18 (RC-1)
 
-After creating and freezing the release branch for at least a weekend, we proceed to the RC-1 release.
+After creating and freezing the release branch for at least a weekend, we proceed to the RC-1 release. A new tag is created, the documentation is updated with the newly created version, and the community is informed of this new release.
+
+At the same time, the release team will create an RC-1 release of the `vitess-operator` to match the new Vitess RC-1 release.
+
+Step-by-step breakdown of how the release team achieves this step can be found on the [release instructions](https://github.com/vitessio/vitess/blob/main/doc/internal/ReleaseInstructions.md#release).
 
 ### Week 18 - 20 (Bug Fixes)
 
@@ -48,23 +57,27 @@ This two weeks period is dedicated to fixing any bugs that are found on the rele
 ### Week 20 (Code Freeze GA)
 
 The release team will freeze the release branch and block non-essential incoming changes until the GA release is out.
-It allows the release team to fix and avoid unexpected issues before the release day.
-
 This is usually done right before the weekend, on a Thursday or Friday depending on availabilities.
+
+It allows the release team to fix and avoid unexpected issues.
+
+Step-by-step breakdown of how the release team achieves this step can be found on the [pre-release instructions](https://github.com/vitessio/vitess/blob/main/doc/internal/ReleaseInstructions.md#pre-release).
 
 ### Week 21 (GA)
 
 This week closes our five months release cycle.
-We publish the GA release of our newest major version. 
+We publish the GA release of our newest major version.
 
 At the same time, the release team will officially announce the newest release through a blog post, a Slack message, and a Tweet.
 
+Step-by-step breakdown of how the release team achieves this step can be found on the [release instructions](https://github.com/vitessio/vitess/blob/main/doc/internal/ReleaseInstructions.md#release).
+
 ### Beyond Week 21 (EOL)
 
-The Vitess maintainer team maintains a major version for one year.
+The Vitess maintainer team maintains a major version for up to one year.
 
-As mentioned in [VEP #5](https://github.com/vitessio/enhancements/blob/main/veps/vep-5.md#support-lifecycle), high severity bug fixes will be ported over the release branch of this major version.
+As mentioned in [VEP #5](https://github.com/vitessio/enhancements/blob/main/veps/vep-5.md#support-lifecycle), high severity bug fixes will be ported over the release branch.
 If needed and requested, a patch version can be released.
 
 After a year of support, bug fixes and other developments will not be ported over the release branch.
-At this time, the related documentation for the release will be archived.
+At this time, the documentation for the release will be archived.
