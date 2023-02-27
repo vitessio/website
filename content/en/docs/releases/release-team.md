@@ -1,6 +1,6 @@
 ---
 title: Release Team
-description: Learn how is composed a release team
+description: Learn how a release team is structured
 weight: 2
 ---
 
