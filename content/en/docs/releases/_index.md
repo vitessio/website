@@ -5,7 +5,7 @@ weight: 3000
 ---
 
 The Vitess maintainers support the last 3 major releases of Vitess.
-Each major release is maintained by the maintainers during 1 year.
+Each major release is maintained for 1 year.
 
 > The release lifecycle of Vitess evolved over the years, each iteration is written down in a VEP (Vitess Enhancement Proposal).
 >
