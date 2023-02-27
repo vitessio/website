@@ -36,7 +36,7 @@ Each major release is maintained by the maintainers during 1 year.
 - **Patch releases:** [v14.0.0](https://github.com/vitessio/vitess/releases/tag/v14.0.0), [v14.0.1](https://github.com/vitessio/vitess/releases/tag/v14.0.1), [v14.0.2](https://github.com/vitessio/vitess/releases/tag/v14.0.2), [v14.0.3](https://github.com/vitessio/vitess/releases/tag/v14.0.3), [v14.0.4](https://github.com/vitessio/vitess/releases/tag/v14.0.4)
 
 ### v13.0
-- **Current version:** v13.0.0
+- **Current version:** v13.0.3
 - **Release date:** 2022-09-01
 - **End of life:** 2023-02-22
 - **Patch releases:** [v13.0.0](https://github.com/vitessio/vitess/releases/tag/v13.0.0), [v13.0.1](https://github.com/vitessio/vitess/releases/tag/v13.0.1), [v13.0.2](https://github.com/vitessio/vitess/releases/tag/v13.0.2), [v13.0.3](https://github.com/vitessio/vitess/releases/tag/v13.0.3)
