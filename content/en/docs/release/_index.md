@@ -4,7 +4,7 @@ description: Learn about how Vitess releases
 weight: 3000
 ---
 
-The maintainers team of Vitess supports the 3 most recent major releases of Vitess.
+The maintainers team of Vitess supports the last 3 major releases of Vitess.
 Each major release is maintained by the maintainers during 1 year.
 
 > The release lifecycle of Vitess evolved over the years, each iteration is written down in a VEP (Vitess Enhancement Proposal).
@@ -12,6 +12,8 @@ Each major release is maintained by the maintainers during 1 year.
 > VEPs [#1](https://github.com/vitessio/enhancements/blob/main/veps/vep-1.md), [#2](https://github.com/vitessio/enhancements/blob/main/veps/vep-2.md), and [#5](https://github.com/vitessio/enhancements/blob/main/veps/vep-5.md) all mention the release lifecycle of Vitess.
 > 
 > The last up-to-date VEP is [VEP #5](https://github.com/vitessio/enhancements/blob/main/veps/vep-5.md).
+
+
 
 ## Release History
 
