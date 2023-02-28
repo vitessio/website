@@ -25,7 +25,7 @@ You can read more about VDiff v2 in the [Introducing VDiff V2 blog post](https:/
 ## VTOrc is now mandatory
 
 [VTOrc](https://vitess.io/blog/2022-09-21-vtorc-vitess-native-orchestrator/) is a required component of Vitess starting from this release. 
-It is required to run at least one instance of VTOrc in order for Vitess to automatically manage the backing MySQL clusters.
+It is necessary to run at least one instance of VTOrc in order for Vitess to automatically manage the backing MySQL clusters.
 
 ## MySQL compatibility improvements
 
