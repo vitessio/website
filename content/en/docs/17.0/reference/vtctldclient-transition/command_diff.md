@@ -15,13 +15,12 @@ For stronger guarantees of compatibility, we highly encourage programming direct
 | | `vtctldclient` command name (NEW) | `vtctlclient` command name (OLD) |
 |-|-|-|
 | | `ApplyShardRoutingRules` | N/A |
-| | `CreateKeyspace` | N/A |
 | | (not yet migrated) | `CopySchemaShard` |
 | | (not yet migrated) | `CreateLookupVindex` |
 | | `DeleteShards` | `DeleteShard` |
 | | `DeleteTablets` | `DeleteTablet` |
 | | `ExecuteFetchAsDBA` | `ExecuteFetchAsDba` |
-| | (not yet migrated) | `ExternalVindex` |
+| | (not yet migrated) | `ExternalizeVindex` |
 | | `GetBackups` | `ListBackups` |
 | | `GetFullStatus` | N/A |
 | | `GetShardRoutingRules` | N/A |
