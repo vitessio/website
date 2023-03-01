@@ -1,12 +1,15 @@
 ---
 title: Release Notes
-description: Everything you need to know to contribute to the release notes of Vitess
+description: Learn how release notes are generated
+weight: 3
 ---
 
 The [release notes](https://github.com/vitessio/vitess/releases) of Vitess describe what a new release is about. We list the new features, bug fixes, important announcement, deprecation notice, etc.
-Since we have a release note document for each release, it was important to us that we create a tool that automatically generate them for us. The tool can be found in [this package](https://github.com/vitessio/vitess/tree/main/go/tools/release-notes).
 
-### How to use release note generation tool?
+Since we publish release notes for each release, it was important to us to have a tool that can automatically generate them for us.
+This tool can be found in [this package](https://github.com/vitessio/vitess/tree/main/go/tools/release-notes).
+
+### How to use the release notes generation tool
 
 {{< info >}}
 You must have the `gh` tool installed first. Click [here](https://github.com/cli/cli) if you don't already have it.
