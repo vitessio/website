@@ -5,7 +5,7 @@ aliases: ['/docs/user-guides/operating-vitess/making-schema-changes', '/docs/sch
 ---
 
 {{< warning >}}
-Please see this [known issue](https://github.com/vitessio/vitess/releases/tag/v16.0.0#mysql-xtrabackup-ddl) taking a backup with XtraBackup with MySQL tables modified via `INSTANT DDL`
+Please see this [known issue]Please see this [known issue](https://github.com/vitessio/vitess/releases/tag/v16.0.0#mysql-xtrabackup-ddl) if you are taking a backup with XtraBackup with MySQL tables modified via `INSTANT DDL`
 {{</ warning >}}
 
 Vitess offers multiple approaches to running unmanaged schema changes. Below, we review each of these approaches.

@@ -6,7 +6,7 @@ aliases: ['/docs/schema-management/mysql-schema/', '/docs/user-guides/mysql-sche
 ---
 
 {{< warning >}}
-Please see this [known issue](https://github.com/vitessio/vitess/releases/tag/v16.0.0#mysql-xtrabackup-ddl) taking a backup with XtraBackup with MySQL tables modified via `INSTANT DDL`
+Please see this [known issue]Please see this [known issue](https://github.com/vitessio/vitess/releases/tag/v16.0.0#mysql-xtrabackup-ddl) if you are taking a backup with XtraBackup with MySQL tables modified via `INSTANT DDL`
 {{</ warning >}}
 
 This user guide describes the problem space of schema changes and the various approaches you may use with Vitess.
