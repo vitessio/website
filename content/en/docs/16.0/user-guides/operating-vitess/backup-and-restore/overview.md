@@ -4,6 +4,10 @@ weight: 1
 aliases: ['/docs/user-guides/backup-and-restore/']
 ---
 
+{{< warning >}}
+Please see this [known issue]Please see this [known issue](https://github.com/vitessio/vitess/releases/tag/v16.0.0#mysql-xtrabackup-ddl) if you are taking a backup with XtraBackup with MySQL tables modified via `INSTANT DDL`
+{{</ warning >}}
+
 Backup and Restore are integrated features provided by tablets managed by Vitess. As well as using _backups_ for data integrity, Vitess will also create and restore backups for provisioning new tablets in an existing shard.
 
 ## Concepts

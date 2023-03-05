@@ -6,6 +6,10 @@ aliases: ['/docs/user-guides/backup-and-restore/']
 
 ## Using xtrabackup
 
+{{< warning >}}
+Please see this [known issue]Please see this [known issue](https://github.com/vitessio/vitess/releases/tag/v16.0.0#mysql-xtrabackup-ddl) if you are taking a backup with XtraBackup with MySQL tables modified via `INSTANT DDL`
+{{</ warning >}}
+
 The default backup implementation is `builtin`, however we strongly recommend using the `xtrabackup` engine as it is more robust and allows for non-blocking backups. Restores will always be done with whichever engine was used to create the backup.
 
 ### Prerequisites
