@@ -14,31 +14,31 @@ For stronger guarantees of compatibility, we highly encourage programming direct
 
 | | `vtctlclient` command name (OLD) | `vtctldclient` command name (NEW) |
 |-|-|-|
-| | N/A | `ApplyShardRoutingRules` |
+| | N/A | [`ApplyShardRoutingRules`](../../programs/vtctldclient/vtctldclient_applyroutingrules/) |
 | | `CopySchemaShard` | (not yet migrated) |
 | | `CreateLookupVindex` | (not yet migrated) |
-| | `DeleteShard` | `DeleteShards` |
-| | `DeleteTablet` | `DeleteTablets` |
-| | `ExecuteFetchAsDba` | `ExecuteFetchAsDBA` |
+| | `DeleteShard` | [`DeleteShards`](../../programs/vtctldclient/vtctldclient_deleteshards/) |
+| | `DeleteTablet` | [`DeleteTablets`](../../programs/vtctldclient/vtctldclient_deletetablets/) |
+| | `ExecuteFetchAsDba` | [`ExecuteFetchAsDBA`](../../programs/vtctldclient/vtctldclient_executefetchasdba/) |
 | | `ExternalizeVindex` | (not yet migrated) |
-| | `ListBackups` | `GetBackups` |
-| | N/A | `GetFullStatus` |
-| | N/A | `GetShardRoutingRules` |
+| | `ListBackups` | [`GetBackups`](../../programs/vtctldclient/vtctldclient_getbackups/) |
+| | N/A | [`GetFullStatus`](../../programs/vtctldclient/vtctldclient_getfullstatus/) |
+| | N/A | [`GetShardRoutingRules`](../../programs/vtctldclient/vtctldclient_getshardroutingrules/) |
 | | `GetShardReplication` | N/A |
-| | `GetSrvKeyspace` | `GetSrvKeyspaces` |
-| | N/A | `GetSrvVSchemas` |
-| | N/A | `GetTabletVersion` |
-| | `ListAllTablets`, `ListShardTablets`, `ListTablets` | `GetTablets` |
-| | N/A | `GetTopologyPath` |
-| | N/A | `GetWorkflows` |
+| | `GetSrvKeyspace` | [`GetSrvKeyspaces`](../../programs/vtctldclient/vtctldclient_getsrvkeyspaces/) |
+| | N/A | [`GetSrvVSchemas`](../../programs/vtctldclient/vtctldclient_getsrvvschemas/) |
+| | N/A | [`GetTabletVersion`](../../programs/vtctldclient/vtctldclient_gettabletversion/) |
+| | `ListAllTablets`, `ListShardTablets`, `ListTablets` | [`GetTablets`](../../programs/vtctldclient/vtctldclient_gettablets/) |
+| | N/A | [`GetTopologyPath`](../../programs/vtctldclient/vtctldclient_gettopologypath/) |
+| | N/A | [`GetWorkflows`](../../programs/vtctldclient/vtctldclient_getworkflows/) |
 | | `InitShardPrimary` | (deleted) |
 | | `Migrate` | (not yet migrated) |
 | | `Mount` | (not yet migrated) |
 | | `OnlineDDL` | (not yet migrated) |
-| | `Ping` | `PingTablet` |
-| | N/A | `SetKeyspaceDurabilityPolicy` |
-| | `SetReadOnly`, `SetReadWrite` | `SetWritable` |
-| | `Sleep` | `SleepTablet` |
+| | `Ping` | [`PingTablet`](../../programs/vtctldclient/vtctldclient_pingtablet/) |
+| | N/A | [`SetKeyspaceDurabilityPolicy`](../../programs/vtctldclient/vtctldclient_setkeyspacedurabilitypolicy/) |
+| | `SetReadOnly`, `SetReadWrite` | [`SetWritable`](../../programs/vtctldclient/vtctldclient_setwritable/) |
+| | `Sleep` | [`SleepTablet`](../../programs/vtctldclient/vtctldclient_sleeptablet/) |
 | | `TopoCat`, `TopoCp` | N/A |
 | | `UpdateSrvKeyspacePartition` | N/A |
 | | `UpdateTabletAddrs` | (deleted) |
