@@ -12,39 +12,39 @@ For stronger guarantees of compatibility, we highly encourage programming direct
 
 ### Command name differences
 
-| | `vtctldclient` command name (NEW) | `vtctlclient` command name (OLD) |
+| | `vtctlclient` command name (OLD) | `vtctldclient` command name (NEW) |
 |-|-|-|
-| | `ApplyShardRoutingRules` | N/A |
-| | (not yet migrated) | `CopySchemaShard` |
-| | (not yet migrated) | `CreateLookupVindex` |
-| | `DeleteShards` | `DeleteShard` |
-| | `DeleteTablets` | `DeleteTablet` |
-| | `ExecuteFetchAsDBA` | `ExecuteFetchAsDba` |
-| | (not yet migrated) | `ExternalizeVindex` |
-| | `GetBackups` | `ListBackups` |
-| | `GetFullStatus` | N/A |
-| | `GetShardRoutingRules` | N/A |
-| | N/A | `GetShardReplication` |
-| | `GetSrvKeyspaces` | `GetSrvKeyspace` |
-| | `GetSrvVSchemas` | N/A |
-| | `GetTabletVersion` | N/A |
-| | `GetTablets` | `ListAllTablets`, `ListShardTablets`, `ListTablets` |
-| | `GetTopologyPath` | N/A |
-| | `GetWorkflows` | N/A |
-| | (deleted) | `InitShardPrimary` |
-| | (not yet migrated) | `Migrate` |
-| | (not yet migrated) | `Mount` |
-| | (not yet migrated) | `OnlineDDL` |
-| | `PingTablet` | `Ping` |
-| | `SetKeyspaceDurabilityPolicy` | N/A |
-| | `SetWritable` | `SetReadOnly`, `SetReadWrite` |
-| | `SleepTablet` | `Sleep` |
-| | N/A | `TopoCat`, `TopoCp` |
-| | N/A | `UpdateSrvKeyspacePartition` |
-| | (deleted) | `UpdateTabletAddrs` |
-| | (not yet migrated) | `VReplicationExec` |
+| | N/A | `ApplyShardRoutingRules` |
+| | `CopySchemaShard` | (not yet migrated) |
+| | `CreateLookupVindex` | (not yet migrated) |
+| | `DeleteShard` | `DeleteShards` |
+| | `DeleteTablet` | `DeleteTablets` |
+| | `ExecuteFetchAsDba` | `ExecuteFetchAsDBA` |
+| | `ExternalizeVindex` | (not yet migrated) |
+| | `ListBackups` | `GetBackups` |
+| | N/A | `GetFullStatus` |
+| | N/A | `GetShardRoutingRules` |
+| | `GetShardReplication` | N/A |
+| | `GetSrvKeyspace` | `GetSrvKeyspaces` |
+| | N/A | `GetSrvVSchemas` |
+| | N/A | `GetTabletVersion` |
+| | `ListAllTablets`, `ListShardTablets`, `ListTablets` | `GetTablets` |
+| | N/A | `GetTopologyPath` |
+| | N/A | `GetWorkflows` |
+| | `InitShardPrimary` | (deleted) |
+| | `Migrate` | (not yet migrated) |
+| | `Mount` | (not yet migrated) |
+| | `OnlineDDL` | (not yet migrated) |
+| | `Ping` | `PingTablet` |
+| | N/A | `SetKeyspaceDurabilityPolicy` |
+| | `SetReadOnly`, `SetReadWrite` | `SetWritable` |
+| | `Sleep` | `SleepTablet` |
+| | `TopoCat`, `TopoCp` | N/A |
+| | `UpdateSrvKeyspacePartition` | N/A |
+| | `UpdateTabletAddrs` | (deleted) |
+| | `VReplicationExec` | (not yet migrated) |
 | | `ValidatePermissionsKeyspace`, `ValidatePermissionsShard` | N/A |
 | | `ValidateSchemaShard` | N/A |
-| | N/A | `VtctldCommand` |
-| | N/A | `WaitForFilteredReplication` |
-| | N/A | `Workflow` |
+| | `VtctldCommand` | N/A |
+| | `WaitForFilteredReplication` | N/A |
+| | `Workflow` | N/A |
