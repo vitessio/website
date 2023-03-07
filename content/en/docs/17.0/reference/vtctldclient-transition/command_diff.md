@@ -44,7 +44,6 @@ For stronger guarantees of compatibility, we highly encourage programming direct
 | | `UpdateTabletAddrs` | (deleted) |
 | | `VReplicationExec` | (not yet migrated) |
 | | `ValidatePermissionsKeyspace`, `ValidatePermissionsShard` | N/A |
-| | `ValidateSchemaShard` | N/A |
 | | `VtctldCommand` | N/A |
 | | `WaitForFilteredReplication` | N/A |
 | | `Workflow` | N/A |
