@@ -24,7 +24,7 @@ For stronger guarantees of compatibility, we highly encourage programming direct
 | | `ListBackups` | [`GetBackups`](../../programs/vtctldclient/vtctldclient_getbackups/) |
 | | N/A | [`GetFullStatus`](../../programs/vtctldclient/vtctldclient_getfullstatus/) |
 | | N/A | [`GetShardRoutingRules`](../../programs/vtctldclient/vtctldclient_getshardroutingrules/) |
-| | `GetShardReplication` | N/A |
+| | `GetShardReplication` | (not yet migrated) |
 | | `GetSrvKeyspace` | [`GetSrvKeyspaces`](../../programs/vtctldclient/vtctldclient_getsrvkeyspaces/) |
 | | N/A | [`GetSrvVSchemas`](../../programs/vtctldclient/vtctldclient_getsrvvschemas/) |
 | | N/A | [`GetTabletVersion`](../../programs/vtctldclient/vtctldclient_gettabletversion/) |
@@ -39,11 +39,11 @@ For stronger guarantees of compatibility, we highly encourage programming direct
 | | N/A | [`SetKeyspaceDurabilityPolicy`](../../programs/vtctldclient/vtctldclient_setkeyspacedurabilitypolicy/) |
 | | `SetReadOnly`, `SetReadWrite` | [`SetWritable`](../../programs/vtctldclient/vtctldclient_setwritable/) |
 | | `Sleep` | [`SleepTablet`](../../programs/vtctldclient/vtctldclient_sleeptablet/) |
-| | `TopoCat`, `TopoCp` | N/A |
-| | `UpdateSrvKeyspacePartition` | N/A |
+| | `TopoCat`, `TopoCp` | (not yet migrated) |
+| | `UpdateSrvKeyspacePartition` | (not yet migrated) |
 | | `UpdateTabletAddrs` | (deleted) |
 | | `VReplicationExec` | (not yet migrated) |
-| | `ValidatePermissionsKeyspace`, `ValidatePermissionsShard` | N/A |
+| | `ValidatePermissionsKeyspace`, `ValidatePermissionsShard` | (deleted) |
 | | `VtctldCommand` | N/A |
-| | `WaitForFilteredReplication` | N/A |
-| | `Workflow` | N/A |
+| | `WaitForFilteredReplication` | (deleted) |
+| | `Workflow` | (deleted) |
