@@ -24,7 +24,7 @@ For stronger guarantees of compatibility, we highly encourage programming direct
 | | `ListBackups` | [`GetBackups`](../../programs/vtctldclient/vtctldclient_getbackups/) |
 | | N/A | [`GetFullStatus`](../../programs/vtctldclient/vtctldclient_getfullstatus/) |
 | | N/A | [`GetShardRoutingRules`](../../programs/vtctldclient/vtctldclient_getshardroutingrules/) |
-| | `GetShardReplication` | (not yet migrated) |
+| | `GetShardReplication` | [`ShardReplicationPositions`](../../programs/vtctldclient/vtctldclient_shardreplicationpositions/) |
 | | `GetSrvKeyspace` | [`GetSrvKeyspaces`](../../programs/vtctldclient/vtctldclient_getsrvkeyspaces/) |
 | | N/A | [`GetSrvVSchemas`](../../programs/vtctldclient/vtctldclient_getsrvvschemas/) |
 | | N/A | [`GetTabletVersion`](../../programs/vtctldclient/vtctldclient_gettabletversion/) |
