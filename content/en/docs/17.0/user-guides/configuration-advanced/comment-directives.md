@@ -93,7 +93,7 @@ Valid values are the same as for the planner flag - `v3` and `gen4`.
 
 ### Workload name (`WORKLOAD_NAME`)
 
-Specifies the client applicaiton workload name. This does not affect query execution, but can be used to instrument
+Specifies the client application workload name. This does not affect query execution, but can be used to instrument
 some `vttablet` metrics to include a label specifying the workload name. It can be useful if you are interested in
 getting insights about how much of the work being done at the `vttablet` level is being caused by each client
 application workload. For this to work, you must use  `--enable-per-workload-table-metrics` at the `vttablet`, and pass
