@@ -90,3 +90,32 @@ select /*vt+ PLANNER=gen4 */ * from user;
 ```
 
 Valid values are the same as for the planner flag - `v3` and `gen4`.
+
+### Workload name (`WORKLOAD_NAME`)
+
+Specifies the client applicaiton workload name. This does not affect query execution, but can be used to instrument
+some `vttablet` metrics to include a label specifying the workload name. It can be useful if you are interested in
+getting insights about how much of the work being done at the `vttablet` level is being caused by each client
+application workload. For this to work, you must use  `--enable-per-workload-table-metrics` at the `vttablet`, and pass
+the client workload name on each query as a directive. For example:
+
+```sql
+select /*vt+ WORKLOAD_NAME=webstore */ * from commerce.customer;
+```
+
+will result in metrics such as this one:
+
+```bash
+% curl -s localhost:15100/metrics  | grep "table=\"customer\"" |grep webstore
+vttablet_query_counts{plan="Select",table="customer",workload="webstore"} 1
+vttablet_query_error_counts{plan="Select",table="customer",workload="webstore"} 0
+vttablet_query_rows_returned{plan="Select",table="customer",workload="webstore"} 0
+vttablet_query_times_ns{plan="Select",table="customer",workload="webstore"} 602557
+```
+
+As shown above, the metrics being instrumented this way are `vttablet_query_counts`, `vttablet_query_error_counts`,
+`vttablet_query_rows_returned` and `vttablet_query_times_ns`.
+
+If the query lacks the `WORKLOAD_NAME` directive, the corresponding label in the metric will have the value of an empty
+string. If `vttablet` is not started with `--enable-per-workload-table-metrics`, metrics are emitted without the
+workload label (e.g. `vttablet_query_counts{plan="Select",table="customer"}`.
