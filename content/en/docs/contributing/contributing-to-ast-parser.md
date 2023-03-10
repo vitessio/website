@@ -11,7 +11,7 @@ The code for the parser and AST lives [here](https://github.com/vitessio/vitess/
 
 Vitess uses a yacc-based parser. To convert the [yacc file](https://github.com/vitessio/vitess/blob/main/go/vt/sqlparser/sql.y) to executable [go file](https://github.com/vitessio/vitess/blob/main/go/vt/sqlparser/sql.go), run the following command in the root Vitess directory.
 ```bash
-make parser
+make sqlparser
 ```
 
 The tests for the parser live in the file [parse_test.go](https://github.com/vitessio/vitess/blob/main/go/vt/sqlparser/parse_test.go). In case any change is made to the parser, a corresponding test should be added to the test file.
