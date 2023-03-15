@@ -54,6 +54,7 @@ The following global options apply to `vtgate`:
 | --emit_stats | boolean | true iff we should emit stats to push-based monitoring/stats backends |
 | --enable_buffer | boolean | Enable buffering (stalling) of primary traffic during failovers. |
 | --enable_buffer_dry_run | boolean | Detect and log failover events, but do not actually buffer requests. |
+| --enable_partial_keyspace_migration | boolean | (Experimental) Follow shard routing rules: enable only while migrating a keyspace shard by shard. See the documentation on [shard level migrations](../../vreplication/shardlevelmigrations/) for more information. (default false) |
 | --enable_system_settings | boolean | Enables the system settings to be changed per session at the database connection level. Override with @@enable_system_settings session variable. |
 | --enable_set_var | boolean | This will enable the use of MySQL's SET_VAR query hint for certain system variables instead of using reserved connections. |
 | --gate_query_cache_size | int | gate server query cache size, maximum number of queries to be cached. vtgate analyzes every incoming query and generate a query plan, these plans are being cached in a lru cache. This config controls the capacity of the lru cache. (default 10000) |
@@ -129,7 +130,7 @@ The following global options apply to `vtgate`:
 | --normalize_queries | boolean | Rewrite queries with bind vars. Turn this off if the app itself sends normalized queries with bind vars. (default true) |
 | --onterm_timeout | duration | wait no more than this for OnTermSync handlers before stopping (default 10s) |
 | --opentsdb_uri | string | URI of opentsdb /api/put method |
-| --planner-version | string | Sets the default planner to use when the session has not changed it. Valid values are: V3, Gen4, Gen4Greedy and Gen4Fallback. Gen4Fallback tries the gen4 planner and falls back to the V3 planner if the gen4 fails. |
+| --planner-version | string | Sets the default planner to use when the session has not changed it. The default planner is Gen4. Other valid values are: V3, Gen4Greedy and Gen4Fallback. Gen4Fallback tries the gen4 planner and falls back to the V3 planner if the gen4 fails. |
 | --pid_file | string | If set, the process will write its pid to the named file, and delete it on graceful shutdown. |
 | --port | int | port for the server |
 | --proxy_protocol | boolean | Enable HAProxy PROXY protocol on MySQL listener socket |
@@ -141,7 +142,7 @@ The following global options apply to `vtgate`:
 | --retry-count | int | retry count (default 2) |
 | --schema_change_signal | boolean | enable schema tracking |
 | --security_policy | string | the name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only) |
-| --service_map | value | comma separated list of services to enable (or disable if prefixed with '-') Example: grpc-vtworker |
+| --service_map | value | comma separated list of services to enable (or disable if prefixed with '-') Example: grpc-queryservice |
 | --sql-max-length-errors | int | truncate queries in error logs to the given length (default unlimited) |
 | --sql-max-length-ui | int | truncate queries in debug UIs to the given length (default 512) (default 512) |
 | --srv_topo_cache_refresh | duration | how frequently to refresh the topology for cached entries (default 1s) |

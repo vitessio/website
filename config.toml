@@ -2,7 +2,7 @@ baseURL = "https://vitess.io"
 canonifyurls = true
 disableKinds = ["taxonomy", "taxonomyTerm"]
 enableGitInfo = true
-googleAnalytics = "UA-163836834-1"
+googleAnalytics = "G-JWT03RNV4P"
 enableRobotsTXT = true
 
 # Syntax highlighting settings
@@ -13,14 +13,14 @@ pygmentsStyle = "fruity"
 # Versions (folder-based)
 
 [params.versions]
-current = "14.0"
-next = "15.0"
+current = "16.0"
+next = "17.0"
 
 # end Versions
 
 [params.assets]
 js = ["app"]
-fontawesomeversion = "5.7.2"
+fontawesomeversion = "6.1.2"
 
 [params.social]
 github        = "vitessio/vitess"
@@ -49,7 +49,7 @@ languageName = "English"
 weight = 1
 
 [languages.en.params]
-description = "A database clustering system for horizontal scaling of MySQL"
+description = "Scalable. Reliable. MySQL-compatible. Cloud-native. Database."
 
 # Chinese
 [languages.zh]
@@ -75,7 +75,7 @@ icon = "fighter-jet"
 
 [[languages.en.params.features]]
 title = "Manageability"
-description = "Vitess automatically handles functions like failovers and backups. It uses a lock server to track and administer servers, letting your application be blissfully ignorant of database topology."
+description = "Vitess automatically handles functions like failovers and backups. It uses a topology server to track and administer servers, letting your application be blissfully ignorant of database topology."
 icon = "tachometer-alt"
 
 [[languages.en.params.features]]
@@ -85,7 +85,7 @@ icon = "share-alt"
 
 [[languages.en.params.features]]
 title = "Shard management"
-description = "MySQL doesn't natively support sharding, but you will likely need it as your database grows. Vitess saves you from having to add sharding logic to your app and also enables live resharding with minimal read-only downtime."
+description = "MySQL doesn't natively support sharding, but you will likely need it as your database grows. Vitess saves you from having to add sharding logic to your application. It also enables live resharding with minimal read-only downtime."
 icon = "object-ungroup"
 
 [[languages.en.params.features]]
@@ -139,4 +139,13 @@ baseName = "_redirects"
 notAlternative = true
 
 [outputs]
-home = [ "HTML", "REDIRECTS", "RSS" ]
+home = [ "HTML", "REDIRECTS", "RSS", "Lunr" ]
+
+[outputFormats.Lunr]
+baseName = "index"
+isPlainText = true
+mediaType = "application/json"
+notAlternative = true
+
+[params.lunr]
+vars = ["title", "summary", "date", "publishdate", "expirydate", "permalink"]

@@ -1,5 +1,5 @@
 ---
-title: Analyzing SQL statements in bulk
+title: Analyzing SQL statements in bulk using VTEXPLAIN
 weight: 2
 aliases: ['/docs/user-guides/vtexplain-in-bulk/'] 
 ---
@@ -12,7 +12,7 @@ This document covers the way the [VTexplain tool](../../../reference/programs/vt
 
 You can find a prebuilt binary version of the VTexplain tool in [the most recent release of Vitess](https://github.com/vitessio/vitess/releases/).
 
-You can also build the `vtexplain` binary in your environment. To build this binary, refer to the [build guide](../../../contributing) for your OS.
+You can also build the `vtexplain` binary in your environment. To build this binary, refer to the [build guide](../../../../contributing) for your OS.
 
 ## Overview
 
@@ -158,7 +158,7 @@ $ cat vschema.json
     }
 }
 ```
-Note that unlike the VSchema used in Vitess, e.g. in `vtctlclient GetVSchema` and `vtctlclient ApplyVSchema`, the format required by `vtexplain` differs slightly. There is an extra level of JSON objects at the top-level of the JSON format to allow you to have a single file that represents the VSchema for multiple Vitess keyspaces. In the above example, there is just a single keyspace called `ks1`.
+Note that unlike the VSchema used in Vitess, e.g. in `vtctldclient GetVSchema` and `vtctldclient ApplyVSchema`, the format required by `vtexplain` differs slightly. There is an extra level of JSON objects at the top-level of the JSON format to allow you to have a single file that represents the VSchema for multiple Vitess keyspaces. In the above example, there is just a single keyspace called `ks1`.
 
 ## 7. Run the VTexplain tool and capture the output
 

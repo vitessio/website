@@ -1,6 +1,6 @@
 ---
 title: Advanced VSchema Properties
-weight: 12
+weight: 20
 ---
 
 With the exception of Multi-Column Vindexes, advanced VSchema Properties do not have DDL constructs. They can only be updated through `vtctld` CLI commands.
@@ -14,17 +14,13 @@ Multi-Column Vindexes are useful in the following two use cases:
 
 In both cases the leading column is the region or tenant, and is used to form the first few bits of the `keyspace_id`. The second column is used for the bits that follow. Since Vitess shards by keyrange, this approach will naturally group all rows of a region or tenant within the same shard, or within a group of consecutive shards. Since each shard is its own MySQL cluster, these can then be deployed to different regions as needed.
 
-Please refer to [Region-based Sharding](../../configuration-advanced/region-sharding) for an example on how to use the `region_json` vindex.
-
-Currently, the Vindex gets used for assigning a `keyspace_id` at the time of insert and at the time of resharding. Additional vindexes need to be added to the table for routing query constructs that contain WHERE clauses.
-
-Vitess does not have the capability to route a query based on multiple values of a multi-column vindex in a where clause yet. This feature will be added soon.
+Please refer to [Region-based Sharding](../../configuration-advanced/region-sharding) for an example on how to use the `region_json` vindex and [Subsharding Vindex](../subsharding-vindex) for the more generic multicol vindex.
 
 #### Alternate approach
 
-You have the option to pre-combine the region and id bits into a single column and use that as an input for a single column vindex. This approach achieves the same goals as a multi-column vindex. Moreover, you avoid having to define additional vindexes for query routing.
+You have the option to pre-combine the region and id bits into a single column and use that as an input for a single column vindex. This approach achieves the same goals as a multi-column vindex.
 
-The downside of this approach is that it is harder to migrate an id to a different region.
+The downside of this approach is that it is harder to migrate an id to a different region and you won't get the query serving support for routing queries to subset of shards if only the first few columns of a multicol vindex are provided.
 
 ## Reference Tables
 
@@ -146,7 +142,10 @@ This flag causes VTGate to automatically expand expressions like `select *` or i
 
 The caveat about using this feature is that you have to keep this column list in sync with the underlying schema.
 
-In the future, Vitess will allow you to pull this information from the vttablets and automatically keep it up-to-date.
+#### Automatic Schema Tracking
+
+Vtgates now also have the capability to track the schema changes and populate the columns list on its own by contacting the vttablets. To know more about this feature, read [here](../../../reference/features/schema-tracking).
+This feature tracks the underlying schema and sets the authoritative column list.
 
 ## Routing Rules
 

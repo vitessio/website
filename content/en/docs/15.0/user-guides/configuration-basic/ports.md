@@ -27,7 +27,7 @@ for the various components:
   * Control or meta-data paths:
     * vtctld &rarr; vttablet
       * TCP port 16000 + vttablet UID (gRPC); e.g port 16100 for UID 100
-    * vtctlclient &rarr; vtctld
+    * vtctldclient &rarr; vtctld
       * TCP port 15999 (gRPC)
     * vtgate &rarr; topology server
       * Depends on topology server, e.g.:

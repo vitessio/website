@@ -73,10 +73,6 @@ This is not enabled by default, as usually the different Vitess servers will run
 | --vtgate_grpc_cert | string | the cert to use to connect |
 | --vtgate_grpc_key  | string | the key to use to connect |
 | --vtgate_grpc_server_name  | string | the server name to use to validate server certificate |
-| --vtworker_client_grpc_ca  | string | (DEPRECATED) the server ca to use to validate servers when connecting |
-| --vtworker_client_grpc_cert | string | (DEPRECATED)the cert to use to connect |
-| --vtworker_client_grpc_key  | string | (DEPRECATED) the key to use to connect |
-| --vtworker_client_grpc_server_name  | string | (DEPRECATED) the server name to use to validate server certificate |
 
 ### Options for vtgate
 

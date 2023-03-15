@@ -57,7 +57,7 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [ListBackups](../vtctl/shards#listbackups) | `ListBackups <keyspace/shard>` |
 | [BackupShard](../vtctl/shards#backupshard) | `BackupShard  -- [--allow_primary=false] <keyspace/shard>` |
 | [RemoveBackup](../vtctl/shards#removebackup) | `RemoveBackup <keyspace/shard> <backup name>` |
-| [InitShardPrimary](../vtctl/shards#initshardprimary) | `InitShardPrimary  -- [--force] [--wait_replicas_timeout=<duration>] <keyspace/shard> <tablet alias>` |
+| (DEPRECATED) [InitShardPrimary](../vtctl/shards#initshardprimary) | `InitShardPrimary  -- [--force] [--wait_replicas_timeout=<duration>] <keyspace/shard> <tablet alias>` |
 | [PlannedReparentShard](../vtctl/shards#plannedreparentshard) | `PlannedReparentShard  -- --keyspace_shard=<keyspace/shard> [--new_primary=<tablet alias>] [--avoid_tablet=<tablet alias>] [--wait_replicas_timeout=<duration>]` |
 | [EmergencyReparentShard](../vtctl/shards#emergencyreparentshard) | `EmergencyReparentShard  -- --keyspace_shard=<keyspace/shard> [--new_primary=<tablet alias>] [--wait_replicas_timeout=<duration>] [--ignore_replicas=<tablet alias list>] [--prevent_cross_cell_promotion=<true/false>]`
 | [TabletExternallyReparented](../vtctl/shards#tabletexternallyreparented) | `TabletExternallyReparented <tablet alias>` |
@@ -69,11 +69,9 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | :-------- | :--------------- |
 | [CreateKeyspace](../vtctl/keyspaces#createkeyspace) | `CreateKeyspace  -- [--sharding_column_name=name] [--sharding_column_type=type] [--served_from=tablettype1:ks1,tablettype2:ks2,...] [--force] [--keyspace_type=type] [--base_keyspace=base_keyspace] [--snapshot_time=time] [--durability-policy=policy_name] <keyspace name>` |
 | [DeleteKeyspace](../vtctl/keyspaces#deletekeyspace) | `DeleteKeyspace  -- [--recursive] <keyspace>` |
-| [RemoveKeyspaceCell](../vtctl/keyspaces#removekeyspacesell) | `RemoveKeyspaceCell  -- [--force] [--recursive] <keyspace> <cell>` |
+| [RemoveKeyspaceCell](../vtctl/keyspaces#removekeyspacecell) | `RemoveKeyspaceCell  -- [--force] [--recursive] <keyspace> <cell>` |
 | [GetKeyspace](../vtctl/keyspaces#getkeyspace) | `GetKeyspace  <keyspace>` |
 | [GetKeyspaces](../vtctl/keyspaces#getkeyspaces) | `GetKeyspaces  ` |
-| (DEPRECATED) [SetKeyspaceShardingInfo](../vtctl/keyspaces#setkeyspaceshardinginfo) DEPRECATED | `SetKeyspaceShardingInfo  -- [--force] <keyspace name> [<column name>] [<column type>]` |
-| (DEPRECATED) [SetKeyspaceServedFrom](../vtctl/keyspaces#setkeyspaceservedfrom) DEPRECATED | `SetKeyspaceServedFrom  -- [--source=<source keyspace name>] [--remove] [--cells=c1,c2,...] <keyspace name> <tablet type>` |
 | [RebuildKeyspaceGraph](../vtctl/keyspaces#rebuildkeyspacegraph) | `RebuildKeyspaceGraph  -- [--cells=c1,c2,...] <keyspace> ...` |
 | [ValidateKeyspace](../vtctl/keyspaces#validatekeyspace) | `ValidateKeyspace  -- [--ping-tablets] <keyspace name>` |
 | [Reshard (v1)](../../vreplication/v1/reshard) | `Reshard  -- --v1 [--skip_schema_copy] <keyspace.workflow> <source_shards> <target_shards>` |
@@ -81,20 +79,13 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [MoveTables (v1)](../../vreplication/v1/movetables) | `MoveTables  -- --v1 [--cell=<cell>] [--tablet_types=<source_tablet_types>] --workflow=<workflow> <source_keyspace> <target_keyspace> <table_specs>` |
 | [MoveTables (v2)](../../vreplication/movetables) | `MoveTables  <options> <action> <workflow identifier>` |
 | [DropSources](../../vreplication/v1/dropsources) | `DropSources  -- [--dry_run] <keyspace.workflow>` |
-| [CreateLookupVindex](../vtctl/keyspaces#createLookupvindex) | `CreateLookupVindex  -- [--cell=<cell>] [--tablet_types=<source_tablet_types>] <keyspace> <json_spec>` |
+| [CreateLookupVindex](../vtctl/keyspaces#createlookupvindex) | `CreateLookupVindex  -- [--cell=<cell>] [--tablet_types=<source_tablet_types>] <keyspace> <json_spec>` |
 | [ExternalizeVindex](../vtctl/keyspaces#externalizevindex) | `ExternalizeVindex  <keyspace>.<vindex>` |
 | [Materialize](../vtctl/keyspaces#materialize) | `Materialize  <json_spec>, example : '{"workflow": "aaa", "source_keyspace": "source", "target_keyspace": "target", "table_settings": [{"target_table": "customer", "source_expression": "select * from customer", "create_ddl": "copy"}]}'` |
-| (DEPRECATED) [SplitClone](../vtctl/keyspaces#splitclone) DEPRECATED | `SplitClone  <keyspace> <from_shards> <to_shards>` |
-| (DEPRECATED) [VerticalSplitClone](../vtctl/keyspaces#verticalsplitclone) DEPRECATED | `VerticalSplitClone  <from_keyspace> <to_keyspace> <tables>` |
-| [VDiff](../vtctl/keyspaces#VDiff) | `VDiff -- [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=<source_tablet_types>] [--filtered_replication_wait_time=30s] [--max_extra_rows_to_compare=1000] <keyspace.workflow>` |
-| (DEPRECATED) [MigrateServedTypes](../vtctl/keyspaces#migrateservedtypes) DEPRECATED | `MigrateServedTypes  -- [--cells=c1,c2,...] [--reverse] [--skip-refresh-state] <keyspace/shard> <served tablet type>` |
-| (DEPRECATED) [MigrateServedFrom](../vtctl/keyspaces#migrateservedfrom) DEPRECATED | `MigrateServedFrom  -- [--cells=c1,c2,...] [--reverse] <destination keyspace/shard> <served tablet type>` |
-| [SwitchReads](../../vreplication/v1/switchreads) | `SwitchReads  -- [--cells=c1,c2,...] [--reverse] -tablet_type={replica|rdonly} [--dry-run] <keyspace.workflow>` |
+| [VDiff](../vtctl/keyspaces#vdiff) | `VDiff -- [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=<source_tablet_types>] [--filtered_replication_wait_time=30s] [--max_extra_rows_to_compare=1000] <keyspace.workflow>` |
+| [SwitchReads](../../vreplication/v1/switchreads) | `SwitchReads  -- [--cells=c1,c2,...] [--reverse] -tablet_type={replica\|rdonly} [--dry-run] <keyspace.workflow>` |
 | [SwitchWrites](../../vreplication/v1/switchwrites) | `SwitchWrites  -- [--filtered_replication_wait_time=30s] [--cancel] [--reverse_replication=false] [--dry-run] <keyspace.workflow>` |
-| [CancelResharding](../vtctl/keyspaces#cancelresharding) | `CancelResharding  <keyspace/shard>` |
-| [ShowResharding](../vtctl/keyspaces#showresharding) | `ShowResharding  <keyspace/shard>` |
 | [FindAllShardsInKeyspace](../vtctl/keyspaces#findallshardsinkeyspace) | `FindAllShardsInKeyspace  <keyspace>` |
-| (DEPRECATED) [WaitForDrain](../vtctl/keyspaces#waitfordrain) DEPRECATED | `WaitForDrain  -- [--timeout <duration>] [--retry_delay <duration>] [--initial_wait <duration>] <keyspace/shard> <served tablet type>` |
 
 ### Generic
 
@@ -115,17 +106,17 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [ReloadSchemaKeyspace](../vtctl/schema-version-permissions#reloadschemakeyspace) | `ReloadSchemaKeyspace  -- [--concurrency=10] [--include_primary=false] <keyspace>` |
 | [ValidateSchemaShard](../vtctl/schema-version-permissions#validateschemashard) | `ValidateSchemaShard  -- [--exclude_tables=''] [--include-views] <keyspace/shard>` |
 | [ValidateSchemaKeyspace](../vtctl/schema-version-permissions#validateschemakeyspace) | `ValidateSchemaKeyspace  -- [--exclude_tables=''] [--include-views] <keyspace name>` |
-| [ApplySchema](../vtctl/schema-version-permissions#applyschema) | `ApplySchema  -- [--allow_long_unavailability] [--wait_replicas_timeout=10s] {--sql=<sql> || --sql-file=<filename>} <keyspace>` |
-| [CopySchemaShard](../vtctl/schema-version-permissions#copyschemashard) | `CopySchemaShard  -- [--tables=<table1>,<table2>,...] [--exclude_tables=<table1>,<table2>,...] [--include-views] [--skip-verify] [--wait_replicas_timeout=10s] {<source keyspace/shard> || <source tablet alias>} <destination keyspace/shard>` |
+| [ApplySchema](../vtctl/schema-version-permissions#applyschema) | `ApplySchema  -- [--allow_long_unavailability] [--wait_replicas_timeout=10s] {--sql=<sql> \|\| --sql-file=<filename>} <keyspace>` |
+| [CopySchemaShard](../vtctl/schema-version-permissions#copyschemashard) | `CopySchemaShard  -- [--tables=<table1>,<table2>,...] [--exclude_tables=<table1>,<table2>,...] [--include-views] [--skip-verify] [--wait_replicas_timeout=10s] {<source keyspace/shard> \|\| <source tablet alias>} <destination keyspace/shard>` |
 | [ValidateVersionShard](../vtctl/schema-version-permissions#validateversionshard) | `ValidateVersionShard  <keyspace/shard>` |
 | [ValidateVersionKeyspace](../vtctl/schema-version-permissions#validateversionkeyspace) | `ValidateVersionKeyspace  <keyspace name>` |
 | [GetPermissions](../vtctl/schema-version-permissions#getpermissions) | `GetPermissions  <tablet alias>` |
 | [ValidatePermissionsShard](../vtctl/schema-version-permissions#validatepermissionsshard) | `ValidatePermissionsShard  <keyspace/shard>` |
 | [ValidatePermissionsKeyspace](../vtctl/schema-version-permissions#validatepermissionskeyspace) | `ValidatePermissionsKeyspace  <keyspace name>` |
 | [GetVSchema](../vtctl/schema-version-permissions#getvschema) | `GetVSchema  <keyspace>` |
-| [ApplyVSchema](../vtctl/schema-version-permissions#applyvschema) | `ApplyVSchema  -- {--vschema=<vschema> || --vschema_file=<vschema file> || --sql=<sql> || --sql_file=<sql file>} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run] <keyspace>` |
+| [ApplyVSchema](../vtctl/schema-version-permissions#applyvschema) | `ApplyVSchema  -- {--vschema=<vschema> \|\| --vschema_file=<vschema file> \|\| --sql=<sql> \|\| --sql_file=<sql file>} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run] <keyspace>` |
 | [GetRoutingRules](../vtctl/schema-version-permissions#getroutingrules) | `GetRoutingRules  ` |
-| [ApplyRoutingRules](../vtctl/schema-version-permissions#applyroutingrules) | `ApplyRoutingRules  -- {--rules=<rules> || --rules_file=<rules_file>} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run]` |
+| [ApplyRoutingRules](../vtctl/schema-version-permissions#applyroutingrules) | `ApplyRoutingRules  -- {--rules=<rules> \|\| --rules_file=<rules_file>} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run]` |
 | [RebuildVSchemaGraph](../vtctl/schema-version-permissions#rebuildvschemagraph) | `RebuildVSchemaGraph  -- [--cells=c1,c2,...]` |
 
 ### Serving Graph
@@ -134,7 +125,7 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | :-------- | :--------------- |
 | [GetSrvKeyspaceNames](../vtctl/serving-graph#getsrvkeyspacenames) | `GetSrvKeyspaceNames  <cell>` |
 | [GetSrvKeyspace](../vtctl/serving-graph#getsrvkeyspace) | `GetSrvKeyspace  <cell> <keyspace>` |
-| [GetSrvVSchema](../vtctl/serving-graph#getsrvsvchema) | `GetSrvVSchema  <cell>` |
+| [GetSrvVSchema](../vtctl/serving-graph#getsrvvschema) | `GetSrvVSchema  <cell>` |
 | [DeleteSrvVSchema](../vtctl/serving-graph#deletesrvvschema) | `DeleteSrvVSchema  <cell>` |
 
 ### Replication Graph
@@ -161,27 +152,6 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [UpdateCellsAlias](../vtctl/cell-aliases#updatecellsalias) | `UpdateCellsAlias  -- [--cells <cell,cell2,...>] <alias>` |
 | [DeleteCellsAlias](../vtctl/cell-aliases#deletecellsalias) | `DeleteCellsAlias  <alias>` |
 | [GetCellsAliases](../vtctl/cell-aliases#getcellsaliases) | `GetCellsAliases  ` |
-
-### Queries
-
-| Name | Example Usage |
-| :-------- | :--------------- |
-| [VtGateExecute](../vtctl/queries#vtgateexecute) | `VtGateExecute  -- --server <vtgate> [--bind_variables <JSON map>] [--keyspace <default keyspace>] [--tablet_type <tablet type>] [--options <proto text options>] [--json] <sql>` |
-| [VtTabletExecute](../vtctl/queries#vttabletexecute) | `VtTabletExecute  -- [--username <TableACL user>] [--transaction_id <transaction_id>] [--options <proto text options>] [--json] <tablet alias> <sql>` |
-| [VtTabletBegin](../vtctl/queries#vttabletbegin) | `VtTabletBegin  -- [--username <TableACL user>] <tablet alias>` |
-| [VtTabletCommit](../vtctl/queries#vttabletcommit) | `VtTabletCommit  -- [--username <TableACL user>] <transaction_id>` |
-| [VtTabletRollback](../vtctl/queries#vttabletrollback) | `VtTabletRollback  -- [--username <TableACL user>] <tablet alias> <transaction_id>` |
-| [VtTabletStreamHealth](../vtctl/queries#vttabletstreamhealth) | `VtTabletStreamHealth  -- [--count <count, default 1>] <tablet alias>` |
-
-### Resharding Throttler
-
-| Name | Example Usage |
-| :-------- | :--------------- |
-| [ThrottlerMaxRates](../vtctl/resharding-throttler#throttlermaxrates) | `ThrottlerMaxRates  -- --server <vttablet>` |
-| [ThrottlerSetMaxRate](../vtctl/resharding-throttler#throttlersetmaxrate) | `ThrottlerSetMaxRate  -- --server <vttablet> <rate>` |
-| [GetThrottlerConfiguration](../vtctl/resharding-throttler#getthrottlerconfiguration) | `GetThrottlerConfiguration  -- --server <vttablet> [<throttler name>]` |
-| [UpdateThrottlerConfiguration](../vtctl/resharding-throttler#updatethrottlerconfiguration) | `UpdateThrottlerConfiguration  -- --server <vttablet> [--copy_zero_values] "<configuration protobuf text>" [<throttler name>]` |
-| [ResetThrottlerConfiguration](../vtctl/resharding-throttler#resetthrottlerconfiguration) | `ResetThrottlerConfiguration  -- --server <vttablet> [<throttler name>]` |
 
 ### Topo
 
@@ -224,7 +194,6 @@ The following global options apply to `vtctl`:
 | --backup_storage_implementation | string | which implementation to use for the backup storage feature |
 | --backup_storage_number_blocks | int | if backup_storage_compress is true, backup_storage_number_blocks sets the number of blocks that can be processed, at once, before the writer blocks, during compression (default is 2). It should be equal to the number of CPUs available for compression (default 2) |
 | --binlog_player_protocol | string | the protocol to download binlogs from a vttablet (default "grpc") |
-| --binlog_use_v3_resharding_mode | | (DEPRECATED) True iff the binlog streamer should use V3-style sharding, which doesn't require a preset sharding key column. (default true)|
 | --ceph_backup_storage_config | string | Path to JSON config file for ceph backup storage (default "ceph_backup_config.json") |
 | --consul_auth_static_file | string | JSON File to read the topos/tokens from. |
 | --cpu_profile | string | write cpu profile to file |
@@ -245,7 +214,6 @@ The following global options apply to `vtctl`:
 | --enable-tx-throttler | | If true replication-lag-based throttling on transactions will be enabled. |
 | --enable_hot_row_protection | | If true, incoming transactions for the same row (range) will be queued and cannot consume all txpool slots. |
 | --enable_hot_row_protection_dry_run | | If true, hot row protection is not enforced but logs if transactions would have been queued. |
-| --enable_queries | | if set, allows vtgate and vttablet queries. May have security implications, as the queries will be run from this process. |
 | --enable_transaction_limit | | If true, limit on number of transactions open at the same time will be enforced for all users. User trying to open a new transaction after exhausting their limit will receive an error immediately, regardless of whether there are available slots or not. |
 | --enable_transaction_limit_dry_run | | If true, limit on number of transactions open at the same time will be tracked for all users, but not enforced. |
 | --enforce_strict_trans_tables | | If true, vttablet requires MySQL to run with STRICT_TRANS_TABLES or STRICT_ALL_TABLES on. It is recommended to not turn this flag off. Otherwise MySQL may alter your supplied values before saving them to the database. (default true)|
@@ -370,11 +338,6 @@ The following global options apply to `vtctl`:
 | --tablet_manager_protocol | string | the protocol to use to talk to vttablet (default "grpc") |
 | --tablet_protocol | string | how to talk to the vttablets (default "grpc") |
 | --tablet_url_template | string | format string describing debug tablet url formatting. See the Go code for getTabletDebugURL() how to customize this. (default "http://{{.GetTabletHostPort}}") |
-| --throttler_client_grpc_ca | string | the server ca to use to validate servers when connecting |
-| --throttler_client_grpc_cert | string | the cert to use to connect |
-| --throttler_client_grpc_key | string | the key to use to connect |
-| --throttler_client_grpc_server_name | string | the server name to use to validate server certificate |
-| --throttler_client_protocol | string | the protocol to use to talk to the integrated throttler service (default "grpc") |
 | --topo_consul_watch_poll_duration | duration | time of the long poll for watch queries. (default 30s) |
 | --topo_etcd_lease_ttl | int | Lease TTL for locks and leader election. The client will use KeepAlive to keep the lease going. (default 30) |
 | --topo_etcd_tls_ca | string | path to the ca to use to validate the server cert when connecting to the etcd topo server |
@@ -424,8 +387,6 @@ The following global options apply to `vtctl`:
 | --vtgate_grpc_server_name | string | the server name to use to validate server certificate |
 | --vtgate_protocol | string | how to talk to vtgate (default "grpc") |
 | --wait-time | duration | time to wait on an action (default 24h0m0s) |
-| --wait_for_drain_sleep_rdonly | duration | (DEPRECATED) time to wait before shutting the query service on old RDONLY tablets during MigrateServedTypes (default 5s) |
-| --wait_for_drain_sleep_replica | duration | (DEPRECATED) time to wait before shutting the query service on old REPLICA tablets during MigrateServedTypes (default 15s) |
 | --watch_replication_stream | | When enabled, vttablet will stream the MySQL replication stream from the local server, and use it to support the include_event_token ExecuteOptions. |
 | --xbstream_restore_flags | string | flags to pass to xbstream command during restore. These should be space separated and will be added to the end of the command. These need to match the ones used for backup e.g. --compress / --decompress, --encrypt / --decrypt |
 | --xtrabackup_backup_flags | string | flags to pass to backup command. These should be space separated and will be added to the end of the command |

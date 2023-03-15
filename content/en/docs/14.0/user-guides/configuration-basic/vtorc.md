@@ -44,3 +44,10 @@ You can optionally add a `clusters_to_watch` flag that contains a comma separate
 You can perform planned failovers using `vtorc`. Additionally, `vtorc` will also perform failure detection with automatic failovers while honoring the [durability policies](../../configuration-basic/durability_policy).
 
 Other Orchestrator settings may also be carefully added to the config. However, some of them may not be compatible with Vitess. These will be documented soon.
+
+{{< info >}}
+**Known Issues**
+
+- [VTOrc doesn't discover the tablets](https://github.com/vitessio/vitess/issues/10650) of a keyspace if the [durability policy](../../configuration-basic/durability_policy) doesn't exist in the topo server when it comes up. This can be resolved by restarting VTOrc.
+
+{{< /info >}}

@@ -1,0 +1,5 @@
+{{- $index := slice -}}
+{{- range $page := $.Site.RegularPages -}}
+    {{- $index = $index | append (dict "title" $page.Title  "content" ($page.Content | plainify | safeHTML) "version" (index (first 3 (split (delimit (split $page.RelPermalink "/") "," "") ",")) 2) "href" $page.Permalink  "summary" ($page.Summary | plainify | safeHTML) "path" ($page.Permalink | relURL)  ) -}}
+{{- end -}}
+{{- $index | jsonify -}}

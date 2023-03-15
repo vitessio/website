@@ -69,7 +69,7 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | :-------- | :--------------- |
 | [CreateKeyspace](../vtctl/keyspaces#createkeyspace) | `CreateKeyspace  -- [--sharding_column_name=name] [--sharding_column_type=type] [--served_from=tablettype1:ks1,tablettype2:ks2,...] [--force] [--keyspace_type=type] [--base_keyspace=base_keyspace] [--snapshot_time=time] [--durability-policy=policy_name] <keyspace name>` |
 | [DeleteKeyspace](../vtctl/keyspaces#deletekeyspace) | `DeleteKeyspace  -- [--recursive] <keyspace>` |
-| [RemoveKeyspaceCell](../vtctl/keyspaces#removekeyspacesell) | `RemoveKeyspaceCell  -- [--force] [--recursive] <keyspace> <cell>` |
+| [RemoveKeyspaceCell](../vtctl/keyspaces#removekeyspacecell) | `RemoveKeyspaceCell  -- [--force] [--recursive] <keyspace> <cell>` |
 | [GetKeyspace](../vtctl/keyspaces#getkeyspace) | `GetKeyspace  <keyspace>` |
 | [GetKeyspaces](../vtctl/keyspaces#getkeyspaces) | `GetKeyspaces  ` |
 | (DEPRECATED) [SetKeyspaceShardingInfo](../vtctl/keyspaces#setkeyspaceshardinginfo) DEPRECATED | `SetKeyspaceShardingInfo  -- [--force] <keyspace name> [<column name>] [<column type>]` |
@@ -81,15 +81,15 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [MoveTables (v1)](../../vreplication/v1/movetables) | `MoveTables  -- --v1 [--cell=<cell>] [--tablet_types=<source_tablet_types>] --workflow=<workflow> <source_keyspace> <target_keyspace> <table_specs>` |
 | [MoveTables (v2)](../../vreplication/movetables) | `MoveTables  <options> <action> <workflow identifier>` |
 | [DropSources](../../vreplication/v1/dropsources) | `DropSources  -- [--dry_run] <keyspace.workflow>` |
-| [CreateLookupVindex](../vtctl/keyspaces#createLookupvindex) | `CreateLookupVindex  -- [--cell=<cell>] [--tablet_types=<source_tablet_types>] <keyspace> <json_spec>` |
+| [CreateLookupVindex](../vtctl/keyspaces#createlookupvindex) | `CreateLookupVindex  -- [--cell=<cell>] [--tablet_types=<source_tablet_types>] <keyspace> <json_spec>` |
 | [ExternalizeVindex](../vtctl/keyspaces#externalizevindex) | `ExternalizeVindex  <keyspace>.<vindex>` |
 | [Materialize](../vtctl/keyspaces#materialize) | `Materialize  <json_spec>, example : '{"workflow": "aaa", "source_keyspace": "source", "target_keyspace": "target", "table_settings": [{"target_table": "customer", "source_expression": "select * from customer", "create_ddl": "copy"}]}'` |
 | (DEPRECATED) [SplitClone](../vtctl/keyspaces#splitclone) DEPRECATED | `SplitClone  <keyspace> <from_shards> <to_shards>` |
 | (DEPRECATED) [VerticalSplitClone](../vtctl/keyspaces#verticalsplitclone) DEPRECATED | `VerticalSplitClone  <from_keyspace> <to_keyspace> <tables>` |
-| [VDiff](../vtctl/keyspaces#VDiff) | `VDiff -- [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=<source_tablet_types>] [--filtered_replication_wait_time=30s] [--max_extra_rows_to_compare=1000] <keyspace.workflow>` |
+| [VDiff](../vtctl/keyspaces#vdiff) | `VDiff -- [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=<source_tablet_types>] [--filtered_replication_wait_time=30s] [--max_extra_rows_to_compare=1000] <keyspace.workflow>` |
 | (DEPRECATED) [MigrateServedTypes](../vtctl/keyspaces#migrateservedtypes) DEPRECATED | `MigrateServedTypes  -- [--cells=c1,c2,...] [--reverse] [--skip-refresh-state] <keyspace/shard> <served tablet type>` |
 | (DEPRECATED) [MigrateServedFrom](../vtctl/keyspaces#migrateservedfrom) DEPRECATED | `MigrateServedFrom  -- [--cells=c1,c2,...] [--reverse] <destination keyspace/shard> <served tablet type>` |
-| [SwitchReads](../../vreplication/v1/switchreads) | `SwitchReads  -- [--cells=c1,c2,...] [--reverse] -tablet_type={replica|rdonly} [--dry-run] <keyspace.workflow>` |
+| [SwitchReads](../../vreplication/v1/switchreads) | `SwitchReads  -- [--cells=c1,c2,...] [--reverse] -tablet_type={replica\|rdonly} [--dry-run] <keyspace.workflow>` |
 | [SwitchWrites](../../vreplication/v1/switchwrites) | `SwitchWrites  -- [--filtered_replication_wait_time=30s] [--cancel] [--reverse_replication=false] [--dry-run] <keyspace.workflow>` |
 | [CancelResharding](../vtctl/keyspaces#cancelresharding) | `CancelResharding  <keyspace/shard>` |
 | [ShowResharding](../vtctl/keyspaces#showresharding) | `ShowResharding  <keyspace/shard>` |
@@ -115,17 +115,17 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [ReloadSchemaKeyspace](../vtctl/schema-version-permissions#reloadschemakeyspace) | `ReloadSchemaKeyspace  -- [--concurrency=10] [--include_primary=false] <keyspace>` |
 | [ValidateSchemaShard](../vtctl/schema-version-permissions#validateschemashard) | `ValidateSchemaShard  -- [--exclude_tables=''] [--include-views] <keyspace/shard>` |
 | [ValidateSchemaKeyspace](../vtctl/schema-version-permissions#validateschemakeyspace) | `ValidateSchemaKeyspace  -- [--exclude_tables=''] [--include-views] <keyspace name>` |
-| [ApplySchema](../vtctl/schema-version-permissions#applyschema) | `ApplySchema  -- [--allow_long_unavailability] [--wait_replicas_timeout=10s] {--sql=<sql> || --sql-file=<filename>} <keyspace>` |
-| [CopySchemaShard](../vtctl/schema-version-permissions#copyschemashard) | `CopySchemaShard  -- [--tables=<table1>,<table2>,...] [--exclude_tables=<table1>,<table2>,...] [--include-views] [--skip-verify] [--wait_replicas_timeout=10s] {<source keyspace/shard> || <source tablet alias>} <destination keyspace/shard>` |
+| [ApplySchema](../vtctl/schema-version-permissions#applyschema) | `ApplySchema  -- [--allow_long_unavailability] [--wait_replicas_timeout=10s] {--sql=<sql> \|\| --sql-file=<filename>} <keyspace>` |
+| [CopySchemaShard](../vtctl/schema-version-permissions#copyschemashard) | `CopySchemaShard  -- [--tables=<table1>,<table2>,...] [--exclude_tables=<table1>,<table2>,...] [--include-views] [--skip-verify] [--wait_replicas_timeout=10s] {<source keyspace/shard> \|\| <source tablet alias>} <destination keyspace/shard>` |
 | [ValidateVersionShard](../vtctl/schema-version-permissions#validateversionshard) | `ValidateVersionShard  <keyspace/shard>` |
 | [ValidateVersionKeyspace](../vtctl/schema-version-permissions#validateversionkeyspace) | `ValidateVersionKeyspace  <keyspace name>` |
 | [GetPermissions](../vtctl/schema-version-permissions#getpermissions) | `GetPermissions  <tablet alias>` |
 | [ValidatePermissionsShard](../vtctl/schema-version-permissions#validatepermissionsshard) | `ValidatePermissionsShard  <keyspace/shard>` |
 | [ValidatePermissionsKeyspace](../vtctl/schema-version-permissions#validatepermissionskeyspace) | `ValidatePermissionsKeyspace  <keyspace name>` |
 | [GetVSchema](../vtctl/schema-version-permissions#getvschema) | `GetVSchema  <keyspace>` |
-| [ApplyVSchema](../vtctl/schema-version-permissions#applyvschema) | `ApplyVSchema  -- {--vschema=<vschema> || --vschema_file=<vschema file> || --sql=<sql> || --sql_file=<sql file>} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run] <keyspace>` |
+| [ApplyVSchema](../vtctl/schema-version-permissions#applyvschema) | `ApplyVSchema  -- {--vschema=<vschema> \|\| --vschema_file=<vschema file> \|\| --sql=<sql> \|\| --sql_file=<sql file>} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run] <keyspace>` |
 | [GetRoutingRules](../vtctl/schema-version-permissions#getroutingrules) | `GetRoutingRules  ` |
-| [ApplyRoutingRules](../vtctl/schema-version-permissions#applyroutingrules) | `ApplyRoutingRules  -- {--rules=<rules> || --rules_file=<rules_file>} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run]` |
+| [ApplyRoutingRules](../vtctl/schema-version-permissions#applyroutingrules) | `ApplyRoutingRules  -- {--rules=<rules> \|\| --rules_file=<rules_file>} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run]` |
 | [RebuildVSchemaGraph](../vtctl/schema-version-permissions#rebuildvschemagraph) | `RebuildVSchemaGraph  -- [--cells=c1,c2,...]` |
 
 ### Serving Graph
@@ -134,7 +134,7 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | :-------- | :--------------- |
 | [GetSrvKeyspaceNames](../vtctl/serving-graph#getsrvkeyspacenames) | `GetSrvKeyspaceNames  <cell>` |
 | [GetSrvKeyspace](../vtctl/serving-graph#getsrvkeyspace) | `GetSrvKeyspace  <cell> <keyspace>` |
-| [GetSrvVSchema](../vtctl/serving-graph#getsrvsvchema) | `GetSrvVSchema  <cell>` |
+| [GetSrvVSchema](../vtctl/serving-graph#getsrvvschema) | `GetSrvVSchema  <cell>` |
 | [DeleteSrvVSchema](../vtctl/serving-graph#deletesrvvschema) | `DeleteSrvVSchema  <cell>` |
 
 ### Replication Graph

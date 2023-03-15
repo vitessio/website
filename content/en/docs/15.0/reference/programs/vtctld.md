@@ -105,7 +105,7 @@ vtctld \
 | --grpc_server_initial_conn_window_size | int | grpc server initial connection window size |
 | --grpc_server_initial_window_size | int | grpc server initial window size |
 | --grpc_server_keepalive_enforcement_policy_min_time | duration | grpc server minimum keepalive time (default 5m0s) |
-| --grpc_server_keepalive_enforcement_policy_permit_without_strea | m | grpc server permit client keepalive pings even when there are no active streams (RPCs) |
+| --grpc_server_keepalive_enforcement_policy_permit_without_stream | boolean | grpc server permit client keepalive pings even when there are no active streams (RPCs) |
 | --heartbeat_enable | boolean | If true, vttablet records (if primary) or checks (if replica) the current time of a replication heartbeat in the table _vt.heartbeat. The result is used to inform the serving state of the vttablet via healthchecks. |
 | --heartbeat_interval | duration | How frequently to read and write replication heartbeat. (default 1s) |
 | --hot_row_protection_concurrent_transactions | int | Number of concurrent transactions let through to the txpool/MySQL for the same hot row. Should be > 1 to have enough 'ready' transactions in MySQL and benefit from a pipelining effect. (default 5) |
@@ -262,19 +262,11 @@ vtctld \
 | --vtctl_healthcheck_retry_delay | duration | delay before retrying a failed healthcheck (default 5s) |
 | --vtctl_healthcheck_timeout | duration | the health check timeout period (default 1m0s) |
 | --vtctl_healthcheck_topology_refresh | duration | refresh interval for re-reading the topology (default 30s) |
-| --vtctld_show_topology_crud | boolean | Controls the display of the CRUD topology actions in the vtctld UI. (default true) |
 | --vtgate_grpc_ca | string | the server ca to use to validate servers when connecting |
 | --vtgate_grpc_cert | string | the cert to use to connect |
 | --vtgate_grpc_key | string | the key to use to connect |
 | --vtgate_grpc_server_name | string | the server name to use to validate server certificate |
 | --vtgate_protocol | string | how to talk to vtgate (default "grpc") |
-| --vtworker_client_grpc_ca | string | (DEPRECATED) the server ca to use to validate servers when connecting |
-| --vtworker_client_grpc_cert | string | (DEPRECATED) the cert to use to connect |
-| --vtworker_client_grpc_key | string | (DEPRECATED) the key to use to connect |
-| --vtworker_client_grpc_server_name | string | (DEPRECATED) the server name to use to validate server certificate |
-| --vtworker_client_protocol | string | (DEPRECATED) the protocol to use to talk to the vtworker server (default "grpc") |
-| --wait_for_drain_sleep_rdonly | duration | (DEPRECATED) time to wait before shutting the query service on old RDONLY tablets during MigrateServedTypes (default 5s) |
-| --wait_for_drain_sleep_replica | duration | (DEPRECATED) time to wait before shutting the query service on old REPLICA tablets during MigrateServedTypes (default 15s) |
 | --watch_replication_stream | boolean | When enabled, vttablet will stream the MySQL replication stream from the local server, and use it to support the include_event_token ExecuteOptions. |
 | --workflow_manager_disable | value | comma separated list of workflow types to disable |
 | --workflow_manager_init | boolean | Initialize the workflow manager in this vtctld instance. |

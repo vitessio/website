@@ -1,4 +1,4 @@
-	---
+---
 title: Creating a Backup
 weight: 2
 aliases: ['/docs/user-guides/backup-and-restore/']
@@ -10,11 +10,11 @@ The default backup implementation is `builtin`, however we strongly recommend us
 
 ### Prerequisite
 
-A compatible version of [xtrabackup](https://www.percona.com/doc/percona-xtrabackup/LATEST/index.html) and [xbstream](https://www.percona.com/doc/percona-xtrabackup/LATEST/xtrabackup_bin/backup.streaming.html), if needed, must be present in your `$PATH` prior to running the `Backup[Shard]` command.
+A compatible version of [xtrabackup](https://www.percona.com/doc/percona-xtrabackup/latest/index.html) and [xbstream](https://docs.percona.com/percona-xtrabackup/8.0/xtrabackup_bin/backup.streaming.html), if needed, must be present in your `$PATH` prior to running the `Backup[Shard]` command.
 
 ### Supported Versions of Xtrabackup
 
-* [For MySQL 5.7](https://www.percona.com/doc/percona-xtrabackup/2.4/index.html#installation)
+* [MySQL 5.7](https://www.percona.com/doc/percona-xtrabackup/2.4/index.html#installation)
 * [MySQL 8.0](https://www.percona.com/doc/percona-xtrabackup/8.0/index.html#installation)
 
 ### Basic VTTablet and Vtctld Configuration
@@ -33,7 +33,7 @@ Additionally required for MySQL 8.0:
 ### Run the following vtctl command to create a backup:
 
 ``` sh
-vtctlclient --server=<vtctld_host>:<vtctld_port> Backup <tablet-alias>
+vtctldclient --server=<vtctld_host>:<vtctld_port> Backup <tablet-alias>
 ```
 
 If the engine is `builtin`, replication will be stopped prior to shutting down mysqld for the backup.
@@ -43,12 +43,12 @@ If the engine is `xtrabackup`, the tablet can continue to serve traffic while th
 ### Run the following vtctl command to backup a specific shard:
 
 ``` sh
-vtctlclient --server=<vtctld_host>:<vtctld_port> BackupShard -- [--allow_primary=false] <keyspace/shard>
+vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard [--allow_primary=false] <keyspace/shard>
 ```
 
 ## Restoring a backup
 
-When a tablet starts, Vitess checks the value of the `-restore_from_backup` command-line flag to determine whether to restore a backup to that tablet.
+When a tablet starts, Vitess checks the value of the `--restore_from_backup` command-line flag to determine whether to restore a backup to that tablet.
 
 * If the flag is present, Vitess tries to restore the most recent backup from the [BackupStorage](../backup-and-restore/#backup-storage-services) system when starting the tablet or if the `--restore_from_backup_ts` flag (Vitess 12.0+) is also set then using the latest backup taken at or before this timestamp instead. Example: '2021-04-29.133050'
 * If the flag is absent, Vitess does not try to restore a backup to the tablet. This is the equivalent of starting a new tablet in a new shard.
@@ -65,18 +65,18 @@ vttablet ... --backup_storage_implementation=file \
 
 ## Managing backups
 
-**vtctl** provides two commands for managing backups:
+**vtctldclient** provides two commands for managing backups:
 
-* [ListBackups](https://vitess.io/docs/reference/programs/vtctl/shards/#listbackups) displays the existing backups for a keyspace/shard in chronological order.
+* [GetBackups](https://vitess.io/docs/reference/programs/vtctldclient/vtctldclient_getbackups/) displays the existing backups for a keyspace/shard in chronological order.
 
     ``` sh
-    vtctlclient --server=<vtctld_host>:<vtctld_port> ListBackups <keyspace/shard>
+    vtctldclient --server=<vtctld_host>:<vtctld_port> GetBackups <keyspace/shard>
     ```
 
-* [RemoveBackup](https://vitess.io/docs/reference/programs/vtctl/shards/#removebackup) deletes a specified backup for a keyspace/shard.
+* [RemoveBackup](https://vitess.io/docs/reference/programs/vtctldclient/vtctldclient_removebackup/) deletes a specified backup for a keyspace/shard.
 
     ``` sh
-    vtctlclient --server=<vtctld_host>:<vtctld_port> RemoveBackup <keyspace/shard> <backup name>
+    vtctldclient --server=<vtctld_host>:<vtctld_port> RemoveBackup <keyspace/shard> <backup name>
     ```
 
 You can also confirm your backup finished by viewing the files in your configured `--<engine>_backup_storage_root` location. You will still need to test and verify these backups for completeness. Note that backups are stored by keyspace and shard under `--<engine>_backup_storage_root`. For example, when using `--file_backup_storage_root=/vt/vtdataroot/backups`:

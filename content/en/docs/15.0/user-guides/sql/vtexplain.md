@@ -1,18 +1,21 @@
 ---
-title: Analyzing a SQL statement
+title: Analyzing a SQL statement using VTEXPLAIN
 weight: 1
 aliases: ['/docs/user-guides/vtexplain/']
 ---
 
 # Introduction
 
-This document covers the way Vitess executes a particular SQL statement using the [VTExplain tool](../../../reference/programs/vtexplain). This tool works similarly to the MySQL `EXPLAIN` statement.
+This document covers the way Vitess executes a particular SQL statement using the [VTExplain tool](../../../reference/programs/vtexplain). 
+This tool works similarly to the MySQL `EXPLAIN` statement.
+You can run `vtexplain` before you have a running Vitess cluster, which lets you quickly try different schema/vschema.
+If you're already running a cluster, you can also use the [`EXPLAIN format=vtexplain...`](../explain-format-vtexplain) command from a SQL console.
 
 ## Prerequisites
 
 You can find a prebuilt binary version of the VTExplain tool in [the most recent release of Vitess](https://github.com/vitessio/vitess/releases/).
 
-You can also build the `vtexplain` binary in your environment. To build this binary, refer to the [build guide](../../../contributing) for your OS.
+You can also build the `vtexplain` binary in your environment. To build this binary, refer to the [build guide](../../../../contributing) for your OS.
 
 ## Overview
 

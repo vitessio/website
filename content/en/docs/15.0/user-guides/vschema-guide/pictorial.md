@@ -1,6 +1,6 @@
 ---
 title: Pictorial Summary
-weight: 13
+weight: 25
 ---
 
 The following two diagrams highlight some of the relationships that exist between VSchema elements and the MySQL tables.

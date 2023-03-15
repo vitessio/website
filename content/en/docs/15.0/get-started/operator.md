@@ -15,7 +15,7 @@ Before we get started, let’s get a few pre-requisites out of the way:
 
 1. Install [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) and start a Minikube engine:
     ```bash
-    minikube start --kubernetes-version=v1.19.16 --cpus=4 --memory=4000 --disk-size=32g
+    minikube start --kubernetes-version=v1.24.0 --cpus=4 --memory=8000 --disk-size=32g
     ```
 
 2. Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and ensure it is in your `PATH`.
@@ -29,7 +29,7 @@ Before we get started, let’s get a few pre-requisites out of the way:
 Change to the operator example directory:
 
 ```bash
-git clone git@github.com:vitessio/vitess.git
+git clone https://github.com/vitessio/vitess
 cd vitess/examples/operator
 ```
 
@@ -47,25 +47,23 @@ In this directory, you will see a group of yaml files. The first digit of each f
 kubectl apply -f 101_initial_cluster.yaml
 ```
 
-{{< info >}}
-We have supplied an example yaml for bringing up Vitess with the experimental [vtorc](../../user-guides/configuration-basic/vtorc) component. You can try this out by using the following command: `kubectl apply -f vtorc_example.yaml`. Once `vtorc` is officially released, the examples will be updated accordingly.
-{{< /info >}}
-
 ### Verify cluster
 
 You can check the state of your cluster with `kubectl get pods`. After a few minutes, it should show that all pods are in the status of running:
 
 ```bash
 $ kubectl get pods
-NAME                                             READY   STATUS    RESTARTS   AGE
-example-etcd-faf13de3-1                          1/1     Running   0          78s
-example-etcd-faf13de3-2                          1/1     Running   0          78s
-example-etcd-faf13de3-3                          1/1     Running   0          78s
-example-vttablet-zone1-2469782763-bfadd780       3/3     Running   1          78s
-example-vttablet-zone1-2548885007-46a852d0       3/3     Running   1          78s
-example-zone1-vtctld-1d4dcad0-59d8498459-kwz6b   1/1     Running   2          78s
-example-zone1-vtgate-bc6cde92-6bd99c6888-vwcj5   1/1     Running   2          78s
-vitess-operator-8454d86687-4wfnc                 1/1     Running   0          2m29s
+NAME                                                         READY   STATUS    RESTARTS        AGE
+example-commerce-x-x-zone1-vtorc-c13ef6ff-5db4c77865-l96xq   1/1     Running   2 (2m49s ago)   5m16s
+example-etcd-faf13de3-1                                      1/1     Running   0               5m17s
+example-etcd-faf13de3-2                                      1/1     Running   0               5m17s
+example-etcd-faf13de3-3                                      1/1     Running   0               5m17s
+example-vttablet-zone1-2469782763-bfadd780                   3/3     Running   1 (2m43s ago)   5m16s
+example-vttablet-zone1-2548885007-46a852d0                   3/3     Running   1 (2m47s ago)   5m16s
+example-zone1-vtadmin-c03d7eae-7c6f6c98f8-f4f5z              2/2     Running   0               5m17s
+example-zone1-vtctld-1d4dcad0-57b9d7bc4b-2tnqd               1/1     Running   2 (2m53s ago)   5m17s
+example-zone1-vtgate-bc6cde92-7d445d676-x6npk                1/1     Running   2 (3m ago)      5m17s
+vitess-operator-5f47c6c45d-bgqp2                             1/1     Running   0               6m52s
 ```
 
 ## Setup Port-forward
@@ -83,6 +81,8 @@ alias mysql="mysql -h 127.0.0.1 -P 15306 -u user"
 ```
 
 Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctlclient` or close your session.
+
+Once the port-forward starts running, the VTAdmin UI will be available at [http://localhost:14000/](http://localhost:14000/)
 
 ## Create Schema
 

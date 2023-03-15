@@ -41,7 +41,7 @@ See [Unmanaged Tablet](../../../user-guides/configuration-advanced/unmanaged-tab
 
 Even if a MySQL is external, you can still make vttablet perform some management functions. They are as follows:
 
-* `--disable_active_reparents`: If this flag is set, then any reparent or replica commands will not be allowed. These are InitShardMaster, PlannedReparent, PlannedReparent, EmergencyReparent, and ReparentTablet. In this mode, you should use the TabletExternallyReparented command to inform vitess of the current primary.
+* `--disable_active_reparents`: If this flag is set, then any reparent or replica commands will not be allowed. These are InitShardPrimary, PlannedReparentShard, EmergencyReparentShard, and ReparentTablet. In this mode, you should use the TabletExternallyReparented command to inform vitess of the current primary.
 * `--replication_connect_retry`: This value is give to mysql when it connects a replica to the primary as the retry duration parameter.
 * `--enable_replication_reporter`: If this flag is set, then vttablet will transmit replica lag related information to the vtgates, which will allow it to balance load better. Additionally, enabling this will also cause vttablet to restart replication if it was stopped. However, it will do this only if --disable_active_reparents was not turned on.
 * `--enable_semi_sync`: This option will automatically enable semi-sync on new replicas as well as on any tablet that transitions into a replica type. This includes the demotion of a primary to a replica.
@@ -342,11 +342,13 @@ The following global options apply to `vttablet`:
 | -v | value | log level for V logs |
 | --version |  | print binary version |
 | --vmodule | value | comma-separated list of pattern=N settings for file-filtered logging |
+| --vreplication_copy_phase_duration | duration | Duration for each copy phase loop (before running the next catchup: default 1h) (default 1h0m0s) |
 | --vreplication_copy_phase_max_innodb_history_list_length | int | The maximum InnoDB transaction history that can exist on a vstreamer (source) before starting another round of copying rows. This helps to limit the impact on the source tablet. (default 1000000) |
 | --vreplication_copy_phase_max_mysql_replication_lag | int | The maximum MySQL replication lag (in seconds) that can exist on a vstreamer (source) before starting another round of copying rows. This helps to limit the impact on the source tablet. (default 43200) |
 | --vreplication_healthcheck_retry_delay | duration | healthcheck retry delay (default 5s) |
 | --vreplication_healthcheck_timeout | duration | healthcheck retry delay (default 1m0s) |
 | --vreplication_healthcheck_topology_refresh | duration | refresh interval for re-reading the topology (default 30s) |
+| --vreplication_max_time_to_retry_on_error | duration | stop automatically retrying when we've had consecutive failures with the same error for this long after the first occurrence (default 0, unlimited) |
 | --vreplication_retry_delay | duration | delay before retrying a failed binlog connection (default 5s) |
 | --vreplication_tablet_type | string | comma separated list of tablet types used as a source (default "in_order:REPLICA,PRIMARY") |
 | --vstream_packet_size | int | Suggested packet size for VReplication streamer. This is used only as a recommendation. The actual packet size may be more or less than this amount. (default 30000) |

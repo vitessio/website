@@ -9,7 +9,7 @@ This is the new _experimental_ version of VDiff which runs on `vttablets` as com
 {{< /warning >}}
 
 {{< info >}}
-Even before it's marked as production-ready (feature complete and tested widely in 1+ releases), it should be safe to use and is likely to provide much better results for very large tables. It also offers the ability to resume a VDiff that may have encountered an error, which is especially useful when working with very large tables.
+Even before it's marked as production-ready (feature complete and tested widely in 1+ releases), it should be safe to use and is likely to provide much better results for very large tables. It offers the ability to automatically retry a VDiff that encountered an ephemeral error, which is especially useful when working with very large tables. It offers the ability to resume a previously completed VDiff where it left off, allowing you to perform ongoing or differential VDiffs. Lastly, it offers ongoing progress reporting to help plan your next steps.
 {{< /info >}}
 
 For additional details, please see the [RFC](https://github.com/vitessio/vitess/issues/10134) and the [README](https://github.com/vitessio/vitess/tree/main/go/vt/vttablet/tabletmanager/vdiff/README.md).
@@ -17,19 +17,17 @@ For additional details, please see the [RFC](https://github.com/vitessio/vitess/
 ### Command
 
 VDiff2 takes different sub-commands or actions similar to how the [`MoveTables`](../movetables/)/[`Reshard`](../reshard/) commands work. The first argument
-is the <keyspace.workflow> followed by <action>. The following actions are supported:
+is the &lt;keyspace.workflow&gt; followed by an &lt;action&gt;. The following actions are supported:
 
 #### Start a new VDiff
 
-These take the same parameters as VDiff1 and schedule VDiff to run on the primary tablet of each target shard to verify
-the subset of data that will live on the given shard. Please note that if you do not specify a sub-command or action
-then `create` is assumed (this eases the transition from VDiff1 to VDiff2). If you do not pass a specific UUID then one
-will be generated.
+These take the same parameters as VDiff1 and schedule VDiff to run on the primary tablet of each target shard to verify the subset of data that will live on the given shard. Please note that if you do not specify a sub-command or action then `create` is assumed (this eases the transition from VDiff1 to VDiff2). If you do not pass a specific UUID then one will be generated.
 
 ```
 VDiff -- --v2 [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
-       [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--max_extra_rows_to_compare=1000]
-       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow>  create [<UUID>]
+       [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--auto-retry] [--verbose] [--max_extra_rows_to_compare=1000]
+       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] [--wait] [--wait-update-interval=1m]
+       <keyspace.workflow> create [<UUID>]
 ```
 
 Each scheduled VDiff has an associated UUID which is returned by the `create` action. You can use it
@@ -42,14 +40,13 @@ VDiff bf9dfc5f-e5e6-11ec-823d-0aa62e50dd24 scheduled on target shards, use show 
 
 #### Resume a previous VDiff
 
-Allows you to resume an existing VDiff workflow, picking up where it left off and comparing the records where the Primary Key column(s) are greater than the last record processed — with the progress and other status information saved when the run ends. This allows you to:
-  1. Resume a VDiff that may have encountered an ephemeral error
-  2. Do approximate rolling or differential VDiffs (e.g. done after MoveTables finishes the initial copy phase and then again just before SwitchTraffic)
+The `resume` action allows you to resume a previously completed VDiff, picking up where it left off and comparing the records where the Primary Key column(s) are greater than the last record processed — with the progress and other status information saved when the run ends. This allows you to do approximate rolling or differential VDiffs (e.g. done after MoveTables finishes the initial copy phase and then again just before SwitchTraffic).
 
 ```
 VDiff -- --v2 [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
-       [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--max_extra_rows_to_compare=1000]
-       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] <keyspace.workflow> resume <UUID>
+       [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--auto-retry] [--verbose] [--max_extra_rows_to_compare=1000]
+       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] [--wait] [--wait-update-interval=1m]
+       <keyspace.workflow> resume <UUID>
 ```
 
 Example:
@@ -66,7 +63,7 @@ We cannot guarantee accurate results for `resume` when different collations are 
 #### Show progress/status of a VDiff
 
 ```
-VDiff  -- --v2  <keyspace.workflow> show [<UUID> | last | all]
+VDiff  -- --v2  <keyspace.workflow> show {<UUID> | last | all}
 ```
 
 You can either `show` a specific UUID or use the `last` convenience shorthand to look at the most recently created VDiff. Example:
@@ -95,9 +92,84 @@ $ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.comm
 	"StartedAt": "2022-06-26 22:44:29",
 	"CompletedAt": "2022-06-26 22:44:31"
 }
+
+$ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.p1c2 show daf1f03a-03ed-11ed-9ab8-920702940ee0
+{
+	"Workflow": "p1c2",
+	"Keyspace": "customer",
+	"State": "started",
+	"UUID": "daf1f03a-03ed-11ed-9ab8-920702940ee0",
+	"RowsCompared": 51,
+	"HasMismatch": false,
+	"Shards": "-80,80-",
+	"StartedAt": "2022-07-15 03:26:03",
+	"Progress": {
+		"Percentage": 48.57,
+		"ETA": "2022-07-15 03:26:10"
+	}
+}
 ```
 
-`show all` lists all vdiffs created for the specified keyspace and workflow.
+`show all` lists all VDiffs created for the specified keyspace and workflow.
+
+{{< info >}}
+It is too expensive to get exact real-time row counts for tables, using e.g. `SELECT COUNT(*)`.
+So we instead use the statistics available in the
+[`information_schema`](https://dev.mysql.com/doc/refman/en/information-schema-tables-table.html)
+to approximate the number of rows in each table when initializing a VDiff on the target
+primary tablet(s). This data is then used in the progress report and it can be significantly
+off (up to 50-60+%) depending on the utilization of the underlying MySQL server resources and
+the age of the tables. You can manually run
+[`ANALYZE TABLE`](https://dev.mysql.com/doc/refman/en/analyze-table.html) to update the
+statistics for the tables involved on the target primary tablet(s) before creating the
+VDiff, if so desired, in order to improve the accuracy of the progress report.
+{{< /info >}}
+
+#### Stopping a VDiff
+
+```
+VDiff  -- --v2  <keyspace.workflow> stop <UUID>
+```
+
+The `stop` action allows you to stop a running VDiff for any reason — for example, the load on the system(s) may be too high at the moment and you want to postpone the work until off hours. You can then later use the `resume` action to start the VDiff again from where it left off. Example:
+
+```
+$ vtctlclient --server=localhost:15999 VDiff -- --v2  --format=json customer.commerce2customer stop ad9bd40e-0c92-11ed-b568-920702940ee0
+{
+	"UUID": "ad9bd40e-0c92-11ed-b568-920702940ee0",
+	"Action": "stop",
+	"Status": "completed"
+}
+```
+
+{{< info >}}
+Attempting to `stop` a VDiff that is already completed is a no-op.
+{{< /info >}}
+
+#### Delete VDiff results
+
+```
+VDiff  -- --v2  <keyspace.workflow> delete {<UUID> | all}
+```
+
+You can either `delete` a specific UUID or use the `all` shorthand to delete all VDiffs created for the specified keyspace and workflow. Example:
+
+```
+$ vtctlclient --server=localhost:15999 VDiff -- --v2 customer.commerce2customer delete all
+VDiff delete status is completed on target shards
+
+$ vtctlclient --server=localhost:15999 VDiff -- --v2 --format=json customer.commerce2customer delete all
+{
+	"Action": "delete",
+	"Status": "completed"
+}
+```
+
+{{< info >}}
+Deletes are idempotent, so attempting to `delete` VDiff data that does not exist is a no-op.
+
+All VDiff data associated with a VReplication workflow is deleted when the workflow is deleted.
+{{< /info >}}
 
 ### Description
 
@@ -105,8 +177,6 @@ VDiff does a row by row comparison of all tables associated with the workflow, d
 source keyspace and the target keyspace and reporting counts of missing/extra/unmatched rows.
 
 It is highly recommended that you do this before you finalize a workflow with `SwitchTraffic`.
-
-The actions supported
 
 ### Parameters
 
@@ -141,7 +211,7 @@ One or more from PRIMARY, REPLICA, RDONLY.<br><br>
 
 <div class="cmd">
 VDiff finds the current position of the source primary and then waits for the target replication to reach
-that position for `--filtered_replication_wait_time`. If the target is much behind the source or if there is
+that position for --filtered_replication_wait_time. If the target is much behind the source or if there is
 a high write qps on the source then this time will need to be increased.
 </div>
 
@@ -164,10 +234,40 @@ A comma separated list of tables to run vdiff on.
 
 #### --format
 **optional**\
-**default** unstructured text output
+**default** text (unstructured text output)
 
 <div class="cmd">
-Only other format supported is json
+Only other format supported is JSON
+</div>
+
+#### --auto-retry
+**optional**\
+**default** true
+
+<div class="cmd">
+Automatically retry vdiffs that end with an error
+</div>
+
+#### --verbose
+**optional**
+
+<div class="cmd">
+Show verbose vdiff output in summaries
+</div>
+
+#### --wait
+**optional**
+
+<div class="cmd">
+When creating or resuming a vdiff, wait for the vdiff to finish before exiting. This will print the current status of the vdiff every --wait-update-interval.
+</div>
+
+#### --wait-update-interval
+**optional**\
+**default** 1m (1 minute)
+
+<div class="cmd">
+When waiting for a vdiff to finish, check and display the current status this often.
 </div>
 
 #### --max_extra_rows_to_compare

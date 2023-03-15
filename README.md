@@ -6,30 +6,27 @@ This repo houses the assets used to build the website at https://vitess.io.
 
 ## Running the site locally
 
-To run the website locally, you need to have the "extended" version of the [Hugo](https://gohugo.io) static site generator installed (installation instructions [here](https://gohugo.io/getting-started/installing/)). Installing the Hugo version in [netlify.toml](./netlify.toml) is recommended.
-
-Once Hugo is installed you will need to install `npm` or `yarn` and fetch the dependencies in the git directory:
+First install `npm`, then fetch dependencies, including
+[Hugo](https://gohugo.io) by running these commands:
 
 ```bash
 cd website
 npm install
 ```
 
-or
+To build a development version of the site, run the following command:
 
 ```bash
-cd website
-yarn
+make build
 ```
 
-You are now ready to startup the hugo server:
+To serve the site locally, run:
 
 ```bash
-hugo server --buildDrafts --buildFuture
+make serve
 ```
 
-This starts Hugo in local mode. You can see access the site at http://localhost:1313.
-
+View the locally served site at http://localhost:1313.
 
 ## Adding a user logo
 
@@ -41,20 +38,17 @@ You can check the site's internal links by running `make check-internal-links` a
 
 ## CSS/SASS
 
-The Vitess website uses [Bulma](https://bulma.io/), a CSS (and SASS) framework that provides all kinds of variables, utilities, and components. 
-
-**⚠ If you are running Hugo locally and your .sass file changes are not getting picked up:** make sure you have [installed the "extended" version](https://gohugo.io/getting-started/installing/) of the `hugo` binary. 
+The Vitess website uses [Bulma](https://bulma.io/), a CSS (and SASS) framework that provides all kinds of variables, utilities, and components.
 
 # Releasing a new version of the documentation
 
-1. Copy the most recent docs version folder to a new folder named for the new upcoming version (for each language)
-  `cp -R content/en/docs/v1.0 content/en/docs/v2.0`
-  `cp -R content/zh/docs/v1.0 content/zh/docs/v2.0`
+To release a new version of the documentation you can use one of the following two scripts:
 
-1. Update `config.toml`
-  Set `[params.versions]` `current` to the value of the new release number.
-  Set `[params.versions]` `next` to the value of the upcoming planned version.
+- `./tools/rc_release.sh`: for RC release.
+  - Takes one argument, the number of the next release.
+  - Usage when releasing v16.0.0-rc1: `./tools/rc_release.sh "17"`
 
-1. (optional) Remove any version of the documenation that is no longer supported
-  `git rm -rf content/en/docs/v0.0`
-  `git rm -rf content/zh/docs/v0.0`
+
+- `./tools/ga_release.sh`: when a version becomes GA.
+  - Takes one argument too, the number of the version we are making GA.
+  - Usage when releasing v16.0.0 GA: `./tools/ga_release.sh "16"`

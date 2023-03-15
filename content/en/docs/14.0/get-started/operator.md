@@ -29,7 +29,7 @@ Before we get started, let’s get a few pre-requisites out of the way:
 Change to the operator example directory:
 
 ```bash
-git clone git@github.com:vitessio/vitess.git
+git clone https://github.com/vitessio/vitess
 cd vitess/examples/operator
 ```
 
@@ -49,6 +49,8 @@ kubectl apply -f 101_initial_cluster.yaml
 
 {{< info >}}
 We have supplied an example yaml for bringing up Vitess with the experimental [vtorc](../../user-guides/configuration-basic/vtorc) component. You can try this out by using the following command: `kubectl apply -f vtorc_example.yaml`. Once `vtorc` is officially released, the examples will be updated accordingly.
+
+After the [port forwarding](#setup-port-forward) is setup, you are required to run [`SetKeyspaceDurabilityPolicy`](../../reference/programs/vtctldclient/vtctldclient_setkeyspacedurabilitypolicy/) with the desired [durability policy](../../user-guides/configuration-basic/durability_policy) and restart VTOrc.
 {{< /info >}}
 
 ### Verify cluster

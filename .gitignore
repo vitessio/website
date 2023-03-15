@@ -1,5 +1,5 @@
 node_modules/
-public/
+/public
 resources/
 !content/en/docs/resources
 
@@ -10,6 +10,7 @@ tmp/
 
 # File generated when running npm install
 package-lock.json
+yarn.lock
 
 # vim files
 *.swp

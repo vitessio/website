@@ -127,12 +127,11 @@ VTTablet should be brought up on the same machine as the MySQL instance. It need
 * `tablet-path`: This should be the cell name followed by a `-` and the tablet UID used for `mysqlctl`. VTTablet will infer the `cell` name from this. Example: `cell1-100`.
 * `init_keyspace`: The keyspace that the tablet is going to serve. This will cause a keyspace to be created if one is not present.
 * `init_shard`: The shard that the tablet is going to serve. This will cause a shard to be created if one is not present.
-* `init_tablet_type`: This will typically be REPLICA. You may use other tablet types like “RDONLY”. Those tablet types will be deprecated in favor of newer ways to achieve their functionality. Note that you are not allowed to start a tablet as a MASTER.
+* `init_tablet_type`: This will typically be REPLICA. You may use other tablet types like “RDONLY”. Note that you are not allowed to start a tablet as a "PRIMARY".
 * `port`, `grpc_port`, and `--service_map` `'grpc-queryservice,grpc-tabletmanager'`
 
 There are some additional parameters that we recommend setting:
 
-* `enable_semi_sync`: The recommended value for this is TRUE. You will need to bring up at least three vttablets for this setting to work correctly. This flag will be deprecated once `vtorc` takes over the management of MySQL instances.
 * `enable_replication_reporter`: Enabling this flag will make vttablet send its replication lag information to the vtgates, and they will use this information to avoid sending queries to replicas that are lagged beyond a threshold.
 * `unhealthy_threshold`: If `enable_replication_reporter` is enabled, and the replication lag exceeds this threshold, then vttablet stops serving queries. This value is meant to match the vtgate `discovery_high_replication_lag_minimum_serving` flag.
 * `degraded_threshold`: This flag does not change vttablet’s behavior. This threshold is used to report a warning in the status page if the replication lag exceeds this threshold. This value is meant to match the vtgate `discovery_low_replication_lag` flag.
@@ -158,7 +157,6 @@ vttablet <topo_flags> <backup_flags> \
   --port=15100 \
   --grpc_port=16100 \
   --service_map 'grpc-queryservice,grpc-tabletmanager’ \
-  --enable_semi_sync=true \
   --enable_replication_reporter=true \
   --restore_from_backup=true \
   --queryserver-config-pool-size=16 \
@@ -197,7 +195,7 @@ The next step is to bring up the rest of the vttablet-MySQL pairs on other machi
 You can find out the current state of all vttablets with the following command:
 
 ```sh
-$ vtctlclient ListAllTablets
+$ vtctldclient GetTablets
 cell1-0000000100 commerce 0 primary sougou-lap1:15100 sougou-lap1:17100 [] 2021-01-02T22:27:11Z
 cell1-0000000101 commerce 0 replica sougou-lap1:15101 sougou-lap1:17101 [] <null>
 cell1-0000000102 commerce 0 rdonly sougou-lap1:15102 sougou-lap1:17102 [] <null>
@@ -216,6 +214,6 @@ If a vttablet crashes, the address info will remain in the topo. However, vtgate
 It is recommended that you delete the tablet record if you intend to bring down a vttablet permanently. The command to delete a tablet is:
 
 ```text
-vtctlclient DeleteTablet cell1-100
+vtctldclient DeleteTablets cell1-100
 ```
 

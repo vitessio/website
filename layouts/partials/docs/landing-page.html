@@ -4,6 +4,7 @@
   {{ range .Sections }}
   {{ $sectionUrl := .RelPermalink }}
   {{ $numPages := len .Pages }}
+  {{ if not (isset .Page.Params "version") }}
   <div class="column is-4">
     <div class="card is-shadowless">
       <div class="card-content content">
@@ -39,4 +40,54 @@
     </div>
   </div>
   {{ end }}
+  {{ end }}
+</div>
+{{ if and
+  (not (isset .Page.Params "version"))
+  (not (isset .Page.Params "designdoc"))
+}}
+<h1>Versions</h1>
+{{ end }}
+<div class="columns is-2 is-multiline is-desktop is-landingpage">
+  {{ $maxPages := 10 }}
+  {{ range .Sections }}
+  {{ $sectionUrl := .RelPermalink }}
+  {{ $numPages := len .Pages }}
+  {{ if isset .Page.Params "version" }}
+  <div class="column is-4">
+    <div class="card is-shadowless">
+      <div class="card-content content">
+        <h3 class="has-text-primary">
+          <a href="{{ $sectionUrl }}">
+            {{ .Name }}
+          </a>
+        </h3>
+
+        <p>
+          {{ .Params.description | markdownify }}
+        </p>
+
+        <hr />
+
+        <ul>
+          {{ range first $maxPages .Pages }}
+          <li>
+            <a href="{{ .RelPermalink }}">
+              {{ .Title }}
+            </a>
+          </li>
+          {{ end }}
+          {{ if gt $numPages $maxPages }}
+          <li>
+            <a href="{{ $sectionUrl }}">
+              More...
+            </a>
+          </li>
+          {{ end }}
+        </ul>
+      </div>
+    </div>
+  </div>
+  {{ end }}
+ {{ end }}
 </div>

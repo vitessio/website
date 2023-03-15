@@ -41,10 +41,9 @@ See [Unmanaged Tablet](../../../user-guides/configuration-advanced/unmanaged-tab
 
 Even if a MySQL is external, you can still make vttablet perform some management functions. They are as follows:
 
-* `--disable_active_reparents`: If this flag is set, then any reparent or replica commands will not be allowed. These are InitShardMaster, PlannedReparent, PlannedReparent, EmergencyReparent, and ReparentTablet. In this mode, you should use the TabletExternallyReparented command to inform vitess of the current primary.
+* `--disable_active_reparents`: If this flag is set, then any reparent or replica commands will not be allowed. These are InitShardPrimary, PlannedReparentShard, EmergencyReparentShard, and ReparentTablet. In this mode, you should use the TabletExternallyReparented command to inform vitess of the current primary.
 * `--replication_connect_retry`: This value is give to mysql when it connects a replica to the primary as the retry duration parameter.
 * `--enable_replication_reporter`: If this flag is set, then vttablet will transmit replica lag related information to the vtgates, which will allow it to balance load better. Additionally, enabling this will also cause vttablet to restart replication if it was stopped. However, it will do this only if --disable_active_reparents was not turned on.
-* `--enable_semi_sync`: This option will automatically enable semi-sync on new replicas as well as on any tablet that transitions into a replica type. This includes the demotion of a primary to a replica.
 * `--heartbeat_enable` and `--heartbeat interval duration`: cause vttablet to write heartbeats to the sidecar database. This information is also used by the replication reporter to assess replica lag.
 
 ## Options
@@ -128,7 +127,7 @@ The following global options apply to `vttablet`:
 | --enable_hot_row_protection |  | If true, incoming transactions for the same row (range) will be queued and cannot consume all txpool slots. |
 | --enable_hot_row_protection_dry_run |  | If true, hot row protection is not enforced but logs if transactions would have been queued. |
 | --enable_replication_reporter |  | Register the health check module that monitors MySQL replication |
-| --enable_semi_sync |  | Enable semi-sync when configuring replication, on primary and replica tablets only (rdonly tablets will not ack). |
+| --enable_semi_sync |  | DEPRECATED - Set the correct durability policy on the keyspace instead. |
 | --enable_transaction_limit |  | If true, limit on number of transactions open at the same time will be enforced for all users. User trying to open a new transaction after exhausting their limit will receive an error immediately, regardless of whether there are available slots or not. |
 | --enable_transaction_limit_dry_run |  | If true, limit on number of transactions open at the same time will be tracked for all users, but not enforced. |
 | --enforce-tableacl-config |  | if this flag is true, vttablet will fail to start if a valid tableacl config does not exist |
@@ -233,7 +232,6 @@ The following global options apply to `vttablet`:
 | --queryserver-config-acl-exempt-acl | string | an acl that exempt from table acl checking (this acl is free to access any vitess tables). |
 | --queryserver-config-enable-table-acl-dry-run |  | If this flag is enabled, tabletserver will emit monitoring metrics and let the request pass regardless of table acl check results |
 | --queryserver-config-idle-timeout | int | query server idle timeout (in seconds), vttablet manages various mysql connection pools. This config means if a connection has not been used in given idle timeout, this connection will be removed from pool. This effectively manages number of connection objects and optimize the pool performance. (default 1800) |
-| --queryserver-config-max-dml-rows | int | query server max dml rows per statement, maximum number of rows allowed to return at a time for an update or delete with either 1) an equality where clauses on primary keys, or 2) a subselect statement. For update and delete statements in above two categories, vttablet will split the original query into multiple small queries based on this configuration value.  |
 | --queryserver-config-max-result-size | int | query server max result size, maximum number of rows allowed to return from vttablet for non-streaming queries. (default 10000) |
 | --queryserver-config-message-postpone-cap | int | query server message postpone cap is the maximum number of messages that can be postponed at any given time. Set this number to substantially lower than transaction cap, so that the transaction pool isn't exhausted by the message subsystem. (default 4) |
 | --queryserver-config-passthrough-dmls |  | query server pass through all dml statements without rewriting |
@@ -342,13 +340,16 @@ The following global options apply to `vttablet`:
 | -v | value | log level for V logs |
 | --version |  | print binary version |
 | --vmodule | value | comma-separated list of pattern=N settings for file-filtered logging |
+| --vreplication_copy_phase_duration | duration | Duration for each copy phase loop (before running the next catchup: default 1h) (default 1h0m0s) |
 | --vreplication_copy_phase_max_innodb_history_list_length | int | The maximum InnoDB transaction history that can exist on a vstreamer (source) before starting another round of copying rows. This helps to limit the impact on the source tablet. (default 1000000) |
 | --vreplication_copy_phase_max_mysql_replication_lag | int | The maximum MySQL replication lag (in seconds) that can exist on a vstreamer (source) before starting another round of copying rows. This helps to limit the impact on the source tablet. (default 43200) |
 | --vreplication_healthcheck_retry_delay | duration | healthcheck retry delay (default 5s) |
 | --vreplication_healthcheck_timeout | duration | healthcheck retry delay (default 1m0s) |
 | --vreplication_healthcheck_topology_refresh | duration | refresh interval for re-reading the topology (default 30s) |
+| --vreplication_max_time_to_retry_on_error | duration | stop automatically retrying when we've had consecutive failures with the same error for this long after the first occurrence (default 0, unlimited) |
 | --vreplication_retry_delay | duration | delay before retrying a failed binlog connection (default 5s) |
 | --vreplication_tablet_type | string | comma separated list of tablet types used as a source (default "in_order:REPLICA,PRIMARY") |
+| --vstream-binlog-rotation-threshold | int | Byte size at which a VStreamer will attempt to rotate the source's open binary log before starting a GTID snapshot based stream (e.g. a ResultStreamer or RowStreamer) (default 67108864 (64MiB)) |
 | --vstream_packet_size | int | Suggested packet size for VReplication streamer. This is used only as a recommendation. The actual packet size may be more or less than this amount. (default 30000) |
 | --vtctld_addr | string | address of a vtctld instance |
 | --vtgate_protocol | string | how to talk to vtgate (default "grpc") |

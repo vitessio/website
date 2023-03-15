@@ -4,6 +4,8 @@ weight: 5
 aliases: ['/docs/user-guides/integration-with-orchestrator/'] 
 ---
 
+Orchestrator integration has been deprecated. Please use VTOrc instead.
+
 [Orchestrator](https://github.com/github/orchestrator) is a tool for managing MySQL replication topologies, including automated failover. It can detect primary failure and initiate a recovery in a matter of seconds.
 
 For the most part, Vitess is agnostic to the actions of Orchestrator, which operates below Vitess at the MySQL level. That means you can pretty much [set up Orchestrator](https://github.com/github/orchestrator/wiki/Orchestrator-Manual) in the normal way, with just a few additions as described below.
@@ -23,12 +25,12 @@ Orchestrator needs to know some things from the Vitess side, like the tablet ali
 
 Vitess also needs to know the identity of the primary for each shard. This is necessary in case of a failover.
 
-It is important to ensure that orchestrator has access to `vtctlclient` so that orchestrator can trigger the change in topology via the [`TabletExternallyReparented`](../../../reference/programs/vtctl/shards/#tabletexternallyreparented) command.
+It is important to ensure that orchestrator has access to `vtctldclient` so that orchestrator can trigger the change in topology via the [`TabletExternallyReparented`](../../../reference/programs/vtctldclient/vtctldclient_tabletexternallyreparented) command.
 
 ``` json
 "PostMasterFailoverProcesses": [
 "echo 'Recovered from {failureType} on {failureCluster}. Failed: {failedHost}:{failedPort}; Promoted: {successorHost}:{successorPort}' >> /tmp/recovery.log",
-"vtctlclient -server vtctld:15999 TabletExternallyReparented {successorAlias}"
+"vtctldclient -server vtctld:15999 TabletExternallyReparented {successorAlias}"
   ],
 ```
 
