@@ -73,6 +73,9 @@ The keyspace, shard, and GTID position list to start streaming from. If no `Shar
 then a [table copy phase](https://github.com/vitessio/vitess/issues/6277) will be initiated for the tables matched
 by the provided [filter](#filter) on the given shard.
 
+If the `ShardGtid.Shard` value is omitted, this means that all shards in the keyspace specified by `ShardGtid.Keyspace` are included. 
+Additionally, if `ShardGtid.Keyspace` has a `/` prefix, you can use regular expressions such as `/.*` to include all the keyspaces.
+
 #### Filter
 
 **Type** [Filter](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#Filter)\
@@ -196,6 +199,51 @@ for {
     e, err := reader.Recv()
     ...
 ```
+
+#### Copy all tables from all shards in the ks keyspace
+
+Below is a snippet in Go that demonstrates how to copy from all shards by omitting `ShardGtid.Shard`:
+
+```go
+vgtid := &binlogdatapb.VGtid{
+  ShardGtids: []*binlogdatapb.ShardGtid{{
+    Keyspace: "ks",
+    Gtid: "",
+  }},
+}
+filter := &binlogdatapb.Filter{
+  Rules: []*binlogdatapb.Rule{{
+    Match: "/.*/",
+  }},
+}
+flags := &vtgatepb.VStreamFlags{}
+reader, err := gconn.VStream(ctx, topodatapb.TabletType_PRIMARY, vgtid, filter, flags)
+```
+
+#### Copy all tables from all shards in all keyspaces
+
+Below is a snippet in Go that demonstrates how to copy from all keyspaces by specifying `/.*` as the value for  `ShardGtid.Keyspace`:
+
+```go
+vgtid := &binlogdatapb.VGtid{
+  ShardGtids: []*binlogdatapb.ShardGtid{{
+    Keyspace: "/.*",
+    Gtid: "",
+  }},
+}
+filter := &binlogdatapb.Filter{
+  Rules: []*binlogdatapb.Rule{{
+    Match: "/.*/",
+  }},
+}
+flags := &vtgatepb.VStreamFlags{}
+reader, err := gconn.VStream(ctx, topodatapb.TabletType_PRIMARY, vgtid, filter, flags)
+```
+
+{{< warning >}}
+Copying from all keyspaces can generate a significant amount of load and potentially impact production.
+Therefore, please exercise caution when using regular expressions in production.
+{{< /warning >}}
 
 ## Debugging
 
