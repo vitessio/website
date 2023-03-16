@@ -221,7 +221,8 @@ flags := &vtgatepb.VStreamFlags{}
 reader, err := gconn.VStream(ctx, topodatapb.TabletType_PRIMARY, vgtid, filter, flags)
 ```
 
-#### Copy all tables from all shards in all keyspaces
+</br>
+#### Copy All Tables From All Shards in All Keyspaces
 
 Below is a snippet in Go that demonstrates how to copy from all keyspaces by specifying `/.*` as the value for  `ShardGtid.Keyspace`:
 
