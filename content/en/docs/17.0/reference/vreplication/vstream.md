@@ -73,8 +73,8 @@ The keyspace, shard, and GTID position list to start streaming from. If no `Shar
 then a [table copy phase](https://github.com/vitessio/vitess/issues/6277) will be initiated for the tables matched
 by the provided [filter](#filter) on the given shard.
 
-If the `ShardGtid.Shard` value is omitted, this means that all shards in the keyspace specified by `ShardGtid.Keyspace` are included. 
-Additionally, if `ShardGtid.Keyspace` has a `/` prefix, you can use regular expressions such as `/.*` to include all the keyspaces.
+If the `ShardGtid.Shard` value is omitted, this means that all shards in the keyspace specified in the `ShardGtid.Keyspace` value are included. 
+Additionally, if the `ShardGtid.Keyspace` value has a `/` prefix, you can use regular expressions such as `/.*` to include all keyspaces.
 
 #### Filter
 
