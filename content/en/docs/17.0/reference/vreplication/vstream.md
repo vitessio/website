@@ -242,6 +242,7 @@ flags := &vtgatepb.VStreamFlags{}
 reader, err := gconn.VStream(ctx, topodatapb.TabletType_PRIMARY, vgtid, filter, flags)
 ```
 
+</br>
 {{< warning >}}
 Copying from all keyspaces can generate a significant amount of load and potentially impact production.
 Therefore, please exercise caution when using regular expressions in production.
