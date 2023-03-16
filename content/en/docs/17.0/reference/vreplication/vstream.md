@@ -214,7 +214,7 @@ vgtid := &binlogdatapb.VGtid{
 }
 filter := &binlogdatapb.Filter{
   Rules: []*binlogdatapb.Rule{{
-    Match: "/.*/",
+    Match: "/.*",
   }},
 }
 flags := &vtgatepb.VStreamFlags{}
@@ -235,7 +235,7 @@ vgtid := &binlogdatapb.VGtid{
 }
 filter := &binlogdatapb.Filter{
   Rules: []*binlogdatapb.Rule{{
-    Match: "/.*/",
+    Match: "/.*",
   }},
 }
 flags := &vtgatepb.VStreamFlags{}
