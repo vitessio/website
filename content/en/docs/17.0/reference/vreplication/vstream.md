@@ -200,7 +200,8 @@ for {
     ...
 ```
 
-#### Copy all tables from all shards in the ks keyspace
+</br>
+#### Copy All Tables From All Shards in the `ks` Keyspace
 
 Below is a snippet in Go that demonstrates how to copy from all shards by omitting `ShardGtid.Shard`:
 
