@@ -244,7 +244,7 @@ reader, err := gconn.VStream(ctx, topodatapb.TabletType_PRIMARY, vgtid, filter, 
 
 </br>
 {{< warning >}}
-Copying from all keyspaces can generate a significant amount of load and potentially impact production.
+Copying from all keyspaces can generate a significant amount of load and potentially impact production traffic.
 Therefore, please exercise caution when using regular expressions in production.
 {{< /warning >}}
 
