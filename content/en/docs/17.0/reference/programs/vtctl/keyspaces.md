@@ -14,7 +14,7 @@ Creates the specified keyspace.
 
 #### Example
 
-<pre class="command-example">CreateKeyspace -- [--sharding_column_name=name] [--sharding_column_type=type] [--served_from=tablettype1:ks1,tablettype2:ks2,...] [--force] [--keyspace_type=type] [--base_keyspace=base_keyspace] [--snapshot_time=time] [--durability-policy=policy_name] &lt;keyspace name&gt; </pre>
+<pre class="command-example">CreateKeyspace -- [--sharding_column_name=name] [--sharding_column_type=type] [--served_from=tablettype1:ks1,tablettype2:ks2,...] [--force] [--keyspace_type=type] [--base_keyspace=base_keyspace] [--snapshot_time=time] [--durability-policy=policy_name] [--sidecar-db-name=db_name] &lt;keyspace name&gt; </pre>
 
 #### Flags
 
@@ -27,6 +27,7 @@ Creates the specified keyspace.
 | keyspace_type        | String  | Specifies the type of the keyspace. It can be NORMAL or SNAPSHOT. For a SNAPSHOT keyspace you must specify the name of a base_keyspace, and a snapshot_time in UTC, in RFC3339 time format, e.g. 2006-01-02T15:04:05+00:00 |
 | sharding_column_name | String  | Specifies the column to use for sharding operations                                                                                                                                                                        |
 | sharding_column_type | String  | Specifies the type of the column to use for sharding operations                                                                                                                                                            |
+| sidecar-db-name      | String  | (Experimental) Specifies the name of the Vitess sidecar database that tablets in this keyspace will use for internal metadata                                                                                              |
 | served_from          | String  | Specifies a comma-separated list of dbtype:keyspace pairs used to serve traffic                                                                                                                                            |
 | snapshot_time        | String  | Specifies the snapshot time for this keyspace                                                                                                                                                                              |
 
