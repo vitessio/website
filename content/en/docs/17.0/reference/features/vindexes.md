@@ -213,7 +213,7 @@ lookup\_unique | Lookup Unique | Lookup table unique values                     
 multicol | Functional Unique | Multi-column [subsharding](../../../user-guides/vschema-guide/subsharding-vindex/) hash for use in tenant based sharding or geo-partitioning or multiple column serving as sharding key | Yes | Yes | No | No | sum of cost of hashing function used for each column | Any                                          |
 null | Functional Unique | Always map to keyspace ID 0                                                                                                                                                             | Yes | No | No | Yes | 100 | Any                                          |
 numeric | Functional Unique | Identity                                                                                                                                                                                | Yes | No | Yes | No | 0 | 64 bit or smaller numeric or equivalent type |
-numeric\_static\_map | Functional Unique | JSON file statically mapping input numeric values to keyspace IDs                                                                                                                       | Yes | No | No | No | 1 | 64 bit or smaller numeric or equivalent type |
+numeric\_static\_map | Functional Unique | JSON document statically mapping input numeric values to keyspace IDs                                                                                                                       | Yes | No | No | No | 1 | 64 bit or smaller numeric or equivalent type |
 region\_experimental | Functional Unique | Multi-column prefix-based hash for use in geo-partitioning                                                                                                                              | Yes | Yes | No | No | 1 | String and numeric type                      |
 region\_json | Functional Unique | Multi-column prefix-based hash combined with a JSON map for key-to-region mapping, for use in geo-partitioning                                                                          | Yes | Yes | No | No | 1 | String and numeric type                      |
 reverse\_bits | Functional Unique | Bit reversal                                                                                                                                                                            | Yes | No | Yes | No | 1 | 64 bit or smaller numeric or equivalent type |
@@ -236,7 +236,13 @@ Lookup Vindexes support the following parameters:
 * `read_lock` (exclusive): determines the type of locking read Vitess uses when querying the backing table. Valid options are `exclusive` (translates to a MySQL `FOR UPDATE` lock), `shared` (`LOCK IN SHARE MODE`) or `none`. Relaxing the default (`exclusive`) may improve performance, but is unsafe if concurrent queries can select and delete the same rows from the backing table.
 * `ignore_nulls` (false): if true, null values in input columns do not create entries in the lookup table. Otherwise, a null input results in an error.
 
-The `numeric_static_map` vindex requires a `json_path` parameter. The file must contain a json that maps input numeric values to keyspace ids.
+The `numeric_static_map` supports the following parameters:
+
+ * `json_path`: Path to a file which must contain a JSON document that maps input numeric values to keyspace ids.
+ * `json`: A string which must contain a JSON document that maps input numeric values to keyspace ids.
+ * `fallback_type`: Name of a functional vindex, e.g. `xxhash`, to fallback to when looking up a key not present in the map.
+
+One of either `json_path` or `json` is required. The two are mutually exclusive.
 
 The `region_experimental` vindex is an experimental vindex that uses the first one or two bytes of the input value as prefix for keyspace id. The rest of the bits are hashed. This allows you to group users of the same region within the same group of shards. The vindex requires a `region_bytes` parameter that specifies if the prefix is one or two bytes.
 
