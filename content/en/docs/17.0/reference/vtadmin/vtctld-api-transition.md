@@ -7,7 +7,7 @@ TO DO: write an introduction
 
 ## vtctld and VTAdmin API methods
 
-| Summary | `vtctld` API (old) | `vtctld` params (new) | `vtadmin` API (new) | `vtadmin` params (new)| Notes |
+| Summary | `vtctld` API (old) | `vtctld` params (old) | `vtadmin` API (new) | `vtadmin` params (new)| Notes |
 | -------- | -------- | -------- | -------- | -------- | -------- |
 | Get cells | GET `/cells`     | -     | GET `/api/cells`    | - | - |
 | Get keyspaces | GET `/keyspaces`     | -    | GET `/api/keyspaces`     | `cluster`: Optional cluster filter | This returns all keyspaces across all clusters discovered by VTAdmin |
