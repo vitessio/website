@@ -11,8 +11,13 @@ TO DO: write an introduction
 | -------- | -------- | -------- | -------- | -------- | -------- |
 | Get cells | GET `/cells`     | -     | GET `/api/cells`    | - | - |
 | Get keyspaces | GET `/keyspaces`     | -    | GET `/api/keyspaces`     | `cluster`: Optional cluster filter | This returns all keyspaces across all clusters discovered by VTAdmin |
-| Get a keyspace | GET `/keyspaces/<keyspace>`     | -    | GET `/api/keyspace/<cluster>/<keyspace>`     | `cluster_id`: Optional cluster filter | In VTAdmin, a cluster must be specified |
-| Perform an action on a keyspace | POST `/keyspaces/<keyspace>`     | `action`| PUT `/api/keyspace/<cluster>/<keyspace>/rebuild_keyspace_graph`, PUT `/api/keyspace/<cluster>/<keyspace>/remove_keyspace_cell`, PUT `/api/keyspace/<cluster><keyspace>/validate`, PUT `/keyspace/<cluster>/<keyspace>/validate/schema`, PUT `/api/keyspace/<cluster>/<keyspace>/validate/version`, DELETE `/api/keyspace/<cluster>/<keyspace>` | Refer to each method's parameters [here](https://github.com/vitessio/vitess/blob/main/go/vt/vtadmin/http/keyspaces.go) | In VTAdmin, each action has its own method and parameters  |
+| Get a keyspace | GET `/keyspaces/<keyspace>`     | -    | GET `/api/keyspace/<cluster>/<keyspace>` | `cluster_id`: Optional cluster filter | In VTAdmin, a cluster must be specified |
+| Rebuild keyspace graph | POST `/keyspaces/<keyspace>`     | `action`| PUT `/api/keyspace/<cluster>/<keyspace>/rebuild_keyspace_graph` | `allow_partial`, `cells` | - |
+| Remove keyspace cell | POST `/keyspaces/<keyspace>`     | `action`| PUT `/api/keyspace/<cluster>/<keyspace>/remove_keyspace_cell` | `cell`, `force`, `recursive` | - |
+| Validate keyspace | POST `/keyspaces/<keyspace>`     | `action`| PUT `/api/keyspace/<cluster><keyspace>/validate` | `ping_tablets` | - |
+| Validate keyspace schema | POST `/keyspaces/<keyspace>`     | `action`| PUT `/keyspace/<cluster>/<keyspace>/validate/schema` | - | -  |
+| Validate keyspace version | POST `/keyspaces/<keyspace>`     | `action`| PUT `/api/keyspace/<cluster>/<keyspace>/validate/version` | - | -  |
+| Delete keyspace | POST `/keyspaces/<keyspace>`     | `action`| DELETE `/api/keyspace/<cluster>/<keyspace>` | `recursive` | -  |
 | Get keyspace tablets | GET `/keyspace/<keyspace>/tablets`     | `cell`, `cells` | GET `/api/tablets`     | `cluster`: Optional cluster filter | In VTAdmin, all tablets in a cluster are returned. Optionally, you can filter results to just one cluster. |
 | Get keyspace tablets for a specific shard | GET `/keyspace/<keyspace>/tablets/<shard>`     | `cell`, `cells` | GET `/api/tablets` | `cluster`: Optional cluster filter | In VTAdmin, all tablets in a cluster are returned. Optionally, you can filter results to just one cluster. |
 | Get shards | GET `/shards`     | - | GET `/api/keyspaces` | `cluster`: Optional cluster filter | In VTAdmin, to get all shards across all keyspaces, first get all keyspaces, and shards are returned within every keyspace [`keyspace.Shards`](https://github.com/vitessio/vitess/blob/main/proto/vtadmin.proto#L223) |
