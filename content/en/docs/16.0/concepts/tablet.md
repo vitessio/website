@@ -13,7 +13,7 @@ See the user guide [VTTablet Modes](../../user-guides/configuration-basic/vttabl
 * **primary** - A *replica* tablet that happens to currently be the MySQL primary for its shard.
 * **master** - Same as **primary**. Deprecated.
 * **replica** - A MySQL replica that is eligible to be promoted to *primary*. Conventionally, these are reserved for serving live, user-facing requests (like from the website's frontend).
-* **rdonly** - A MySQL replica that cannot be promoted to *primary*. Conventionally, these are used for background processing jobs, such as taking backups, dumping data to other systems, heavy analytical queries, MapReduce, and resharding.
+* **rdonly** - A MySQL replica that cannot be promoted to *primary*. Conventionally, these are used for background processing jobs, such as taking backups, dumping data to other systems, heavy analytical queries and MapReduce.
 * **backup** - A tablet that has stopped replication at a consistent snapshot, so it can upload a new backup for its shard. After it finishes, it will resume replication and return to its previous type.
 * **restore** - A tablet that has started up with no data, and is in the process of restoring itself from the latest backup. After it finishes, it will begin replicating at the GTID position of the backup, and become either *replica* or *rdonly*.
 * **drained** - A tablet that has been reserved by a Vitess background process (such as rdonly tablets for resharding).
