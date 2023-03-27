@@ -62,12 +62,10 @@ Download the [latest binary release](https://github.com/vitessio/vitess/releases
 
 **Notes:**
 
-* Release 15.0 has a bug because of which the local example fails when try to run vtadmin web. [Issue#11679](https://github.com/vitessio/vitess/issues/11679)
-* Please use release [15.0.2](https://github.com/vitessio/vitess/releases/tag/v15.0.2) instead.
 * Ubuntu is the only fully supported OS, for another OS please [build Vitess by yourself](/docs/contributing) or use the Docker images.
 
 ```sh
-version=15.0.2
+version=16.0.1
 file=vitess-${version}-a914f40.tar.gz
 wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
 tar -xzf ${file}
@@ -98,7 +96,7 @@ cd ~/my-vitess-example/examples/local
 
 You should see an output similar to the following:
 
-```text
+```bash
 ~/my-vitess-example> ./101_initial_cluster.sh
 $ ./101_initial_cluster.sh 
 add /vitess/global
@@ -107,6 +105,7 @@ add zone1 CellInfo
 Created cell: zone1
 etcd start done...
 Starting vtctld...
+vtctld is running!
 Starting MySQL for tablet zone1-0000000100...
 Starting vttablet for zone1-0000000100...
 HTTP/1.1 200 OK
@@ -131,7 +130,9 @@ Content-Type: text/html; charset=utf-8
     "keyspace_type": 0,
     "base_keyspace": "",
     "snapshot_time": null,
-    "durability_policy": "semi_sync"
+    "durability_policy": "semi_sync",
+    "throttler_config": null,
+    "sidecar_db_name": "_vt"
   }
 }
 vtorc is running!

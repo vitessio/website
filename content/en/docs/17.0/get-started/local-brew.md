@@ -57,6 +57,7 @@ add zone1 CellInfo
 Created cell: zone1
 etcd start done...
 Starting vtctld...
+vtctld is running!
 Starting MySQL for tablet zone1-0000000100...
 Starting vttablet for zone1-0000000100...
 HTTP/1.1 200 OK
@@ -81,7 +82,9 @@ Content-Type: text/html; charset=utf-8
     "keyspace_type": 0,
     "base_keyspace": "",
     "snapshot_time": null,
-    "durability_policy": "semi_sync"
+    "durability_policy": "semi_sync",
+    "throttler_config": null,
+    "sidecar_db_name": "_vt"
   }
 }
 vtorc is running!
