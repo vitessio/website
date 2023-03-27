@@ -87,10 +87,8 @@ In Vitess 15, a new connection pool, the ["settings pool"](https://vitess.io/doc
 
 Currently, this feature is behind a flag and can be enabled using [`queryserver-enable-settings-pool`](https://vitess.io/docs/15.0/reference/features/connection-pools/#vttablet-settings-pool) in Vttablet.
 
-At PlanetScale, we have started to roll out this feature and are already seeing improvements in query latency and load on Vttablet for customers who previously relied on reserved connections due to their application ORMs.
+At [PlanetScale](https://planetscale.com/), we have started to roll out this feature and are already seeing improvements in query latency and load on Vttablet for customers who previously relied on reserved connections due to their application ORMs.
 
 ![showing latency drop after deploying settings pool](/files/2023-03-27-connection-pooling-in-vitess/query-latency-and-load-1.png)
-Source: [PlanetScale](https://planetscale.com/blog/connection-pooling)
 
 ![showing load average drop after deploying settings pool](/files/2023-03-27-connection-pooling-in-vitess/query-latency-and-load-2.png)
-Source: [PlanetScale](https://planetscale.com/blog/connection-pooling)
