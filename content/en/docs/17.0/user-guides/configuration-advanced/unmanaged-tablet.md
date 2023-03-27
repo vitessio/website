@@ -66,7 +66,6 @@ vttablet \
  --grpc_port 16401 \
  --service_map 'grpc-queryservice,grpc-tabletmanager,grpc-updatestream' \
  --pid_file $VTDATAROOT/vt_0000000401/vttablet.pid \
- --vtctld_addr http://localhost:15000/ \
  --db_host 127.0.0.1 \
  --db_port 5726 \
  --db_app_user msandbox \
