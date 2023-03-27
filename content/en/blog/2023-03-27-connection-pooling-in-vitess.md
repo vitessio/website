@@ -10,6 +10,7 @@ description: "Connection pooling reduces the overhead of establishing new databa
 Connection pooling is a commonly used technique in modern applications to manage database connections efficiently. It involves creating a cache of database connections that the application can use as needed. Instead of creating a new connection for each request to the database, the application retrieves a connection from the pool. After the application finishes using the connection, it is returned to the pool to be reused later, rather than being closed outright.
 
 ![application level connection pool](/files/2023-03-27-connection-pooling-in-vitess/connections-and-pools.png)
+Source: [PlanetScale](https://planetscale.com/blog/connection-pooling)
 
 ## Benefits of connection pooling
 
@@ -20,6 +21,7 @@ Using connection pooling in your application offers several advantages:
 Connection pooling reduces the overhead of establishing new database connections. Connections are reused instead of being created and closed for each request. This is especially useful for applications that require frequent, small interactions with the database.
 
 ![mysql ssl connection sequence diagram](/files/2023-03-27-connection-pooling-in-vitess/mysql-ssl-connection.png)
+Source: [PlanetScale](https://planetscale.com/blog/connection-pooling)
 
 The diagram above illustrates a typical [MySQL SSL connection](https://dev.mysql.com/doc/dev/mysql-server/latest/page_protocol_connection_phase.html#sect_protocol_connection_phase_initial_handshake) establishment phase when an application connects to a database over a network. This initial handshake phase can add up to 50ms of overhead. However, by implementing connection pooling, applications can significantly reduce their response time per request by saving the 50ms overhead. This improvement in performance can greatly benefit the overall functionality of the applications.
 
@@ -38,6 +40,7 @@ Connection pooling at the application level is a useful tool, but it has limitat
 As the scale of the application grows, its load increases, and it becomes necessary to deploy it on multiple servers. However, as the number of servers increases from a few to hundreds or thousands, this can potentially overload the database. Moreover, new applications connecting to the same database can also overwhelm it.
 
 ![increased application servers and added new applications](/files/2023-03-27-connection-pooling-in-vitess/scaling-and-adding-applications.png)
+Source: [PlanetScale](https://planetscale.com/blog/connection-pooling)
 
 Inefficient use of database connections can also occur at the application-level connection pooling. The application servers may not always be equally loaded, and the application might not have correctly capped the database connections, resulting in a waste of connections. As a result, the application servers that require those connections may not be able to acquire them when the database connection limits are reached.
 
@@ -46,6 +49,7 @@ Inefficient use of database connections can also occur at the application-level 
 In 2010, YouTube encountered similar challenges, leading to the [development of Vitess](https://vitess.io/docs/overview/history/) and [its first component, Vttablet](https://vitess.io/docs/reference/programs/vttablet/). Vttablet acted as a MySQL proxy and was primarily responsible for managing the connection pool. By allowing client applications to connect only to Vttablet, the need for a connection pool at the application level was eliminated. This meant that connections could be centrally managed in Vttablet, with the maximum number of allowed connections being configurable in Vttablet, rather than growing unbounded as the number of applications increased. This significantly reduced the strain on the database and improved scalability.
 
 ![application connection to vttablet and vttablet acting as mysql proxy and managing the connection pool](/files/2023-03-27-connection-pooling-in-vitess/vttablet-pool.png)
+Source: [PlanetScale](https://planetscale.com/blog/connection-pooling)
 
 To handle concurrent requests at scale, the connection pool implementation in Vttablet was designed to be lockless, using atomic operations and non-blocking data structures with lock-free algorithms. This approach enables Vitess to efficiently manage large numbers of concurrent requests, further improving its scalability and performance.
 
@@ -86,5 +90,7 @@ Currently, this feature is behind a flag and can be enabled using [`queryserver-
 At PlanetScale, we have started to roll out this feature and are already seeing improvements in query latency and load on Vttablet for customers who previously relied on reserved connections due to their application ORMs.
 
 ![showing latency drop after deploying settings pool](/files/2023-03-27-connection-pooling-in-vitess/query-latency-and-load-1.png)
+Source: [PlanetScale](https://planetscale.com/blog/connection-pooling)
 
 ![showing load average drop after deploying settings pool](/files/2023-03-27-connection-pooling-in-vitess/query-latency-and-load-2.png)
+Source: [PlanetScale](https://planetscale.com/blog/connection-pooling)
