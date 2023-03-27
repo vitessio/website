@@ -6,6 +6,10 @@ series: vtctldclient
 
 Executes a cluster management command on the remote vtctld server.
 
+```
+vtctldclient [flags]
+```
+
 ### Options
 
 ```
@@ -20,7 +24,7 @@ Executes a cluster management command on the remote vtctld server.
 * [vtctldclient AddCellsAlias](./vtctldclient_addcellsalias/)	 - Defines a group of cells that can be referenced by a single name (the alias).
 * [vtctldclient ApplyRoutingRules](./vtctldclient_applyroutingrules/)	 - Applies the VSchema routing rules.
 * [vtctldclient ApplySchema](./vtctldclient_applyschema/)	 - Applies the schema change to the specified keyspace on every primary, running in parallel on all shards. The changes are then propagated to replicas via replication.
-* [vtctldclient ApplyShardRoutingRules](./vtctldclient_applyshardroutingrules/)	 - Applies VSchema shard routing rules.
+* [vtctldclient ApplyShardRoutingRules](./vtctldclient_applyshardroutingrules/)	 - Applies the provided shard routing rules.
 * [vtctldclient ApplyVSchema](./vtctldclient_applyvschema/)	 - Applies the VTGate routing schema to the provided keyspace. Shows the result after application.
 * [vtctldclient Backup](./vtctldclient_backup/)	 - Uses the BackupStorage service on the given tablet to create and store a new backup.
 * [vtctldclient BackupShard](./vtctldclient_backupshard/)	 - Finds the most up-to-date REPLICA, RDONLY, or SPARE tablet in the given shard and uses the BackupStorage service on that tablet to create and store a new backup.
@@ -98,4 +102,5 @@ Executes a cluster management command on the remote vtctld server.
 * [vtctldclient ValidateShard](./vtctldclient_validateshard/)	 - Validates that all nodes reachable from the specified shard are consistent.
 * [vtctldclient ValidateVersionKeyspace](./vtctldclient_validateversionkeyspace/)	 - Validates that the version on the primary tablet of shard 0 matches all of the other tablets in the keyspace.
 * [vtctldclient ValidateVersionShard](./vtctldclient_validateversionshard/)	 - Validates that the version on the primary matches all of the replicas.
+* [vtctldclient workflow](./vtctldclient_workflow/)	 - Administer VReplication workflows (Reshard, MoveTables, etc) in the given keyspace
 
