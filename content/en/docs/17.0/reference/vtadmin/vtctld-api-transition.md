@@ -25,7 +25,7 @@ One of the main differences between vtctld and VTAdmin API is that VTAdmin API r
 | Validate keyspace schema | POST `/keyspaces/<keyspace>` | `action`: `ValidateSchemaKeyspace` | PUT `/keyspace/<cluster>/<keyspace>/validate/schema` | - | -  |
 | Validate keyspace version | POST `/keyspaces/<keyspace>` | `action`: `ValidateVersionKeyspace` | PUT `/api/keyspace/<cluster>/<keyspace>/validate/version` | - | -  |
 | Validate keyspace permissions | POST `/keyspaces/<keyspace>` | `action`: `ValidatePermissionsKeyspace` | To be implemented in VTAdmin | - | Need to implement in VTAdmin |
-| Delete keyspace | - | - | DELETE `/api/keyspace/<cluster>/<keyspace>` | <li>`recursive`: Recursively delete all shards in the keyspace. Otherwise, the keyspace must be empty (have no shards), or DeleteKeyspace returns an error</li> | -  |
+| Delete keyspace | - | - | DELETE `/api/keyspace/<cluster>/<keyspace>` | <li>`recursive`: Recursively delete all shards in the keyspace. If not specified or set to false, the keyspace must be empty (have no shards), or DeleteKeyspace returns an error</li> | -  |
 | Get keyspace tablets | GET `/keyspace/<keyspace>/tablets` | `cell`, `cells` | GET `/api/tablets` | <li>`cluster`: Optional cluster filter</li> | - |
 | Get keyspace tablets for a specific shard | GET `/keyspace/<keyspace>/tablets/<shard>` | `cell`, `cells` | GET `/api/tablets` | <li>`cluster`: Optional cluster filter</li> | -  |
 | Get shards | GET `/shards` | - | GET `/api/keyspaces` | <li>`cluster`: Optional cluster filter</li> | In VTAdmin, to get all shards across all keyspaces, first get all keyspaces, and shards are returned within every keyspace [`keyspace.Shards`](https://github.com/vitessio/vitess/blob/main/proto/vtadmin.proto#L223) |
