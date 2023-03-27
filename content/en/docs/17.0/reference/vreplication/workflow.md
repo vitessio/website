@@ -53,9 +53,9 @@ You can update an existing workflow so that DDL in the replication stream are ha
 
 <div class="cmd">
 Name of target keyspace and the associated workflow to take action on.
-{{< note >}}
+{{< info >}}
 The `listall` action is an exception to this rule as with that action you only specify the keyspace.
-{{< /note >}}
+{{< /info >}}
 </div>
 
 #### action
