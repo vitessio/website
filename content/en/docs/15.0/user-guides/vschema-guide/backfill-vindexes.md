@@ -16,7 +16,7 @@ Creating a unique lookup Vindex is an elaborate process. It is good to use the f
 * Create a VSchema entry for the lookup table. If sharded, assign a Primary Vindex for the `from` column.
 * Create the lookup vindex in the VSchema of the sharded keyspace:
   * Give it a distinct name
-  * Specify the type from one of [predefined vindexes](https://vitess.io/docs/13.0/reference/features/vindexes/#predefined-vindexes)
+  * Specify the type from one of [predefined vindexes](../../../references/features/vindexes/#predefined-vindexes)
   * Under `params`: specify the properties of the lookup table
   * Specify the `Owner` as the main table
 * Associate the column of the owner table with the new Vindex.
