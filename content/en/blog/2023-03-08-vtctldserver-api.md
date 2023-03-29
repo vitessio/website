@@ -45,7 +45,7 @@ message Event {
 
 As the [RFC] points out, there are several issues with this design.
 
-First, and most noticable, this is effectively an untyped interface, precisely the opposite of one of the biggest benefits of using an interface definition language (IDL) like gRPC.
+First, and most noticeably, this is effectively an untyped interface, precisely the opposite of one of the biggest benefits of using an interface definition language (IDL) like gRPC.
 Everything is just strings!
 Can you `json.Unmarshal` it?
 Sometimes!
