@@ -7,7 +7,6 @@ tags:
 - vtctld
 - Cluster Management
 description: A structured gRPC API for Vitess cluster management.
-draft: true
 ---
 
 We are more than thrilled to announce the general availability of `VtctldServer`, a new gRPC API to perform cluster management operations with `vtctld` components in your Vitess clusters.
