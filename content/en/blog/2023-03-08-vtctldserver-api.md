@@ -9,7 +9,7 @@ tags:
 description: A structured gRPC API for Vitess cluster management.
 ---
 
-We are more than thrilled to announce the general availability of `VtctldServer`, a new gRPC API to perform cluster management operations with `vtctld` components in your Vitess clusters.
+We are more than thrilled to belatedly discuss `VtctldServer`, the new gRPC API for performing cluster management operations with `vtctld` components, which became generally available in Vitess v15.
 This is the (near-) culmination of long, steady migration that began back in [Vitess v9][initial_pr] (!!!), so we'd like to talk a bit about the motivation behind the move, the design of the new API, and where we go from here.
 
 ## Why?
