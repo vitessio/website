@@ -34,8 +34,8 @@ One of the main differences between vtctld and VTAdmin API is that VTAdmin API r
 | Validate shard schema | POST `/shards/<shard>` | `action`: `ValidateSchemaShard` | To be implemented in VTAdmin | - | Need to implement in VTAdmin |
 | Validate shard version | POST `/shards/<shard>` | `action`: `ValidateVersionShard` | PUT `/api/shard/<cluster>/<keyspace>/<shard>/validate_version` | - | - |
 | Validate shard permissions | POST `/shards/<shard>` | `action`: `ValidatePermissionsShard` | To be implemented in VTAdmin | - | Need to implement in VTAdmin |
-| Get SrvKeyspaces for a cell | GET `/srv_keyspace/<cell>` | - | To be implemented in VTAdmin | - | Need to implement in VTAdmin |
-| Get SrvKeyspaces for a specific keyspace | GET`/srv_keyspace/<cell>/<keyspace>` | - | To be implemented in VTAdmin | - | Need to implement in VTAdmin |
+| Get SrvKeyspaces for a cell | GET `/srv_keyspace/<cell>` | - | GET `/api/srvkeyspaces` | <li>`cell`: Optional cell filter</li><li>`cluster`: Optional cluster filter</li> | The VTAdmin method returns all SrvKeyspaces across all clusters and their keyspaces if the `cluster` parameter is not provided. |
+| Get SrvKeyspaces for a specific keyspace | GET`/srv_keyspace/<cell>/<keyspace>` | - | GET `/api/srvkeyspace/<cluster>/<keyspace>` | <li>`cell`: Optional cell filter</li> | - |
 | Get all tablets by cell and/or shard | GET `/tablets` | `shard`,`cell` | GET `/api/tablets` | <li>`cluster`: Optional cluster filter</li> | - |
 | Get a tablet | GET `/tablets/<tablet>` | - | GET `/api/tablets/<tablet>` | <li>`cluster`: Optional cluster filter</li> | - |
 | Get tablet health | GET `/tablets/<tablet>/health` | - | GET `/api/tablet/<tablet>/healthcheck` | <li>`cluster`: Optional cluster filter</li> | - |
