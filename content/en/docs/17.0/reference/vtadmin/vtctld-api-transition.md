@@ -8,7 +8,7 @@ The following table highlights old vtctld API methods and their counterparts in 
 Some methods do not have a 1:1 mapping from vtctld to VTAdmin. These cases include:
 - vtctld methods that are split out into many different VTAdmin methods (ex. keyspace and tablet action methods)
 - vtctld methods that are not supported in VTAdmin (ex. executing a vtctl command)
-- vtctld methods that we plan to support, but do not currently support, in VTAdmin (ex. SrvKeyspace methods)
+- vtctld methods that we plan to support, but do not currently support, in VTAdmin 
 - VTAdmin methods that were not supported by vtctld API; noted here because they may be useful
 
 One of the main differences between vtctld and VTAdmin API is that VTAdmin API returns results across all clusters discovered by VTAdmin [cluster discovery](https://vitess.io/docs/17.0/reference/vtadmin/cluster_discovery/). VTAdmin API methods that accept a `cluster` or `cluster_id` parameter are methods that will return results from all clusters, unless the aforementioned filter parameter is provided.
