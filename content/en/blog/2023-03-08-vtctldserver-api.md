@@ -68,8 +68,8 @@ It's defined in the same protobuf file, which results in the (possibly confusing
 
 ### Structure
 
-(A quick preface: We're going to mostly speak in generalities here, because to detail each individual special case, exception, and difference could turn this blog post into a novel-length [reamde][reamde].
-We strongly advise checking the actual protobuf definitions and client `--help` output for a permanently-authoritative source)
+A quick preface: We're going to mostly speak in generalities here, because to detail each individual special case, exception, and difference could turn this blog post into a novel-length [reamde][reamde].
+We strongly advise checking the actual protobuf definitions and client `--help` output for a permanently-authoritative source.
 
 In general, we created one unary RPC for each vtctl command that the old CLI tooling advertised.
 Each RPC would take a request message, prefixed with the command name, and return a response message, and the CLI arguments would become fields on the request message.
