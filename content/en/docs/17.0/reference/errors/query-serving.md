@@ -31,9 +31,9 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT03016 | The given column is unknown in the vindex table. | unknown vindex column: '%s' | 0 |  |
 | VT03017 | This vstream where clause can only be a greater than filter. | where clause can only be of the type 'pos > <value>' | 1149 | 42000 |
 | VT03018 | You cannot use the NEXT syntax on a table that is not a sequence table. | NEXT used on a non-sequence table | 0 |  |
-| VT03019 | The given symbol was not found or is not available. | symbol %s not found | 0 |  |
-| VT03020 | The given symbol was not found in the subquery. | symbol %s not found in subquery | 0 |  |
-| VT03021 | The given symbol is ambiguous. You can use a table qualifier to make it unambiguous. | ambiguous symbol reference: %v | 0 |  |
+| VT03019 | The given column was not found or is not available. | column %s not found | 0 |  |
+| VT03020 | The given column was not found in the subquery. | column %s not found in subquery | 0 |  |
+| VT03021 | The given column is ambiguous. You can use a table qualifier to make it unambiguous. | ambiguous column reference: %v | 0 |  |
 | VT03022 | The given column cannot be found. | column %v not found in %v | 0 |  |
 | VT03023 | When targeting a range of shards, Vitess does not know which shard to send the INSERT to. | INSERT not supported when targeting a key range: %s | 0 |  |
 | VT05001 | The given database does not exist; Vitess cannot drop it. | cannot drop database '%s'; database does not exists | 1008 | HY000 |
