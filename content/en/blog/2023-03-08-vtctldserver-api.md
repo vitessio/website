@@ -15,7 +15,7 @@ This is the (near-) culmination of long, steady migration that began back in [Vi
 
 ## Why?
 
-Vitess users may have found themselves invoking some various cluster management operations (think `CreateKeyspace`, `EmergencyReparentShard`, `Backup`, and so on) via the `vtctlclient` program.
+Vitess users may have found themselves invoking various cluster management operations (think `CreateKeyspace`, `EmergencyReparentShard`, `Backup`, and so on) via the `vtctlclient` program.
 These commands communicate with a remote `vtctld` in the cluster via a gRPC interface defined as follows:
 
 ```proto
@@ -254,7 +254,7 @@ In those few cases, where we may have an extremely long-running operation, or wa
 ### Errors
 
 In addition to the "one RPC per command" remit of the new API, the other noteworthy element of our gRPC implementation of that API is a revisiting of errors.
-The old APIs implementation almost exclusively[^2] returned plain Go `error` types back up to the `ExecuteVtctlCommand` implementation, which were dutifully translated by `grpc-go` into `UNKNOWN` errors, which is ... not super helpful.
+The old API's implementation almost exclusively[^2] returned plain Go `error` types back up to the `ExecuteVtctlCommand` implementation, which were dutifully translated by `grpc-go` into `UNKNOWN` errors, which is ... not super helpful.
 
 When implementing the new API, we tried to, wherever possible, use the `vterrors` package to surface more helpful information back to the caller wherever possible.
 Enjoy![^3]
@@ -283,7 +283,7 @@ A fair warning, though &mdash; there's a small bit of indirection to allow VTAdm
 
 ## Example: Audit backups
 
-The other big benefit to the structured API is it's (relatively) easy to program against.
+The other big benefit to the structured API is that it's (relatively) easy to program against.
 You can import the gRPC client definition and then write well-typed code to fulfill more advanced automation needs you might have.
 (You can also generate a client for your language of choice, say, Ruby or C++ and so on, but you don't want an example in those languages from me, I promise).
 
@@ -388,7 +388,7 @@ For more information, you can check the [reference docs][vtctldclient_reference_
 
 A quick but important callout &mdash; note the additional "d"!
 It's subtle, and the sheer number of consecutive, full-height consonants does not help the matter, but we've found it's very easy for old habits to omit it.
-Omitting it, of course, results in your uninentionally using the old binary, which isn't what you wanted, probably won't work in subtle ways, and soon won't work at all.
+Omitting it, of course, results in your unintentionally using the old binary, which isn't what you wanted, probably won't work in subtle ways, and soon won't work at all.
 To be extremely, annoyingly, pedantically, clear about it:
 
 ```diff
