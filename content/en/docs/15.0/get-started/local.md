@@ -89,7 +89,7 @@ Download the [latest binary release](https://github.com/vitessio/vitess/releases
 
 ```sh
 version=15.0.3
-file=vitess-${version}-a914f40.tar.gz
+file=vitess-${version}-652b0da.tar.gz
 wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
 tar -xzf ${file}
 cd ${file/.tar.gz/}
