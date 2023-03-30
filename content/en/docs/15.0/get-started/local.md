@@ -85,11 +85,11 @@ Download the [latest binary release](https://github.com/vitessio/vitess/releases
 **Notes:**
 
 * Release 15.0 has a bug because of which the local example fails when try to run vtadmin web. [Issue#11679](https://github.com/vitessio/vitess/issues/11679)
-* Please use release [15.0.2](https://github.com/vitessio/vitess/releases/tag/v15.0.2) instead.
+* Please use release [15.0.3](https://github.com/vitessio/vitess/releases/tag/v15.0.3) instead.
 
 ```sh
-version=15.0.2
-file=vitess-${version}-a914f40.tar.gz
+version=15.0.3
+file=vitess-${version}-652b0da.tar.gz
 wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
 tar -xzf ${file}
 cd ${file/.tar.gz/}
