@@ -1,4 +1,5 @@
 User-agent: *
 Disallow: /zh/docs/
+Disallow: /blog/2023-03-27-connection-pooling-in-vitess/
 
 SITEMAP: https://vitess.io/sitemap.xml
