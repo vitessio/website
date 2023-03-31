@@ -42,6 +42,11 @@ We have a number of [recorded presentations and videos](https://vitess.io/docs/r
 
 * For a curated list please check out a PlanetScale blog post [here](https://www.planetscale.com/blog/videos-intro-to-vitess-its-powerful-capabilities-and-how-to-get-started).
 
-## Where can I read additional FAQs?
+## Additional FAQs?
 
-PlanetScale hosts a knowledge base for Vitess. This additional resource is available [here](https://planetscale.freshdesk.com/support/solutions).
+* Getting Started
+* Migrating
+* Operating Vitess
+* Advanced Configurations
+* Sharding
+* Troubleshooting
