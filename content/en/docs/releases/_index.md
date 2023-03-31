@@ -35,7 +35,7 @@ Each major release is maintained for 1 year.
 
 ----
 
-### Archived Releases
+## Archived Releases
 
 ### v13.0
 - **Current version:** [v13.0.3](https://github.com/vitessio/vitess/releases/tag/v13.0.3) (2022-09-01)
