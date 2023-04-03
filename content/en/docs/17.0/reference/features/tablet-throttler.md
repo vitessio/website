@@ -233,6 +233,8 @@ This API call returns the following JSON object:
   "IsLeader": true,
   "IsOpen": true,
   "IsDormant": false,
+  "Query": "select unix_timestamp(now(6))-max(ts/1000000000) as replication_lag from _vt.heartbeat",
+  "Threshold": 1,
   "AggregatedMetrics": {
     "mysql/self": {
       "Value": 0.749837
@@ -279,6 +281,8 @@ This API call returns the following JSON object:
   "IsLeader": false,
   "IsOpen": true,
   "IsDormant": false,
+  "Query": "select unix_timestamp(now(6))-max(ts/1000000000) as replication_lag from _vt.heartbeat",
+  "Threshold": 1,
   "AggregatedMetrics": {
     "mysql/self": {
       "Value": 0.346409
