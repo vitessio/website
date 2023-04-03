@@ -15,7 +15,7 @@ The following has been verified to work on __Ubuntu 19.10__ and __Debian 10__. I
 
 ### Install Go
 
-[Download and install](http://golang.org/doc/install) Golang 1.20. For example, at writing:
+[Download and install](http://golang.org/doc/install) Golang. For example for `go1.20.2`, at writing:
 
 ```
 curl -LO https://dl.google.com/go/go1.20.2.linux-amd64.tar.gz

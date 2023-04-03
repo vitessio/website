@@ -30,7 +30,7 @@ Add `mysql` to your `PATH`:
 echo 'export PATH="/usr/local/opt/mysql/bin:$PATH"' >> ~/.bash_profile
 ```
 
-[Download and install](http://golang.org/doc/install) Golang 1.20. For example, at writing:
+[Download and install](http://golang.org/doc/install) Golang. For example for `go1.20.2`, at writing:
 ```shell
 curl -LO https://golang.org/dl/go1.20.2.darwin-amd64.pkg
 sudo installer -pkg go1.20.2.darwin-amd64.pkg -target /

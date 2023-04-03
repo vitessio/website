@@ -15,7 +15,7 @@ The following has been verified to work on __CentOS 7__. If you are new to Vites
 
 ### Install Go
 
-[Download and install](http://golang.org/doc/install) Golang 1.20. For example, at writing:
+[Download and install](http://golang.org/doc/install) Golang. For example for `go1.20.2`, at writing:
 
 ```
 curl -LO https://golang.org/dl/go1.20.2.linux-amd64.tar.gz
