@@ -13,14 +13,17 @@ The following has been verified to work on __CentOS 7__. If you are new to Vites
 
 ## Install Dependencies
 
-### Install Go 1.19+
+### Install Go
 
-[Download and install](http://golang.org/doc/install) Golang 1.19.4. For example, at writing:
+[Download and install](http://golang.org/doc/install) Golang 1.20. For example, at writing:
 
 ```
-curl -LO https://golang.org/dl/go1.19.4.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.19.4.linux-amd64.tar.gz
+curl -LO https://golang.org/dl/go1.20.2.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.20.2.linux-amd64.tar.gz
 ```
+
+> Vitess is tested and shipped using a specific Golang version for each release.
+> For maximum compatibility we encourage you to use the same Golang version as [the one mentioned in our `build.env` file](https://github.com/vitessio/vitess/blob/d1ba6258ea2462d5d28d67661aace7b79bb7e27b/build.env#L20).
 
 Make sure to add go to your bashrc:
 ```

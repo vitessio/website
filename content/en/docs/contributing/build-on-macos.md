@@ -30,11 +30,14 @@ Add `mysql` to your `PATH`:
 echo 'export PATH="/usr/local/opt/mysql/bin:$PATH"' >> ~/.bash_profile
 ```
 
-[Download and install](http://golang.org/doc/install) Golang 1.19.4. For example, at writing:
+[Download and install](http://golang.org/doc/install) Golang 1.20. For example, at writing:
 ```shell
-curl -LO https://golang.org/dl/go1.19.4.darwin-amd64.pkg
-sudo installer -pkg go1.19.4.darwin-amd64.pkg -target /
+curl -LO https://golang.org/dl/go1.20.2.darwin-amd64.pkg
+sudo installer -pkg go1.20.2.darwin-amd64.pkg -target /
 ```
+
+> Vitess is tested and shipped using a specific Golang version for each release.
+> For maximum compatibility we encourage you to use the same Golang version as [the one mentioned in our `build.env` file](https://github.com/vitessio/vitess/blob/d1ba6258ea2462d5d28d67661aace7b79bb7e27b/build.env#L20).
 
 Do not install etcd via brew otherwise it will not be the version that is supported. Let it be installed when running make build.
 
