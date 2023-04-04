@@ -11,6 +11,8 @@ description: 'Introducing schemadiff, a best kept secret library available in Vi
 
 One of the interesting developments found in Vitess releases starting with `v14`, is `schemadiff`, a best kept secret internal library. At its core, `schemadiff` is a declarative, programmatic library that can produce an SQL diff of entities: two tables, two views, or two full blown database schemas. But it then goes beyond that to normalize, validate, export, and even _apply_ schema changes, all declaratively and without having to use a MySQL server. Let's dive in to understand its functionality and capabilities.
 
+Introducing `schemadiff`, a best kept secret internal `Vitess` library. At its core, `schemadiff` is a declarative, programmatic library that can produce an SQL diff of entities: two tables, two views, or two full blown database schemas. But it then goes beyond that to normalize, validate, export, and even _apply_ schema changes, all declaratively and without having to use a MySQL server. Let's dive in to understand its functionality and capabilities.
+
 ## Some tech specs
 
 `schemadiff` supports MySQL `8.0` dialect and functionality. It is completely in-memory and does not use any MySQL server or MySQL code. It applies MySQL-compatible logic and rulers to validate and apply schema changes. It uses a declarative approach but also works with imperative commands.
@@ -35,18 +37,18 @@ This approach has two advantages:
 
 However, there are disadvantages, as well:
 
-0. Complex expressions are left, well, complex. A `CREATE VIEW ...` statement is really just a long SQL text. Which tables or views are referenced in our `VIEW` definition? Which columns?
-0. Not everything is normalized and formalized. We know `int(10)` and `int(11)` are really the same. But as MySQL goes, the column type is different. Contract this with `varchar(10)` and `varchar(11)`, where the type is truly different. It still takes some higher level logic to understand what is a real diff and what isn't.
-0. MySQL allows schema inconsistencies. It is possible, in MySQL, to have an "orphaned" `VIEW`, where the tables/views on which it relies, do not exist. Reading something from MySQL doesn't fully mean it's valid.
-0. Last, and most impactful of all, is the operational overhead. To diff two schemas, you need to deploy two schemas, then read back the metadata for all the tables, views, indexes, constraints, etc. You need to deploy a MySQL server, likely in a non-production environment. You will need to start the server, deploy the changes, read back, shutdown the server. This is a heavyweight operation.
+- Complex expressions are left, well, complex. A `CREATE VIEW ...` statement is really just a long SQL text. Which tables or views are referenced in our `VIEW` definition? Which columns?
+- Not everything is normalized and formalized. We know `int(10)` and `int(11)` are really the same. But as MySQL goes, the column type is different. Contract this with `varchar(10)` and `varchar(11)`, where the type is truly different. It still takes some higher level logic to understand what is a real diff and what isn't.
+- MySQL allows schema inconsistencies. It is possible, in MySQL, to have an "orphaned" `VIEW`, where the tables/views on which it relies, do not exist. Reading something from MySQL doesn't fully mean it's valid.
+- Last, and most impactful of all, is the operational overhead. To diff two schemas, you need to deploy two schemas, then read back the metadata for all the tables, views, indexes, constraints, etc. You need to deploy a MySQL server, likely in a non-production environment. You will need to start the server, deploy the changes, read back, shutdown the server. This is a heavyweight operation.
   Even more, if you want to validate your _diff_, you probably want to deploy it on the running server, then re-read the result, compare it with what you were expecting to find. This is more so heavyweight.
 	And, if you wanted to resolve the _order_ by which the changes must take place (some scenarios dictate a specific order, a topic for a future post), then you'd need to solicit confirmation from MySQL by applying changes on the server, regressively.
 
 The second is the in-memory, programmatic approach. Instead of relying on `INFORMATION_SCHEMA`, we rely on the SQL of the schema, i.e. on the `CREATE TABLE` and `CREATE VIEW` statements themselves. This poses a few challenges of its own:
 
-0. First and foremost, you must be able to parse and analyze all statements. This includes a `CREATE TABLE` that has a `CHECK CONSTRAINT` with a complex expression, or a sub-partitioning scheme using functions over columns. Or the ability to fully parse a `CREATE VIEW` statement. Or a complex `GENERATED` column expression, etc.
-0. You must be able to accommodate different equivalent definitions. For example, `create table t (id int primary key)` is equivalent to `create table t(id int, primary key(id))`. Even MySQL's own `SHOW CREATE TABLE` output may present different results depending on when/where the table was created.
-0. Not having a MySQL server to validate correctness of the initial schema and the generated diffs means the application must implement that logic.
+- First and foremost, you must be able to parse and analyze all statements. This includes a `CREATE TABLE` that has a `CHECK CONSTRAINT` with a complex expression, or a sub-partitioning scheme using functions over columns. Or the ability to fully parse a `CREATE VIEW` statement. Or a complex `GENERATED` column expression, etc.
+- You must be able to accommodate different equivalent definitions. For example, `create table t (id int primary key)` is equivalent to `create table t(id int, primary key (id))`. Even MySQL's own `SHOW CREATE TABLE` output may present different results depending on when/where the table was created.
+- Not having a MySQL server to validate correctness of the initial schema and the generated diffs means the application must implement that logic.
 
 `schemadiff` uses the programmatic approach. Let's see some sample code and continue to discuss its internals.
 
@@ -57,7 +59,7 @@ The second is the in-memory, programmatic approach. Instead of relying on `INFOR
 By way of simple illustration, we create and diff two schemas, each with a single table. First schema:
 
 ```go
-schema1, err := NewSchemaFromSQL("create table t (id int, name varchar(64), primary key(id))")
+schema1, err := NewSchemaFromSQL("create table t (id int, name varchar(64), primary key (id))")
 if err == nil {
 	fmt.Println(schema1.ToSQL())
 }
@@ -74,7 +76,7 @@ CREATE TABLE `t` (
 In the second schema, our table is slightly modified:
 
 ```go
-schema2, err := NewSchemaFromSQL("create table t (id bigint, name varchar(64), key name_idx(name(16)), primary key(id))")
+schema2, err := NewSchemaFromSQL("create table t (id bigint, name varchar(64), key name_idx(name(16)), primary key (id))")
 if err == nil {
 	fmt.Println(schema2.ToSQL())
 }
@@ -94,10 +96,9 @@ We now programmatically diff the two schemas (this is actually the long path to 
 ```go
 hints := &DiffHints{}
 diffs, err := schema1.Diff(schema2, hints)
-if err == nil {
-	for _, diff := range diffs {
-		fmt.Println(diff.CanonicalStatementString())
-	}
+// Handle error
+for _, diff := range diffs {
+	fmt.Println(diff.CanonicalStatementString())
 }
 ```
 
@@ -114,7 +115,7 @@ diffs, err := DiffSchemasSQL("create ...", "create ...", hints)
 ...
 ```
 
-The first thing to note in the above examples is that everything takes place purely within `go` space, and there is no MySQL server nor library involved. `schemadiff` is purely programmatic, and makes heavy use of Vitess' [`sqlparser`](https://github.com/vitessio/vitess/tree/main/go/vt/sqlparser) library.
+The first thing to note in the above examples is that everything takes place purely within `go` space, and MySQL is not involved. `schemadiff` is purely programmatic, and makes heavy use of Vitess' [`sqlparser`](https://github.com/vitessio/vitess/tree/main/go/vt/sqlparser) library.
 
 
 ## sqlparser
@@ -177,13 +178,13 @@ CREATE TABLE `invalid` (
 );
 ```
 
-The above table is _syntactically_ valid, but _semantically_ invalid. There are two columns that go by the same name (`title`), and an index that covers a non-existent column (`val`). These are but two out of many possible errors. Obviously, such a statement cannot come from a `SHOW CREATE TABLE` output of a running MySQL server. But, we don't really expect a MySQL server here. We are just faced with some input, and if we don't validate it first, results could be unexpected.
+The above table is _syntactically_ valid, but _semantically_ invalid. There are two columns that go by the same name (`title`), and an index that covers a non-existent column (`val`). These are but two out of many possible errors. A `SHOW CREATE TABLE` would never produce such an output, of course. But we can't assume the output comes from MySQL. If we don't validate the input, and attempt to produce a diff, results could be unexpected.
 
 ## Validation
 
 The basic validation premise is that everyone should want their schema to be valid. There's no point in using invalid schemas, because, at the end of they day, you want to be able to deploy those schemas on real MySQL servers.
 
-To that effect, `schemadiff` enforce validation upon loading a new schema. As we see later on, it also enforces validation upon applying changes. If you try to load an invalid schema as in the above, `schemadiff` returns an informative error. You can't have two columns of same name. Your keys may only cover existing columns. The collation name must be recognized. A `GENERATED` column must refer to existing columns. A `FOREIGN KEY` constraint must reference existing columns in existing tables, respective to the local columns count and data types, etc. Circular `FOREIGN KEY` dependencies are not allowed.
+To that effect, `schemadiff` enforce validation upon loading a new schema. As we see later on, it also enforces validation upon applying changes. If you try to load an invalid schema as in the above, `schemadiff` returns an informative error. You can't have two columns of same name. Your keys may only cover existing columns. A collation name must be recognized. A `GENERATED` column must refer to existing columns. A `FOREIGN KEY` constraint must reference existing columns in existing tables, respective to the local columns count and data types, etc. Circular `FOREIGN KEY` dependencies are not allowed.
 
 Even more interesting is view validation. `schemadiff` offers a complete validation over view definitions: all referenced tables/views must exist. Circular dependency is not allowed. Referenced columns are validated to exist. Unqualified column names are ensured not to be ambiguous.
 
@@ -208,28 +209,21 @@ create table what_can_be_normalized (
 There's a few things to normalize here. Inputs can come in different shapes and sizes, and still mean the same thing. Even MySQL itself presents different output for textual columns based on which version the table was created in. In the above table definition, we can normalize the following:
 
 - The canonical way to declare a `primary key` is as an index definition, not as part of the column definition.
-- `int(11)` is just an `int`. `11` does not matter (it is in fact slated to be deprecated in MySQL).
+- `int(12)` is just an `int`. `12` does not matter. Interestingly, some ORMs do have special treatment for `int(1)`, as an indication to a boolean value. `schemadiff` accommodates that.
 - It looks like `i` is `NULL`able (because it does not say `not null`). Which means its default value is `null` even if we don't explicitly say that.
 - `v`'s collation, and thereby character set, agree with the table's collation. It can be removed.
+- And, of course, we used unqualified names and lower case SQL syntax.
 
 A normalized version of the above looks like:
 
 ```sql
-create table what_can_be_normalized (
-	id int,
-	i int,
-	v varchar(32),
-	primary key(id)
-) default charset=utf8mb4 collate=utf8mb4_0900_ai_ci
-```
-
-We simplify for clarity, but the normalized `schemadiff` form is really a full blown qualified statement of the form:
-
-```sql
 CREATE TABLE `what_can_be_normalized` (
 	`id` int,
-	...
-)
+	`i` int,
+	`v` varchar(32),
+	PRIMARY KEY (`id`)
+) CHARSET utf8mb4,
+  COLLATE utf8mb4_0900_ai_ci;
 ```
 
 Normalization both ensures we converge onto a single, canonical, representation of a table/view, as well as presents an "economical" form.
@@ -250,13 +244,13 @@ Consider this simplified code, or see snippet from [`diff_test.go`](https://gith
 
 ```go
 schema1, err := NewSchemaFromSQL(sql1)
-// handle error
+// Handle error
 
 schema2, err := NewSchemaFromSQL(sql2)
-// handle error
+// Handle error
 
 diffs, err := schema1.Diff(schema2, hints)
-// handle error
+// Handle error
 
 applied, err := schema1.Apply(diffs)
 require.NoError(t, err)
@@ -280,7 +274,7 @@ assert.Equal(t, schema2.ToQueries(), applied.ToQueries())
 - You shouldn't be able to `DropColumn` if there's a `FOREIGN KEY` referencing that column, though.
 - The list goes on.
 
-As we can see, there's a lot of validations involved. Some of them actually depend on each other! Say I'm dropping a column as well as a `FOREIGN KEY` that references that column. MySQL-wise this is a single `ALTER TABLE` operation. But, programmatically, `schemadiff` needs to first remove the `FOREIGN KEY`, and then remove the column. The reverse order is invalid. `schemadiff` resolves the correct order of operations inside a table.
+As we can see, there's a lot of validations involved. Some of them actually depend on each other! Say we drop a column as well as a `FOREIGN KEY` that references that column. MySQL-wise this is a single `ALTER TABLE` operation. But, programmatically, `schemadiff` needs to first remove the `FOREIGN KEY`, and then remove the column. The reverse order is invalid. `schemadiff` resolves the correct order of operations inside a table.
 
 But then, it also resolves the correct order of operations in the grand context of the schema. Consider this diff:
 
@@ -296,3 +290,10 @@ Alphabetically, `v1` comes before `v2`. But, to apply these two diffs, we must f
 Or, consider the flow in [this `e2e` test](https://github.com/vitessio/vitess/blob/27cd9c34bb747d504dfd6c3aa8dff08d7b11832f/go/test/endtoend/schemadiff/vrepl/schemadiff_vrepl_suite_test.go#L345-L428). We hook onto `vitess`'s pre-existing Online DDL tests, a suite that includes a multitude of scenarios. The suite already has a story: a table, a change, an expected result. In our `schemadiff` test we shuffle the logic: we have an original table and and expected table. We evaluate the diff. We apply the diff onto the original table. We expect the result to be identical to the expected table!
 
 Because this runs in GitHub CI, we take advantage of a running MySQL server. We perform the test in-memory, and then also on MySQL itself, and so we have an authoritative validation for the `Apply()` functionality. For fun and glory, we also generate the reverse diff. This test cross validates the programmatic approach, the MySQL schema, and actual MySQL schema changes, and expects full compliance between all.
+
+## Even beyond
+
+The declarative approach is challenging. It requires reverse-engineering of a hidden sequence of changes. Sometimes these changes have inter-dependency between them. We will discuss this further in a future post.
+
+Note that `schemadiff` is an internal library, and as such, its interface is subject to change. As part of the `Vitess` codebase, `schemadiff` code is open source, licensed under `Apache 2.0`.
+
