@@ -118,7 +118,7 @@ The first thing to note in the above examples is that everything takes place pur
 
 Vitess is a sharding and infrastructure framework running on top of MySQL, and masquerades as a MySQL server to route queries into relevant shards. It thus obviously must be able to parse MySQL's SQL dialect. [`sqlparser`](https://github.com/vitessio/vitess/tree/main/go/vt/sqlparser) is the Vitess library that does so.
 
-`sqlparser` utilizes a [classic yacc file](https://github.com/vitessio/vitess/blob/main/go/vt/sqlparser/sql.y) to parse SQL into an Abstract Syntax Tree (AST), with `golang` structs generated and populated by the parser. For example, a SQL `CREATE TABLE` statement is parsed into a [`CreateTable`](https://github.com/vitessio/vitess/blob/157857a4c5ee6dcb44e7de08894db8334750746e/go/vt/sqlparser/ast.go#L509-L517) instance:
+`sqlparser` utilizes a classic [yacc](https://en.wikipedia.org/wiki/Yacc) [file](https://github.com/vitessio/vitess/blob/main/go/vt/sqlparser/sql.y) to parse SQL into an Abstract Syntax Tree (AST), with `golang` structs generated and populated by the parser. For example, a SQL `CREATE TABLE` statement is parsed into a [`CreateTable`](https://github.com/vitessio/vitess/blob/157857a4c5ee6dcb44e7de08894db8334750746e/go/vt/sqlparser/ast.go#L509-L517) instance:
 
 ```go
 CreateTable struct {
@@ -197,7 +197,7 @@ Consider this table definition:
 ```sql
 create table what_can_be_normalized (
 	id int primary key,
-	i int(11) default null,
+	i int(12) default null,
 	v varchar(32) collate utf8mb4_0900_ai_ci
 ) default charset=utf8mb4 collate=utf8mb4_0900_ai_ci
 ```
@@ -205,7 +205,7 @@ create table what_can_be_normalized (
 There's a few things to normalize here. Inputs can come in different shapes and sizes, and still mean the same thing. Even MySQL itself presents different output for textual columns based on which version the table was created in. In the above table definition, we can normalize the following:
 
 - The canonical way to declare a `primary key` is as an index definition, not as part of the column definition.
-- `int(12)` is just an `int`. `12` does not matter. Interestingly, some ORMs do have special treatment for `int(1)`, as an indication to a boolean value. `schemadiff` accommodates that.
+- `int(12)` is just an `int`. `12` does not matter. Integer precision is in fact being [deprecated in MySQL](https://dev.mysql.com/worklog/task/?id=13127). Interestingly, some ORMs do have special treatment for `int(1)`, as an indication to a boolean value. `schemadiff` accommodates that.
 - It looks like `i` is `NULL`able (because it does not say `not null`). Which means its default value is `null` even if we don't explicitly say that.
 - `v`'s collation, and thereby character set, agree with the table's collation. It can be removed.
 - And, of course, we used unqualified names and lower case SQL syntax.
@@ -222,7 +222,7 @@ CREATE TABLE `what_can_be_normalized` (
   COLLATE utf8mb4_0900_ai_ci;
 ```
 
-Normalization both ensures we converge onto a single, canonical, representation of a table/view, as well as presents an "economical" form.
+`schemadiff` chooses to normalize into the shortest form possible, often shorter than MySQL's own `SHOW CREATE TABLE` output. Normalization ensures we converge onto a single, canonical, representation of a table, view, or schema.
 
 ## Beyond diff
 
