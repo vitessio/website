@@ -50,7 +50,7 @@ vtadmin \
   --logtostderr \
   --alsologtostderr \
   --no-rbac \
-  --cluster "id=local,name=local,discovery=staticfile,discovery-staticfile-path=./vtadmin/discovery.json,tablet-fqdn-tmpl={{ .Tablet.Hostname }}:15{{ .Tablet.Alias.Uid }}" 
+  --cluster "id=local,name=local,discovery=staticfile,discovery-staticfile-path=./vtadmin/discovery.json,tablet-fqdn-tmpl=http://{{ .Tablet.Hostname }}:15{{ .Tablet.Alias.Uid }}" 
 ```
 
 To optionally configure role-based access control (RBAC), refer to the [RBAC documentation][rbac_docs].
