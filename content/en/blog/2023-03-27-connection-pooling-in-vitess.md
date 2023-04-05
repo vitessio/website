@@ -7,6 +7,8 @@ title: 'Connection pooling in Vitess'
 description: "Connection pooling reduces the overhead of establishing new database connections. Learn how connection pooling works and how it is handled in Vitess."
 ---
 
+> **Note:** The content is orignally published at [PlanetScale](https://planetscale.com/blog/connection-pooling)
+
 Connection pooling is a commonly used technique in modern applications to manage database connections efficiently. It involves creating a cache of database connections that the application can use as needed. Instead of creating a new connection for each request to the database, the application retrieves a connection from the pool. After the application finishes using the connection, it is returned to the pool to be reused later, rather than being closed outright.
 
 ![application level connection pool](/files/2023-03-27-connection-pooling-in-vitess/connections-and-pools.png)
