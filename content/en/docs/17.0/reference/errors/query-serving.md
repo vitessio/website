@@ -36,6 +36,8 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT03021 | The given column is ambiguous. You can use a table qualifier to make it unambiguous. | ambiguous column reference: %v | 0 |  |
 | VT03022 | The given column cannot be found. | column %v not found in %v | 0 |  |
 | VT03023 | When targeting a range of shards, Vitess does not know which shard to send the INSERT to. | INSERT not supported when targeting a key range: %s | 0 |  |
+| VT03024 | The query cannot be prepared using the user defined variable as it does not exists for this session. | '%s' user defined variable does not exists | 0 |  |
+| VT03025 | The execute statement have wrong number of arguments | Incorrect arguments to %s | 1210 | HY000 |
 | VT05001 | The given database does not exist; Vitess cannot drop it. | cannot drop database '%s'; database does not exists | 1008 | HY000 |
 | VT05002 | The given database does not exist; Vitess cannot alter it. | cannot alter database '%s'; unknown database | 1049 | 42000 |
 | VT05003 | The given database does not exist in the VSchema. | unknown database '%s' in vschema | 1049 | 42000 |
@@ -54,6 +56,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09008 | vexplain queries/all will actually run queries. `/*vt+ EXECUTE_DML_QUERIES */` must be set to run DML queries in vtexplain. Example: `vexplain /*vt+ EXECUTE_DML_QUERIES */ queries delete from t1` | vexplain queries/all will actually run queries | 0 |  |
 | VT09009 | Stream is only supported for primary tablets, please use a stream on those tablets. | stream is supported only for primary tablet type, current type: %v | 0 |  |
 | VT09010 | SHOW VITESS_THROTTLER STATUS works only on primary tablet. | SHOW VITESS_THROTTLER STATUS works only on primary tablet | 0 |  |
+| VT09011 | The prepared statement is not available | Unknown prepared statement handler (%s) given to %s | 1243 | HY000 |
 | VT10001 | Foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/. | foreign key constraints are not allowed | 0 |  |
 | VT12001 | This statement is unsupported by Vitess. Please rewrite your query to use supported syntax. | unsupported: %s | 0 |  |
 | VT13001 | This error should not happen and is a bug. Please file an issue on GitHub: https://github.com/vitessio/vitess/issues/new/choose. | [BUG] %s | 0 |  |
