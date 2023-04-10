@@ -127,6 +127,22 @@ If specified, these cells (comma-separated list) are used
 [when selecting stream source tablets](../tablet_selection/). When no value is specified the `vtgate` will
 default to looking for source tablets within its own local cell.
 
+##### CellPreference
+
+**Type** string\
+**Default** ""
+
+If specified, this determines which cells to give preference to during tablet selection. 
+By default, this is `preferlocalwithalias` to give preference to local cell and any alias it belongs to. 
+If `onlyspecified` is given, then only tablets specified within the `Cells` option will be selected first.
+
+##### TabletOrder
+
+**Type** string\
+**Default** ""
+
+This is to eventually replace the `in_order` hint to specify tablet order during selection. 
+
 ### RPC Response
 
 The [`VStream` gRPC](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate/vtgateconn#VTGateConn.VStream) returns
