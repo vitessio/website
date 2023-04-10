@@ -193,37 +193,40 @@ Downloading and installing node v16.19.1...
 Local cache found: ${NVM_DIR}/.cache/bin/node-v16.19.1-darwin-x64/node-v16.19.1-darwin-x64.tar.xz
 Checksums match! Using existing downloaded archive ${NVM_DIR}/.cache/bin/node-v16.19.1-darwin-x64/node-v16.19.1-darwin-x64.tar.xz
 Now using node v16.19.1 (npm v8.19.3)
-Now using node v16.19.1 (npm v8.19.3)
 
 > vtadmin@0.1.0 build
-> react-scripts build
+> vite build
 
-Creating an optimized production build...
-Browserslist: caniuse-lite is outdated. Please run:
-  npx browserslist@latest --update-db
-  Why you should do it regularly: https://github.com/browserslist/browserslist#browsers-data-updating
-Browserslist: caniuse-lite is outdated. Please run:
-  npx browserslist@latest --update-db
-  Why you should do it regularly: https://github.com/browserslist/browserslist#browsers-data-updating
-Compiled successfully.
+vite v4.2.1 building for production...
+transforming (1218) src/icons/alertFail.svgUse of eval in "node_modules/@protobufjs/inquire/index.js" is strongly discouraged as it poses security risks and may cause issues with minification.
+✓ 1231 modules transformed.
+build/assets/chevronUp-3d6782a5.svg              0.18 kB
+build/assets/chevronDown-02f94e73.svg            0.19 kB
+build/assets/download-8ef290b4.svg               0.21 kB
+build/assets/delete-a9184ef9.svg                 0.23 kB
+build/assets/info-2617ee9d.svg                   0.34 kB
+build/assets/circleAdd-cfd7e5db.svg              0.35 kB
+build/assets/alertFail-8056b6e4.svg              0.35 kB
+build/assets/checkSuccess-f8fd1dbb.svg           0.36 kB
+build/assets/search-3261bac7.svg                 0.41 kB
+build/assets/question-a67b2492.svg               0.46 kB
+build/assets/runQuery-edfab4ed.svg               0.49 kB
+build/assets/open-405dd348.svg                   0.49 kB
+build/index.html                                 0.90 kB
+build/assets/bug-5b6edb54.svg                    0.99 kB
+build/assets/topology-0032b65e.svg               1.62 kB
+build/assets/NotoMono-Regular-41fd7ccc.ttf     107.85 kB
+build/assets/NotoSans-Regular-c8cff31f.ttf     313.14 kB
+build/assets/NotoSans-SemiBold-43207822.ttf    313.72 kB
+build/assets/NotoSans-Bold-c6a598dd.ttf        313.79 kB
+build/assets/index-ef40fbc9.css                 87.78 kB │ gzip:  15.02 kB
+build/assets/index-4ddb52ed.js               2,811.88 kB │ gzip: 492.59 kB
 
-File sizes after gzip:
-
-  385.49 kB  build/static/js/main.044e444c.js
-  15.4 kB    build/static/css/main.a46ccb6f.css
-
-The project was built assuming it is hosted at /.
-You can control this with the homepage field in your package.json.
-
-The build folder is ready to be deployed.
-You may serve it with a static server:
-
-  npm install -g serve
-  serve -s build
-
-Find out more about deployment here:
-
-  https://cra.link/deployment
+(!) Some chunks are larger than 500 kBs after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 10.85s
 
 vtadmin-web is running!
   - Browser: http://localhost:14201

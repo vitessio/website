@@ -59,13 +59,13 @@ To optionally configure role-based access control (RBAC), refer to the [RBAC doc
 
 Environment variables can be defined in a `.env` file or passed inline to the `npm run build` command. The full list of flags is given in the [`vtadmin-web` reference documentation][vtadmin_web_env_ref].
 
-The following is from the [local example][local_example] showing a minimal set of environment variables. `$web_dir`, in this case, refers to the [`vtadmin-web` source directory][vtadmin_web_src] but could equally apply to the `web/vtadmin/` directory copied into a Docker container, for example. `REACT_APP_VTADMIN_API_ADDRESS` uses the same hostname as the `--addr` flag passed to `vtadmin` in the previous step. 
+The following is from the [local example][local_example] showing a minimal set of environment variables. `$web_dir`, in this case, refers to the [`vtadmin-web` source directory][vtadmin_web_src] but could equally apply to the `web/vtadmin/` directory copied into a Docker container, for example. `VITE_VTADMIN_API_ADDRESS` uses the same hostname as the `--addr` flag passed to `vtadmin` in the previous step. 
 
 ```
 npm --prefix $web_dir --silent install
 
-REACT_APP_VTADMIN_API_ADDRESS="https://vtadmin-api.example.com:14200" \
-  REACT_APP_ENABLE_EXPERIMENTAL_TABLET_DEBUG_VARS="true" \
+VITE_VTADMIN_API_ADDRESS="https://vtadmin-api.example.com:14200" \
+  VITE_ENABLE_EXPERIMENTAL_TABLET_DEBUG_VARS="true" \
   npm run --prefix $web_dir build
 ```
 
@@ -74,16 +74,16 @@ For example:
 
 ```javascript
 window.env = {
-    'REACT_APP_VTADMIN_API_ADDRESS': "https://vtadmin-api.example.com:14200",
-    'REACT_APP_FETCH_CREDENTIALS': "omit",
-    'REACT_APP_ENABLE_EXPERIMENTAL_TABLET_DEBUG_VARS': true,
-    'REACT_APP_BUGSNAG_API_KEY': "",
-    'REACT_APP_DOCUMENT_TITLE': "",
-    'REACT_APP_READONLY_MODE': false,
+    'VITE_VTADMIN_API_ADDRESS': "https://vtadmin-api.example.com:14200",
+    'VITE_FETCH_CREDENTIALS': "omit",
+    'VITE_ENABLE_EXPERIMENTAL_TABLET_DEBUG_VARS': true,
+    'VITE_BUGSNAG_API_KEY': "",
+    'VITE_DOCUMENT_TITLE': "",
+    'VITE_READONLY_MODE': false,
 };
 ```
 
-After running `build` command, the production build of the front-end assets will be in the `$web_dir/build` directory. They can be served as any other static content; for example, [Go's embed package][go_embed] or npm's [serve package][npm_serve]. Each filename inside of `$web_dir/build/static` will contain a unique hash of the file contents. This hash in the file name enables [long term caching techniques][web_caching].
+After running `build` command, the production build of the front-end assets will be in the `$web_dir/build` directory. They can be served as any other static content; for example, [Go's embed package][go_embed] or npm's [serve package][npm_serve]. Each filename inside of `$web_dir/build/assets` will contain a unique hash of the file contents.
 
 [discovery_json]: https://github.com/vitessio/vitess/blob/main/examples/local/vtadmin/discovery.json
 [go_embed]:https://pkg.go.dev/embed
