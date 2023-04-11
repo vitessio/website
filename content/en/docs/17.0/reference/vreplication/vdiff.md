@@ -296,8 +296,9 @@ up to date and thus that the progress reporting is as accurate as possible.
 </div>
 
 {{< warning >}}
-[`ANALYZE TABLE`](https://dev.mysql.com/doc/refman/en/analyze-table.html) takes a table level READ lock on the table while it runs — effectively making the table
-read-only. While `ANALYZE TABLE` does not typically take very long to run it can still potentially interfere with serving queries from the *target* keyspace.
+[`ANALYZE TABLE`](https://dev.mysql.com/doc/refman/en/analyze-table.html) takes a table level READ lock on the table while it runs — effectively making the
+table read-only. While [`ANALYZE TABLE`](https://dev.mysql.com/doc/refman/en/analyze-table.html) does not typically take very long to run it can still
+potentially interfere with serving queries from the *target* keyspace.
 {{< /warning >}}
 
 #### keyspace.workflow
