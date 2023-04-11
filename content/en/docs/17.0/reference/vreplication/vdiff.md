@@ -291,8 +291,8 @@ When reporting missing rows, only show primary keys in the report.
 **optional**
 
 <div class="cmd">
-When specified `ANALYZE TABLE` is run on each table in the target keyspace when initializing the VDiff. This helps to ensure that the table statistics are
-up to date and thus that the progress reporting is as accurate as possible.
+When specified, ANALYZE TABLE is run on each table in the target keyspace when initializing the VDiff. This helps to ensure that the table statistics are
+up-to-date and thus that the progress reporting is as accurate as possible.
 </div>
 
 {{< warning >}}
