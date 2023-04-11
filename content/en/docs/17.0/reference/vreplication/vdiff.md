@@ -291,7 +291,7 @@ When reporting missing rows, only show primary keys in the report.
 **optional**
 
 <div class="cmd">
-When specified [`ANALYZE TABLE`](https://dev.mysql.com/doc/refman/8.0/en/analyze-table.html) is run on each table in the target keyspace when initializing the VDiff.
+When specified [`ANALYZE TABLE`](https://dev.mysql.com/doc/refman/en/analyze-table.html) is run on each table in the target keyspace when initializing the VDiff.
 This helps to ensure that the table statistics are up to date and thus that the progress reporting is as accurate as possible.
 
 {< warning >}
