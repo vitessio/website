@@ -291,14 +291,14 @@ When reporting missing rows, only show primary keys in the report.
 **optional**
 
 <div class="cmd">
-When specified [`ANALYZE TABLE`](https://dev.mysql.com/doc/refman/en/analyze-table.html) is run on each table in the target keyspace when initializing the VDiff.
-This helps to ensure that the table statistics are up to date and thus that the progress reporting is as accurate as possible.
+When specified `ANALYZE TABLE` is run on each table in the target keyspace when initializing the VDiff. This helps to ensure that the table statistics are
+up to date and thus that the progress reporting is as accurate as possible.
 </div>
 
-{< warning >}
-`ANALYZE TABLE` takes a table level READ lock on the table while it runs — effectively making the table read-only. While `ANALYZE TABLE` does not typically take very
-long to run it can still potentially interfere with serving queries from the *target* keyspace.
-{</ warning >}
+{{< warning >}}
+[`ANALYZE TABLE`](https://dev.mysql.com/doc/refman/en/analyze-table.html) takes a table level READ lock on the table while it runs — effectively making the table
+read-only. While `ANALYZE TABLE` does not typically take very long to run it can still potentially interfere with serving queries from the *target* keyspace.
+{{< /warning >}}
 
 #### keyspace.workflow
 **mandatory**
