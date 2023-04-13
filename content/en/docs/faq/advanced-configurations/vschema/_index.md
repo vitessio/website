@@ -22,7 +22,7 @@ You can read more detail about how to select your primary key [here](https://vit
 
 We recommend using ApplySchema and ApplyVSchema in order to make updates to schemas within Vitess. It is also important to note that you will need to update both your MySQL database schema as well as your VSchema. 
 
-The [ApplySchema](https://vitess.io/docs/reference/programs/vtctl/#applyvschema) command applies a schema change to the specified keyspace on every master tablet, running in parallel on all shards. Changes are then propagated to replicas. The ApplyVSchema command applies the specified VSchema to the keyspace. The VSchema can be specified as a string or in a file. You can read more about the process to use these commands [here](https://vitess.io/docs/reference/features/schema-management/#changing-your-schema). 
+The [ApplySchema](https://vitess.io/docs/reference/programs/vtctl/#applyvschema) command applies a schema change to the specified keyspace on every primary tablet, running in parallel on all shards. Changes are then propagated to replicas. The ApplyVSchema command applies the specified VSchema to the keyspace. The VSchema can be specified as a string or in a file. You can read more about the process to use these commands [here](https://vitess.io/docs/reference/features/schema-management/#changing-your-schema). 
 
 There are a few ways that changes can be made to your schemas within Vitess. If you don’t want to use ApplySchema you can read more about the different methods to make updates [here](https://vitess.io/docs/user-guides/operating-vitess/making-schema-changes/).
 

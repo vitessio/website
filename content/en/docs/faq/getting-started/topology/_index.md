@@ -17,7 +17,7 @@ The main functions the Topology Service provides are:
 * It is used to store configuration data about the Vitess cluster. It stores small data structures (a few hundred bytes) per object.
 	* E.g. information about the Keyspaces, the Shards, the Tablets, the Replication Graph, and the Serving Graph. 
 * It supports a watch interface that signals a client when changes occur on an object. This is used, for instance, to know when the keyspace topology changes (e.g. for resharding).
-* It supports master election.
+* It supports primary election.
 * It supports quorum reads and writes.
 
 ## What Topology servers can I use with Vitess?

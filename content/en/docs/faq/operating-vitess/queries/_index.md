@@ -21,9 +21,9 @@ The general convention is to send OLTP queries to `REPLICA` tablet types, and OL
 
 You can qualify the keyspace name with the desired tablet type using the @ suffix. This can be specified as part of the connection as the database name, or can be changed on the fly through the USE command.
 
-For example, `ks@master` will select `ks` as the default keyspace with all queries being sent to the master. Consequently `ks@replica` will load balance requests across all `REPLICA` tablet types, and `ks@rdonly` will choose `RDONLY`.
+For example, `ks@primary` will select `ks` as the default keyspace with all queries being sent to the primary. Consequently `ks@replica` will load balance requests across all `REPLICA` tablet types, and `ks@rdonly` will choose `RDONLY`.
 
-You can also specify the database name as `@master`, etc, which instructs Vitess that no default keyspace was specified, but that the requests are for the specified tablet type.
+You can also specify the database name as `@primary`, etc, which instructs Vitess that no default keyspace was specified, but that the requests are for the specified tablet type.
 
 If no tablet type was specified, then VTGate chooses its default, which can be overridden with the `-default_tablet_type` command line argument.
 
