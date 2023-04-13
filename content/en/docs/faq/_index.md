@@ -44,9 +44,9 @@ We have a number of [recorded presentations and videos](https://vitess.io/docs/r
 
 ## Additional FAQs?
 
-* [Getting Started](/faqs/getting-started)
-* [Migrating](/faqs/migrating)
-* [Operating Vitess](/faqs/operating-vitess)
-* [Advanced Configurations](/faqs/advanced-configurations)
-* [Sharding](/faqs/sharding)
-* [Troubleshooting](/faqs/troubleshooting)
+* [Getting Started](/faq/getting-started)
+* [Migrating](/faq/migrating)
+* [Operating Vitess](/faq/operating-vitess)
+* [Advanced Configurations](/faq/advanced-configurations)
+* [Sharding](/faq/sharding)
+* [Troubleshooting](/faq/troubleshooting)
