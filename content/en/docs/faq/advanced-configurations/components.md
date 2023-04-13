@@ -2,7 +2,6 @@
 title: Components
 description: Frequently Asked Questions about Vitess
 weight: 1
-docs_nav_disable_expand: false
 ---
 
 ## How does Vitess modify parameters on tablets?

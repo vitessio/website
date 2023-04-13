@@ -2,7 +2,6 @@
 title: Vtgate
 description: Frequently Asked Questions about Vitess
 weight: 4
-docs_nav_disable_expand: false
 ---
 
 ## How do you use gRPC with vtgate?

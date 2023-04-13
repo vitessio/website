@@ -2,7 +2,6 @@
 title: Vindex
 description: Frequently Asked Questions about Vitess
 weight: 7
-docs_nav_disable_expand: false
 ---
 
 ## What is a secondary Vindex? How does it work?

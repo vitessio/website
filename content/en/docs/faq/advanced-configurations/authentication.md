@@ -2,7 +2,6 @@
 title: Authentication
 description: Frequently Asked Questions about Vitess
 weight: 5
-docs_nav_disable_expand: false
 ---
 
 ## How do I set up MySQL authentication in Vitess?

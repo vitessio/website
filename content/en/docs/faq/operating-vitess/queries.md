@@ -2,7 +2,6 @@
 title: Queries
 description: Frequently Asked Questions about Vitess
 weight: 3
-docs_nav_disable_expand: false
 ---
 
 ## How can I perform a full table scan without the row limit per query?

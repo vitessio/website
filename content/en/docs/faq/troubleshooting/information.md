@@ -2,7 +2,6 @@
 title: Information Gathering
 description: Frequently Asked Questions about Vitess
 weight: 2
-docs_nav_disable_expand: false
 ---
 
 ## Capturing a tcpdump network trace for vtgate

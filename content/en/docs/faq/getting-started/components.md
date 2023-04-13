@@ -2,7 +2,6 @@
 title: Components
 description: Frequently Asked Questions about Vitess
 weight: 3
-docs_nav_disable_expand: false
 ---
 
 ## What is vtgate and how does it work? 

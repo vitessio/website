@@ -2,7 +2,6 @@
 title: Advanced Migrations
 description: Frequently Asked Questions about Vitess
 weight: 2
-docs_nav_disable_expand: false
 ---
 
 ## How do I migrate to Vitess from a hosted MySQL?

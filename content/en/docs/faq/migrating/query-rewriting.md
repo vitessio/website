@@ -2,7 +2,6 @@
 title: Query Rewriting
 description: Frequently Asked Questions about Vitess
 weight: 3
-docs_nav_disable_expand: false
 ---
 
 ## How can tables be migrated from using auto-increment to sequences?

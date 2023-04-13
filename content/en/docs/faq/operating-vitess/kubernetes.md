@@ -2,7 +2,6 @@
 title: Kubernetes
 description: Frequently Asked Questions about Vitess
 weight: 5
-docs_nav_disable_expand: false
 ---
 
 ## How can I resize my Kubernetes storage when using Vitess?

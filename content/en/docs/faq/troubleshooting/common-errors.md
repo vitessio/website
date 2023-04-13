@@ -2,7 +2,6 @@
 title: Common Errors
 description: Frequently Asked Questions about Vitess
 weight: 1
-docs_nav_disable_expand: false
 ---
 
 ## Why is an SQL update with a primary key slow?

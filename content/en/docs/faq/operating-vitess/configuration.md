@@ -2,7 +2,6 @@
 title: Configuration
 description: Frequently Asked Questions about Vitess
 weight: 2
-docs_nav_disable_expand: false
 ---
 
 ## What foreign key support exists in Vitess?

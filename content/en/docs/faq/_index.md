@@ -43,10 +43,3 @@ We have a number of [recorded presentations and videos](https://vitess.io/docs/r
 * For a curated list please check out a PlanetScale blog post [here](https://www.planetscale.com/blog/videos-intro-to-vitess-its-powerful-capabilities-and-how-to-get-started).
 
 ## Additional FAQs?
-
-* [Getting Started](/faq/getting-started)
-* [Migrating](/faq/migrating)
-* [Operating Vitess](/faq/operating-vitess)
-* [Advanced Configurations](/faq/advanced-configurations)
-* [Sharding](/faq/sharding)
-* [Troubleshooting](/faq/troubleshooting)

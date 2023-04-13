@@ -2,7 +2,6 @@
 title: Overview
 description: Frequently Asked Questions about Vitess
 weight: 4
-docs_nav_disable_expand: false
 ---
 
 ## What is the topology service? How does it work?

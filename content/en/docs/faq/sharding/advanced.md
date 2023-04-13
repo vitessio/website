@@ -2,7 +2,6 @@
 title: Advanced
 description: Frequently Asked Questions about Vitess
 weight: 3
-docs_nav_disable_expand: false
 ---
 
 ## How can I know which shard contains a row for a table?

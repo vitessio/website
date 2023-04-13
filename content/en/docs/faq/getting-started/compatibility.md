@@ -2,7 +2,6 @@
 title: Compatibility
 description: Frequently Asked Questions about Vitess
 weight: 2
-docs_nav_disable_expand: false
 ---
 
 ## How is Vitess different from AWS Aurora for MySQL?

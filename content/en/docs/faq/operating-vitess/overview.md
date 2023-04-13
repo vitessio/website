@@ -2,7 +2,6 @@
 title: Overview
 description: Frequently Asked Questions about Vitess
 weight: 1
-docs_nav_disable_expand: false
 ---
 
 ## Am I really limited to 250 GB as my tablet size? Why?

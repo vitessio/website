@@ -2,7 +2,6 @@
 title: Overview
 description: Frequently Asked Questions about Vitess
 weight: 1
-docs_nav_disable_expand: false
 ---
 
 ## How much resources (memory, CPU, disk) does Vitess use?

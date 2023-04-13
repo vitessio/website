@@ -2,7 +2,6 @@
 title: VTTablet
 description: Frequently Asked Questions about Vitess
 weight: 3
-docs_nav_disable_expand: false
 ---
 
 ## Can vttablets start without sql_mode set to STRICT_TRANS_TABLES?

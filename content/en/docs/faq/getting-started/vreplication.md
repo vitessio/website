@@ -2,7 +2,6 @@
 title: Overview
 description: Frequently Asked Questions about Vitess
 weight: 6
-docs_nav_disable_expand: false
 ---
 
 ## What is VReplication? How does it work?
