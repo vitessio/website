@@ -1,7 +1,7 @@
 ---
 title: "Vtctld Server API"
-date: 2023-03-08T06:30:10-05:00
-slug: '2023-03-08-vtctldserver-api'
+date: 2023-04-17
+slug: '2023-04-17-vtctldserver-api'
 tags:
 - Vitess
 - vtctld
@@ -9,8 +9,8 @@ tags:
 description: A structured gRPC API for Vitess cluster management.
 ---
 
-We are thrilled to discuss `VtctldServer`, the new gRPC API for performing cluster management operations with `vtctld` components, which became generally available in Vitess v15.
-This is the (near-) culmination of long, steady migration that began back in [Vitess v9][initial_pr] (!!!), so we'd like to talk a bit about the motivation behind the move, the design of the new API, and where we go from here.
+We are thrilled to discuss `VtctldServer`, the new gRPC API for performing cluster management operations with `vtctld` components.
+This is the (near-) culmination of long, steady migration that began back in [Vitess v9][initial_pr] (!!!) and went GA in Vitess v15, so we'd like to talk a bit about the motivation behind the move, the design of the new API, and where we go from here.
 
 ## Why?
 
