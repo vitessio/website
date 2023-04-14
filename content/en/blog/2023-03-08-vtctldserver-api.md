@@ -9,7 +9,7 @@ tags:
 description: A structured gRPC API for Vitess cluster management.
 ---
 
-We are more than thrilled to belatedly discuss `VtctldServer`, the new gRPC API for performing cluster management operations with `vtctld` components, which became generally available in Vitess v15.
+We are thrilled to discuss `VtctldServer`, the new gRPC API for performing cluster management operations with `vtctld` components, which became generally available in Vitess v15.
 This is the (near-) culmination of long, steady migration that began back in [Vitess v9][initial_pr] (!!!), so we'd like to talk a bit about the motivation behind the move, the design of the new API, and where we go from here.
 
 ## Why?
@@ -120,7 +120,7 @@ There are few other general exceptions[^1] to call out, so you know what to look
 
 #### Exception 1: Consolidation
 
-First, in the old model, occasionally there were several instances of similar commands that we have compressed into a single RPC with different options to switch between the subtle behavioral differences.
+In the old model, there were several instances of similar commands that we have compressed into a single RPC with different options to switch between the subtle behavioral differences.
 That was ... pretty wordy, so, an example!
 
 Before:
@@ -185,17 +185,17 @@ Meanwhile, the `GetTablet` RPC is a 1-to-1 drop-in for the legacy `GetTablet` co
 
 #### Exception 2: Pluralization
 
-Second, certain commands would only operate on a single instance of a resource at a time.
+Certain commands would only operate on a single instance of a resource at a time.
 For example, if you wanted to delete N shards, you needed to make N round-trips to a `vtctl` by invoking N `DeleteShard` commands.
 
-For these sorts of commands, we've tried to "pluralize" them, to operate on multiple reserouces with a single round-trip to the `vtctld`.
+For these sorts of commands, we've tried to "pluralize" them, to operate on multiple resources with a single round-trip to the `vtctld`.
 So, `DeleteShard` becomes `DeleteShards`, and `DeleteTablet` becomes `DeleteTablets`, and so on.
-For the destructive operations (like the two `Delete*` RPCs above), we perform them sequentially, and, if any instance fails (i.e. we fail to delete the 3rd tablet), the overall RPC returns an error.
+For destructive operations (like the two `Delete*` RPCs above), we perform them sequentially, and, if any instance fails (i.e. we fail to delete the 3rd tablet), the overall RPC returns an error.
 
 #### Exception 3: Streaming
 
 As we said earlier, the old gRPC API had a single, _streaming_ RPC, through which all `vtctl` commands were proxied.
-In most &mdash; but not all! &mdash; cases, these "streamed" responses only ever consisted of one packet from the server, but to properly consume stream, you needed to write a receive loop that would only ever iterate once:
+In most &mdash; but not all! &mdash; cases, these "streamed" responses only ever consisted of one packet from the server, but to properly consume the stream, you needed to write a receive loop that would only ever iterate once:
 
 ```go
 stream, err := client.ExecuteVtctlCommand(
@@ -246,7 +246,7 @@ Ahhhh, isn't unary so much cleaner?
 
 However, there are a few cluster management operations that legitimately benefit from a streaming model between the client and the server.
 In those few cases, where we may have an extremely long-running operation, or want some sort of progress indication, we've kept the streaming response paradigm.
-`Backup` and `Restore` are the two most clear examples, but again, we recommend you check against the actual RPC definition at time of programming for the authoritative source.
+`Backup` and `Restore` are the two clearest examples, but again, we recommend you check against the actual RPC definition at time of programming for the authoritative source.
 
 <!-- aside about how state machine commands like `Reshard` are actually better for these systems? -->
 
@@ -255,7 +255,7 @@ In those few cases, where we may have an extremely long-running operation, or wa
 In addition to the "one RPC per command" remit of the new API, the other noteworthy element of our gRPC implementation of that API is a revisiting of errors.
 The old API's implementation almost exclusively[^2] returned plain Go `error` types back up to the `ExecuteVtctlCommand` implementation, which were dutifully translated by `grpc-go` into `UNKNOWN` errors, which is ... not super helpful.
 
-When implementing the new API, we tried to, wherever possible, use the `vterrors` package to surface more helpful information back to the caller wherever possible.
+When implementing the new API, we tried to, wherever possible, use the `vterrors` package to surface more helpful information back to the caller.
 Enjoy![^3]
 
 ## Status
