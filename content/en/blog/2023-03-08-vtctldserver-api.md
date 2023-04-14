@@ -248,8 +248,6 @@ However, there are a few cluster management operations that legitimately benefit
 In those few cases, where we may have an extremely long-running operation, or want some sort of progress indication, we've kept the streaming response paradigm.
 `Backup` and `Restore` are the two clearest examples, but again, we recommend you check against the actual RPC definition at time of programming for the authoritative source.
 
-<!-- aside about how state machine commands like `Reshard` are actually better for these systems? -->
-
 ### Errors
 
 In addition to the "one RPC per command" remit of the new API, the other noteworthy element of our gRPC implementation of that API is a revisiting of errors.
