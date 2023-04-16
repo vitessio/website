@@ -24,11 +24,11 @@ As a use case for (1), consider [declarative Vitess migrations](https://vitess.i
 
 Case (2) is best explained with [PlanetScale branching](https://planetscale.com/docs/concepts/branching). You have a production schema, and you have a local copy of that schema. On your local copy, you make changes over time, and finally wish to apply those changes in production. Did you track those changes? Some ORMs will do a good job at that. But you might not have used an ORM, or the ORM might not be feature complete. What tables do you need to `CREATE`? Which views should be `DROP`ped? And what needs to be `ALTER`ed? Is there a specific order of operations?
 
-There are two approaches to analyzing the diff of tables or schemas. One approach is to use a running MySQL server. Deploy the two schemas on that server, then investigate the `INFORMATION_SCHEMA` metadata tables and construct a model for the schema. In `INFORMATION_SCHEMA` we may find a formal breakdown such as the columns found in each table, what data type a column has, what default does it have, if any; which indexes are unique, which columns do they cover; what foreign key constraints on a table point to which parent table, what columns are covered; etc.
+There are two approaches to analyzing the diff of tables or schemas. One approach is to use a running MySQL server. Deploy the two schemas on that server, then investigate the `INFORMATION_SCHEMA` metadata tables and construct a model for the schema. `INFORMATION_SCHEMA` offers a formal breakdown such as the columns found in each table, what data type a column has, what default does it have, if any; which indexes are unique, which columns do they cover; what foreign key constraints on a table point to which parent table, what columns are covered; etc.
 
 This approach has two advantages:
 
-1. If you're able to create a table in MySQL, that means it's valid. By the time you introspect `INFORMATION_SCHEMA` on that table, you may safely assume that, for example, keys only cover existing columns.
+1. If you're able to create a table in MySQL, that means it's valid. By the time you introspect `INFORMATION_SCHEMA` on a table, validity is given. You may safely assume, for example, that keys only cover existing columns.
 2. `INFORMATION_SCHEMA` formalizes the majority of information. The data type is well defined. A column precision is an integer value. The text collation is a well known value.
 
 However, there are disadvantages, as well:
