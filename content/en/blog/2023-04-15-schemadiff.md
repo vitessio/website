@@ -11,7 +11,7 @@ Introducing `schemadiff`, a best kept secret internal `Vitess` library. At its c
 
 ## Some tech specs
 
-`schemadiff` supports MySQL `8.0` dialect and functionality. It is completely in-memory and does not use any MySQL server or MySQL code. It applies MySQL-compatible logic and rulers to validate and apply schema changes. It uses a declarative approach but also works with imperative commands.
+`schemadiff` supports MySQL `8.0` dialect and functionality. It is completely in-memory and does not use any MySQL server or MySQL code. It applies MySQL-compatible logic and rules to validate and apply schema changes. It uses a declarative approach but also works with imperative commands.
 
 ## Diff preamble
 
