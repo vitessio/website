@@ -111,7 +111,7 @@ diffs, err := DiffSchemasSQL("create ...", "create ...", hints)
 ...
 ```
 
-The first thing to note in the above examples is that everything takes place purely within `go` space, and MySQL is not involved. `schemadiff` is purely programmatic, and makes heavy use of Vitess' [`sqlparser`](https://github.com/vitessio/vitess/tree/main/go/vt/sqlparser) library.
+The main thing to note in the above examples is that everything takes place purely within `go` space, and MySQL is not involved. `schemadiff` is purely programmatic, and makes heavy use of Vitess' [`sqlparser`](https://github.com/vitessio/vitess/tree/main/go/vt/sqlparser) library.
 
 
 ## sqlparser
@@ -144,7 +144,7 @@ type TableSpec struct {
 }
 ```
 
-You can already see how AST helps us in analyzing a table's definition. As a very simple illustration, imagine we have two tables we want to diff. Say we want to find whether the two have a different set (let's ignore ordering for now) of columns. How would we do that?
+You can already see how AST helps us in analyzing a table's definition. As a very simple illustration, imagine we have two tables we want to diff. Say we want to find whether the two have a different set of columns (let's ignore ordering for now). How would we do that?
 
 We can programmatically iterate over `range table1.TableSpec.Columns` in each of the tables. We can do a full drill down of all the details in a `ColumnDefinition`. Or, we can take a shortcut. `schemadiff` uses an optimistic approach: most of the schema is likely to be identical. It first attempts to compare components as a whole. If they components are identical as a whole, we can proceed to drill down.
 
@@ -206,9 +206,9 @@ There's a few things to normalize here. Inputs can come in different shapes and 
 
 - The canonical way to declare a `primary key` is as an index definition, not as part of the column definition.
 - `int(12)` is just an `int`. `12` does not matter. Integer precision is in fact being [deprecated in MySQL](https://dev.mysql.com/worklog/task/?id=13127). Interestingly, some ORMs do have special treatment for `int(1)`, as an indication to a boolean value. `schemadiff` accommodates that.
-- It looks like `i` is `NULL`able (because it does not say `not null`). Which means its default value is `null` even if we don't explicitly say that.
+- It looks like `i` is `null`able (because it does not say `not null`). Which means its default value is `null` even if we don't explicitly say that.
 - `v`'s collation, and thereby character set, agree with the table's collation. It can be removed.
-- And, of course, we used unqualified names and lower case SQL syntax.
+- And, of course, the snippet uses unqualified names and lower case SQL syntax.
 
 A normalized version of the above looks like:
 
