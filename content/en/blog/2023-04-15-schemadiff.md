@@ -4,10 +4,10 @@ date: 2023-04-15
 slug: '2023-04-15-schemadiff'
 tags: ['Vitess','MySQL', 'DDL', 'schema']
 title: 'schemadiff: Vitess In-memory Schema Diffing, Normalization, Validation and Manipulation'
-description: 'Introducing schemadiff, a best kept secret library available in Vitess'
+description: 'Introducing schemadiff, an internal library available in Vitess'
 ---
 
-Introducing `schemadiff`, a best kept secret internal `Vitess` library. At its core, `schemadiff` is a declarative, programmatic library that can produce an SQL diff of two entities: tables, views, or full blown database schemas. But it then goes beyond that to normalize, validate, export, and even _apply_ schema changes, all declaratively and without having to use a MySQL server. Let's dive in to understand its functionality and capabilities.
+Introducing `schemadiff`, an internal library in `Vitess` that has been one of its best-kept secrets until now. At its core, `schemadiff` is a declarative, programmatic library that can produce an SQL diff of two entities: tables, views, or full blown database schemas. But it then goes beyond that to normalize, validate, export, and even _apply_ schema changes, all declaratively and without having to use a MySQL server. Let's dive in to understand its functionality and capabilities.
 
 ## Some tech specs
 
