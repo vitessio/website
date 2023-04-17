@@ -116,7 +116,7 @@ The main thing to note in the above examples is that everything takes place pure
 
 ## sqlparser
 
-Vitess is a sharding and infrastructure framework running on top of MySQL, and masquerades as a MySQL server to route queries into relevant shards. It thus obviously must be able to parse MySQL's SQL dialect. [`sqlparser`](https://github.com/vitessio/vitess/tree/main/go/vt/sqlparser) is the Vitess library that does so.
+Vitess is a sharding and management framework running on top of MySQL, which masquerades as a MySQL server to route queries to relevant shards. It thus obviously must be able to parse MySQL's SQL dialect. [`sqlparser`](https://github.com/vitessio/vitess/tree/main/go/vt/sqlparser) is the Vitess library that does so.
 
 `sqlparser` utilizes a classic [yacc](https://en.wikipedia.org/wiki/Yacc) [file](https://github.com/vitessio/vitess/blob/main/go/vt/sqlparser/sql.y) to parse SQL into an Abstract Syntax Tree (AST), with `golang` structs generated and populated by the parser. For example, a SQL `CREATE TABLE` statement is parsed into a [`CreateTable`](https://github.com/vitessio/vitess/blob/157857a4c5ee6dcb44e7de08894db8334750746e/go/vt/sqlparser/ast.go#L509-L517) instance:
 
