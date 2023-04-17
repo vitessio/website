@@ -281,7 +281,7 @@ create view v2 as select * from t;
 
 Alphabetically, `v1` comes before `v2`. But, to apply these two diffs, we must first create `v2`, then `v1`. The reverse order is invalid. This time it's invalid not only programmatically in `schemadiff`, but also when applied to MySQL itself.
 
-`schemadiff` maintains the hierarchical ordering of all tables and views, based on `FOREIGN KEY` and view definitions. There's a specific order for `CREATE` statements, and a specific (reverse) order for `DROP` statements. There may actually be conflicts between the diffs, but that's the topic of a different blog post.
+`schemadiff` maintains the hierarchical ordering of all tables and views, based on `FOREIGN KEY` and view definitions. There's a specific order for `CREATE` statements, and a specific (reverse) order for `DROP` statements. There may actually be conflicts between the diffs, but that's a topic for a different blog post.
 
 Or, consider the flow in [this `e2e` test](https://github.com/vitessio/vitess/blob/27cd9c34bb747d504dfd6c3aa8dff08d7b11832f/go/test/endtoend/schemadiff/vrepl/schemadiff_vrepl_suite_test.go#L345-L428). We hook onto `vitess`'s pre-existing Online DDL tests, a suite that includes a multitude of scenarios. The suite already has a story: a table, a change, an expected result. In our `schemadiff` test we shuffle the logic: we have an original table and and expected table. We evaluate the diff. We apply the diff onto the original table. We expect the result to be identical to the expected table!
 
