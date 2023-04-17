@@ -42,7 +42,7 @@ However, there are disadvantages, as well:
 
 The second is the in-memory, programmatic approach. Instead of relying on `INFORMATION_SCHEMA`, we rely on the SQL of the schema, i.e. on the `CREATE TABLE` and `CREATE VIEW` statements themselves. This poses a few challenges of its own:
 
-- First and foremost, you must be able to parse and analyze all statements. This includes a `CREATE TABLE` that has a `CHECK CONSTRAINT` with a complex expression, or a sub-partitioning scheme using functions over columns. Or the ability to fully parse a `CREATE VIEW` statement. Or a complex `GENERATED` column expression, etc.
+- First and foremost, you must be able to parse and analyze all statements. This includes a `CREATE TABLE` that has a `CHECK CONSTRAINT` with a complex expression, or a sub-partitioning scheme using functions over columns. You also need the ability to fully parse a `CREATE VIEW` statement, a complex `GENERATED` column expression, etc.
 - You must be able to accommodate different equivalent definitions. For example, `create table t (id int primary key)` is equivalent to `create table t(id int, primary key (id))`. Even MySQL's own `SHOW CREATE TABLE` output may present different results depending on when/where the table was created.
 - Not having a MySQL server to validate correctness of the initial schema and the generated diffs means the application must implement that logic.
 
