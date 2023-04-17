@@ -21,7 +21,7 @@ These take the same parameters as VDiff1 and schedule VDiff to run on the primar
 ```
 VDiff -- [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
        [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--auto-retry] [--verbose] [--max_extra_rows_to_compare=1000]
-       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] [--wait] [--wait-update-interval=1m]
+       [--update-table-stats] [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] [--wait] [--wait-update-interval=1m]
        <keyspace.workflow> create [<UUID>]
 ```
 
@@ -40,7 +40,7 @@ The `resume` action allows you to resume a previously completed VDiff, picking u
 ```
 VDiff -- [--source_cell=<cell>] [--target_cell=<cell>] [--tablet_types=in_order:RDONLY,REPLICA,PRIMARY]
        [--limit=<max rows to diff>] [--tables=<table list>] [--format=json] [--auto-retry] [--verbose] [--max_extra_rows_to_compare=1000]
-       [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] [--wait] [--wait-update-interval=1m]
+       [--update-table-stats] [--filtered_replication_wait_time=30s] [--debug_query] [--only_pks] [--wait] [--wait-update-interval=1m]
        <keyspace.workflow> resume <UUID>
 ```
 
@@ -286,6 +286,20 @@ Adds the MySQL query to the report that can be used for further debugging
 <div class="cmd">
 When reporting missing rows, only show primary keys in the report.
 </div>
+
+#### --update-table-stats
+**optional**
+
+<div class="cmd">
+When specified, ANALYZE TABLE is run on each table in the target keyspace when initializing the VDiff. This helps to ensure that the table statistics are
+up-to-date and thus that the progress reporting is as accurate as possible.
+</div>
+
+{{< warning >}}
+[`ANALYZE TABLE`](https://dev.mysql.com/doc/refman/en/analyze-table.html) takes a table level READ lock on the table while it runs — effectively making the
+table read-only. While [`ANALYZE TABLE`](https://dev.mysql.com/doc/refman/en/analyze-table.html) does not typically take very long to run it can still
+potentially interfere with serving queries from the *target* keyspace.
+{{< /warning >}}
 
 #### keyspace.workflow
 **mandatory**
