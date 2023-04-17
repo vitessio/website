@@ -146,7 +146,7 @@ type TableSpec struct {
 
 You can already see how AST helps us in analyzing a table's definition. As a very simple illustration, imagine we have two tables we want to diff. Say we want to determine whether the two have a different set of columns (let's ignore ordering for now). How would we do that?
 
-We can programmatically iterate over `range table1.TableSpec.Columns` in each of the tables. We can do a full drill down of all the details in a `ColumnDefinition`. Or, we can take a shortcut. `schemadiff` uses an optimistic approach: most of the schema is likely to be identical. It first attempts to compare components as a whole. If the components are identical as a whole, we can proceed to drill down.
+We can programmatically iterate over `range table1.TableSpec.Columns` in each of the tables. We can do a full drill down of all the details in a `ColumnDefinition`. Or, we can take a shortcut. `schemadiff` uses an optimistic approach: most of the schema is likely to be identical. It first attempts to compare components as a whole. If the components are not identical as a whole, we can proceed to drill down.
 
 How do you "compare a component as a whole"? `sqlparser` not only parses SQL, it also exports AST as SQL. We can, for example, run:
 
