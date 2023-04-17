@@ -28,7 +28,7 @@ There are two approaches to analyzing the diff of tables or schemas. One approac
 
 This approach has two advantages:
 
-1. If you're able to create a table in MySQL, that means it's valid. By the time you introspect `INFORMATION_SCHEMA` on a table, validity is given. You may safely assume, for example, that keys only cover existing columns.
+1. If you're able to create a table in MySQL, that means it's valid. By the time you introspect `INFORMATION_SCHEMA` on a table, validity is a given. You may safely assume, for example, that keys only cover existing columns.
 2. `INFORMATION_SCHEMA` formalizes the majority of information. The data type is well defined. A column precision is an integer value. The text collation is a well known value.
 
 However, there are disadvantages, as well:
