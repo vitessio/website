@@ -17,8 +17,8 @@ Introducing `schemadiff`, a best kept secret internal `Vitess` library. At its c
 
 `schemadiff`, as its name suggests, began as a diffing library. The objectives were:
 
-1. Given two table definitions, what schema changes (DDLs) would we need to apply on the 1st, so it looks like the 2nd?
-2. Given two schemas (aka databases), that include tables and views, what schema changes (DDLs) would we need to apply on the 1st, so it looks like the 2nd?
+1. Given two table definitions, what schema changes (DDLs) would we need to apply on the first, so it looks like the second?
+2. Given two schemas (aka databases), that include tables and views, what schema changes (DDLs) would we need to apply on the first, so it looks like the second?
 
 As a use case for (1), consider [declarative Vitess migrations](https://vitess.io/docs/16.0/user-guides/schema-changes/declarative-migrations/). Consider that you might want to tell your database: "Here's a table, please make it look like so". It's the database's job to determine whether this table exists in the first place or not. If not, then it must be created. If it exists, and already looks exactly like you want it to, geat, that's a no-op. But what if the current table looks somewhat different? What changes need to be applied on the existing table so as to make it look like your desired table? Specifically, what `ALTER TABLE` statement(s) (there are some rare scenarios where we might need to invoke more than one) do we need to invoke?
 
