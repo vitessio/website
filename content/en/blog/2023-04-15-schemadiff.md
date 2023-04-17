@@ -272,7 +272,7 @@ assert.Equal(t, schema2.ToQueries(), applied.ToQueries())
 
 As we can see, there are a lot of validations involved. Some of them actually depend on each other! Say we drop a column as well as a `FOREIGN KEY` that references that column. MySQL-wise this is a single `ALTER TABLE` operation. But, programmatically, `schemadiff` needs to first remove the `FOREIGN KEY`, and then remove the column. The reverse order is invalid. `schemadiff` computes the correct order of operations for a table.
 
-But then, it also resolves the correct order of operations in the grand context of the schema. Consider this diff:
+But then, it also computes the correct order of operations in the grand context of the schema. Consider this diff:
 
 ```sql
 create view v1 as select * from v2;
