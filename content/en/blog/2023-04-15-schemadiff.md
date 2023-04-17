@@ -38,7 +38,7 @@ However, there are disadvantages, as well:
 - MySQL allows schema inconsistencies. It is possible, in MySQL, to have an "orphaned" `VIEW`, where the tables/views on which it relies, do not exist. Reading something from MySQL doesn't mean it's really valid.
 - Last, and most impactful of all, is the operational overhead. To diff two schemas, you need to deploy two schemas, then read back the metadata for all the tables, views, indexes, constraints, etc. You need to deploy a MySQL server, likely in a non-production environment. You will need to start the server, deploy the changes, read back, shutdown the server. This is a heavyweight operation.
   And if you then want to validate your _diff_, you probably want to deploy it on the running server, then re-read the result, compare it with what you were expecting to find. This is even more heavyweight.
-	And, if you wanted to resolve the _order_ by which the changes must take place (some scenarios dictate a specific order, a topic for a future post), then you'd need to solicit confirmation from MySQL by applying changes on the server, regressively.
+	And, if you want to compute the _order_ in which the changes must take place (some scenarios dictate a specific order, a topic for a future post), then you'd need to solicit confirmation from MySQL by applying changes on the server, regressively.
 
 The second is the in-memory, programmatic approach. Instead of relying on `INFORMATION_SCHEMA`, we rely on the SQL of the schema, i.e. on the `CREATE TABLE` and `CREATE VIEW` statements themselves. This poses a few challenges of its own:
 
