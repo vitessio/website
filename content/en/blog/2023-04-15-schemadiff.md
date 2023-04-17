@@ -46,7 +46,7 @@ The second is the in-memory, programmatic approach. Instead of relying on `INFOR
 - You must be able to accommodate different equivalent definitions. For example, `create table t (id int primary key)` is equivalent to `create table t(id int, primary key (id))`. Even MySQL's own `SHOW CREATE TABLE` output may present different results depending on when/where the table was created.
 - Not having a MySQL server to validate correctness of the initial schema and the generated diffs means that the application must implement that logic.
 
-`schemadiff` uses the programmatic approach. Let's see some sample code and continue to discuss its internals.
+`schemadiff` uses the programmatic approach. Let's look at some sample code first and then we'll move on to discuss its internals.
 
 
 
