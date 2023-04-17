@@ -13,7 +13,7 @@ Introducing `schemadiff`, an internal library in `Vitess` that has been one of i
 
 `schemadiff` supports MySQL `8.0` dialect and functionality. It is completely in-memory and does not use any MySQL server or MySQL code. It applies MySQL-compatible logic and rules to validate and apply schema changes. It uses a declarative approach but also works with imperative commands.
 
-## Diff preamble
+## Diff objectives
 
 `schemadiff`, as its name suggests, began as a diffing library. The objectives were:
 
