@@ -178,7 +178,7 @@ The above table is _syntactically_ valid, but _semantically_ invalid. There are 
 
 ## Validation
 
-The basic validation premise is that everyone should want their schema to be valid. There's no point in using invalid schemas, because, at the end of they day, you want to be able to deploy those schemas on real MySQL servers.
+The basic premise of validation is that all users want their schemas to be valid. There's no point in using invalid schemas, because, at the end of they day, you want to be able to deploy those schemas on real MySQL servers.
 
 To that effect, `schemadiff` enforce validation upon loading a new schema. As we see later on, it also enforces validation upon applying changes. If you try to load an invalid schema as in the above, `schemadiff` returns an informative error. You can't have two columns of same name. Your keys may only cover existing columns. A collation name must be recognized. A `GENERATED` column must refer to existing columns. A `FOREIGN KEY` constraint must reference existing columns in existing tables, respective to the local columns count and data types, etc. Circular `FOREIGN KEY` dependencies are not allowed.
 
