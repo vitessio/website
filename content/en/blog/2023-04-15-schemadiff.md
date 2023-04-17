@@ -289,7 +289,7 @@ Because this runs in GitHub CI, we take advantage of a running MySQL server. We 
 
 ## Even beyond
 
-The declarative approach is challenging. It requires reverse-engineering of a hidden sequence of changes. Sometimes these changes have inter-dependency between them. We will discuss this further in a future post.
+The declarative approach is challenging. It requires reverse-engineering of a hidden sequence of changes. Sometimes these changes are inter-dependent. We will discuss this further in a future post.
 
 Note that `schemadiff` is an internal library, and as such, its interface is subject to change. As part of the `Vitess` codebase, `schemadiff` code is open source, licensed under `Apache 2.0`.
 
