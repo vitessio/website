@@ -3,7 +3,7 @@ author: 'Shlomi Noach'
 date: 2023-04-15
 slug: '2023-04-15-schemadiff'
 tags: ['Vitess','MySQL', 'DDL', 'schema']
-title: 'schemadiff: in-memory schema diffing, normalization, validation and manipulation'
+title: 'schemadiff: Vitess In-memory Schema Diffing, Normalization, Validation and Manipulation'
 description: 'Introducing schemadiff, a best kept secret library available in Vitess'
 ---
 
