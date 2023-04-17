@@ -264,7 +264,7 @@ assert.Equal(t, schema2.ToQueries(), applied.ToQueries())
 `Apply()` validates the requested changes on the fly, as well as on the resulting schema. It adheres to MySQL rules. For example:
 
 - If the diff has a `AddColumn` AST struct, verify upfront that no column exists by same name.
-- If there's an `AddKey`, validate that the columns specified by the key, do in fact exist.
+- If there's an `AddKey`, validate that the columns specified by the key do in fact exist.
 - If there's an `AddKey` and no index name specified, generate one, compatible with MySQL naming.
 - Conversely, if there's a `DropColumn`, and some keys exist that actually cover that column, remove the column from those keys; any key that is left without any covered columns is dropped (this is the standard MySQL behavior).
 - You shouldn't be able to `DropColumn` if there's a `FOREIGN KEY` referencing that column, though.
