@@ -56,17 +56,12 @@ vtctld \
 | --catch-sigpipe | | catch and ignore SIGPIPE on stdout and stderr if specified |
 | --cell | string | cell to use |
 | --ceph_backup_storage_config | string | Path to JSON config file for ceph backup storage (default "ceph_backup_config.json") |
-| --compression-engine-name | string | compressor engine used for compression. (default "pargzip") |
-| --compression-level | int | what level to pass to the compressor. (default 1) |
 | --consul_auth_static_file | string | JSON File to read the topos/tokens from. |
 | --datadog-agent-host | string | host to send spans to. if empty, no tracing will be done |
 | --datadog-agent-port | string | port to send spans to. if empty, no tracing will be done |
 | --disable_active_reparents | boolean | if set, do not allow active reparents. Use this to protect a cluster using external reparents. |
 | --durability_policy | string | type of durability to enforce. Default is none. Other values are dictated by registered plugins (default "none") |
 | --emit_stats | boolean | true iff we should emit stats to push-based monitoring/stats backends |
-| --external-compressor | string | command with arguments to use when compressing a backup. |
-| --external-compressor-extension | string | extension to use when using an external compressor. |
-| --external-decompressor |string | command with arguments to use when decompressing a backup. |
 | --file_backup_storage_root | string | root directory for the file backup storage -- this path must be on shared storage to provide a global view of backups to all vitess components |
 | --gcs_backup_storage_bucket | string | Google Cloud Storage bucket to use for backups |
 | --gcs_backup_storage_root | string | root prefix for all backup-related object names |
@@ -104,7 +99,6 @@ vtctld \
 | --log_err_stacks | boolean | log stack traces for errors |
 | --log_rotate_max_size | uint | size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800) |
 | --logtostderr | boolean | log to standard error instead of files |
-| --manifest-external-decompressor | string | command with arguments to store in the backup manifest when compressing a backup with an external compression engine. |
 | --max-stack-size | int | configure the maximum stack size in bytes (default 67108864) |
 | --onclose_timeout | duration | wait no more than this for OnClose handlers before stopping (default 1ns) |
 | --onterm_timeout | duration | wait no more than this for OnTermSync handlers before stopping (default 10s) |
