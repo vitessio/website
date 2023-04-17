@@ -174,7 +174,7 @@ CREATE TABLE `invalid` (
 );
 ```
 
-The above table is _syntactically_ valid, but _semantically_ invalid. There are two columns that go by the same name (`title`), and an index that covers a non-existent column (`val`). These are but two out of many possible errors. A `SHOW CREATE TABLE` would never produce such an output, of course. But we can't assume the output comes from MySQL. If we don't validate the input, and attempt to produce a diff, results could be unexpected.
+The above table is _syntactically_ valid, but _semantically_ invalid. There are two columns that go by the same name (`title`), and an index that covers a non-existent column (`val`). These are but two out of many possible errors. A `SHOW CREATE TABLE` would never produce such an output, of course. But we can't assume the output comes from MySQL. If we don't validate the input, and attempt to produce a diff, the results could be unexpected.
 
 ## Validation
 
