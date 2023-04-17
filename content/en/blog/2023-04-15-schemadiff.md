@@ -104,7 +104,7 @@ And this is the resulting diff:
 ALTER TABLE `t` MODIFY COLUMN `id` bigint, ADD KEY `name_idx` (`name`(16))
 ```
 
-There's different ways to generating the diffs. Here's a quick shortcut to achieving the same:
+There are multiple ways of generating the diff. Here's a quick shortcut to achieving the same:
 
 ```go
 diffs, err := DiffSchemasSQL("create ...", "create ...", hints)
