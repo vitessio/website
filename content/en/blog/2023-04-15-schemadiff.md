@@ -159,7 +159,7 @@ We can thus compare any two _nodes_. If they export into identical strings, then
 
 Continuing our simple illustration, if `table2` has a column called `info`, which we cannot find in `table1`, then our table diff, i.e. our `ALTER TABLE` statement, should include an `ADD COLUMN <column definition>` statement. What's the content of the column definition? It is trivially the `CanonicalString()` of the extra column object.
 
-`sqlparser` is devoid of semantic context. It merely deals with a programmatic reflection of SQL. It does not know if a certain table exists, nor does it care about type conversions in a `SELECT` query. As long as the syntax is valid, it is satisfied.
+`sqlparser` is devoid of semantic context. It merely deals with a programmatic reflection of SQL. It does not know if a certain table exists, or if a foreign key references valid columns. As long as the syntax is valid, it is satisfied.
 
 ## Semantics
 
