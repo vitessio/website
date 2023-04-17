@@ -91,7 +91,9 @@ We now programmatically diff the two schemas (this is actually the long path to 
 
 ```go
 hints := &DiffHints{}
-diffs, err := schema1.Diff(schema2, hints)
+diff, err := schema1.SchemaDiff(schema2, hints)
+// Handle error
+diffs, err := diff.OrderedDiffs()
 // Handle error
 for _, diff := range diffs {
 	fmt.Println(diff.CanonicalStatementString())
@@ -118,7 +120,7 @@ The main thing to note in the above examples is that everything takes place pure
 
 Vitess is a sharding and management framework running on top of MySQL, which masquerades as a MySQL server to route queries to relevant shards. It thus obviously must be able to parse MySQL's SQL dialect. [`sqlparser`](https://github.com/vitessio/vitess/tree/main/go/vt/sqlparser) is the Vitess library that does so.
 
-`sqlparser` utilizes a classic [yacc](https://en.wikipedia.org/wiki/Yacc) [file](https://github.com/vitessio/vitess/blob/main/go/vt/sqlparser/sql.y) to parse SQL into an Abstract Syntax Tree (AST), with `golang` structs generated and populated by the parser. For example, a SQL `CREATE TABLE` statement is parsed into a [`CreateTable`](https://github.com/vitessio/vitess/blob/157857a4c5ee6dcb44e7de08894db8334750746e/go/vt/sqlparser/ast.go#L509-L517) instance:
+`sqlparser` utilizes a classic [yacc](https://en.wikipedia.org/wiki/Yacc) [file](https://github.com/vitessio/vitess/blob/main/go/vt/sqlparser/sql.y) to parse SQL into an Abstract Syntax Tree (AST), with `golang` structs generated and populated by the parser. For example, a SQL `CREATE TABLE` statement is parsed into a [`CreateTable`](https://github.com/vitessio/vitess/blob/ed72037bb6358a2065834589a21f5119fd407136/go/vt/sqlparser/ast.go#L509-L517) instance:
 
 ```go
 CreateTable struct {
@@ -132,7 +134,7 @@ CreateTable struct {
 }
 ```
 
-And here is the breakdown of [`TableSpec`](https://github.com/vitessio/vitess/blob/157857a4c5ee6dcb44e7de08894db8334750746e/go/vt/sqlparser/ast.go#L1763-L1769):
+And here is the breakdown of [`TableSpec`](https://github.com/vitessio/vitess/blob/ed72037bb6358a2065834589a21f5119fd407136/go/vt/sqlparser/ast.go#L1758-L1765):
 
 ```go
 type TableSpec struct {
@@ -236,7 +238,7 @@ Unless, we can ask `schemadiff` to programmatically _apply_ those diffs and vali
 
 ## Applying diffs
 
-Consider this simplified code, or see snippet from [`diff_test.go`](https://github.com/vitessio/vitess/blob/27cd9c34bb747d504dfd6c3aa8dff08d7b11832f/go/vt/schemadiff/diff_test.go#L777-L793):
+Consider this simplified code, or see snippet from [`diff_test.go`](https://github.com/vitessio/vitess/blob/ed72037bb6358a2065834589a21f5119fd407136/go/vt/schemadiff/diff_test.go#L806-L822):
 
 ```go
 schema1, err := NewSchemaFromSQL(sql1)
@@ -245,15 +247,17 @@ schema1, err := NewSchemaFromSQL(sql1)
 schema2, err := NewSchemaFromSQL(sql2)
 // Handle error
 
-diffs, err := schema1.Diff(schema2, hints)
+diff, err := schema1.SchemaDiff(schema2, hints)
+// Handle error
+diffs, err := diff.OrderedDiffs()
 // Handle error
 
 applied, err := schema1.Apply(diffs)
 require.NoError(t, err)
 
-appliedDiff, err := schema2.Diff(applied, hints)
+appliedDiff, err := schema2.SchemaDiff(applied, hints)
 require.NoError(t, err)
-assert.Empty(t, appliedDiff)
+assert.True(t, appliedDiff.Empty())
 assert.Equal(t, schema2.ToQueries(), applied.ToQueries())
 ```
 
@@ -283,7 +287,7 @@ Alphabetically, `v1` comes before `v2`. But, to apply these two diffs, we must f
 
 `schemadiff` maintains the hierarchical ordering of all tables and views, based on `FOREIGN KEY` and view definitions. There's a specific order for `CREATE` statements, and a specific (reverse) order for `DROP` statements. There may actually be conflicts between the diffs, but that's a topic for a different blog post.
 
-Or, consider the flow in [this `e2e` test](https://github.com/vitessio/vitess/blob/27cd9c34bb747d504dfd6c3aa8dff08d7b11832f/go/test/endtoend/schemadiff/vrepl/schemadiff_vrepl_suite_test.go#L345-L428). We hook onto `vitess`'s pre-existing Online DDL tests, a suite that includes a multitude of scenarios. The suite already has a story: a table, a change, an expected result. In our `schemadiff` test we shuffle the logic: we have an original table and and expected table. We evaluate the diff. We apply the diff onto the original table. We expect the result to be identical to the expected table!
+Or, consider the flow in [this `e2e` test](https://github.com/vitessio/vitess/blob/ed72037bb6358a2065834589a21f5119fd407136/go/test/endtoend/schemadiff/vrepl/schemadiff_vrepl_suite_test.go#L345-L428). We hook onto `vitess`'s pre-existing Online DDL tests, a suite that includes a multitude of scenarios. The suite already has a story: a table, a change, an expected result. In our `schemadiff` test we shuffle the logic: we have an original table and and expected table. We evaluate the diff. We apply the diff onto the original table. We expect the result to be identical to the expected table!
 
 Because this runs in GitHub CI, we take advantage of a running MySQL server. We perform the test in-memory, and then also on MySQL itself, and so we have an authoritative validation for the `Apply()` functionality. For fun and glory, we also generate the reverse diff. This test cross validates the programmatic approach, the MySQL schema, and actual MySQL schema changes, and expects full compliance between all.
 
@@ -292,4 +296,3 @@ Because this runs in GitHub CI, we take advantage of a running MySQL server. We 
 The declarative approach is challenging. It requires reverse-engineering of a hidden sequence of changes. Sometimes these changes are inter-dependent. We will discuss this further in a future post.
 
 Note that `schemadiff` is an internal library, and as such, its interface is subject to change. As part of the `Vitess` codebase, `schemadiff` code is open source, licensed under `Apache 2.0`.
-
