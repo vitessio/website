@@ -33,14 +33,14 @@ vtctldclient GetTablets [--strict] [{--cell $c1 [--cell $c2 ...], [--tablet-type
 ### Options
 
 ```
-  -c, --cell strings           List of cells to filter tablets by.
-      --format string          Output format to use; valid choices are (json, awk). (default "awk")
-  -h, --help                   help for GetTablets
-  -k, --keyspace string        Keyspace to filter tablets by.
-  -s, --shard string           Shard to filter tablets by.
-      --strict                 Require all cells to return successful tablet data. Without --strict, tablet listings may be partial.
-  -t, --tablet-alias strings   List of tablet aliases to filter by.
-      --tablet-type string     Tablet type to filter by.
+  -c, --cell strings                        List of cells to filter tablets by.
+      --format string                       Output format to use; valid choices are (json, awk). (default "awk")
+  -h, --help                                help for GetTablets
+  -k, --keyspace string                     Keyspace to filter tablets by.
+  -s, --shard string                        Shard to filter tablets by.
+      --strict                              Require all cells to return successful tablet data. Without --strict, tablet listings may be partial.
+  -t, --tablet-alias strings                List of tablet aliases to filter by.
+      --tablet-type topodatapb.TabletType   Tablet type to filter by (backup,drained,experimental,primary,rdonly,replica,restore,spare). (default UNKNOWN)
 ```
 
 ### Options inherited from parent commands
