@@ -10,7 +10,9 @@ Vitess supports different modes. In OLTP mode, the result size is typically limi
 
 However, OLAP mode has no limit to the number of rows returned. In order to change to this mode, you may issue the following command before executing your query:
 
+```sql
 set workload='olap'
+```
 
 You can also set the workload to `dba mode`, which allows you to override the implicit timeouts that exist in vttablet. However, this mode should be used judiciously as it supersedes shutdown and reparent commands.
 
@@ -36,11 +38,12 @@ For a keyspace ks and shard -80, you would use the database name ks:-80. This is
 
 If you would like something similar to Percona's [max_statement_time](https://www.percona.com/doc/percona-server/5.6/management/statement_timeout.html#max_statement_time) you can set the vttablet command line flag as follows: -queryserver-config-query-timeout=15. This is set in seconds.
 
-You can also specify a query comment like select /*vt+ QUERY_TIMEOUT_MS=1000 */ ... 
+You can also specify a query comment like `select /*vt+ QUERY_TIMEOUT_MS=1000 */ `... 
 
 If you choose to set the vttablet command line flag the time you choose will set the absolute max time. The query comment can only override the timeout to a lower value. 
 
 This timeout via SQL query comments has the following limitations/caveats:
+
 - You need to prevent your SQL client from stripping the comments before sending to the server (the MySQL CLI strips comments by default)
 - You need to disable query normalization in vtgate (-normalize_queries false);  to allow the comment to reach vttablet.
 - It only works for SELECT statements today, this might change in the future.
@@ -51,4 +54,4 @@ Note that streaming queries are not affected by either of these timeouts.
 
 ## Can I increase the resource pool timeout for streaming requests?
 
-Yes. You can adjust the flag -queryserver-config-stream-pool-size=100.
+Yes. You can adjust the flag `-queryserver-config-stream-pool-size=100`.

@@ -27,6 +27,7 @@ You can read more about reparenting in Vitess [here](https://vitess.io/docs/user
 ## How are shards named?
 
 Shard names have the following characteristics:
+
 - They represent a range, where the left number is included, but the right is not.
 - Their notation is hexadecimal.
 - They are left justified.

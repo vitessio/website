@@ -8,10 +8,11 @@ weight: 4
 
 To do this you will need to use the Vitess MySQL Go client. You can find a Golang Database compatible gRPC driver here. For Java go [here](https://github.com/vitessio/vitess/tree/master/java).
 
-Once you have the appropriate driver you will need to add the -service_map grpc-vtgateservice VTGate flag and set the port -grpc_port.
+Once you have the appropriate driver you will need to add the `-service_map grpc-vtgateservice` VTGate flag and set the port `-grpc_port`.
 
 This runs on a standard gRPC interface, so if you want to directly use it you can follow the example below:
 
+```sh
 #!/usr/bin/env node
 import Debug from "debug";
 import * as grpc from "grpc";
@@ -49,6 +50,7 @@ async function main() {
    await SingleQuery();
 }
 main().then((_) => _);
+```
 
 ## How does vtgate know which shard to route a query to?
 

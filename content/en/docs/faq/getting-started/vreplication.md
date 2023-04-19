@@ -9,6 +9,7 @@ weight: 6
 VReplication is used as a building block for a number of use cases throughout Vitess. It works as a stream or combination of streams that establish replication from a source keyspace/shard into a target keyspace/shard. A given stream can replicate multiple tables. It allows Vitess to keep the data being copied in-sync by using a combination of copying rows and filtered replication.
 
 Vreplication works via the following process:
+
 1. Analyzing the source table and identifying what rows it needs to copy. 
 2. It then very briefly locks the table and makes a note of the current GTID replication position on the source database. After it’s noted the current GTID Vreplication then unlocks the table again.
 3. It selects all the rows and all the columns from GTID value 0 onward and copies from that select.

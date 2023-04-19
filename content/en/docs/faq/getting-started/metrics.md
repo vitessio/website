@@ -9,13 +9,16 @@ weight: 7
 All Vitess components have a web UI that you can access to see the state of each component.
 
 The first place to look is the /debug/status page. 
+
 * This is the main landing page for a VTGate, which displays the status of a particular server. A list of tablets this VTGate process is connected to is also displayed, as this is the list of tablets that can potentially serve queries.
 
 A second place to look is the /debug/vars page.  For example, for VTGate, this page contains the following items:
+
 * VTGateApi - This is the main histogram variable to track for VTGates. It gives you a break down of all queries by command, keyspace, and type.
 * HealthcheckConnections - It shows the number of tablet connections for query/healthcheck per keyspace, shard, and tablet type.
 
 There are two other pages you can use to get monitoring information from Vitess in the VTGate web UI:
+
 * /debug/query_plans - This URL gives you all the query plans for queries going through VTGate.
 * /debug/vschema - This URL shows the vschema as loaded by VTGate.
 

@@ -14,7 +14,7 @@ An unhappy vttablet is one that is at whatever limit to which the -degraded_thre
 
 vtgate will always prefer happy vttablets over unhappy vttablets, however if all your vttablets are unhappy then it will serve all of them. 
 
-To make sure that your vttablets are reporting their replica lag you need to set the flag -enable_replication_reporter.  With that flag set vttablets will transmit their replica lag to vtgates allowing them to balance load better. Enabling this flag will also cause vttablets to restart replication if it's stopped, as long as the flag -disable_active_reparents isn't set.
+To make sure that your vttablets are reporting their replica lag you need to set the flag `-enable_replication_reporter`.  With that flag set vttablets will transmit their replica lag to vtgates allowing them to balance load better. Enabling this flag will also cause vttablets to restart replication if it's stopped, as long as the flag `-disable_active_reparents` isn't set.
 
 ## Are there recommended thresholds for health statuses?
 
@@ -34,11 +34,14 @@ If you are concerned about access security and want to change the admin user acc
 1. Create the new user in the database. 
 2. Give that user the required permissions.The list of what vitess requires can be found [here](https://github.com/vitessio/vitess/blob/master/config/init_db.sql).
 3. Then when you start up Vitess you need to pass in the username and passwords to Vitess. That is done by setting `-db_user` and `-db-credentials-file`. The credentials file will have the format:
+
+```sh
  {
    "<user name>": [
        "<password>"
    ]
  }
+ ```
 
 After you have followed the above steps the credentials file will tell vttablet the account to use to connect to the database. 
 

@@ -28,7 +28,9 @@ You will add a `datastore` field and populate it with a `type` and a `container`
 
 The only requirement for this is that the container needs to have a standard MySQL deployment. For example, the following block should work to set up Percona for your datastore:
 
+```sh
   - type: "replica"
           datastore:
             type: mysql
             container: "percona/percona-server:5.7"
+```

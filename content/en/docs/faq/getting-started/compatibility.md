@@ -10,7 +10,7 @@ Vitess can run on-premise or in the cloud. It can be run on bare metal, VMs, Kub
 
 AWS Aurora has a heavily modified version of MySQL that is very tightly tied to AWS and is only available as a managed service.
 
-ADD MORE INFO (MARKED UNHELPFUL)
+MARKED UNHELPFUL
 
 ## What versions of MySQL or MariaDB work with Vitess?
 

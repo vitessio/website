@@ -25,6 +25,7 @@ Note that this is very workload-dependent. We recommend testing the configuratio
 **Memory**
 
 The memory requirements for VTGate and VTTablet servers will depend on QPS and query result set sizes. We recommend:
+
 * Provisioning a baseline of 1GB per core.
 * Allocating additional memory if you are increasing the Vitess default row limits and/or expect many concurrent queries returning large result sets. Note that this may not be necessary if your large result set queries use streaming.
 
@@ -81,7 +82,7 @@ Vitess consists of a number of server processes and command-line utilities and i
 
 The diagram below illustrates Vitess’ components and their location within Vitess’ architecture:
 
-ADD IMAGE
+<img alt="Vitess Components" src="../img/vitess-components.png"  width=100%>
 
 ## Are microservices recommended for scaling? 
 

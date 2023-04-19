@@ -31,4 +31,4 @@ The expected behavior is that the connection to the old primary will close and t
 
 AWS/Aurora
 
-To ensure that the expected behavior occurs when using AWS/Aurora you will need to set the vttablet flag -pool_hostname_resolve_interval to something other than the default. This is because the default is 0. When this flag is set to the default, Vitess will never re-resolve the AWS/Aurora DNS name.
+To ensure that the expected behavior occurs when using AWS/Aurora you will need to set the vttablet flag `-pool_hostname_resolve_interval` to something other than the default. This is because the default is 0. When this flag is set to the default, Vitess will never re-resolve the AWS/Aurora DNS name.

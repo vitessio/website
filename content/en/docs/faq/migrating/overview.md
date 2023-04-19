@@ -9,6 +9,7 @@ weight: 1
 There are two main parts to migrating your data to Vitess: migrating the actual data and repointing the application. The answer here will focus primarily on the methods that can be used to migrate your data into Vitess.
 
 There are three different methods to migrate your data into Vitess. Choosing the appropriate option depends on several factors like:
+
 - The nature of the application accessing the MySQL database
 - The size of the MySQL database to be migrated
 - The load, especially the write load, on the MySQL database
@@ -17,6 +18,7 @@ There are three different methods to migrate your data into Vitess. Choosing the
 - The network level configuration of your components
 
 The three different methods are:
+
 - ‘Stop-the-world’
 - VReplication from Vitess setup in front of the existing external MySQL database
 - Application-level migration

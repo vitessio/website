@@ -29,6 +29,7 @@ Uniqueness for a Primary Vindex does not mean that the column has to be a primar
 A Vindex provides a way to map a column value to a keyspace ID. Since each shard in Vitess covers a range of keyspace ID values, this mapping can be used to identify which shard contains a row. 
 
 The advantages of Vindexes stem from their flexibility:
+
 * A table can have multiple Vindexes.
 * Vindexes can be NonUnique, which allows a column value to yield multiple keyspace IDs.
 * Vindexes can be a simple function or be based on a lookup table.

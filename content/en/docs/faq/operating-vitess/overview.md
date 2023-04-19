@@ -29,6 +29,7 @@ Vitess runs on a lot of different options. Kubernetes is only one of the availab
 The Vitess Operator is open source and is on [GitHub](https://github.com/planetscale/vitess-operator). You can see the repository for information on licensing and contribution.
 
 The Vitess Operator automates the management and maintenance work of Vitess on Kubernetes by automating the tasks below:
+
 - Deploy any number of Vitess clusters, cells, keyspaces, shards, and tablets to scale both reads and writes either horizontally or vertically.
 - Deploy overlapping shards for Vitess resharding, allowing zero-downtime resizing of shards.
 - Trigger manual planned failover via Kubernetes annotation.

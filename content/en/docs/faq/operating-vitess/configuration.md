@@ -16,14 +16,17 @@ Please note that if you do shard or re-shard an existing keyspqce with foreign k
 
 In the example [vtgate-up.sh](https://github.com/vitessio/vitess/blob/master/examples/legacy_local/scripts/vtgate-up.sh) script you'll see the following lines:
 
+```sql
 -mysql_server_port $mysql_server_port \
 -mysql_server_socket_path $mysql_server_socket_path \
 -mysql_auth_server_static_file "./mysql_auth_server_static_creds.json" \
-Generic
+```
 
 In this example, vtgate accepts MySQL connections on port 15306 and the authentication information is stored in the json file. You can then connect to it using the following command:
 
+```sql
 mysql -h 127.0.0.1 -P 15306 -u mysql_user --password=mysql_password
+```
 
 ## Must the application know about the sharding scheme in Vitess?
 
