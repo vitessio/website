@@ -62,7 +62,6 @@ vtctld \
 | --datadog-agent-host | string | host to send spans to. if empty, no tracing will be done |
 | --datadog-agent-port | string | port to send spans to. if empty, no tracing will be done |
 | --disable_active_reparents | boolean | if set, do not allow active reparents. Use this to protect a cluster using external reparents. |
-| --durability_policy | string | type of durability to enforce. Default is none. Other values are dictated by registered plugins (default "none") |
 | --emit_stats | boolean | true iff we should emit stats to push-based monitoring/stats backends |
 | --external-compressor | string | command with arguments to use when compressing a backup. |
 | --external-compressor-extension | string | extension to use when using an external compressor. |
