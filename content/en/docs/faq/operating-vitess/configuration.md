@@ -14,7 +14,7 @@ Please note that if you do shard or re-shard an existing keyspqce with foreign k
 
 ## How do I connect to vtgate using MySQL protocol?
 
-In the example [vtgate-up.sh](https://github.com/vitessio/vitess/blob/master/examples/legacy_local/scripts/vtgate-up.sh) script you'll see the following lines:
+In the example [vtgate-up.sh](https://github.com/vitessio/vitess/blob/main/examples/common/scripts/vtgate-up.sh) script you'll see the following lines:
 
 ```sql
 -mysql_server_port $mysql_server_port \
@@ -38,7 +38,7 @@ Yes, you can keep a primary/replica in the primary region and can keep a read on
 
 ## Can data replication from a primary region cell be controlled?
 
-If you want to replicate data from a primary region cell to secondary region cell you would need to use [VReplication](ADD LINK).
+If you want to replicate data from a primary region cell to secondary region cell you would need to use [VReplication](https://vitess.io/docs/reference/vreplication/vreplication/).
 
 Please note that Vitess has some regulatory requirements that certain data can't leave the primary region.
 

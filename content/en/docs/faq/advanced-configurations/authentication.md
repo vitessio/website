@@ -12,7 +12,7 @@ The simplest way to configure users is via a static authentication method. You c
 
 You will be able to configure the UserData string and add multiple passwords. For password format, Vitess supports the MySQL mysql_native_password hash format and you should always specify your passwords using this in a non-test or external environment. 
 
-To see an example of how to configure the static authentication file and more information on the various options please follow this [link](https://vitess.io/docs/13.0/user-guides/configuration-advanced/user-management/#authentication).
+To see an example of how to configure the static authentication file and more information on the various options please follow this [link](https://vitess.io/docs/user-guides/configuration-advanced/user-management/#authentication).
 
 There are other authentication mechanisms that can be utilized including LDAP-based authentication and TLS client certificate-based authentication.
 
@@ -25,4 +25,4 @@ Not all of the MySQL GRANT system has been implemented in Vitess. Authorization 
 - Write (corresponding to write DML, e.g. INSERT, UPDATE, DELETE)
 - Admin (corresponding to DDL, e.g. ALTER TABLE)
 
-Vitess authorization via ACLs are applied at the VTTablet level, as opposed to on VTGate, where authentication is enforced. There are a number of VTTablet command line parameters that control the behavior of ACLs. You can see examples and read more about the command line parameters and further configuration options [here](https://vitess.io/docs/user-guides/authorization/#vttablet-parameters-for-table-acls). 
+Vitess authorization via ACLs are applied at the VTTablet level, as opposed to on VTGate, where authentication is enforced. There are a number of VTTablet command line parameters that control the behavior of ACLs. You can see examples and read more about the command line parameters and further configuration options [here](https://vitess.io/docs/user-guides/configuration-advanced/authorization/#vttablet-parameters-for-table-acls). 

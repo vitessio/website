@@ -6,7 +6,7 @@ weight: 4
 
 ## How do you use gRPC with vtgate?
 
-To do this you will need to use the Vitess MySQL Go client. You can find a Golang Database compatible gRPC driver here. For Java go [here](https://github.com/vitessio/vitess/tree/master/java).
+To do this you will need to use the Vitess MySQL Go client. You can find a Golang Database compatible gRPC driver [here](https://pkg.go.dev/vitess.io/vitess/go/vt/vitessdriver). For Java go [here](https://github.com/vitessio/vitess/tree/master/java).
 
 Once you have the appropriate driver you will need to add the `-service_map grpc-vtgateservice` VTGate flag and set the port `-grpc_port`.
 

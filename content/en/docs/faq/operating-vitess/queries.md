@@ -36,7 +36,7 @@ For a keyspace ks and shard -80, you would use the database name ks:-80. This is
 
 ## Can I set a session variable query timeout?
 
-If you would like something similar to Percona's [max_statement_time](https://www.percona.com/doc/percona-server/5.6/management/statement_timeout.html#max_statement_time) you can set the vttablet command line flag as follows: -queryserver-config-query-timeout=15. This is set in seconds.
+If you would like something similar to `[max_execution_time]`(https://dev.mysql.com/blog-archive/server-side-select-statement-timeouts/) you can set the vttablet command line flag as follows: `-queryserver-config-query-timeout=15`. This is set in seconds.
 
 You can also specify a query comment like `select /*vt+ QUERY_TIMEOUT_MS=1000 */ `... 
 

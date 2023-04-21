@@ -32,7 +32,7 @@ Please do note that with MySQL 5.6 reaching end of life in February 2021, it is 
 
 Vitess supports much of MySQL, with some limitations. **Depending on your MySQL setup you will need to adjust queries that utilize any of the current unsupported cases.**
 
-For SQL syntax there is a list of example unsupported queries [here](https://github.com/vitessio/vitess/blob/master/go/vt/vtgate/planbuilder/testdata/unsupported_cases.txt). 
+For SQL syntax there is a list of example unsupported queries [here](https://github.com/vitessio/vitess/blob/main/go/vt/vtgate/planbuilder/testdata/unsupported_cases.json). 
 
 There are some further compatibility issues beyond pure SQL syntax that are listed out [here](https://vitess.io/docs/reference/mysql-compatibility/).
 

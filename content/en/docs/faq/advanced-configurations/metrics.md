@@ -18,4 +18,4 @@ Vitess exports per-user stats on table ACLs. There are example usages of table A
 
 To locate the variables that enable the export of per-users stats you will need to look in `/debug/vars` for variables that start with `User`, like `UserTableQueryCount`. The export itself is a multi-dimensional export categorized by Table, User and Query Type. You can also find similar names exported as prometheus metrics.
 
-Analyzing these variables can enable you to quickly narrow down the root cause of an incident, as these stats are fine-grained. Once you've identified the table and query type, you can then drill into `/queryz` or `/debug/query_stats to determine if the issue is a particular query.
+Analyzing these variables can enable you to quickly narrow down the root cause of an incident, as these stats are fine-grained. Once you've identified the table and query type, you can then drill into `/queryz` or `/debug/query_stats` to determine if the issue is a particular query.

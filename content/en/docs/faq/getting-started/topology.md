@@ -1,5 +1,5 @@
 ---
-title: Overview
+title: Topology
 description: Frequently Asked Questions about Vitess
 weight: 4
 ---
@@ -58,4 +58,4 @@ This process is explained in Vitess’ documentation [here](https://vitess.io/do
 
 If your migration is more complex, or has special requirements, we also support a ‘tee’ implementation of the topo service interface. It is defined in go/vt/topo/helpers/tee.go. It allows communicating to two topo services, and the migration uses multiple phases.
 
-This process is explained in Vitess’ documentation [here}(https://vitess.io/docs/reference/features/topology-service/#migration-using-the-tee-implementation).
+This process is explained in Vitess’ documentation [here](https://vitess.io/docs/reference/features/topology-service/#migration-using-the-tee-implementation).

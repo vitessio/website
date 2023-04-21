@@ -1,5 +1,5 @@
 ---
-title: Overview
+title: VReplication
 description: Frequently Asked Questions about Vitess
 weight: 6
 ---
@@ -24,6 +24,6 @@ This process then repeats until Vreplication finishes copying the whole table. A
 
 There are a number of higher level commands like MoveTables and Materialized Views that create Vreplication streams behind the scenes of the command. By using these higher level commands, Vitess creates VReplication rules for the user. Further use cases are listed out [here](https://vitess.io/docs/reference/features/vreplication/).
 
-For more information on [MoveTables](https://vitess.io/docs/user-guides/move-tables/) and [Materialized Views](https://vitess.io/docs/user-guides/materialize/) please follow the links provided.
+For more information on [MoveTables](https://vitess.io/docs/user-guides/migration/move-tables/) and [Materialized Views](https://vitess.io/docs/user-guides/migration/materialize/ please follow the links provided.
 
 There is a way to create VReplication rules by hand but we don’t recommend using that method as it can be challenging to configure the rules correctly.

@@ -1,5 +1,5 @@
 ---
-title: Overview
+title: Metrics
 description: Frequently Asked Questions about Vitess
 weight: 7
 ---

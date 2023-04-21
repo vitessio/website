@@ -47,7 +47,7 @@ Once you have the full list of normalized queries you will need to filter out an
 
 After filtering the list of queries you will need to generate and populate some fake values. To do this we have an example pipeline in the documentation [here](https://vitess.io/docs/user-guides/sql/vtexplain-in-bulk/#3-populate-fake-values-for-your-queries).
 
-Once you have the fake values in place you can then run the [vtexplain](https://planetscale.freshdesk.com/en/support/solutions/articles/64000255725) command against every query and then inspect the output for errors. You will likely want to use a script to do this. We have an example script as well as some setup steps in the documentation [here](https://vitess.io/docs/reference/programs/vtexplain/#example-usage).
+Once you have the fake values in place you can then run the [vtexplain](https://vitess.io/docs/faq/migrating/overview/#what-is-vtexplain) command against every query and then inspect the output for errors. You will likely want to use a script to do this. We have an example script as well as some setup steps in the documentation [here](https://vitess.io/docs/reference/programs/vtexplain/#example-usage).
 
 Further case by case examples are available in the documentation starting [here](https://vitess.io/docs/user-guides/sql/vtexplain-in-bulk/).
 
