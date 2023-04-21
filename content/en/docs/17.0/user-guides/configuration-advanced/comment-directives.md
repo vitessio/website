@@ -124,10 +124,10 @@ workload label (e.g. `vttablet_query_counts{plan="Select",table="customer"}`.
 
 Specifies the priority associated with the execution of this query, as a number between 0 (lowest priority) and 100
 (highest priority). The priority is used by the transaction throttler (see `--tx-throttler-...` and `-enable-tx-throttler`
-flags in the `vttablet` documentation) to determine whether a particular query should be throttled. If the transaction
-throttler determines that a query may need to be throttled, it will throttle it with a probability of
-`1 - <query priority>`. This allows to avoid high business impact queries from being throttled (by setting their
-priority to `100`) while letting less business critical ones continue to be throttled (by setting their priority to less
-than `100`).
+flags in the `vttablet` [documentation](../../reference/programs/vttablet.md))) to determine whether a particular query
+should be throttled. If the transaction throttler determines that a query may need to be throttled, it will throttle it
+with a probability of `1 - <query priority>`. This allows avoiding high business impact queries from being throttled (by
+setting their priority to `100`) while letting less business critical ones continue to be throttled (by setting their
+priority to less than `100`).
 
 Notice that this directive has no effect if the transaction throttler is not enabled.
