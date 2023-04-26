@@ -110,6 +110,8 @@ In a private network, where TLS security is not required, it might still be desi
 
 **Important**: This is not secure. Any user code can provide any value for the Effective Caller ID's principal, and therefore access any data. This is intended as a safety feature to make sure some applications do not misbehave. Therefore, this flag is not enabled by default.
 
+Another way to customize the immediateCallerID is to set the `grpc-use-static-authentication-callerid` flag on vtgate, which is only effective if you're using the static authentication plugin with vtgate. In this case, the username from the current authenticated session to vtgate is copied over as the Immediate Caller ID, and used throughout the Vitess stack.
+
 ### Example
 
 For a concrete example, see [encrypted_transport_test.go](https://github.com/vitessio/vitess/blob/main/go/test/endtoend/encryption/encryptedtransport/encrypted_transport_test.go) in the source tree.
