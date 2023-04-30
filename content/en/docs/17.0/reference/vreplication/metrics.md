@@ -94,6 +94,10 @@ The total number of errors that caused a stream to stall
 
 The total number of events streamed by this vttablet across all workflows
 
+#### VStreamerCompressedTransactionsDecoded
+
+The total number of compressed transactions (MySQL's binlog_transaction_compression=ON) decoded by this vttablet across all workflows
+
 #### VStreamerNumPackets
 
 The total number of packets sent by this vttablet across all workflows
