@@ -1,8 +1,8 @@
 ---
 author: 'Rameez Sajwani and Max Englander'
 title: "Backup & Restore Performance"
-date: 2023-05-01
-slug: '2023-05-01-backup-and-restore-performance'
+date: 2023-05-08
+slug: '2023-05-08-backup-and-restore-performance'
 tags:
 - Vitess
 - backup
