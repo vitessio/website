@@ -1,7 +1,8 @@
 ---
+author: 'Rameez Sajwani and Max Englander'
 title: "Backup & Restore Performance"
-date: 2023-04-20
-slug: '2023-04-20-backup&restore-performance'
+date: 2023-05-01
+slug: '2023-05-01-backup-and-restore-performance'
 tags:
 - Vitess
 - backup
@@ -42,7 +43,7 @@ Backup storage provides different plugins for persisting these backups. Currentl
 - [Amazon S3](https://github.com/vitessio/vitess/tree/main/go/vt/mysqlctl/s3backupstorage)
 - [Ceph](https://github.com/vitessio/vitess/tree/main/go/vt/mysqlctl/cephbackupstorage)
 
-## Compression engine benchmarks
+## Compression engines and benchmarks
 
 Prior to [Vitess v15](https://github.com/vitessio/vitess/releases/tag/v15.0.0#support-for-additional-compressors-and-decompressors-during-backup-&-restore),  Vttablet backups were compressed using `pargzip` that generates gzip compatible files. In v15, Vitess contributor [Renan Rangel](https://github.com/rvrangel) added the ability to [specify an external compression engine](https://github.com/vitessio/vitess/pull/10558) based on experiments which yielded a 30% performance improvement using an external compressor rather than the builtin Vitess compression engines.
 
