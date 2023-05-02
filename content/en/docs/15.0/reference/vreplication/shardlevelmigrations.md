@@ -31,7 +31,7 @@ number of primaries that need to be synced when writes are switched.
 Supporting shard level migrations allows you to move very large keyspaces from one Vitess cluster 
 to another in an incremental way, cutting over traffic and reverting as needed 
 on a per-shard basis. When using this method, there is also a 
-new [`vtgate`](../../programs/vtgate/) `--enable_partial_keyspace_migration` 
+new [`vtgate`](../../programs/vtgate/) `--enable-partial-keyspace-migration` 
 flag that enables support for shard level query routing so that individual 
 shards can be routed to one side of the migration or the other during the 
 migration period — *including when shard targeting is used*.
@@ -69,7 +69,7 @@ to switch *read and write traffic* all at once for the shard(s)
 ## Related Vitess Flags
 
 In order to support the shard level query routing during the migration, 
-the `--enable_partial_keyspace_migration` flag must be set for all of the 
+the `--enable-partial-keyspace-migration` flag must be set for all of the 
 [`vtgate`](../../programs/vtgate/) instances in the target Vitess cluster.
 
 {{< warning >}}
