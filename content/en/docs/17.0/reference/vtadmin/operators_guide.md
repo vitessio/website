@@ -17,11 +17,11 @@ The simplest VTAdmin deployment involves a single Vitess cluster. You can look
 at the [local example][local_example] for a
 minimal invocation of the `vtadmin` and `vtadmin-web` binaries.
 
-## Prerequisites
+### Prerequisites
 
 - Building `vtadmin-web` requires [node](https://nodejs.org/en/) at the version given in the [package.json file](https://github.com/vitessio/vitess/blob/main/web/vtadmin/package.json).
 
-## 1. Define the cluster configuration
+### 1. Define the cluster configuration
 
 VTAdmin is mapped to one or more Vitess clusters two ways:
 
@@ -33,7 +33,7 @@ When both command-line cluster configs and a config file are provided, any optio
 For a well-commented example enumerating the cluster configuration options, see [clusters.example.yaml](https://github.com/vitessio/vitess/blob/main/doc/vtadmin/clusters.yaml).
 
 
-## 2. Configure `vtadmin`
+### 2. Configure `vtadmin`
 
 Configure the flags for the `vtadmin` process. The full list of flags is given in the [`vtadmin` reference documentation][vtadmin_flag_ref].
 
@@ -55,7 +55,7 @@ vtadmin \
 
 To optionally configure role-based access control (RBAC), refer to the [RBAC documentation][rbac_docs].
 
-## 3. Configure and build `vtadmin-web`
+### 3. Configure and build `vtadmin-web`
 
 Environment variables can be defined in a `.env` file or passed inline to the `npm run build` command. The full list of flags is given in the [`vtadmin-web` reference documentation][vtadmin_web_env_ref].
 
@@ -85,10 +85,32 @@ window.env = {
 
 After running `build` command, the production build of the front-end assets will be in the `$web_dir/build` directory. They can be served as any other static content; for example, [Go's embed package][go_embed] or npm's [serve package][npm_serve]. Each filename inside of `$web_dir/build/assets` will contain a unique hash of the file contents.
 
+## Best Practices
+
+Now that you can build and run VTAdmin, there are a few best practices you should follow before deploying into production.
+Because VTAdmin by definition has access to potentially-sensitive information about your clusters, it's important to ensure that only the right people have access those resources.
+
+### Use Role-based Access Control (RBAC)
+
+VTAdmin provides RBAC to provide administrators a mechanism for controlling who can perfom what actions across their clusters.
+Out of the box, having no RBAC configuration at all will allow anyone to do anything in any cluster, while an empty RBAC configuration will prevent anyone from doing anything in any cluster.
+
+It is strongly recommended to provide at least some minimal RBAC configuration when deploying VTAdmin.
+When designing your particular configuration, it is best to apply the [principle of least privilege][principle_of_least_privilege].
+For example, you should avoid applying a `*` actor to a write action, or a `*` action to resources that are subject to write actions.
+
+For further reading on VTAdmin's RBAC design, please refer to the [reference page][rbac_docs].
+
+### Deploy in a trusted environment
+
+There is no trust boundary between `vtadmin-web` and `vtadmin-api`, with deployment-specific authentication mechanisms being left to the operator to design for their specific environment.
+As such, you should deploy VTAdmin **within** a trusted environment, for example, behind a single sign-on (SSO) integration, such as [okta](https://developer.okta.com/docs/guides/sign-into-web-app-redirect/go/main/).
+
 [discovery_json]: https://github.com/vitessio/vitess/blob/main/examples/local/vtadmin/discovery.json
 [go_embed]:https://pkg.go.dev/embed
 [local_example]: https://github.com/vitessio/vitess/blob/main/examples/local/scripts/vtadmin-up.sh
 [npm_serve]: https://www.npmjs.com/package/serve
+[principle_of_least_privilege]: https://csrc.nist.gov/glossary/term/least_privilege#:~:text=Definition(s)%3A,needs%20to%20perform%20its%20function.
 [rbac_docs]: ../role-based-access-control
 [vtadmin_flag_ref]: ../../programs/vtadmin
 [vtadmin_web_env_ref]: ../../programs/vtadmin-web
