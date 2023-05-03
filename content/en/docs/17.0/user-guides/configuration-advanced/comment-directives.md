@@ -126,8 +126,8 @@ Specifies the priority associated with the execution of this query, as a number 
 (highest priority). The priority is used by the transaction throttler (see `--tx-throttler-...` and `-enable-tx-throttler`
 flags in the `vttablet` [documentation](../../reference/programs/vttablet.md))) to determine whether a particular query
 should be throttled. If the transaction throttler determines that a query may need to be throttled, it will throttle it
-with a probability of `100 - <query priority>`. This allows avoiding high business impact queries from being throttled
-(by setting their priority to `100`) while letting less business critical ones continue to be throttled (by setting
-their priority to less than `100`).
+with a probability equal to the provided query priority. This allows avoiding high business impact queries from being
+throttled (by setting their priority to `0`) while letting less business critical ones continue to be throttled (by
+setting their priority to more than `0`).
 
 Notice that this directive has no effect if the transaction throttler is not enabled.
