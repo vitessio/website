@@ -15,12 +15,12 @@ The performance of backups and restores is a business requirement for Vitess use
 if we can't take backups fast enough, we risk missing daily SLAs in a production context. In the event we need to perform an emergency restore, it is paramount that we
 can do so as fast as possible.
 
-The performance of backups and restores are driven by a number of factors:
+The performance of backups and restores is driven by a number of factors:
 
 - The size of the data set.
 - The CPU and memory on the machine.
-- The IO throughput of the machine and disk.
-- The network throughput between the machine and backup storage, e.g. S3.
+- The I/O throughput of the machine and disk.
+- The network bandwidth between the machine and backup storage, e.g. S3.
 - The efficiency of the compression algorithm.
 
 Over the last few releases, we have been making improvements to our ability to observe these factors, and experimenting with different options to improve performance.
@@ -62,7 +62,7 @@ The built-in supported engines are:
 - lz4
 - zstd
 
-Having the ability to use an external library will allow you to plug your own compressor with an external binary, which is a more flexible setup for users. Users could have different requirements/needs that influences which algorithm makes more sense in their environment (e.g., optimizing for size, cpu, or memory). In general, it might be advisable to move to zstd compression, it compresses much faster (or with less CPU), supports multithreaded compression out of the box, and its single thread decompression is easily 4x as fast as our current gzip/zlib library. But it is also important to note that with the parallel compression and multiple threads, it is easy to just blow out the local host/container CPU allocation completely.
+Having the ability to use an external library will allow you to plug-in your own compressor with an external binary, which is a more flexible setup for users. Users could have different requirements/needs that influences which algorithm makes more sense in their environment (e.g., optimizing for size, cpu, or memory). In general, it might be advisable to move to zstd compression, as it compresses much faster (or with less CPU), supports multithreaded compression out of the box, and its single thread decompression is easily 4x as fast as our current gzip/zlib library. But it is also important to note that with parallel compression and multiple threads, it is easy to just blow out the local host/container CPU allocation completely.
 
 We reproduced some of these findings, and made them part of the codebase in the [form of benchmarks](https://github.com/vitessio/vitess/pull/11994).
 
@@ -70,9 +70,9 @@ We reproduced some of these findings, and made them part of the codebase in the 
 
 Vitess uses an IO buffer of 2MiB when writing to disks in restores. However, until v17, there was no way to control the size of this buffer, nor to enable IO buffering when reading data from disks in backups.
 
-In v17, it's possible to control the size of IO buffers used when reading and writing data to disk during backups and restores. (Currently this is limited to the builtin backup engine.)
+In v17, it's possible to control the size of I/O buffers used while reading and writing data to disk during backups and restores. (Currently this is limited to the builtin backup engine.)
 
-Depending on the environment where vtbackup or other backup/restore programs are run, tuning these settings could impact IO throughput.
+Depending on the environment where vtbackup or other backup/restore programs are run, tuning these settings could impact I/O throughput.
 
 ### Detailed backup stats
 
@@ -94,7 +94,7 @@ Below is a human-friendly sample of these stats obtained from the backup phase o
 
 In this configuration, `source:read` represents reading data from disk, and `compressor:write` is compressing that data. We can see that reading from disk is a bigger bottleneck.
 
-Compare the stats sample above with the one below taken in the same environment with a 2MiB IO read buffer:
+Compare the stats sample above with the one below taken in the same environment with a 2MiB I/O read buffer:
 
 - `--builtinbackup-file-read-buffer-size=2097152`
 
@@ -104,7 +104,7 @@ Compare the stats sample above with the one below taken in the same environment 
 | Backup | BackupEngine | Builtin        | source:read      | 38.03      | <span style="background-color: MediumSeaGreen">138.00</span> |
 | Backup | BackupEngine | Builtin        | compressor:write | 38.03      | <span style="background-color: OrangeRed">86.108</span>      |
 
-In that experiment, it looks like we read from disk faster, but compression became a bottleneck. Let's see what happens next when we use an external compression engine:
+In this experiment, it looks like we read from disk faster, but compression became a bottleneck. Let's see what happens next when we use an external compression engine:
 
 - `--compression-engine=external`
 - `--external-compressor=zstd -c -1 -T4`
@@ -122,4 +122,4 @@ From the original settings, that's:
 - ~16% improvement to disk IO performance.
 - A ~20% improvement to net backup performance.
 
-One observation here is that with the original configuration, we were getting ~220 MiB/s of IO throughput. With the final configuration, we got ~260 MiB/s, which aligns with the EBS provisioned IO throughput of 250 MiB/s. In order to make further improvements to disk IO throughput in this environment, we'll need to experiment with different hardware configurations.
+One observation here is that with the original configuration, we were getting ~220 MiB/s of I/O throughput. With the final configuration, we got ~260 MiB/s, which is closer to the 250 MiB/s we had provisioned in the benchmark environment. In order to make further improvements to disk I/O throughput in this environment, we would need to experiment with different hardware configurations.
