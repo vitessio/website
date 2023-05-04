@@ -46,32 +46,32 @@ Backup storage provides different plugins for persisting these backups. Currentl
 
 ## Compression engines and benchmarks
 
-Prior to [Vitess v15](https://github.com/vitessio/vitess/releases/tag/v15.0.0#support-for-additional-compressors-and-decompressors-during-backup-&-restore),  Vttablet backups were compressed using `pargzip` that generates gzip compatible files. In v15, Vitess contributor [Renan Rangel](https://github.com/rvrangel) added the ability to [specify an external compression engine](https://github.com/vitessio/vitess/pull/10558) based on experiments which yielded a 30% performance improvement using an external compressor rather than the builtin Vitess compression engines.
+Prior to [Vitess v15](https://github.com/vitessio/vitess/releases/tag/v15.0.0#support-for-additional-compressors-and-decompressors-during-backup-&-restore), backups were compressed and decompressed exclusively using the built-in `pargzip` engine, which generates gzip compatible files.
 
-With these changes backup/restore now supports many more options for compression and decompression. You can even choose to use an external library to do the compression/decompression for you.
+In v15, Vitess contributor [Renan Rangel](https://github.com/rvrangel) [added the ability to](https://github.com/vitessio/vitess/pull/10558):
 
-The built-in supported engines are:
+ * specify alternate built-in compression engines
+ * specify an external compression engine
+ * control compression level and backup file extension
 
-### Compression:
+With these changes, backup/restore now supports many more options for compression and decompression.
+
+The built-in supported compression engines are:
+
 - pargzip (default)
 - pgzip
 - lz4
 - zstd
 
-### Decompression:
-- pgzip
-- lz4
-- zstd
+Having the ability to use an external library allows you to plug-in your own compressor with an external binary, which is a more flexible setup for users. Users may have different requirements influencing which choices make more sense in their environment (e.g., optimizing for size, cpu, or memory). For some, it might be advisable to move to zstd compression, as it compresses much faster (or with less CPU), supports multithreaded compression out of the box, and its single thread decompression is easily 4x as fast as our current gzip/zlib library. But for others, using parallel compression and multiple threads could consume CPU in a way that adversely affects other parts of their environments.
 
-Having the ability to use an external library will allow you to plug-in your own compressor with an external binary, which is a more flexible setup for users. Users could have different requirements/needs that influences which algorithm makes more sense in their environment (e.g., optimizing for size, cpu, or memory). In general, it might be advisable to move to zstd compression, as it compresses much faster (or with less CPU), supports multithreaded compression out of the box, and its single thread decompression is easily 4x as fast as our current gzip/zlib library. But it is also important to note that with parallel compression and multiple threads, it is easy to just blow out the local host/container CPU allocation completely.
+Renan's contributions were based on experiments which yielded a 30% performance improvement using an external compressor rather than the built-in Vitess compression engines. We reproduced Renan's findings and made them part of the codebase in the [form of benchmarks](https://github.com/vitessio/vitess/pull/11994).
 
-We reproduced some of these findings, and made them part of the codebase in the [form of benchmarks](https://github.com/vitessio/vitess/pull/11994).
+## I/O buffering
 
-## IO buffering
+Vitess uses an I/O buffer of 2MiB when writing to disks in restores. However, until v17, there was no way to control the size of this buffer, nor to enable I/O buffering when reading data from disks in backups.
 
-Vitess uses an IO buffer of 2MiB when writing to disks in restores. However, until v17, there was no way to control the size of this buffer, nor to enable IO buffering when reading data from disks in backups.
-
-In v17, it's possible to control the size of I/O buffers used while reading and writing data to disk during backups and restores. (Currently this is limited to the builtin backup engine.)
+In v17, it's possible to control the size of I/O buffers used while reading and writing data to disk during backups and restores. (Currently this is limited to the built-in backup engine.)
 
 Depending on the environment where vtbackup or other backup/restore programs are run, tuning these settings could impact I/O throughput.
 
@@ -82,7 +82,7 @@ Depending on the environment where vtbackup or other backup/restore programs are
 Below is a human-friendly sample of these stats obtained from the backup phase of a vtbackup in an environment with:
 
 - Roughly ~40GiB of database data.
-- Vitess' builtin zstd compression engine.
+- Vitess' built-in zstd compression engine.
 - An AWS EC2 r5a.xlarge instance.
 - An AWS EBS volume with 250 MiB/s of provisioned throughput.
 
@@ -120,7 +120,7 @@ In this experiment, it looks like we read from disk faster, but compression beca
 From the original settings, that's:
 
 - ~35% improvement to compression performance.
-- ~16% improvement to disk IO performance.
+- ~16% improvement to disk I/O performance.
 - A ~20% improvement to net backup performance.
 
 One observation here is that with the original configuration, we were getting ~220 MiB/s of I/O throughput. With the final configuration, we got ~260 MiB/s, which is closer to the 250 MiB/s we had provisioned in the benchmark environment. In order to make further improvements to disk I/O throughput in this environment, we would need to experiment with different hardware configurations.
