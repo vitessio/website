@@ -27,7 +27,7 @@ Over the last few releases, we have been making improvements to our ability to o
 
 Before we dive into the details, here is a quick overview of Vitess backup & restore design
 
-## Overview?
+## Overview
 
 Backup & restore is provided by tablets managed by Vitess as pluggable interfaces to support multiple implementations. These interfaces are provided through
 - [Backup Engine](https://github.com/vitessio/vitess/blob/main/go/vt/mysqlctl/backupengine.go)
@@ -42,6 +42,7 @@ Backup storage provides different plugins for persisting these backups. Currentl
 - [Google Cloud Storage](https://github.com/vitessio/vitess/tree/main/go/vt/mysqlctl/gcsbackupstorage)
 - [Amazon S3](https://github.com/vitessio/vitess/tree/main/go/vt/mysqlctl/s3backupstorage)
 - [Ceph](https://github.com/vitessio/vitess/tree/main/go/vt/mysqlctl/cephbackupstorage)
+- [Azure](https://github.com/vitessio/vitess/tree/main/go/vt/mysqlctl/azblobbackupstorage)
 
 ## Compression engines and benchmarks
 
@@ -123,3 +124,7 @@ From the original settings, that's:
 - A ~20% improvement to net backup performance.
 
 One observation here is that with the original configuration, we were getting ~220 MiB/s of I/O throughput. With the final configuration, we got ~260 MiB/s, which is closer to the 250 MiB/s we had provisioned in the benchmark environment. In order to make further improvements to disk I/O throughput in this environment, we would need to experiment with different hardware configurations.
+
+## Learn more
+
+You can learn more about backup and restore in Vitess from the [docs](https://vitess.io/docs/).
