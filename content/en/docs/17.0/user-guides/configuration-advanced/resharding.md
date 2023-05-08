@@ -329,6 +329,10 @@ After celebrating your second successful resharding, you are now ready to clean 
 ### Using Operator
 
 ```bash
+vtctlclient Reshard -- Complete customer.cust2cust
+```
+After the workflow has completed, you can go ahead and remove the shard that is no longer required -
+```bash
 kubectl apply -f 306_down_shard_0.yaml
 ```
 
