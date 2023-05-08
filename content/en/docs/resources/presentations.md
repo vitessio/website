@@ -4,6 +4,10 @@ weight: 1
 aliases: ['/resources/presentations.html', '/docs/resources/presentations/']
 ---
 
+## FOSDEM 2023
+
+[Life of a Query in Vitess](https://ftp.fau.de/fosdem/2023/K.3.201/life_query_vitess.webm) - Harshit Gangal, PlanetScale
+
 ## KubeCon NA 2022
 
 One VTOrc To Rule Them All – High Availability In a Distributed Database System - Deepthi Sigireddi & Manan Gupta, PlanetScale
@@ -130,7 +134,7 @@ Lizz van Dijk demonstrates how to migrate from a regular MySQL release to Vitess
 
 Lizz van Dijk presents an introduction to Vitess for MySQL users.
 
-<iframe src = "/ViewerJS/#../files/2020-lizz-prefosdem.pdf" width='600' height='450' allowfullscreen webkitallowfullscreen></iframe>
+<iframe src = "/ViewerJS/#../files/2020-lizz-prefosdem.pdf" width=100% height=auto allowfullscreen webkitallowfullscreen style="aspect-ratio: 16/9;"></iframe>
 
 ## QCon 2019
 
@@ -155,19 +159,19 @@ Vitess was also featured during the [CNCF project updates keynote](https://www.y
 
 Sugu Sougoumarane presents an overview of Vitess at Highload in Moscow.
 
-{{< pdf src="/ViewerJS/#../files/2019-sugu-highload.pdf" >}}
+<iframe src = "/ViewerJS/#../files/2019-sugu-highload.pdf" width=100% height=auto allowfullscreen webkitallowfullscreen style="aspect-ratio: 16/9;"></iframe>
 
 ## Utah Kubernetes Meetup 2019
 
 Jiten Vaidya shows how you can extend Vitess to create jurisdiction-aware database clusters.
 
-{{< pdf src="/ViewerJS/#../files/2019-jiten-utah.pdf" >}}
+<iframe src = "/ViewerJS/#../files/2019-jiten-utah.pdf" width=100% height=auto allowfullscreen webkitallowfullscreen style="aspect-ratio: 16/9;"></iframe>
 
 ## CNCF Meetup Paris 2019
 
 Sugu Sougoumarane and Morgan Tocker present a three hour Vitess workshop on Kubernetes.
 
-{{< pdf src="/ViewerJS/#../files/2019-paris-cncf.pdf" >}}
+<iframe src = "/ViewerJS/#../files/2019-paris-cncf.pdf" width=100% height=auto allowfullscreen webkitallowfullscreen style="aspect-ratio: 16/9;"></iframe>
 
 ## Percona Live Europe 2019
 
@@ -175,14 +179,14 @@ Sugu Sougoumarane and Morgan Tocker present a three hour Vitess workshop on Kube
 
 Morgan Tocker talks about his adventures in Vitess, after having come from a MySQL background.
 
-{{< pdf src="/ViewerJS/#../files/2019-morgan-percona-eu.pdf" >}}
+<iframe src = "/ViewerJS/#../files/2019-morgan-percona-eu.pdf" width=100% height=auto allowfullscreen webkitallowfullscreen style="aspect-ratio: 16/9;"></iframe>
 
 
 **Sharded MySQL on Kubernetes**
 
 Sugu Sougoumarane presents an overview of running sharded MySQL on Kubernetes.
 
-{{< pdf src="/ViewerJS/#../files/2019-sugu-percona-eu.pdf" >}}
+<iframe src = "/ViewerJS/#../files/2019-sugu-percona-eu.pdf" width=100% height=auto allowfullscreen webkitallowfullscreen style="aspect-ratio: 16/9;"></iframe>
 
 ## Vitess Meetup 2019 @ Slack HQ
 
@@ -190,14 +194,14 @@ Sugu Sougoumarane presents an overview of running sharded MySQL on Kubernetes.
 
 Deepthi Sigireddi shares new features recently introduced in Vitess, and what's on the roadmap moving forward.
 
-{{< pdf src="/ViewerJS/#../files/2019-deepthi-vitess-meetup.pdf" >}}
+<iframe src = "/ViewerJS/#../files/2019-deepthi-vitess-meetup.pdf" width=100% height=auto allowfullscreen webkitallowfullscreen style="aspect-ratio: 16/9;"></iframe>
 
 
 **Deploying multi-cell Vitess**
 
 Rafael Chacon Vivas describes how Vitess is used in Slack.
 
-{{< pdf src="/ViewerJS/#../files/2019-rafael-vitess-meetup.pdf" >}}
+<iframe src = "/ViewerJS/#../files/2019-rafael-vitess-meetup.pdf" width=100% height=auto allowfullscreen webkitallowfullscreen style="aspect-ratio: 16/9;"></iframe>
 
 
 **Vitess at Pinterest**
@@ -296,7 +300,7 @@ Slack is embarking on a major migration of the MySQL infrastructure at the core 
 
 Michael Demmer shows us how, at [Percona Live Europe 2017](https://www.percona.com/live/e17/sessions/migrating-to-vitess-at-slack-scale).
 
-{{< pdf src="/ViewerJS/#../files/2017-demmer-percona.pdf" >}}
+<iframe src = "/ViewerJS/#../files/2017-demmer-percona.pdf" width=100% height=auto allowfullscreen webkitallowfullscreen style="aspect-ratio: 16/9;"></iframe>
 
 ## Vitess Deep Dive sessions
 
@@ -308,7 +312,7 @@ Start with session 1 and work your way through the playlist. This series focuses
 
 [Sugu](https://github.com/sougou) and [Anthony](https://github.com/enisoc) showed what it looks like to use Vitess now that Keyspace IDs can be completely hidden from the application. They gave a live demo of resharding the Guestbook sample app, which now knows nothing about shards, and explained how new features in VTGate make all of this possible.
 
-{{< pdf src="/ViewerJS/#../files/percona-2016.pdf" >}}
+<iframe src = "/ViewerJS/#../files/percona-2016.pdf" width=100% height=auto allowfullscreen webkitallowfullscreen style="aspect-ratio: 16/9;"></iframe>
 
 ## CoreOS Meetup, January 2016
 
@@ -320,20 +324,20 @@ of the Vitess on Kubernetes deployment templates.
 
 Please note the Vitess on Kubernetes deployment templates were removed as of February 27, 2020.
 
-{{< pdf src="/ViewerJS/#../files/coreos-meetup-2016-01-27.pdf" >}}
+<iframe src = "/ViewerJS/#../files/coreos-meetup-2016-01-27.pdf" width=100% height=auto allowfullscreen webkitallowfullscreen style="aspect-ratio: 16/9;"></iframe>
 
 ## Oracle OpenWorld 2015
 
 Vitess team member [Anthony Yeh](https://github.com/enisoc)'s talk at Oracle OpenWorld 2015 focused on what the [Cloud Native Computing](http://cncf.io) paradigm means when applied to MySQL in the cloud. The talk also included a deep dive into [transparent, live resharding](../../reference/features/sharding/), one of the key
 features of Vitess that makes it well-adapted for a Cloud Native environment.
 
-{{< pdf src="/ViewerJS/#../files/openworld-2015-vitess.pdf" >}}
+<iframe src = "/ViewerJS/#../files/openworld-2015-vitess.pdf" width=100% height=auto allowfullscreen webkitallowfullscreen style="aspect-ratio: 16/9;"></iframe>
 
 ## Percona Live 2015
 
 Vitess team member [Anthony Yeh](https://github.com/enisoc)'s talk at Percona Live 2015 provided an overview of Vitess as well as an explanation of how Vitess has evolved to live in a containerized world with Kubernetes and Docker.
 
-{{< pdf src="/ViewerJS/#../files/percona-2015-vitess-and-kubernetes.pdf" >}}
+<iframe src = "/ViewerJS/#../files/percona-2015-vitess-and-kubernetes.pdf" width=100% height=auto allowfullscreen webkitallowfullscreen style="aspect-ratio: 16/9;"></iframe>
 
 ## Google I/O 2014 - Scaling with Go: YouTube's Vitess
 

@@ -23,7 +23,7 @@ Whether by planned operation or an unplanned failure, an `online` migration's VR
 
 When a replica tablet is promoted as `primary`, it notices the VReplication stream, which is meant to be active and running. It sets up the connections and processes to resume its work. It is possible that some retries will take place as the stream re-evaluates its source of data.
 
-The [Online DDL Scheduler](../../../design-docs/online-ddl/scheduler) detects the running stream, and identifies it as having been created by a different tablet. It assumes ownership of the stream and proceeds to follow its progress till completion.
+The [Online DDL Scheduler](https://github.com/vitessio/vitess/blob/main/doc/design-docs/OnlineDDLScheduler.md) detects the running stream, and identifies it as having been created by a different tablet. It assumes ownership of the stream and proceeds to follow its progress till completion.
 
 The stream must be no more than `10` minutes stale, otherwise the scheduler marks the migration as failed.
 

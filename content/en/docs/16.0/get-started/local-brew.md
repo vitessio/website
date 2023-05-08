@@ -14,9 +14,11 @@ A [Homebrew](https://brew.sh/) package manager is also available, which requires
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
+> In this guide, `v9.0.0` is used in most outputs. You can replace it by the version of Vitess you are using.
+
 ## Install Vitess with Homebrew
 
-Vitess supports the databases listed [here](../../../overview/supported-databases/). Homebrew will install latest tagged Vitess Release.
+Vitess supports the databases listed [here](../../overview/supported-databases/). Homebrew will install latest tagged Vitess Release.
 
 ```bash
 $ brew install vitess
@@ -205,7 +207,7 @@ If you encounter any errors, such as ports already in use, you can kill the proc
 
 ```bash
 pkill -9 -f '(vtdataroot|VTDATAROOT|vitess|vtadmin)' # kill Vitess processes
-rm -rf /usr/local/Cellar/vitess/15.0.0/share/vitess/examples/local/vtdataroot
+rm -rf /usr/local/Cellar/vitess/9.0.0/share/vitess/examples/local/vtdataroot
 ```
 
 ## Setup Aliases

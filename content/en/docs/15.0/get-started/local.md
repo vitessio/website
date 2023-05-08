@@ -36,13 +36,13 @@ sudo systemctl disable mysql
 sudo systemctl disable etcd
 ```
 
-### Install Node 16.13.0+
+### Install Node 16+
 
 ```
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 ```
 
-Ensure the following is in your bashrc/zshrc or similar:
+Ensure the following is in your bashrc/zshrc or similar. `nvm` automatically attempts adds these there:
 ```
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -52,11 +52,11 @@ export NVM_DIR="$HOME/.nvm"
 Finally, install [node](https://nodejs.org/):
 
 ```
-nvm install --lts 16.13.0
-nvm use 16.13.0
+nvm install 16
+nvm use 16
 ```
 
-See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
+See the [vtadmin README](https://github.com/vitessio/vitess/blob/release-15.0/web/vtadmin/README.md) for more details.
 
 ## Disable AppArmor or SELinux
 
@@ -85,11 +85,11 @@ Download the [latest binary release](https://github.com/vitessio/vitess/releases
 **Notes:**
 
 * Release 15.0 has a bug because of which the local example fails when try to run vtadmin web. [Issue#11679](https://github.com/vitessio/vitess/issues/11679)
-* Please use release [15.0.1](https://github.com/vitessio/vitess/releases/tag/v15.0.1) instead.
+* Please use release [15.0.3](https://github.com/vitessio/vitess/releases/tag/v15.0.3) instead.
 
 ```sh
-version=15.0.1
-file=vitess-${version}-13ee9c8.tar.gz
+version=15.0.3
+file=vitess-${version}-652b0da.tar.gz
 wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
 tar -xzf ${file}
 cd ${file/.tar.gz/}
@@ -202,7 +202,6 @@ vtadmin-api is running!
   - API: http://localhost:14200
   - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtadmin-api.out
   - PID: 74039
-
 
 > vtadmin@0.1.0 build
 > react-scripts build

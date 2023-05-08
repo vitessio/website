@@ -29,6 +29,6 @@ You can also use the demo app to follow the steps of this user guide. If so, you
 
 ### VSchema DDL
 
-The demo describes the VSchema JSON syntax. Many of the changes can be executed by issuing special DDL commands that Vitess understands. Wherever applicable, we have provided the equivalent DDL construct you could apply if you were running a live system. All the DDLs are also listed in the `vschema_ddls.sql` file.
+The demo describes the VSchema JSON syntax. Many of the changes can be executed by issuing special DDL commands that Vitess understands. Wherever applicable, we have provided the equivalent DDL construct you could apply if you were running a live system. All the DDLs are also listed in the [vschema_ddls.sql](https://github.com/vitessio/vitess/blob/main/examples/demo/vschema_ddls.sql) file.
 
 It is generally recommended that you get familiar with the JSON syntax as it will be useful for troubleshooting if something does not work as intended.

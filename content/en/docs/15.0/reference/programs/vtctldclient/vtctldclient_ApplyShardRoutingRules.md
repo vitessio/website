@@ -4,20 +4,21 @@ series: vtctldclient
 ---
 ## vtctldclient ApplyShardRoutingRules
 
-Applies the provided shard routing rules. See the documentation on [shard level migrations](../../../vreplication/shardlevelmigrations/) for more information.
+Applies VSchema shard routing rules.
 
 ```
-vtctldclient ApplyShardRoutingRules {--rules RULES | --rules-file RULES_FILE} [--skip-rebuild] [--dry-run]
+vtctldclient ApplyShardRoutingRules {--rules RULES | --rules-file RULES_FILE} [--cells=c1,c2,...] [--skip-rebuild] [--dry-run]
 ```
 
 ### Options
 
 ```
-  -h, --help               help for ApplyShardRoutingRules
-      --rules RULES        JSON string of the shard routing rules to apply
-      --rules-file         Path to a file containing the shard routing rules to apply as a JSON document
-      --skip-rebuild       Don't rebuild the SrvVSchema after applying the rules (if you want to delay enforcement of the new rules)
-      --dry-run            Don't actually apply the rules, just print informtion about the work that would be done
+  -c, --cells strings       Limit the VSchema graph rebuilding to the specified cells. Ignored if --skip-rebuild is specified.
+  -d, --dry-run             Validate the specified shard routing rules and note actions that would be taken, but do not actually apply the rules to the topo.
+  -h, --help                help for ApplyShardRoutingRules
+  -r, --rules string        Shard routing rules, specified as a string
+  -f, --rules-file string   Path to a file containing shard routing rules specified as JSON
+      --skip-rebuild        Skip rebuilding the SrvVSchema objects.
 ```
 
 ### Options inherited from parent commands

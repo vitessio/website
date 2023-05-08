@@ -13,14 +13,17 @@ The following has been verified to work on __CentOS 7__. If you are new to Vites
 
 ## Install Dependencies
 
-### Install Go 1.17+
+### Install Go
 
-[Download and install](http://golang.org/doc/install) Golang 1.17. For example, at writing:
+[Download and install](http://golang.org/doc/install) Golang. For example for `go1.20.2`, at writing:
 
 ```
-curl -LO https://golang.org/dl/go1.17.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.17.linux-amd64.tar.gz
+curl -LO https://golang.org/dl/go1.20.2.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.20.2.linux-amd64.tar.gz
 ```
+
+> Vitess is tested and shipped using a specific Golang version for each release.
+> For maximum compatibility we encourage you to use the same Golang version as [the one mentioned in our `build.env` file](https://github.com/vitessio/vitess/blob/d1ba6258ea2462d5d28d67661aace7b79bb7e27b/build.env#L20).
 
 Make sure to add go to your bashrc:
 ```
@@ -60,10 +63,10 @@ See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmi
 
 ### Packages from CentOS repos
 
-First install the MySQL 5.7 repository from Oracle:
+First install the MySQL repository from Oracle:
 
 ```
-sudo yum localinstall -y https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
+sudo yum localinstall -y https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
 sudo yum install -y mysql-community-server
 ```
 
@@ -76,7 +79,6 @@ sudo yum install -y make unzip g++ etcd curl git wget
 **Notes:**
 
 * We will be using etcd as the topology service. The command `make tools` can also install Zookeeper or Consul for you, which requires additional dependencies.
-* Vitess currently has some additional tests written in Python, but we will be skipping this step for simplicity.
 
 ### Disable SELinux
 
