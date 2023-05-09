@@ -88,7 +88,7 @@ After running `build` command, the production build of the front-end assets will
 ## Best Practices
 
 Now that you can build and run VTAdmin, there are a few best practices you should follow before deploying into production.
-Because VTAdmin by definition has access to potentially-sensitive information about your clusters, it's important to ensure that only the right people have access those resources.
+Because VTAdmin by definition has access to potentially-sensitive information about your clusters, it's important to ensure that only the right people have access to those resources.
 
 ### Use Role-based Access Control (RBAC)
 
