@@ -85,8 +85,7 @@ Global topology service contains:
 * if using filtered replication, the source shards this shard is replicating
   from.
 * the list of cells that have tablets in this shard.
-* shard-global tablet controls, like `DeniedTable`s, which no tablet should serve
-  in this shard.
+* shard-global tablet controls, like `DeniedTables`, which specifies a comma-separated list of tables to deny queries on.
 
 A Shard can be locked. We use this during operations that affect either the
 Shard record, or multiple tablets within a Shard (like reparenting), so multiple
