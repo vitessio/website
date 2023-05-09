@@ -57,6 +57,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09009 | Stream is only supported for primary tablets, please use a stream on those tablets. | stream is supported only for primary tablet type, current type: %v | 0 |  |
 | VT09010 | SHOW VITESS_THROTTLER STATUS works only on primary tablet. | SHOW VITESS_THROTTLER STATUS works only on primary tablet | 0 |  |
 | VT09011 | The prepared statement is not available | Unknown prepared statement handler (%s) given to %s | 1243 | HY000 |
+| VT09012 | This type of statement is not allowed on the given tablet. | %s statement with %s tablet not allowed | 0 |  |
 | VT10001 | Foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/. | foreign key constraints are not allowed | 0 |  |
 | VT12001 | This statement is unsupported by Vitess. Please rewrite your query to use supported syntax. | unsupported: %s | 0 |  |
 | VT13001 | This error should not happen and is a bug. Please file an issue on GitHub: https://github.com/vitessio/vitess/issues/new/choose. | [BUG] %s | 0 |  |
@@ -65,6 +66,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT14002 | No available connection. | no available connection | 0 |  |
 | VT14003 | No connection for the given tablet. | no connection for tablet %v | 0 |  |
 | VT14004 | The specified keyspace could not be found. | cannot find keyspace for: %s | 0 |  |
+| VT14005 | Failed to read sidecar database identifier. | cannot lookup sidecar database for keyspace: %s | 0 |  |
 <!-- end -->
 
 ## Old Errors
