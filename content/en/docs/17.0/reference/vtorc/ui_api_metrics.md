@@ -14,14 +14,15 @@ Currently, the `/debug/status` lists the recent recoveries that VTOrc has perfor
 
 VTOrc supports the following APIs which can be used for monitoring and changing the behaviour of VTOrc.
 
- | New API                          | Additional notes                                                                                                                                                                                        |
-|----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
- | `/api/problems`                  | This API lists all the instances that have any problems in them. The problems range from replication not running to errant GTIDs. The new API also supports filtering using the keyspace and shard name |
-| `/api/disable-global-recoveries` | This API disables the global recoveries in VTOrc. This makes it so that VTOrc doesn't repair any failures it detects.                                                                                   |
- | `/api/enable-global-recoveries`  | This API enables the global recoveries in VTOrc.                                                                                                                                                        |
- | `/debug/health`                  | This API outputs the health of the VTOrc process.                                                                                                                                                       |
- | `/debug/liveness`                | This API outputs the liveness of the VTOrc process.                                                                                                                                                     |
-| `/api/replication-analysis`      | This API shows the replication analysis of VTOrc. Output is in JSON format.                                                                                                                             |
+ | New API                             | Additional notes                                                                                                                                                                                        |
+|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+ | `/api/problems`                     | This API lists all the instances that have any problems in them. The problems range from replication not running to errant GTIDs. The new API also supports filtering using the keyspace and shard name |
+| `/api/disable-global-recoveries`    | This API disables the global recoveries in VTOrc. This makes it so that VTOrc doesn't repair any failures it detects.                                                                                   |
+ | `/api/enable-global-recoveries`     | This API enables the global recoveries in VTOrc.                                                                                                                                                        |
+ | `/debug/health`                     | This API outputs the health of the VTOrc process.                                                                                                                                                       |
+ | `/debug/liveness`                   | This API outputs the liveness of the VTOrc process.                                                                                                                                                     |
+| `/api/replication-analysis`         | This API shows the replication analysis of VTOrc. Output is in JSON format.                                                                                                                             |
+| `/api/aggregated-discovery-metrics` | This API shows the aggregated metrics for the discovery process of vttablets in VTOrc.                                                                                                                  |
 
 # Metrics
 
