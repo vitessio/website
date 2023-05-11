@@ -31,11 +31,13 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT03016 | The given column is unknown in the vindex table. | unknown vindex column: '%s' | 0 |  |
 | VT03017 | This vstream where clause can only be a greater than filter. | where clause can only be of the type 'pos > <value>' | 1149 | 42000 |
 | VT03018 | You cannot use the NEXT syntax on a table that is not a sequence table. | NEXT used on a non-sequence table | 0 |  |
-| VT03019 | The given symbol was not found or is not available. | symbol %s not found | 0 |  |
-| VT03020 | The given symbol was not found in the subquery. | symbol %s not found in subquery | 0 |  |
-| VT03021 | The given symbol is ambiguous. You can use a table qualifier to make it unambiguous. | ambiguous symbol reference: %v | 0 |  |
+| VT03019 | The given column was not found or is not available. | column %s not found | 0 |  |
+| VT03020 | The given column was not found in the subquery. | column %s not found in subquery | 0 |  |
+| VT03021 | The given column is ambiguous. You can use a table qualifier to make it unambiguous. | ambiguous column reference: %v | 0 |  |
 | VT03022 | The given column cannot be found. | column %v not found in %v | 0 |  |
 | VT03023 | When targeting a range of shards, Vitess does not know which shard to send the INSERT to. | INSERT not supported when targeting a key range: %s | 0 |  |
+| VT03024 | The query cannot be prepared using the user defined variable as it does not exists for this session. | '%s' user defined variable does not exists | 0 |  |
+| VT03025 | The execute statement have wrong number of arguments | Incorrect arguments to %s | 1210 | HY000 |
 | VT05001 | The given database does not exist; Vitess cannot drop it. | cannot drop database '%s'; database does not exists | 1008 | HY000 |
 | VT05002 | The given database does not exist; Vitess cannot alter it. | cannot alter database '%s'; unknown database | 1049 | 42000 |
 | VT05003 | The given database does not exist in the VSchema. | unknown database '%s' in vschema | 1049 | 42000 |
@@ -54,6 +56,8 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09008 | vexplain queries/all will actually run queries. `/*vt+ EXECUTE_DML_QUERIES */` must be set to run DML queries in vtexplain. Example: `vexplain /*vt+ EXECUTE_DML_QUERIES */ queries delete from t1` | vexplain queries/all will actually run queries | 0 |  |
 | VT09009 | Stream is only supported for primary tablets, please use a stream on those tablets. | stream is supported only for primary tablet type, current type: %v | 0 |  |
 | VT09010 | SHOW VITESS_THROTTLER STATUS works only on primary tablet. | SHOW VITESS_THROTTLER STATUS works only on primary tablet | 0 |  |
+| VT09011 | The prepared statement is not available | Unknown prepared statement handler (%s) given to %s | 1243 | HY000 |
+| VT09012 | This type of statement is not allowed on the given tablet. | %s statement with %s tablet not allowed | 0 |  |
 | VT10001 | Foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/. | foreign key constraints are not allowed | 0 |  |
 | VT12001 | This statement is unsupported by Vitess. Please rewrite your query to use supported syntax. | unsupported: %s | 0 |  |
 | VT13001 | This error should not happen and is a bug. Please file an issue on GitHub: https://github.com/vitessio/vitess/issues/new/choose. | [BUG] %s | 0 |  |
@@ -62,6 +66,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT14002 | No available connection. | no available connection | 0 |  |
 | VT14003 | No connection for the given tablet. | no connection for tablet %v | 0 |  |
 | VT14004 | The specified keyspace could not be found. | cannot find keyspace for: %s | 0 |  |
+| VT14005 | Failed to read sidecar database identifier. | cannot lookup sidecar database for keyspace: %s | 0 |  |
 <!-- end -->
 
 ## Old Errors
