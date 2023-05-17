@@ -280,6 +280,9 @@ customer_id: 1
 …
 ```
 
+## Monitoring
+Vitess gateways publish vstream metrics listed [here](../metrics/#gateway-metrics).
+
 ## More Reading
 
   * [VStream Copy](https://github.com/vitessio/vitess/issues/6277)
