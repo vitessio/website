@@ -14,6 +14,8 @@ A [Homebrew](https://brew.sh/) package manager is also available, which requires
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
+> In this guide, `v9.0.0` is used in most outputs. You can replace it by the version of Vitess you are using.
+
 ## Install Vitess with Homebrew
 
 Vitess supports the databases listed [here](../../../overview/supported-databases/). Homebrew will install latest tagged Vitess Release.

@@ -6,7 +6,7 @@ weight: 11
 Creating a lookup vindex after the main table already contains rows does not automatically backfill the lookup table for the existing entries. 
 Only newer inserts cause automatic population of the lookup table. 
 
-This backfill can be set up using the [CreateLookupVindex](#CreateLookupVindex) command covered below.
+This backfill can be set up using the [CreateLookupVindex](#createlookupvindex) command covered below.
 
 ### Manual Backfill Checklist
 
@@ -16,7 +16,7 @@ Creating a unique lookup Vindex is an elaborate process. It is good to use the f
 * Create a VSchema entry for the lookup table. If sharded, assign a Primary Vindex for the `from` column.
 * Create the lookup vindex in the VSchema of the sharded keyspace:
   * Give it a distinct name
-  * Specify the type from one of [predefined vindexes](https://vitess.io/docs/13.0/reference/features/vindexes/#predefined-vindexes)
+  * Specify the type from one of [predefined vindexes](../../../reference/features/vindexes/#predefined-vindexes)
   * Under `params`: specify the properties of the lookup table
   * Specify the `Owner` as the main table
 * Associate the column of the owner table with the new Vindex.

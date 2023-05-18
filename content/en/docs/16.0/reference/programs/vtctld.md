@@ -46,7 +46,7 @@ vtctld \
 | --azblob_backup_storage_root | string | Root prefix for all backup-related Azure Blobs; this should exclude both initial and trailing '/' (e.g. just 'a/b' not '/a/b/') |
 | --backup_engine_implementation | string | Specifies which implementation to use for creating new backups (builtin or xtrabackup). Restores will always be done with whichever engine created a given backup. (default "builtin") |
 | --backup_storage_block_size | int | if backup_storage_compress is true, backup_storage_block_size sets the byte size for each block while compressing (default is 250000). (default 250000) |
-| --backup_storage_compress | boolean | if set, the backup files will be compressed (default is true). Set to false for instance if a backup_storage_hook is specified and it compresses the data. (default true) |
+| --backup_storage_compress | boolean | if set, the backup files will be compressed (default is true). |
 | --backup_storage_implementation | string | which implementation to use for the backup storage feature |
 | --backup_storage_number_blocks | int | if backup_storage_compress is true, backup_storage_number_blocks sets the number of blocks that can be processed, at once, before the writer blocks, during compression (default is 2). It should be equal to the number of CPUs available for compression (default 2) |
 | --builtinbackup_mysqld_timeout | duration | how long to wait for mysqld to shutdown at the start of the backup. (default 10m0s) |
@@ -121,7 +121,7 @@ vtctld \
 | --s3_backup_storage_bucket | string | S3 bucket to use for backups |
 | --s3_backup_storage_root | string | root prefix for all backup-related object names |
 | --s3_backup_tls_skip_verify_cert | boolean | skip the 'certificate is valid' check for SSL connections |
-| --schema_change_check_interval | int | this value decides how often we check schema change dir, in seconds (default 60) |
+| --schema_change_check_interval | duration | How often the schema change dir is checked for schema changes (deprecated: if passed as a bare integer, the duration will be in seconds). |
 | --schema_change_controller | string | schema change controller is responsible for finding schema changes and responding to schema change events |
 | --schema_change_dir | string | directory contains schema changes for all keyspaces. Each keyspace has its own directory and schema changes are expected to live in '$KEYSPACE/input' dir. e.g. test_keyspace/input/*sql, each sql file represents a schema change |
 | --schema_change_replicas_timeout | duration | how long to wait for replicas to receive the schema change (default 10s) |

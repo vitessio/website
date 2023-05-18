@@ -68,8 +68,8 @@ All subsets end with a `drop`, even if not explicitly mentioned. Thus, `"purge"`
 
 In MySQL **8.0.23** and later, table drops do not acquire locks on the InnoDB buffer pool, and are non-blocking for queries that do not reference the table being dropped. Vitess automatically identifies whether the underlying MySQL server is at that version or later and will:
 
-- Implicitly skip `purge` state, even if defined
-- Implicitly skip `hold` state, even if defined
+- Implicitly skip the `purge` stage, even if defined
+- Implicitly skip the `evac` stage, even if defined
 
 ## Stateless flow by table name hints
 

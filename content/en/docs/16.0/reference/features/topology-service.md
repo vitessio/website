@@ -85,12 +85,11 @@ Global topology service contains:
 * if using filtered replication, the source shards this shard is replicating
   from.
 * the list of cells that have tablets in this shard.
-* shard-global tablet controls, like denied tables no tablet should serve
-  in this shard.
+* shard-global tablet controls, like `DeniedTables`, which specifies a comma-separated list of tables to deny queries on.
 
 A Shard can be locked. We use this during operations that affect either the
 Shard record, or multiple tablets within a Shard (like reparenting), so multiple
-tasks cannot concurrently alter the data.
+tasks cannot concurrently alter the same data.
 
 ### VSchema data
 
@@ -108,21 +107,21 @@ The Tablet record has a lot of information about each vttablet process
 making up each tablet (along with the MySQL process):
 
 * the Tablet Alias (cell+unique id) that uniquely identifies the Tablet.
-* the Hostname, IP address and port map of the Tablet.
-* the current Tablet type (primary, replica, batch, spare, …).
-* which Keyspace / Shard the tablet is part of.
-* the sharding Key Range served by this Tablet.
-* user-specified tag map (e.g. to store per-installation data).
+* the **Hostname**, **IP address** and **port map** of the Tablet.
+* the current **Tablet type** (primary, replica, batch, spare, …).
+* which **Keyspace / Shard** the tablet is part of.
+* the sharding **Key Range** served by this Tablet.
+* user-specified **tag map** (e.g. to store per-installation data).
 
-A Tablet record is created before a tablet can be running (by passing the `init_*` parameters to the vttablet process).
-The only way a Tablet record will be updated is one of:
+A Tablet record can be created before a tablet starts running (by passing the `init_*` parameters to the vttablet process).
+The only way a tablet record will be updated is one of:
 
 * The vttablet process itself owns the record while it is running, and can
-  change it.
-* At init time, before the tablet starts.
-* After shutdown, when the tablet gets deleted.
-* If a tablet becomes unresponsive, it may be forced to spare to make it
-  unhealthy when it restarts.
+  change it:
+  * At init time, before the Tablet starts.
+  * After shutdown, when the Tablet gets deleted.
+  * If a Tablet becomes unresponsive, it may be forced to spare to make it
+    unhealthy when it restarts.
 
 ### Replication graph
 
@@ -143,7 +142,7 @@ It is the local representation of a Keyspace. It contains information on what
 shard to use for getting to the data (but not information about each individual
 shard):
 
-* the partitions map is keyed by the tablet type (primary, replica, batch, …) and
+* the partitions map is keyed by the Tablet type (primary, replica, batch, …) and
   the value is a list of shards to use for serving.
 * it also contains the global Keyspace fields, copied for fast access.
 
@@ -211,7 +210,7 @@ We use the following paths for the data, in all implementations:
 * SrvKeyspace: `keyspaces/<keyspace>/SrvKeyspace`
 * SrvVSchema: `SvrVSchema`
 
-The `vtctl TopoCat` utility can decode these files when using the
+The [`vtctl TopoCat`](https://vitess.io/docs/16.0/reference/programs/vtctl/topo/#topocat) utility can decode these files when using the
 `--decode_proto` option:
 
 ``` sh
@@ -445,7 +444,7 @@ etcd, zookeeper, or consul. At a higher level overview:
   `/vitess/${CELL_NAME}` (on consul this should be `vitess/${CELL_NAME}`) where `${CELL_NAME}` is the location of the cell
   `us-east-1, eu-west-2, etc`.
 * When starting a vttablet instance you must provide the global topology service
-  as well as the `-tablet-path`, which implicitly includes the cell details.
+  as well as the `--tablet-path`, which implicitly includes the cell details.
   With this information the vttablet process will read the local topology
   details from the global topology server.
 * When starting a vtgate instance, you will provide the global topology
@@ -644,7 +643,7 @@ After this split, the configuration is completely symmetrical:
 
 ## Migration between implementations
 
-We provide the `topo2topo` utility to migrate between one implementation
+We provide the [`topo2topo`](https://vitess.io/docs/16.0/reference/features/topology-service/#migration-between-implementations) utility to migrate between one implementation
 and another of the topology service.
 
 The process to follow in that case is:

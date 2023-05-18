@@ -22,7 +22,7 @@ Whatever system launches `vtbackup` is responsible for the following:
 
 ## Example Usage
 
-The following example launches the `vtbackup`.
+On a running Vitess cluster, the following command will create a backup using `vtbackup` for keyspace `commerce` and shard `0`.
 
 ```bash
 export TOPOLOGY_FLAGS="--topo_implementation etcd2 --topo_global_server_address localhost:2379 --topo_global_root /vitess/global"

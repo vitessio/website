@@ -4,6 +4,10 @@ weight: 2
 aliases: ['/docs/user-guides/managed-online-schema-changes/']
 ---
 
+{{< warning >}}
+Please see this [known issue](https://github.com/vitessio/vitess/releases/tag/v16.0.0#mysql-xtrabackup-ddl) if you are taking a backup with XtraBackup with MySQL tables modified via `INSTANT DDL`
+{{</ warning >}}
+
 Vitess offers managed, online schema migrations (aka Online DDL), transparently to the user. Vitess Online DDL offers:
 
 - Non-blocking migrations
@@ -28,7 +32,7 @@ As general overview:
 - Tablets will independently run schema migrations:
   - `ALTER TABLE` statements run via `VReplication`, `gh-ost` or `pt-online-schema-change`, as per selected [strategy](../ddl-strategies)
   - `CREATE TABLE` and `CREATE VIEW` statements run directly.
-  - `DROP TABLE` statements run [safely and lazily](../../../design-docs/table-lifecycle/safe-lazy-drop-tables/).
+  - `DROP TABLE` statements run [safely and lazily](https://github.com/vitessio/vitess/blob/main/doc/design-docs/SafeLazyDropTables.md).
   - `ALTER VIEW` and `DROP VIEW` are internally modified to allow quick revert.
 - Vitess provides the user a mechanism to view migration status, launch (if required), complete (if required), cancel or retry migrations, based on the job ID.
 
@@ -165,7 +169,7 @@ A migration can be in any one of these states:
 
 A migration is said to be _pending_ if we expect it to run and complete. Pending migrations are those in `queued`, `ready` and `running` states.
 
-For more about internals of the scheduler and how migration states are controlled, see [Online DDL Scheduler](../../../design-docs/online-ddl/scheduler)
+For more about internals of the scheduler and how migration states are controlled, see [Online DDL Scheduler](https://github.com/vitessio/vitess/blob/main/doc/design-docs/OnlineDDLScheduler.md)
 
 ## Configuration
 

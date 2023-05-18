@@ -4,6 +4,10 @@ weight: 1
 aliases: ['/docs/user-guides/backup-and-restore/']
 ---
 
+{{< warning >}}
+Please see this [known issue](https://github.com/vitessio/vitess/releases/tag/v16.0.0#mysql-xtrabackup-ddl) if you are taking a backup with XtraBackup with MySQL tables modified via `INSTANT DDL`
+{{</ warning >}}
+
 Backup and Restore are integrated features provided by tablets managed by Vitess. As well as using _backups_ for data integrity, Vitess will also create and restore backups for provisioning new tablets in an existing shard.
 
 ## Concepts
@@ -18,6 +22,8 @@ Currently, Vitess has plugins for:
 * Google Cloud Storage
 * Amazon S3
 * Ceph
+
+In order to secure against path-traversal attacks, it is recommended that cloud storage buckets used for backups should not be used to store any other sensitive files or objects.
 
 ### Backup Engines
 
@@ -77,27 +83,20 @@ All three programs can be made aware of Backup Engine and Backup Storage using t
       </td>
     </tr>
     <tr>
-      <td><code>backup_storage_hook</code></td>
-      <td>If set, the content of every file to backup is sent to a hook. The
-        hook receives the data for each file on stdin. It should echo the
-        transformed data to stdout. Anything the hook prints to stderr will
-        be printed in the vttablet logs.<br>
-        Hooks should be located in the <code>vthook</code> subdirectory of the
-        <code>VTROOT</code> directory.<br>
-        The hook receives a <code>-operation write</code> or a
-        <code>-operation read</code> parameter depending on the direction
-        of the data processing. For instance, <code>write</code> would be for
-        encryption, and <code>read</code> would be for decryption.</br>
-      </td>
-    </tr>
-    <tr>
       <td><code>backup_storage_compress</code></td>
       <td>This flag controls if the backups are compressed by the Vitess code.
         By default it is set to true. Use
         <code>--backup_storage_compress=false</code> to disable.</br>
-        This is meant to be used with a <code>--backup_storage_hook</code>
-        hook that already compresses the data, to avoid compressing the data
-        twice.
+      </td>
+    </tr>
+    <tr>
+      <td><code>backup_storage_block_size</code></td>
+      <td>If <code>--backup_storage_compress</code> is true, <code>backup_storage_block_size</code> sets the block size in bytes to use while compressing (default is 250000).
+      </td>
+    </tr>
+    <tr>
+      <td><code>backup_storage_number_blocks</code></td>
+      <td>If <code>--backup_storage_compress</code> is true, <code>backup_storage_number_blocks</code> sets the number of blocks that can be processed, in parallel, before the writer blocks, during compression. It should be equal to the number of CPUs available for compression. (default 2)
       </td>
     </tr>
     <td><code>compression-level</code></td>

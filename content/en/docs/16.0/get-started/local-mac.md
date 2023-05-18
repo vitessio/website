@@ -271,11 +271,15 @@ You should now be able to connect to the VTGate server that was started in `101_
 $ mysql -P 15306 -u root --protocol tcp
 ```
 
-You can also browse to the vtctld console using the following URL:
+</br>
+
+You can also now browse and administer your new Vitess cluster using the [VTAdmin](../../reference/vtadmin/) UI at the following URL:
 
 ```text
-http://localhost:15000
+http://localhost:14201
 ```
+
+</br>
 
 VTOrc is also setup as part of the initialization. You can look at its user-interface at:
 
