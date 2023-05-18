@@ -113,14 +113,14 @@ diffs, err := DiffSchemasSQL("create ...", "create ...", hints)
 ...
 ```
 
-The main thing to note in the above examples is that everything takes place purely within `go` space, and MySQL is not involved. `schemadiff` is purely programmatic, and makes heavy use of Vitess' [`sqlparser`](https://github.com/vitessio/vitess/tree/main/go/vt/sqlparser) library.
+The main thing to note in the above examples is that everything takes place purely within `go` space, and MySQL is not involved. `schemadiff` is purely programmatic, and makes heavy use of Vitess' <span style="background-color: #F5F5F5;padding: 0 4px;">[sqlparser](https://github.com/vitessio/vitess/tree/main/go/vt/sqlparser)</span> library.
 
 
 ## sqlparser
 
-Vitess is a sharding and management framework running on top of MySQL, which masquerades as a MySQL server to route queries to relevant shards. It thus obviously must be able to parse MySQL's SQL dialect. [`sqlparser`](https://github.com/vitessio/vitess/tree/main/go/vt/sqlparser) is the Vitess library that does so.
+Vitess is a sharding and management framework running on top of MySQL, which masquerades as a MySQL server to route queries to relevant shards. It thus obviously must be able to parse MySQL's SQL dialect. <span style="background-color: #F5F5F5;padding: 0 4px;">[sqlparser](https://github.com/vitessio/vitess/tree/main/go/vt/sqlparser)</span> is the Vitess library that does so.
 
-`sqlparser` utilizes a classic [yacc](https://en.wikipedia.org/wiki/Yacc) [file](https://github.com/vitessio/vitess/blob/main/go/vt/sqlparser/sql.y) to parse SQL into an Abstract Syntax Tree (AST), with `golang` structs generated and populated by the parser. For example, a SQL `CREATE TABLE` statement is parsed into a [`CreateTable`](https://github.com/vitessio/vitess/blob/ed72037bb6358a2065834589a21f5119fd407136/go/vt/sqlparser/ast.go#L509-L517) instance:
+`sqlparser` utilizes a classic [yacc](https://en.wikipedia.org/wiki/Yacc) [file](https://github.com/vitessio/vitess/blob/main/go/vt/sqlparser/sql.y) to parse SQL into an Abstract Syntax Tree (AST), with `golang` structs generated and populated by the parser. For example, a SQL `CREATE TABLE` statement is parsed into a <span style="background-color: #F5F5F5;padding: 0 4px;">[CreateTable](https://github.com/vitessio/vitess/blob/ed72037bb6358a2065834589a21f5119fd407136/go/vt/sqlparser/ast.go#L509-L517)</span> instance:
 
 ```go
 CreateTable struct {
@@ -134,7 +134,7 @@ CreateTable struct {
 }
 ```
 
-And here is the breakdown of [`TableSpec`](https://github.com/vitessio/vitess/blob/ed72037bb6358a2065834589a21f5119fd407136/go/vt/sqlparser/ast.go#L1758-L1765):
+And here is the breakdown of <span style="background-color: #F5F5F5;padding: 0 4px;">[TableSpec](https://github.com/vitessio/vitess/blob/ed72037bb6358a2065834589a21f5119fd407136/go/vt/sqlparser/ast.go#L1758-L1765)</span>:
 
 ```go
 type TableSpec struct {
@@ -190,7 +190,7 @@ Even more interesting is view validation. `schemadiff` offers a complete validat
 
 There are nuances. What do you do about different `AUTO_INCREMENT` values? These are not strictly part of the schema, but may or may not cause impact to production if you apply or not apply them. How do you deal with renamed columns? What about constraint names, which, per ANSI SQL, must be unique across the schema? Do you mind if key definitions are in different order?
 
-[`DiffHints`](https://github.com/vitessio/vitess/blob/157857a4c5ee6dcb44e7de08894db8334750746e/go/vt/schemadiff/types.go#L110-L121) includes many controls that affect the diffing logic and output.
+<span style="background-color: #F5F5F5;padding: 0 4px;">[DiffHints](https://github.com/vitessio/vitess/blob/157857a4c5ee6dcb44e7de08894db8334750746e/go/vt/schemadiff/types.go#L110-L121)</span> includes many controls that affect the diffing logic and output.
 
 ## Normalization
 
@@ -238,7 +238,7 @@ Unless, we can ask `schemadiff` to programmatically _apply_ those diffs and vali
 
 ## Applying diffs
 
-Consider this simplified code, or see snippet from [`diff_test.go`](https://github.com/vitessio/vitess/blob/ed72037bb6358a2065834589a21f5119fd407136/go/vt/schemadiff/diff_test.go#L806-L822):
+Consider this simplified code, or see snippet from <span style="background-color: #F5F5F5;padding: 0 4px;">[diff_test.go](https://github.com/vitessio/vitess/blob/ed72037bb6358a2065834589a21f5119fd407136/go/vt/schemadiff/diff_test.go#L806-L822)</span>:
 
 ```go
 schema1, err := NewSchemaFromSQL(sql1)
