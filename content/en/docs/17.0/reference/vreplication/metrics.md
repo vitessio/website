@@ -144,8 +144,8 @@ The total number of vstreamers created during the lifetime of this tablet
 "VStreamersEndedWithErrors": 0,
 ```
 
-## Gateway Metrics
+## VTGate Metrics
 #### VStreamsCreated
-The total number of vstreams created during the lifetime of this gateway.
+The total number of vstreams created during the lifetime of this vtgate.
 #### VStreamsLag
 The difference in seconds between the current time when the vstream event was sent and the time when the binlog event occurred.

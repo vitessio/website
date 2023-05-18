@@ -281,7 +281,7 @@ customer_id: 1
 ```
 
 ## Monitoring
-Vitess gateways publish vstream metrics listed [here](../metrics/#gateway-metrics).
+VTGates publish vstream metrics listed [here](../metrics/#vtgate-metrics).
 
 ## More Reading
 
