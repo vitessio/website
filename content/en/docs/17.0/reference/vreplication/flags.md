@@ -68,8 +68,8 @@ When copying the contents of a table we go through 1+ cycles of copy,catchup,fas
 
 * You can see the current configuration value as `RowStreamerMaxInnoDBTrxHistLen` in the running process at the `/debug/vars` vttablet endpoint
 * You can modify the current configuration value as `RowStreamerMaxInnoDBTrxHistLen` in the running process at the `/debug/env` vttablet endpoint
-* You can see the total (global) number of waits and time spent waiting for MySQL on the source tablet as `waitForMySQL` in `RowStreamerWaits` at the `/debug/vars` vttablet endpoint 
-* You can see the number of waits and time spent waiting for MySQL on the source tablet by table (we do not have the workflow name on the source) as `<tablename>:waitForMySQL` in `VStreamerPhaseTiming` at the `/debug/vars` vttablet endpoint 
+* You can see the total (global) number of waits and time spent waiting for MySQL on the source tablet as `waitForMySQL` in `RowStreamerWaits` at the `/debug/vars` vttablet endpoint
+* You can see the number of waits and time spent waiting for MySQL on the source tablet by table (we do not have the workflow name on the source) as `<tablename>:waitForMySQL` in `VStreamerPhaseTiming` at the `/debug/vars` vttablet endpoint
 
 #### vreplication_copy_phase_max_mysql_replication_lag
 
@@ -82,8 +82,8 @@ When copying the contents of a table we go through 1+ cycles of copy,catchup,fas
 
 * You can see the current configuration value as `RowStreamerMaxMySQLReplLagSecs` in the running process at the `/debug/vars` vttablet endpoint
 * You can modify the current configuration value as `RowStreamerMaxMySQLReplLagSecs` in the running process at the `/debug/env` vttablet endpoint
-* You can see the total (global) number of waits and time spent waiting for MySQL on the source tablet as `waitForMySQL` in `RowStreamerWaits` at the `/debug/vars` vttablet endpoint 
-* You can see the number of waits and time spent waiting for MySQL on the source tablet by table (we do not have the workflow name on the source) as `<tablename>:waitForMySQL` in `VStreamerPhaseTiming` at the `/debug/vars` vttablet endpoint 
+* You can see the total (global) number of waits and time spent waiting for MySQL on the source tablet as `waitForMySQL` in `RowStreamerWaits` at the `/debug/vars` vttablet endpoint
+* You can see the number of waits and time spent waiting for MySQL on the source tablet by table (we do not have the workflow name on the source) as `<tablename>:waitForMySQL` in `VStreamerPhaseTiming` at the `/debug/vars` vttablet endpoint
 
 #### vreplication_heartbeat_update_interval
 
@@ -147,6 +147,17 @@ When enabled, vttablet will start the _watcher_ which streams the MySQL replicat
 All vstreams on a tablet share a common engine. vstreams that are lagging might see a newer (and hence incorrect) version of the schema in case DDLs were applied in between. Also, reloading schemas is an expensive operation. If there are multiple vstreams, each of them will separately receive a DDL event resulting in multiple reloads for the same DDL. The [tracker](../internal/tracker) addresses these issues.
 
 When enabled, vttablet will start the _tracker_ which runs a separate vstream that monitors DDLs and stores the version of the schema at the position that a DDL is applied in the schema version table. So if we are streaming events from the past we can get the corresponding schema and interpret the fields from the event correctly.
+
+#### schema-version-max-age-seconds
+
+**Type** integer\
+**Unit** seconds\
+**Default** 0\
+**Applicable on** source
+
+By default the historian loads up to 10,000 rows from the `_vt.schema_version` table into memory which contain a blob of the entire database schema. For clusters with large schemas each of these rows can become very large (>1MB) and can eventually lead to out of memory errors on the tablet if frequent DDLs are run triggering a new `_vt.schema_version` row to be written and stored in the tablet's memory.
+
+`schema-version-max-age-seconds` provides a way to periodically purge those schema version rows from the tablet's memory by removing rows older than the max age in seconds. The default of 0 means no records will be purged. This option **only** controls removing the records in the tablet's memory and does not remove the rows stored in the database. A safe option is to choose a max age at least as old as your [binlog retention seconds](https://dev.mysql.com/doc/refman/8.0/en/replication-options-binary-log.html#sysvar_binlog_expire_logs_seconds) to avoid removing schema versions that are needed to serialize binlog events that require a schema different from the most recent schema.
 
 #### vreplication_retry_delay
 
