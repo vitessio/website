@@ -159,16 +159,6 @@ By default the historian loads up to 10,000 rows from the `_vt.schema_version` t
 
 `schema-version-max-age-seconds` provides a way to periodically purge those schema version rows from the tablet's memory by removing rows older than the max age in seconds. The default of 0 means no records will be purged. This option **only** controls removing the records in the tablet's memory and does not remove the rows stored in the database. A safe option is to choose a max age at least as old as your [binlog retention seconds](https://dev.mysql.com/doc/refman/8.0/en/replication-options-binary-log.html#sysvar_binlog_expire_logs_seconds) to avoid removing schema versions that are needed to serialize binlog events that require a schema different from the most recent schema.
 
-#### watch_replication_stream
-
-**Type** bool\
-**Default** false\
-**Applicable on** source
-
-By default vttablets reload their schema every `--queryserver-config-schema-reload-time` seconds (default 30 minutes). This can cause a problem while streaming events if DDLs are applied on the source and streaming is started _after_ the DDL was applied but _before_ vttablet refreshed its schema. This is alleviated by enabling the _watcher_.
-
-When enabled, vttablet will start the _watcher_ which streams the MySQL replication stream from the local database, and uses it to proactively update its schema when it encounters a DDL.
-
 #### vreplication_retry_delay
 
 **Type** integer\
