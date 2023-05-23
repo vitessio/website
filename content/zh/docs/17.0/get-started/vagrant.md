@@ -123,7 +123,6 @@ After completing the instructions above to [build Vitess](#build-vitess-vagrant)
     ```sh
     export VTROOT=/vagrant
     export VTDATAROOT=/tmp/vtdata-dev
-    export MYSQL_FLAVOR=MySQL56
     cd "$VITESS_WORKSPACE"/examples/local
     ./client.sh
     ### example output:
