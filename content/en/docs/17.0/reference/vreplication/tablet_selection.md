@@ -25,7 +25,7 @@ workflow commands like [`MoveTables`](../movetables/) or the
 
 Even with `--cells` specified, by default, the `TabletPicker` will give preference to a healthy and serving tablet within the local cell of the calling process. If there are multiple candidates in the local cell, it will pick one at random. If no healthy tablets exist in the local cell pool, then it will give preference to tablets within cells belonging to the same cell alias as the local cell. If none exist here, then it moves on to selecting candidates from cells provided using the `--cells` flag in your VReplication workflow commands.
 
-To override this local cell preference, pass in `--cell_preference=onlyspecified` and a list of `--cells`. This will only pick tablets from the cells provided. Note: This is currently only available as an override option via the [`VStreamFlags](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags)request object.
+When using the [VTGate VStream API](vstream), you can override this local cell preference by specifying `--cell_preference=onlyspecified` and a list of cells with `--cells` in the [VStreamFlags](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags) request object. This will then only pick tablets from the cells provided.
 
 
 ### Tablet Types
@@ -40,7 +40,9 @@ You can also specify an order of preference for the tablet types using the `in_o
 `--tablet_types "in_order:REPLICA,PRIMARY"` would cause a replica source tablet to be used whenever possible and a primary tablet would only be used as
 a fallback in the event that there are no viable replica tablets available at the time.
 
-The above `in_order` prefix will be deprecated in upcoming versions so please migrate to using the new `--tablet_order` flag in the `VStreamFlags` request object.
+{{< info >}}
+When using the [VTGate VStream API](../vstream/) you should instead migrate to using the new `--tablet_order` flag in the [VStreamFlags](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags) request object as usage of the "in_order" string hint will eventually be deprecated and removed.
+{{< /info >}}
 
 #### VStream
 For a VStream there is no default tablet type. You must specify an individual tablet type using the

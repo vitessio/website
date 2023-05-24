@@ -133,15 +133,15 @@ default to looking for source tablets within its own local cell.
 **Default** ""
 
 If specified, this determines which cells to give preference to during tablet selection. 
-By default, this is `preferlocalwithalias` to give preference to local cell and any alias it belongs to. 
-If `onlyspecified` is given, then only tablets specified within the `Cells` option will be selected first.
+By default, `preferlocalwithalias` is used in order to give preference to the caller's local cell and then any alias its cell belongs to. 
+If `onlyspecified` is given, then only tablets specified within the `Cells` option will be selected.
 
 ##### TabletOrder
 
 **Type** string\
 **Default** ""
 
-This is to eventually replace the `in_order` hint to specify tablet order during selection. 
+This replaces the `in_order` hint (e.g. `"in_order:REPLICA,PRIMARY"`) previously used to specify tablet type order [during source tablet selection](tablet_selection).
 
 ### RPC Response
 
