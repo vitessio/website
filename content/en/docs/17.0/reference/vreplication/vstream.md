@@ -132,7 +132,7 @@ default to looking for source tablets within its own local cell.
 **Type** string\
 **Default** ""
 
-If specified, this determines which cells to give preference to during tablet selection. 
+If specified, this determines which cells to give preference to during [tablet selection](../tablet_selection/). 
 By default, `preferlocalwithalias` is used in order to give preference to the caller's local cell and then any alias its cell belongs to. 
 If `onlyspecified` is given, then only tablets specified within the `Cells` option will be selected.
 

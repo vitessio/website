@@ -18,7 +18,7 @@ need to replicate the streamed writes within the target shard.
 By default the `TabletPicker` will only look for viable (healthy and serving) source tablets of the specified tablet type(s) within the local cell (or cell alias within which the local cell belongs) of the
 calling process — the `vtgate` managing the VStream or the target `vttablet` for the VReplication stream — and it will select a random one from the candidate
 list. If you want to support cross-cell streams then you will need to specify the list of cells or any
-[CellAlias](https://vitess.io/docs/reference/programs/vtctl/cell-aliases/) that contain a list of cells using the `--cells` flag in your VReplication
+[CellAlias](../../programs/vtctl/cell-aliases/) that contain a list of cells using the `--cells` flag in your VReplication
 workflow commands like [`MoveTables`](../movetables/) or the
 [`VStreamFlags.Cells`](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags) field in a
 [`VStreamRequest`](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamRequest).
