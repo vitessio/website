@@ -141,7 +141,7 @@ If `onlyspecified` is given, then only tablets specified within the `Cells` opti
 **Type** string\
 **Default** ""
 
-This replaces the `in_order` hint (e.g. `"in_order:REPLICA,PRIMARY"`) previously used to specify tablet type order [during source tablet selection](tablet_selection).
+This replaces the `in_order` hint (e.g. `"in_order:REPLICA,PRIMARY"`) previously used to specify tablet type order [during source tablet selection](../tablet_selection/).
 
 ### RPC Response
 

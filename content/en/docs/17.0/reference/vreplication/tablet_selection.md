@@ -25,7 +25,7 @@ workflow commands like [`MoveTables`](../movetables/) or the
 
 Even with `--cells` specified, by default, the `TabletPicker` will give preference to a healthy and serving tablet within the local cell of the calling process. If there are multiple candidates in the local cell, it will pick one at random. If no healthy tablets exist in the local cell pool, then it will give preference to tablets within cells belonging to the same cell alias as the local cell. If none exist here, then it moves on to selecting candidates from cells provided using the `--cells` flag in your VReplication workflow commands.
 
-When using the [VTGate VStream API](vstream), you can override this local cell preference by specifying `--cell_preference=onlyspecified` and a list of cells with `--cells` in the [VStreamFlags](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags) request object. This will then only pick tablets from the cells provided.
+When using the [VTGate VStream API](../vstream/), you can override this local cell preference by specifying `--cell_preference=onlyspecified` and a list of cells with `--cells` in the [VStreamFlags](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags) request object. This will then only pick tablets from the cells provided.
 
 
 ### Tablet Types
