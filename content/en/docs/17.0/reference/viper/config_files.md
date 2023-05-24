@@ -65,3 +65,5 @@ To migitate against potentially writing to disk "too often" for a given user, th
 Internally, the system is notified to write "soon" only when a dynamic value is updated.
 If the wait period has elapsed between changes, a write happens immediately; otherwise, the system waits out the remainder of the period and persists any changes that happened while it was waiting.
 Setting this interval to zero means that writes happen immediately.
+
+[viper_read_in_config_docs]: https://github.com/spf13/viper#reading-config-files

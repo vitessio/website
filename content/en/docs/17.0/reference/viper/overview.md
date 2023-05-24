@@ -13,3 +13,7 @@ It acts as a registry for configuration values coming from a variety of sources,
 - Command-line flags, primarily from `pflag.Flag` types.
 
 It is used by a wide variety of Go projects, including [hugo][hugo] and [kops][kops].
+
+[viper]: https://github.com/spf13/viper
+[hugo]: https://github.com/gohugoio/hugo
+[kops]: https://github.com/kubernetes/kops

@@ -50,7 +50,7 @@ This requires a fair amount of `reflect`ion code, which we won't go into here, a
 In these cases, the `GetFuncForType` will panic, allowing the module author to catch this during testing of their package.
 They may then provide their own `GetFunc`.
 
-The full suite of types, both supported and panic-inducing, are documented by way of unit tests in [`go/viperutil/get_func_test.go`](../../go/viperutil/get_func_test.go).
+The full suite of types, both supported and panic-inducing, are documented by way of unit tests in [`go/viperutil/get_func_test.go`](https://github.com/vitessio/vitess/blob/main/go/viperutil/get_func_test.go).
 
 ## Debug Endpoint
 
