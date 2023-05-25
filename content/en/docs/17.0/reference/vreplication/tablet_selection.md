@@ -18,14 +18,14 @@ need to replicate the streamed writes within the target shard.
 By default the `TabletPicker` will only look for viable (healthy and serving) source tablets of the specified tablet type(s) within the local cell (or cell alias within which the local cell belongs) of the
 calling process — the `vtgate` managing the VStream or the target `vttablet` for the VReplication stream — and it will select a random one from the candidate
 list. If you want to support cross-cell streams then you will need to specify the list of cells or any
-[CellAlias](../../programs/vtctl/cell-aliases/) that contain a list of cells using the `--cells` flag in your VReplication
+[CellAlias](../../programs/vtctl/cell-aliases/) that contain a list of cells using the `Cells` field in your VReplication
 workflow commands like [`MoveTables`](../movetables/) or the
 [`VStreamFlags.Cells`](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags) field in a
 [`VStreamRequest`](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamRequest).
 
-Even with `--cells` specified, by default, the `TabletPicker` will give preference to a healthy and serving tablet within the local cell of the calling process. If there are multiple candidates in the local cell, it will pick one at random. If no healthy tablets exist in the local cell pool, then it will give preference to tablets within cells belonging to the same cell alias as the local cell. If none exist here, then it moves on to selecting candidates from cells provided using the `--cells` flag in your VReplication workflow commands.
+Even with the `Cells` field specified, by default, the `TabletPicker` will give preference to a healthy and serving tablet within the local cell of the calling process. If there are multiple candidates in the local cell, it will pick one at random. If no healthy tablets exist in the local cell pool, then it will give preference to tablets within cells belonging to the same cell alias as the local cell. If none exist here, then it moves on to selecting candidates from cells provided using the `Cells` field in your VReplication workflow commands.
 
-When using the [VTGate VStream API](../vstream/), you can override this local cell preference by specifying `--cell_preference=onlyspecified` and a list of cells with `--cells` in the [VStreamFlags](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags) request object. This will then only pick tablets from the cells provided.
+When using the [VTGate VStream API](../vstream/), you can override this local cell preference by specifying the `CellPreference` field as `onlyspecified` and a list of cells with `Cells` in the [VStreamFlags](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags) request object. This will then only pick tablets from the cells provided.
 
 
 ### Tablet Types
@@ -41,7 +41,7 @@ You can also specify an order of preference for the tablet types using the `in_o
 a fallback in the event that there are no viable replica tablets available at the time.
 
 {{< info >}}
-When using the [VTGate VStream API](../vstream/) you should instead migrate to using the new `--tablet_order` flag in the [VStreamFlags](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags) request object as usage of the "in_order" string hint will eventually be deprecated and removed.
+When using the [VTGate VStream API](../vstream/) you should instead migrate to using the new `TabletOrder` field in the [VStreamFlags](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags) request object as usage of the "in_order" string hint will eventually be deprecated and removed.
 {{< /info >}}
 
 #### VStream
