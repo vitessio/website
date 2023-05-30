@@ -24,4 +24,4 @@ If the table ACL is enabled, then an exempted/allowed username needs to be passe
 
 ## VTTablet
 
-Schema tracking is enabled in VTTablet with the flag `--queryserver-config-schema-change-signal`, defaults to `true`. When enabled, VTTablet sends schema changes to VTGate based on an interval that can be modified with the flag `--queryserver-config-schema-change-signal-interval` (defaults to 5 seconds).
+Schema tracking is enabled in VTTablet with the flag `--queryserver-config-schema-change-signal`, defaults to `true`. When enabled, VTTablet sends schema changes to VTGate when a DDL query executes. Apart from DDL executions, VTTablet also checks for schema changes on an interval that can be modified with the flag `--queryserver-config-schema-reload-time` (defaults to 30 minutes).
