@@ -28,7 +28,15 @@ The goals of the audit were to:
 * All the reported issues that are under our control have either been fixed, or have a plan in place to be fixed before the end of the year.
 * We ended up deleting some unused code as a result of the audit, which is always a good thing.
 * AdaLogics contributed 3 additional fuzzers to the fuzzing test suite for Vitess.
-* Vitess is not SLSA-compliant, because we do not yet generate provenance for our builds.
+* Vitess is not SLSA-compliant, because we do not yet generate provenance for our builds. However, there is an ongoing effort to fix this.
+
+Some highlights from the report:
+
+"Our overall assessment of VTAdmin is highly positive. VTAdmin follows secure design and code practices"
+
+"The VTAdmin code is clean and well-structured, making it easy to understand and audit."
+
+"This professional response to security disclosures is an important element of well-maintained security policy."
 
 We are grateful to the [Cloud Native Computing Foundation](https://cncf.io) for sponsoring this audit, and to [OSTIF](https://ostif.org) and [AdaLogics](https://adalogics.com) for carrying it through.
 Special thanks are due to Andrew Mason and Dirkjan Bussink for doing most of the remediation work, and to Adam Korczynski and David Korczyzski of ADA logics for conducting the audit.
