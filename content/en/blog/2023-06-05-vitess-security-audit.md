@@ -10,7 +10,7 @@ description: "Third-party security audit of Vitess completed"
 The Vitess Maintainer team is pleased to announce the results of a recent third-party security audit of the Vitess code base.
 
 Vitess had previously been audited in 2019. Given the amount of time that has passed, and the magnitude of change during that time, the maintainer team decided to request a fresh audit.
-Starting in March 2023, an independent team from AdaLogics performed a full security audit of Vitess with special emphasis on VTAdmin, which is a relatively new addition to Vitess.
+Starting in March 2023, an independent team from [Ada Logics](https://adalogics.com) performed a full security audit of Vitess with special focus on VTAdmin, which is a relatively new addition to Vitess.
 
 ## Scope
 The goals of the audit were to:
@@ -38,7 +38,7 @@ Some highlights from the report:
 
 "This professional response to security disclosures is an important element of well-maintained security policy."
 
-We are grateful to the [Cloud Native Computing Foundation](https://cncf.io) for sponsoring this audit, and to [OSTIF](https://ostif.org) and [AdaLogics](https://adalogics.com) for carrying it through.
-Special thanks are due to Andrew Mason and Dirkjan Bussink for doing most of the remediation work, and to Adam Korczynski and David Korczyzski of ADA logics for conducting the audit.
+We are grateful to the [Cloud Native Computing Foundation](https://cncf.io) for sponsoring this audit, and to [OSTIF](https://ostif.org) for facilitating it.
+Special thanks are due to Andrew Mason and Dirkjan Bussink for doing most of the remediation work, and to Adam Korczynski and David Korczynski of Ada Logics for conducting the audit.
 
 You can read the full audit report [here](../../files/VIT-03-report.pdf).
