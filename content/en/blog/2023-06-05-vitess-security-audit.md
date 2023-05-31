@@ -1,7 +1,7 @@
 ---
 author: 'Deepthi Sigireddi'
-date: 2023-05-31
-slug: '2023-05-31-vitess-security-audit'
+date: 2023-06-05
+slug: '2023-06-05-vitess-security-audit'
 tags: ['security','Vitess','MySQL']
 title: 'Vitess Security Audit Results'
 description: "Third-party security audit of Vitess completed"
