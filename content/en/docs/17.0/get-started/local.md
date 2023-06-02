@@ -63,20 +63,19 @@ Download the [latest binary release](https://github.com/vitessio/vitess/releases
 **Notes:**
 
 * Ubuntu is the only fully supported OS, for another OS please [build Vitess by yourself](/docs/contributing) or use the Docker images.
+* For the below approach you'll need [Go](https://vitess.io/docs/contributing/build-on-ubuntu/#install-go), [Node](https://vitess.io/docs/contributing/build-on-ubuntu/#install-node-16130) and [apt](https://vitess.io/docs/contributing/build-on-ubuntu/#packages-from-apt-repos) packages installed. Additionally you'll need to disable the [mysqld](https://vitess.io/docs/contributing/build-on-ubuntu/#disable-mysqld-apparmor-profile) AppArmor Profile to launch MySQL in any data directory by default.
 
 ```sh
-version=16.0.2
-file=vitess-${version}-6076fed.tar.gz
-wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
-tar -xzf ${file}
-cd ${file/.tar.gz/}
-sudo mkdir -p /usr/local/vitess
-sudo cp -r * /usr/local/vitess/
+cd ~
+git clone https://github.com/vitessio/vitess.git
+cd vitess
+make build
 ```
 
 Make sure to add `/usr/local/vitess/bin` to the `PATH` environment variable. You can do this by adding the following to your `$HOME/.bashrc` file:
 
 ```sh
+export VTDATAROOT=/tmp/vtdataroot
 export PATH=/usr/local/vitess/bin:${PATH}
 ```
 
