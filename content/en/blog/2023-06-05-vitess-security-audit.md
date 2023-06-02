@@ -27,7 +27,7 @@ The goals of the audit were to:
 * Vitess published 2 Moderate Severity CVEs and patch releases with associated fixes for them.
 * All the reported issues that are under our control have either been fixed, or have a plan in place to be fixed before the end of the year.
 * We ended up deleting some unused code as a result of the audit, which is always a good thing.
-* Ada Logics contributed 3 additional fuzzers to the fuzzing test suite for Vitess.
+* Ada Logics contributed two additional fuzzers to the fuzzing test suite for Vitess.
 * The Vitess team started work on generating SLSA artifacts such as provenance attestation before the audit commenced, this is still in progress.
 
 Some highlights from the report:
@@ -41,4 +41,4 @@ Some highlights from the report:
 We are grateful to the [Cloud Native Computing Foundation](https://cncf.io) for sponsoring this audit, and to [OSTIF](https://ostif.org) for facilitating it.
 Special thanks are due to Andrew Mason and Dirkjan Bussink for doing most of the remediation work, and to Adam Korczynski and David Korczynski of Ada Logics for conducting the audit.
 
-You can read the full audit report [here](../../files/VIT-03-report.pdf).
+You can read the full audit report [here](../../files/VIT-03-report-security-audit.pdf).
