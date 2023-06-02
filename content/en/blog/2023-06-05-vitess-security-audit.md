@@ -24,7 +24,7 @@ The goals of the audit were to:
 ## Outcomes
 * No Critical issues were found during the audit. 
 * A total of 12 Moderate/Low/Informational issues were reported.
-* Vitess published 2 Moderate Severity CVEs and patch releases with associated fixes for them.
+* Vitess published two Moderate Severity CVEs and patch releases with associated fixes for them.
 * All the reported issues that are under our control have either been fixed, or have a plan in place to be fixed before the end of the year.
 * We ended up deleting some unused code as a result of the audit, which is always a good thing.
 * Ada Logics contributed two additional fuzzers to the fuzzing test suite for Vitess.
