@@ -111,7 +111,7 @@ Configuration in v16 differs from v15 and earlier. Please note the different con
 
 ### v17 and forward
 
-In `v17`, and as of `v16`, throttler configuration is found in the [local topology server](../../../concepts/topology-service/). There is one configuration per keyspace. All shards and all tablets in all cells have the same throttler configuration: they are all enabled or disabled, and all share the same threshold or custom query. Since configuration is stored outside the tablet, it survives tablet restarts.
+In `v17`, throttler configuration is found in the [local topology server](../../../concepts/topology-service/). There is one configuration per keyspace. All shards and all tablets in all cells have the same throttler configuration: they are all enabled or disabled, and all share the same threshold or custom query. Since configuration is stored outside the tablet, it survives tablet restarts.
 
 `v16` introduced a new opt-in `vttablet` flag, `--throttler-config-via-topo`. In `v16` this flag defaulted `false`. In `v17` this flag now defaults `true`. With `--throttler-config-via-topo` set, the tablet will look for configuration in the topology server, and will watch and apply any changes made there.
 
@@ -136,7 +136,7 @@ See [vtctl UpdateThrottlerConfig](../../programs/vtctl/throttler#updatethrottler
 If you are still using the `v15` flags, we recommend that you transition to the new throttler configuration scheme: first populate topo with a new throttler configuration via `UpdateThrottlerConfig`. At the very least, set a `--threshold`. You likely also want to `--enable`. Then, reconfigure `vttablet`s with `--throttler-config-via-topo`, and restart them.
 
 
-### v16, v15 and before
+### v16 and before
 
 In earlier versions, the throttler is configured per tablet. Each tablet can have throttler enabled/disabled independently, or have different thresholds.
 
@@ -158,9 +158,9 @@ An example for custom query & threshold setup, using the MySQL metrics `Threads_
 
 ```shell
 $ vttablet
-  -throttle_metrics_query "show global status like 'threads_running'"
-  -throttle_metrics_threshold 150
-  -throttle_check_as_check_self
+  --throttle_metrics_query "show global status like 'threads_running'"
+  --throttle_metrics_threshold 150
+  --throttle_check_as_check_self
 ```
 
 ## Heartbeat configuration
