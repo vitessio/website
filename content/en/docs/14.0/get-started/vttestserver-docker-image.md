@@ -5,7 +5,7 @@ featured: true
 aliases: ['/docs/tutorials/vttestserver/']
 ---
 
-This guide covers using the vttestserver docker image for testing purposes. This is also the docker image that we use for testing in [Vitess Framewok Testing](https://github.com/planetscale/vitess-framework-testing).
+This guide covers using the vttestserver docker image for testing purposes. This is also the docker image that we use for testing in [Vitess Framework Testing](https://github.com/planetscale/vitess-framework-testing).
 
 ## Get the docker image
 
