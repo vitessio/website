@@ -3,6 +3,10 @@ title: vtgr (experimental)
 weight: 10
 ---
 
+{{< warning >}}
+This component has been deprecated in v17 and will be removed in v18! We recommend that you instead use [VTOrc](../vtorc/) with the [semi_sync durability policy](../durability_policy/).
+{{</ warning >}}
+
 `vtgr` is a stateless orchestration component that integrates Vitess with MySQL group replication: it is responsible to bootstrap MySQL group and reconcile between the group and Vitess. It is available as an experimental feature. It still needs thorough testing, and more features need to be added.
 
 In order to configure `vtgr`, you have to make the following changes to `vttablet`:
