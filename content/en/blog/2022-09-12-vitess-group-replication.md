@@ -7,6 +7,8 @@ title: 'VTGR: Vitess with Group Replication'
 description: "VTGR: an orchestration component for Vitess with Group Replication"
 ---
 
+_Update June 12, 2023_: This component has been deprecated in v17 and will be removed in v18! We recommend that you instead use [VTOrc](../vtorc/) with the [semi_sync durability policy](../durability_policy/).
+
 # Introduction
 MySQL group replication is a new replication mechanism that was released in 2016. Group replication involves establishing a group of nodes that are coordinated automatically via Group Communication System (GCS) protocols, an implementation of Paxos. For a transaction to commit, a majority of the group has to agree on the order of a given transaction in the global sequence of transactions. Deciding to commit or abort a transaction is done by each server individually, but all servers make the same decision. In addition, group replication also provides automatic failover within a group. That is, group replication will detect failures on the node and modify the group membership accordingly by itself [[0](https://dev.mysql.com/doc/refman/8.0/en/group-replication-background.html)].
 
