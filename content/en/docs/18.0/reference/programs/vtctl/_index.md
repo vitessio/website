@@ -243,9 +243,6 @@ The following global options apply to `vtctl`:
 | --topo_global_root | string | the path of the global topology data in the global topology server |
 | --topo_global_server_address | string | the address of the global topology server |
 | --topo_implementation | string | the topology implementation to use |
-| --topo_k8s_context | string | The kubeconfig context to use, overrides the 'current-context' from the config |
-| --topo_k8s_kubeconfig | string | Path to a valid kubeconfig file. |
-| --topo_k8s_namespace | string | The kubernetes namespace to use for all objects. Default comes from the context or in-cluster config |
 | --topo_zk_auth_file | string | auth to use when connecting to the zk topo server, file contents should be <scheme>:<auth>, e.g., digest:user:pass |
 | --topo_zk_base_timeout | duration | zk base timeout (see zk.Connect) (default 30s) |
 | --topo_zk_max_concurrency | int | maximum number of pending requests to send to a Zookeeper server. (default 64) |
