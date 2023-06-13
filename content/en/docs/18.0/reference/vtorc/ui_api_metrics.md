@@ -33,6 +33,7 @@ Metrics are available to be seen on the `/debug/vars` page. VTOrc exports the fo
 | `RecoveriesCount`      | The number of recoveries run. This is further subdivided for all the different recoveries.           |
 | `SuccessfulRecoveries` | The number of succesful recoveries run. This is further subdivided for all the different recoveries. |
 | `FailedRecoveries`     | The number of recoveries that failed. This is further subdivided for all the different recoveries.   |
+| `ErrantGtidMap`        | Metric to track the errant GTIDs detected by VTOrc.                                                  |
 
 
 {{< info >}}
