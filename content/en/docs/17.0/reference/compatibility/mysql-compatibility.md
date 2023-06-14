@@ -12,15 +12,6 @@ As Vitess is a distributed system, it is important to understand the differences
 Vitess provides MySQL default semantics i.e. `REPEATABLE READ` for single-shard transactions. For multi-shard transactions the semantics change to `READ COMMITTED`.
 The clients can change the shard level transaction mode with `SET` statement on a connection.
 
-## Cross-shard Transactions
-
-Vitess supports multiple [transaction modes](../../../user-guides/configuration-advanced/shard-isolation-atomicity).
-The default mode is MULTI i.e. multi-shard transactions as best-effort. A transaction that affects only one shard will be fully ACID complaint.
-When a transactions affects multiple shards, any failure on one or more shards will rollback the effect of that query.
-Committing the multi-shard transaction issues commits to the participating shards in a particular order. This allows the application or user to undo the effects of partial commits in case of failures.
-There are more improvements planned which can be tracked through [this issue](https://github.com/vitessio/vitess/issues/10692).
-
-
 ## SQL Support
 
 The following describes some differences in query handling between Vitess and MySQL.
@@ -181,6 +172,14 @@ type DBDDLPlugin interface {
 It must then register itself by calling `DBDDLRegister`.
 You can take a look at the `dbddl_plugin.go` in the engine package for an example of how it's done.
 Finally, you need to add a command line flag to vtgate to have it use the new plugin: `--dbddl_plugin=myPluginName`
+
+## Cross-shard Transactions
+
+Vitess supports multiple [transaction modes](../../../user-guides/configuration-advanced/shard-isolation-atomicity) i.e. `SINGLE`, `MULTI` and `TWOPC` .
+
+The default mode is MULTI i.e. multi-shard transactions as best-effort. A transaction that affects only one shard will be fully ACID complaint.
+When a transactions affects multiple shards, any failure on one or more shards will rollback the effect of that query.
+Committing the multi-shard transaction issues commits to the participating shards in a particular order. This allows the application or user to undo the effects of partial commits in case of failures.
 
 ## Auto Increment
 
