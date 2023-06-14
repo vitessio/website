@@ -327,9 +327,13 @@ Applies the VTGate routing schema to the provided keyspace. Shows the result aft
 
 #### Errors
 
-* The <code>&lt;keyspace&gt;</code> argument is required for the <code>&lt;ApplyVSchema&gt;</code> command This error occurs if the command is not called with exactly one argument.
+* The <code>&lt;keyspace&gt;</code> argument is required for the <code>&lt;ApplyVSchema&gt;</code> command. This error occurs if the command is not called with exactly one argument.
 * Either the <code>&lt;vschema&gt;</code> or <code>&lt;vschema&gt;</code>File flag must be specified when calling the <code>&lt;ApplyVSchema&gt;</code> command.
 * If using a file you may need to pass the absolute path.
+
+#### Warnings
+
+* In some cases, unknown params passed to Vindexes may be accepted but reported as warnings in the command response.
 
 ### GetRoutingRules
 

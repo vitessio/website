@@ -149,7 +149,7 @@ Vindexes are defined in the [VSchema](../vschema/) inside the `Vindexes` section
 
 In the above case, the name of the vindex is `name_keyspace_idx`. It is of type `lookup`, and it is owned by the `user` table.
 
-Every Vindex has an optional `params` section that contains a map of string key-value pairs. The keys and values differ depending on the vindex type and are explained below. 
+Every Vindex has an optional `params` section that contains a map of string key-value pairs. The keys and values differ depending on the vindex type and are explained below.
 
 There is an optional fourth parameter: `batch_lookup`. To read more about how to use `batch_lookup` see our [Unique Lookup user guide](../../../user-guides/vschema-guide/unique-lookup/).
 
@@ -322,3 +322,27 @@ hex_keyspace_id: d9e62c0ad204fe91658ecc758049e515
 1 row in set (0.00 sec)
 
 ```
+
+### Unknown Vindex params
+
+Most Vindexes will accept unknown params without complaint. For example, the following `lookup` Vindex can be applied without error:
+
+```json
+    "name_keyspace_idx": {
+      "type": "lookup",
+      "params": {
+        "table": "name_keyspace_idx",
+        "from": "name",
+        "to": "keyspace_id",
+        "rear_lock": "none"
+      },
+      "owner": "user"
+    }
+```
+
+In this example, the user intended to use `read_lock` but typed `rear_lock` by mistake. They will be in for an unpleasant surprise during the traffic peak and `rear_lock` does nothing to mitigate lock contention.
+
+To help users avoid these kinds of unpleasant surprises, Vindexes may expose unknown params in the following ways:
+
+ * [As warnings](../../programs/vtctl/schema-version-permissions/#warnings) in the output of `ApplyVSchema`.
+ * As a [VTGate stat](../../../user-guides/configuration-basic/monitoring/#vschemavindexunknownparams) named `VSchemaVindexUnknownParams`.

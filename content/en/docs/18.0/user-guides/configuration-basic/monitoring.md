@@ -370,9 +370,13 @@ This is the main histogram variable to track for vtgates. It gives you a break u
 
 It shows the number of tablet connections for query/healthcheck per keyspace, shard, and tablet type.
 
-### TopologyWatcherErrors and TopologyWatcherOperations
+#### TopologyWatcherErrors and TopologyWatcherOperations
 
 These two variables track events related to how vtgate watches the topology. It is particularly important to monitor the error count. This can act as an early warning sign if a vtgate is not able to refresh the list of tablets from the topo.
+
+#### VSchemaVindexUnknownParams
+
+Gauges the number of unknown Vindex params in the latest VSchema obtained from the topology.
 
 ### /debug/health
 
