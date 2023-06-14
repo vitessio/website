@@ -32,12 +32,12 @@ When MySQL installs with brew it will startup, you will want to shut this proces
 $ brew services stop mysql
 ```
 
-### Install Node 16.13.0+ (required to run VTAdmin)
+### Install Node 18.16.0+ (required to run VTAdmin)
 
 ```bash
 $ brew install nvm
-$ nvm install --lts 16.13.0
-$ nvm use 16.13.0
+$ nvm install --lts 18.16.0
+$ nvm use 18.16.0
 ```
 
 See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
@@ -203,6 +203,14 @@ vtadmin-api is running!
   - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtadmin-api.out
   - PID: 74039
 
+Installing nvm...
+
+nvm is already installed!
+
+Configuring Node.js 18.16.0
+
+v18.16.0 is already installed.
+Now using node v18.16.0 (npm v9.5.1)
 
 > vtadmin@0.1.0 build
 > vite build
