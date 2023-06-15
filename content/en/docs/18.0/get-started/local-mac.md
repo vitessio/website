@@ -209,7 +209,9 @@ nvm is already installed!
 
 Configuring Node.js 18.16.0
 
-v18.16.0 is already installed.
+Downloading and installing node v18.16.0...
+Local cache found: ${NVM_DIR}/.cache/bin/node-v18.16.0-darwin-x64/node-v18.16.0-darwin-x64.tar.xz
+Checksums match! Using existing downloaded archive ${NVM_DIR}/.cache/bin/node-v18.16.0-darwin-x64/node-v18.16.0-darwin-x64.tar.xz
 Now using node v18.16.0 (npm v9.5.1)
 
 > vtadmin@0.1.0 build
