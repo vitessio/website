@@ -203,7 +203,6 @@ vtadmin-api is running!
   - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtadmin-api.out
   - PID: 74039
 
-
 > vtadmin@0.1.0 build
 > vite build
 
