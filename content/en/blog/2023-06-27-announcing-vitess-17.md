@@ -35,9 +35,7 @@ We have [added support](https://github.com/vitessio/vitess/pull/12905) for the `
 
 We have also [added support](https://github.com/vitessio/vitess/pull/12950) for the [new binary log transaction compression added in MySQL 8.0](https://dev.mysql.com/doc/refman/8.0/en/binary-log-transaction-compression.html). <code>[Zstandard](https://facebook.github.io/zstd)</code> is used to compress the contents of each <code>[GTID](https://dev.mysql.com/doc/refman/en/replication-gtids.html)</code> before storing the [compressed events](https://dev.mysql.com/doc/dev/mysql-server/latest/classbinary__log_1_1Transaction__payload__event.html) in the binary log. This also greatly reduces disk I/O and storage along with network I/O – at the cost of some extra CPU cycles when reading and writing the log.
 
-These features can also be combined for even greater efficiency gains. Aside from the reduced hardware/service costs around disk, network, and CPU resources these new features make it practical to [retain binary logs for a longer period of time](https://dev.mysql.com/doc/refman/8.0/en/replication-options-binary-log.html#sysvar_binlog_expire_logs_auto_purge). This can aid in
-
-backups, restores, and disaster recovery related operations.
+These features can also be combined for even greater efficiency gains. Aside from the reduced hardware/service costs around disk, network, and CPU resources these new features make it practical to [retain binary logs for a longer period of time](https://dev.mysql.com/doc/refman/8.0/en/replication-options-binary-log.html#sysvar_binlog_expire_logs_auto_purge). This can aid in backups, restores, and disaster recovery related operations.
 
 ## Usability Enhancements
 
@@ -48,11 +46,11 @@ backups, restores, and disaster recovery related operations.
 
 ### VTorc Improvements
 
-* [VTOrc](https://vitess.io/docs/user-guides/configuration-basic/vtorc/) has had many bug fixes and is now able to handle dead primary recoveries much faster than before.
+* [VTOrc](https://vitess.io/docs/user-guides/configuration-basic/vtorc/) has had many bug fixes and is now able to handle dead primary recoveries much faster than before
 
 ### VTAdmin Improvements
 
-* We migrated [vtadmin-web](https://vitess.io/docs/17.0/reference/programs/vtadmin-web/) from `create-react-app` to <code>[Vite](https://vitejs.dev/)</code> which allows us to easily keep dependencies up to date and vulnerability-free.
+* We migrated <code>[vtadmin-web](https://vitess.io/docs/17.0/reference/programs/vtadmin-web/)</code> from `create-react-app` to <code>[Vite](https://vitejs.dev/)</code> which allows us to easily keep dependencies up to date and vulnerability-free
 
 ### Other Improvements
 
@@ -61,3 +59,5 @@ You can find the full set of fixes and improvements in the release notes: [https
 ## Try It Out
 
 We are very pleased with the great strides we have made with v17 and hope that you will be as well. We encourage all current users of Vitess and everyone who has been considering it to [try this new release](https://github.com/vitessio/vitess/releases/tag/v17.0.0)! We also look forward to your feedback, which can be provided via [Vitess GitHub issues](https://github.com/vitessio/vitess/issues/new/choose) or the [Vitess Slack](https://vitess.slack.com/).
+
+Thank you for using Vitess!
