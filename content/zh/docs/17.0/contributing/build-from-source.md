@@ -126,13 +126,7 @@ _Vitess支持MySQL 5.6+和MariaDB 10.0+。我们建议使用MySQL 5.7。_
     cd src/vitess.io/vitess
     ```
 
-2. 设置 `MYSQL_FLAVOR`:
-```sh
-# It is recommended to use MySQL56 even for MySQL 5.7 and 8.0. For MariaDB you can use MariaDB:
-export MYSQL_FLAVOR=MySQL56
-```
-
-3. 如果你的MYSQL数据库安装在 `/usr/bin`之外的位置， 请将`VT_MYSQL_ROOT` v变量设置为Mysql安装的根目录:
+2. 如果你的MYSQL数据库安装在 `/usr/bin`之外的位置， 请将`VT_MYSQL_ROOT` v变量设置为Mysql安装的根目录:
 
     ```sh
     # 通过tar包安装的设置参考
@@ -144,11 +138,11 @@ export MYSQL_FLAVOR=MySQL56
 
     请注意上述命令设置生效的前提 `mysql` 可执行文件在 `/usr/local/opt/mysql@5.7/bin/mysql`这里。
 
-4. 运行 `mysqld --version` 确保你使用的是 MySQL 5.7版本。
+3. 运行 `mysqld --version` 确保你使用的是 MySQL 5.7版本。
 
-5. 使用以下命令构建Vitess。请注意，`bootstrap.sh`脚本需要下载一些依赖项。如果您的计算机需要代理才能访问Internet，则需要设置常用的环境变量 (e.g. `http_proxy`, `https_proxy`, `no_proxy`).
+4. 使用以下命令构建Vitess。请注意，`bootstrap.sh`脚本需要下载一些依赖项。如果您的计算机需要代理才能访问Internet，则需要设置常用的环境变量 (e.g. `http_proxy`, `https_proxy`, `no_proxy`).
 
-    运行 boostrap.sh 脚本:
+    运行 bootstrap.sh 脚本:
 
     ```sh
     BUILD_TESTS=0 ./bootstrap.sh
