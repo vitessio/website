@@ -14,6 +14,10 @@ _backup_duration_seconds_ times the duration of a backup.
 
 ## Restore metrics
 
+#### RestoredBackupTime, RestorePosition
+
+_RestoredBackupTime_ captures the timestamp associated with the backup from which the current process was restored. _RestorePosition_ captures the GTID position associated with that backup.
+
 #### restore_duration_seconds
 
 _restore_duration_seconds_ times the duration of a restore.
