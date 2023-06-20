@@ -40,6 +40,10 @@ Depending on the Backup Engine and Backup Storage in-use, a restore may be a com
 
 These operations are counted and timed, and the number of bytes consumed or produced by each stage of the pipeline are counted as well.
 
+#### RestoredBackupTime, RestorePosition
+
+_RestoredBackupTime_ captures the timestamp associated with the backup from which the current process was restored. _RestorePosition_ captures the GTID position associated with that backup.
+
 #### restore_duration_seconds
 
 **Deprecated**
