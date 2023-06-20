@@ -67,7 +67,7 @@ The `IGNORE_MAX_MEMORY_ROWS` comment directive allows a Vitess-aware application
 
 ## Allow scatter (`ALLOW_SCATTER`)
 
-In Vitess, it is possible to use the `vtgate` parameter `--no_scatter` to prevent `vtgate` from issuing scatter queries. Thus only queries that target a single shard will be allowed.
+In Vitess, it is possible to use the `vtgate` parameter `--no_scatter` to prevent `vtgate` from issuing scatter queries. Thus only queries that do not scatter will be allowed.
 
 This comment directive is used to override that limitation, allowing application code to be customized to allow scatters for certain chosen use-cases, but not for the general case.
 
