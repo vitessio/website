@@ -29,6 +29,8 @@ _restore_duration_seconds_ times the duration of a restore.
 
 ```
 {
+  "RestorePosition": "MySQL56/f00e54ca-0fbf-11ee-ad84-eddb850690bf:1-61",
+  "RestoredBackupTime": "2023-06-21T00:39:00Z",
   "backup_duration_seconds": 4,
   "restore_duration_seconds": 6
 }
