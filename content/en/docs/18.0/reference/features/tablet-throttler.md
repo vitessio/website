@@ -136,34 +136,6 @@ See [vtctl UpdateThrottlerConfig](../../programs/vtctl/throttler#updatethrottler
 
 If you are still using the `v15` flags, we recommend that you transition to the new throttler configuration scheme: first populate topo with a new throttler configuration via `UpdateThrottlerConfig`. At the very least, set a `--threshold`. You likely also want to `--enable`. Then, reconfigure `vttablet`s with `--throttler-config-via-topo`, and restart them.
 
-
-### v16 and before
-
-In earlier versions, the throttler is configured per tablet. Each tablet can have throttler enabled/disabled independently, or have different thresholds.
-
-`v17` still supports the per-tablet configuration if you specify `--throttler-config-via-topo=false`, but this will be removed in `v18`.
-
-- The throttler is **disabled** by default. Use the `vttablet` option `--enable-lag-throttler` to enable the throttler.
-  When the throttler is disabled, it still serves `/throttler/check` and `/throttler/check-self` API endpoints, and responds with `HTTP 200 OK` to all requests.
-  When the throttler is enabled, it implicitly also runs heartbeat injections.
-- Use the `vttablet` flag `--throttle_threshold` to set a lag threshold value. The default threshold is `1sec` and is set upon tablet startup. For example, to set a half-second lag threshold, use the flag `--throttle_threshold=0.5s`.
-- To set the tablet types that the throttler queries for lag, use the `vttablet` flag `--throttle_tablet_types="replica,rdonly"`. The default tablet type is `replica`; this type is always implicitly included in the tablet types list. You may add any other tablet type. Any type not specified is ignored by the throttler.
-- To override the default lag evaluation, and measure a different metric, use `--throttle_metrics_query`. The query must be either of these forms:
-  - `SHOW GLOBAL STATUS LIKE '<metric>'`
-  - `SHOW GLOBAL VARIABLES LIKE '<metric>'`
-  - `SELECT <single-column> FROM ...`, expecting single column, single row result
-- To override the throttle threshold, use `--throttle_metrics_threshold`. Floating point values are accepted.
-- Use `--throttle_check_as_check_self` to implicitly reroute any `/throttler/check` call into `/throttler/check-self`. This makes sense when the user supplies a custom query, and where the user wishes to throttle writes to the cluster based on the primary tablet's health, rather than the overall health of the cluster.
-
-An example for custom query & threshold setup, using the MySQL metrics `Threads_running` (number of threads actively executing a query at a given time) on the primary, might look like:
-
-```shell
-$ vttablet
-  --throttle_metrics_query "show global status like 'threads_running'"
-  --throttle_metrics_threshold 150
-  --throttle_check_as_check_self
-```
-
 ## Heartbeat configuration
 
 Enabling the lag throttler also automatically enables heartbeat injection. The follwing `vttablet` flags further control heartbeat behavior:
@@ -184,7 +156,7 @@ Applications use these API endpoints:
 
 #### Examples:
 
-- `gh-ost` uses this throttler endpoint: `/throttler/check?app=gh-ost&p=low`
+- `gh-ost` uses this throttler endpoint: `/throttler/check?app=online-ddl:gh-ost:<migration-uuid>&p=low`
 - A data backfill application will identify as such, and use _normal_ priority: `/throttler/check?app=my_backfill` (priority not indicated in URL therefore assumed to be _normal_)
 - An app reading a massive amount of data directly from a replica tablet will use `/throttler/check-self?app=my_data_reader`
 
@@ -196,32 +168,101 @@ A `HEAD` request is sufficient. A `GET` request also provides a `JSON` output. F
 
 In the first two above examples we can see that the tablet is configured to throttle at `1sec`
 
-### Instructions
+### Control
 
-- `/throttler/throttle-app?app=<name>&duration=<duration>[&ratio=<ratio>][&p=low]`: instructs the throttler to begin throttling requests from given app.
-  - A mandatory `duration` value auto expires the throttling after indicated time. You may specify these units: `s` (seconds), `m` (minutes), `h` (hours) or combinations. Example values: `90s`, `30m`, `1h`, `1h30m`, etc.
-  - An optional `ratio` value indicates the throttling intensity, ranging from `0` (no throttling at all) to `1.0` (the default, full throttle).
-    With a value of `0.3`, for example, `3` out of `10`, on average, checks by the app, are flat out denied, regardless of present metrics and threshold. The remaining `7` out of `10` checks, will get a response that is based on the actual metrics and threshold (thereby, thay may be approved, or they may be rejected).
-  - Applications may also declare themselves to be _low priority_ via `?p=low` param. Managed online schema migrations (`gh-ost`, `pt-online-schema-change`) do so, as does the table purge process.
-- `/throttler/unthrottle-app?app=<name>`: instructs the throttler to stop throttling for the given app. This removes any previous throttling instruction for the app. the throttler still reserves the right to throttle the app based on cluster status.
+All controls below apply to a given keyspace (`commerce` in the next examples). All of the keyspace's tablets, in all shards and cells, are affected.
 
-#### Examples:
+Enable the throttler:
 
-- `/throttler/throttle-app?app=vreplication&duration=2h` rejects all requests made by `vreplication` for the next `2` hours, after which the app is unthrottled.
-- `/throttler/throttle-app?app=vreplication&duration=2h&ratio=0.25` rejects on average 1 out of 4 requests made by `vreplication` for the next `2` hours, after which the app is unthrottled.
-
-{{< info >}}
-If using `curl` from a shell prompt/script, make sure to enclose URL with quotes, like so:
-
+```sh
+$ vtctldclient UpdateThrottlerConfig --enable commerce
 ```
-$ curl -s 'http://localhost:15000/throttler/throttle-app?app=test&ratio=0.25'
+
+Disable the throttler
+
+```sh
+$ vtctldclient UpdateThrottlerConfig --disable commerce
 ```
-{{< /info >}}
+
+Enable and also set a replication lag threshold:
+
+```sh
+$ vtctldclient UpdateThrottlerConfig --enable --threshold 15.0 commerce
+```
+
+Set a custom query and a matching threshold. Does not affect enabled state:
+
+```sh
+$ vtctldclient UpdateThrottlerConfig --custom-query "show global status like 'threads_running'" --threshold 40 --check-as-check-self commerce
+```
+
+In the above, we use `--check-as-check-self` because we want the shard's `PRIMARY`'s metric (concurrent threads) to be the throttling factor.
+
+Return to default throttling metric (replication lag):
+
+```sh
+$ vtctldclient UpdateThrottlerConfig --custom-query "" --threshold 15.0 --check-as-check-shard commerce
+```
+
+In the above, we use `--check-as-check-self` because we want the shard's replicas metric (lag) to be the throttling factor.
+
+Throttle a specific app, `vreplication`, so that `80%` of its eligible requests are denied (slowing it down to `20%` potential speed), auto-expiring after `30` minutes:
+
+```sh
+$ vtctldclient UpdateThrottlerConfig --throttle-app "vreplication" --throttle-app-ratio=0.8 --throttle-app-duration "30m" commerce
+```
+
+Force expire now (unthrottle):
+
+```sh
+$ vtctldclient UpdateThrottlerConfig --throttle-app "vreplication" --throttle-app-duration 0 commerce
+```
+
+Fully throttle all Online DDL (schema changes) for the next hour and a half:
+
+```sh
+$ vtctldclient UpdateThrottlerConfig --throttle-app "online-ddl" --throttle-app-ratio=1.0 --throttle-app-duration "1h30m" commerce
+```
 
 ### Information
 
+Throttler configuration is pare of the `Keyspace` entry:
+
+```sh
+$ vtctldclient GetKeyspace commerce
+```
+
+```json
+{
+  "name": "commerce",
+  "keyspace": {
+    "served_froms": [],
+    "keyspace_type": 0,
+    "base_keyspace": "",
+    "snapshot_time": null,
+    "durability_policy": "semi_sync",
+    "throttler_config": {
+      "enabled": true,
+      "threshold": 15.0,
+      "custom_query": "",
+      "check_as_check_self": false,
+      "throttled_apps": {
+        "vreplication": {
+          "name": "vreplication",
+          "ratio": 0.5,
+          "expires_at": {
+            "seconds": "1687864412",
+            "nanoseconds": 142717831
+          }
+        }
+      }
+    },
+    "sidecar_db_name": "_vt"
+  }
+}
+```
+
 - `/throttler/status` endpoint. This is useful for monitoring and management purposes.
-- `/throttler/throttled-apps` endpoint, listing all apps for which there's a throttling instruction
 
 Vitess also accepts the SQL syntax:
 
@@ -310,22 +351,6 @@ This API call returns the following JSON object:
 
 The replica tablet only presents `mysql/self` metric (measurement of its own backend MySQL's lag). It does not serve checks for the shard in general.
 
-
-#### Example: throttled-apps
-
-```sh
-$ curl -s 'http://127.0.0.1:15100/throttler/throttled-apps'
-```
-
-```json
-[
-  {
-    "AppName": "always-throttled-app",
-    "ExpireAt": "2032-05-08T11:33:19.683767744Z",
-    "Ratio": 1
-  }
-]
-```
 
 ## Resources
 
