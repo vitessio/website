@@ -129,6 +129,7 @@ Updating the throttler config is done via `vtctlclient` or `vtctldclient`. For e
 ```sh
 $ vtctlclient -- UpdateThrottlerConfig --enable --threshold 3.0 commerce
 $ vtctldclient UpdateThrottlerConfig --disable commerce
+$ vtctldclient UpdateThrottlerConfig --throttle-app="vreplication" --throttle-app-ratio 0.5 --throttle-app-duration "30m" commerce
 ```
 
 See [vtctl UpdateThrottlerConfig](../../programs/vtctl/throttler#updatethrottlerconfig).
