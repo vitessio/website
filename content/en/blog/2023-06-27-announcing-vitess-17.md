@@ -46,7 +46,7 @@ These features can also be combined for even greater efficiency gains. Aside fro
 
 ### VTorc Improvements
 
-* [VTOrc](https://vitess.io/docs/user-guides/configuration-basic/vtorc/) has had many bug fixes and is now able to handle dead primary recoveries much faster than before
+* [VTOrc](https://vitess.io/docs/user-guides/configuration-basic/vtorc/) has had many bug fixes and is now able to handle dead primary recoveries much faster than before.
 
 ### VTAdmin Improvements
 
