@@ -42,7 +42,7 @@ These features can also be combined for even greater efficiency gains. Aside fro
 ### Traffic Throttling Improvements
 
 * The transaction throttler can now [throttle DMLs even in autocommit mode](https://github.com/vitessio/vitess/pull/13040). Previously it only throttled on explicit `BEGIN` statements.
-* The transaction throttler has a new `--tx-throttler-tablet-types` flag to [control the types of tablets](https://github.com/vitessio/vitess/pull/12174) influencing the throttler
+* The transaction throttler has a new `--tx-throttler-tablet-types` flag to [control the types of tablets](https://github.com/vitessio/vitess/pull/12174) influencing the throttler.
 
 ### VTorc Improvements
 
