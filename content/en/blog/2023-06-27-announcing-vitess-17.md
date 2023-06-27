@@ -54,7 +54,7 @@ These features can also be combined for even greater efficiency gains. Aside fro
 
 ## Other Improvements
 
-You can find the full set of fixes and improvements in the release notes: [https://github.com/vitessio/vitess/releases/tag/v17.0.0](https://github.com/vitessio/vitess/releases/tag/v17.0.0)
+You can find the full set of fixes and improvements in the [release notes](https://github.com/vitessio/vitess/releases/tag/v17.0.0).
 
 ## Try It Out
 
