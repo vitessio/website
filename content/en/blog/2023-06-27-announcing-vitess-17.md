@@ -50,7 +50,7 @@ These features can also be combined for even greater efficiency gains. Aside fro
 
 ### VTAdmin Improvements
 
-* We migrated <code>[vtadmin-web](https://vitess.io/docs/17.0/reference/programs/vtadmin-web/)</code> from `create-react-app` to <code>[Vite](https://vitejs.dev/)</code> which allows us to easily keep dependencies up to date and vulnerability-free
+* We migrated <code>[vtadmin-web](https://vitess.io/docs/17.0/reference/programs/vtadmin-web/)</code> from `create-react-app` to <code>[Vite](https://vitejs.dev/)</code> which allows us to easily keep dependencies up to date and vulnerability-free.
 
 ## Other Improvements
 
