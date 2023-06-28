@@ -125,10 +125,15 @@ Vitess does not yet support Window Functions or Common Table Expressions.
 
 ### Killing running queries
 
-Vitess does not yet support killing running queries via the `KILL` command through VTGate.
-Currently, there exists a comment directive [QUERY_TIMEOUT_MS](../../../user-guides/configuration-advanced/comment-directives/#query-timeouts-query_timeout_ms) that can be set to reduce the query timeout which will ensure that the query either return result or abort within that time.
+Vitess added support for killing running queries via the `KILL` command through VTGate in v18.
+To use the kill query statement, a new connection is requires as the current connection will be busy executing the query itself.?
+Similarly, how mysql client does on `ctrl+c` on the shell.
 
-Vitess does have strict query timeouts for OLTP workloads (see below). If you need to kill a query, you can connect to the underlying MySQL shard instance and run `KILL` from there.
+Alternatively, 
+- [query_timeout_ms](../../../user-guides/configuration-advanced/comment-directives/#query-timeouts-query_timeout_ms) query comment directive can be set to have query timeout which will ensure that the query either return result or abort within that time.
+- [mysql_server_query_timeout](../../programs/vtgate/) command line flag can be set on VTGate to have a default timeout.
+
+Vitess have strict query timeouts for OLTP workloads (see below).
 
 ### Workload
 
@@ -136,6 +141,7 @@ By default, Vitess sets some intentional restrictions on the execution time and 
 ```sql
 SET workload='olap'
 ```
+These timeout are present on [vttablet](../../programs/vttablet/) like `queryserver-config-query-timeout`, `queryserver-config-transaction-timeout`
 
 ### SELECT ... INTO Statement
 
