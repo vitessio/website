@@ -323,9 +323,9 @@ hex_keyspace_id: d9e62c0ad204fe91658ecc758049e515
 
 ```
 
-### Unknown Vindex params
+### Unknown Vindex parameters
 
-Most Vindexes will accept unknown params without complaint. For example, the following `lookup` Vindex can be applied without error:
+Most Vindexes will accept unknown parameters without complaint. For example, the following `lookup` Vindex can be applied without error:
 
 ```json
     "name_keyspace_idx": {
@@ -342,7 +342,7 @@ Most Vindexes will accept unknown params without complaint. For example, the fol
 
 In this example, the user intended to use `read_lock` but typed `rear_lock` by mistake. They will be in for an unpleasant surprise during the traffic peak and `rear_lock` does nothing to mitigate lock contention.
 
-To help users avoid these kinds of unpleasant surprises, Vindexes may expose unknown params in the following ways:
+To help users avoid these kinds of unpleasant surprises, Vindexes may expose unknown parameters in the following ways:
 
  * [As warnings](../../programs/vtctl/schema-version-permissions/#warnings) in the output of `ApplyVSchema`.
- * As a [VTGate stat](../../../user-guides/configuration-basic/monitoring/#vschemavindexunknownparams) named `VSchemaVindexUnknownParams`.
+ * As a [VTGate stat](../../../user-guides/configuration-basic/monitoring/#vindexunknownparameters) named `VindexUnknownParameters`.
