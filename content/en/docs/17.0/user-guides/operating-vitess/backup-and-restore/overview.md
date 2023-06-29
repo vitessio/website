@@ -45,7 +45,7 @@ The identity of the tablet on which a full backup or an incremental backup is ta
 
 Restores are the counterparts of backups. A restore uses the engine utilized to create a backup. One may run a restore from a full backup, or a point-in-time restore (PITR) based on additional incremental backups.
 
-A Vitess restore operates on a tablet. The restore process completely wipes out the data in the tablet's MySQL server and repopulates the server with the backup(s) data. The MySQL server is shutdown durign the process. As a safety mechanism, it is not possible to restore onto a `PRIMARY` tablet.
+A Vitess restore operates on a tablet. The restore process completely wipes out the data in the tablet's MySQL server and repopulates the server with the backup(s) data. The MySQL server is shutdown durign the process. As a safety mechanism, Vitess by default prevents a restore onto a `PRIMARY` tablet.
 
 ### Restore Types
 
