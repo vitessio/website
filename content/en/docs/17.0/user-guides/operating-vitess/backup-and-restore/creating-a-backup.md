@@ -4,6 +4,12 @@ weight: 2
 aliases: ['/docs/user-guides/backup-and-restore/']
 ---
 
+## Choosing the backup type
+
+As described in [Backup types](../overview/#backup-types), you choose to run a Full Backup (the default) or an Incremental Backup.
+
+Full backups will use the backup engine chosen in the tablet's [configuration](#configuration). Incremental backups will always copy MySQL's binary logs, irrespective of the configured backup engine.
+
 ## Using xtrabackup
 
 The default backup implementation is `builtin`, however we strongly recommend using the `xtrabackup` engine as it is more robust and allows for non-blocking backups. Restores will always be done with whichever engine was used to create the backup.
@@ -75,11 +81,11 @@ I0310 12:49:32.279773  215835 backup.go:163] I0310 20:49:32.279485 xtrabackupeng
 
 To continue with risk: Set `--xtrabackup_backup_flags=--no-server-version-check`. Note this occurs when your MySQL server version is technically unsupported by `xtrabackup`.
 
-## Create backups with vtctl
+## Create a full backup with vtctl
 
 __Run the following vtctl command to create a backup:__
 
-``` sh
+```sh
 vtctldclient --server=<vtctld_host>:<vtctld_port> Backup <tablet-alias>
 ```
 
@@ -89,9 +95,30 @@ If the engine is `xtrabackup`, the tablet can continue to serve traffic while th
 
 __Run the following vtctl command to backup a specific shard:__
 
-``` sh
+```sh
 vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard [--allow_primary=false] <keyspace/shard>
 ```
+
+## Create an incremental backup with vtctl
+
+An incremental backup requires additional information: the point from which to start the backup. An incremental backup is taken by supplying `--incremental_from_pos` to the `Backup` command. The argument may either indicate a valid position, or the value `auto`. Examples:
+
+```sh
+vtctlclient -- Backup --incremental_from_pos="MySQL56/0d7aaca6-1666-11ee-aeaf-0a43f95f28a3:1-53" zone1-0000000102
+
+vtctlclient -- Backup --incremental_from_pos="auto" zone1-0000000102
+```
+
+When `--incremental_from_pos="auto"`, Vitess chooses the position of the last successful backup as the starting point for the incremental backup. This is a convenient way to ensure a sequence of contiguous incremental backups.
+
+An incremental backup backs up one or more MySQL binary log files. These binary log files may begin with the requested position, or with an earlier position. They will necessarily include the requested position. When the incremental backup begins, Vitess rotates the MySQL binary logs on the tablet, so that it does not back up an active log file.
+
+An incremental backup fails in these scenarios:
+
+- It is unable to find binary log files that covers the requested position. This can happen if the binary logs are purged earlier than the incremental backup was taken. It essentially means there's a gap in the changelog events. **Note** that while on one tablet the binary logs may be missing, another tablet may still have binary logs that cover the requested position.
+- There is no change to the database since the requested position, i.e. the GTID position has not changed since.
+
+`v17` only supports `--incremental_from_pos` in the `Backup` command, not in `BackupShard`. Also, only `vtctlclient` supports the flag, where `vtctldclient` does not. `v18` is expected to support incremental backups for `BackupShard` and for `vtctldclient`.
 
 ## Backing up Topology Server
 
