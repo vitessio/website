@@ -75,6 +75,12 @@ Build Vitess:
 make build
 ```
 
+Since the addition of [#13263](https://github.com/vitessio/vitess/pull/13262) the `vtadmin` React application will be built when doing a `make build`.
+You can skip this step by setting the `NOVTADMINBUILD` environment variable.
+```shell
+NOVTADMINBUILD=1 make build
+```
+
 ## Testing your Binaries
 
 The unit tests require that you first install a Java runtime. This is required for running ZooKeeper tests:
