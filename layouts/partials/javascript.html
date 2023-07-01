@@ -26,6 +26,8 @@ $versions.current}}
       "use strict";
       let index;
       let debounceTimer = null;
+      const _debug = true;
+      const debugLog = _debug ? console.log : () => { };
       const currentUrl = window.location.pathname;
       const currentLocation = String(currentUrl).split("/");
       const currentVersion = currentLocation[2];
@@ -139,6 +141,7 @@ $versions.current}}
           }
         });
         search(query);
+        trackSearchEvent(query);
       }
 
       function search(keywords) {
@@ -169,21 +172,49 @@ $versions.current}}
           // show the matched result
           results.forEach(function (result) {
             const doc = parse[result.ref];
-            const element = template.content.cloneNode(true);
-            element.querySelector(".title").textContent = doc.title;
-            element.querySelector(".subtitle").textContent = doc.summary;
-            element.querySelector(".subtitle").setAttribute("href", doc.href);
-            element
-              .querySelector(".is-read-more")
-              .setAttribute("href", doc.href);
-            element.querySelector(".search-path").textContent = doc.path;
-            element
-              .querySelector(".search-path")
-              .setAttribute("href", doc.href);
+            const searchResultItem = template.content.cloneNode(true)
+              .querySelector('.search-result-item');
 
-            target.appendChild(element);
+            const searchPath = searchResultItem.querySelector('a.search-path');
+            searchPath.setAttribute('href', doc.href);
+            searchPath.textContent = doc.path;
+
+            const title = searchResultItem.querySelector('a.title');
+            title.setAttribute('href', doc.href);
+            title.textContent = doc.title;
+
+            const subtitle = searchResultItem.querySelector('a.subtitle');
+            subtitle.setAttribute('href', doc.href);
+            subtitle.textContent = doc.summary;
+
+            searchResultItem.addEventListener('click',
+              () => trackSearchResultClick(doc.href, query));
+            target.appendChild(searchResultItem);
           }, this);
         }
+      }
+
+      const lunrSearchEventCategory = 'Lunr Search';
+
+      function trackSearchEvent(searchTerm) {
+        debugLog('trackSearchEvent: searchTerm = ' + searchTerm);
+        if (typeof gtag !== 'function') return;
+        gtag('event', 'search', {
+          event_category: lunrSearchEventCategory,
+          event_label: 'Search Input',
+          search_term: searchTerm,
+        });
+      }
+
+      function trackSearchResultClick(searchResultURL, searchTerm) {
+        debugLog(`trackSearchResultClick: searchTerm = ${searchTerm}, link = ${searchResultURL}`);
+        if (typeof gtag !== 'function') return;
+        gtag('event', 'click', {
+          event_category: lunrSearchEventCategory,
+          event_label: 'Search-result Click',
+          search_term: searchTerm,
+          value: searchResultURL,
+        });
       }
 
       // click outside the search modal to close
