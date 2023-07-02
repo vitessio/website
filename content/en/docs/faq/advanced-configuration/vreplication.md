@@ -1,7 +1,7 @@
 ---
 title: VReplication
 description: Frequently Asked Questions about Vitess
-weight: 5
+weight: 7
 ---
 
 ## What is semi-sync replication?

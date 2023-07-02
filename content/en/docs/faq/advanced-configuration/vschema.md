@@ -1,7 +1,7 @@
 ---
 title: Vschema
 description: Frequently Asked Questions about Vitess
-weight: 2
+weight: 5
 ---
 
 ## How do you select your primary key for Vitess?

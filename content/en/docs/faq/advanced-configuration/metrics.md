@@ -1,7 +1,7 @@
 ---
 title: Metrics
 description: Frequently Asked Questions about Vitess
-weight: 6
+weight: 8
 ---
 
 ## What Grafana dashboards are available?
