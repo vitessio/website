@@ -126,7 +126,7 @@ Vitess does not yet support Window Functions or Common Table Expressions.
 ### Killing running queries
 
 Vitess added support for killing running queries via the `KILL` command through VTGate in v18.
-To use the kill query statement, a new connection is requires as the current connection will be busy executing the query itself.?
+To use the kill query statement, a new connection is required as the current connection will be busy executing the query.
 Similarly, how mysql client does on `ctrl+c` on the shell.
 
 Alternatively, 
