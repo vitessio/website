@@ -56,7 +56,7 @@ If successful, the tablet's MySQL server rejoins the shard's replication stream,
 
 ### Restore to a point-in-time
 
-`v17` supports restoring to a specific _position_:
+`v17` supports incremental restore, or restoring to a specific _position_:
 
 ```shell
 vtctlclient -- RestoreFromBackup --restore_to_pos <position> <tablet-alias>
@@ -67,5 +67,7 @@ Example:
 ```shell
 vtctlclient -- RestoreFromBackup --restore_to_pos "MySQL56/0d7aaca6-1666-11ee-aeaf-0a43f95f28a3:1-60" zone1-0000000102
 ```
+
+This restore method assumes backups have been taken that cover the specified position. The restore process will first determine a restore path: a sequence of backups, starting with a full backup followed by zero or more incremental backups, that when combined, include the specified position. See more on [Restore Types](../overview/#restore-types) and on [Taking Incremental Backup](../creating-a-backup/#create-an-incremental-backup-with-vtctl).
 
 `v18` will supports restore to a given timestamp.
