@@ -133,7 +133,7 @@ Alternatively,
 - [query_timeout_ms](../../../user-guides/configuration-advanced/comment-directives/#query-timeouts-query_timeout_ms) query comment directive can be set to have query timeout which will ensure that the query either return result or abort within that time.
 - [mysql_server_query_timeout](../../programs/vtgate/) command line flag can be set on VTGate to have a default timeout.
 
-Vitess have strict query timeouts for OLTP workloads (see below).
+Vitess does have strict query timeouts for OLTP workloads (see below).
 
 ### Workload
 
