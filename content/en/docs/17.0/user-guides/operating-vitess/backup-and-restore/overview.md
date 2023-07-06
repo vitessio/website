@@ -39,7 +39,7 @@ Full and incremental backups are expected to be interleaved. For example: one wo
 
 Full backups are simply states of the database. Incremental backups, however, need to start with some point and end with some point. The common practice is for an incremental backup to continue from the point of the last good backup, which can be a full or incremental backup. An inremental backup in Vitess end at the point in time of execution.
 
-The identity of the tablet on which a full backup or an incremental backup is taken is immaterial. It is possible to take a full backup on one tablet and incremental backups on another. It is possible to take full backups on two different tablets. It is also possible to take incremental backups, independently, on two different tablets, even though the contents of those incremental backups overlaps. Vitess uses MySQL GTID to determine positioning and prune duplicates.
+The identity of the tablet on which a full backup or an incremental backup is taken is immaterial. It is possible to take a full backup on one tablet and incremental backups on another. It is possible to take full backups on two different tablets. It is also possible to take incremental backups, independently, on two different tablets, even though the contents of those incremental backups overlaps. Vitess uses MySQL GTID sets to determine positioning and prune duplicates.
 
 ### Restores
 
