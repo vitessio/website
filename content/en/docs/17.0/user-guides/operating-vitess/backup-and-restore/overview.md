@@ -28,7 +28,7 @@ The engine is the techology used for generating the backup. Currently Vitess has
 
 ### Backup types
 
-Vitess supports Full Backups as well as Incremental Backups, and their respective counterparts full restores and point-in-time restores.
+Vitess supports full backups as well as incremental backups, and their respective counterparts full restores and point-in-time restores.
 
 * A full backup contains the entire data in the database. The backup represents a consistent state of the data, i.e. it is a snapshot of the data at some point in time.
 * An incremental backup contains a changelog, or a transition of data from one state to another. Vitess implements incremental backups by making a copy of MySQL binary logs.
