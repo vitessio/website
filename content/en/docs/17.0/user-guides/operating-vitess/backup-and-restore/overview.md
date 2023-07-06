@@ -49,7 +49,7 @@ A Vitess restore operates on a tablet. The restore process completely wipes out 
 
 ### Restore Types
 
-Vitess supports full restores and incremental (aka point in time) restores. The two serve different purposes.
+Vitess supports full restores and incremental (AKA point-in-time) restores. The two serve different purposes.
 
 * A full restore loads the dataset from a full backup onto a non-`PRIMARY` tablet. Once the data is loaded, the restore process starts the MySQL service and makes it join the replication stream. It is expected that a freshly restored server will lag behind the shard's `PRIMARY` for a period of time.
   The full restore flow is useful for seeding new replica tablets. It may also be used to fix replicas that have been corrupted.
