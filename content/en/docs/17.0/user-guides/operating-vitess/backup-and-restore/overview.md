@@ -33,7 +33,7 @@ Vitess supports full backups as well as incremental backups, and their respectiv
 * A full backup contains the entire data in the database. The backup represents a consistent state of the data, i.e. it is a snapshot of the data at some point in time.
 * An incremental backup contains a changelog, or a transition of data from one state to another. Vitess implements incremental backups by making a copy of MySQL binary logs.
 
-Generally speaking and on most workloads, the cost of a full backup is higher, and the cost of incremental backups is lower. The time it takes to create a full backup is significant, and it is therefore impractical to take full backups in very small intervals. Moreover, a full backup onsumes the disk space needed for the entire dataset. Incremental backups, on the other hand, are quick to run, and have very little impact, if any, to the running servers. They only contain the changes in between two points in time, and on most workloads are more compact.
+Generally speaking and on most workloads, the cost of a full backup is higher, and the cost of incremental backups is lower. The time it takes to create a full backup is significant, and it is therefore impractical to take full backups in very small intervals. Moreover, a full backup consumes the disk space needed for the entire dataset. Incremental backups, on the other hand, are quick to run, and have very little impact, if any, to the running servers. They only contain the changes in between two points in time, and on most workloads are more compact.
 
 Full and incremental backups are expected to be interleaved. For example: one would create a full backup once per day, and incremental backups once per hour.
 
