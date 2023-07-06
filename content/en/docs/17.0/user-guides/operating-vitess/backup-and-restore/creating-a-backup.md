@@ -6,7 +6,7 @@ aliases: ['/docs/user-guides/backup-and-restore/']
 
 ## Choosing the backup type
 
-As described in [Backup types](../overview/#backup-types), you choose to run a Full Backup (the default) or an Incremental Backup.
+As described in [Backup types](../overview/#backup-types), you choose to run a full Backup (the default) or an incremental Backup.
 
 Full backups will use the backup engine chosen in the tablet's [configuration](#configuration). Incremental backups will always copy MySQL's binary logs, irrespective of the configured backup engine.
 
