@@ -46,6 +46,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT05006 | The given system variable is unknown. | unknown system variable '%s' | 1193 | HY000 |
 | VT05007 | Table information is not available. | no table info | 0 |  |
 | VT06001 | The given database name already exists. | cannot create database '%s'; database exists | 1007 | HY000 |
+| VT07001 | Kill statement is not allowed. More in docs about how to enable it and its limitations. | %s | 1095 | HY000 |
 | VT09001 | the table does not have a primary vindex, the operation is impossible. | table '%s' does not have a primary vindex | 1173 | 42000 |
 | VT09002 | This type of DML statement is not allowed on a replica target. | %s statement with a replica target | 1874 | HY000 |
 | VT09003 | A vindex column is mandatory for the insert, please provide one. | INSERT query does not have primary vindex column '%v' in the column list | 0 |  |
@@ -60,6 +61,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09012 | This type of statement is not allowed on the given tablet. | %s statement with %s tablet not allowed | 0 |  |
 | VT09013 | Durability policy wants Vitess to use semi-sync, but the MySQL instances don't have the semi-sync plugin loaded. | semi-sync plugins are not loaded | 0 |  |
 | VT09014 | The vindex cannot be used as table in DML statement | vindex cannot be modified | 0 |  |
+| VT09015 | This query cannot be planned without more information on the SQL schema. Please turn on schema tracking or add authoritative columns information to your VSchema. | schema tracking required | 0 |  |
 | VT10001 | Foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/. | foreign key constraints are not allowed | 0 |  |
 | VT12001 | This statement is unsupported by Vitess. Please rewrite your query to use supported syntax. | unsupported: %s | 0 |  |
 | VT13001 | This error should not happen and is a bug. Please file an issue on GitHub: https://github.com/vitessio/vitess/issues/new/choose. | [BUG] %s | 0 |  |
