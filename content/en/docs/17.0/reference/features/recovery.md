@@ -6,7 +6,7 @@ aliases: ['/docs/recovery/pitr','/docs/reference/pitr/']
 
 ## Point in Time Recovery
 
-Vitess supports incremental backup and recoveries, aka point in time recoveries. `v17` offers restore-to-position functionality, and `v18` is slated to support restore-to-timestamp functionality.
+Vitess supports incremental backup and recoveries, AKA point in time recoveries. `v17` offers restore-to-position functionality, and `v18` is slated to support restore-to-timestamp functionality in addition.
 
 Point in time recoveries are based on Full and Incremental backups. It is possible to recover a database to a position that is _covered_ by some backup.
 
