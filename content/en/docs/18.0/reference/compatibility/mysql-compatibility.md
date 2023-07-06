@@ -129,6 +129,8 @@ In v18, Vitess introduced the ability to terminate running queries using the [`K
 To execute a "kill connection" or "kill query" statement, the client needs to establish a new connection.
 This behavior is similar to when a user on the MySQL shell client terminates a command by pressing ctrl+c.
 
+The [RFC](https://github.com/vitessio/vitess/issues/13438) highlights the current limitation of the `Kill statement` support. 
+
 Alternatively, 
 - [query_timeout_ms](../../../user-guides/configuration-advanced/comment-directives/#query-timeouts-query_timeout_ms) query comment directive can be set to define a query timeout. This ensures that the query either returns a result or aborts within the specified time.
 - [mysql_server_query_timeout](../../programs/vtgate/) command-line flag can be set on VTGate to establish a default timeout.
