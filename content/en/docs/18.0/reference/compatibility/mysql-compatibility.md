@@ -125,16 +125,26 @@ Vitess does not yet support Window Functions or Common Table Expressions.
 
 ### Killing running queries
 
-Vitess does not yet support killing running queries via the `KILL` command through VTGate.
-Currently, there exists a comment directive [QUERY_TIMEOUT_MS](../../../user-guides/configuration-advanced/comment-directives/#query-timeouts-query_timeout_ms) that can be set to reduce the query timeout which will ensure that the query either return result or abort within that time.
+In v18, Vitess introduced the ability to terminate running queries using the [`KILL` command](https://dev.mysql.com/doc/refman/8.0/en/kill.html) through VTGate.
+To execute a "kill connection" or "kill query" statement, the client needs to establish a new connection.
+This behavior is similar to when a user on the MySQL shell client terminates a command by pressing ctrl+c.
 
-Vitess does have strict query timeouts for OLTP workloads (see below). If you need to kill a query, you can connect to the underlying MySQL shard instance and run `KILL` from there.
+The [RFC](https://github.com/vitessio/vitess/issues/13438) highlights the current limitation of the `Kill statement` support. 
+
+Alternatively, 
+- [query_timeout_ms](../../../user-guides/configuration-advanced/comment-directives/#query-timeouts-query_timeout_ms) query comment directive can be set to define a query timeout. This ensures that the query either returns a result or aborts within the specified time.
+- [mysql_server_query_timeout](../../programs/vtgate/) command-line flag can be set on VTGate to establish a default timeout.
+
+Vitess does have strict query timeouts for OLTP workloads (see below).
 
 ### Workload
 
-By default, Vitess sets some intentional restrictions on the execution time and number of rows that a query can return. This default workload mode is called `OLTP`. This can be disabled by setting the workload to `OLAP`:
+By default, Vitess applies specific limitations on the execution time and the number of rows a query can return.
+These limitations can be modified by adjusting the parameters like `queryserver-config-query-timeout`, `queryserver-config-transaction-timeout` and more in [vttablet](../../programs/vttablet/).
+This default workload mode is referred as `OLTP`. This can be disabled by switching to `OLAP` mode by executing the following SQL statement:
+
 ```sql
-SET workload='olap'
+set workload = olap;
 ```
 
 ### SELECT ... INTO Statement
