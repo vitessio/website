@@ -1,0 +1,58 @@
+# Miscellaneous
+[more]
+other = "अधिक ..."
+
+# Main page hero buttons
+[quickstart]
+other = "Kubernetes जल्दी शुरू"
+
+[build]
+other = "निर्माण"
+
+[documentation]
+other = "प्रलेखन"
+
+# "Who uses" section
+[who_uses]
+other = "कौन_उपयोग करता है Vitess"
+
+[add_logo]
+other = "जोड़ना logo"
+
+# CNCF section
+[cncf]
+other = "Vitess [Cloud Native Computing Foundation](https://cncf.io) स्नातक परियोजना है"
+
+# Intro section
+[intro_vitess]
+other = "Vitess परिचय"
+
+# Navbar/footer links
+[docs]
+other = "डॉक्स"
+
+[blog]
+other = "ब्लॉग"
+
+[community]
+other = "समुदाय"
+
+# Footer
+[authors]
+other = "Vitess लेखक"
+
+# Social media
+[github]
+other = "GitHub"
+
+[twitter]
+other = "ट्विटर"
+
+[slack]
+other = "Slack"
+
+[stack_overflow]
+other = "स्टैक ओवरफ़्लो"
+
+[search]
+other = "दस्तावेज़ खोजें"
