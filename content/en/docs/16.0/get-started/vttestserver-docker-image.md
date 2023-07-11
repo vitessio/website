@@ -73,16 +73,54 @@ Environment variables in docker can be specified using the `-e` aka `--env` flag
 The vtgate listens for MySQL connections on 3 + the `PORT` environment variable specified. i.e. if you specify `PORT` to be 33574, then vtgate will be listening to connections on 33577, on the `MYSQL_BIND_HOST` which defaults to localhost. But this port will be on the docker container side. To connect to vtgate externally from a MySQL client, you will need to publish that port as well and specify the `MYSQL_BIND_HOST` to `0.0.0.0`. This can be done via the `-p` aka `--publish` flag to docker. For eg: adding `-p 33577:33577` to the `docker
 run` command will publish the container's 33577 port to your local 33577 port, which can now be used to connect to the vtgate.
 
+### Persisting container data
+
+If you wish to keep the state of the test container across reboots, such as when running the vttestserver container as a database container in local application development environments, you may optionally pass the `--persistent_mode` flag, along with a `--data_dir` directory which is bound to a docker volume. Due to a bug, the `--port` argument must also be present for correct operation.
+
+When running in this mode, underlying MySQL table schemas and their data are persisted under the provided `--data_dir`.
+
+For example:
+
+```shell
+docker run --name=vttestserver \
+  -p 33577:33577 \
+  --health-cmd="mysqladmin ping -h127.0.0.1 -P33577" \
+  --health-interval=5s \
+  --health-timeout=2s \
+  --health-retries=5 \
+  -v vttestserver_data:/vt/vtdataroot/vitess \
+  vitess/vttestserver:mysql80
+  /vt/bin/vttestserver \
+  --alsologtostderr \
+  --data_dir=/vt/vtdataroot/vitess \
+  --persistent_mode \
+  --port=33574 \
+  --mysql_bind_host=0.0.0.0 \
+  --keyspaces=test,unsharded \
+  --num_shards=2,1
+```
+
 ## Example
 
 An example command to run the docker image is as follows :
 
 ```shell
-docker run --name=vttestserver -p 33577:33577 -e PORT=33574 -e KEYSPACES=test,unsharded -e NUM_SHARDS=2,1 -e MYSQL_MAX_CONNECTIONS=70000 -e MYSQL_BIND_HOST=0.0.0.0 --health-cmd="mysqladmin ping -h127.0.0.1 -P33577" --health-interval=5s --health-timeout=2s --health-retries=5 vitess/vttestserver:mysql80
+docker run --name=vttestserver \
+  -p 33577:33577 \
+  -e PORT=33574 \
+  -e KEYSPACES=test,unsharded \
+  -e NUM_SHARDS=2,1 \
+  -e MYSQL_MAX_CONNECTIONS=70000 \
+  -e MYSQL_BIND_HOST=0.0.0.0 \
+  --health-cmd="mysqladmin ping -h127.0.0.1 -P33577" \
+  --health-interval=5s \
+  --health-timeout=2s \
+  --health-retries=5 \
+  vitess/vttestserver:mysql80
 ```
 
 Now, we can connect to the vtgate from a MySQL client as follows :
- 
+
 ```shell
 mysql --host 127.0.0.1 --port 33577 --user "root"
 ```
