@@ -87,9 +87,9 @@ You are now ready to start your first cluster! Open a new terminal window to ens
 Start by copying the local examples included with Vitess to your preferred location. For our first example we will deploy a [single unsharded keyspace](../../concepts/keyspace). The file `101_initial_cluster.sh` is for example `1` phase `01`. Lets execute it now:
 
 ```sh
-mkdir -p ~/my-vitess-example/examples
-cp -r <vitess source path>/examples ~/my-vitess-example/examples
-cp -r <vitess source path>/web ~/my-vitess-example
+vitess_path=/usr/local/vitess
+mkdir ~/my-vitess-example
+cp -r ${vitess_path}/{examples,web} ~/my-vitess-example
 cd ~/my-vitess-example/examples/local
 ./101_initial_cluster.sh
 ```
@@ -106,25 +106,9 @@ Created cell: zone1
 etcd start done...
 Starting vtctld...
 vtctld is running!
-Starting MySQL for tablet zone1-0000000100...
-Starting vttablet for zone1-0000000100...
-HTTP/1.1 200 OK
-Date: Thu, 01 Sep 2022 12:49:50 GMT
-Content-Type: text/html; charset=utf-8
-
-Starting MySQL for tablet zone1-0000000101...
-Starting vttablet for zone1-0000000101...
-HTTP/1.1 200 OK
-Date: Thu, 01 Sep 2022 12:49:55 GMT
-Content-Type: text/html; charset=utf-8
-
-Starting MySQL for tablet zone1-0000000102...
-Starting vttablet for zone1-0000000102...
-HTTP/1.1 200 OK
-Date: Thu, 01 Sep 2022 12:50:00 GMT
-Content-Type: text/html; charset=utf-8
-
+Successfully created keyspace commerce. Result:
 {
+  "name": "commerce",
   "keyspace": {
     "served_froms": [],
     "keyspace_type": 0,
@@ -135,12 +119,29 @@ Content-Type: text/html; charset=utf-8
     "sidecar_db_name": "_vt"
   }
 }
+Starting MySQL for tablet zone1-0000000100...
+Starting vttablet for zone1-0000000100...
+HTTP/1.1 200 OK
+Date: Mon, 26 Jun 2023 19:21:51 GMT
+Content-Type: text/html; charset=utf-8
+
+Starting MySQL for tablet zone1-0000000101...
+Starting vttablet for zone1-0000000101...
+HTTP/1.1 200 OK
+Date: Mon, 26 Jun 2023 19:21:54 GMT
+Content-Type: text/html; charset=utf-8
+
+Starting MySQL for tablet zone1-0000000102...
+Starting vttablet for zone1-0000000102...
+HTTP/1.1 200 OK
+Date: Mon, 26 Jun 2023 19:21:56 GMT
+Content-Type: text/html; charset=utf-8
+
 vtorc is running!
   - UI: http://localhost:16000
-  - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtorc.out
-  - PID: 74088
+  - Logs: /Users/florentpoinsard/Code/vitess/vtdataroot/tmp/vtorc.out
+  - PID: 49556
 
-zone1-0000000100 commerce 0 primary localhost:15100 localhost:17100 [] 2022-09-23T05:48:52Z
 
 New VSchema object:
 {
@@ -153,7 +154,8 @@ New VSchema object:
       "auto_increment": null,
       "columns": [],
       "pinned": "",
-      "column_list_authoritative": false
+      "column_list_authoritative": false,
+      "source": ""
     },
     "customer": {
       "type": "",
@@ -161,7 +163,8 @@ New VSchema object:
       "auto_increment": null,
       "columns": [],
       "pinned": "",
-      "column_list_authoritative": false
+      "column_list_authoritative": false,
+      "source": ""
     },
     "product": {
       "type": "",
@@ -169,7 +172,8 @@ New VSchema object:
       "auto_increment": null,
       "columns": [],
       "pinned": "",
-      "column_list_authoritative": false
+      "column_list_authoritative": false,
+      "source": ""
     }
   },
   "require_explicit_routing": false
@@ -177,61 +181,16 @@ New VSchema object:
 If this is not what you expected, check the input data (as JSON parsing will skip unexpected fields).
 Waiting for vtgate to be up...
 vtgate is up!
-Access vtgate at http://Manans-MacBook-Pro.local:15001/debug/status
+Access vtgate at http://Florents-MacBook-Pro-2.local:15001/debug/status
 vtadmin-api is running!
-  - API: http://localhost:14200
-  - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtadmin-api.out
-  - PID: 74039
-
-Installing nvm...
-
-nvm is already installed!
-
-Configuring Node.js 18.16.0
-
-Downloading and installing node v18.16.0...
-Local cache found: ${NVM_DIR}/.cache/bin/node-v18.16.0-darwin-x64/node-v18.16.0-darwin-x64.tar.xz
-Checksums match! Using existing downloaded archive ${NVM_DIR}/.cache/bin/node-v18.16.0-darwin-x64/node-v18.16.0-darwin-x64.tar.xz
-Now using node v18.16.0 (npm v9.5.1)
-
-> vtadmin@0.1.0 build
-> vite build
-
-vite v4.2.1 building for production...
-transforming (1218) src/icons/alertFail.svgUse of eval in "node_modules/@protobufjs/inquire/index.js" is strongly discouraged as it poses security risks and may cause issues with minification.
-✓ 1231 modules transformed.
-build/assets/chevronUp-3d6782a5.svg              0.18 kB
-build/assets/chevronDown-02f94e73.svg            0.19 kB
-build/assets/download-8ef290b4.svg               0.21 kB
-build/assets/delete-a9184ef9.svg                 0.23 kB
-build/assets/info-2617ee9d.svg                   0.34 kB
-build/assets/circleAdd-cfd7e5db.svg              0.35 kB
-build/assets/alertFail-8056b6e4.svg              0.35 kB
-build/assets/checkSuccess-f8fd1dbb.svg           0.36 kB
-build/assets/search-3261bac7.svg                 0.41 kB
-build/assets/question-a67b2492.svg               0.46 kB
-build/assets/runQuery-edfab4ed.svg               0.49 kB
-build/assets/open-405dd348.svg                   0.49 kB
-build/index.html                                 0.90 kB
-build/assets/bug-5b6edb54.svg                    0.99 kB
-build/assets/topology-0032b65e.svg               1.62 kB
-build/assets/NotoMono-Regular-41fd7ccc.ttf     107.85 kB
-build/assets/NotoSans-Regular-c8cff31f.ttf     313.14 kB
-build/assets/NotoSans-SemiBold-43207822.ttf    313.72 kB
-build/assets/NotoSans-Bold-c6a598dd.ttf        313.79 kB
-build/assets/index-ef40fbc9.css                 87.78 kB │ gzip:  15.02 kB
-build/assets/index-4ddb52ed.js               2,811.88 kB │ gzip: 492.59 kB
-
-(!) Some chunks are larger than 500 kBs after minification. Consider:
-- Using dynamic import() to code-split the application
-- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
-- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
-✓ built in 10.85s
+  - API: http://Florents-MacBook-Pro-2.local:14200
+  - Logs: /Users/florentpoinsard/Code/vitess/vtdataroot/tmp/vtadmin-api.out
+  - PID: 49695
 
 vtadmin-web is running!
-  - Browser: http://localhost:14201
-  - Logs: /Users/manangupta/vitess/vtdataroot/tmp/vtadmin-web.out
-  - PID: 74070
+  - Browser: http://Florents-MacBook-Pro-2.local:14201
+  - Logs: /Users/florentpoinsard/Code/vitess/vtdataroot/tmp/vtadmin-web.out
+  - PID: 49698
 ```
 
 You can also verify that the processes have started with `pgrep`:
