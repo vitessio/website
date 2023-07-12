@@ -496,7 +496,7 @@ $ vtctlclient -- ApplySchema --sql "alter vitess_migration cancel all" commerce
 Also available via `vtctlclient OnlineDDL` command:
 
 ```
-vtctlclient OnlineDDL <keyspace> cancel-all
+vtctlclient OnlineDDL <keyspace> cancel all
 ```
 
 Example:
@@ -513,7 +513,7 @@ $ vtctlclient OnlineDDL commerce show all
 | zone1-0000000100 |     0 | vt_commerce  | corder      | 2c87f7cd_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | queued           |
 +------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
 
-$ vtctlclient OnlineDDL commerce cancel-all
+$ vtctlclient OnlineDDL commerce cancel all
 
 $ vtctlclient OnlineDDL commerce show all
 +------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
@@ -655,6 +655,16 @@ mysql> alter vitess_migration 'aa89f255_8d68_11eb_815f_f875a4d24e90' cleanup;
 Query OK, 1 row affected (0.00 sec)
 ```
 
+
+#### Via vtctlclient/ApplySchema
+
+Execute via `vtctlclient -- ApplySchema --sql "..." <keyspace>` like previous commands, or use `OnlineDDL` command:
+
+
+```shell
+$ vtctlclient OnlineDDL commerce cleanup 2201058f_f266_11ea_bab4_0242c0a8b007
+```
+
 ## Reverting a migration
 
 Vitess offers _lossless revert_ for online schema migrations: the user may regret a table migration after completion, and roll back the table's schema to previous state _without loss of data_. See [Revertible Migrations](../revertible-migrations/).
@@ -773,3 +783,15 @@ Use:
 ### Showing throttled apps
 
 The command `show vitess_throttled_apps;` is a general purpose throttler command, and shows all apps for which there are throttling rules. It will list any specific or general migration throttling status.
+
+### Via vtctlclient/ApplySchema
+
+Execute via `vtctlclient -- ApplySchema --sql "..." <keyspace>` like previous commands, or use `OnlineDDL` commands:
+
+
+```shell
+$ vtctlclient OnlineDDL commerce throttle 2201058f_f266_11ea_bab4_0242c0a8b007
+$ vtctlclient OnlineDDL commerce throttle all
+$ vtctlclient OnlineDDL commerce unthrottle 2201058f_f266_11ea_bab4_0242c0a8b007
+$ vtctlclient OnlineDDL commerce unthrottle all
+```
