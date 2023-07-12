@@ -325,7 +325,7 @@ Lists all the backups for a shard.
 ### BackupShard
 
 ```
-BackupShard -- [--allow_primary=false] <keyspace/shard>
+BackupShard -- [--allow_primary=false] [--upgrade_safe=false] <keyspace/shard>
 ```
 
 ### RemoveBackup

@@ -32,7 +32,7 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [ExecuteFetchAsApp](../vtctl/tablets#executefetchasapp) | `ExecuteFetchAsApp  -- [--max_rows=10000] [--json] [--use_pool] <tablet alias> <sql command>` |
 | [ExecuteFetchAsDba](../vtctl/tablets#executefetchasdba) | `ExecuteFetchAsDba  -- [--max_rows=10000] [--disable_binlogs] [--json] <tablet alias> <sql command>` |
 | [VReplicationExec](../vtctl/tablets#vreplicationexec) | `VReplicationExec  -- [--json] <tablet alias> <sql command>` |
-| [Backup](../vtctl/tablets#backup) | `Backup  -- [--concurrency=4] [--allow_primary=false] <tablet alias>` |
+| [Backup](../vtctl/tablets#backup) | `Backup  -- [--concurrency=4] [--allow_primary=false] [--upgrade_safe=false] <tablet alias>` |
 | [RestoreFromBackup](../vtctl/tablets#restorefrombackup) | `RestoreFromBackup <tablet alias>` |
 | [ReparentTablet](../vtctl/tablets#reparenttablet) | `ReparentTablet <tablet alias>` |
 
@@ -55,7 +55,7 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [RemoveShardCell](../vtctl/shards#removeshardcell) | `RemoveShardCell  -- [--force] [--recursive] <keyspace/shard> <cell>` |
 | [DeleteShard](../vtctl/shards#deleteshard) | `DeleteShard  -- [--recursive] [--even_if_serving] <keyspace/shard> ...` |
 | [ListBackups](../vtctl/shards#listbackups) | `ListBackups <keyspace/shard>` |
-| [BackupShard](../vtctl/shards#backupshard) | `BackupShard  -- [--allow_primary=false] <keyspace/shard>` |
+| [BackupShard](../vtctl/shards#backupshard) | `BackupShard  -- [--allow_primary=false] [--upgrade_safe=false] <keyspace/shard>` |
 | [RemoveBackup](../vtctl/shards#removebackup) | `RemoveBackup <keyspace/shard> <backup name>` |
 | (DEPRECATED) [InitShardPrimary](../vtctl/shards#initshardprimary) | `InitShardPrimary  -- [--force] [--wait_replicas_timeout=<duration>] <keyspace/shard> <tablet alias>` |
 | [PlannedReparentShard](../vtctl/shards#plannedreparentshard) | `PlannedReparentShard  -- --keyspace_shard=<keyspace/shard> [--new_primary=<tablet alias>] [--avoid_tablet=<tablet alias>] [--wait_replicas_timeout=<duration>]` |

@@ -7,7 +7,7 @@ series: vtctldclient
 Uses the BackupStorage service on the given tablet to create and store a new backup.
 
 ```
-vtctldclient Backup [--concurrency <concurrency>] [--allow-primary] <tablet_alias>
+vtctldclient Backup [--concurrency <concurrency>] [--allow-primary] [--upgrade_safe] <tablet_alias>
 ```
 
 ### Options
@@ -15,6 +15,7 @@ vtctldclient Backup [--concurrency <concurrency>] [--allow-primary] <tablet_alia
 ```
       --allow-primary      Allow the primary of a shard to be used for the backup. WARNING: If using the builtin backup engine, this will shutdown mysqld on the primary and stop writes for the duration of the backup.
       --concurrency uint   Specifies the number of compression/checksum jobs to run simultaneously. (default 4)
+      --upgrade_safe       Whether to use innodb_fast_shutdown=0 for the backup so it is safe to use for MySQL upgrades.
   -h, --help               help for Backup
 ```
 
