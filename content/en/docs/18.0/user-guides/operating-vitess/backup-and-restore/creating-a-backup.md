@@ -106,8 +106,12 @@ An incremental backup requires additional information: the point from which to s
 ```sh
 vtctlclient -- Backup --incremental_from_pos="MySQL56/0d7aaca6-1666-11ee-aeaf-0a43f95f28a3:1-53" zone1-0000000102
 
+vtctlclient -- Backup --incremental_from_pos="0d7aaca6-1666-11ee-aeaf-0a43f95f28a3:1-53" zone1-0000000102
+
 vtctlclient -- Backup --incremental_from_pos="auto" zone1-0000000102
 ```
+
+When indicating a position, you may choose to use or to omit the `MySQL56/` prefix (which you can find in the backup manifest's Position).
 
 When `--incremental_from_pos="auto"`, Vitess chooses the position of the last successful backup as the starting point for the incremental backup. This is a convenient way to ensure a sequence of contiguous incremental backups.
 
