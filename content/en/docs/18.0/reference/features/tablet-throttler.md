@@ -105,24 +105,23 @@ It is _not possible_ to give an app more way than the throttler's standard behav
 ## Configuration
 
 {{< warning >}}
-Configuration in v16 differs from v15 and earlier. Please note the different configuration options for your version.{{< /warning >}}
+Per-tablet throttler configuration, as used in `v15` and supported in `v16`, is no longer supported in `v18`.{{< /warning >}}
 
-`v16` is backwards compliant with `v15` and still default to the `v15` configuration. We illustrate both configurations so that you understand how to transition from one to the other.
+Throttler configuration is found in the [local topology server](../../../concepts/topology-service/). There is one configuration per keyspace. All shards and all tablets in all cells have the same throttler configuration: they are all enabled or disabled, and all share the same threshold or custom query. Since configuration is stored outside the tablet, it survives tablet restarts.
 
-### v17 and forward
+`v16` introduced a new opt-in `vttablet` flag, `--throttler-config-via-topo`, and the flag defaulted `false`. In `v17` the flag now defaulted to `true`. In `v18`, the flag is not used anymore, and the tablet looks for configuration in the topology server, and will watch and apply any changes made there.
 
-In `v17`, throttler configuration is found in the [local topology server](../../../concepts/topology-service/). There is one configuration per keyspace. All shards and all tablets in all cells have the same throttler configuration: they are all enabled or disabled, and all share the same threshold or custom query. Since configuration is stored outside the tablet, it survives tablet restarts.
+The following flags are deprecated (and will be removed in `v19`):
 
-`v16` introduced a new opt-in `vttablet` flag, `--throttler-config-via-topo`. In `v16` this flag defaulted `false`. In `v17` this flag now defaults `true`. With `--throttler-config-via-topo` set, the tablet will look for configuration in the topology server, and will watch and apply any changes made there.
-
-When the flag `--throttler-config-via-topo` is set (and it is set by default), the following flags are ignored even if specified. These flags are scheduled to be removed in `v18`and `v19`:
-
-- `--enable_lag_throttler`
 - `--throttle_threshold`
 - `--throttle_metrics_query`
 - `--throttle_metrics_threshold`
 - `--throttle_check_as_check_self`
+- `--throttler-config-via-topo`
 
+The following flag was removed:
+
+- `--enable_lag_throttler`
 
 Updating the throttler config is done via `vtctlclient` or `vtctldclient`. For example:
 
@@ -134,7 +133,7 @@ $ vtctldclient UpdateThrottlerConfig --throttle-app="vreplication" --throttle-ap
 
 See [vtctl UpdateThrottlerConfig](../../programs/vtctl/throttler#updatethrottlerconfig).
 
-If you are still using the `v15` flags, we recommend that you transition to the new throttler configuration scheme: first populate topo with a new throttler configuration via `UpdateThrottlerConfig`. At the very least, set a `--threshold`. You likely also want to `--enable`. Then, reconfigure `vttablet`s with `--throttler-config-via-topo`, and restart them.
+If you are still using the `v15` flags, you will have to transition to the new throttler configuration scheme: first populate topo with a new throttler configuration via `UpdateThrottlerConfig`. At the very least, set a `--threshold`. You likely also want to `--enable`. Then, reconfigure `vttablet`s with `--throttler-config-via-topo`, and restart them.
 
 ## Heartbeat configuration
 
