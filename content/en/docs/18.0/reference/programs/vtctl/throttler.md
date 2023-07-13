@@ -14,7 +14,7 @@ Update tablet throttler configuration for all tablets of a given keyspace.
 
 #### Usage
 
-<pre class="command-example">UpdateThrottlerConfig -- [--enable|--disable] [--threshold=&lt;float64&gt;] [--custom-query=&lt;query&gt;] [--check-as-check-self|--check-as-check-shard] [--throttle-app=&lt;name&gt;] [--throttle-app-ratio=&lt;float, range [0..1]&gt;] [--throttle-app-duration=&lt;duration&gt;] &lt;keyspace&gt;</pre>
+<pre class="command-example">UpdateThrottlerConfig -- [--enable|--disable] [--threshold=&lt;float64&gt;] [--custom-query=&lt;query&gt;] [--check-as-check-self|--check-as-check-shard] [--throttle-app|unthrottle-app=&lt;name&gt;] [--throttle-app-ratio=&lt;float, range [0..1]&gt;] [--throttle-app-duration=&lt;duration&gt;] &lt;keyspace&gt;</pre>
 
 #### Examples
 
@@ -23,6 +23,8 @@ Update tablet throttler configuration for all tablets of a given keyspace.
 ```UpdateThrottlerConfig -- --disable commerce```
 
 ```UpdateThrottlerConfig -- --throttle-app="vreplication" --throttle-app-ratio=0.5 --throttle-app-duration="30m" commerce```
+
+```UpdateThrottlerConfig -- --unthrottle-app="vreplication" commerce```
 
 
 #### Flags
