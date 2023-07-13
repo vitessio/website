@@ -137,7 +137,7 @@ This can be caused by a DDL executed on the source table as by default — contr
 If you want the same or similar DDL to be applied on the target then you can apply that DDL on the target keyspace
 and then restart the workflow. For example, using the example above:
 ```bash
-$ vtctlclient ApplySchema -- --allow_long_unavailability --ddl_strategy=direct --sql="alter table customer add notes varchar(100) not null" customer
+$ vtctlclient ApplySchema -- --ddl_strategy=direct --sql="alter table customer add notes varchar(100) not null" customer
 
 $ vtctlclient Workflow -- customer.commerce2customer start
 ``` 
