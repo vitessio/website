@@ -95,6 +95,13 @@ mysql> alter vitess_migration launch all;
 
 Launches all currently postponed migrations on all shards.
 
+It is also possible to use `vtctlclient OnlineDDL` commands:
+
+```shell
+$ vtctlclient OnlineDDL commerce launch 2201058f_f266_11ea_bab4_0242c0a8b007
+$ vtctlclient OnlineDDL commerce launch all
+```
+
 Postponed launch is supported for all migrations.
 
 ## Postpone completion
@@ -246,6 +253,14 @@ mysql> show vitess_migrations like '3091ef2a_4b87_11ec_a827_0a43f95f28a3' \G
                migration_status: complete
 ...
             postpone_completion: 0
+```
+
+
+It is also possible to use `vtctlclient OnlineDDL` commands:
+
+```shell
+$ vtctlclient OnlineDDL commerce complete 2201058f_f266_11ea_bab4_0242c0a8b007
+$ vtctlclient OnlineDDL commerce complete all
 ```
 
 ### Supported migrations
