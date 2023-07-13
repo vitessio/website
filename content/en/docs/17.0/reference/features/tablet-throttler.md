@@ -110,25 +110,25 @@ Vitess has a granular breakdown for its own throttler apps. Generally, the user 
 - `vcopier`: the VCopier component of VReplication, which copies over the mass of table rows from source to target tables.
 ## Configuration
 
+
 {{< warning >}}
-Configuration in v16 differs from v15 and earlier. Please note the different configuration options for your version.{{< /warning >}}
+Per-tablet throttler configuration, as used in `v15` and supported in `v16`, is no longer supported in `v18`.{{< /warning >}}
 
-`v16` is backwards compliant with `v15` and still default to the `v15` configuration. We illustrate both configurations so that you understand how to transition from one to the other.
+Throttler configuration is found in the [local topology server](../../../concepts/topology-service/). There is one configuration per keyspace. All shards and all tablets in all cells have the same throttler configuration: they are all enabled or disabled, and all share the same threshold or custom query. Since configuration is stored outside the tablet, it survives tablet restarts.
 
-### v17 and forward
+`v16` introduced a new opt-in `vttablet` flag, `--throttler-config-via-topo`, and the flag defaulted `false`. In `v17` the flag now defaulted to `true`. In `v18`, the flag is not used anymore, and the tablet looks for configuration in the topology server, and will watch and apply any changes made there.
 
-In `v17`, throttler configuration is found in the [local topology server](../../../concepts/topology-service/). There is one configuration per keyspace. All shards and all tablets in all cells have the same throttler configuration: they are all enabled or disabled, and all share the same threshold or custom query. Since configuration is stored outside the tablet, it survives tablet restarts.
+The following flags are deprecated (and will be removed in `v19`):
 
-`v16` introduced a new opt-in `vttablet` flag, `--throttler-config-via-topo`. In `v16` this flag defaulted `false`. In `v17` this flag now defaults `true`. With `--throttler-config-via-topo` set, the tablet will look for configuration in the topology server, and will watch and apply any changes made there.
-
-When the flag `--throttler-config-via-topo` is set (and it is set by default), the following flags are ignored even if specified. These flags are scheduled to be removed in `v18`and `v19`:
-
-- `--enable_lag_throttler`
 - `--throttle_threshold`
 - `--throttle_metrics_query`
 - `--throttle_metrics_threshold`
 - `--throttle_check_as_check_self`
+- `--throttler-config-via-topo`
 
+The following flag was removed:
+
+- `--enable_lag_throttler`
 
 Updating the throttler config is done via `vtctlclient` or `vtctldclient`. For example:
 
@@ -139,35 +139,8 @@ $ vtctldclient UpdateThrottlerConfig --disable commerce
 
 See [vtctl UpdateThrottlerConfig](../../programs/vtctl/throttler#updatethrottlerconfig).
 
-If you are still using the `v15` flags, we recommend that you transition to the new throttler configuration scheme: first populate topo with a new throttler configuration via `UpdateThrottlerConfig`. At the very least, set a `--threshold`. You likely also want to `--enable`. Then, reconfigure `vttablet`s with `--throttler-config-via-topo`, and restart them.
+If you are still using the `v15` flags, you will have to transition to the new throttler configuration scheme: first populate topo with a new throttler configuration via `UpdateThrottlerConfig`. At the very least, set a `--threshold`. You likely also want to `--enable`. Then, reconfigure `vttablet`s with `--throttler-config-via-topo`, and restart them.
 
-
-### v16 and before
-
-In earlier versions, the throttler is configured per tablet. Each tablet can have throttler enabled/disabled independently, or have different thresholds.
-
-`v17` still supports the per-tablet configuration if you specify `--throttler-config-via-topo=false`, but this will be removed in `v18`.
-
-- The throttler is **disabled** by default. Use the `vttablet` option `--enable-lag-throttler` to enable the throttler.
-  When the throttler is disabled, it still serves `/throttler/check` and `/throttler/check-self` API endpoints, and responds with `HTTP 200 OK` to all requests.
-  When the throttler is enabled, it implicitly also runs heartbeat injections.
-- Use the `vttablet` flag `--throttle_threshold` to set a lag threshold value. The default threshold is `1sec` and is set upon tablet startup. For example, to set a half-second lag threshold, use the flag `--throttle_threshold=0.5s`.
-- To set the tablet types that the throttler queries for lag, use the `vttablet` flag `--throttle_tablet_types="replica,rdonly"`. The default tablet type is `replica`; this type is always implicitly included in the tablet types list. You may add any other tablet type. Any type not specified is ignored by the throttler.
-- To override the default lag evaluation, and measure a different metric, use `--throttle_metrics_query`. The query must be either of these forms:
-  - `SHOW GLOBAL STATUS LIKE '<metric>'`
-  - `SHOW GLOBAL VARIABLES LIKE '<metric>'`
-  - `SELECT <single-column> FROM ...`, expecting single column, single row result
-- To override the throttle threshold, use `--throttle_metrics_threshold`. Floating point values are accepted.
-- Use `--throttle_check_as_check_self` to implicitly reroute any `/throttler/check` call into `/throttler/check-self`. This makes sense when the user supplies a custom query, and where the user wishes to throttle writes to the cluster based on the primary tablet's health, rather than the overall health of the cluster.
-
-An example for custom query & threshold setup, using the MySQL metrics `Threads_running` (number of threads actively executing a query at a given time) on the primary, might look like:
-
-```shell
-$ vttablet
-  --throttle_metrics_query "show global status like 'threads_running'"
-  --throttle_metrics_threshold 150
-  --throttle_check_as_check_self
-```
 
 ## Heartbeat configuration
 
