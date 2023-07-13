@@ -37,31 +37,6 @@ CREATE TABLE `demo` (
 ```
 In the above, we run a direct, synchronous, blocking `ALTER TABLE` statement. Knowing the table is in `commerce` keyspace, Vitess autodetects the relevant shards, and then autodetects which is the `primary` server in each shard. It then directly invokes the `ALTER TABLE` statement on all shards (concurrently), and the `vtctlclient` command only returns when all are complete.
 
-Vitess will run some validations:
-
-```shell
-$ vtctlclient ApplySchema -- --sql "ALTER TABLE demo add column status int" commerce
-E0908 10:35:53.478462 3711762 main.go:67] remote error: rpc error: code = Unknown desc = schema change failed, ExecuteResult: {
-  "FailedShards": null,
-  "SuccessShards": null,
-  "CurSQLIndex": 0,
-  "Sqls": [
-    "ALTER TABLE demo add column status int"
-  ],
-  "ExecutorErr": "rpc error: code = Unknown desc = TabletManager.PreflightSchema on zone1-0000000100 error: /usr/bin/mysql: exit status 1, output: ERROR 1060 (42S21) at line 3: Duplicate column name 'status'\n: /usr/bin/mysql: exit status 1, output: ERROR 1060 (42S21) at line 3: Duplicate column name 'status'\n",
-  "TotalTimeSpent": 87104194
-}
-```
-
-Vitess was able to determine that the migration is invalid because a column named `status` already exists. The statement never made it to the MySQL servers. These checks are not thorough, though they cover common scenarios.
-
-If the table is large, then `ApplySchema` will reject the statement, try to protect the user from blocking their production servers. You may override that by supplying `--allow_long_unavailability` as follows:
-
-```shell
-$ vtctlclient ApplySchema -- --allow_long_unavailability --sql "ALTER TABLE demo modify id bigint unsigned" commerce
-```
-
-
 ## VTGate
 
 You may run DDL directly from VTGate just like you would send to a MySQL instance. For example:
