@@ -102,6 +102,12 @@ It is possible to _restrict_ the throttler's response to one or more apps. For e
 
 It is _not possible_ to give an app more way than the throttler's standard behavior. That is, if the throttler is set to throttler at `5s` replication lag, it is _not possible_ to respond wih `HTTP 200` to a specific app with replication lag at `7s`.
 
+Vitess has a granular breakdown for its own throttler apps. Generally, the user should not change throttling configuration for internal apps. However, some of the apps are user-facing or user-initiated, and it makes sense for the user to restrict them. These apps include:
+
+- `online-ddl`: affecting all schema migrations of all strategies.
+- `vreplication`: all VReplication operations, for example: MoveTables, Reshard, Online DDL via `vitess/online` strategy.
+- `vplayer`: the VPlayer component of VReplication, which tails, processes and applies events from the bianry logs.
+- `vcopier`: the VCopier component of VReplication, which copies over the mass of table rows from source to target tables.
 ## Configuration
 
 {{< warning >}}
