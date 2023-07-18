@@ -28,24 +28,24 @@ vtexplain -- -shards 128 --vschema-file vschema.json --schema-file schema.sql --
 
 The following parameters apply to `mysqlctl`:
 
-| Name                   | Type    | Definition                                                                                                                                               |
-|:-----------------------|:--------|:---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| --dbname               | string  | Optional database target to override normal routing                                                                                                      |
-| --execution-mode       | string  | The execution mode to simulate -- must be set to multi, legacy-autocommit, or twopc (default "multi")                                                    |
-| --ks-shard-map         | string  | JSON map of keyspace name -> shard name -> ShardReference object. The inner map is the same as the output of FindAllShardsInKeyspace                     |
-| --ks-shard-map-file    | string  | File containing json blob of keyspace name -> shard name -> ShardReference object                                                                        |
-| --mysql_server_version | string  | MySQL server version to advertise. (default "8.0.30-Vitess")                                                                                             |
-| --normalize            | boolean | Whether to enable vtgate normalization                                                                                                                   |
-| --output-mode          | string  | Output in human-friendly text or json (default "text")                                                                                                   |
-| --planner-version      | string  | Sets the query planner version to use when generating the explain output. Valid values are V3 and Gen4. An empty value will use VTGate's default planner |
-| --replication-mode     | string  | The replication mode to simulate -- must be set to either ROW or STATEMENT (default "ROW")                                                               |
-| --schema               | string  | The SQL table schema                                                                                                                                     |
-| --schema-file          | string  | Identifies the file that contains the SQL table schema                                                                                                   |
-| --shards               | int     | Number of shards per keyspace. Passing --ks-shard-map/--ks-shard-map-file causes this flag to be ignored. (default 2)                                    |
-| --sql                  | string  | A list of semicolon-delimited SQL commands to analyze                                                                                                    |
-| --sql-file             | string  | Identifies the file that contains the SQL commands to analyze                                                                                            |
-| --vschema              | string  | Identifies the VTGate routing schema                                                                                                                     |
-| --vschema-file         | string  | Identifies the VTGate routing schema file                                                                                                                |
+| Name                   | Type    | Definition                                                                                                                           |
+|:-----------------------|:--------|:-------------------------------------------------------------------------------------------------------------------------------------|
+| --dbname               | string  | Optional database target to override normal routing                                                                                  |
+| --execution-mode       | string  | The execution mode to simulate -- must be set to multi, legacy-autocommit, or twopc (default "multi")                                |
+| --ks-shard-map         | string  | JSON map of keyspace name -> shard name -> ShardReference object. The inner map is the same as the output of FindAllShardsInKeyspace |
+| --ks-shard-map-file    | string  | File containing json blob of keyspace name -> shard name -> ShardReference object                                                    |
+| --mysql_server_version | string  | MySQL server version to advertise. (default "8.0.30-Vitess")                                                                         |
+| --normalize            | boolean | Whether to enable vtgate normalization                                                                                               |
+| --output-mode          | string  | Output in human-friendly text or json (default "text")                                                                               |
+| --planner-version      | string  | Sets the default planner to use. Valid values are: Gen4, Gen4Greedy, Gen4Left2Right                                                  |
+| --replication-mode     | string  | The replication mode to simulate -- must be set to either ROW or STATEMENT (default "ROW")                                           |
+| --schema               | string  | The SQL table schema                                                                                                                 |
+| --schema-file          | string  | Identifies the file that contains the SQL table schema                                                                               |
+| --shards               | int     | Number of shards per keyspace. Passing --ks-shard-map/--ks-shard-map-file causes this flag to be ignored. (default 2)                |
+| --sql                  | string  | A list of semicolon-delimited SQL commands to analyze                                                                                |
+| --sql-file             | string  | Identifies the file that contains the SQL commands to analyze                                                                        |
+| --vschema              | string  | Identifies the VTGate routing schema                                                                                                 |
+| --vschema-file         | string  | Identifies the VTGate routing schema file                                                                                            |
 
 <br>
 
