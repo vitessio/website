@@ -23,13 +23,12 @@ For --sql, semi-colons and repeated values may be mixed, for example:
 	ApplySchema --sql "CREATE TABLE my_table" --sql "CREATE TABLE my_other_table"
 
 ```
-vtctldclient ApplySchema [--allow-long-unavailability] [--ddl-strategy <strategy>] [--uuid <uuid> ...] [--migration-context <context>] [--wait-replicas-timeout <duration>] [--caller-id <caller_id>] {--sql-file <file> | --sql <sql>} <keyspace>
+vtctldclient ApplySchema [--ddl-strategy <strategy>] [--uuid <uuid> ...] [--migration-context <context>] [--wait-replicas-timeout <duration>] [--caller-id <caller_id>] {--sql-file <file> | --sql <sql>} <keyspace>
 ```
 
 ### Options
 
 ```
-      --allow-long-unavailability        Allow large schema changes which incur a longer unavailability of the database.
       --caller-id string                 Effective caller ID used for the operation and should map to an ACL name which grants this identity the necessary permissions to perform the operation (this is only necessary when strict table ACLs are used).
       --ddl-strategy string              Online DDL strategy, compatible with @@ddl_strategy session variable (examples: 'gh-ost', 'pt-osc', 'gh-ost --max-load=Threads_running=100'. (default "direct")
   -h, --help                             help for ApplySchema
