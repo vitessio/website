@@ -22,7 +22,7 @@ vtctldclient --server localhost:15999 workflow --keyspace customer delete --work
   -h, --help                 help for delete
       --keep-data            Keep the partially copied table data from the workflow in the target keyspace
       --keep-routing-rules   Keep the routing rules created for the workflow
-  -w, --workflow string      The workflow you want to update (required)
+  -w, --workflow string      The workflow you want to delete (required)
 ```
 
 ### Options inherited from parent commands
