@@ -1,10 +1,14 @@
 ---
 title: Local Install via Docker
 description: Instructions for using Vitess on your machine for testing purposes
-weight: 1
-featured: true
+weight: 5
+featured: false
 aliases: ['/docs/tutorials/local-docker/']
 ---
+
+{{< warning >}}
+This guide will only work on x86_64/amd64 based machines.
+{{</ warning >}}
 
 This guide illustrates how to run a local testing Vitess setup via Docker. The Vitess environment is identical to the [local setup](../local/), but without having to install software on one's host other than Docker.
 
