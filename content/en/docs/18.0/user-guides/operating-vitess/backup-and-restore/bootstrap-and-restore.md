@@ -56,7 +56,21 @@ If successful, the tablet's MySQL server rejoins the shard's replication stream,
 
 ### Restore to a point-in-time
 
-`v17` supports incremental restore, or restoring to a specific _position_:
+Vitess supports restoring to a _timestamp_ or to a specific _position_. Either way, this restore method assumes backups have been taken that cover the specified position. The restore process will first determine a restore path: a sequence of backups, starting with a full backup followed by zero or more incremental backups, that when combined, include the specified timestamp or position. See more on [Restore Types](../overview/#restore-types) and on [Taking Incremental Backup](../creating-a-backup/#create-an-incremental-backup-with-vtctl).
+
+#### Restore to timestamp
+
+Starting with `v18`, it is possible to restore to a given timestamp. The restore process will apply all events up to, and excluding, the given timestamp, at 1 second granularity. That is, the restore will bring the database to a point in time which is _about_ 1 second before the specified timestamp. Example:
+
+```shell
+$ vtctlclient -- RestoreFromBackup --restore_to_timestamp "2023-06-15T09:49:50Z" zone1-0000000100
+```
+
+The timestamp must be in `RFC3339` format.
+
+#### Restore to a position
+
+It is possible to restore onto a precise GTID position. Vitess will restore up to, and including, the exact requested position. This gives you the utmost granularity into the state of the restored database.
 
 ```shell
 vtctlclient -- RestoreFromBackup --restore_to_pos <position> <tablet-alias>
@@ -68,6 +82,4 @@ Example:
 vtctlclient -- RestoreFromBackup --restore_to_pos "MySQL56/0d7aaca6-1666-11ee-aeaf-0a43f95f28a3:1-60" zone1-0000000102
 ```
 
-This restore method assumes backups have been taken that cover the specified position. The restore process will first determine a restore path: a sequence of backups, starting with a full backup followed by zero or more incremental backups, that when combined, include the specified position. See more on [Restore Types](../overview/#restore-types) and on [Taking Incremental Backup](../creating-a-backup/#create-an-incremental-backup-with-vtctl).
 
-`v18` will supports restore to a given timestamp.
