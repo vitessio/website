@@ -90,7 +90,7 @@ Download the [latest binary release](https://github.com/vitessio/vitess/releases
 
 ```sh
 version=16.0.3
-file=vitess-${version}-6076fed.tar.gz
+file=vitess-${version}-a93cb55.tar.gz
 wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
 tar -xzf ${file}
 cd ${file/.tar.gz/}
