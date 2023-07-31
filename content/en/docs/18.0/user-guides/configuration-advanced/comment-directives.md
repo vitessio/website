@@ -89,7 +89,7 @@ Overrides the default planner to the one specified by the directive. Example que
 select /*vt+ PLANNER=gen4 */ * from user;
 ```
 
-Valid values are the same as for the planner flag - `v3` and `gen4`.
+Valid values are the same as for the planner flag - `Gen4`, `Gen4Greedy` and `Gen4Left2Right`.
 
 ### Workload name (`WORKLOAD_NAME`)
 

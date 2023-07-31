@@ -86,7 +86,7 @@ To continue with risk: Set `--xtrabackup_backup_flags=--no-server-version-check`
 __Run the following vtctl command to create a backup:__
 
 ```sh
-vtctldclient --server=<vtctld_host>:<vtctld_port> Backup [--upgrade_safe=false] <tablet-alias>
+vtctldclient --server=<vtctld_host>:<vtctld_port> Backup [--upgrade-safe=false] <tablet-alias>
 ```
 
 If the engine is `builtin`, replication will be stopped prior to shutting down mysqld for the backup.
@@ -96,7 +96,7 @@ If the engine is `xtrabackup`, the tablet can continue to serve traffic while th
 __Run the following vtctl command to backup a specific shard:__
 
 ``` sh
-vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard [--allow_primary=false] [--upgrade_safe=false] <keyspace/shard>
+vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard [--allow_primary=false] [--upgrade-safe=false] <keyspace/shard>
 ```
 
 ## Create an incremental backup with vtctl
