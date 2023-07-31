@@ -23,7 +23,7 @@ vtctldclient UpdateThrottlerConfig [--enable|--disable] [--threshold=<float64>] 
       --throttle-app string              an app name to throttle
       --throttle-app-duration duration   duration after which throttled app rule expires (app specififed in --throttled-app) (default 1h0m0s)
       --throttle-app-ratio float         ratio to throttle app (app specififed in --throttled-app) (default 1)
-      --unthrottle-app string            expire any throttling rule for the given app
+      --unthrottle-app string            an app name to unthrottle
 ```
 
 ### Options inherited from parent commands
