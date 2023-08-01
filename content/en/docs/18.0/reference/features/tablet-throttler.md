@@ -45,7 +45,7 @@ In addition, the primary tablet is responsible for the overall health of the clu
 
 - The throttler confirms it is still the primary tablet for its shard.
 - Every `10sec`, the throttler uses the topology server to refresh the shard's tablets list.
-- The throttler probes all `REPLICA` tablets for their replication lag. This is done by querying the `_vt.heartbeat` table.
+- The throttler probes all `REPLICA` tablets for their own throttler metrics. This is done via gRPC.
   - The throttler begins in dormant probe mode. As long as no application or client is actually looking for metrics, it probes the servers at multi-second intervals.
   - When applications check for throttle advice, the throttler begins probing servers in subsecond intervals. It reverts to dormant probe mode if no requests are made in the duration of `1min`.
 - The throttler aggregates the last probed values from all relevant tablets. This is _the cluster's metric_.
