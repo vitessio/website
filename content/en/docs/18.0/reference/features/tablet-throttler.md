@@ -45,7 +45,7 @@ In addition, the primary tablet is responsible for the overall health of the clu
 
 - The throttler confirms it is still the primary tablet for its shard.
 - Every `10sec`, the throttler uses the topology server to refresh the shard's tablets list.
-- The throttler probes all `REPLICA` tablets for their own throttler metrics. This is done via gRPC.
+- The throttler probes all `REPLICA` tablets (or other types of tablets, see [Configuration](#configuration)) for their own throttler metrics. This is done via gRPC.
   - The throttler begins in dormant probe mode. As long as no application or client is actually looking for metrics, it probes the servers at multi-second intervals.
   - When applications check for throttle advice, the throttler begins probing servers in subsecond intervals. It reverts to dormant probe mode if no requests are made in the duration of `1min`.
 - The throttler aggregates the last probed values from all relevant tablets. This is _the cluster's metric_.
@@ -134,6 +134,8 @@ $ vtctldclient UpdateThrottlerConfig --throttle-app="vreplication" --throttle-ap
 See [vtctl UpdateThrottlerConfig](../../programs/vtctl/throttler#updatethrottlerconfig).
 
 If you are still using the `v15` flags, you will have to transition to the new throttler configuration scheme: first populate topo with a new throttler configuration via `UpdateThrottlerConfig`. At the very least, set a `--threshold`. You likely also want to `--enable`. Then, reconfigure `vttablet`s with `--throttler-config-via-topo`, and restart them.
+
+The list of tablet types included in the throttler's logic is dictated by `vttablet --throttle_tablet_types`. The value is a comma delimited list of tablet types. The default value is `"replica"`. You may, for example, set it to be `"replica,rdonly"`.
 
 ## Heartbeat configuration
 
