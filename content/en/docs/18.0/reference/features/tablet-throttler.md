@@ -229,7 +229,7 @@ Fully throttle all Online DDL (schema changes) for the next hour and a half:
 $ vtctldclient UpdateThrottlerConfig --throttle-app "online-ddl" --throttle-app-ratio=1.0 --throttle-app-duration "1h30m" commerce
 ```
 
-Exempt `vreplication` from beign throttled, even if otherwise the metrics are past teh throttler threshold (e.g. replication lag is high):
+Exempt `vreplication` from being throttled, even if otherwise the metrics are past the throttler threshold (e.g. replication lag is high):
 
 ```sh
 $ vtctldclient UpdateThrottlerConfig --throttle-app "vreplication" --throttle-app-duration "30m" --throttle-app-exempt commerce
