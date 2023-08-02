@@ -247,7 +247,7 @@ $ vtctldclient UpdateThrottlerConfig --unthrottle-app "vreplication" commerce
 
 ### Information
 
-Throttler configuration is pare of the `Keyspace` entry:
+Throttler configuration is part of the `Keyspace` entry:
 
 ```sh
 $ vtctldclient GetKeyspace commerce
