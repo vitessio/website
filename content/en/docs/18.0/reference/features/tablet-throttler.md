@@ -237,7 +237,7 @@ $ vtctldclient UpdateThrottlerConfig --throttle-app "vreplication" --throttle-ap
 
 Use the above with great care. Exempting one app can cause starvation to all other apps. Consider, for example, the common use case where throttling is based on replication lag. By exempting `vreplication`, it is free to grab all the resources it wants. It is possible and likely that it will drive replication lag higher than the threshold, which means all other throttler clients will be fully throttled and with all requests rejected.
 
-Exemption times out just as other throttling rules. To unexempt, any of the following will do:
+Exemption times out just as other throttling rules. To remove an exemption, any of the following will do:
 
 ```sh
 $ vtctldclient UpdateThrottlerConfig --throttle-app "vreplication" --throttle-app-exempt=false commerce
