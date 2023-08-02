@@ -100,7 +100,7 @@ It is possible for the throttler to respond differently -- to some extent -- to 
 
 It is possible to _restrict_ the throttler's response to one or more apps. For example, it's possible to completely throttle "vreplication" while still responding `HTTP 200` to other apps. This is typically used to give way or precedence to one or two apps, or otherwise to further reduce the incoming load from a specific app.
 
-Starting `v18`, it is also possible to _exempt_ an app from throttling, even if the throttler is otherwise rejecting requests with metrics beyond the threshold. This is a feature that the user will have to use with great care, and only in a situation where they absolutely have to give a specific workflow/migration the highest priority above all else. See discussion in examples, below.
+Starting `v18`, it is also possible to _exempt_ an app from throttling, even if the throttler is otherwise rejecting requests with metrics beyond the threshold. This is an advanced feature that users should treat with great care, and only in situations where they absolutely must give a specific workflow/migration the highest priority above all else. See discussion in examples, below.
 
 ## Configuration
 
