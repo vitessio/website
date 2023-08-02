@@ -382,14 +382,14 @@ Stops mysqld and uses the [BackupEngine](../../../../user-guides/operating-vites
 
 #### Example
 
-<pre class="command-example">Backup -- [--concurrency=4] &lt;tablet alias&gt;</pre>
+<pre class="command-example">Backup -- [--concurrency=4] [--upgrade-safe=false] &lt;tablet alias&gt;</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | concurrency | Int | Specifies the number of compression/checksum jobs to run simultaneously |
-
+| upgrade-safe | Boolean | Whether to use <code>innodb_fast_shutdown=0</code> for the backup so it is safe to use for MySQL upgrades |
 
 #### Arguments
 

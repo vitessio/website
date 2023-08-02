@@ -1,7 +1,7 @@
 ---
 title: Local Install via Homebrew
 description: Instructions for using Vitess on your macOS machine for testing purposes
-weight: 2
+weight: 3
 featured: true
 aliases: ['/docs/tutorials/local-brew/']
 ---

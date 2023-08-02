@@ -122,12 +122,22 @@ Messages can also be created to be sent in the future:
 
 ## Receiving messages
 
-Processes can subscribe to receive messages by sending a `MessageStream`
+Processes can subscribe to receive messages by sending a [`MessageStream`](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate#Executor.MessageStream)
 gRPC request to a `VTGate` or using the `stream * from <table>` SQL statement
 (if using the interactive mysql command-line client you must also pass the
-`-q`/`--quick` option). If there are multiple subscribers, the messages will be
-delivered in a round-robin fashion. Note that *this is not a broadcast*; each
-message will be sent to at most one subscriber.
+`-q`/`--quick` option):
+
+```mysql
+$ mysql --quick <vtgate params>
+mysql> SET WORKLOAD=OLAP;
+mysql> STREAM * FROM <table>;
+```
+
+</br>
+
+If there are multiple subscribers, the messages will be delivered in a round-robin
+fashion. Note that *this is not a broadcast*; each message will be sent to at most
+one subscriber.
 
 The format for messages is the same as a standard Vitess `Result` received from
 a `VTGate`. This means that standard database tools that understand query results

@@ -13,7 +13,7 @@ Finds the most up-to-date REPLICA, RDONLY, or SPARE tablet in the given shard an
 If no replica-type tablet can be found, the backup can be taken on the primary if --allow-primary is specified.
 
 ```
-vtctldclient BackupShard [--concurrency <concurrency>] [--allow-primary] <keyspace/shard>
+vtctldclient BackupShard [--concurrency <concurrency>] [--allow-primary] [--upgrade-safe] <keyspace/shard>
 ```
 
 ### Options
@@ -22,6 +22,7 @@ vtctldclient BackupShard [--concurrency <concurrency>] [--allow-primary] <keyspa
       --allow-primary      Allow the primary of a shard to be used for the backup. WARNING: If using the builtin backup engine, this will shutdown mysqld on the primary and stop writes for the duration of the backup.
       --concurrency uint   Specifies the number of compression/checksum jobs to run simultaneously. (default 4)
   -h, --help               help for BackupShard
+      --upgrade-safe       Whether to use innodb_fast_shutdown=0 for the backup so it is safe to use for MySQL upgrades.
 ```
 
 ### Options inherited from parent commands

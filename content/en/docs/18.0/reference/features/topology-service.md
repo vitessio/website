@@ -95,7 +95,7 @@ tasks cannot concurrently alter the data.
 ### VSchema data
 
 The VSchema data contains sharding and routing information for
-the [VTGate V3](https://github.com/vitessio/vitess/blob/main/doc/VTGateV3Features.md) API.
+the [VTGate API](https://github.com/vitessio/vitess/blob/main/doc/design-docs/VTGateV3Features.md).
 
 ## Local data
 
@@ -360,7 +360,7 @@ others wait for files with older ModRevisions to disappear.
 Leader elections also use a subdirectory, named after the election Name, and use
 a similar method as the locks, with ephemeral files.
 
-We store the proto3 binary data for each object (as the v3 API allows us to store
+We store the proto3 binary data for each object (as the API allows us to store
 binary data).  Note that this means that if you want to interact with etcd using
 the `etcdctl` tool, you will have to tell it to use the v3 API, e.g.:
 

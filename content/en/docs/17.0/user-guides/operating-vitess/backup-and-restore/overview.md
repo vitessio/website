@@ -26,6 +26,36 @@ The engine is the techology used for generating the backup. Currently Vitess has
 * Builtin: Shutdown an instance and copy all the database files (default)
 * XtraBackup: An online backup using Percona's [XtraBackup](https://www.percona.com/software/mysql-database/percona-xtrabackup)
 
+### Backup types
+
+Vitess supports full backups as well as incremental backups, and their respective counterparts full restores and point-in-time restores.
+
+* A full backup contains the entire data in the database. The backup represents a consistent state of the data, i.e. it is a snapshot of the data at some point in time.
+* An incremental backup contains a changelog, or a transition of data from one state to another. Vitess implements incremental backups by making a copy of MySQL binary logs.
+
+Generally speaking and on most workloads, the cost of a full backup is higher, and the cost of incremental backups is lower. The time it takes to create a full backup is significant, and it is therefore impractical to take full backups in very small intervals. Moreover, a full backup consumes the disk space needed for the entire dataset. Incremental backups, on the other hand, are quick to run, and have very little impact, if any, to the running servers. They only contain the changes in between two points in time, and on most workloads are more compact.
+
+Full and incremental backups are expected to be interleaved. For example: one would create a full backup once per day, and incremental backups once per hour.
+
+Full backups are simply states of the database. Incremental backups, however, need to start with some point and end with some point. The common practice is for an incremental backup to continue from the point of the last good backup, which can be a full or incremental backup. An inremental backup in Vitess ends at the point in time of execution.
+
+The identity of the tablet on which a full backup or an incremental backup is taken is immaterial. It is possible to take a full backup on one tablet and incremental backups on another. It is possible to take full backups on two different tablets. It is also possible to take incremental backups, independently, on two different tablets, even though the contents of those incremental backups overlaps. Vitess uses MySQL GTID sets to determine positioning and prune duplicates.
+
+### Restores
+
+Restores are the counterparts of backups. A restore uses the engine utilized to create a backup. One may run a restore from a full backup, or a point-in-time restore (PITR) based on additional incremental backups.
+
+A Vitess restore operates on a tablet. The restore process completely wipes out the data in the tablet's MySQL server and repopulates the server with the backup(s) data. The MySQL server is shutdown during the process. As a safety mechanism, Vitess by default prevents a restore onto a `PRIMARY` tablet. Any non-`PRIMARY` tablet is otherwise eligible to restore.
+
+### Restore Types
+
+Vitess supports full restores and incremental (AKA point-in-time) restores. The two serve different purposes.
+
+* A full restore loads the dataset from a full backup onto a non-`PRIMARY` tablet. Once the data is loaded, the restore process starts the MySQL service and makes it join the replication stream. It is expected that a freshly restored server will lag behind the shard's `PRIMARY` for a period of time.
+  The full restore flow is useful for seeding new replica tablets. It may also be used to fix replicas that have been corrupted.
+* An incremental, or a point-in-time restore, restores a tablet/MySQL up to a specific position or time. This is done by first loading a full backup dataset, followed by applying the changelog captured in zero or more incremental backups. Once that is complete, the tablet type is set to `DRAINED` and the tablet does _not_ join the replication stream.
+  The common purpose of point-in-time restore is to recover data from an accidental write/deletion. If the database administrator knows at about what time the accidental write took place, they can restore a replica tablet to a point in time shortly before the accidental write. Since the server does not join the replication stream, its data then remains static, and the administrator may review or copy the data as they please. Finally, it is then possible to change the tablet type back to `REPLICA` and have it join the shard's replication.
+
 ## Vtbackup, VTTablet and Vtctld
 
 Vtbackup, VTTablet, and Vtctld may all participate in backups and restores.

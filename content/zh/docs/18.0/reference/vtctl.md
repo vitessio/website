@@ -1085,17 +1085,16 @@ Updates the configuration of the MaxReplicationLag module. The configuration mus
 
 ### ApplySchema
 
-Applies the schema change to the specified keyspace on every master, running in parallel on all shards. The changes are then propagated to slaves via replication. If -allow_long_unavailability is set, schema changes affecting a large number of rows (and possibly incurring a longer period of unavailability) will not be rejected.
+Applies the schema change to the specified keyspace on every master, running in parallel on all shards. The changes are then propagated to slaves via replication.
 
 #### Example
 
-<pre class="command-example">ApplySchema [-allow_long_unavailability] [-wait_replicas_timeout=10s] {-sql=&lt;sql&gt; || -sql-file=&lt;filename&gt;} &lt;keyspace&gt;</pre>
+<pre class="command-example">ApplySchema [-wait_replicas_timeout=10s] {-sql=&lt;sql&gt; || -sql-file=&lt;filename&gt;} &lt;keyspace&gt;</pre>
 
 #### Flags
 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
-| allow_long_unavailability | Boolean | Allow large schema changes which incur a longer unavailability of the database. |
 | sql | string | A list of semicolon-delimited SQL commands |
 | sql-file | string | Identifies the file that contains the SQL commands |
 | wait_replicas_timeout | Duration | The amount of time to wait for slaves to receive the schema change via replication. |
