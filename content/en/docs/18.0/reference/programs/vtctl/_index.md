@@ -157,7 +157,7 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 
 | Name | Example Usage |
 | :-------- | :--------------- |
-| [UpdateThrottlerConfig](../vtctl/throttler#updatethrottlerconfig) | `UpdateThrottlerConfig  -- [--enable\|--disable] [--threshold=<float64>] [--custom-query=<query>] [--check-as-check-self\|--check-as-check-shard] [--throttle-app=<name>] [--throttle-app-ratio=<float, range [0..1]>] [--throttle-app-duration=<duration>] <keyspace>`
+| [UpdateThrottlerConfig](../vtctl/throttler#updatethrottlerconfig) | `UpdateThrottlerConfig  -- [--enable\|--disable] [--threshold=<float64>] [--custom-query=<query>] [--check-as-check-self\|--check-as-check-shard] [--throttle-app|unthrottle-app=<name>] [--throttle-app-ratio=<float, range [0..1]>] [--throttle-app-duration=<duration>] <keyspace>`
 
 ## Options
 

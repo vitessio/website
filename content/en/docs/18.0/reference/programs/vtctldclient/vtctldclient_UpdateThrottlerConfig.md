@@ -7,7 +7,7 @@ series: vtctldclient
 Update the tablet throttler configuration for all tablets in the given keyspace (across all cells)
 
 ```
-vtctldclient UpdateThrottlerConfig [--enable|--disable] [--threshold=<float64>] [--custom-query=<query>] [--check-as-check-self|--check-as-check-shard] [--throttle-app=<name>] [--throttle-app-ratio=<float, range [0..1]>] [--throttle-app-duration=<duration>] <keyspace>
+vtctldclient UpdateThrottlerConfig [--enable|--disable] [--threshold=<float64>] [--custom-query=<query>] [--check-as-check-self|--check-as-check-shard] [--throttle-app|unthrottle-app=<name>] [--throttle-app-ratio=<float, range [0..1]>] [--throttle-app-duration=<duration>] <keyspace>
 ```
 
 ### Options
@@ -23,6 +23,7 @@ vtctldclient UpdateThrottlerConfig [--enable|--disable] [--threshold=<float64>] 
       --throttle-app string              an app name to throttle
       --throttle-app-duration duration   duration after which throttled app rule expires (app specififed in --throttled-app) (default 1h0m0s)
       --throttle-app-ratio float         ratio to throttle app (app specififed in --throttled-app) (default 1)
+      --unthrottle-app string            expire any throttling rule for the given app
 ```
 
 ### Options inherited from parent commands

@@ -211,7 +211,13 @@ Throttle a specific app, `vreplication`, so that `80%` of its eligible requests 
 $ vtctldclient UpdateThrottlerConfig --throttle-app "vreplication" --throttle-app-ratio=0.8 --throttle-app-duration "30m" commerce
 ```
 
-Force expire now (unthrottle):
+Unthrottle an app:
+
+```sh
+$ vtctldclient UpdateThrottlerConfig --unthrottle-app "vreplication" commerce
+```
+
+An altrnative method to unthrottle is to set a throttling rule that expires immediately:
 
 ```sh
 $ vtctldclient UpdateThrottlerConfig --throttle-app "vreplication" --throttle-app-duration 0 commerce

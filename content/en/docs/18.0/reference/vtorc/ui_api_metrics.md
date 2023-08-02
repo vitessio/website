@@ -22,18 +22,19 @@ VTOrc supports the following APIs which can be used for monitoring and changing 
  | `/debug/health`                  | This API outputs the health of the VTOrc process.                                                                                                                                                       |
  | `/debug/liveness`                | This API outputs the liveness of the VTOrc process.                                                                                                                                                     |
 | `/api/replication-analysis`      | This API shows the replication analysis of VTOrc. Output is in JSON format.                                                                                                                             |
+| `/api/errant-gtids`              | This API shows the tablets that have errant GTIDs as detected by VTOrc. Output is in JSON format. This API supports filtering by keyspace and shard name.                                               |
 
 # Metrics
 
 Metrics are available to be seen on the `/debug/vars` page. VTOrc exports the following metrics:
 
-| Metric                 | Usage                                                                                                |
-|------------------------|------------------------------------------------------------------------------------------------------|
-| `PendingRecoveries`    | The number of recoveries in progress which haven't completed.                                        |
-| `RecoveriesCount`      | The number of recoveries run. This is further subdivided for all the different recoveries.           |
-| `SuccessfulRecoveries` | The number of succesful recoveries run. This is further subdivided for all the different recoveries. |
-| `FailedRecoveries`     | The number of recoveries that failed. This is further subdivided for all the different recoveries.   |
-| `ErrantGtidMap`        | Metric to track the errant GTIDs detected by VTOrc.                                                  |
+| Metric                  | Usage                                                                                                |
+|-------------------------|------------------------------------------------------------------------------------------------------|
+| `PendingRecoveries`     | The number of recoveries in progress which haven't completed.                                        |
+| `RecoveriesCount`       | The number of recoveries run. This is further subdivided for all the different recoveries.           |
+| `SuccessfulRecoveries`  | The number of succesful recoveries run. This is further subdivided for all the different recoveries. |
+| `FailedRecoveries`      | The number of recoveries that failed. This is further subdivided for all the different recoveries.   |
+| `ErrantGtidTabletCount` | The number of tablets with errant GTIDs as detected by VTOrc.                                        |
 
 
 {{< info >}}
