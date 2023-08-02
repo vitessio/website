@@ -119,3 +119,15 @@ As shown above, the metrics being instrumented this way are `vttablet_query_coun
 If the query lacks the `WORKLOAD_NAME` directive, the corresponding label in the metric will have the value of an empty
 string. If `vttablet` is not started with `--enable-per-workload-table-metrics`, metrics are emitted without the
 workload label (e.g. `vttablet_query_counts{plan="Select",table="customer"}`.
+
+### Priority (`PRIORITY`)
+
+Specifies the priority associated with the execution of this query, as a number between 0 (highest priority) and 100
+(lowest priority). The priority is used by the transaction throttler (see `--tx-throttler-...` and `-enable-tx-throttler`
+flags in the `vttablet` [documentation](../../reference/programs/vttablet.md))) to determine whether a particular query
+should be throttled. If the transaction throttler determines that a query may need to be throttled, it will throttle it
+with a probability equal to the provided query priority. This allows avoiding high business impact queries from being
+throttled (by setting their priority to `0`) while letting less business critical ones continue to be throttled (by
+setting their priority to more than `0`).
+
+Notice that this directive has no effect if the transaction throttler is not enabled.
