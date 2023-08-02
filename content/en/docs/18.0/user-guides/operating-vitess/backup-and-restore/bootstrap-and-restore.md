@@ -63,7 +63,7 @@ Vitess supports restoring to a _timestamp_ or to a specific _position_. Either w
 Starting with `v18`, it is possible to restore to a given timestamp. The restore process will apply all events up to, and excluding, the given timestamp, at 1 second granularity. That is, the restore will bring the database to a point in time which is _about_ 1 second before the specified timestamp. Example:
 
 ```shell
-$ vtctlclient -- RestoreFromBackup --restore_to_timestamp "2023-06-15T09:49:50Z" zone1-0000000100
+vtctldclient RestoreFromBackup --restore-to-timestamp "2023-06-15T09:49:50Z" zone1-0000000100
 ```
 
 The timestamp must be in `RFC3339` format.
@@ -73,13 +73,27 @@ The timestamp must be in `RFC3339` format.
 It is possible to restore onto a precise GTID position. Vitess will restore up to, and including, the exact requested position. This gives you the utmost granularity into the state of the restored database.
 
 ```shell
-vtctlclient -- RestoreFromBackup --restore_to_pos <position> <tablet-alias>
+vtctldclient RestoreFromBackup --restore-to-pos <position> <tablet-alias>
 ```
 
 Example:
 
 ```shell
-vtctlclient -- RestoreFromBackup --restore_to_pos "MySQL56/0d7aaca6-1666-11ee-aeaf-0a43f95f28a3:1-60" zone1-0000000102
+vtctldclient RestoreFromBackup --restore-to-pos "MySQL56/0d7aaca6-1666-11ee-aeaf-0a43f95f28a3:1-60" zone1-0000000102
 ```
 
+#### Dry run
 
+It is possible to verify whether a restore-to-timestamp or restore-to-pos is possible without actually performing the restore. Run:
+
+
+```shell
+vtctldclient RestoreFromBackup --dry-run --restore-to-timestamp "2023-06-15T09:49:50Z" zone1-0000000100
+```
+
+or
+```shell
+vtctldclient RestoreFromBackup --dry-run --restore-to-pos "MySQL56/0d7aaca6-1666-11ee-aeaf-0a43f95f28a3:1-60" zone1-0000000102
+```
+
+A dry run restore looks at existing backups and sees whether there is a path that restores up to given timestamp or pos, but then quits and does not interrupt any tablet's execution and without changing the tablet's type. If there's no valid path to restore, the process exits with error.

@@ -17,6 +17,7 @@ vtctldclient EmergencyReparentShard <keyspace/shard>
   -i, --ignore-replicas strings          Comma-separated, repeated list of replica tablet aliases to ignore during the emergency reparent.
       --new-primary string               Alias of a tablet that should be the new primary. If not specified, the vtctld will select the best candidate to promote.
       --prevent-cross-cell-promotion     Only promotes a new primary from the same cell as the previous primary.
+      --wait-for-all-tablets             Should ERS wait for all the tablets to respond. Useful when all the tablets are reachable.
       --wait-replicas-timeout duration   Time to wait for replicas to catch up in reparenting. (default 15s)
 ```
 
