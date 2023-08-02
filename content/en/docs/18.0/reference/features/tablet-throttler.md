@@ -100,7 +100,7 @@ It is possible for the throttler to respond differently -- to some extent -- to 
 
 It is possible to _restrict_ the throttler's response to one or more apps. For example, it's possible to completely throttle "vreplication" while still responding `HTTP 200` to other apps. This is typically used to give way or precedence to one or two apps, or otherwise to further reduce the incoming load from a specific app.
 
-It is _not possible_ to give an app more way than the throttler's standard behavior. That is, if the throttler is set to throttler at `5s` replication lag, it is _not possible_ to respond wih `HTTP 200` to a specific app with replication lag at `7s`.
+Starting `v18`, it is also possible to _exempt_ an app from throttling, even if the throttler is otherwise rejecting requests with metrics beyond the threshold. This is an advanced feature that users should treat with great care, and only in situations where they absolutely must give a specific workflow/migration the highest priority above all else. See discussion in examples, below.
 
 ## Configuration
 
@@ -231,9 +231,25 @@ Fully throttle all Online DDL (schema changes) for the next hour and a half:
 $ vtctldclient UpdateThrottlerConfig --throttle-app "online-ddl" --throttle-app-ratio=1.0 --throttle-app-duration "1h30m" commerce
 ```
 
+Exempt `vreplication` from being throttled, even if otherwise the metrics are past the throttler threshold (e.g. replication lag is high):
+
+```sh
+$ vtctldclient UpdateThrottlerConfig --throttle-app "vreplication" --throttle-app-duration "30m" --throttle-app-exempt commerce
+```
+
+Use the above with great care. Exempting one app can cause starvation to all other apps. Consider, for example, the common use case where throttling is based on replication lag. By exempting `vreplication`, it is free to grab all the resources it wants. It is possible and likely that it will drive replication lag higher than the threshold, which means all other throttler clients will be fully throttled and with all requests rejected.
+
+Exemption times out just as other throttling rules. To remove an exemption, any of the following will do:
+
+```sh
+$ vtctldclient UpdateThrottlerConfig --throttle-app "vreplication" --throttle-app-exempt=false commerce
+$ vtctldclient UpdateThrottlerConfig --throttle-app "vreplication" --throttle-app-duration "0" commerce
+$ vtctldclient UpdateThrottlerConfig --unthrottle-app "vreplication" commerce
+```
+
 ### Information
 
-Throttler configuration is pare of the `Keyspace` entry:
+Throttler configuration is part of the `Keyspace` entry:
 
 ```sh
 $ vtctldclient GetKeyspace commerce
