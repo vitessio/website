@@ -46,6 +46,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT05006 | The given system variable is unknown. | unknown system variable '%s' | 1193 | HY000 |
 | VT05007 | Table information is not available. | no table info | 0 |  |
 | VT06001 | The given database name already exists. | cannot create database '%s'; database exists | 1007 | HY000 |
+| VT07001 | Kill statement is not allowed. More in docs about how to enable it and its limitations. | %s | 1095 | HY000 |
 | VT09001 | the table does not have a primary vindex, the operation is impossible. | table '%s' does not have a primary vindex | 1173 | 42000 |
 | VT09002 | This type of DML statement is not allowed on a replica target. | %s statement with a replica target | 1874 | HY000 |
 | VT09003 | A vindex column is mandatory for the insert, please provide one. | INSERT query does not have primary vindex column '%v' in the column list | 0 |  |
