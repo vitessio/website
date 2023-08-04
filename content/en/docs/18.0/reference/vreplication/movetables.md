@@ -21,6 +21,7 @@ MoveTables -- [--source=<sourceKs>] [--tables=<tableSpecs>] [--cells=<cells>]
   [--tablet_types=<source_tablet_types>] [--all] [--exclude=<tables>] [--auto_start] 
   [--stop_after_copy] [--timeout=timeoutDuration] [--reverse_replication] [--keep_data] 
   [--keep_routing_rules] [--on-ddl=<ddl-action>] [--source_time_zone=<mysql_time_zone>]
+  [--initialize-target-sequences]
   <action> <workflow identifier>
 ```
 
@@ -152,10 +153,6 @@ Comma seperated list of Cell(s) and/or CellAlias(es) to replicate from.
 **optional**\
 **default** false
 
-{{< warning >}}
-This flag is currently **experimental**.
-{{< /warning >}}
-
 <div class="cmd">
 
 If true, any secondary keys are dropped from the table definitions on the target shard(s) as we first initialize the
@@ -197,6 +194,16 @@ but the command logs all the steps that would be taken.
 <div class="cmd">
 
 If moving all tables, specifies tables to be skipped.
+
+</div>
+
+#### --initialize-target-sequences
+**optional**\
+**default** false
+
+<div class="cmd">
+
+When switching write (primary tablet) traffic for tables that are being moved from an unsharded keyspace to a sharded one, initialize any sequences being used by those tables on the target. They are initialized using the current maximum value for the column used on the target. This ensures that the sequence values on the target are greater than the maximum value seen on the source and ensure seamless auto generated primary key values when going from [MySQL auto_increment](https://dev.mysql.com/doc/refman/en/example-auto-increment.html) columns on the unsharded source to [Vitess Sequences](../../features/vitess-sequences/) on the sharded target.
 
 </div>
 
