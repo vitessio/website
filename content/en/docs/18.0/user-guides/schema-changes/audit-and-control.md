@@ -60,13 +60,13 @@ mysql> drop table customer;
 You may use `vtctl` or `vtctlclient` (the two are interchangeable for the purpose of this document) to apply schema changes. The `ApplySchema` command supports both synchronous and online schema migrations. To run an online schema migration you will supply the `--ddl_strategy` command line flag:
 
 ```shell
-$ vtctlclient -- ApplySchema --ddl_strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
+$ vtctldclient ApplySchema --ddl-strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
 a2994c92_f1d4_11ea_afa3_f875a4d24e90
 ```
 
  You my run multiple migrations withing the same `ApplySchema` command:
 ```shell
-$ vtctlclient -- ApplySchema --ddl_strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED; CREATE TABLE sample (id int PRIMARY KEY); DROP TABLE another;" commerce
+$ vtctldclient ApplySchema --ddl-strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED; CREATE TABLE sample (id int PRIMARY KEY); DROP TABLE another;" commerce
 3091ef2a_4b87_11ec_a827_0a43f95f28a3
 ```
 
@@ -327,19 +327,19 @@ Query OK, 1 row affected (0.01 sec)
 Launch a specific migration:
 
 ```shell
-$ vtctlclient -- ApplySchema --sql "alter vitess_migration '9e8a9249_3976_11ed_9442_0a43f95f28a3' launch" commerce
+$ vtctldclient ApplySchema --sql "alter vitess_migration '9e8a9249_3976_11ed_9442_0a43f95f28a3' launch" commerce
 ```
 
 Or launch a specific migration on a specific shard:
 
 ```shell
-$ vtctlclient -- ApplySchema --sql "alter vitess_migration '9e8a9249_3976_11ed_9442_0a43f95f28a3' launch vitess_shards '-40,40-80'" commerce
+$ vtctldclient ApplySchema --sql "alter vitess_migration '9e8a9249_3976_11ed_9442_0a43f95f28a3' launch vitess_shards '-40,40-80'" commerce
 ```
 
 Or launch all:
 
 ```shell
-$ vtctlclient -- ApplySchema --sql "alter vitess_migration launch all" commerce
+$ vtctldclient ApplySchema --sql "alter vitess_migration launch all" commerce
 ```
 
 ## Completing a migration
@@ -365,13 +365,13 @@ Query OK, 1 row affected (0.01 sec)
 Complete a specific migration:
 
 ```shell
-$ vtctlclient -- ApplySchema --sql "alter vitess_migration '9e8a9249_3976_11ed_9442_0a43f95f28a3' complete" commerce
+$ vtctldclient ApplySchema --sql "alter vitess_migration '9e8a9249_3976_11ed_9442_0a43f95f28a3' complete" commerce
 ```
 
 Or complete all:
 
 ```shell
-$ vtctlclient -- ApplySchema --sql "alter vitess_migration complete all" commerce
+$ vtctldclient ApplySchema --sql "alter vitess_migration complete all" commerce
 ```
 
 ## Cancelling a migration
@@ -489,7 +489,7 @@ Examples for a 4-shard cluster:
 
 
 ```shell
-$ vtctlclient -- ApplySchema --sql "alter vitess_migration cancel all" commerce
+$ vtctldclient ApplySchema --sql "alter vitess_migration cancel all" commerce
 ```
 
 Also available via `vtctlclient OnlineDDL` command:
@@ -588,7 +588,7 @@ completed_timestamp: NULL
 
 
 ```shell
-$ vtctlclient -- ApplySchema --sql "alter vitess_migration '2201058f_f266_11ea_bab4_0242c0a8b007' retry" commerce
+$ vtctldclient ApplySchema --sql "alter vitess_migration '2201058f_f266_11ea_bab4_0242c0a8b007' retry" commerce
 ```
 
 Also available via `vtctlclient OnlineDDL` command:
@@ -657,7 +657,7 @@ Query OK, 1 row affected (0.00 sec)
 
 #### Via vtctlclient/ApplySchema
 
-Execute via `vtctlclient -- ApplySchema --sql "..." <keyspace>` like previous commands, or use `OnlineDDL` command:
+Execute via `vtctldclient ApplySchema --sql "..." <keyspace>` like previous commands, or use `OnlineDDL` command:
 
 
 ```shell
@@ -727,8 +727,8 @@ Create Table: CREATE TABLE `corder` (
 
 ### Via vtctlclient/ApplySchema
 
-```
-$ vtctlclient -- ApplySchema --ddl_strategy "vitess" --sql "revert vitess_migration '1a689113_8d77_11eb_815f_f875a4d24e90'" commerce
+```sh
+$ vtctldclient ApplySchema --ddl-strategy "vitess" --sql "revert vitess_migration '1a689113_8d77_11eb_815f_f875a4d24e90'" commerce
 ```
 
 ## Controlling throttling
@@ -785,7 +785,7 @@ The command `show vitess_throttled_apps;` is a general purpose throttler command
 
 ### Via vtctlclient/ApplySchema
 
-Execute via `vtctlclient -- ApplySchema --sql "..." <keyspace>` like previous commands, or use `OnlineDDL` commands:
+Execute via `vtctldclient ApplySchema --sql "..." <keyspace>` like previous commands, or use `OnlineDDL` commands:
 
 
 ```shell

@@ -45,7 +45,7 @@ As of Vitess 12.0 `vtctl OnlineDDL revert` is deprecated. Use the `REVERT VITESS
 Via `vtctl`:
 
 ```
-$ vtctlclient -- ApplySchema --ddl_strategy "vitess" --sql "revert vitess_migration '69b17887_8a62_11eb_badd_f875a4d24e90'" commerce
+$ vtctldclient ApplySchema --ddl-strategy "vitess" --sql "revert vitess_migration '69b17887_8a62_11eb_badd_f875a4d24e90'" commerce
 ```
 
 Both operations return a UUID for the revert migration. The user can track the revert migration to find its state.

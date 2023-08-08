@@ -23,12 +23,12 @@ You will set either `@@ddl_strategy` session variable, or `--ddl_strategy` comma
 #### Via vtctlclient
 
 ```shell
-$ vtctlclient -- ApplySchema --ddl_strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
+$ vtctldclient ApplySchema --ddl-strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
 a2994c92_f1d4_11ea_afa3_f875a4d24e90
 ```
 
 ```shell
-$ vtctlclient -- ApplySchema --ddl_strategy "gh-ost --max-load Threads_running=200" --sql "ALTER TABLE demo add column status int" commerce
+$ vtctldclient ApplySchema --ddl-strategy "gh-ost --max-load Threads_running=200" --sql "ALTER TABLE demo add column status int" commerce
 ```
 
 #### Via VTGate
@@ -86,7 +86,7 @@ Vitess takes care of setting up the necessary command line flags. It automatical
 
 - `set @@ddl_strategy='gh-ost --max-load Threads_running=200';`
 - `set @@ddl_strategy='gh-ost --max-load Threads_running=200 --critical-load Threads_running=500 --critical-load-hibernate-seconds=60 --default-retries=512';`
-- `vtctlclient -- ApplySchema --ddl_strategy "gh-ost --allow-nullable-unique-key --chunk-size 200" ...`
+- `vtctldclient --ddl-strategy "gh-ost --allow-nullable-unique-key --chunk-size 200" ...`
 
 **Note:** Do not override the following flags: `alter, database, table, execute, max-lag, force-table-names, serve-socket-file, hooks-path, hooks-hint-token, panic-flag-file`. Overriding any of these may cause Vitess to lose control and track of the migration, or even to migrate the wrong table.
 
@@ -108,7 +108,7 @@ Vitess takes care of supplying the command line flags, the DSN, the username & p
 
 - `set @@ddl_strategy='pt-osc --null-to-not-null';`
 - `set @@ddl_strategy='pt-osc --max-load Threads_running=200';`
-- `vtctlclient -- ApplySchema --ddl_strategy "pt-osc --alter-foreign-keys-method auto --chunk-size 200" ...`
+- `vtctldclient ApplySchema --ddl-strategy "pt-osc --alter-foreign-keys-method auto --chunk-size 200" ...`
 
 Vitess tracks the state of the `pt-osc` migration. If it fails, Vitess makes sure to drop the migration triggers. Vitess keeps track of the migration even if the tablet itself restarts for any reason. Normally that would terminate the migration; Vitess will cleanup the triggers if so, or will happily let the migration run to completion if not.
 

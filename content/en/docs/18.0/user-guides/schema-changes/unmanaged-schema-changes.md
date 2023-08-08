@@ -23,7 +23,7 @@ CREATE TABLE `demo` (
 Consider the following examples:
 
 ```shell
-$ vtctlclient ApplySchema -- --sql "ALTER TABLE demo modify id bigint unsigned" commerce
+$ vtctldclient ApplySchema --sql "ALTER TABLE demo modify id bigint unsigned" commerce
 ```
 ```sql
 SHOW CREATE TABLE demo;
