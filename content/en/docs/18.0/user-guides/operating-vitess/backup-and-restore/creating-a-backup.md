@@ -101,7 +101,7 @@ vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard [--allow_primary=f
 
 ## Create an incremental backup with vtctl
 
-An incremental backup requires additional information: the point from which to start the backup. An incremental backup is taken by supplying `--incremental-from-pos` to the `Backup` command. The argument may either indicate a valid position, or the value `auto`. Examples:
+An incremental backup requires additional information: the point from which to start the backup. An incremental backup is taken by supplying `--incremental-from-pos` to the `Backup` or `BackupShard` command. The argument may either indicate a valid position, or the value `auto`. Examples:
 
 ```sh
 vtctldclient Backup --incremental-from-pos="MySQL56/0d7aaca6-1666-11ee-aeaf-0a43f95f28a3:1-53" zone1-0000000102
@@ -109,6 +109,8 @@ vtctldclient Backup --incremental-from-pos="MySQL56/0d7aaca6-1666-11ee-aeaf-0a43
 vtctldclient Backup --incremental-from-pos="0d7aaca6-1666-11ee-aeaf-0a43f95f28a3:1-53" zone1-0000000102
 
 vtctldclient Backup --incremental-from-pos="auto" zone1-0000000102
+
+vtctldclient BackupShard --incremental-from-pos=auto commerce/0
 ```
 
 When indicating a position, you may choose to use or to omit the `MySQL56/` prefix (which you can find in the backup manifest's Position).
@@ -121,8 +123,6 @@ An incremental backup fails in these scenarios:
 
 - It is unable to find binary log files that covers the requested position. This can happen if the binary logs are purged earlier than the incremental backup was taken. It essentially means there's a gap in the changelog events. **Note** that while on one tablet the binary logs may be missing, another tablet may still have binary logs that cover the requested position.
 - There is no change to the database since the requested position, i.e. the GTID position has not changed since.
-
-`v17` only supports `--incremental-from-pos` in the `Backup` command, not in `BackupShard`. Also, only `vtctlclient` supports the flag, where `vtctldclient` does not. `v18` is expected to support incremental backups for `BackupShard` and for `vtctldclient`.
 
 ## Backing up Topology Server
 
