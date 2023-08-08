@@ -30,7 +30,7 @@ vtctldclient ApplySchema [--ddl-strategy <strategy>] [--uuid <uuid> ...] [--migr
 
 ```
       --allow-long-unavailability        Deprecated and has no effect.
-      --batch-size int                   How many queries to batch together. Only applicabel when all queries are CREATE TABLE|VIEW
+      --batch-size int                   How many queries to batch together. Only applicable when all queries are CREATE TABLE|VIEW
       --caller-id string                 Effective caller ID used for the operation and should map to an ACL name which grants this identity the necessary permissions to perform the operation (this is only necessary when strict table ACLs are used).
       --ddl-strategy string              Online DDL strategy, compatible with @@ddl_strategy session variable (examples: 'gh-ost', 'pt-osc', 'gh-ost --max-load=Threads_running=100'. (default "direct")
   -h, --help                             help for ApplySchema
