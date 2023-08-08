@@ -95,6 +95,7 @@ Here is a list of all the system variables that are handled by Vitess and how th
 | charset                                 | VitessAware    |
 | names                                   | VitessAware    |
 | session_uuid                            | VitessAware    |
+| migration_context                       | VitessAware    |
 | enable_system_settings                  | VitessAware    |
 | read_after_write_gtid                   | VitessAware    |
 | read_after_write_timeout                | VitessAware    |
