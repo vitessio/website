@@ -23,7 +23,7 @@ CREATE TABLE `demo` (
 Consider the following examples:
 
 ```shell
-$ vtctlclient ApplySchema -- --sql "ALTER TABLE demo modify id bigint unsigned" commerce
+$ vtctldclient ApplySchema --sql "ALTER TABLE demo modify id bigint unsigned" commerce
 ```
 ```sql
 SHOW CREATE TABLE demo;
@@ -36,6 +36,16 @@ CREATE TABLE `demo` (
 ) ENGINE=InnoDB
 ```
 In the above, we run a direct, synchronous, blocking `ALTER TABLE` statement. Knowing the table is in `commerce` keyspace, Vitess autodetects the relevant shards, and then autodetects which is the `primary` server in each shard. It then directly invokes the `ALTER TABLE` statement on all shards (concurrently), and the `vtctlclient` command only returns when all are complete.
+
+
+When applying a new schema, where all statements are `CREATE TABLE` or `CREATE VIEW`, you may supply the flag `--batch-size=<n>`. For example:
+
+```shell
+$ vtctldclient ApplySchema --sql-file /tmp/create.sql --batch-size=100 commerce
+```
+
+This flag only applies for unmanaged schema changes, and optimizes total run time by sending batches of `CREATE` statements to the underlying databases.
+
 
 ## VTGate
 

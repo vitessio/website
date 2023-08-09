@@ -46,7 +46,7 @@ mysql> create table sample_table(id int primary key);
 or, via `vtctl`:
 
 ```shell
-vtctl ApplySchema -- --skip_preflight --ddl_strategy "vitess --allow-concurrent" -sql "REVERT VITESS_MIGRATION '3091ef2a_4b87_11ec_a827_0a43f95f28a3'"
+vtctldclient ApplySchema --ddl-strategy "vitess --allow-concurrent" -sql "REVERT VITESS_MIGRATION '3091ef2a_4b87_11ec_a827_0a43f95f28a3'"
 ```
 
 ## Restrictions and eligibility

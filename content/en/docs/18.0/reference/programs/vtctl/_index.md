@@ -32,7 +32,7 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [ExecuteFetchAsApp](../vtctl/tablets#executefetchasapp) | `ExecuteFetchAsApp  -- [--max_rows=10000] [--json] [--use_pool] <tablet alias> <sql command>` |
 | [ExecuteFetchAsDba](../vtctl/tablets#executefetchasdba) | `ExecuteFetchAsDba  -- [--max_rows=10000] [--disable_binlogs] [--json] <tablet alias> <sql command>` |
 | [VReplicationExec](../vtctl/tablets#vreplicationexec) | `VReplicationExec  -- [--json] <tablet alias> <sql command>` |
-| [Backup](../vtctl/tablets#backup) | `Backup  -- [--concurrency=4] [--allow_primary=false] [--upgrade-safe=false] <tablet alias>` |
+| [Backup](../vtctl/tablets#backup) | `Backup  -- [--concurrency=4] [--allow_primary=false] [--upgrade-safe=false] [--incremental-from-pos=<pos>] <tablet alias>` |
 | [RestoreFromBackup](../vtctl/tablets#restorefrombackup) | `RestoreFromBackup <tablet alias>` |
 | [ReparentTablet](../vtctl/tablets#reparenttablet) | `ReparentTablet <tablet alias>` |
 
@@ -55,7 +55,7 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [RemoveShardCell](../vtctl/shards#removeshardcell) | `RemoveShardCell  -- [--force] [--recursive] <keyspace/shard> <cell>` |
 | [DeleteShard](../vtctl/shards#deleteshard) | `DeleteShard  -- [--recursive] [--even_if_serving] <keyspace/shard> ...` |
 | [ListBackups](../vtctl/shards#listbackups) | `ListBackups <keyspace/shard>` |
-| [BackupShard](../vtctl/shards#backupshard) | `BackupShard  -- [--allow_primary=false] [--upgrade-safe=false] <keyspace/shard>` |
+| [BackupShard](../vtctl/shards#backupshard) | `BackupShard  -- [--allow_primary=false] [--upgrade-safe=false] <keyspace/shard>` [--incremental_from_pos=<pos>] |
 | [RemoveBackup](../vtctl/shards#removebackup) | `RemoveBackup <keyspace/shard> <backup name>` |
 | (DEPRECATED) [InitShardPrimary](../vtctl/shards#initshardprimary) | `InitShardPrimary  -- [--force] [--wait_replicas_timeout=<duration>] <keyspace/shard> <tablet alias>` |
 | [PlannedReparentShard](../vtctl/shards#plannedreparentshard) | `PlannedReparentShard  -- --keyspace_shard=<keyspace/shard> [--new_primary=<tablet alias>] [--avoid_tablet=<tablet alias>] [--wait_replicas_timeout=<duration>]` |
@@ -99,7 +99,7 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 | [ReloadSchemaKeyspace](../vtctl/schema-version-permissions#reloadschemakeyspace) | `ReloadSchemaKeyspace  -- [--concurrency=10] [--include_primary=false] <keyspace>` |
 | [ValidateSchemaShard](../vtctl/schema-version-permissions#validateschemashard) | `ValidateSchemaShard  -- [--exclude_tables=''] [--include-views] <keyspace/shard>` |
 | [ValidateSchemaKeyspace](../vtctl/schema-version-permissions#validateschemakeyspace) | `ValidateSchemaKeyspace  -- [--exclude_tables=''] [--include-views] <keyspace name>` |
-| [ApplySchema](../vtctl/schema-version-permissions#applyschema) | `ApplySchema  -- [--wait_replicas_timeout=10s] {--sql=<sql> \|\| --sql-file=<filename>} <keyspace>` |
+| [ApplySchema](../vtctl/schema-version-permissions#applyschema) | `ApplySchema  -- [--wait_replicas_timeout=10s] {--sql=<sql> \|\| --sql-file=<filename>} [--batch-size=100] <keyspace>` |
 | [CopySchemaShard](../vtctl/schema-version-permissions#copyschemashard) | `CopySchemaShard  -- [--tables=<table1>,<table2>,...] [--exclude_tables=<table1>,<table2>,...] [--include-views] [--skip-verify] [--wait_replicas_timeout=10s] {<source keyspace/shard> \|\| <source tablet alias>} <destination keyspace/shard>` |
 | [ValidateVersionShard](../vtctl/schema-version-permissions#validateversionshard) | `ValidateVersionShard  <keyspace/shard>` |
 | [ValidateVersionKeyspace](../vtctl/schema-version-permissions#validateversionkeyspace) | `ValidateVersionKeyspace  <keyspace name>` |
