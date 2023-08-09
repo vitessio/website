@@ -22,11 +22,13 @@ vtctldclient --server localhost:15999 movetables --workflow commerce2customer --
       --all-tables                         Copy all tables from the source
       --auto-start                         Start the MoveTables workflow after creating it (default true)
   -c, --cells strings                      Cells and/or CellAliases to copy table data from
+      --defer-secondary-keys               Defer secondary index creation for a table until after it has been copied
       --exclude-tables strings             Source tables to exclude from copying
   -h, --help                               help for create
       --on-ddl string                      What to do when DDL is encountered in the VReplication stream. Possible values are IGNORE, STOP, EXEC, and EXEC_IGNORE (default "IGNORE")
       --source-keyspace string             Keyspace where the tables are being moved from (required)
       --source-shards strings              Source shards to copy data from when performing a partial MoveTables (experimental)
+      --source-time-zone string            Specifying this causes any DATETIME fields to be converted from the given time zone into UTC
       --stop-after-copy                    Stop the MoveTables workflow after it's finished copying the existing rows and before it starts replicating changes
       --tables strings                     Source tables to copy
       --tablet-types strings               Source tablet types to replicate table data from (e.g. PRIMARY,REPLICA,RDONLY)
