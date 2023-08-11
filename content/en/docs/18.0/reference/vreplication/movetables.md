@@ -21,6 +21,7 @@ MoveTables -- [--source=<sourceKs>] [--tables=<tableSpecs>] [--cells=<cells>]
   [--tablet_types=<source_tablet_types>] [--all] [--exclude=<tables>] [--auto_start] 
   [--stop_after_copy] [--timeout=timeoutDuration] [--reverse_replication] [--keep_data] 
   [--keep_routing_rules] [--on-ddl=<ddl-action>] [--source_time_zone=<mysql_time_zone>]
+  [--initialize-target-sequences]
   <action> <workflow identifier>
 ```
 
@@ -152,10 +153,6 @@ Comma seperated list of Cell(s) and/or CellAlias(es) to replicate from.
 **optional**\
 **default** false
 
-{{< warning >}}
-This flag is currently **experimental**.
-{{< /warning >}}
-
 <div class="cmd">
 
 If true, any secondary keys are dropped from the table definitions on the target shard(s) as we first initialize the
@@ -199,6 +196,37 @@ but the command logs all the steps that would be taken.
 If moving all tables, specifies tables to be skipped.
 
 </div>
+
+#### --initialize-target-sequences
+**optional**\
+**default** false
+
+<div class="cmd">
+
+If specified, when switching write (primary tablet) traffic for tables that are being moved from an unsharded keyspace to a
+sharded one, initialize any sequences being used by those tables on the target. They are initialized using the current
+maximum value for the column across all shards on the target.
+
+</div>
+
+###### Uses
+
+* It's common that users import unsharded data into Vitess — sharding it in the process — or move
+tables from an unsharded keyspace to a sharded one as they become too large for a single MySQL instance.
+When doing either of these you would typically be leveraging [MySQL auto_increment](https://dev.mysql.com/doc/refman/en/example-auto-increment.html)
+columns for primary keys on the unsharded tables (source). On the sharded target, however, you will then
+need to use [Vitess Sequences](../../features/vitess-sequences/) in order to ensure that you continue having
+automatically generated incrementing unique primary keys _across all shards_. When it comes to [switching the write traffic](#switchtraffic)
+during this move you would need to manually ensure that you [initialize the sequences](../../features/vitess-sequences/#initializing-a-sequence)
+so that the next values they provide are higher than any already used on the source (with ample buffer in between
+to avoid potential identifier reuse and duplicate key errors immediately following the cutover). This flag tells Vitess
+to manage this sequence initialization for you as part of the `SwitchTraffic` operation to ensure a seamless cutover
+without any additional manual steps. For more information, please see [the feature request](https://github.com/vitessio/vitess/issues/13685).
+
+{{< info >}}
+You will still need to take the manual step of [creating each backing sequence table](../../features/vitess-sequences/#creating-a-sequence)
+in an unsharded keyspace of your choosing prior to the `SwitchTraffic` operation.
+{{< /info>}}
 
 #### --keep_data
 **optional**\
