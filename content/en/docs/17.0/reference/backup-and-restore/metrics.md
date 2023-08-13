@@ -40,6 +40,10 @@ Depending on the Backup Engine and Backup Storage in-use, a restore may be a com
 
 These operations are counted and timed, and the number of bytes consumed or produced by each stage of the pipeline are counted as well.
 
+#### RestoredBackupTime, RestorePosition
+
+_RestoredBackupTime_ captures the timestamp associated with the backup from which the current process was restored. _RestorePosition_ captures the GTID position associated with that backup.
+
 #### restore_duration_seconds
 
 **Deprecated**
@@ -123,6 +127,8 @@ _DurationByPhaseSeconds_ exports timings for these individual phases.
     "BackupEngine.Builtin.Destination:Close": 26954624,
     "BackupStorage.File.File:Read": 102416075
   },
+  "RestorePosition": "MySQL56/f00e54ca-0fbf-11ee-ad84-eddb850690bf:1-61",
+  "RestoredBackupTime": "2023-06-21T00:39:00Z",
   "backup_duration_seconds": 4,
   "restore_duration_seconds": 6
 }

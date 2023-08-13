@@ -20,12 +20,6 @@ Depending on the Backup Engine and Backup Storage in-use, a backup may be a comp
 
 These operations are counted and timed, and the number of bytes consumed or produced by each stage of the pipeline are counted as well.
 
-#### backup_duration_seconds
-
-**Deprecated**
-
-_backup_duration_seconds_ times the duration of a backup. This metric is deprecated and will be removed in a future release. Use _BackupDurationNanoseconds_ instead.
-
 ## Restore metrics
 
 Metrics related to restore operations are available in both Vtbackup and VTTablet.
@@ -40,11 +34,9 @@ Depending on the Backup Engine and Backup Storage in-use, a restore may be a com
 
 These operations are counted and timed, and the number of bytes consumed or produced by each stage of the pipeline are counted as well.
 
-#### restore_duration_seconds
+#### RestoredBackupTime, RestorePosition
 
-**Deprecated**
-
-_restore_duration_seconds_ times the duration of a restore. This metric is deprecated and will be removed in a future release. Use _RestoreDurationNanoseconds_ instead.
+_RestoredBackupTime_ captures the timestamp associated with the backup from which the current process was restored. _RestorePosition_ captures the GTID position associated with that backup.
 
 ## Vtbackup metrics
 
@@ -123,8 +115,8 @@ _DurationByPhaseSeconds_ exports timings for these individual phases.
     "BackupEngine.Builtin.Destination:Close": 26954624,
     "BackupStorage.File.File:Read": 102416075
   },
-  "backup_duration_seconds": 4,
-  "restore_duration_seconds": 6
+  "RestorePosition": "MySQL56/f00e54ca-0fbf-11ee-ad84-eddb850690bf:1-61",
+  "RestoredBackupTime": "2023-06-21T00:39:00Z",
 }
 ```
 
