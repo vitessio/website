@@ -57,15 +57,59 @@ $ mysql -h 127.0.0.1 -u myuser1 -pincorrect_password -e "select 1"
 ERROR 1045 (28000): Access denied for user 'myuser1'
 ```
 
+## Generating passwords
+
+You should always used generated random passwords in static configuration.
+Also when using `caching_sha2_password` or `mysql_native_password` this
+is a must as the formats don't provide any protection against password
+retrieval attacks.
+
+We recommend using at least as many bits of random entropy as the hashing
+used, so for `caching_sha2_password` you should generate passwords with
+256 bits (32 bytes) of randomness.
+
 ## Password format
 
 In the above example we used plaintext passwords.  Vitess supports the
-MySQL [mysql_native_password](https://dev.mysql.com/doc/refman/8.0/en/native-pluggable-authentication.html)
-hash format, and you should always specify your passwords using this
-in a non-test or external environment. 
+MySQL [caching_sha2_password](https://dev.mysql.com/doc/refman/8.0/en/caching-sha2-pluggable-authentication.html)
+and [mysql_native_password](https://dev.mysql.com/doc/refman/8.0/en/native-pluggable-authentication.html)
+hash formats. We recommend using the `caching_sha2_password` format unless
+you must use `mysql_native_password` for legacy clients.
 
-Vitess does not support the full [caching_sha2_password](https://dev.mysql.com/doc/refman/8.0/en/caching-sha2-pluggable-authentication.html) 
-authentication cycle, it is only supported through ssl.
+### Caching SHA2 Password
+
+To use a `caching_sha2_password` hash, your user section in your static
+JSON authentication file would look something like this instead:
+
+```json
+{
+  "vitess": [
+    {
+      "UserData": "vitess",
+      "CachingSha2Password": "*EDD6D7297051F55BF680A727FB9732672035A2AB65AB0426BA5ED76E1A0D9FCF"
+    }
+  ]
+}
+```
+
+You can generate a hash for `caching_sha2_password with generating a SHA256
+hash of the cleartext password string twice, e.g. doing it in
+MySQL for the cleartext password `password`:
+
+```mysql
+mysql> SELECT UPPER(SHA2(UNHEX(SHA2("password", 256)), 256)) as hash;
++------------------------------------------------------------------+
+| hash                                                             |
++------------------------------------------------------------------+
+| 73641C99F7719F57D8F4BEB11A303AFCD190243A51CED8782CA6D3DBE014D146 |
++------------------------------------------------------------------+
+1 row in set (0.00 sec)
+```
+
+So, you would use `*73641C99F7719F57D8F4BEB11A303AFCD190243A51CED8782CA6D3DBE014D146` as the
+`CachingSha2Password` hash value for the cleartext password `password`.
+
+### MySQL Native Password
 
 To use a `mysql_native_password` hash, your user section in your static
 JSON authentication file would look something like this instead:
@@ -131,11 +175,11 @@ An example could be:
   "vitess": [
     {
       "UserData": "vitess_old",
-      "MysqlNativePassword": "*9E128DA0C64A6FCCCDCFBDD0FC0A2C967C6DB36F"
+      "CachingSha2Password": "*EDD6D7297051F55BF680A727FB9732672035A2AB65AB0426BA5ED76E1A0D9FCF"
     },
     {
       "UserData": "vitess_new",
-      "MysqlNativePassword": "*B3AD996B12F211BEA47A7C666CC136FB26DC96AF"
+      "CachingSha2Password": "*73641C99F7719F57D8F4BEB11A303AFCD190243A51CED8782CA6D3DBE014D146"
     }
   ]
 }

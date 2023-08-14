@@ -50,6 +50,7 @@ Here are the contents of an example file that shows the ability to specify MySQL
 {
   "mysql_user": [
     {
+      "CachingSha2Password": "*EDD6D7297051F55BF680A727FB9732672035A2AB65AB0426BA5ED76E1A0D9FCF",
       "MysqlNativePassword": "*9E128DA0C64A6FCCCDCFBDD0FC0A2C967C6DB36F",
       "Password": "mysql_password",
       "UserData": "mysql_user"
@@ -63,6 +64,7 @@ Here are the contents of an example file that shows the ability to specify MySQL
   ],
   "mysql_user3": [
     {
+      "CachingSha2Password": "*EDD6D7297051F55BF680A727FB9732672035A2AB65AB0426BA5ED76E1A0D9FCF",
       "MysqlNativePassword": "*9E128DA0C64A6FCCCDCFBDD0FC0A2C967C6DB36F",
       "UserData": "mysql_user"
     }
