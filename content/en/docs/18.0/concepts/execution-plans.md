@@ -12,6 +12,16 @@ An execution plan consists of operators, each of which implements a specific pie
 
 Evaluation of the execution plan begins at the leaf nodes of the tree. Leaf nodes pull in data from VTTablet, the Topology Service, and in some cases are also able to evaluate expression values locally. Each leaf node will not have input from other operators, and pipe in any nodes they produce into their parent nodes. The parents nodes will then pipe in nodes to their parent nodes, all the way up to a root node. The root node produces the final results of the query and delivers the results to the user.
 
+### Routing Operators
+
+A routing operator in an execution plan instructs Vitess which destination to send a piece of work to. Typically a routing operator will tell Vitess which keyspace to use when executing the piece of work, whether or not the keyspace is sharded, and, in the case of sharded keyspaces, which vindex to use.
+
+### Scatter Queries
+
+A routing operator which specifies a sharded keyspace, but which does not specify a vindex, will "scatter" to all shards in a sharded keyspace. A "scatter" query contains one or more pieces of work routed to a sharded keyspace, but which cannot be routed using a vindex.
+
+Note that not all queries which are sent to multiple (or all) shards in a sharded keyspace are considered scatter queries.
+
 ### Observing Execution Plans
 
 Cached execution plans can be observed at the VTGate level by browsing the `/queryz` end point.
