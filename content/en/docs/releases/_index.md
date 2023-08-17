@@ -18,16 +18,16 @@ Each major release is maintained for 1 year.
 > The latest and current vitess release is v17.0
 
 ### v17.0
-- **Current version:** [v17.0.1](https://github.com/vitessio/vitess/releases/tag/v17.0.1) (2023-07-28)
+- **Current version:** [v17.0.2](https://github.com/vitessio/vitess/releases/tag/v17.0.2) (2023-08-18)
 - **Initial GA release:** [v17.0.0](https://github.com/vitessio/vitess/releases/tag/v17.0.0) (2023-06-27)
 - **End of life:** 2024-06-27
-- **Patch releases:** [v17.0.1](https://github.com/vitessio/vitess/releases/tag/v17.0.1)
+- **Patch releases:** [v17.0.1](https://github.com/vitessio/vitess/releases/tag/v17.0.1), [v17.0.2](https://github.com/vitessio/vitess/releases/tag/v17.0.2)
 
 ### v16.0
-- **Current version:** [v16.0.3](https://github.com/vitessio/vitess/releases/tag/v16.0.3) (2023-07-28)
+- **Current version:** [v16.0.4](https://github.com/vitessio/vitess/releases/tag/v16.0.4) (2023-08-18)
 - **Initial GA release:** [v16.0.0](https://github.com/vitessio/vitess/releases/tag/v16.0.0) (2023-02-28)
 - **End of life:** 2024-02-28
-- **Patch releases:** [v16.0.1](https://github.com/vitessio/vitess/releases/tag/v16.0.1), [v16.0.2](https://github.com/vitessio/vitess/releases/tag/v16.0.2), [v16.0.3](https://github.com/vitessio/vitess/releases/tag/v16.0.3)
+- **Patch releases:** [v16.0.1](https://github.com/vitessio/vitess/releases/tag/v16.0.1), [v16.0.2](https://github.com/vitessio/vitess/releases/tag/v16.0.2), [v16.0.3](https://github.com/vitessio/vitess/releases/tag/v16.0.3), [v16.0.4](https://github.com/vitessio/vitess/releases/tag/v16.0.4)
 
 ### v15.0
 - **Current version:** [v15.0.4](https://github.com/vitessio/vitess/releases/tag/v15.0.4) (2023-07-28)
