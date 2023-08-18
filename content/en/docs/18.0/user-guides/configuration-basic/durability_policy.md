@@ -17,8 +17,10 @@ type Durabler interface {
 
 There are 3 implementations supported in this release:
  - ***semi_sync*** - This durability policy sets the number of required semi-sync ACKers to 1. It only allows Primary and Replica type servers to acknowledge semi sync. It returns NeutralPromoteRule for replica tablet types, MustNotPromoteRule for everything else.
+ - ***semi_sync_with_rdonly_ack*** - This durability policy sets the number of required semi-sync ACKers to 1. It allows Primary, Replica and Rdonly type servers to acknowledge semi sync. It returns NeutralPromoteRule for replica tablet types, MustNotPromoteRule for everything else.
  - ***none** (default)* - This durability policy does not set any semi-sync configurations. It returns NeutralPromoteRule for Primary and Replica tablet types, MustNotPromoteRule for everything else
  - ***cross_cell*** - This durability policy sets the number of required semi-sync ACKers to 1. It only allows Primary and Replica type servers from a different cell than the current primary to acknowledge semi sync. It returns NeutralPromoteRule for replica tablet types, MustNotPromoteRule for everything else.
+ - ***cross_cell_with_rdonly_ack*** - This durability policy sets the number of required semi-sync ACKers to 1. It only allows Primary, Replica and Rdonly type servers from a different cell than the current primary to acknowledge semi sync. It returns NeutralPromoteRule for replica tablet types, MustNotPromoteRule for everything else.
 
 
 [EmergencyReparentShard](../../configuration-advanced/reparenting/#emergencyreparentshard-emergency-reparenting) and [PlannedReparentShard](../../configuration-advanced/reparenting/#plannedreparentshard-planned-reparenting) will use the durability rules while choosing the correct candidate for promotion.
