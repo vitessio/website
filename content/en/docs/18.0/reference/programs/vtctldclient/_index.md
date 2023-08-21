@@ -67,6 +67,7 @@ vtctldclient [flags]
 * [vtctldclient GetWorkflows](./vtctldclient_getworkflows/)	 - Gets all vreplication workflows (Reshard, MoveTables, etc) in the given keyspace.
 * [vtctldclient LegacyVtctlCommand](./vtctldclient_legacyvtctlcommand/)	 - Invoke a legacy vtctlclient command. Flag parsing is best effort.
 * [vtctldclient MoveTables](./vtctldclient_movetables/)	 - Perform commands related to moving tables from a source keyspace to a target keyspace.
+* [vtctldclient OnlineDDL](./vtctldclient_onlineddl/)	 - Operates on online DDL (schema migrations).
 * [vtctldclient PingTablet](./vtctldclient_pingtablet/)	 - Checks that the specified tablet is awake and responding to RPCs. This command can be blocked by other in-flight operations.
 * [vtctldclient PlannedReparentShard](./vtctldclient_plannedreparentshard/)	 - Reparents the shard to a new primary, or away from an old primary. Both the old and new primaries must be up and running.
 * [vtctldclient RebuildKeyspaceGraph](./vtctldclient_rebuildkeyspacegraph/)	 - Rebuilds the serving data for the keyspace(s). This command may trigger an update to all connected clients.
