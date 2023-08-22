@@ -22,5 +22,7 @@ Operates on online DDL (schema migrations).
 ### SEE ALSO
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
+* [vtctldclient OnlineDDL cleanup](./vtctldclient_onlineddl_cleanup/)	 - Mark a given schema migration ready for artifact cleanup.
+* [vtctldclient OnlineDDL retry](./vtctldclient_onlineddl_retry/)	 - Mark a given schema migration for retry.
 * [vtctldclient OnlineDDL show](./vtctldclient_onlineddl_show/)	 - Display information about online DDL operations.
 
