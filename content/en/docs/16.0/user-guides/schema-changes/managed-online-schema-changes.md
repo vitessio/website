@@ -88,6 +88,7 @@ Use the standard MySQL `DROP TABLE` syntax. The query goes through the same [mig
 ### CREATE VIEW, ALTER VIEW, DROP VIEW
 
 Use the standard MySQL syntax for these statements. All queries go through the same migration flow as above, and are revertible. Like `DROP TABLE`, a `DROP VIEW` statements does not immediately drop a view, but instead renamed is for safe keeping.
+
 ### Statement transformations
 
 Vitess may modify your queries to qualify for online DDL statement. Modifications include:
