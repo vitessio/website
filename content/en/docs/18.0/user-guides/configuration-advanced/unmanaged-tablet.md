@@ -27,10 +27,10 @@ mysql -h 127.0.0.1 -P 5726 -umsandbox -pmsandbox legacy -e 'show tables'
 <br>Output:
 
 ```text
-~/vitess/examples/local$ source ../common/env.sh
-~/vitess/examples/local$ 
-~/vitess/examples/local$ # verify vtgate/vitess is up and running
-~/vitess/examples/local$ mysql commerce -e 'show tables' 
+$ source ../common/env.sh
+
+$ # verify vtgate/vitess is up and running
+$ mysql commerce -e 'show tables' 
 +-----------------------+
 | Tables_in_vt_commerce |
 +-----------------------+
@@ -38,8 +38,8 @@ mysql -h 127.0.0.1 -P 5726 -umsandbox -pmsandbox legacy -e 'show tables'
 | customer              |
 | product               |
 +-----------------------+
-~/vitess/examples/local$ # verify my unmanaged mysql is running 
-~/vitess/examples/local$ mysql -h 127.0.0.1 -P 5726 -umsandbox -pmsandbox legacy -e 'show tables'
+$ # verify my unmanaged mysql is running 
+$ mysql -h 127.0.0.1 -P 5726 -umsandbox -pmsandbox legacy -e 'show tables'
 mysql: [Warning] Using a password on the command line interface can be insecure.
 +------------------+
 | Tables_in_legacy |
@@ -99,7 +99,7 @@ vtctldclient TabletExternallyReparented zone1-401
 VTGate should now be able to route queries to your unmanaged MySQL server:
 
 ```bash
-~/vitess/examples/local$ mysql legacy -e 'show tables'
+$ mysql legacy -e 'show tables'
 +------------------+
 | Tables_in_legacy |
 +------------------+
@@ -158,10 +158,10 @@ mysql -h 127.0.0.1 -P 5726 -umsandbox -pmsandbox legacy -e 'show tables'
 <br>Output:
 
 ```text
-~/vitess/examples/local$ source ../common/env.sh
-~/vitess/examples/local$ 
-~/vitess/examples/local$ # verify vtgate/vitess is up and running
-~/vitess/examples/local$ mysql commerce -e 'show tables' 
+$ source ../common/env.sh
+$ 
+$ # verify vtgate/vitess is up and running
+$ mysql commerce -e 'show tables' 
 +-----------------------+
 | Tables_in_vt_commerce |
 +-----------------------+
@@ -170,8 +170,8 @@ mysql -h 127.0.0.1 -P 5726 -umsandbox -pmsandbox legacy -e 'show tables'
 | legacytable           |
 | product               |
 +-----------------------+
-~/vitess/examples/local$ # verify my unmanaged mysql is running 
-~/vitess/examples/local$ mysql -h 127.0.0.1 -P 5726 -umsandbox -pmsandbox legacy -e 'show tables'
+$ # verify my unmanaged mysql is running 
+$ mysql -h 127.0.0.1 -P 5726 -umsandbox -pmsandbox legacy -e 'show tables'
 mysql: [Warning] Using a password on the command line interface can be insecure.
 ```
 
