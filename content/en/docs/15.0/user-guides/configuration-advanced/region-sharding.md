@@ -107,7 +107,7 @@ Now start the cluster:
 You should see output similar to the following:
 
 ```text
-~/my-vitess-example> ./101_initial_cluster.sh
+$ ./101_initial_cluster.sh
 add /vitess/global
 add /vitess/zone1
 add zone1 CellInfo
@@ -193,7 +193,7 @@ vtadmin-web is running!
 You can also verify that the processes have started with `pgrep`:
 
 ```bash
-~/my-vitess-example> pgrep -fl vitess
+$ pgrep -fl vitess
 9160 etcd
 9222 vtctld
 9280 mysqld_safe
@@ -227,7 +227,7 @@ Setting up aliases changes `mysql` to always connect to Vitess for your current 
 You should now be able to connect to the VTGate server that was started in `101_initial_cluster.sh`:
 
 ```bash
-~/my-vitess-example> mysql
+$ mysql
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 2
 Server version: 5.7.9-Vitess (Ubuntu)
@@ -252,13 +252,13 @@ mysql> show tables;
 ## Insert some data into the cluster
 
 ```bash
-~/my-vitess-example> mysql < insert_customers.sql
+mysql < insert_customers.sql
 ```
 
 ## Examine the data we just inserted
 
 ```bash
-~/my-vitess-example> mysql --table < show_initial_data.sql
+mysql --table < show_initial_data.sql
 ```
 
 ```text
@@ -342,15 +342,18 @@ Here is the lookup vindex definition. Here we both define the lookup vindex, and
   }
 }
 ```
+
 Once the vindex is available, we have to `Externalize` it for it to be usable.
 Putting this all together, we run the script that combines the above steps.
 
 ```sh
 ./201_main_sharded.sh
 ```
+
 Once this is complete, we can view the new vschema. Note that it now includes both region_vdx and a lookup vindex.
+
 ```text
-~/my-vitess-example> vtctldclient GetVSchema main
+$ vtctldclient GetVSchema main
 {
   "sharded": true,
   "vindexes": {

@@ -97,7 +97,6 @@ cd ~/my-vitess-example/examples/local
 You should see an output similar to the following:
 
 ```bash
-~/my-vitess-example> ./101_initial_cluster.sh
 $ ./101_initial_cluster.sh 
 add /vitess/global
 add /vitess/zone1
@@ -237,7 +236,7 @@ vtadmin-web is running!
 You can also verify that the processes have started with `pgrep`:
 
 ```bash
-~/my-vitess-example> pgrep -fl vitess
+$ pgrep -fl vitess
 14119 etcd
 14176 vtctld
 14251 mysqld_safe
@@ -277,7 +276,7 @@ Setting up aliases changes `mysql` to always connect to Vitess for your current 
 You should now be able to connect to the VTGate server that was started in `101_initial_cluster.sh`:
 
 ```bash
-~/my-vitess-example> mysql
+$ mysql
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 2
 Server version: 8.0.31-Vitess (Ubuntu)

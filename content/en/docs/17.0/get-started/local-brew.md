@@ -40,9 +40,9 @@ At this point Vitess binaries installed under default Homebrew install location 
 ### Install Node 18.16.0+ (required to run VTAdmin)
 
 ```bash
-$ brew install nvm
-$ nvm install --lts 18.16.0
-$ nvm use 18.16.0
+brew install nvm
+nvm install --lts 18.16.0
+nvm use 18.16.0
 ```
 
 See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
@@ -50,9 +50,10 @@ See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmi
 ## Start a Single Keyspace Cluster
 
 For testing purposes initiate following example;
+
 ```bash
-$ cd /usr/local/share/vitess/examples/local/
-$ ./101_initial_cluster.sh
+cd /usr/local/share/vitess/examples/local/
+./101_initial_cluster.sh
 add /vitess/global
 add /vitess/zone1
 add zone1 CellInfo
@@ -146,7 +147,9 @@ vtadmin-web is running!
   - Logs: /Users/florentpoinsard/Code/vitess/vtdataroot/tmp/vtadmin-web.out
   - PID: 49698
 ```
+
 Verify your initial cluster:
+
 ```sql
 $ mysql -e "show vitess_tablets"
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
@@ -157,6 +160,7 @@ $ mysql -e "show vitess_tablets"
 | zone1 | commerce | 0     | RDONLY     | SERVING | zone1-0000000102 | localhost |                      |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
 ```
+
 You can also verify that the processes have started with `pgrep`:
 
 ```bash

@@ -13,9 +13,9 @@ A pure [homebrew setup](../local-brew/) is also available.
 For the purposes of installing software you will need to have brew installed. This will also install curl and git which will also be needed:
 
 ```sh
-$ curl https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh > brew-install.sh
+curl https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh > brew-install.sh
 
-$ bash brew-install.sh
+bash brew-install.sh
 ```
 
 ## Install MySQL and etcd
@@ -23,21 +23,21 @@ $ bash brew-install.sh
 Once brew is installed you will need to install some dependencies for Vitess. Vitess supports the databases listed [here](../../overview/supported-databases/): 
 
 ```sh
-$ brew install automake go mysql mysql-client etcd
+brew install automake go mysql mysql-client etcd
 ```
 
 When MySQL installs with brew it will startup, you will want to shut this process down, as Vitess will be managing the startup and shutdown of MySQL:
 
 ```sh
-$ brew services stop mysql
+brew services stop mysql
 ```
 
 ### Install Node 16.13.0+ (required to run VTAdmin)
 
 ```bash
-$ brew install nvm
-$ nvm install --lts 16.13.0
-$ nvm use 16.13.0
+brew install nvm
+nvm install --lts 16.13.0
+nvm use 16.13.0
 ```
 
 See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
@@ -47,15 +47,15 @@ See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmi
 With the tools you’ve just installed via brew, you will next update your PATH variable so your shell knows where to find the binaries:
 
 ```sh
-$ echo “export PATH=${PATH}:/opt/homebrew/opt/mysql-client/bin:/opt/homebrew/opt/mysql/bin:~/Github/vitess/bin:/Users/jason/go/bin:​​/opt/homebrew/bin” >> ~/.zshrc
-$ source ~/.zshrc
+echo “export PATH=${PATH}:/opt/homebrew/opt/mysql-client/bin:/opt/homebrew/opt/mysql/bin:~/Github/vitess/bin:/Users/jason/go/bin:​​/opt/homebrew/bin” >> ~/.zshrc
+source ~/.zshrc
 ```
 
 If you’re using bash for your shell you’ll have to update the paths in `.bash_profile` or `.bashrc` instead. Mac does not read `.bashrc` by default:
 
 ```sh
-$ echo “export PATH=${PATH}:/opt/homebrew/opt/mysql-client/bin:/opt/homebrew/opt/mysql/bin:~/Github/vitess/bin:/Users/jason/go/bin:/opt/homebrew/bin” >> ~/.bash_profile
-$ source ~/.bash_profile
+echo “export PATH=${PATH}:/opt/homebrew/opt/mysql-client/bin:/opt/homebrew/opt/mysql/bin:~/Github/vitess/bin:/Users/jason/go/bin:/opt/homebrew/bin” >> ~/.bash_profile
+source ~/.bash_profile
 ```
 
 ## System Check
@@ -63,12 +63,12 @@ $ source ~/.bash_profile
 Before going further, you should check to confirm your shell has access to `go`, `mysql`, and `mysqld`. If versions are not returned when you run the following commands you should check that the programs are installed and the path is correct for your shell: 
 
 ```sh
-$ mysqld --version
-$ mysql --version
-$ go version
-$ etcd --version
-$ node --version
-$ npm --version
+mysqld --version
+mysql --version
+go version
+etcd --version
+node --version
+npm --version
 ```
 
 ## Install Vitess
@@ -76,25 +76,25 @@ $ npm --version
 With everything now in place you can clone and build Vitess.
 
 ```sh
-$ git clone https://github.com/vitessio/vitess.git
-$ cd vitess
-$ make build
+git clone https://github.com/vitessio/vitess.git
+cd vitess
+make build
 ```
 
 It will take some time for Vitess to build. Once it completes you should see a bin folder which will hold the Vitess binaries. You will need to add this folder to your `PATH` variable as well: 
 
 ```sh
-$ cd bin
-$ echo "$(printf 'export PATH="${PATH}:'; echo "$(pwd)\"")" >> ~/.zshrc
-$ source ~/.zshrc
+cd bin
+echo "$(printf 'export PATH="${PATH}:'; echo "$(pwd)\"")" >> ~/.zshrc
+source ~/.zshrc
 ```
 
 If you are using bash this will need to be your `.bash_profile` or `.bashrc` file instead:
 
 ```sh
-$ cd bin
-$ echo "$(printf 'export PATH="${PATH}:'; echo "$(pwd)\"")" >> ~/.bash_profile
-$ source ~/.bash_profile
+cd bin
+echo "$(printf 'export PATH="${PATH}:'; echo "$(pwd)\"")" >> ~/.bash_profile
+source ~/.bash_profile
 ```
 
 You are now ready to start your first cluster! Open a new terminal window to ensure your `.bashrc` file changes take effect. 
@@ -104,20 +104,19 @@ You are now ready to start your first cluster! Open a new terminal window to ens
 You are now ready to stand up your first Vitess cluster, using the example scripts provided in the source code. Assuming you are still in the bin directory you will need to navigate to the sample files:
 
 ```sh
-$ cd ../examples/local/
+cd ../examples/local/
 ```
 
 From here you can startup the cluster and source the env file which will help set environment variables used when working with this local cluster: 
 
 ```sh
-$ ./101_initial_cluster.sh
-$ source env.sh
+./101_initial_cluster.sh
+source env.sh
 ```
 
 You should see an output similar to the following:
 
 ```text
-~/my-vitess-example> ./101_initial_cluster.sh
 $ ./101_initial_cluster.sh 
 add /vitess/global
 add /vitess/zone1
@@ -268,7 +267,7 @@ user@computer:~/Github/vitess/examples/local$ rm -rf ./vtdataroot
 You should now be able to connect to the VTGate server that was started in `101_initial_cluster.sh`:
 
 ```sh
-$ mysql -P 15306 -u root --protocol tcp
+mysql -P 15306 -u root --protocol tcp
 ```
 
 </br>
@@ -325,13 +324,13 @@ You can now proceed with [MoveTables](../../user-guides/migration/move-tables).
 Or alternatively, once you are finished with the local examples or if you would like to start over, you can clean up by running the 401_teardown script:
 
 ```sh
-$ ./401_teardown.sh
-$ rm -rf ./vtdataroot
+./401_teardown.sh
+rm -rf ./vtdataroot
 ```
 
 Sometimes you will still need to manually kill processes if there are errors in the environment:
 
 ```sh
-$ pkill -9 -f ./vtdataroot
-$ rm -rf ./vtdataroot
+pkill -9 -f ./vtdataroot
+rm -rf ./vtdataroot
 ```

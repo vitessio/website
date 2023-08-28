@@ -13,9 +13,9 @@ A pure [homebrew setup](../local-brew/) is also available.
 For the purposes of installing software you will need to have brew installed. This will also install curl and git which will also be needed:
 
 ```sh
-$ curl https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh > brew-install.sh
+curl https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh > brew-install.sh
 
-$ bash brew-install.sh
+bash brew-install.sh
 ```
 
 ## Install MySQL and etcd
@@ -23,7 +23,7 @@ $ bash brew-install.sh
 Once brew is installed you will need to install some dependencies for Vitess. Vitess supports the databases listed [here](../../overview/supported-databases/): 
 
 ```sh
-$ brew install automake go mysql mysql-client etcd
+brew install automake go mysql mysql-client etcd
 ```
 
 When MySQL installs with brew it will startup, you will want to shut this process down, as Vitess will be managing the startup and shutdown of MySQL:
@@ -35,9 +35,9 @@ $ brew services stop mysql
 ### Install Node 18.16.0+ (required to run VTAdmin)
 
 ```bash
-$ brew install nvm
-$ nvm install --lts 18.16.0
-$ nvm use 18.16.0
+brew install nvm
+nvm install --lts 18.16.0
+nvm use 18.16.0
 ```
 
 See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
@@ -47,8 +47,8 @@ See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmi
 With the tools you’ve just installed via brew, you will next update your PATH variable so your shell knows where to find the binaries:
 
 ```sh
-$ echo “export PATH=${PATH}:/opt/homebrew/opt/mysql-client/bin:/opt/homebrew/opt/mysql/bin:~/Github/vitess/bin:/Users/jason/go/bin:​​/opt/homebrew/bin” >> ~/.zshrc
-$ source ~/.zshrc
+echo “export PATH=${PATH}:/opt/homebrew/opt/mysql-client/bin:/opt/homebrew/opt/mysql/bin:~/Github/vitess/bin:/Users/jason/go/bin:​​/opt/homebrew/bin” >> ~/.zshrc
+source ~/.zshrc
 ```
 
 If you’re using bash for your shell you’ll have to update the paths in `.bash_profile` or `.bashrc` instead. Mac does not read `.bashrc` by default:
@@ -117,7 +117,7 @@ $ source env.sh
 You should see an output similar to the following:
 
 ```bash
-~/my-vitess-example> ./101_initial_cluster.sh
+$ ./101_initial_cluster.sh
 $ ./101_initial_cluster.sh 
 add /vitess/global
 add /vitess/zone1
