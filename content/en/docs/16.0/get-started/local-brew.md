@@ -40,9 +40,9 @@ At this point Vitess binaries installed under default Homebrew install location 
 ### Install Node 16.13.0+ (required to run VTAdmin)
 
 ```bash
-$ brew install nvm
-$ nvm install --lts 16.13.0
-$ nvm use 16.13.0
+brew install nvm
+nvm install --lts 16.13.0
+nvm use 16.13.0
 ```
 
 See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
@@ -50,6 +50,7 @@ See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmi
 ## Start a Single Keyspace Cluster
 
 For testing purposes initiate following example;
+
 ```bash
 $ cd /usr/local/share/vitess/examples/local/
 $ ./101_initial_cluster.sh
@@ -171,7 +172,9 @@ vtadmin-web is running!
   - PID: 74070
 
 ```
+
 Verify your initial cluster:
+
 ```sql
 $ mysql -e "show vitess_tablets"
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
@@ -182,6 +185,7 @@ $ mysql -e "show vitess_tablets"
 | zone1 | commerce | 0     | RDONLY     | SERVING | zone1-0000000102 | localhost |                      |
 +-------+----------+-------+------------+---------+------------------+-----------+----------------------+
 ```
+
 You can also verify that the processes have started with `pgrep`:
 
 ```bash
@@ -215,7 +219,7 @@ rm -rf /usr/local/Cellar/vitess/9.0.0/share/vitess/examples/local/vtdataroot
 For ease-of-use, Vitess provides aliases for `mysql` and `vtctlclient`:
 
 ```bash
-source ./env.sh
+source ../common/env.sh
 ```
 
 Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctlclient` or close your session.
