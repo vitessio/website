@@ -215,7 +215,7 @@ rm -rf /usr/local/Cellar/vitess/9.0.0/share/vitess/examples/local/vtdataroot
 For ease-of-use, Vitess provides aliases for `mysql` and `vtctlclient`:
 
 ```bash
-source ./env.sh
+source ../common/env.sh
 ```
 
 Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctlclient` or close your session.
