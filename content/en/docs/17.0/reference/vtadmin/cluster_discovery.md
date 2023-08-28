@@ -18,7 +18,7 @@ vtadmin \
   --alsologtostderr \
   --rbac \
   --rbac-config="./vtadmin/rbac.yaml" \
-  --cluster "id=local,name=local,discovery=staticfile,discovery-staticfile-path=./vtadmin/discovery.json,tablet-fqdn-tmpl={{ .Tablet.Hostname }}:15{{ .Tablet.Alias.Uid }}"
+  --cluster "id=local,name=local,discovery=staticfile,discovery-staticfile-path=./vtadmin/discovery.json,tablet-fqdn-tmpl=http://{{ .Tablet.Hostname }}:15{{ .Tablet.Alias.Uid }}"
 ```
 where, in this example, `discovery=staticfile` is specifying static file discovery.
 
@@ -27,7 +27,7 @@ VTAdmin API currently supports a few methods for discovery:
 #### Static file discovery
 With **static file discovery**, VTGate and Vtctld addresses are specified in a static file, whose path is provided as a parameter to the `--cluster` command line argument:
 ```bash
-  --cluster "id=local,name=local,discovery=staticfile,discovery-staticfile-path=./vtadmin/discovery.json,tablet-fqdn-tmpl={{ .Tablet.Hostname }}:15{{ .Tablet.Alias.Uid }}"
+  --cluster "id=local,name=local,discovery=staticfile,discovery-staticfile-path=./vtadmin/discovery.json,tablet-fqdn-tmpl=http://{{ .Tablet.Hostname }}:15{{ .Tablet.Alias.Uid }}"
 ```
 <br/>
 In this example, the file lives at `./vtadmin/discovery.json`, and might look like:
@@ -69,8 +69,8 @@ vtadmin \
   --alsologtostderr \
   --rbac \
   --rbac-config="./vtadmin/rbac.yaml" \
-  --cluster "id=local,name=local,discovery=staticfile,discovery-staticfile-path=./vtadmin/discovery-local.json,tablet-fqdn-tmpl={{ .Tablet.Hostname }}:15{{ .Tablet.Alias.Uid }}"
-  --cluster "id=prod,name=prod,discovery=staticfile,discovery-staticfile-path=./vtadmin/discovery-prod.json,tablet-fqdn-tmpl={{ .Tablet.Hostname }}:15{{ .Tablet.Alias.Uid }}"
+  --cluster "id=local,name=local,discovery=staticfile,discovery-staticfile-path=./vtadmin/discovery-local.json,tablet-fqdn-tmpl=http://{{ .Tablet.Hostname }}:15{{ .Tablet.Alias.Uid }}"
+  --cluster "id=prod,name=prod,discovery=staticfile,discovery-staticfile-path=./vtadmin/discovery-prod.json,tablet-fqdn-tmpl=http://{{ .Tablet.Hostname }}:15{{ .Tablet.Alias.Uid }}"
 ```
 <br/>
 The above multi-cluster configuration would show up in VTAdmin Web as:
