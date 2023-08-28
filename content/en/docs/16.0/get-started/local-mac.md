@@ -111,7 +111,7 @@ From here you can startup the cluster and source the env file which will help se
 
 ```sh
 ./101_initial_cluster.sh
-source env.sh
+source ../common/env.sh
 ```
 
 You should see an output similar to the following:
