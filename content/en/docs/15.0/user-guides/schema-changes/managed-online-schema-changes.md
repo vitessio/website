@@ -31,9 +31,18 @@ As general overview:
   - `DROP TABLE` statements run [safely and lazily](https://github.com/vitessio/vitess/blob/main/doc/design-docs/SafeLazyDropTables.md).
 - Vitess provides the user a mechanism to view migration status, cancel or retry migrations, based on the job ID.
 
-## Syntax
+## Syntax and supported statements
 
-The standard MySQL syntax for `CREATE`, `ALTER` and `DROP` is supported.
+Online DDL applies to the following statements:
+
+- `CREATE TABLE`
+- `ALTER TABLE`
+- `DROP TABLE`
+- `CREATE VIEW`
+- `ALTER VIEW`
+- `DROP VIEW`
+
+Other DDL statements, such as `RENAME`, `TRUNCATE`, `OPTIMIZE`, etc., are not managed by the Online DDL mechanism and are executed directly on the backend MySQL servers.
 
 ### ALTER TABLE
 
@@ -70,6 +79,10 @@ Use the standard MySQL `CREATE TABLE` syntax. The query goes through the same [m
 ### DROP TABLE
 
 Use the standard MySQL `DROP TABLE` syntax. The query goes through the same [migration flow](#migration-flow-and-states) as `ALTER TABLE` does. Tables are not immediately dropped. Instead, they are renamed into special names, recognizable by the table lifecycle mechanism, to then slowly and safely transition through lifecycle states into finally getting dropped.
+
+### CREATE VIEW, ALTER VIEW, DROP VIEW
+
+Use the standard MySQL syntax for these statements. All queries go through the same migration flow as above, and are revertible. Like `DROP TABLE`, a `DROP VIEW` statements does not immediately drop a view, but instead renamed is for safe keeping.
 
 ### Statement transformations
 
