@@ -268,8 +268,8 @@ We caution against against using `EXEC` or `EXEC_IGNORE` for the following reaso
 **default** false
 
 <div class="cmd">
-Do not create routing rules for the tables being moved, when the workflow is created. This implies that you should
-not use global routing or sent traffic to the target keyspace while sending queries to vtgate.
+Do not create routing rules for the tables being moved when the workflow is created. This implies that you should
+not use global routing or send traffic to the target keyspace through a vtgate.
 See https://github.com/vitessio/vitess/pull/13858 and https://github.com/vitessio/vitess/issues/13851 for a use-case
 and more details.
 </div>
