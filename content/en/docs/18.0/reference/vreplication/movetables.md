@@ -150,7 +150,8 @@ of a database with a large number of small tables. The single copy phase copies 
 target.  This implies the following limitations
 * if the workflow breaks at any time during the copy phase it will have to be cancelled and restarted as a new workflow.
 * since the copy phase works with a single snapshot of all tables it could take a long time to complete if the tables
-  are large or the network is slow.
+  are large or the network is slow. You may want to increase the default `--vreplication_copy_phase_duration`
+  vttablet flag which is set to 1 hour by default.
 * the read lock held by the snapshot could impact performance due to the InnoDB History Length on certain
   hardware if the write-qps is high.
 
