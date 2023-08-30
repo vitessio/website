@@ -24,7 +24,7 @@ MoveTables -- [--source=<sourceKs>] [--tables=<tableSpecs>] [--cells=<cells>]
   [--tablet_types=<source_tablet_types>] [--all] [--exclude=<tables>] [--auto_start] 
   [--stop_after_copy] [--timeout=timeoutDuration] [--reverse_replication] [--keep_data] 
   [--keep_routing_rules] [--on-ddl=<ddl-action>] [--source_time_zone=<mysql_time_zone>]
-  [--initialize-target-sequences] 
+  [--initialize-target-sequences] [--atomic-copy]
   <action> <workflow identifier>
 ```
 
@@ -139,6 +139,28 @@ Move all tables from the source keyspace.
 
 </div>
 
+#### --atomic-copy
+**optional**\
+**default** "false"
+
+When this flag is set, the workflow will run in a single copy phase, with no catchup/fastforward phases. A single
+snapshot is taken of all tables in the source and copied to the target. This allows you to import an entire database
+for example if it contains tables with parent/child relationships or for performance reasons, to speed up the copy
+of a database with a large number of small tables. The single copy phase copies *all* tables in the source to the
+target.  This implies the following limitations
+* if the workflow breaks at any time during the copy phase it will have to be cancelled and restarted as a new workflow.
+* since the copy phase works with a single snapshot of all tables it could take a long time to complete if the tables
+  are large or the network is slow.
+* the read lock held by the snapshot could impact performance due to the InnoDB History Length on certain
+  hardware if the write-qps is high.
+
+Implies:
+* `--all` (all tables will be copied)
+
+Incompatible with:
+* `--tables` (cannot specify tables to copy, all tables will be copied)
+* `--exclude` (cannot exclude tables from copy, all tables will be copied)
+
 #### --auto_start
 
 **optional**\
@@ -232,34 +254,6 @@ but the command logs all the steps that would be taken.
 If moving all tables, specifies tables to be skipped.
 
 </div>
-
-_Note_: this is a working name for the flag and may change before we merge the [related PR](https://github.com/vitessio/vitess/pull/13137)
-#### --foreign-key-mode
-**optional**\
-**default** "false"
-
-Vitess currently supports foreign key constraints them when used in the RESTRICT mode for unsharded keyspaces, certain
-core functionality like VReplication and Online DDL will not work if CASCADE constraints are used. CASCADE constraints
-will soon be supported by Vitess, either in v18 or v19, for unsharded only. For sharded keyspaces, foreign key 
-constraints are not planned to be supported in the foreseeable future.
-
-`--foreign-key-mode` allows you to import a database that contain tables with parent/child relationships. In this 
-mode Vitess only runs a single copy phase and copies *all* tables in the source to the target. This implies the 
-following limitations
-* if the workflow breaks at any time during the copy phase it will have to be cancelled and restarted as a new workflow.
-* since the copy phase works with a single snapshot of all tables it could take a long time to complete if the tables 
-  are large or the network is slow. 
-* the read lock held by the snapshot could impact performance due to the InnoDB History Length on certain
-  hardware if the write-qps is high.
-
-Implies: 
-* --all (all tables will be copied)
-
-Incompatible with: 
-* `--tables` (cannot specify tables to copy, all tables will be copied)
-* `--exclude` (cannot exclude tables from copy, all tables will be copied)
-* `--drop_foreign_keys` (cannot drop foreign keys because we want to support them on the target!)
-* `--defer_secondary_keys` (because this flag drops and recreates non-primary keys before and after each table copy)
 
 #### --initialize-target-sequences
 
