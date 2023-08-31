@@ -25,7 +25,7 @@ vtctldclient --server localhost:15999 movetables --workflow commerce2customer --
       --defer-secondary-keys               Defer secondary index creation for a table until after it has been copied
       --exclude-tables strings             Source tables to exclude from copying
   -h, --help                               help for create
-      --no-routing-rules                   (Advanced) MoveTables Create only. Do not create routing rules while creating the workflow. See the reference documentation for limitations if you use this flag.
+      --no-routing-rules                   (Advanced) Do not create routing rules while creating the workflow. See the reference documentation for limitations if you use this flag.
       --on-ddl string                      What to do when DDL is encountered in the VReplication stream. Possible values are IGNORE, STOP, EXEC, and EXEC_IGNORE (default "IGNORE")
       --source-keyspace string             Keyspace where the tables are being moved from (required)
       --source-shards strings              Source shards to copy data from when performing a partial MoveTables (experimental)
