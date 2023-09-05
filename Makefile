@@ -47,4 +47,4 @@ endif
 
 # Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtctldclient-docs
 vtctldclient-docs:
-	go run ./tools/vtctldclientdocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${VTCTLDCLIENT_VERSION_PAIRS}"
+	go run ./tools/vtctldclientdocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${VTCTLDCLIENT_VERSION_PAIRS}" vtctldclient

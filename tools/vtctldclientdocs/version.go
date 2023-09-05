@@ -29,7 +29,7 @@ type version struct {
 }
 
 func (v version) Dir(root string) string {
-	return filepath.Join(root, "content", "en", "docs", v.DocVersion, "reference", "programs", "vtctldclient")
+	return filepath.Join(root, "content", "en", "docs", v.DocVersion, "reference", "programs", binaryName)
 }
 
 func (v version) GenerateDocs(workdir string, vitessDir string, docgenPath string) (err error) {
