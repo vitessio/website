@@ -26,11 +26,13 @@ import (
 )
 
 var (
-	usage       = "Generates website documentation for the `vtctldclient` binary for a given set of <vitessio/vitess-gitref>:<vitessio/website-version> pairs."
+	usage       = "Generates website documentation for the given binary for a given set of <vitessio/vitess-gitref>:<vitessio/website-version> pairs."
 	debug       = flag.Bool("debug", false, "log debug info")
 	vitessDir   = flag.String("vitess-dir", "", "path to vitess checkout")
-	docGenPath  = flag.String("vtctldclientdocgen-path", "./go/cmd/vtctldclient/docgen", "path to the vtctldclient doc generator, **relative to** --vitess-dir")
-	versionStrs = flag.String("version-pairs", "main:16.0", "CSV of <gitref>:<version> pairs to generate docs for; for example, 'v15.0.2:15.0' will generate docs from the v15.0.2 tag into the content/en/15.0 subtree. ensure your vitess checkout is up-to-date (git fetch --all) before running.")
+	docGenPath  = flag.String("docgen-path", "", "path to the binary docs generator, **relative to** --vitess-dir. if blank, defaults to ./go/cmd/`binary`/docgen")
+	versionStrs = flag.String("version-pairs", "main:17.0", "CSV of <gitref>:<version> pairs to generate docs for; for example, 'v15.0.2:15.0' will generate docs from the v15.0.2 tag into the content/en/15.0 subtree. ensure your vitess checkout is up-to-date (git fetch --all) before running.")
+
+	binaryName string
 )
 
 func getValidWorkdir() (string, error) {
@@ -70,10 +72,16 @@ func unwrap[T any](t T, err error) T {
 func main() {
 	flag.Usage = func() {
 		fmt.Fprintf(flag.CommandLine.Output(), "Usage of %s:\n", os.Args[0])
+		fmt.Fprintf(flag.CommandLine.Output(), "%s <binary>\n", os.Args[0])
 		fmt.Fprintf(flag.CommandLine.Output(), "\n%s\n\n", usage)
 		flag.PrintDefaults()
 	}
 	flag.Parse()
+
+	binaryName = flag.Arg(0)
+	if binaryName == "" {
+		log.Fatalf("binary name is required")
+	}
 
 	wd := unwrap(getValidWorkdir())
 
@@ -101,6 +109,10 @@ func main() {
 		}
 
 		versions = append(versions, version)
+	}
+
+	if *docGenPath == "" {
+		*docGenPath = fmt.Sprintf("./go/cmd/%s/docgen", binaryName)
 	}
 
 	for _, version := range versions {
