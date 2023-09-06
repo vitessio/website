@@ -3,7 +3,7 @@ title: VSchema DDL
 weight: 30
 ---
 
-VSchema DDL is an experimental feature that allows users to alter the VSchema by issuing "vschema ddls" directly to vtgate. The vschema_ddl_authorized_users specifies which users can alter the vschema.
+VSchema DDL is an experimental feature that allows users to alter the VSchema by issuing "vschema ddls" directly to vtgate. The `vschema_ddl_authorized_users` flag specifies which users can alter the vschema.
 
 ### Table
 
