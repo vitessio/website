@@ -45,6 +45,10 @@ ifndef COBRADOC_VERSION_PAIRS
 export COBRADOC_VERSION_PAIRS="main:16.0,v15.0.2:15.0"
 endif
 
+# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtctld-docs
+vtctld-docs:
+	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtctld
+
 # Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtctldclient-docs
 vtctldclient-docs:
 	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtctldclient
