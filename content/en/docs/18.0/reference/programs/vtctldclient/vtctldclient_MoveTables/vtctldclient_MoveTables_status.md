@@ -1,25 +1,25 @@
 ---
-title: MoveTables status
+title: MoveTables Status
 series: vtctldclient
 ---
-## vtctldclient MoveTables status
+## vtctldclient MoveTables Status
 
-Show the current status for a MoveTables VReplication workflow.
+Show the current status for a moveTables VReplication workflow.
 
 ```
-vtctldclient MoveTables status
+vtctldclient MoveTables Status
 ```
 
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --target-keyspace customer status
+vtctldclient --server localhost:15999 moveTables --workflow cust2cust --target-keyspace customer status
 ```
 
 ### Options
 
 ```
-  -h, --help   help for status
+  -h, --help   help for Status
 ```
 
 ### Options inherited from parent commands
@@ -27,7 +27,6 @@ vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --
 ```
       --action_timeout duration   timeout for the total command (default 1h0m0s)
       --server string             server to use for connection (required)
-      --target-keyspace string    Keyspace where the tables are being moved to and where the workflow exists (required)
 ```
 
 ### SEE ALSO

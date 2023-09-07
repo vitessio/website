@@ -1,13 +1,13 @@
 ---
-title: Workflow update
+title: Workflow Update
 series: vtctldclient
 ---
-## vtctldclient Workflow update
+## vtctldclient Workflow Update
 
 Update the configuration parameters for a VReplication workflow.
 
 ```
-vtctldclient Workflow update
+vtctldclient Workflow Update
 ```
 
 ### Examples
@@ -20,7 +20,7 @@ vtctldclient --server localhost:15999 workflow --keyspace customer update --work
 
 ```
   -c, --cells strings           New Cell(s) or CellAlias(es) (comma-separated) to replicate from
-  -h, --help                    help for update
+  -h, --help                    help for Update
       --on-ddl string           New instruction on what to do when DDL is encountered in the VReplication stream. Possible values are IGNORE, STOP, EXEC, and EXEC_IGNORE
   -t, --tablet-types strings    New source tablet types to replicate from (e.g. PRIMARY,REPLICA,RDONLY)
       --tablet-types-in-order   When performing source tablet selection, look for candidates in the type order as they are listed in the tablet-types flag (default true)

@@ -1,13 +1,13 @@
 ---
-title: MoveTables Complete
+title: Reshard Complete
 series: vtctldclient
 ---
-## vtctldclient MoveTables Complete
+## vtctldclient Reshard Complete
 
 Complete a MoveTables VReplication workflow.
 
 ```
-vtctldclient MoveTables Complete
+vtctldclient Reshard Complete
 ```
 
 ### Examples
@@ -31,5 +31,5 @@ vtctldclient --server localhost:15999 movetables --workflow commerce2customer --
 
 ### SEE ALSO
 
-* [vtctldclient MoveTables](../)	 - Perform commands related to moving tables from a source keyspace to a target keyspace.
+* [vtctldclient Reshard](../)	 - Perform commands related to resharding a keyspace.
 

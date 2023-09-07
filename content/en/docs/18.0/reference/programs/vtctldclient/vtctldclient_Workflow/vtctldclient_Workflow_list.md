@@ -1,13 +1,13 @@
 ---
-title: Workflow list
+title: Workflow List
 series: vtctldclient
 ---
-## vtctldclient Workflow list
+## vtctldclient Workflow List
 
 List the VReplication workflows in the given keyspace.
 
 ```
-vtctldclient Workflow list
+vtctldclient Workflow List
 ```
 
 ### Examples
@@ -19,7 +19,7 @@ vtctldclient --server localhost:15999 workflow --keyspace customer list
 ### Options
 
 ```
-  -h, --help   help for list
+  -h, --help   help for List
 ```
 
 ### Options inherited from parent commands

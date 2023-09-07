@@ -1,19 +1,19 @@
 ---
-title: MoveTables Stop
+title: Reshard Stop
 series: vtctldclient
 ---
-## vtctldclient MoveTables Stop
+## vtctldclient Reshard Stop
 
-Stop a moveTables workflow.
+Stop a reshard workflow.
 
 ```
-vtctldclient MoveTables Stop
+vtctldclient Reshard Stop
 ```
 
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 moveTables --workflow cust2cust --target-keyspace customer stop
+vtctldclient --server localhost:15999 reshard --workflow cust2cust --target-keyspace customer stop
 ```
 
 ### Options
@@ -31,5 +31,5 @@ vtctldclient --server localhost:15999 moveTables --workflow cust2cust --target-k
 
 ### SEE ALSO
 
-* [vtctldclient MoveTables](../)	 - Perform commands related to moving tables from a source keyspace to a target keyspace.
+* [vtctldclient Reshard](../)	 - Perform commands related to resharding a keyspace.
 

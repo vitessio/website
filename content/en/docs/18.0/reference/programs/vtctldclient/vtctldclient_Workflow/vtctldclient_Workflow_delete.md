@@ -1,13 +1,13 @@
 ---
-title: Workflow delete
+title: Workflow Delete
 series: vtctldclient
 ---
-## vtctldclient Workflow delete
+## vtctldclient Workflow Delete
 
 Delete a VReplication workflow.
 
 ```
-vtctldclient Workflow delete
+vtctldclient Workflow Delete
 ```
 
 ### Examples
@@ -19,7 +19,7 @@ vtctldclient --server localhost:15999 workflow --keyspace customer delete --work
 ### Options
 
 ```
-  -h, --help                 help for delete
+  -h, --help                 help for Delete
       --keep-data            Keep the partially copied table data from the workflow in the target keyspace
       --keep-routing-rules   Keep the routing rules created for the workflow
   -w, --workflow string      The workflow you want to delete (required)

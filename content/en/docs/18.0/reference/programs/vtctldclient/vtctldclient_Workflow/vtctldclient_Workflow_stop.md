@@ -19,8 +19,7 @@ vtctldclient --server localhost:15999 workflow --keyspace customer stop --workfl
 ### Options
 
 ```
-  -h, --help              help for stop
-  -w, --workflow string   The workflow you want to stop (required)
+  -h, --help   help for stop
 ```
 
 ### Options inherited from parent commands

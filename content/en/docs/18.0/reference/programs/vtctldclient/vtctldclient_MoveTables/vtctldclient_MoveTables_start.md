@@ -1,25 +1,25 @@
 ---
-title: MoveTables start
+title: MoveTables Start
 series: vtctldclient
 ---
-## vtctldclient MoveTables start
+## vtctldclient MoveTables Start
 
-Start the MoveTables workflow.
+Start a moveTables workflow.
 
 ```
-vtctldclient MoveTables start
+vtctldclient MoveTables Start
 ```
 
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 movetables --workflow commerce2customer --target-keyspace customer start
+vtctldclient --server localhost:15999 moveTables --workflow cust2cust --target-keyspace customer start
 ```
 
 ### Options
 
 ```
-  -h, --help   help for start
+  -h, --help   help for Start
 ```
 
 ### Options inherited from parent commands
@@ -27,7 +27,6 @@ vtctldclient --server localhost:15999 movetables --workflow commerce2customer --
 ```
       --action_timeout duration   timeout for the total command (default 1h0m0s)
       --server string             server to use for connection (required)
-      --target-keyspace string    Keyspace where the tables are being moved to and where the workflow exists (required)
 ```
 
 ### SEE ALSO
