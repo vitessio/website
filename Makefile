@@ -53,6 +53,14 @@ vtctld-docs:
 vtctldclient-docs:
 	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtctldclient
 
+# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtgate-docs
+vtgate-docs:
+	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtgate
+
 # Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtorc-docs
 vtorc-docs:
 	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtorc
+
+# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vttablet-docs
+vttablet-docs:
+	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vttablet
