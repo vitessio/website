@@ -4,7 +4,7 @@ series: vtorc
 ---
 ## vtorc
 
-VTOrc is the automated fault detection and repair tool of Vitess.
+VTOrc is the automated fault detection and repair tool in Vitess.
 
 ```
 vtorc [flags]
