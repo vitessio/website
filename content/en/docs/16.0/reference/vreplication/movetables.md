@@ -21,6 +21,7 @@ MoveTables -- [--source=<sourceKs>] [--tables=<tableSpecs>] [--cells=<cells>]
   [--tablet_types=<source_tablet_types>] [--all] [--exclude=<tables>] [--auto_start] 
   [--stop_after_copy] [--timeout=timeoutDuration] [--reverse_replication] [--keep_data] 
   [--keep_routing_rules] [--on-ddl=<ddl-action>] [--source_time_zone=<mysql_time_zone>]
+  [--no-routing-rules]
   <action> <workflow identifier>
 ```
 
@@ -260,6 +261,17 @@ We caution against against using `EXEC` or `EXEC_IGNORE` for the following reaso
   * The DDL may take a long time to apply on the target and may disrupt replication, performance, and query execution while it is being applied (if serving traffic from the target)
 {{< /warning >}}
 
+</div>
+
+#### --no-routing-rules
+**optional**\
+**default** false
+
+<div class="cmd">
+Do not create routing rules for the tables being moved when the workflow is created. This implies that you should
+not use global routing or send traffic to the target keyspace through a vtgate.
+See https://github.com/vitessio/vitess/pull/13858 and https://github.com/vitessio/vitess/issues/13851 for a use-case
+and more details.
 </div>
 
 #### --rename_tables
