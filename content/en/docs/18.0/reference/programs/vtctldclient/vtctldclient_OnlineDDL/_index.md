@@ -28,4 +28,6 @@ Operates on online DDL (schema migrations).
 * [vtctldclient OnlineDDL launch](./vtctldclient_onlineddl_launch/)	 - Launch one or all migrations executed with `--postpone-launch`.
 * [vtctldclient OnlineDDL retry](./vtctldclient_onlineddl_retry/)	 - Mark a given schema migration for retry.
 * [vtctldclient OnlineDDL show](./vtctldclient_onlineddl_show/)	 - Display information about online DDL operations.
+* [vtctldclient OnlineDDL throttle](./vtctldclient_onlineddl_throttle/)	 - Throttle one or all migrations.
+* [vtctldclient OnlineDDL unthrottle](./vtctldclient_onlineddl_unthrottle/)	 - Unthrottle one or all migrations.
 
