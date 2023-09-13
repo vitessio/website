@@ -10,6 +10,21 @@ VTOrc is the automated fault detection and repair tool in Vitess.
 vtorc [flags]
 ```
 
+### Examples
+
+```
+vtorc \
+	--topo_implementation etcd2 \
+	--topo_global_server_address localhost:2379 \
+	--topo_global_root /vitess/global \
+	--log_dir $VTDATAROOT/tmp \
+	--port 15000 \
+	--recovery-period-block-duration "10m" \
+	--instance-poll-time "1s" \
+	--topo-information-refresh-duration "30s" \
+	--alsologtostderr
+```
+
 ### Options
 
 ```
@@ -20,6 +35,7 @@ vtorc [flags]
       --audit-to-backend                                            Whether to store the audit log in the VTOrc database
       --audit-to-syslog                                             Whether to store the audit log in the syslog
       --catch-sigpipe                                               catch and ignore SIGPIPE on stdout and stderr if specified
+      --change-tablets-with-errant-gtid-to-drained                  Whether VTOrc should be changing the type of tablets with errant GTIDs to DRAINED
       --clusters_to_watch strings                                   Comma-separated list of keyspaces or keyspace/shards that this instance will monitor and repair. Defaults to all clusters in the topology. Example: "ks1,ks2/-80"
       --config string                                               config file name
       --config-file string                                          Full path of the config file (with extension) to use. If set, --config-path, --config-type, and --config-name are ignored.
