@@ -6,8 +6,22 @@ series: mysqlctl
 
 Shuts mysqld down and removes the directory.
 
+### Synopsis
+
+{{< warning >}}
+This is a destructive operation.
+{{</ warning >}}
+
+Shuts down a `mysqld` instance and removes its data directory.
+
 ```
 mysqlctl teardown [flags]
+```
+
+### Examples
+
+```
+mysqlctl --tablet_uid 101 --alsologtostderr teardown
 ```
 
 ### Options

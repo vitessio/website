@@ -6,8 +6,23 @@ series: mysqlctl
 
 Initializes the directory structure and starts mysqld.
 
+### Synopsis
+
+Bootstraps a new `mysqld` instance, initializes its data directory, and starts the instance.
+The MySQL version and flavor will be auto-detected, with a minimal configuration file applied.
+
 ```
 mysqlctl init [flags]
+```
+
+### Examples
+
+```
+mysqlctl \
+	--alsologtostderr \
+	--tablet_uid 101 \
+	--mysql_port 12345 \
+	init
 ```
 
 ### Options

@@ -6,8 +6,20 @@ series: mysqlctl
 
 Shuts down mysqld, without removing any files.
 
+### Synopsis
+
+Stop a `mysqld` instance that was previously started with `init` or `start`.
+
+For large `mysqld` instances, you may need to extend the `wait_time` to shutdown cleanly.
+
 ```
 mysqlctl shutdown [flags]
+```
+
+### Examples
+
+```
+mysqlctl --tablet_uid 101 --alsologtostderr shutdown
 ```
 
 ### Options

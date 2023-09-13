@@ -6,8 +6,23 @@ series: mysqlctl
 
 Reinitializes my.cnf file with new server_id.
 
+### Synopsis
+
+Regenerate new configuration files for an existing `mysqld` instance (generating new server_id and server_uuid values).
+This could be helpful to revert configuration changes, or to pick up changes made to the bundled config in newer Vitess versions.
+
 ```
 mysqlctl reinit_config [flags]
+```
+
+### Examples
+
+```
+mysqlctl \
+	--alsologtostderr \
+	--tablet_uid 101 \
+	--mysql_port 12345 \
+	reinit_config
 ```
 
 ### Options

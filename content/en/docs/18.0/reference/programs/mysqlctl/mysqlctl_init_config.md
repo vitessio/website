@@ -6,8 +6,23 @@ series: mysqlctl
 
 Initializes the directory structure, creates my.cnf file, but does not start mysqld.
 
+### Synopsis
+
+Bootstraps the configuration for a new `mysqld` instance and initializes its data directory.
+This command is the same as `init` except the `mysqld` server will not be started.
+
 ```
 mysqlctl init_config [flags]
+```
+
+### Examples
+
+```
+mysqlctl \
+	--alsologtostderr \
+	--tablet_uid 101 \
+	--mysql_port 12345 \
+	init_config
 ```
 
 ### Options

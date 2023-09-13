@@ -6,6 +6,14 @@ series: mysqlctl
 
 mysqlctl initializes and controls mysqld with Vitess-specific configuration.
 
+### Synopsis
+
+`mysqlctl` is a command-line client used for managing `mysqld` instances.
+
+It is responsible for bootstrapping tasks such as generating a configuration file for `mysqld` and initializing the instance and its data directory.
+The `mysqld_safe` watchdog is utilized when present.
+This helps ensure that `mysqld` is automatically restarted after failures.
+
 ### Options
 
 ```

@@ -6,8 +6,18 @@ series: mysqlctl
 
 Starts mysqld on an already 'init'-ed directory.
 
+### Synopsis
+
+Resume an existing `mysqld` instance that was previously bootstrapped with `init` or `init_config`
+
 ```
 mysqlctl start [flags]
+```
+
+### Examples
+
+```
+mysqlctl --tablet_uid 101 --alsologtostderr start
 ```
 
 ### Options
