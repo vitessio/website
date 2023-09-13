@@ -6,6 +6,14 @@ series: vtgate
 
 VTGate is a stateless proxy responsible for accepting requests from applications and routing them to the appropriate tablet server(s) for query execution. It speaks both the MySQL Protocol and a gRPC protocol.
 
+### Synopsis
+
+VTGate is a stateless proxy responsible for accepting requests from applications and routing them to the appropriate tablet server(s) for query execution. It speaks both the MySQL Protocol and a gRPC protocol.
+
+### Key Options
+`--srv_topo_cache_ttl`: There may be instances where you will need to increase the cached TTL from the default of 1 second to a higher number:
+* You may want to increase this option if you see that your topo leader goes down and keeps your queries waiting for a few seconds.
+
 ```
 vtgate [flags]
 ```
@@ -13,7 +21,6 @@ vtgate [flags]
 ### Examples
 
 ```
-
 vtgate \
 	--topo_implementation etcd2 \
 	--topo_global_server_address localhost:2379 \
@@ -57,6 +64,7 @@ vtgate \
       --dbddl_plugin string                                              controls how to handle CREATE/DROP DATABASE. use it if you are using your own database provisioning service (default "fail")
       --ddl_strategy string                                              Set default strategy for DDL statements. Override with @@ddl_strategy session variable (default "direct")
       --default_tablet_type topodatapb.TabletType                        The default tablet type to set for queries, when one is not explicitly selected. (default PRIMARY)
+  -d, --dir string                                                       output directory to write documentation (default "doc")
       --discovery_high_replication_lag_minimum_serving duration          Threshold above which replication lag is considered too high when applying the min_number_serving_vttablets flag. (default 2h0m0s)
       --discovery_low_replication_lag duration                           Threshold below which replication lag is considered low enough to be healthy. (default 30s)
       --emit_stats                                                       If set, emit stats to push-based monitoring and stats backends
@@ -103,7 +111,7 @@ vtgate \
       --grpc_use_effective_callerid                                      If set, and SSL is not used, will set the immediate caller id from the effective caller id's principal.
       --healthcheck_retry_delay duration                                 health check retry delay (default 2ms)
       --healthcheck_timeout duration                                     the health check timeout period (default 1m0s)
-  -h, --help                                                             help for vtgate
+  -h, --help                                                             help for docgen
       --jaeger-agent-host string                                         host and port to send spans to. if empty, no tracing will be done
       --keep_logs duration                                               keep logs for this long (using ctime) (zero to keep forever)
       --keep_logs_by_mtime duration                                      keep logs for this long (using mtime) (zero to keep forever)
