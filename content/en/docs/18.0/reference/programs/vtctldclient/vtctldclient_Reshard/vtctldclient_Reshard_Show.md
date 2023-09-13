@@ -1,25 +1,25 @@
 ---
-title: Reshard Show
+title: Reshard show
 series: vtctldclient
 ---
-## vtctldclient Reshard Show
+## vtctldclient Reshard show
 
-Show the details for a reshard VReplication workflow.
+Show the details for a Reshard VReplication workflow.
 
 ```
-vtctldclient Reshard Show
+vtctldclient Reshard show
 ```
 
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 reshard --workflow cust2cust --target-keyspace customer show
+vtctldclient --server localhost:15999 Reshard --workflow cust2cust --target-keyspace customer show
 ```
 
 ### Options
 
 ```
-  -h, --help   help for Show
+  -h, --help   help for show
 ```
 
 ### Options inherited from parent commands

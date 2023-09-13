@@ -1,13 +1,13 @@
 ---
-title: Reshard Complete
+title: Reshard complete
 series: vtctldclient
 ---
-## vtctldclient Reshard Complete
+## vtctldclient Reshard complete
 
 Complete a MoveTables VReplication workflow.
 
 ```
-vtctldclient Reshard Complete
+vtctldclient Reshard complete
 ```
 
 ### Examples
@@ -19,7 +19,7 @@ vtctldclient --server localhost:15999 movetables --workflow commerce2customer --
 ### Options
 
 ```
-  -h, --help   help for Complete
+  -h, --help   help for complete
 ```
 
 ### Options inherited from parent commands

@@ -1,25 +1,25 @@
 ---
-title: MoveTables Show
+title: MoveTables show
 series: vtctldclient
 ---
-## vtctldclient MoveTables Show
+## vtctldclient MoveTables show
 
-Show the details for a moveTables VReplication workflow.
+Show the details for a MoveTables VReplication workflow.
 
 ```
-vtctldclient MoveTables Show
+vtctldclient MoveTables show
 ```
 
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 moveTables --workflow cust2cust --target-keyspace customer show
+vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --target-keyspace customer show
 ```
 
 ### Options
 
 ```
-  -h, --help   help for Show
+  -h, --help   help for show
 ```
 
 ### Options inherited from parent commands

@@ -1,13 +1,13 @@
 ---
-title: MoveTables Complete
+title: MoveTables complete
 series: vtctldclient
 ---
-## vtctldclient MoveTables Complete
+## vtctldclient MoveTables complete
 
 Complete a MoveTables VReplication workflow.
 
 ```
-vtctldclient MoveTables Complete
+vtctldclient MoveTables complete
 ```
 
 ### Examples
@@ -19,7 +19,7 @@ vtctldclient --server localhost:15999 movetables --workflow commerce2customer --
 ### Options
 
 ```
-  -h, --help   help for Complete
+  -h, --help   help for complete
 ```
 
 ### Options inherited from parent commands

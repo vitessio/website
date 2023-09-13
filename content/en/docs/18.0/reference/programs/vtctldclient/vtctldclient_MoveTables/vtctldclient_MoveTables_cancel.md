@@ -1,25 +1,25 @@
 ---
-title: MoveTables Cancel
+title: MoveTables cancel
 series: vtctldclient
 ---
-## vtctldclient MoveTables Cancel
+## vtctldclient MoveTables cancel
 
-Cancel a moveTables VReplication workflow.
+Cancel a MoveTables VReplication workflow.
 
 ```
-vtctldclient MoveTables Cancel
+vtctldclient MoveTables cancel
 ```
 
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 moveTables --workflow cust2cust --target-keyspace customer cancel
+vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --target-keyspace customer cancel
 ```
 
 ### Options
 
 ```
-  -h, --help   help for Cancel
+  -h, --help   help for cancel
 ```
 
 ### Options inherited from parent commands

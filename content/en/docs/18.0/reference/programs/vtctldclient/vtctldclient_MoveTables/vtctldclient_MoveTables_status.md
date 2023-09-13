@@ -1,25 +1,25 @@
 ---
-title: MoveTables Status
+title: MoveTables status
 series: vtctldclient
 ---
-## vtctldclient MoveTables Status
+## vtctldclient MoveTables status
 
-Show the current status for a moveTables VReplication workflow.
+Show the current status for a MoveTables VReplication workflow.
 
 ```
-vtctldclient MoveTables Status
+vtctldclient MoveTables status
 ```
 
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 moveTables --workflow cust2cust --target-keyspace customer status
+vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --target-keyspace customer status
 ```
 
 ### Options
 
 ```
-  -h, --help   help for Status
+  -h, --help   help for status
 ```
 
 ### Options inherited from parent commands

@@ -1,25 +1,25 @@
 ---
-title: Reshard Start
+title: Reshard start
 series: vtctldclient
 ---
-## vtctldclient Reshard Start
+## vtctldclient Reshard start
 
-Start a reshard workflow.
+Start a Reshard workflow.
 
 ```
-vtctldclient Reshard Start
+vtctldclient Reshard start
 ```
 
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 reshard --workflow cust2cust --target-keyspace customer start
+vtctldclient --server localhost:15999 Reshard --workflow cust2cust --target-keyspace customer start
 ```
 
 ### Options
 
 ```
-  -h, --help   help for Start
+  -h, --help   help for start
 ```
 
 ### Options inherited from parent commands

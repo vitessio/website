@@ -1,25 +1,25 @@
 ---
-title: Reshard Stop
+title: Reshard stop
 series: vtctldclient
 ---
-## vtctldclient Reshard Stop
+## vtctldclient Reshard stop
 
-Stop a reshard workflow.
+Stop a Reshard workflow.
 
 ```
-vtctldclient Reshard Stop
+vtctldclient Reshard stop
 ```
 
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 reshard --workflow cust2cust --target-keyspace customer stop
+vtctldclient --server localhost:15999 Reshard --workflow cust2cust --target-keyspace customer stop
 ```
 
 ### Options
 
 ```
-  -h, --help   help for Stop
+  -h, --help   help for stop
 ```
 
 ### Options inherited from parent commands

@@ -4,7 +4,7 @@ series: vtctldclient
 ---
 ## vtctldclient OnlineDDL cancel
 
-Cancel one or all pending migrations, terminating any actively running ones.
+cancel one or all migrations, terminating any running ones as needed.
 
 ```
 vtctldclient OnlineDDL cancel <keyspace> <uuid|all>
@@ -14,7 +14,6 @@ vtctldclient OnlineDDL cancel <keyspace> <uuid|all>
 
 ```
 OnlineDDL cancel test_keyspace 82fa54ac_e83e_11ea_96b7_f875a4d24e90
-OnlineDDL cancel test_keyspace all
 ```
 
 ### Options

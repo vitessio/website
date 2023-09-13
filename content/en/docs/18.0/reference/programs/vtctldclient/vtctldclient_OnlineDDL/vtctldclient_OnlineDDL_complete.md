@@ -4,7 +4,7 @@ series: vtctldclient
 ---
 ## vtctldclient OnlineDDL complete
 
-Complete one or all migrations executed with `--postpone-completion`.
+complete one or all migrations executed with --postpone-completion
 
 ```
 vtctldclient OnlineDDL complete <keyspace> <uuid|all>
@@ -14,7 +14,6 @@ vtctldclient OnlineDDL complete <keyspace> <uuid|all>
 
 ```
 OnlineDDL complete test_keyspace 82fa54ac_e83e_11ea_96b7_f875a4d24e90
-OnlineDDL complete test_keyspace all
 ```
 
 ### Options

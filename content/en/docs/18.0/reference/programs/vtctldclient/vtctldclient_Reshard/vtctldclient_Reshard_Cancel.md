@@ -1,25 +1,25 @@
 ---
-title: Reshard Cancel
+title: Reshard cancel
 series: vtctldclient
 ---
-## vtctldclient Reshard Cancel
+## vtctldclient Reshard cancel
 
-Cancel a reshard VReplication workflow.
+Cancel a Reshard VReplication workflow.
 
 ```
-vtctldclient Reshard Cancel
+vtctldclient Reshard cancel
 ```
 
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 reshard --workflow cust2cust --target-keyspace customer cancel
+vtctldclient --server localhost:15999 Reshard --workflow cust2cust --target-keyspace customer cancel
 ```
 
 ### Options
 
 ```
-  -h, --help   help for Cancel
+  -h, --help   help for cancel
 ```
 
 ### Options inherited from parent commands

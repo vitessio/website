@@ -1,25 +1,25 @@
 ---
-title: Reshard Status
+title: Reshard status
 series: vtctldclient
 ---
-## vtctldclient Reshard Status
+## vtctldclient Reshard status
 
-Show the current status for a reshard VReplication workflow.
+Show the current status for a Reshard VReplication workflow.
 
 ```
-vtctldclient Reshard Status
+vtctldclient Reshard status
 ```
 
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 reshard --workflow cust2cust --target-keyspace customer status
+vtctldclient --server localhost:15999 Reshard --workflow cust2cust --target-keyspace customer status
 ```
 
 ### Options
 
 ```
-  -h, --help   help for Status
+  -h, --help   help for status
 ```
 
 ### Options inherited from parent commands

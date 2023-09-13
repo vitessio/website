@@ -1,13 +1,13 @@
 ---
-title: Workflow Start
+title: Workflow start
 series: vtctldclient
 ---
-## vtctldclient Workflow Start
+## vtctldclient Workflow start
 
 Start a VReplication workflow.
 
 ```
-vtctldclient Workflow Start
+vtctldclient Workflow start
 ```
 
 ### Examples
@@ -19,14 +19,14 @@ vtctldclient --server localhost:15999 workflow --keyspace customer start --workf
 ### Options
 
 ```
-  -h, --help   help for Start
+  -h, --help   help for start
 ```
 
 ### Options inherited from parent commands
 
 ```
       --action_timeout duration   timeout for the total command (default 1h0m0s)
-  -k, --keyspace string           Keyspace context for the workflow (required)
+  -k, --keyspace string           Keyspace context for the workflow (required).
       --server string             server to use for connection (required)
 ```
 

@@ -4,7 +4,7 @@ series: vtctldclient
 ---
 ## vtctldclient OnlineDDL launch
 
-Launch one or all migrations executed with `--postpone-launch`.
+launch one or all migrations executed with --postpone-launch
 
 ```
 vtctldclient OnlineDDL launch <keyspace> <uuid|all>
@@ -14,7 +14,6 @@ vtctldclient OnlineDDL launch <keyspace> <uuid|all>
 
 ```
 OnlineDDL launch test_keyspace 82fa54ac_e83e_11ea_96b7_f875a4d24e90
-OnlineDDL launch test_keyspace all
 ```
 
 ### Options

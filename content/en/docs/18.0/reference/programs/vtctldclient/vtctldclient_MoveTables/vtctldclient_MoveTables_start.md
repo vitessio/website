@@ -1,25 +1,25 @@
 ---
-title: MoveTables Start
+title: MoveTables start
 series: vtctldclient
 ---
-## vtctldclient MoveTables Start
+## vtctldclient MoveTables start
 
-Start a moveTables workflow.
+Start a MoveTables workflow.
 
 ```
-vtctldclient MoveTables Start
+vtctldclient MoveTables start
 ```
 
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 moveTables --workflow cust2cust --target-keyspace customer start
+vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --target-keyspace customer start
 ```
 
 ### Options
 
 ```
-  -h, --help   help for Start
+  -h, --help   help for start
 ```
 
 ### Options inherited from parent commands
