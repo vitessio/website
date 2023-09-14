@@ -11,8 +11,9 @@ VTGate is a stateless proxy responsible for accepting requests from applications
 VTGate is a stateless proxy responsible for accepting requests from applications and routing them to the appropriate tablet server(s) for query execution. It speaks both the MySQL Protocol and a gRPC protocol.
 
 ### Key Options
-`--srv_topo_cache_ttl`: There may be instances where you will need to increase the cached TTL from the default of 1 second to a higher number:
-* You may want to increase this option if you see that your topo leader goes down and keeps your queries waiting for a few seconds.
+
+* `--srv_topo_cache_ttl`: There may be instances where you will need to increase the cached TTL from the default of 1 second to a higher number:
+	* You may want to increase this option if you see that your topo leader goes down and keeps your queries waiting for a few seconds.
 
 ```
 vtgate [flags]
