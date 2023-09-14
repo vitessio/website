@@ -42,7 +42,7 @@ Going cross-cell for non-primary requests is an advanced use case that requires 
 
 For those who wish to use the MySQL protocol, you must specify a `mysql_server_port` and a `mysql_auth_server_impl` for configuring authentication. Predefined auth servers are `clientcert`, `static`, `ldap` and `none`. The most commonly used authentication is `static` that  allows you to specify the credentials through a `mysql_auth_server_static_file` parameter.
 
-The `vschema_ddl_authorized_users` specifies which users can alter the vschema by issuing “[vschema ddls](../../vschema-guide/vschema_ddl)” directly to vtgate. VSchema DDL is an experimental feature.
+The `vschema_ddl_authorized_users` specifies which users can alter the vschema by issuing “vschema ddls” directly to vtgate. VSchema DDL is an experimental feature that will be documented soon.
 
 Here are the contents of an example file that shows the ability to specify MySQL native passwords as well as plain text:
 
@@ -57,7 +57,7 @@ Here are the contents of an example file that shows the ability to specify MySQL
     }
   ],
   "mysql_user2": [
-    {
+    { 
       "Password": "mysql_password",
       "UserData": "mysql_user"
     }
