@@ -32,6 +32,7 @@
       {{/* 'docs_nav_disable_expand' is (currently only) used to hide the caret on the "Older Version Docs" link */}}
       {{/* We can remove it with a better versioning system: see https://github.com/vitessio/website/issues/625 */}}
       {{ $isExpandable := and .IsSection (not .Params.docs_nav_disable_expand) }}
+      {{ $isExpandable := and $isExpandable (gt (len .RegularPages) 0) }}
       {{ $expandableClass := cond $isExpandable "expandable" "" }}
 
       <li class="{{ $expandedClass }} {{ $activeClass }}">
