@@ -47,21 +47,23 @@ func (v version) GenerateDocs(workdir string, vitessDir string, docgenPath strin
 		}
 	}()
 
-	gitCheckout := exec.Command("git", "checkout", v.Ref)
-	debugf(gitCheckout.String())
-	if err = gitCheckout.Run(); err != nil {
-		return err
-	}
-
-	defer func() {
-		gitCheckout := exec.Command("git", "checkout", "-")
+	if v.Ref != "HEAD" {
+		gitCheckout := exec.Command("git", "checkout", v.Ref)
 		debugf(gitCheckout.String())
-		if checkoutErr := gitCheckout.Run(); checkoutErr != nil {
-			if err == nil {
-				err = checkoutErr
-			}
+		if err = gitCheckout.Run(); err != nil {
+			return err
 		}
-	}()
+
+		defer func() {
+			gitCheckout := exec.Command("git", "checkout", "-")
+			debugf(gitCheckout.String())
+			if checkoutErr := gitCheckout.Run(); checkoutErr != nil {
+				if err == nil {
+					err = checkoutErr
+				}
+			}
+		}()
+	}
 
 	if err = isDir(filepath.Join(vitessDir, docgenPath)); err != nil {
 		err = fmt.Errorf("cannot find docgen tool directory: %w", err)
