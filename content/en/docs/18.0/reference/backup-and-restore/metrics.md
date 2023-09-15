@@ -48,6 +48,15 @@ Vtbackup fetches the last backup, restores it to an empty mysql installation, re
 
 _DurationByPhaseSeconds_ exports timings for these individual phases.
 
+#### PhaseStatus
+
+Vtbackup emits status metrics for its phases of execution. `PhaseStatus` reports a 1 (active) or a 0 (inactive) for each of the following phases and statuses:
+
+
+ * `CatchUpReplication` phase has statuses `Stalled` and `Stopped`.
+   * `Stalled` is set to `1` when replication stops advancing.
+   * `Stopped` is set to `1` when replication stops before `vtbackup` catches up with the primary.
+
 <hr style="border-top: 2px dashed brown">
 
 ## Example
