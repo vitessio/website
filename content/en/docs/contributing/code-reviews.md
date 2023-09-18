@@ -100,10 +100,7 @@ all the items on the checklist are satisfied.
 
 ## Approving a Pull Request
 
-As a reviewer you can approve a pull request through two ways:
-
-* Approve the pull request via GitHub's code review system
-* Reply with a comment that contains *LGTM*  (Looks Good To Me)
+As a reviewer you can approve a Pull Request via GitHub's code review system.
 
 ## Merging a Pull Request
 
