@@ -19,7 +19,7 @@ vtctldclient Workflow --keyspace <keyspace> [command] [command-flags]
 
 ```
   -h, --help              help for Workflow
-  -k, --keyspace string   Keyspace context for the workflow (required)
+  -k, --keyspace string   Keyspace context for the workflow (required).
 ```
 
 ### Options inherited from parent commands

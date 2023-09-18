@@ -20,14 +20,14 @@ vtctldclient --server localhost:15999 workflow --keyspace customer show --workfl
 
 ```
   -h, --help              help for show
-  -w, --workflow string   The workflow you want the details for (required)
+  -w, --workflow string   The workflow you want the details for (required).
 ```
 
 ### Options inherited from parent commands
 
 ```
       --action_timeout duration   timeout for the total command (default 1h0m0s)
-  -k, --keyspace string           Keyspace context for the workflow (required)
+  -k, --keyspace string           Keyspace context for the workflow (required).
       --server string             server to use for connection (required)
 ```
 

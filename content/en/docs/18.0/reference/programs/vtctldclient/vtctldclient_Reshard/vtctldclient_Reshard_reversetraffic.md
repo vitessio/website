@@ -1,19 +1,19 @@
 ---
-title: MoveTables reversetraffic
+title: Reshard reversetraffic
 series: vtctldclient
 ---
-## vtctldclient MoveTables reversetraffic
+## vtctldclient Reshard reversetraffic
 
-Reverse traffic for a MoveTables VReplication workflow.
+Reverse traffic for a Reshard VReplication workflow.
 
 ```
-vtctldclient MoveTables reversetraffic
+vtctldclient Reshard reversetraffic
 ```
 
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --target-keyspace customer reversetraffic
+vtctldclient --server localhost:15999 Reshard --workflow cust2cust --target-keyspace customer reversetraffic
 ```
 
 ### Options
@@ -37,5 +37,5 @@ vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --
 
 ### SEE ALSO
 
-* [vtctldclient MoveTables](../)	 - Perform commands related to moving tables from a source keyspace to a target keyspace.
+* [vtctldclient Reshard](../)	 - Perform commands related to resharding a keyspace.
 

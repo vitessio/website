@@ -18,6 +18,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -32,7 +33,7 @@ func (v version) Dir(root string) string {
 	return filepath.Join(root, "content", "en", "docs", v.DocVersion, "reference", "programs", binaryName)
 }
 
-func (v version) GenerateDocs(workdir string, vitessDir string, docgenPath string) (err error) {
+func (v version) GenerateDocs(workdir string, vitessDir string, docgenPath string, graceful bool) (err error) {
 	debugf("chdir %s", vitessDir)
 	if err = os.Chdir(vitessDir); err != nil {
 		return err
@@ -67,6 +68,11 @@ func (v version) GenerateDocs(workdir string, vitessDir string, docgenPath strin
 
 	if err = isDir(filepath.Join(vitessDir, docgenPath)); err != nil {
 		err = fmt.Errorf("cannot find docgen tool directory: %w", err)
+		if graceful {
+			log.Printf("[warning] %s", err)
+			return nil
+		}
+
 		return err
 	}
 

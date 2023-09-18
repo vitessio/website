@@ -1,19 +1,19 @@
 ---
-title: OnlineDDL cancel
+title: Reshard cancel
 series: vtctldclient
 ---
-## vtctldclient OnlineDDL cancel
+## vtctldclient Reshard cancel
 
-cancel one or all migrations, terminating any running ones as needed.
+Cancel a Reshard VReplication workflow.
 
 ```
-vtctldclient OnlineDDL cancel <keyspace> <uuid|all>
+vtctldclient Reshard cancel
 ```
 
 ### Examples
 
 ```
-OnlineDDL cancel test_keyspace 82fa54ac_e83e_11ea_96b7_f875a4d24e90
+vtctldclient --server localhost:15999 Reshard --workflow cust2cust --target-keyspace customer cancel
 ```
 
 ### Options
@@ -31,5 +31,5 @@ OnlineDDL cancel test_keyspace 82fa54ac_e83e_11ea_96b7_f875a4d24e90
 
 ### SEE ALSO
 
-* [vtctldclient OnlineDDL](../)	 - Operates on online DDL (schema migrations).
+* [vtctldclient Reshard](../)	 - Perform commands related to resharding a keyspace.
 
