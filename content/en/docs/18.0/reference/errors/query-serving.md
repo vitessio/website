@@ -62,8 +62,10 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09013 | Durability policy wants Vitess to use semi-sync, but the MySQL instances don't have the semi-sync plugin loaded. | semi-sync plugins are not loaded | 0 |  |
 | VT09014 | The vindex cannot be used as table in DML statement | vindex cannot be modified | 0 |  |
 | VT09015 | This query cannot be planned without more information on the SQL schema. Please turn on schema tracking or add authoritative columns information to your VSchema. | schema tracking required | 0 |  |
+| VT09016 | SET DEFAULT is not supported by InnoDB | Cannot delete or update a parent row: a foreign key constraint fails | 1451 | 23000 |
 | VT10001 | Foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/. | foreign key constraints are not allowed | 0 |  |
 | VT12001 | This statement is unsupported by Vitess. Please rewrite your query to use supported syntax. | unsupported: %s | 0 |  |
+| VT12002 | Vitess does not support cross shard foreign keys. | unsupported: cross-shard foreign keys | 0 |  |
 | VT13001 | This error should not happen and is a bug. Please file an issue on GitHub: https://github.com/vitessio/vitess/issues/new/choose. | [BUG] %s | 0 |  |
 | VT13002 | This error should not happen and is a bug. Please file an issue on GitHub: https://github.com/vitessio/vitess/issues/new/choose. | unexpected AST struct for query: %s | 0 |  |
 | VT14001 | The connection failed. | connection error | 0 |  |
