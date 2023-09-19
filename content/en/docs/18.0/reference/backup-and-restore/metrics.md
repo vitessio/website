@@ -94,7 +94,7 @@ _Phase_ a binary-valued gauge that reports the currently active phase.
   "Phase": {
     "InitialBackup": 0,
     "RestoreLastBackup": 0,
-    "CatchUpReplication": 0,
+    "CatchupReplication": 0,
     "TakeNewBackup": 0
   },
   "RestoreBytes": {
@@ -131,6 +131,6 @@ _Phase_ a binary-valued gauge that reports the currently active phase.
 Some notes to help understand these metrics:
 
  * `BackupBytes["BackupStorage.File.File:Write"]` measures how many bytes were read from disk by the `file` Backup Storage implementation during the backup phase.
-  * `Phase["CatchUpReplication"]` reports whether the catch-up replication phase is active (1) or not (0).
+  * `Phase["CatchupReplication"]` reports whether the catch-up replication phase is active (1) or not (0).
   * `Phase["RestoreLastBackup"]` reports whether the restore last backup phase is active (1) or not (0).
   * `RestoreDurationNanoseconds["-.-.Restore"]` also measures to the duration of the restore phase.
