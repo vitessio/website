@@ -13,15 +13,13 @@ vtctldclient MoveTables cancel
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 movetables --workflow commerce2customer --target-keyspace customer cancel
+vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --target-keyspace customer cancel
 ```
 
 ### Options
 
 ```
-  -h, --help                 help for cancel
-      --keep-data            Keep the partially copied table data from the MoveTables workflow in the target keyspace
-      --keep-routing-rules   Keep the routing rules created for the MoveTables workflow
+  -h, --help   help for cancel
 ```
 
 ### Options inherited from parent commands
@@ -29,7 +27,6 @@ vtctldclient --server localhost:15999 movetables --workflow commerce2customer --
 ```
       --action_timeout duration   timeout for the total command (default 1h0m0s)
       --server string             server to use for connection (required)
-      --target-keyspace string    Keyspace where the tables are being moved to and where the workflow exists (required)
 ```
 
 ### SEE ALSO

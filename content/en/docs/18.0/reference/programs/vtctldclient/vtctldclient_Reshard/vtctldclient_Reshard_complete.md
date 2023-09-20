@@ -1,19 +1,19 @@
 ---
-title: OnlineDDL complete
+title: Reshard complete
 series: vtctldclient
 ---
-## vtctldclient OnlineDDL complete
+## vtctldclient Reshard complete
 
-complete one or all migrations executed with --postpone-completion
+Complete a MoveTables VReplication workflow.
 
 ```
-vtctldclient OnlineDDL complete <keyspace> <uuid|all>
+vtctldclient Reshard complete
 ```
 
 ### Examples
 
 ```
-OnlineDDL complete test_keyspace 82fa54ac_e83e_11ea_96b7_f875a4d24e90
+vtctldclient --server localhost:15999 movetables --workflow commerce2customer --target-keyspace customer complete
 ```
 
 ### Options
@@ -31,5 +31,5 @@ OnlineDDL complete test_keyspace 82fa54ac_e83e_11ea_96b7_f875a4d24e90
 
 ### SEE ALSO
 
-* [vtctldclient OnlineDDL](../)	 - Operates on online DDL (schema migrations).
+* [vtctldclient Reshard](../)	 - Perform commands related to resharding a keyspace.
 

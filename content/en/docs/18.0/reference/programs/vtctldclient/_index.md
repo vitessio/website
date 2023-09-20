@@ -81,6 +81,7 @@ vtctldclient [flags]
 * [vtctldclient RemoveKeyspaceCell](./vtctldclient_removekeyspacecell/)	 - Removes the specified cell from the Cells list for all shards in the specified keyspace (by calling RemoveShardCell on every shard). It also removes the SrvKeyspace for that keyspace in that cell.
 * [vtctldclient RemoveShardCell](./vtctldclient_removeshardcell/)	 - Remove the specified cell from the specified shard's Cells list.
 * [vtctldclient ReparentTablet](./vtctldclient_reparenttablet/)	 - Reparent a tablet to the current primary in the shard.
+* [vtctldclient Reshard](./vtctldclient_reshard/)	 - Perform commands related to resharding a keyspace.
 * [vtctldclient RestoreFromBackup](./vtctldclient_restorefrombackup/)	 - Stops mysqld on the specified tablet and restores the data from either the latest backup or closest before `backup-timestamp`.
 * [vtctldclient RunHealthCheck](./vtctldclient_runhealthcheck/)	 - Runs a healthcheck on the remote tablet.
 * [vtctldclient SetKeyspaceDurabilityPolicy](./vtctldclient_setkeyspacedurabilitypolicy/)	 - Sets the durability-policy used by the specified keyspace.

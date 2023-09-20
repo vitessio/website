@@ -32,6 +32,9 @@ var (
 	docGenPath  = flag.String("docgen-path", "", "path to the binary docs generator, **relative to** --vitess-dir. if blank, defaults to ./go/cmd/`binary`/docgen")
 	versionStrs = flag.String("version-pairs", "main:17.0", "CSV of <gitref>:<version> pairs to generate docs for; for example, 'v15.0.2:15.0' will generate docs from the v15.0.2 tag into the content/en/15.0 subtree. ensure your vitess checkout is up-to-date (git fetch --all) before running.")
 
+	// -graceful=false explicitly to make this harder to use en masse.
+	graceful = flag.Bool("graceful", true, "skip programs/versions where either the docgen directory or target content directory is missing (under the assumption there was no setup for generated docs for that binary/version)")
+
 	binaryName string
 )
 
@@ -105,7 +108,13 @@ func main() {
 		}
 
 		if err := isDir(version.Dir(wd)); err != nil {
-			log.Fatalf("cannot find directory for doc version %s (index=%d): %v", pair, i, err)
+			msg := fmt.Sprintf("cannot find directory for doc version %s (index=%d): %v", pair, i, err)
+			if *graceful {
+				log.Printf("[warning] %s", msg)
+				continue
+			}
+
+			log.Fatal(msg)
 		}
 
 		versions = append(versions, version)
@@ -116,6 +125,6 @@ func main() {
 	}
 
 	for _, version := range versions {
-		must(version.GenerateDocs(wd, *vitessDir, *docGenPath))
+		must(version.GenerateDocs(wd, *vitessDir, *docGenPath, *graceful))
 	}
 }

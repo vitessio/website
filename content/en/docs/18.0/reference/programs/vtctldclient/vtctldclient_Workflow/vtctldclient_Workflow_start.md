@@ -19,15 +19,14 @@ vtctldclient --server localhost:15999 workflow --keyspace customer start --workf
 ### Options
 
 ```
-  -h, --help              help for start
-  -w, --workflow string   The workflow you want to start (required)
+  -h, --help   help for start
 ```
 
 ### Options inherited from parent commands
 
 ```
       --action_timeout duration   timeout for the total command (default 1h0m0s)
-  -k, --keyspace string           Keyspace context for the workflow (required)
+  -k, --keyspace string           Keyspace context for the workflow (required).
       --server string             server to use for connection (required)
 ```
 
