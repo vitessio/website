@@ -45,7 +45,7 @@ ifndef COBRADOC_VERSION_PAIRS
 export COBRADOC_VERSION_PAIRS="main:18.0,v17.0.2:17.0,v16.0.4:16.0,v15.0.4:15.0"
 endif
 
-generated-docs: mysqlctl-docs mysqlctld-docs vtctld-docs vtctldclient-docs vtgate-docs vtorc-docs vttablet-docs
+generated-docs: mysqlctl-docs mysqlctld-docs vtaclcheck-docs vtbackup-docs vtbench-docs vtclient-docs vtcombo-docs vtctld-docs vtctldclient-docs vtgate-docs vtorc-docs vttablet-docs
 
 # Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make mysqlctl-docs
 mysqlctl-docs:
@@ -54,6 +54,26 @@ mysqlctl-docs:
 # Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make mysqlctld-docs
 mysqlctld-docs:
 	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" mysqlctld
+
+# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtaclcheck-docs
+vtaclcheck-docs:
+	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtaclcheck
+
+# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtbackup-docs
+vtbackup-docs:
+	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtbackup
+
+# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtbench-docs
+vtbench-docs:
+	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtbench
+
+# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtclient-docs
+vtclient-docs:
+	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtclient
+
+# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtcombo-docs
+vtcombo-docs:
+	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtcombo
 
 # Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtctld-docs
 vtctld-docs:
