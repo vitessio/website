@@ -1,25 +1,25 @@
 ---
-title: MoveTables status
+title: VDiff stop
 series: vtctldclient
 ---
-## vtctldclient MoveTables status
+## vtctldclient VDiff stop
 
-Show the current status for a MoveTables VReplication workflow.
+Stop a running VDiff.
 
 ```
-vtctldclient MoveTables status
+vtctldclient VDiff stop
 ```
 
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --target-keyspace customer status
+vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --target-keyspace stop a037a9e2-5628-11ee-8c99-0242ac120002
 ```
 
 ### Options
 
 ```
-  -h, --help   help for status
+  -h, --help   help for stop
 ```
 
 ### Options inherited from parent commands
@@ -34,5 +34,5 @@ vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --
 
 ### SEE ALSO
 
-* [vtctldclient MoveTables](../)	 - Perform commands related to moving tables from a source keyspace to a target keyspace.
+* [vtctldclient VDiff](../)	 - Perform commands related to diffing tables involved in a VReplication workflow between the source and target.
 

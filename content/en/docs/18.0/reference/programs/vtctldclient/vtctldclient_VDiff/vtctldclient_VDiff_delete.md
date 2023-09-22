@@ -1,25 +1,26 @@
 ---
-title: MoveTables status
+title: VDiff delete
 series: vtctldclient
 ---
-## vtctldclient MoveTables status
+## vtctldclient VDiff delete
 
-Show the current status for a MoveTables VReplication workflow.
+Delete VDiffs.
 
 ```
-vtctldclient MoveTables status
+vtctldclient VDiff delete
 ```
 
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --target-keyspace customer status
+vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --target-keyspace delete a037a9e2-5628-11ee-8c99-0242ac120002
+vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --target-keyspace delete all
 ```
 
 ### Options
 
 ```
-  -h, --help   help for status
+  -h, --help   help for delete
 ```
 
 ### Options inherited from parent commands
@@ -34,5 +35,5 @@ vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --
 
 ### SEE ALSO
 
-* [vtctldclient MoveTables](../)	 - Perform commands related to moving tables from a source keyspace to a target keyspace.
+* [vtctldclient VDiff](../)	 - Perform commands related to diffing tables involved in a VReplication workflow between the source and target.
 
