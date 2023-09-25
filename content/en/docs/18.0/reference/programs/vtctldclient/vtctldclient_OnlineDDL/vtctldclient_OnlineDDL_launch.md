@@ -1,10 +1,11 @@
 ---
 title: OnlineDDL launch
 series: vtctldclient
+commit: 476ca265d0583549c05a3ab88f76bc8d24174364
 ---
 ## vtctldclient OnlineDDL launch
 
-launch one or all migrations executed with --postpone-launch
+Launch one or all migrations executed with --postpone-launch
 
 ```
 vtctldclient OnlineDDL launch <keyspace> <uuid|all>
