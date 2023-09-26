@@ -1,7 +1,7 @@
 ---
 title: unzip
 series: zk
-commit: 5d802ee3aed9099ee325ff27425099d05090b0e0
+commit: 0e61ba498e0344d37d6e1cae933ae14aa2804fcd
 ---
 ## zk unzip
 
@@ -26,5 +26,5 @@ zk unzip zktree.zip /zk/prefix
 
 ### SEE ALSO
 
-* [zk](../)	 - zk is a tool for wrangling the zookeeper.
+* [zk](../)	 - zk is a tool for wrangling zookeeper.
 

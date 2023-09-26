@@ -45,7 +45,7 @@ ifndef COBRADOC_VERSION_PAIRS
 export COBRADOC_VERSION_PAIRS="main:18.0,v17.0.2:17.0,v16.0.4:16.0,v15.0.4:15.0"
 endif
 
-generated-docs: mysqlctl-docs mysqlctld-docs vtaclcheck-docs vtbackup-docs vtbench-docs vtclient-docs vtcombo-docs vtctld-docs vtctldclient-docs vtgate-docs vtorc-docs vttablet-docs
+generated-docs: mysqlctl-docs mysqlctld-docs vtaclcheck-docs vtbackup-docs vtbench-docs vtclient-docs vtcombo-docs vtctld-docs vtctldclient-docs vtgate-docs vtorc-docs vttablet-docs zk-docs zkctl-docs zkctld-docs
 
 # Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make mysqlctl-docs
 mysqlctl-docs:
@@ -94,3 +94,15 @@ vtorc-docs:
 # Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vttablet-docs
 vttablet-docs:
 	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vttablet
+
+# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make zk-docs
+zk-docs:
+	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" zk
+
+# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make zkctl-docs
+zkctl-docs:
+	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" zkctl
+
+# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make zkctld-docs
+zkctld-docs:
+	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" zkctld

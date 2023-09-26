@@ -1,7 +1,7 @@
 ---
 title: start
 series: zkctl
-commit: 5d802ee3aed9099ee325ff27425099d05090b0e0
+commit: 0e61ba498e0344d37d6e1cae933ae14aa2804fcd
 ---
 ## zkctl start
 
