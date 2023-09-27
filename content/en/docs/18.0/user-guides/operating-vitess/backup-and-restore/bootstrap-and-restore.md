@@ -11,7 +11,7 @@ When a tablet starts, Vitess checks the value of the `--restore_from_backup` com
 
 If the flag is absent, Vitess does not try to restore a backup to the tablet. This is the equivalent of starting a new tablet in a new shard. If the flag is present, then the tablet is seeded by a backup, as follows:
 
-- If `--restore_to_timestamp` or `--restore_to_position` flags are provided, then this is a [point in time recovery](../overview/#restore-types). The tablet auto selects a good full backup followed by a series of incremental backups, that collectively bring it up to date with requested timestamp or position. The tablet is set to `DRAINED` type, and does not begin replicating.
+- If `--restore-to-timestamp` or `--restore-to-pos` flags are provided, then this is a [point in time recovery](../overview/#restore-types). The tablet auto selects a good full backup followed by a series of incremental backups, that collectively bring it up to date with requested timestamp or position. The tablet is set to `DRAINED` type, and does not begin replicating.
 - If neither of these flags is present, then the tablet is running a _full_ restore. Vitess tries to restore the most recent backup from the [BackupStorage](../overview/#backup-storage-services) system when starting the tablet. Or, if the `--restore_from_backup_ts` flag is also set then using the latest backup taken at or before this timestamp instead. Example: `"2021-04-29.133050"`
 
 This flag is generally enabled all of the time for all of the tablets in a shard. By default, if Vitess cannot find a backup in the Backup Storage system, the tablet will start up empty. This behavior allows you to bootstrap a new shard before any backups exist.
