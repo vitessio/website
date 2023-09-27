@@ -192,3 +192,14 @@ Workflows like `MoveTables` make use of routing rules to create the existence of
 
 For more information, please refer to the [Routing Rules](../../../reference/features/schema-routing-rules) section.
 
+## Foreign Key Mode
+
+Vitess supports multiple foreign key modes. A detailed analysis of these different modes can be found on the [foreign keys](../foreign-keys) page.
+
+Each keyspace can be configured to run with a different foreign key mode - 
+```json
+{
+  "sharded": true,
+  "foreignKeyMode": "FK_MANAGED"
+}
+```

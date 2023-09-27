@@ -155,6 +155,8 @@ In cases where you choose to group rows based on their foreign key relationships
 
 Foreign key constraints across shards or keyspaces are not supported in Vitess. For example, you cannot specify a foreign key between `corder.product_id` and `product.product_id`.
 
+A more detailed analysis of foreign keys in Vitess can be found on the [foreign keys](../foreign-keys) page.
+
 ### Many-to-Many relationships
 
 In the case where a table has relationships with multiple other tables, you can only choose one of those relationships for shard grouping. All other relationships will end up being cross-shard, and will incur cross-shard penalties.
