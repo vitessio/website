@@ -18,7 +18,11 @@ To this end, users can configure tables related by foreign keys to use the same 
 - If `ON DELETE CASCADE`, `ON UPDATE CASCADE`, `ON DELETE SET NULL`, etc reference actions are used for foreign keys that cause a change on a child table when the parent is updated, MySQL doesn't report the updates on the child table in the binary log. They happen at the InnoDB level. This causes VReplication to not see the updates on the child, causing issues in [MoveTables](../../migration/move-tables/) and other VReplication based workflows.
 - [OnlineDDL](../../schema-changes/managed-online-schema-changes/) doesn't work well with tables that have foreign key constraints on them.
 
-### Vitess Aware Foreign Keys
+### Vitess Aware Foreign Keys [EXPERIMENTAL]
+
+{{< info >}}
+Please note, that in this version of Vitess, this mode is experimental and should be used cautiously.
+{{< /info >}}
 
 Users can run Vitess such that it keeps track of all the foreign key constraints using the schema tracker. To run Vitess in this mode, `foreignKeyMode` VSchema property has to be set to `FK_MANAGED` for the given keyspace.
 
