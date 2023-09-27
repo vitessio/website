@@ -1,26 +1,26 @@
 ---
-title: Reshard cancel
+title: VDiff stop
 series: vtctldclient
 commit: b089f78945653f6acd17c66f896820e36df49437
 ---
-## vtctldclient Reshard cancel
+## vtctldclient VDiff stop
 
-Cancel a Reshard VReplication workflow.
+Stop a running VDiff.
 
 ```
-vtctldclient Reshard cancel
+vtctldclient VDiff stop
 ```
 
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 Reshard --workflow cust2cust --target-keyspace customer cancel
+vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --target-keyspace stop a037a9e2-5628-11ee-8c99-0242ac120002
 ```
 
 ### Options
 
 ```
-  -h, --help   help for cancel
+  -h, --help   help for stop
 ```
 
 ### Options inherited from parent commands
@@ -35,5 +35,5 @@ vtctldclient --server localhost:15999 Reshard --workflow cust2cust --target-keys
 
 ### SEE ALSO
 
-* [vtctldclient Reshard](../)	 - Perform commands related to resharding a keyspace.
+* [vtctldclient VDiff](../)	 - Perform commands related to diffing tables involved in a VReplication workflow between the source and target.
 
