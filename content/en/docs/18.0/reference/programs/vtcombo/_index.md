@@ -1,6 +1,7 @@
 ---
 title: vtcombo
 series: vtcombo
+commit: 476ca265d0583549c05a3ab88f76bc8d24174364
 ---
 ## vtcombo
 
@@ -152,6 +153,7 @@ vtcombo [flags]
       --gc_check_interval duration                                       Interval between garbage collection checks (default 1h0m0s)
       --gc_purge_check_interval duration                                 Interval between purge discovery checks (default 1m0s)
       --gh-ost-path string                                               override default gh-ost binary full path
+      --grpc-send-session-in-streaming                                   If set, will send the session as last packet in streaming api to support transactions in streaming
       --grpc-use-effective-groups                                        If set, and SSL is not used, will set the immediate caller's security groups from the effective caller id's groups.
       --grpc-use-static-authentication-callerid                          If set, will set the immediate caller id to the username authenticated by the static auth plugin.
       --grpc_auth_mode string                                            Which auth plugin implementation to use (eg: static)
