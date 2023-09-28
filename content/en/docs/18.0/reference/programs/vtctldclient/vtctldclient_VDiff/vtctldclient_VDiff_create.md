@@ -1,7 +1,7 @@
 ---
 title: VDiff create
 series: vtctldclient
-commit: b089f78945653f6acd17c66f896820e36df49437
+commit: 30385807689b40668d60dbb5059ea0987f19da5c
 ---
 ## vtctldclient VDiff create
 
@@ -31,6 +31,7 @@ vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --targe
       --source-cells strings                      The source cell(s) to compare from; default is any available cell.
       --tables strings                            Only run vdiff for these tables in the workflow.
       --tablet-types strings                      Tablet types to use on the source and target.
+      --tablet-types-in-preference-order          When performing source tablet selection, look for candidates in the type order as they are listed in the tablet-types flag. (default true)
       --target-cells strings                      The target cell(s) to compare with; default is any available cell.
       --update-table-stats                        Update the table statistics, using ANALYZE TABLE, on each table involved in the VDiff during initialization. This will ensure that progress estimates are as accurate as possible -- but it does involve locks and can potentially impact query processing on the target keyspace.
       --wait                                      When creating or resuming a vdiff, wait for it to finish before exiting.
