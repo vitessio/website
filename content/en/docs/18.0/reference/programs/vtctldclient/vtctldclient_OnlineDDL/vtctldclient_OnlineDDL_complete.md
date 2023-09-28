@@ -1,10 +1,11 @@
 ---
 title: OnlineDDL complete
 series: vtctldclient
+commit: 476ca265d0583549c05a3ab88f76bc8d24174364
 ---
 ## vtctldclient OnlineDDL complete
 
-complete one or all migrations executed with --postpone-completion
+Complete one or all migrations executed with --postpone-completion
 
 ```
 vtctldclient OnlineDDL complete <keyspace> <uuid|all>

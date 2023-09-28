@@ -1,6 +1,7 @@
 ---
 title: OnlineDDL throttle
 series: vtctldclient
+commit: 476ca265d0583549c05a3ab88f76bc8d24174364
 ---
 ## vtctldclient OnlineDDL throttle
 
