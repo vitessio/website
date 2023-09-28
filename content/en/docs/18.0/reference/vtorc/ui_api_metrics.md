@@ -28,13 +28,16 @@ VTOrc supports the following APIs which can be used for monitoring and changing 
 
 Metrics are available to be seen on the `/debug/vars` page. VTOrc exports the following metrics:
 
-| Metric                  | Usage                                                                                                |
-|-------------------------|------------------------------------------------------------------------------------------------------|
-| `PendingRecoveries`     | The number of recoveries in progress which haven't completed.                                        |
-| `RecoveriesCount`       | The number of recoveries run. This is further subdivided for all the different recoveries.           |
-| `SuccessfulRecoveries`  | The number of succesful recoveries run. This is further subdivided for all the different recoveries. |
-| `FailedRecoveries`      | The number of recoveries that failed. This is further subdivided for all the different recoveries.   |
-| `ErrantGtidTabletCount` | The number of tablets with errant GTIDs as detected by VTOrc.                                        |
+| Metric                             | Usage                                                                                                                                   |
+|------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| `PendingRecoveries`                | The number of recoveries in progress which haven't completed.                                                                           |
+| `RecoveriesCount`                  | The number of recoveries run. This is further subdivided for all the different recoveries.                                              |
+| `SuccessfulRecoveries`             | The number of succesful recoveries run. This is further subdivided for all the different recoveries.                                    |
+| `FailedRecoveries`                 | The number of recoveries that failed. This is further subdivided for all the different recoveries.                                      |
+| `ErrantGtidTabletCount`            | The number of tablets with errant GTIDs as detected by VTOrc.                                                                           |
+| `planned_reparent_counts`          | Number of times Planned Reparent Shard has been run. It is further subdivided by the keyspace, shard and the result of the operation.   |
+| `emergency_reparent_counts`        | Number of times Emergency Reparent Shard has been run. It is further subdivided by the keyspace, shard and the result of the operation. |
+| `reparent_shard_operation_timings` | Timings of reparent shard operations indexed by the type of operation.                                                                  |
 
 
 {{< info >}}

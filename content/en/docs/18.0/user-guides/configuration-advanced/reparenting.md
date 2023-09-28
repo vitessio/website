@@ -78,6 +78,16 @@ This command performs the following actions:
 
 The new primary (if unspecified) is chosen using the configured [Durability Policy](../../configuration-basic/durability_policy).
 
+### Metrics
+
+Metrics are available to be seen on the `/debug/vars` page of VTOrc and vtctld for the reparent operations that they execute:
+
+| Metric                             | Usage                                                                                                                                   |
+|------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| `planned_reparent_counts`          | Number of times Planned Reparent Shard has been run. It is further subdivided by the keyspace, shard and the result of the operation.   |
+| `emergency_reparent_counts`        | Number of times Emergency Reparent Shard has been run. It is further subdivided by the keyspace, shard and the result of the operation. |
+| `reparent_shard_operation_timings` | Timings of reparent shard operations indexed by the type of operation.                                                                  |
+
 ## External Reparenting
 
 External reparenting occurs when another tool handles the process of changing a shard's primary tablet. After that occurs, the tool needs to call the [`vtctl TabletExternallyReparented`](../../../reference/programs/vtctl/shards/#tabletexternallyreparented) command to ensure that the topology service, replication graph, and serving graph are updated accordingly.
