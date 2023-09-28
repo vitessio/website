@@ -4,6 +4,20 @@ weight: 1
 aliases: ['/resources/presentations.html', '/docs/resources/presentations/']
 ---
 
+## Percona Live 2023
+
+[Vitess at GitHub](https://videos.perconalive.com/watch/DyDnR68XXcqYq3JzimZ3Z5) - Arthur Schreiber, GitHub
+
+[Continuous and Automated Performance Benchmarking for Your Database](https://videos.perconalive.com/watch/bPeJAqQ5FomWsJvnehKYoH) - Florent Poinsard, PlanetScale
+
+## KubeCon EU 2023
+
+Introduction to Vitess and Real World Usage - Arthur Schreiber, GitHub & Florent Poinsard, PlanetScale
+{{< youtube id="C2DsT1_zK_4" autoplay="false" >}}
+
+Scaling Databases at Activision - Greg Smith & Vladimir Kovacik, Activision/Blizzard
+{{< youtube id="_ba9tbivT28" autoplay="false" >}}
+
 ## FOSDEM 2023
 
 [Life of a Query in Vitess](https://ftp.fau.de/fosdem/2023/K.3.201/life_query_vitess.webm) - Harshit Gangal, PlanetScale
@@ -45,7 +59,7 @@ Vitess: Introduction and New Features - Deepthi Sigireddi & Alkin Tezuysal, Plan
 
 {{< youtube id="uKdMR89mfdE" autoplay="false" >}}
 
-## Perconalive 2021
+## Percona Live 2021
 
 Deploying a Sharded Vitess Sandbox Cluster in Public Cloud Kubernetes in 10 Minutes - Jordan Moldow, Box
 
@@ -88,7 +102,7 @@ KubeCon featured several Vitess talks, including:
 * [Vitess: Introduction and New Features](https://youtu.be/Nqzhgzg5WCw) - Sugu Sougoumarane & Deepthi Sigireddi, PlanetScale
 * [Codename VIFL - How to Migrate MySQL Database Clusters to Vitess](https://youtu.be/k51L0xdClGQ) - Guido Iaquinti & Rafael Chacon , Slack
 
-## Perconalive Europe Online 2020
+## Percona Live Europe Online 2020
 
 Vitess Online Schema Migration Automation - Shlomi Noach, PlanetScale
 
@@ -118,7 +132,7 @@ A demo of the new Vitess-native Orchestrator - Sugu Sougoumarane, CTO, PlanetSca
 
 {{< youtube id="JVHi2oN3lxM" autoplay="false" >}}
 
-## Perconalive NA Online 2020
+## Percona Live NA Online 2020
 
 Unbounded scale: Using Vitess for scaling write intensive workloads - Morgan Tocker, PlanetScale; Daniel Guzman Burgos, Percona
 
