@@ -68,13 +68,6 @@ the highest level of security. Accordingly, it is very important to test
 your ACL config thoroughly before applying, pay attention to access
 permissions on the ACL config file, etc.
 
-## ACLs and schema tracking
-
-If you are using the VTGate [schema tracking](https://vitess.io/docs/reference/features/schema-tracking/)
-feature, you will want to review https://vitess.io/docs/reference/features/schema-tracking/#vtgate .
-Specifically, you will need to specify a user with the appropriate access
-for your ACL config in the VTGate `-schema_change_signal_user` parameter.
-
 ## Format of the table ACL config file
 
 The file specified in the `--table-acl-config` parameter above is a JSON
