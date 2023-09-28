@@ -10,6 +10,8 @@ aliases: ['/resources/presentations.html', '/docs/resources/presentations/']
 
 [Continuous and Automated Performance Benchmarking for Your Database](https://videos.perconalive.com/watch/bPeJAqQ5FomWsJvnehKYoH) - Florent Poinsard, PlanetScale
 
+[MySQL and Vitess (and Kubernetes) at HubSpot](https://speakerdeck.com/jfg956/mysql-and-vitess-and-kubernetes-at-hubspot) - Jean-François Gagné & Swetha Narayanaswamy, HubSpot
+
 ## KubeCon EU 2023
 
 Introduction to Vitess and Real World Usage - Arthur Schreiber, GitHub & Florent Poinsard, PlanetScale
