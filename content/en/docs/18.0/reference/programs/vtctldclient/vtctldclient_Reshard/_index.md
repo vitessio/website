@@ -1,6 +1,7 @@
 ---
 title: Reshard
 series: vtctldclient
+commit: b089f78945653f6acd17c66f896820e36df49437
 ---
 ## vtctldclient Reshard
 
@@ -16,8 +17,8 @@ See the --help output for each command for more details.
 ```
       --format string            The format of the output; supported formats are: text,json. (default "text")
   -h, --help                     help for Reshard
-      --target-keyspace string   Target keyspace for this workflow exists (required).
-  -w, --workflow string          The workflow you want to perform the command on (required).
+      --target-keyspace string   Target keyspace for this workflow.
+  -w, --workflow string          The workflow you want to perform the command on.
 ```
 
 ### Options inherited from parent commands

@@ -1,7 +1,7 @@
 ---
 title: vttablet
 series: vttablet
-commit: 0e61ba498e0344d37d6e1cae933ae14aa2804fcd
+commit: 30385807689b40668d60dbb5059ea0987f19da5c
 ---
 ## vttablet
 
@@ -99,7 +99,7 @@ vttablet \
       --config-file string                                               Full path of the config file (with extension) to use. If set, --config-path, --config-type, and --config-name are ignored.
       --config-file-not-found-handling ConfigFileNotFoundHandling        Behavior when a config file is not found. (Options: error, exit, ignore, warn) (default warn)
       --config-name string                                               Name of the config file (without extension) to search for. (default "vtconfig")
-      --config-path strings                                              Paths to search for config files in. (default [/Users/andrew/dev/vitess])
+      --config-path strings                                              Paths to search for config files in. (default [$WORKDIR])
       --config-persistence-min-interval duration                         minimum interval between persisting dynamic config changes back to disk (if no change has occurred, nothing is done). (default 1s)
       --config-type string                                               Config file type (omit to infer config type from file extension).
       --consolidator-stream-query-size int                               Configure the stream consolidator query size in bytes. Setting to 0 disables the stream consolidator. (default 2097152)
@@ -312,6 +312,8 @@ vttablet \
       --relay_log_max_size int                                           Maximum buffer size (in bytes) for VReplication target buffering. If single rows are larger than this, a single row is buffered at a time. (default 250000)
       --remote_operation_timeout duration                                time to wait for a remote operation (default 15s)
       --replication_connect_retry duration                               how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s)
+      --restore-to-pos string                                            (init incremental restore parameter) if set, run a point in time recovery that ends with the given position. This will attempt to use one full backup followed by zero or more incremental backups
+      --restore-to-timestamp string                                      (init incremental restore parameter) if set, run a point in time recovery that restores up to the given timestamp, if possible. Given timestamp in RFC3339 format. Example: '2006-01-02T15:04:05Z07:00'
       --restore_concurrency int                                          (init restore parameter) how many concurrent files to restore at once (default 4)
       --restore_from_backup                                              (init restore parameter) will check BackupStorage for a recent backup at startup and start there
       --restore_from_backup_ts string                                    (init restore parameter) if set, restore the latest backup taken at or before this timestamp. Example: '2021-04-29.133050'

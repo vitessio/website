@@ -1,10 +1,11 @@
 ---
 title: MoveTables create
 series: vtctldclient
+commit: b089f78945653f6acd17c66f896820e36df49437
 ---
 ## vtctldclient MoveTables create
 
-Create and optionally run a moveTables VReplication workflow.
+Create and optionally run a MoveTables VReplication workflow.
 
 ```
 vtctldclient MoveTables create
@@ -28,7 +29,7 @@ vtctldclient --server localhost:15999 movetables --workflow commerce2customer --
   -h, --help                               help for create
       --no-routing-rules                   (Advanced) Do not create routing rules while creating the workflow. See the reference documentation for limitations if you use this flag.
       --on-ddl string                      What to do when DDL is encountered in the VReplication stream. Possible values are IGNORE, STOP, EXEC, and EXEC_IGNORE. (default "IGNORE")
-      --source-keyspace string             Keyspace where the tables are being moved from (required).
+      --source-keyspace string             Keyspace where the tables are being moved from.
       --source-shards strings              Source shards to copy data from when performing a partial moveTables (experimental).
       --source-time-zone string            Specifying this causes any DATETIME fields to be converted from the given time zone into UTC.
       --stop-after-copy                    Stop the MoveTables workflow after it's finished copying the existing rows and before it starts replicating changes.
@@ -41,7 +42,10 @@ vtctldclient --server localhost:15999 movetables --workflow commerce2customer --
 
 ```
       --action_timeout duration   timeout for the total command (default 1h0m0s)
+      --format string             The format of the output; supported formats are: text,json. (default "text")
       --server string             server to use for connection (required)
+      --target-keyspace string    Target keyspace for this workflow.
+  -w, --workflow string           The workflow you want to perform the command on.
 ```
 
 ### SEE ALSO
