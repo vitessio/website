@@ -22,6 +22,10 @@ Scaling Databases at Activision - Greg Smith & Vladimir Kovacik, Activision/Bliz
 
 [Life of a Query in Vitess](https://ftp.fau.de/fosdem/2023/K.3.201/life_query_vitess.webm) - Harshit Gangal, PlanetScale
 
+## preFOSDEM MySQL Days 2023
+
+[How Vitess achieves Consensus with Replicated MySQL](https://www.mysql.com/news-and-events/events/preFOSDEM_MySQL_Days_2023/preFOSDEM_MySQL_Days_-_How_Vitess_achieves_Consensus_with_Replicated_MySQL.pdf) - Deepthi Sigireddi, PlanetScale
+
 ## KubeCon NA 2022
 
 One VTOrc To Rule Them All – High Availability In a Distributed Database System - Deepthi Sigireddi & Manan Gupta, PlanetScale
