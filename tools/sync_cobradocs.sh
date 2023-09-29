@@ -2,13 +2,21 @@
 
 set -exuo pipefail
 
-tmp="$(mktemp -d vitessio.website)"
-trap "rm -rf ${tmp}" EXIT
+persist_tmpdir=${COBRADOCS_SYNC_PERSIST:-}
+tmp="vitessio.website"
 
-git clone --depth=1 git@github.com:vitessio/vitess "${tmp}/vitess" && \
-    cd "${tmp}/vitess" && \
-    git fetch --tags && \
-    cd -
+if [[ -z "${persist_tmpdir}" ]]; then
+    trap "rm -rf ${tmp}" EXIT
+fi
+
+if [ ! -d "${tmp}" ]; then
+    tmp="$(mktemp -d vitessio.website)"
+
+    git clone --depth=1 git@github.com:vitessio/vitess "${tmp}/vitess" && \
+        cd "${tmp}/vitess" && \
+        git fetch --tags && \
+        cd -
+fi
 
 VITESS_DIR="$(pwd)/${tmp}/vitess" make generated-docs
 
