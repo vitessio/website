@@ -35,6 +35,7 @@ Metrics are available to be seen on the `/debug/vars` page. VTOrc exports the fo
 | `SuccessfulRecoveries`             | The number of succesful recoveries run. This is further subdivided for all the different recoveries.                                    |
 | `FailedRecoveries`                 | The number of recoveries that failed. This is further subdivided for all the different recoveries.                                      |
 | `ErrantGtidTabletCount`            | The number of tablets with errant GTIDs as detected by VTOrc.                                                                           |
+| `DetectedProblems`                 | Binary gauge that shows the active problems that VTOrc has detected. This is further subdivided by TabletAlias, Keyspace, and Shard.    |
 | `planned_reparent_counts`          | Number of times Planned Reparent Shard has been run. It is further subdivided by the keyspace, shard and the result of the operation.   |
 | `emergency_reparent_counts`        | Number of times Emergency Reparent Shard has been run. It is further subdivided by the keyspace, shard and the result of the operation. |
 | `reparent_shard_operation_timings` | Timings of reparent shard operations indexed by the type of operation.                                                                  |
