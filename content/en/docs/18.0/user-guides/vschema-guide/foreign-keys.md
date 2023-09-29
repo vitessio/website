@@ -9,7 +9,7 @@ For running foreign keys in Vitess, the users have a few options. Let's explore 
 
 Users can run Vitess such that it doesn't know about or care for the foreign key constraints existing on MySQL. To run Vitess in this mode, `foreignKeyMode` VSchema property has to be set to `FK_UNMANAGED` for the given keyspace. This is the default mode for Vitess as well.
 
-It is upto the users to configure the foreign keys in MySQL such that rows that are related by foreign keys end up living in the same shard.
+It is up to the users to configure the foreign keys in MySQL such that rows that are related by foreign keys end up living in the same shard.
 To this end, users can configure tables related by foreign keys to use the same shared vindex. More detail about this can be read in [shared vindexes](../shared-vindexes/#foreign-keys).
 
 #### Limitations
