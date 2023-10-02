@@ -1,10 +1,11 @@
 ---
 title: OnlineDDL cancel
 series: vtctldclient
+commit: 476ca265d0583549c05a3ab88f76bc8d24174364
 ---
 ## vtctldclient OnlineDDL cancel
 
-cancel one or all migrations, terminating any running ones as needed.
+Cancel one or all migrations, terminating any running ones as needed.
 
 ```
 vtctldclient OnlineDDL cancel <keyspace> <uuid|all>

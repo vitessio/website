@@ -283,8 +283,6 @@ In this example there are only a few rows in the tables, so the `MoveTables` ope
 ```bash
 $ vtctlclient MoveTables -- Progress customer.commerce2customer
 
-Copy Completed.
-
 The following vreplication streams exist for workflow customer.commerce2customer:
 
 id=1 on 0/zone1-0000000201: Status: Running. VStream Lag: 0s.

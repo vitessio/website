@@ -1,6 +1,7 @@
 ---
 title: vtgate
 series: vtgate
+commit: 30385807689b40668d60dbb5059ea0987f19da5c
 ---
 ## vtgate
 
@@ -56,7 +57,7 @@ vtgate \
       --config-file string                                               Full path of the config file (with extension) to use. If set, --config-path, --config-type, and --config-name are ignored.
       --config-file-not-found-handling ConfigFileNotFoundHandling        Behavior when a config file is not found. (Options: error, exit, ignore, warn) (default warn)
       --config-name string                                               Name of the config file (without extension) to search for. (default "vtconfig")
-      --config-path strings                                              Paths to search for config files in. (default [/Users/andrew/dev/vitess])
+      --config-path strings                                              Paths to search for config files in. (default [$WORKDIR])
       --config-persistence-min-interval duration                         minimum interval between persisting dynamic config changes back to disk (if no change has occurred, nothing is done). (default 1s)
       --config-type string                                               Config file type (omit to infer config type from file extension).
       --consul_auth_static_file string                                   JSON File to read the topos/tokens from.
@@ -80,6 +81,7 @@ vtgate \
       --foreign_key_mode string                                          This is to provide how to handle foreign key constraint in create/alter table. Valid values are: allow, disallow (default "allow")
       --gate_query_cache_memory int                                      gate server query cache size in bytes, maximum amount of memory to be cached. vtgate analyzes every incoming query and generate a query plan, these plans are being cached in a lru cache. This config controls the capacity of the lru cache. (default 33554432)
       --gateway_initial_tablet_timeout duration                          At startup, the tabletGateway will wait up to this duration to get at least one tablet per keyspace/shard/tablet type (default 30s)
+      --grpc-send-session-in-streaming                                   If set, will send the session as last packet in streaming api to support transactions in streaming
       --grpc-use-effective-groups                                        If set, and SSL is not used, will set the immediate caller's security groups from the effective caller id's groups.
       --grpc-use-static-authentication-callerid                          If set, will set the immediate caller id to the username authenticated by the static auth plugin.
       --grpc_auth_mode string                                            Which auth plugin implementation to use (eg: static)
