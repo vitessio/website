@@ -1,6 +1,7 @@
 ---
 title: vttablet
 series: vttablet
+commit: d5efe8eed32db0ae6516cb01fa4d61f5df54bafb
 ---
 ## vttablet
 
@@ -73,6 +74,7 @@ vttablet \
       --backup_storage_compress                                          if set, the backup files will be compressed. (default true)
       --backup_storage_implementation string                             Which backup storage implementation to use for creating and restoring backups.
       --backup_storage_number_blocks int                                 if backup_storage_compress is true, backup_storage_number_blocks sets the number of blocks that can be processed, in parallel, before the writer blocks, during compression (default is 2). It should be equal to the number of CPUs available for compression. (default 2)
+      --bind-address string                                              Bind address for the server. If empty, the server will listen on all available unicast and anycast IP addresses of the local system.
       --binlog_host string                                               PITR restore parameter: hostname/IP of binlog server.
       --binlog_password string                                           PITR restore parameter: password of binlog server.
       --binlog_player_grpc_ca string                                     the server ca to use to validate servers when connecting
@@ -98,7 +100,7 @@ vttablet \
       --config-file string                                               Full path of the config file (with extension) to use. If set, --config-path, --config-type, and --config-name are ignored.
       --config-file-not-found-handling ConfigFileNotFoundHandling        Behavior when a config file is not found. (Options: error, exit, ignore, warn) (default warn)
       --config-name string                                               Name of the config file (without extension) to search for. (default "vtconfig")
-      --config-path strings                                              Paths to search for config files in. (default [/Users/andrew/dev/vitess])
+      --config-path strings                                              Paths to search for config files in. (default [$WORKDIR])
       --config-persistence-min-interval duration                         minimum interval between persisting dynamic config changes back to disk (if no change has occurred, nothing is done). (default 1s)
       --config-type string                                               Config file type (omit to infer config type from file extension).
       --consolidator-stream-query-size int                               Configure the stream consolidator query size in bytes. Setting to 0 disables the stream consolidator. (default 2097152)
@@ -187,6 +189,7 @@ vttablet \
       --grpc_auth_mtls_allowed_substrings string                         List of substrings of at least one of the client certificate names (separated by colon).
       --grpc_auth_static_client_creds string                             When using grpc_static_auth in the server, this file provides the credentials to use to authenticate with server.
       --grpc_auth_static_password_file string                            JSON File to read the users/passwords from.
+      --grpc_bind_address string                                         Bind address for gRPC calls. If empty, listen on all addresses.
       --grpc_ca string                                                   server CA to use for gRPC connections, requires TLS, and enforces client certificate check
       --grpc_cert string                                                 server certificate to use for gRPC connections, requires grpc_key, enables TLS
       --grpc_compression string                                          Which protocol to use for compressing gRPC. Default: nothing. Supported: snappy
@@ -311,6 +314,8 @@ vttablet \
       --relay_log_max_size int                                           Maximum buffer size (in bytes) for VReplication target buffering. If single rows are larger than this, a single row is buffered at a time. (default 250000)
       --remote_operation_timeout duration                                time to wait for a remote operation (default 15s)
       --replication_connect_retry duration                               how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s)
+      --restore-to-pos string                                            (init incremental restore parameter) if set, run a point in time recovery that ends with the given position. This will attempt to use one full backup followed by zero or more incremental backups
+      --restore-to-timestamp string                                      (init incremental restore parameter) if set, run a point in time recovery that restores up to the given timestamp, if possible. Given timestamp in RFC3339 format. Example: '2006-01-02T15:04:05Z07:00'
       --restore_concurrency int                                          (init restore parameter) how many concurrent files to restore at once (default 4)
       --restore_from_backup                                              (init restore parameter) will check BackupStorage for a recent backup at startup and start there
       --restore_from_backup_ts string                                    (init restore parameter) if set, restore the latest backup taken at or before this timestamp. Example: '2021-04-29.133050'
