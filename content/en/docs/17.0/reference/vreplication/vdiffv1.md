@@ -5,7 +5,7 @@ weight: 40
 ---
 
 {{< warning >}}
-This is the legacy v1 VDiff command — it is deprecated in Vitess 18.0 and will be **removed** in 19.0. Please migrate all of your VDiff usage to the new [VDiff](../vdiff/) command ASAP.
+This is the legacy v1 VDiff command — it is deprecated in Vitess 18.0 and will be **removed** in 19.0. Please migrate all of your VDiff usage to the new [VDiff](../vdiff/) command before upgrading.
 {{< /warning >}}
 
 ### Command
