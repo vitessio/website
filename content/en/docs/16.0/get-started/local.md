@@ -90,8 +90,7 @@ Download the [latest binary release](https://github.com/vitessio/vitess/releases
 
 ```sh
 version=16.0.5
-// TODO: Fix the sha
-file=vitess-${version}-87ea735.tar.gz
+file=vitess-${version}-fd462ffb10.tar.gz
 wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
 tar -xzf ${file}
 cd ${file/.tar.gz/}
