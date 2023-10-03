@@ -3,22 +3,22 @@
 set -exuo pipefail
 
 persist_tmpdir=${COBRADOCS_SYNC_PERSIST:-}
-tmp="vitessio.website"
+tmp=${VITESS_DIR:-"$(pwd)/vitessio.website"}
 
 if [[ -z "${persist_tmpdir}" ]]; then
     trap "rm -rf ${tmp}" EXIT
 fi
 
 if [ ! -d "${tmp}" ]; then
-    tmp="$(mktemp -d vitessio.website)"
+    tmp="$(mktemp -d $tmp)"
 
-    git clone --depth=1 git@github.com:vitessio/vitess "${tmp}/vitess" && \
-        cd "${tmp}/vitess" && \
+    git clone --depth=1 git@github.com:vitessio/vitess "${tmp}" && \
+        cd "${tmp}" && \
         git fetch --tags && \
         cd -
 fi
 
-VITESS_DIR="$(pwd)/${tmp}/vitess" make generated-docs
+VITESS_DIR="${tmp}" make generated-docs
 
 git add $(git diff -I"^commit:.*$" --numstat | awk '{print $3}' | xargs)
 # Reset any modified files that contained _only_ a SHA update.
