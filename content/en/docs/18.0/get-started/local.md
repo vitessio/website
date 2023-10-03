@@ -66,7 +66,7 @@ Download the [latest binary release](https://github.com/vitessio/vitess/releases
 
 ```sh
 version=18.0.0-rc1
-file=vitess-${version}-70a9466.tar.gz
+file=vitess-${version}-6ab165a.tar.gz
 wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
 tar -xzf ${file}
 cd ${file/.tar.gz/}
