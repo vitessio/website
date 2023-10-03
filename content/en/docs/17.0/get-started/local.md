@@ -66,7 +66,7 @@ Download the [latest binary release](https://github.com/vitessio/vitess/releases
 
 ```sh
 version=17.0.3
-file=vitess-${version}-dced85dd0f.tar.gz
+file=vitess-${version}-dced85d.tar.gz
 wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
 tar -xzf ${file}
 cd ${file/.tar.gz/}
