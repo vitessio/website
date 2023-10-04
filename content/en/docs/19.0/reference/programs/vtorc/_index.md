@@ -1,7 +1,7 @@
 ---
 title: vtorc
 series: vtorc
-commit: 30385807689b40668d60dbb5059ea0987f19da5c
+commit: e73ce917ed97a6a8586cd3647cb2f498fe908a0e
 ---
 ## vtorc
 
@@ -35,6 +35,7 @@ vtorc \
       --audit-purge-duration duration                               Duration for which audit logs are held before being purged. Should be in multiples of days (default 168h0m0s)
       --audit-to-backend                                            Whether to store the audit log in the VTOrc database
       --audit-to-syslog                                             Whether to store the audit log in the syslog
+      --bind-address string                                         Bind address for the server. If empty, the server will listen on all available unicast and anycast IP addresses of the local system.
       --catch-sigpipe                                               catch and ignore SIGPIPE on stdout and stderr if specified
       --change-tablets-with-errant-gtid-to-drained                  Whether VTOrc should be changing the type of tablets with errant GTIDs to DRAINED
       --clusters_to_watch strings                                   Comma-separated list of keyspaces or keyspace/shards that this instance will monitor and repair. Defaults to all clusters in the topology. Example: "ks1,ks2/-80"

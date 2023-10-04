@@ -1,6 +1,7 @@
 ---
-title: workflow_update
+title: workflow update
 series: vtctldclient
+commit: dced85dd0f33b8bd95d37adb781d6cdc1949af92
 ---
 ## vtctldclient workflow update
 
@@ -36,5 +37,5 @@ vtctldclient --server=localhost:15999 workflow --keyspace=customer update --work
 
 ### SEE ALSO
 
-* [vtctldclient workflow](./vtctldclient_workflow/)	 - Administer VReplication workflows (Reshard, MoveTables, etc) in the given keyspace
+* [vtctldclient workflow](../)	 - Administer VReplication workflows (Reshard, MoveTables, etc) in the given keyspace
 

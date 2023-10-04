@@ -1,6 +1,7 @@
 ---
 title: workflow
 series: vtctldclient
+commit: dced85dd0f33b8bd95d37adb781d6cdc1949af92
 ---
 ## vtctldclient workflow
 

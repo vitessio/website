@@ -1,16 +1,11 @@
 ---
 title: Reshard
 series: vtctldclient
-commit: b089f78945653f6acd17c66f896820e36df49437
+commit: e73ce917ed97a6a8586cd3647cb2f498fe908a0e
 ---
 ## vtctldclient Reshard
 
 Perform commands related to resharding a keyspace.
-
-### Synopsis
-
-Reshard commands: Create, Show, Status, SwitchTraffic, ReverseTraffic, Stop, Start, Cancel, and Delete.
-See the --help output for each command for more details.
 
 ### Options
 
@@ -32,8 +27,8 @@ See the --help output for each command for more details.
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 * [vtctldclient Reshard cancel](./vtctldclient_reshard_cancel/)	 - Cancel a Reshard VReplication workflow.
-* [vtctldclient Reshard complete](./vtctldclient_reshard_complete/)	 - Complete a MoveTables VReplication workflow.
-* [vtctldclient Reshard create](./vtctldclient_reshard_create/)	 - Create and optionally run a reshard VReplication workflow.
+* [vtctldclient Reshard complete](./vtctldclient_reshard_complete/)	 - Complete a Reshard VReplication workflow.
+* [vtctldclient Reshard create](./vtctldclient_reshard_create/)	 - Create and optionally run a Reshard VReplication workflow.
 * [vtctldclient Reshard reversetraffic](./vtctldclient_reshard_reversetraffic/)	 - Reverse traffic for a Reshard VReplication workflow.
 * [vtctldclient Reshard show](./vtctldclient_reshard_show/)	 - Show the details for a Reshard VReplication workflow.
 * [vtctldclient Reshard start](./vtctldclient_reshard_start/)	 - Start a Reshard workflow.

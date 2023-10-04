@@ -1,7 +1,7 @@
 ---
 title: vtbackup
 series: vtbackup
-commit: 30385807689b40668d60dbb5059ea0987f19da5c
+commit: e73ce917ed97a6a8586cd3647cb2f498fe908a0e
 ---
 ## vtbackup
 
@@ -69,6 +69,7 @@ vtbackup [flags]
       --backup_storage_compress                                     if set, the backup files will be compressed. (default true)
       --backup_storage_implementation string                        Which backup storage implementation to use for creating and restoring backups.
       --backup_storage_number_blocks int                            if backup_storage_compress is true, backup_storage_number_blocks sets the number of blocks that can be processed, in parallel, before the writer blocks, during compression (default is 2). It should be equal to the number of CPUs available for compression. (default 2)
+      --bind-address string                                         Bind address for the server. If empty, the server will listen on all available unicast and anycast IP addresses of the local system.
       --builtinbackup-file-read-buffer-size uint                    read files using an IO buffer of this many bytes. Golang defaults are used when set to 0.
       --builtinbackup-file-write-buffer-size uint                   write files using an IO buffer of this many bytes. Golang defaults are used when set to 0. (default 2097152)
       --builtinbackup_mysqld_timeout duration                       how long to wait for mysqld to shutdown at the start of the backup. (default 10m0s)
