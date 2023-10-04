@@ -28,3 +28,4 @@ Some of these documents might not be representative of the current state of Vite
 - [RFC: Replica transactions](https://github.com/vitessio/vitess/issues/6166)
 - [Consistent Lookup Vindexes](https://github.com/vitessio/vitess/issues/4855)
 - [Owned Primary Vindex](https://github.com/vitessio/vitess/blob/main/doc/design-docs/OwnedPrimaryVindexes.md)
+- [Foreign Key Management in Vitess](https://github.com/vitessio/vitess/issues/12967)
