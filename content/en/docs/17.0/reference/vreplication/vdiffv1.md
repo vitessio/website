@@ -4,9 +4,9 @@ description: Compare the source and target in a workflow to ensure integrity
 weight: 40
 ---
 
-{{< info >}}
-This is the legacy v1 VDiff. [VDiff v2](../vdiff/), which runs on tablets, is now production-ready. We recommend that you begin using v2 instead.
-{{< /info >}} 
+{{< warning >}}
+This is the legacy v1 VDiff command — it is deprecated in Vitess 18.0 and will be **removed** in 19.0. Please migrate all of your VDiff usage to the new [VDiff](../vdiff/) command before upgrading.
+{{< /warning >}}
 
 ### Command
 
