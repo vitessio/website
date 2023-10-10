@@ -1,7 +1,7 @@
 ---
 title: reinit config
 series: mysqlctl
-commit: b089f78945653f6acd17c66f896820e36df49437
+commit: e73ce917ed97a6a8586cd3647cb2f498fe908a0e
 ---
 ## mysqlctl reinit_config
 
@@ -42,7 +42,7 @@ mysqlctl \
       --config-file string                                          Full path of the config file (with extension) to use. If set, --config-path, --config-type, and --config-name are ignored.
       --config-file-not-found-handling ConfigFileNotFoundHandling   Behavior when a config file is not found. (Options: error, exit, ignore, warn) (default warn)
       --config-name string                                          Name of the config file (without extension) to search for. (default "vtconfig")
-      --config-path strings                                         Paths to search for config files in. (default [/Users/andrew/dev/vtwebsite/vitessio.website/vitess])
+      --config-path strings                                         Paths to search for config files in. (default [<WORKDIR>])
       --config-persistence-min-interval duration                    minimum interval between persisting dynamic config changes back to disk (if no change has occurred, nothing is done). (default 1s)
       --config-type string                                          Config file type (omit to infer config type from file extension).
       --db-credentials-file string                                  db credentials file; send SIGHUP to reload this file

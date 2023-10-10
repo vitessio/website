@@ -1,7 +1,7 @@
 ---
 title: vttestserver
 series: vttestserver
-commit: 30385807689b40668d60dbb5059ea0987f19da5c
+commit: 6ab165ade925b35a00cf447827d874eba13998b6
 ---
 ## vttestserver
 
@@ -57,6 +57,7 @@ vttestserver [flags]
       --grpc_auth_mtls_allowed_substrings string                         List of substrings of at least one of the client certificate names (separated by colon).
       --grpc_auth_static_client_creds string                             When using grpc_static_auth in the server, this file provides the credentials to use to authenticate with server.
       --grpc_auth_static_password_file string                            JSON File to read the users/passwords from.
+      --grpc_bind_address string                                         Bind address for gRPC calls. If empty, listen on all addresses.
       --grpc_ca string                                                   server CA to use for gRPC connections, requires TLS, and enforces client certificate check
       --grpc_cert string                                                 server certificate to use for gRPC connections, requires grpc_key, enables TLS
       --grpc_compression string                                          Which protocol to use for compressing gRPC. Default: nothing. Supported: snappy

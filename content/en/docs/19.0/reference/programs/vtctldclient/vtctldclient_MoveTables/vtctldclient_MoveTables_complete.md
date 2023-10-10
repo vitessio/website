@@ -1,7 +1,7 @@
 ---
 title: MoveTables complete
 series: vtctldclient
-commit: b089f78945653f6acd17c66f896820e36df49437
+commit: e73ce917ed97a6a8586cd3647cb2f498fe908a0e
 ---
 ## vtctldclient MoveTables complete
 
@@ -14,7 +14,7 @@ vtctldclient MoveTables complete
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 movetables --workflow commerce2customer --target-keyspace customer complete
+vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --target-keyspace customer complete
 ```
 
 ### Options
