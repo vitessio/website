@@ -38,6 +38,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT03023 | When targeting a range of shards, Vitess does not know which shard to send the INSERT to. | INSERT not supported when targeting a key range: %s | 0 |  |
 | VT03024 | The query cannot be prepared using the user defined variable as it does not exists for this session. | '%s' user defined variable does not exists | 0 |  |
 | VT03025 | The execute statement have wrong number of arguments | Incorrect arguments to %s | 1210 | HY000 |
+| VT03024 | The query cannot be executed as missing the bind variable. | '%s' bind variable does not exists | 0 |  |
 | VT05001 | The given database does not exist; Vitess cannot drop it. | cannot drop database '%s'; database does not exists | 1008 | HY000 |
 | VT05002 | The given database does not exist; Vitess cannot alter it. | cannot alter database '%s'; unknown database | 1049 | 42000 |
 | VT05003 | The given database does not exist in the VSchema. | unknown database '%s' in vschema | 1049 | 42000 |
@@ -63,6 +64,8 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09014 | The vindex cannot be used as table in DML statement | vindex cannot be modified | 0 |  |
 | VT09015 | This query cannot be planned without more information on the SQL schema. Please turn on schema tracking or add authoritative columns information to your VSchema. | schema tracking required | 0 |  |
 | VT09016 | SET DEFAULT is not supported by InnoDB | Cannot delete or update a parent row: a foreign key constraint fails | 1451 | 23000 |
+| VT09017 | Invalid syntax for the statement type. | %s | 0 |  |
+| VT09017 | Invalid syntax for the vindex function statement. | %s | 0 |  |
 | VT10001 | Foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/. | foreign key constraints are not allowed | 0 |  |
 | VT12001 | This statement is unsupported by Vitess. Please rewrite your query to use supported syntax. | unsupported: %s | 0 |  |
 | VT12002 | Vitess does not support cross shard foreign keys. | unsupported: cross-shard foreign keys | 0 |  |
