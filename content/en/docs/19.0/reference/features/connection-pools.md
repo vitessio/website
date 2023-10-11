@@ -48,7 +48,7 @@ As a result, connection pools should be sized mindful of the capacity of the und
   * Max size controlled by:  `--dba_pool_size` (default 20)
   * metric:  `vttablet_dba_conn_pool_capacity`
   * vttablet user flag:  `--db_dba_user` (default 'vt_dba')
-  * Used by vttablet `ExecuteFetchAsDba` RPC. This is used when using `vtctlclient ExecuteFetchAsDba` 
+  * Used by vttablet `ExecuteFetchAsDba` RPC. This is used when using `vtctldclient ExecuteFetchAsDBA` 
   Also used implicitly for various internal Vitess maintenance tasks (e.g. schema reloads, etc.)
 
 ### app_conn_pool
@@ -56,7 +56,7 @@ As a result, connection pools should be sized mindful of the capacity of the und
   * Max size controlled by:  `--app_pool_size` (default 40)
   * metric:  `vttablet_app_conn_pool_capacity`
   * vttablet user flag:  `--db_app_user` default 'vt_app')
-  * Used by vttablet `ExecuteFetchAsApp` RPC. This is used when using `vtctlclient ExecuteFetchAsApp`
+  * Used by vttablet `ExecuteFetchAsApp` RPC. This is used when using `vtctldclient ExecuteFetchAsApp`
 
 ### tx_read_pool
 
@@ -89,7 +89,6 @@ As a result, connection pools should be sized mindful of the capacity of the und
 #### `--db_allprivs_user` 
 
  * (default 'vt_allprivs')
- * Created on demand by `vtctlclient ExecuteFetchAsAllPrivs`
 
 #### `--db_erepl_user` 
                                

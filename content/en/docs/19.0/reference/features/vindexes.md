@@ -267,7 +267,7 @@ You can query Vindex functions to see the resulting `keyspace_id` it produces (t
 
 First, a snippet of the VSchema:
 ``` shell
-$ vtctlclient -server=localhost:15999 GetVSchema customer | jq '.vindexes'
+$ vtctldclient --server=localhost:15999 GetVSchema customer | jq '.vindexes'
 {
   "binary_md5_vdx": {
     "type": "binary_md5"

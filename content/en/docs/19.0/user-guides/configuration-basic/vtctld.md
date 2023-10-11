@@ -21,7 +21,7 @@ If the TopoServer is unreachable, or if the topo flags are incorrectly configure
 F0426 11:11:40.363545   14833 server.go:223] Failed to open topo server (etcd2,localhost:2379,/vitess/global): dial tcp 127.0.0.1:2379: connect: connection refused
 ```
 
-The `service_map` flag allows you to configure the grpc APIs that a Vitess server exposes as grpc. If grpc-vtctl is not specified as a service\_map for vtctld, you will not be able to access it using `vtctlclient`.
+The `service_map` flag allows you to configure the grpc APIs that a Vitess server exposes as grpc. If grpc-vtctl is not specified as a service\_map for vtctld, you will not be able to access it using `vtctldclient`.
 Similarly, if grpc-vtctld is not specified as a service\_map for vtctld, you will not be able to access it using `vtctldclient`.
 
 vtctld is usually not very resource intensive. But you may need to provision more if you plan to run the `VDiff` command. This functionality will soon be moved to vttablet.

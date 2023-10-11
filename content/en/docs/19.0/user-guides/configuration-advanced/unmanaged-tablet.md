@@ -120,32 +120,42 @@ Empty set (0.01 sec)
 ## Move legacytable to the commerce keyspace
 
 Move the table:
+
 ```bash
-vtctlclient MoveTables -- --source legacy --tables 'legacytable' Create commerce.legacy2commerce 
+vtctldclient MoveTables --target-keyspace commerce --workflow legacy2commerce create --source-keyspace legacy --tables 'legacytable'
 ```
+
 <br>
+
 Monitor the workflow:
 
 use `Show` or `Progress`
-```bash
-vtctlclient MoveTables -- Show commerce.legacy2commerce
-vtctlclient MoveTables -- Progress commerce.legacy2commerce
-```
-
-You can also use the [`Workflow show`](../../../reference/vreplication/workflow/) command to get the progress as it has much more info as well.
 
 ```bash
-vtctlclient Workflow commerce.legacy2commerce show
+vtctldclient MoveTables --target-keyspace commerce --workflow legacy2commerce show
+vtctldclient MoveTables --target-keyspace commerce --workflow legacy2commerce progress
 ```
+
+You can alternatively use the [`Workflow show`](../../../reference/programs/vtctldclient/vtctldclient_workflow/vtctldclient_workflow_show/) command to get the details as well.
+
+```bash
+vtctldclient Workflow --keyspace commerce show --workflow legacy2commerce
+```
+
 <br>Switch traffic:
+
 ```bash
-vtctlclient MoveTables -- --tablet_type=rdonly,replica SwitchTraffic commerce.legacy2commerce
+vtctldclient MoveTables --target-keyspace commerce --workflow legacy2commerce SwitchTraffic
 ```
+
 <br>Complete the `MoveTables`:
+
 ```bash
-vtctlclient MoveTables Complete commerce.legacy2commerce
+vtctldclient MoveTables --target-keyspace commerce --workflow legacy2commerce complete
 ```
+
 <br>Verify that the table was moved:
+
 ```bash
 source ../common/env.sh
 
@@ -155,6 +165,7 @@ mysql commerce -e 'show tables'
 # verify my unmanaged mysql is running
 mysql -h 127.0.0.1 -P 5726 -umsandbox -pmsandbox legacy -e 'show tables'
 ```
+
 <br>Output:
 
 ```text
@@ -174,4 +185,3 @@ $ # verify my unmanaged mysql is running
 $ mysql -h 127.0.0.1 -P 5726 -umsandbox -pmsandbox legacy -e 'show tables'
 mysql: [Warning] Using a password on the command line interface can be insecure.
 ```
-

@@ -31,7 +31,7 @@ All of the command options and parameters are listed in our [reference page for 
 Let's start by loading some sample data:
 
 ```bash
-$ mysql < ../common/insert_commerce_data.sql
+mysql < ../common/insert_commerce_data.sql
 ```
 
 We can look at what we just inserted:
@@ -112,7 +112,8 @@ We will run two `Materialize` operations, one for each copy/view of the `corder`
 combine these two operations into a single `Materialize` operation, but we will keep them separate for clarity.
 
 ```bash
-$ vtctlclient Materialize -- '{"workflow": "copy_corder_1", "source_keyspace": "commerce", "target_keyspace": "commerce", "table_settings": [{"target_table": "corder_view", "source_expression": "select * from corder"}]}'
+$ vtctldclient Materialize --workflow copy_corder_1 --target-keyspace commerce create --source-keyspace commerce --table-settings '[{"target_table": "corder_view", "source_expression": "select * from corder"}]'
+Materialization workflow copy_corder_1 successfully created in the commerce keyspace. Use show to view the status.
 ```
 
 Now, we should see the materialized view table `corder_view`:
@@ -162,68 +163,106 @@ While we can also see and manipulate the underlying VReplication streams created
 status of the VReplication workflow using the [Workflow](../../../reference/vreplication/workflow) command:
 
 ```json
-$  vtctlclient Workflow -- commerce listall
-Following workflow(s) found in keyspace commerce: copy_corder_1
+$  vtctldclient Workflow --keyspace commerce list
+[
+  "copy_corder_1"
+]
 
-$ vtctlclient Workflow -- commerce.copy_corder_1 show
+$ vtctldclient Materialize --target-keyspace commerce show --workflow copy_corder_1 --include-logs=false
 {
-	"Workflow": "copy_corder_1",
-	"SourceLocation": {
-		"Keyspace": "commerce",
-		"Shards": [
-			"0"
-		]
-	},
-	"TargetLocation": {
-		"Keyspace": "commerce",
-		"Shards": [
-			"0"
-		]
-	},
-	"MaxVReplicationLag": 1,
-	"MaxVReplicationTransactionLag": 1,
-	"Frozen": false,
-	"ShardStatuses": {
-		"0/zone1-0000000101": {
-			"PrimaryReplicationStatuses": [
-				{
-					"Shard": "0",
-					"Tablet": "zone1-0000000101",
-					"ID": 1,
-					"Bls": {
-						"keyspace": "commerce",
-						"shard": "0",
-						"filter": {
-							"rules": [
-								{
-									"match": "corder_view",
-									"filter": "select * from corder"
-								}
-							]
-						}
-					},
-					"Pos": "4c89eede-8c68-11ed-a40a-6f1a36c22987:1-1070",
-					"StopPos": "",
-					"State": "Running",
-					"DBName": "vt_commerce",
-					"TransactionTimestamp": 1672862991,
-					"TimeUpdated": 1672862991,
-					"TimeHeartbeat": 1672862991,
-					"TimeThrottled": 0,
-					"ComponentThrottled": "",
-					"Message": "",
-					"Tags": "",
-					"WorkflowType": "Materialize",
-					"WorkflowSubType": "None",
-					"CopyState": null
-				}
-			],
-			"TabletControls": null,
-			"PrimaryIsServing": true
-		}
-	},
-	"SourceTimeZone": "",
-	"TargetTimeZone": ""
+  "workflows": [
+    {
+      "name": "copy_corder_1",
+      "source": {
+        "keyspace": "commerce",
+        "shards": [
+          "0"
+        ]
+      },
+      "target": {
+        "keyspace": "commerce",
+        "shards": [
+          "0"
+        ]
+      },
+      "max_v_replication_lag": "0",
+      "shard_streams": {
+        "0/zone1-0000000101": {
+          "streams": [
+            {
+              "id": "1",
+              "shard": "0",
+              "tablet": {
+                "cell": "zone1",
+                "uid": 101
+              },
+              "binlog_source": {
+                "keyspace": "commerce",
+                "shard": "0",
+                "tablet_type": "UNKNOWN",
+                "key_range": null,
+                "tables": [],
+                "filter": {
+                  "rules": [
+                    {
+                      "match": "corder_view",
+                      "filter": "select * from corder",
+                      "convert_enum_to_text": {},
+                      "convert_charset": {},
+                      "source_unique_key_columns": "",
+                      "target_unique_key_columns": "",
+                      "source_unique_key_target_columns": "",
+                      "convert_int_to_enum": {}
+                    }
+                  ],
+                  "field_event_mode": "ERR_ON_MISMATCH",
+                  "workflow_type": "0",
+                  "workflow_name": ""
+                },
+                "on_ddl": "IGNORE",
+                "external_mysql": "",
+                "stop_after_copy": false,
+                "external_cluster": "",
+                "source_time_zone": "",
+                "target_time_zone": ""
+              },
+              "position": "fd3ac16e-6880-11ee-be79-13f9a85fe24e:1-241",
+              "stop_position": "",
+              "state": "Running",
+              "db_name": "vt_commerce",
+              "transaction_timestamp": {
+                "seconds": "1697061520",
+                "nanoseconds": 0
+              },
+              "time_updated": {
+                "seconds": "1697061521",
+                "nanoseconds": 0
+              },
+              "message": "",
+              "copy_states": [],
+              "logs": [],
+              "log_fetch_error": "",
+              "tags": [],
+              "rows_copied": "5",
+              "throttler_status": {
+                "component_throttled": "",
+                "time_throttled": {
+                  "seconds": "0",
+                  "nanoseconds": 0
+                }
+              }
+            }
+          ],
+          "tablet_controls": [],
+          "is_primary_serving": true
+        }
+      },
+      "workflow_type": "Materialize",
+      "workflow_sub_type": "None",
+      "max_v_replication_transaction_lag": "0",
+      "defer_secondary_keys": false
+    }
+  ]
 }
 ```
 
@@ -231,35 +270,45 @@ We can now also use the `Workflow` `stop`/`start` actions to temporarily stop th
 example:
 
 ```bash
-$ vtctlclient Workflow -- commerce.copy_corder_1 stop
-+------------------+--------------+
-|      Tablet      | RowsAffected |
-+------------------+--------------+
-| zone1-0000000100 |            1 |
-+------------------+--------------+
+$ vtctldclient Materialize --target-keyspace commerce stop --workflow copy_corder_1
+{
+  "summary": "Successfully updated the copy_corder_1 workflow on (1) target primary tablets in the commerce keyspace",
+  "details": [
+    {
+      "tablet": {
+        "cell": "zone1",
+        "uid": 101
+      },
+      "changed": true
+    }
+  ]
+}
 ```
 
 And `start` to start the workflow again and continue with the materialization:
 
 ```bash
-$ vtctlclient Workflow -- commerce.copy_corder_1 start
-+------------------+--------------+
-|      Tablet      | RowsAffected |
-+------------------+--------------+
-| zone1-0000000100 |            1 |
-+------------------+--------------+
+$ vtctldclient Materialize --target-keyspace commerce start --workflow copy_corder_1
+{
+  "summary": "Successfully updated the copy_corder_1 workflow on (1) target primary tablets in the commerce keyspace",
+  "details": [
+    {
+      "tablet": {
+        "cell": "zone1",
+        "uid": 101
+      },
+      "changed": true
+    }
+  ]
+}
 ```
 
 If at some point, when the initial copy is done and we have fully materialized all of the (initial) data, we do not
-want to continue replicating changes from the source, we can `delete` the workflow:
+want to continue replicating changes from the source, we can `cancel` the workflow:
 
 ```bash
-$ vtctlclient Workflow -- commerce.copy_corder_1 delete
-+------------------+--------------+
-|      Tablet      | RowsAffected |
-+------------------+--------------+
-| zone1-0000000100 |            1 |
-+------------------+--------------+
+$ vtctldclient Materialize --target-keyspace commerce cancel --workflow copy_corder_1
+Successfully cancelled the copy_corder_1 workflow in the commerce keyspace 
 ```
 
 Note that deleting the workflow will *not* `DROP` the target table of the `Materialize` workflow or `DELETE` any of the
@@ -272,7 +321,8 @@ Now we can perform the materialization of the `corder_view_redacted` table we cr
 this table without a price column so we will not be copying that column in our query either:
 
 ```bash
-$ vtctlclient Materialize -- '{"workflow": "copy_corder_2", "source_keyspace": "commerce", "target_keyspace": "commerce", "table_settings": [{"target_table": "corder_view_redacted", "source_expression": "select order_id, customer_id, sku from corder"}]}'
+$ vtctldclient Materialize --target-keyspace commerce create --workflow copy_corder_2 --source-keyspace commerce --table-settings '[{"target_table": "corder_view_redacted", "source_expression": "select order_id, customer_id, sku from corder"}]'
+Materialization workflow copy_corder_2 successfully created in the commerce keyspace. Use show to view the status.
 ```
 
 Again, looking the target table will show all the source table rows, this time without the `price` column:
@@ -317,7 +367,7 @@ target keyspace's primary tablet, e.g. in this case:
 
 ```bash
 # We want to connect directly to the primary mysqld
-$ SOCKETPATH=${VTDATAROOT}/$(vtctlclient ListAllTablets -- --keyspace=commerce --tablet_type=primary | awk '$1 sub(/zone1-/, "vt_") {print $1}')
+$ SOCKETPATH=${VTDATAROOT}/$(vtctldclient GetTablets --keyspace=commerce --tablet-type=primary | awk '$1 sub(/zone1-/, "vt_") {print $1}')
 
 $ mysql -u root -h localhost --socket=${SOCKETPATH}/mysql.sock --binary-as-hex=false -e "select * from _vt.vreplication\G"
 *************************** 1. row ***************************
@@ -346,8 +396,7 @@ transaction_timestamp: 1672865502
 
 ## Cleanup
 
-As seen earlier, you can easily use the [`Workflow delete`](../../../reference/vreplication/workflow) command to
-clean up a `Materialize` workflow when it's no longer needed.
+As seen earlier, you can easily use the [`Workflow delete`](../../../reference/programs/vtctldclient/vtctldclient_workflow/vtctldclient_workflow_delete/) or [`Materialize cancel`](reference/programs/vtctldclient/vtctldclient_materialize/vtctldclient_materialize_cancel/) command to clean up a `Materialize` workflow when it's no longer needed.
 
 {{< info >}}
 While this deletes the `Materialize` VReplication stream, the actual source and target tables are left unchanged

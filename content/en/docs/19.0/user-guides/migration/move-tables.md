@@ -153,7 +153,7 @@ In this step we will create the `MoveTables` workflow, which copies the tables f
 `customer`. This operation does not block any database activity; the `MoveTables` operation is performed online:
 
 ```bash
-$ vtctlclient MoveTables -- --source commerce --tables 'customer,corder' Create customer.commerce2customer
+vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer create --source-keyspace commerce --tables 'customer,corder'
 ```
 
 A few things to note:
@@ -281,79 +281,138 @@ be copied faithfully to the new copy of these tables in the `customer` keyspace.
 In this example there are only a few rows in the tables, so the `MoveTables` operation only takes seconds. If the tables were large, however, you may need to monitor the progress of the operation. You can get a basic summary of the progress using the [`Progress`](../../../reference/vreplication/movetables/#progress) action:
 
 ```bash
-$ vtctlclient MoveTables -- Progress customer.commerce2customer
-
-The following vreplication streams exist for workflow customer.commerce2customer:
-
-id=1 on 0/zone1-0000000201: Status: Running. VStream Lag: 0s.
+$ vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer progress
+{
+  "table_copy_state": {},
+  "shard_streams": {
+    "customer/0": {
+      "streams": [
+        {
+          "id": 2,
+          "tablet": {
+            "cell": "zone1",
+            "uid": 200
+          },
+          "source_shard": "commerce/0",
+          "position": "5d8e0b24-6873-11ee-9359-49d03ab2cdee:1-51",
+          "status": "Running",
+          "info": "VStream Lag: 0s"
+        }
+      ]
+    }
+  }
+}
 ```
 
 You can get detailed status and progress information using the
-[`Workflow show`](../../../reference/vreplication/workflow/) command: 
+[`show`](../../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_show/) sub-command:
+
 ```json
-$ vtctlclient Workflow customer.commerce2customer show
+$ vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer show --include-logs=false 
 {
-	"Workflow": "commerce2customer",
-	"SourceLocation": {
-		"Keyspace": "commerce",
-		"Shards": [
-			"0"
-		]
-	},
-	"TargetLocation": {
-		"Keyspace": "customer",
-		"Shards": [
-			"0"
-		]
-	},
-	"MaxVReplicationLag": 1,
-	"MaxVReplicationTransactionLag": 1,
-	"Frozen": false,
-	"ShardStatuses": {
-		"0/zone1-0000000201": {
-			"PrimaryReplicationStatuses": [
-				{
-					"Shard": "0",
-					"Tablet": "zone1-0000000201",
-					"ID": 1,
-					"Bls": {
-						"keyspace": "commerce",
-						"shard": "0",
-						"filter": {
-							"rules": [
-								{
-									"match": "customer",
-									"filter": "select * from customer"
-								},
-								{
-									"match": "corder",
-									"filter": "select * from corder"
-								}
-							]
-						}
-					},
-					"Pos": "7e765c5c-8c59-11ed-9d2e-7c501ea4de6a:1-83",
-					"StopPos": "",
-					"State": "Running",
-					"DBName": "vt_customer",
-					"TransactionTimestamp": 0,
-					"TimeUpdated": 1672857697,
-					"TimeHeartbeat": 1672857697,
-					"TimeThrottled": 0,
-					"ComponentThrottled": "",
-					"Message": "",
-					"Tags": "",
-					"WorkflowType": "MoveTables",
-					"WorkflowSubType": "None",
-					"CopyState": null
-				}
-			],
-			"TabletControls": null,
-			"PrimaryIsServing": true
-		}
-	},
-	"SourceTimeZone": "",
-	"TargetTimeZone": ""
+  "workflows": [
+    {
+      "name": "commerce2customer",
+      "source": {
+        "keyspace": "commerce",
+        "shards": [
+          "0"
+        ]
+      },
+      "target": {
+        "keyspace": "customer",
+        "shards": [
+          "0"
+        ]
+      },
+      "max_v_replication_lag": "1",
+      "shard_streams": {
+        "0/zone1-0000000200": {
+          "streams": [
+            {
+              "id": "2",
+              "shard": "0",
+              "tablet": {
+                "cell": "zone1",
+                "uid": 200
+              },
+              "binlog_source": {
+                "keyspace": "commerce",
+                "shard": "0",
+                "tablet_type": "UNKNOWN",
+                "key_range": null,
+                "tables": [],
+                "filter": {
+                  "rules": [
+                    {
+                      "match": "customer",
+                      "filter": "select * from customer",
+                      "convert_enum_to_text": {},
+                      "convert_charset": {},
+                      "source_unique_key_columns": "",
+                      "target_unique_key_columns": "",
+                      "source_unique_key_target_columns": "",
+                      "convert_int_to_enum": {}
+                    },
+                    {
+                      "match": "corder",
+                      "filter": "select * from corder",
+                      "convert_enum_to_text": {},
+                      "convert_charset": {},
+                      "source_unique_key_columns": "",
+                      "target_unique_key_columns": "",
+                      "source_unique_key_target_columns": "",
+                      "convert_int_to_enum": {}
+                    }
+                  ],
+                  "field_event_mode": "ERR_ON_MISMATCH",
+                  "workflow_type": "0",
+                  "workflow_name": ""
+                },
+                "on_ddl": "IGNORE",
+                "external_mysql": "",
+                "stop_after_copy": false,
+                "external_cluster": "",
+                "source_time_zone": "",
+                "target_time_zone": ""
+              },
+              "position": "5d8e0b24-6873-11ee-9359-49d03ab2cdee:1-51",
+              "stop_position": "",
+              "state": "Running",
+              "db_name": "vt_customer",
+              "transaction_timestamp": {
+                "seconds": "0",
+                "nanoseconds": 0
+              },
+              "time_updated": {
+                "seconds": "1697060227",
+                "nanoseconds": 0
+              },
+              "message": "",
+              "copy_states": [],
+              "logs": [],
+              "log_fetch_error": "",
+              "tags": [],
+              "rows_copied": "0",
+              "throttler_status": {
+                "component_throttled": "",
+                "time_throttled": {
+                  "seconds": "0",
+                  "nanoseconds": 0
+                }
+              }
+            }
+          ],
+          "tablet_controls": [],
+          "is_primary_serving": true
+        }
+      },
+      "workflow_type": "MoveTables",
+      "workflow_sub_type": "None",
+      "max_v_replication_transaction_lag": "1",
+      "defer_secondary_keys": false
+    }
+  ]
 }
 ```
 
@@ -363,12 +422,10 @@ We can use [`VDiff`](../../../reference/vreplication/vdiff/) to perform a logica
 to confirm that they are fully in sync:
 
 ```bash
-$ vtctlclient VDiff -- --v2 customer.commerce2customer create
-{
-	"UUID": "d050262e-8c5f-11ed-ac72-920702940ee0"
-}
+$ vtctldclient VDiff --target-keyspace customer --workflow commerce2customer create
+VDiff bc74b91b-2ee8-4869-bc39-4740ce445e20 scheduled on target shards, use show to view progress
 
-$ vtctlclient VDiff -- --v2 --format=json --verbose customer.commerce2customer show last
+$ vtctldclient VDiff --format=json --target-keyspace customer --workflow commerce2customer show last --verbose
 {
 	"Workflow": "commerce2customer",
 	"Keyspace": "customer",
@@ -435,9 +492,9 @@ traffic from the old `commerce` keyspace to the `customer` keyspace for the tabl
 tables will continue to route to the `commerce` keyspace.
 
 ```bash
-$ vtctlclient MoveTables -- SwitchTraffic customer.commerce2customer
-
+$ vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer SwitchTraffic
 SwitchTraffic was successful for workflow customer.commerce2customer
+
 Start State: Reads Not Switched. Writes Not Switched
 Current State: All Reads Switched. Writes Switched
 ```
@@ -560,10 +617,9 @@ $ vtctldclient GetRoutingRules
 ## Reverting the Switch (Optional)
 
 As part of the `SwitchTraffic` operation, Vitess will automatically setup a reverse VReplication workflow (unless
-you supply the [`--reverse_replication false` flag](../../../reference/vreplication/movetables/#--reverse_replication))
-to copy changes now applied to the moved tables in the target keyspace — `customer` and `corder` in the
-`customer` keyspace — back to the original source tables in the source `commerce` keyspace. This allows us to
-reverse or revert the cutover using the [`ReverseTraffic`](../../../reference/vreplication/movetables/#reversetraffic)
+you supply the `--enable-reverse-replication=false` flag) to copy changes now applied to the moved tables in the
+target keyspace — `customer` and `corder` in the `customer` keyspace — back to the original source tables in the
+source `commerce` keyspace. This allows us to reverse or revert the cutover using the [`ReverseTraffic`](../../../reference/vreplication/movetables/#reversetraffic)
 action, without data loss, even after we have started writing to the new `customer` keyspace. Note that the
 workflow for this reverse workflow is created in the original source keyspace and given the name of the original
 workflow with `_reverse` appended. So in our example where the `MoveTables` workflow was in the `customer` keyspace
@@ -572,77 +628,155 @@ and called `commerce2customer`, the reverse workflow is in the `commerce` keyspa
 [`Workflow show`](../../../reference/vreplication/workflow/) command:
 
 ```json
-$ vtctlclient Workflow commerce.commerce2customer_reverse show
+$ vtctldclient Workflow --keyspace commerce show --workflow commerce2customer_reverse
 {
-	"Workflow": "commerce2customer_reverse",
-	"SourceLocation": {
-		"Keyspace": "customer",
-		"Shards": [
-			"0"
-		]
-	},
-	"TargetLocation": {
-		"Keyspace": "commerce",
-		"Shards": [
-			"0"
-		]
-	},
-	"MaxVReplicationLag": 1,
-	"MaxVReplicationTransactionLag": 1,
-	"Frozen": false,
-	"ShardStatuses": {
-		"0/zone1-0000000100": {
-			"PrimaryReplicationStatuses": [
-				{
-					"Shard": "0",
-					"Tablet": "zone1-0000000100",
-					"ID": 1,
-					"Bls": {
-						"keyspace": "customer",
-						"shard": "0",
-						"filter": {
-							"rules": [
-								{
-									"match": "customer",
-									"filter": "select * from `customer`"
-								},
-								{
-									"match": "corder",
-									"filter": "select * from `corder`"
-								}
-							]
-						}
-					},
-					"Pos": "9fb1be70-8c59-11ed-9ef5-c05f9df6f7f3:1-2361",
-					"StopPos": "",
-					"State": "Running",
-					"DBName": "vt_commerce",
-					"TransactionTimestamp": 1672858428,
-					"TimeUpdated": 1672859207,
-					"TimeHeartbeat": 1672859207,
-					"TimeThrottled": 0,
-					"ComponentThrottled": "",
-					"Message": "",
-					"Tags": "",
-					"WorkflowType": "MoveTables",
-					"WorkflowSubType": "None",
-					"CopyState": null
-				}
-			],
-			"TabletControls": [
-				{
-					"tablet_type": 1,
-					"denied_tables": [
-						"corder",
-						"customer"
-					]
-				}
-			],
-			"PrimaryIsServing": true
-		}
-	},
-	"SourceTimeZone": "",
-	"TargetTimeZone": ""
+  "workflows": [
+    {
+      "name": "commerce2customer_reverse",
+      "source": {
+        "keyspace": "customer",
+        "shards": [
+          "0"
+        ]
+      },
+      "target": {
+        "keyspace": "commerce",
+        "shards": [
+          "0"
+        ]
+      },
+      "max_v_replication_lag": "1",
+      "shard_streams": {
+        "0/zone1-0000000101": {
+          "streams": [
+            {
+              "id": "1",
+              "shard": "0",
+              "tablet": {
+                "cell": "zone1",
+                "uid": 101
+              },
+              "binlog_source": {
+                "keyspace": "customer",
+                "shard": "0",
+                "tablet_type": "UNKNOWN",
+                "key_range": null,
+                "tables": [],
+                "filter": {
+                  "rules": [
+                    {
+                      "match": "customer",
+                      "filter": "select * from `customer`",
+                      "convert_enum_to_text": {},
+                      "convert_charset": {},
+                      "source_unique_key_columns": "",
+                      "target_unique_key_columns": "",
+                      "source_unique_key_target_columns": "",
+                      "convert_int_to_enum": {}
+                    },
+                    {
+                      "match": "corder",
+                      "filter": "select * from `corder`",
+                      "convert_enum_to_text": {},
+                      "convert_charset": {},
+                      "source_unique_key_columns": "",
+                      "target_unique_key_columns": "",
+                      "source_unique_key_target_columns": "",
+                      "convert_int_to_enum": {}
+                    }
+                  ],
+                  "field_event_mode": "ERR_ON_MISMATCH",
+                  "workflow_type": "0",
+                  "workflow_name": ""
+                },
+                "on_ddl": "IGNORE",
+                "external_mysql": "",
+                "stop_after_copy": false,
+                "external_cluster": "",
+                "source_time_zone": "",
+                "target_time_zone": ""
+              },
+              "position": "751b3b58-6874-11ee-9a45-2b583b20ee4a:1-4579",
+              "stop_position": "",
+              "state": "Running",
+              "db_name": "vt_commerce",
+              "transaction_timestamp": {
+                "seconds": "1697060479",
+                "nanoseconds": 0
+              },
+              "time_updated": {
+                "seconds": "1697060690",
+                "nanoseconds": 0
+              },
+              "message": "",
+              "copy_states": [],
+              "logs": [
+                {
+                  "id": "1",
+                  "stream_id": "1",
+                  "type": "Stream Created",
+                  "state": "Stopped",
+                  "created_at": {
+                    "seconds": "1697046079",
+                    "nanoseconds": 0
+                  },
+                  "updated_at": {
+                    "seconds": "1697046079",
+                    "nanoseconds": 0
+                  },
+                  "message": "{\"component_throttled\":\"\",\"db_name\":\"vt_commerce\",\"defer_secondary_keys\":\"0\",\"id\":\"1\",\"max_replication_lag\":\"9223372036854775807\",\"max_tps\":\"9223372036854775807\",\"pos\":\"MySQL56/751b3b58-6874-11ee-9a45-2b583b20ee4a:1-4577\",\"rows_copied\":\"0\",\"source\":\"keyspace:\\\"customer\\\" shard:\\\"0\\\" filter:{rules:{match:\\\"customer\\\" filter:\\\"select * from `customer`\\\"} rules:{match:\\\"corder\\\" filter:\\\"select * from `corder`\\\"}}\",\"state\":\"Stopped\",\"tags\":\"\",\"time_heartbeat\":\"0\",\"time_throttled\":\"0\",\"time_updated\":\"1697060479\",\"transaction_timestamp\":\"0\",\"workflow\":\"commerce2customer_reverse\",\"workflow_sub_type\":\"0\",\"workflow_type\":\"1\"}",
+                  "count": "1"
+                },
+                {
+                  "id": "2",
+                  "stream_id": "1",
+                  "type": "State Changed",
+                  "state": "Running",
+                  "created_at": {
+                    "seconds": "1697046079",
+                    "nanoseconds": 0
+                  },
+                  "updated_at": {
+                    "seconds": "1697046079",
+                    "nanoseconds": 0
+                  },
+                  "message": "",
+                  "count": "1"
+                }
+              ],
+              "log_fetch_error": "",
+              "tags": [],
+              "rows_copied": "0",
+              "throttler_status": {
+                "component_throttled": "",
+                "time_throttled": {
+                  "seconds": "0",
+                  "nanoseconds": 0
+                }
+              }
+            }
+          ],
+          "tablet_controls": [
+            {
+              "tablet_type": "PRIMARY",
+              "cells": [],
+              "denied_tables": [
+                "corder",
+                "customer"
+              ],
+              "frozen": false
+            }
+          ],
+          "is_primary_serving": true
+        }
+      },
+      "workflow_type": "MoveTables",
+      "workflow_sub_type": "None",
+      "max_v_replication_transaction_lag": "1",
+      "defer_secondary_keys": false
+    }
+  ]
+} 
 }
 ```
 
@@ -656,11 +790,8 @@ for the  `customer` and `corder` tables to the `commerce` keyspace, it is much b
 error, rather than return incorrect/stale data:
 
 ```bash
-$ vtctlclient MoveTables -- Complete customer.commerce2customer
-
-Complete was successful for workflow customer.commerce2customer
-Start State: All Reads Switched. Writes Switched
-Current State: Workflow Not Found
+$ vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer complete
+Successfully completed the commerce2customer workflow in the customer keyspace
 ```
 
 {{< info >}}
@@ -684,12 +815,12 @@ $ vtctldclient GetRoutingRules
 }
 
 # Workflow is gone
-$ vtctlclient Workflow customer listall
-No workflows found in keyspace customer
+$ vtctldclient Workflow --keyspace customer list
+[]
 
 # Reverse workflow is also gone
-$ vtctlclient Workflow commerce listall
-No workflows found in keyspace commerce
+$ vtctldclient Workflow --keyspace commerce list
+[]
 ```
 
 This confirms that the data and routing rules have been properly cleaned up. Note that the `Complete` process also cleans up the reverse VReplication workflow mentioned above.
