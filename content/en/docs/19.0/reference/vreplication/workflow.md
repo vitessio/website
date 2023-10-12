@@ -1,6 +1,6 @@
 ---
 title: Workflow
-description: VReplication command to perform common actions on a workflow
+description: VReplication command to perform common actions on all types of workflows
 weight: 50
 ---
 

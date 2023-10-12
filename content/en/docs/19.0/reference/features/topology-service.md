@@ -522,7 +522,7 @@ information about the local topology service:
 
 vtctldclient --server ${VTCTLD_IP}:15999 AddCellInfo -- \
   --root=/vitess/${CELL_NAME} \
-  --server_address=${CELL_ETCD_SERVER} \
+  --server-address=${CELL_ETCD_SERVER} \
   ${CELL_NAME}
 ```
 

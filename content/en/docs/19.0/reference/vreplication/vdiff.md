@@ -18,7 +18,7 @@ VDiff takes different sub-commands or actions similar to how the [`MoveTables`](
 
 #### Start a New VDiff
 
-The [`create` action](../../../reference/programs/vtctldclient/vtctldclient_vdiff/vtctldclient_vdiff_create/) schedules VDiff to run on the primary tablet of each target shard to verify the subset of data that will live on the given shard. If you do not pass a specific UUID then one will be generated.
+The [`create` action](../../../reference/programs/vtctldclient/vtctldclient_vdiff/vtctldclient_vdiff_create/) schedules a VDiff to run on the primary tablet of each target shard to verify the subset of data that will live on the given shard. If you do not pass a specific UUID then one will be generated.
 
 Each scheduled VDiff has an associated UUID which is returned by the `create` action. You can use it
 to monitor progress. Example:
@@ -30,7 +30,7 @@ VDiff a35b0006-e6d9-416e-bea9-917795dc5bf3 scheduled on target shards, use show 
 
 #### Resume a Previous VDiff
 
-The [`resume` action](../../../reference/programs/vtctldclient/vtctldclient_vdiff/vtctldclient_vdiff_resume/) allows you to resume a previously completed VDiff, picking up where it left off and comparing the records where the Primary Key column(s) are greater than the last record processed — with the progress and other status information saved when the run ends. This allows you to do approximate rolling or differential VDiffs (e.g. done after MoveTables finishes the initial copy phase and then again just before SwitchTraffic).
+The [`resume` action](../../../reference/programs/vtctldclient/vtctldclient_vdiff/vtctldclient_vdiff_resume/) allows you to resume a previously completed VDiff, picking up where it left off and comparing the records where the Primary Key column(s) are greater than the last record processed — with the progress and other status information saved when the run ends. This allows you to do approximate rolling or differential VDiffs (e.g. done after `MoveTables` finishes the initial copy phase and then again just before `SwitchTraffic`).
 
 Example:
 

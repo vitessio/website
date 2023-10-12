@@ -20,7 +20,7 @@ adding/deleting/updating rows in the lookup Vindex via the usual
 [transactional flow when updating the "owner" table for the Vindex](../../../reference/features/vindexes/#lookup-vindex-types)
 takes over.
 
-In this guide, we will walk through the process of using the [`LookupVindex create`](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) command's workflow, and give some insight into what happens underneath the covers.
+In this guide, we will walk through the process of using the [`LookupVindex create`](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) command, and give some insight into what happens underneath the covers.
 
 You can see the details of the [`vtctldclient LookupVindex create` command](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) in the reference docs.
 
@@ -264,7 +264,7 @@ Now we can look what happened in greater detail:
 * Note that each primary tablet will start streams from each source
   tablet, for a total of 4 streams in this case.
 
-Lets observe the VReplication streams that got created using the `vtctldclient Workflow show` command.
+Lets observe the VReplication streams that got created using the `show` sub-command.
 
 {{< info >}}
 The created vreplication workflow will have a generated name of `<target_table_name>_vdx`.
@@ -431,7 +431,7 @@ the VReplication streams and also clear the `write_only` flag from the
 Vindex indicating that it is *not* backfilling anymore.
 
 ```bash
-$ vtctldclient --server localhost:15999 LookupVindex --name customer_region_lookup --table-keyspace main externalize                        ─╯
+$ vtctldclient --server localhost:15999 LookupVindex --name customer_region_lookup --table-keyspace main externalize
 LookupVindex customer_region_lookup has been externalized and the customer_region_lookup VReplication workflow has been deleted
 ```
 
