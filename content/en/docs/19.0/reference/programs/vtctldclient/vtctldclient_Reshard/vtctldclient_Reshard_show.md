@@ -1,7 +1,7 @@
 ---
 title: Reshard show
 series: vtctldclient
-commit: 314ebcf13923f98945595208d5099eca4a7184ea
+commit: b089f78945653f6acd17c66f896820e36df49437
 ---
 ## vtctldclient Reshard show
 
@@ -20,17 +20,15 @@ vtctldclient --server localhost:15999 Reshard --workflow cust2cust --target-keys
 ### Options
 
 ```
-  -h, --help           help for show
-      --include-logs   Include recent logs for the workflow. (default true)
+  -h, --help   help for show
 ```
 
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration   timeout to use for the command (default 1h0m0s)
-      --compact                   use compact format for otherwise verbose outputs
+      --action_timeout duration   timeout for the total command (default 1h0m0s)
       --format string             The format of the output; supported formats are: text,json. (default "text")
-      --server string             server to use for the connection (required)
+      --server string             server to use for connection (required)
       --target-keyspace string    Target keyspace for this workflow.
   -w, --workflow string           The workflow you want to perform the command on.
 ```

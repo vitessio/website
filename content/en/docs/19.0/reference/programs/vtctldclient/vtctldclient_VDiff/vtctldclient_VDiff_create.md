@@ -1,7 +1,7 @@
 ---
 title: VDiff create
 series: vtctldclient
-commit: 314ebcf13923f98945595208d5099eca4a7184ea
+commit: 30385807689b40668d60dbb5059ea0987f19da5c
 ---
 ## vtctldclient VDiff create
 
@@ -14,7 +14,7 @@ vtctldclient VDiff create
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --target-keyspace customer create
+vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --target-keyspace customer
 vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --target-keyspace customer create b3f59678-5241-11ee-be56-0242ac120002
 ```
 
@@ -41,10 +41,9 @@ vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --targe
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration   timeout to use for the command (default 1h0m0s)
-      --compact                   use compact format for otherwise verbose outputs
+      --action_timeout duration   timeout for the total command (default 1h0m0s)
       --format string             The format of the output; supported formats are: text,json. (default "text")
-      --server string             server to use for the connection (required)
+      --server string             server to use for connection (required)
       --target-keyspace string    Target keyspace for this workflow.
   -w, --workflow string           The workflow you want to perform the command on.
 ```

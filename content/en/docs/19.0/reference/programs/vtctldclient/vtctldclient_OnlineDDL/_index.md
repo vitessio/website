@@ -1,7 +1,7 @@
 ---
 title: OnlineDDL
 series: vtctldclient
-commit: 314ebcf13923f98945595208d5099eca4a7184ea
+commit: 476ca265d0583549c05a3ab88f76bc8d24174364
 ---
 ## vtctldclient OnlineDDL
 
@@ -16,9 +16,8 @@ Operates on online DDL (schema migrations).
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration   timeout to use for the command (default 1h0m0s)
-      --compact                   use compact format for otherwise verbose outputs
-      --server string             server to use for the connection (required)
+      --action_timeout duration   timeout for the total command (default 1h0m0s)
+      --server string             server to use for connection (required)
 ```
 
 ### SEE ALSO

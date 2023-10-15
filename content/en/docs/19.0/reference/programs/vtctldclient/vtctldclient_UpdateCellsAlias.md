@@ -1,7 +1,6 @@
 ---
 title: UpdateCellsAlias
 series: vtctldclient
-commit: 314ebcf13923f98945595208d5099eca4a7184ea
 ---
 ## vtctldclient UpdateCellsAlias
 
@@ -25,9 +24,8 @@ vtctldclient UpdateCellsAlias [--cells <cell1,cell2,...> [--cells <cell4> ...]] 
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration   timeout to use for the command (default 1h0m0s)
-      --compact                   use compact format for otherwise verbose outputs
-      --server string             server to use for the connection (required)
+      --action_timeout duration   timeout for the total command (default 1h0m0s)
+      --server string             server to use for connection (required)
 ```
 
 ### SEE ALSO

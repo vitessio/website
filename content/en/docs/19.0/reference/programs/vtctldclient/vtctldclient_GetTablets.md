@@ -1,7 +1,6 @@
 ---
 title: GetTablets
 series: vtctldclient
-commit: 314ebcf13923f98945595208d5099eca4a7184ea
 ---
 ## vtctldclient GetTablets
 
@@ -48,9 +47,8 @@ vtctldclient GetTablets [--strict] [{--cell $c1 [--cell $c2 ...] [--tablet-type 
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration   timeout to use for the command (default 1h0m0s)
-      --compact                   use compact format for otherwise verbose outputs
-      --server string             server to use for the connection (required)
+      --action_timeout duration   timeout for the total command (default 1h0m0s)
+      --server string             server to use for connection (required)
 ```
 
 ### SEE ALSO

@@ -1,7 +1,7 @@
 ---
 title: Workflow
 series: vtctldclient
-commit: 314ebcf13923f98945595208d5099eca4a7184ea
+commit: e73ce917ed97a6a8586cd3647cb2f498fe908a0e
 ---
 ## vtctldclient Workflow
 
@@ -15,15 +15,14 @@ vtctldclient Workflow --keyspace <keyspace> [command] [command-flags]
 
 ```
   -h, --help              help for Workflow
-  -k, --keyspace string   Keyspace context for the workflow.
+  -k, --keyspace string   Keyspace context for the workflow (required).
 ```
 
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration   timeout to use for the command (default 1h0m0s)
-      --compact                   use compact format for otherwise verbose outputs
-      --server string             server to use for the connection (required)
+      --action_timeout duration   timeout for the total command (default 1h0m0s)
+      --server string             server to use for connection (required)
 ```
 
 ### SEE ALSO
