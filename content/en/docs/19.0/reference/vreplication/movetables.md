@@ -19,18 +19,18 @@ These workflows can have a significant impact on the source tablets (which are o
 
 Please see the [`MoveTables` command reference](../../../reference/programs/vtctldclient/vtctldclient_movetables/) for a full list of sub-commands and their flags.
 
-## The Basic MoveTables Workflow lifecycle
+## The Basic MoveTables Workflow Lifecycle
 
 1. Initiate the migration using `create`<br/>
-`MoveTables --workflow commerce2customer --target-keyspace customer create --source-keyspace commerce --tables "customer,corder"`
+`MoveTables --workflow <workflow> --target-keyspace <target-keyspace> create --source-keyspace <source-keyspace> --tables <tables>`
 1. Monitor the workflow using `show` or `status`<br/>
-`MoveTables --workflow commerce2customer --target-keyspace customer show`<br/>
-`MoveTables --workflow commerce2customer --target-keyspace customer status`<br/>
+`MoveTables --workflow <workflow> --target-keyspace <target-keyspace> show`<br/>
+`MoveTables --workflow <workflow> --target-keyspace <target-keyspace> status`<br/>
 1. Confirm that data has been copied over correctly using [VDiff](../vdiff)
 1. Cutover to the target keyspace with `switchtraffic`<br/>
-`MoveTables --workflow commerce2customer --target-keyspace customer switchtraffic`
+`MoveTables --workflow <workflow> --target-keyspace <target-keyspace> switchtraffic`
 1. Cleanup vreplication artifacts and source tables with `complete`<br/>
-`MoveTables --workflow commerce2customer --target-keyspace customer complete`
+`MoveTables --workflow <workflow> --target-keyspace <target-keyspace> complete`
 
 ## Common Use Cases for MoveTables
 
@@ -63,7 +63,7 @@ Action must be one of the following: `create`, `show`, `status`, `switchtraffic`
 #### Show
 <div class="cmd">
 
-[`show`](../../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_show/) displays useful information about a workflow -- including recent logs.
+[`show`](../../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_show/) displays useful information about a workflow – including recent logs.
 
 </div>
 
