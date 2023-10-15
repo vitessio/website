@@ -1,6 +1,7 @@
 ---
 title: Workflow update
 series: vtctldclient
+commit: fe3121946231107b737e319b680c9686396b9ce1
 ---
 ## vtctldclient Workflow update
 
@@ -24,15 +25,16 @@ vtctldclient --server localhost:15999 workflow --keyspace customer update --work
       --on-ddl string           New instruction on what to do when DDL is encountered in the VReplication stream. Possible values are IGNORE, STOP, EXEC, and EXEC_IGNORE.
   -t, --tablet-types strings    New source tablet types to replicate from (e.g. PRIMARY,REPLICA,RDONLY).
       --tablet-types-in-order   When performing source tablet selection, look for candidates in the type order as they are listed in the tablet-types flag. (default true)
-  -w, --workflow string         The workflow you want to update (required).
+  -w, --workflow string         The workflow you want to update.
 ```
 
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration   timeout for the total command (default 1h0m0s)
-  -k, --keyspace string           Keyspace context for the workflow (required).
-      --server string             server to use for connection (required)
+      --action_timeout duration   timeout to use for the command (default 1h0m0s)
+      --compact                   use compact format for otherwise verbose outputs
+  -k, --keyspace string           Keyspace context for the workflow.
+      --server string             server to use for the connection (required)
 ```
 
 ### SEE ALSO

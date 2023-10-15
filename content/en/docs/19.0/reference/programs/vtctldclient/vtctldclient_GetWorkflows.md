@@ -1,6 +1,7 @@
 ---
 title: GetWorkflows
 series: vtctldclient
+commit: 0f751fbb7c64ca5280c5d4f58d038e1df5477c67
 ---
 ## vtctldclient GetWorkflows
 
@@ -13,15 +14,17 @@ vtctldclient GetWorkflows <keyspace>
 ### Options
 
 ```
-  -h, --help       help for GetWorkflows
-  -a, --show-all   Show all workflows instead of just active workflows.
+  -h, --help           help for GetWorkflows
+      --include-logs   Include recent logs for the workflows. (default true)
+  -a, --show-all       Show all workflows instead of just active workflows.
 ```
 
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration   timeout for the total command (default 1h0m0s)
-      --server string             server to use for connection (required)
+      --action_timeout duration   timeout to use for the command (default 1h0m0s)
+      --compact                   use compact format for otherwise verbose outputs
+      --server string             server to use for the connection (required)
 ```
 
 ### SEE ALSO

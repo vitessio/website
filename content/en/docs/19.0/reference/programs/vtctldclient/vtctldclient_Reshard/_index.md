@@ -1,7 +1,7 @@
 ---
 title: Reshard
 series: vtctldclient
-commit: e73ce917ed97a6a8586cd3647cb2f498fe908a0e
+commit: 0f751fbb7c64ca5280c5d4f58d038e1df5477c67
 ---
 ## vtctldclient Reshard
 
@@ -19,8 +19,9 @@ Perform commands related to resharding a keyspace.
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration   timeout for the total command (default 1h0m0s)
-      --server string             server to use for connection (required)
+      --action_timeout duration   timeout to use for the command (default 1h0m0s)
+      --compact                   use compact format for otherwise verbose outputs
+      --server string             server to use for the connection (required)
 ```
 
 ### SEE ALSO
