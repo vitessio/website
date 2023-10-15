@@ -6,7 +6,7 @@ weight: 40
 
 ### Description
 
-`Materialize` is a lower level vreplication command that allows for generalized materialization of tables. The target tables
+[`Materialize`](../../../reference/programs/vtctldclient/vtctldclient_materialize/) is a lower level vreplication command that allows for generalized materialization of tables. The target tables
 can be copies, aggregations, or views. The target tables are kept in sync in near-realtime.
 
 You can specify multiple tables to materialize using the [`create`](../../../reference/programs/vtctldclient/vtctldclient_materialize/vtctldclient_materialize_create/) sub-command's `--table-settings` flag.
