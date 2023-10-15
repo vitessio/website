@@ -29,15 +29,17 @@ Please see the [`Materialize` command reference](../../../reference/programs/vtc
 
 ### Example
 
-```
+```shell
 vtctldclient --server localhost:15999 Materialize --workflow product_sales --target-keyspace commerce create --source-keyspace commerce --table-settings '[{"target_table": "sales_by_sku", "create_ddl": "create table sales_by_sku (sku varbinary(128) not null primary key, orders bigint, revenue bigint)", "source_expression": "select sku, count(*) as orders, sum(price) as revenue from corder group by sku"}]' --cells zone1 --cells zone2 --tablet-types replica
 ```
 
 ### Parameters
 
+### Action
+
 [`Materialize`](../../../reference/programs/vtctldclient/vtctldclient_materialize/) is an "umbrella" command. The [`action` or sub-command](../../../reference/programs/vtctldclient/vtctldclient_materialize/#see-also) defines the operation on the workflow.
 
-### options
+### Options
 
 Each [`action` or sub-command](../../../reference/programs/vtctldclient/vtctldclient_materialize/#see-also) has additional options/parameters that can be used to modify its behavior. Please see the [command's reference docs](../../../reference/programs/vtctldclient/vtctldclient_materialize/) for the full list of command options or flags. Below we will add additional information for a subset of key options.
 
