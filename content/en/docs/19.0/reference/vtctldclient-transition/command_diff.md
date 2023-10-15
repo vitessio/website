@@ -41,6 +41,7 @@ For stronger guarantees of compatibility, we highly encourage programming direct
 | | `TopoCp` | (not yet migrated) |
 | | `UpdateSrvKeyspacePartition` | (not yet migrated) |
 | | `UpdateTabletAddrs` | (deleted) |
+| | `VReplicationExec` | (deleted) |
 | | `ValidatePermissionsKeyspace`, `ValidatePermissionsShard` | (deleted) |
 | | `VtctldCommand` | N/A |
 | | `WaitForFilteredReplication` | (deleted) |
