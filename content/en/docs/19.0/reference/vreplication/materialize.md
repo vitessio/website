@@ -1,28 +1,45 @@
 ---
 title: Materialize
-description:
+description: Materialize the results of a query into a table
 weight: 40
 ---
-
-### Command
-
-```
-Materialize -- [--cells=<cells>] [--tablet_types=<source_tablet_types>] <json_spec>
-```
 
 ### Description
 
 `Materialize` is a lower level vreplication command that allows for generalized materialization of tables. The target tables
 can be copies, aggregations, or views. The target tables are kept in sync in near-realtime.
 
-You can specify multiple tables to materialize using the `json_spec` parameter.
+You can specify multiple tables to materialize using the [`create`](../../../reference/programs/vtctldclient/vtctldclient_materialize/vtctldclient_materialize_create/) sub-command's `--table-settings` flag.
 
 {{< warning >}}
 Be careful to avoid using the `INSTANT ADD COLUMN` feature in [MySQL 8.0+](https://mysqlserverteam.com/mysql-8-0-innodb-now-supports-instant-add-column/) with materialization source tables as this can cause the vreplication based materialization workflow to break.
 {{< /warning >}}
 
+## The Basic Materialize Workflow Lifecycle
+
+1. Initiate the migration using `Materialize`
+2. Monitor the workflow using `show` or `status`<br/>
+`Materialize --target-keyspace <target-keyspace> show --workflow <workflow>`<br/>
+`Materialize --target-keyspace <target-keyspace> status --workflow <workflow>`<br/>
+3. Start accessing your views once the workflow has started Replicating
+
+## Command
+
+Please see the [`Materialize` command reference](../../../reference/programs/vtctldclient/vtctldclient_materialize/) for a full list of sub-commands and their flags.
+
+### Example
+
+```
+vtctldclient --server localhost:15999 Materialize --workflow product_sales --target-keyspace commerce create --source-keyspace commerce --table-settings '[{"target_table": "sales_by_sku", "create_ddl": "create table sales_by_sku (sku varbinary(128) not null primary key, orders bigint, revenue bigint)", "source_expression": "select sku, count(*) as orders, sum(price) as revenue from corder group by sku"}]' --cells zone1 --cells zone2 --tablet-types replica
+```
+
 ### Parameters
 
+[`Materialize`](../../../reference/programs/vtctldclient/vtctldclient_materialize/) is an "umbrella" command. The [`action` or sub-command](../../../reference/programs/vtctldclient/vtctldclient_materialize/#see-also) defines the operation on the workflow.
+
+### options
+
+Each [`action` or sub-command](../../../reference/programs/vtctldclient/vtctldclient_materialize/#see-also) has additional options/parameters that can be used to modify its behavior. Please see the [command's reference docs](../../../reference/programs/vtctldclient/vtctldclient_materialize/) for the full list of command options or flags. Below we will add additional information for a subset of key options.
 
 #### --cells
 **optional**\
@@ -41,7 +58,7 @@ cells should be used to pick a tablet for selecting data from the source keyspac
 * To reduce bandwidth costs by skipping cells that are in different availability zones
 * Select cells where replica lags are lower
 
-#### --tablet_types 
+#### --tablet-types 
 **optional**\
 **default** `--vreplication_tablet_type` parameter value for the tablet. `--vreplication_tablet_type` has the default value of "in_order:REPLICA,PRIMARY".\
 **string**
@@ -58,44 +75,34 @@ specified impacts [tablet selection](../tablet_selection/) for the workflow.
 * To reduce the load on PRIMARY tablets by using REPLICAs or RDONLYs
 * Reducing lag by pointing to PRIMARY
 
-#### JSON spec details
+#### --table-settings
+**required**\
+**JSON**
+
 <div class="cmd">
 
-* *workflow* name to refer to this materialization
-* *source_keyspace* keyspace containing the source table
-* *target_keyspace* keyspace to materialize to
-* *table_settings* list of views to be materialized and the associated query
-  * *target_table* name of table to which to materialize the data to
-  * *source_expression* the materialization query
-* Optional parameters:
-  * *stop_after_copy* if vreplication should be stopped after the copy phase
-    is complete
-  * *cell* name of a cell, or a comma separated list of cells, that should be
-    used for choosing source tablet(s) for the materialization. If this
-    parameter is not specified, only cell(s) local to the target tablet(s) is
-    considered
-  * *tablet_types* a Vitess tablet_type, or comma separated list of tablet
-    types, that should be used for choosing source tablet(s) for the
-    materialization. If not specified, this defaults to the tablet type(s)
-    specified by the `--vreplication_tablet_type` VTTablet command line flag
+This is a JSON array where each value must contain two key/value pairs. The first required key is 'target_table' and it is the name of the table in the target-keyspace to store the results in. The second required key is 'source_expression' and its value is the select query to run against the source table. An optional key/value pair can also be specified for 'create_ddl' which provides the DDL to create the target table if it does not exist – you can alternatively specify a value of 'copy' if the target table schema should be copied as-is from the source keyspace. Here's an example value for table-settings:
+
+```json
+[
+  {
+    "target_table": "customer_one_email",
+    "source_expression": "select email from customer where customer_id = 1"
+  },
+  {
+    "target_table": "states",
+    "source_expression": "select * from states",
+    "create_ddl": "copy"
+  },
+  {
+    "target_table": "sales_by_sku",
+    "source_expression": "select sku, count(*) as orders, sum(price) as revenue from corder group by sku",
+    "create_ddl": "create table sales_by_sku (sku varbinary(128) not null primary key, orders bigint, revenue bigint)"
+  }
+]
+```
 
 </div>
-
-#### Example
-```
-Materialize '{"workflow": "product_sales", "source_keyspace": "commerce", "target_keyspace": "customer",
-    "table_settings": [{"target_table": "sales_by_sku",
-    "source_expression": "select sku, count(*), sum(price) from corder group by order_id"}],
-    "cell": "zone1", "tablet_types": "REPLICA"}'
-```
-
-### A Materialize Workflow
-
-Once you decide on your materialization requirements, you need to initiate a VReplication workflow as follows:
-
-1. Initiate the migration using `Materialize`
-2. Monitor the workflow using [Workflow](../workflow)
-3. Start accessing your views once the workflow has started Replicating
 
 ### Notes
 

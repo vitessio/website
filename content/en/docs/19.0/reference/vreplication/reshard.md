@@ -34,8 +34,7 @@ Please see the [`Reshard` command reference](../../../reference/programs/vtctldc
 
 ### action
 
-`Reshard` is an "umbrella" command. The `action` sub-command defines the operation on the workflow.
-Action must be one of the following: `create`, `show`, `status`, `switchtraffic`, `reversetrafffic`, `cancel`, or `complete`.
+[`Reshard`](../../../reference/programs/vtctldclient/vtctldclient_reshard/) is an "umbrella" command. The [`action` or sub-command](../../../reference/programs/vtctldclient/vtctldclient_reshard/#see-also) defines the operation on the workflow.
 
 #### Create
 <div class="cmd">

@@ -51,7 +51,6 @@ See this [user guide](../../../user-guides/migration/move-tables/) which describ
 ### Action
 
 [`MoveTables`](../../../reference/programs/vtctldclient/vtctldclient_movetables/) is an "umbrella" command. The [`action` or sub-command](../../../reference/programs/vtctldclient/vtctldclient_movetables/#see-also) defines the operation on the workflow.
-Action must be one of the following: `create`, `show`, `status`, `switchtraffic`, `reversetraffic`, `cancel`, or `complete`.
 
 #### Create
 <div class="cmd">
