@@ -278,10 +278,10 @@ be copied faithfully to the new copy of these tables in the `customer` keyspace.
 
 ## Monitoring Progress (Optional)
 
-In this example there are only a few rows in the tables, so the `MoveTables` operation only takes seconds. If the tables were large, however, you may need to monitor the progress of the operation. You can get a basic summary of the progress using the [`Progress`](../../../reference/vreplication/movetables/#progress) action:
+In this example there are only a few rows in the tables, so the `MoveTables` operation only takes seconds. If the tables were large, however, you may need to monitor the progress of the operation. You can get a basic summary of the progress using the [`status`](../../../reference/vreplication/movetables/#status) action:
 
 ```bash
-$ vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer progress
+$ vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer status --format=json
 {
   "table_copy_state": {},
   "shard_streams": {
@@ -300,11 +300,12 @@ $ vtctldclient MoveTables --target-keyspace customer --workflow commerce2custome
         }
       ]
     }
-  }
+  },
+  "traffic_state": "Reads Not Switched. Writes Not Switched"
 }
 ```
 
-You can get detailed status and progress information using the
+You can get more detailed status information using the
 [`show`](../../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_show/) sub-command:
 
 ```json

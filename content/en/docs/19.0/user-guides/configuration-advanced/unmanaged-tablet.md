@@ -133,7 +133,7 @@ use `Show` or `Progress`
 
 ```bash
 vtctldclient MoveTables --target-keyspace commerce --workflow legacy2commerce show
-vtctldclient MoveTables --target-keyspace commerce --workflow legacy2commerce progress
+vtctldclient MoveTables --target-keyspace commerce --workflow legacy2commerce status
 ```
 
 You can alternatively use the [`Workflow show`](../../../reference/programs/vtctldclient/vtctldclient_workflow/vtctldclient_workflow_show/) command to get the details as well.

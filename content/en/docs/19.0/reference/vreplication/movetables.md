@@ -70,7 +70,7 @@ Action must be one of the following: `create`, `show`, `status`, `switchtraffic`
 #### Status
 <div class="cmd">
 
-[`status`](../../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_status/) (or `progress`) reports the progress of a workflow by showing the percentage of data copied across targets, if workflow is in copy state, and the replication lag between the target and the source once the copy phase is completed.
+[`status`](../../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_status/) (or `progress`) reports the progress of a workflow by showing the percentage of data copied across targets, if workflow is in copy state, and the replication lag between the target and the source once the copy phase is completed. It also shows the current state of traffic for the tables involved in the workflow.
 
 It is too expensive to get real-time row counts of tables, using _count(*)_, say. So we use the statistics available in the `information_schema` to approximate copy progress. This data can be significantly off (up to 50-60%) depending on the utilization of the underlying mysql server resources. You can manually run `ANALYZE TABLE` to update the statistics if so desired.
 

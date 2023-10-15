@@ -30,16 +30,16 @@ on working with external Vitess clusters.
 
 #### Differences Between Migrate and MoveTables
 
-`Migrate` has separate semantics and behaviors from `MoveTables`:
+[`Migrate`](../../../reference/programs/vtctldclient/vtctldclient_migrate/) has separate semantics and behaviors from [`MoveTables`](../../../reference/programs/vtctldclient/vtctldclient_movetables/):
 
-* `MoveTables` migrates data from one keyspace to another, within the same Vitess cluster; `Migrate` functions between two separated Vitess clusters. 
-* `MoveTables` erases the source data upon completion by default; Migrate keeps the source data intact.
-    * There are flags available in MoveTables to change the default behavior in regards to the source data.
-* `MoveTables` sets up routing rules and reverse replication, allowing for rollback prior to completion.
-    * Switching read/write traffic is not meaningful in the case of `Migrate`, as the Source is in a different cluster.
+* [`MoveTables`](../../../reference/programs/vtctldclient/vtctldclient_movetables/) migrates data from one keyspace to another, within the same Vitess cluster; [`Migrate`](../../../reference/programs/vtctldclient/vtctldclient_migrate/) functions between two separate Vitess clusters.
+* [`MoveTables`](../../../reference/programs/vtctldclient/vtctldclient_movetables/) erases the source data upon completion by default; Migrate keeps the source data intact.
+    * There are flags available in [`MoveTables`](../../../reference/programs/vtctldclient/vtctldclient_movetables/) to change the default behavior in regards to the source data.
+* [`MoveTables`](../../../reference/programs/vtctldclient/vtctldclient_movetables/) sets up routing rules and reverse replication, allowing for rollback prior to completion.
+    * Switching read/write traffic is not meaningful in the case of [`Migrate`](../../../reference/programs/vtctldclient/vtctldclient_migrate/), as the Source is in a different cluster.
     * Switching traffic requires the Target to have the ability to create vreplication streams (in the `_vt` database) on the Source;
       this may not always be possible on production systems.
-* Not all `MoveTables` options work with `Migrate`; for example [`Progress`](../progress) is unavailable with `Migrate`. 
+* Not all [`MoveTables`](../../../reference/programs/vtctldclient/vtctldclient_movetables/) sub-commands work with [`Migrate`](../../../reference/programs/vtctldclient/vtctldclient_migrate/); for example `SwitchTraffic` and `ReverseTraffic` are unavailable with [`Migrate`](../../../reference/programs/vtctldclient/vtctldclient_migrate/).
 
 
 ### Parameters

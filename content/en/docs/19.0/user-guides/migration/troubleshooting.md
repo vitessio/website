@@ -51,8 +51,8 @@ tablet so it's recommended to use non-PRIMARY tablets whenever possible to limit
 ## Monitoring
 
 It's important to properly monitor your VReplication workflows in order to detect any issues. Your primary tools for this are:
-  - The [`Workflow show`](../../../reference/vreplication/workflow/) command
-  - The `Progress`/`Show` action (e.g. [`MoveTables -- Progress`](../../../reference/vreplication/movetables/#progress))
+  - The `show`sub-command (e.g. [`MoveTables show`](../../../reference/vreplication/movetables/#show))
+  - The `status ` sub-command (e.g. [`MoveTables status`](../../../reference/vreplication/movetables/#status))
   - The [VReplication related metrics](../../../reference/vreplication/metrics/)
     - Note that in most production systems the tablet endpoints would be scraped and stored in something like [Prometheus](https://prometheus.io) where you can build dashboards and alerting on the data
 
@@ -79,10 +79,10 @@ $ vtctldclient ApplyRoutingRules --rules-file=/tmp/routingrules.backup.json
 ### Stream Never Starts
 
 This can be exhibited in one of two ways:
-1. This error is shown in the `Progress`/`Show` action output or the `Workflow show` output: `Error picking tablet: context has expired`
+1. This error is shown in the `status`/`show` action output or the `Workflow show` output: `Error picking tablet: context has expired`
 2. The stream never starts, which can be seen in the following ways:
     1. The `Workflow show` output is showing an empty value in the `Pos` field for the stream
-    2. The `Progress`/`Show` action output is showing `VStream has not started` for the stream
+    2. The `status`/`show` action output is showing `VStream has not started` for the stream
 
 When a VReplication workflow starts or restarts the [tablet selection process](../../../reference/vreplication/tablet_selection/)
 runs to find a viable source tablet for the stream. The `cells` and `tablet_types` play a key role in this process and
@@ -97,7 +97,7 @@ progress that you do not wish you lose, you can update the underlying workflow r
 values. For example:
 
 ```bash
-$ vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer progress
+$ vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer status --format=json
 {
   "table_copy_state": {},
   "shard_streams": {
@@ -116,7 +116,8 @@ $ vtctldclient MoveTables --target-keyspace customer --workflow commerce2custome
         }
       ]
     }
-  }
+  },
+  "traffic_state": "Reads Not Switched. Writes Not Switched"
 }
 ```
 
@@ -124,10 +125,10 @@ $ vtctldclient MoveTables --target-keyspace customer --workflow commerce2custome
 
 We can encounter persistent SQL errors when applying replicated events on the target for a variety of reasons, but
 the most common cause is incompatible DDL having been executed against the source table while the workflow is running. 
-You would see this error in the `Show`/`Progress` or `Workflow show` output. For example:
+You would see this error in the `status`/`show` or `Workflow show` output. For example:
 
 ```bash
-$ vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer progress
+$ vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer status --format=json
 {
   "table_copy_state": {},
   "shard_streams": {
@@ -146,7 +147,8 @@ $ vtctldclient MoveTables --target-keyspace customer --workflow commerce2custome
         }
       ]
     }
-  }
+  },
+  "traffic_state": "Reads Not Switched. Writes Not Switched"
 }
 ```
 
@@ -176,7 +178,7 @@ The following vreplication streams exist for workflow customer.commerce2customer
 
 id=2 on customer/zone1-200: Status: Running. VStream has not started.
 
-$ vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer progress
+$ vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer status --format=json
 {
   "table_copy_state": {},
   "shard_streams": {
@@ -195,7 +197,8 @@ $ vtctldclient MoveTables --target-keyspace customer --workflow commerce2custome
         }
       ]
     }
-  }
+  },
+  "traffic_state": "Reads Not Switched. Writes Not Switched"
 } 
 ```
 
