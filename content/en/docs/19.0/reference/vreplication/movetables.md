@@ -11,13 +11,13 @@ These workflows can have a significant impact on the source tablets (which are o
 
 ## Description
 
-[`MoveTables`](../../../reference/programs/vtctldclient/vtctldclient_movetables/) is used to start and manage workflows to move one or more tables from an external database or an existing Vitess keyspace into a new Vitess keyspace. The target keyspace can be unsharded or sharded.
+[`MoveTables`](../../programs/vtctldclient/vtctldclient_movetables/) is used to start and manage workflows to move one or more tables from an external database or an existing Vitess keyspace into a new Vitess keyspace. The target keyspace can be unsharded or sharded.
 
-[`MoveTables`](../../../reference/programs/vtctldclient/vtctldclient_movetables/)  is typically used for migrating data into Vitess or to implement vertical sharding. You might use the former when you first start using Vitess and the latter if you want to distribute your load across servers without sharding tables.
+[`MoveTables`](../../programs/vtctldclient/vtctldclient_movetables/)  is typically used for migrating data into Vitess or to implement vertical sharding. You might use the former when you first start using Vitess and the latter if you want to distribute your load across servers without sharding tables.
 
 ## Command
 
-Please see the [`MoveTables` command reference](../../../reference/programs/vtctldclient/vtctldclient_movetables/) for a full list of sub-commands and their flags.
+Please see the [`MoveTables` command reference](../../programs/vtctldclient/vtctldclient_movetables/) for a full list of sub-commands and their flags.
 
 ## The Basic MoveTables Workflow Lifecycle
 
@@ -50,26 +50,26 @@ See this [user guide](../../../user-guides/migration/move-tables/) which describ
 
 ### Action
 
-[`MoveTables`](../../../reference/programs/vtctldclient/vtctldclient_movetables/) is an "umbrella" command. The [`action` or sub-command](../../../reference/programs/vtctldclient/vtctldclient_movetables/#see-also) defines the operation on the workflow.
+[`MoveTables`](../../programs/vtctldclient/vtctldclient_movetables/) is an "umbrella" command. The [`action` or sub-command](../../programs/vtctldclient/vtctldclient_movetables/#see-also) defines the operation on the workflow.
 
 #### Create
 <div class="cmd">
 
-[`create`](../../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_create/) sets up and creates a new workflow. The workflow name should not conflict with that of an existing workflow.
+[`create`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_create/) sets up and creates a new workflow. The workflow name should not conflict with that of an existing workflow.
 
 </div>
 
 #### Show
 <div class="cmd">
 
-[`show`](../../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_show/) displays useful information about a workflow – including recent logs.
+[`show`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_show/) displays useful information about a workflow – including recent logs.
 
 </div>
 
 #### Status
 <div class="cmd">
 
-[`status`](../../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_status/) (or `progress`) reports the progress of a workflow by showing the percentage of data copied across targets, if workflow is in copy state, and the replication lag between the target and the source once the copy phase is completed. It also shows the current state of traffic for the tables involved in the workflow.
+[`status`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_status/) (or `progress`) reports the progress of a workflow by showing the percentage of data copied across targets, if workflow is in copy state, and the replication lag between the target and the source once the copy phase is completed. It also shows the current state of traffic for the tables involved in the workflow.
 
 It is too expensive to get real-time row counts of tables, using _count(*)_, say. So we use the statistics available in the `information_schema` to approximate copy progress. This data can be significantly off (up to 50-60%) depending on the utilization of the underlying mysql server resources. You can manually run `ANALYZE TABLE` to update the statistics if so desired.
 
@@ -78,21 +78,21 @@ It is too expensive to get real-time row counts of tables, using _count(*)_, say
 #### SwitchTraffic
 <div class="cmd">
 
-[`switchtraffic`](../../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_switchtraffic/) switches traffic forward for the `tablet-types` specified. You can switch all traffic with just one command, and this is the default behavior. Note that you can now switch replica, rdonly, and primary traffic in any order.
+[`switchtraffic`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_switchtraffic/) switches traffic forward for the `tablet-types` specified. You can switch all traffic with just one command, and this is the default behavior. Note that you can now switch replica, rdonly, and primary traffic in any order.
 
 </div>
 
 #### ReverseTraffic
 <div class="cmd">
 
-[`reversetraffic`](../../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_reversetraffic/) switches traffic in the reverse direction for the `tablet-types` specified. The traffic should have been previously switched forward using `SwitchTraffic` for the `cells` and `tablet-types` specified.
+[`reversetraffic`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_reversetraffic/) switches traffic in the reverse direction for the `tablet-types` specified. The traffic should have been previously switched forward using `SwitchTraffic` for the `cells` and `tablet-types` specified.
 
 </div>
 
 #### Cancel
 <div class="cmd">
 
-[`cancel`](../../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_cancel/) can be used if a workflow was created in error or was misconfigured and you prefer to create a new workflow instead of fixing this one. `cancel` can only be called if no traffic has been switched. It removes vreplication-related artifacts like rows from the vreplication and copy_state tables in the sidecar `_vt` database along with routing rules and blacklisted tables from the topo and, by default, the target tables on the target keyspace
+[`cancel`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_cancel/) can be used if a workflow was created in error or was misconfigured and you prefer to create a new workflow instead of fixing this one. `cancel` can only be called if no traffic has been switched. It removes vreplication-related artifacts like rows from the vreplication and copy_state tables in the sidecar `_vt` database along with routing rules and blacklisted tables from the topo and, by default, the target tables on the target keyspace
 (see `--keep-data` and `--rename-tables`).
 
 </div>
@@ -104,14 +104,14 @@ It is too expensive to get real-time row counts of tables, using _count(*)_, say
 This is a destructive command
 {{< /warning >}}
 
-[`complete`](../../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_complete/) is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with routing rules and and blocklisted tables from the topo. By default, the source tables are also dropped on the target keyspace
+[`complete`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_complete/) is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with routing rules and and blocklisted tables from the topo. By default, the source tables are also dropped on the target keyspace
 (see `--keep-data` and `--rename-tables`).
 
 </div>
 
 ### options
 
-Each [`action` or sub-command](../../../reference/programs/vtctldclient/vtctldclient_movetables/#see-also) has additional options/parameters that can be used to modify its behavior. Please see the [command's reference docs](../../../reference/programs/vtctldclient/vtctldclient_movetables/) for the full list of command options or flags. Below we will add additional information for a subset of key options.
+Each [`action` or sub-command](../../programs/vtctldclient/vtctldclient_movetables/#see-also) has additional options/parameters that can be used to modify its behavior. Please see the [command's reference docs](../../programs/vtctldclient/vtctldclient_movetables/) for the full list of command options or flags. Below we will add additional information for a subset of key options.
 
 #### --auto-start
 **optional**\
@@ -203,13 +203,13 @@ in an unsharded keyspace of your choosing prior to the `SwitchTraffic` operation
 
 #### --max-replication-lag-allowed
 **optional**\
-**default**  the value used for [`--timeout`](../../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_switchtraffic/#options)
+**default**  the value used for [`--timeout`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_switchtraffic/#options)
 
 <div class="cmd">
 
 While executing `SwitchTraffic` we ensure that the VReplication lag for the workflow is less than this duration, otherwise report an error and don't attempt the switch. The calculated VReplication lag is the estimated maximum lag across workflow streams between the last event seen at the source and the last event processed by the target (which would be a heartbeat event if we're fully caught up). Usually, when VReplication has caught up, this lag should be very small (under a second).
 
-While switching write traffic, we temporarily make the source databases read-only, and wait for the targets to catchup. This means that the application can effectively be partially down for this cutover period as writes will pause or error out. While switching write traffic this flag can ensure that you only switch traffic if the current lag is low, thus limiting this period of write-unavailability and avoiding it entirely if we're not likely to catch up within the [`--timeout`](../../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_switchtraffic/#options) window.
+While switching write traffic, we temporarily make the source databases read-only, and wait for the targets to catchup. This means that the application can effectively be partially down for this cutover period as writes will pause or error out. While switching write traffic this flag can ensure that you only switch traffic if the current lag is low, thus limiting this period of write-unavailability and avoiding it entirely if we're not likely to catch up within the [`--timeout`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_switchtraffic/#options) window.
 
 While switching read traffic this can also be used to set an approximate upper bound on how stale reads will be against the replica tablets when using `@replica` shard targeting.
 
@@ -345,4 +345,4 @@ the command will error out. For setups with high write qps you may need to incre
 ### More Reading
 
 * [`MoveTables` in practice](../../../concepts/move-tables/)
-* [`MoveTables` reference docs](../../../reference/programs/vtctldclient/vtctldclient_movetables/)
+* [`MoveTables` reference docs](../../programs/vtctldclient/vtctldclient_movetables/)

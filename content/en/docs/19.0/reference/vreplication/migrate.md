@@ -6,7 +6,7 @@ weight: 85
 
 ### Description
 
-[`Migrate`](../../../reference/programs/vtctldclient/vtctldclient_migrate/) is used to start and manage VReplication workflows for copying keyspaces and/or tables from a source Vitess cluster, to a target Vitess cluster.
+[`Migrate`](../../programs/vtctldclient/vtctldclient_migrate/) is used to start and manage VReplication workflows for copying keyspaces and/or tables from a source Vitess cluster, to a target Vitess cluster.
 This command is built off of [`MoveTables`](../movetables) but has been extended to work with independent source and target topology services. It should be 
 utilized when moving Keyspaces or Tables between two separate Vitess environments. Migrate is an advantageous strategy for large sharded environments
 for a few reasons:
@@ -23,25 +23,25 @@ on working with external Vitess clusters.
 
 #### Differences Between Migrate and MoveTables
 
-[`Migrate`](../../../reference/programs/vtctldclient/vtctldclient_migrate/) has separate semantics and behaviors from [`MoveTables`](../../../reference/programs/vtctldclient/vtctldclient_movetables/):
+[`Migrate`](../../programs/vtctldclient/vtctldclient_migrate/) has separate semantics and behaviors from [`MoveTables`](../../programs/vtctldclient/vtctldclient_movetables/):
 
-* [`MoveTables`](../../../reference/programs/vtctldclient/vtctldclient_movetables/) migrates data from one keyspace to another, within the same Vitess cluster; [`Migrate`](../../../reference/programs/vtctldclient/vtctldclient_migrate/) functions between two separate Vitess clusters.
-* [`MoveTables`](../../../reference/programs/vtctldclient/vtctldclient_movetables/) erases the source data upon completion by default; Migrate keeps the source data intact.
-    * There are flags available in [`MoveTables`](../../../reference/programs/vtctldclient/vtctldclient_movetables/) to change the default behavior in regards to the source data.
-* [`MoveTables`](../../../reference/programs/vtctldclient/vtctldclient_movetables/) sets up routing rules and reverse replication, allowing for rollback prior to completion.
-    * Switching read/write traffic is not meaningful in the case of [`Migrate`](../../../reference/programs/vtctldclient/vtctldclient_migrate/), as the Source is in a different cluster.
+* [`MoveTables`](../../programs/vtctldclient/vtctldclient_movetables/) migrates data from one keyspace to another, within the same Vitess cluster; [`Migrate`](../../programs/vtctldclient/vtctldclient_migrate/) functions between two separate Vitess clusters.
+* [`MoveTables`](../../programs/vtctldclient/vtctldclient_movetables/) erases the source data upon completion by default; Migrate keeps the source data intact.
+    * There are flags available in [`MoveTables`](../../programs/vtctldclient/vtctldclient_movetables/) to change the default behavior in regards to the source data.
+* [`MoveTables`](../../programs/vtctldclient/vtctldclient_movetables/) sets up routing rules and reverse replication, allowing for rollback prior to completion.
+    * Switching read/write traffic is not meaningful in the case of [`Migrate`](../../programs/vtctldclient/vtctldclient_migrate/), as the Source is in a different cluster.
     * Switching traffic requires the Target to have the ability to create vreplication streams (in the `_vt` database) on the Source;
       this may not always be possible on production systems.
-* Not all [`MoveTables`](../../../reference/programs/vtctldclient/vtctldclient_movetables/) sub-commands work with [`Migrate`](../../../reference/programs/vtctldclient/vtctldclient_migrate/); for example `SwitchTraffic` and `ReverseTraffic` are unavailable with [`Migrate`](../../../reference/programs/vtctldclient/vtctldclient_migrate/).
+* Not all [`MoveTables`](../../programs/vtctldclient/vtctldclient_movetables/) sub-commands work with [`Migrate`](../../programs/vtctldclient/vtctldclient_migrate/); for example `SwitchTraffic` and `ReverseTraffic` are unavailable with [`Migrate`](../../programs/vtctldclient/vtctldclient_migrate/).
 
 ## Command
 
-Please see the [`Migrate` command reference](../../../reference/programs/vtctldclient/vtctldclient_migrate/) for a full list of sub-commands and their flags.
+Please see the [`Migrate` command reference](../../programs/vtctldclient/vtctldclient_migrate/) for a full list of sub-commands and their flags.
 
 ### An Example Migrate Workflow Lifecycle
 
 {{< info >}}
-NOTE: there is no reverse vreplication flow with [`Migrate`](../../../reference/programs/vtctldclient/vtctldclient_migrate/). After the [`Migrate complete`](../../../reference/programs/vtctldclient/vtctldclient_migrate/vtctldclient_migrate_complete/) command is given; no writes will be replicated between the Source and Target Vitess clusters. They are essentially two identical Vitess clusters running in two different environments. Once writing resumes on one of the clusters they will begin to drift apart. 
+NOTE: there is no reverse vreplication flow with [`Migrate`](../../programs/vtctldclient/vtctldclient_migrate/). After the [`Migrate complete`](../../programs/vtctldclient/vtctldclient_migrate/vtctldclient_migrate_complete/) command is given; no writes will be replicated between the Source and Target Vitess clusters. They are essentially two identical Vitess clusters running in two different environments. Once writing resumes on one of the clusters they will begin to drift apart. 
 {{< /info >}}
 
 1. Mount the source Vitess cluster using [Mount](../mount).<br/>
@@ -66,11 +66,11 @@ NOTE: there is no reverse vreplication flow with [`Migrate`](../../../reference/
 
 ### Action
 
-[`Migrate`](../../../reference/programs/vtctldclient/vtctldclient_migrate/) is an "umbrella" command. The [`action` or sub-command](../../../reference/programs/vtctldclient/vtctldclient_migrate/#see-also) defines the operation on the workflow.
+[`Migrate`](../../programs/vtctldclient/vtctldclient_migrate/) is an "umbrella" command. The [`action` or sub-command](../../programs/vtctldclient/vtctldclient_migrate/#see-also) defines the operation on the workflow.
 
 ### Options
 
-Each [`action` or sub-command](../../../reference/programs/vtctldclient/vtctldclient_migrate/#see-also) has additional options/parameters that can be used to modify its behavior. Please see the [command's reference docs](../../../reference/programs/vtctldclient/vtctldclient_migrate/) for the full list of command options or flags.
+Each [`action` or sub-command](../../programs/vtctldclient/vtctldclient_migrate/#see-also) has additional options/parameters that can be used to modify its behavior. Please see the [command's reference docs](../../programs/vtctldclient/vtctldclient_migrate/) for the full list of command options or flags.
 
 The options for the supported commands are the same as [MoveTables](../movetables), with the exception of `--enable-reverse-replication` as setting
 up the reverse vreplication streams requires modifying the source cluster's `_vt` sidecar database which we cannot do as that database is

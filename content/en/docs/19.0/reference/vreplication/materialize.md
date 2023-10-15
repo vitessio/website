@@ -6,10 +6,10 @@ weight: 40
 
 ### Description
 
-[`Materialize`](../../../reference/programs/vtctldclient/vtctldclient_materialize/) is a lower level vreplication command that allows for generalized materialization of tables. The target tables
+[`Materialize`](../../programs/vtctldclient/vtctldclient_materialize/) is a lower level vreplication command that allows for generalized materialization of tables. The target tables
 can be copies, aggregations, or views. The target tables are kept in sync in near-realtime.
 
-You can specify multiple tables to materialize using the [`create`](../../../reference/programs/vtctldclient/vtctldclient_materialize/vtctldclient_materialize_create/) sub-command's `--table-settings` flag.
+You can specify multiple tables to materialize using the [`create`](../../programs/vtctldclient/vtctldclient_materialize/vtctldclient_materialize_create/) sub-command's `--table-settings` flag.
 
 {{< warning >}}
 Be careful to avoid using the `INSTANT ADD COLUMN` feature in [MySQL 8.0+](https://mysqlserverteam.com/mysql-8-0-innodb-now-supports-instant-add-column/) with materialization source tables as this can cause the vreplication based materialization workflow to break.
@@ -25,7 +25,7 @@ Be careful to avoid using the `INSTANT ADD COLUMN` feature in [MySQL 8.0+](https
 
 ## Command
 
-Please see the [`Materialize` command reference](../../../reference/programs/vtctldclient/vtctldclient_materialize/) for a full list of sub-commands and their flags.
+Please see the [`Materialize` command reference](../../programs/vtctldclient/vtctldclient_materialize/) for a full list of sub-commands and their flags.
 
 ### Example
 
@@ -37,11 +37,11 @@ vtctldclient --server localhost:15999 Materialize --workflow product_sales --tar
 
 ### Action
 
-[`Materialize`](../../../reference/programs/vtctldclient/vtctldclient_materialize/) is an "umbrella" command. The [`action` or sub-command](../../../reference/programs/vtctldclient/vtctldclient_materialize/#see-also) defines the operation on the workflow.
+[`Materialize`](../../programs/vtctldclient/vtctldclient_materialize/) is an "umbrella" command. The [`action` or sub-command](../../programs/vtctldclient/vtctldclient_materialize/#see-also) defines the operation on the workflow.
 
 ### Options
 
-Each [`action` or sub-command](../../../reference/programs/vtctldclient/vtctldclient_materialize/#see-also) has additional options/parameters that can be used to modify its behavior. Please see the [command's reference docs](../../../reference/programs/vtctldclient/vtctldclient_materialize/) for the full list of command options or flags. Below we will add additional information for a subset of key options.
+Each [`action` or sub-command](../../programs/vtctldclient/vtctldclient_materialize/#see-also) has additional options/parameters that can be used to modify its behavior. Please see the [command's reference docs](../../programs/vtctldclient/vtctldclient_materialize/) for the full list of command options or flags. Below we will add additional information for a subset of key options.
 
 #### --cells
 **optional**\
