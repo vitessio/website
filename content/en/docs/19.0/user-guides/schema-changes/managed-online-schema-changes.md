@@ -111,7 +111,7 @@ See also [ddl_strategy flags](../ddl-strategy-flags).
 Vitess provides two interfaces to interacting with Online DDL:
 
 - SQL commands, via `VTGate`
-- Command line interface, via `vtctlclient`
+- Command line interface, via `vtctldclient`
 
 Supported interactions are:
 
@@ -146,7 +146,7 @@ mysql> drop table customer;
 +--------------------------------------+
 ```
 
-#### Executing an Online DDL via vtctlclient/ApplySchema
+#### Executing an Online DDL via vtctldclient
 
 ```shell
 $ vtctldclient ApplySchema --ddl-strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
@@ -161,7 +161,7 @@ $ vtctldclient ApplySchema --ddl-strategy "vitess" --sql "ALTER TABLE demo MODIF
 `ApplySchema` accepts the following flags:
 
 - `--ddl_strategy`: by default migrations run directly via MySQL standard DDL. This flag must be applied to indicate an online strategy. See also [DDL strategies](../ddl-strategies) and [ddl_strategy flags](../ddl-strategy-flags).
-- `-migration_context <unique-value>`: all migrations in a `ApplySchema` command are logically grouped via a unique _context_. A unique value will be supplied automatically. The user may choose to supply their own value, and it's their responsibility to provide with a unique value. Any string format is accepted.
+- `--migration_context <unique-value>`: all migrations in a `ApplySchema` command are logically grouped via a unique _context_. A unique value will be supplied automatically. The user may choose to supply their own value, and it's their responsibility to provide with a unique value. Any string format is accepted.
   The context can then be used to search for migrations, via `SHOW VITESS_MIGRATIONS LIKE 'the-context'`. It is visible in `SHOW VITESS_MIGRATIONS ...` output as the `migration_context` column.
 
 ## Migration flow and states

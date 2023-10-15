@@ -20,7 +20,7 @@ See also [ddl_strategy flags](../ddl-strategy-flags).
 
 You will set either `@@ddl_strategy` session variable, or `--ddl_strategy` command line flag. Examples:
 
-#### Via vtctlclient
+#### Via vtctldclient
 
 ```shell
 $ vtctldclient ApplySchema --ddl-strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
@@ -82,7 +82,7 @@ To be able to run online schema migrations via `gh-ost`:
 
 Vitess automatically creates a MySQL account for the migration, with a randomly generated password. The account is destroyed at the end of the migration.
 
-Vitess takes care of setting up the necessary command line flags. It automatically creates a hooks directory and populates it with hooks that report `gh-ost`'s progress back to Vitess. You may supply additional flags for your migration as part of `@@ddl_strategy` session variable (using `VTGate`) or `--ddl_strategy` command line flag (using `vtctlclient`). Examples:
+Vitess takes care of setting up the necessary command line flags. It automatically creates a hooks directory and populates it with hooks that report `gh-ost`'s progress back to Vitess. You may supply additional flags for your migration as part of `@@ddl_strategy` session variable (using `VTGate`) or `--ddl_strategy` command line flag (using `vtctldclient`). Examples:
 
 - `set @@ddl_strategy='gh-ost --max-load Threads_running=200';`
 - `set @@ddl_strategy='gh-ost --max-load Threads_running=200 --critical-load Threads_running=500 --critical-load-hibernate-seconds=60 --default-retries=512';`
@@ -104,7 +104,7 @@ Note that on Vitess Docker images, `pt-online-schema-change` and dependencies ar
 
 Vitess automatically creates a MySQL account for the migration, with a randomly generated password. The account is destroyed at the end of the migration.
 
-Vitess takes care of supplying the command line flags, the DSN, the username & password. It also sets up `PLUGINS` used to communicate migration progress back to the tablet. You may supply additional flags for your migration as part of `@@ddl_strategy` session variable (using `VTGate`) or `-ddl_strategy` command line flag (using `vtctlclient`). Examples:
+Vitess takes care of supplying the command line flags, the DSN, the username & password. It also sets up `PLUGINS` used to communicate migration progress back to the tablet. You may supply additional flags for your migration as part of `@@ddl_strategy` session variable (using `VTGate`) or `-ddl_strategy` command line flag (using `vtctldclient`). Examples:
 
 - `set @@ddl_strategy='pt-osc --null-to-not-null';`
 - `set @@ddl_strategy='pt-osc --max-load Threads_running=200';`

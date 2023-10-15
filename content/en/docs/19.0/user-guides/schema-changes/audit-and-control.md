@@ -534,7 +534,7 @@ $ vtctldclient ApplySchema --sql "alter vitess_migration '075088b9_6b56_11ee_808
 $ vtctldclient ApplySchema --sql "alter vitess_migration '075088b9_6b56_11ee_808b_0a43f95f28a3' retry" customer
 ```
 
-Also available via `vtctlclient OnlineDDL` command:
+Also available via `vtctldclient OnlineDDL` command:
 
 
 ```sh
