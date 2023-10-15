@@ -187,42 +187,10 @@ Now let's say we want to add a lookup Vindex on the `sku` column.
 We can use a [`consistent_lookup` or `consistent_lookup_unique`](../../vschema-guide/unique-lookup/)
 Vindex type. In our example we will use `consistent_lookup_unique`.
 
-Here is our example `<json_spec>`:
-
-```json
-$ cat lookup_vindex.json
-{
-    "sharded": true,
-    "vindexes": {
-        "corder_lookup": {
-            "type": "consistent_lookup_unique",
-            "params": {
-                "table": "customer.corder_lookup",
-                "from": "sku",
-                "to": "keyspace_id"
-            },
-            "owner": "corder"
-        }
-    },
-    "tables": {
-        "corder": {
-            "column_vindexes": [
-                {
-                    "column": "sku",
-                    "name": "corder_lookup"
-                }
-            ]
-        }
-    }
-}
-```
-
-</br>
-
 Note that as mentioned above, we do not have to tell Vitess about
 how to shard the actual backing table for the lookup Vindex or
 any schema to create as it will do it automatically. Now, let us
-actually execute the `CreateLookupVindex` command:
+actually execute the `LookupVindex create` command:
 
 ```bash
 vtctldclient --server localhost:15999 LookupVindex --name customer_region_lookup --table-keyspace main create --keyspace main --type consistent_lookup_unique --table-owner customer --table-owner-columns=id --tablet-types=PRIMARY
@@ -272,7 +240,7 @@ So in our example here: `corder_lookup_vdx`.
 {{< /info >}}
 
 ```json
-$ vtctldclient --server localhost:15999 LookupVindex --name customer_region_lookup --table-keyspace main show
+$ vtctldclient --server localhost:15999 LookupVindex --name customer_region_lookup --table-keyspace main show --include-logs=false
 {
   "workflows": [
     {
