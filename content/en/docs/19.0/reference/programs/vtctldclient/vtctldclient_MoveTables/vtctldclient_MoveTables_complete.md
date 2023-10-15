@@ -1,7 +1,7 @@
 ---
 title: MoveTables complete
 series: vtctldclient
-commit: e73ce917ed97a6a8586cd3647cb2f498fe908a0e
+commit: 314ebcf13923f98945595208d5099eca4a7184ea
 ---
 ## vtctldclient MoveTables complete
 
@@ -20,15 +20,20 @@ vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --
 ### Options
 
 ```
-  -h, --help   help for complete
+      --dry-run              Print the actions that would be taken and report any known errors that would have occurred.
+  -h, --help                 help for complete
+      --keep-data            Keep the original source table data that was copied by the MoveTables workflow.
+      --keep-routing-rules   Keep the routing rules in place that direct table traffic from the source keyspace to the target keyspace of the MoveTables workflow.
+      --rename-tables        Keep the original source table data that was copied by the MoveTables workflow, but rename each table to '_<tablename>_old'.
 ```
 
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration   timeout for the total command (default 1h0m0s)
+      --action_timeout duration   timeout to use for the command (default 1h0m0s)
+      --compact                   use compact format for otherwise verbose outputs
       --format string             The format of the output; supported formats are: text,json. (default "text")
-      --server string             server to use for connection (required)
+      --server string             server to use for the connection (required)
       --target-keyspace string    Target keyspace for this workflow.
   -w, --workflow string           The workflow you want to perform the command on.
 ```
