@@ -25,7 +25,7 @@ different ways for the purposes of avoiding expensive cross-shard queries. `Mate
 allow for you to pre-create the schema and [VSchema](../../../concepts/vschema/) for the copied table, allowing you
 to for example maintain a copy of a table without some of the source table's MySQL indexes.
 
-All of the command options and parameters are listed in our [reference page for the `Materialize` command](../../../reference/vreplication/materialize). In our examples to follow we will only touch on what is possible using
+All of the command options and parameters are listed in our [reference page for the `Materialize` command](../../../reference/programs/vtctldclient/vtctldclient_materialize/). In our examples to follow we will only touch on what is possible using
 [`Materialize`](../../../reference/vreplication/materialize).
 
 Let's start by loading some sample data:
@@ -81,7 +81,7 @@ for the `corder_view_redacted` copy we will use the opportunity to drop or redac
 
 In the case where we are using `Materialize` to copy tables *between or across keyspaces* we can use the
 `"create_ddl": "copy"` option in the
-[`Materialize` `json_spec` `table_settings`](../../../reference/vreplication/materialize/#json-spec-details)
+[`Materialize --table-settings`](../../../reference/vreplication/materialize/#--table-settings) flag
 to create the target table for us (similar to what `MoveTables` does). However, in our case where we are using
 `Materialize` within a single keyspace (`commerce`) so we need to manually create the target tables. Let's go ahead
 and do that:
@@ -157,10 +157,9 @@ or removing rows in a fashion that would break the "replication" part of the VRe
 
 ## Viewing the Workflow While in Progress
 
-While we can also see and manipulate the underlying VReplication streams created by `Materialize` there are
-[Workflow](../../../reference/vreplication/workflow) commands to `show`, `stop`, `start` and `delete` the
+[`Materialize`](../../../reference/programs/vtctldclient/vtctldclient_materialize/#see-also) has actions or sub-commands to `show`, `stop`, `start` and `cancel` the
 `Materialize` workflow. For example, once we have started the `Materialize` command above, we can observe the
-status of the VReplication workflow using the [Workflow](../../../reference/vreplication/workflow) command:
+status of the VReplication workflow using the [`show`](../../../reference/programs/vtctldclient/vtctldclient_materialize/vtctldclient_materialize_show/) sub-command:
 
 ```json
 $  vtctldclient Workflow --keyspace commerce list
@@ -266,7 +265,7 @@ $ vtctldclient Materialize --target-keyspace commerce show --workflow copy_corde
 }
 ```
 
-We can now also use the `Workflow` `stop`/`start` actions to temporarily stop the materialization workflow. For
+We can now also use the [`stop`](../../../reference/programs/vtctldclient/vtctldclient_materialize/vtctldclient_materialize_stop/) and [`start`](../../../reference/programs/vtctldclient/vtctldclient_materialize/vtctldclient_materialize_start/) actions to temporarily stop the materialization workflow. For
 example:
 
 ```bash
@@ -285,7 +284,7 @@ $ vtctldclient Materialize --target-keyspace commerce stop --workflow copy_corde
 }
 ```
 
-And `start` to start the workflow again and continue with the materialization:
+And [`start`](../../../reference/programs/vtctldclient/vtctldclient_materialize/vtctldclient_materialize_start/) to start the workflow again and continue with the materialization:
 
 ```bash
 $ vtctldclient Materialize --target-keyspace commerce start --workflow copy_corder_1
@@ -304,7 +303,7 @@ $ vtctldclient Materialize --target-keyspace commerce start --workflow copy_cord
 ```
 
 If at some point, when the initial copy is done and we have fully materialized all of the (initial) data, we do not
-want to continue replicating changes from the source, we can `cancel` the workflow:
+want to continue replicating changes from the source, we can [`cancel`](../../../reference/programs/vtctldclient/vtctldclient_materialize/vtctldclient_materialize_cancel/) the workflow:
 
 ```bash
 $ vtctldclient Materialize --target-keyspace commerce cancel --workflow copy_corder_1
@@ -396,7 +395,7 @@ transaction_timestamp: 1672865502
 
 ## Cleanup
 
-As seen earlier, you can easily use the [`Workflow delete`](../../../reference/programs/vtctldclient/vtctldclient_workflow/vtctldclient_workflow_delete/) or [`Materialize cancel`](reference/programs/vtctldclient/vtctldclient_materialize/vtctldclient_materialize_cancel/) command to clean up a `Materialize` workflow when it's no longer needed.
+As seen earlier, you can easily use the [`Workflow delete`](../../../reference/programs/vtctldclient/vtctldclient_workflow/vtctldclient_workflow_delete/) or [`Materialize cancel`](../../../reference/programs/vtctldclient/vtctldclient_materialize/vtctldclient_materialize_cancel/) command to clean up a `Materialize` workflow when it's no longer needed.
 
 {{< info >}}
 While this deletes the `Materialize` VReplication stream, the actual source and target tables are left unchanged

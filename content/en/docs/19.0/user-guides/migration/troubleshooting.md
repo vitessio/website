@@ -20,7 +20,7 @@ you have setup the shell aliases from the example, e.g. `env.sh` in the [local](
 
 ### Execute a Dry Run
 
-The `SwitchTraffic`/`ReverseTraffic` and `Complete` actions support a dry run using the `--dry_run` flag where no
+The `SwitchTraffic`/`ReverseTraffic` and `Complete` actions support a dry run using the `--dry-run` flag where no
 actual steps are taken but instead the command logs all the steps that *would* be taken. This command will also
 verify that the cluster is generally in a state where it can perform the action successfully without potentially
 timing out along the way. Given that traffic cutovers can potentially cause read/write pauses or outages this can
@@ -81,18 +81,18 @@ $ vtctldclient ApplyRoutingRules --rules-file=/tmp/routingrules.backup.json
 This can be exhibited in one of two ways:
 1. This error is shown in the `status`/`show` action output or the `Workflow show` output: `Error picking tablet: context has expired`
 2. The stream never starts, which can be seen in the following ways:
-    1. The `Workflow show` output is showing an empty value in the `Pos` field for the stream
+    1. The `show` output is showing an empty value in the `Pos` field for the stream
     2. The `status`/`show` action output is showing `VStream has not started` for the stream
 
 When a VReplication workflow starts or restarts the [tablet selection process](../../../reference/vreplication/tablet_selection/)
-runs to find a viable source tablet for the stream. The `cells` and `tablet_types` play a key role in this process and
+runs to find a viable source tablet for the stream. The `--cells` and `--tablet-types` play a key role in this process and
 if we cannot ever find a viable source tablet for the stream then you may want to expand the cells and/or tablet types
 made available for the selection process.
 
 #### Corrective Action
 
-If the workflow was only created and has not yet made any progress then you should `Cancel` the workflow and `Create` a new
-one using different values for the `--cells` and `--tablet_types` flags. If, however, this workflow has made significant
+If the workflow was only created and has not yet made any progress then you should `cancel` the workflow and `create` a new
+one using different values for the `--cells` and `--tablet-types` flags. If, however, this workflow has made significant
 progress that you do not wish you lose, you can update the underlying workflow record directly to modify either of those
 values. For example:
 
