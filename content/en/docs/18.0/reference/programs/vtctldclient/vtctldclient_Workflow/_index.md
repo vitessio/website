@@ -1,15 +1,11 @@
 ---
 title: Workflow
 series: vtctldclient
+commit: fe3121946231107b737e319b680c9686396b9ce1
 ---
 ## vtctldclient Workflow
 
 Administer VReplication workflows (Reshard, MoveTables, etc) in the given keyspace.
-
-### Synopsis
-
-Workflow commands: List, Show, Start, Stop, Update, and Delete.
-See the --help output for each command for more details.
 
 ```
 vtctldclient Workflow --keyspace <keyspace> [command] [command-flags]
@@ -19,14 +15,15 @@ vtctldclient Workflow --keyspace <keyspace> [command] [command-flags]
 
 ```
   -h, --help              help for Workflow
-  -k, --keyspace string   Keyspace context for the workflow (required).
+  -k, --keyspace string   Keyspace context for the workflow.
 ```
 
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration   timeout for the total command (default 1h0m0s)
-      --server string             server to use for connection (required)
+      --action_timeout duration   timeout to use for the command (default 1h0m0s)
+      --compact                   use compact format for otherwise verbose outputs
+      --server string             server to use for the connection (required)
 ```
 
 ### SEE ALSO
