@@ -1,7 +1,7 @@
 ---
 title: ApplySchema
 series: vtctldclient
-commit: b2d7604e4e0728329314500c182c3192cee74510
+commit: fe3121946231107b737e319b680c9686396b9ce1
 ---
 ## vtctldclient ApplySchema
 
@@ -45,8 +45,9 @@ vtctldclient ApplySchema [--ddl-strategy <strategy>] [--uuid <uuid> ...] [--migr
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration   timeout for the total command (default 1h0m0s)
-      --server string             server to use for connection (required)
+      --action_timeout duration   timeout to use for the command (default 1h0m0s)
+      --compact                   use compact format for otherwise verbose outputs
+      --server string             server to use for the connection (required)
 ```
 
 ### SEE ALSO

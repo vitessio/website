@@ -1,7 +1,7 @@
 ---
 title: LookupVindex create
 series: vtctldclient
-commit: e73ce917ed97a6a8586cd3647cb2f498fe908a0e
+commit: 0f751fbb7c64ca5280c5d4f58d038e1df5477c67
 ---
 ## vtctldclient LookupVindex create
 
@@ -37,9 +37,10 @@ vtctldclient --server localhost:15999 LookupVindex --name corder_lookup_vdx --ta
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration   timeout for the total command (default 1h0m0s)
+      --action_timeout duration   timeout to use for the command (default 1h0m0s)
+      --compact                   use compact format for otherwise verbose outputs
       --name string               The name of the Lookup Vindex to create. This will also be the name of the VReplication workflow created to backfill the Lookup Vindex.
-      --server string             server to use for connection (required)
+      --server string             server to use for the connection (required)
       --table-keyspace string     The keyspace to create the lookup table in. This is also where the VReplication workflow is created to backfill the Lookup Vindex.
 ```
 
