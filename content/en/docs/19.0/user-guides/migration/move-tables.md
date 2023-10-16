@@ -778,7 +778,6 @@ $ vtctldclient Workflow --keyspace commerce show --workflow commerce2customer_re
     }
   ]
 } 
-}
 ```
 
 ## Finalize and Cleanup

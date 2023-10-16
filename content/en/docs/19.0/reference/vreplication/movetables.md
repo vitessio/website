@@ -109,7 +109,7 @@ This is a destructive command
 
 </div>
 
-### options
+### Options
 
 Each [`action` or sub-command](../../programs/vtctldclient/vtctldclient_movetables/#see-also) has additional options/parameters that can be used to modify its behavior. Please see the [command's reference docs](../../programs/vtctldclient/vtctldclient_movetables/) for the full list of command options or flags. Below we will add additional information for a subset of key options.
 
@@ -203,13 +203,13 @@ in an unsharded keyspace of your choosing prior to the `SwitchTraffic` operation
 
 #### --max-replication-lag-allowed
 **optional**\
-**default**  the value used for [`--timeout`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_switchtraffic/#options)
+**default**  the value used for [`--timeout`](#--timeout)
 
 <div class="cmd">
 
 While executing `SwitchTraffic` we ensure that the VReplication lag for the workflow is less than this duration, otherwise report an error and don't attempt the switch. The calculated VReplication lag is the estimated maximum lag across workflow streams between the last event seen at the source and the last event processed by the target (which would be a heartbeat event if we're fully caught up). Usually, when VReplication has caught up, this lag should be very small (under a second).
 
-While switching write traffic, we temporarily make the source databases read-only, and wait for the targets to catchup. This means that the application can effectively be partially down for this cutover period as writes will pause or error out. While switching write traffic this flag can ensure that you only switch traffic if the current lag is low, thus limiting this period of write-unavailability and avoiding it entirely if we're not likely to catch up within the [`--timeout`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_switchtraffic/#options) window.
+While switching write traffic, we temporarily make the source databases read-only, and wait for the targets to catchup. This means that the application can effectively be partially down for this cutover period as writes will pause or error out. While switching write traffic this flag can ensure that you only switch traffic if the current lag is low, thus limiting this period of write-unavailability and avoiding it entirely if we're not likely to catch up within the [`--timeout`](#--timeout)) window.
 
 While switching read traffic this can also be used to set an approximate upper bound on how stale reads will be against the replica tablets when using `@replica` shard targeting.
 

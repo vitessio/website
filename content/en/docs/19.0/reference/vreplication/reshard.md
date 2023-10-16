@@ -11,7 +11,7 @@ These workflows can have a significant impact on the source tablets (which are o
 
 ## Description
 
-`Reshard` is used to create and manage workflows to horizontally shard an existing keyspace. The source keyspace can be unsharded or sharded.
+[`Reshard`](../../programs/vtctldclient/vtctldclient_reshard/) is used to create and manage workflows to horizontally shard an existing keyspace. The source keyspace can be unsharded or sharded.
 
 ## Command
 
@@ -32,21 +32,21 @@ Please see the [`Reshard` command reference](../../programs/vtctldclient/vtctldc
 
 ## Parameters
 
-### action
+### Action
 
 [`Reshard`](../../programs/vtctldclient/vtctldclient_reshard/) is an "umbrella" command. The [`action` or sub-command](../../programs/vtctldclient/vtctldclient_reshard/#see-also) defines the operation on the workflow.
 
 #### Create
 <div class="cmd">
 
-`Create` sets up and creates a new workflow. The workflow name should not conflict with that of an existing workflow.
+[`create`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_create/) sets up and creates a new workflow. The workflow name should not conflict with that of an existing workflow.
 
 </div>
 
 #### Show
 <div class="cmd">
 
-`Show` displays useful information about a workflow — including recent logs.
+[`show`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_show/) displays useful information about a workflow — including recent logs.
 
 </div>
 
@@ -62,21 +62,21 @@ It is too expensive to get real-time row counts of tables, using _count(*)_, say
 #### SwitchTraffic
 <div class="cmd">
 
-`SwitchTraffic` switches traffic forward for the `tablet-types` specified. This replaces the previous `SwitchReads` and `SwitchWrites` commands with a single one. It is now possible to switch all traffic with just one command, and this is the default behavior. Also, you can now switch replica, rdonly and primary traffic in any order: earlier you needed to first `SwitchReads` (for replicas and rdonly tablets) first before `SwitchWrites`.
+[`SwitchTraffic`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_switchtraffic) switches traffic forward for the `tablet-types` specified. This replaces the previous `SwitchReads` and `SwitchWrites` commands with a single one. It is now possible to switch all traffic with just one command, and this is the default behavior. Also, you can now switch replica, rdonly and primary traffic in any order: earlier you needed to first `SwitchReads` (for replicas and rdonly tablets) first before `SwitchWrites`.
 
 </div>
 
 #### ReverseTraffic
 <div class="cmd">
 
-`ReverseTraffic` switches traffic in the reverse direction for the `tablet-types` specified. The traffic should have been previously switched forward using `SwitchTraffic` for the `cells` and `tablet_types` specified.
+[`ReverseTraffic`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_reversetraffic/) switches traffic in the reverse direction for the `tablet-types` specified. The traffic should have been previously switched forward using `SwitchTraffic` for the `cells` and `tablet_types` specified.
 
 </div>
 
 #### Cancel
 <div class="cmd">
 
-`cancel` can be used if a workflow was created in error or was misconfigured and you prefer to create a new workflow instead of fixing this one. Cancel can only be called if no traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with the new target shards from the topo and, by default, the target tables on the target keyspace
+[`cancel`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_cancel/) can be used if a workflow was created in error or was misconfigured and you prefer to create a new workflow instead of fixing this one. Cancel can only be called if no traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with the new target shards from the topo and, by default, the target tables on the target keyspace
 (see `--keep-data` and `--rename-tables`).
 
 </div>
@@ -88,7 +88,7 @@ It is too expensive to get real-time row counts of tables, using _count(*)_, say
 This is a destructive command
 {{< /warning >}}
 
-`complete` is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with the original source shards from the topo. By default, the source tables are also dropped on the source shards
+[`complete`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_complete/) is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with the original source shards from the topo. By default, the source tables are also dropped on the source shards
 (see `--keep-data` and `--rename-tables`) .
 
 </div>
