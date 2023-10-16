@@ -200,6 +200,6 @@ Each keyspace can be configured to run with a different foreign key mode -
 ```json
 {
   "sharded": true,
-  "foreignKeyMode": "FK_MANAGED"
+  "foreignKeyMode": "managed"
 }
 ```
