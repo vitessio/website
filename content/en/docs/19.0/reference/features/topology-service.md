@@ -516,13 +516,13 @@ information about the local topology service:
     * `${CELL_NAME}` the name of our local cell in this case `US_EAST`
 
 ``` sh
-# vtctlclient uses the IP address of the vtctld daemon with the `--server` flag
+# vtctldclient uses the IP address of the vtctld daemon with the `--server` flag
 # The daemon already has the global topology information, therefore, we do not
 # need to explicitly provide these details.
 
-vtctlclient --server ${VTCTLD_IP}:15999 AddCellInfo -- \
+vtctldclient --server ${VTCTLD_IP}:15999 AddCellInfo -- \
   --root=/vitess/${CELL_NAME} \
-  --server_address=${CELL_ETCD_SERVER} \
+  --server-address=${CELL_ETCD_SERVER} \
   ${CELL_NAME}
 ```
 
@@ -573,8 +573,8 @@ propagate information from the global topology service back to the local topolog
 services
 
 ```sh
-vtctlclient --server ${VTCTLD_IP}:15999 RebuildKeyspaceGraph ${KEYSPACE_NAME}
-vtctlclient --server ${VTCTLD_IP}:15999 RebuildVSchemaGraph
+vtctldclient --server ${VTCTLD_IP}:15999 RebuildKeyspaceGraph ${KEYSPACE_NAME}
+vtctldclient --server ${VTCTLD_IP}:15999 RebuildVSchemaGraph
 ```
 
 
@@ -604,7 +604,7 @@ run 5 global servers across all cells (for global topology data) and 3 local
 servers per cell (for per-cell topology data).
 
 To migrate to such a setup, start by adding the 3 local servers in the second
-cell and run `vtctlclient AddCellinfo` as was done for the first cell. Tablets and
+cell and run `vtctldclient AddCellInfo` as was done for the first cell. Tablets and
 vtgates can now be started in the second cell, and used normally.
 
 vtgate can then be configured with a list of cells to watch for tablets using

@@ -1,5 +1,5 @@
 ---
-title: CreateLookupVindex
+title: Creating a LookupVindex
 weight: 30
 aliases: ['/docs/user-guides/createlookupvindex/']
 ---
@@ -10,53 +10,23 @@ an [Operator](../../../get-started/operator) or [local](../../../get-started/loc
 are at the point where you have the sharded keyspace called `customer` setup.
 {{< /info >}}
 
-**CreateLookupVindex** is a [VReplication](../../../reference/vreplication/) workflow used to create **and** backfill
-a [lookup Vindex](../../../reference/features/vindexes/#lookup-vindex-types) automatically for a table that already
+[`LookupVindex create`](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) uses a [VReplication](../../../reference/vreplication/) workflow used to create **and** backfill
+a [Lookup Vindex](../../../reference/features/vindexes/#lookup-vindex-types) automatically for a table that already
 exists, and may have a significant amount of data in it already.
 
-Internally, the [`CreateLookupVindex`](../../../reference/vreplication/createlookupvindex/) process uses
+Internally, the [`LookupVindex create`](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) command uses
 VReplication for the backfill process, until the lookup Vindex is "in sync". Then the normal process for
 adding/deleting/updating rows in the lookup Vindex via the usual
 [transactional flow when updating the "owner" table for the Vindex](../../../reference/features/vindexes/#lookup-vindex-types)
 takes over.
 
-In this guide, we will walk through the process of using the [`CreateLookupVindex`](../../../reference/vreplication/createlookupvindex/)
-workflow, and give some insight into what happens underneath the covers.
+In this guide, we will walk through the process of using the [`LookupVindex create`](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) command, and give some insight into what happens underneath the covers.
 
-The `CreateLookupVindex` `vtctl` client command has the following syntax:
-
-```CreateLookupVindex -- [--cells=<source_cells>] [--continue_after_copy_with_owner=false] [--tablet_types=<source_tablet_types>] <keyspace> <json_spec>```
-
-* `<json_spec>`:  Use the lookup Vindex specified in `<json_spec>` along with
-  VReplication to populate/backfill the lookup Vindex from the source table.
-* `<keyspace>`:  The Vitess keyspace we are creating the lookup Vindex in.
-  The source table is expected to also be in this keyspace.
-* `--tablet-types`:  Provided to specify the tablet types
-  (e.g. `PRIMARY`, `REPLICA`, `RDONLY`) that are acceptable
-  as source tablets for the VReplication stream(s) that this command will
-  create. If not specified, the tablet type used will default to the value
-  of the [`vttablet --vreplication_tablet_type` flag](../../../reference/vreplication/flags/#vreplication_tablet_type)
-  value, which defaults to `in_order:REPLICA,PRIMARY`.
-* `--cells`: By default VReplication streams, such as used by
-  `CreateLookupVindex`, will not cross cell boundaries. If you want the
-  VReplication streams to source their data from tablets in cells other
-  than the local cell, you can use the `--cells` option to specify a
-  comma-separated list of cells (see [VReplication tablet selection](../../../reference/vreplication/tablet_selection/)).
-* `--continue_after_copy_with_owner`: By default, when an owner is provided in the `<json_spec>`,
-  the VReplication streams will stop after the backfill completes. Specify this flag if
-  you don't want this to happen. This is useful if, for example, the owner table is being
-  migrated from an unsharded keyspace to a sharded keyspace using
-  [`MoveTables`](../../../reference/vreplication/movetables/).
-
-The `<json_spec>` describes the lookup Vindex to be created, and details about
-the table it is to be created against (on which column, etc.). However,
-you do not have to specify details about the actual lookup table, Vitess
-will create that automatically based on the type of the column you are
-creating the Vindex column on, etc.
+You can see the details of the [`LookupVindex create` command](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) in the reference docs.
 
 In the context of the `customer` database that is part of the Vitess examples we
 started earlier, let's add some rows into the `customer.corder` table, and then
-look at an example `<json_spec>`:
+look at an example command:
 
 ```bash
 $ mysql -P 15306 -h 127.0.0.1 -u root --binary-as-hex=false -A
@@ -217,45 +187,13 @@ Now let's say we want to add a lookup Vindex on the `sku` column.
 We can use a [`consistent_lookup` or `consistent_lookup_unique`](../../vschema-guide/unique-lookup/)
 Vindex type. In our example we will use `consistent_lookup_unique`.
 
-Here is our example `<json_spec>`:
-
-```json
-$ cat lookup_vindex.json
-{
-    "sharded": true,
-    "vindexes": {
-        "corder_lookup": {
-            "type": "consistent_lookup_unique",
-            "params": {
-                "table": "customer.corder_lookup",
-                "from": "sku",
-                "to": "keyspace_id"
-            },
-            "owner": "corder"
-        }
-    },
-    "tables": {
-        "corder": {
-            "column_vindexes": [
-                {
-                    "column": "sku",
-                    "name": "corder_lookup"
-                }
-            ]
-        }
-    }
-}
-```
-
-</br>
-
 Note that as mentioned above, we do not have to tell Vitess about
 how to shard the actual backing table for the lookup Vindex or
 any schema to create as it will do it automatically. Now, let us
-actually execute the `CreateLookupVindex` command:
+actually execute the `LookupVindex create` command:
 
 ```bash
-$ vtctlclient --server localhost:15999 CreateLookupVindex -- --tablet_types=RDONLY customer "$(cat lookup_vindex.json)"
+vtctldclient --server localhost:15999 LookupVindex --name customer_region_lookup --table-keyspace main create --keyspace main --type consistent_lookup_unique --table-owner customer --table-owner-columns=id --tablet-types=PRIMARY
 ```
 
 </br>
@@ -294,7 +232,7 @@ Now we can look what happened in greater detail:
 * Note that each primary tablet will start streams from each source
   tablet, for a total of 4 streams in this case.
 
-Lets observe the VReplication streams that got created using the `vtctlclient Workflow show` command.
+Lets observe the VReplication streams that got created using the `show` sub-command.
 
 {{< info >}}
 The created vreplication workflow will have a generated name of `<target_table_name>_vdx`.
@@ -302,170 +240,101 @@ So in our example here: `corder_lookup_vdx`.
 {{< /info >}}
 
 ```json
-$ vtctlclient --server localhost:15999 Workflow customer.corder_lookup_vdx show
+$ vtctldclient --server localhost:15999 LookupVindex --name customer_region_lookup --table-keyspace main show --include-logs=false
 {
-	"Workflow": "corder_lookup_vdx",
-	"SourceLocation": {
-		"Keyspace": "customer",
-		"Shards": [
-			"-80",
-			"80-"
-		]
-	},
-	"TargetLocation": {
-		"Keyspace": "customer",
-		"Shards": [
-			"-80",
-			"80-"
-		]
-	},
-	"MaxVReplicationLag": 78,
-	"MaxVReplicationTransactionLag": 1674479901,
-	"Frozen": false,
-	"ShardStatuses": {
-		"-80/zone1-0000000300": {
-			"PrimaryReplicationStatuses": [
-				{
-					"Shard": "-80",
-					"Tablet": "zone1-0000000300",
-					"ID": 1,
-					"Bls": {
-						"keyspace": "customer",
-						"shard": "-80",
-						"filter": {
-							"rules": [
-								{
-									"match": "corder_lookup",
-									"filter": "select sku as sku, keyspace_id() as keyspace_id from corder where in_keyrange(sku, 'customer.binary_md5', '-80') group by sku, keyspace_id"
-								}
-							]
-						},
-						"stop_after_copy": true
-					},
-					"Pos": "cb8ae288-9b1f-11ed-84ff-04ed332e05c2:1-117",
-					"StopPos": "",
-					"State": "Stopped",
-					"DBName": "vt_customer",
-					"TransactionTimestamp": 0,
-					"TimeUpdated": 1674479823,
-					"TimeHeartbeat": 0,
-					"TimeThrottled": 0,
-					"ComponentThrottled": "",
-					"Message": "Stopped after copy.",
-					"Tags": "",
-					"WorkflowType": "CreateLookupIndex",
-					"WorkflowSubType": "None",
-					"CopyState": null
-				},
-				{
-					"Shard": "-80",
-					"Tablet": "zone1-0000000300",
-					"ID": 2,
-					"Bls": {
-						"keyspace": "customer",
-						"shard": "80-",
-						"filter": {
-							"rules": [
-								{
-									"match": "corder_lookup",
-									"filter": "select sku as sku, keyspace_id() as keyspace_id from corder where in_keyrange(sku, 'customer.binary_md5', '-80') group by sku, keyspace_id"
-								}
-							]
-						},
-						"stop_after_copy": true
-					},
-					"Pos": "de051c70-9b1f-11ed-832d-04ed332e05c2:1-121",
-					"StopPos": "",
-					"State": "Stopped",
-					"DBName": "vt_customer",
-					"TransactionTimestamp": 0,
-					"TimeUpdated": 1674479823,
-					"TimeHeartbeat": 0,
-					"TimeThrottled": 0,
-					"ComponentThrottled": "",
-					"Message": "Stopped after copy.",
-					"Tags": "",
-					"WorkflowType": "CreateLookupIndex",
-					"WorkflowSubType": "None",
-					"CopyState": null
-				}
-			],
-			"TabletControls": null,
-			"PrimaryIsServing": true
-		},
-		"80-/zone1-0000000401": {
-			"PrimaryReplicationStatuses": [
-				{
-					"Shard": "80-",
-					"Tablet": "zone1-0000000401",
-					"ID": 1,
-					"Bls": {
-						"keyspace": "customer",
-						"shard": "-80",
-						"filter": {
-							"rules": [
-								{
-									"match": "corder_lookup",
-									"filter": "select sku as sku, keyspace_id() as keyspace_id from corder where in_keyrange(sku, 'customer.binary_md5', '80-') group by sku, keyspace_id"
-								}
-							]
-						},
-						"stop_after_copy": true
-					},
-					"Pos": "cb8ae288-9b1f-11ed-84ff-04ed332e05c2:1-117",
-					"StopPos": "",
-					"State": "Stopped",
-					"DBName": "vt_customer",
-					"TransactionTimestamp": 0,
-					"TimeUpdated": 1674479823,
-					"TimeHeartbeat": 0,
-					"TimeThrottled": 0,
-					"ComponentThrottled": "",
-					"Message": "Stopped after copy.",
-					"Tags": "",
-					"WorkflowType": "CreateLookupIndex",
-					"WorkflowSubType": "None",
-					"CopyState": null
-				},
-				{
-					"Shard": "80-",
-					"Tablet": "zone1-0000000401",
-					"ID": 2,
-					"Bls": {
-						"keyspace": "customer",
-						"shard": "80-",
-						"filter": {
-							"rules": [
-								{
-									"match": "corder_lookup",
-									"filter": "select sku as sku, keyspace_id() as keyspace_id from corder where in_keyrange(sku, 'customer.binary_md5', '80-') group by sku, keyspace_id"
-								}
-							]
-						},
-						"stop_after_copy": true
-					},
-					"Pos": "de051c70-9b1f-11ed-832d-04ed332e05c2:1-123",
-					"StopPos": "",
-					"State": "Stopped",
-					"DBName": "vt_customer",
-					"TransactionTimestamp": 0,
-					"TimeUpdated": 1674479823,
-					"TimeHeartbeat": 0,
-					"TimeThrottled": 0,
-					"ComponentThrottled": "",
-					"Message": "Stopped after copy.",
-					"Tags": "",
-					"WorkflowType": "CreateLookupIndex",
-					"WorkflowSubType": "None",
-					"CopyState": null
-				}
-			],
-			"TabletControls": null,
-			"PrimaryIsServing": true
-		}
-	},
-	"SourceTimeZone": "",
-	"TargetTimeZone": ""
+  "workflows": [
+    {
+      "name": "customer_region_lookup",
+      "source": {
+        "keyspace": "main",
+        "shards": [
+          "0"
+        ]
+      },
+      "target": {
+        "keyspace": "main",
+        "shards": [
+          "0"
+        ]
+      },
+      "max_v_replication_lag": "0",
+      "shard_streams": {
+        "0/zone1-0000000100": {
+          "streams": [
+            {
+              "id": "1",
+              "shard": "0",
+              "tablet": {
+                "cell": "zone1",
+                "uid": 100
+              },
+              "binlog_source": {
+                "keyspace": "main",
+                "shard": "0",
+                "tablet_type": "UNKNOWN",
+                "key_range": null,
+                "tables": [],
+                "filter": {
+                  "rules": [
+                    {
+                      "match": "customer_region_lookup",
+                      "filter": "select id as id, keyspace_id() as keyspace_id from customer where in_keyrange(id, 'main.xxhash', '-') group by id, keyspace_id",
+                      "convert_enum_to_text": {},
+                      "convert_charset": {},
+                      "source_unique_key_columns": "",
+                      "target_unique_key_columns": "",
+                      "source_unique_key_target_columns": "",
+                      "convert_int_to_enum": {}
+                    }
+                  ],
+                  "field_event_mode": "ERR_ON_MISMATCH",
+                  "workflow_type": "0",
+                  "workflow_name": ""
+                },
+                "on_ddl": "IGNORE",
+                "external_mysql": "",
+                "stop_after_copy": false,
+                "external_cluster": "",
+                "source_time_zone": "",
+                "target_time_zone": ""
+              },
+              "position": "63c84d28-6888-11ee-93b0-81b2fbd12545:1-63",
+              "stop_position": "",
+              "state": "Running",
+              "db_name": "vt_main",
+              "transaction_timestamp": {
+                "seconds": "1697064644",
+                "nanoseconds": 0
+              },
+              "time_updated": {
+                "seconds": "1697064646",
+                "nanoseconds": 0
+              },
+              "message": "",
+              "copy_states": [],
+              "logs": [],
+              "log_fetch_error": "",
+              "tags": [],
+              "rows_copied": "0",
+              "throttler_status": {
+                "component_throttled": "",
+                "time_throttled": {
+                  "seconds": "0",
+                  "nanoseconds": 0
+                }
+              }
+            }
+          ],
+          "tablet_controls": [],
+          "is_primary_serving": true
+        }
+      },
+      "workflow_type": "CreateLookupIndex",
+      "workflow_sub_type": "None",
+      "max_v_replication_transaction_lag": "0",
+      "defer_secondary_keys": false
+    }
+  ]
 }
 ```
 
@@ -530,7 +399,8 @@ the VReplication streams and also clear the `write_only` flag from the
 Vindex indicating that it is *not* backfilling anymore.
 
 ```bash
-$ vtctlclient --server localhost:15999 ExternalizeVindex customer.corder_lookup
+$ vtctldclient --server localhost:15999 LookupVindex --name customer_region_lookup --table-keyspace main externalize
+LookupVindex customer_region_lookup has been externalized and the customer_region_lookup VReplication workflow has been deleted
 ```
 
 </br>

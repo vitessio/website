@@ -6,7 +6,7 @@ weight: 300
 ### Introduction
 
 For both [VTGate VStreams and VTTablet VReplication streams](../../../concepts/vstream/) we must choose a tablet to serve the role of *source* (vstreamer). This
-tablet selection is performed by the internal `TabletPicker` component. 
+tablet selection is performed by the internal `TabletPicker` component.
 
 {{< info >}}
 For VReplication streams a tablet also serves the role of *target* (vapplier). These, however, will always be the primary tablets in the target keyspace as we
@@ -34,11 +34,11 @@ When using the [VTGate VStream API](../vstream/), you can override this local ce
 For VReplication, the server side default which determines the candidate types made available for potential selection as the source for a stream is set
 using the [`vttablet` `--vreplication_tablet_type` flag](../flags/#vreplication_tablet_type) (default value is `in_order:REPLICA,PRIMARY`). The target tablet
 will provide this value to the `TabletPicker` to determine the viable source tablet candidates. You can override this default on the client side using your
-workflow command's `--tablet_types` flag.
+workflow command's `--tablet-types` flag.
 
-You can also specify an order of preference for the tablet types using the `in_order:` prefix in both the server and client flags. For example,
-`--tablet_types "in_order:REPLICA,PRIMARY"` would cause a replica source tablet to be used whenever possible and a primary tablet would only be used as
-a fallback in the event that there are no viable replica tablets available at the time.
+You can also specify that the tablet types should be used in the order of preference as listed in the `--tablet-types` flag using the `--tablet-types-in-preference-order` flag. For example `--tablet-types "REPLICA,PRIMARY" --tablet-types-in-preference-order` would cause a replica source tablet to be used whenever possible
+and a primary tablet would only be used as a fallback in the event that there are no viable replica tablets
+available at the time.
 
 {{< info >}}
 When using the [VTGate VStream API](../vstream/) you should instead migrate to using the new `TabletOrder` field in the [VStreamFlags](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags) request object as usage of the "in_order" string hint will eventually be deprecated and removed.

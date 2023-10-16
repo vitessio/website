@@ -9,77 +9,91 @@ aliases: ['/docs/reference/vreplication/v2/movetables/']
 These workflows can have a significant impact on the source tablets (which are often in production) — especially when a PRIMARY tablet is used as a source. You can limit the impact on the source tablets using the [`--vreplication_copy_phase_max_*` vttablet flags](../flags/#vreplication_copy_phase_max_innodb_history_list_length)
 {{< /warning >}}
 
-## Command
-
-```
-MoveTables -- <options> <action> <workflow identifier>
-```
-or
-
-```
-MoveTables -- [--source=<sourceKs>] [--tables=<tableSpecs>] [--cells=<cells>] 
-  [--tablet_types=<source_tablet_types>] [--all] [--exclude=<tables>] [--auto_start] 
-  [--stop_after_copy] [--timeout=timeoutDuration] [--reverse_replication] [--keep_data] 
-  [--keep_routing_rules] [--on-ddl=<ddl-action>] [--source_time_zone=<mysql_time_zone>]
-  [--initialize-target-sequences] [--no-routing-rules]
-  <action> <workflow identifier>
-```
-
 ## Description
 
-`MoveTables` is used to start and manage workflows to move one or more tables from an external database or an existing Vitess keyspace into a new Vitess keyspace. The target keyspace can be unsharded or sharded.
+[`MoveTables`](../../programs/vtctldclient/vtctldclient_movetables/) is used to start and manage workflows to move one or more tables from an external database or an existing Vitess keyspace into a new Vitess keyspace. The target keyspace can be unsharded or sharded.
 
-`MoveTables` is typically used for migrating data into Vitess or to implement vertical sharding. You might use the former when you first start using Vitess and the latter if you want to distribute your load across servers without sharding tables.
+[`MoveTables`](../../programs/vtctldclient/vtctldclient_movetables/)  is typically used for migrating data into Vitess or to implement vertical sharding. You might use the former when you first start using Vitess and the latter if you want to distribute your load across servers without sharding tables.
+
+## Command
+
+Please see the [`MoveTables` command reference](../../programs/vtctldclient/vtctldclient_movetables/) for a full list of sub-commands and their flags.
+
+## The Basic MoveTables Workflow Lifecycle
+
+1. Initiate the migration using `create`<br/>
+`MoveTables --workflow <workflow> --target-keyspace <target-keyspace> create --source-keyspace <source-keyspace> --tables <tables>`
+1. Monitor the workflow using `show` or `status`<br/>
+`MoveTables --workflow <workflow> --target-keyspace <target-keyspace> show`<br/>
+`MoveTables --workflow <workflow> --target-keyspace <target-keyspace> status`<br/>
+1. Confirm that data has been copied over correctly using [VDiff](../vdiff)
+1. Cutover to the target keyspace with `switchtraffic`<br/>
+`MoveTables --workflow <workflow> --target-keyspace <target-keyspace> switchtraffic`
+1. Cleanup vreplication artifacts and source tables with `complete`<br/>
+`MoveTables --workflow <workflow> --target-keyspace <target-keyspace> complete`
+
+## Common Use Cases for MoveTables
+
+### Adopting Vitess
+
+For those wanting to try out Vitess for the first time, `MoveTables` provides an easy way to route part of their workload to Vitess with the ability to migrate back at any time without any risk. You point a vttablet to your existing MySQL installation, spin up an unsharded Vitess cluster and use a `MoveTables` workflow to start serving some tables from Vitess. You can also go further and use a Reshard workflow to experiment with a sharded version of a part of your database.
+
+See this [user guide](../../../user-guides/configuration-advanced/unmanaged-tablet/#move-legacytable-to-the-commerce-keyspace) for detailed steps.
+
+### Vertical Sharding
+
+For existing Vitess users you can easily move one or more tables to another keyspace, either for balancing load or as preparation for sharding your tables.
+
+See this [user guide](../../../user-guides/migration/move-tables/) which describes how `MoveTables` works in the local example provided in the Vitess repo.
 
 ## Parameters
 
-### action
+### Action
 
-`MoveTables` is an "umbrella" command. The `action` sub-command defines the operation on the workflow.
-Action must be one of the following: `Create`, `Show`, `Progress`, `SwitchTraffic`, `ReverseTrafffic`, `Cancel`, or `Complete`.
+[`MoveTables`](../../programs/vtctldclient/vtctldclient_movetables/) is an "umbrella" command. The [`action` or sub-command](../../programs/vtctldclient/vtctldclient_movetables/#see-also) defines the operation on the workflow.
 
 #### Create
 <div class="cmd">
 
-`Create` sets up and creates a new workflow. The workflow name should not conflict with that of an existing workflow.
+[`create`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_create/) sets up and creates a new workflow. The workflow name should not conflict with that of an existing workflow.
 
 </div>
 
 #### Show
 <div class="cmd">
 
-`Show` displays useful information about a workflow. (At this time the [Workflow](../workflow) Show command gives more information. This will be improved over time.)
+[`show`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_show/) displays useful information about a workflow – including recent logs.
 
 </div>
 
-#### Progress
+#### Status
 <div class="cmd">
 
-`Progress` reports the progress of a workflow by showing the percentage of data copied across targets, if workflow is in copy state, and the replication lag between the target and the source once the copy phase is completed.
+[`status`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_status/) (or `progress`) reports the progress of a workflow by showing the percentage of data copied across targets, if workflow is in copy state, and the replication lag between the target and the source once the copy phase is completed. It also shows the current state of traffic for the tables involved in the workflow.
 
-It is too expensive to get real-time row counts of tables, using _count(*)_, say. So we use the statistics available in the `information_schema` to approximate copy progress. This data can be significantly off (up to 50-60%) depending on the utilization of the underlying mysql server resources. You can manually run `analyze table` to update the statistics if so desired.
+It is too expensive to get real-time row counts of tables, using _count(*)_, say. So we use the statistics available in the `information_schema` to approximate copy progress. This data can be significantly off (up to 50-60%) depending on the utilization of the underlying mysql server resources. You can manually run `ANALYZE TABLE` to update the statistics if so desired.
 
 </div>
 
 #### SwitchTraffic
 <div class="cmd">
 
-`SwitchTraffic` switches traffic forward for the `tablet_types` specified. This replaces the previous `SwitchReads` and `SwitchWrites` commands with a single one. It is now possible to switch all traffic with just one command, and this is the default behavior. Also, you can now switch replica, rdonly and primary traffic in any order: earlier you needed to first `SwitchReads` (for replicas and rdonly tablets) first before `SwitchWrites`.
+[`switchtraffic`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_switchtraffic/) switches traffic forward for the `tablet-types` specified. You can switch all traffic with just one command, and this is the default behavior. Note that you can now switch replica, rdonly, and primary traffic in any order.
 
 </div>
 
 #### ReverseTraffic
 <div class="cmd">
 
-`ReverseTraffic` switches traffic in the reverse direction for the `tablet_types` specified. The traffic should have been previously switched forward using `SwitchTraffic` for the `cells` and `tablet_types` specified.
+[`reversetraffic`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_reversetraffic/) switches traffic in the reverse direction for the `tablet-types` specified. The traffic should have been previously switched forward using `SwitchTraffic` for the `cells` and `tablet-types` specified.
 
 </div>
 
 #### Cancel
 <div class="cmd">
 
-`Cancel` can be used if a workflow was created in error or was misconfigured and you prefer to create a new workflow instead of fixing this one. `Cancel` can only be called if no traffic has been switched. It removes vreplication-related artifacts like rows from the vreplication and copy_state tables in the sidecar `_vt` database along with routing rules and blacklisted tables from the topo and, by default, the target tables on the target keyspace
-(see [`--keep_data`](./#--keep_data) and [`--rename_tables`](#--rename_tables)).
+[`cancel`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_cancel/) can be used if a workflow was created in error or was misconfigured and you prefer to create a new workflow instead of fixing this one. `cancel` can only be called if no traffic has been switched. It removes vreplication-related artifacts like rows from the vreplication and copy_state tables in the sidecar `_vt` database along with routing rules and blacklisted tables from the topo and, by default, the target tables on the target keyspace
+(see `--keep-data` and `--rename-tables`).
 
 </div>
 
@@ -90,27 +104,16 @@ It is too expensive to get real-time row counts of tables, using _count(*)_, say
 This is a destructive command
 {{< /warning >}}
 
-`Complete` is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with routing rules and and blacklisted tables from the topo. By default, the source tables are also dropped on the target keyspace
-(see [`--keep_data`](./#--keep_data) and [`--rename_tables`](#--rename_tables)).
+[`complete`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_complete/) is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with routing rules and and blocklisted tables from the topo. By default, the source tables are also dropped on the target keyspace
+(see `--keep-data` and `--rename-tables`).
 
 </div>
 
-### options
+### Options
 
-Each `action` has additional options/parameters that can be used to modify its behavior.
+Each [`action` or sub-command](../../programs/vtctldclient/vtctldclient_movetables/#see-also) has additional options/parameters that can be used to modify its behavior. Please see the [command's reference docs](../../programs/vtctldclient/vtctldclient_movetables/) for the full list of command options or flags. Below we will add additional information for a subset of key options.
 
-`actions` are common to both `MoveTables` and `Reshard` workflows. Only the `create` action has different parameters, all other actions have common options and similar semantics.
-
-#### --all
-
-**optional** cannot specify `table_specs` if `--all` is specified
-<div class="cmd">
-
-Move all tables from the source keyspace.
-
-</div>
-
-#### --auto_start
+#### --auto-start
 **optional**\
 **default** true
 
@@ -167,36 +170,6 @@ parallel index builds. This is logically similar to the
 
 </div>
 
-#### --drop_foreign_keys
-**optional**\
-**default** false
-
-<div class="cmd">
-
-If true, tables in the target keyspace will be created without any foreign keys that exist on the source.
-
-</div>
-
-#### --dry_run
-**optional**\
-**default** false
-
-<div class="cmd">
-
-For the `SwitchTraffic`, `ReverseTraffic`, and `Complete` actions, you can do a dry run where no actual steps are taken
-but the command logs all the steps that would be taken.
-
-</div>
-
-#### --exclude
-**optional** only applies if `--all` is specified
-
-<div class="cmd">
-
-If moving all tables, specifies tables to be skipped.
-
-</div>
-
 #### --initialize-target-sequences
 **optional**\
 **default** false
@@ -228,35 +201,15 @@ You will still need to take the manual step of [creating each backing sequence t
 in an unsharded keyspace of your choosing prior to the `SwitchTraffic` operation.
 {{< /info>}}
 
-#### --keep_data
+#### --max-replication-lag-allowed
 **optional**\
-**default** false
-
-<div class="cmd">
-
-Usually, the target tables are deleted by `Cancel`. If this flag is used the target tables will not be deleted.
-
-</div>
-
-#### --keep_routing_rules
-**optional**\
-**default** false
-
-<div class="cmd">
-
-Usually, any routing rules created by the workflow in the source and target keyspace are removed by `Complete` or `Cancel`. If this flag is used the routing rules will be left in place.
-
-</div>
-
-#### --max_replication_lag_allowed
-**optional**\
-**default**  the value used for `--timeout`
+**default**  the value used for [`--timeout`](#--timeout)
 
 <div class="cmd">
 
 While executing `SwitchTraffic` we ensure that the VReplication lag for the workflow is less than this duration, otherwise report an error and don't attempt the switch. The calculated VReplication lag is the estimated maximum lag across workflow streams between the last event seen at the source and the last event processed by the target (which would be a heartbeat event if we're fully caught up). Usually, when VReplication has caught up, this lag should be very small (under a second).
 
-While switching write traffic, we temporarily make the source databases read-only, and wait for the targets to catchup. This means that the application can effectively be partially down for this cutover period as writes will pause or error out. While switching write traffic this flag can ensure that you only switch traffic if the current lag is low, thus limiting this period of write-unavailability and avoiding it entirely if we're not likely to catch up within the `--timeout` window.
+While switching write traffic, we temporarily make the source databases read-only, and wait for the targets to catchup. This means that the application can effectively be partially down for this cutover period as writes will pause or error out. While switching write traffic this flag can ensure that you only switch traffic if the current lag is low, thus limiting this period of write-unavailability and avoiding it entirely if we're not likely to catch up within the [`--timeout`](#--timeout)) window.
 
 While switching read traffic this can also be used to set an approximate upper bound on how stale reads will be against the replica tablets when using `@replica` shard targeting.
 
@@ -301,7 +254,7 @@ See https://github.com/vitessio/vitess/pull/13895 and https://github.com/vitessi
 and more details.
 </div>
 
-#### --rename_tables
+#### --rename-tables
 **optional**\
 **default** false
 
@@ -310,11 +263,11 @@ and more details.
 During `Complete` or `Cancel` operations, the tables are renamed instead of being deleted. Currently the new name is _&lt;table_name&gt;_old.
 
 We use the same renaming logic used by [`pt-online-schema-change`](https://docs.percona.com/percona-toolkit/pt-online-schema-change.html).
-Such tables are automatically skipped by vreplication if they exist on the source.
+Such tables are automatically skipped by VReplication if they exist on the source.
 
 </div>
 
-#### --reverse_replication
+#### --enable-reverse-replication
 **optional**\
 **default** true
 
@@ -326,15 +279,7 @@ If set to false these reverse replication streams will not be created and you wi
 
 </div>
 
-#### --source
-**mandatory**
-<div class="cmd">
-
-Name of existing keyspace that contains the tables to be moved.
-
-</div>
-
-#### --source_time_zone
+#### --source-time-zone
 **optional**\
 **default** ""
 
@@ -356,7 +301,7 @@ setting this flag will not convert them.
 
 </div>
 
-#### --stop_after_copy
+#### --stop-after-copy
 
 **optional**
 **default** false
@@ -373,29 +318,7 @@ is small enough to start replicating, the workflow state will be set to Stopped.
 * If you just want a consistent snapshot of all the tables you can set this flag. The workflow
 will stop once the copy is done and you can then mark the workflow as `Complete`.
 
-#### --tables
-**optional**  one of `--tables` or `--all` needs to be specified
-<div class="cmd">
-
-_Either_
-
-* a comma-separated list of tables
-  * if target keyspace is unsharded OR
-  * if target keyspace is sharded AND the tables being moved are already defined in the target's vschema
-
-  Example: `MoveTables -- --source commerce --tables 'customer,corder' Create customer.commerce2customer`
-
-_Or_
-
-* the JSON table section of the vschema for associated tables
-  * if target keyspace is sharded AND
-  * tables being moved are not yet present in the target's vschema
-
-  Example: `MoveTables -- --source commerce --tables '{"t1":{"column_vindexes": [{"column": "id1", "name": "hash"}]}, "t2":{"column_vindexes": [{"column": "id2", "name": "hash"}]}}' Create customer.commerce2customer`
-
-</div>
-
-#### --tablet_types 
+#### --tablet-types 
 **optional**\
 **default** `--vreplication_tablet_type` parameter value for the tablet. `--vreplication_tablet_type` has the default value of "in_order:REPLICA,PRIMARY".\
 **string**
@@ -419,43 +342,7 @@ the command will error out. For setups with high write qps you may need to incre
 
 </div>
 
-### workflow identifier
-
-<div class="cmd">
-
-All workflows are identified by `targetKeyspace.workflow` where `targetKeyspace` is the name of the keyspace to which the tables are being moved. `workflow` is a name you assign to the `MoveTables` workflow to identify it.
-
-</div>
-
-
-## The most basic MoveTables Workflow lifecycle
-
-1. Initiate the migration using `Create`<br/>
-`MoveTables -- --source=<sourceKs> --tables=<tableSpecs> Create <targetKs.workflow>`
-1. Monitor the workflow using `Show` or `Progress`<br/>
-`MoveTables Show <targetKs.workflow>` _*or*_ <br/>
-`MoveTables Progress <targetKs.workflow>`<br/>
-1. Confirm that data has been copied over correctly using [VDiff](../vdiff)
-1. Cutover to the target keyspace with `SwitchTraffic`<br/>
-`MoveTables SwitchTraffic <targetKs.workflow>`
-1. Cleanup vreplication artifacts and source tables with `Complete`<br/>
-`MoveTables Complete <targetKs.workflow>`
-
-
-## Common use cases for MoveTables
-
-### Adopting Vitess
-
-For those wanting to try out Vitess for the first time, `MoveTables` provides an easy way to route part of their workload to Vitess with the ability to migrate back at any time without any risk. You point a vttablet to your existing MySQL installation, spin up an unsharded Vitess cluster and use a `MoveTables` workflow to start serving some tables from Vitess. You can also go further and use a Reshard workflow to experiment with a sharded version of a part of your database.
-
-See this [user guide](../../../user-guides/configuration-advanced/unmanaged-tablet/#move-legacytable-to-the-commerce-keyspace) for detailed steps.
-
-### Vertical Sharding
-
-For existing Vitess users you can easily move one or more tables to another keyspace, either for balancing load or as preparation for sharding your tables.
-
-See this [user guide](../../../user-guides/migration/move-tables/) which describes how `MoveTables` works in the local example provided in the Vitess repo.
-
 ### More Reading
 
 * [`MoveTables` in practice](../../../concepts/move-tables/)
+* [`MoveTables` reference docs](../../programs/vtctldclient/vtctldclient_movetables/)

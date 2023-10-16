@@ -72,16 +72,15 @@ vitess-operator-5f47c6c45d-bgqp2                             1/1     Running   0
 The port-forward will only forward to a specific pod. Currently, `kubectl` does not automatically terminate a port-forward as the pod disappears due to apply/upgrade operations. You will need to manually restart the port-forward.
 {{</ warning >}}
 
-For ease-of-use, Vitess provides a script to port-forward from Kubernetes to your local machine. This script also recommends setting up aliases for `mysql` and `vtctlclient`:
+For ease-of-use, Vitess provides a script to port-forward from Kubernetes to your local machine. This script also recommends setting up aliases for `mysql` and `vtctldclient`:
 
 ```bash
 ./pf.sh &
 alias vtctldclient="vtctldclient --server=localhost:15999"
-alias vtctlclient="vtctlclient --server=localhost:15999"
 alias mysql="mysql -h 127.0.0.1 -P 15306 -u user"
 ```
 
-Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctlclient && unalias vtctldclient` or close your session.
+Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctldclient` or close your session.
 
 Once the port-forward starts running, the VTAdmin UI will be available at [http://localhost:14000/](http://localhost:14000/)
 

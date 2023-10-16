@@ -13,8 +13,8 @@ cached locally, the processes involved will refresh their topo data throughout t
 tablet on the source and target shards that are involved in a [VReplication](../../) workflow
 will refresh their topo data multiple times as the state of things transition during the cutover. If we are *not* able
 to confirm that all tablets involved in a VReplication worfklow are able to refresh their topo data then the cutover
-command — e.g. [`vtctlclient SwitchTraffic`](../../switchtraffic) — will cancel the operation
-and return an error indicating which tablet(s) are unhealthy (including for `--dry_run` executions).
+command — e.g. [`vtctldclient SwitchTraffic`](../../switchtraffic) — will cancel the operation
+and return an error indicating which tablet(s) are unhealthy (including for `--dry-run` executions).
 {{< /info >}}
 
 ## VSchema
@@ -28,11 +28,16 @@ one [`Shard`](../../../features/topology-service/#shard) key per keyspace which 
 shard that has been created within the keyspace. For each shard that is healthy there is an
 attribute `is_primary_serving` which is set to true. The other shards which have been created but are still not healthy
 and serving within the keyspace will not have this attribute set. Here is an example shard info record from an unsharded
-keyspace named commerce (without the `--cell` flag being passed the `global` topo base path is used):
+keyspace named commerce:
 
 ```bash
-$ vtctlclient --server=localhost:15999 TopoCat -- --decode_proto '/keyspaces/commerce/shards/0/Shard'
-primary_alias:{cell:"zone1" uid:100} primary_term_start_time:{seconds:1650341417 nanoseconds:374817485} is_primary_serving:true
+$ vtctldclient --server=localhost:15999 GetTopologyPath /global/keyspaces/commerce/shards/0/Shard
+{
+  "name": "Shard",
+  "path": "/global//keyspaces/commerce/shards/0/Shard",
+  "data": "primary_alias:{cell:\"zone1\" uid:101} primary_term_start_time:{seconds:1697055542 nanoseconds:430056000} is_primary_serving:true",
+  "children": []
+}
 ```
 
 ## SrvKeyspace
@@ -50,11 +55,21 @@ same unsharded commerce keyspace and here we specify the `--cell` flag so that c
 its `CellInfo` record in the `global` topo — is used:
 
 ```bash
-$ vtctlclient --server=localhost:15999 TopoCat -- --decode_proto '/cells/zone1/CellInfo'
-server_address:"localhost:2379" root:"/vitess/zone1"
+$ vtctldclient --server=localhost:15999 GetTopologyPath /global/cells/zone1/CellInfo
+{
+  "name": "CellInfo",
+  "path": "/global/cells/zone1/CellInfo",
+  "data": "server_address:\"localhost:2379\" root:\"/vitess/zone1\"",
+  "children": []
+}
 
-$ vtctlclient --server=localhost:15999 TopoCat -- --decode_proto --cell=zone1 '/keyspaces/commerce/SrvKeyspace'
-partitions:{served_type:PRIMARY shard_references:{name:"0"}} partitions:{served_type:REPLICA shard_references:{name:"0"}} partitions:{served_type:RDONLY shard_references:{name:"0"}}
+$ vtctldclient --server=localhost:15999 GetTopologyPath /zone1/keyspaces/commerce/SrvKeyspace
+{
+  "name": "SrvKeyspace",
+  "path": "/zone1/keyspaces/commerce/SrvKeyspace",
+  "data": "partitions:{served_type:PRIMARY shard_references:{name:\"0\"}} partitions:{served_type:REPLICA shard_references:{name:\"0\"}} partitions:{served_type:RDONLY shard_references:{name:\"0\"}}",
+  "children": []
+}
 ```
 
 ## Routing Rules
@@ -66,15 +81,20 @@ where we have an active [`MoveTables`](../../../vreplication/movetables/) workfl
 customer keyspace but we have not switched any traffic yet:
 
 ```bash
-$ vtctlclient --server=localhost:15999 TopoCat -- --decode_proto '/RoutingRules'
-rules:{from_table:"corder@rdonly" to_tables:"commerce.corder"} rules:{from_table:"customer.corder" to_tables:"commerce.corder"} rules:{from_table:"customer.corder@replica" to_tables:"commerce.corder"} rules:{from_table:"customer@rdonly" to_tables:"commerce.customer"} rules:{from_table:"customer.customer@rdonly" to_tables:"commerce.customer"} rules:{from_table:"customer.corder@rdonly" to_tables:"commerce.corder"} rules:{from_table:"customer@replica" to_tables:"commerce.customer"} rules:{from_table:"corder@replica" to_tables:"commerce.corder"} rules:{from_table:"commerce.corder@replica" to_tables:"commerce.corder"} rules:{from_table:"commerce.corder@rdonly" to_tables:"commerce.corder"} rules:{from_table:"commerce.customer@rdonly" to_tables:"commerce.customer"} rules:{from_table:"corder" to_tables:"commerce.corder"} rules:{from_table:"customer.customer@replica" to_tables:"commerce.customer"} rules:{from_table:"commerce.customer@replica" to_tables:"commerce.customer"} rules:{from_table:"customer" to_tables:"commerce.customer"} rules:{from_table:"customer.customer" to_tables:"commerce.customer"}
+$ vtctldclient --server=localhost:15999 GetTopologyPath /global/RoutingRules
+{
+  "name": "RoutingRules",
+  "path": "/global/RoutingRules",
+  "data": "rules:{from_table:\"customer.customer\" to_tables:\"commerce.customer\"} rules:{from_table:\"commerce.customer@rdonly\" to_tables:\"commerce.customer\"} rules:{from_table:\"corder\" to_tables:\"commerce.corder\"} rules:{from_table:\"corder@replica\" to_tables:\"commerce.corder\"} rules:{from_table:\"corder@rdonly\" to_tables:\"commerce.corder\"} rules:{from_table:\"customer.corder\" to_tables:\"commerce.corder\"} rules:{from_table:\"customer\" to_tables:\"commerce.customer\"} rules:{from_table:\"customer@rdonly\" to_tables:\"commerce.customer\"} rules:{from_table:\"customer.corder@replica\" to_tables:\"commerce.corder\"} rules:{from_table:\"commerce.customer@replica\" to_tables:\"commerce.customer\"} rules:{from_table:\"customer.customer@replica\" to_tables:\"commerce.customer\"} rules:{from_table:\"customer.customer@rdonly\" to_tables:\"commerce.customer\"} rules:{from_table:\"commerce.corder@rdonly\" to_tables:\"commerce.corder\"} rules:{from_table:\"customer@replica\" to_tables:\"commerce.customer\"} rules:{from_table:\"commerce.corder@replica\" to_tables:\"commerce.corder\"} rules:{from_table:\"customer.corder@rdonly\" to_tables:\"commerce.corder\"}",
+  "children": []
+}
 ```
 
 </br>
 
 {{< info >}}
 In practice you would instead typically view the routing rules via the
-dedicated [`GetRoutingRules`](../../../programs/vtctl/schema-version-permissions/#getroutingrules)
+dedicated [`GetRoutingRules`](../../../programs/vtctldclient/vtctldclient_getroutingrules/)
 vtctl client command which will return the rules for all keyspaces in the topo.
 {{< /info >}}
 

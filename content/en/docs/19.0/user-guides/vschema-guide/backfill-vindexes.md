@@ -3,14 +3,14 @@ title: Backfill Lookup Vindexes
 weight: 11
 ---
 
-Creating a lookup vindex after the main table already contains rows does not automatically backfill the lookup table for the existing entries.
+Creating a Lookup Vindex after the main table already contains rows does not automatically backfill the lookup table for the existing entries.
 Only newer inserts cause automatic population of the lookup table.
 
-This backfill can be set up using the [CreateLookupVindex](#createlookupvindex) command covered below.
+This backfill can be set up using the [LookupVindex create](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) command covered below.
 
 ### Manual Backfill Checklist
 
-Creating a unique lookup Vindex is an elaborate process. It is good to use the following checklist if this is done manually:
+Creating a unique Lookup Vindex is an elaborate process. It is good to use the following checklist if this is done manually:
 
 * Create the lookup table as sharded or unsharded. Make the `from` column the primary key.
 * Create a VSchema entry for the lookup table. If sharded, assign a Primary Vindex for the `from` column.
@@ -21,9 +21,9 @@ Creating a unique lookup Vindex is an elaborate process. It is good to use the f
   * Specify the `Owner` as the main table
 * Associate the column of the owner table with the new Vindex.
 
-### CreateLookupVindex
+### Creating a Lookup Vindex
 
-vtctld supports the [CreateLookupVindex](../../configuration-advanced/createlookupvindex) command that can perform all the above steps as well as the backfill.
+vtctldclient supports the [LookupVindex create](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) command that can perform all the above steps as well as the backfill.
 
 {{< warning >}}
 This will not work against the `vtcombo` based demo app because it does not support vreplication. You can only try this against a real Vitess cluster.
@@ -31,7 +31,7 @@ This will not work against the `vtcombo` based demo app because it does not supp
 
 The workflow automatically infers the schema and vschema for the lookup table and creates it. It also sets up the necessary VReplication streams to backfill the lookup table.
 
-After the backfill is done, you should clean up the workflow. More detailed instructions are available in the  [CreateLookupVindex Reference](../../configuration-advanced/createlookupvindex)
+After the backfill is done, you should clean up the workflow. More detailed instructions are available in the  [Creating a Lookup Vindex Guide](../../configuration-advanced/createlookupvindex)
 
 To create such a lookup vindex on a real Vitess cluster, you can use the following instructions:
 

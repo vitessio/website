@@ -65,7 +65,7 @@ Download the [latest binary release](https://github.com/vitessio/vitess/releases
 * Ubuntu is the only fully supported OS, for another OS please [build Vitess by yourself](/docs/contributing) or use the Docker images.
 
 ```sh
-version=17.0.0
+version=19.0.0
 file=vitess-${version}-70a9466.tar.gz
 wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
 tar -xzf ${file}
@@ -222,13 +222,13 @@ rm -rf vtdataroot
 
 ## Setup Aliases
 
-For ease-of-use, Vitess provides aliases for `mysql`, `vtctlclient` and `vtcltdclient`:
+For ease-of-use, Vitess provides aliases for `mysql` and `vtcltdclient`:
 
 ```bash
 source ../common/env.sh
 ```
 
-Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctlclient && unalias vtctldclient` or close your session.
+Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctldclient` or close your session.
 
 ## Connect to your cluster
 

@@ -222,13 +222,13 @@ rm -rf vtdataroot
 
 ## Setup Aliases
 
-For ease-of-use, Vitess provides aliases for `mysql`, `vtctlclient` and `vtcltdclient`:
+For ease-of-use, Vitess provides aliases for `mysql` and `vtcltdclient`:
 
 ```bash
 source ../common/env.sh
 ```
 
-Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctlclient && unalias vtctldclient` or close your session.
+Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctldclient` or close your session.
 
 ## Connect to your cluster
 

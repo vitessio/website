@@ -225,7 +225,7 @@ Now we can start the [Reshard](../../../reference/vreplication/reshard/) operati
 will not block any read or write operations to your database:
 
 ```bash
-vtctlclient Reshard -- --source_shards '0' --target_shards '-80,80-' Create customer.cust2cust
+vtctldclient Reshard --target-keyspace customer --workflow cust2cust create --source-shards '0' --target-shards '-80,80-'
 ```
 
 </br>
@@ -238,10 +238,10 @@ our [reference page for Reshard](../../../reference/vreplication/reshard).
 After the reshard is complete, we can use [VDiff](../../../reference/vreplication/vdiff) to check data integrity and ensure our source and target shards are consistent:
 
 ```bash
-$ vtctlclient VDiff -- customer.cust2cust
+$ vtctldclient VDiff --target-keyspace customer --workflow cust2cust create
 VDiff 60fa5738-9bad-11ed-b6de-920702940ee0 scheduled on target shards, use show to view progress
 
-$ vtctlclient VDiff -- --format=json customer.cust2cust show last
+$ vtctldclient VDiff --target-keyspace customer --workflow cust2cust show last
 {
 	"Workflow": "cust2cust",
 	"Keyspace": "customer",
@@ -263,7 +263,7 @@ at the new location. By switching targeted read operations first, we are able to
 tablets are healthy and able to respond to requests:
 
 ```bash
-vtctlclient Reshard -- --tablet_types=rdonly,replica SwitchTraffic customer.cust2cust
+vtctldclient Reshard --target-keyspace customer --workflow cust2cust SwitchTraffic --tablet-types=rdonly,replica
 ```
 
 ## Switch Writes and Primary Reads
@@ -272,7 +272,7 @@ After the [`REPLICA` and `RDONLY` targeted reads](../../../reference/features/vs
 switched, and the health of the system has been verified, it's time to switch writes and all default traffic:
 
 ```bash
-vtctlclient Reshard -- --tablet_types=primary SwitchTraffic customer.cust2cust
+vtctldclient Reshard --target-keyspace customer --workflow cust2cust SwitchTraffic
 ```
 
 ## Note
@@ -329,9 +329,11 @@ After celebrating your second successful resharding, you are now ready to clean 
 ### Using Operator
 
 ```bash
-vtctlclient Reshard -- Complete customer.cust2cust
+vtctldclient Reshard --target-keyspace customer --workflow cust2cust complete
 ```
+
 After the workflow has completed, you can go ahead and remove the shard that is no longer required -
+
 ```bash
 kubectl apply -f 306_down_shard_0.yaml
 ```
@@ -339,7 +341,7 @@ kubectl apply -f 306_down_shard_0.yaml
 ### Using a Local Deployment
 
 ```bash
-vtctlclient Reshard -- Complete customer.cust2cust
+vtctldclient Reshard --target-keyspace customer --workflow cust2cust complete
 
 for i in 200 201 202; do
  CELL=zone1 TABLET_UID=$i ./scripts/vttablet-down.sh
