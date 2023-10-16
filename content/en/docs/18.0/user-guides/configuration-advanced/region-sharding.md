@@ -356,7 +356,7 @@ Now that our new tablets are up, we can go ahead with the resharding:
 This script executes one command:
 
 ```bash
-vtctlclient Reshard -- --source_shards '0' --target_shards '-40,40-80,80-c0,c0-' --tablet_types=PRIMARY Create main.main2regions
+vtctldclient Reshard --target-keyspace main --workflow main2regions create --source-shards '0' --target-shards '-40,40-80,80-c0,c0-' --tablet-types=PRIMARY
 ```
 
 </br>
@@ -372,10 +372,10 @@ We can check the correctness of the copy using the [`VDiff` command](../../../re
 and the `<keyspace>.<workflow>` name we used for `Reshard` command above:
 
 ```bash
-$ vtctlclient VDiff -- main.main2regions create
+$ vtctldclient VDiff --target-keyspace main --workflow main2regions create
 VDiff 044e8da0-9ba4-11ed-8bc7-920702940ee0 scheduled on target shards, use show to view progress
 
-$ vtctlclient VDiff -- --format=json main.main2regions show last
+$ vtctldclient VDiff --format=json --target-keyspace main --workflow main2regions show last
 {
 	"Workflow": "main2regions",
 	"Keyspace": "main",
@@ -391,29 +391,17 @@ $ vtctlclient VDiff -- --format=json main.main2regions show last
 
 </br>
 
-We can take a look at the VReplication workflow's progress and status using the
-[`Progress` action](../../../reference/vreplication/reshard/#progress):
+We can take a look at the VReplication workflow's status using the
+[`show` action](../../../reference/programs/vtctldclient/vtctldclient_reshard/vtctldclient_reshard_show/):
 
 ```bash
-$ vtctlclient Reshard -- Progress main.main2regions
-
-The following vreplication streams exist for workflow main.main2regions:
-
-id=1 on 40-80/zone1-0000000300: Status: Running. VStream Lag: 0s.
-id=1 on -40/zone1-0000000200: Status: Running. VStream Lag: 0s.
-id=1 on 80-c0/zone1-0000000400: Status: Running. VStream Lag: 0s.
-id=1 on c0-/zone1-0000000500: Status: Running. VStream Lag: 0s.
+vtctldclient Reshard --target-keyspace main --workflow main2regions show
 ```
 
 </br>
 
 We now have a running stream from the source tablet (`100`) to each of of our new `main` target shards that will
 keep the tables up-to-date with the source shard (`0`).
-
-{{< info >}}
-You can see greater detail about the VReplication workflow and the individual streams using the following command:
-`vtctlclient Workflow -- main.main2regions show`
-{{< /info >}}
 
 ## Cutover
 

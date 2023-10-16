@@ -9,75 +9,75 @@ aliases: ['/docs/reference/vreplication/v2/reshard/']
 These workflows can have a significant impact on the source tablets (which are often in production) — especially when a PRIMARY tablet is used as a source. You can limit the impact on the source tablets using the [`--vreplication_copy_phase_max_*` vttablet flags](../flags/#vreplication_copy_phase_max_innodb_history_list_length)
 {{< /warning >}}
 
-## Command
-
-```
-Reshard -- <options> <action> <workflow identifier>
-```
-
-or
-
-```
-Reshard -- [--source_shards=<source_shards>] [--target_shards=<target_shards>] [--cells=<cells>]
-           [--tablet_types=<source_tablet_types>] [--skip_schema_copy] [--auto_start]
-           [--stop_after_copy] [--on-ddl=<ddl-action>] [--timeout=timeoutDuration]
-           [--reverse_replication] [--keep_data] [--keep_routing_rules] <action> <keyspace.workflow>
-```
-
 ## Description
 
-`Reshard` is used to create and manage workflows to horizontally shard an existing keyspace. The source keyspace can be unsharded or sharded.
+[`Reshard`](../../programs/vtctldclient/vtctldclient_reshard/) is used to create and manage workflows to horizontally shard an existing keyspace. The source keyspace can be unsharded or sharded.
 
+## Command
+
+Please see the [`Reshard` command reference](../../programs/vtctldclient/vtctldclient_reshard/) for a full list of sub-commands and their flags.
+
+### The Basic Reshard Workflow Lifecycle
+
+1. Initiate the migration using `create`<br/>
+`Reshard --workflow <workflow> --target-keyspace <target-keyspace> create --source-shards <source-shards> --target-shards <target-shards>`
+1. Monitor the workflow using `show` or `status`<br/>
+`Reshard --workflow <workflow> --target-keyspace <target-keyspace> show`<br/>
+`Reshard --workflow <workflow> --target-keyspace <target-keyspace> status`<br/>
+1. Confirm that data has been copied over correctly using [VDiff](../vdiff)
+1. Cutover to the target keyspace with `SwitchTraffic`<br/>
+`Reshard --workflow <workflow> --target-keyspace <target-keyspace> switchtraffic`
+1. Cleanup vreplication artifacts and source shards with `complete`<br/>
+`Reshard --workflow <workflow> --target-keyspace <target-keyspace> complete`
 
 ## Parameters
 
-### action
+### Action
 
-`Reshard` is an "umbrella" command. The `action` sub-command defines the operation on the workflow.
-Action must be one of the following: `Create`, `Show`, `Progress`, `SwitchTraffic`, `ReverseTrafffic`, `Cancel`, or `Complete`.
+[`Reshard`](../../programs/vtctldclient/vtctldclient_reshard/) is an "umbrella" command. The [`action` or sub-command](../../programs/vtctldclient/vtctldclient_reshard/#see-also) defines the operation on the workflow.
 
 #### Create
 <div class="cmd">
 
-`Create` sets up and creates a new workflow. The workflow name should not conflict with that of an existing workflow.
+[`create`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_create/) sets up and creates a new workflow. The workflow name should not conflict with that of an existing workflow.
 
 </div>
 
 #### Show
 <div class="cmd">
 
-`Show` displays useful information about a workflow. (At this time the [Workflow](../workflow) Show command gives more information. This will be improved over time.)
+[`show`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_show/) displays useful information about a workflow — including recent logs.
 
 </div>
 
-#### Progress
+#### Status
 <div class="cmd">
 
-`Progress` reports the progress of a workflow by showing the percentage of data copied across targets, if workflow is in copy state, and the replication lag between the target and the source once the copy phase is completed.
+[`status`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_status/) (or `progress`) reports the progress of a workflow by showing the percentage of data copied across targets, if workflow is in copy state, and the replication lag between the target and the source once the copy phase is completed. It also shows the current state of traffic for the tables involved in the workflow.
 
-It is too expensive to get real-time row counts of tables, using _count(*)_, say. So we use the statistics available in the `information_schema` to approximate copy progress. This data can be significantly off (up to 50-60%) depending on the utilization of the underlying mysql server resources. You can manually run `analyze table` to update the statistics if so desired.
+It is too expensive to get real-time row counts of tables, using _count(*)_, say. So we use the statistics available in the `information_schema` to approximate copy progress. This data can be significantly off (up to 50-60%) depending on the utilization of the underlying mysql server resources. You can manually run `ANALYZE TABLE` to update the statistics if so desired.
 
 </div>
 
 #### SwitchTraffic
 <div class="cmd">
 
-`SwitchTraffic` switches traffic forward for the `tablet_types` specified. This replaces the previous `SwitchReads` and `SwitchWrites` commands with a single one. It is now possible to switch all traffic with just one command, and this is the default behavior. Also, you can now switch replica, rdonly and primary traffic in any order: earlier you needed to first `SwitchReads` (for replicas and rdonly tablets) first before `SwitchWrites`.
+[`SwitchTraffic`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_switchtraffic) switches traffic forward for the `tablet-types` specified. This replaces the previous `SwitchReads` and `SwitchWrites` commands with a single one. It is now possible to switch all traffic with just one command, and this is the default behavior. Also, you can now switch replica, rdonly and primary traffic in any order: earlier you needed to first `SwitchReads` (for replicas and rdonly tablets) first before `SwitchWrites`.
 
 </div>
 
 #### ReverseTraffic
 <div class="cmd">
 
-`ReverseTraffic` switches traffic in the reverse direction for the `tablet_types` specified. The traffic should have been previously switched forward using `SwitchTraffic` for the `cells` and `tablet_types` specified.
+[`ReverseTraffic`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_reversetraffic/) switches traffic in the reverse direction for the `tablet-types` specified. The traffic should have been previously switched forward using `SwitchTraffic` for the `cells` and `tablet_types` specified.
 
 </div>
 
 #### Cancel
 <div class="cmd">
 
-`Cancel` can be used if a workflow was created in error or was misconfigured and you prefer to create a new workflow instead of fixing this one. Cancel can only be called if no traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with the new target shards from the topo and, by default, the target tables on the target keyspace
-(see [`--keep_data`](./#--keep_data) and [`--rename_tables`](#--rename_tables)).
+[`cancel`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_cancel/) can be used if a workflow was created in error or was misconfigured and you prefer to create a new workflow instead of fixing this one. Cancel can only be called if no traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with the new target shards from the topo and, by default, the target tables on the target keyspace
+(see `--keep-data` and `--rename-tables`).
 
 </div>
 
@@ -88,18 +88,16 @@ It is too expensive to get real-time row counts of tables, using _count(*)_, say
 This is a destructive command
 {{< /warning >}}
 
-`Complete` is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with the original source shards from the topo. By default, the source tables are also dropped on the source shards
-(see [`--keep_data`](./#--keep_data) and [`--rename_tables`](#--rename_tables)) .
+[`complete`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_complete/) is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with the original source shards from the topo. By default, the source tables are also dropped on the source shards
+(see `--keep-data` and `--rename-tables`) .
 
 </div>
 
 ### options
 
-Each `action` has additional options/parameters that can be used to modify its behavior.
+Each [`action` or sub-command](../../programs/vtctldclient/vtctldclient_reshard/#see-also) has additional options/parameters that can be used to modify its behavior. Please see the [command's reference docs](../../programs/vtctldclient/vtctldclient_reshard/) for the full list of command options or flags. `actions` are common to both `MoveTables` and `Reshard` workflows. Only the `create` action has different parameters, all other actions have common options and similar semantics. Below we will add additional information for a subset of key options.
 
-`actions` are common to both `MoveTables` and `Reshard` workflows. Only the `create` action has different parameters, all other actions have common options and similar semantics.
-
-#### --auto_start
+#### --auto-start
 **optional**\
 **default** true
 
@@ -160,37 +158,18 @@ parallel index builds. This is logically similar to the
 
 </div>
 
-#### --drop_foreign_keys
-**optional**
-**default** false
-
-<div class="cmd">
-
-If true, tables in the target keyspace will be created without any foreign keys that exist on the source.
-
-</div>
-
-#### --dry_run
+#### --dry-run
 **optional**\
 **default** false
 
 <div class="cmd">
 
-For the `SwitchTraffic`, `ReverseTraffic`, and `Complete` actions, you can do a dry run where no actual steps are taken
+For the `SwitchTraffic`, `ReverseTraffic`, and `complete` actions, you can do a dry run where no actual steps are taken
 but the command logs all the steps that would be taken.
 
 </div>
 
-#### --exclude
-**optional** only applies if `--all` is specified
-
-<div class="cmd">
-
-If moving all tables, specifies tables to be skipped.
-
-</div>
-
-#### --keep_data
+#### --keep-data
 **optional**\
 **default** false
 
@@ -200,7 +179,7 @@ Usually, the target tables are deleted by `Cancel`. If this flag is used the tar
 
 </div>
 
-#### --keep_routing_rules
+#### --keep-routing-rules
 **optional**\
 **default** false
 
@@ -210,7 +189,7 @@ Usually, any routing rules created by the workflow in the source and target keys
 
 </div>
 
-#### --max_replication_lag_allowed
+#### --max-replication-lag-allowed
 **optional**\
 **default**  the value used for `--timeout`
 
@@ -252,7 +231,7 @@ We caution against against using `EXEC` or `EXEC_IGNORE` for the following reaso
 
 </div>
 
-#### --reverse_replication
+#### --enable-reverse-replication
 **optional**\
 **default** true
 
@@ -264,7 +243,7 @@ If set to false these reverse replication streams will not be created and you wi
 
 </div>
 
-#### --stop_after_copy
+#### --stop-after-copy
 
 **optional**
 **default** false
@@ -281,7 +260,7 @@ is small enough to start replicating, the workflow state will be set to Stopped.
 * If you just want a consistent snapshot of all the tables you can set this flag. The workflow
 will stop once the copy is done and you can then mark the workflow as `Complete`d
 
-#### --source_shards
+#### --source-shards
 **mandatory**
 
 <div class="cmd">
@@ -290,7 +269,7 @@ Comma separated shard names to reshard from.
 
 </div>
 
-#### --tablet_types 
+#### --tablet-types 
 **optional**\
 **default** `--vreplication_tablet_type` parameter value for the tablet. `--vreplication_tablet_type` has the default value of "in_order:REPLICA,PRIMARY".\
 **string**
@@ -299,15 +278,6 @@ Comma separated shard names to reshard from.
 
 Source tablet types to replicate from (e.g. PRIMARY, REPLICA, RDONLY). The value
 specified impacts [tablet selection](../tablet_selection/) for the workflow.
-
-</div>
-
-#### --target_shards
-**mandatory**
-
-<div class="cmd">
-
-Comma separated shard names to reshard to.
 
 </div>
 
@@ -322,26 +292,3 @@ catchup with the point where the writes were stopped. If the wait time is longer
 the command will error out. For setups with high write qps you may need to increase this value.
 
 </div>
-
-
-#### workflow identifier
-
-<div class="cmd">
-
-All workflows are identified by `targetKeyspace.workflow` where `targetKeyspace` is the name of the keyspace to which the tables are being moved. `workflow` is a name you assign to the `Reshard` workflow to identify it.
-
-</div>
-
-
-### The most basic Reshard Workflow lifecycle
-
-1. Initiate the migration using `Create`<br/>
-`Reshard -- --source_shards=<source_shards> --target_shards=<target_shards> Create <keyspace.workflow>`
-1. Monitor the workflow using `Show` or `Progress`<br/>
-`Reshard Show <keyspace.workflow>` _*or*_ <br/>
-`Reshard Progress <keyspace.workflow>`<br/>
-1. Confirm that data has been copied over correctly using [VDiff](../vdiff)
-1. Cutover to the target keyspace with `SwitchTraffic`<br/>
-`Reshard SwitchTraffic <keyspace.workflow>`
-1. Cleanup vreplication artifacts and source shards with `Complete`<br/>
-`Reshard Complete <keyspace.workflow>`

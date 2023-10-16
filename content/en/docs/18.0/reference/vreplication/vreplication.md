@@ -1,6 +1,6 @@
 ---
 title: Overview
-description: VReplication features, design and options in a nutshell
+description: VReplication features, design, and options in a nutshell
 weight: 2
 aliases: ['/docs/reference/features/vreplication/']
 ---
@@ -22,10 +22,8 @@ many features. It can be used for the following use cases:
 * **Realtime Rollups**: Use [`Materialize`](../materialize/) with aggregation
   expressions in which case Vitess will create a rolled up version of the
   source table which can be used for realtime analytics.
-* **Lookup Vindexes**: Use [`CreateLookupVindex`](../../../user-guides/vschema-guide/backfill-vindexes/#createlookupvindex) to create a new
-  [`lookup vindex`](../../features/vindexes/#functional-and-lookup-vindex)
-  and backfill it from the existing data.
-* **Online Schema Changes**: Use [`ddl_stragegy=vitess`](../../../user-guides/schema-changes/ddl-strategies/) for native [online non-blocking schema
+* **Lookup Vindexes**: Use the [`LookupVindex`](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/) command to create and backfill Lookup Vindexes. See the [`Creating a Lookup Vindex`](../../../user-guides/vschema-guide/backfill-vindexes/#createlookupvindex) section of the vschema user guide for example usage.
+* **Online Schema Changes**: Use a [`ddl strategy of vitess`](../../../user-guides/schema-changes/ddl-strategies/) for native [online non-blocking schema
   migrations](../../../user-guides/schema-changes/managed-online-schema-changes/) that are trackable, cancellable, revertible, and retryable.
   All being safe to run in production due to intelligent throttling and
   resource management.
@@ -199,7 +197,7 @@ will contain information about what it's been doing with each stream.
 ### Workflow Show
 
 The current status of the workflows and streams can also be fetched by using
-the `vtctl` client [`Workflow Show`](../workflow/) command.
+the `vtctldclient` [`Workflow Show`](../workflow/) command.
 
 ### Monitoring Variables
 
