@@ -31,9 +31,8 @@ When using the [VTGate VStream API](../vstream/), you can override this local ce
 ### Tablet Types
 
 #### VReplication
-For VReplication, the server side default which determines the candidate types made available for potential selection as the source for a stream is set
-using the [`vttablet` `--vreplication_tablet_type` flag](../flags/#vreplication_tablet_type) (default value is `in_order:REPLICA,PRIMARY`). The target tablet
-will provide this value to the `TabletPicker` to determine the viable source tablet candidates. You can override this default on the client side using your
+
+For VReplication the tablet types determines the candidate types made available for potential selection as the source for a stream (default value is `in_order:REPLICA,PRIMARY`). The target tablet will provide this value to the `TabletPicker` to determine the viable source tablet candidates. You specify the value on the client side using your
 workflow command's `--tablet-types` flag.
 
 You can also specify that the tablet types should be used in the order of preference as listed in the `--tablet-types` flag using the `--tablet-types-in-preference-order` flag. For example `--tablet-types "REPLICA,PRIMARY" --tablet-types-in-preference-order` would cause a replica source tablet to be used whenever possible
@@ -45,5 +44,6 @@ When using the [VTGate VStream API](../vstream/) you should instead migrate to u
 {{< /info >}}
 
 #### VStream
+
 For a VStream there is no default tablet type. You must specify an individual tablet type using the
 [`VStreamRequest.TabletType`](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamRequest) field.

@@ -177,14 +177,6 @@ stalled streams after _vreplication_retry_delay_ seconds
 
 Stop automatically retrying when we've had consecutive failures with the same error for this long after the first occurrence (default 0, meaning no time limit).
 
-#### vreplication_tablet_type
-
-**Type** string\
-**Default** in_order:REPLICA,PRIMARY\
-**Applicable on** target
-
-This parameter specifies the default tablet_types that will be used by the tablet picker to find sources for a VReplication stream. It can be overridden, per workflow, by passing a different list to the workflow commands like `MoveTables` and `Reshard`.
-
 #### vreplication_experimental_flags
 
 **Type** bitmask\
