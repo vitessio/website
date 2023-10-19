@@ -146,7 +146,7 @@ There are pros and cons to using any of the strategies. Some notable differences
 #### Setup
 
 - VReplication is part of Vitess
-- A `gh-ost` binary is embedded within the Vitess binary, compatible with `glibc 2.3` and `Linux/amd64`. The user may choose to use their own `gh-ost` binary, configured with `-gh-ost-path`.
+- A `gh-ost` binary is embedded within the Vitess binary, compatible with `glibc 2.3` and `Linux/amd64`. The user may choose to use their own `gh-ost` binary, configured with `--gh-ost-path`.
 - `pt-online-schema-change` is not included in Vitess, and the user needs to set it up on tablet hosts.
   - Note that on Vitess Docker images, `pt-online-schema-change` and dependencies _are_ pre-installed.
 
