@@ -94,7 +94,7 @@ Vitess may modify your queries to qualify for online DDL statement. Modification
 
 ## ddl_strategy
 
-You will set either `@@ddl_strategy` session variable, or `--ddl_strategy` command line flag, to control your schema migration strategy, and specifically, to enable and configure online DDL. Details in [DDL Strategies](../ddl-strategies). A quick overview:
+You will either set `vtgate` `--ddl_strategy` command line flag value, or will override it with the `@@ddl_strategy` session variable, or use the `vtctldclient` --ddl-strategy` flag to control your schema migration strategy, and specifically, to enable and configure online DDL. Details in [DDL Strategies](../ddl-strategies). A quick overview:
 
 - The value `"vitess"` instructs Vitess to run an `ALTER TABLE` online DDL via `VReplication`. This is the preferred method.
 - The value `"gh-ost"` instructs Vitess to run an `ALTER TABLE` online DDL via `gh-ost`.
@@ -227,7 +227,7 @@ All three strategies: `vitess`, `gh-ost` and `pt-osc` utilize the tablet throttl
 - `gh-ost` uses the throttler via `--throttle-http`, which is automatically provided by Vitess
 - `pt-osc` uses the throttler by replication lag plugin, automatically injected by Vitess.
 
-**NOTE** that at this time (and subject to change) the tablet throttler is disabled by default. Enable it with `vttablet`'s `-enable-lag-throttler` flag. If the tablet throttler is disabled, schema migrations will not throttle on replication lag.
+**NOTE** that at this time (and subject to change) the tablet throttler is disabled by default. Enable it via `vtctldclient UpdateThrottlerConfig --enable <keyspace>`. If the tablet throttler is disabled, schema migrations will not throttle on replication lag.
 
 ## Table cleanup
 

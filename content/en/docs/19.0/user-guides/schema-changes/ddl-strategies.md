@@ -18,35 +18,43 @@ See also [ddl_strategy flags](../ddl-strategy-flags).
 
 ## Specifying a DDL strategy
 
-You will set either `@@ddl_strategy` session variable, or `--ddl_strategy` command line flag. Examples:
+You can apply DDL strategies to your schema changes in these different ways:
 
-#### Via vtctldclient
+- The command `vtctldclient ApplySchema` takes a `--ddl-strategy` flag. The strategy applies to the specific changes requested in the command. The following example applies the `vitess` strategy to three migrations submitted together: 
 
-```shell
-$ vtctldclient ApplySchema --ddl-strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
-a2994c92_f1d4_11ea_afa3_f875a4d24e90
+```sh
+$ vtctldclient ApplySchema --ddl-strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED; CREATE TABLE sample (id int PRIMARY KEY); DROP TABLE another;" commerce
+ab185fdf_6e46_11ee_8f23_0a43f95f28a3
 ```
 
-```shell
-$ vtctldclient ApplySchema --ddl-strategy "gh-ost --max-load Threads_running=200" --sql "ALTER TABLE demo add column status int" commerce
+- Set `vtgate --ddl_strategy` flag. Migrations executed from within `vtgate` will use said strategy.
+
+```sh
+$ vtgate --ddl_strategy="vitess"
+
+$ mysql
 ```
-
-#### Via VTGate
-
-```shell
-$ mysql -h 127.0.0.1 -P 15306 commerce
-Welcome to the MySQL monitor.  Commands end with ; or \g.
-
-mysql> SET @@ddl_strategy='vitess';
-Query OK, 0 rows affected (0.00 sec)
-
-mysql> ALTER TABLE demo ADD COLUMN sample INT;
+```sql
+mysql> alter table corder force;
 +--------------------------------------+
 | uuid                                 |
 +--------------------------------------+
-| fa2fb689_f1d5_11ea_859e_f875a4d24e90 |
+| 2015f08d_6e46_11ee_a918_0a43f95f28a3 |
 +--------------------------------------+
-1 row in set (0.00 sec)
+```
+
+- Set the `@@ddl_strategy` session variable to override the value of `vtgate`'s `--ddl_strategy` flag, for the current session.
+
+```sql
+mysql> set @@ddl_strategy="vitess --postpone-completion --allow-concurrent";
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> alter table corder force;
++--------------------------------------+
+| uuid                                 |
++--------------------------------------+
+| 861f7de9_6e46_11ee_a918_0a43f95f28a3 |
++--------------------------------------+
 ```
 
 ## Choosing a DDL strategy
