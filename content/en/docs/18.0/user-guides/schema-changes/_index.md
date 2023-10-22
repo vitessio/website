@@ -76,7 +76,7 @@ For a given table in a given keyspace, Vitess knows at all times:
 - In which shards (MySQL clusters) the table is found
 - Which is the `primary` server per shard.
 
-When using either managed schema changes, or direct schema changes via `vtctl` or `vtgate`, Vitess resolves the discovery of the affected servers automatically, and this is hidden from the user.
+When using either managed schema changes, or direct schema changes via `vtctldclient` or `vtgate`, Vitess resolves the discovery of the affected servers automatically, and this is hidden from the user.
 
 ### Schedule
 
@@ -86,7 +86,7 @@ In managed, online schema changes, Vitess owns and tracks all pending and active
 
 In managed, online schema changes, Vitess owns the execution of `vitess`, `gh-ost` or `pt-online-schema-change` migrations. While these run in the background, Vitess keeps track of the migration state.
 
-In direct schema changes via `vtctl` or `vtgate`, Vitess issues a synchronous `ALTER TABLE` statement on the relevant shards.
+In direct schema changes via `vtctldclient` or `vtgate`, Vitess issues a synchronous `ALTER TABLE` statement on the relevant shards.
 
 ### Audit/control
 

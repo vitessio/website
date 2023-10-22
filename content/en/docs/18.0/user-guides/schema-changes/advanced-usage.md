@@ -24,7 +24,7 @@ You can only run this change successfully once. Once it it applied, the column `
 
 Sometimes it is desirable to be able to retry a migration. For example, if you apply a migration on a sharded keyspace, where one or more of the shards can be down. In such scenario some shards receive and apply the DDL, while other shards do not, and are not aware of its existence. Attempting to re-apply the same DDL will generate errors on the shards that have received and applied it on the first attempt.
 
-`vtctldclient ApplySchema` accepts a `--migration_context` flag. By default, Vitess auto-generates a unique context per execution of `vtctldclient ApplySchema`. You may supply your own value, which can be an arbitrary text (limited to `1024` characters). You may search for migrations with a particular context via `SHOW VITESS_MIGRATIONS LIKE '<context-value>'`. Also, any `SHOW VITESS_MIGRATIONS ...` command outputs the context value in the `migration_context` column.
+`vtctldclient ApplySchema` accepts a `--migration-context` flag. By default, Vitess auto-generates a unique context per execution of `vtctldclient ApplySchema`. You may supply your own value, which can be an arbitrary text (limited to `1024` characters). You may search for migrations with a particular context via `SHOW VITESS_MIGRATIONS LIKE '<context-value>'`. Also, any `SHOW VITESS_MIGRATIONS ...` command outputs the context value in the `migration_context` column.
 
 When Vitess meets a migration which has exact same DDL and exact same (non-empty) context as some older migration, it considers it as a _duplicate_. The new migration does get a `UUID` of its own, and is tracked as a new migration. But if the previous migration (or, if there are multiple past duplicate migrations with same DDL and context, _any one of those_) is `complete`, then the new migration is also implicitly assumed to be `complete`.
 
@@ -33,12 +33,12 @@ Thus, the new migration does not get to execute if an identical previous migrati
 Usage:
 
 ```sh
-$ vtctldclient ApplySchema -- --migration_context="1111-2222" --ddl_strategy='vitess' --sql "alter table customer add column status int unsigned not null" commerce
+$ vtctldclient ApplySchema --migration-context="1111-2222" --ddl-strategy='vitess' --sql "alter table customer add column status int unsigned not null" commerce
 
-$ vtctldclient ApplySchema -- --migration_context="1111-2222" --ddl_strategy='vitess' --sql "alter table customer add column status int unsigned not null" commerce
+$ vtctldclient ApplySchema --migration-context="1111-2222" --ddl-strategy='vitess' --sql "alter table customer add column status int unsigned not null" commerce
 ```
 
-In the above, the two calls are identical. Specifically, they share the exact same `--migration_context` value of `1111-2222`, and the exact same `--sql`.
+In the above, the two calls are identical. Specifically, they share the exact same `--migration-context` value of `1111-2222`, and the exact same `--sql`.
 
 Notes:
 
@@ -52,7 +52,7 @@ Notes:
 The context may also be set via VTGate:
 
 ```sql
-mysql> set @@ddl_strategy='vitess --';
+mysql> set @@ddl_strategy='vitess --allow-concurrent';
 mysql> set @@migration_context='1111-2222';
 mysql> alter table customer add column status int unsigned not null;
 ```
@@ -63,12 +63,12 @@ By default, the migration context for an Online DDL issued via VTGate is the val
 
 You may go one step beyond [duplicate migration detection](#duplicate-migration-detection) by explicitly supplying migration UUIDs such that duplicate migrations are never submitted in the first place.
 
-Consider the following example, note `--uuid_list` flag:
+Consider the following example, note `--uuid-list` flag:
 
 ```sh
-$ vtctldclient ApplySchema -- --uuid_list "73380089_7764_11ec_a656_0a43f95f28a3" --ddl_strategy='vitess' --sql "alter table customer add column status int unsigned not null" commerce
+$ vtctldclient ApplySchema --uuid-list "73380089_7764_11ec_a656_0a43f95f28a3" --ddl-strategy='vitess' --sql "alter table customer add column status int unsigned not null" commerce
 
-$ vtctldclient ApplySchema -- --uuid_list "73380089_7764_11ec_a656_0a43f95f28a3" --ddl_strategy='vitess' --sql "alter table customer add column status int unsigned not null" commerce
+$ vtctldclient ApplySchema --uuid-list "73380089_7764_11ec_a656_0a43f95f28a3" --ddl-strategy='vitess' --sql "alter table customer add column status int unsigned not null" commerce
 ```
 
 Normally Vitess generates a `UUID` for each migration, thus having a new, unique ID per migration. With `-uuid_list`, you can force Vitess into using your own supplied UUID. There cannot be two migrations with the same `UUID`. Therefore, any subsequent submission of a migration with an already existing `UUID` is implicitly discarded. The 2nd call does return the migration `UUID`, but is internally discarded.
@@ -77,12 +77,12 @@ This feature is useful for external management systems (e.g. schema deployment t
 
 Notes:
 
-- `--uuid_list` accepts zero or more comma separated UUID values
+- `--uuid-list` accepts zero or more comma separated UUID values
 - If empty, Vitess calculates UUID for the migrations
 - Number of supplied UUIDs must match the number of DDL statements in `--sql`
 - Each UUID must be in [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt) format, with underscored instead of dashes. Examples of valid UUIDs: `73380089_7764_11ec_a656_0a43f95f28a3`  and `28dc5ebc_78e6_11ec_accf_ab29e6ca1002`.
 - If multiple UUIDs are given, they must all be different from one another.
-- It is the caller's responsibility to ensure the UUIDs are indeed unique. If the user submits an `ApplySchema` with an already existing `--uuid_list=<UUID>` value, Vitess takes no steps to validate whether the DDL is identical to the already existing submission.
+- It is the caller's responsibility to ensure the UUIDs are indeed unique. If the user submits an `ApplySchema` with an already existing `--uuid-list=<UUID>` value, Vitess takes no steps to validate whether the DDL is identical to the already existing submission.
 
 ## Gated cut-over
 
@@ -96,7 +96,7 @@ The user may submit multiple migrations such that non auto-completes. The user c
 Consider the following:
 
 ```sh
-$ vtctldclient ApplySchema --ddl_strategy='vitess --postpone-completion --allow-concurrent' --sql "alter table customer add column country int not null default 0; alter table order add column shipping_country int not null default 0" commerce
+$ vtctldclient ApplySchema --ddl-strategy='vitess --postpone-completion --allow-concurrent' --sql "alter table customer add column country int not null default 0; alter table order add column shipping_country int not null default 0" commerce
 29231906_776f_11ec_a656_0a43f95f28a3
 3cc4ae0e_776f_11ec_a656_0a43f95f28a3
 ```
@@ -135,14 +135,14 @@ The use case and workflow is as follows:
 Consider the following example. We run a 5 hour long migration to drop an index:
 
 ```sh
-$ vtctldclient ApplySchema --ddl_strategy='vitess' --sql "alter table customer drop index joined_timestamp_idx" commerce
+$ vtctldclient ApplySchema --ddl-strategy='vitess' --sql "alter table customer drop index joined_timestamp_idx" commerce
 29231906_776f_11ec_a656_0a43f95f28a3
 ```
 
 As soon as the migration completes, we run:
 
 ```sh
-$ vtctldclient ApplySchema --ddl_strategy='vitess --postpone-completion --allow-concurrent' --sql "revert vitess_migration '29231906_776f_11ec_a656_0a43f95f28a3'" commerce
+$ vtctldclient ApplySchema --ddl-strategy='vitess --postpone-completion --allow-concurrent' --sql "revert vitess_migration '29231906_776f_11ec_a656_0a43f95f28a3'" commerce
 3cc4ae0e_776f_11ec_a656_0a43f95f28a3
 ```
 
@@ -181,7 +181,7 @@ Note that there can be scenarios with impossible ordering. Those hardly make sen
 An example for in-order submission:
 
 ```sh
-$ vtctldclient ApplySchema --ddl_strategy='vitess --allow-concurrent --in-order-completion' --sql "create table t1 (id int primary key); create view v1 as select id from t1;" commerce
+$ vtctldclient ApplySchema --ddl-strategy='vitess --allow-concurrent --in-order-completion' --sql "create table t1 (id int primary key); create view v1 as select id from t1;" commerce
 ```
 
 {{< info >}}
