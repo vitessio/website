@@ -90,7 +90,7 @@ To be able to run online schema migrations via `gh-ost`:
 
 Vitess automatically creates a MySQL account for the migration, with a randomly generated password. The account is destroyed at the end of the migration.
 
-Vitess takes care of setting up the necessary command line flags. It automatically creates a hooks directory and populates it with hooks that report `gh-ost`'s progress back to Vitess. You may supply additional flags for your migration as part of `@@ddl_strategy` session variable (using `VTGate`) or `--ddl_strategy` command line flag (using `vtctldclient`). Examples:
+Vitess takes care of setting up the necessary command line flags. It automatically creates a hooks directory and populates it with hooks that report `gh-ost`'s progress back to Vitess. You may supply additional flags for your migration as part of `@@ddl_strategy` session variable (using `VTGate`) or `--ddl-strategy` command line flag (using `vtctldclient`). Examples:
 
 - `set @@ddl_strategy='gh-ost --max-load Threads_running=200';`
 - `set @@ddl_strategy='gh-ost --max-load Threads_running=200 --critical-load Threads_running=500 --critical-load-hibernate-seconds=60 --default-retries=512';`
@@ -112,7 +112,7 @@ Note that on Vitess Docker images, `pt-online-schema-change` and dependencies ar
 
 Vitess automatically creates a MySQL account for the migration, with a randomly generated password. The account is destroyed at the end of the migration.
 
-Vitess takes care of supplying the command line flags, the DSN, the username & password. It also sets up `PLUGINS` used to communicate migration progress back to the tablet. You may supply additional flags for your migration as part of `@@ddl_strategy` session variable (using `VTGate`) or `-ddl_strategy` command line flag (using `vtctldclient`). Examples:
+Vitess takes care of supplying the command line flags, the DSN, the username & password. It also sets up `PLUGINS` used to communicate migration progress back to the tablet. You may supply additional flags for your migration as part of `@@ddl_strategy` session variable (using `VTGate`) or `-ddl-strategy` command line flag (using `vtctldclient`). Examples:
 
 - `set @@ddl_strategy='pt-osc --null-to-not-null';`
 - `set @@ddl_strategy='pt-osc --max-load Threads_running=200';`
@@ -140,13 +140,15 @@ There are pros and cons to using any of the strategies. Some notable differences
 #### Support
 
 - VReplication (`vitess` strategy) is internal to Vitess and supported by the Vitess maintainers.
-- `gh-ost` enjoys partial, informal support from Vitess maintainers.
-- `pt-online-schema-change` is out of the maintainers control.
+- `gh-ost` and `pt-online-schema-change` are not supported by the Vitess maintainers.
 
 #### Setup
 
 - VReplication is part of Vitess
 - A `gh-ost` binary is embedded within the Vitess binary, compatible with `glibc 2.3` and `Linux/amd64`. The user may choose to use their own `gh-ost` binary, configured with `--gh-ost-path`.
+{{< warning >}}
+The embedded `gh-ost` binary will be removed in future versions. The user will need to install their own `gh-ost` binary.
+{{< /warning >}}
 - `pt-online-schema-change` is not included in Vitess, and the user needs to set it up on tablet hosts.
   - Note that on Vitess Docker images, `pt-online-schema-change` and dependencies _are_ pre-installed.
 
