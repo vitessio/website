@@ -18,7 +18,7 @@ CREATE TABLE `demo` (
 
 ## ApplySchema
 
-`ApplySchema` is a `vtctlclient` command that can be used to apply a schema change to a keyspace. The main advantage of using this tool is that it performs some sanity checks about the schema before applying it. However, a downside is that it can be a little too strict and may not work for all use cases.
+`ApplySchema` is a `vtctldclient` command that can be used to apply a schema change to a keyspace. The main advantage of using this tool is that it performs some sanity checks about the schema before applying it. However, a downside is that it can be a little too strict and may not work for all use cases.
 
 Consider the following examples:
 
@@ -35,7 +35,7 @@ CREATE TABLE `demo` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB
 ```
-In the above, we run a direct, synchronous, blocking `ALTER TABLE` statement. Knowing the table is in `commerce` keyspace, Vitess autodetects the relevant shards, and then autodetects which is the `primary` server in each shard. It then directly invokes the `ALTER TABLE` statement on all shards (concurrently), and the `vtctlclient` command only returns when all are complete.
+In the above, we run a direct, synchronous, blocking `ALTER TABLE` statement. Knowing the table is in `commerce` keyspace, Vitess autodetects the relevant shards, and then autodetects which is the `primary` server in each shard. It then directly invokes the `ALTER TABLE` statement on all shards (concurrently), and the `vtctldclient` command only returns when all are complete.
 
 
 When applying a new schema, where all statements are `CREATE TABLE` or `CREATE VIEW`, you may supply the flag `--batch-size=<n>`. For example:
@@ -81,10 +81,10 @@ You can apply schema changes directly to the underlying MySQL shard primary inst
 
 VTTablet will eventually notice the change and update itself. This is controlled by the `--queryserver-config-schema-reload-time` parameter which defaults to 1800 seconds.
 
-You can also explicitly issue the `vtctlclient` `ReloadSchema` command to make it reload immediately. Specify a tablet to reload the schema from, as in:
+You can also explicitly issue the `vtctldclient` `ReloadSchema` command to make it reload immediately. Specify a tablet to reload the schema from, as in:
 
 ```shell
-$ vtctlclient ReloadSchema zone1-0000000100
+$ vtctldclient ReloadSchema zone1-0000000100
 ```
 
 Users will likely want to deploy schema changes via `gh-ost` or `pt-online-schema-change`, which do not block the table. Vitess offers [managed, online schema changes](../managed-online-schema-changes/) where it automates the invocation and execution of these tools. Using these schema

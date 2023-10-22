@@ -52,29 +52,31 @@ mysql> drop table customer;
 ```
 
 - `@@ddl_strategy` behaves like a MySQL session variable, though is only recognized by `VTGate`. Setting `@@ddl_strategy` only applies to that same connection and does not affect other connections. The strategy applies to all migrations executed in that session. You may subsequently set `@@ddl_strategy` to different value.
-- If you run `vtgate` without `--ddl_strategy`, then `@@ddl_strategy` defaults to `'direct'`, which implies schema migrations are synchronous. You will need to `set @@ddl_strategy='gh-ost'` to run followup `ALTER TABLE` statements via `gh-ost`.
-- If you run `vtgate --ddl_strategy "gh-ost"`, then `@@ddl_strategy` defaults to `'gh-ost'` in each new session. Any `ALTER TABLE` will run via `gh-ost`. You may `set @@ddl_strategy='pt-osc'` to make migrations run through `pt-online-schema-change`, or `set @@ddl_strategy='direct'` to run migrations synchronously.
+- If you run `vtgate` without `--ddl_strategy`, then `@@ddl_strategy` defaults to `'direct'`, which implies schema migrations are synchronous. You will need to `set @@ddl_strategy='vitess'` to run followup `ALTER TABLE` statements via Vitess.
+- If you run `vtgate --ddl_strategy "vitess"`, then `@@ddl_strategy` defaults to `'vitess'` in each new session. Any `ALTER TABLE` will run via Vitess online DDL. You may `set @@ddl_strategy='gh-ost'` to make migrations run through `gh-ost`, or `set @@ddl_strategy='direct'` to run migrations synchronously.
 
-#### Via vtctlclient/ApplySchema
+#### Via vtctldclient
 
-You may use `vtctl` or `vtctlclient` (the two are interchangeable for the purpose of this document) to apply schema changes. The `ApplySchema` command supports both synchronous and online schema migrations. To run an online schema migration you will supply the `--ddl_strategy` command line flag:
+You may use `vtctldclient` to apply schema changes. The `ApplySchema` command supports both synchronous and online schema migrations. To run an online schema migration you will supply the `--ddl-strategy` command line flag:
 
 ```shell
-$ vtctldclient ApplySchema --ddl-strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED" commerce
-a2994c92_f1d4_11ea_afa3_f875a4d24e90
+$ vtctldclient ApplySchema --ddl-strategy="vitess" --sql "alter table product add column ts_entry TIMESTAMP NOT NULL" commerce
+c26f3b5e_6b50_11ee_808b_0a43f95f28a3
 ```
 
  You my run multiple migrations withing the same `ApplySchema` command:
 ```shell
-$ vtctldclient ApplySchema --ddl-strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED; CREATE TABLE sample (id int PRIMARY KEY); DROP TABLE another;" commerce
-3091ef2a_4b87_11ec_a827_0a43f95f28a3
+$ vtctldclient ApplySchema --ddl-strategy="vitess" --sql "alter table corder modify price bigint unsigned default null; create table sample (id int primary key); drop table if exists some_other_table" customer
+d729b47e_6b52_11ee_808b_0a43f95f28a3
+d72b644f_6b52_11ee_808b_0a43f95f28a3
+d72d230d_6b52_11ee_808b_0a43f95f28a3
 ```
 
 `ApplySchema` accepts the following flags:
 
-- `--ddl_strategy`: by default migrations run directly via MySQL standard DDL. This flag must be aupplied to indicate an online strategy. See also [DDL strategies](../ddl-strategies) and [ddl_strategy flags](../ddl-strategy-flags).
-- `--migration_context <unique-value>`: all migrations in a `ApplySchema` command are logically grouped via a unique _context_. A unique value will be supplied automatically. The user may choose to supply their own value, and it's their responsibility to provide with a unique value. Any string format is accepted.
-  The context can then be used to search for migrations, via `SHOW VITESS_MIGRATIONS LIKE 'the-context'`. It is visible in `SHOW VITESS_MIGRATIONS ...` output as the `migration_context` column.
+- `--ddl-strategy`: by default migrations run directly via MySQL standard DDL (aka `direct`). This flag must be aupplied to indicate an online strategy. See also [DDL strategies](../ddl-strategies) and [ddl_strategy flags](../ddl-strategy-flags).
+- `--migration-context <unique-value>`: all migrations in a `ApplySchema` command are logically grouped via a unique _context_. A unique value will be supplied automatically. The user may choose to supply their own value, and it's their responsibility to provide with a unique value. Any string format is accepted.
+  The context can then be used to search for migrations, via `SHOW VITESS_MIGRATIONS LIKE '<the-context>'`. It is visible in `SHOW VITESS_MIGRATIONS ...` output as the `migration_context` column.
 
 ## Tracking migrations
 
@@ -92,216 +94,157 @@ Common patterns are:
 
 Examples for a single shard cluster:
 
+```sh
+$ mysql commerce
+```
 ```sql
-mysql> show vitess_migrations like 'bf4598ab_8d55_11eb_815f_f875a4d24e90' \G
+mysql> show vitess_migrations like 'c26f3b5e_6b50_11ee_808b_0a43f95f28a3' \G
 *************************** 1. row ***************************
-                 id: 23
-     migration_uuid: bf4598ab_8d55_11eb_815f_f875a4d24e90
-           keyspace: commerce
-              shard: 0
-       mysql_schema: vt_commerce
-        mysql_table: corder
-migration_statement: alter table corder add column ts timestamp not null default current_timestamp()
-           strategy: vitess
-            options: 
-    added_timestamp: 2021-03-25 12:35:01
-requested_timestamp: 2021-03-25 12:34:58
-    ready_timestamp: 2021-03-25 12:35:04
-  started_timestamp: 2021-03-25 12:35:04
- liveness_timestamp: 2021-03-25 12:35:06
-completed_timestamp: 2021-03-25 12:35:06
-  cleanup_timestamp: NULL
-   migration_status: complete
-           log_path: 
-          artifacts: _bf4598ab_8d55_11eb_815f_f875a4d24e90_20210325123504_vrepl,
-            retries: 0
-             tablet: zone1-0000000100
-     tablet_failure: 0
-           progress: 100
-  migration_context: vtgate:a8352418-8d55-11eb-815f-f875a4d24e90
-         ddl_action: alter
-            message: 
-        eta_seconds: 0
+                             id: 1
+                 migration_uuid: c26f3b5e_6b50_11ee_808b_0a43f95f28a3
+                       keyspace: commerce
+                          shard: 0
+                   mysql_schema: vt_commerce
+                    mysql_table: product
+            migration_statement: alter table product add column ts_entry TIMESTAMP not null
+                       strategy: vitess
+                        options:
+                added_timestamp: 2023-10-15 11:48:29
+            requested_timestamp: 2023-10-15 11:48:30
+                ready_timestamp: NULL
+              started_timestamp: 2023-10-15 11:48:31
+             liveness_timestamp: 2023-10-15 11:48:37
+            completed_timestamp: 2023-10-15 11:48:38.232430
+              cleanup_timestamp: NULL
+               migration_status: complete
+                       log_path:
+                      artifacts: _c26f3b5e_6b50_11ee_808b_0a43f95f28a3_20231015114830_vrepl,
+                        retries: 0
+                         tablet: zone1-0000000100
+                 tablet_failure: 0
+                       progress: 100
+              migration_context: vtctl:c26e658d-6b50-11ee-808b-0a43f95f28a3
+                     ddl_action: alter
+                        message:
+                    eta_seconds: 0
+                    rows_copied: 0
+                     table_rows: 0
+              added_unique_keys: 0
+            removed_unique_keys: 0
+                       log_file:
+       retain_artifacts_seconds: 86400
+            postpone_completion: 0
+       removed_unique_key_names:
+dropped_no_default_column_names:
+          expanded_column_names:
+               revertible_notes:
+               allow_concurrent: 0
+                  reverted_uuid:
+                        is_view: 0
+              ready_to_complete: 1
+      vitess_liveness_indicator: 1697370514
+            user_throttle_ratio: 0
+                   special_plan:
+       last_throttled_timestamp: NULL
+            component_throttled:
+            cancelled_timestamp: NULL
+                postpone_launch: 0
+                          stage: re-enabling writes
+               cutover_attempts: 1
+         is_immediate_operation: 0
+             reviewed_timestamp: 2023-10-15 11:48:31
+    ready_to_complete_timestamp: 2023-10-15 11:48:35
 ```
 
 ```sql
 mysql> show vitess_migrations like 'complete' \G
-...
-*************************** 21. row ***************************
-                 id: 24
-     migration_uuid: 6848c1a4_8d57_11eb_815f_f875a4d24e90
-           keyspace: commerce
-              shard: 0
-       mysql_schema: vt_commerce
-        mysql_table: customer
-migration_statement: drop table customer
-           strategy: vitess
-            options: 
-    added_timestamp: 2021-03-25 12:46:53
-requested_timestamp: 2021-03-25 12:46:51
-    ready_timestamp: 2021-03-25 12:46:57
-  started_timestamp: 2021-03-25 12:46:57
- liveness_timestamp: 2021-03-25 12:46:57
-completed_timestamp: 2021-03-25 12:46:57
-  cleanup_timestamp: NULL
-   migration_status: complete
-           log_path: 
-          artifacts: _vt_HOLD_6848c1a48d5711eb815ff875a4d24e90_20210326104657,
-            retries: 0
-             tablet: zone1-0000000100
-     tablet_failure: 0
-           progress: 100
-  migration_context: vtgate:a8352418-8d55-11eb-815f-f875a4d24e90
-         ddl_action: drop
-            message: 
-        eta_seconds: 0
+-- same output as above
+
+mysql> show vitess_migrations like 'failed' \G
+Empty set (0.01 sec)
+```
+
+Examples for a multi sharded cluster:
+
+```sh
+$ mysql customer
 ```
 
 ```sql
-mysql> show vitess_migrations where completed_timestamp > now() - interval 1 day;
-+----+--------------------------------------+----------+-------+--------------+-------------+---------------------------------------------------------------------------------+----------+---------+---------------------+---------------------+---------------------+---------------------+---------------------+---------------------+-------------------+------------------+----------+-------------------------------------------------------------+---------+------------------+----------------+----------+---------------------------------------------+------------+---------+-------------+
-| id | migration_uuid                       | keyspace | shard | mysql_schema | mysql_table | migration_statement                                                             | strategy | options | added_timestamp     | requested_timestamp | ready_timestamp     | started_timestamp   | liveness_timestamp  | completed_timestamp | cleanup_timestamp | migration_status | log_path | artifacts                                                   | retries | tablet           | tablet_failure | progress | migration_context                           | ddl_action | message | eta_seconds |
-+----+--------------------------------------+----------+-------+--------------+-------------+---------------------------------------------------------------------------------+----------+---------+---------------------+---------------------+---------------------+---------------------+---------------------+---------------------+-------------------+------------------+----------+-------------------------------------------------------------+---------+------------------+----------------+----------+---------------------------------------------+------------+---------+-------------+
-| 23 | bf4598ab_8d55_11eb_815f_f875a4d24e90 | commerce | 0     | vt_commerce  | corder      | alter table corder add column ts timestamp not null default current_timestamp() | online   |         | 2021-03-25 12:35:01 | 2021-03-25 12:34:58 | 2021-03-25 12:35:04 | 2021-03-25 12:35:04 | 2021-03-25 12:35:06 | 2021-03-25 12:35:06 | NULL              | complete         |          | _bf4598ab_8d55_11eb_815f_f875a4d24e90_20210325123504_vrepl, |       0 | zone1-0000000100 |              0 |      100 | vtgate:a8352418-8d55-11eb-815f-f875a4d24e90 | alter      |         |           0 |
-| 24 | 6848c1a4_8d57_11eb_815f_f875a4d24e90 | commerce | 0     | vt_commerce  | customer    | drop table customer                                                             | online   |         | 2021-03-25 12:46:53 | 2021-03-25 12:46:51 | 2021-03-25 12:46:57 | 2021-03-25 12:46:57 | 2021-03-25 12:46:57 | 2021-03-25 12:46:57 | NULL              | complete         |          | _vt_HOLD_6848c1a48d5711eb815ff875a4d24e90_20210326104657,   |       0 | zone1-0000000100 |              0 |      100 | vtgate:a8352418-8d55-11eb-815f-f875a4d24e90 | drop       |         |           0 |
-| 25 | 6fd57dd3_8d57_11eb_815f_f875a4d24e90 | commerce | 0     | vt_commerce  | customer    | revert 6848c1a4_8d57_11eb_815f_f875a4d24e90                                     | online   |         | 2021-03-25 12:47:08 | 2021-03-25 12:47:04 | 2021-03-25 12:47:12 | 2021-03-25 12:47:12 | 2021-03-25 12:47:12 | 2021-03-25 12:47:12 | NULL              | complete         |          | _vt_HOLD_6848c1a48d5711eb815ff875a4d24e90_20210326104657,   |       0 | zone1-0000000100 |              0 |      100 | vtgate:a8352418-8d55-11eb-815f-f875a4d24e90 | create     |         |           0 |
-+----+--------------------------------------+----------+-------+--------------+-------------+---------------------------------------------------------------------------------+----------+---------+---------------------+---------------------+---------------------+---------------------+---------------------+---------------------+-------------------+------------------+----------+-------------------------------------------------------------+---------+------------------+----------------+----------+---------------------------------------------+------------+---------+-------------+
+mysql> show vitess_migrations like 'complete';
++----+--------------------------------------+----------+-------+--------------+------------------+---------------------------------------------------------------------+----------+---------+---------------------+---------------------+-----------------+---------------------+---------------------+----------------------------+-------------------+------------------+----------+-------------------------------------------------------------+---------+------------------+----------------+----------+--------------------------------------------+------------+---------+-------------+-------------+------------+-------------------+---------------------+----------+--------------------------+---------------------+--------------------------+---------------------------------+-----------------------+-------------------------------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+--------------------+------------------+------------------------+---------------------+-----------------------------+
+| id | migration_uuid                       | keyspace | shard | mysql_schema | mysql_table      | migration_statement                                                 | strategy | options | added_timestamp     | requested_timestamp | ready_timestamp | started_timestamp   | liveness_timestamp  | completed_timestamp        | cleanup_timestamp | migration_status | log_path | artifacts                                                   | retries | tablet           | tablet_failure | progress | migration_context                          | ddl_action | message | eta_seconds | rows_copied | table_rows | added_unique_keys | removed_unique_keys | log_file | retain_artifacts_seconds | postpone_completion | removed_unique_key_names | dropped_no_default_column_names | expanded_column_names | revertible_notes                          | allow_concurrent | reverted_uuid | is_view | ready_to_complete | vitess_liveness_indicator | user_throttle_ratio | special_plan | last_throttled_timestamp | component_throttled | cancelled_timestamp | postpone_launch | stage              | cutover_attempts | is_immediate_operation | reviewed_timestamp  | ready_to_complete_timestamp |
++----+--------------------------------------+----------+-------+--------------+------------------+---------------------------------------------------------------------+----------+---------+---------------------+---------------------+-----------------+---------------------+---------------------+----------------------------+-------------------+------------------+----------+-------------------------------------------------------------+---------+------------------+----------------+----------+--------------------------------------------+------------+---------+-------------+-------------+------------+-------------------+---------------------+----------+--------------------------+---------------------+--------------------------+---------------------------------+-----------------------+-------------------------------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+--------------------+------------------+------------------------+---------------------+-----------------------------+
+|  7 | d729b47e_6b52_11ee_808b_0a43f95f28a3 | customer | 80-   | vt_customer  | corder           | alter table corder modify column price bigint unsigned default null | vitess   |         | 2023-10-15 12:03:23 | 2023-10-15 12:03:24 | NULL            | 2023-10-15 12:03:25 | 2023-10-15 12:03:31 | 2023-10-15 12:03:32.012778 | NULL              | complete         |          | _d729b47e_6b52_11ee_808b_0a43f95f28a3_20231015120324_vrepl, |       0 | zone1-0000000401 |              0 |      100 | vtctl:d7288b41-6b52-11ee-808b-0a43f95f28a3 | alter      |         |           0 |           0 |          0 |                 0 |                   0 |          |                    86400 |                   0 |                          |                                 | `price`               | column price: increased NUMERIC_PRECISION |                0 |               |       0 |                 1 |                1697371408 |                   0 |              | NULL                     |                     | NULL                |               0 | re-enabling writes |                1 |                      0 | 2023-10-15 12:03:25 | 2023-10-15 12:03:29         |
+|  8 | d72b644f_6b52_11ee_808b_0a43f95f28a3 | customer | 80-   | vt_customer  | sample           | create table sample (
+	id int primary key
+)                         | vitess   |         | 2023-10-15 12:03:23 | 2023-10-15 12:03:24 | NULL            | 2023-10-15 12:03:34 | 2023-10-15 12:03:34 | 2023-10-15 12:03:33.701212 | NULL              | complete         |          | _vt_HOLD_dd2164646b5211eeba7c0a43f95f28a3_20231016120333,   |       0 | zone1-0000000401 |              0 |      100 | vtctl:d7288b41-6b52-11ee-808b-0a43f95f28a3 | create     |         |           0 |           0 |          0 |                 0 |                   0 |          |                    86400 |                   0 |                          |                                 |                       |                                           |                0 |               |       0 |                 1 |                         0 |                   0 |              | NULL                     |                     | NULL                |               0 |                    |                0 |                      1 | 2023-10-15 12:03:25 | 2023-10-15 12:03:25         |
+|  9 | d72d230d_6b52_11ee_808b_0a43f95f28a3 | customer | 80-   | vt_customer  | some_other_table | drop table if exists some_other_table                               | vitess   |         | 2023-10-15 12:03:23 | 2023-10-15 12:03:24 | NULL            | 2023-10-15 12:03:35 | 2023-10-15 12:03:35 | 2023-10-15 12:03:34.710144 | NULL              | complete         |          |                                                             |       0 | zone1-0000000401 |              0 |      100 | vtctl:d7288b41-6b52-11ee-808b-0a43f95f28a3 | drop       |         |           0 |           0 |          0 |                 0 |                   0 |          |                    86400 |                   0 |                          |                                 |                       |                                           |                0 |               |       0 |                 1 |                         0 |                   0 |              | NULL                     |                     | NULL                |               0 |                    |                0 |                      1 | 2023-10-15 12:03:25 | 2023-10-15 12:03:25         |
+|  7 | d729b47e_6b52_11ee_808b_0a43f95f28a3 | customer | -80   | vt_customer  | corder           | alter table corder modify column price bigint unsigned default null | vitess   |         | 2023-10-15 12:03:23 | 2023-10-15 12:03:24 | NULL            | 2023-10-15 12:03:25 | 2023-10-15 12:03:31 | 2023-10-15 12:03:32.034889 | NULL              | complete         |          | _d729b47e_6b52_11ee_808b_0a43f95f28a3_20231015120324_vrepl, |       0 | zone1-0000000301 |              0 |      100 | vtctl:d7288b41-6b52-11ee-808b-0a43f95f28a3 | alter      |         |           0 |           0 |          0 |                 0 |                   0 |          |                    86400 |                   0 |                          |                                 | `price`               | column price: increased NUMERIC_PRECISION |                0 |               |       0 |                 1 |                1697371408 |                   0 |              | NULL                     |                     | NULL                |               0 | re-enabling writes |                1 |                      0 | 2023-10-15 12:03:25 | 2023-10-15 12:03:29         |
+|  8 | d72b644f_6b52_11ee_808b_0a43f95f28a3 | customer | -80   | vt_customer  | sample           | create table sample (
+	id int primary key
+)                         | vitess   |         | 2023-10-15 12:03:23 | 2023-10-15 12:03:24 | NULL            | 2023-10-15 12:03:34 | 2023-10-15 12:03:34 | 2023-10-15 12:03:33.701214 | NULL              | complete         |          | _vt_HOLD_dd21768e6b5211ee86cc0a43f95f28a3_20231016120333,   |       0 | zone1-0000000301 |              0 |      100 | vtctl:d7288b41-6b52-11ee-808b-0a43f95f28a3 | create     |         |           0 |           0 |          0 |                 0 |                   0 |          |                    86400 |                   0 |                          |                                 |                       |                                           |                0 |               |       0 |                 1 |                         0 |                   0 |              | NULL                     |                     | NULL                |               0 |                    |                0 |                      1 | 2023-10-15 12:03:25 | 2023-10-15 12:03:25         |
+|  9 | d72d230d_6b52_11ee_808b_0a43f95f28a3 | customer | -80   | vt_customer  | some_other_table | drop table if exists some_other_table                               | vitess   |         | 2023-10-15 12:03:23 | 2023-10-15 12:03:24 | NULL            | 2023-10-15 12:03:35 | 2023-10-15 12:03:35 | 2023-10-15 12:03:34.710280 | NULL              | complete         |          |                                                             |       0 | zone1-0000000301 |              0 |      100 | vtctl:d7288b41-6b52-11ee-808b-0a43f95f28a3 | drop       |         |           0 |           0 |          0 |                 0 |                   0 |          |                    86400 |                   0 |                          |                                 |                       |                                           |                0 |               |       0 |                 1 |                         0 |                   0 |              | NULL                     |                     | NULL                |               0 |                    |                0 |                      1 | 2023-10-15 12:03:25 | 2023-10-15 12:03:25         |
++----+--------------------------------------+----------+-------+--------------+------------------+---------------------------------------------------------------------+----------+---------+---------------------+---------------------+-----------------+---------------------+---------------------+----------------------------+-------------------+------------------+----------+-------------------------------------------------------------+---------+------------------+----------------+----------+--------------------------------------------+------------+---------+-------------+-------------+------------+-------------------+---------------------+----------+--------------------------+---------------------+--------------------------+---------------------------------+-----------------------+-------------------------------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+--------------------+------------------+------------------------+---------------------+-----------------------------+
+```
+```sh
+$ vtctldclient OnlineDDL show customer cancelled --limit 1
++--------------------------------------+----------+-------+--------------+-------------+--------------------------------+----------+---------+---------------------+---------------------+-----------------+-------------------+--------------------+---------------------+-------------------+-----------+----------+-----------+---------+------------------+----------------+----------+--------------------------------------------+------------+---------------------------+-------------+-------------+------------+-------------------+---------------------+----------+----------------------------+---------------------+--------------------------+---------------------------------+-----------------------+------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+-------+------------------+------------------------+--------------------+-----------------------------+
+|            migration_uuid            | keyspace | shard | mysql_schema | mysql_table |      migration_statement       | strategy | options |   added_timestamp   | requested_timestamp | ready_timestamp | started_timestamp | liveness_timestamp | completed_timestamp | cleanup_timestamp |  status   | log_path | artifacts | retries |      tablet      | tablet_failure | progress |             migration_context              | ddl_action |          message          | eta_seconds | rows_copied | table_rows | added_unique_keys | removed_unique_keys | log_file | artifact_retention_seconds | postpone_completion | removed_unique_key_names | dropped_no_default_column_names | expanded_column_names | revertible_notes | allow_concurrent | reverted_uuid | is_view | ready_to_complete | vitess_liveness_indicator | user_throttle_ratio | special_plan | last_throttled_timestamp | component_throttled | cancelled_timestamp | postpone_launch | stage | cutover_attempts | is_immediate_operation | reviewed_timestamp | ready_to_complete_timestamp |
++--------------------------------------+----------+-------+--------------+-------------+--------------------------------+----------+---------+---------------------+---------------------+-----------------+-------------------+--------------------+---------------------+-------------------+-----------+----------+-----------+---------+------------------+----------------+----------+--------------------------------------------+------------+---------------------------+-------------+-------------+------------+-------------------+---------------------+----------+----------------------------+---------------------+--------------------------+---------------------------------+-----------------------+------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+-------+------------------+------------------------+--------------------+-----------------------------+
+| c919678a_6b50_11ee_808b_0a43f95f28a3 | customer |   -80 | vt_customer  | product     | alter table product modify     | vitess   |         | 2023-10-15 11:48:41 | 2023-10-15 11:48:41 |                 |                   |                    | 2023-10-15 12:00:26 |                   | cancelled |          |           |       0 | zone1-0000000301 |                |        0 | vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3 | alter      | CANCEL ALL issued by user |          -1 |           0 |          0 |                 0 |                   0 |          |                      86400 |                     |                          |                                 |                       |                  |                  |               |         |                   |                         0 |                   0 |              |                          |                     |                     |                 |       |                0 |                        |                    |                             |
+|                                      |          |       |              |             | column price bigint unsigned   |          |         |                     |                     |                 |                   |                    |                     |                   |           |          |           |         |                  |                |          |                                            |            |                           |             |             |            |                   |                     |          |                            |                     |                          |                                 |                       |                  |                  |               |         |                   |                           |                     |              |                          |                     |                     |                 |       |                  |                        |                    |                             |
+|                                      |          |       |              |             | default null                   |          |         |                     |                     |                 |                   |                    |                     |                   |           |          |           |         |                  |                |          |                                            |            |                           |             |             |            |                   |                     |          |                            |                     |                          |                                 |                       |                  |                  |               |         |                   |                           |                     |              |                          |                     |                     |                 |       |                  |                        |                    |                             |
+| c919678a_6b50_11ee_808b_0a43f95f28a3 | customer | 80-   | vt_customer  | product     | alter table product modify     | vitess   |         | 2023-10-15 11:48:41 | 2023-10-15 11:48:41 |                 |                   |                    | 2023-10-15 12:00:26 |                   | cancelled |          |           |       0 | zone1-0000000401 |                |        0 | vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3 | alter      | CANCEL ALL issued by user |          -1 |           0 |          0 |                 0 |                   0 |          |                      86400 |                     |                          |                                 |                       |                  |                  |               |         |                   |                         0 |                   0 |              |                          |                     |                     |                 |       |                0 |                        |                    |                             |
+|                                      |          |       |              |             | column price bigint unsigned   |          |         |                     |                     |                 |                   |                    |                     |                   |           |          |           |         |                  |                |          |                                            |            |                           |             |             |            |                   |                     |          |                            |                     |                          |                                 |                       |                  |                  |               |         |                   |                           |                     |              |                          |                     |                     |                 |       |                  |                        |                    |                             |
+|                                      |          |       |              |             | default null                   |          |         |                     |                     |                 |                   |                    |                     |                   |           |          |           |         |                  |                |          |                                            |            |                           |             |             |            |                   |                     |          |                            |                     |                          |                                 |                       |                  |                  |               |         |                   |                           |                     |              |                          |                     |                     |                 |       |                  |                        |                    |                             |
++--------------------------------------+----------+-------+--------------+-------------+--------------------------------+----------+---------+---------------------+---------------------+-----------------+-------------------+--------------------+---------------------+-------------------+-----------+----------+-----------+---------+------------------+----------------+----------+--------------------------------------------+------------+---------------------------+-------------+-------------+------------+-------------------+---------------------+----------+----------------------------+---------------------+--------------------------+---------------------------------+-----------------------+------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+-------+------------------+------------------------+--------------------+-----------------------------+
 ```
 
+Note in the above each migration appears twice. For example, `d729b47e_6b52_11ee_808b_0a43f95f28a3` appears once for shard `-80` and once for shard `80-`. The two migrations run independently on each shard. It is possible to coordinate a near-atomic cut-over, aka [gated cut-over](../advanced-usage/#gated-cut-over).
 - `show vitess_migrations` shows the entire history of migrations.
 - `show vitess_migrations like ...` filters migrations by `migration_uuid`, or `migration_context`, or `migration_status`.
 - `show vitess_migrations where ...` lets the user specify arbitrary conditions.
 - All commands return results for the keyspace (schema) in use.
 
-#### Via vtctlclient/ApplySchema
-
-Examples for a 4-shard cluster:
+#### Via vtctldclient
 
 ```shell
-$ vtctlclient OnlineDDL commerce show ab3ffdd5_f25c_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:24:33 | 2020-09-09 05:24:34 | complete         |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+$ vtctldclient OnlineDDL show customer d729b47e_6b52_11ee_808b_0a43f95f28a3
++--------------------------------------+----------+-------+--------------+-------------+--------------------------------+----------+---------+---------------------+---------------------+-----------------+---------------------+---------------------+---------------------+-------------------+----------+----------+-------------------------------------------------------------+---------+------------------+----------------+----------+--------------------------------------------+------------+---------+-------------+-------------+------------+-------------------+---------------------+----------+----------------------------+---------------------+--------------------------+---------------------------------+-----------------------+--------------------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+--------------------+------------------+------------------------+---------------------+-----------------------------+
+|            migration_uuid            | keyspace | shard | mysql_schema | mysql_table |      migration_statement       | strategy | options |   added_timestamp   | requested_timestamp | ready_timestamp |  started_timestamp  | liveness_timestamp  | completed_timestamp | cleanup_timestamp |  status  | log_path |                          artifacts                          | retries |      tablet      | tablet_failure | progress |             migration_context              | ddl_action | message | eta_seconds | rows_copied | table_rows | added_unique_keys | removed_unique_keys | log_file | artifact_retention_seconds | postpone_completion | removed_unique_key_names | dropped_no_default_column_names | expanded_column_names |        revertible_notes        | allow_concurrent | reverted_uuid | is_view | ready_to_complete | vitess_liveness_indicator | user_throttle_ratio | special_plan | last_throttled_timestamp | component_throttled | cancelled_timestamp | postpone_launch |       stage        | cutover_attempts | is_immediate_operation | reviewed_timestamp  | ready_to_complete_timestamp |
++--------------------------------------+----------+-------+--------------+-------------+--------------------------------+----------+---------+---------------------+---------------------+-----------------+---------------------+---------------------+---------------------+-------------------+----------+----------+-------------------------------------------------------------+---------+------------------+----------------+----------+--------------------------------------------+------------+---------+-------------+-------------+------------+-------------------+---------------------+----------+----------------------------+---------------------+--------------------------+---------------------------------+-----------------------+--------------------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+--------------------+------------------+------------------------+---------------------+-----------------------------+
+| d729b47e_6b52_11ee_808b_0a43f95f28a3 | customer | 80-   | vt_customer  | corder      | alter table corder modify      | vitess   |         | 2023-10-15 12:03:23 | 2023-10-15 12:03:24 |                 | 2023-10-15 12:03:25 | 2023-10-15 12:03:31 | 2023-10-15 12:03:32 |                   | complete |          | _d729b47e_6b52_11ee_808b_0a43f95f28a3_20231015120324_vrepl, |       0 | zone1-0000000401 |                |      100 | vtctl:d7288b41-6b52-11ee-808b-0a43f95f28a3 | alter      |         |           0 |           0 |          0 |                 0 |                   0 |          |                      86400 |                     |                          |                                 | `price`               | column price: increased        |                  |               |         |                   |                1697371408 |                   0 |              |                          |                     |                     |                 | re-enabling writes |                1 |                        | 2023-10-15 12:03:25 | 2023-10-15 12:03:29         |
+|                                      |          |       |              |             | column price bigint unsigned   |          |         |                     |                     |                 |                     |                     |                     |                   |          |          |                                                             |         |                  |                |          |                                            |            |         |             |             |            |                   |                     |          |                            |                     |                          |                                 |                       | NUMERIC_PRECISION              |                  |               |         |                   |                           |                     |              |                          |                     |                     |                 |                    |                  |                        |                     |                             |
+|                                      |          |       |              |             | default null                   |          |         |                     |                     |                 |                     |                     |                     |                   |          |          |                                                             |         |                  |                |          |                                            |            |         |             |             |            |                   |                     |          |                            |                     |                          |                                 |                       |                                |                  |               |         |                   |                           |                     |              |                          |                     |                     |                 |                    |                  |                        |                     |                             |
+| d729b47e_6b52_11ee_808b_0a43f95f28a3 | customer |   -80 | vt_customer  | corder      | alter table corder modify      | vitess   |         | 2023-10-15 12:03:23 | 2023-10-15 12:03:24 |                 | 2023-10-15 12:03:25 | 2023-10-15 12:03:31 | 2023-10-15 12:03:32 |                   | complete |          | _d729b47e_6b52_11ee_808b_0a43f95f28a3_20231015120324_vrepl, |       0 | zone1-0000000301 |                |      100 | vtctl:d7288b41-6b52-11ee-808b-0a43f95f28a3 | alter      |         |           0 |           0 |          0 |                 0 |                   0 |          |                      86400 |                     |                          |                                 | `price`               | column price: increased        |                  |               |         |                   |                1697371408 |                   0 |              |                          |                     |                     |                 | re-enabling writes |                1 |                        | 2023-10-15 12:03:25 | 2023-10-15 12:03:29         |
+|                                      |          |       |              |             | column price bigint unsigned   |          |         |                     |                     |                 |                     |                     |                     |                   |          |          |                                                             |         |                  |                |          |                                            |            |         |             |             |            |                   |                     |          |                            |                     |                          |                                 |                       | NUMERIC_PRECISION              |                  |               |         |                   |                           |                     |              |                          |                     |                     |                 |                    |                  |                        |                     |                             |
+|                                      |          |       |              |             | default null                   |          |         |                     |                     |                 |                     |                     |                     |                   |          |          |                                                             |         |                  |                |          |                                            |            |         |             |             |            |                   |                     |          |                            |                     |                          |                                 |                       |                                |                  |               |         |                   |                           |                     |              |                          |                     |                     |                 |                    |                  |                        |                     |                             |
++--------------------------------------+----------+-------+--------------+-------------+--------------------------------+----------+---------+---------------------+---------------------+-----------------+---------------------+---------------------+---------------------+-------------------+----------+----------+-------------------------------------------------------------+---------+------------------+----------------+----------+--------------------------------------------+------------+---------+-------------+-------------+------------+-------------------+---------------------+----------+----------------------------+---------------------+--------------------------+---------------------------------+-----------------------+--------------------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+--------------------+------------------+------------------------+---------------------+-----------------------------+
 
-$ vtctlclient OnlineDDL commerce show 8a797518_f25c_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | running          |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 | 2020-09-09 05:23:33 | complete         |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | running          |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | running          |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+$ vtctldclient OnlineDDL show commerce recent
++--------------------------------------+----------+-------+--------------+-------------+--------------------------------+----------+---------+---------------------+---------------------+-----------------+---------------------+---------------------+---------------------+-------------------+----------+----------+-------------------------------------------------------------+---------+------------------+----------------+----------+--------------------------------------------+------------+---------+-------------+-------------+------------+-------------------+---------------------+----------+----------------------------+---------------------+--------------------------+---------------------------------+-----------------------+------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+--------------------+------------------+------------------------+---------------------+-----------------------------+
+|            migration_uuid            | keyspace | shard | mysql_schema | mysql_table |      migration_statement       | strategy | options |   added_timestamp   | requested_timestamp | ready_timestamp |  started_timestamp  | liveness_timestamp  | completed_timestamp | cleanup_timestamp |  status  | log_path |                          artifacts                          | retries |      tablet      | tablet_failure | progress |             migration_context              | ddl_action | message | eta_seconds | rows_copied | table_rows | added_unique_keys | removed_unique_keys | log_file | artifact_retention_seconds | postpone_completion | removed_unique_key_names | dropped_no_default_column_names | expanded_column_names | revertible_notes | allow_concurrent | reverted_uuid | is_view | ready_to_complete | vitess_liveness_indicator | user_throttle_ratio | special_plan | last_throttled_timestamp | component_throttled | cancelled_timestamp | postpone_launch |       stage        | cutover_attempts | is_immediate_operation | reviewed_timestamp  | ready_to_complete_timestamp |
++--------------------------------------+----------+-------+--------------+-------------+--------------------------------+----------+---------+---------------------+---------------------+-----------------+---------------------+---------------------+---------------------+-------------------+----------+----------+-------------------------------------------------------------+---------+------------------+----------------+----------+--------------------------------------------+------------+---------+-------------+-------------+------------+-------------------+---------------------+----------+----------------------------+---------------------+--------------------------+---------------------------------+-----------------------+------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+--------------------+------------------+------------------------+---------------------+-----------------------------+
+| c26f3b5e_6b50_11ee_808b_0a43f95f28a3 | commerce |     0 | vt_commerce  | product     | alter table product add column | vitess   |         | 2023-10-15 11:48:29 | 2023-10-15 11:48:30 |                 | 2023-10-15 11:48:31 | 2023-10-15 11:48:37 | 2023-10-15 11:48:38 |                   | complete |          | _c26f3b5e_6b50_11ee_808b_0a43f95f28a3_20231015114830_vrepl, |       0 | zone1-0000000100 |                |      100 | vtctl:c26e658d-6b50-11ee-808b-0a43f95f28a3 | alter      |         |           0 |           0 |          0 |                 0 |                   0 |          |                      86400 |                     |                          |                                 |                       |                  |                  |               |         |                   |                1697370514 |                   0 |              |                          |                     |                     |                 | re-enabling writes |                1 |                        | 2023-10-15 11:48:31 | 2023-10-15 11:48:35         |
+|                                      |          |       |              |             | ts_entry TIMESTAMP not null    |          |         |                     |                     |                 |                     |                     |                     |                   |          |          |                                                             |         |                  |                |          |                                            |            |         |             |             |            |                   |                     |          |                            |                     |                          |                                 |                       |                  |                  |               |         |                   |                           |                     |              |                          |                     |                     |                 |                    |                  |                        |                     |                             |
++--------------------------------------+----------+-------+--------------+-------------+--------------------------------+----------+---------+---------------------+---------------------+-----------------+---------------------+---------------------+---------------------+-------------------+----------+----------+-------------------------------------------------------------+---------+------------------+----------------+----------+--------------------------------------------+------------+---------+-------------+-------------+------------+-------------------+---------------------+----------+----------------------------+---------------------+--------------------------+---------------------------------+-----------------------+------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+--------------------+------------------+------------------------+---------------------+-----------------------------+
 
-$ vtctlclient OnlineDDL commerce show 8a797518_f25c_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 | 2020-09-09 05:23:33 | complete         |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-
-$ vtctlclient OnlineDDL commerce show recent
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 | 2020-09-09 05:23:33 | complete         |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:24:33 | 2020-09-09 05:24:34 | complete         |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-
-$ vtctlclient OnlineDDL --order descending commerce show all
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:24:33 | 2020-09-09 05:24:34 | complete         |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 | 2020-09-09 05:23:33 | complete         |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-
-$ vtctlclient OnlineDDL commerce show failed
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-
-$ vtctlclient OnlineDDL --limit 5 commerce show recent
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 | 2020-09-09 05:23:33 | complete         |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:24:33 | 2020-09-09 05:24:34 | complete         |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-
-$ vtctlclient OnlineDDL --skip 5 --limit 5 commerce show recent
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:25:13 | 2020-09-09 05:25:14 | complete         |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 8a797518_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:23:32 |                     | failed           |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 63b5db0c_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:22:41 | 2020-09-09 05:22:42 | complete         |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | ab3ffdd5_f25c_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 05:24:33 | 2020-09-09 05:24:34 | complete         |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+$ vtctldclient OnlineDDL show customer cancelled --limit 1
++--------------------------------------+----------+-------+--------------+-------------+--------------------------------+----------+---------+---------------------+---------------------+-----------------+-------------------+--------------------+---------------------+-------------------+-----------+----------+-----------+---------+------------------+----------------+----------+--------------------------------------------+------------+---------------------------+-------------+-------------+------------+-------------------+---------------------+----------+----------------------------+---------------------+--------------------------+---------------------------------+-----------------------+------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+-------+------------------+------------------------+--------------------+-----------------------------+
+|            migration_uuid            | keyspace | shard | mysql_schema | mysql_table |      migration_statement       | strategy | options |   added_timestamp   | requested_timestamp | ready_timestamp | started_timestamp | liveness_timestamp | completed_timestamp | cleanup_timestamp |  status   | log_path | artifacts | retries |      tablet      | tablet_failure | progress |             migration_context              | ddl_action |          message          | eta_seconds | rows_copied | table_rows | added_unique_keys | removed_unique_keys | log_file | artifact_retention_seconds | postpone_completion | removed_unique_key_names | dropped_no_default_column_names | expanded_column_names | revertible_notes | allow_concurrent | reverted_uuid | is_view | ready_to_complete | vitess_liveness_indicator | user_throttle_ratio | special_plan | last_throttled_timestamp | component_throttled | cancelled_timestamp | postpone_launch | stage | cutover_attempts | is_immediate_operation | reviewed_timestamp | ready_to_complete_timestamp |
++--------------------------------------+----------+-------+--------------+-------------+--------------------------------+----------+---------+---------------------+---------------------+-----------------+-------------------+--------------------+---------------------+-------------------+-----------+----------+-----------+---------+------------------+----------------+----------+--------------------------------------------+------------+---------------------------+-------------+-------------+------------+-------------------+---------------------+----------+----------------------------+---------------------+--------------------------+---------------------------------+-----------------------+------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+-------+------------------+------------------------+--------------------+-----------------------------+
+| c919678a_6b50_11ee_808b_0a43f95f28a3 | customer |   -80 | vt_customer  | product     | alter table product modify     | vitess   |         | 2023-10-15 11:48:41 | 2023-10-15 11:48:41 |                 |                   |                    | 2023-10-15 12:00:26 |                   | cancelled |          |           |       0 | zone1-0000000301 |                |        0 | vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3 | alter      | CANCEL ALL issued by user |          -1 |           0 |          0 |                 0 |                   0 |          |                      86400 |                     |                          |                                 |                       |                  |                  |               |         |                   |                         0 |                   0 |              |                          |                     |                     |                 |       |                0 |                        |                    |                             |
+|                                      |          |       |              |             | column price bigint unsigned   |          |         |                     |                     |                 |                   |                    |                     |                   |           |          |           |         |                  |                |          |                                            |            |                           |             |             |            |                   |                     |          |                            |                     |                          |                                 |                       |                  |                  |               |         |                   |                           |                     |              |                          |                     |                     |                 |       |                  |                        |                    |                             |
+|                                      |          |       |              |             | default null                   |          |         |                     |                     |                 |                   |                    |                     |                   |           |          |           |         |                  |                |          |                                            |            |                           |             |             |            |                   |                     |          |                            |                     |                          |                                 |                       |                  |                  |               |         |                   |                           |                     |              |                          |                     |                     |                 |       |                  |                        |                    |                             |
+| c919678a_6b50_11ee_808b_0a43f95f28a3 | customer | 80-   | vt_customer  | product     | alter table product modify     | vitess   |         | 2023-10-15 11:48:41 | 2023-10-15 11:48:41 |                 |                   |                    | 2023-10-15 12:00:26 |                   | cancelled |          |           |       0 | zone1-0000000401 |                |        0 | vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3 | alter      | CANCEL ALL issued by user |          -1 |           0 |          0 |                 0 |                   0 |          |                      86400 |                     |                          |                                 |                       |                  |                  |               |         |                   |                         0 |                   0 |              |                          |                     |                     |                 |       |                0 |                        |                    |                             |
+|                                      |          |       |              |             | column price bigint unsigned   |          |         |                     |                     |                 |                   |                    |                     |                   |           |          |           |         |                  |                |          |                                            |            |                           |             |             |            |                   |                     |          |                            |                     |                          |                                 |                       |                  |                  |               |         |                   |                           |                     |              |                          |                     |                     |                 |       |                  |                        |                    |                             |
+|                                      |          |       |              |             | default null                   |          |         |                     |                     |                 |                   |                    |                     |                   |           |          |           |         |                  |                |          |                                            |            |                           |             |             |            |                   |                     |          |                            |                     |                          |                                 |                       |                  |                  |               |         |                   |                           |                     |              |                          |                     |                     |                 |       |                  |                        |                    |                             |
++--------------------------------------+----------+-------+--------------+-------------+--------------------------------+----------+---------+---------------------+---------------------+-----------------+-------------------+--------------------+---------------------+-------------------+-----------+----------+-----------+---------+------------------+----------------+----------+--------------------------------------------+------------+---------------------------+-------------+-------------+------------+-------------------+---------------------+----------+----------------------------+---------------------+--------------------------+---------------------------------+-----------------------+------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+-------+------------------+------------------------+--------------------+-----------------------------+
 ```
 The syntax for tracking migrations is: 
 ```
-vtctlclient OnlineDDL [-json] <keyspace> show <migration_id|all|recent|queued|ready|running|complete|failed|cancelled>
-```
-
-
-
-## Showing migration logs
-
-`gh-ost` and `pt-osc` tools generate logs files, which are retrievable for `24` hours after migration completion/failure.
-
-#### Via VTGate/SQL
-
-```sql
-mysql> show vitess_migration '3a273866_e867_11eb_ab12_0a43f95f28a3' logs \G
-*************************** 1. row ***************************
-migration_log: 2021-07-19 07:59:23 INFO starting gh-ost 261355426d8fc31b590733ca8ff8e79012103c18
-2021-07-19 07:59:23 INFO Migrating `vt_commerce`.`corder`
-2021-07-19 07:59:23 INFO executing gh-ost-on-startup hook: /tmp/online-ddl-3a273866_e867_11eb_ab12_0a43f95f28a3-943208852/gh-ost-on-startup
-ok
-2021-07-19 07:59:23 INFO inspector connection validated on ip-REDACTED:17100
-2021-07-19 07:59:23 INFO User has SUPER, REPLICATION SLAVE privileges, and has ALL privileges on `vt_commerce`.*
-2021-07-19 07:59:23 INFO binary logs validated on ip-REDACTED:17100
-2021-07-19 07:59:23 INFO Restarting replication on ip-REDACTED:17100 to make sure binlog settings apply to replication thread
-2021-07-19 07:59:23 INFO Inspector initiated on ip-REDACTED:17100, version 5.7.30-log
-2021-07-19 07:59:23 INFO Table found. Engine=InnoDB
-...
+vtctldclient OnlineDDL show <keyspace> <all|recent|queued|ready|running|complete|failed|cancelled|<migration uuid>|<migration context>>
 ```
 
 ## Launching a migration
@@ -322,7 +265,7 @@ mysql> alter vitess_migration launch all;
 Query OK, 1 row affected (0.01 sec)
 ```
 
-#### Via vtctlclient/ApplySchema
+#### Via vtctldclient
 
 Launch a specific migration:
 
@@ -360,7 +303,7 @@ mysql> alter vitess_migration complete all;
 Query OK, 1 row affected (0.01 sec)
 ```
 
-#### Via vtctlclient/ApplySchema
+#### Via vtctldclient
 
 Complete a specific migration:
 
@@ -384,91 +327,120 @@ The user may cancel a migration, as follows:
 
 #### Via VTGate/SQL
 
-Examples for a single shard cluster:
-
+In this illustrative flow we also glimpse into some further control over migrations.
 
 ```sql
-                 id: 28
-     migration_uuid: aa89f255_8d68_11eb_815f_f875a4d24e90
-           keyspace: commerce
-              shard: 0
-       mysql_schema: vt_commerce
-        mysql_table: corder
-migration_statement: alter table corder add column handler_id int not null
-           strategy: gh-ost
-            options: 
-    added_timestamp: 2021-03-25 14:50:27
-requested_timestamp: 2021-03-25 14:50:24
-    ready_timestamp: 2021-03-25 14:50:31
-  started_timestamp: 2021-03-25 14:50:32
- liveness_timestamp: 2021-03-25 14:50:32
-completed_timestamp: NULL
-  cleanup_timestamp: NULL
-   migration_status: running
+
+mysql> set @@ddl_strategy='vitess --postpone-completion';
+
+mysql> alter table product engine=innodb;
++--------------------------------------+
+| uuid                                 |
++--------------------------------------+
+| f9e4dbaa_6b54_11ee_b0cf_0a43f95f28a3 |
++--------------------------------------+
+
+mysql> show vitess_migrations like 'f9e4dbaa_6b54_11ee_b0cf_0a43f95f28a3' \G
+*************************** 1. row ***************************
+                             id: 3
+                 migration_uuid: f9e4dbaa_6b54_11ee_b0cf_0a43f95f28a3
+                       keyspace: commerce
+                          shard: 0
+                   mysql_schema: vt_commerce
+                    mysql_table: product
+            migration_statement: alter table product engine innodb
+                       strategy: vitess
+                        options: --postpone-completion
+                added_timestamp: 2023-10-15 12:18:40
+            requested_timestamp: 2023-10-15 12:18:41
+                ready_timestamp: NULL
+              started_timestamp: 2023-10-15 12:18:42
+             liveness_timestamp: 2023-10-15 12:18:52
+            completed_timestamp: NULL
+              cleanup_timestamp: NULL
+               migration_status: running
 ...
 
-mysql> alter vitess_migration 'aa89f255_8d68_11eb_815f_f875a4d24e90' cancel;
-Query OK, 1 row affected (0.01 sec)
 
-mysql> show vitess_migrations like 'aa89f255_8d68_11eb_815f_f875a4d24e90' \G
+mysql> alter vitess_migration 'f9e4dbaa_6b54_11ee_b0cf_0a43f95f28a3' cancel;
+Query OK, 1 row affected (0.04 sec)
+
+mysql> show vitess_migrations like 'f9e4dbaa_6b54_11ee_b0cf_0a43f95f28a3' \G
 *************************** 1. row ***************************
-                 id: 28
-     migration_uuid: aa89f255_8d68_11eb_815f_f875a4d24e90
-           keyspace: commerce
-              shard: 0
-       mysql_schema: vt_commerce
-        mysql_table: corder
-migration_statement: alter table corder add column handler_id int not null
-           strategy: gh-ost
-            options: --throttle-flag-file=/tmp/throttle.flag
-    added_timestamp: 2021-03-25 14:50:27
-requested_timestamp: 2021-03-25 14:50:24
-    ready_timestamp: 2021-03-25 14:50:31
-  started_timestamp: 2021-03-25 14:50:32
- liveness_timestamp: 2021-03-25 14:50:32
-completed_timestamp: NULL
-  cleanup_timestamp: NULL
-   migration_status: cancelled
+                             id: 3
+                 migration_uuid: f9e4dbaa_6b54_11ee_b0cf_0a43f95f28a3
+                       keyspace: commerce
+                          shard: 0
+                   mysql_schema: vt_commerce
+                    mysql_table: product
+            migration_statement: alter table product engine innodb
+                       strategy: vitess
+                        options: --postpone-completion
+                added_timestamp: 2023-10-15 12:18:40
+            requested_timestamp: 2023-10-15 12:18:41
+                ready_timestamp: NULL
+              started_timestamp: 2023-10-15 12:18:42
+             liveness_timestamp: 2023-10-15 12:19:02
+            completed_timestamp: 2023-10-15 12:19:42.347196
+              cleanup_timestamp: NULL
+               migration_status: cancelled
+                       log_path:
+                      artifacts: _f9e4dbaa_6b54_11ee_b0cf_0a43f95f28a3_20231015121841_vrepl,
+                        retries: 0
+                         tablet: zone1-0000000100
+                 tablet_failure: 0
+                       progress: 100
+              migration_context: vtgate:cc06e24a-6b54-11ee-b0cf-0a43f95f28a3
+                     ddl_action: alter
+                        message: CANCEL issued by user
 ...
 ```
 
 - `alter vitess_migration ... cancel` takes exactly one migration's UUID.
-- `alter vitess_migration ... cancel` responds with number of affected migrations.
+- `alter vitess_migration cancel all` takes no arguments and affects all pending migrations.
+- `alter vitess_migration ... cancel` or `alter vitess_migration cancel all` respond with number of affected migrations across all shards.
 
-#### Via vtctlclient/ApplySchema
+#### Via vtctldclient
 
-Examples for a 4-shard cluster:
+Illustrating yet another flow where we can control the progress of migrations:
 
+```sh
+
+$ vtctldclient UpdateThrottlerConfig --enable customer
+
+$ vtctldclient ApplySchema --sql "alter vitess_migration throttle all" customer
+
+$ vtctldclient ApplySchema --ddl-strategy="vitess" --sql "alter table corder engine=innodb" customer
+075088b9_6b56_11ee_808b_0a43f95f28a3
+
+$ vtctldclient OnlineDDL show customer 075088b9_6b56_11ee_808b_0a43f95f28a3
++--------------------------------------+----------+-------+--------------+-------------+--------------------------------+----------+---------+---------------------+---------------------+-----------------+---------------------+---------------------+---------------------+-------------------+---------+----------+-------------------------------------------------------------+---------+------------------+----------------+----------+--------------------------------------------+------------+---------+-------------+-------------+------------+-------------------+---------------------+----------+----------------------------+---------------------+--------------------------+---------------------------------+-----------------------+------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+-------+------------------+------------------------+---------------------+-----------------------------+
+|            migration_uuid            | keyspace | shard | mysql_schema | mysql_table |      migration_statement       | strategy | options |   added_timestamp   | requested_timestamp | ready_timestamp |  started_timestamp  | liveness_timestamp  | completed_timestamp | cleanup_timestamp | status  | log_path |                          artifacts                          | retries |      tablet      | tablet_failure | progress |             migration_context              | ddl_action | message | eta_seconds | rows_copied | table_rows | added_unique_keys | removed_unique_keys | log_file | artifact_retention_seconds | postpone_completion | removed_unique_key_names | dropped_no_default_column_names | expanded_column_names | revertible_notes | allow_concurrent | reverted_uuid | is_view | ready_to_complete | vitess_liveness_indicator | user_throttle_ratio | special_plan | last_throttled_timestamp | component_throttled | cancelled_timestamp | postpone_launch | stage | cutover_attempts | is_immediate_operation | reviewed_timestamp  | ready_to_complete_timestamp |
++--------------------------------------+----------+-------+--------------+-------------+--------------------------------+----------+---------+---------------------+---------------------+-----------------+---------------------+---------------------+---------------------+-------------------+---------+----------+-------------------------------------------------------------+---------+------------------+----------------+----------+--------------------------------------------+------------+---------+-------------+-------------+------------+-------------------+---------------------+----------+----------------------------+---------------------+--------------------------+---------------------------------+-----------------------+------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+-------+------------------+------------------------+---------------------+-----------------------------+
+| 075088b9_6b56_11ee_808b_0a43f95f28a3 | customer |   -80 | vt_customer  | corder      | alter table corder engine      | vitess   |         | 2023-10-15 12:26:12 | 2023-10-15 12:26:13 |                 | 2023-10-15 12:26:14 | 2023-10-15 12:26:23 |                     |                   | running |          | _075088b9_6b56_11ee_808b_0a43f95f28a3_20231015122613_vrepl, |       0 | zone1-0000000301 |                |      100 | vtctl:074f5fd7-6b56-11ee-808b-0a43f95f28a3 | alter      |         |           0 |           0 |          0 |                 0 |                   0 |          |                      86400 |                     |                          |                                 |                       |                  |                  |               |         |                   |                1697372782 |                   1 |              | 2023-10-15 12:26:22      | vcopier             |                     |                 |       |                0 |                        | 2023-10-15 12:26:14 |                             |
+|                                      |          |       |              |             | innodb                         |          |         |                     |                     |                 |                     |                     |                     |                   |         |          |                                                             |         |                  |                |          |                                            |            |         |             |             |            |                   |                     |          |                            |                     |                          |                                 |                       |                  |                  |               |         |                   |                           |                     |              |                          |                     |                     |                 |       |                  |                        |                     |                             |
+| 075088b9_6b56_11ee_808b_0a43f95f28a3 | customer | 80-   | vt_customer  | corder      | alter table corder engine      | vitess   |         | 2023-10-15 12:26:12 | 2023-10-15 12:26:13 |                 | 2023-10-15 12:26:14 | 2023-10-15 12:26:23 |                     |                   | running |          | _075088b9_6b56_11ee_808b_0a43f95f28a3_20231015122613_vrepl, |       0 | zone1-0000000401 |                |      100 | vtctl:074f5fd7-6b56-11ee-808b-0a43f95f28a3 | alter      |         |           0 |           0 |          0 |                 0 |                   0 |          |                      86400 |                     |                          |                                 |                       |                  |                  |               |         |                   |                1697372782 |                   1 |              | 2023-10-15 12:26:22      | vcopier             |                     |                 |       |                0 |                        | 2023-10-15 12:26:14 |                             |
+|                                      |          |       |              |             | innodb                         |          |         |                     |                     |                 |                     |                     |                     |                   |         |          |                                                             |         |                  |                |          |                                            |            |         |             |             |            |                   |                     |          |                            |                     |                          |                                 |                       |                  |                  |               |         |                   |                           |                     |              |                          |                     |                     |                 |       |                  |                        |                     |                             |
++--------------------------------------+----------+-------+--------------+-------------+--------------------------------+----------+---------+---------------------+---------------------+-----------------+---------------------+---------------------+---------------------+-------------------+---------+----------+-------------------------------------------------------------+---------+------------------+----------------+----------+--------------------------------------------+------------+---------+-------------+-------------+------------+-------------------+---------------------+----------+----------------------------+---------------------+--------------------------+---------------------------------+-----------------------+------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+-------+------------------+------------------------+---------------------+-----------------------------+
+
+$ vtctldclient OnlineDDL cancel customer 075088b9_6b56_11ee_808b_0a43f95f28a3
+{
+  "rows_affected_by_shard": {
+    "-80": "1",
+    "80-": "1"
+  }
+}
+
+$ vtctldclient OnlineDDL show customer 075088b9_6b56_11ee_808b_0a43f95f28a3
++--------------------------------------+----------+-------+--------------+-------------+--------------------------------+----------+---------+---------------------+---------------------+-----------------+---------------------+---------------------+---------------------+-------------------+-----------+----------+-------------------------------------------------------------+---------+------------------+----------------+----------+--------------------------------------------+------------+-----------------------+-------------+-------------+------------+-------------------+---------------------+----------+----------------------------+---------------------+--------------------------+---------------------------------+-----------------------+------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+-------+------------------+------------------------+---------------------+-----------------------------+
+|            migration_uuid            | keyspace | shard | mysql_schema | mysql_table |      migration_statement       | strategy | options |   added_timestamp   | requested_timestamp | ready_timestamp |  started_timestamp  | liveness_timestamp  | completed_timestamp | cleanup_timestamp |  status   | log_path |                          artifacts                          | retries |      tablet      | tablet_failure | progress |             migration_context              | ddl_action |        message        | eta_seconds | rows_copied | table_rows | added_unique_keys | removed_unique_keys | log_file | artifact_retention_seconds | postpone_completion | removed_unique_key_names | dropped_no_default_column_names | expanded_column_names | revertible_notes | allow_concurrent | reverted_uuid | is_view | ready_to_complete | vitess_liveness_indicator | user_throttle_ratio | special_plan | last_throttled_timestamp | component_throttled | cancelled_timestamp | postpone_launch | stage | cutover_attempts | is_immediate_operation | reviewed_timestamp  | ready_to_complete_timestamp |
++--------------------------------------+----------+-------+--------------+-------------+--------------------------------+----------+---------+---------------------+---------------------+-----------------+---------------------+---------------------+---------------------+-------------------+-----------+----------+-------------------------------------------------------------+---------+------------------+----------------+----------+--------------------------------------------+------------+-----------------------+-------------+-------------+------------+-------------------+---------------------+----------+----------------------------+---------------------+--------------------------+---------------------------------+-----------------------+------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+-------+------------------+------------------------+---------------------+-----------------------------+
+| 075088b9_6b56_11ee_808b_0a43f95f28a3 | customer |   -80 | vt_customer  | corder      | alter table corder engine      | vitess   |         | 2023-10-15 12:26:12 | 2023-10-15 12:26:13 |                 | 2023-10-15 12:26:14 | 2023-10-15 12:26:34 | 2023-10-15 12:26:54 |                   | cancelled |          | _075088b9_6b56_11ee_808b_0a43f95f28a3_20231015122613_vrepl, |       0 | zone1-0000000301 |                |      100 | vtctl:074f5fd7-6b56-11ee-808b-0a43f95f28a3 | alter      | CANCEL issued by user |           0 |           0 |          0 |                 0 |                   0 |          |                      86400 |                     |                          |                                 |                       |                  |                  |               |         |                   |                1697372793 |                   1 |              | 2023-10-15 12:26:33      | vcopier             |                     |                 |       |                0 |                        | 2023-10-15 12:26:14 |                             |
+|                                      |          |       |              |             | innodb                         |          |         |                     |                     |                 |                     |                     |                     |                   |           |          |                                                             |         |                  |                |          |                                            |            |                       |             |             |            |                   |                     |          |                            |                     |                          |                                 |                       |                  |                  |               |         |                   |                           |                     |              |                          |                     |                     |                 |       |                  |                        |                     |                             |
+| 075088b9_6b56_11ee_808b_0a43f95f28a3 | customer | 80-   | vt_customer  | corder      | alter table corder engine      | vitess   |         | 2023-10-15 12:26:12 | 2023-10-15 12:26:13 |                 | 2023-10-15 12:26:14 | 2023-10-15 12:26:34 | 2023-10-15 12:26:54 |                   | cancelled |          | _075088b9_6b56_11ee_808b_0a43f95f28a3_20231015122613_vrepl, |       0 | zone1-0000000401 |                |      100 | vtctl:074f5fd7-6b56-11ee-808b-0a43f95f28a3 | alter      | CANCEL issued by user |           0 |           0 |          0 |                 0 |                   0 |          |                      86400 |                     |                          |                                 |                       |                  |                  |               |         |                   |                1697372793 |                   1 |              | 2023-10-15 12:26:33      | vcopier             |                     |                 |       |                0 |                        | 2023-10-15 12:26:14 |                             |
+|                                      |          |       |              |             | innodb                         |          |         |                     |                     |                 |                     |                     |                     |                   |           |          |                                                             |         |                  |                |          |                                            |            |                       |             |             |            |                   |                     |          |                            |                     |                          |                                 |                       |                  |                  |               |         |                   |                           |                     |              |                          |                     |                     |                 |       |                  |                        |                     |                             |
++--------------------------------------+----------+-------+--------------+-------------+--------------------------------+----------+---------+---------------------+---------------------+-----------------+---------------------+---------------------+---------------------+-------------------+-----------+----------+-------------------------------------------------------------+---------+------------------+----------------+----------+--------------------------------------------+------------+-----------------------+-------------+-------------+------------+-------------------+---------------------+----------+----------------------------+---------------------+--------------------------+---------------------------------+-----------------------+------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+-------+------------------+------------------------+---------------------+-----------------------------+
 ```
-vtctlclient OnlineDDL <keyspace> cancel <migration_id>
-```
-
-Example:
-
-```shell
-$ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | running          |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | running          |
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | running          |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | running          |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-
-$ vtctlclient OnlineDDL commerce cancel 2201058f_f266_11ea_bab4_0242c0a8b007
-
-$ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | cancelled        |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | cancelled        |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | cancelled        |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | cancelled        |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-```
-
 
 ## Cancelling all keyspace migrations
 
@@ -483,47 +455,21 @@ mysql> alter vitess_migration cancel all;
 Query OK, 1 row affected (0.02 sec)
 ```
 
-#### Via vtctlclient/ApplySchema
-
-Examples for a 4-shard cluster:
-
+#### Via vtctldclient
 
 ```shell
 $ vtctldclient ApplySchema --sql "alter vitess_migration cancel all" commerce
 ```
 
-Also available via `vtctlclient OnlineDDL` command:
+Also available via `vtctldclient OnlineDDL` command:
 
-```
-vtctlclient OnlineDDL <keyspace> cancel all
-```
-
-Example:
-
-```shell
-$ vtctlclient OnlineDDL commerce show all
-+------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
-|      Tablet      | shard | mysql_schema | mysql_table |            migration_uuid            | strategy | started_timestamp | completed_timestamp | migration_status |
-+------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c581994_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | queued           |
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c6420c9_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | queued           |
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c7040df_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | queued           |
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c7c0572_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | queued           |
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c87f7cd_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | queued           |
-+------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
-
-$ vtctlclient OnlineDDL commerce cancel all
-
-$ vtctlclient OnlineDDL commerce show all
-+------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
-|      Tablet      | shard | mysql_schema | mysql_table |            migration_uuid            | strategy | started_timestamp | completed_timestamp | migration_status |
-+------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c581994_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | cancelled        |
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c6420c9_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | cancelled        |
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c7040df_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | cancelled        |
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c7c0572_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | cancelled        |
-| zone1-0000000100 |     0 | vt_commerce  | corder      | 2c87f7cd_353a_11eb_8b72_f875a4d24e90 | online   |                   |                     | cancelled        |
-+------------------+-------+--------------+-------------+--------------------------------------+----------+-------------------+---------------------+------------------+
+```sh
+$ vtctldclient OnlineDDL cancel commerce all
+{
+  "rows_affected_by_shard": {
+    "0": "0"
+  }
+}
 ```
 
 ## Retrying a migration
@@ -534,100 +480,78 @@ It is not possible to retry a migration with different options. e.g. if the user
 
 #### Via VTGate/SQL
 
-Examples for a single shard cluster:
-
 ```sql
+mysql> alter vitess_migration '075088b9_6b56_11ee_808b_0a43f95f28a3' retry;
+Query OK, 2 rows affected (0.01 sec)
+
+mysql> show vitess_migrations like '075088b9_6b56_11ee_808b_0a43f95f28a3' \G
 *************************** 1. row ***************************
-                 id: 28
-     migration_uuid: aa89f255_8d68_11eb_815f_f875a4d24e90
-           keyspace: commerce
-              shard: 0
-       mysql_schema: vt_commerce
-        mysql_table: corder
-migration_statement: alter table corder add column handler_id int not null
-           strategy: gh-ost
-            options: --throttle-flag-file=/tmp/throttle.flag
-    added_timestamp: 2021-03-25 14:50:27
-requested_timestamp: 2021-03-25 14:50:24
-    ready_timestamp: 2021-03-25 14:56:22
-  started_timestamp: 2021-03-25 14:56:22
- liveness_timestamp: 2021-03-25 14:56:22
-completed_timestamp: NULL
-  cleanup_timestamp: NULL
-   migration_status: failed
+                             id: 12
+                 migration_uuid: 075088b9_6b56_11ee_808b_0a43f95f28a3
+                       keyspace: customer
+                          shard: -80
+                   mysql_schema: vt_customer
+                    mysql_table: corder
+            migration_statement: alter table corder engine innodb
+                       strategy: vitess
+                        options:
+                added_timestamp: 2023-10-15 12:26:12
+            requested_timestamp: 2023-10-15 12:26:13
+                ready_timestamp: NULL
+              started_timestamp: 2023-10-15 12:30:09
+             liveness_timestamp: 2023-10-15 12:30:18
+            completed_timestamp: NULL
+              cleanup_timestamp: NULL
+               migration_status: running
 ...
-
-mysql> alter vitess_migration 'aa89f255_8d68_11eb_815f_f875a4d24e90' retry;
-Query OK, 1 row affected (0.00 sec)
-
-mysql> show vitess_migrations like 'aa89f255_8d68_11eb_815f_f875a4d24e90' \G
-*************************** 1. row ***************************
-                 id: 28
-     migration_uuid: aa89f255_8d68_11eb_815f_f875a4d24e90
-           keyspace: commerce
-              shard: 0
-       mysql_schema: vt_commerce
-        mysql_table: corder
-migration_statement: alter table corder add column handler_id int not null
-           strategy: gh-ost
-            options: --throttle-flag-file=/tmp/throttle.flag
-    added_timestamp: 2021-03-25 14:50:27
-requested_timestamp: 2021-03-25 14:50:24
-    ready_timestamp: 2021-03-25 14:56:42
-  started_timestamp: 2021-03-25 14:56:42
- liveness_timestamp: 2021-03-25 14:56:42
-completed_timestamp: NULL
-  cleanup_timestamp: NULL
-   migration_status: running
+*************************** 2. row ***************************
+                             id: 12
+                 migration_uuid: 075088b9_6b56_11ee_808b_0a43f95f28a3
+                       keyspace: customer
+                          shard: 80-
+                   mysql_schema: vt_customer
+                    mysql_table: corder
+            migration_statement: alter table corder engine innodb
+                       strategy: vitess
+                        options:
+                added_timestamp: 2023-10-15 12:26:12
+            requested_timestamp: 2023-10-15 12:26:13
+                ready_timestamp: NULL
+              started_timestamp: 2023-10-15 12:30:09
+             liveness_timestamp: 2023-10-15 12:30:18
+            completed_timestamp: NULL
+              cleanup_timestamp: NULL
+               migration_status: running
 ...
 ```
-- `alter vitess_migration ... retry` takes exactly one migration's UUID.
-- `alter vitess_migration ... retry` responds with number of affected migrations.
 
-#### Via vtctlclient/ApplySchema
+#### Via vtctldclient
 
+The above migrations are running again, but still throttled. By way of illustration, let's cancel and retry them yet again:
 
 ```shell
-$ vtctldclient ApplySchema --sql "alter vitess_migration '2201058f_f266_11ea_bab4_0242c0a8b007' retry" commerce
+$ vtctldclient ApplySchema --sql "alter vitess_migration '075088b9_6b56_11ee_808b_0a43f95f28a3' cancel" customer
+$ vtctldclient ApplySchema --sql "alter vitess_migration '075088b9_6b56_11ee_808b_0a43f95f28a3' retry" customer
 ```
 
-Also available via `vtctlclient OnlineDDL` command:
-
-Examples for a 4-shard cluster:
+Also available via `vtctldclient OnlineDDL` command:
 
 
-```shell
-$ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | failed           |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | failed           |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | failed           |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:32:31 |                     | failed           |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-
-$ vtctlclient OnlineDDL commerce retry 2201058f_f266_11ea_bab4_0242c0a8b007
-
-$ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+-------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy | started_timestamp | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+-------------------+---------------------+------------------+
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   |                   |                     | queued           |
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   |                   |                     | queued           |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   |                   |                     | queued           |
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   |                   |                     | queued           |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+-------------------+---------------------+------------------+
-
-$ vtctlclient OnlineDDL commerce show 2201058f_f266_11ea_bab4_0242c0a8b007
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-|     Tablet      | shard | mysql_schema | mysql_table | ddl_action |            migration_uuid            | strategy |  started_timestamp  | completed_timestamp | migration_status |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
-| test-0000000101 |   -40 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:37:33 |                     | running          |
-| test-0000000401 | c0-   | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:37:33 |                     | running          |
-| test-0000000201 | 40-80 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:37:33 |                     | running          |
-| test-0000000301 | 80-c0 | vt_commerce  | demo        | alter      | 2201058f_f266_11ea_bab4_0242c0a8b007 | online   | 2020-09-09 06:37:33 |                     | running          |
-+-----------------+-------+--------------+-------------+------------+--------------------------------------+----------+---------------------+---------------------+------------------+
+```sh
+$ vtctldclient OnlineDDL cancel customer 075088b9_6b56_11ee_808b_0a43f95f28a3
+{
+  "rows_affected_by_shard": {
+    "-80": "1",
+    "80-": "1"
+  }
+}
+$ vtctldclient OnlineDDL retry customer 075088b9_6b56_11ee_808b_0a43f95f28a3
+{
+  "rows_affected_by_shard": {
+    "-80": "1",
+    "80-": "1"
+  }
+}
 ```
 
 ## Cleaning migration artifacts
@@ -655,20 +579,33 @@ Query OK, 1 row affected (0.00 sec)
 ```
 
 
-#### Via vtctlclient/ApplySchema
+#### Via vtctldclient
 
 Execute via `vtctldclient ApplySchema --sql "..." <keyspace>` like previous commands, or use `OnlineDDL` command:
 
 
 ```shell
-$ vtctlclient OnlineDDL commerce cleanup 2201058f_f266_11ea_bab4_0242c0a8b007
+$ $ vtctldclient OnlineDDL cancel customer all
+{
+  "rows_affected_by_shard": {
+    "-80": "1",
+    "80-": "1"
+  }
+}
+$ vtctldclient OnlineDDL cleanup customer 075088b9_6b56_11ee_808b_0a43f95f28a3
+{
+  "rows_affected_by_shard": {
+    "-80": "1",
+    "80-": "1"
+  }
+}
 ```
 
 ## Reverting a migration
 
 Vitess offers _lossless revert_ for online schema migrations: the user may regret a table migration after completion, and roll back the table's schema to previous state _without loss of data_. See [Revertible Migrations](../revertible-migrations/).
 
-### Via VTGate/SQL
+#### Via VTGate/SQL
 
 Examples for a single shard cluster:
 
@@ -684,6 +621,8 @@ Create Table: CREATE TABLE `corder` (
   PRIMARY KEY (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 1 row in set (0.01 sec)
+
+mysql> set @@ddl_strategy='vitess';
 
 mysql> alter table corder drop column ts, add key customer_idx(customer_id);
 +--------------------------------------+
@@ -725,7 +664,7 @@ Create Table: CREATE TABLE `corder` (
 
 - A `revert` is its own migration, hence has its own UUID
 
-### Via vtctlclient/ApplySchema
+#### Via vtctldclient
 
 ```sh
 $ vtctldclient ApplySchema --ddl-strategy "vitess" --sql "revert vitess_migration '1a689113_8d77_11eb_815f_f875a4d24e90'" commerce
@@ -765,32 +704,31 @@ You may supply either or both these options: `expire`, `ratio`:
 
 It's likely that you will want to throttle migrations in general, and not a specific migration. Use:
 
-- `alter vitess_migration throttle all;` to fully throttle any and all migrations from this point on
-- `alter vitess_migration throttle all expire '90m';` to fully throttle any and all migrations from this point on and for the next `90` minutes.
-- `alter vitess_migration throttle all ratio 0.8;` to severely slow down all migrations from this point on (4 out of 5 migrations requests to the throttler are denied)
-- `alter vitess_migration throttle all duration '10m' ratio 0.2;` to lightly slow down all migrations from this point on (1 out of 5 migrations requests to the throttler are denied) for the next `10` minutes.
+- `alter vitess_migration throttle all` to fully throttle any and all migrations from this point on
+- `alter vitess_migration throttle all expire '90m'` to fully throttle any and all migrations from this point on and for the next `90` minutes.
+- `alter vitess_migration throttle all ratio 0.8` to severely slow down all migrations from this point on (4 out of 5 migrations requests to the throttler are denied)
+- `alter vitess_migration throttle all duration '10m' ratio 0.2` to lightly slow down all migrations from this point on (1 out of 5 migrations requests to the throttler are denied) for the next `10` minutes.
 
 ### Unthrottling
 
 Use:
 
-- `alter vitess_migration 'aa89f255_8d68_11eb_815f_f875a4d24e90' unthrottle;` to allow the specified migration to resume working as normal
-- `alter vitess_migration unthrottle all;` to unthrottle all migrations.
+- `alter vitess_migration 'aa89f255_8d68_11eb_815f_f875a4d24e90' unthrottle` to allow the specified migration to resume working as normal
+- `alter vitess_migration unthrottle all` to unthrottle all migrations.
 
 **Note** that this does not disable throttling altogether. If, for example, replication lag grows on replicas, the throttler may still throttle the migration until replication is caught up. Unthrottling only cancels an explicit throttling request as described above.
 
 ### Showing throttled apps
 
-The command `show vitess_throttled_apps;` is a general purpose throttler command, and shows all apps for which there are throttling rules. It will list any specific or general migration throttling status.
+The command `show vitess_throttled_apps` is a general purpose throttler command, and shows all apps for which there are throttling rules. It will list any specific or general migration throttling status.
 
-### Via vtctlclient/ApplySchema
+#### Via vtctldclient
 
 Execute via `vtctldclient ApplySchema --sql "..." <keyspace>` like previous commands, or use `OnlineDDL` commands:
 
-
 ```shell
-$ vtctlclient OnlineDDL commerce throttle 2201058f_f266_11ea_bab4_0242c0a8b007
-$ vtctlclient OnlineDDL commerce throttle all
-$ vtctlclient OnlineDDL commerce unthrottle 2201058f_f266_11ea_bab4_0242c0a8b007
-$ vtctlclient OnlineDDL commerce unthrottle all
+$ vtctldclient OnlineDDL throttle customer 075088b9_6b56_11ee_808b_0a43f95f28a3
+$ vtctldclient OnlineDDL throttle customer all
+$ vtctldclient OnlineDDL unthrottle customer 075088b9_6b56_11ee_808b_0a43f95f28a3
+$ vtctldclient OnlineDDL unthrottle customer all
 ```

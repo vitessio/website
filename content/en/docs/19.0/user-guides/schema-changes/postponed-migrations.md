@@ -24,11 +24,11 @@ Add `--postpone-launch` to any of the online DDL strategies. Example:
 mysql> set @@ddl_strategy='vitess --postpone-launch';
 
 -- The migration is tracked, but the ALTER process won't start running.
-mysql> alter table mytable add column i int not null;
+mysql> alter table product engine=innodb;
 +--------------------------------------+
 | uuid                                 |
 +--------------------------------------+
-| 9e8a9249_3976_11ed_9442_0a43f95f28a3 |
+| 62cc734d_6b59_11ee_b0cf_0a43f95f28a3 |
 +--------------------------------------+
 ```
 
@@ -36,27 +36,25 @@ Migrations executed with `--postpone-launch` are visible on `show vitess_migrati
 
 
 ```sql
-mysql> show vitess_migrations like '9e8a9249_3976_11ed_9442_0a43f95f28a3' \G
+mysql> show vitess_migrations like '62cc734d_6b59_11ee_b0cf_0a43f95f28a3' \G
 *************************** 1. row ***************************
-                             id: 3
-                 migration_uuid: 9e8a9249_3976_11ed_9442_0a43f95f28a3
+                             id: 4
+                 migration_uuid: 62cc734d_6b59_11ee_b0cf_0a43f95f28a3
                        keyspace: commerce
                           shard: 0
                    mysql_schema: vt_commerce
-                    mysql_table: mytable
-            migration_statement: alter table mytable add column i int not null
+                    mysql_table: product
+            migration_statement: alter table product engine innodb
                        strategy: vitess
                         options: --postpone-launch
-                added_timestamp: 2022-09-21 06:28:34
-            requested_timestamp: 2022-09-21 06:28:34
+                added_timestamp: 2023-10-15 12:50:14
+            requested_timestamp: 2023-10-15 12:50:15
                 ready_timestamp: NULL
               started_timestamp: NULL
              liveness_timestamp: NULL
             completed_timestamp: NULL
               cleanup_timestamp: NULL
                migration_status: queued
-                            ...
-                postpone_launch: 1
 ```
 
 ### Use case
@@ -95,11 +93,23 @@ mysql> alter vitess_migration launch all;
 
 Launches all currently postponed migrations on all shards.
 
-It is also possible to use `vtctlclient OnlineDDL` commands:
+It is also possible to use `vtctldclient OnlineDDL` commands:
 
 ```shell
-$ vtctlclient OnlineDDL commerce launch 2201058f_f266_11ea_bab4_0242c0a8b007
-$ vtctlclient OnlineDDL commerce launch all
+$ vtctldclient OnlineDDL launch commerce 62cc734d_6b59_11ee_b0cf_0a43f95f28a3
+{
+  "rows_affected_by_shard": {
+    "0": "1"
+  }
+}
+
+# No migration left to launch:
+$ vtctldclient OnlineDDL launch commerce all
+{
+  "rows_affected_by_shard": {
+    "0": "0"
+  }
+}
 ```
 
 Postponed launch is supported for all migrations.
@@ -172,8 +182,7 @@ mysql> show vitess_migrations like 'a1dac193_4b86_11ec_a827_0a43f95f28a3' \G
 ```
 
 ```sql
--- The migration is tracked, will start running when scheduler chooses, but will not cut-over
--- to replace the table with the new schema
+-- The migration is tracked, will start running when scheduler chooses, but will not cut-over.
 mysql> alter table another_table add column ts timestamp not null;
 +--------------------------------------+
 | uuid                                 |
@@ -256,11 +265,23 @@ mysql> show vitess_migrations like '3091ef2a_4b87_11ec_a827_0a43f95f28a3' \G
 ```
 
 
-It is also possible to use `vtctlclient OnlineDDL` commands:
+It is also possible to use `vtctldclient OnlineDDL` commands:
 
 ```shell
-$ vtctlclient OnlineDDL commerce complete 2201058f_f266_11ea_bab4_0242c0a8b007
-$ vtctlclient OnlineDDL commerce complete all
+$ vtctldclient OnlineDDL complete commerce 2201058f_f266_11ea_bab4_0242c0a8b007
+{
+  "rows_affected_by_shard": {
+    "0": "1"
+  }
+}
+
+# No migration left whose completion is still postponed:
+$ vtctldclient OnlineDDL complete commerce all
+{
+  "rows_affected_by_shard": {
+    "0": "0"
+  }
+}
 ```
 
 ### Supported migrations
