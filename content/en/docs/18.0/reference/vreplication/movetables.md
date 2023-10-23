@@ -144,6 +144,10 @@ from a specific point of time
 
 Comma seperated list of Cell(s) and/or CellAlias(es) to replicate from.
 
+{{< info >}}
+You can alternatively specify `--all-cells` if you want to replicate from source tablets in any existing cell (the local cell of the target tablet will be preferred).
+{{< /info >}}
+
 </div>
 
 ###### Uses
