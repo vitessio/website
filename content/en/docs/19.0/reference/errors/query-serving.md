@@ -65,7 +65,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09015 | This query cannot be planned without more information on the SQL schema. Please turn on schema tracking or add authoritative columns information to your VSchema. | schema tracking required | 0 |  |
 | VT09016 | SET DEFAULT is not supported by InnoDB | Cannot delete or update a parent row: a foreign key constraint fails | 1451 | 23000 |
 | VT09017 | Invalid syntax for the statement type. | %s | 0 |  |
-| VT09017 | Invalid syntax for the vindex function statement. | %s | 0 |  |
+| VT09018 | Invalid syntax for the vindex function statement. | %s | 0 |  |
 | VT10001 | Foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/. | foreign key constraints are not allowed | 0 |  |
 | VT12001 | This statement is unsupported by Vitess. Please rewrite your query to use supported syntax. | unsupported: %s | 0 |  |
 | VT12002 | Vitess does not support cross shard foreign keys. | unsupported: cross-shard foreign keys | 0 |  |
