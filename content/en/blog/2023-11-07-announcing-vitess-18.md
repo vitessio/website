@@ -16,7 +16,7 @@ Vitess 18 is now Generally Available, with a number of new enhancements designed
 In the past, foreign keys had to be managed outside Vitess. This was a significant blocker for adoption.
 We are now able to support Vitess-managed foreign keys within the same shard. 
 This includes the ability to import data into Vitess from an existing MySQL database with foreign keys. 
-We plan to extend foreign key support to cross-shard relationships in the next release.
+We plan to extend foreign key support to cross-shard relationships in a future release.
 
 ### General Compatibility
 
