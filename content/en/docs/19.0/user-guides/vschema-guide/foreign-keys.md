@@ -35,6 +35,7 @@ For more details on what operations Vitess performs for each type of DML, please
 - Currently, Vitess only supports shard-scoped foreign key constraints even in the `managed` mode. Support for cross-shard foreign keys is planned for a future release.
 - `UPDATE` statements only support updating to a literal value. For example, `UPDATE t1 SET col1 = 3 WHERE id = col + 1` is accepted, but `UPDATE t1 SET col1 = col + 3` is not.
 - [OnlineDDL](../../schema-changes/managed-online-schema-changes/) doesn't work well with tables that have foreign key constraints on them.
+- Some query syntaxes like `REPLACE INTO` and `INSERT INTO ... ON DUPLICATE KEY UPDATE` aren't supported.
 
 ### Vitess Disallows Foreign Keys
 
