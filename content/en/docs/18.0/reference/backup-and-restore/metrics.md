@@ -44,9 +44,11 @@ Vtbackup exports some metrics which are not available elsewhere.
 
 #### DurationByPhaseSeconds
 
-Vtbackup fetches the last backup, restores it to an empty mysql installation, replicates recent changes into that installation, and then takes a backup of that installation.
+Deprecated. See next section.
 
-_DurationByPhaseSeconds_ exports timings for these individual phases.
+#### Phase
+
+_Phase_ a binary-valued gauge that reports the currently active phase.
 
 #### PhaseStatus
 
@@ -98,6 +100,12 @@ Vtbackup emits status metrics for its phases of execution. `PhaseStatus` reports
     "CatchUpReplication": 1,
     "TakeNewBackup": 4
   },
+  "Phase": {
+    "InitialBackup": 0,
+    "RestoreLastBackup": 0,
+    "CatchupReplication": 0,
+    "TakeNewBackup": 0
+  },
   "RestoreBytes": {
     "BackupEngine.Builtin.Source:Read": 1095,
     "BackupEngine.Builtin.Decompressor:Read": 950,
@@ -132,6 +140,6 @@ Vtbackup emits status metrics for its phases of execution. `PhaseStatus` reports
 Some notes to help understand these metrics:
 
  * `BackupBytes["BackupStorage.File.File:Write"]` measures how many bytes were read from disk by the `file` Backup Storage implementation during the backup phase.
- * `DurationByPhaseSeconds["CatchUpReplication"]` measures how long it took to catch-up replication after the restore phase.
- * `DurationByPhaseSeconds["RestoreLastBackup"]` measures to the duration of the restore phase.
- * `RestoreDurationNanoseconds["-.-.Restore"]` also measures to the duration of the restore phase.
+  * `Phase["CatchupReplication"]` reports whether the catch-up replication phase is active (1) or not (0).
+  * `Phase["RestoreLastBackup"]` reports whether the restore last backup phase is active (1) or not (0).
+  * `RestoreDurationNanoseconds["-.-.Restore"]` also measures to the duration of the restore phase.
