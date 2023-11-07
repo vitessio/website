@@ -62,7 +62,7 @@ cells should be used to pick a tablet for selecting data from the source keyspac
 
 #### --tablet-types 
 **optional**\
-**default** `--vreplication_tablet_type` parameter value for the tablet. `--vreplication_tablet_type` has the default value of "in_order:REPLICA,PRIMARY".\
+**default** "in_order:REPLICA,PRIMARY"\
 **string**
 
 <div class="cmd">
