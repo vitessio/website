@@ -68,6 +68,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09017 | Invalid syntax for the statement type. | %s | 0 |  |
 | VT09018 | Invalid syntax for the vindex function statement. | %s | 0 |  |
 | VT10001 | Foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/. | foreign key constraints are not allowed | 0 |  |
+| VT10002 | Foreign key constraints sometimes are not written in binary logs and will cause issue with vreplication workflows like online-ddl. | 'replace into' with foreign key constraints are not allowed | 0 |  |
 | VT12001 | This statement is unsupported by Vitess. Please rewrite your query to use supported syntax. | unsupported: %s | 0 |  |
 | VT12002 | Vitess does not support cross shard foreign keys. | unsupported: cross-shard foreign keys | 0 |  |
 | VT13001 | This error should not happen and is a bug. Please file an issue on GitHub: https://github.com/vitessio/vitess/issues/new/choose. | [BUG] %s | 0 |  |
