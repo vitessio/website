@@ -67,6 +67,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09016 | SET DEFAULT is not supported by InnoDB | Cannot delete or update a parent row: a foreign key constraint fails | 1451 | 23000 |
 | VT09017 | Invalid syntax for the statement type. | %s | 0 |  |
 | VT09018 | Invalid syntax for the vindex function statement. | %s | 0 |  |
+| VT09019 | Vitess doesn't support cyclic foreign keys. | keyspace '%s' has cyclic foreign keys | 0 |  |
 | VT10001 | Foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/. | foreign key constraints are not allowed | 0 |  |
 | VT10002 | Foreign key constraints sometimes are not written in binary logs and will cause issue with vreplication workflows like online-ddl. | 'replace into' with foreign key constraints are not allowed | 0 |  |
 | VT12001 | This statement is unsupported by Vitess. Please rewrite your query to use supported syntax. | unsupported: %s | 0 |  |
