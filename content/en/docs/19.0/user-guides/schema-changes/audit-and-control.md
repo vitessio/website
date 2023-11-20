@@ -317,6 +317,78 @@ Or complete all:
 $ vtctldclient ApplySchema --sql "alter vitess_migration complete all" commerce
 ```
 
+Also available via `vtctldclient OnlineDDL` command:
+
+```sh
+$ vtctldclient OnlineDDL complete commerce 9e8a9249_3976_11ed_9442_0a43f95f28a3
+{
+  "rows_affected_by_shard": {
+    "0": "0"
+  }
+}
+```
+
+## Forcing a migration cut-over
+
+Applicable to `ALTER TABLE` migrations in `vitess` strategy and on MySQL `8.0`. The final step of the migration, the cut-over, involves acquiring locks on the migrated table. This operation can time out when the table is otherwise locked by the user or the app, in which case Vitess retries it later on, until successful. On very busy workloads, or in workloads where the app holds long running transactions locking the table, the migration may never be able to complete.
+
+The user may instruct Vitess to force the upcoming cut-over(s) of a specific migration, or of all pending migrations. When Vitess cuts-over such a migration, it searches for, and `KILL`s all queries still pending on the mgirated table, as well as all transactions that are holding locks on the table (by `KILL`ing their connections). This has a high likelihood to succeed and to allow the cut-over process to pass. If the cut-over still fails, then Vitess retries it later on, and keeps on `KILL`ing queries and connections on each such attempt.
+
+Notes:
+
+- The command merely marks the migration for forced cut-over.
+- Actual cut-over expected to take place within a few seconds of issuing this command.
+- Normally, migration cut-over intervals have an increasing backoff intervals. Once marked for forced cut-over, the migration ignores any such intervals and attempts at the earliest opportunity.
+- It is possible to mark a migration for forced cut-over even before it completes, or before it even starts. The migration will still run normally until the point of cut-over, at which time it will attempt `KILL`ing queries and transactions.
+- Not to be confused with `COMPLETE` command, above. This command does not compelte a `--postpone-completion` migration.
+
+See also `--force-cut-over-after=<duration>` [DDL strategy flag](../ddl-strategy-flags).
+
+#### Via VTGate/SQL
+
+```sql
+mysql> alter vitess_migration 'aa89f255_8d68_11eb_815f_f875a4d24e90' force_cutover;
+Query OK, 1 row affected (0.01 sec)
+```
+
+or
+
+```sql
+mysql> alter vitess_migration force_cutover all;
+Query OK, 1 row affected (0.01 sec)
+```
+
+#### Via vtctldclient
+
+Mark a specific migration for forced cut-over:
+
+```shell
+$ vtctldclient ApplySchema --sql "alter vitess_migration '9e8a9249_3976_11ed_9442_0a43f95f28a3' force_cutover" commerce
+```
+
+Or mark all pending migrations:
+
+```shell
+$ vtctldclient ApplySchema --sql "alter vitess_migration force_cutover all" commerce
+```
+
+Also available via `vtctldclient OnlineDDL` command:
+
+```sh
+$ vtctldclient OnlineDDL force_cutover commerce 9e8a9249_3976_11ed_9442_0a43f95f28a3
+{
+  "rows_affected_by_shard": {
+    "0": "1"
+  }
+}
+$ vtctldclient OnlineDDL force_cutover commerce all
+{
+  "rows_affected_by_shard": {
+    "0": "4"
+  }
+}
+```
+
 ## Cancelling a migration
 
 The user may cancel a migration, as follows:
