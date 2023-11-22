@@ -43,7 +43,7 @@ sudo systemctl disable etcd
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 ```
 
-Ensure the following is in your bashrc/zshrc or similar. `nvm` automatically attempts adds these there:
+Ensure the following is in your bashrc/zshrc or similar. `nvm` automatically attempts to add them:
 ```
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
