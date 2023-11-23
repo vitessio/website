@@ -26,7 +26,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT03011 | The given value type is not accepted. | invalid value type: %v | 0 |  |
 | VT03012 | The syntax is invalid. Please refer to the MySQL documentation for the proper syntax. | invalid syntax: %s | 0 |  |
 | VT03013 | This table or alias name is already use. Please use another one that is unique. | not unique table/alias: '%s' | 1066 | 42000 |
-| VT03014 | The given column is unknown. | unknown column '%d' in '%s' | 1054 | 42S22 |
+| VT03014 | The given column is unknown. | unknown column '%s' in '%s' | 1054 | 42S22 |
 | VT03015 | Cannot assign multiple values to a column in an update statement. | column has duplicate set values: '%v' | 0 |  |
 | VT03016 | The given column is unknown in the vindex table. | unknown vindex column: '%s' | 0 |  |
 | VT03017 | This vstream where clause can only be a greater than filter. | where clause can only be of the type 'pos > <value>' | 1149 | 42000 |
@@ -39,6 +39,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT03024 | The query cannot be prepared using the user defined variable as it does not exists for this session. | '%s' user defined variable does not exists | 0 |  |
 | VT03025 | The execute statement have wrong number of arguments | Incorrect arguments to %s | 1210 | HY000 |
 | VT03024 | The query cannot be executed as missing the bind variable. | '%s' bind variable does not exists | 0 |  |
+| VT03027 | The column cannot have null value. | Column '%s' cannot be null | 1048 | 23000 |
 | VT05001 | The given database does not exist; Vitess cannot drop it. | cannot drop database '%s'; database does not exists | 1008 | HY000 |
 | VT05002 | The given database does not exist; Vitess cannot alter it. | cannot alter database '%s'; unknown database | 1049 | 42000 |
 | VT05003 | The given database does not exist in the VSchema. | unknown database '%s' in vschema | 1049 | 42000 |
@@ -66,8 +67,9 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09016 | SET DEFAULT is not supported by InnoDB | Cannot delete or update a parent row: a foreign key constraint fails | 1451 | 23000 |
 | VT09017 | Invalid syntax for the statement type. | %s | 0 |  |
 | VT09018 | Invalid syntax for the vindex function statement. | %s | 0 |  |
-| VT09019 | Vitess doesn't support cyclic foreign keys. | %s has cyclic foreign keys | 0 |  |
+| VT09019 | Vitess doesn't support cyclic foreign keys. | keyspace '%s' has cyclic foreign keys | 0 |  |
 | VT10001 | Foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/. | foreign key constraints are not allowed | 0 |  |
+| VT10002 | Foreign key constraints sometimes are not written in binary logs and will cause issue with vreplication workflows like online-ddl. | 'replace into' with foreign key constraints are not allowed | 0 |  |
 | VT12001 | This statement is unsupported by Vitess. Please rewrite your query to use supported syntax. | unsupported: %s | 0 |  |
 | VT12002 | Vitess does not support cross shard foreign keys. | unsupported: cross-shard foreign keys | 0 |  |
 | VT13001 | This error should not happen and is a bug. Please file an issue on GitHub: https://github.com/vitessio/vitess/issues/new/choose. | [BUG] %s | 0 |  |
