@@ -36,6 +36,29 @@ sudo systemctl disable mysql
 sudo systemctl disable etcd
 ```
 
+
+## Install Node
+
+```
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+```
+
+Ensure the following is in your bashrc/zshrc or similar. `nvm` automatically attempts to add them:
+```
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+```
+
+Finally, install [node](https://nodejs.org/):
+
+```
+nvm install 18
+nvm use 18
+```
+
+See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
+
 ## Disable AppArmor or SELinux
 
 AppArmor/SELinux will not allow Vitess to launch MySQL in any data directory by default. You will need to disable it:
@@ -58,15 +81,15 @@ sudo setenforce 0
 
 ## Install Vitess
 
-Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux. For example with Vitess 17:
+Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux. For example with Vitess 18:
 
 **Notes:**
 
 * Ubuntu is the only fully supported OS, for another OS please [build Vitess by yourself](/docs/contributing) or use the Docker images.
 
 ```sh
-version=19.0.0
-file=vitess-${version}-70a9466.tar.gz
+version=18.0.1
+file=vitess-${version}-aa72dc8.tar.gz
 wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
 tar -xzf ${file}
 cd ${file/.tar.gz/}
