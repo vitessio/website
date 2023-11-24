@@ -91,6 +91,7 @@ Here is a list of all the system variables that are handled by Vitess and how th
 | sql_select_limit                        | VitessAware    |
 | transaction_mode                        | VitessAware    |
 | ddl_strategy                            | VitessAware    |
+| foreign_key_checks                      | VitessAware    |
 | workload                                | VitessAware    |
 | charset                                 | VitessAware    |
 | names                                   | VitessAware    |
@@ -171,7 +172,6 @@ Here is a list of all the system variables that are handled by Vitess and how th
 | end_markers_in_json                     | ReservedConn   |
 | eq_range_index_dive_limit               | ReservedConn   |
 | explicit_defaults_for_timestamp         | ReservedConn   |
-| foreign_key_checks                      | ReservedConn   |
 | group_concat_max_len                    | ReservedConn   |
 | information_schema_stats_expiry         | ReservedConn   |
 | max_heap_table_size                     | ReservedConn   |
