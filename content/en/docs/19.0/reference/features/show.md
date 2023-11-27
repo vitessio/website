@@ -73,6 +73,17 @@ Example Output:
 +-------+----------+-------+------------+---------+------------------+------------+----------------------+
 ```
 
+* `SHOW VSCHEMA KEYSPACES` -- Information about Vschema information for all the keyspaces including the foreign key mode, whether the keyspace is sharded, and if there is an error in the VSchema for the keyspace.
+```shell
+Example Output:
++----------+---------+-------------+---------+
+| Keyspace | Sharded | Foreign Key | Comment |
++----------+---------+-------------+---------+
+| ks       | true    | managed     |         |
+| uks      | false   | managed     |         |
++----------+---------+-------------+---------+
+```
+
 * `SHOW VSCHEMA TABLES` -- A list of tables available in the current keyspace's vschema.
 ```shell
 Example Output for customer keyspace:
