@@ -375,13 +375,13 @@ $ vtctldclient ApplySchema --sql "alter vitess_migration force_cutover all" comm
 Also available via `vtctldclient OnlineDDL` command:
 
 ```sh
-$ vtctldclient OnlineDDL force_cutover commerce 9e8a9249_3976_11ed_9442_0a43f95f28a3
+$ vtctldclient OnlineDDL force-cutover commerce 9e8a9249_3976_11ed_9442_0a43f95f28a3
 {
   "rows_affected_by_shard": {
     "0": "1"
   }
 }
-$ vtctldclient OnlineDDL force_cutover commerce all
+$ vtctldclient OnlineDDL force-cutover commerce all
 {
   "rows_affected_by_shard": {
     "0": "4"
