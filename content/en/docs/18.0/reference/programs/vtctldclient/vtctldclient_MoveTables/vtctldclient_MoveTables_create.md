@@ -1,7 +1,7 @@
 ---
 title: MoveTables create
 series: vtctldclient
-commit: fe3121946231107b737e319b680c9686396b9ce1
+commit: 9a6f5262f7707ff80ce85c111d2ff686d85d29cc
 ---
 ## vtctldclient MoveTables create
 
@@ -20,6 +20,7 @@ vtctldclient --server localhost:15999 movetables --workflow commerce2customer --
 ### Options
 
 ```
+  -a, --all-cells                          Copy table data from any existing cell.
       --all-tables                         Copy all tables from the source.
       --atomic-copy                        (EXPERIMENTAL) A single copy phase is run for all tables from the source. Use this, for example, if your source keyspace has tables which use foreign key constraints.
       --auto-start                         Start the workflow after creating it. (default true)

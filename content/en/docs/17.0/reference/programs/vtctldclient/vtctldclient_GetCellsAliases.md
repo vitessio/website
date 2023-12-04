@@ -1,6 +1,7 @@
 ---
 title: GetCellsAliases
 series: vtctldclient
+commit: 9a3d0f4a69a840cfa2cb86654abd4afa0be6e0aa
 ---
 ## vtctldclient GetCellsAliases
 

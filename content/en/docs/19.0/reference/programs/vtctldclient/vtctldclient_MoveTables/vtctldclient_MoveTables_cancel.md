@@ -1,7 +1,7 @@
 ---
 title: MoveTables cancel
 series: vtctldclient
-commit: 0f751fbb7c64ca5280c5d4f58d038e1df5477c67
+commit: cd9693c40a7965e7aebaf8c749e9742c6dca0729
 ---
 ## vtctldclient MoveTables cancel
 
@@ -28,12 +28,15 @@ vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration   timeout to use for the command (default 1h0m0s)
-      --compact                   use compact format for otherwise verbose outputs
-      --format string             The format of the output; supported formats are: text,json. (default "text")
-      --server string             server to use for the connection (required)
-      --target-keyspace string    Target keyspace for this workflow.
-  -w, --workflow string           The workflow you want to perform the command on.
+      --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --compact                              use compact format for otherwise verbose outputs
+      --format string                        The format of the output; supported formats are: text,json. (default "text")
+      --server string                        server to use for the connection (required)
+      --target-keyspace string               Target keyspace for this workflow.
+      --topo-global-root string              the path of the global topology data in the global topology server (default "/vitess/global")
+      --topo-global-server-address strings   the address of the global topology server(s) (default [localhost:2379])
+      --topo-implementation string           the topology implementation to use (default "etcd2")
+  -w, --workflow string                      The workflow you want to perform the command on.
 ```
 
 ### SEE ALSO

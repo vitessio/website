@@ -1,7 +1,7 @@
 ---
 title: GetShardRoutingRules
 series: vtctldclient
-commit: fe3121946231107b737e319b680c9686396b9ce1
+commit: 9a6f5262f7707ff80ce85c111d2ff686d85d29cc
 ---
 ## vtctldclient GetShardRoutingRules
 

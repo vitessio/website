@@ -1,7 +1,7 @@
 ---
 title: Mount register
 series: vtctldclient
-commit: fe3121946231107b737e319b680c9686396b9ce1
+commit: 9a6f5262f7707ff80ce85c111d2ff686d85d29cc
 ---
 ## vtctldclient Mount register
 
@@ -14,13 +14,14 @@ vtctldclient Mount register
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 mount register --topo-type etcd2 --topo-server localhost:12379 --topo-root /vitess/global ext1
+vtctldclient --server localhost:15999 mount register --name ext1 --topo-type etcd2 --topo-server localhost:12379 --topo-root /vitess/global
 ```
 
 ### Options
 
 ```
   -h, --help                 help for register
+      --name string          Name to use for the mount.
       --topo-root string     Topo server root path.
       --topo-server string   Topo server address.
       --topo-type string     Topo server implementation to use.

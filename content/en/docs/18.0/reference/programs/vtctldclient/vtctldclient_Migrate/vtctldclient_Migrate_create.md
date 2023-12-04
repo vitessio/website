@@ -1,7 +1,7 @@
 ---
 title: Migrate create
 series: vtctldclient
-commit: fe3121946231107b737e319b680c9686396b9ce1
+commit: 9a6f5262f7707ff80ce85c111d2ff686d85d29cc
 ---
 ## vtctldclient Migrate create
 
@@ -20,6 +20,7 @@ vtctldclient --server localhost:15999 migrate --workflow import --target-keyspac
 ### Options
 
 ```
+  -a, --all-cells                          Copy table data from any existing cell.
       --all-tables                         Copy all tables from the source.
       --auto-start                         Start the workflow after creating it. (default true)
   -c, --cells strings                      Cells and/or CellAliases to copy table data from.
