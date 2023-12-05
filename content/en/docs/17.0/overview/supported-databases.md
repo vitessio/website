@@ -14,7 +14,7 @@ Vitess supports the core features of MySQL versions 5.7 to 8.0, with [some limit
 
 {{< info >}}For new Vitess installations, MySQL or Percona Server for MySQL version 8 are recommended.  {{< /info >}}
 
-{{< info >}} MySQL version 5.7 is EOL in v19 and users should upgrade to MySQL 8 before upgrading to Vitess v19. {{< /info >}}
+{{< warning >}} MySQL version 5.7 is EOL in v19 and users should upgrade to MySQL 8 before upgrading to Vitess v19. {{< /warning >}}
 
 ## See also
 
