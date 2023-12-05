@@ -20,7 +20,7 @@ Vitess supports importing from a wide range of databases that include -
 
 - [MySQL](https://www.mysql.com/) version 5.7 to 8.0
 - [Percona Server for MySQL](https://www.percona.com/software/mysql-database/percona-server) version 5.7 to 8.0
-- [MariaDB](https://mariadb.com)
+- [MariaDB](https://mariadb.com) versions 10.10+
 
 ## See also
 
