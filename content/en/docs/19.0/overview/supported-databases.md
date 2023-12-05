@@ -10,9 +10,9 @@ Vitess deploys, scales and manages clusters of open-source SQL database instance
 
 The [VTGate](../../concepts/vtgate/) proxy server advertises its version as MySQL 8.0.
 
-### MySQL versions 8.0
+### MySQL 8.0
 
-Vitess supports the core features of MySQL versions 8.0, with [some limitations](../../reference/compatibility/mysql-compatibility/). Vitess also supports [Percona Server for MySQL](https://www.percona.com/software/mysql-database/percona-server) versions 8.0.
+Vitess supports the core features of MySQL 8.0, with [some limitations](../../reference/compatibility/mysql-compatibility/). Vitess also supports [Percona Server for MySQL](https://www.percona.com/software/mysql-database/percona-server) 8.0.
 
 ## Supported Databases For Imports
 
