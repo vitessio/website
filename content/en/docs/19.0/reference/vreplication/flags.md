@@ -180,11 +180,15 @@ Stop automatically retrying when we've had consecutive failures with the same er
 #### vreplication_experimental_flags
 
 **Type** bitmask\
-**Default** 0\
+**Default** 3 (VReplicationExperimentalFlagOptimizeInserts | VReplicationExperimentalFlagAllowNoBlobBinlogRowImage)\
 **Applicable on** target
 
-Features that are not field-tested, that are not backward-compatible, or need to be proven in production environments are put behind _vreplication_experimental_flags_. These features are temporary and will either be made permanent, removed, or put behind a separate vttablet option. Currently, the only experimental features are expected to be performance improvements.
+Features that are not yet adequately field-tested, that are not backward-compatible, or need to be proven in production environments are put behind _vreplication_experimental_flags_. These features are temporary and will either be made permanent, removed, or put behind a separate vttablet option. Currently, the only experimental features are expected to be performance improvements.
 
-This will be a bit-mask for each such feature. The ones currently defined:
+This will be a bitmask for each such feature. The ones currently defined:
 
-bitmask: *0x1* => If set then we optimize the catchup phase by not sending inserts for rows that are outside the range of primary keys already copied. More details at https://github.com/vitessio/vitess/pull/7708
+* bitmask: _0x1_ => If set then we optimize the catchup phase by not sending inserts for rows that are outside the range of primary keys already copied. For more details see: https://github.com/vitessio/vitess/pull/7708
+
+* bitmask: _0x2_ => If set then we support MySQL's [`binlog_row_image=NOBLOB`](https://dev.mysql.com/doc/refman/en/replication-options-binary-log.html#sysvar_binlog_row_image) option. For more details see: https://github.com/vitessio/vitess/pull/12905
+
+* bitmask: _0x4_ => If set then we optimize the replay of events during the running phase by batching statements and transactions in order to limit the number of queries and thus round-trips to MySQL. For more details see: https://github.com/vitessio/vitess/pull/14502
