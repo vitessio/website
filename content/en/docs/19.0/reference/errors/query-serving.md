@@ -42,6 +42,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT03027 | The column cannot have null value. | Column '%s' cannot be null | 1048 | 23000 |
 | VT03028 | The column cannot have null value. | Column '%s' cannot be null on row %d, col %d | 1048 | 23000 |
 | VT03029 | The number of columns you want to insert do not match the number of columns of your SELECT query. | column count does not match value count with the row for vindex '%s' | 1136 | 21S01 |
+| VT03030 | The number of columns you want to insert do not match the number of columns of your SELECT query. | lookup column count does not match value count with the row (columns, count): (%v, %d) | 1136 | 21S01 |
 | VT05001 | The given database does not exist; Vitess cannot drop it. | cannot drop database '%s'; database does not exists | 1008 | HY000 |
 | VT05002 | The given database does not exist; Vitess cannot alter it. | cannot alter database '%s'; unknown database | 1049 | 42000 |
 | VT05003 | The given database does not exist in the VSchema. | unknown database '%s' in vschema | 1049 | 42000 |
