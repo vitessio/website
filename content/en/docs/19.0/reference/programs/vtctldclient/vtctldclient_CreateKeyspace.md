@@ -1,7 +1,7 @@
 ---
 title: CreateKeyspace
 series: vtctldclient
-commit: cd9693c40a7965e7aebaf8c749e9742c6dca0729
+commit: 3b58bee089a76fdb1f9d452787e40f10e34f034d
 ---
 ## vtctldclient CreateKeyspace
 
@@ -21,15 +21,14 @@ vtctldclient CreateKeyspace <keyspace> [--force|-f] [--type KEYSPACE_TYPE] [--ba
 ### Options
 
 ```
-  -e, --allow-empty-vschema              Allows a new keyspace to have no vschema.
-      --base-keyspace string             The base keyspace for a snapshot keyspace.
-      --durability-policy string         Type of durability to enforce for this keyspace. Default is none. Possible values include 'semi_sync' and others as dictated by registered plugins. (default "none")
-  -f, --force                            Proceeds even if the keyspace already exists. Does not overwrite the existing keyspace record.
-  -h, --help                             help for CreateKeyspace
-      --served-from cli.StringMapValue   Specifies a set of db_type:keyspace pairs used to serve traffic for the keyspace.
-      --sidecar-db-name string           (Experimental) Name of the Vitess sidecar database that tablets in this keyspace will use for internal metadata. (default "_vt")
-      --snapshot-timestamp string        The snapshot time for a snapshot keyspace, as a timestamp in RFC3339 format.
-      --type cli.KeyspaceTypeFlag        The type of the keyspace. (default NORMAL)
+  -e, --allow-empty-vschema         Allows a new keyspace to have no vschema.
+      --base-keyspace string        The base keyspace for a snapshot keyspace.
+      --durability-policy string    Type of durability to enforce for this keyspace. Default is none. Possible values include 'semi_sync' and others as dictated by registered plugins. (default "none")
+  -f, --force                       Proceeds even if the keyspace already exists. Does not overwrite the existing keyspace record.
+  -h, --help                        help for CreateKeyspace
+      --sidecar-db-name string      (Experimental) Name of the Vitess sidecar database that tablets in this keyspace will use for internal metadata. (default "_vt")
+      --snapshot-timestamp string   The snapshot time for a snapshot keyspace, as a timestamp in RFC3339 format.
+      --type cli.KeyspaceTypeFlag   The type of the keyspace. (default NORMAL)
 ```
 
 ### Options inherited from parent commands

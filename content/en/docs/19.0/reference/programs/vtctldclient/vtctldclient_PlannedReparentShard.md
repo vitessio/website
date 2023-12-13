@@ -1,7 +1,7 @@
 ---
 title: PlannedReparentShard
 series: vtctldclient
-commit: cd9693c40a7965e7aebaf8c749e9742c6dca0729
+commit: 3b58bee089a76fdb1f9d452787e40f10e34f034d
 ---
 ## vtctldclient PlannedReparentShard
 
@@ -14,10 +14,11 @@ vtctldclient PlannedReparentShard <keyspace/shard>
 ### Options
 
 ```
-      --avoid-primary string             Alias of a tablet that should not be the primary; i.e. "reparent to any other tablet if this one is the primary".
-  -h, --help                             help for PlannedReparentShard
-      --new-primary string               Alias of a tablet that should be the new primary.
-      --wait-replicas-timeout duration   Time to wait for replicas to catch up on replication both before and after reparenting. (default 15s)
+      --avoid-primary string                 Alias of a tablet that should not be the primary; i.e. "reparent to any other tablet if this one is the primary".
+  -h, --help                                 help for PlannedReparentShard
+      --new-primary string                   Alias of a tablet that should be the new primary.
+      --tolerable-replication-lag duration   Amount of replication lag that is considered acceptable for a tablet to be eligible for promotion when Vitess makes the choice of a new primary.
+      --wait-replicas-timeout duration       Time to wait for replicas to catch up on replication both before and after reparenting. (default 15s)
 ```
 
 ### Options inherited from parent commands

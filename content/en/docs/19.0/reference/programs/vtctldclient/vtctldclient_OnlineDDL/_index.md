@@ -1,7 +1,7 @@
 ---
 title: OnlineDDL
 series: vtctldclient
-commit: cd9693c40a7965e7aebaf8c749e9742c6dca0729
+commit: 3b58bee089a76fdb1f9d452787e40f10e34f034d
 ---
 ## vtctldclient OnlineDDL
 
@@ -30,6 +30,7 @@ Operates on online DDL (schema migrations).
 * [vtctldclient OnlineDDL cancel](./vtctldclient_onlineddl_cancel/)	 - Cancel one or all migrations, terminating any running ones as needed.
 * [vtctldclient OnlineDDL cleanup](./vtctldclient_onlineddl_cleanup/)	 - Mark a given schema migration ready for artifact cleanup.
 * [vtctldclient OnlineDDL complete](./vtctldclient_onlineddl_complete/)	 - Complete one or all migrations executed with --postpone-completion
+* [vtctldclient OnlineDDL force-cutover](./vtctldclient_onlineddl_force-cutover/)	 - Mark a given schema migration, or all pending migrations, for forced cut over.
 * [vtctldclient OnlineDDL launch](./vtctldclient_onlineddl_launch/)	 - Launch one or all migrations executed with --postpone-launch
 * [vtctldclient OnlineDDL retry](./vtctldclient_onlineddl_retry/)	 - Mark a given schema migration for retry.
 * [vtctldclient OnlineDDL show](./vtctldclient_onlineddl_show/)	 - Display information about online DDL operations.

@@ -1,7 +1,7 @@
 ---
 title: LookupVindex externalize
 series: vtctldclient
-commit: cd9693c40a7965e7aebaf8c749e9742c6dca0729
+commit: 3b58bee089a76fdb1f9d452787e40f10e34f034d
 ---
 ## vtctldclient LookupVindex externalize
 

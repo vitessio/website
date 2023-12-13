@@ -1,20 +1,26 @@
 ---
-title: GetSrvKeyspaceNames
+title: OnlineDDL force-cutover
 series: vtctldclient
 commit: 3b58bee089a76fdb1f9d452787e40f10e34f034d
 ---
-## vtctldclient GetSrvKeyspaceNames
+## vtctldclient OnlineDDL force-cutover
 
-Outputs a JSON mapping of cell=>keyspace names served in that cell. Omit to query all cells.
+Mark a given schema migration, or all pending migrations, for forced cut over.
 
 ```
-vtctldclient GetSrvKeyspaceNames [<cell> ...]
+vtctldclient OnlineDDL force-cutover <keyspace> <uuid|all>
+```
+
+### Examples
+
+```
+OnlineDDL force-cutover test_keyspace 82fa54ac_e83e_11ea_96b7_f875a4d24e90
 ```
 
 ### Options
 
 ```
-  -h, --help   help for GetSrvKeyspaceNames
+  -h, --help   help for force-cutover
 ```
 
 ### Options inherited from parent commands
@@ -30,5 +36,5 @@ vtctldclient GetSrvKeyspaceNames [<cell> ...]
 
 ### SEE ALSO
 
-* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
+* [vtctldclient OnlineDDL](../)	 - Operates on online DDL (schema migrations).
 
