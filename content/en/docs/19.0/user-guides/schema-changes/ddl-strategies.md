@@ -65,17 +65,19 @@ Different strategies have different behavior for `ALTER` statements. Sections be
 
 The `vitess` strategy invokes Vitess's built in [VReplication](../../../reference/vreplication/vreplication/) mechanism. It is the mechanism behind resharding, materialized views, imports from external databases, and more. VReplication migrations use the same logic for copying data as do other VReplication operations, and as such the `vitess` strategy is known to be compatible with overall Vitess behavior. VReplication is authored by the maintainers of Vitess.
 
-VReplication migrations enjoy the general features of VReplication:
+`vitess` migrations enjoy the general features of VReplication:
 
 - Seamless integration with Vitess.
 - Seamless use of the throttler mechanism.
 - Visibility into internal working and status of VReplication.
 - Agnostic to planned reparenting and to unplanned failovers. A migration will resume from point of interruption shortly after a new primary is available.
 
-VReplication migrations further:
+`vitess` migrations further:
 
 - Are [revertible](../revertible-migrations): you may switch back to the pre-migration schema without losing any data accumulated during and post migration.
 - Support a wider range of schema changes. For example, while `gh-ost` has a strict requirement for a shared unique key pre/post migration, `vitess` migrations may work with different keys, making it possible to modify a table's `PRIMARY KEY` without having to rely on an additional `UNIQUE KEY`.
+- Support cut-over backoff: should a cut-over fail due to timeout, next cut-overs take place at increasing intervals and up to `30min` intevals, so as to not overwhelm production traffic.
+- Support forced cut-over, to prioritise completion of the migration over any queries using the mgirated table, or over any transactions holding locks on the table.
 
 ### gh-ost
 
@@ -168,21 +170,23 @@ The embedded `gh-ost` binary will be removed in future versions. The user will n
 
 ## Vitess functionality comparison
 
-| Strategy | Managed | Online | Trackable | Declarative | Revertible          | Recoverable |
-|----------|---------|--------|-----------|-------------|---------------------|-------------|
-| `direct` | No      | MySQL* | No        | No          | No                  | No          |
-| `mysql`  | Yes     | MySQL* | Yes       | Yes         | No                  | No          |
-| `pt-osc` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP`       | No*         |
-| `gh-ost` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP`       | No*         |
-| `vitess` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP,ALTER` | Yes         |
+| Strategy | Managed | Online | Trackable | Declarative | Revertible          | Recoverable | Backoff |
+|----------|---------|--------|-----------|-------------|---------------------|-------------|---------|
+| `direct` | No      | MySQL* | No        | No          | No                  | No          | No      |
+| `mysql`  | Yes     | MySQL* | Yes       | Yes         | No                  | No          | No      |
+| `pt-osc` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP`       | No*         | No      |
+| `gh-ost` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP`       | No*         | No      |
+| `vitess` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP,ALTER` | Yes         | Yes     |
 
 - **Managed**: whether Vitess schedules and operates the migration
 - **Online**:
   - MySQL supports limited online (`INPLACE`) DDL as well as `INSTANT` DDL. See [support chart](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html). `INSTANT` DDL is instant on both primary and replicas. `INPLACE` is non-blocking on parent but serialized on replicas, causing replication lag. Otherwise migrations are blocking on both primary and replicas.
-  - `gh-ost`, `vitess` do not support foreign keys
+  - `gh-ost` does not support foreign keys
   - `pt-osc` has support for foreign keys (may apply collateral blocking operations)
+  - `vitess` supports foreign keys on a [patched MySQL server](https://github.com/planetscale/mysql-server/commit/bb777e3e86387571c044fb4a2beb4f8c60462ced) and with `--unsafe-allow-foreign-keys` DDL strategy flag.
 - **Trackable**: able to determine migration state (`ready`, `running`, `complete` etc)
   - `vitess` and `gh-ost` strategies also makes available _progress %_ and _ETA seconds_
 - **Declarative**: support `--declarative` flag
 - **Revertible**: `vitess` strategy supports [revertible](../revertible-migrations/) `ALTER` statements (or `ALTER`s implied by `--declarative` migrations). All managed strategies supports revertible `CREATE` and `DROP`.
 - **Recoverable**: a `vitess` migration interrupted by planned/unplanned failover, [automatically resumes](../recoverable-migrations/) work from point of interruption. `gh-ost` and `pt-osc` will not resume after failover, but Vitess will automatically retry the migration (by marking the migration as failed and by initiating a `RETRY`), exactly once for any migration.
+- **Backoff**: if the final cut-over step times out due to heavy traffic or locks on the migrated table, Vitess retries it in increasing intervals up to `30min` apart, so as not to further overwhelm production traffic.

@@ -1,7 +1,7 @@
 ---
 title: Reshard create
 series: vtctldclient
-commit: 0f751fbb7c64ca5280c5d4f58d038e1df5477c67
+commit: 3b58bee089a76fdb1f9d452787e40f10e34f034d
 ---
 ## vtctldclient Reshard create
 
@@ -20,6 +20,7 @@ vtctldclient --server localhost:15999 reshard --workflow customer2customer --tar
 ### Options
 
 ```
+  -a, --all-cells                          Copy table data from any existing cell.
       --auto-start                         Start the workflow after creating it. (default true)
   -c, --cells strings                      Cells and/or CellAliases to copy table data from.
       --defer-secondary-keys               Defer secondary index creation for a table until after it has been copied.
@@ -36,12 +37,15 @@ vtctldclient --server localhost:15999 reshard --workflow customer2customer --tar
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration   timeout to use for the command (default 1h0m0s)
-      --compact                   use compact format for otherwise verbose outputs
-      --format string             The format of the output; supported formats are: text,json. (default "text")
-      --server string             server to use for the connection (required)
-      --target-keyspace string    Target keyspace for this workflow.
-  -w, --workflow string           The workflow you want to perform the command on.
+      --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --compact                              use compact format for otherwise verbose outputs
+      --format string                        The format of the output; supported formats are: text,json. (default "text")
+      --server string                        server to use for the connection (required)
+      --target-keyspace string               Target keyspace for this workflow.
+      --topo-global-root string              the path of the global topology data in the global topology server (default "/vitess/global")
+      --topo-global-server-address strings   the address of the global topology server(s) (default [localhost:2379])
+      --topo-implementation string           the topology implementation to use (default "etcd2")
+  -w, --workflow string                      The workflow you want to perform the command on.
 ```
 
 ### SEE ALSO

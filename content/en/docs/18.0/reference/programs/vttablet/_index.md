@@ -1,7 +1,7 @@
 ---
 title: vttablet
 series: vttablet
-commit: 6ab165ade925b35a00cf447827d874eba13998b6
+commit: 9a6f5262f7707ff80ce85c111d2ff686d85d29cc
 ---
 ## vttablet
 
@@ -100,7 +100,7 @@ vttablet \
       --config-file string                                               Full path of the config file (with extension) to use. If set, --config-path, --config-type, and --config-name are ignored.
       --config-file-not-found-handling ConfigFileNotFoundHandling        Behavior when a config file is not found. (Options: error, exit, ignore, warn) (default warn)
       --config-name string                                               Name of the config file (without extension) to search for. (default "vtconfig")
-      --config-path strings                                              Paths to search for config files in. (default [$WORKDIR])
+      --config-path strings                                              Paths to search for config files in. (default [<WORKDIR>])
       --config-persistence-min-interval duration                         minimum interval between persisting dynamic config changes back to disk (if no change has occurred, nothing is done). (default 1s)
       --config-type string                                               Config file type (omit to infer config type from file extension).
       --consolidator-stream-query-size int                               Configure the stream consolidator query size in bytes. Setting to 0 disables the stream consolidator. (default 2097152)
