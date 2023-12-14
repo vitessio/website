@@ -1,7 +1,7 @@
 ---
 title: vtorc
 series: vtorc
-commit: c823b86a19bfeb9a6a411a75caf492464caf697e
+commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
 ---
 ## vtorc
 
@@ -99,6 +99,7 @@ vtorc \
       --tablet_manager_grpc_key string                              the key to use to connect
       --tablet_manager_grpc_server_name string                      the server name to use to validate server certificate
       --tablet_manager_protocol string                              Protocol to use to make tabletmanager RPCs to vttablets. (default "grpc")
+      --tolerable-replication-lag duration                          Amount of replication lag that is considered acceptable for a tablet to be eligible for promotion when Vitess makes the choice of a new primary in PRS
       --topo-information-refresh-duration duration                  Timer duration on which VTOrc refreshes the keyspace and vttablet records from the topology server (default 15s)
       --topo_consul_lock_delay duration                             LockDelay for consul session. (default 15s)
       --topo_consul_lock_session_checks string                      List of checks for consul session. (default "serfHealth")

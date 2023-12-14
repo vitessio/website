@@ -1,7 +1,7 @@
 ---
 title: vttestserver
 series: vttestserver
-commit: c823b86a19bfeb9a6a411a75caf492464caf697e
+commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
 ---
 ## vttestserver
 
@@ -150,6 +150,7 @@ vttestserver [flags]
   -v, --version                                                          print binary version
       --vmodule vModuleFlag                                              comma-separated list of pattern=N settings for file-filtered logging
       --vschema_ddl_authorized_users string                              Comma separated list of users authorized to execute vschema ddl operations via vtgate
+      --vtcombo-bind-host string                                         which host to bind vtcombo servenv listener to (default "localhost")
       --vtctl_client_protocol string                                     Protocol to use to talk to the vtctl server. (default "grpc")
       --vtctld_grpc_ca string                                            the server ca to use to validate servers when connecting
       --vtctld_grpc_cert string                                          the cert to use to connect

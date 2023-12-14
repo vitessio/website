@@ -1,7 +1,7 @@
 ---
 title: vtbackup
 series: vtbackup
-commit: c823b86a19bfeb9a6a411a75caf492464caf697e
+commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
 ---
 ## vtbackup
 
@@ -188,6 +188,7 @@ vtbackup [flags]
       --mycnf_slow_log_path string                                  mysql slow query log path
       --mycnf_socket_file string                                    mysql socket file
       --mycnf_tmp_dir string                                        mysql tmp directory
+      --mysql-shutdown-timeout duration                             how long to wait for mysqld shutdown (default 5m0s)
       --mysql_port int                                              mysql port (default 3306)
       --mysql_server_version string                                 MySQL server version to advertise. (default "8.0.30-Vitess")
       --mysql_socket string                                         path to the mysql socket

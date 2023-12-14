@@ -1,7 +1,7 @@
 ---
 title: ApplySchema
 series: vtctldclient
-commit: c823b86a19bfeb9a6a411a75caf492464caf697e
+commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
 ---
 ## vtctldclient ApplySchema
 
@@ -30,7 +30,6 @@ vtctldclient ApplySchema [--ddl-strategy <strategy>] [--uuid <uuid> ...] [--migr
 ### Options
 
 ```
-      --allow-long-unavailability        Deprecated and has no effect.
       --batch-size int                   How many queries to batch together. Only applicable when all queries are CREATE TABLE|VIEW
       --caller-id string                 Effective caller ID used for the operation and should map to an ACL name which grants this identity the necessary permissions to perform the operation (this is only necessary when strict table ACLs are used).
       --ddl-strategy string              Online DDL strategy, compatible with @@ddl_strategy session variable (examples: 'gh-ost', 'pt-osc', 'gh-ost --max-load=Threads_running=100'. (default "direct")
@@ -45,9 +44,12 @@ vtctldclient ApplySchema [--ddl-strategy <strategy>] [--uuid <uuid> ...] [--migr
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration   timeout to use for the command (default 1h0m0s)
-      --compact                   use compact format for otherwise verbose outputs
-      --server string             server to use for the connection (required)
+      --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --compact                              use compact format for otherwise verbose outputs
+      --server string                        server to use for the connection (required)
+      --topo-global-root string              the path of the global topology data in the global topology server (default "/vitess/global")
+      --topo-global-server-address strings   the address of the global topology server(s) (default [localhost:2379])
+      --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
 ### SEE ALSO

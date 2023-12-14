@@ -1,7 +1,7 @@
 ---
 title: mysqlctld
 series: mysqlctld
-commit: c823b86a19bfeb9a6a411a75caf492464caf697e
+commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
 ---
 ## mysqlctld
 
@@ -127,6 +127,7 @@ mysqlctld \
       --replication_connect_retry duration                               how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s)
       --security_policy string                                           the name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only)
       --service_map strings                                              comma separated list of services to enable (or disable if prefixed with '-') Example: grpc-queryservice
+      --shutdown-wait-time duration                                      How long to wait for mysqld shutdown (default 5m0s)
       --socket_file string                                               Local unix socket file to listen on
       --stderrthreshold severityFlag                                     logs at or above this threshold go to stderr (default 1)
       --table-refresh-interval int                                       interval in milliseconds to refresh tables in status page with refreshRequired class
@@ -135,6 +136,6 @@ mysqlctld \
       --v Level                                                          log level for V logs
   -v, --version                                                          print binary version
       --vmodule vModuleFlag                                              comma-separated list of pattern=N settings for file-filtered logging
-      --wait_time duration                                               How long to wait for mysqld startup or shutdown (default 5m0s)
+      --wait_time duration                                               How long to wait for mysqld startup (default 5m0s)
 ```
 

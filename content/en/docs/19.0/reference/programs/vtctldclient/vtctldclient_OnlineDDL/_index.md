@@ -1,7 +1,7 @@
 ---
 title: OnlineDDL
 series: vtctldclient
-commit: c823b86a19bfeb9a6a411a75caf492464caf697e
+commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
 ---
 ## vtctldclient OnlineDDL
 
@@ -16,9 +16,12 @@ Operates on online DDL (schema migrations).
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration   timeout to use for the command (default 1h0m0s)
-      --compact                   use compact format for otherwise verbose outputs
-      --server string             server to use for the connection (required)
+      --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --compact                              use compact format for otherwise verbose outputs
+      --server string                        server to use for the connection (required)
+      --topo-global-root string              the path of the global topology data in the global topology server (default "/vitess/global")
+      --topo-global-server-address strings   the address of the global topology server(s) (default [localhost:2379])
+      --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
 ### SEE ALSO
@@ -27,6 +30,7 @@ Operates on online DDL (schema migrations).
 * [vtctldclient OnlineDDL cancel](./vtctldclient_onlineddl_cancel/)	 - Cancel one or all migrations, terminating any running ones as needed.
 * [vtctldclient OnlineDDL cleanup](./vtctldclient_onlineddl_cleanup/)	 - Mark a given schema migration ready for artifact cleanup.
 * [vtctldclient OnlineDDL complete](./vtctldclient_onlineddl_complete/)	 - Complete one or all migrations executed with --postpone-completion
+* [vtctldclient OnlineDDL force-cutover](./vtctldclient_onlineddl_force-cutover/)	 - Mark a given schema migration, or all pending migrations, for forced cut over.
 * [vtctldclient OnlineDDL launch](./vtctldclient_onlineddl_launch/)	 - Launch one or all migrations executed with --postpone-launch
 * [vtctldclient OnlineDDL retry](./vtctldclient_onlineddl_retry/)	 - Mark a given schema migration for retry.
 * [vtctldclient OnlineDDL show](./vtctldclient_onlineddl_show/)	 - Display information about online DDL operations.
