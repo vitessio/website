@@ -1,7 +1,7 @@
 ---
 title: vtbackup
 series: vtbackup
-commit: e73ce917ed97a6a8586cd3647cb2f498fe908a0e
+commit: c823b86a19bfeb9a6a411a75caf492464caf697e
 ---
 ## vtbackup
 
@@ -81,7 +81,7 @@ vtbackup [flags]
       --config-file string                                          Full path of the config file (with extension) to use. If set, --config-path, --config-type, and --config-name are ignored.
       --config-file-not-found-handling ConfigFileNotFoundHandling   Behavior when a config file is not found. (Options: error, exit, ignore, warn) (default warn)
       --config-name string                                          Name of the config file (without extension) to search for. (default "vtconfig")
-      --config-path strings                                         Paths to search for config files in. (default [$WORKDIR])
+      --config-path strings                                         Paths to search for config files in. (default [<WORKDIR>])
       --config-persistence-min-interval duration                    minimum interval between persisting dynamic config changes back to disk (if no change has occurred, nothing is done). (default 1s)
       --config-type string                                          Config file type (omit to infer config type from file extension).
       --consul_auth_static_file string                              JSON File to read the topos/tokens from.
@@ -161,7 +161,7 @@ vtbackup [flags]
       --keep_logs duration                                          keep logs for this long (using ctime) (zero to keep forever)
       --keep_logs_by_mtime duration                                 keep logs for this long (using mtime) (zero to keep forever)
       --lock-timeout duration                                       Maximum time for which a shard/keyspace lock can be acquired for (default 45s)
-      --log_backtrace_at traceLocation                              when logging hits line file:N, emit a stack trace (default :0)
+      --log_backtrace_at traceLocations                             when logging hits line file:N, emit a stack trace
       --log_dir string                                              If non-empty, write log files in this directory
       --log_err_stacks                                              log stack traces for errors
       --log_rotate_max_size uint                                    size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
@@ -215,7 +215,7 @@ vtbackup [flags]
       --stats_common_tags strings                                   Comma-separated list of common tags for the stats backend. It provides both label and values. Example: label1:value1,label2:value2
       --stats_drop_variables string                                 Variables to be dropped from the list of exported variables.
       --stats_emit_period duration                                  Interval between emitting stats to all registered backends (default 1m0s)
-      --stderrthreshold severity                                    logs at or above this threshold go to stderr (default 1)
+      --stderrthreshold severityFlag                                logs at or above this threshold go to stderr (default 1)
       --tablet_manager_grpc_ca string                               the server ca to use to validate servers when connecting
       --tablet_manager_grpc_cert string                             the cert to use to connect
       --tablet_manager_grpc_concurrency int                         concurrency to use to talk to a vttablet server for performance-sensitive RPCs (like ExecuteFetchAs{Dba,AllPrivs,App}) (default 8)
@@ -244,7 +244,7 @@ vtbackup [flags]
       --upgrade-safe                                                Whether to use innodb_fast_shutdown=0 for the backup so it is safe to use for MySQL upgrades.
       --v Level                                                     log level for V logs
   -v, --version                                                     print binary version
-      --vmodule moduleSpec                                          comma-separated list of pattern=N settings for file-filtered logging
+      --vmodule vModuleFlag                                         comma-separated list of pattern=N settings for file-filtered logging
       --xbstream_restore_flags string                               Flags to pass to xbstream command during restore. These should be space separated and will be added to the end of the command. These need to match the ones used for backup e.g. --compress / --decompress, --encrypt / --decrypt
       --xtrabackup_backup_flags string                              Flags to pass to backup command. These should be space separated and will be added to the end of the command
       --xtrabackup_prepare_flags string                             Flags to pass to prepare command. These should be space separated and will be added to the end of the command

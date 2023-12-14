@@ -1,19 +1,11 @@
 ---
 title: vtctldclient
 series: vtctldclient
-commit: 3b58bee089a76fdb1f9d452787e40f10e34f034d
+commit: c823b86a19bfeb9a6a411a75caf492464caf697e
 ---
 ## vtctldclient
 
 Executes a cluster management command on the remote vtctld server.
-
-### Synopsis
-
-Executes a cluster management command on the remote vtctld server.
-If there are no running vtctld servers -- for example when bootstrapping
-a new Vitess cluster -- you can specify a --server value of 'internal'.
-When doing so, you would use the --topo* flags so that the client can
-connect directly to the topo server(s).
 
 ```
 vtctldclient [flags]
@@ -22,13 +14,10 @@ vtctldclient [flags]
 ### Options
 
 ```
-      --action_timeout duration              timeout to use for the command (default 1h0m0s)
-      --compact                              use compact format for otherwise verbose outputs
-  -h, --help                                 help for vtctldclient
-      --server string                        server to use for the connection (required)
-      --topo-global-root string              the path of the global topology data in the global topology server (default "/vitess/global")
-      --topo-global-server-address strings   the address of the global topology server(s) (default [localhost:2379])
-      --topo-implementation string           the topology implementation to use (default "etcd2")
+      --action_timeout duration   timeout to use for the command (default 1h0m0s)
+      --compact                   use compact format for otherwise verbose outputs
+  -h, --help                      help for vtctldclient
+      --server string             server to use for the connection (required)
 ```
 
 ### SEE ALSO

@@ -1,7 +1,7 @@
 ---
 title: VDiff create
 series: vtctldclient
-commit: 3b58bee089a76fdb1f9d452787e40f10e34f034d
+commit: c823b86a19bfeb9a6a411a75caf492464caf697e
 ---
 ## vtctldclient VDiff create
 
@@ -27,7 +27,6 @@ vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --targe
   -h, --help                                      help for create
       --limit uint32                              Max rows to stop comparing after. (default 4294967295)
       --max-extra-rows-to-compare uint32          If there are collation differences between the source and target, you can have rows that are identical but simply returned in a different order from MySQL. We will do a second pass to compare the rows for any actual differences in this case and this flag allows you to control the resources used for this operation. (default 1000)
-      --max-report-sample-rows uint32             Maximum number of row differences to report (0 for all differences). NOTE: when increasing this value it is highly recommended to also specify --only-pks (default 10)
       --only-pks                                  When reporting missing rows, only show primary keys in the report.
       --source-cells strings                      The source cell(s) to compare from; default is any available cell.
       --tables strings                            Only run vdiff for these tables in the workflow.
@@ -42,15 +41,12 @@ vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --targe
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration              timeout to use for the command (default 1h0m0s)
-      --compact                              use compact format for otherwise verbose outputs
-      --format string                        The format of the output; supported formats are: text,json. (default "text")
-      --server string                        server to use for the connection (required)
-      --target-keyspace string               Target keyspace for this workflow.
-      --topo-global-root string              the path of the global topology data in the global topology server (default "/vitess/global")
-      --topo-global-server-address strings   the address of the global topology server(s) (default [localhost:2379])
-      --topo-implementation string           the topology implementation to use (default "etcd2")
-  -w, --workflow string                      The workflow you want to perform the command on.
+      --action_timeout duration   timeout to use for the command (default 1h0m0s)
+      --compact                   use compact format for otherwise verbose outputs
+      --format string             The format of the output; supported formats are: text,json. (default "text")
+      --server string             server to use for the connection (required)
+      --target-keyspace string    Target keyspace for this workflow.
+  -w, --workflow string           The workflow you want to perform the command on.
 ```
 
 ### SEE ALSO
