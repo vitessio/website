@@ -1,7 +1,7 @@
 ---
 title: vtorc
 series: vtorc
-commit: e73ce917ed97a6a8586cd3647cb2f498fe908a0e
+commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
 ---
 ## vtorc
 
@@ -43,7 +43,7 @@ vtorc \
       --config-file string                                          Full path of the config file (with extension) to use. If set, --config-path, --config-type, and --config-name are ignored.
       --config-file-not-found-handling ConfigFileNotFoundHandling   Behavior when a config file is not found. (Options: error, exit, ignore, warn) (default warn)
       --config-name string                                          Name of the config file (without extension) to search for. (default "vtconfig")
-      --config-path strings                                         Paths to search for config files in. (default [$WORKDIR])
+      --config-path strings                                         Paths to search for config files in. (default [<WORKDIR>])
       --config-persistence-min-interval duration                    minimum interval between persisting dynamic config changes back to disk (if no change has occurred, nothing is done). (default 1s)
       --config-type string                                          Config file type (omit to infer config type from file extension).
       --consul_auth_static_file string                              JSON File to read the topos/tokens from.
@@ -63,7 +63,7 @@ vtorc \
       --keep_logs_by_mtime duration                                 keep logs for this long (using mtime) (zero to keep forever)
       --lameduck-period duration                                    keep running at least this long after SIGTERM before stopping (default 50ms)
       --lock-timeout duration                                       Maximum time for which a shard/keyspace lock can be acquired for (default 45s)
-      --log_backtrace_at traceLocation                              when logging hits line file:N, emit a stack trace (default :0)
+      --log_backtrace_at traceLocations                             when logging hits line file:N, emit a stack trace
       --log_dir string                                              If non-empty, write log files in this directory
       --log_err_stacks                                              log stack traces for errors
       --log_rotate_max_size uint                                    size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
@@ -89,7 +89,7 @@ vtorc \
       --stats_common_tags strings                                   Comma-separated list of common tags for the stats backend. It provides both label and values. Example: label1:value1,label2:value2
       --stats_drop_variables string                                 Variables to be dropped from the list of exported variables.
       --stats_emit_period duration                                  Interval between emitting stats to all registered backends (default 1m0s)
-      --stderrthreshold severity                                    logs at or above this threshold go to stderr (default 1)
+      --stderrthreshold severityFlag                                logs at or above this threshold go to stderr (default 1)
       --table-refresh-interval int                                  interval in milliseconds to refresh tables in status page with refreshRequired class
       --tablet_manager_grpc_ca string                               the server ca to use to validate servers when connecting
       --tablet_manager_grpc_cert string                             the cert to use to connect
@@ -99,6 +99,7 @@ vtorc \
       --tablet_manager_grpc_key string                              the key to use to connect
       --tablet_manager_grpc_server_name string                      the server name to use to validate server certificate
       --tablet_manager_protocol string                              Protocol to use to make tabletmanager RPCs to vttablets. (default "grpc")
+      --tolerable-replication-lag duration                          Amount of replication lag that is considered acceptable for a tablet to be eligible for promotion when Vitess makes the choice of a new primary in PRS
       --topo-information-refresh-duration duration                  Timer duration on which VTOrc refreshes the keyspace and vttablet records from the topology server (default 15s)
       --topo_consul_lock_delay duration                             LockDelay for consul session. (default 15s)
       --topo_consul_lock_session_checks string                      List of checks for consul session. (default "serfHealth")
@@ -119,7 +120,7 @@ vtorc \
       --topo_zk_tls_key string                                      the key to use to connect to the zk topo server, enables TLS
       --v Level                                                     log level for V logs
   -v, --version                                                     print binary version
-      --vmodule moduleSpec                                          comma-separated list of pattern=N settings for file-filtered logging
+      --vmodule vModuleFlag                                         comma-separated list of pattern=N settings for file-filtered logging
       --wait-replicas-timeout duration                              Duration for which to wait for replica's to respond when issuing RPCs (default 30s)
 ```
 

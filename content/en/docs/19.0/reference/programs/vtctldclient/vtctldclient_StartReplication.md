@@ -1,7 +1,7 @@
 ---
 title: StartReplication
 series: vtctldclient
-commit: 3b58bee089a76fdb1f9d452787e40f10e34f034d
+commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
 ---
 ## vtctldclient StartReplication
 
