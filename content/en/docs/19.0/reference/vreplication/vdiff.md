@@ -12,6 +12,16 @@ source keyspace and the target keyspace and reporting counts of missing/extra/un
 
 It is highly recommended that you do this before you finalize a workflow with `SwitchTraffic` and `complete`.
 
+{{< warning >}}
+VDiff supports diffing tables without a defined [Primary Key (PK)](https://dev.mysql.com/doc/refman/en/primary-key-optimization.html)
+and it will use a Primary Key equivalent (PKE: index on non-NULL unique column(s)) if one exists.
+However, be aware of the additional overhead and time required to do the comparision in these
+cases, particularly if there is no PK _or_ PKE as diffing the table will then require a full table
+scan to read every row and a filesort to sort all of them before the diff can start (and this will
+have to be done every time it's restarted/resumed). If the table is of any significant size then
+it's strongly recommended that you define a PK for the table.
+{{</ warning >}}
+
 ### Command
 
 VDiff takes different sub-commands or actions similar to how the [`MoveTables`](../movetables/)/[`Reshard`](../reshard/) commands work. Please see [the command's reference docs](../../../reference/programs/vtctldclient/vtctldclient_vdiff/) for additional info. The following sub-commands or actions are supported:
