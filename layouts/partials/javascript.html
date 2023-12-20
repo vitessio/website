@@ -197,7 +197,17 @@ $versions.current}}
       }
 
       function highlightSearchTerm(content, searchTerm) {
-        return content.replace(new RegExp(searchTerm, 'gi'), '<mark>$&</mark>');
+        const keywords = searchTerm.trim().split(/\s+/); // Split keywords by empty space
+        let highlightedContent = content;
+
+        keywords.forEach(keyword => {
+          if (keyword.trim() !== '') {
+            const regex = new RegExp(keyword, 'gi');
+            highlightedContent = highlightedContent.replace(regex, '<mark>$&</mark>');
+          }
+        });
+
+        return highlightedContent;
       }
 
       const lunrSearchEventCategory = 'Lunr Search';
