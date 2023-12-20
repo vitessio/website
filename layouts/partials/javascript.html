@@ -182,16 +182,22 @@ $versions.current}}
             const title = searchResultItem.querySelector('a.title');
             title.setAttribute('href', doc.href);
             title.textContent = doc.title;
+            title.innerHTML = highlightSearchTerm(doc.title, keywords);
 
             const subtitle = searchResultItem.querySelector('a.subtitle');
             subtitle.setAttribute('href', doc.href);
             subtitle.textContent = doc.summary;
+            subtitle.innerHTML = highlightSearchTerm(doc.summary, keywords);
 
             searchResultItem.addEventListener('click',
               () => trackSearchResultClick(doc.href, query));
             target.appendChild(searchResultItem);
           }, this);
         }
+      }
+
+      function highlightSearchTerm(content, searchTerm) {
+        return content.replace(new RegExp(searchTerm, 'gi'), '<mark>$&</mark>');
       }
 
       const lunrSearchEventCategory = 'Lunr Search';
