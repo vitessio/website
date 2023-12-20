@@ -88,7 +88,7 @@ Download the [latest binary release](https://github.com/vitessio/vitess/releases
 
 ```sh
 version=18.0.2
-file=vitess-${version}-d3012c188e.tar.gz
+file=vitess-${version}-d3012c1.tar.gz
 wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
 tar -xzf ${file}
 cd ${file/.tar.gz/}
