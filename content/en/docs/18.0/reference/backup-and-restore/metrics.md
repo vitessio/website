@@ -6,7 +6,19 @@ weight: 10
 
 Backup and restore operations export several metrics using the expvars interface. These are available at the `/debug/vars` endpoint of Vtbackup's and VTTablet's http status pages. [More details can be found here](../../features/monitoring/#3-push-based-metrics-system).
 
-## Backup metrics
+## Backup and Restore metrics
+
+Metrics related to backup and restore operations are available in both Vtbackup and VTTablet.
+
+#### BackupBytes, BackupCount, BackupDurationNanoseconds
+
+Depending on the Backup Engine and Backup Storage in-use, a backup may be a complex pipeline of operations, including but not limited to:
+
+ * Reading files from disk.
+ * Compressing files.
+ * Uploading compressed files to cloud object storage.
+
+These operations are counted and timed, and the number of bytes consumed or produced by each stage of the pipeline are counted as well.
 
 Metrics related to backup operations are available in both Vtbackup and VTTablet.
 
@@ -16,11 +28,25 @@ Depending on the Backup Engine and Backup Storage in-use, a backup may be a comp
 
  * Reading files from disk.
  * Compressing files.
- * Uploading compress files to cloud object storage.
+ * Uploading compressed files to cloud object storage.
 
 These operations are counted and timed, and the number of bytes consumed or produced by each stage of the pipeline are counted as well.
 
-## Restore metrics
+#### backup_duration_seconds
+
+**Deprecated**
+
+_backup_duration_seconds_ times the duration of a backup. This metric is deprecated and will be removed in a future release. Use _BackupDurationNanoseconds_ instead.
+
+#### RestoreBytes, RestoreCount, RestoreDurationNanoseconds
+
+Depending on the Backup Engine and Backup Storage in-use, a restore may be a complex pipeline of operations, including but not limited to:
+
+ * Downloading compressed files from cloud object storage.
+ * Decompressing files.
+ * Writing decompressed files to disk.
+
+These operations are counted and timed, and the number of bytes consumed or produced by each stage of the pipeline are counted as well.
 
 Metrics related to restore operations are available in both Vtbackup and VTTablet.
 
@@ -37,6 +63,26 @@ These operations are counted and timed, and the number of bytes consumed or prod
 #### RestoredBackupTime, RestorePosition
 
 _RestoredBackupTime_ captures the timestamp associated with the backup from which the current process was restored. _RestorePosition_ captures the GTID position associated with that backup.
+
+#### Instrumented components and operations
+
+| Component | Implementation | Operation | Metrics |
+|-|-|-|-|
+| BackupEngine | Builtin | Compressor:Close | BackupCount, BackupDurationNanoseconds  |
+| BackupEngine | Builtin | Compressor:Open | BackupCount, BackupDurationNanoseconds |
+| BackupEngine | Builtin | Compressor:Write | BackupBytes, BackupDurationNanoseconds |
+| BackupEngine | Builtin | Decompressor:Read | RestoreBytes, RestoreDurationNanoseconds |
+| BackupEngine | Builtin | Decompressor:Close | RestoreCount, RestoreDurationNanoseconds |
+| BackupEngine | Builtin | Decompressor:Open | RestoreCount, RestoreDurationNanoseconds |
+| BackupEngine | Builtin | Destination:Close | BackupCount, BackupDurationNanoseconds, RestoreCount, RestoreDurationNanoseconds |
+| BackupEngine | Builtin | Destination:Open | BackupCount, BackupDurationNanoseconds, RestoreCount, RestoreDurationNanoseconds |
+| BackupEngine | Builtin | Destination:Write | BackupBytes, BackupDurationNanoseconds, RestoreBytes, RestoreDurationNanoseconds |
+| BackupEngine | Builtin | Source:Close | BackupCount, BackupDurationNanoseconds, RestoreCount, RestoreDurationNanoseconds |
+| BackupEngine | Builtin | Source:Open | BackupCount, BackupDurationNanoseconds, RestoreCount, RestoreDurationNanoseconds |
+| BackupEngine | Builtin | Source:Read | BackupBytes, BackupDurationNanoseconds, RestoreBytes, RestoreDurationNanoseconds |
+| BackupStorage | File | File:Read | RestoreBytes, RestoreDurationNanoseconds |
+| BackupStorage | File | File:Write | BackupBytes, BackupDurationNanoseconds |
+| BackupStorage | S3 | AWS:Request:Send | BackupCount, BackupDurationNanoseconds, RestoreCount, RestoreDurationNanoseconds |
 
 ## Vtbackup metrics
 
@@ -62,6 +108,7 @@ Vtbackup emits status metrics for its phases of execution. `PhaseStatus` reports
 <hr style="border-top: 2px dashed brown">
 
 ## Example
+
 **A snippet of vtbackup metrics after running it against the local example after creating the initial cluster**
 
 (Processed with `jq` for readability.)
