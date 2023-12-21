@@ -15,7 +15,7 @@ It is highly recommended that you do this before you finalize a workflow with `S
 {{< warning >}}
 VDiff supports diffing tables without a defined [Primary Key (PK)](https://dev.mysql.com/doc/refman/en/primary-key-optimization.html)
 and it will use a Primary Key equivalent (PKE: index on non-NULL unique column(s)) if one exists.
-However, be aware of the additional overhead and time required to do the comparision in these
+However, be aware of the additional overhead and time required to do the comparison in these
 cases, particularly if there is no PK _or_ PKE as diffing the table will then require a full table
 scan to read every row and a filesort to sort all of them before the diff can start (and this will
 have to be done every time it's restarted/resumed). If the table is of any significant size then

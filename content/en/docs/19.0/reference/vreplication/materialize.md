@@ -10,6 +10,14 @@ weight: 40
 can be copies, aggregations, or views. The target tables are kept in sync in near-realtime.
 
 You can specify multiple tables to materialize using the [`create`](../../programs/vtctldclient/vtctldclient_materialize/vtctldclient_materialize_create/) sub-command's `--table-settings` flag.
+There are limitations, however, to the queries which can be used with `Materialize`:
+  - The query must be a `SELECT` statement
+  - Only the following operators are supported: `=`, `<`, `<=`, `>`, `>=`, `<>`, `!=` (e.g. no `IN`, `OR`, or `LIKE`)
+  - The query must be against a single table (so no `JOIN`s)
+  - The query cannot use `DISTINCT`
+  - The query cannot use a derived table
+  - Expressions in the query must have an alias, e.g. `select hour(c1) as c1_hour from t1`
+  - The `GROUP BY` expression cannot reference an aggregate expression such as `MAX` or `COUNT`
 
 {{< warning >}}
 Be careful to avoid using the `INSTANT ADD COLUMN` feature in [MySQL 8.0+](https://mysqlserverteam.com/mysql-8-0-innodb-now-supports-instant-add-column/) with materialization source tables as this can cause the vreplication based materialization workflow to break.
