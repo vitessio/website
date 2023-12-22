@@ -182,12 +182,12 @@ $versions.current}}
             const title = searchResultItem.querySelector('a.title');
             title.setAttribute('href', doc.href);
             title.textContent = doc.title;
-            title.innerHTML = highlightSearchTerm(doc.title, keywords);
+            highlightSearchTerm(title, doc.title, keywords);
 
             const subtitle = searchResultItem.querySelector('a.subtitle');
             subtitle.setAttribute('href', doc.href);
             subtitle.textContent = doc.summary;
-            subtitle.innerHTML = highlightSearchTerm(doc.summary, keywords);
+            highlightSearchTerm(subtitle, doc.summary, keywords);
 
             searchResultItem.addEventListener('click',
               () => trackSearchResultClick(doc.href, query));
@@ -196,18 +196,19 @@ $versions.current}}
         }
       }
 
-      function highlightSearchTerm(content, searchTerm) {
-        const keywords = searchTerm.trim().split(/\s+/); // Split keywords by empty space
+      function highlightSearchTerm(element, content, keywords) {
+        // Split keywords by empty space
+        const keywordList = keywords.trim().split(/\s+/);
         let highlightedContent = content;
 
-        keywords.forEach(keyword => {
-          if (keyword.trim() !== '') {
-            const regex = new RegExp(keyword, 'gi');
-            highlightedContent = highlightedContent.replace(regex, '<mark>$&</mark>');
-          }
+        keywordList.forEach(keyword => {
+          const regex = new RegExp(keyword, 'gi');
+          highlightedContent = highlightedContent.replace(regex, match => `<mark>${match}</mark>`);
         });
 
-        return highlightedContent;
+        // Replace with highlighted content
+        element.textContent = '';
+        element.appendChild(document.createRange().createContextualFragment(highlightedContent));
       }
 
       const lunrSearchEventCategory = 'Lunr Search';
