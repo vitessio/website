@@ -8,7 +8,7 @@ commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
 Applies the VTGate routing schema to the provided keyspace. Shows the result after application.
 
 ```
-vtctldclient ApplyVSchema {--vschema=<vschema> || --vschema-file=<vschema file> || --sql=<sql> || --sql-file=<sql file>} [--cells=c1,c2,...] [--skip-rebuild] [--dry-run] <keyspace>
+vtctldclient ApplyVSchema {--vschema=<vschema> || --vschema-file=<vschema file> || --sql=<sql> || --sql-file=<sql file>} [--cells=c1,c2,...] [--skip-rebuild] [--dry-run] [--strict] <keyspace>
 ```
 
 ### Options
@@ -20,6 +20,7 @@ vtctldclient ApplyVSchema {--vschema=<vschema> || --vschema-file=<vschema file> 
       --skip-rebuild                            Skip rebuilding the SrvSchema objects.
       --sql alter table t add vindex hash(id)   A VSchema DDL SQL statement, e.g. alter table t add vindex hash(id).
       --sql-file string                         Path to a file containing a VSchema DDL SQL.
+      --strict                                  If set, treat unknown vindex params as errors.
       --vschema string                          VSchema to apply, in JSON form.
       --vschema-file string                     Path to a file containing the vschema to apply, in JSON form.
 ```
