@@ -6,8 +6,6 @@ weight: 4
 
 This guide covers installing Vitess locally for testing purposes, from pre-compiled binaries. We will launch multiple copies of `mysqld`, so it is recommended to have greater than 4GB RAM, as well as 20GB of available disk space.
 
-A pure [homebrew setup](../local-brew/) is also available.
-
 ## Install Brew
 
 For the purposes of installing software you will need to have brew installed. This will also install curl and git which will also be needed:
@@ -78,6 +76,7 @@ With everything now in place you can clone and build Vitess.
 ```sh
 $ git clone https://github.com/vitessio/vitess.git
 $ cd vitess
+$ git checkout release-18.0
 $ make build
 ```
 
