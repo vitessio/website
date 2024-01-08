@@ -28,7 +28,7 @@ Guaranteeing ACID Isolation is very contentious and has high costs. Providing it
 
 ### Configuring VTGate
 
-The atomicity policy is controlled by the `transaction_mode` flag. The default value is `multi` and will set all transactions to multi-database mode.
+The atomicity policy is controlled by the `transaction_mode` flag.  If not specified, the default value is `UNSPECIFIED`, which itself defaults to `MULTI` and will set all transactions to multi-database mode.
 
 To enforce single-database transactions, the VTGates can be started by specifying `transaction_mode=single`.
 
