@@ -1,7 +1,7 @@
 ---
 title: SetKeyspaceDurabilityPolicy
 series: vtctldclient
-commit: 9a6f5262f7707ff80ce85c111d2ff686d85d29cc
+commit: d3012c188ea0cfc6837917fc6642ea23be9bb1ff
 ---
 ## vtctldclient SetKeyspaceDurabilityPolicy
 

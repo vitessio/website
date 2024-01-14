@@ -1,7 +1,7 @@
 ---
 title: DeleteSrvVSchema
 series: vtctldclient
-commit: a7f80a82e5d99cf00c253c3902367bec5fa40e5d
+commit: 6c9f87de69a1fdbf6a68ff8375b32a1c2abba291
 ---
 ## vtctldclient DeleteSrvVSchema
 

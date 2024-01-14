@@ -1,7 +1,7 @@
 ---
 title: ValidateVersionShard
 series: vtctldclient
-commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
+commit: 3091de1ea79b2ea900007b27403a5c2235092d44
 ---
 ## vtctldclient ValidateVersionShard
 

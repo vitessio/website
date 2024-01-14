@@ -1,7 +1,7 @@
 ---
 title: GetSrvVSchema
 series: vtctldclient
-commit: 9a3d0f4a69a840cfa2cb86654abd4afa0be6e0aa
+commit: 9a3628037518bc108c636220319f3c7385b2a559
 ---
 ## vtctldclient GetSrvVSchema
 
