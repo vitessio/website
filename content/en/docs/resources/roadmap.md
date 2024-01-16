@@ -10,7 +10,7 @@ As an open source project, Vitess is developed by a community of contributors. M
 If you have a specific question about the Roadmap, we recommend posting in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
 {{< /info >}}
 
-Last Updated: Nov 1, 2023
+Last Updated: Jan 16, 2024
 
 ## Short Term (1-4 months)
 
@@ -18,18 +18,20 @@ Last Updated: Nov 1, 2023
   - Support more MySQL Syntax (improve compatibility as a drop-in replacement)
     - Better information_schema support
   - Improve error messages
+  - Foreign Key constraints
 - VReplication
   - Benchmarking
   - Performance improvements
+  - Migrating data with Foreign Key constraints
+- VTAdmin
+  - Schema management APIs
 - Vitess operator
   - Documentation
-  - Kubernetes 1.25 support
 
 ## Medium / Long Term (4-18 months)
 
 - MySQL compatibility
   - Support more frameworks
-  - Foreign Key support
 - Query Serving improvements
   - Performance
   - More supported queries
