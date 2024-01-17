@@ -19,14 +19,14 @@ Last Updated: Jan 16, 2024
     - Better information_schema support
   - Improve error messages
   - Foreign Key constraints
+- Improve Usability
+  - Viper framework for flags
 - VReplication
   - Benchmarking
   - Performance improvements
   - Migrating data with Foreign Key constraints
 - VTAdmin
   - Schema management APIs
-- Vitess operator
-  - Documentation
 
 ## Medium / Long Term (4-18 months)
 
@@ -42,5 +42,7 @@ Last Updated: Jan 16, 2024
   - Schema Management
 - VTOrc improvements
   - Reduce client downtime
+- Vitess operator
+  - Documentation
 - Read-After-Write consistency
 - Distributed Transactions
