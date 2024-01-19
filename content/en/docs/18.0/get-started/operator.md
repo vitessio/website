@@ -102,7 +102,7 @@ You should now be able to connect to the VTGate Server in your cluster with the 
 ~/vitess/examples/operator$ mysql
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 3
-Server version: 5.7.9-Vitess MySQL Community Server (GPL)
+Server version: 8.0.30-Vitess MySQL Community Server (GPL)
 
 Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
 
@@ -113,12 +113,18 @@ owners.
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
 mysql> show databases;
-+-----------+
-| Databases |
-+-----------+
-| commerce  |
-+-----------+
-1 row in set (0.00 sec)
++--------------------+
+| Database           |
++--------------------+
+| commerce           |
+| information_schema |
+| mysql              |
+| sys                |
+| performance_schema |
++--------------------+
+5 rows in set (0.01 sec)
+
+mysql>
 ```
 
 ### Summary
