@@ -113,12 +113,18 @@ owners.
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
 mysql> show databases;
-+-----------+
-| Databases |
-+-----------+
-| commerce  |
-+-----------+
-1 row in set (0.00 sec)
++--------------------+
+| Database           |
++--------------------+
+| commerce           |
+| information_schema |
+| mysql              |
+| sys                |
+| performance_schema |
++--------------------+
+5 rows in set (0.01 sec)
+
+mysql>
 ```
 
 ### Summary
