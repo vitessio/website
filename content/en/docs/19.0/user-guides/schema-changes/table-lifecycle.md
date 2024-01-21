@@ -80,6 +80,17 @@ Vitess does not track the state of the table lifecycle. The process is stateless
 - The table `_vt_EVAC_6ace8bcef73211ea87e9f875a4d24e90_20210918093000` is held until `2021-09-18 09:30:00`
 - The table `_vt_DROP_6ace8bcef73211ea87e9f875a4d24e90_20210921170000` is eligible to be dropped on `2021-09-21 17:00:00`
 
+{{< info >}}
+Starting in Vitess `v20`, the table naming format will change. Tables will be named like so:
+
+- `_vt_hld_6ace8bcef73211ea87e9f875a4d24e90_20200915120410_`
+- `_vt_prg_6ace8bcef73211ea87e9f875a4d24e90_20200915120410_`
+- `_vt_evc_6ace8bcef73211ea87e9f875a4d24e90_20200915120410_`
+- `_vt_drp_6ace8bcef73211ea87e9f875a4d24e90_20200915120410_`
+
+`v19` supports the new naming format, but does not generate any tables in this format. `v20` will generate tables in the new format, and will support the old format. Support for old format will be dropped in `v21` or later.
+{{< /info >}}
+
 ## Automated lifecycle
 
 Vitess internally uses the above table lifecycle for [online, managed schema migrations](../../../user-guides/schema-changes/managed-online-schema-changes/). All online strategies: `vitess`, `gh-ost`, and `pt-online-schema-change`, create artifact tables or end with leftover tables: Vitess automatically collects those tables. The artifact or leftover tables are immediate moved to `hold` state. Depending on `vttablet`'s `--table_gc_lifecycle` flag, they may spend time in this state, getting purged, or immediately transitioned to the next state.
