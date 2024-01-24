@@ -1,7 +1,7 @@
 ---
 title: MoveTables complete
 series: vtctldclient
-commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
+commit: 2642bea6b1d3476889564c49ed64829f2a3d0a90
 ---
 ## vtctldclient MoveTables complete
 
@@ -25,6 +25,7 @@ vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --
       --keep-data            Keep the original source table data that was copied by the MoveTables workflow.
       --keep-routing-rules   Keep the routing rules in place that direct table traffic from the source keyspace to the target keyspace of the MoveTables workflow.
       --rename-tables        Keep the original source table data that was copied by the MoveTables workflow, but rename each table to '_<tablename>_old'.
+      --shards strings       (Optional) Specifies a comma-separated list of shards to operate on.
 ```
 
 ### Options inherited from parent commands

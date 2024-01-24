@@ -1,7 +1,7 @@
 ---
 title: vtgate
 series: vtgate
-commit: c823b86a19bfeb9a6a411a75caf492464caf697e
+commit: 2642bea6b1d3476889564c49ed64829f2a3d0a90
 ---
 ## vtgate
 
@@ -181,6 +181,7 @@ vtgate \
       --planner-version string                                           Sets the default planner to use when the session has not changed it. Valid values are: Gen4, Gen4Greedy, Gen4Left2Right
       --port int                                                         port for the server
       --pprof strings                                                    enable profiling
+      --pprof-http                                                       enable pprof http endpoints (default true)
       --proxy_protocol                                                   Enable HAProxy PROXY protocol on MySQL listener socket
       --purge_logs_interval duration                                     how often try to remove old logs (default 1h0m0s)
       --query-timeout int                                                Sets the default query timeout (in ms). Can be overridden by session variable (query_timeout) or comment directive (QUERY_TIMEOUT_MS)

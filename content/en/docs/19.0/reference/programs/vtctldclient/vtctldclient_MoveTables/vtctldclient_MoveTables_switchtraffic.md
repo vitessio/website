@@ -1,7 +1,7 @@
 ---
 title: MoveTables switchtraffic
 series: vtctldclient
-commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
+commit: 2642bea6b1d3476889564c49ed64829f2a3d0a90
 ---
 ## vtctldclient MoveTables switchtraffic
 
@@ -26,6 +26,7 @@ vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --
   -h, --help                                   help for switchtraffic
       --initialize-target-sequences            When moving tables from an unsharded keyspace to a sharded keyspace, initialize any sequences that are being used on the target when switching writes.
       --max-replication-lag-allowed duration   Allow traffic to be switched only if VReplication lag is below this. (default 30s)
+      --shards strings                         (Optional) Specifies a comma-separated list of shards to operate on.
       --tablet-types strings                   Tablet types to switch traffic for.
       --timeout duration                       Specifies the maximum time to wait, in seconds, for VReplication to catch up on primary tablets. The traffic switch will be cancelled on timeout. (default 30s)
 ```

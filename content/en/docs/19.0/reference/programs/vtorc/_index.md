@@ -1,7 +1,7 @@
 ---
 title: vtorc
 series: vtorc
-commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
+commit: 2642bea6b1d3476889564c49ed64829f2a3d0a90
 ---
 ## vtorc
 
@@ -74,6 +74,7 @@ vtorc \
       --pid_file string                                             If set, the process will write its pid to the named file, and delete it on graceful shutdown.
       --port int                                                    port for the server
       --pprof strings                                               enable profiling
+      --pprof-http                                                  enable pprof http endpoints (default true)
       --prevent-cross-cell-failover                                 Prevent VTOrc from promoting a primary in a different cell than the current primary in case of a failover
       --purge_logs_interval duration                                how often try to remove old logs (default 1h0m0s)
       --reasonable-replication-lag duration                         Maximum replication lag on replicas which is deemed to be acceptable (default 10s)
@@ -93,7 +94,7 @@ vtorc \
       --table-refresh-interval int                                  interval in milliseconds to refresh tables in status page with refreshRequired class
       --tablet_manager_grpc_ca string                               the server ca to use to validate servers when connecting
       --tablet_manager_grpc_cert string                             the cert to use to connect
-      --tablet_manager_grpc_concurrency int                         concurrency to use to talk to a vttablet server for performance-sensitive RPCs (like ExecuteFetchAs{Dba,AllPrivs,App}) (default 8)
+      --tablet_manager_grpc_concurrency int                         concurrency to use to talk to a vttablet server for performance-sensitive RPCs (like ExecuteFetchAs{Dba,App} and CheckThrottler) (default 8)
       --tablet_manager_grpc_connpool_size int                       number of tablets to keep tmclient connections open to (default 100)
       --tablet_manager_grpc_crl string                              the server crl to use to validate server certificates when connecting
       --tablet_manager_grpc_key string                              the key to use to connect

@@ -1,7 +1,7 @@
 ---
 title: ReloadSchemaKeyspace
 series: vtctldclient
-commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
+commit: 2642bea6b1d3476889564c49ed64829f2a3d0a90
 ---
 ## vtctldclient ReloadSchemaKeyspace
 
@@ -14,9 +14,9 @@ vtctldclient ReloadSchemaKeyspace [--concurrency=<concurrency>] [--include-prima
 ### Options
 
 ```
-      --concurrency uint32   Number of tablets to reload in parallel. Set to zero for unbounded concurrency. (default 10)
-  -h, --help                 help for ReloadSchemaKeyspace
-      --include-primary      Also reload the primary tablets.
+      --concurrency int32   Number of tablets to reload in parallel. Set to zero for unbounded concurrency. (default 10)
+  -h, --help                help for ReloadSchemaKeyspace
+      --include-primary     Also reload the primary tablets.
 ```
 
 ### Options inherited from parent commands

@@ -1,7 +1,7 @@
 ---
 title: position
 series: mysqlctl
-commit: c823b86a19bfeb9a6a411a75caf492464caf697e
+commit: 2642bea6b1d3476889564c49ed64829f2a3d0a90
 ---
 ## mysqlctl position
 
@@ -81,6 +81,7 @@ mysqlctl position <operation> <pos1> <pos2 | gtid> [flags]
       --pid_file string                                             If set, the process will write its pid to the named file, and delete it on graceful shutdown.
       --pool_hostname_resolve_interval duration                     if set force an update to all hostnames and reconnect if changed, defaults to 0 (disabled)
       --pprof strings                                               enable profiling
+      --pprof-http                                                  enable pprof http endpoints (default true)
       --purge_logs_interval duration                                how often try to remove old logs (default 1h0m0s)
       --replication_connect_retry duration                          how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s)
       --security_policy string                                      the name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only)
