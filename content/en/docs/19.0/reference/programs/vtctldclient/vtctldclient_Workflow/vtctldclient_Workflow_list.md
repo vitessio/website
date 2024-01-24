@@ -1,7 +1,7 @@
 ---
 title: Workflow list
 series: vtctldclient
-commit: 2642bea6b1d3476889564c49ed64829f2a3d0a90
+commit: a85c612dc9a58aa2e4b13010fdba99e246646618
 ---
 ## vtctldclient Workflow list
 
@@ -20,8 +20,7 @@ vtctldclient --server localhost:15999 workflow --keyspace customer list
 ### Options
 
 ```
-  -h, --help             help for list
-      --shards strings   (Optional) Specifies a comma-separated list of shards to operate on.
+  -h, --help   help for list
 ```
 
 ### Options inherited from parent commands
