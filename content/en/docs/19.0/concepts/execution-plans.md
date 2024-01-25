@@ -26,7 +26,7 @@ Note that not all queries which are sent to multiple (or all) shards in a sharde
 
 Cached execution plans can be observed at the VTGate level by browsing the `/queryz` end point.
 
-Starting with Vitess 6, individual statement plans can also be observed with `EXPLAIN FORMAT=vitess <query>`.
+Starting with Vitess 16, individual statement plans can also be observed with [`VExplain`](../../user-guides/sql/explain-format-vtexplain).
 
 **Related Vitess Documentation**
 
