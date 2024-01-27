@@ -1,7 +1,7 @@
 ---
 title: BackupShard
 series: vtctldclient
-commit: f751c8323ff52c90f288481b0bd92192f1734973
+commit: 6e3190ec7a07a2dbb095ea4e8c69368fa098d41f
 ---
 ## vtctldclient BackupShard
 
@@ -21,7 +21,7 @@ vtctldclient BackupShard [--concurrency <concurrency>] [--allow-primary] [--incr
 
 ```
       --allow-primary                 Allow the primary of a shard to be used for the backup. WARNING: If using the builtin backup engine, this will shutdown mysqld on the primary and stop writes for the duration of the backup.
-      --concurrency int32             Specifies the number of compression/checksum jobs to run simultaneously. (default 4)
+      --concurrency uint              Specifies the number of compression/checksum jobs to run simultaneously. (default 4)
   -h, --help                          help for BackupShard
       --incremental-from-pos string   Position of previous backup. Default: empty. If given, then this backup becomes an incremental backup from given position. If value is 'auto', backup taken from last successful backup position
       --upgrade-safe                  Whether to use innodb_fast_shutdown=0 for the backup so it is safe to use for MySQL upgrades.
@@ -31,6 +31,7 @@ vtctldclient BackupShard [--concurrency <concurrency>] [--allow-primary] [--incr
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --andrew-is-testing                    nothing to see here
       --compact                              use compact format for otherwise verbose outputs
       --server string                        server to use for the connection (required)
       --topo-global-root string              the path of the global topology data in the global topology server (default "/vitess/global")

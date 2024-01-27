@@ -1,7 +1,7 @@
 ---
 title: Mount register
 series: vtctldclient
-commit: f751c8323ff52c90f288481b0bd92192f1734973
+commit: 6e3190ec7a07a2dbb095ea4e8c69368fa098d41f
 ---
 ## vtctldclient Mount register
 
@@ -31,6 +31,7 @@ vtctldclient --server localhost:15999 mount register --name ext1 --topo-type etc
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --andrew-is-testing                    nothing to see here
       --compact                              use compact format for otherwise verbose outputs
       --server string                        server to use for the connection (required)
       --topo-global-root string              the path of the global topology data in the global topology server (default "/vitess/global")

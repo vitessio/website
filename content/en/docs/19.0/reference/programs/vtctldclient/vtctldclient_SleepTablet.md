@@ -1,7 +1,7 @@
 ---
 title: SleepTablet
 series: vtctldclient
-commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
+commit: 6e3190ec7a07a2dbb095ea4e8c69368fa098d41f
 ---
 ## vtctldclient SleepTablet
 
@@ -37,6 +37,7 @@ vtctldclient SleepTablet <alias> <duration>
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --andrew-is-testing                    nothing to see here
       --compact                              use compact format for otherwise verbose outputs
       --server string                        server to use for the connection (required)
       --topo-global-root string              the path of the global topology data in the global topology server (default "/vitess/global")

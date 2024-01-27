@@ -1,7 +1,7 @@
 ---
 title: Migrate status
 series: vtctldclient
-commit: f751c8323ff52c90f288481b0bd92192f1734973
+commit: 6e3190ec7a07a2dbb095ea4e8c69368fa098d41f
 ---
 ## vtctldclient Migrate status
 
@@ -27,6 +27,7 @@ vtctldclient --server localhost:15999 Migrate --workflow import --target-keyspac
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --andrew-is-testing                    nothing to see here
       --compact                              use compact format for otherwise verbose outputs
       --format string                        The format of the output; supported formats are: text,json. (default "text")
       --server string                        server to use for the connection (required)

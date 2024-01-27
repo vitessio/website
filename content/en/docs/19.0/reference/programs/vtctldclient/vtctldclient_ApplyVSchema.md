@@ -1,14 +1,14 @@
 ---
 title: ApplyVSchema
 series: vtctldclient
-commit: f751c8323ff52c90f288481b0bd92192f1734973
+commit: 6e3190ec7a07a2dbb095ea4e8c69368fa098d41f
 ---
 ## vtctldclient ApplyVSchema
 
 Applies the VTGate routing schema to the provided keyspace. Shows the result after application.
 
 ```
-vtctldclient ApplyVSchema {--vschema=<vschema> || --vschema-file=<vschema file> || --sql=<sql> || --sql-file=<sql file>} [--cells=c1,c2,...] [--skip-rebuild] [--dry-run] [--strict] <keyspace>
+vtctldclient ApplyVSchema {--vschema=<vschema> || --vschema-file=<vschema file> || --sql=<sql> || --sql-file=<sql file>} [--cells=c1,c2,...] [--skip-rebuild] [--dry-run] <keyspace>
 ```
 
 ### Options
@@ -20,7 +20,6 @@ vtctldclient ApplyVSchema {--vschema=<vschema> || --vschema-file=<vschema file> 
       --skip-rebuild                            Skip rebuilding the SrvSchema objects.
       --sql alter table t add vindex hash(id)   A VSchema DDL SQL statement, e.g. alter table t add vindex hash(id).
       --sql-file string                         Path to a file containing a VSchema DDL SQL.
-      --strict                                  If set, treat unknown vindex params as errors.
       --vschema string                          VSchema to apply, in JSON form.
       --vschema-file string                     Path to a file containing the vschema to apply, in JSON form.
 ```
@@ -29,6 +28,7 @@ vtctldclient ApplyVSchema {--vschema=<vschema> || --vschema-file=<vschema file> 
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --andrew-is-testing                    nothing to see here
       --compact                              use compact format for otherwise verbose outputs
       --server string                        server to use for the connection (required)
       --topo-global-root string              the path of the global topology data in the global topology server (default "/vitess/global")

@@ -1,7 +1,7 @@
 ---
 title: Workflow list
 series: vtctldclient
-commit: f751c8323ff52c90f288481b0bd92192f1734973
+commit: 6e3190ec7a07a2dbb095ea4e8c69368fa098d41f
 ---
 ## vtctldclient Workflow list
 
@@ -20,14 +20,14 @@ vtctldclient --server localhost:15999 workflow --keyspace customer list
 ### Options
 
 ```
-  -h, --help             help for list
-      --shards strings   (Optional) Specifies a comma-separated list of shards to operate on.
+  -h, --help   help for list
 ```
 
 ### Options inherited from parent commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --andrew-is-testing                    nothing to see here
       --compact                              use compact format for otherwise verbose outputs
   -k, --keyspace string                      Keyspace context for the workflow.
       --server string                        server to use for the connection (required)
