@@ -1,7 +1,7 @@
 ---
 title: vtctld
 series: vtctld
-commit: f751c8323ff52c90f288481b0bd92192f1734973
+commit: 43ef6ae99f08fc573b00474e555af693911fee79
 ---
 ## vtctld
 
@@ -99,6 +99,7 @@ vtctld \
       --grpc_server_initial_window_size int                              gRPC server initial window size
       --grpc_server_keepalive_enforcement_policy_min_time duration       gRPC server minimum keepalive time (default 10s)
       --grpc_server_keepalive_enforcement_policy_permit_without_stream   gRPC server permit client keepalive pings even when there are no active streams (RPCs)
+      --healthcheck-init-concurrency int                                 Concurrency of intiating healthchecks. This should be less than the golang max thread limit of 10000. (default 1024)
   -h, --help                                                             help for vtctld
       --jaeger-agent-host string                                         host and port to send spans to. if empty, no tracing will be done
       --keep_logs duration                                               keep logs for this long (using ctime) (zero to keep forever)

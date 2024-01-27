@@ -1,7 +1,7 @@
 ---
 title: vtgate
 series: vtgate
-commit: f751c8323ff52c90f288481b0bd92192f1734973
+commit: 43ef6ae99f08fc573b00474e555af693911fee79
 ---
 ## vtgate
 
@@ -112,6 +112,7 @@ vtgate \
       --grpc_server_keepalive_enforcement_policy_min_time duration       gRPC server minimum keepalive time (default 10s)
       --grpc_server_keepalive_enforcement_policy_permit_without_stream   gRPC server permit client keepalive pings even when there are no active streams (RPCs)
       --grpc_use_effective_callerid                                      If set, and SSL is not used, will set the immediate caller id from the effective caller id's principal.
+      --healthcheck-init-concurrency int                                 Concurrency of intiating healthchecks. This should be less than the golang max thread limit of 10000. (default 1024)
       --healthcheck_retry_delay duration                                 health check retry delay (default 2ms)
       --healthcheck_timeout duration                                     the health check timeout period (default 1m0s)
   -h, --help                                                             help for docgen
