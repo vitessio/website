@@ -1,7 +1,7 @@
 ---
 title: Workflow delete
 series: vtctldclient
-commit: f751c8323ff52c90f288481b0bd92192f1734973
+commit: d2176bc68952b2f115d5d8cdf5ccad539b00000f
 ---
 ## vtctldclient Workflow delete
 
@@ -23,7 +23,6 @@ vtctldclient --server localhost:15999 workflow --keyspace customer delete --work
   -h, --help                 help for delete
       --keep-data            Keep the partially copied table data from the workflow in the target keyspace.
       --keep-routing-rules   Keep the routing rules created for the workflow.
-      --shards strings       (Optional) Specifies a comma-separated list of shards to operate on.
   -w, --workflow string      The workflow you want to delete.
 ```
 
@@ -31,6 +30,7 @@ vtctldclient --server localhost:15999 workflow --keyspace customer delete --work
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --andrew-is-testing                    nothing to see here
       --compact                              use compact format for otherwise verbose outputs
   -k, --keyspace string                      Keyspace context for the workflow.
       --server string                        server to use for the connection (required)

@@ -1,7 +1,7 @@
 ---
 title: Mount
 series: vtctldclient
-commit: f751c8323ff52c90f288481b0bd92192f1734973
+commit: d2176bc68952b2f115d5d8cdf5ccad539b00000f
 ---
 ## vtctldclient Mount
 
@@ -17,6 +17,7 @@ Mount is used to link an external Vitess cluster in order to migrate data from i
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --andrew-is-testing                    nothing to see here
       --compact                              use compact format for otherwise verbose outputs
       --server string                        server to use for the connection (required)
       --topo-global-root string              the path of the global topology data in the global topology server (default "/vitess/global")

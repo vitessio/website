@@ -1,7 +1,7 @@
 ---
 title: MoveTables reversetraffic
 series: vtctldclient
-commit: f751c8323ff52c90f288481b0bd92192f1734973
+commit: d2176bc68952b2f115d5d8cdf5ccad539b00000f
 ---
 ## vtctldclient MoveTables reversetraffic
 
@@ -25,7 +25,6 @@ vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --
       --enable-reverse-replication             Setup replication going back to the original source keyspace to support rolling back the traffic cutover. (default true)
   -h, --help                                   help for reversetraffic
       --max-replication-lag-allowed duration   Allow traffic to be switched only if VReplication lag is below this. (default 30s)
-      --shards strings                         (Optional) Specifies a comma-separated list of shards to operate on.
       --tablet-types strings                   Tablet types to switch traffic for.
       --timeout duration                       Specifies the maximum time to wait, in seconds, for VReplication to catch up on primary tablets. The traffic switch will be cancelled on timeout. (default 30s)
 ```
@@ -34,6 +33,7 @@ vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --andrew-is-testing                    nothing to see here
       --compact                              use compact format for otherwise verbose outputs
       --format string                        The format of the output; supported formats are: text,json. (default "text")
       --server string                        server to use for the connection (required)

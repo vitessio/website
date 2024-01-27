@@ -1,7 +1,7 @@
 ---
 title: GetShardRoutingRules
 series: vtctldclient
-commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
+commit: d2176bc68952b2f115d5d8cdf5ccad539b00000f
 ---
 ## vtctldclient GetShardRoutingRules
 
@@ -29,6 +29,7 @@ vtctldclient GetShardRoutingRules
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --andrew-is-testing                    nothing to see here
       --compact                              use compact format for otherwise verbose outputs
       --server string                        server to use for the connection (required)
       --topo-global-root string              the path of the global topology data in the global topology server (default "/vitess/global")

@@ -1,7 +1,7 @@
 ---
 title: VDiff create
 series: vtctldclient
-commit: f751c8323ff52c90f288481b0bd92192f1734973
+commit: d2176bc68952b2f115d5d8cdf5ccad539b00000f
 ---
 ## vtctldclient VDiff create
 
@@ -26,7 +26,6 @@ vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --targe
       --filtered-replication-wait-time duration   Specifies the maximum time to wait, in seconds, for replication to catch up when syncing tablet streams. (default 30s)
   -h, --help                                      help for create
       --limit int                                 Max rows to stop comparing after. (default 9223372036854775807)
-      --max-diff-duration duration                How long should an individual table diff run before being stopped and restarted in order to lessen the impact on tablets due to holding open database snapshots for long periods of time (0 is the default and means no time limit).
       --max-extra-rows-to-compare int             If there are collation differences between the source and target, you can have rows that are identical but simply returned in a different order from MySQL. We will do a second pass to compare the rows for any actual differences in this case and this flag allows you to control the resources used for this operation. (default 1000)
       --max-report-sample-rows int                Maximum number of row differences to report (0 for all differences). NOTE: when increasing this value it is highly recommended to also specify --only-pks (default 10)
       --only-pks                                  When reporting missing rows, only show primary keys in the report.
@@ -44,6 +43,7 @@ vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --targe
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --andrew-is-testing                    nothing to see here
       --compact                              use compact format for otherwise verbose outputs
       --format string                        The format of the output; supported formats are: text,json. (default "text")
       --server string                        server to use for the connection (required)

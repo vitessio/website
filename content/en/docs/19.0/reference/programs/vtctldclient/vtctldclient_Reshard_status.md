@@ -1,7 +1,7 @@
 ---
 title: Reshard status
 series: vtctldclient
-commit: f751c8323ff52c90f288481b0bd92192f1734973
+commit: d2176bc68952b2f115d5d8cdf5ccad539b00000f
 ---
 ## vtctldclient Reshard status
 
@@ -27,6 +27,7 @@ vtctldclient --server localhost:15999 Reshard --workflow cust2cust --target-keys
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --andrew-is-testing                    nothing to see here
       --compact                              use compact format for otherwise verbose outputs
       --format string                        The format of the output; supported formats are: text,json. (default "text")
       --server string                        server to use for the connection (required)

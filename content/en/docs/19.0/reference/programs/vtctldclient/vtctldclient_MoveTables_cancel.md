@@ -1,7 +1,7 @@
 ---
 title: MoveTables cancel
 series: vtctldclient
-commit: f751c8323ff52c90f288481b0bd92192f1734973
+commit: d2176bc68952b2f115d5d8cdf5ccad539b00000f
 ---
 ## vtctldclient MoveTables cancel
 
@@ -23,13 +23,13 @@ vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --
   -h, --help                 help for cancel
       --keep-data            Keep the partially copied table data from the MoveTables workflow in the target keyspace.
       --keep-routing-rules   Keep the routing rules created for the MoveTables workflow.
-      --shards strings       (Optional) Specifies a comma-separated list of shards to operate on.
 ```
 
 ### Options inherited from parent commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --andrew-is-testing                    nothing to see here
       --compact                              use compact format for otherwise verbose outputs
       --format string                        The format of the output; supported formats are: text,json. (default "text")
       --server string                        server to use for the connection (required)
