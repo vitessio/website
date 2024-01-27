@@ -1,7 +1,7 @@
 ---
 title: mysqlctld
 series: mysqlctld
-commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
+commit: f751c8323ff52c90f288481b0bd92192f1734973
 ---
 ## mysqlctld
 
@@ -123,6 +123,7 @@ mysqlctld \
       --pool_hostname_resolve_interval duration                          if set force an update to all hostnames and reconnect if changed, defaults to 0 (disabled)
       --port int                                                         port for the server
       --pprof strings                                                    enable profiling
+      --pprof-http                                                       enable pprof http endpoints (default true)
       --purge_logs_interval duration                                     how often try to remove old logs (default 1h0m0s)
       --replication_connect_retry duration                               how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s)
       --security_policy string                                           the name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only)
