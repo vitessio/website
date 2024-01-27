@@ -1,7 +1,7 @@
 ---
 title: vtgateclienttest
 series: vtgateclienttest
-commit: c823b86a19bfeb9a6a411a75caf492464caf697e
+commit: f751c8323ff52c90f288481b0bd92192f1734973
 ---
 ## vtgateclienttest
 
@@ -66,6 +66,7 @@ vtgateclienttest [flags]
       --pid_file string                                                  If set, the process will write its pid to the named file, and delete it on graceful shutdown.
       --port int                                                         port for the server
       --pprof strings                                                    enable profiling
+      --pprof-http                                                       enable pprof http endpoints (default true)
       --purge_logs_interval duration                                     how often try to remove old logs (default 1h0m0s)
       --security_policy string                                           the name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only)
       --service_map strings                                              comma separated list of services to enable (or disable if prefixed with '-') Example: grpc-queryservice
