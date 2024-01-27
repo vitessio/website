@@ -1,7 +1,7 @@
 ---
 title: zkctl
 series: zkctl
-commit: c823b86a19bfeb9a6a411a75caf492464caf697e
+commit: f751c8323ff52c90f288481b0bd92192f1734973
 ---
 ## zkctl
 
@@ -26,6 +26,7 @@ Initializes and controls zookeeper with Vitess-specific configuration.
       --log_rotate_max_size uint                                    size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
       --logtostderr                                                 log to standard error instead of files
       --pprof strings                                               enable profiling
+      --pprof-http                                                  enable pprof http endpoints (default true)
       --purge_logs_interval duration                                how often try to remove old logs (default 1h0m0s)
       --stderrthreshold severityFlag                                logs at or above this threshold go to stderr (default 1)
       --v Level                                                     log level for V logs
