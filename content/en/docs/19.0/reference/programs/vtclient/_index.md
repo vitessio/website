@@ -1,7 +1,7 @@
 ---
 title: vtclient
 series: vtclient
-commit: 2642bea6b1d3476889564c49ed64829f2a3d0a90
+commit: 345071ef1cc88ac4deffad78ec0b376466405ef7
 ---
 ## vtclient
 

@@ -1,7 +1,7 @@
 ---
 title: Workflow update
 series: vtctldclient
-commit: a85c612dc9a58aa2e4b13010fdba99e246646618
+commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
 ---
 ## vtctldclient Workflow update
 

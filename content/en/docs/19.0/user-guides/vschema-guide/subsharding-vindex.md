@@ -197,25 +197,12 @@ Now, if we have a sharded Vitess cluster, let us observe the routing when all
 columns are provided:
 
 ```
-mysql> vexplain plan select * from t1 where c1=1 and c2=1 and c3=1 \G
-*************************** 1. row ***************************
-JSON: {
-	"OperatorType": "Route",
-	"Variant": "EqualUnique",
-	"Keyspace": {
-		"Name": "customer",
-		"Sharded": true
-	},
-	"FieldQuery": "select c1, c2, c3, c4 from t1 where 1 != 1",
-	"Query": "select c1, c2, c3, c4 from t1 where c1 = 1 and c2 = 1 and c3 = 1",
-	"Table": "t1",
-	"Values": [
-		"1",
-		"1",
-		"1"
-	],
-	"Vindex": "t1_multicol"
-}
+mysql> explain format=vitess select * from t1 where c1=1 and c2=1 and c3=1;
++----------+-------------+----------+-------------+------------+-----------------------------------------------------+
+| operator | variant     | keyspace | destination | tabletType | query                                               |
++----------+-------------+----------+-------------+------------+-----------------------------------------------------+
+| Route    | EqualUnique | sharded  |             | UNKNOWN    | select * from t1 where c1 = 1 and c2 = 1 and c3 = 1 |
++----------+-------------+----------+-------------+------------+-----------------------------------------------------+
 1 row in set (0.00 sec)
 ```
 
@@ -223,43 +210,20 @@ This is as expected.  Let's see the plans when a subset of columns,
 in order of their appearance in the vindex is provided:
 
 ```
-mysql> vexplain plan select * from t1 where c1=1 and c2=1 \G
-*************************** 1. row ***************************
-JSON: {
-	"OperatorType": "Route",
-	"Variant": "SubShard",
-	"Keyspace": {
-		"Name": "customer",
-		"Sharded": true
-	},
-	"FieldQuery": "select c1, c2, c3, c4 from t1 where 1 != 1",
-	"Query": "select c1, c2, c3, c4 from t1 where c1 = 1 and c2 = 1",
-	"Table": "t1",
-	"Values": [
-		"1",
-		"1"
-	],
-	"Vindex": "t1_multicol"
-}
+mysql> explain format=vitess select * from t1 where c1=1 and c2=1;
++----------+---------+----------+-------------+------------+------------------------------------------+
+| operator | variant | keyspace | destination | tabletType | query                                    |
++----------+---------+----------+-------------+------------+------------------------------------------+
+| Route    | Equal   | sharded  |             | UNKNOWN    | select * from t1 where c1 = 1 and c2 = 1 |
++----------+---------+----------+-------------+------------+------------------------------------------+
 1 row in set (0.00 sec)
 
-mysql> vexplain plan select * from t1 where c1=1 \G
-*************************** 1. row ***************************
-JSON: {
-	"OperatorType": "Route",
-	"Variant": "SubShard",
-	"Keyspace": {
-		"Name": "customer",
-		"Sharded": true
-	},
-	"FieldQuery": "select c1, c2, c3, c4 from t1 where 1 != 1",
-	"Query": "select c1, c2, c3, c4 from t1 where c1 = 1",
-	"Table": "t1",
-	"Values": [
-		"1"
-	],
-	"Vindex": "t1_multicol"
-}
+mysql> explain format=vitess select * from t1 where c1=1;
++----------+---------+----------+-------------+------------+-------------------------------+
+| operator | variant | keyspace | destination | tabletType | query                         |
++----------+---------+----------+-------------+------------+-------------------------------+
+| Route    | Equal   | sharded  |             | UNKNOWN    | select * from t1 where c1 = 1 |
++----------+---------+----------+-------------+------------+-------------------------------+
 1 row in set (0.00 sec)
 ```
 
@@ -271,53 +235,32 @@ of shards in the keyspace.
 Next, let's show that providing no columns scatters (as expected):
 
 ```
-mysql> vexplain plan select * from t1 \G
-*************************** 1. row ***************************
-JSON: {
-	"OperatorType": "Route",
-	"Variant": "Scatter",
-	"Keyspace": {
-		"Name": "customer",
-		"Sharded": true
-	},
-	"FieldQuery": "select c1, c2, c3, c4 from t1 where 1 != 1",
-	"Query": "select c1, c2, c3, c4 from t1",
-	"Table": "t1"
-}
-1 row in set (0.01 sec)
+mysql> explain format=vitess select * from t1;
++----------+---------+----------+-------------+------------+------------------+
+| operator | variant | keyspace | destination | tabletType | query            |
++----------+---------+----------+-------------+------------+------------------+
+| Route    | Scatter | sharded  |             | UNKNOWN    | select * from t1 |
++----------+---------+----------+-------------+------------+------------------+
+1 row in set (0.00 sec)
 ```
 
 Similarly, providing a column (or subset of columns) from the subsharding
 vindex that does not include the first column will lead to a scatter:
 
 ```
-mysql> vexplain plan select * from t1 where c3=1 \G
-*************************** 1. row ***************************
-JSON: {
-	"OperatorType": "Route",
-	"Variant": "Scatter",
-	"Keyspace": {
-		"Name": "customer",
-		"Sharded": true
-	},
-	"FieldQuery": "select c1, c2, c3, c4 from t1 where 1 != 1",
-	"Query": "select c1, c2, c3, c4 from t1 where c3 = 1",
-	"Table": "t1"
-}
+mysql> explain format=vitess select * from t1 where c3=1;
++----------+---------+----------+-------------+------------+-------------------------------+
+| operator | variant | keyspace | destination | tabletType | query                         |
++----------+---------+----------+-------------+------------+-------------------------------+
+| Route    | Scatter | sharded  |             | UNKNOWN    | select * from t1 where c3 = 1 |
++----------+---------+----------+-------------+------------+-------------------------------+
 1 row in set (0.00 sec)
 
-mysql> vexplain plan select * from t1 where c2=1 and c3=1 \G
-*************************** 1. row ***************************
-JSON: {
-	"OperatorType": "Route",
-	"Variant": "Scatter",
-	"Keyspace": {
-		"Name": "customer",
-		"Sharded": true
-	},
-	"FieldQuery": "select c1, c2, c3, c4 from t1 where 1 != 1",
-	"Query": "select c1, c2, c3, c4 from t1 where c2 = 1 and c3 = 1",
-	"Table": "t1"
-}
+mysql> explain format=vitess select * from t1 where c2=1 and c3=1;
++----------+---------+----------+-------------+------------+------------------------------------------+
+| operator | variant | keyspace | destination | tabletType | query                                    |
++----------+---------+----------+-------------+------------+------------------------------------------+
+| Route    | Scatter | sharded  |             | UNKNOWN    | select * from t1 where c2 = 1 and c3 = 1 |
++----------+---------+----------+-------------+------------+------------------------------------------+
 1 row in set (0.00 sec)
 ```
