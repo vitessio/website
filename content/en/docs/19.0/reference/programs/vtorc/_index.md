@@ -1,7 +1,7 @@
 ---
 title: vtorc
 series: vtorc
-commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
+commit: a85c612dc9a58aa2e4b13010fdba99e246646618
 ---
 ## vtorc
 
@@ -74,6 +74,7 @@ vtorc \
       --pid_file string                                             If set, the process will write its pid to the named file, and delete it on graceful shutdown.
       --port int                                                    port for the server
       --pprof strings                                               enable profiling
+      --pprof-http                                                  enable pprof http endpoints (default true)
       --prevent-cross-cell-failover                                 Prevent VTOrc from promoting a primary in a different cell than the current primary in case of a failover
       --purge_logs_interval duration                                how often try to remove old logs (default 1h0m0s)
       --reasonable-replication-lag duration                         Maximum replication lag on replicas which is deemed to be acceptable (default 10s)

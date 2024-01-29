@@ -1,7 +1,7 @@
 ---
 title: vttablet
 series: vttablet
-commit: 6b481a7dc8639a070f8aa42773aa9c5a497f79c7
+commit: a85c612dc9a58aa2e4b13010fdba99e246646618
 ---
 ## vttablet
 
@@ -272,6 +272,7 @@ vttablet \
       --pool_hostname_resolve_interval duration                          if set force an update to all hostnames and reconnect if changed, defaults to 0 (disabled)
       --port int                                                         port for the server
       --pprof strings                                                    enable profiling
+      --pprof-http                                                       enable pprof http endpoints (default true)
       --pt-osc-path string                                               override default pt-online-schema-change binary full path
       --publish_retry_interval duration                                  how long vttablet waits to retry publishing the tablet record (default 30s)
       --purge_logs_interval duration                                     how often try to remove old logs (default 1h0m0s)

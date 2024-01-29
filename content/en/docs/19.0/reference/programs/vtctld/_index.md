@@ -1,7 +1,7 @@
 ---
 title: vtctld
 series: vtctld
-commit: c823b86a19bfeb9a6a411a75caf492464caf697e
+commit: a85c612dc9a58aa2e4b13010fdba99e246646618
 ---
 ## vtctld
 
@@ -111,12 +111,14 @@ vtctld \
       --log_rotate_max_size uint                                         size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
       --logtostderr                                                      log to standard error instead of files
       --max-stack-size int                                               configure the maximum stack size in bytes (default 67108864)
+      --mysql_server_version string                                      MySQL server version to advertise. (default "8.0.30-Vitess")
       --onclose_timeout duration                                         wait no more than this for OnClose handlers before stopping (default 10s)
       --onterm_timeout duration                                          wait no more than this for OnTermSync handlers before stopping (default 10s)
       --opentsdb_uri string                                              URI of opentsdb /api/put method
       --pid_file string                                                  If set, the process will write its pid to the named file, and delete it on graceful shutdown.
       --port int                                                         port for the server
       --pprof strings                                                    enable profiling
+      --pprof-http                                                       enable pprof http endpoints (default true)
       --proxy_tablets                                                    Setting this true will make vtctld proxy the tablet status instead of redirecting to them
       --purge_logs_interval duration                                     how often try to remove old logs (default 1h0m0s)
       --remote_operation_timeout duration                                time to wait for a remote operation (default 15s)

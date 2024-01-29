@@ -1,7 +1,7 @@
 ---
 title: VDiff create
 series: vtctldclient
-commit: 9a6f5262f7707ff80ce85c111d2ff686d85d29cc
+commit: d3012c188ea0cfc6837917fc6642ea23be9bb1ff
 ---
 ## vtctldclient VDiff create
 
@@ -25,8 +25,8 @@ vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --targe
       --debug-query                               Adds a mysql query to the report that can be used for further debugging.
       --filtered-replication-wait-time duration   Specifies the maximum time to wait, in seconds, for replication to catch up when syncing tablet streams. (default 30s)
   -h, --help                                      help for create
-      --limit uint32                              Max rows to stop comparing after. (default 4294967295)
-      --max-extra-rows-to-compare uint32          If there are collation differences between the source and target, you can have rows that are identical but simply returned in a different order from MySQL. We will do a second pass to compare the rows for any actual differences in this case and this flag allows you to control the resources used for this operation. (default 1000)
+      --limit int                                 Max rows to stop comparing after. (default 9223372036854775807)
+      --max-extra-rows-to-compare int             If there are collation differences between the source and target, you can have rows that are identical but simply returned in a different order from MySQL. We will do a second pass to compare the rows for any actual differences in this case and this flag allows you to control the resources used for this operation. (default 1000)
       --only-pks                                  When reporting missing rows, only show primary keys in the report.
       --source-cells strings                      The source cell(s) to compare from; default is any available cell.
       --tables strings                            Only run vdiff for these tables in the workflow.

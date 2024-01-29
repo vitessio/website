@@ -1,7 +1,7 @@
 ---
 title: ApplyRoutingRules
 series: vtctldclient
-commit: 9a6f5262f7707ff80ce85c111d2ff686d85d29cc
+commit: d3012c188ea0cfc6837917fc6642ea23be9bb1ff
 ---
 ## vtctldclient ApplyRoutingRules
 
@@ -14,7 +14,7 @@ vtctldclient ApplyRoutingRules {--rules RULES | --rules-file RULES_FILE} [--cell
 ### Options
 
 ```
-  -c, --cells strings       Limit the VSchema graph rebuildingg to the specified cells. Ignored if --skip-rebuild is specified.
+  -c, --cells strings       Limit the VSchema graph rebuilding to the specified cells. Ignored if --skip-rebuild is specified.
   -d, --dry-run             Load the specified routing rules as a validation step, but do not actually apply the rules to the topo.
   -h, --help                help for ApplyRoutingRules
   -r, --rules string        Routing rules, specified as a string.

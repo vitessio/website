@@ -1,7 +1,7 @@
 ---
 title: vtbackup
 series: vtbackup
-commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
+commit: 20b1e461f3710f368a04eb0b563fd3de3df56908
 ---
 ## vtbackup
 
@@ -151,7 +151,7 @@ vtbackup [flags]
       --grpc_max_message_size int                                   Maximum allowed RPC message size. Larger messages will be rejected by gRPC with the error 'exceeding the max size'. (default 16777216)
       --grpc_prometheus                                             Enable gRPC monitoring with Prometheus.
   -h, --help                                                        help for vtbackup
-      --incremental_from_pos string                                 Position of previous backup. Default: empty. If given, then this backup becomes an incremental backup from given position. If value is 'auto', backup taken from last successful backup position
+      --incremental_from_pos string                                 Position, or name of backup from which to create an incremental backup. Default: empty. If given, then this backup becomes an incremental backup from given position or given backup. If value is 'auto', this backup will be taken from the last successful backup position.
       --init_db_name_override string                                (init parameter) override the name of the db used by vttablet
       --init_db_sql_file string                                     path to .sql file to run after mysql_install_db
       --init_keyspace string                                        (init parameter) keyspace to use for this tablet
@@ -196,6 +196,7 @@ vtbackup [flags]
       --opentsdb_uri string                                         URI of opentsdb /api/put method
       --port int                                                    port for the server
       --pprof strings                                               enable profiling
+      --pprof-http                                                  enable pprof http endpoints (default true)
       --purge_logs_interval duration                                how often try to remove old logs (default 1h0m0s)
       --remote_operation_timeout duration                           time to wait for a remote operation (default 15s)
       --restart_before_backup                                       Perform a mysqld clean/full restart after applying binlogs, but before taking the backup. Only makes sense to work around xtrabackup bugs.

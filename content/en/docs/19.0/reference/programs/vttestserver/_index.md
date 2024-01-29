@@ -1,7 +1,7 @@
 ---
 title: vttestserver
 series: vttestserver
-commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
+commit: a85c612dc9a58aa2e4b13010fdba99e246646618
 ---
 ## vttestserver
 
@@ -109,6 +109,7 @@ vttestserver [flags]
       --pool_hostname_resolve_interval duration                          if set force an update to all hostnames and reconnect if changed, defaults to 0 (disabled)
       --port int                                                         Port to use for vtcombo. If this is 0, a random port will be chosen.
       --pprof strings                                                    enable profiling
+      --pprof-http                                                       enable pprof http endpoints (default true)
       --proto_topo string                                                Define the fake cluster topology as a compact text format encoded vttest proto. See vttest.proto for more information.
       --purge_logs_interval duration                                     how often try to remove old logs (default 1h0m0s)
       --queryserver-config-transaction-timeout float                     query server transaction timeout (in seconds), a transaction will be killed if it takes longer than this value

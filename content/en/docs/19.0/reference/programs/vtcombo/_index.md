@@ -1,7 +1,7 @@
 ---
 title: vtcombo
 series: vtcombo
-commit: 6b481a7dc8639a070f8aa42773aa9c5a497f79c7
+commit: a85c612dc9a58aa2e4b13010fdba99e246646618
 ---
 ## vtcombo
 
@@ -270,6 +270,7 @@ vtcombo [flags]
       --pool_hostname_resolve_interval duration                          if set force an update to all hostnames and reconnect if changed, defaults to 0 (disabled)
       --port int                                                         port for the server
       --pprof strings                                                    enable profiling
+      --pprof-http                                                       enable pprof http endpoints (default true)
       --proto_topo vttest.TopoData                                       vttest proto definition of the topology, encoded in compact text format. See vttest.proto for more information.
       --proxy_protocol                                                   Enable HAProxy PROXY protocol on MySQL listener socket
       --proxy_tablets                                                    Setting this true will make vtctld proxy the tablet status instead of redirecting to them

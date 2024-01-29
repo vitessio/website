@@ -101,19 +101,27 @@ vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard [--allow_primary=f
 
 ## Create an incremental backup with vtctl
 
-An incremental backup requires additional information: the point from which to start the backup. An incremental backup is taken by supplying `--incremental-from-pos` to the `Backup` or `BackupShard` command. The argument may either indicate a valid position, or the value `auto`. Examples:
+An incremental backup requires additional information: the point from which to start the backup. An incremental backup is taken by supplying `--incremental-from-pos` to the `Backup` or `BackupShard` command. The argument may either indicate:
+
+- A valid position.
+- A name of a successful backup.
+- Or, the value `auto`.
 
 ```sh
 vtctldclient Backup --incremental-from-pos="MySQL56/0d7aaca6-1666-11ee-aeaf-0a43f95f28a3:1-53" zone1-0000000102
 
 vtctldclient Backup --incremental-from-pos="0d7aaca6-1666-11ee-aeaf-0a43f95f28a3:1-53" zone1-0000000102
 
+vtctldclient Backup --incremental-from-pos="2024-01-10.062022.zone1-0000000101 commerce/0" zone1-0000000102
+
 vtctldclient Backup --incremental-from-pos="auto" zone1-0000000102
 
 vtctldclient BackupShard --incremental-from-pos=auto commerce/0
 ```
 
-When indicating a position, you may choose to use or to omit the `MySQL56/` prefix (which you can find in the backup manifest's Position).
+When `--incremental-from-pos` supplies a position, you may choose to use or to omit the `MySQL56/` prefix (which you can find in the backup manifest's Position).
+
+When `--incremental-from-pos` indicates a backup name, that must be a successfully completed, existing backup. It may be either a full or an incremental backup.
 
 When `--incremental-from-pos="auto"`, Vitess chooses the position of the last successful backup as the starting point for the incremental backup. This is a convenient way to ensure a sequence of contiguous incremental backups.
 

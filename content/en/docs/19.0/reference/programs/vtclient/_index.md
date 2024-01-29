@@ -1,7 +1,7 @@
 ---
 title: vtclient
 series: vtclient
-commit: c823b86a19bfeb9a6a411a75caf492464caf697e
+commit: 2642bea6b1d3476889564c49ed64829f2a3d0a90
 ---
 ## vtclient
 
@@ -55,6 +55,7 @@ vtclient --server vtgate:15991 --target '@primary' --bind_variables '[ 12345, 1,
       --mysql_server_version string                                 MySQL server version to advertise. (default "8.0.30-Vitess")
       --parallel int                                                DMLs only: Number of threads executing the same query in parallel. Useful for simple load testing. (default 1)
       --pprof strings                                               enable profiling
+      --pprof-http                                                  enable pprof http endpoints (default true)
       --purge_logs_interval duration                                how often try to remove old logs (default 1h0m0s)
       --qps int                                                     queries per second to throttle each thread at.
       --security_policy string                                      the name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only)

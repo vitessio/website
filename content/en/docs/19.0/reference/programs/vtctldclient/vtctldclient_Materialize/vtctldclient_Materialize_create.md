@@ -1,7 +1,7 @@
 ---
 title: Materialize create
 series: vtctldclient
-commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
+commit: 2642bea6b1d3476889564c49ed64829f2a3d0a90
 ---
 ## vtctldclient Materialize create
 
@@ -52,7 +52,10 @@ vtctldclient --server localhost:15999 materialize --workflow product_sales --tar
 ```
   -c, --cells strings                      Cells and/or CellAliases to copy table data from.
   -h, --help                               help for create
+      --mysql_server_version string        Configure the MySQL version to use for example for the parser. (default "8.0.30-Vitess")
       --source-keyspace string             Keyspace where the tables queried in the 'source_expression' values within table-settings live.
+      --sql-max-length-errors int          truncate queries in error logs to the given length (default unlimited)
+      --sql-max-length-ui int              truncate queries in debug UIs to the given length (default 512) (default 512)
       --stop-after-copy                    Stop the workflow after it's finished copying the existing rows and before it starts replicating changes.
       --table-settings JSON                A JSON array defining what tables to materialize using what select statements. See the --help output for more details. (default null)
       --tablet-types strings               Source tablet types to replicate table data from (e.g. PRIMARY,REPLICA,RDONLY).
