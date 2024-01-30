@@ -127,10 +127,9 @@ When `--incremental-from-pos="auto"`, Vitess chooses the position of the last su
 
 An incremental backup backs up one or more MySQL binary log files. These binary log files may begin with the requested position, or with an earlier position. They will necessarily include the requested position. When the incremental backup begins, Vitess rotates the MySQL binary logs on the tablet, so that it does not back up an active log file.
 
-An incremental backup fails in these scenarios:
+If Vitess finds that the database made no writes since the requested backup/position, then the incremental backup is deemed _empty_ and produces no artifacts, essentially becoming a no-op. The `Backup/BackupShard` command exits with success code, but there is no `MANIFEST` file created and no backup name.
 
-- It is unable to find binary log files that covers the requested position. This can happen if the binary logs are purged earlier than the incremental backup was taken. It essentially means there's a gap in the changelog events. **Note** that while on one tablet the binary logs may be missing, another tablet may still have binary logs that cover the requested position.
-- There is no change to the database since the requested position, i.e. the GTID position has not changed since.
+An incremental backup fails when it is unable to find binary log files that covers the requested position. This can happen if the binary logs are purged earlier than the incremental backup was taken. It essentially means there's a gap in the changelog events. **Note** that while on one tablet the binary logs may be missing, another tablet may still have binary logs that cover the requested position.
 
 ## Backing up Topology Server
 
