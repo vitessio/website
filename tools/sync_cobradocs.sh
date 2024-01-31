@@ -30,10 +30,4 @@ git add $(git diff -I"^commit:.*$" --numstat | awk '{print $3}' | xargs) || true
 git checkout -- .
 # Add any net-new files that were missed in the first `git add`.
 git add content/**
-
-if [ $(git diff --cached --name-only | wc -l) -eq 0 ]; then
-    echo "No changes to cobradocs detected" >&2
-    exit 1
-fi
-
-git commit -sm "sync cobradocs to latest release branches"
+git commit --allow-empty -sm "sync cobradocs to latest release branches"

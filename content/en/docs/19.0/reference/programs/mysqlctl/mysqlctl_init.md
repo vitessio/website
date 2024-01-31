@@ -1,7 +1,7 @@
 ---
 title: init
 series: mysqlctl
-commit: 2642bea6b1d3476889564c49ed64829f2a3d0a90
+commit: 345071ef1cc88ac4deffad78ec0b376466405ef7
 ---
 ## mysqlctl init
 
@@ -44,7 +44,7 @@ mysqlctl \
       --config-file string                                          Full path of the config file (with extension) to use. If set, --config-path, --config-type, and --config-name are ignored.
       --config-file-not-found-handling ConfigFileNotFoundHandling   Behavior when a config file is not found. (Options: error, exit, ignore, warn) (default warn)
       --config-name string                                          Name of the config file (without extension) to search for. (default "vtconfig")
-      --config-path strings                                         Paths to search for config files in. (default [<WORKDIR>])
+      --config-path strings                                         Paths to search for config files in. (default [/tmp/pull_request_handler/vitess])
       --config-persistence-min-interval duration                    minimum interval between persisting dynamic config changes back to disk (if no change has occurred, nothing is done). (default 1s)
       --config-type string                                          Config file type (omit to infer config type from file extension).
       --db-credentials-file string                                  db credentials file; send SIGHUP to reload this file
