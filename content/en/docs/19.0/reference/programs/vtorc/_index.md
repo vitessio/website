@@ -1,7 +1,7 @@
 ---
 title: vtorc
 series: vtorc
-commit: a85c612dc9a58aa2e4b13010fdba99e246646618
+commit: cd4058933e3fe1cd7f2666eb9cce26af8969965a
 ---
 ## vtorc
 
@@ -94,7 +94,7 @@ vtorc \
       --table-refresh-interval int                                  interval in milliseconds to refresh tables in status page with refreshRequired class
       --tablet_manager_grpc_ca string                               the server ca to use to validate servers when connecting
       --tablet_manager_grpc_cert string                             the cert to use to connect
-      --tablet_manager_grpc_concurrency int                         concurrency to use to talk to a vttablet server for performance-sensitive RPCs (like ExecuteFetchAs{Dba,AllPrivs,App}) (default 8)
+      --tablet_manager_grpc_concurrency int                         concurrency to use to talk to a vttablet server for performance-sensitive RPCs (like ExecuteFetchAs{Dba,App} and CheckThrottler) (default 8)
       --tablet_manager_grpc_connpool_size int                       number of tablets to keep tmclient connections open to (default 100)
       --tablet_manager_grpc_crl string                              the server crl to use to validate server certificates when connecting
       --tablet_manager_grpc_key string                              the key to use to connect
