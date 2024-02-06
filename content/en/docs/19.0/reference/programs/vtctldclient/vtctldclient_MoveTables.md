@@ -1,7 +1,7 @@
 ---
 title: MoveTables
 series: vtctldclient
-commit: 3d3c86e85f4bf63e4e94ebbd3909fda3a838f517
+commit: 6eb2e70db701a94eab08ba8b4137a98b640f7511
 ---
 ## vtctldclient MoveTables
 
@@ -33,6 +33,7 @@ Perform commands related to moving tables from a source keyspace to a target key
 * [vtctldclient MoveTables cancel](./vtctldclient_movetables_cancel/)	 - Cancel a MoveTables VReplication workflow.
 * [vtctldclient MoveTables complete](./vtctldclient_movetables_complete/)	 - Complete a MoveTables VReplication workflow.
 * [vtctldclient MoveTables create](./vtctldclient_movetables_create/)	 - Create and optionally run a MoveTables VReplication workflow.
+* [vtctldclient MoveTables mirrortraffic](./vtctldclient_movetables_mirrortraffic/)	 - Mirror traffic for a MoveTables VReplication workflow.
 * [vtctldclient MoveTables reversetraffic](./vtctldclient_movetables_reversetraffic/)	 - Reverse traffic for a MoveTables VReplication workflow.
 * [vtctldclient MoveTables show](./vtctldclient_movetables_show/)	 - Show the details for a MoveTables VReplication workflow.
 * [vtctldclient MoveTables start](./vtctldclient_movetables_start/)	 - Start a MoveTables workflow.
