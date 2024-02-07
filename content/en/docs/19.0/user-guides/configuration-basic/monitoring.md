@@ -278,9 +278,13 @@ There are other internal pools used by vttablet that are not very consequential.
 
 The above three variables are table acl stats. They are broken out by table, plan and user.
 
-#### `QueryPlanCacheSize`
+#### `QueryCacheCapacity`, `QueryCacheEvictions`, `QueryCacheHits`, `QueryCacheMisses`, `QueryCacheSize`
 
-If the application does not make good use of bind variables, this value would reach the QueryCacheCapacity. If so, inspecting the current query cache will give you a clue about where the misuse is happening.
+VTTablet maintains a cache of query plans, and instruments cache usage in `QueryCache*` stats.
+
+If the application does not make good use of bind variables, `QueryCacheSize` will reach the value of `QueryCacheCapacity`, at which point `QueryCacheEvictions` would increase. Monitoring the current `QueryCacheSize`will give you a clue about where the misuse is happening.
+
+`QueryCacheHits` and `QueryCacheMisses` provide visibility, respectively, into how many queries are being sped up by the cache or else have to fall back to the slower path of query parsing and planning.
 
 #### `QueryCounts`, `QueryErrorCounts`, `QueryRowCounts`, `QueryTimesNs`
 
