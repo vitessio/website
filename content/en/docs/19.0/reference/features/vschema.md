@@ -80,7 +80,7 @@ The configuration of your VSchema reflects the desired sharding configuration fo
 You can use the following commands for maintaining the VSchema:
 
 * `GetVSchema <keyspace>`
-* `ApplyVSchema -- {--vschema=<vschema> || --vschema_file=<vschema file> || --sql=<sql> || --sql_file=<sql file>} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run] <keyspace>`
+* `ApplyVSchema -- {--vschema=<vschema> || --vschema_file=<vschema file> || --sql=<sql> || --sql_file=<sql file>} [--cells=c1,c2,...] [--skip_rebuild] [--dry-run] [--strict]  <keyspace>`
 * `RebuildVSchemaGraph [--cells=c1,c2,...]`
 * `GetSrvVSchema <cell>`
 * `DeleteSrvVSchema <cell>`
