@@ -1,7 +1,7 @@
 ---
 title: MoveTables create
 series: vtctldclient
-commit: 574162f4cad770c19a20a28526fe46f7de24b999
+commit: 0b7b61403f3df520f0274f1f8376979725abfaae
 ---
 ## vtctldclient MoveTables create
 
@@ -20,6 +20,7 @@ vtctldclient --server localhost:15999 movetables --workflow commerce2customer --
 ### Options
 
 ```
+      --additional-filter string           Additional filter to apply to the tables being copied in addition to the default filter.
   -a, --all-cells                          Copy table data from any existing cell.
       --all-tables                         Copy all tables from the source.
       --atomic-copy                        (EXPERIMENTAL) A single copy phase is run for all tables from the source. Use this, for example, if your source keyspace has tables which use foreign key constraints.
@@ -31,12 +32,14 @@ vtctldclient --server localhost:15999 movetables --workflow commerce2customer --
       --no-routing-rules                   (Advanced) Do not create routing rules while creating the workflow. See the reference documentation for limitations if you use this flag.
       --on-ddl string                      What to do when DDL is encountered in the VReplication stream. Possible values are IGNORE, STOP, EXEC, and EXEC_IGNORE. (default "IGNORE")
       --source-keyspace string             Keyspace where the tables are being moved from.
+      --source-keyspace-alias string       Used in conjunction with --use-keyspace-routing-rules. This value will be used instead of the source keyspace name in the keyspace routing rules.
       --source-shards strings              Source shards to copy data from when performing a partial MoveTables (experimental).
       --source-time-zone string            Specifying this causes any DATETIME fields to be converted from the given time zone into UTC.
       --stop-after-copy                    Stop the workflow after it's finished copying the existing rows and before it starts replicating changes.
       --tables strings                     Source tables to copy.
       --tablet-types strings               Source tablet types to replicate table data from (e.g. PRIMARY,REPLICA,RDONLY).
       --tablet-types-in-preference-order   When performing source tablet selection, look for candidates in the type order as they are listed in the tablet-types flag. (default true)
+      --use-keyspace-routing-rules         Use keyspaces routing rules to route traffic to the target keyspace. This is not compatible with the --no-routing-rules flag and will override the default table routing rules mechanism.
 ```
 
 ### Options inherited from parent commands

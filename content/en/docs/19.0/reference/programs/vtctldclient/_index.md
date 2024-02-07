@@ -1,7 +1,7 @@
 ---
 title: vtctldclient
 series: vtctldclient
-commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
+commit: 0b7b61403f3df520f0274f1f8376979725abfaae
 ---
 ## vtctldclient
 
@@ -35,6 +35,7 @@ vtctldclient [flags]
 
 * [vtctldclient AddCellInfo](./vtctldclient_addcellinfo/)	 - Registers a local topology service in a new cell by creating the CellInfo.
 * [vtctldclient AddCellsAlias](./vtctldclient_addcellsalias/)	 - Defines a group of cells that can be referenced by a single name (the alias).
+* [vtctldclient ApplyKeyspaceRoutingRules](./vtctldclient_applykeyspaceroutingrules/)	 - Applies the provided keyspace routing rules.
 * [vtctldclient ApplyRoutingRules](./vtctldclient_applyroutingrules/)	 - Applies the VSchema routing rules.
 * [vtctldclient ApplySchema](./vtctldclient_applyschema/)	 - Applies the schema change to the specified keyspace on every primary, running in parallel on all shards. The changes are then propagated to replicas via replication.
 * [vtctldclient ApplyShardRoutingRules](./vtctldclient_applyshardroutingrules/)	 - Applies the provided shard routing rules.
@@ -62,6 +63,7 @@ vtctldclient [flags]
 * [vtctldclient GetCellsAliases](./vtctldclient_getcellsaliases/)	 - Gets all CellsAlias objects in the cluster.
 * [vtctldclient GetFullStatus](./vtctldclient_getfullstatus/)	 - Outputs a JSON structure that contains full status of MySQL including the replication information, semi-sync information, GTID information among others.
 * [vtctldclient GetKeyspace](./vtctldclient_getkeyspace/)	 - Returns information about the given keyspace from the topology.
+* [vtctldclient GetKeyspaceRoutingRules](./vtctldclient_getkeyspaceroutingrules/)	 - Displays the currently active keyspace routing rules as a JSON document.
 * [vtctldclient GetKeyspaces](./vtctldclient_getkeyspaces/)	 - Returns information about every keyspace in the topology.
 * [vtctldclient GetPermissions](./vtctldclient_getpermissions/)	 - Displays the permissions for a tablet.
 * [vtctldclient GetRoutingRules](./vtctldclient_getroutingrules/)	 - Displays the VSchema routing rules.
