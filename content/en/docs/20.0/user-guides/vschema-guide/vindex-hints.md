@@ -13,29 +13,26 @@ Vindex hints are inspired by MySQL's index hints but are designed specifically f
 
 The syntax for using vindex hints in a query is as follows:
 
-- To **use** a specific vindex for routing:
+```
+tbl_name [[AS] alias] [index_hint_list]
 
-  ```sql
-  SELECT * FROM table_name USE VINDEX (vindex_name);
-  ```
+index_hint_list:
+index_hint [index_hint] ...
 
-- To **ignore** a specific vindex for routing:
+index_hint:
+  USE VINDEX ([index_list])
+| IGNORE VINDEX ([index_list])
 
-  ```sql
-  SELECT * FROM table_name IGNORE VINDEX (vindex_name);
-  ```
 
-`table_name` is the name of the table the query operates on, and `vindex_name` is the name of the vindex to be used or ignored.
+index_list:
+index_name [, index_name] ...
+```
 
 ## Usage
 
-Certainly, here's the addition to the section:
-
----
-
 ### Using Vindex Hints
 
-When you want to explicitly route a query to shards based on a specific vindex, use the `USE VINDEX` hint.
+When you want to route a table in query to shards based only on a specific set of vindexes, use the `USE VINDEX` hint.
 This can be particularly useful when you know the distribution of your data and want to optimize for query performance.
 You can list multiple vindexes separated by commas, and the planner will consider all of them and use the one producing the best query plan.
 
