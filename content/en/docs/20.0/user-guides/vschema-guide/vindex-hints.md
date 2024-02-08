@@ -14,18 +14,18 @@ Vindex hints are inspired by MySQL's index hints but are designed specifically f
 The syntax for using vindex hints in a query is as follows:
 
 ```
-tbl_name [[AS] alias] [index_hint_list]
+tbl_name [[AS] alias] [vindex_hint_list]
 
-index_hint_list:
-index_hint [index_hint] ...
+vindex_hint_list:
+vindex_hint [vindex_hint] ...
 
-index_hint:
-  USE VINDEX ([index_list])
-| IGNORE VINDEX ([index_list])
+vindex_hint:
+  USE VINDEX ([vindex_list])
+| IGNORE VINDEX ([vindex_list])
 
 
-index_list:
-index_name [, index_name] ...
+vindex_list:
+vindex_name [, vindex_name] ...
 ```
 
 ## Usage
