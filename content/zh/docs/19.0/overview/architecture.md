@@ -12,7 +12,7 @@ Vitess平台由许多服务器进程、命令行实用程序和基于Web的实�
 
 下图说明了Vitess的组件
 
-![Vitess Overview Architecture Diagram](../img/VitessOverview.png)
+![Vitess Overview Architecture Diagram](../img/architecture.png)
 
 ## Topology
 
