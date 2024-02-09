@@ -14,11 +14,6 @@ Vitess平台由许多服务器进程、命令行实用程序和基于Web的实�
 
 <img alt="Architecture Diagram" src="../img/architecture.svg"  width=100%>
 
-## Topology
-
-[拓扑服务](../../user-guides/topology-service) 一个元数据存储，包含有关正在运行的服务器、分片方案和复制图的信息。拓扑由一致的数据存储支持。您可以使用**vtctl** (命令行) 和 **vtctld** (web)查看拓扑.
-
-在Kubernetes中，数据存储是etcd。 Vitess源代码还附带[Apache ZooKeeper](http://zookeeper.apache.org/)支持。
 
 ## vtgate
 
