@@ -151,3 +151,40 @@ Deletes are idempotent, so attempting to `delete` VDiff data that does not exist
 
 All VDiff data associated with a VReplication workflow is deleted when the workflow is deleted.
 {{< /info >}}
+
+### Metrics
+
+VDiff exports several metrics using the expvars interface. These are available at the `/debug/vars`
+endpoint of vttablet's http status pages. [More details can be found here](../../features/monitoring/#3-push-based-metrics-system).
+All of these are exported on the target primary `vttablet` processes where the VDiff controllers run.
+
+#### VDiffCount
+
+The number of vdiffs that exist on the `vttablet` — meaning ones that were created and have not
+yet been deleted so they could still be stopped, resumed, or deleted. This count would match the
+number of vdiffs you would see in the `vdiff show all` client command output.
+
+#### VDiffErrorCountTotal
+
+The number of errors encountered across all vdiff actions on the `vttablet`.
+
+#### VDiffErrors
+
+The count of specific errors seen during the lifetime of a vdiff.
+
+#### VDiffPhaseTimings
+
+This metric reflects the amount of time spent (in nanoseconds) in the main phases that are run during
+the lifetime of a vdiff.
+
+#### VDiffRowsComparedTotal
+
+The number of rows compared across all vdiffs on the `vttablet`.
+
+#### VDiffRowsCompared
+
+The live number of rows compared per vdiff by table.
+
+#### VDiffRestartedTableDiffsCount
+
+The numnber of time that table diffs were restarted due to `--max-diff-duration` by table.
