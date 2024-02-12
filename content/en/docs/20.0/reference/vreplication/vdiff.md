@@ -162,7 +162,8 @@ All of these are exported on the target primary `vttablet` processes where the V
 
 The number of vdiffs that exist on the `vttablet` — meaning ones that were created and have not
 yet been deleted so they could still be stopped, resumed, or deleted. This count would match the
-number of vdiffs you would see in the `vdiff show all` client command output.
+number of vdiffs you would see in the [`vdiff show all`](../../programs/vtctldclient/vtctldclient_vdiff/vtctldclient_vdiff_show/)
+client command output.
 
 #### VDiffErrorCountTotal
 
@@ -187,4 +188,5 @@ The live number of rows compared per vdiff by table.
 
 #### VDiffRestartedTableDiffsCount
 
-The numnber of time that table diffs were restarted due to `--max-diff-duration` by table.
+The numnber of time that table diffs were restarted due to [`--max-diff-duration`](../../programs/vtctldclient/vtctldclient_vdiff/vtctldclient_vdiff_create/#options)
+by table.
