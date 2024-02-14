@@ -101,7 +101,7 @@ docker run --name=vttestserver \
   vitess/vttestserver:mysql80 \
   /vt/bin/vttestserver \
   --alsologtostderr \
-  --data_dir=/vt/vtdataroot/vitess \
+  --data_dir=/vt/vtdataroot/ \
   --persistent_mode \
   --port=33574 \
   --mysql_bind_host=0.0.0.0 \
