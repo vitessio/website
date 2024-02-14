@@ -97,11 +97,11 @@ docker run --name=vttestserver \
   --health-interval=5s \
   --health-timeout=2s \
   --health-retries=5 \
-  -v vttestserver_data:/vt/vtdataroot/vitess \
-  vitess/vttestserver:mysql80
+  -v vttestserver_data:/vt/vtdataroot \
+  vitess/vttestserver:mysql80 \
   /vt/bin/vttestserver \
   --alsologtostderr \
-  --data_dir=/vt/vtdataroot/vitess \
+  --data_dir=/vt/vtdataroot/ \
   --persistent_mode \
   --port=33574 \
   --mysql_bind_host=0.0.0.0 \
