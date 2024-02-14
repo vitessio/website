@@ -89,7 +89,7 @@ docker run --name=vttestserver \
   --health-interval=5s \
   --health-timeout=2s \
   --health-retries=5 \
-  -v vttestserver_data:/vt/vtdataroot/vitess \
+  -v vttestserver_data:/vt/vtdataroot \
   vitess/vttestserver:mysql80 \
   /vt/bin/vttestserver \
   --alsologtostderr \
