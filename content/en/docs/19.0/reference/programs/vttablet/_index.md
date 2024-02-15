@@ -1,7 +1,7 @@
 ---
 title: vttablet
 series: vttablet
-commit: a85c612dc9a58aa2e4b13010fdba99e246646618
+commit: f82fb7cbd03db4fb93ba49c49b9ff5e43eb77608
 ---
 ## vttablet
 
@@ -211,6 +211,8 @@ vttablet \
       --grpc_server_initial_window_size int                              gRPC server initial window size
       --grpc_server_keepalive_enforcement_policy_min_time duration       gRPC server minimum keepalive time (default 10s)
       --grpc_server_keepalive_enforcement_policy_permit_without_stream   gRPC server permit client keepalive pings even when there are no active streams (RPCs)
+      --grpc_server_keepalive_time duration                              After a duration of this time, if the server doesn't see any activity, it pings the client to see if the transport is still alive. (default 10s)
+      --grpc_server_keepalive_timeout duration                           After having pinged for keepalive check, the server waits for a duration of Timeout and if no activity is seen even after that the connection is closed. (default 10s)
       --health_check_interval duration                                   Interval between health checks (default 20s)
       --heartbeat_enable                                                 If true, vttablet records (if master) or checks (if replica) the current time of a replication heartbeat in the sidecar database's heartbeat table. The result is used to inform the serving state of the vttablet via healthchecks.
       --heartbeat_interval duration                                      How frequently to read and write replication heartbeat. (default 1s)
@@ -272,7 +274,7 @@ vttablet \
       --pool_hostname_resolve_interval duration                          if set force an update to all hostnames and reconnect if changed, defaults to 0 (disabled)
       --port int                                                         port for the server
       --pprof strings                                                    enable profiling
-      --pprof-http                                                       enable pprof http endpoints (default true)
+      --pprof-http                                                       enable pprof http endpoints
       --pt-osc-path string                                               override default pt-online-schema-change binary full path
       --publish_retry_interval duration                                  how long vttablet waits to retry publishing the tablet record (default 30s)
       --purge_logs_interval duration                                     how often try to remove old logs (default 1h0m0s)
@@ -368,7 +370,7 @@ vttablet \
       --tablet_hostname string                                           if not empty, this hostname will be assumed instead of trying to resolve it
       --tablet_manager_grpc_ca string                                    the server ca to use to validate servers when connecting
       --tablet_manager_grpc_cert string                                  the cert to use to connect
-      --tablet_manager_grpc_concurrency int                              concurrency to use to talk to a vttablet server for performance-sensitive RPCs (like ExecuteFetchAs{Dba,AllPrivs,App}) (default 8)
+      --tablet_manager_grpc_concurrency int                              concurrency to use to talk to a vttablet server for performance-sensitive RPCs (like ExecuteFetchAs{Dba,App} and CheckThrottler) (default 8)
       --tablet_manager_grpc_connpool_size int                            number of tablets to keep tmclient connections open to (default 100)
       --tablet_manager_grpc_crl string                                   the server crl to use to validate server certificates when connecting
       --tablet_manager_grpc_key string                                   the key to use to connect

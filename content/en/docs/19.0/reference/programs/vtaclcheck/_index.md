@@ -1,7 +1,7 @@
 ---
 title: vtaclcheck
 series: vtaclcheck
-commit: 2642bea6b1d3476889564c49ed64829f2a3d0a90
+commit: f82fb7cbd03db4fb93ba49c49b9ff5e43eb77608
 ---
 ## vtaclcheck
 
@@ -31,7 +31,7 @@ vtaclcheck [flags]
       --log_rotate_max_size uint                                    size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
       --logtostderr                                                 log to standard error instead of files
       --pprof strings                                               enable profiling
-      --pprof-http                                                  enable pprof http endpoints (default true)
+      --pprof-http                                                  enable pprof http endpoints
       --purge_logs_interval duration                                how often try to remove old logs (default 1h0m0s)
       --security_policy string                                      the name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only)
       --static-auth-file string                                     The path of the auth_server_static JSON file to check

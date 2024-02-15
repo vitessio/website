@@ -1,7 +1,7 @@
 ---
 title: init
 series: zkctl
-commit: 2642bea6b1d3476889564c49ed64829f2a3d0a90
+commit: f82fb7cbd03db4fb93ba49c49b9ff5e43eb77608
 ---
 ## zkctl init
 
@@ -24,7 +24,7 @@ zkctl init [flags]
       --config-file string                                          Full path of the config file (with extension) to use. If set, --config-path, --config-type, and --config-name are ignored.
       --config-file-not-found-handling ConfigFileNotFoundHandling   Behavior when a config file is not found. (Options: error, exit, ignore, warn) (default warn)
       --config-name string                                          Name of the config file (without extension) to search for. (default "vtconfig")
-      --config-path strings                                         Paths to search for config files in. (default [<WORKDIR>])
+      --config-path strings                                         Paths to search for config files in. (default [/tmp/pull_request_handler/vitess])
       --config-persistence-min-interval duration                    minimum interval between persisting dynamic config changes back to disk (if no change has occurred, nothing is done). (default 1s)
       --config-type string                                          Config file type (omit to infer config type from file extension).
       --keep_logs duration                                          keep logs for this long (using ctime) (zero to keep forever)
@@ -35,7 +35,7 @@ zkctl init [flags]
       --log_rotate_max_size uint                                    size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
       --logtostderr                                                 log to standard error instead of files
       --pprof strings                                               enable profiling
-      --pprof-http                                                  enable pprof http endpoints (default true)
+      --pprof-http                                                  enable pprof http endpoints
       --purge_logs_interval duration                                how often try to remove old logs (default 1h0m0s)
       --stderrthreshold severityFlag                                logs at or above this threshold go to stderr (default 1)
       --v Level                                                     log level for V logs
