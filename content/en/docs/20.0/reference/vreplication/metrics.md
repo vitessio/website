@@ -72,6 +72,14 @@ The number of streams running on this target
 
 This shows the state of each stream.
 
+#### VReplicationThrottledCounts
+
+The number of times vreplication was throttled by workflow, id, throttler (trx or tablet), and the sub-component (vstreamer, vcopier, vplayer, etc) that was throttled (see [the other tablet throttler metrics](../../features/tablet-throttler/#metrics))
+
+#### VReplicationThrottledCountTotal
+
+The total number of times that vreplication has been throttled (see [the other tablet throttler metrics](../../features/tablet-throttler/#metrics))
+
 ## Source Tablet Metrics
 
 #### VStreamPacketSize
