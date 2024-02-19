@@ -1,7 +1,7 @@
 ---
 title: vtcombo
 series: vtcombo
-commit: a85c612dc9a58aa2e4b13010fdba99e246646618
+commit: b539ce927ee86b723a94a627cdec1403dd4020f0
 ---
 ## vtcombo
 
@@ -177,6 +177,8 @@ vtcombo [flags]
       --grpc_server_initial_window_size int                              gRPC server initial window size
       --grpc_server_keepalive_enforcement_policy_min_time duration       gRPC server minimum keepalive time (default 10s)
       --grpc_server_keepalive_enforcement_policy_permit_without_stream   gRPC server permit client keepalive pings even when there are no active streams (RPCs)
+      --grpc_server_keepalive_time duration                              After a duration of this time, if the server doesn't see any activity, it pings the client to see if the transport is still alive. (default 10s)
+      --grpc_server_keepalive_timeout duration                           After having pinged for keepalive check, the server waits for a duration of Timeout and if no activity is seen even after that the connection is closed. (default 10s)
       --grpc_use_effective_callerid                                      If set, and SSL is not used, will set the immediate caller id from the effective caller id's principal.
       --health_check_interval duration                                   Interval between health checks (default 20s)
       --healthcheck_retry_delay duration                                 health check retry delay (default 2ms)
@@ -270,7 +272,7 @@ vtcombo [flags]
       --pool_hostname_resolve_interval duration                          if set force an update to all hostnames and reconnect if changed, defaults to 0 (disabled)
       --port int                                                         port for the server
       --pprof strings                                                    enable profiling
-      --pprof-http                                                       enable pprof http endpoints (default true)
+      --pprof-http                                                       enable pprof http endpoints
       --proto_topo vttest.TopoData                                       vttest proto definition of the topology, encoded in compact text format. See vttest.proto for more information.
       --proxy_protocol                                                   Enable HAProxy PROXY protocol on MySQL listener socket
       --proxy_tablets                                                    Setting this true will make vtctld proxy the tablet status instead of redirecting to them
@@ -357,7 +359,7 @@ vtcombo [flags]
       --tablet_hostname string                                           if not empty, this hostname will be assumed instead of trying to resolve it
       --tablet_manager_grpc_ca string                                    the server ca to use to validate servers when connecting
       --tablet_manager_grpc_cert string                                  the cert to use to connect
-      --tablet_manager_grpc_concurrency int                              concurrency to use to talk to a vttablet server for performance-sensitive RPCs (like ExecuteFetchAs{Dba,AllPrivs,App}) (default 8)
+      --tablet_manager_grpc_concurrency int                              concurrency to use to talk to a vttablet server for performance-sensitive RPCs (like ExecuteFetchAs{Dba,App} and CheckThrottler) (default 8)
       --tablet_manager_grpc_connpool_size int                            number of tablets to keep tmclient connections open to (default 100)
       --tablet_manager_grpc_crl string                                   the server crl to use to validate server certificates when connecting
       --tablet_manager_grpc_key string                                   the key to use to connect

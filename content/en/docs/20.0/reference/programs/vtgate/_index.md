@@ -1,7 +1,7 @@
 ---
 title: vtgate
 series: vtgate
-commit: 2642bea6b1d3476889564c49ed64829f2a3d0a90
+commit: b539ce927ee86b723a94a627cdec1403dd4020f0
 ---
 ## vtgate
 
@@ -111,6 +111,8 @@ vtgate \
       --grpc_server_initial_window_size int                              gRPC server initial window size
       --grpc_server_keepalive_enforcement_policy_min_time duration       gRPC server minimum keepalive time (default 10s)
       --grpc_server_keepalive_enforcement_policy_permit_without_stream   gRPC server permit client keepalive pings even when there are no active streams (RPCs)
+      --grpc_server_keepalive_time duration                              After a duration of this time, if the server doesn't see any activity, it pings the client to see if the transport is still alive. (default 10s)
+      --grpc_server_keepalive_timeout duration                           After having pinged for keepalive check, the server waits for a duration of Timeout and if no activity is seen even after that the connection is closed. (default 10s)
       --grpc_use_effective_callerid                                      If set, and SSL is not used, will set the immediate caller id from the effective caller id's principal.
       --healthcheck_retry_delay duration                                 health check retry delay (default 2ms)
       --healthcheck_timeout duration                                     the health check timeout period (default 1m0s)
@@ -181,7 +183,7 @@ vtgate \
       --planner-version string                                           Sets the default planner to use when the session has not changed it. Valid values are: Gen4, Gen4Greedy, Gen4Left2Right
       --port int                                                         port for the server
       --pprof strings                                                    enable profiling
-      --pprof-http                                                       enable pprof http endpoints (default true)
+      --pprof-http                                                       enable pprof http endpoints
       --proxy_protocol                                                   Enable HAProxy PROXY protocol on MySQL listener socket
       --purge_logs_interval duration                                     how often try to remove old logs (default 1h0m0s)
       --query-timeout int                                                Sets the default query timeout (in ms). Can be overridden by session variable (query_timeout) or comment directive (QUERY_TIMEOUT_MS)
@@ -253,7 +255,6 @@ vtgate \
       --warming-reads-concurrency int                                    Number of concurrent warming reads allowed (default 500)
       --warming-reads-percent int                                        Percentage of reads on the primary to forward to replicas. Useful for keeping buffer pools warm
       --warming-reads-query-timeout duration                             Timeout of warming read queries (default 5s)
-      --warn-non-atomic-commit                                           If a multi-shard commit fails after successfully committing to one or more shards, a warning will be added to the session.
       --warn_memory_rows int                                             Warning threshold for in-memory results. A row count higher than this amount will cause the VtGateWarnings.ResultsExceeded counter to be incremented. (default 30000)
       --warn_payload_size int                                            The warning threshold for query payloads in bytes. A payload greater than this threshold will cause the VtGateWarnings.WarnPayloadSizeExceeded counter to be incremented.
       --warn_sharded_only                                                If any features that are only available in unsharded mode are used, query execution warnings will be added to the session

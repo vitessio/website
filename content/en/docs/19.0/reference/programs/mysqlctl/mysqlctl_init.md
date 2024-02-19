@@ -1,7 +1,7 @@
 ---
 title: init
 series: mysqlctl
-commit: f82fb7cbd03db4fb93ba49c49b9ff5e43eb77608
+commit: 2929deecbcdad21ca991cff62db8205e78cc4452
 ---
 ## mysqlctl init
 
