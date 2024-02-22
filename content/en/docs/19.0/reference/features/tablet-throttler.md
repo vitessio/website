@@ -375,6 +375,76 @@ This API call returns the following JSON object:
 The replica tablet only presents `mysql/self` metric (measurement of its own backend MySQL's lag). It does not serve checks for the shard in general.
 
 
+### Metrics
+
+The tablet throttler exports several metrics using the expvars interface. These are available at the `/debug/vars` endpoint of vttablet's http status pages. [More details can be found here](../../features/monitoring/#3-push-based-metrics-system).
+
+#### Aggregated metrics
+
+These are the metrics by which the throttler compares with the threshold and decides whether to accept or reject throttle checks.
+
+##### `ThrottlerAggregatedMysqlSelf`
+
+Gauge, the current metric value of the tablet. This is the result of a self-check, done continuously when the throttler is enabled.
+
+##### `ThrottlerAggregatedMysqlShard`
+
+Gauge, on the `PRIMARY` tablet only, this is the aggregated collected metric value from all serving shard tables, excluding the `PRIMARY`. The `PRIMARY` tablet continuously probes the serving tablets for this metric. As the default collected metric is replication lag, the aggregated value is the highest lag across the probed tablets.
+
+#### Check metrics
+
+The throttler is checked by apps (`vreplication`, `online-ddl`, etc), and responds with status codes, "OK" for "good to proceed" or any other code for "hold off".
+
+At this time the throttler only runs checks with the backend MySQL server. It has the potential to check other input sources.
+
+##### `ThrottlerCheckAnyTotal`
+
+Counter, number of times the throttler has been checked. Tracking this metrics shows the traffic the throttler receives. The value should only increase when an app uses the throttler.
+
+This metric excludes some internal apps (e.g. the schema tracker) that are always on, but does include the throttler's self checks (see following).
+
+##### `ThrottlerCheckAnyError`
+
+Counter. Included in `ThrottlerCheckAnyTotal`, indicating how many times the throttler rejected a check.
+
+##### `ThrottlerCheckAnyMysqlSelfTotal`
+
+Counter. Number of MySQL self-checks this throttler made. Included in `ThrottlerCheckAnyTotal`.
+
+##### `ThrottlerCheckAnyMysqlSelfError`
+
+Counter. Included in `ThrottlerCheckAnyMysqlSelfTotal`, indicating how many times the MySQL self-check resulted in rejection.
+
+##### `ThrottlerCheckAnyMysqlShardTotal`
+
+Counter. Number of MySQL shard-checks this throttler made. Included in `ThrottlerCheckAnyTotal`.
+
+##### `ThrottlerCheckAnyMysqlShardError`
+
+Counter. Included in `ThrottlerCheckAnyMysqlShardTotal`, indicating how many times the MySQL shard-check resulted in rejection.
+
+##### `ThrottlerCheckMysqlSelfSecondsSinceHealthy`
+
+Gauge, number of seconds since the last good MySQL self-check.
+
+##### `ThrottlerCheckMysqlShardSecondsSinceHealthy`
+
+Gauge, number of seconds since the last good MySQL shard-check.
+
+#### Internal throttler metrics
+
+These metrics are helpful when analyzing the throttler behavior, how it interacts with other shard throttlers, its heartbeat mechanism.
+
+##### `ThrottlerProbesTotal`
+
+The throttler probes for metrics independently of checks. Once probed, the result metric is cached, and any further checks are based on that cached value. Further probes overwrite that cached value.
+
+Counter. Total number of probes this throttler made. This includes self probes (e.g. to get the self MySQL metric) and, on `PRIMARY`, the shard probes (e.g. getting MySQL metrics from all serving replicas).
+
+##### `ThrottlerProbesLatency`
+
+Gauge. Time in nanoseconds of last probe. This serves as a general heuristic only for network latency.
+
 ## Resources
 
 - [freno](https://github.com/github/freno) project page
