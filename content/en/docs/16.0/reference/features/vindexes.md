@@ -122,7 +122,7 @@ The previously described properties are mostly independent of each other. Combin
 
 * **Functional Unique**: The most popular category because it is the one best suited to be a Primary Vindex.
 * **Functional NonUnique**: There are currently no use cases that need this category.
-* **Lookup Unique Owned**: Used for optimizing high QPS read queries that do not use the Primary Vindex columns in their WHERE clause. There is a price to pay: an extra write to the lookup table for insert and delete operations, and an extra lookup for read operations. However, it may be worth it to avoid high QPS read queries to be sent to all shards. The overheard of maintaining the lookup table is amortized as the number of shards grow.
+* **Lookup Unique Owned**: Used for optimizing high QPS read queries that do not use the Primary Vindex columns in their WHERE clause. There is a price to pay: an extra write to the lookup table for insert and delete operations, and an extra lookup for read operations. However, it may be worth it to avoid high QPS read queries to be sent to all shards. The overhead of maintaining the lookup table is amortized as the number of shards grow.
 * **Lookup Unique Unowned**: Can be used as an optimization as described in the Shared Vindexes section.
 * **Lookup NonUnique Owned**: Used for high QPS queries on columns that are non-unique.
 * **Lookup NonUnique Unowned**: You would rarely have to use this category because it is unlikely that you will be using a column as foreign key that is not unique within a shard. But it is theoretically possible.
