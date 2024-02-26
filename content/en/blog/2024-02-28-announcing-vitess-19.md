@@ -20,7 +20,7 @@ We're thrilled to announce the release of Vitess 19, our latest version packed w
 * **Dropping Support for MySQL 5.7**: As Oracle has marked MySQL 5.7 end of life in October 2023, we're also moving forward by dropping support for MySQL 5.7. We advise users to upgrade to MySQL 8.0 while on Vitess 18 before making the jump to Vitess 19. However, Vitess 19 will still support importing from MySQL 5.7.
 * **Deprecations**: We're cleaning house to streamline our offerings and improve maintainability. This includes deprecating several VTTablet flags, mysql specific tags of the Docker image `vitess/lite`, and changes to the `EXPLAIN` statement format.
 * **Breaking Changes**: Notably, `ExecuteFetchAsDBA` now rejects multi-statement SQL, enforcing stricter security and stability practices.
-* **New Stats and Metrics**: We're introducing new statistics for stream consolidations and adding the build version to `/debug/vars` to provide deeper insights and traceability.
+* **New Metrics**: We're introducing new metrics for stream consolidations and adding the build version to `/debug/vars` to provide deeper insights and traceability.
 * **Enhanced Query Compatibility**: This release brings support for multi-table delete operations, a new `SHOW VSCHEMA KEYSPACES` query, and several other SQL syntax enhancements that broaden Vitess's compatibility with MySQL.
 * **Apply VSchema Enhancements**: We've added a `--strict` sub-flag and corresponding gRPC field to the `ApplyVSchema` command, ensuring that only known parameters are used in Vindexes, enhancing error checking and config validation.
 * **Tablet Throttler**: Throttlers now communicate via gRPC only. HTTP communication is dropped.
