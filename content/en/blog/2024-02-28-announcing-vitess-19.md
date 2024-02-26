@@ -72,7 +72,7 @@ The table GC mechanism is now more responsive to tables that need to be garbage 
 
 ### Breaking Change: `ExecuteFetchAsDBA`
 
-The command `ExecuteFetchAsDBA` now rejects multi-statement input. Previously, the results of multi-statement input were implicitly allowed, but resulted with undefined and undesired behavior: errors were only reported for the first statement, and silently dropped for successive statements. The connection was left in undefined state and could leak results into next users of the connection pool. Schema tracker would not be notified of changes until the connection was closed. We will introduce formal multi-statement support in a future version.
+The command `ExecuteFetchAsDBA` now rejects multi-statement input. Previously, the results of multi-statement input were implicitly allowed, but resulted in undefined and undesired behavior: errors were only reported for the first statement, and silently dropped for successive statements. The connection was left in an undefined state and could leak results to next users of the connection pool. Schema tracker would not be notified of changes until the connection was closed. We will introduce formal multi-statement support in a future version.
 
 ### A Call to the Community
 
