@@ -8,7 +8,7 @@ description: "Vitess 19 is now Generally Available"
 ---
 
 
-## Announcing Vitess 19: Cleaning house
+## Announcing Vitess 19
 
 We're thrilled to announce the release of Vitess 19, our latest version packed with enhancements aimed at improving scalability, performance, and usability of your database systems. With this release, we continue our commitment to providing a powerful, scalable, and reliable database clustering solution for MySQL.
 
