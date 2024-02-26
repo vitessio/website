@@ -51,7 +51,7 @@ Inter-throttler communication is now solely based on gRPC. HTTP communication is
 
 ### Online DDL
 
-Vitess migration cut-over now uses back-off in face of table locks. If unable to cut-over, next attempts take place in increasing intervals. This reduces the impact on an already overloaded production traffic.
+Vitess migration cut-over now uses back-off in face of table locks. If unable to cut-over, next attempts take place in increasing intervals. This reduces the impact on an already overloaded production system.
 
 Online DDL also supports forced cut-over, at either predetermined timeout or on demand. Forced cut-over prioritizes the cut-over completion over production traffic, and terminates queries and transactions that conflict with the cut-over.
 
