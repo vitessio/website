@@ -67,7 +67,7 @@ An empty incremental backup is now allowed, and the `Backup|BackupShard` command
 
 ### Table Lifecycle
 
-The table GC mechanism is now more responsive to tables that need to be garbage collected, and is able to observe operations that generate GC tables. For example, it can capture the result of an `ALTER VITESS_MIGRATION … CLEANUP` command and move the table through the relevant stages within the scope of seconds rather than minutes/hours.
+The table GC mechanism is now more responsive to tables that need to be garbage collected, and is able to observe operations that generate GC tables. For example, it can capture the result of an `ALTER VITESS_MIGRATION … CLEANUP` command and move the table through the relevant stages within seconds rather than taking several minutes or hours.
 
 
 ### Breaking Change: `ExecuteFetchAsDBA`
