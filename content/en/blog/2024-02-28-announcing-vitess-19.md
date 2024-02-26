@@ -23,7 +23,7 @@ We're thrilled to announce the release of Vitess 19, our latest version packed w
 * **New Metrics**: We're introducing new metrics for stream consolidations and adding the build version to `/debug/vars` to provide deeper insights and traceability.
 * **Enhanced Query Compatibility**: This release brings support for multi-table delete operations, a new `SHOW VSCHEMA KEYSPACES` query, and several other SQL syntax enhancements that broaden Vitess's compatibility with MySQL.
 * **Apply VSchema Enhancements**: We've added a `--strict` sub-flag and corresponding gRPC field to the `ApplyVSchema` command, ensuring that only known parameters are used in Vindexes, enhancing error checking and config validation.
-* **Tablet Throttler**: Throttlers now communicate via gRPC only. HTTP communication is dropped.
+* **Tablet Throttler**: Throttlers now communicate via gRPC only. HTTP communication is no longer used. This closes a possible vulnerability vector. 
 * **Online DDL**: Support backoff for cut-over attempts in face of locking. Support forced cut-over.
 * **Incremental Backup**: Support backup names and empty backups.
 * **Table lifecycle**: Quicker cleanup flow.
