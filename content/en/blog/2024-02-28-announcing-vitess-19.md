@@ -27,6 +27,7 @@ We're thrilled to announce the release of Vitess 19, our latest version packed w
 * **Online DDL**: Support backoff for cut-over attempts in face of locking. Support forced cut-over.
 * **Incremental Backup**: Support backup names and empty backups.
 * **Table lifecycle**: Quicker cleanup flow.
+* **Performance improvements**: Including a new connection pool for the Tablets, faster hashing in sharded Vitess clusters and faster aggregations in the Gates.
 
 
 ## Dive Deeper
@@ -73,6 +74,22 @@ The table GC mechanism is now more responsive to tables that need to be garbage 
 ### Breaking Change: `ExecuteFetchAsDBA`
 
 The command `ExecuteFetchAsDBA` now rejects multi-statement input. Previously, the results of multi-statement input were implicitly allowed, but resulted in undefined and undesired behavior: errors were only reported for the first statement, and silently dropped for successive statements. The connection was left in an undefined state and could leak results to next users of the connection pool. Schema tracker would not be notified of changes until the connection was closed. We will introduce formal multi-statement support in a future version.
+
+### Performance Improvements
+
+Following the trend over the past 3 years, this new Vitess release is faster than the previous one in _all_ the benchmarks we track in [Arewefastyet](https://benchmark.vitess.io/status). We've fixed several performance regressions from Vitess 18 and introduced significant performance improvements.
+
+#### New connection pool
+
+The connection pool for MySQL connections in the Tablets has been rewritten from scratch. The new pool is architected over several lock-free stacks and provides significantly lower query latencies, lower and more fair wait times and more efficient usage for idle connections. This is particularly noticeable in Vitess clusters with external tablets (i.e. clusters where the Tablet and the MySQL instance are deployed in different hosts) and busy Vitess clusters with many point queries.
+
+#### Faster hashing in sharded Vitess clusters
+
+The VIndex hasher for textual columns was previously implemented using the `x/text/collate` package, which allocates a linear amount of memory based on the length of the column being hashed. We've replaced it with a custom, backwards-compatible implementation, which is both faster and uses a constant amount of memory. This is a very significant performance improvement for sharded tables that use a large textual columns as a sharding key.
+
+#### Faster comparisons in cross-shard aggregations
+
+The performance of cross-shard aggregations that use `ORDER` or `GROUP BY` qualifiers has been greatly improved by introducing Tiny Weights. The query executor in the VTGates now tags all the SQL values from the upstream shards with a compressed form of their weight string, allowing constant-time comparisons while performing aggregations.
 
 ### A Call to the Community
 
