@@ -1,7 +1,7 @@
 ---
 author: 'Vitess Maintainer Team'
-date: 2024-02-28
-slug: '2024-02-28-announcing-vitess-19'
+date: 2024-03-06
+slug: '2024-03-06-announcing-vitess-19'
 tags: ['release','Vitess','MySQL','kubernetes','operator','sharding', 'Orchestration', 'Failover', 'High-Availability']
 title: 'Announcing Vitess 19'
 description: "Vitess 19 is now Generally Available"
