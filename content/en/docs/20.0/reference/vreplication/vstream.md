@@ -10,16 +10,20 @@ that allows clients to subscribe to a change event stream for a set of tables.
 
 ## Use Cases
 
- * **Change Data Capture (CDC)**: `VStream` can be used to capture changes to a
-   table and send them to a downstream system. This is useful for building
-   real-time data pipelines.
+* **Change Data Capture (CDC)**: `VStream` can be used to capture changes to a
+table and send them to a downstream system. This is useful for building
+real-time data pipelines.
 
 ## Overview
 
-`VStream` supports copying the current contents of a table — as you will often not
-have the binary logs going back to the creation of the table — and then begin streaming
-new changes to the table from that point on. It also supports resuming this initial copy
-phase if it's interrupted for any reason.
+`VStream` supports copying the current contents of a table — as you will often not have the binary logs going back
+to the creation of the table — and then begin streaming new changes to the table from that point on. It supports
+resuming this initial copy phase if it's interrupted for any reason. It also supports automatic handling of
+[resharding events](../reshard/) — if the `VStream` is connected throughout then it will automatically transition from
+the old shards to the new when traffic is switched ([`SwitchTraffic` or `ReverseTraffic`](../reshard/#switchtraffic)), and
+if you were not connected but re-connect after traffic is switched ([`SwitchTraffic` or `ReverseTraffic`](../reshard/#switchtraffic))
+*but before the old shards are removed*, it will automatically catch up on any missed changes on the old shards before
+seamlessly transitioning to the new shards and continuing to stream all changes made there.
 
 Events in the stream are [MySQL row based binary log events](https://dev.mysql.com/doc/refman/en/mysqlbinlog-row-events.html) — with [extended metadata](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#VEvent)
 — and can be processed by event bridges which support Vitess such as
@@ -150,25 +154,28 @@ a [`VStreamReader`](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate/vtgateconn#
 the stream could not be initialized. You would call the `Recv` method on that
 [`VStreamReader`](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate/vtgateconn#VStreamReader) in a for loop and
 responses will be sent when available. Each response consisting of the following two parameters:
-  * An array of [`VEvent`](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#VEvent) objects — the new messages to process in the stream
-  * An `error` — an error that, if non-nil, indicates the stream has been closed (`EOF`) or an error occurred
+
+* An array of [`VEvent`](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#VEvent) objects — the new messages to process in the stream
+* An `error` — an error that, if non-nil, indicates the stream has been closed (`EOF`) or an error occurred
 
 ### API Types
- * [TabletType](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/topodata#TabletType)
- * [VGtid](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#VGtid)
- * [ShardGtid](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#ShardGtid)
- * [Filter.Rule](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#Rule)
- * [LastPKEvent](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#LastPKEvent)
- * [TableLastPK](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#TableLastPK)
- * [VStreamFlags](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags)
- * [VStreamReader](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate/vtgateconn#VStreamReader)
- * [VEvent](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#VEvent)
+
+* [TabletType](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/topodata#TabletType)
+* [VGtid](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#VGtid)
+* [ShardGtid](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#ShardGtid)
+* [Filter.Rule](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#Rule)
+* [LastPKEvent](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#LastPKEvent)
+* [TableLastPK](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#TableLastPK)
+* [VStreamFlags](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags)
+* [VStreamReader](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate/vtgateconn#VStreamReader)
+* [VEvent](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/binlogdata#VEvent)
 
 ### Example Usage
 
 You can find a full example go client [here](https://github.com/vitessio/vitess/blob/main/examples/local/vstream_client.go).
 
 Below is a snippet showing how to use the `VStream` API in go:
+
 ```go
 gconn, err := vtgateconn.Dial(ctx, grpcAddress)
 if err != nil {
@@ -269,6 +276,7 @@ Therefore, please exercise caution when using regular expressions in production.
 ## Debugging
 
 There is also an SQL interface that can be used for testing and debugging from a `vtgate`. Here's an example:
+
 ```mysql
 $ mysql --quick <vtgate params>
 
@@ -297,15 +305,16 @@ customer_id: 1
 ```
 
 ## Monitoring
+
 VTGates publish vstream metrics listed [here](../metrics/#vtgate-metrics).
 
 ## More Reading
 
-  * [VStream Copy](https://github.com/vitessio/vitess/issues/6277)
-  * [VStream API and Resharding](../internal/vstream-stream-migration/)
-  * [VStream Skew Minimization](../internal/vstream-skew-detection/)
-  * Debezium Connector for Vitess
-    * [Docs](https://debezium.io/documentation/reference/stable/connectors/vitess.html)
-    * [Source](https://github.com/debezium/debezium-connector-vitess/)
-  * Blog posts
-    * [Streaming Vitess at Bolt](https://medium.com/bolt-labs/streaming-vitess-at-bolt-f8ea93211c3f)
+* [VStream Copy](https://github.com/vitessio/vitess/issues/6277)
+* [VStream API and Resharding](../internal/vstream-stream-migration/)
+* [VStream Skew Minimization](../internal/vstream-skew-detection/)
+* Debezium Connector for Vitess
+  * [Docs](https://debezium.io/documentation/reference/stable/connectors/vitess.html)
+  * [Source](https://github.com/debezium/debezium-connector-vitess/)
+* Blog posts
+  * [Streaming Vitess at Bolt](https://medium.com/bolt-labs/streaming-vitess-at-bolt-f8ea93211c3f)
