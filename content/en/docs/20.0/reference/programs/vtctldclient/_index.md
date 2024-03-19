@@ -1,7 +1,7 @@
 ---
 title: vtctldclient
 series: vtctldclient
-commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
+commit: fdabcfb130ec3ca15b23c278a0f20802bcd05756
 ---
 ## vtctldclient
 
@@ -54,6 +54,7 @@ vtctldclient [flags]
 * [vtctldclient ExecuteFetchAsApp](./vtctldclient_executefetchasapp/)	 - Executes the given query as the App user on the remote tablet.
 * [vtctldclient ExecuteFetchAsDBA](./vtctldclient_executefetchasdba/)	 - Executes the given query as the DBA user on the remote tablet.
 * [vtctldclient ExecuteHook](./vtctldclient_executehook/)	 - Runs the specified hook on the given tablet.
+* [vtctldclient ExecuteMultiFetchAsDBA](./vtctldclient_executemultifetchasdba/)	 - Executes given multiple queries as the DBA user on the remote tablet.
 * [vtctldclient FindAllShardsInKeyspace](./vtctldclient_findallshardsinkeyspace/)	 - Returns a map of shard names to shard references for a given keyspace.
 * [vtctldclient GenerateShardRanges](./vtctldclient_generateshardranges/)	 - Print a set of shard ranges assuming a keyspace with N shards.
 * [vtctldclient GetBackups](./vtctldclient_getbackups/)	 - Lists backups for the given shard.
