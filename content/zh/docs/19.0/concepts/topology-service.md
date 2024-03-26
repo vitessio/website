@@ -1,5 +1,5 @@
 ---
-title: topology-service
+title: Topology Service
 description: 拓扑或分布式锁服务
 ---
 
