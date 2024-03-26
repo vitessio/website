@@ -137,7 +137,7 @@ By default, Vitess employs a default setting for `transaction_mode` of **MULTI**
   * Phase 2:  Issue the subset of inserts for each shard. This is also done in parallel. An error at this point will allow us to rollback the transactions on the shards.  Again, no data has been affected, and the application can retry.
   * Phase 3:  Issue commits against each shard involved in the insert. This is done serially.  This allows the operation to halt if there is an error on one of the shards.  At this point an error would be returned to the application, **but the inserts on shards committed before the failing shard cannot be rolled back**. As a result the atomicity of the insert is broken, and now clients will see (possibly permanently) inconsistent results. It is left up to the client to repair the possible inconsistency, potentially with a retry, or some more elaborate mechanism.
 
-VTGate can be configured, with `--warn-non-atomic-commit`, to record a warning and increment a counter when a commit error occurs on one shard after successfully committing to other shard(s). The warnings will look like this:
+VTGate records a warning and increments a counter when a commit error occurs on one shard after successfully committing to other shard(s). The warnings will look like this:
 
 ``` mysql
 mysql> show warnings;
