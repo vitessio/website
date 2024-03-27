@@ -72,7 +72,11 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09017 | Invalid syntax for the statement type. | %s | 0 |  |
 | VT09018 | Invalid syntax for the vindex function statement. | %s | 0 |  |
 | VT09019 | Vitess doesn't support cyclic foreign keys. | keyspace '%s' has cyclic foreign keys | 0 |  |
+| VT09022 | Cannot send query to multiple shards. | Destination does not have exactly one shard: %v | 0 |  |
+| VT09023 | Unable to determine the shard for the given row. | could not map %v to a keyspace id | 0 |  |
+| VT09024 | Unable to determine the shard for the given row. | could not map %v to a unique keyspace id: %v | 0 |  |
 | VT10001 | Foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/. | foreign key constraints are not allowed | 0 |  |
+| VT10002 | Foreign key constraints sometimes are not written in binary logs and will cause issue with vreplication workflows like online-ddl. | 'replace into' with foreign key constraints are not allowed | 0 |  |
 | VT12001 | This statement is unsupported by Vitess. Please rewrite your query to use supported syntax. | unsupported: %s | 0 |  |
 | VT12002 | Vitess does not support cross shard foreign keys. | unsupported: cross-shard foreign keys | 0 |  |
 | VT13001 | This error should not happen and is a bug. Please file an issue on GitHub: https://github.com/vitessio/vitess/issues/new/choose. | [BUG] %s | 0 |  |
