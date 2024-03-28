@@ -4,6 +4,10 @@ weight: 1
 aliases: ['/resources/presentations.html', '/docs/resources/presentations/']
 ---
 
+## KubeCon EU 2024
+
+[Vitess: Introduction, New Features and the Vinted User Story](https://www.youtube.com/watch?v=uRB-Qni_bCM) - Florent Poinsard, Deepthi Sigireddi, PlanetScale & Kazimieras Aliulis, Vinted
+
 ## Percona Live 2023
 
 [Vitess at GitHub](https://videos.perconalive.com/watch/DyDnR68XXcqYq3JzimZ3Z5) - Arthur Schreiber, GitHub
