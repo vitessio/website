@@ -17,7 +17,7 @@ When I started in mid-May, Andrés gave me my instructions: find as many bugs in
 
 We first looked into a tool called [SQLancer](https://github.com/sqlancer/sqlancer). From its README:
 
-SQLancer (Synthesized Query Lancer) is a tool to automatically test Database Management Systems (DBMSs) in order to find logic bugs in their implementation. We refer to logic bugs as those bugs that cause the DBMS to fetch an incorrect result set (e.g., by omitting a record).
+> > SQLancer (Synthesized Query Lancer) is a tool to automatically test Database Management Systems (DBMSs) in order to find logic bugs in their implementation. We refer to logic bugs as those bugs that cause the DBMS to fetch an incorrect result set (e.g., by omitting a record).
 
 SQLancer had been very successful at finding bugs in well-established DBMSs, such as SQLite and MySQL, so we thought it might work well for Vitess. But there were three main problems:
 
