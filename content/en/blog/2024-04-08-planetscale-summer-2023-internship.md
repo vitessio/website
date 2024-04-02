@@ -1,7 +1,7 @@
 ---
 author: 'Arvind Murty'
 date: 2024-04-08
-slug: '2024-04-06-vitess-fuzzing-summer-2023-internship'
+slug: '2024-04-08-vitess-fuzzing-summer-2023-internship'
 tags: ['Vitess', 'PlanetScale', 'Golang', 'MySQL', 'Query Serving']
 title: 'Summer 2023: Fuzzing Vitess at PlanetScale'
 description: "My experience working as an intern in the Vitess query serving team for PlanetScale"
