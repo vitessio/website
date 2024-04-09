@@ -1,7 +1,7 @@
 ---
 title: Workflow update
 series: vtctldclient
-commit: a85c612dc9a58aa2e4b13010fdba99e246646618
+commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
 ## vtctldclient Workflow update
 
@@ -23,6 +23,7 @@ vtctldclient --server localhost:15999 workflow --keyspace customer update --work
   -c, --cells strings           New Cell(s) or CellAlias(es) (comma-separated) to replicate from.
   -h, --help                    help for update
       --on-ddl string           New instruction on what to do when DDL is encountered in the VReplication stream. Possible values are IGNORE, STOP, EXEC, and EXEC_IGNORE.
+      --shards strings          (Optional) Specifies a comma-separated list of shards to operate on.
   -t, --tablet-types strings    New source tablet types to replicate from (e.g. PRIMARY,REPLICA,RDONLY).
       --tablet-types-in-order   When performing source tablet selection, look for candidates in the type order as they are listed in the tablet-types flag. (default true)
   -w, --workflow string         The workflow you want to update.

@@ -1,7 +1,7 @@
 ---
 title: MoveTables show
 series: vtctldclient
-commit: a85c612dc9a58aa2e4b13010fdba99e246646618
+commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
 ## vtctldclient MoveTables show
 
@@ -20,8 +20,9 @@ vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --
 ### Options
 
 ```
-  -h, --help           help for show
-      --include-logs   Include recent logs for the workflow. (default true)
+  -h, --help             help for show
+      --include-logs     Include recent logs for the workflow. (default true)
+      --shards strings   (Optional) Specifies a comma-separated list of shards to operate on.
 ```
 
 ### Options inherited from parent commands

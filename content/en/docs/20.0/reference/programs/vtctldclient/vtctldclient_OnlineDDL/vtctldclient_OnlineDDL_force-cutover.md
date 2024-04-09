@@ -1,7 +1,7 @@
 ---
 title: OnlineDDL force-cutover
 series: vtctldclient
-commit: 3b58bee089a76fdb1f9d452787e40f10e34f034d
+commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
 ## vtctldclient OnlineDDL force-cutover
 
