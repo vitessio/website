@@ -1,7 +1,7 @@
 ---
 title: vttestserver
 series: vttestserver
-commit: 2929deecbcdad21ca991cff62db8205e78cc4452
+commit: cb5464edf5d7075feae744f3580f8bc626d185aa
 ---
 ## vttestserver
 
@@ -80,8 +80,6 @@ vttestserver [flags]
       --grpc_server_initial_window_size int                              gRPC server initial window size
       --grpc_server_keepalive_enforcement_policy_min_time duration       gRPC server minimum keepalive time (default 10s)
       --grpc_server_keepalive_enforcement_policy_permit_without_stream   gRPC server permit client keepalive pings even when there are no active streams (RPCs)
-      --grpc_server_keepalive_time duration                              After a duration of this time, if the server doesn't see any activity, it pings the client to see if the transport is still alive. (default 10s)
-      --grpc_server_keepalive_timeout duration                           After having pinged for keepalive check, the server waits for a duration of Timeout and if no activity is seen even after that the connection is closed. (default 10s)
   -h, --help                                                             help for vttestserver
       --initialize_with_random_data                                      If this flag is each table-shard will be initialized with random data. See also the 'rng_seed' and 'min_shard_size' and 'max_shard_size' flags.
       --keep_logs duration                                               keep logs for this long (using ctime) (zero to keep forever)
@@ -112,7 +110,7 @@ vttestserver [flags]
       --pool_hostname_resolve_interval duration                          if set force an update to all hostnames and reconnect if changed, defaults to 0 (disabled)
       --port int                                                         Port to use for vtcombo. If this is 0, a random port will be chosen.
       --pprof strings                                                    enable profiling
-      --pprof-http                                                       enable pprof http endpoints
+      --pprof-http                                                       enable pprof http endpoints (default true)
       --proto_topo string                                                Define the fake cluster topology as a compact text format encoded vttest proto. See vttest.proto for more information.
       --purge_logs_interval duration                                     how often try to remove old logs (default 1h0m0s)
       --queryserver-config-transaction-timeout float                     query server transaction timeout (in seconds), a transaction will be killed if it takes longer than this value

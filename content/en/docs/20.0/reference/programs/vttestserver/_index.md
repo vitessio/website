@@ -1,7 +1,7 @@
 ---
 title: vttestserver
 series: vttestserver
-commit: b539ce927ee86b723a94a627cdec1403dd4020f0
+commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
 ## vttestserver
 
@@ -42,7 +42,6 @@ vttestserver [flags]
       --dba_idle_timeout duration                                        Idle timeout for dba connections (default 1m0s)
       --dba_pool_size int                                                Size of the connection pool for dba connections (default 20)
       --default_schema_dir string                                        Default directory for initial schema files. If no schema is found in schema_dir, default to this location.
-      --disable_active_reparents                                         if set, do not allow active reparents. Use this to protect a cluster using external reparents.
       --enable_direct_ddl                                                Allow users to submit direct DDL statements (default true)
       --enable_online_ddl                                                Allow users to submit, review and control Online DDL (default true)
       --enable_system_settings                                           This will enable the system settings to be changed per session at the database connection level (default true)
@@ -83,6 +82,7 @@ vttestserver [flags]
       --grpc_server_keepalive_time duration                              After a duration of this time, if the server doesn't see any activity, it pings the client to see if the transport is still alive. (default 10s)
       --grpc_server_keepalive_timeout duration                           After having pinged for keepalive check, the server waits for a duration of Timeout and if no activity is seen even after that the connection is closed. (default 10s)
   -h, --help                                                             help for vttestserver
+      --initialize-with-vt-dba-tcp                                       If this flag is enabled, MySQL will be initialized with an additional user named vt_dba_tcp, who will have access via TCP/IP connection.
       --initialize_with_random_data                                      If this flag is each table-shard will be initialized with random data. See also the 'rng_seed' and 'min_shard_size' and 'max_shard_size' flags.
       --keep_logs duration                                               keep logs for this long (using ctime) (zero to keep forever)
       --keep_logs_by_mtime duration                                      keep logs for this long (using mtime) (zero to keep forever)
@@ -132,7 +132,7 @@ vttestserver [flags]
       --tablet_hostname string                                           The hostname to use for the tablet otherwise it will be derived from OS' hostname (default "localhost")
       --tablet_manager_grpc_ca string                                    the server ca to use to validate servers when connecting
       --tablet_manager_grpc_cert string                                  the cert to use to connect
-      --tablet_manager_grpc_concurrency int                              concurrency to use to talk to a vttablet server for performance-sensitive RPCs (like ExecuteFetchAs{Dba,App} and CheckThrottler) (default 8)
+      --tablet_manager_grpc_concurrency int                              concurrency to use to talk to a vttablet server for performance-sensitive RPCs (like ExecuteFetchAs{Dba,App}, CheckThrottler and FullStatus) (default 8)
       --tablet_manager_grpc_connpool_size int                            number of tablets to keep tmclient connections open to (default 100)
       --tablet_manager_grpc_crl string                                   the server crl to use to validate server certificates when connecting
       --tablet_manager_grpc_key string                                   the key to use to connect

@@ -1,7 +1,7 @@
 ---
 title: vtbackup
 series: vtbackup
-commit: 2929deecbcdad21ca991cff62db8205e78cc4452
+commit: cb5464edf5d7075feae744f3580f8bc626d185aa
 ---
 ## vtbackup
 
@@ -197,7 +197,7 @@ vtbackup [flags]
       --opentsdb_uri string                                         URI of opentsdb /api/put method
       --port int                                                    port for the server
       --pprof strings                                               enable profiling
-      --pprof-http                                                  enable pprof http endpoints
+      --pprof-http                                                  enable pprof http endpoints (default true)
       --purge_logs_interval duration                                how often try to remove old logs (default 1h0m0s)
       --remote_operation_timeout duration                           time to wait for a remote operation (default 15s)
       --restart_before_backup                                       Perform a mysqld clean/full restart after applying binlogs, but before taking the backup. Only makes sense to work around xtrabackup bugs.

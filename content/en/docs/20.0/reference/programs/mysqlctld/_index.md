@@ -1,7 +1,7 @@
 ---
 title: mysqlctld
 series: mysqlctld
-commit: b539ce927ee86b723a94a627cdec1403dd4020f0
+commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
 ## mysqlctld
 
@@ -120,7 +120,7 @@ mysqlctld \
       --mysqlctl_mycnf_template string                                   template file to use for generating the my.cnf file during server init
       --mysqlctl_socket string                                           socket file to use for remote mysqlctl actions (empty for local actions)
       --onclose_timeout duration                                         wait no more than this for OnClose handlers before stopping (default 10s)
-      --onterm_timeout duration                                          wait no more than this for OnTermSync handlers before stopping (default 10s)
+      --onterm_timeout duration                                          wait no more than this for OnTermSync handlers before stopping (default 5m10s)
       --pid_file string                                                  If set, the process will write its pid to the named file, and delete it on graceful shutdown.
       --pool_hostname_resolve_interval duration                          if set force an update to all hostnames and reconnect if changed, defaults to 0 (disabled)
       --port int                                                         port for the server

@@ -20,6 +20,10 @@ fi
 
 VITESS_DIR="${tmp}" make generated-docs
 
+# The documentation generation in Vitess produces a non-anonymous path
+# which are replaced here using find and sed.
+find ./content/en/docs/ -type f -exec sh -c 'LC_CTYPE=C LANG=en_US.UTF-8 sed -i "" "s@\['"$tmp"'\]@\[<WORKDIR>\]@g" "$0"' {} \;
+
 git add $(git diff -I"^commit:.*$" --numstat | awk '{print $3}' | xargs) || true
 # Reset any modified files that contained _only_ a SHA update.
 git checkout -- .

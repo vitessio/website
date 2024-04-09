@@ -1,7 +1,7 @@
 ---
 title: vtgateclienttest
 series: vtgateclienttest
-commit: 2929deecbcdad21ca991cff62db8205e78cc4452
+commit: cb5464edf5d7075feae744f3580f8bc626d185aa
 ---
 ## vtgateclienttest
 
@@ -50,8 +50,6 @@ vtgateclienttest [flags]
       --grpc_server_initial_window_size int                              gRPC server initial window size
       --grpc_server_keepalive_enforcement_policy_min_time duration       gRPC server minimum keepalive time (default 10s)
       --grpc_server_keepalive_enforcement_policy_permit_without_stream   gRPC server permit client keepalive pings even when there are no active streams (RPCs)
-      --grpc_server_keepalive_time duration                              After a duration of this time, if the server doesn't see any activity, it pings the client to see if the transport is still alive. (default 10s)
-      --grpc_server_keepalive_timeout duration                           After having pinged for keepalive check, the server waits for a duration of Timeout and if no activity is seen even after that the connection is closed. (default 10s)
   -h, --help                                                             help for vtgateclienttest
       --keep_logs duration                                               keep logs for this long (using ctime) (zero to keep forever)
       --keep_logs_by_mtime duration                                      keep logs for this long (using mtime) (zero to keep forever)
@@ -68,7 +66,7 @@ vtgateclienttest [flags]
       --pid_file string                                                  If set, the process will write its pid to the named file, and delete it on graceful shutdown.
       --port int                                                         port for the server
       --pprof strings                                                    enable profiling
-      --pprof-http                                                       enable pprof http endpoints
+      --pprof-http                                                       enable pprof http endpoints (default true)
       --purge_logs_interval duration                                     how often try to remove old logs (default 1h0m0s)
       --security_policy string                                           the name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only)
       --service_map strings                                              comma separated list of services to enable (or disable if prefixed with '-') Example: grpc-queryservice
