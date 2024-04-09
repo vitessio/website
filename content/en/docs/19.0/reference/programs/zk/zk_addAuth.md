@@ -1,7 +1,7 @@
 ---
 title: addAuth
 series: zk
-commit: 0e61ba498e0344d37d6e1cae933ae14aa2804fcd
+commit: cb5464edf5d7075feae744f3580f8bc626d185aa
 ---
 ## zk addAuth
 

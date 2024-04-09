@@ -1,7 +1,7 @@
 ---
 title: teardown
 series: mysqlctl
-commit: 2929deecbcdad21ca991cff62db8205e78cc4452
+commit: cb5464edf5d7075feae744f3580f8bc626d185aa
 ---
 ## mysqlctl teardown
 
@@ -43,7 +43,7 @@ mysqlctl --tablet_uid 101 --alsologtostderr teardown
       --config-file string                                          Full path of the config file (with extension) to use. If set, --config-path, --config-type, and --config-name are ignored.
       --config-file-not-found-handling ConfigFileNotFoundHandling   Behavior when a config file is not found. (Options: error, exit, ignore, warn) (default warn)
       --config-name string                                          Name of the config file (without extension) to search for. (default "vtconfig")
-      --config-path strings                                         Paths to search for config files in. (default [/tmp/pull_request_handler/vitess])
+      --config-path strings                                         Paths to search for config files in. (default [<WORKDIR>])
       --config-persistence-min-interval duration                    minimum interval between persisting dynamic config changes back to disk (if no change has occurred, nothing is done). (default 1s)
       --config-type string                                          Config file type (omit to infer config type from file extension).
       --db-credentials-file string                                  db credentials file; send SIGHUP to reload this file
@@ -97,7 +97,7 @@ mysqlctl --tablet_uid 101 --alsologtostderr teardown
       --pid_file string                                             If set, the process will write its pid to the named file, and delete it on graceful shutdown.
       --pool_hostname_resolve_interval duration                     if set force an update to all hostnames and reconnect if changed, defaults to 0 (disabled)
       --pprof strings                                               enable profiling
-      --pprof-http                                                  enable pprof http endpoints
+      --pprof-http                                                  enable pprof http endpoints (default true)
       --purge_logs_interval duration                                how often try to remove old logs (default 1h0m0s)
       --replication_connect_retry duration                          how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s)
       --security_policy string                                      the name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only)

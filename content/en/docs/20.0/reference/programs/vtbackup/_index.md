@@ -1,7 +1,7 @@
 ---
 title: vtbackup
 series: vtbackup
-commit: b539ce927ee86b723a94a627cdec1403dd4020f0
+commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
 ## vtbackup
 
@@ -221,7 +221,7 @@ vtbackup [flags]
       --stderrthreshold severityFlag                                logs at or above this threshold go to stderr (default 1)
       --tablet_manager_grpc_ca string                               the server ca to use to validate servers when connecting
       --tablet_manager_grpc_cert string                             the cert to use to connect
-      --tablet_manager_grpc_concurrency int                         concurrency to use to talk to a vttablet server for performance-sensitive RPCs (like ExecuteFetchAs{Dba,App} and CheckThrottler) (default 8)
+      --tablet_manager_grpc_concurrency int                         concurrency to use to talk to a vttablet server for performance-sensitive RPCs (like ExecuteFetchAs{Dba,App}, CheckThrottler and FullStatus) (default 8)
       --tablet_manager_grpc_connpool_size int                       number of tablets to keep tmclient connections open to (default 100)
       --tablet_manager_grpc_crl string                              the server crl to use to validate server certificates when connecting
       --tablet_manager_grpc_key string                              the key to use to connect

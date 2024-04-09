@@ -1,7 +1,7 @@
 ---
 title: mysqlctld
 series: mysqlctld
-commit: aa72dc8d9189843c0a49f32b54f6fc978f6dbcde
+commit: b5b3114ab9371f882762dd66ae0efc5af3a3dbc0
 ---
 ## mysqlctld
 

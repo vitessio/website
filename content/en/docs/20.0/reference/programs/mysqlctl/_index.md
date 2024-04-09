@@ -1,7 +1,7 @@
 ---
 title: mysqlctl
 series: mysqlctl
-commit: b539ce927ee86b723a94a627cdec1403dd4020f0
+commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
 ## mysqlctl
 

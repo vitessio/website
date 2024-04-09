@@ -1,7 +1,7 @@
 ---
 title: vtorc
 series: vtorc
-commit: b539ce927ee86b723a94a627cdec1403dd4020f0
+commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
 ## vtorc
 
@@ -20,7 +20,6 @@ vtorc \
 	--topo_global_root /vitess/global \
 	--log_dir $VTDATAROOT/tmp \
 	--port 15000 \
-	--recovery-period-block-duration "10m" \
 	--instance-poll-time "1s" \
 	--topo-information-refresh-duration "30s" \
 	--alsologtostderr
@@ -78,7 +77,6 @@ vtorc \
       --prevent-cross-cell-failover                                 Prevent VTOrc from promoting a primary in a different cell than the current primary in case of a failover
       --purge_logs_interval duration                                how often try to remove old logs (default 1h0m0s)
       --reasonable-replication-lag duration                         Maximum replication lag on replicas which is deemed to be acceptable (default 10s)
-      --recovery-period-block-duration duration                     Duration for which a new recovery is blocked on an instance after running a recovery (default 30s)
       --recovery-poll-duration duration                             Timer duration on which VTOrc polls its database to run a recovery (default 1s)
       --remote_operation_timeout duration                           time to wait for a remote operation (default 15s)
       --security_policy string                                      the name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only)
@@ -94,7 +92,7 @@ vtorc \
       --table-refresh-interval int                                  interval in milliseconds to refresh tables in status page with refreshRequired class
       --tablet_manager_grpc_ca string                               the server ca to use to validate servers when connecting
       --tablet_manager_grpc_cert string                             the cert to use to connect
-      --tablet_manager_grpc_concurrency int                         concurrency to use to talk to a vttablet server for performance-sensitive RPCs (like ExecuteFetchAs{Dba,App} and CheckThrottler) (default 8)
+      --tablet_manager_grpc_concurrency int                         concurrency to use to talk to a vttablet server for performance-sensitive RPCs (like ExecuteFetchAs{Dba,App}, CheckThrottler and FullStatus) (default 8)
       --tablet_manager_grpc_connpool_size int                       number of tablets to keep tmclient connections open to (default 100)
       --tablet_manager_grpc_crl string                              the server crl to use to validate server certificates when connecting
       --tablet_manager_grpc_key string                              the key to use to connect
