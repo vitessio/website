@@ -30,7 +30,7 @@ var (
 	debug       = flag.Bool("debug", false, "log debug info")
 	vitessDir   = flag.String("vitess-dir", "", "path to vitess checkout")
 	docGenPath  = flag.String("docgen-path", "", "path to the binary docs generator, **relative to** --vitess-dir. if blank, defaults to ./go/cmd/`binary`/docgen")
-	versionStrs = flag.String("version-pairs", "main:17.0", "CSV of <gitref>:<version> pairs to generate docs for; for example, 'v15.0.2:15.0' will generate docs from the v15.0.2 tag into the content/en/15.0 subtree. ensure your vitess checkout is up-to-date (git fetch --all) before running.")
+	versionStrs = flag.String("version-pairs", "main:20.0", "CSV of <gitref>:<version> pairs to generate docs for; for example, 'v19.0.3:19.0' will generate docs from the v19.0.3 tag into the content/en/19.0 subtree. ensure your vitess checkout is up-to-date (git fetch --all) before running.")
 
 	// -graceful=false explicitly to make this harder to use en masse.
 	graceful = flag.Bool("graceful", true, "skip programs/versions where either the docgen directory or target content directory is missing (under the assumption there was no setup for generated docs for that binary/version)")
