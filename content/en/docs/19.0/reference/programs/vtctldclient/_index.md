@@ -1,7 +1,7 @@
 ---
 title: vtctldclient
 series: vtctldclient
-commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
+commit: cb5464edf5d7075feae744f3580f8bc626d185aa
 ---
 ## vtctldclient
 
@@ -67,6 +67,7 @@ vtctldclient [flags]
 * [vtctldclient GetRoutingRules](./vtctldclient_getroutingrules/)	 - Displays the VSchema routing rules.
 * [vtctldclient GetSchema](./vtctldclient_getschema/)	 - Displays the full schema for a tablet, optionally restricted to the specified tables/views.
 * [vtctldclient GetShard](./vtctldclient_getshard/)	 - Returns information about a shard in the topology.
+* [vtctldclient GetShardReplication](./vtctldclient_getshardreplication/)	 - Returns information about the replication relationships for a shard in the given cell(s).
 * [vtctldclient GetShardRoutingRules](./vtctldclient_getshardroutingrules/)	 - Displays the currently active shard routing rules as a JSON document.
 * [vtctldclient GetSrvKeyspaceNames](./vtctldclient_getsrvkeyspacenames/)	 - Outputs a JSON mapping of cell=>keyspace names served in that cell. Omit to query all cells.
 * [vtctldclient GetSrvKeyspaces](./vtctldclient_getsrvkeyspaces/)	 - Returns the SrvKeyspaces for the given keyspace in one or more cells.

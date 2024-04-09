@@ -1,7 +1,7 @@
 ---
 title: Workflow show
 series: vtctldclient
-commit: a85c612dc9a58aa2e4b13010fdba99e246646618
+commit: cb5464edf5d7075feae744f3580f8bc626d185aa
 ---
 ## vtctldclient Workflow show
 
@@ -22,6 +22,7 @@ vtctldclient --server localhost:15999 workflow --keyspace customer show --workfl
 ```
   -h, --help              help for show
       --include-logs      Include recent logs for the workflow. (default true)
+      --shards strings    (Optional) Specifies a comma-separated list of shards to operate on.
   -w, --workflow string   The workflow you want the details for.
 ```
 

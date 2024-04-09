@@ -1,7 +1,7 @@
 ---
 title: AddCellsAlias
 series: vtctldclient
-commit: 9a6f5262f7707ff80ce85c111d2ff686d85d29cc
+commit: b5b3114ab9371f882762dd66ae0efc5af3a3dbc0
 ---
 ## vtctldclient AddCellsAlias
 

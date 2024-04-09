@@ -1,7 +1,7 @@
 ---
 title: VDiff resume
 series: vtctldclient
-commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
+commit: cb5464edf5d7075feae744f3580f8bc626d185aa
 ---
 ## vtctldclient VDiff resume
 
