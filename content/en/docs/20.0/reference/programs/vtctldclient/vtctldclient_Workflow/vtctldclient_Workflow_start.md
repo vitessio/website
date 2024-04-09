@@ -1,7 +1,7 @@
 ---
 title: Workflow start
 series: vtctldclient
-commit: a85c612dc9a58aa2e4b13010fdba99e246646618
+commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
 ## vtctldclient Workflow start
 
@@ -21,6 +21,7 @@ vtctldclient --server localhost:15999 workflow --keyspace customer start --workf
 
 ```
   -h, --help              help for start
+      --shards strings    (Optional) Specifies a comma-separated list of shards to operate on.
   -w, --workflow string   The workflow you want to start.
 ```
 

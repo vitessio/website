@@ -1,7 +1,7 @@
 ---
 title: ApplyVSchema
 series: vtctldclient
-commit: 2642bea6b1d3476889564c49ed64829f2a3d0a90
+commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
 ## vtctldclient ApplyVSchema
 

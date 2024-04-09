@@ -1,7 +1,7 @@
 ---
 title: vtctldclient
 series: vtctldclient
-commit: fdabcfb130ec3ca15b23c278a0f20802bcd05756
+commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
 ## vtctldclient
 
@@ -35,6 +35,7 @@ vtctldclient [flags]
 
 * [vtctldclient AddCellInfo](./vtctldclient_addcellinfo/)	 - Registers a local topology service in a new cell by creating the CellInfo.
 * [vtctldclient AddCellsAlias](./vtctldclient_addcellsalias/)	 - Defines a group of cells that can be referenced by a single name (the alias).
+* [vtctldclient ApplyKeyspaceRoutingRules](./vtctldclient_applykeyspaceroutingrules/)	 - Applies the provided keyspace routing rules.
 * [vtctldclient ApplyRoutingRules](./vtctldclient_applyroutingrules/)	 - Applies the VSchema routing rules.
 * [vtctldclient ApplySchema](./vtctldclient_applyschema/)	 - Applies the schema change to the specified keyspace on every primary, running in parallel on all shards. The changes are then propagated to replicas via replication.
 * [vtctldclient ApplyShardRoutingRules](./vtctldclient_applyshardroutingrules/)	 - Applies the provided shard routing rules.
@@ -63,11 +64,13 @@ vtctldclient [flags]
 * [vtctldclient GetCellsAliases](./vtctldclient_getcellsaliases/)	 - Gets all CellsAlias objects in the cluster.
 * [vtctldclient GetFullStatus](./vtctldclient_getfullstatus/)	 - Outputs a JSON structure that contains full status of MySQL including the replication information, semi-sync information, GTID information among others.
 * [vtctldclient GetKeyspace](./vtctldclient_getkeyspace/)	 - Returns information about the given keyspace from the topology.
+* [vtctldclient GetKeyspaceRoutingRules](./vtctldclient_getkeyspaceroutingrules/)	 - Displays the currently active keyspace routing rules.
 * [vtctldclient GetKeyspaces](./vtctldclient_getkeyspaces/)	 - Returns information about every keyspace in the topology.
 * [vtctldclient GetPermissions](./vtctldclient_getpermissions/)	 - Displays the permissions for a tablet.
 * [vtctldclient GetRoutingRules](./vtctldclient_getroutingrules/)	 - Displays the VSchema routing rules.
 * [vtctldclient GetSchema](./vtctldclient_getschema/)	 - Displays the full schema for a tablet, optionally restricted to the specified tables/views.
 * [vtctldclient GetShard](./vtctldclient_getshard/)	 - Returns information about a shard in the topology.
+* [vtctldclient GetShardReplication](./vtctldclient_getshardreplication/)	 - Returns information about the replication relationships for a shard in the given cell(s).
 * [vtctldclient GetShardRoutingRules](./vtctldclient_getshardroutingrules/)	 - Displays the currently active shard routing rules as a JSON document.
 * [vtctldclient GetSrvKeyspaceNames](./vtctldclient_getsrvkeyspacenames/)	 - Outputs a JSON mapping of cell=>keyspace names served in that cell. Omit to query all cells.
 * [vtctldclient GetSrvKeyspaces](./vtctldclient_getsrvkeyspaces/)	 - Returns the SrvKeyspaces for the given keyspace in one or more cells.

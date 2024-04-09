@@ -1,7 +1,7 @@
 ---
 title: Reshard stop
 series: vtctldclient
-commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
+commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
 ## vtctldclient Reshard stop
 

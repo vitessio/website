@@ -1,7 +1,7 @@
 ---
 title: BackupShard
 series: vtctldclient
-commit: 20b1e461f3710f368a04eb0b563fd3de3df56908
+commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
 ## vtctldclient BackupShard
 

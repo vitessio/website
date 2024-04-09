@@ -1,7 +1,7 @@
 ---
 title: VDiff delete
 series: vtctldclient
-commit: 3b906cf6a3cedd9d216eaee4e162025d408beee9
+commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
 ## vtctldclient VDiff delete
 
@@ -14,7 +14,7 @@ vtctldclient VDiff delete
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --target-keyspace delete a037a9e2-5628-11ee-8c99-0242ac120002
+vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --target-keyspace customer delete a037a9e2-5628-11ee-8c99-0242ac120002
 vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --target-keyspace delete all
 ```
 

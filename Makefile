@@ -42,7 +42,7 @@ check-all-links: clean build link-checker-setup
 	bin/htmltest --conf .htmltest.external.yml
 
 ifndef COBRADOC_VERSION_PAIRS
-export COBRADOC_VERSION_PAIRS="main:20.0,v19.0.1:19.0,v18.0.3:18.0,v17.0.6:17.0"
+export COBRADOC_VERSION_PAIRS="main:20.0,v19.0.3:19.0,v18.0.4:18.0,v17.0.6:17.0"
 endif
 
 generated-docs: mysqlctl-docs \
