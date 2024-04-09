@@ -1,7 +1,7 @@
 ---
 title: MoveTables status
 series: vtctldclient
-commit: a85c612dc9a58aa2e4b13010fdba99e246646618
+commit: cb5464edf5d7075feae744f3580f8bc626d185aa
 ---
 ## vtctldclient MoveTables status
 
@@ -20,7 +20,8 @@ vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --
 ### Options
 
 ```
-  -h, --help   help for status
+  -h, --help             help for status
+      --shards strings   (Optional) Specifies a comma-separated list of shards to operate on.
 ```
 
 ### Options inherited from parent commands

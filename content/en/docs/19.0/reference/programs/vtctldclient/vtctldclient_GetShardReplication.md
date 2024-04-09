@@ -1,26 +1,20 @@
 ---
-title: Reshard start
+title: GetShardReplication
 series: vtctldclient
-commit: 2929deecbcdad21ca991cff62db8205e78cc4452
+commit: cb5464edf5d7075feae744f3580f8bc626d185aa
 ---
-## vtctldclient Reshard start
+## vtctldclient GetShardReplication
 
-Start a Reshard workflow.
-
-```
-vtctldclient Reshard start
-```
-
-### Examples
+Returns information about the replication relationships for a shard in the given cell(s).
 
 ```
-vtctldclient --server localhost:15999 Reshard --workflow cust2cust --target-keyspace customer start
+vtctldclient GetShardReplication <keyspace/shard> [cell1 [cell2...]]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for start
+  -h, --help   help for GetShardReplication
 ```
 
 ### Options inherited from parent commands
@@ -28,16 +22,13 @@ vtctldclient --server localhost:15999 Reshard --workflow cust2cust --target-keys
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
       --compact                              use compact format for otherwise verbose outputs
-      --format string                        The format of the output; supported formats are: text,json. (default "text")
       --server string                        server to use for the connection (required)
-      --target-keyspace string               Target keyspace for this workflow.
       --topo-global-root string              the path of the global topology data in the global topology server (default "/vitess/global")
       --topo-global-server-address strings   the address of the global topology server(s) (default [localhost:2379])
       --topo-implementation string           the topology implementation to use (default "etcd2")
-  -w, --workflow string                      The workflow you want to perform the command on.
 ```
 
 ### SEE ALSO
 
-* [vtctldclient Reshard](./vtctldclient_reshard/)	 - Perform commands related to resharding a keyspace.
+* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 
