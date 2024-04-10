@@ -9,7 +9,7 @@ Vitess-managed schema migrations (aka `Online DDL`) use VReplication workflows t
 existing schema to the desired schema. Since the Online DDL is also a VReplication workflow, we 
 can use `VDiff` to validate that the transformed table and original table are in sync.
 
-`VDiff`s can only be run on schema migrations created with the `--postpone-completion` flag. You should run the `VDiff` 
+`VDiff`s can only be run on schema migrations created with the `--postpone-completion` flag. You should run `VDiff` 
 once your schema migration has its `ready_to_complete` set to `1`.
 
 Here is an example of how you can run a `VDiff` on a schema migration:
@@ -60,5 +60,5 @@ You should see `HasMismatch: false` unless there is a bug in Vitess, in which ca
 create an issue at `https://github.com/vitessio/vitess/issues`
 
 ## References
-* [Online DDL Usage](https://vitess.io/docs/user-guides/schema-changes/audit-and-control/)
+* [Online DDL usage](https://vitess.io/docs/user-guides/schema-changes/audit-and-control/)
 * [VDiff](https://vitess.io/docs/reference/vreplication/vdiff/)
