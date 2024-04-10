@@ -7,8 +7,8 @@ aliases: ['/docs/user-guides/schema-changes/ddl-strategies/']
 Vitess supports both managed, online schema migrations (aka Online DDL) as well as unmanaged migrations. How Vitess runs a schema migration depends on the _DDL strategy_. Vitess allows these strategies:
 
 - `vitess` (formerly known as `online`): utilizes Vitess's built-in [VReplication](../../../reference/vreplication/vreplication/) mechanism. This is the preferred strategy in Vitess.
-- `gh-ost`: uses 3rd party GitHub's [gh-ost](https://github.com/github/gh-ost) tool.
-- `pt-osc`: uses 3rd party Percona's [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html) as part of [Percona Toolkit](https://www.percona.com/doc/percona-toolkit/3.0/index.html). `pt-osc` strategy is **experimental**.
+- `gh-ost`: uses 3rd party GitHub's [gh-ost](https://github.com/github/gh-ost) tool. `gh-ost` strategy is **unsupported** and slated to be removed in future versions.
+- `pt-osc`: uses 3rd party Percona's [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html) as part of [Percona Toolkit](https://www.percona.com/doc/percona-toolkit/3.0/index.html). `pt-osc` strategy is **experimental** and slated to be removed in future versions.
 - `mysql`: managed by the Online DDL scheduler, but executed via normal MySQL statement. Whether it is blocking or not is up to the specific query.
 - `direct`: unmanaged. The direct apply of DDL to your database. Whether it is blocking or not is up to the specific query.
 
@@ -102,6 +102,10 @@ Vitess takes care of setting up the necessary command line flags. It automatical
 
 `gh-ost` throttling is done via Vitess's own tablet throttler, based on replication lag.
 
+{{< warning >}}
+`gh-ost` strategy is **unsupported** and slated to be removed in future versions.
+{{< /warning >}}
+
 ### Using pt-online-schema-change
 
 [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html) is part of [Percona Toolkit](https://www.percona.com/doc/percona-toolkit/3.0/index.html), a set of Perl scripts. To be able to use `pt-online-schema-change`, you must have the following setup on all your tablet servers (normally tablets are co-located with MySQL on same host and so this implies setting up on all MySQL servers):
@@ -127,7 +131,7 @@ Do not override the following flags: `alter, pid, plugin, dry-run, execute, new-
 `pt-osc` throttling is done via Vitess's own tablet throttler, based on replication lag, and via a `pt-online-schema-change` plugin.
 
 {{< warning >}}
-The integration with `pt-online-schema-change` is **experimental**
+`pt-osc` strategy is **experimental** and slated to be removed in future versions.
 {{< /warning >}}
 
 ### Comparing the options
@@ -142,15 +146,12 @@ There are pros and cons to using any of the strategies. Some notable differences
 #### Support
 
 - VReplication (`vitess` strategy) is internal to Vitess and supported by the Vitess maintainers.
-- `gh-ost` and `pt-online-schema-change` are not supported by the Vitess maintainers.
+- `gh-ost` and `pt-online-schema-change` are not supported by the Vitess maintainers, and slated to be removed in future versions.
 
 #### Setup
 
 - VReplication is part of Vitess
-- A `gh-ost` binary is embedded within the Vitess binary, compatible with `glibc 2.3` and `Linux/amd64`. The user may choose to use their own `gh-ost` binary, configured with `--gh-ost-path`.
-{{< warning >}}
-The embedded `gh-ost` binary will be removed in future versions. The user will need to install their own `gh-ost` binary.
-{{< /warning >}}
+- To use `gh-ost` strategy, the user must supply a `gh-ost` binary. By default, Vitess will look for the binary in `/usr/bin/gh-ost`. Otherwise, the user should configure the binary's full path with `--gh-ost-path`.
 - `pt-online-schema-change` is not included in Vitess, and the user needs to set it up on tablet hosts.
   - Note that on Vitess Docker images, `pt-online-schema-change` and dependencies _are_ pre-installed.
 
@@ -166,17 +167,19 @@ The embedded `gh-ost` binary will be removed in future versions. The user will n
 
 #### MySQL compatibility
 
-- `pt-online-schema-change` partially supports foreign keys. Neither `gh-ost` nor `VReplication` support foreign keys.
+- `vitess` strategy supports foreign keys using a custom built MySQL server, found in https://github.com/planetscale/mysql-server, and using experimental `--unsafe-allow-foreign-keys` DDL strategy flag. Otherwise `vitess` does not allow making changes to a table participating in a foreign key relationship.
+  `pt-online-schema-change` partially supports foreign keys.
+  `gh-ost` does not allow making changes to a table participating in a foreign key relationship.
 
 ## Vitess functionality comparison
 
 | Strategy | Managed | Online | Trackable | Declarative | Revertible          | Recoverable | Backoff |
 |----------|---------|--------|-----------|-------------|---------------------|-------------|---------|
-| `direct` | No      | MySQL* | No        | No          | No                  | No          | No      |
-| `mysql`  | Yes     | MySQL* | Yes       | Yes         | No                  | No          | No      |
-| `pt-osc` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP`       | No*         | No      |
-| `gh-ost` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP`       | No*         | No      |
 | `vitess` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP,ALTER` | Yes         | Yes     |
+| `gh-ost` | Yes     | Yes*   | Yes+      | Yes         | `CREATE,DROP`       | No*         | No      |
+| `pt-osc` | Yes     | Yes*   | Yes       | Yes         | `CREATE,DROP`       | No*         | No      |
+| `mysql`  | Yes     | MySQL* | Yes       | Yes         | No                  | No          | No      |
+| `direct` | No      | MySQL* | No        | No          | No                  | No          | No      |
 
 - **Managed**: whether Vitess schedules and operates the migration
 - **Online**:

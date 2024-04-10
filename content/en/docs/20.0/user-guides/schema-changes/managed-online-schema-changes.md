@@ -67,8 +67,8 @@ ALTER TABLE demo MODIFY id bigint UNSIGNED;
 This statement can be executed as:
 
 - a `vitess` (aka `online`), managed online migration
-- a `gh-ost`, managed online migration
-- a `pt-online-schema-change`, managed online migration (**experimental**)
+- a `gh-ost`, managed online migration ((**unsupported** and slated to be removed in future versions)
+- a `pt-online-schema-change`, managed online migration (**experimental** and slated to be removed in future versions)
 - a synchronous, [unmanaged schema change](../unmanaged-schema-changes/)
 
 See [DDL Strategies](../ddl-strategies) for discussion around the different options.
