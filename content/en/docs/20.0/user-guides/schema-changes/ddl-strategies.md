@@ -151,7 +151,7 @@ There are pros and cons to using any of the strategies. Some notable differences
 #### Setup
 
 - VReplication is part of Vitess
-- To use `gh-ost` strategy, the user must supply a `gh-ost` binary. By default, Vitess will look for the binary in `/usr/bin/gh-ost`. Otherwise, the user should configure the binary's full path with `--gh-ost-path`.
+- To use `gh-ost` strategy, the user must supply a `gh-ost` binary. By default, Vitess will look for the binary `gh-ost` in the existing `PATH`. Otherwise, the user should configure the binary's full path with `--gh-ost-path`.
 - `pt-online-schema-change` is not included in Vitess, and the user needs to set it up on tablet hosts.
   - Note that on Vitess Docker images, `pt-online-schema-change` and dependencies _are_ pre-installed.
 
