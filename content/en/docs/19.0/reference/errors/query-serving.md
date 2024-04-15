@@ -94,7 +94,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | 1192 | HY000 | Can't execute the given command because you have an active transaction | The provided statement cannot be executed inside a transaction. |
 | 1231 | 42000 | invalid transaction_mode: %s | Valid transaction_mode values are 'SINGLE', 'MULTI' or 'TWOPC'. |
 | 1231 | 42000 | invalid workload: %s | Valid workload values are 'OLTP', 'OLAP' or 'DBA'. |
-| 1231 | 42000 | invalid DDL strategy: %s | Valid DDL strategies are gh-ost, pt-osc. |
+| 1231 | 42000 | invalid DDL strategy: %s | Valid DDL strategies are `vitess`, `gh-ost`, `pt-osc`, `mysql`, `direct`. |
 | 1690 | 22003 | %s value is out of range in %v [+,-,*,/] %v | Arithmetic operation lead to out of range value for the type. |
 | 1047 | 42000 | connection ID and transaction ID do not exist | The session is pointing to a transaction and/or reserved connection that is not valid. |
 | 1105 | HY000 | %d is not a boolean | Tried setting a system variable to a value that could not be converted a boolean value.  |

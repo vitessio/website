@@ -16,8 +16,7 @@ The workflow for the `VSchema` is as follows:
 
 This document describes the [`vtctl`](../../../reference/programs/vtctl/) commands that you can use to [review](#reviewing-your-schema) or [update](#changing-your-schema) your schema in Vitess.
 
-Note that this functionality is not recommended for long-running schema changes. It is recommended to use a tool such as [`pt-online-schema-change`](https://www.percona.com/doc/percona-toolkit/LATEST/pt-online-schema-change.html) or [`gh-ost`](https://github.com/github/gh-ost) instead.
-
+It is not recommended to run schema changes through this command. Instead, use [managed, online schema changes](../../../user-guides/schema-changes/managed-online-schema-changes/).
 
 ## Reviewing your schema
 
