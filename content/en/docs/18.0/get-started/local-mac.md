@@ -45,15 +45,15 @@ See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmi
 With the tools you’ve just installed via brew, you will next update your PATH variable so your shell knows where to find the binaries:
 
 ```sh
-echo “export PATH=${PATH}:/opt/homebrew/opt/mysql-client/bin:/opt/homebrew/opt/mysql/bin:~/Github/vitess/bin:/Users/jason/go/bin:​​/opt/homebrew/bin” >> ~/.zshrc
+echo "export PATH=${PATH}:/opt/homebrew/opt/mysql-client/bin:/opt/homebrew/opt/mysql/bin:~/Github/vitess/bin:${HOME}/go/bin:/opt/homebrew/bin" >> ~/.zshrc
 source ~/.zshrc
 ```
 
 If you’re using bash for your shell you’ll have to update the paths in `.bash_profile` or `.bashrc` instead. Mac does not read `.bashrc` by default:
 
 ```sh
-$ echo “export PATH=${PATH}:/opt/homebrew/opt/mysql-client/bin:/opt/homebrew/opt/mysql/bin:~/Github/vitess/bin:/Users/jason/go/bin:/opt/homebrew/bin” >> ~/.bash_profile
-$ source ~/.bash_profile
+echo "export PATH=${PATH}:/opt/homebrew/opt/mysql-client/bin:/opt/homebrew/opt/mysql/bin:~/Github/vitess/bin:${HOME}/go/bin:/opt/homebrew/bin" >> ~/.bash_profile
+source ~/.bash_profile
 ```
 
 ## System Check
