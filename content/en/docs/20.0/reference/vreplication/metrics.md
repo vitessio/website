@@ -16,6 +16,10 @@ During the copy phase we run one loop of bulk copy for approximately an hour at 
 
 _VReplicationCopyRowCount_ counts the number of rows copied during the copy phase per stream and _VReplicationCopyRowCountTotal_ the total across all streams.
 
+#### VReplicationDDLActions
+
+This metric counts the number of DDL actions -- based on [the value of the OnDDL strategy configured for the workflow](../vreplication/#handle-ddl) -- that have been taken in the current workflow streams.
+
 #### VReplicationErrors
 
 _VReplicationErrors_ counts the number of times errors occurred during vreplication. Errors are keyed
@@ -24,6 +28,10 @@ by the type of error.
 #### VReplicationHeartbeat
 
 _VReplicationHeartbeat_ records, for each stream, the timestamp sent by the last heartbeat event for that stream.
+
+#### VReplicationLagSeconds, VReplicationLagSecondsMax, VReplicationLagSecondsTotal
+
+These metrics show the replication lag of the target stream with respect to the source stream. _VReplicationLagSeconds_ shows the current replication lag and _VReplicationLagSecondsMax_ has the maximum lag in this stream. Note that these values are only valid during the replication phase of a workflow.
 
 #### VReplicationMessages
 
@@ -36,14 +44,6 @@ _VReplicationPhaseTimings_ counts the total time taken by the runs,
 VReplicationPhaseTimingsCounts the number of runs and _VReplicationPhaseTimingsTotals_ the total
 runs across all streams.
 
-#### VReplicationTableCopyRowCounts
-
-_VReplicationTableCopyRowCounts_ counts the number of rows copied during the copy phase per table per stream.
-
-#### VReplicationTableCopyTimings
-
-_VReplicationTableCopyTimings_ counts the time taken per table per stream during the copy phase of the stream. Unlike _VReplicationPhaseTimings_, this metric updates continuously, rather than being set once at the end of the copy phase.
-
 #### VReplicationQPS
 
 _VReplicationQPS_ is a list of QPS values for each loop of each phase of the workflow.
@@ -51,10 +51,6 @@ _VReplicationQPS_ is a list of QPS values for each loop of each phase of the wor
 #### VReplicationQueryCount, VReplicationQueryCountTotal
 
 _VReplicationQueryCount_ is the total number of queries in each phase of a workflow. _VReplicationQueryCountTotal_ is the total queries across all phases and workflows.
-
-#### VReplicationLagSeconds, VReplicationLagSecondsMax, VReplicationLagSecondsTotal
-
-These metrics show the replication lag of the target stream with respect to the source stream. _VReplicationLagSeconds_ shows the current replication lag and _VReplicationLagSecondsMax_ has the maximum lag in this stream. Note that these values are only valid during the replication phase of a workflow.
 
 #### VReplicationSource
 
@@ -72,6 +68,14 @@ The number of streams running on this target
 
 This shows the state of each stream.
 
+#### VReplicationTableCopyRowCounts
+
+_VReplicationTableCopyRowCounts_ counts the number of rows copied during the copy phase per table per stream.
+
+#### VReplicationTableCopyTimings
+
+_VReplicationTableCopyTimings_ counts the time taken per table per stream during the copy phase of the stream. Unlike _VReplicationPhaseTimings_, this metric updates continuously, rather than being set once at the end of the copy phase.
+
 #### VReplicationThrottledCounts
 
 The number of times vreplication was throttled by workflow, id, throttler (trx or tablet), and the sub-component (vstreamer, vcopier, vplayer, etc) that was throttled (see [the other tablet throttler metrics](../../features/tablet-throttler/#metrics))
@@ -82,37 +86,37 @@ The total number of times that vreplication has been throttled (see [the other t
 
 ## Source Tablet Metrics
 
-#### VStreamPacketSize
+#### VStreamerCompressedTransactionsDecoded
 
-The value of the `vstream_packet_size` flag specified for this tablet
+The total number of compressed transactions (MySQL's binlog_transaction_compression=ON) decoded by this vttablet across all workflows
 
 #### VStreamerCount
 
 The current number of running vstreamers
 
-#### VStreamerErrors
+#### VStreamersCreated
 
-The number of errors per category across workflows
+The total number of vstreamers created during the lifetime of this tablet
 
 #### VStreamersEndedWithErrors
 
 The total number of errors that caused a stream to stall
 
+#### VStreamerErrors
+
+The number of errors per category across workflows
+
 #### VStreamerEventsStreamed
 
 The total number of events streamed by this vttablet across all workflows
 
-#### VStreamerCompressedTransactionsDecoded
+#### VStreamPacketSize
 
-The total number of compressed transactions (MySQL's binlog_transaction_compression=ON) decoded by this vttablet across all workflows
+The value of the `vstream_packet_size` flag specified for this tablet
 
 #### VStreamerNumPackets
 
 The total number of packets sent by this vttablet across all workflows
-
-#### VStreamersCreated
-
-The total number of vstreamers created during the lifetime of this tablet
 
 <hr style="border-top: 2px dashed brown">
 
