@@ -18,7 +18,7 @@ _VReplicationCopyRowCount_ counts the number of rows copied during the copy phas
 
 #### VReplicationDDLActions
 
-This metric counts the number of DDL actions -- based on [the value of the OnDDL strategy configured for the workflow](../vreplication/#handle-ddl) -- that have been taken in the current workflow streams.
+This metric counts the number of DDL actions — based on [the value of the OnDDL strategy configured for the workflow](../vreplication/#handle-ddl) — that have been taken in the current workflow streams.
 
 #### VReplicationErrors
 
