@@ -82,6 +82,19 @@ endeavor to handle errors appropriately if/when they occur (e.g. unplanned
 outages/fail overs, etc.)
 {{< /warning >}}
 
+## What happens during a MoveTables or Reshard SwitchTraffic or ReverseTraffic with Buffering
+
+Fundamentally Vitess will:
+
+ * Hold up and buffer any queries sent to the tables (MoveTables) or shards (Reshard) for which traffic is being switched.
+ * Perform the traffic switching work so that application traffic against the tables (MoveTables) or shards (Reshard) are transparently switched to the new keyspace (MoveTables) or shards (Reshard).
+ * Drain the buffered queries to the new keyspace or shards — or if the switch failed then back to the original keyspace or shards.
+
+{{< warning >}}
+This process is not guaranteed to eliminate errors to the application, but
+rather reduce them or make them less frequent. The application should still
+endeavor to handle errors appropriately if/when they occur.
+{{< /warning >}}
 
 ## How does it work?
 
