@@ -44,7 +44,8 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT03029 | The number of columns you want to insert do not match the number of columns of your SELECT query. | column count does not match value count with the row for vindex '%s' | 1136 | 21S01 |
 | VT03030 | The number of columns you want to insert do not match the number of columns of your SELECT query. | lookup column count does not match value count with the row (columns, count): (%v, %d) | 1136 | 21S01 |
 | VT03031 | EXPLAIN has to be sent down as a single query to the underlying MySQL, and this is not possible if it uses tables from multiple keyspaces | EXPLAIN is only supported for single keyspace | 0 |  |
-| VT03031 | You cannot update a table that is not a real MySQL table. | the target table %s of the UPDATE is not updatable | 1288 | HY000 |
+| VT03032 | You cannot update a table that is not a real MySQL table. | the target table %s of the UPDATE is not updatable | 1288 | HY000 |
+| VT03033 | The table column list and derived column list have different column counts. | In definition of view, derived table or common table expression, SELECT list and column names list have different column counts | 1353 | HY000 |
 | VT05001 | The given database does not exist; Vitess cannot drop it. | cannot drop database '%s'; database does not exists | 1008 | HY000 |
 | VT05002 | The given database does not exist; Vitess cannot alter it. | cannot alter database '%s'; unknown database | 1049 | 42000 |
 | VT05003 | The given database does not exist in the VSchema. | unknown database '%s' in vschema | 1049 | 42000 |
@@ -96,7 +97,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | 1192 | HY000 | Can't execute the given command because you have an active transaction | The provided statement cannot be executed inside a transaction. |
 | 1231 | 42000 | invalid transaction_mode: %s | Valid transaction_mode values are 'SINGLE', 'MULTI' or 'TWOPC'. |
 | 1231 | 42000 | invalid workload: %s | Valid workload values are 'OLTP', 'OLAP' or 'DBA'. |
-| 1231 | 42000 | invalid DDL strategy: %s | Valid DDL strategies are `vitess`, `gh-ost`, `pt-osc`, `mysql`, `direct`. |
+| 1231 | 42000 | invalid DDL strategy: %s | Valid DDL strategies are gh-ost, pt-osc. |
 | 1690 | 22003 | %s value is out of range in %v [+,-,*,/] %v | Arithmetic operation lead to out of range value for the type. |
 | 1047 | 42000 | connection ID and transaction ID do not exist | The session is pointing to a transaction and/or reserved connection that is not valid. |
 | 1105 | HY000 | %d is not a boolean | Tried setting a system variable to a value that could not be converted a boolean value.  |
