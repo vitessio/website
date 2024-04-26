@@ -165,7 +165,7 @@ A lookup call will happen with `name = 'Alex'` to the `name_user_vdx` vindex whi
 The lookup vindex table may be inconsistent with the `User` table but the results returned for the query remained consistent with the `User` table.
 
 ### Insert Operation:
-Insertion of Lookup Vindex Tables data happens through the Pre Connection.
+Insertion of Lookup Vindex table data happens through the **Pre** connection.
 
 **Example:** `insert into user(id, name, phone, email) values (300, 'Emma', 8877991122, 'xyz@mail.com')`
 
