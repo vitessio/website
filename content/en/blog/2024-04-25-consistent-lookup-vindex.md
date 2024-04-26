@@ -3,7 +3,7 @@ author: 'Harshit Gangal, Deepthi Sigireddi'
 date: 2024-04-25
 slug: '2024-04-25-consistent-lookup-vindex'
 tags: ['Vitess', 'PlanetScale', 'MySQL', 'Query Serving', 'Vindex']
-title: 'Consistent Lookup Vindex Approach to Data Consistency without 2PC'
+title: 'Consistent Lookup Vindex: Achieving Data Consistency without 2PC'
 description: "How we implemented a consistent lookup Vindex in Vitess to ensure data consistency without using 2PC"
 ---
 
