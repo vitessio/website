@@ -220,7 +220,7 @@ PHONE_USER_VDX:
 ### Update Operation:
 Update of Lookup Vindex Tables data happens through a Delete Operation followed by an Insert Operation. We already know that Delete Operation is handled through Post connection and Insert Operation through Pre connection.
 
-In a special case, where vindex column data is unchanged, it will cause `lock wait timeout` on the Insert Operation (Pre-Transaction) as the lock will be held by Delete Operation (Post-Transaction). To mitigate this, Vitess handles this case well and updating vindex column data with the same value as before is turned into a no-op for the lookup vindex tables.
+In the special case of an update where the vindex column value is unchanged, it will cause `lock wait timeout` on the Insert operation (on the **Pre** connection) as the row lock will be held by the Delete operation (on the **Post** connection). To mitigate this, updating vindex column data with the same value as before is turned into a no-op for lookup vindex tables.
 
 However, it is still possible to run into this limitation if the same lookup vindex value is deleted and inserted as two different statements inside the same transaction.
 
