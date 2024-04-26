@@ -218,7 +218,7 @@ PHONE_USER_VDX:
 ```
 
 ### Update Operation:
-Update of Lookup Vindex Tables data happens through a Delete Operation followed by an Insert Operation. We already know that Delete Operation is handled through Post connection and Insert Operation through Pre connection.
+Update of Lookup Vindex table data happens through a Delete operation followed by an Insert operation. We already know that Delete operation is handled through **Post** connection and Insert operation through **Pre** connection.
 
 In the special case of an update where the vindex column value is unchanged, it will cause `lock wait timeout` on the Insert operation (on the **Pre** connection) as the row lock will be held by the Delete operation (on the **Post** connection). To mitigate this, updating vindex column data with the same value as before is turned into a no-op for lookup vindex tables.
 
