@@ -108,7 +108,7 @@ PHONE_USER_VDX:
 ```
 
 ### Delete Operation:
-Deletion of Lookup Vindex Tables data happens through the Post Connection.
+Deletion of Lookup Vindex table data happens through the **Post** connection.
 
 **Example:** `delete from user where id = 100`
 
