@@ -32,6 +32,7 @@ Secondary Vindexes can be unique or non-unique, and we’ll illustrate both type
 +-------+--------------+------+-----+
 ```
 
+
 #### Non Unique Vindex Table Defination:
 **NAME_USER_VDX Table**
 ```shell
@@ -44,6 +45,7 @@ Secondary Vindexes can be unique or non-unique, and we’ll illustrate both type
 +-------------+--------------+------+-----+
 ```
 
+
 #### Unique Vindex Table Defination:
 **PHONE_USER_VDX Table**
 ```shell
@@ -54,6 +56,7 @@ Secondary Vindexes can be unique or non-unique, and we’ll illustrate both type
 | keyspace_id | binary(8) | YES  |     |
 +-------------+-----------+------+-----+
 ```
+
 
 When executing a query like `select id, phone, email from user where name = 'Alex'`, the query planner uses the lookup vindex table `name_user_vdx`, to map the value `Alex` to its corresponding `Keyspace ID`. This lets the planner direct the query to a single destination shard rather than to all shards, thus avoiding a costly `scatter-gather` operation.
 
@@ -112,13 +115,13 @@ Deletion of Lookup Vindex table data happens through the **Post** connection.
 
 **Example:** `delete from user where id = 100`
 
-1. First select all the lookup columns from the `User` Table
+1. First select all the lookup columns from the `User` Table <br>
    **Main:** `select id, name, phone from user where id = 100 for update`
-2. Delete the Lookup Vindex Rows
-   **Post:**
+2. Delete the Lookup Vindex Rows <br>
+   **Post-Transaction:**
    1.  `delete from name_user_vdx where name = 'Alex' and id = 100`
    2.  `delete from phone_user_vdx where phone = 8877991122`
-3. Delete the User Table Row
+3. Delete the User Table Row <br>
    **Main:** `delete from user where id = 100`
 
 On Commit, suppose the Main transaction succeeds but the Post transaction fails. Let’s see how we are still able to maintain consistency.
@@ -169,23 +172,20 @@ Insertion of Lookup Vindex table data happens through the **Pre** connection.
 
 **Example:** `insert into user(id, name, phone, email) values (300, 'Emma', 8877991122, 'xyz@mail.com')`
 
-1. Insert into Lookup Vindex table
-   **Pre:**
-   1. `insert into name_user_vdx(name, id, keyspace_id) values ('Emma', 300, '0x333030')`
-
+1. Insert into Lookup Vindex table <br>
+   **Pre-Transaction:**
+   1. `insert into name_user_vdx(name, id, keyspace_id) values ('Emma', 300, '0x333030')` <br>
       No error as `name` is a non-unique column.
-   2. `insert into phone_user_vdx(phone, keyspace_id) values (8877991122, '0x333030')`
-   
+   2. `insert into phone_user_vdx(phone, keyspace_id) values (8877991122, '0x333030')` <br>
       This results in a duplicate key error as it is a unique column. Note that this row is left over from the error we got during the previous delete operation. We’ll get into the details of how this is handled in a minute.
-2. Insert the User table Row
+2. Insert the User table Row <br>
    **Main:** `insert into user(id, name, phone, email) values (300, 'Emma', 8877991122, 'xyz@mail.com')`
 
 **Handling of Duplicate Key Error in Lookup Vindex:**
-1. Lock the lookup row so that no other transaction can race with the current operation.
-   
-   **Pre:** `select phone, keyspace_id from phone_user_vdx where phone = 8877991122 for update`
+1. Lock the lookup row so that no other transaction can race with the current operation. <br>
+   **Pre-Transaction:** `select phone, keyspace_id from phone_user_vdx where phone = 8877991122 for update`
 2. Lock the main table row to ensure that the row we want to insert does not exist yet and no other transaction can race with the current operation.
-   1. **Main:** `select phone from user where phone = 8877991122 for update`
+   1. **Main:** `select phone from user where phone = 8877991122 for update` <br>
    Because we previously deleted the corresponding row for this select, it will return no results. This tells us that the lookup vindex table has an orphan row which can be updated with the new value from the insert statement.
    2. **Pre-Transaction:** `update phone_user_vdx set keyspace_id = ‘0x333030’ where phone = 8877991122`
 
