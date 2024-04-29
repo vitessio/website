@@ -33,7 +33,7 @@ Secondary Vindexes can be unique or non-unique, and we’ll illustrate both type
 ```
 
 
-#### Non Unique Vindex Table Defination:
+#### Non Unique Vindex Table Definition:
 **NAME_USER_VDX Table**
 ```shell
 +-------------+--------------+------+-----+
