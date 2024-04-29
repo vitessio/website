@@ -46,7 +46,7 @@ Secondary Vindexes can be unique or non-unique, and we’ll illustrate both type
 ```
 
 
-#### Unique Vindex Table Defination:
+#### Unique Vindex Table Definition:
 **PHONE_USER_VDX Table**
 ```shell
 +-------------+-----------+------+-----+
