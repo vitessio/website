@@ -20,7 +20,6 @@ A compatible version of [xtrabackup](https://www.percona.com/doc/percona-xtrabac
 
 ### Supported Versions
 
-* [MySQL 5.7](https://www.percona.com/doc/percona-xtrabackup/2.4/index.html#installation)
 * [MySQL 8.0](https://www.percona.com/doc/percona-xtrabackup/8.0/index.html#installation)
 
 ### Configuration
@@ -32,7 +31,7 @@ __Required flags:__
 * `--backup_engine_implementation=xtrabackup`
 * `--xtrabackup_user string` 
 	* The user that xtrabackup will use to connect to the database server. This user must have the [necessary privileges](https://www.percona.com/doc/percona-xtrabackup/2.4/using_xtrabackup/privileges.html#permissions-and-privileges-needed).
-    * This user will need to be authorized to connect to mysql locally without a password using [auth_socket](https://dev.mysql.com/doc/refman/5.7/en/socket-pluggable-authentication.html).
+    * This user will need to be authorized to connect to mysql locally without a password using [auth_socket](https://dev.mysql.com/doc/refman/8.0/en/socket-pluggable-authentication.html).
 
 Additionally required for MySQL 8.0:
 
