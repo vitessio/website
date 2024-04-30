@@ -76,7 +76,7 @@ Note that VTGate can [buffer queries](../../features/vtgate-buffering/) when swi
 [`ReverseTraffic`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_reversetraffic/) switches traffic in the reverse direction for the `tablet-types` specified. The traffic should have been previously switched forward using `SwitchTraffic` for the `cells` and `tablet_types` specified.
 
 {{< info >}}
-Note that VTGate can [buffer queries](../../features/vtgate-buffering/) when switching traffic which can virtually eliminate any visible impact on application users.
+Note that VTGate can [buffer queries](../../features/vtgate-buffering/) when reversing traffic which can virtually eliminate any visible impact on application users.
 {{</ info >}}
 
 </div>
