@@ -16,7 +16,7 @@ Vitess supports the databases listed [here](../../overview/supported-databases/)
 
 ```sh
 # Ubuntu based
-sudo apt install -y mysql-server etcd curl
+sudo apt install -y mysql-server etcd-server etcd-client curl
 
 # Debian
 sudo apt install -y default-mysql-server default-mysql-client etcd curl
