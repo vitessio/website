@@ -116,7 +116,6 @@ $ source ../common/env.sh
 You should see an output similar to the following:
 
 ```bash
-$ ./101_initial_cluster.sh
 $ ./101_initial_cluster.sh 
 add /vitess/global
 add /vitess/zone1
