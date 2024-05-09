@@ -15,29 +15,8 @@ The following has been verified to work on __Ubuntu 19.10__ and __Debian 10__. I
 
 ### Install Go
 
-[Download and install](http://golang.org/doc/install) Golang. For example for `go1.20.2`, at writing:
-
-```
-curl -LO https://dl.google.com/go/go1.20.2.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.20.2.linux-amd64.tar.gz
-```
-
-> Vitess is tested and shipped using a specific Golang version for each release.
-> For maximum compatibility we encourage you to use the same Golang version as [the one mentioned in our `build.env` file](https://github.com/vitessio/vitess/blob/d1ba6258ea2462d5d28d67661aace7b79bb7e27b/build.env#L20).
-
-Make sure to add go to your bashrc:
-```
-# Additions to ~/.bashrc file
-
-# Add go PATH
-export PATH=$PATH:/usr/local/go/bin
-
-# Add GOROOT
-export GOROOT=/usr/local/go/
-
-# Add GOPATH
-export GOPATH=/home/<user>/go
-```
+[Download and install](http://golang.org/doc/install) Golang. Vitess is tested and shipped using a specific Golang version for each release.
+For maximum compatibility we encourage you to use the same Golang version as [the one mentioned in our `build.env` file](https://github.com/vitessio/vitess/blob/main/build.env#L20).
 
 ### Install Node 16.13.0+
 
