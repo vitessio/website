@@ -188,7 +188,7 @@ Finally, you need to add a command line flag to vtgate to have it use the new pl
 
 ### User Defined Functions
 VTGates can now track user-defined functions (UDFs) and use them during planning.
-To enable it, set the `--enable-udfs` flag on VTGate.
+To enable this feature, set the `--enable-udfs` flag on VTGate.
 More details on how to add UDFs can be found in [MySQL Docs](https://dev.mysql.com/doc/extending-mysql/8.0/en/adding-loadable-function.html).
 
 ## Cross-shard Transactions
