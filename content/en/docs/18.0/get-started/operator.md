@@ -13,16 +13,18 @@ PlanetScale provides a [Vitess Operator for Kubernetes](https://github.com/plane
 
 Before we get started, let’s get a few pre-requisites out of the way:
 
-1. Install [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) and start a Minikube engine:
+1. Install [Docker Engine](https://docs.docker.com/engine/install/) locally.
+
+2. Install [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) and start a Minikube engine:
     ```bash
     minikube start --kubernetes-version=v1.25.8 --cpus=4 --memory=11000 --disk-size=32g
     ```
 
-2. Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and ensure it is in your `PATH`.
+3. Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and ensure it is in your `PATH`.
 
-1. Install [the MySQL client](https://dev.mysql.com/doc/mysql-getting-started/en/) locally.
+4. Install [the MySQL client](https://dev.mysql.com/doc/mysql-getting-started/en/) locally.
 
-1. Install [vtctldclient](https://vitess.io/docs/get-started/local/#install-vitess) locally.
+5. Install [vtctldclient](https://vitess.io/docs/get-started/local/#install-vitess) locally.
 
 ## Install the Operator
 
