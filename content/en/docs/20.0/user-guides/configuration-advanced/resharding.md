@@ -361,3 +361,8 @@ Beyond this, you will also want to manually delete the on-disk directories assoc
 ```bash
 rm -rf ${VTDATAROOT}/vt_000000020{0,1,2}/
 ```
+
+## Next Steps
+
+Congratulations, you have successfully resharded your `customer` keyspace in two shards.
+Now, let's learn [how to schedule backups](../../operating-vitess/backup-and-restore/scheduled-backups) of your Vitess custer.
