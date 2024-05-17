@@ -47,7 +47,8 @@ example-vbsc-every-minute-customer-8aaaa771-1715963880-n7cm7   0/1     Completed
 ### Listing backups
 
 Now we can list the available backups, by getting the `vtb` (`VitessBackup`) objects in our Kubernetes cluster.
-We can see we have three backups, that is because the schedule `every-minute-customer` takes two backups (one for each shard). 
+We can see we have three backups, that is because the schedule `every-minute-customer` takes two backups (one for each shard, `-80` and `80-`),
+and the other schedule (`every-minute-commerce`) takes only one backup (for the shard `-`). 
 
 ```bash
 $ kubectl get vtb --no-headers
