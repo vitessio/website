@@ -27,14 +27,14 @@ the two `customer` shards, and the second one will backup the `commerce` keyspac
 The backups will be stored directly inside the Minikube node, but if you want to backup to for instance S3, you can
 change the `location` of the backup in `401_scheduled_backups.yaml`.
 
-```
+```bash
 kubectl apply -f 401_scheduled_backups.yaml
 ```
 
 After at least a minute, we should appear at least two pods that are created by the `VitessBackupSchedule` object.
 These pods will take a backup of vitess.
 
-```
+```bash
 $ kubectl get pods
 NAME                                                           READY   STATUS             RESTARTS        AGE
 ...
@@ -48,7 +48,7 @@ example-vbsc-every-minute-customer-8aaaa771-1715963880-n7cm7   0/1     Completed
 Now we can list the available backups, by getting the `vtb` (`VitessBackup`) objects in our Kubernetes cluster.
 We can see we have three backups, that is because the schedule `every-minute-customer` takes two backups (one for each shard). 
 
-```
+```bash
 $ kubectl get vtb --no-headers
 example-commerce-x-x-20240517-163802-97ece60f-8f2a3d47    111s
 example-customer-80-x-20240517-163812-70e40ad-78a0d60b    58s
@@ -57,7 +57,7 @@ example-customer-x-80-20240517-163803-729301e-02e8899b    111s
 
 Since we are running on Minikube, our backups are stored locally on the Minikube node, we can take a look at them like so:
 
-```
+```bash
 $ minikube ssh
 docker@minikube:~$ cd /tmp/example/
 docker@minikube:/tmp/example$ ls
