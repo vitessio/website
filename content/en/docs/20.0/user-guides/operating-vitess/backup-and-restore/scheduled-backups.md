@@ -31,8 +31,9 @@ change the `location` of the backup in `401_scheduled_backups.yaml`.
 kubectl apply -f 401_scheduled_backups.yaml
 ```
 
-After at least a minute, we should appear at least two pods that are created by the `VitessBackupSchedule` object.
-These pods will take a backup of vitess.
+After at least a minute, we should see two new pods that were created by the operator. Under the hood, these pods
+are managed by a Kubernetes Job, and their goal is to take a backup of Vitess, as we defined in the `strategies` field
+of the `401_scheduled_backups.yaml` file.
 
 ```bash
 $ kubectl get pods
