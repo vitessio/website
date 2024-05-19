@@ -115,13 +115,16 @@ make site
 git add .
 ```
 
-**12.** Commit your changes. 
+**12.** Commit your changes. To contribute to this project, you need to agree to the Developer Certificate of Origin (DCO) for every commit you make.
 
 ```
-git commit -m "<commit subject>"
+git commit --signoff -m "<commit subject>"
 ```
+Or you can use the shorter format shown below.
 
-
+```
+git commit -s -m "<commit subject>"
+```
 
 **13.** While you are working on your branch, other developers may update the `prod` branch with their branch. This action means your branch is now out of date with the `prod` branch and missing content. So to fetch the new changes, follow along:
 
