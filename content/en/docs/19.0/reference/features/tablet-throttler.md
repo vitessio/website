@@ -139,12 +139,16 @@ The list of tablet types included in the throttler's logic is dictated by `vttab
 
 ## Heartbeat configuration
 
-Enabling the lag throttler also automatically enables heartbeat injection. The follwing `vttablet` flags further control heartbeat behavior:
+The throttler requires heartbeat to be enabled via `vttablet` flags. We recommend enabling heartbeats via `--heartbeat_on_demand_duration` in conjunction with `--heartbeat_interval` as follows:
 
-- `--heartbeat_interval` indicates how frequently heartbeats are injected. The interval should over-sample the `--throttle_threshold`. For example, if `--throttle_threshold` is `1s`, then `--heartbeat_interval` should be `250ms` or less.
-- `--heartbeat_on_demand_duration` ensures heartbeats are only injected when needed (e.g. during active VReplication workflows such as MoveTables or OnlineDDL). Heartbeats are written to the binary logs, and can therefore bloat them. If this is a concern, configure for example: `--heartbeat_on_demand_duration 5s`. This setting means: any throttler request starts a `5s` lease of heartbeat writes.
+- `--heartbeat_interval` indicates how frequently heartbeats are injected. The interval should over-sample the `--throttle_threshold` by a factor of `2` to `4`. Examples:
+  - If `--throttle_threshold` (replication lag) is `1s`, use `--heartbeat_interval 250ms`.
+  - If `--throttle_threshold` is `5s`, use an interval of `1s` or `2s`.
+- `--heartbeat_on_demand_duration` ensures heartbeats are only injected when needed (e.g. during active VReplication workflows such as MoveTables or Online DDL). Heartbeats are written to the binary logs, and can therefore bloat them. If this is a concern, configure for example: `--heartbeat_on_demand_duration 5s`. This setting means: any throttler request starts a `5s` lease of heartbeat writes.
   In normal times, heartbeats are not written. Once a throttle check is requested (e.g. by a running migration), the throttler asks the tablet to start a `5s` lease of heartbeats. that first check is likely to return a non-OK code, because heartbeats were stale. However, subsequent checks will soon pick up on the newly injected heartbeats. Checks made while the lease is held, further extend the lease time. In the scenario of a running migration, we can expect heartbeats to begin as soon as the migration begins, and terminate `5s` (in our example) after the migration completes.
   A recommended value is a multiple of `--throttle_threshold`. If `--throttle_threshold` is `1s`, reasonable values would be `5s` to `60s`.
+
+Alternatively, you may choose to enable heartbeats unconditionally via `--heartbeat_enable`, again in conjunction with `--heartbeat_interval <duration>`.
 
 ## API & usage
 
