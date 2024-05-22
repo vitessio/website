@@ -1,7 +1,7 @@
 ---
 title: MoveTables create
 series: vtctldclient
-commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
+commit: b9b567acbb1f36404f46b5daa168d37831dd137f
 ---
 ## vtctldclient MoveTables create
 
@@ -31,15 +31,15 @@ vtctldclient --server localhost:15999 movetables --workflow commerce2customer --
       --no-routing-rules                   (Advanced) Do not create routing rules while creating the workflow. See the reference documentation for limitations if you use this flag.
       --on-ddl string                      What to do when DDL is encountered in the VReplication stream. Possible values are IGNORE, STOP, EXEC, and EXEC_IGNORE. (default "IGNORE")
       --remove-sharded-auto-increment      If moving the table(s) to a sharded keyspace, remove any auto_increment clauses when copying the schema to the target as sharded keyspaces should rely on either user/application generated values or Vitess sequences to ensure uniqueness. (default true)
+      --shards strings                     (EXPERIMENTAL: Multi-tenant migrations only) Specify that vreplication streams should only be created on this subset of target shards. Warning: you should first ensure that all rows on the source route to the specified subset of target shards using your VIndex of choice or you could lose data during the migration.
       --source-keyspace string             Keyspace where the tables are being moved from.
-      --source-keyspace-alias string       (EXPERIMENTAL) Used currently only for multi-tenant migrations. This value will be used instead of the source keyspace name in the keyspace routing rules.
       --source-shards strings              Source shards to copy data from when performing a partial MoveTables (experimental).
       --source-time-zone string            Specifying this causes any DATETIME fields to be converted from the given time zone into UTC.
       --stop-after-copy                    Stop the workflow after it's finished copying the existing rows and before it starts replicating changes.
       --tables strings                     Source tables to copy.
       --tablet-types strings               Source tablet types to replicate table data from (e.g. PRIMARY,REPLICA,RDONLY).
       --tablet-types-in-preference-order   When performing source tablet selection, look for candidates in the type order as they are listed in the tablet-types flag. (default true)
-      --tenant-id string                   (EXPERIMENTAL) The tenant ID to use for the MoveTables workflow into a multi-tenant keyspace.
+      --tenant-id string                   (EXPERIMENTAL: Multi-tenant migrations only) The tenant ID to use for the MoveTables workflow into a multi-tenant keyspace.
 ```
 
 ### Options inherited from parent commands

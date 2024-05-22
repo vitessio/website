@@ -1,7 +1,7 @@
 ---
 title: SetWritable
 series: vtctldclient
-commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
+commit: b9b567acbb1f36404f46b5daa168d37831dd137f
 ---
 ## vtctldclient SetWritable
 

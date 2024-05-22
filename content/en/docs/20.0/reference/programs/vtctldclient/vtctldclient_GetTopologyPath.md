@@ -1,7 +1,7 @@
 ---
 title: GetTopologyPath
 series: vtctldclient
-commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
+commit: b9b567acbb1f36404f46b5daa168d37831dd137f
 ---
 ## vtctldclient GetTopologyPath
 
@@ -14,7 +14,9 @@ vtctldclient GetTopologyPath <path>
 ### Options
 
 ```
-  -h, --help   help for GetTopologyPath
+      --data-as-json   If true, only the data is output and it is in JSON format rather than prototext.
+  -h, --help           help for GetTopologyPath
+      --version int    The version of the path's key to get. If not specified, the latest version is returned.
 ```
 
 ### Options inherited from parent commands
