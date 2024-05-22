@@ -52,3 +52,15 @@ To release a new version of the documentation you can use one of the following t
 - `./tools/ga_release.sh`: when a version becomes GA.
   - Takes one argument too, the number of the version we are making GA.
   - Usage when releasing v16.0.0 GA: `./tools/ga_release.sh "16"`
+
+<h1><a name="community"></a><a name="contributing"></a> 
+<a href="https://github.com/vitessio/vitess/blob/main/CONTRIBUTING.md">Contributing</a> and 
+<a href="https://vitess.slack.com/join/shared_invite/zt-2he4t8glg-hyLiiW~f_0YM2YD9oYYuuA#/shared-invite/email">Community</a> 
+</h1>
+
+<p>We welcome contributions, updates, <a href="https://github.com/vitessio/vitess/issues">discrepancy reports</a>, and <a href="https://github.com/vitessio/vitess/pulls">pull requests</a>. This project thrives on community collaboration. Contributors should follow the <a href="https://github.com/cncf/foundation/blob/main/code-of-conduct.md">CNCF Code of Conduct</a>.</p>
+
+<p>Join our <a href="https://vitess.slack.com/join/shared_invite/zt-2he4t8glg-hyLiiW~f_0YM2YD9oYYuuA#/shared-invite/email">Slack</a>! Our projects thrive on community collaboration.</p>
+
+<p><i>Not sure where to start?</i> Grab an <a href="https://github.com/vitessio/vitess/issues">open issue</a>.</p>
+<br>
