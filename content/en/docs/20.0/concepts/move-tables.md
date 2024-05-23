@@ -2,7 +2,7 @@
 title: MoveTables
 ---
 
-MoveTables is a new workflow based on VReplication. It enables you to relocate tables between keyspaces, and therefore physical MySQL instances, without downtime.
+MoveTables is a workflow based on VReplication. It enables you to relocate tables between keyspaces, and therefore physical MySQL instances, without downtime.
 
 ## Identifying Candidate Tables
 

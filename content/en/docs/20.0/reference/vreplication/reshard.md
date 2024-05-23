@@ -64,12 +64,20 @@ It is too expensive to get real-time row counts of tables, using _count(*)_, say
 
 [`SwitchTraffic`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_switchtraffic) switches traffic forward for the `tablet-types` specified. This replaces the previous `SwitchReads` and `SwitchWrites` commands with a single one. It is now possible to switch all traffic with just one command, and this is the default behavior. Also, you can now switch replica, rdonly and primary traffic in any order: earlier you needed to first `SwitchReads` (for replicas and rdonly tablets) first before `SwitchWrites`.
 
+{{< info >}}
+Note that VTGate can [buffer queries](../../features/vtgate-buffering/) when switching traffic which can virtually eliminate any visible impact on application users.
+{{</ info >}}
+
 </div>
 
 #### ReverseTraffic
 <div class="cmd">
 
 [`ReverseTraffic`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_reversetraffic/) switches traffic in the reverse direction for the `tablet-types` specified. The traffic should have been previously switched forward using `SwitchTraffic` for the `cells` and `tablet_types` specified.
+
+{{< info >}}
+Note that VTGate can [buffer queries](../../features/vtgate-buffering/) when reversing traffic which can virtually eliminate any visible impact on application users.
+{{</ info >}}
 
 </div>
 
