@@ -241,3 +241,8 @@ The tables are kept for 24 hours after migration completion. Vitess automaticall
 
 Artifact tables are identifiable via `artifacts` column in a `SHOW VITESS_MIGRATION ...` command. You should generally not touch these tables. It's possible to `DROP` those tables with `direct` DDL strategy. Note that dropping tables in production can be risky and lock down your database for a substantial period of time. Dropping artifact tables also makes the migrations impossible to [revert](../revertible-migrations/).
 
+## Noblob
+
+The noblob binlog row image is supported by the MoveTables and Reshard VReplication workflows. If noblob is used it won't affect schema changes as long as blobs are not part of the PRIMARY KEY, in most vreplication workflows. 
+
+**NOTE** BLOB should never be part of a PRIMARY KEY and should also not be part of the Online DDL migration key.
