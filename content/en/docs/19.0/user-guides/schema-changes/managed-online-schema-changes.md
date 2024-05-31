@@ -244,4 +244,4 @@ Artifact tables are identifiable via `artifacts` column in a `SHOW VITESS_MIGRAT
 
 The `noblob` binlog row image is supported by the MoveTables and Reshard VReplication workflows.
 
-**NOTE** replication does not support blobs as part of the `PRIMARY KEY` in `MoveTables` operations, or as part of the [migration key](../../../reference/vreplication/internal/keys/)in Online DDL operations.
+**NOTE** replication does not support blobs as part of the `PRIMARY KEY` in `MoveTables` operations, or as part of the [migration key](../../../reference/vreplication/internal/keys/) in Online DDL operations.
