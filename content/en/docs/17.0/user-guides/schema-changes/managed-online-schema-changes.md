@@ -243,6 +243,6 @@ Artifact tables are identifiable via `artifacts` column in a `SHOW VITESS_MIGRAT
 
 ## Noblob
 
-The noblob binlog row image is supported by the MoveTables and Reshard VReplication workflows. If noblob is used it won't affect schema changes, as long as blobs are not part of the PRIMARY KEY in vreplication workflows. 
+The `noblob` binlog row image is supported by the MoveTables and Reshard VReplication workflows.
 
-**NOTE** BLOB should never be part of a PRIMARY KEY and should also not be part of the Online DDL [migration key](https://vitess.io/docs/archive/15.0/reference/vreplication/internal/keys/). This is becuse vreplication does not support index prefixes for the PRIMARY KEY.
+**NOTE** replication does not support blobs as part of the `PRIMARY KEY` in `MoveTable` operations, or as part of the [migration key](../../../reference/features/tablet-throttler/)in Online DDL operations.
