@@ -10,12 +10,12 @@ an [Operator](../../../../get-started/operator) or [local](../../../../get-start
 that the [MoveTables](../../../migration/move-tables/) and [Resharding](../../../configuration-advanced/resharding) user guides have been followed (which take you through
 steps `101` to `306`).
 
-This step is doable only if you are using the vitess-operator.
+This guide is useful only if you are using the vitess-operator.
 {{< /info >}}
 
 ## Backups
 
-If you are not familiar with how backups in Vitess work we suggest you familiarize yourself with it.
+If you are not already familiar with how backups work in Vitess we suggest you familiarize yourself with them first.
 An [entire guide](../overview/) is available in this section.
 
 ## Scheduling backups
@@ -24,14 +24,14 @@ An [entire guide](../overview/) is available in this section.
 
 For this example we are going to create two schedules: each will be executed every minute, the first one will backup
 the two `customer` shards, and the second one will backup the `commerce` keyspace.
-The backups will be stored directly inside the Minikube node, but if you want to backup to for instance S3, you can
+The backups will be stored directly inside the Minikube node, but if you want to backup to a cloud storage provider like S3, you can
 change the `location` of the backup in `401_scheduled_backups.yaml`.
 
 ```bash
 kubectl apply -f 401_scheduled_backups.yaml
 ```
 
-After at least a minute, we should see two new pods that were created by the operator. Under the hood, these pods
+After a minute or so, we should see two new pods that were created by the operator. Under the hood, these pods
 are managed by a Kubernetes Job, and their goal is to take a backup of Vitess, as we defined in the `strategies` field
 of the `401_scheduled_backups.yaml` file.
 
@@ -95,6 +95,6 @@ docker@minikube:/tmp/example$
 
 ### Cleanup
 
-Congratulations, you have correctly scheduled recurrent backups of your Vitess cluster.
+Congratulations, you have correctly scheduled recurring backups of your Vitess cluster.
 
 If you want, you can now clean up the entire cluster by running: `minikube delete`. 
