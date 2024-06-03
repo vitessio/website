@@ -6,7 +6,7 @@ aliases: ['/docs/user-guides/backup-and-restore/']
 
 {{< info >}}
 This guide follows on from the Get Started guides. Please make sure that you have
-an [Operator](../../../../get-started/operator) or [local](../../../../get-started/local) installation ready. It also assumes
+an [Operator](../../../../get-started/operator) installation ready. It also assumes
 that the [MoveTables](../../../migration/move-tables/) and [Resharding](../../../configuration-advanced/resharding) user guides have been followed (which take you through
 steps `101` to `306`).
 
@@ -15,12 +15,15 @@ This guide is useful only if you are using the vitess-operator.
 
 ## Backups
 
-If you are not already familiar with how backups work in Vitess we suggest you familiarize yourself with them first.
-An [entire guide](../overview/) is available in this section.
+If you are not already familiar with [how backups work](../overview/) in Vitess we suggest you familiarize yourself with them first.
 
 ## Scheduling backups
 
 ### Adding the schedule
+
+{{< warning >}}
+Please note that is not recommended to run production backups every minute. These schedules are only an example.
+{{</ warning >}}
 
 For this example we are going to create two schedules: each will be executed every minute, the first one will backup
 the two `customer` shards, and the second one will backup the `commerce` keyspace.
