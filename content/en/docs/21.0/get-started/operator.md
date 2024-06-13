@@ -33,7 +33,6 @@ Change to the operator example directory:
 ```bash
 git clone https://github.com/vitessio/vitess
 cd vitess/examples/operator
-git checkout release-20.0
 ```
 
 Install the operator:
