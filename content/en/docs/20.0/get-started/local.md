@@ -89,7 +89,7 @@ Download the [latest binary release](https://github.com/vitessio/vitess/releases
 
 ```sh
 version=20.0.0-rc1
-file=vitess-${version}-fe01c8d.tar.gz
+file=vitess-${version}-7e8c974.tar.gz
 wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
 tar -xzf ${file}
 cd ${file/.tar.gz/}
