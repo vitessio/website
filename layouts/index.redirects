@@ -50,6 +50,23 @@
 # Redirect to Slack invite link.
 /slack https://join.slack.com/t/vitess/shared_invite/zt-2he4t8glg-hyLiiW~f_0YM2YD9oYYuuA 302
 
+# Redirect archived docs
+/docs/16.0/                              /docs/archive/16.0/
+/docs/16.0/*                             /docs/archive/16.0/:splat
+/docs/15.0/                              /docs/archive/15.0/
+/docs/15.0/*                             /docs/archive/15.0/:splat
+/docs/14.0/                              /docs/archive/14.0/
+/docs/14.0/*                             /docs/archive/14.0/:splat
+/docs/13.0/                              /docs/archive/13.0/
+/docs/13.0/*                             /docs/archive/13.0/:splat
+/docs/12.0/                              /docs/archive/12.0/
+/docs/12.0/*                             /docs/archive/12.0/:splat
+/docs/11.0/                              /docs/archive/11.0/
+/docs/11.0/*                             /docs/archive/11.0/:splat
+
+# Blog post
+/blog/2024-02-28-announcing-vitess-19/   /blog/2024-03-06-announcing-vitess-19/
+
 # Docs versioning redirects
 
 ## [en]
