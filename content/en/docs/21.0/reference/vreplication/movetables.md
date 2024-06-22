@@ -75,6 +75,16 @@ It is too expensive to get real-time row counts of tables, using _count(*)_, say
 
 </div>
 
+#### MirrorTraffic
+<div class="cmd">
+
+[`mirrortraffic`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_mirrortraffic/) mirrors a percentage of traffic forward for the `tablet-types` specified.
+
+`mirrortraffic` must be run before `switchtraffic`. `switchtraffic` will automatically remove any mirror rules that were created by `mirrortraffic`.
+
+</div>
+
+
 #### SwitchTraffic
 <div class="cmd">
 

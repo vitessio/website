@@ -486,6 +486,22 @@ $ vtctldclient VDiff --format=json --target-keyspace customer --workflow commerc
 This can take a long time to complete on very large tables.
 {{</ info >}}
 
+## Mirroring Traffic
+
+Optionally, you can test how queries will perform once traffic is switched by mirroring traffic from the source keyspace to the target keyspace. A mirrored query will be routed to the source keyspace (`commerce`), and a copy of that query will be sent to the target keyspace (`customer`). Results and errors from the source keyspace will be returned to the client, while results and errors from the target keyspace wil be ignored.
+
+```bash
+$ vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer MirrorTraffic --percent 1.0
+SwitchTraffic was successful for workflow customer.commerce2customer
+
+Start State: Reads Not Switched. Writes Not Switched
+Current State: All Reads Switched. Writes Switched
+```
+
+`MirrorTraffic` increases VTGate CPU usage and memory allocations, while decreasing performance. It is recommended to start with small values of `--percent` (between `0` and `1`), and increase in small increments. If you observe decreases in performance or increases in VTGate memory usage, either revert to smaller values of `--percent` or increase the amount of resources allocated to VTGate.
+
+Check [VTTablet-level metrics](../configuration-basic/monitoring/) in the target keyspace to see how queries are performing there.
+
 ## Switching Traffic
 
 Once the `MoveTables` operation is complete ([in the "running" or replicating phase](../../../../design-docs/vreplication/life-of-a-stream/)), the first step in making the changes live is to _switch_ all query serving
