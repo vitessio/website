@@ -156,8 +156,8 @@ the primary [vindex type](../../../reference/features/vindexes/#predefined-vinde
 way of distributing rows into various shards. For other data types we would typically use a different vindex
 type:
 
-* For `VARCHAR` columns, use `unicode_loose_md5` or `unicode_loose_xxhash`.
-* For `VARBINARY`, use `binary_md5` or `xxhash`.
+* For `VARCHAR` columns, use `unicode_loose_xxhash`.
+* For `VARBINARY`, use `xxhash`.
 * Vitess uses a plugin system to define vindexes. If none of the
 [predefined vindexes](../../../reference/features/vindexes/#predefined-vindexes) suit your needs, you can
 develop your own custom vindex.

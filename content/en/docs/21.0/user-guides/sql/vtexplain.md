@@ -78,11 +78,11 @@ The following example VSchema defines a single keyspace `mainkeyspace` and three
   "mainkeyspace": {
     "sharded": true,
     "vindexes": {
-      "hash": {
-        "type": "hash"
+      "xxhash": {
+        "type": "xxhash"
       },
-      "md5": {
-        "type": "unicode_loose_md5",
+      "unicode_loose_xxhash": {
+        "type": "unicode_loose_xxhash",
         "params": {},
         "owner": ""
       },
@@ -101,7 +101,7 @@ The following example VSchema defines a single keyspace `mainkeyspace` and three
         "column_vindexes": [
           {
             "column": "user_id",
-            "name": "hash"
+            "name": "xxhash"
           },
           {
             "column": "name",
@@ -115,7 +115,7 @@ The following example VSchema defines a single keyspace `mainkeyspace` and three
         "column_vindexes": [
           {
             "column": "name",
-            "name": "md5"
+            "name": "unicode_loose_xxhash"
           }
         ],
         "auto_increment": null

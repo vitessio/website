@@ -515,7 +515,7 @@ mysql> vexplain select * from corder where sku = "Product_1";
 			"Values": [
 				":sku"
 			],
-			"Vindex": "binary_md5"
+			"Vindex": "xxhash"
 		},
 		{
 			"OperatorType": "Route",

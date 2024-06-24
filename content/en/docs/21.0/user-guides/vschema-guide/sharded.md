@@ -11,9 +11,9 @@ A sharded keyspace allows you to split a large database into smaller parts by di
 
 Vitess provides many predefined vindex types. The most popular ones are:
 
-* `hash`: for numbers
-* `unicode_loose_md5`: for text columns
-* `binary_md5`: for binary columns
+* `xxhash`: for numbers
+* `unicode_loose_xxhash`: for text columns
+* `xxhash`: for binary columns
 
 In our example, we are going to designate `customer` as a sharded keyspace, and create a `customer` table in it. The schema for the table is as follows:
 
@@ -59,7 +59,7 @@ alter vschema on customer.customer add vindex hash(customer_id) using hash;
 The DDL creates the `hash` vindex under the `vindexes` section, the `customer` table under the `tables` section, and associates the `customer_id` column to `hash`. For sharded keyspaces, the only way to create a table is using the above construct. This is because a primary vindex is mandatory for sharded tables.
 
 {{< info >}}
-Every sharded table must have a Primary Vindex. A Primary Vindex must be instantiated from a vindex type that is Unique. `hash`, `unicode_loose_md5` and `binary_md5` are unique vindex types.
+Every sharded table must have a Primary Vindex. A Primary Vindex must be instantiated from a vindex type that is Unique. `xxhash`, `unicode_loose_xxhash` and `binary_md5` are unique vindex types.
 {{< /info >}}
 
 The demo brings up the `customer` table as two shards: `-80` and `80-`. For a `hash` vindex, input values of 1, 2 and 3 fall in the `-80` range, and 4 falls in the `80-` range. Restarting the demo with the updated configs should allow you to perform the following:
