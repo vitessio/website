@@ -89,7 +89,7 @@ As an open-source project, Vitess thrives on the contributions, insights, and fe
 
 ## Getting Started
 
-For a seamless transition to [Vitess 20](https://github.com/vitessio/vitess/releases/tag/v20.0.0), we highly recommend reviewing the [detailed release notes](https://github.com/vitessio/vitess/blob/main/changelog/20.0/20.0.0/release_notes.md). Additionally, explore [our documentation](https://vitess.io/docs/20.0/) for guides, best practices, and tips to make the most of Vitess 20. Whether you're upgrading from a previous version or integrating Vitess for the first time, our resources are designed to support you every step of the way.
+For a seamless transition to [Vitess 20](https://github.com/vitessio/vitess/releases/tag/v20.0.0), we highly recommend reviewing the [detailed release notes](https://github.com/vitessio/vitess/blob/main/changelog/20.0/20.0.0/release_notes.md). Additionally, you can explore [our documentation](https://vitess.io/docs/20.0/) for guides, best practices, and tips to make the most of Vitess 20. Whether you're upgrading from a previous version or running Vitess for the first time, our resources are designed to support you every step of the way.
 
 Thank you for your support and contributions to the Vitess project!
 
