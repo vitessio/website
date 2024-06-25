@@ -62,7 +62,7 @@ These features provide greater control and efficiency for managing sharded data.
 
 Many web-scale applications use a multi-tenant architecture where each tenant has their own database (with identical schemas). There are several challenges with this approach like provisioning and scaling potentially tens of thousands of databases, and uniformly updating database schemas across them.
 
-A sharded Vitess cluster is a great option for such a system with a single logical database serving all tenants. Vitess 20 adds support for importing data from such a multi-tenant cluster into a single Vitess Cluster, with new options to the MoveTables workflow. You would run one such workflow for each tenant, with imported tenants being served by the Vitess cluster.
+A sharded Vitess [keyspace](https://vitess.io/docs/concepts/keyspace/) is a great option for such a system with a single logical database serving all tenants. Vitess 20 adds support for importing data from such a multi-tenant setup into a single Vitess [keyspace](https://vitess.io/docs/concepts/keyspace/), with new [`--shards` and `--tenant-id` flags](https://vitess.io/docs/reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_create/) for the [MoveTables workflow](https://vitess.io/docs/reference/vreplication/movetables/). You would run one such workflow for each tenant, with imported tenants being served by the Vitess cluster.
 
 ### Online DDL
 
