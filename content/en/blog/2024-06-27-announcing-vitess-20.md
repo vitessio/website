@@ -81,7 +81,7 @@ Release 20.0 drops support for `gh-ost` for Online DDL, as we continue to invest
 
 ### Vitess-operator
 
-Automated and scheduled backups are now available as an experimental feature in v2.13.0. The getting started guide contains a [new guide](https://vitess.io/docs/20.0/user-guides/operating-vitess/backup-and-restore/scheduled-backups/) to learn how to use this new feature.
+Automated and scheduled backups are now available as an experimental feature in v2.13.0. We have added a [new user guide](https://vitess.io/docs/20.0/user-guides/operating-vitess/backup-and-restore/scheduled-backups/) for this feature.
 
 ## Vitess and the Community
 
