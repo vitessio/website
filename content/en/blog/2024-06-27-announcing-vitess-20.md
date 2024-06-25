@@ -85,7 +85,7 @@ Automated and scheduled backups are now available as an experimental feature in 
 
 ## Vitess and the Community
 
-As an open-source project, Vitess thrives on the contributions, insights, and feedback from the community. Your experiences and input are invaluable in shaping the future of Vitess. We encourage you to share your stories and ask questions, on [GitHub](https://github.com/vitessio/vitess) or in our [Slack channel](http://vitess.io/slack).
+As an open-source project, Vitess thrives on the contributions, insights, and feedback from the community. Your experiences and input are invaluable in shaping the future of Vitess. We encourage you to share your stories and ask questions, on [GitHub](https://github.com/vitessio/vitess) or in our [Slack community](http://vitess.io/slack).
 
 ## Getting Started
 
