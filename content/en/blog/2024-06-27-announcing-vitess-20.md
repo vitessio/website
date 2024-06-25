@@ -56,7 +56,7 @@ DELETE FROM t1 WHERE id IN (SELECT col FROM t2 WHERE foo = 32 AND bar = 43);
 DELETE t1, t3 FROM t1 JOIN t2 ON t1.id = t2.id JOIN t3 ON t1.col = t3.col;
 ```
 
-These features provide greater control and efficiency for managing sharded databases. For more details, please refer to the Vitess and MySQL documentation.
+These features provide greater control and efficiency for managing sharded data. For more details, please refer to the Vitess and MySQL documentation.
 
 ### VReplication: Multi-tenant Imports
 
