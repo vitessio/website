@@ -66,11 +66,6 @@ A sharded Vitess cluster is a great option for such a system with a single logic
 
 ### Online DDL
 
-Release 20.0 drops support for `gh-ost` for Online DDL, as we continue to invest in `vitess` migrations based on VReplication. The `gh-ost` strategy is still recognized; however:
-
-- Vttablet binaries no longer bundle the `gh-ost` binary. The user should provide their own `gh-ost` binary, and supply `vttablet --gh-ost-path`.
-- Vitess no longer tests `gh-ost` in CI/endtoend tests.
-
 Vitess migrations now support `enum` definition reordering. Vitess opts to use `enum`s by alias (their string representation) rather than by ordinal value (the internal integer representation).
 
 Vitess now has better analysis for `INSTANT` DDL scenarios, enabled with the `--prefer-instant-ddl` DDL [strategy flag](https://vitess.io/docs/20.0/user-guides/schema-changes/ddl-strategy-flags/). It is able to predict whether a migration can be fulfilled by the `INSTANT` algorithm and use this algorithm if so.
@@ -78,6 +73,11 @@ Vitess now has better analysis for `INSTANT` DDL scenarios, enabled with the `--
 It also improves support for range partitioning migrations, and opts to use direct partitioning queries over Online DDL where appropriate.
 
 VDiffs can now be run on Online DDL Workflows which are still in progress (i.e. not yet cut-over).
+
+Release 20.0 drops support for `gh-ost` for Online DDL, as we continue to invest in `vitess` migrations based on VReplication. The `gh-ost` strategy is still recognized; however:
+
+- Vttablet binaries no longer bundle the `gh-ost` binary. The user should provide their own `gh-ost` binary, and supply `vttablet --gh-ost-path`.
+- Vitess no longer tests `gh-ost` in CI/endtoend tests.
 
 ### Vitess-operator
 
