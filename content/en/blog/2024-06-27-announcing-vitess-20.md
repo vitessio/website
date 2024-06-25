@@ -16,7 +16,7 @@ Version 20 focuses on usability and maturity of existing features, and continues
 
 ## What's New in Vitess 20
 
-- **Query Compatibility**: enhances DML support including improved query compatibility, Vindex hints, and extended support for various sharded `update` and `delete` operations.
+- **Query Compatibility**: enhanced DML support including improved query compatibility, Vindex hints, and extended support for various sharded `update` and `delete` operations.
 - **VReplication**: multi-tenant imports support.
 - **Online DDL**: dropping support for `gh-ost` , improve support for various schema change scenarios.
 - **Vitess Operator**: automated and scheduled backups.
