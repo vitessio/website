@@ -73,7 +73,7 @@ Release 20.0 drops support for `gh-ost` for Online DDL, as we continue to invest
 
 Vitess migrations now support `enum` definition reordering. Vitess opts to use `enum`s by alias (their string representation) rather than by ordinal value (the internal integer representation).
 
-Vitess has now better analysis for `INSTANT` DDL scenarios, enabled with the `--prefer-instant-ddl` DDL [strategy flag](https://vitess.io/docs/20.0/user-guides/schema-changes/ddl-strategy-flags/). It is able to predict whether a migration can be fulfilled by the `INSTANT` algorithm and use this algorithm if so.
+Vitess now has better analysis for `INSTANT` DDL scenarios, enabled with the `--prefer-instant-ddl` DDL [strategy flag](https://vitess.io/docs/20.0/user-guides/schema-changes/ddl-strategy-flags/). It is able to predict whether a migration can be fulfilled by the `INSTANT` algorithm and use this algorithm if so.
 
 It also improves support for range partitioning migrations, and opts to use direct partitioning queries over Online DDL where appropriate.
 
