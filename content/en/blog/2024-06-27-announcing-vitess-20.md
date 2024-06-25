@@ -18,7 +18,7 @@ Version 20 focuses on usability and maturity of existing features, and continues
 
 - **Query Compatibility**: enhanced DML support including improved query compatibility, Vindex hints, and extended support for various sharded `update` and `delete` operations.
 - **VReplication**: multi-tenant imports.
-- **Online DDL**: dropping support for `gh-ost` , improve support for various schema change scenarios.
+- **Online DDL**: dropping support for `gh-ost` , improved support for various schema change scenarios.
 - **Vitess Operator**: automated and scheduled backups.
 
 ## Dive Deeper
