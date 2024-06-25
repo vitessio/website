@@ -17,8 +17,8 @@ Version 20 focuses on usability and maturity of existing features, and continues
 ## What's New in Vitess 20
 
 - **Query Compatibility**: enhanced DML support including improved query compatibility, Vindex hints, and extended support for various sharded `update` and `delete` operations.
-- **VReplication**: multi-tenant imports.
-- **Online DDL**: dropping support for `gh-ost` , improved support for various schema change scenarios.
+- **VReplication**: multi-tenant imports (experimental).
+- **Online DDL**: improved support for various schema change scenarios, dropping support for `gh-ost`.
 - **Vitess Operator**: automated and scheduled backups.
 
 ## Dive Deeper
@@ -58,7 +58,7 @@ DELETE t1, t3 FROM t1 JOIN t2 ON t1.id = t2.id JOIN t3 ON t1.col = t3.col;
 
 These features provide greater control and efficiency for managing sharded data. For more details, please refer to the Vitess and MySQL documentation.
 
-### VReplication: Multi-tenant Imports
+### VReplication: Multi-tenant Imports (experimental)
 
 Many web-scale applications use a multi-tenant architecture where each tenant has their own database (with identical schemas). There are several challenges with this approach like provisioning and scaling potentially tens of thousands of databases, and uniformly updating database schemas across them.
 
