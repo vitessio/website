@@ -7,9 +7,6 @@ title: 'Announcing Vitess 20'
 description: "Vitess 20 is now Generally Available"
 ---
 
-
-## Announcing Vitess 20
-
 We're delighted to announce the release of [Vitess 20](https://github.com/vitessio/vitess/releases/tag/v20.0.0) along with [version 2.13.0](https://github.com/planetscale/vitess-operator/releases/tag/v2.13.0) of the Vitess Kubernetes Operator.
 
 Version 20 focuses on usability and maturity of existing features, and continues to build on the solid foundation of scalability and performance established in previous versions. Our commitment remains steadfast in providing a powerful, scalable, and reliable solution for your database scaling needs.
