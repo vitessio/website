@@ -66,7 +66,7 @@ A sharded Vitess cluster is a great option for such a system with a single logic
 
 ### Online DDL
 
-Release 20.0 drops support for `gh-ost` for Online DDL, as we continue to invest in `vitess` migrations based on vreplication. The `gh-ost` strategy is still recognized; however:
+Release 20.0 drops support for `gh-ost` for Online DDL, as we continue to invest in `vitess` migrations based on VReplication. The `gh-ost` strategy is still recognized; however:
 
 - Vttablet binaries no longer bundle the `gh-ost` binary. The user should provide their own `gh-ost` binary, and supply `vttablet --gh-ost-path`.
 - Vitess no longer tests `gh-ost` in CI/endtoend tests.
