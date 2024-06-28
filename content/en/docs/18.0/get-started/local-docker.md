@@ -12,7 +12,7 @@ This guide will only work on x86_64/amd64 based machines.
 
 This guide illustrates how to run a local testing Vitess setup via Docker. The Vitess environment is identical to the [local setup](../local/), but without having to install software on one's host other than Docker.
 
-## Prerequisites
+## Prerequisite
 
 Before we get started, let’s get a few pre-requisites out of the way:
 1. Install [Golang](https://go.dev/doc/install) locally.
