@@ -14,8 +14,7 @@ This guide illustrates how to run a local testing Vitess setup via Docker. The V
 
 ## Prerequisite
 
-Before we get started, let’s get a few pre-requisites out of the way:
-1. Install [Golang](https://go.dev/doc/install) locally.
+- Install [Golang](https://go.dev/doc/install) locally.
 
 ## Check out the vitessio/vitess repository
 
