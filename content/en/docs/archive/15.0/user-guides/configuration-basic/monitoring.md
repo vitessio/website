@@ -154,7 +154,7 @@ The vttablet queries exec time is roughly equal to the sum of the MySQL exec tim
 
 #### Waits
 
-Waits is a histogram variable that tracks various waits in the system. Right now, the only categories are "Consolidations" and "StreamConsolidations". A consolidation happens when one query waits for the results of an identical query already executing, thereby saving the database from performing duplicate work.
+Waits is a histogram variable that tracks various waits in the system. Right now, the only category is "Consolidations". A consolidation happens when one query waits for the results of an identical query already executing, thereby saving the database from performing duplicate work.
 
 This variable used to report connection pool waits, but a refactor moved those variables out into the pool related vars.
 
