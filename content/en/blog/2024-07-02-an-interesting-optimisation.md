@@ -76,8 +76,6 @@ Rewriters perform one of two functions:
 1. Running a rewriter over the plan to perform a specific task. For example, the "pull DISTINCT from UNION" rewriter extracts the DISTINCT part from UNION and uses a separate operator for it.
 2. Controlling when push-down rewriters are enabled. Some rewriters only turn on after reaching a certain phase.
 
-By delaying the "ordering under aggregation" rewriter until the "split aggregation" phase, we can push down the aggregation without causing issues by pushing down ordering under the top aggregator.
-
 By delaying the "ordering under aggregation" rewriter until the "split aggregation" phase, we can push down the aggregation under the join. This doesn't stop the "ordering under aggregation" rewriter from doing its job, it just has to wait a bit before doing it.    
 
 The final tree looks like this:
