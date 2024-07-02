@@ -28,7 +28,7 @@ The planner was unable to delegate aggregation to MySQL, leading to the fetching
 
 ## Planning and Tree Rewriting
 
-During planning, we perform extensive tree rewriting to push as much work down under `Route`s as possible. The rewriting process aims to optimize query execution by pushing operations closer to the data.
+During the planning phase, we perform extensive tree rewriting to push as much work down under Routes as possible. This involves repeatedly rewriting the tree until no further changes occur during a full pass of the tree, a state known as fixed-point. The goal of this rewriting process is to optimize query execution by pushing operations closer to the data.
 
 ### Initial Plan
 
@@ -54,13 +54,13 @@ We don't split aggregation between MySQL and vtgate in the initial phases, so we
 By pushing ordering under aggregation, the plan changes to:
 
 ```
->>>>>>>> push ordering under aggregation
 Aggregator (ORG sum(`user`.type), user_extra.id group by user_extra.id)
 └── Ordering (user_extra.id)
-    └── ApplyJoin on [`user`.team_id | :user_team_id = user_extra.id | `user`.team_id = user_extra.id]
+    └── ApplyJoin on `user`.team_id = user_extra.id
+...
 ```
 
-We can't push the ordering further down since it's sorted by the RHS of the join. Ordering can only be pushed down to the LHS.
+We can't push the ordering further down since it's sorted by the right hand side of the join. Ordering can only be pushed down to the left hand side.
 This leaves us in an unfortunate situation - ordering is blocking the aggregator from being pushed down, which means we have to fetch all that data, _and_ sort it to do the aggregation.
 
 ### The Solution
@@ -69,14 +69,16 @@ The solution I typically use in these situations involves leveraging the phases 
 
 ### Phases
 
-We have several phases that run sequentially. After completing a phase, we run the push-down rewriters until we reach a fixed point, then move to the next phase, and so on.
+We have several phases that run sequentially. After completing a phase, we run the push-down rewriters, then move to the next phase, and so on.
 
 Rewriters perform one of two functions:
 
 1. Running a rewriter over the plan to perform a specific task. For example, the "pull DISTINCT from UNION" rewriter extracts the DISTINCT part from UNION and uses a separate operator for it.
-2. Enabling and disabling rewriters. Many rewriters are only enabled after reaching a certain point.
+2. Controlling when push-down rewriters are enabled. Some rewriters only turn on after reaching a certain phase.
 
 By delaying the "ordering under aggregation" rewriter until the "split aggregation" phase, we can push down the aggregation without causing issues by pushing down ordering under the top aggregator.
+
+By delaying the "ordering under aggregation" rewriter until the "split aggregation" phase, we can push down the aggregation under the join. This doesn't stop the "ordering under aggregation" rewriter from doing its job, it just has to wait a bit before doing it.    
 
 The final tree looks like this:
 
