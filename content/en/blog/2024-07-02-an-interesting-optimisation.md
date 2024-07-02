@@ -1,16 +1,16 @@
 ---
 author: 'Andrés Taylor'
 date: 2024-07-02
-slug: '2024-07-02-an-interesting-optimisation'
+slug: '2024-07-02-an-interesting-optimization'
 tags: ['Vitess', 'PlanetScale', 'MySQL', 'Query Serving', 'Vindex', 'plan', 'execution plan', 'explain', 'optimizer']
 title: 'An Interesting Optimization'
-description: "How I implemented an optimisation by delaying another optimisation"
+description: "How I implemented an optimization by delaying another optimization"
 ---
 
 ## Introduction
 
 I recently encountered an intriguing bug. A user reported that their query was causing vtgate to fetch a large amount of data, sometimes resulting in an Out Of Memory (OOM) error.
-For a deeper understanding of grouping and aggregations on Vitess, I recommend reading [this blog post](https://planetscale.com/blog/grouping-and-aggregations-on-vitess) I wrote earlier.
+For a deeper understanding of grouping and aggregations on Vitess, I recommend reading this [prior blog post](https://planetscale.com/blog/grouping-and-aggregations-on-vitess).
 
 ## The Query
 
@@ -73,7 +73,7 @@ We have several phases that run sequentially. After completing a phase, we run t
 
 Rewriters perform one of two functions:
 
-1. Running a rewriter over the plan to perform a specific task. For example, the "pull distinct from UNION" rewriter extracts the DISTINCT part from UNION and uses a separate operator for it.
+1. Running a rewriter over the plan to perform a specific task. For example, the "pull DISTINCT from UNION" rewriter extracts the DISTINCT part from UNION and uses a separate operator for it.
 2. Enabling and disabling rewriters. Many rewriters are only enabled after reaching a certain point.
 
 By delaying the "ordering under aggregation" rewriter until the "split aggregation" phase, we can push down the aggregation without causing issues by pushing down ordering under the top aggregator.
