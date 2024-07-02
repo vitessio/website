@@ -7,16 +7,10 @@ title: 'An Interesting Optimization'
 description: "How I implemented an optimisation by delaying another optimisation"
 ---
 
-# An Interesting Optimization
-
 ## Introduction
 
 I recently encountered an intriguing bug. A user reported that their query was causing vtgate to fetch a large amount of data, sometimes resulting in an Out Of Memory (OOM) error.
 For a deeper understanding of grouping and aggregations on Vitess, I recommend reading [this blog post](https://planetscale.com/blog/grouping-and-aggregations-on-vitess) I wrote earlier.
-
-## About Vitess
-
-Vitess is a database clustering system for horizontal scaling of MySQL through a proxy. It handles various tasks such as sharding, replication, and topology management, providing high availability and scalability for large-scale database applications.
 
 ## The Query
 
