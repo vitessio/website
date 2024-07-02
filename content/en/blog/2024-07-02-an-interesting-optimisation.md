@@ -106,3 +106,5 @@ Most of the aggregation has been pushed down to MySQL, and at the vtgate level, 
 ## Conclusion
 
 This optimization demonstrates the complexity of query planning and the importance of efficient tree rewriting in Vitess. By carefully pushing operations closer to the data, we can significantly improve query performance and resource utilization.
+
+For more details on the implementation, you can check out the [pull request on GitHub](https://github.com/vitessio/vitess/pull/16278) that addresses this optimization.
