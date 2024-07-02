@@ -1,3 +1,11 @@
+---
+author: 'Andrés Taylor'
+date: 2024-07-02
+slug: '2024-07-02-an-interesting-optimisation'
+tags: ['Vitess', 'PlanetScale', 'MySQL', 'Query Serving', 'Vindex', 'plan', 'execution plan', 'explain', 'optimizer']
+title: 'Consistent Lookup Vindex: Achieving Data Consistency without 2PC'
+description: "How I implemented an optimisation by delaying another optimisation"
+---
 
 # An Interesting Optimization
 
