@@ -100,7 +100,7 @@ It is possible for the throttler to respond differently -- to some extent -- to 
 
 It is possible to _restrict_ the throttler's response to one or more apps. For example, it's possible to completely throttle "vreplication" while still responding `HTTP 200` to other apps. This is typically used to give way or precedence to one or two apps, or otherwise to further reduce the incoming load from a specific app.
 
-Starting `v18`, it is also possible to _exempt_ an app from throttling, even if the throttler is otherwise rejecting requests with metrics beyond the threshold. This is an advanced feature that users should treat with great care, and only in situations where they absolutely must give a specific workflow/migration the highest priority above all else. See discussion in examples, below.
+It is also possible to _exempt_ an app from throttling, even if the throttler is otherwise rejecting requests with metrics beyond the threshold. This is an advanced feature that users should treat with great care, and only in situations where they absolutely must give a specific workflow/migration the highest priority above all else. See discussion in examples, below.
 
 ## Configuration
 
@@ -139,7 +139,7 @@ The list of tablet types included in the throttler's logic is dictated by `vttab
 
 ## Heartbeat configuration
 
-The throttler requires heartbeat to be enabled via `vttablet` flags. We recommend enabling heartbeats via `--heartbeat_on_demand_duration` in conjunction with `--heartbeat_interval` as follows:
+To measure replication lag, the throttler uses the heartbeat writer service in Vitess. We recommend enabling heartbeats via `--heartbeat_on_demand_duration` in conjunction with `--heartbeat_interval` as follows:
 
 - `--heartbeat_interval` indicates how frequently heartbeats are injected. The interval should over-sample the `--throttle_threshold` by a factor of `2` to `4`. Examples:
   - If `--throttle_threshold` (replication lag) is `1s`, use `--heartbeat_interval 250ms`.
@@ -149,6 +149,8 @@ The throttler requires heartbeat to be enabled via `vttablet` flags. We recommen
   A recommended value is a multiple of `--throttle_threshold`. If `--throttle_threshold` is `1s`, reasonable values would be `5s` to `60s`.
 
 Alternatively, you may choose to enable heartbeats unconditionally via `--heartbeat_enable`, again in conjunction with `--heartbeat_interval <duration>`.
+
+When the heartbeat writer is unconfigured, it still serves heartbeats at throttler requests, leased on-demand for `10s`. It is therefore not strictly necessary to configure the heartbeat writer.
 
 ## API & usage
 
