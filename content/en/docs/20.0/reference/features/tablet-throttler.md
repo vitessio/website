@@ -164,7 +164,6 @@ Applications use these API endpoints:
 #### Examples:
 
 - `gh-ost` uses this throttler endpoint: `/throttler/check?app=online-ddl:gh-ost:<migration-uuid>&p=low`
-- A data backfill application will identify as such, and use _normal_ priority: `/throttler/check?app=my_backfill` (priority not indicated in URL therefore assumed to be _normal_)
 - An app reading a massive amount of data directly from a replica tablet will use `/throttler/check-self?app=my_data_reader`
 
 A `HEAD` request is sufficient. A `GET` request also provides a `JSON` output. For example:
