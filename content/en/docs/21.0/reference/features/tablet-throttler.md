@@ -143,7 +143,7 @@ To measure replication lag, the throttler uses the heartbeat writer service in V
 
 Alternatively, you may choose to enable heartbeats unconditionally via `--heartbeat_enable`, again in conjunction with `--heartbeat_interval <duration>`.
 
-When the heartbeat writer is unconfigured, it still serves heartbeats at throttler requests, leased on-demand for `10s`. It is therefore not strictly necessary to configure the heartbeat writer.
+There is no need to configure the heartbeats as it will by default perform heartbeats upon each throttler requests, leased on-demand for `10s`.
 
 ## API & usage
 
