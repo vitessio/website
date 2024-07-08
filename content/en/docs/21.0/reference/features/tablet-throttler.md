@@ -100,18 +100,13 @@ It is possible for the throttler to respond differently -- to some extent -- to 
 
 It is possible to _restrict_ the throttler's response to one or more apps. For example, it's possible to completely throttle "vreplication" while still responding `HTTP 200` to other apps. This is typically used to give way or precedence to one or two apps, or otherwise to further reduce the incoming load from a specific app.
 
-Starting `v18`, it is also possible to _exempt_ an app from throttling, even if the throttler is otherwise rejecting requests with metrics beyond the threshold. This is an advanced feature that users should treat with great care, and only in situations where they absolutely must give a specific workflow/migration the highest priority above all else. See discussion in examples, below.
+It is also possible to _exempt_ an app from throttling, even if the throttler is otherwise rejecting requests with metrics beyond the threshold. This is an advanced feature that users should treat with great care, and only in situations where they absolutely must give a specific workflow/migration the highest priority above all else. See discussion in examples, below.
 
 ## Configuration
 
-{{< warning >}}
-Per-tablet throttler configuration, as used in `v15` and supported in `v16`, is no longer supported in `v18`.{{< /warning >}}
-
 Throttler configuration is found in the [local topology server](../../../concepts/topology-service/). There is one configuration per keyspace. All shards and all tablets in all cells have the same throttler configuration: they are all enabled or disabled, and all share the same threshold or custom query. Since configuration is stored outside the tablet, it survives tablet restarts.
 
-`v16` introduced a new opt-in `vttablet` flag, `--throttler-config-via-topo`, and the flag defaulted `false`. In `v17` the flag now defaulted to `true`. In `v18`, the flag is not used anymore, and the tablet looks for configuration in the topology server, and will watch and apply any changes made there.
-
-The following flags are deprecated (and will be removed in `v19`):
+The following flags have been removed in `v19`:
 
 - `--throttle_threshold`
 - `--throttle_metrics_query`
@@ -133,13 +128,15 @@ $ vtctldclient UpdateThrottlerConfig --throttle-app "vreplication" --throttle-ap
 
 See [vtctl UpdateThrottlerConfig](../../programs/vtctl/throttler#updatethrottlerconfig).
 
-If you are still using the `v15` flags, you will have to transition to the new throttler configuration scheme: first populate topo with a new throttler configuration via `UpdateThrottlerConfig`. At the very least, set a `--threshold`. You likely also want to `--enable`. Then, reconfigure `vttablet`s with `--throttler-config-via-topo`, and restart them.
-
 The list of tablet types included in the throttler's logic is dictated by `vttablet --throttle_tablet_types`. The value is a comma delimited list of tablet types. The default value is `"replica"`. You may, for example, set it to be `"replica,rdonly"`.
 
 ## Heartbeat configuration
 
-The throttler requires heartbeat to be enabled via `vttablet` flags. We recommend enabling heartbeats via `--heartbeat_on_demand_duration` in conjunction with `--heartbeat_interval` as follows:
+{{< info >}}
+Configuring heartbeats is not strictly required, as the throttler will initiate an on-demand heartbeat lease while serving requests.
+{{< /info >}}
+
+To measure replication lag, the throttler uses the heartbeat writer service in Vitess. We recommend enabling heartbeats via `--heartbeat_on_demand_duration` in conjunction with `--heartbeat_interval` as follows:
 
 - `--heartbeat_interval` indicates how frequently heartbeats are injected. The interval should over-sample the `--throttle_threshold` by a factor of `2` to `4`. Examples:
   - If `--throttle_threshold` (replication lag) is `1s`, use `--heartbeat_interval 250ms`.
@@ -149,6 +146,8 @@ The throttler requires heartbeat to be enabled via `vttablet` flags. We recommen
   A recommended value is a multiple of `--throttle_threshold`. If `--throttle_threshold` is `1s`, reasonable values would be `5s` to `60s`.
 
 Alternatively, you may choose to enable heartbeats unconditionally via `--heartbeat_enable`, again in conjunction with `--heartbeat_interval <duration>`.
+
+There is no need to configure the heartbeats as it will by default perform heartbeats upon each throttler requests, leased on-demand for `10s`.
 
 ## API & usage
 
