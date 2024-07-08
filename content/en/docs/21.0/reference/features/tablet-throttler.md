@@ -132,6 +132,10 @@ The list of tablet types included in the throttler's logic is dictated by `vttab
 
 ## Heartbeat configuration
 
+{{< info >}}
+Configuring heartbeats is not strictly required, as the throttler will initiate an on-demand heartbeat lease while serving requests.
+{{< /info >}}
+
 To measure replication lag, the throttler uses the heartbeat writer service in Vitess. We recommend enabling heartbeats via `--heartbeat_on_demand_duration` in conjunction with `--heartbeat_interval` as follows:
 
 - `--heartbeat_interval` indicates how frequently heartbeats are injected. The interval should over-sample the `--throttle_threshold` by a factor of `2` to `4`. Examples:
