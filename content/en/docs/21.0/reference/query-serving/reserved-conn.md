@@ -18,8 +18,8 @@ so that it does not actually do anything with user variables. Instead, it keeps
 the state in the Vitess layer.
 
 In other cases, this approach is not enough, and Vitess can use **reserved connections**.
-Reserved connections maintains a dedicated connection for the `vtgate` session 
-from the relevant `vttablet` to the MySQL server. Reserved connections are used when using 
+A dedicated connection is maintained for the `vtgate` session 
+from the relevant `vttablet` to its underlying MySQL server. Reserved connections are used when using 
 temporary tables, or when using MySQL locking functions to acquire advisory locks. 
 In general, it is better to use reserved connections sparingly, because they reduce the 
 effectiveness of the `vttablet` connection pooling. This may also reduce, or even 
