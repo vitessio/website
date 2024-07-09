@@ -30,7 +30,7 @@ MySQL.
 
 `SET` statements used to cause use of `reserved connections`. This is no longer the case with the new connection pool implementation used by vttablet.
 The connection pool now tracks connections with modified settings instead of pinning connections to specific client sessions. 
-Any client requesting connection with or without settings are provided the connection accordingly.
+Any client requesting a connection with or without settings is provided a connection that has the correct settings.
 With this enhancement, we reduce the likelihood of MySQL running out of connections due to reserved connections, 
 because the scenarios where we still need reserved connections have drastically reduced.
 
