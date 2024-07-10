@@ -86,39 +86,11 @@ $ go run vstream_client.go
 
 If you are interested in additional lower level details, you can check out the [VStream API documentation](../../docs/reference/vreplication/vstream/).
 
-## An Example Walkthrough
+## An Example Setup
 
-Let's walk through a complete example showing how you can set up a Vitess cluster, a data warehouse, and a CDC pipeline between them. We'll use a similar setup to [the one described here](https://debezium.io/blog/2017/09/25/streaming-to-another-database/), but using the
-[Debezium Connector for Vitess](https://debezium.io/documentation/reference/connectors/vitess.html) rather than the [Debezium Connector for MySQL](https://debezium.io/documentation/reference/connectors/mysql.html) and an [AWS RedShift](https://aws.amazon.com/redshift/)
-instance rather than PostgreSQL as the target (with [RedShift being based on PostgreSQL](https://docs.aws.amazon.com/redshift/latest/dg/c_redshift-and-postgres-sql.html)). This also demonstrates the general rule that in setting these kinds of things up you would use a
-Vitess variant of the connector/driver rather than the MySQL one — with things otherwise being the same.
+You could use a similar setup to [the one described here](https://debezium.io/blog/2017/09/25/streaming-to-another-database/), but using the [Debezium Connector for Vitess](https://debezium.io/documentation/reference/connectors/vitess.html) rather than the
+[Debezium Connector for MySQL](https://debezium.io/documentation/reference/connectors/mysql.html) and an [AWS RedShift](https://aws.amazon.com/redshift/) instance rather than PostgreSQL as the target
+(with [RedShift being based on PostgreSQL](https://docs.aws.amazon.com/redshift/latest/dg/c_redshift-and-postgres-sql.html)). This also demonstrates the general rule that in setting these kinds of systems up you would use a Vitess variant of the
+connector/driver rather than the MySQL one — with things otherwise being the same.
 
-### Setting up a Vitess Cluster
-
-We can leverage the [local examples](https://github.com/vitessio/vitess/tree/main/examples/local) provided by Vitess to set up a simple cluster that we can use to test the VStream API. This will involve setting up a local Vitess cluster, creating a keyspace, and populating it
-with some data. You can follow the instructions in the [Vitess documentation](https://vitess.io/docs/get-started/local/). The following steps — which you can skip if you still have the Vitess cluster in place from the ["under the hood"](#a-look-under-the-hood-at-vstream) section
-or otherwise already have a Vitess cluster — will setup a Vitess cluster consisting of an unsharded `commerce` keyspace and a sharded `customer` keyspace:
-
-```shell
-git clone git@github.com:vitessio/vitess.git
-cd vitess
-git checkout main
-make build
-
-pushd examples/local
-
-./101_initial_cluster.sh; mysql < ../common/insert_commerce_data.sql; ./201_customer_tablets.sh; ./202_move_tables.sh; ./203_switch_reads.sh; ./204_switch_writes.sh; ./205_clean_commerce.sh; ./301_customer_sharded.sh; ./302_new_shards.sh; ./303_reshard.sh; ./304_switch_reads.sh; ./305_switch_writes.sh; ./306_down_shard_0.sh; ./307_delete_shard_0.sh
-```
-
-### Setting up a Data Warehouse
-
-Follow the [documented instructions for setting up a sample AWS RedShift instance](https://docs.aws.amazon.com/redshift/latest/gsg/rs-gsg-launch-sample-cluster.html). If you happen to already have a RedShift instance, you can use that instead.
-
-Confirm that you can reach the RedShift instance from your local machine:
-
-```shell
-```
-
-### Setting up a CDC Pipeline Between Them
-
-...
+Happy streaming!
