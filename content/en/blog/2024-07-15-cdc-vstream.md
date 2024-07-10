@@ -40,8 +40,7 @@ git clone git@github.com:vitessio/vitess.git
 cd vitess
 git checkout main
 make build
-
-pushd examples/local
+cd examples/local
 
 ./101_initial_cluster.sh; mysql < ../common/insert_commerce_data.sql; ./201_customer_tablets.sh; ./202_move_tables.sh; ./203_switch_reads.sh; ./204_switch_writes.sh; ./205_clean_commerce.sh; ./301_customer_sharded.sh; ./302_new_shards.sh; ./303_reshard.sh; ./304_switch_reads.sh; ./305_switch_writes.sh; ./306_down_shard_0.sh; ./307_delete_shard_0.sh
 
@@ -54,8 +53,6 @@ done
 
 # Cleanup whenever you're done testing
 ./401_teardown.sh
-
-popd
 ```
 
 The VStream client will output the changes that are being streamed from the VTGate that looks like this — first snapshotting the current state of the `customer` table, before then streaming the subsequent changes as they happen in real-time:
