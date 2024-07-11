@@ -30,8 +30,8 @@ This low-level [VStream](../../docs/reference/vreplication/vstream/) primitive i
 
 [VStream](https://github.com/vitessio/vitess/blob/eb29999a3f4730b2ebe2e0abe1d1996ce2d861d9/proto/queryservice.proto#L103-L113) is a low-level component, provided via [gRPC](https://grpc.io), that is used internally by [VReplication](../../docs/reference/vreplication/vreplication/)
 to replicate data within Vitess for various workflow types such as [`MoveTables`](../../docs/reference/vreplication/movetables/) and [`Reshard`](../../docs/reference/vreplication/reshard/) — typically from one [VTTablet](../../docs/concepts/tablet/) to another. The
-[VTGate VStream API](https://github.com/vitessio/vitess/blob/eb29999a3f4730b2ebe2e0abe1d1996ce2d861d9/proto/vtgateservice.proto#L55-L56) leverages this low-level component to stream data from the [Shards](../../docs/concepts/shard/) within a Vitess [Keyspace](../../docs/concepts/keyspace/),
-providing a single unified change stream spanning the logical database that may consist of hundreds or even thousands of shards. You can see a [simple example client that uses the VStream API directly here](https://github.com/vitessio/vitess/blob/main/examples/local/vstream_client.go).
+[VTGate VStream RPC](https://github.com/vitessio/vitess/blob/eb29999a3f4730b2ebe2e0abe1d1996ce2d861d9/proto/vtgateservice.proto#L55-L56) leverages this low-level component to stream data from the [Shards](../../docs/concepts/shard/) within a Vitess [Keyspace](../../docs/concepts/keyspace/),
+providing a single unified change stream spanning the logical database which may consist of hundreds or even thousands of shards. You can see a [simple example client that uses the VStream API directly here](https://github.com/vitessio/vitess/blob/main/examples/local/vstream_client.go).
 
 This is what the output looks like, with commands that you can run yourself if you are interested in the lower-level aspects (not necessary if you're going to use an existing connector/driver such as the [Debezium Connector for Vitess](https://debezium.io/documentation/reference/connectors/vitess.html)):
 
@@ -55,7 +55,7 @@ done
 ./401_teardown.sh
 ```
 
-The VStream client will output the changes that are being streamed from the VTGate that looks like this — first snapshotting the current state of the `customer` table, before then streaming the subsequent changes as they happen in real-time:
+The VStream client will output the changes that are being streamed from the VTGate that look like this — first snapshotting the current state of the `customer` table in the sharded `customer` keyspace, before then streaming the subsequent changes to the table as they happen in real-time:
 
 ```shell
 $ go run vstream_client.go
