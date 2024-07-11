@@ -49,6 +49,10 @@ This list is expected to expand in the future.
 
 All metrics are `float64` values, and are expected to be non-negative. Metrics are identified by names (`lag`, `loadavg`, etc.)
 
+{{< info >}}
+The `v21` throttler supports multi-metrics. Up till `v20`, the throttler would only monitor and operate by a single metric, which is either replication lag or a custom query. With `v21` multiple metrics are being monitored and used at the same time. `v21` and `v20` throttlers are compatible and a shard can run tablets of both versions at the same time.
+{{</ info >}}
+
 ### Thresholds
 
 A metric value can be _good_ or _bad_. Each metric is assigned a threshold. Below that threshold, the metric is _good_. As of the threshold (equal or higher), the metric is deemed _bad_. The higher the metric, the worse it is.
