@@ -167,7 +167,7 @@ $ vtctldclient UpdateThrottlerConfig --metric-name "loadavg" --threshold "2.5" c
 
 In this example, the `loadavg` metric value is henceforth deemed _good_ if below `2.5`. The threshold is stored as part of the keyspace entry in the topo service:
 
-```
+```shell
 $ vtctldclient GetKeyspace commerce | jq .keyspace.throttler_config.metric_thresholds
 ```
 ```json
@@ -177,7 +177,7 @@ $ vtctldclient GetKeyspace commerce | jq .keyspace.throttler_config.metric_thres
 ```
 The threshold applies to any check for that specific metric (see App Metrics, below) on any tablet in this keyspace. The value of the metric is also reflected in the throttler status:
 
-```sh
+```shell
 $ vtctldclient GetThrottlerStatus zone1-0000000101  | jq .metric_thresholds
 ```
 ```json
@@ -197,13 +197,13 @@ Use a `0` threshold value to restore the threshold back to factory defaults.
 
 By default, when an app checks the throttler, the result is based on replication lag. If the custom query is set, then the result is based on the custom query result. It is possible to assign specific metrics to specific apps, like so:
 
-```sh
+```shell
 $ vtctldclient UpdateThrottlerConfig --app-name "online-ddl" --app-metrics "lag,threads_running" commerce
 ```
 
 From that moment on, Online DDL operations will throttle on **both** high `lag` as well as on high `threads_running`. If either these values exceeds its respective threshold, Online DDL gets throttled. However, it's important to note the _scope_ of the metrics, which is left to the defaults here. To elaborate, it is possible to further indicate metric scopes, for example:
 
-```sh
+```shell
 $ vtctldclient UpdateThrottlerConfig --app-name "online-ddl" --app-metrics "lag,threads_running,shard/loadavg" commerce
 ```
 
@@ -214,7 +214,7 @@ In this example, Online DDL will throttle when:
 - The highest `loadavg` value in all shard tablets exceeds its threshold (`loadavg`'s default scope is `self`, but the assignment explicitly required `shard` scope).
 
 It's possible to set metrics for the `all` app. Continuing our example setup, we now:
-```sh
+```shell
 $ vtctldclient UpdateThrottlerConfig --app-name "all" --app-metrics "lag,custom" commerce
 ```
 
@@ -301,7 +301,7 @@ $ vtctldclient --server localhost:15999 CheckThrottler --app-name vreplication z
 
 The assignments are visible in the throttler status:
 
-```sh
+```shell
 $ vtctldclient GetThrottlerStatus zone1-0000000101  | jq .app_checked_metrics
 ```
 ```json
@@ -312,7 +312,7 @@ $ vtctldclient GetThrottlerStatus zone1-0000000101  | jq .app_checked_metrics
 ```
 
 To deassign metrics from an app, supply an empty value like so:
-```sh
+```shell
 $ vtctldclient UpdateThrottlerConfig --app-name "all" --app-metrics "" commerce
 ```
 
@@ -402,25 +402,25 @@ $ vtctldclient UpdateThrottlerConfig --custom-query "" commerce
 
 Assign metrics to an app, use default metric scopes:
 
-```sh
+```shell
 $ vtctldclient UpdateThrottlerConfig --app-name "online-ddl" --app-metrics "lag,threads_running" commerce
 ```
 
 Assign metrics to an app, use explicit metric scopes:
 
-```sh
+```shell
 $ vtctldclient UpdateThrottlerConfig --app-name "online-ddl" --app-metrics "lag,shard/threads_running" commerce
 ```
 
 Remove assignment from app:
 
-```sh
+```shell
 $ vtctldclient UpdateThrottlerConfig --app-name "online-ddl" --app-metrics "" commerce
 ```
 
 Assign metrics to all apps, except for those which have an explicit assignment:
 
-```sh
+```shell
 $ vtctldclient UpdateThrottlerConfig --app-name "all" --app-metrics "lag,shard/loadavg" commerce
 ```
 
@@ -673,7 +673,7 @@ $ vtctldclient GetThrottlerStatus zone1-0000000101
 
 The throttler configuration is stored as part of the `Keyspace` or `SrvKeyspace`, and can be read via `vtctldclient GetKeyspace` or `vtctldclient GetSrvKeyspace` commands:
 
-```sh
+```shell
 $ vtctldclient GetKeyspace commerce | jq .keyspace.throttler_config
 ```
 ```json
