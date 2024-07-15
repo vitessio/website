@@ -6,7 +6,10 @@ aliases: ['/resources/presentations.html', '/docs/resources/presentations/']
 
 ## KubeCon EU 2024
 
-[Vitess: Introduction, New Features and the Vinted User Story](https://www.youtube.com/watch?v=uRB-Qni_bCM) - Florent Poinsard, Deepthi Sigireddi, PlanetScale & Kazimieras Aliulis, Vinted
+Vitess: Introduction, New Features and the Vinted User Story - Florent Poinsard, Deepthi Sigireddi, PlanetScale & Kazimieras Aliulis, Vinted
+{{< youtube id="uRB-Qni_bCM" autoplay="false" >}}
+
+[Distributed Database Architecture in the Cloud Native Era](https://www.infoq.com/podcasts/distributed-database-architecture-deepthi-sigireddi/) - Deepthi Sigireddi, PlanetScale
 
 ## Percona Live 2023
 
@@ -60,6 +63,10 @@ Vitess VReplication: Standing on the Shoulders of a MySQL Giant - Matt Lord, Pla
 ## FOSDEM 2022
 
 * [The relational model in the modern development age](https://video.fosdem.org/2022/D.mysql/relational_model_dev.webm) - Shlomi Noach, PlanetScale
+
+## SE Radio 2022
+[How Vitess Scales MySQL](https://se-radio.net/2022/05/episode-510-deepthi-sigireddi-on-how-vitess-scales-mysql/) - Deepthi Sigireddi, PlanetScale
+
 ## KubeCon China 2021
 
 Continuous Performance Benchmarking for Vitess - Alkin Tezuysal, Florent Poinsard & Manan Gupta, PlanetScale
