@@ -452,7 +452,7 @@ $ vtctldclient UpdateThrottlerConfig --throttle-app "all" --throttle-app-ratio=0
 
 ### CheckThrottler
 
-Issue a check on a tablet's throttler, optionally identify as some app. Use in automation or in troubleshooting.
+Use `vtctldclient`'s [CheckThrottler](../../programs/vtctldclient/vtctldclient_checkthrottler/) to issue a check on a tablet's throttler, optionally identify as some app. Use in automation or in troubleshooting.
 
 Get the response is for a `vreplication` app check:
 ```shell
