@@ -320,8 +320,6 @@ The special app `vitess` is internally assigned all known metrics, at all times.
 
 ### App rules
 
-_This PR has no changes to app rules logic_
-
 The user may impose additional throttling rules on any given app. A rule is limited by a duration (after which the rule expires and removed), and can:
 
 - Further rejecting checks based on a rejection ratio (`0.0` for no extra rejection .. `1.0` for complete rejection) before even checking actual metrics/thresholds. This effectively "slows down" the app.
