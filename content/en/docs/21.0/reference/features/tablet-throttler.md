@@ -30,7 +30,7 @@ The throttler will then use these metrics (or some of them) to periodically push
 
 ### Tablets
 
-The throttler runs as part of the tablet server. The throttler can be disabled or enabled, based on the tablet throttler configuration as part of [`Keyspace`](../../programs/vtctldclient/vtctldclient_getkeyspace/). in the topo service. All tablets sharing the same keyspace read the same throttler configuration. Thus, all tablet throttlers are all enabled or all disabled, irrespective of shards and tablet types.
+The throttler runs as part of the tablet server. The throttler can be disabled or enabled, based on the tablet throttler configuration as part of the [`Keyspace`](../../programs/vtctldclient/vtctldclient_getkeyspace/) record in the topo service. All tablets sharing the same keyspace read the same throttler configuration. Thus, all tablet throttlers are all enabled or all disabled, irrespective of shards and tablet types.
 
 Tablets in the same shard collaborate. The `Primary` tablet polls the replica tablets, and replica tablets report and sometimes push throttler notifications to the `Primary`.
 
