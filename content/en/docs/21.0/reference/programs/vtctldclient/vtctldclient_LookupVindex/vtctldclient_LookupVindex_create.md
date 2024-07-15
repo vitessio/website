@@ -1,7 +1,7 @@
 ---
 title: LookupVindex create
 series: vtctldclient
-commit: b9b567acbb1f36404f46b5daa168d37831dd137f
+commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
 ## vtctldclient LookupVindex create
 
@@ -28,7 +28,7 @@ vtctldclient --server localhost:15999 LookupVindex --name corder_lookup_vdx --ta
       --table-name string                  The name of the lookup table. If not specified, then it will be created using the same name as the Lookup Vindex.
       --table-owner string                 The table holding the data which we should use to backfill the Lookup Vindex. This must exist in the same keyspace as the Lookup Vindex.
       --table-owner-columns strings        The columns to read from the owner table. These will be used to build the hash which gets stored as the keyspace_id value in the lookup table.
-      --table-vindex-type string           The primary vindex name/type to use for the lookup table, if the table-keyspace is sharded. This must match the name of a vindex defined in the table-keyspace. If no value is provided then the default type will be used based on the table-owner-columns types.
+      --table-vindex-type string           The primary vindex name/type to use for the lookup table, if the table-keyspace is sharded. If no value is provided then the default type will be used based on the table-owner-columns types.
       --tablet-types strings               Source tablet types to replicate from.
       --tablet-types-in-preference-order   When performing source tablet selection, look for candidates in the type order as they are listed in the tablet-types flag. (default true)
       --type string                        The type of Lookup Vindex to create.

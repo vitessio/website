@@ -1,25 +1,20 @@
 ---
-title: UpdateCellsAlias
+title: GetMirrorRules
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
-## vtctldclient UpdateCellsAlias
+## vtctldclient GetMirrorRules
 
-Updates the content of a CellsAlias with the provided parameters, creating the CellsAlias if it does not exist.
-
-### Synopsis
-
-Updates the content of a CellsAlias with the provided parameters, creating the CellsAlias if it does not exist.
+Displays the VSchema mirror rules.
 
 ```
-vtctldclient UpdateCellsAlias [--cells <cell1,cell2,...> [--cells <cell4> ...]] <alias>
+vtctldclient GetMirrorRules
 ```
 
 ### Options
 
 ```
-  -c, --cells strings   The list of cell names that are members of this alias.
-  -h, --help            help for UpdateCellsAlias
+  -h, --help   help for GetMirrorRules
 ```
 
 ### Options inherited from parent commands

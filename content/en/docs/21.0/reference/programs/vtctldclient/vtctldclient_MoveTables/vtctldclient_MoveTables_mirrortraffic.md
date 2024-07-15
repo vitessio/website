@@ -1,26 +1,28 @@
 ---
-title: Migrate complete
+title: MoveTables mirrortraffic
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
-## vtctldclient Migrate complete
+## vtctldclient MoveTables mirrortraffic
 
-Complete a Migrate VReplication workflow.
+Mirror traffic for a MoveTables MoveTables workflow.
 
 ```
-vtctldclient Migrate complete
+vtctldclient MoveTables mirrortraffic
 ```
 
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 Migrate --workflow import --target-keyspace customer complete
+vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --target-keyspace customer mirrortraffic --percent 5.0
 ```
 
 ### Options
 
 ```
-  -h, --help   help for complete
+  -h, --help                   help for mirrortraffic
+      --percent float32        Percentage of traffic to mirror. (default 1)
+      --tablet-types strings   Tablet types to mirror traffic for.
 ```
 
 ### Options inherited from parent commands
@@ -39,5 +41,5 @@ vtctldclient --server localhost:15999 Migrate --workflow import --target-keyspac
 
 ### SEE ALSO
 
-* [vtctldclient Migrate](../)	 - Migrate is used to import data from an external cluster into the current cluster.
+* [vtctldclient MoveTables](../)	 - Perform commands related to moving tables from a source keyspace to a target keyspace.
 

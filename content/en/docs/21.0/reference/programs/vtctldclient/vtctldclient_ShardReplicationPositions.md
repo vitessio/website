@@ -1,7 +1,7 @@
 ---
 title: ShardReplicationPositions
 series: vtctldclient
-commit: b9b567acbb1f36404f46b5daa168d37831dd137f
+commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
 ## vtctldclient ShardReplicationPositions
 

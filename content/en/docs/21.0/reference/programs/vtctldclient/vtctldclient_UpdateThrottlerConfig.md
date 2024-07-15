@@ -1,7 +1,7 @@
 ---
 title: UpdateThrottlerConfig
 series: vtctldclient
-commit: b9b567acbb1f36404f46b5daa168d37831dd137f
+commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
 ## vtctldclient UpdateThrottlerConfig
 
@@ -14,12 +14,15 @@ vtctldclient UpdateThrottlerConfig [--enable|--disable] [--threshold=<float64>] 
 ### Options
 
 ```
+      --app-metrics strings              metrics to be used when checking the throttler for the app (requires --app-name). Empty to restore to default metrics
+      --app-name string                  app name for which to assign metrics (requires --app-metrics)
       --check-as-check-self              /throttler/check requests behave as is /throttler/check-self was called
       --check-as-check-shard             use standard behavior for /throttler/check requests
       --custom-query string              custom throttler check query
       --disable                          Disable the throttler
       --enable                           Enable the throttler
   -h, --help                             help for UpdateThrottlerConfig
+      --metric-name string               name of the metric for which we apply a new threshold (requires --threshold). If empty, the default (either 'lag' or 'custom') metric is used.
       --threshold float                  threshold for the either default check (replication lag seconds) or custom check
       --throttle-app string              an app name to throttle
       --throttle-app-duration duration   duration after which throttled app rule expires (app specififed in --throttled-app) (default 1h0m0s)
