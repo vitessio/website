@@ -10,11 +10,14 @@ aliases: ['/resources/presentations.html', '/docs/resources/presentations/']
 
 ## Percona Live 2023
 
-[Vitess at GitHub](https://videos.perconalive.com/watch/DyDnR68XXcqYq3JzimZ3Z5) - Arthur Schreiber, GitHub
+Vitess at GitHub - Arthur Schreiber, GitHub
+{{< youtube id="_Xl24s_0mZs" autoplay="false" >}}
 
-[Continuous and Automated Performance Benchmarking for Your Database](https://videos.perconalive.com/watch/bPeJAqQ5FomWsJvnehKYoH) - Florent Poinsard, PlanetScale
+Continuous and Automated Performance Benchmarking for Your Database - Florent Poinsard, PlanetScale
+{{< youtube id="Nl2d1cnNNQo" autoplay="false" >}}
 
-[MySQL and Vitess (and Kubernetes) at HubSpot](https://speakerdeck.com/jfg956/mysql-and-vitess-and-kubernetes-at-hubspot) - Jean-François Gagné & Swetha Narayanaswamy, HubSpot
+MySQL and Vitess (and Kubernetes) at HubSpot - Jean-François Gagné & Swetha Narayanaswamy, HubSpot
+{{< youtube id="85KIra7c2Iw" autoplay="false" >}}
 
 ## KubeCon EU 2023
 
