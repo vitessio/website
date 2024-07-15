@@ -476,7 +476,7 @@ $ vtctldclient CheckThrottler --app-name "online-ddl" --scope "shard" zone1-0000
 
 ### GetThrottlerStatus
 
-See the state of the throttler, including what the throttles perceives to be current metric values, metrics health, metric thresholds, assigned metrics, app rules, and more.
+Use `vtctldclient`'s [GetThrottlerStatus](../../programs/vtctldclient/vtctldclient_getthrottlerstatus/) to see the state of the throttler, including what the throttles perceives to be current metric values, metrics health, metric thresholds, assigned metrics, app rules, and more.
 
 ```shell
 $ vtctldclient GetThrottlerStatus zone1-0000000101
