@@ -163,9 +163,10 @@ The schema has been simplified to include only those fields that are significant
 
 ## Common Issues and Solutions
 
-* The `docker` driver should not be used with root privileges.
+* The `docker` driver should not be used with root privileges. If you wish to continue as root, use --force. If you are running minikube withn a VM, consider using --driver=none: <br/>
+Exiting due to to DRV_AS_ROOT: The `docker` driver should not be used with root privileges.
 
-  Solution - Create a new user and it to your [docker group](https://docs.docker.com/engine/install/linux-postinstall).
+  Solution - Create a new user and add it to your [docker group](https://docs.docker.com/engine/install/linux-postinstall).
 
 
 ## Next Steps
