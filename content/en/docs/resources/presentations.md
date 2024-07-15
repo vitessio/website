@@ -9,6 +9,7 @@ aliases: ['/resources/presentations.html', '/docs/resources/presentations/']
 Vitess: Introduction, New Features and the Vinted User Story - Florent Poinsard, Deepthi Sigireddi, PlanetScale & Kazimieras Aliulis, Vinted
 {{< youtube id="uRB-Qni_bCM" autoplay="false" >}}
 
+## InfoQ 2024
 [Distributed Database Architecture in the Cloud Native Era](https://www.infoq.com/podcasts/distributed-database-architecture-deepthi-sigireddi/) - Deepthi Sigireddi, PlanetScale
 
 ## Percona Live 2023
