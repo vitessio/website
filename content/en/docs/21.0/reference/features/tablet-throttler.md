@@ -764,10 +764,6 @@ To measure replication lag, the throttler uses the heartbeat writer service in V
   In normal times, heartbeats are not written. Once a throttle check is requested (e.g. by a running migration), the throttler asks the tablet to start a `5s` lease of heartbeats. that first check is likely to return a non-OK code, because heartbeats were stale. However, subsequent checks will soon pick up on the newly injected heartbeats. Checks made while the lease is held, further extend the lease time. In the scenario of a running migration, we can expect heartbeats to begin as soon as the migration begins, and terminate `5s` (in our example) after the migration completes.
   A recommended value is a multiple of `--throttle_threshold`. If `--throttle_threshold` is `5s`, reasonable values would be `10s` to `60s`.
 
-Alternatively, you may choose to enable heartbeats unconditionally via `--heartbeat_enable`, again in conjunction with `--heartbeat_interval <duration>`.
-
-There is no need to configure the heartbeats as it will by default perform heartbeats upon each throttler requests, leased on-demand for `10s`.
-
 ### API
 
 The primary throttler uses `CheckThrottler` gRPC calls on the replicas. Apps internal to vitess use `ThrottlerClient` as a library client.
