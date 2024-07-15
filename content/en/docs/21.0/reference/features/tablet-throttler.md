@@ -211,7 +211,7 @@ In this example, Online DDL will throttle when:
 
 - The highest `lag` value across all tablets in the shard exceeds the lag threshold (`lag`s default scope is `shard`), or
 - The number of `threads_running` on the `Primary` exceeds its threshold (`threads_running`'s default scope is `self`), or
-- The highest `loadavg` value in all shard tablets exceeds its threshold (`loadavg`'s default scope is `self`, but the assignment explicitly required `shard` scope).
+- The highest `loadavg` value across all tablets in the shard exceeds its threshold (`loadavg`'s default scope is `self`, but the assignment explicitly required `shard` scope).
 
 It's possible to set metrics for the `all` app. Continuing our example setup, we now:
 ```shell
