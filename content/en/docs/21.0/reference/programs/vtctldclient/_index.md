@@ -1,7 +1,7 @@
 ---
 title: vtctldclient
 series: vtctldclient
-commit: b9b567acbb1f36404f46b5daa168d37831dd137f
+commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
 ## vtctldclient
 
@@ -43,6 +43,7 @@ vtctldclient [flags]
 * [vtctldclient Backup](./vtctldclient_backup/)	 - Uses the BackupStorage service on the given tablet to create and store a new backup.
 * [vtctldclient BackupShard](./vtctldclient_backupshard/)	 - Finds the most up-to-date REPLICA, RDONLY, or SPARE tablet in the given shard and uses the BackupStorage service on that tablet to create and store a new backup.
 * [vtctldclient ChangeTabletType](./vtctldclient_changetablettype/)	 - Changes the db type for the specified tablet, if possible.
+* [vtctldclient CheckThrottler](./vtctldclient_checkthrottler/)	 - Issue a throttler check on the given tablet.
 * [vtctldclient CreateKeyspace](./vtctldclient_createkeyspace/)	 - Creates the specified keyspace in the topology.
 * [vtctldclient CreateShard](./vtctldclient_createshard/)	 - Creates the specified shard in the topology.
 * [vtctldclient DeleteCellInfo](./vtctldclient_deletecellinfo/)	 - Deletes the CellInfo for the provided cell.
@@ -66,6 +67,7 @@ vtctldclient [flags]
 * [vtctldclient GetKeyspace](./vtctldclient_getkeyspace/)	 - Returns information about the given keyspace from the topology.
 * [vtctldclient GetKeyspaceRoutingRules](./vtctldclient_getkeyspaceroutingrules/)	 - Displays the currently active keyspace routing rules.
 * [vtctldclient GetKeyspaces](./vtctldclient_getkeyspaces/)	 - Returns information about every keyspace in the topology.
+* [vtctldclient GetMirrorRules](./vtctldclient_getmirrorrules/)	 - Displays the VSchema mirror rules.
 * [vtctldclient GetPermissions](./vtctldclient_getpermissions/)	 - Displays the permissions for a tablet.
 * [vtctldclient GetRoutingRules](./vtctldclient_getroutingrules/)	 - Displays the VSchema routing rules.
 * [vtctldclient GetSchema](./vtctldclient_getschema/)	 - Displays the full schema for a tablet, optionally restricted to the specified tables/views.
@@ -79,6 +81,7 @@ vtctldclient [flags]
 * [vtctldclient GetTablet](./vtctldclient_gettablet/)	 - Outputs a JSON structure that contains information about the tablet.
 * [vtctldclient GetTabletVersion](./vtctldclient_gettabletversion/)	 - Print the version of a tablet from its debug vars.
 * [vtctldclient GetTablets](./vtctldclient_gettablets/)	 - Looks up tablets according to filter criteria.
+* [vtctldclient GetThrottlerStatus](./vtctldclient_getthrottlerstatus/)	 - Get the throttler status for the given tablet.
 * [vtctldclient GetTopologyPath](./vtctldclient_gettopologypath/)	 - Gets the value associated with the particular path (key) in the topology server.
 * [vtctldclient GetVSchema](./vtctldclient_getvschema/)	 - Prints a JSON representation of a keyspace's topo record.
 * [vtctldclient GetWorkflows](./vtctldclient_getworkflows/)	 - Gets all vreplication workflows (Reshard, MoveTables, etc) in the given keyspace.

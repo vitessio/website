@@ -1,25 +1,30 @@
 ---
-title: UpdateCellsAlias
+title: CheckThrottler
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
-## vtctldclient UpdateCellsAlias
+## vtctldclient CheckThrottler
 
-Updates the content of a CellsAlias with the provided parameters, creating the CellsAlias if it does not exist.
-
-### Synopsis
-
-Updates the content of a CellsAlias with the provided parameters, creating the CellsAlias if it does not exist.
+Issue a throttler check on the given tablet.
 
 ```
-vtctldclient UpdateCellsAlias [--cells <cell1,cell2,...> [--cells <cell4> ...]] <alias>
+vtctldclient CheckThrottler [--app-name <name>] <tablet alias>
+```
+
+### Examples
+
+```
+CheckThrottler --app-name online-ddl zone1-0000000101
 ```
 
 ### Options
 
 ```
-  -c, --cells strings   The list of cell names that are members of this alias.
-  -h, --help            help for UpdateCellsAlias
+      --app-name string      app name to check (default "vitess")
+  -h, --help                 help for CheckThrottler
+      --ok-if-not-exists     return OK even if metric does not exist
+      --request-heartbeats   request heartbeat lease
+      --scope string         check scope ('shard', 'self' or leave empty for per-metric defaults)
 ```
 
 ### Options inherited from parent commands
