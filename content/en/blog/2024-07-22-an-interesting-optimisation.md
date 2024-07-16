@@ -1,7 +1,7 @@
 ---
 author: 'Andrés Taylor'
-date: 2024-07-02
-slug: '2024-07-02-an-interesting-optimization'
+date: 2024-07-22
+slug: '2024-07-22-an-interesting-optimization'
 tags: ['Vitess', 'PlanetScale', 'MySQL', 'Query Serving', 'Vindex', 'plan', 'execution plan', 'explain', 'optimizer']
 title: 'An Interesting Optimization'
 description: "How I implemented an optimization by delaying another optimization"
