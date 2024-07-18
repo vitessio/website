@@ -164,9 +164,13 @@ The schema has been simplified to include only those fields that are significant
 
 ## Common Issues and Solutions
 
-<b>Issue:</b> Starting Minikube produces the following error <br/>
-The `docker` driver should not be used with root privileges. If you wish to continue as root, use --force. If you are running minikube withn a VM, consider using --driver=none: <br/>
-Exiting due to to DRV_AS_ROOT: The `docker` driver should not be used with root privileges.
+<b>Issue:</b> Starting Minikube produces the following error:
+```sh
+The "docker" driver should not be used with root privileges. If you wish to continue as root, use --force. 
+If you are running minikube within a VM, consider using --driver=none: 
+https://minikube.sigs.k8s.io/docs/reference/drivers/none
+Exiting due to to DRV_AS_ROOT: The "docker" driver should not be used with root privileges.
+``` 
 
 <b>Solution:</b> Create a new user and add it to your [docker group](https://docs.docker.com/engine/install/linux-postinstall).
   
