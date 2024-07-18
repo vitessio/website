@@ -32,13 +32,13 @@ To stay up to date on these meetings, subscribe to the [CNCF Public Events calen
 
 **Time**: 08.00 a.m. PST
 
-**Dial-in details**: [Click to join Zoom call](https://zoom.us/j/8695363767?pwd=dmJ4V0h3aEhyei90VnMzYXlxRUZGdz09)
+**Dial-in details**: [Click to join Zoom call](https://zoom.us/j/95808017444?pwd=tYoQbfgf3aFTvarGlTeYyDippUc3wZ.1)
 
 To join by phone:
 
-* US: +16699006833,,8695363767#  or +16465588656,,8695363767#
+* US: +12532050468,,95808017444#,,,,*512414  or +12532158782,,95808017444#,,,,*512414#
 * International dial-in numbers [click here](../dialin)
-* Meeting ID (required to join the call): 8695363767
+* Meeting ID (required to join the call): 95808017444
 
 If you would like to submit a topic for discussion at the meeting, please [email the maintainers team](mailto:cncf-vitess-maintainers@lists.cncf.io), or reply to the call-for-agenda-items on the Vitess Slack a few days before the call.
 

@@ -5,15 +5,15 @@ description: Details for dialing in to the monthly meeting
 
 We use Zoom for our monthly meeting. You can dial-in by phone from these countries with the following details.
 
-Using the Zoom app on mobile or web: [click here](https://zoom.us/j/8695363767?pwd=dmJ4V0h3aEhyei90VnMzYXlxRUZGdz09)
+Using the Zoom app on mobile or web: [click here](https://zoom.us/j/95808017444?pwd=tYoQbfgf3aFTvarGlTeYyDippUc3wZ.1)
  
-Meeting ID: 8695363767
+Meeting ID: 95808017444
 
 **Joining by phone:**
 
 Or iPhone one-tap :
 
- US: +16699006833,,8695363767# or +16465588656,,8695363767#
+ US: +12532050468,,95808017444#,,,,*512414  or +12532158782,,95808017444#,,,,*512414#
 
 **Or other phone:**
 
