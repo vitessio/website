@@ -12,7 +12,7 @@ Vitess: Introduction, New Features and the Vinted User Story - Florent Poinsard,
 ## InfoQ 2024
 [Distributed Database Architecture in the Cloud Native Era](https://www.infoq.com/podcasts/distributed-database-architecture-deepthi-sigireddi/) - Deepthi Sigireddi, PlanetScale
 
-## Percona Live 2023
+## Percona Live 2023 
 
 Vitess at GitHub - Arthur Schreiber, GitHub
 {{< youtube id="_Xl24s_0mZs" autoplay="false" >}}

@@ -161,6 +161,19 @@ The schema has been simplified to include only those fields that are significant
 * The `customer` table has a `customer_id` that has an `auto_increment`. A typical customer table would have a lot more columns, and sometimes additional detail tables.
 * The `corder` table (named so because `order` is an SQL reserved word) has an `order_id` auto-increment column. It also has foreign keys into `customer(customer_id)` and `product(sku)`.
 
+## Common Issues and Solutions
+
+<b>Issue:</b> Starting Minikube produces the following error:
+```sh
+The "docker" driver should not be used with root privileges. If you wish to continue as root, use --force. 
+If you are running minikube within a VM, consider using --driver=none: 
+https://minikube.sigs.k8s.io/docs/reference/drivers/none
+Exiting due to to DRV_AS_ROOT: The "docker" driver should not be used with root privileges.
+``` 
+
+<b>Solution:</b> Create a new user and add it to your [docker group](https://docs.docker.com/engine/install/linux-postinstall).
+
+
 ## Next Steps
 
 You can now proceed with [MoveTables](../../user-guides/migration/move-tables).
