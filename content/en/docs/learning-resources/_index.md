@@ -1,7 +1,7 @@
 ---
 title: Learning Resources
 description: Talks, presentations and podcasts for your learning!
-weight: 10011
+weight: 2200
 ---
 
 ## KubeCon EU 2024

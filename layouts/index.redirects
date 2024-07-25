@@ -74,6 +74,8 @@
 /docs/resources/presentations/*           /docs/learning-resources/:splat
 /docs/resources/roadmap/                  /docs/roadmap/
 /docs/resources/roadmap/*                 /docs/roadmap/:splat
+/docs/resources/                         /docs/learning-resources
+/docs/resources/*                        /docs/learning-resources/:splat
 
 # Docs versioning redirects
 
