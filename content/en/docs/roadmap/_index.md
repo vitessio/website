@@ -1,7 +1,7 @@
 ---
-title: Vitess Roadmap
+title: Roadmap
 description: Upcoming features planned for development
-weight: 2
+weight: 10011
 ---
 
 As an open source project, Vitess is developed by a community of contributors. Many of the contributors run Vitess in production, and add features to address their specific pain points. As a result of this, we can not guarantee that the features listed here will be implemented in any specific order.

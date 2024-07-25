@@ -1,7 +1,7 @@
 ---
-title: Presentations and Videos
-weight: 1
-aliases: ['/resources/presentations.html', '/docs/resources/presentations/']
+title: Learning Resources
+description: Talks, presentations and podcasts for your learning!
+weight: 2200
 ---
 
 ## KubeCon EU 2024

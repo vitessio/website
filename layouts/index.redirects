@@ -69,6 +69,14 @@
 # Blog post
 /blog/2024-02-28-announcing-vitess-19/   /blog/2024-03-06-announcing-vitess-19/
 
+# Learning Resources and Roadmap redirects
+/docs/resources/presentations             /docs/learning-resources
+/docs/resources/presentations/*           /docs/learning-resources/:splat
+/docs/resources/roadmap/                  /docs/roadmap/
+/docs/resources/roadmap/*                 /docs/roadmap/:splat
+/docs/resources/                         /docs/learning-resources
+/docs/resources/*                        /docs/learning-resources/:splat
+
 # Docs versioning redirects
 
 ## [en]
@@ -90,8 +98,6 @@
 /docs/pdfs/*                             /docs/{{ $current }}/pdfs/:splat
 /docs/reference                          /docs/{{ $current }}/reference
 /docs/reference/*                        /docs/{{ $current }}/reference/:splat
-/docs/resources                          /docs/{{ $current }}/resources
-/docs/resources/*                        /docs/{{ $current }}/resources/:splat
 /docs/troubleshoot                       /docs/{{ $current }}/troubleshoot
 /docs/troubleshoot/*                     /docs/{{ $current }}/troubleshoot/:splat
 /docs/user-guides                        /docs/{{ $current }}/user-guides 301!
