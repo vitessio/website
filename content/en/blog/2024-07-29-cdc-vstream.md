@@ -1,7 +1,7 @@
 ---
 author: 'Matt Lord'
-date: 2024-07-15
-slug: '2024-07-15-cdc-vstream'
+date: 2024-07-29
+slug: '2024-07-29-cdc-vstream'
 tags: ['Vitess', 'PlanetScale', 'MySQL', 'VReplication', 'CDC', 'Debezium']
 title: 'Building Data Pipelines With Vitess'
 description: "Learn the basics of Change Data Capture (CDC) and how to leverage Vitess's VStream API to build data pipelines."
