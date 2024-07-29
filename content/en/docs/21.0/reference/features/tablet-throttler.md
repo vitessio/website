@@ -142,18 +142,26 @@ $ vtctldclient --server localhost:15999 CheckThrottler --app-name "vreplication"
       "message": "",
       "scope": "shard"
     }
-  }
+  },
+  "app_name": "vreplication",
+  "summary": "vreplication is granted access",
+  "response_code": "OK"
 }
 ```
 
 The response includes:
 
-- Status code (based on HTTP responses, ie `200` for "OK")
+- Response code
 - Any error message
 - The list of metrics checked; for each metric:
   - Its status code
   - Its threshold
   - The scope it was checked with
+- A human readable summary
+
+{{< info >}}
+The response also includes an HTTP status (e.g. `200` for "OK"). This value is being deprecated and will be removed in `v22` or later.
+{{</ info >}}
 
 ## How concepts are combined and used
 
@@ -732,13 +740,15 @@ As a general guideline, it is also not useful to set the lag threshold above `30
 
 ### Response codes
 
-Throttler returns one of the following HTTP response codes in a check response:
+Throttler returns one of the following response codes in a check response:
 
-- `200` (OK): The application may write to the data store. This is the desired response.
-- `404` (Not Found): The check contains an unknown metric name. This can take place immediately upon startup or immediately after failover, and should resolve within 10 seconds.
-- `417` (Expectation Failed): The requesting application is explicitly forbidden to write. The throttler does not implement this at this time.
-- `429` (Too Many Requests): Do not write. A normal, expected state indicating there is replication lag. This is the hint for applications or clients to withhold writes.
-- `500` (Internal Server Error): An internal error has occurred. Do not write.
+- `OK` (`1`): The application may write to the data store. This is the desired response.
+- `THRESHOLD_EXCEEDED` (`2`): A metric exceeds its threshold (e.g. replication lag is very high). This is the hint for applications or clients to withhold writes. This happens normally.
+- `APP_DENIED` (`3`): The requesting application is explicitly denied (as with `ApplyThrottlerConfig --throttle-app=...`)
+- `UNKNOWN_METRIC` (`4`): The check contains an unknown metric name, or the metric is yet uncollected. This can take place immediately upon startup or immediately after failover, and should resolve within a few seconds.
+- `INTERNAL_ERROR` (`5`): Any unexpected error.
+
+An `OK` response is the only one where the app should proceed to write. All Vitess internal apps handle these values automatically.
 
 ### The custom query
 
