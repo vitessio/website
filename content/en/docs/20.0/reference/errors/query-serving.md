@@ -80,6 +80,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09023 | Unable to determine the shard for the given row. | could not map %v to a keyspace id | 0 |  |
 | VT09024 | Unable to determine the shard for the given row. | could not map %v to a unique keyspace id: %v | 0 |  |
 | VT10001 | Foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/. | foreign key constraints are not allowed | 0 |  |
+| VT10002 | The distributed transaction cannot be committed. A rollback decision is taken. | atomic distributed transaction not allowed: %s | 0 |  |
 | VT12001 | This statement is unsupported by Vitess. Please rewrite your query to use supported syntax. | unsupported: %s | 0 |  |
 | VT12002 | Vitess does not support cross shard foreign keys. | unsupported: cross-shard foreign keys | 0 |  |
 | VT13001 | This error should not happen and is a bug. Please file an issue on GitHub: https://github.com/vitessio/vitess/issues/new/choose. | [BUG] %s | 0 |  |
