@@ -1,16 +1,6 @@
-{{ $path         := .File.Path }}
-{{ $language     := .Language }}
-{{ $editUrl      := printf "https://github.com/vitessio/website/tree/prod/content/%s/%s" $language $path }}
-
 <footer class="footer">
   <div class="container has-text-centered">
-    <a class="button" href="{{ $editUrl }}" rel="noopener noreferrer" target="_blank">
-      <span class="icon">
-        <i class="fab fa-github"></i>
-      </span>
-      <span>Edit this page</span>
-    </a>
-
+    {{ partial "docs/edit-this-page.html" . }}
     <p class="is-size-7 mt-2">Last updated {{ .Lastmod.Format "January 2, 2006" }}</p>
   </div>
 </footer>
