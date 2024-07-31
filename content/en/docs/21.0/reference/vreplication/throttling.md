@@ -17,13 +17,11 @@ To help address the above issues, VReplication uses the [tablet throttler](../..
 
 ### Target Throttling
 
-On the target side, VReplication wishes to consult the overall health of the target shard (there can be multiple shards to a VReplication workflow, and here we discuss the single shard at the end of a single VReplication stream). That shard may serve production traffic unrelated to VReplication. VReplication therefore consults the internal equivalent of `/throttler/check` when writing data to the shard's primary. This checks the MySQL replication lag on relevant replicas in the shard. The throttler will delay the VReplication writes of both table-copy and changelog events until the shard's replication lag is under the defined threshold (1s by default).
+On the target side, VReplication wishes to consult the overall health of the target shard (there can be multiple shards to a VReplication workflow, and here we discuss the single shard at the end of a single VReplication stream). That shard may serve production traffic unrelated to VReplication. VReplication therefore consults the tablet throttler when writing data to the shard's primary. This checks the MySQL replication lag on relevant replicas in the shard, and/or any other configured metrics. The throttler will delay the VReplication writes of both table-copy and changelog events until the shard's replication lag or other metrics are below their respective thresholds..
 
 ### Source Throttling
 
-On the source side, VReplication only affects the single MySQL server it reads from, and has no impact on the overall shard. VStreamer, the source endpoint of VReplication, consults the equivalent of `/throttler/check-self`, which looks for replication lag on the source host.
-
-As long as `check-self` fails — meaning that the replication lag is not within the defined threshold (1s by default) — VStreamer will not read table data, nor will it pull events from the changelog.
+On the source side, VReplication only affects the single MySQL server it reads from, and has no impact on the overall shard. VStreamer, the source endpoint of VReplication, consults the tablet's throttler. By default this looks for replication lag on tablet's MySQL server. It may look for additional/other metrics per configuration. As long as any of the metrics exceeds its threshold, VStreamer will not read table data, nor will it pull events from the changelog.
 
 ### Impact of Throttling
 
