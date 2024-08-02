@@ -142,4 +142,41 @@ mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
 E1027 18:28:23.464780   19483 mysqld.go:734] mysqld --initialize-insecure failed: /usr/sbin/mysqld: exit status 1, output: mysqld: [ERROR] Failed to open required defaults file: /home/morgo/vitess/vtdataroot/vt_0000000101/my.cnf
 mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
 ```
+The following command disables the AppArmor profile for `mysqld`:
 
+```
+sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
+sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
+```
+
+The following command should now return an empty result:
+```
+sudo aa-status | grep mysqld
+```
+
+If this doesn't work, you can try making sure all lurking processes are shutdown, and then restart the example again in the `/tmp` directory:
+
+```
+for process in `pgrep -f '(vtdataroot|VTDATAROOT)'`; do 
+ kill -9 $process
+done;
+
+export VTDATAROOT=/tmp/vtdataroot
+./101_initial_cluster.sh
+```
+
+### Mysqlctl Fails to Start 
+This error is because some tests need `VTROOT`, but it is missing. You can manually run `source dev.env` to solve this:
+```
+Running tool: /usr/local/go/bin/go test -timeout 30s -run ^TestFloatFormatting$ vitess.io/vitess/go/vt/vtgate/evalengine/integration
+
+E0316 20:47:00.173050   63268 local_cluster.go:313] Mysqlctl failed to start: fork/exec bin/mysqlctl: no such file or directory
+could not launch mysql: fork/exec bin/mysqlctl: no such file or directory
+FAIL    vitess.io/vitess/go/vt/vtgate/evalengine/integration    0.018s
+```
+If you use an IDE to run these tests, you need to set `VTROOT` previously. For example, in VScode
+```
+"go.testEnvVars": {
+    "VTROOT": "<path to my vitess checkout>"
+}
+```
