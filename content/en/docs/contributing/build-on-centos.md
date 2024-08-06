@@ -59,7 +59,7 @@ sudo yum install -y make unzip g++ etcd curl git wget
 
 * We will be using etcd as the topology service. The command `make tools` can also install Zookeeper or Consul for you, which requires additional dependencies.
 
-{{<warning>}}Make sure to follow all the steps in this guide to prevent potential issues during testing.{{</warning>}}
+{{<warning>}}Be sure to follow all the steps in this guide to avoid running into problems later on.{{</warning>}}
 
 ### Disable SELinux
 
