@@ -110,6 +110,22 @@ if isLetter(tkn.cur()) {
 ```
 We can now verify that our added unit test in *token_test.go* works perfectly and can commit this change.
 
+From CLI -
+
+1. Navigate to the SQL Parser Directory:
+   - Change your current working directory to the `sqlparser` directory within `go/vt/`. Use the following command:
+
+     ```bash
+     cd go/vt/sqlparser/
+     ```
+
+2. Run the Tests:
+   - Once you are in the `sqlparser` directory, execute the following command to run the tests:
+
+     ```bash
+     go test
+     ```
+
 As a final step, we run the *parse_test.go* file to ensure that everything works. We fix any tests whose expectations have changed or any incorrect tests to reflect the change and commit it.
 
 With these changes, the issue is resolved! But our work is not yet complete...  
