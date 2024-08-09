@@ -142,12 +142,6 @@ mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
 E1027 18:28:23.464780   19483 mysqld.go:734] mysqld --initialize-insecure failed: /usr/sbin/mysqld: exit status 1, output: mysqld: [ERROR] Failed to open required defaults file: /home/morgo/vitess/vtdataroot/vt_0000000101/my.cnf
 mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
 ```
-The following command disables the AppArmor profile for `mysqld`:
-
-```
-sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
-sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
-```
 
 The following command should now return an empty result:
 ```
