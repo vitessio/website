@@ -6,7 +6,7 @@ aliases: ['/docs/reference/features/vtgate-buffering',
 ---
 
 For documentation on buffering behaviors please see
-[VTGate Buffering](../../../reference/features/vtgate-buffering/).
+[VTGate Buffering](https://vitess.io/docs/20.0/reference/features/vtgate-buffering/).
 In this guide we are going to go through a few scenarios involving buffering to
 see the practical behaviors. There are several parameters to tune for buffering
 so, we will be using a python utility [gateslap](https://github.com/planetscale/gateslap)
