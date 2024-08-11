@@ -128,37 +128,6 @@ Error:  105: Key already exists (/vitess/zone1) [6]
 Error:  105: Key already exists (/vitess/global) [6]
 ```
 
-### MySQL Fails to Initialize
-
-This error is most likely the result of SELinux enabled:
-
-```
-1027 18:28:23.462926   19486 mysqld.go:734] mysqld --initialize-insecure failed: /usr/sbin/mysqld: exit status 1, output: mysqld: [ERROR] Failed to open required defaults file: /home/morgo/vitess/vtdataroot/vt_0000000102/my.cnf
-mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
-
-could not stat mysql error log (/home/morgo/vitess/vtdataroot/vt_0000000102/error.log): stat /home/morgo/vitess/vtdataroot/vt_0000000102/error.log: no such file or directory
-E1027 18:28:23.464117   19486 mysqlctl.go:254] failed init mysql: /usr/sbin/mysqld: exit status 1, output: mysqld: [ERROR] Failed to open required defaults file: /home/morgo/vitess/vtdataroot/vt_0000000102/my.cnf
-mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
-E1027 18:28:23.464780   19483 mysqld.go:734] mysqld --initialize-insecure failed: /usr/sbin/mysqld: exit status 1, output: mysqld: [ERROR] Failed to open required defaults file: /home/morgo/vitess/vtdataroot/vt_0000000101/my.cnf
-mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
-```
-
-The following command should now return an empty result:
-```
-sudo aa-status | grep mysqld
-```
-
-If this doesn't work, you can try making sure all lurking processes are shutdown, and then restart the example again in the `/tmp` directory:
-
-```
-for process in `pgrep -f '(vtdataroot|VTDATAROOT)'`; do 
- kill -9 $process
-done;
-
-export VTDATAROOT=/tmp/vtdataroot
-./101_initial_cluster.sh
-```
-
 ### Mysqlctl Fails to Start 
 This error is because some tests need `VTROOT`, but it is missing. You can manually run `source dev.env` to solve this:
 ```
