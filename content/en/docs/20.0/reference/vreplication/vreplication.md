@@ -35,55 +35,97 @@ many features. It can be used for the following use cases:
   asynchronous processing of data using the [Messaging](../../features/messaging/)
   feature.
 
+VReplication Architecture Overview: 
+
+```mermaid
+graph TB
+    subgraph "Source Keyspace/Shard"
+        SKS("Source Keyspace/Shard<br>(Tables)")
+    end
+
+    subgraph "Target Keyspace/Shard"
+        TKS("Target Keyspace/Shard<br>(Tables)")
+    end
+
+    subgraph "VReplication Streams"
+        VRS("VReplication Streams<br>(Continuous Replication)")
+    end
+
+    subgraph "VReplication Controller"
+        VRC("VReplication Controller")
+    end
+
+    subgraph "VDiff"
+        VD("VDiff")
+    end
+
+    subgraph "Journaling"
+        J("Journaling")
+    end
+
+    subgraph "Routing Rules"
+        RR("Routing Rules")
+    end
+
+    SKS --> VRS
+    VRS --> TKS
+    VRS --> VRC
+    VRC --> VD
+    VRC --> J
+    VRC --> RR
+```
+
+This above diagram shows how VReplication works, starting with data in source areas (keyspaces/shards), moving it through VReplication streams, and finally placing it in target areas. It also explains what each part does, like the VReplication controller, VDiff, journaling, and routing rules, which all help manage the copying of data
+
 ## Feature Description
 
 VReplication works as [a stream or set of streams](../internal/life-of-a-stream/).
 Each stream establishes replication from a source keyspace/shard to a
 target keyspace/shard.
 
-A given stream can replicate multiple tables. For each table, you can
+### Table Replication
+
+* A given stream can replicate multiple tables. For each table, you can
 specify a `SELECT` statement that represents both the transformation
 rule and the filtering rule. The `SELECT` expressions specify the
 transformation, and the `WHERE` clause specifies the filtering.
 
-The `SELECT` expressions can be any non-aggregate MySQL expression, or
+* The `SELECT` expressions can be any non-aggregate MySQL expression, or
 they can also be `COUNT` or `SUM` as aggregate expressions. Aggregate
 expressions combined with the corresponding `GROUP BY` clauses will
 allow you to materialize real-time rollups of the source table, which
 can be used for analytics. The target table can have a different name
 from the source.
 
+### Multi-Shard Support
+
 For a sharded system like Vitess, multiple VReplication streams
-may be needed to achieve the objective. This is because there
-can be multiple source shards and multiple destination shards, and
-the relationship between them may not be one to one.
+may be needed to achieve the objective. his is because multiple source and destination shards may exist, and their relationships may not always be one-to-one.
+
+### Core Functions
 
 VReplication performs the following essential functions:
 
-* [Copy data](../internal/life-of-a-stream/#copy)
-  from the source to the destination table in a consistent
-  fashion. For a large table, this copy can be long-running. It can be
-  interrupted and resumed. If interrupted, VReplication can keep
-  the copied portion up-to-date with respect to the source, and it can
-  resume the copy process at a point that is consistent with the
+* **Data Copying:** VReplication [Copies data](../internal/life-of-a-stream/#copy)
+  from the source to the destination table consistently. For a large table, this copy can be long-running, as well as, interrupted and resumed. If interrupted, VReplication can keep the copied portion up-to-date with respect to the source, and it can resume the copy process at a point that is consistent with the
   current replication position.
-* After copying is finished, it can continuously [replicate](../internal/life-of-a-stream/#replicate)
+* **Continuous Replication:** After copying is finished, it can continuously [replicate](../internal/life-of-a-stream/#replicate)
   the data from the source to destination.
-* The copying rule can be expressed as a `SELECT` statement. The
+* **Copying Rule:** The copying rule can be expressed as a `SELECT` statement. The
   statement should be simple enough that the materialized table can
   be kept up-to-date from the data coming from the binlog. For
   example, joins in the `SELECT` statement are not supported today.
-* Correctness verification: VReplication supports the [VDiff](../vdiff) command
+* **Correctness verification**: VReplication supports the [VDiff](../vdiff) command
   which verifies that the target table is an exact representation of
   the `SELECT` statement from the source by capturing consistent
   snapshots of the source and target and comparing them against each
   other.
-* Journaling: If there is any kind of traffic cut-over where we
+* **Journaling:** If there is any kind of traffic cut-over where we
   start writing to a different table than we used
   to before, VReplication will save the current binlog positions
   into a journal table. This can be used by other streams to resume
   replication from the new source.
-* Routing rules: Although this feature is itself not a direct
+* **Routing rules:** Although this feature is itself not a direct
   functionality of VReplication, it works hand in hand with it. It
   automatically manages sophisticated rules about where to route queries
   depending on the type of workflow being performed. For example,
@@ -143,14 +185,14 @@ specify a value for `on-ddl`. This allows you to specify what to do with DDL SQL
  statements when they are encountered
 in the replication stream from the source. The values can be as follows:
 
-* `IGNORE`: Ignore all DDLs (this is also the default, if a value for `on-ddl`
+* **`IGNORE`:** Ignore all DDLs (this is also the default, if a value for `on-ddl`
   is not provided).
-* `STOP`: Stop when DDL is encountered. This allows you to make any necessary
+* **`STOP`:** Stop when DDL is encountered. This allows you to make any necessary
   changes to the target. Once changes are made, updating the state to `Running`
   will cause VReplication to continue from just after the point where it
   encountered the DDL.
-* `EXEC`: Apply the DDL, but stop if an error is encountered while applying it.
-* `EXEC_IGNORE`: Apply the DDL, but ignore any errors and continue replicating.
+* **`EXEC`:** Apply the DDL, but stop if an error is encountered while applying it.
+* **`EXEC_IGNORE`:** Apply the DDL, but ignore any errors and continue replicating.
 
 {{< warning >}}
 We caution against against using `EXEC` or `EXEC_IGNORE` for the following reasons:
