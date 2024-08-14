@@ -66,6 +66,14 @@
 /docs/11.0/                              /docs/archive/11.0/
 /docs/11.0/*                             /docs/archive/11.0/:splat
 
+# Redirect old version documentation to current version
+/docs/archive/17.0/reference/features/vtgate-buffering     /docs/20.0/reference/features/vtgate-buffering 301
+     
+
+# Redirect old version directories to current version
+/docs/17.0/                              /docs/20.0/ 301
+/docs/17.0/*                             /docs/20.0/:splat 301
+
 # Blog post
 /blog/2024-02-28-announcing-vitess-19/   /blog/2024-03-06-announcing-vitess-19/
 
