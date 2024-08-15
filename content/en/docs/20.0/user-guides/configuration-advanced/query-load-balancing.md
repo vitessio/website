@@ -11,7 +11,7 @@ You can set the following flags on VTGate to control load-balancing of read quer
 
 * `discovery_high_replication_lag_minimum_serving`: If the replication lag of a vttablet exceeds this value, vtgate will treat it as unhealthy and will not send queries to it. This value is meant to match vttablet’s `unhealthy_threshold` value.
 * `discovery_low_replication_lag`: If a single vttablet lags beyond this value, vtgate will not send it any queries. However, if too many replicas exceed this threshold, then vtgate will send queries to the ones that have the least lag. A weighted average algorithm is used to exclude the outliers. This value is meant to match vttablet’s `degraded_threshold` value.
-* `min_number_serving_vttablets`: The minimum number of vttablets for each replicating tablet type (e.g. replica, rdonly) that will be continue to be used even with replication lag above `discovery_low_replication_lag`, but still below `discovery_high_replication_lag_minimum_serving`.
+* `min_number_serving_vttablets`: The minimum number of vttablets for each replicating tablet type (e.g. replica, rdonly) that will continue to be used even with replication lag above `discovery_low_replication_lag`, but still below `discovery_high_replication_lag_minimum_serving`.
 
 Be aware that there are VTTablet settings that impact the functionality of these flags, discussed in the section below.
 
