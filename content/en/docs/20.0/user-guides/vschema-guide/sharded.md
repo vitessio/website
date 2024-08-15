@@ -2,6 +2,24 @@
 title: Sharded Keyspace
 weight: 5
 ---
+## Prerequisites and Complete Setup Process
+
+Before diving into the details of sharded keyspaces, it's important to understand the complete process of setting up a sharded keyspace in Vitess:
+
+1. Create the keyspace
+2. Define and apply the VSchema
+3. Create physical shards
+4. Create tablets (instances) for each shard
+5. Initialize the schema on each shard
+6. (Optional) Migrate data from an unsharded keyspace
+
+Each of these steps is crucial for a fully functional sharded keyspace. This guide will walk you through these steps, with a focus on VSchema definition and usage.
+
+ {{< info >}}
+ **Note**: Applying the VSchema (step 2) only defines the logical structure of your sharded keyspace. It does not create physical shards, tablets, or initialize the schema. Attempting to query the database after only applying the VSchema will result in errors such as "no healthy tablet available". Ensure you complete all the steps listed above before attempting to use your sharded keyspace.
+{{< /info >}}
+
+## Understanding Sharded Keyspaces
 
 A sharded keyspace allows you to split a large database into smaller parts by distributing the rows of each table into different shards. In Vitess, each shard is assigned a `keyrange`. Every row has a keyspace id, and this value decides the shard in which the row lives. For key-value stores, the keyspace id is dictated by the value of the key, also known as the sharding key. In Vitess, this is known as the Primary Vindex. But it differs from a sharding key in the following ways:
 
