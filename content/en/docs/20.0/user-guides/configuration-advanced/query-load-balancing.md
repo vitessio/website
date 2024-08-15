@@ -36,7 +36,7 @@ Combining `discovery_high_replication_lag_minimum_serving`, `discovery_low_repli
 There are some things to be aware of when manipulating these settings.
 
 * It is safe to roll out the flag changes on vttablet and vtgate separately, but the overall behavior may not take hold as expected until both sets of flags are completely applied.
-* It is unadvisable to set these replication lag thresholds below 3 seconds, as there is skew in replication lag measurement below that point.
+* It is inadvisable to set these replication lag thresholds below 3 seconds, as there is skew in replication lag measurement below that point.
 * As a reminder, tablets are grouped together by type for this functionality, so for example, `min_number_serving_vttablets` will be applied separately to rdonly and replica tablet type groups.
 * When reducing `discovery_low_replication_lag` from the default, also consider reducing the vttablet `health_check_interval` which controls how often the lag measurements are checked. The latency in changes to replication lag is dictated by this configuration. It should be a fraction of `discovery_low_replication_lag` -- a good rule of thumb is half of that setting or lower.
 
