@@ -13,13 +13,14 @@ Before we get started, let’s get a few things out of the way:
 
 1. Install [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) and start a Minikube engine. We recommend using Kubernetes 1.14, as this is a common denominator across public clouds:
     ```bash
-    minikube start --kubernetes-version=v1.14.10 --cpus=8 --memory=11000 --disk-size=50g
+    minikube start --cpus=8 --memory=11000 --disk-size=50g
     ```
 
     If you do not have a machine with 11GB of memory to spare, you could also consider using GKE instead. An equivalent setup can be deployed from the Cloud Shell with:
     ```bash
     gcloud container clusters create vitess --cluster-version 1.14 --zone us-east1-b --num-nodes 5
     ```
+> **Note:** For the best experience, it is recommended to use the latest stable version of Kubernetes. Please refer to the [Vitess Operator Compatibility Matrix](https://github.com/planetscale/vitess-operator#compatibility) to ensure compatibility with your Kubernetes version.
 
 2. Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and ensure it is in your `PATH`. For example, on Linux:
 
