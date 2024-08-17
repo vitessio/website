@@ -258,6 +258,16 @@ See https://github.com/vitessio/vitess/pull/13895 and https://github.com/vitessi
 and more details.
 </div>
 
+#### --keep-data
+**optional**\
+**default** false
+
+<div class="cmd">
+
+During `Complete` or `Cancel` operations, Preserves the original source table data that was duplicated during the MoveTables workflow, which can be beneficial for data validation or other purposes.
+
+</div>
+
 #### --rename-tables
 **optional**\
 **default** false
