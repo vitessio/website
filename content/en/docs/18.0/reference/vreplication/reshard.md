@@ -88,8 +88,8 @@ It is too expensive to get real-time row counts of tables, using _count(*)_, say
 This is a destructive command
 {{< /warning >}}
 
-[`complete`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_complete/) is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with the original source shards from the topo. By default, the source tables are also dropped on the source shards
-(see `--keep-data` and `--rename-tables`) .
+[`complete`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_complete/) is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with the original source shards from the topo.It does not drop the source tables or tear down `vttablets`.
+(see `--keep-data`) .
 
 </div>
 
