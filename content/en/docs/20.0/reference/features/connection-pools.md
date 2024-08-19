@@ -121,7 +121,7 @@ Flag: `--transaction_limit_per_user`
 ### vtgate system settings
 Flag: `--enable_system_settings`
 
-This vtgate flag allows clients to modify a [subset of system settings](https://github.com/vitessio/vitess/blob/main/go/vt/sysvars/sysvars.go#L174-L217) on the MySQL.
+This vtgate flag allows clients to modify a [subset of system settings](https://github.com/vitessio/vitess/blob/v20.0.0/go/vt/sysvars/sysvars.go#L186-L231) on the MySQL.
 
 ## Calculating maximum db connections used by vttablet
 
