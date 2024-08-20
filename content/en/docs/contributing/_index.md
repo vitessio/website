@@ -47,7 +47,70 @@ Before diving into the Vitess codebase, make yourself familiar with the system a
 
 How-to-build guides are available for Ubuntu, MacOS and CentOS. Most of the maintainers are building on Ubuntu or Mac.
 
-## GitHub workflow
+Certainly, here's the complete, updated walkthrough section for writing and running a unit test in the Vitess project:
+
+## Writing and Running a Unit Test
+
+Unit tests help ensure that all components of the codebase work as expected and make it easier to catch bugs early. Here’s an example on how to write and run a unit test in Vitess: 
+
+#### Identify an Issue
+
+Start by looking for issues marked as [good first issue](https://github.com/vitessio/vitess/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22). Suppose you find an issue about increasing error handling capacity in a specific function.
+
+#### Write a Unit Test
+
+Now that we know where we want to make changes, let's navigate to the directory of the file you want to modify. Create a new test file with the same name as the original file, appending `_test` to the filename. For example, if you're working on `db.go`, your test file should be named `db_test.go`.
+
+Here's a basic structure for your test:
+
+```go
+package main
+
+import (
+    "testing"
+)
+
+func TestFunctionName(t *testing.T) {
+    // Initialize test conditions here
+
+    // Invoke the function under scrutiny
+    result := functionName(args)
+
+    // Verify the expected outcome
+    if result != expectedResult {
+        t.Errorf("Expected %v, got %v", expectedResult, result)
+    }
+}
+```
+
+Make sure to replace `functionName`, `args`, and `expectedResult` with the actual function name, arguments, and expected outcome relevant to the issue you're working on.
+
+#### Execute  Test
+
+To execute your test, you can use Go's testing tool by running:
+
+```bash
+go test -v
+```
+
+The `-v` flag provides verbose output, showing you which tests passed or failed. If your test passes, you'll see output like this:
+
+```bash
+PASS
+ok  	github.com/yourusername/vitess/rest_of_the_path	        0.003s
+```
+
+**Running a Specific Test**
+
+If you want to run a particular test, such as `TestFunctionName` from our example, use:
+
+```bash
+go test -v -run TestFunctionName
+```
+
+Please remember, this is a basic example. Vitess often requires more complex tests including database operations, which may need additional setup and steps.
+
+## GitHub Workflow
 
 Vitess is hosted on GitHub and the project uses the [Pull Request workflow](github-workflow).
 
