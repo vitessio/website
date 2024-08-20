@@ -33,7 +33,7 @@ Vitess resource consumption is mostly driven by QPS, but there may be variations
 
 Resources for other servers like the toposerver, vtctld, Vtadmin and VTOrc are minimal. They are likely not going to exceed one CPU per server instance.
 
-## Environment variables
+## Environment Variables
 
 Setting up a few environment variables upfront will improve the manageability of the system:
 

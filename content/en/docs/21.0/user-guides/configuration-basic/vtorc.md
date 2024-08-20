@@ -8,7 +8,6 @@ An overview of the architecture of VTOrc can be found on this [page](../../../re
 
 Setting up VTOrc lets you avoid performing the `InitShardPrimary` step. It automatically detects that the new shard doesn't have a primary and elects one for you.
 
-
 ### Flags
 
 For a full list of supported flags, please look at [VTOrc reference page](../../../reference/programs/vtorc).
@@ -17,7 +16,7 @@ For a full list of supported flags, please look at [VTOrc reference page](../../
 
 For information about the UI, API and metrics that VTOrc exports, please consult this [page](../../../reference/vtorc/ui_api_metrics).
 
-### Example invocation of VTOrc
+### Example Invocation of VTOrc
 
 You can bring VTOrc using the following invocation:
 
@@ -35,12 +34,11 @@ vtorc --topo_implementation etcd2 \
 
 You can optionally add a `clusters_to_watch` flag that contains a comma separated list of keyspaces or `keyspace/shard` values. If specified, VTOrc will manage only those clusters.
 
-
 ### Durability Policies
 
 All the failovers that VTOrc performs will be honoring the [durability policies](../../configuration-basic/durability_policy). Please be careful in setting the
 desired durability policies for your keyspace because this will affect what situations VTOrc can recover from and what situations will require manual intervention.
 
-### Running VTOrc using the Vitess Operator
+### Running VTOrc Using the Vitess Operator
 
 To find information about deploying VTOrc using Vitess Operator please take a look at this [page](../../../reference/vtorc/running_with_vtop).

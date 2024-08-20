@@ -37,7 +37,7 @@ For more details on what operations Vitess performs for each type of DML, please
 - Some query syntaxes like `REPLACE INTO` and `INSERT INTO ... ON DUPLICATE KEY UPDATE` aren't supported.
 - Cyclic foreign keys are rejected by Vitess.
 
-#### Unsupported cyclic foreign keys
+#### Unsupported Cyclic Foreign Keys
 
 In this foreign key mode, Vitess limits support for certain schema patterns to prevent scenarios where the planner might enter an endless loop.
 
@@ -52,7 +52,8 @@ Once this graph is assembled, the schema is considered unacceptable if a cycle i
 
 To better clarify, here are some illustrative examples demonstrating unacceptable configurations and pointers on how to fix them:
 
-Example 1: Consider the following schema -
+**Example 1:** Consider the following schema:
+
 ```sql
 CREATE TABLE `employee` (
 	`id` bigint unsigned NOT NULL AUTO_INCREMENT,
@@ -64,7 +65,7 @@ CREATE TABLE `employee` (
   CHARSET utf8mb4,
   COLLATE utf8mb4_0900_ai_ci;
 ```
-Because of the `ON DELETE CASCADE` in the foreign key, we'll end up with a graph like so -
+Because of the `ON DELETE CASCADE` in the foreign key, we'll end up with a graph like so:
 
 ```mermaid
 flowchart TD
@@ -74,7 +75,7 @@ flowchart TD
 
 To fix the schema, we should change the reference action of the foreign key. Any other action other than `ON DELETE CASCADE` will prevent cycles.
 
-Example 2: A similar situation can arise in a multi table schema as well.
+**Example 2:** A similar situation can arise in a multi table schema as well:
 
 ```sql
 CREATE TABLE `One` (
@@ -98,7 +99,7 @@ CREATE TABLE `Two` (
   COLLATE utf8mb4_0900_ai_ci;
 ```
 
-Because of the `on delete cascade` in the foreign key, we'll end up with a graph like so -
+Because of the `on delete cascade` in the foreign key, we'll end up with a graph like so:
 
 ```mermaid
 flowchart TD
@@ -118,7 +119,8 @@ flowchart TD
 
 The fix is again the same, wherein we need to change the reference action.
 
-Example 3: Consider the following schema - 
+**Example 3:** Consider the following schema:
+
 ```sql
 CREATE TABLE `t1` (
     `id` bigint unsigned NOT NULL AUTO_INCREMENT,
@@ -148,7 +150,7 @@ CHARSET utf8mb4,
 COLLATE utf8mb4_0900_ai_ci;
 ```
 
-The constructed graph looks like so - 
+The constructed graph looks like so:
 
 ```mermaid
 flowchart TD

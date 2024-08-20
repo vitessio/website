@@ -44,7 +44,7 @@ We use unit tests both to test the code and to describe it for other developers.
 They must cover all the important use cases of the feature.
 * A separate pull request into `vitessio/website` that updates the documentation is required if the feature changes or adds to existing behavior.
 
-### Bug fixes
+### Bug Fixes
 
 If you are creating a PR to fix a bug, make sure to create an end-to-end test that fails without your change.
 This is the important reproduction case that will make sure this particular bug does not show up again, and that clearly shows on your PR what bug you are fixing.

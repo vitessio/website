@@ -10,7 +10,7 @@ Listed below are recipes for advanced online DDL usage:
 - [Duplicate migration indication](#duplicate-migration-indication)
 - [Near instant REVERTs](#near-instant-reverts)
 
-## Duplicate migration detection
+## Duplicate Migration Detection
 
 Two migrations sharing the same context and DDL are considered duplicate, and only one will run to completion.
 
@@ -59,7 +59,7 @@ mysql> alter table customer add column status int unsigned not null;
 
 By default, the migration context for an Online DDL issued via VTGate is the value of `@@session_uuid`. If `@@migration_context` is non-empty, then its value is used.
 
-## Duplicate migration indication
+## Duplicate Migration Indication
 
 You may go one step beyond [duplicate migration detection](#duplicate-migration-detection) by explicitly supplying migration UUIDs such that duplicate migrations are never submitted in the first place.
 
@@ -164,7 +164,7 @@ $ vtctldclient ApplySchema --sql "alter vitess_migration '3cc4ae0e_776f_11ec_a65
 
 Which means we want to apply the revert. Since the revert is already running in the background, it is likely that binary log processing is up to date, and cut-over is near instantaneous.
 
-## Inter-dependent migrations
+## Inter-dependent Migrations
 
 It is possible to submit inter-dependent migrations within the same `ApplySchema` command, and have them complete in the correct order, even if they run concurrently. Examples for inter-dependent migrations:
 

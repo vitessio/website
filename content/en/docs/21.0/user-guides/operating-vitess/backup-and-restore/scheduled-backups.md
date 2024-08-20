@@ -17,9 +17,9 @@ This guide is useful only if you are using the vitess-operator.
 
 If you are not already familiar with [how backups work](../overview/) in Vitess we suggest you familiarize yourself with them first.
 
-## Scheduling backups
+## Scheduling Backups
 
-### Adding the schedule
+### Adding the Schedule
 
 {{< warning >}}
 Please note that is not recommended to run production backups every minute. These schedules are only an example.
@@ -47,7 +47,7 @@ example-vbsc-every-minute-customer-8aaaa771-1715963880-n7cm7   0/1     Completed
 ...
 ```
 
-### Listing backups
+### Listing Backups
 
 Now we can list the available backups, by getting the `vtb` (`VitessBackup`) objects in our Kubernetes cluster.
 We can see we have three backups, that is because the schedule `every-minute-customer` takes two backups (one for each shard, `-80` and `80-`),

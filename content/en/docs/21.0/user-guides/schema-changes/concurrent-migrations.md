@@ -6,7 +6,7 @@ aliases: ['/docs/user-guides/schema-changes/concurrent-migrations/']
 
 By default, Vitess schedules all migrations to run sequentially. Only a single migration is expected to run at any given time. However, there are cases for concurrent execution of migrations, and the user may request concurrent execution via `--allow-concurrent` flag in `ddl_strategy`.
 
-## Why not run concurrent migrations by default
+## Why not Run Concurrent Migrations by Default
 
 At the heart of schema migration management we are interested in `ALTER` DDLs that run for long periods of time. These will copy large amounts of data, perform many reads and writes, and overall affect the production server. They use built-in throttling mechanism to prevent harming production. The migration essentially competes with production traffic over resources.
 

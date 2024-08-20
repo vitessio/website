@@ -31,7 +31,7 @@ The suggested solution would be creating general guidelines for this naming conv
 - Should be capitalized and written in imperative present tense
 - Not end with a period
 
-#### Consists of three parts:
+#### Consists of Three Parts:
 
 * Title: Short informative summary of the pull request
 * #[Issue_ID]

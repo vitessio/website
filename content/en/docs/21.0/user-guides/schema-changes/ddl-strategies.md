@@ -57,7 +57,7 @@ mysql> alter table corder force;
 +--------------------------------------+
 ```
 
-## Choosing a DDL strategy
+## Choosing a DDL Strategy
 
 Different strategies have different behavior for `ALTER` statements. Sections below first break down specific handling and notes for each strategy, followed by an evaluation of the differences.
 
@@ -134,7 +134,7 @@ Do not override the following flags: `alter, pid, plugin, dry-run, execute, new-
 `pt-osc` strategy is **experimental** and slated to be removed in future versions.
 {{< /warning >}}
 
-### Comparing the options
+### Comparing the Options
 
 There are pros and cons to using any of the strategies. Some notable differences:
 
@@ -171,7 +171,7 @@ There are pros and cons to using any of the strategies. Some notable differences
   `pt-online-schema-change` partially supports foreign keys.
   `gh-ost` does not allow making changes to a table participating in a foreign key relationship.
 
-## Vitess functionality comparison
+## Vitess Functionality Comparison
 
 | Strategy | Managed | Online | Trackable | Declarative | Revertible          | Recoverable | Backoff |
 |----------|---------|--------|-----------|-------------|---------------------|-------------|---------|

@@ -12,7 +12,7 @@ be routed to a single shard.  If an ordered subset of columns are provided,
 starting with the first column in the vindex, then the query can usually be
 routed to a subset of shards instead of all shards.
 
-### Use cases
+### Use Cases
 
 A common use case for a subsharding vindex is when a given entity’s data fits
 on more than one shard (e.g a large tenant in a SaaS scenario) and there is
@@ -25,11 +25,13 @@ region should reside within a subset of shards which are co-located in that
 region.
 
 ### Prerequisite
+
 The subsharding vindex only works with Gen4 query planner.
 
 ### Usage
 
 This vindex is registered as `multicol` vindex.
+
 It takes 3 parameters as input:
 
 1. `column_count` - the number of columns provided for using the vindex.
@@ -62,7 +64,9 @@ Example usage in VSchema:
   }
 }
 ```
+
 `column_count` is a required parameter.
+
 A maximum of 8 columns can be used in this vindex i.e. `column_count <= 8`
 
 `column_vindex` should contain the vindex names in a comma-separated list. It should be less than or equal to column_count.
@@ -94,7 +98,7 @@ keyspace_id:
 `column_bytes` should contain the number of bytes for each column in a comma-separated list. The numbers should add up to 8.
 If the number of bytes is not provided for all columns, they are inferred by assigning equal numbers to the remaining unassigned columns.
 
-Example 1:
+**Example 1:**
 
 ```
 Given:
@@ -115,13 +119,15 @@ col 4 -> 1
 col 5 -> 1
 ```
 
-Example 2:
+**Example 2:**
+
 ```
 given: 3 columns, 8 bytes
 output: c1 -> 3, c2 -> 3, c3 -> 2
 ```
 
-Example 3:
+**Example 3:**
+
 ```
 given: 3 columns, first column is 1 byte.
 output: c1 -> 1, c2 -> 4, c3 -> 3
@@ -140,7 +146,6 @@ The Vindexes that can be used in a subsharding vindex by implementing the requir
 * `unicode_loose_md5`
 * `unicode_loose_xxhash`
 * `xxhash`
-
 
 ### Example
 

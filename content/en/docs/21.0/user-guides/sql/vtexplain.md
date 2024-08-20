@@ -27,7 +27,7 @@ To successfully analyze your SQL queries and determine how Vitess executes each 
 
 If you have a large number of queries you want to analyze for issues, based on a Vschema you’ve created for your database, you can read through a detailed scripted example [here](../vtexplain-in-bulk).
 
-## 1. Identify a SQL schema for tables in the statement
+## 1. Identify a SQL schema for Tables in the Statement
 
 In order to explain a statement, first identify the SQL schema for the tables that the statement uses. This includes tables that a query targets and tables that a DML statement modifies.
 
@@ -49,11 +49,11 @@ CREATE TABLE users_name_idx(
 );
 ```
 
-## 2. Identify a VSchema for the statement's source tables
+## 2. Identify a VSchema for the Statement's Source Tables
 
 Next, identify a [VSchema](../../../concepts/vschema) that contains the [Vindexes](../../../reference/features/vindexes) for the tables in the statement.
 
-### The VSchema must use a keyspace name.
+### The VSchema must Use a Keyspace Name.
 
 VTExplain requires a keyspace name for each keyspace in an input VSchema:
 
@@ -125,11 +125,11 @@ The following example VSchema defines a single keyspace `mainkeyspace` and three
 }
 ```
 
-## 3. Run the VTExplain tool
+## 3. Run the VTExplain Tool
 
 To explain a query, pass the SQL schema and VSchema files as arguments to the `VTExplain` command.
 
-### Example: Explaining a SELECT query
+### Example: Explaining a SELECT Query
 
 In the following example, the `VTExplain` command takes a `SELECT` query and returns the sequence of queries that Vitess runs in order to execute the query:
 
@@ -159,7 +159,7 @@ In the example above, the output of `VTExplain` shows the sequence of queries th
 
 In this example, each query has sequence number `1`, which shows that Vitess executes these in parallel. Vitess automatically adds the `LIMIT 10001` clause to protect against large results.
 
-### Example: Explaining an INSERT query
+### Example: Explaining an INSERT Query
 
 In the following example, the `VTExplain` command takes an `INSERT` query and returns the sequence of queries that Vitess runs in order to execute the query:
 
@@ -186,7 +186,7 @@ The example above shows how Vitess handles an insert into a table with a seconda
 * At sequence number `3`, the first transaction commits.
 * At sequence number `4`, the second transaction commits.
 
-### Example: Explaining an uneven keyspace
+### Example: Explaining an Uneven Keyspace
 
 In previous examples, we used the `--shards` flag to set up an evenly-sharded keyspace, where each shard covers the same fraction of the keyrange.
 `VTExplain` also supports receiving a JSON mapping of shard ranges to see how Vitess would handle a query against an arbitrarly-sharded keyspace.
@@ -302,6 +302,6 @@ SELECT * FROM users WHERE id IN (10, 17, 42, 1000)
 ```
 
 
-## See also
+## See Also
 
 * For detailed configuration options for VTExplain, see the [VTExplain syntax reference](../../../reference/programs/vtexplain).

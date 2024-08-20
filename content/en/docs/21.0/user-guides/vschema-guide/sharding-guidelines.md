@@ -58,7 +58,7 @@ Vitess now has support for [multi-column Vindexes](../advanced-vschema/#multi-co
 
 The Vitess multi-column Vindex feature also allows you to locate data associated with regions in different geographical locations. For more details, see [Region-based Sharding](../../configuration-advanced/region-sharding).
 
-### Many-to-Many relationships
+### Many-to-Many Relationships
 
 Sharding works well only if the relationship between data is hierarchical (one-to-one or one-to-many). If a table has foreign keys into multiple other tables, you have to choose one based on the strongest relationship and group the rows by that foreign key. The rest of the relationships will incur cross-shard overheads.
 

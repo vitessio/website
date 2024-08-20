@@ -34,7 +34,7 @@ various factors:
 It is common practice to avoid direct `DROP TABLE` statements and to follow
 a more elaborate table lifecycle.
 
-## Vitess table lifecycle
+## Vitess Table Lifecycle
 
 The lifecycle offered by Vitess consists of the following stages or some subset of them:
 
@@ -52,7 +52,7 @@ To understand the flow better, consider the following breakdown:
 - `drop`: an actual `DROP TABLE` is imminent
 - _removed_: table is dropped. When using InnoDB and `innodb_file_per_table` this means the `.ibd` data file backing the table is removed, and disk space is reclaimed.
 
-## Lifecycle subsets and configuration
+## Lifecycle Subsets and Configuration
 
 Different environments and users have different requirements and workflows. For example:
 
@@ -71,7 +71,7 @@ In MySQL **8.0.23** and later, table drops do not acquire locks on the InnoDB bu
 - Implicitly skip the `purge` stage, even if defined
 - Implicitly skip the `evac` stage, even if defined
 
-## Stateless flow by table name hints
+## Stateless Flow by Table Name Hints
 
 Vitess does not track the state of the table lifecycle. The process is stateless thanks to an encoding scheme in the table names. Examples:
 
@@ -91,11 +91,11 @@ Starting in Vitess `v20`, the table naming format will change. Tables will be na
 `v19` supports the new naming format, but does not generate any tables in this format. `v20` will generate tables in the new format, and will support the old format. Support for old format will be dropped in `v21` or later.
 {{< /info >}}
 
-## Automated lifecycle
+## Automated Lifecycle
 
 Vitess internally uses the above table lifecycle for [online, managed schema migrations](../../../user-guides/schema-changes/managed-online-schema-changes/). All online strategies: `vitess`, `gh-ost`, and `pt-online-schema-change`, create artifact tables or end with leftover tables: Vitess automatically collects those tables. The artifact or leftover tables are immediate moved to `hold` state. Depending on `vttablet`'s `--table_gc_lifecycle` flag, they may spend time in this state, getting purged, or immediately transitioned to the next state.
 
-## User-facing DROP TABLE lifecycle
+## User-facing DROP TABLE Lifecycle
 
 When using an online `ddl_strategy`, a `DROP TABLE` is a [managed schema migration](../../../user-guides/schema-changes/managed-online-schema-changes/). It is internally replaced by a `RENAME TABLE` statement, renaming it into a `HOLD` state (e.g. `_vt_HOLD_6ace8bcef73211ea87e9f875a4d24e90_20210915120000`). It will then participate in the table lifecycle mechanism. If `table_gc_lifecycle` does not include the `hold` state, the table proceeds to transition to next included state. 
 

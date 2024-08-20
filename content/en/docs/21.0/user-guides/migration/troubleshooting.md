@@ -73,7 +73,6 @@ Those can later be applied this way:
 $ vtctldclient ApplyRoutingRules --rules-file=/tmp/routingrules.backup.json
 ```
 
-
 ## Specific Errors and Issues
 
 ### Stream Never Starts
@@ -156,6 +155,7 @@ This can be caused by a DDL executed on the source table as by default — contr
 [`on-ddl` flag value](../../../reference/vreplication/vreplication/#handle-ddl) — DDL is ignored in the stream.
 
 #### Corrective Action
+
 If you want the same or similar DDL to be applied on the target then you can apply that DDL on the target keyspace
 and then restart the workflow. For example, using the example above:
 

@@ -39,6 +39,7 @@ nvm use 16.13.0
 ```
 
 See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
+
 ### Packages from apt repos
 
 Install dependencies required to build and run Vitess:
@@ -194,4 +195,3 @@ If you use an IDE to run these tests, you need to set `VTROOT` previously. For e
     "VTROOT": "<path to my vitess checkout>"
 }
 ```
-

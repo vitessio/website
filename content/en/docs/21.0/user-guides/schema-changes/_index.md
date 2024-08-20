@@ -18,7 +18,7 @@ It is recommended to use Vitess' managed, online schema changes.
 
 Some background on schema changes follows.
 
-## The schema change problem
+## The Schema Change Problem
 
 Schema change is one of the oldest problems in MySQL and in the relational world in general. With accelerated development and deployment flows, engineers find they need to deploy schema changes sometimes on a daily basis. With the growth of data this task becomes more and more difficult. A direct MySQL `ALTER TABLE` statement is a blocking (no reads nor writes are possible on the migrated table) and resource heavy operation; variants of `ALTER TABLE` include `InnoDB` [Online DDL](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html), which allows for some concurrency on a `primary` server, but still blocking on replicas, leading to unacceptable replication lags once the statement hits the replicas. 
 
@@ -28,7 +28,7 @@ MySQL's [Instant DDL](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-
 
 Such direct `ALTER TABLE` is fine in development or possibly staging environments, where datasets are either small, or where table locking is acceptable.
 
-## ALTER TABLE solutions
+## ALTER TABLE Solutions
 
 Busy production systems tend to use either of these two approaches, to make schema changes less disruptive to ongoing production traffic:
 
@@ -39,7 +39,7 @@ Busy production systems tend to use either of these two approaches, to make sche
   - Each migration requires a failover (aka _successover_, aka _planned reparent_).
   - Total wall clock time is higher since we run the same migration in sequence on different servers.
 
-## Schema change cycle and operation
+## Schema Change Cycle and Operation
 
 The cycle of schema changes, from idea to production, is complex, involves multiple environments and possibly multiple teams. Below is one possible breakdown common in production. Notice how even interacting with the database itself takes multiple steps:
 
@@ -59,7 +59,7 @@ The cycle of schema changes, from idea to production, is complex, involves multi
 
 Steps `4` - `10` are tightly coupled with the database or with the infrastructure around the database.
 
-## Schema change and Vitess
+## Schema Change and Vitess
 
 Vitess solves or automates multiple parts of the flow:
 
@@ -102,7 +102,7 @@ Vitess automatically garbage-collects the "old" tables, artifacts of `vitess`, `
 
 In the case of managed, online schema changes via `pt-online-schema-change`, Vitess will ensure to drop the triggers in case the tool failed to do so for whatever reason.
 
-## The various approaches
+## The Various Approaches
 
 Vitess allows a variety of approaches to schema changes, from fully automated to fully owned by the user.
 

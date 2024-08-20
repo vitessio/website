@@ -16,7 +16,7 @@ In both cases the leading column is the region or tenant, and is used to form th
 
 Please refer to [Region-based Sharding](../../configuration-advanced/region-sharding) for an example on how to use the `region_json` vindex and [Subsharding Vindex](../subsharding-vindex) for the more generic multicol vindex.
 
-#### Alternate approach
+#### Alternate Approach
 
 You have the option to pre-combine the region and id bits into a single column and use that as an input for a single column vindex. This approach achieves the same goals as a multi-column vindex.
 

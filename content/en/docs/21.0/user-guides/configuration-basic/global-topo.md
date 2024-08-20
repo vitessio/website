@@ -36,7 +36,7 @@ Note that the topo implementation for etcd is `etcd2`. This is because Vitess us
 To be safe, you may want to bring up etcd with `--enable-v2=true`, even though it is the default value. Also, you will need to set the `ETCDCTL_API=2` environment variable before bringing up etcd.
 {{< /info >}}
 
-## Moving to a different TopoServer
+## Moving to a Different TopoServer
 
 It is generally not recommended that you migrate from one type of toposerver to another. However, if absolutely necessary, you can use the [topo2topo](../../../reference/features/topology-service/#migration-between-implementations) command line tool to perform this migration.
 

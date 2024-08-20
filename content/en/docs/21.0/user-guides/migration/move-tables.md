@@ -69,7 +69,7 @@ Notice that all of the tables are currently in the `commerce` schema/keyspace he
 
 In this scenario, we are going to add the `customer` [keyspace](../../../concepts/keyspace) in addition to the `commerce` keyspace we already have.  This new keyspace will be backed by its own set of mysqld instances. We will then move the `customer` and `corder` tables from the `commerce` keyspace to the newly created `customer` keyspace while the `product` table will remain in the `commerce` keyspace. This operation happens online, which means that it does not block either read or write operations to the tables, *except* for a very small window during the final cut-over.
 
-## Show our current tablets
+## Show our Current Tablets
 
 ```bash
 $ mysql -e "show vitess_tablets"

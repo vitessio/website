@@ -6,7 +6,7 @@ aliases: ['/docs/user-guides/schema-changes/ddl-strategy-flags/']
 
 [`ddl_strategy`](../ddl-strategies) accepts flags in command line format. The flags can be vitess-specific, or, if unrecognized by Vitess, are passed on the underlying online schema change tools.
 
-## Vitess flags
+## Vitess Flags
 
 Vitess respects the following flags. They can be combined unless specifically indicated otherwise:
 
@@ -47,7 +47,7 @@ Vitess respects the following flags. They can be combined unless specifically in
 
   It does not make sense to combine `--singleton` and `--singleton-context`.
 
-## Pass-through flags
+## Pass-through Flags
 
 Flags unrecognized by Vitess are passed on to the underlying schema change tools. For example, a `gh-ost` migration can run with:
 ```sql

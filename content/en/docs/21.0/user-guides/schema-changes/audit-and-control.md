@@ -22,7 +22,7 @@ Supported interactions are:
 - [Cleaning migration artifacts](#cleaning-migration-artifacts)
 - [Reverting a migration](#reverting-a-migration)
 
-## Running migrations
+## Running Migrations
 
 To run a managed schema migration, you should:
 
@@ -78,7 +78,7 @@ d72d230d_6b52_11ee_808b_0a43f95f28a3
 - `--migration-context <unique-value>`: all migrations in a `ApplySchema` command are logically grouped via a unique _context_. A unique value will be supplied automatically. The user may choose to supply their own value, and it's their responsibility to provide with a unique value. Any string format is accepted.
   The context can then be used to search for migrations, via `SHOW VITESS_MIGRATIONS LIKE '<the-context>'`. It is visible in `SHOW VITESS_MIGRATIONS ...` output as the `migration_context` column.
 
-## Tracking migrations
+## Tracking Migrations
 
 You may track the status of a single or of multiple migrations. Since migrations run asycnhronously, it is the user's responsibility to audit the progress and state of submitted migrations. Users are likely to want to know when a migration is complete (or failed) so as to be able to deploy code changes or run other operations.
 
@@ -285,7 +285,7 @@ Or launch all:
 $ vtctldclient ApplySchema --sql "alter vitess_migration launch all" commerce
 ```
 
-## Completing a migration
+## Completing a Migration
 
 Migrations submitted with [`--postpone-completion`](../postponed-migrations) remain `ready` or `running` until told to complete. The user may complete a specific migration or they may complete all postponed migrations:
 
@@ -328,7 +328,7 @@ $ vtctldclient OnlineDDL complete commerce 9e8a9249_3976_11ed_9442_0a43f95f28a3
 }
 ```
 
-## Forcing a migration cut-over
+## Forcing a Migration cut-over
 
 Applicable to `ALTER TABLE` migrations in `vitess` strategy and on MySQL `8.0`. The final step of the migration, the cut-over, involves acquiring locks on the migrated table. This operation can time out when the table is otherwise locked by the user or the app, in which case Vitess retries it later on, until successful. On very busy workloads, or in workloads where the app holds long running transactions locking the table, the migration may never be able to complete.
 
@@ -389,7 +389,7 @@ $ vtctldclient OnlineDDL force-cutover commerce all
 }
 ```
 
-## Cancelling a migration
+## Cancelling a Migration
 
 The user may cancel a migration, as follows:
 
@@ -544,7 +544,7 @@ $ vtctldclient OnlineDDL cancel commerce all
 }
 ```
 
-## Retrying a migration
+## Retrying a Migration
 
 The user may retry running a migration. If the migration is in `failed` or in `cancelled` state, Vitess will re-run the migration, with exact same arguments as previously intended. If the migration is in any other state, `retry` does nothing.
 
@@ -626,7 +626,7 @@ $ vtctldclient OnlineDDL retry customer 075088b9_6b56_11ee_808b_0a43f95f28a3
 }
 ```
 
-## Cleaning migration artifacts
+## Cleaning Migration Artifacts
 
 Migrations yield artifacts: these are leftover tables, such as the ghost or shadow tables in an `ALTER` DDL. These tables are audited and collected as part of [table lifecycle](../table-lifecycle/).
 
@@ -673,7 +673,7 @@ $ vtctldclient OnlineDDL cleanup customer 075088b9_6b56_11ee_808b_0a43f95f28a3
 }
 ```
 
-## Reverting a migration
+## Reverting a Migration
 
 Vitess offers _lossless revert_ for online schema migrations: the user may regret a table migration after completion, and roll back the table's schema to previous state _without loss of data_. See [Revertible Migrations](../revertible-migrations/).
 
@@ -742,7 +742,7 @@ Create Table: CREATE TABLE `corder` (
 $ vtctldclient ApplySchema --ddl-strategy "vitess" --sql "revert vitess_migration '1a689113_8d77_11eb_815f_f875a4d24e90'" commerce
 ```
 
-## Controlling throttling
+## Controlling Throttling
 
 Managed migrations [use](../managed-online-schema-changes/#throttling) the [tablet throttler](../../../reference/features/tablet-throttler/) to ensure a sustainable impact to the MySQL servers and replication stream. Normally, the user doesn't need to get involved, as the throttler auto-identifies load scenarios, and pushes back on migration progress. However, Vitess makes available these commands for additional control over migration throttling:
 
@@ -756,7 +756,7 @@ show vitess_throttled_apps;
 
 **Note:** the tablet throttler must be enabled for these command to run.
 
-### Throttling a migration
+### Throttling a Migration
 
 To fully throttle a migration, run:
 
@@ -772,7 +772,7 @@ You may supply either or both these options: `expire`, `ratio`:
 - `alter vitess_migration 'aa89f255_8d68_11eb_815f_f875a4d24e90' throttle expire '2h'` will fully throttle the migration for the next `2` hours, after which the migration resumes normal work. You may specify these units: `s` (seconds), `m` (minutes), `h` (hours) or combinations. Example values: `90s`, `30m`, `1h`, `1h30m`, etc.
 - `alter vitess_migration 'aa89f255_8d68_11eb_815f_f875a4d24e90' throttle ratio 0.7` will partially throttle the migration. This instructs the throttler to reject, on average, `7` migration throttling check requests out of `10`. Any value between `0` (no throttling at all) and `1.0` (fully throttled) are allowed. This is a fine tune way to slow down a migration.
 
-### Throttling all migrations
+### Throttling All Migrations
 
 It's likely that you will want to throttle migrations in general, and not a specific migration. Use:
 
@@ -790,7 +790,7 @@ Use:
 
 **Note** that this does not disable throttling altogether. If, for example, replication lag grows on replicas, the throttler may still throttle the migration until replication is caught up. Unthrottling only cancels an explicit throttling request as described above.
 
-### Showing throttled apps
+### Showing Throttled Apps
 
 The command `show vitess_throttled_apps` is a general purpose throttler command, and shows all apps for which there are throttling rules. It will list any specific or general migration throttling status.
 

@@ -40,7 +40,7 @@ nvm use 16.13.0
 
 See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
 
-### Packages from CentOS repos
+### Packages from CentOS Repos
 
 First install the MySQL repository from Oracle:
 
@@ -101,7 +101,7 @@ You can skip this step by setting the `NOVTADMINBUILD` environment variable.
 NOVTADMINBUILD=1 make build
 ```
 
-## Testing your Binaries
+## Testing our Binaries
 
 The unit tests require the following additional packages:
 
@@ -142,4 +142,3 @@ mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
 E1027 18:28:23.464780   19483 mysqld.go:734] mysqld --initialize-insecure failed: /usr/sbin/mysqld: exit status 1, output: mysqld: [ERROR] Failed to open required defaults file: /home/morgo/vitess/vtdataroot/vt_0000000101/my.cnf
 mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
 ```
-

@@ -37,6 +37,7 @@ mysql> show vitess_migrations like 'a2994c92_f1d4_11ea_afa3_f875a4d24e90' \G
 ```
 
 3. Run the VDiff command. The name of the VReplication workflow is the same as Online DDL's `uuid`.
+
 ```
 vtctldclient VDiff --target-keyspace customer --workflow a2994c92_f1d4_11ea_afa3_f875a4d24e90 Create
 
@@ -44,6 +45,7 @@ VDiff a35b0006-e6d9-416e-bea9-917795dc5bf3 scheduled on target shards, use show 
 ```
 
 4. Monitor VDiff progress/status. 
+
 ```
 vtctldclient VDiff --target-keyspace customer --workflow Show a2994c92_f1d4_11ea_afa3_f875a4d24e90
 
@@ -56,9 +58,11 @@ CompletedAt:  2024-03-26 22:54:31
 
 Use "--format=json" for more detailed output.
 ```
+
 You should see `HasMismatch: false` unless there is a bug in Vitess, in which case please post on Vitess Slack and/or 
 create an issue at `https://github.com/vitessio/vitess/issues`
 
 ## References
+
 * [Online DDL usage](https://vitess.io/docs/user-guides/schema-changes/audit-and-control/)
 * [VDiff](https://vitess.io/docs/reference/vreplication/vdiff/)

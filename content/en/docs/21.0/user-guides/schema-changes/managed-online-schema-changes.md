@@ -32,7 +32,7 @@ As general overview:
   - `ALTER VIEW` and `DROP VIEW` are internally modified to allow quick revert.
 - Vitess provides the user a mechanism to view migration status, launch (if required), complete (if required), cancel or retry migrations, based on the job ID.
 
-## Syntax and supported statements
+## Syntax and Supported Statements
 
 Online DDL applies to the following statements:
 
@@ -164,7 +164,7 @@ $ vtctldclient ApplySchema --ddl-strategy "vitess" --sql "ALTER TABLE demo MODIF
 - `--migration_context <unique-value>`: all migrations in a `ApplySchema` command are logically grouped via a unique _context_. A unique value will be supplied automatically. The user may choose to supply their own value, and it's their responsibility to provide with a unique value. Any string format is accepted.
   The context can then be used to search for migrations, via `SHOW VITESS_MIGRATIONS LIKE 'the-context'`. It is visible in `SHOW VITESS_MIGRATIONS ...` output as the `migration_context` column.
 
-## Migration flow and states
+## Migration Flow and States
 
 A migration can be in any one of these states:
 
@@ -193,7 +193,7 @@ For more about internals of the scheduler and how migration states are controlle
 
   Example: `vtgate --enable_online_ddl=false` to disable access to Online DDL via `VTGate`.
  
-## Auto resume after failure
+## Auto Resume after Failure
 
 VReplication based migrations (`ddl_strategy="vitess"`) are [failover agnostic](../recoverable-migrations/). They automatically resume after either planned promotion ([PlannedReparentShard](../../configuration-advanced/reparenting/#plannedreparentshard-planned-reparenting)), emergency promotion ([EmergencyReparentShard](../../configuration-advanced/reparenting/#emergencyreparentshard-emergency-reparenting)) or completely external reparenting.
 
@@ -201,7 +201,7 @@ Once the new primary is in place and turns active, it auto-resumes the VReplicat
 
 The new primary must be available within `10 minutes`, or else the migration is considered to be stale and is aborted.
 
-## Auto retry after failure
+## Auto Retry after Failure
 
 Neither `gh-ost` and `pt-osc` are able to resume from point of failure, or after a failover. However, Vitess management can issue an automated retry (starting the migration afresh).
 
@@ -229,7 +229,7 @@ All three strategies: `vitess`, `gh-ost` and `pt-osc` utilize the tablet throttl
 
 **NOTE** that at this time (and subject to change) the tablet throttler is disabled by default. Enable it via `vtctldclient UpdateThrottlerConfig --enable <keyspace>`. If the tablet throttler is disabled, schema migrations will not throttle on replication lag.
 
-## Table cleanup
+## Table Cleanup
 
 All `ALTER` strategies leave artifacts behind. Whether successful or failed, either the original table or the _ghost_ table is left still populated at the end of the migration. Vitess explicitly makes sure the tables are not dropped at the end of the migration. This is for two reasons:
 

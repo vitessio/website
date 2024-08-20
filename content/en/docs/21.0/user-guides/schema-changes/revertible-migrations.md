@@ -13,7 +13,7 @@ Revertible migrations supported for:
 - `ALTER TABLE` statements: supported in `vitess` strategy, the _revert_ is to reapply previous table schema, without losing any data added/modified since migration completion.
 - Another `revert` migration. It is possible to revert a _revert_, revert the revert of a _revert_, and so forth.
 
-## Behavior and limitations
+## Behavior and Limitations
 
 - A revert is a migration of its own, with a migration UUID, similarly to normal migrations.
 - Migrations are only for revertible for `24h` since completion.
@@ -50,7 +50,7 @@ $ vtctldclient ApplySchema --ddl-strategy "vitess" --sql "revert vitess_migratio
 
 Both operations return a UUID for the revert migration. The user can track the revert migration to find its state.
 
-## Usage & walkthrough
+## Usage & Walkthrough
 
 Consider the following annotated flow:
 ```sql
@@ -220,7 +220,7 @@ mysql> select * from t;
 +----+---------------------+
 ```
 
-## Implementation details
+## Implementation Details
 
 Revert for `CREATE` and `DROP` are implemented similarly for all online strategies.
 

@@ -164,7 +164,7 @@ vttablet <topo_flags> <backup_flags> \
   --queryserver-config-stream-pool-size= 16
 ```
 
-### Key configuration notes
+### Key Configuration Notes
 
 * It is important to set MySQL’s `max_connections` property to be 50%-100% higher than the total number of connections in the various pools. 
 	* This is because Vitess may have to kill connections and open new ones. MySQL accounting has a delay in how it counts closed connections, which may cause its view of the number of connections to exceed the ones currently opened by Vitess. For example, in the above example, the `max_connections` settings should be around 800.

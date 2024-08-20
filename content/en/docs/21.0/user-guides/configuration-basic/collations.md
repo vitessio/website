@@ -8,7 +8,7 @@ MySQL is a Unicode-aware database, and as explained on [the MySQL documentation]
 
 Likewise, Vitess is also Unicode-aware, and it supports the vast majority of the collations and charsets in the underlying MySQL server. On a basic level, this support means that Vitess handles gracefully textual Unicode columns and queries, and relays this information to MySQL clients without losing or corrupting the encoding of the data. On top of this, newer versions of Vitess are also capable of performing textual comparison and sorting operations in SQL queries directly on VTGate instances, greatly speeding up complex operations such as cross-shard joins.
 
-### Supported collations
+### Supported Collations
 
 The collation environment (i.e. the set of support collations and charsets) of a Vitess cluster is defined by the MySQL server version flag (`--mysql_server_version`) provided to the VTGate and VTTablet instances in the cluster. Higher (newer) MySQL versions will enable built-in support for more collations.
 
@@ -400,7 +400,7 @@ Using collations that are not supported by Vitess but implemented in the underly
 | utf8mb4_unicode_nopad_ci | utf8mb4 | ❌ | ❌ | ❌ | ⚠️ | ⚠️ | ❌ | ❌ |
 | utf8mb4_unicode_520_nopad_ci | utf8mb4 | ❌ | ❌ | ❌ | ⚠️ | ⚠️ | ❌ | ❌ |
 
-### Configuring the default connection charset for a Vitess cluster
+### Configuring the Default Connection Charset for a Vitess Cluster
 
 **The default connection charset for a Vitess cluster is configured in your VTTablet instances** via the `--db_charset` flag. This flag modifies the behavior of the _connections_ that the tablet creates, not the underlying MySQL instance: it defines the charset that VTTablet uses when opening connections to MySQL.
 If the `--db_charset` flag is left empty, VTTablet will default to an `utf8mb4` charset based on the underlying MySQL version. For instance, MySQL 5.x will default to `utf8mb4_general_ci`, while MySQL 8.x defaults to `utf8mb4_0900_ai_ci`. Because the handshake packet of MySQL leaves only 1 byte to reference the charset ID, only charset IDs <= 255 are supported.

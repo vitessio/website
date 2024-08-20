@@ -26,6 +26,7 @@ The output has four columns:
 * Query - the actual query used.
 
 ### Example 1:
+
 ```mysql
 mysql> vexplain queries select * from user where id = 4;
 +------+----------+-------+-----------------------------------------------------------+
@@ -39,6 +40,7 @@ mysql> vexplain queries select * from user where id = 4;
 Here we have a query where the planner can immediately see which shard to send the query to.
 
 ### Example 2:
+
 ```mysql
 mysql> vexplain queries select * from user where lookup = 'apa';
 +------+----------+-------+-------------------------------------------------------------------+
@@ -63,6 +65,7 @@ It does so without actually running any queries - it just plans the given query 
 The output contains a scalar output having a JSON description of the plan that vtgate will use for the query. 
 
 ### Example:
+
 ```mysql
 mysql> vexplain plan select * from corder join commerce.product as prod on corder.sku = prod.sku;
 ```

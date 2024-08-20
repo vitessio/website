@@ -13,7 +13,7 @@ In both cases, it takes an explicit user interaction to launch or to complete th
 
 Normally, migrations are executed by Vitess and are launched and completed automatically. For example, an `ALTER` on a large table can take hours or more to complete. Vitess automatically instates the new schema in place whenever it is satisfied that the `ALTER` is complete. Or, a `DROP` statement could wait in queue while other statements are running, only to actually execute hours later.
 
-## Postpone launch
+## Postpone Launch
 
 A postponed-launch migration will remain in queued state and will not start executing, until instructed to launch.
 
@@ -57,7 +57,7 @@ mysql> show vitess_migrations like '62cc734d_6b59_11ee_b0cf_0a43f95f28a3' \G
                migration_status: queued
 ```
 
-### Use case
+### Use Case
 
 The use case is specific to multi sharded environments. In some cases, a user may wish to experiment a migration on a single shard:
 

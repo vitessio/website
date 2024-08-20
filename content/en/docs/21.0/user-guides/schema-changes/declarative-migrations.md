@@ -96,7 +96,7 @@ set @@ddl_strategy='gh-ost --declarative --max-load=Threads_running=100';
 
 Vitess notes down the `--declarative` flag and does not pass it to `gh-ost`, `pt-osc` or `VReplication`.
 
-## Implementation details
+## Implementation Details
 
 The user submits a declarative DDL. Tables schedule the migration to execute, but at time of execution, may modify the migration on the fly and end up running a different migration.
 

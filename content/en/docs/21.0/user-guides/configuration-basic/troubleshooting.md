@@ -29,7 +29,7 @@ Most of the focus of Vitess monitoring centers around the cost of a query. Altho
 
 Let us now go through some fire drills.
 
-### Too many connections
+### Too Many Connections
 
 If you see an error that contains the string `Too many connections (errno 1040) (sqlstate 08004)`, then it means that the maximum number of connections allowed by MySQL has been exceeded.
 
@@ -39,21 +39,21 @@ The remedy is to further increase the `max_connections` settings in MySQL. The o
 
 This is one of the most common problems. It can show up as just an elevated latency with no external impact. Sometimes, the problem can be more acute where queries return errors due to timeouts. There can be multiple root causes.
 
-#### Approach 1: Validate resource usage and remove bottlenecks
+#### Approach 1: Validate Resource Usage and Remove Bottlenecks
 
-Check vtgate CPU usage: If the vtgate CPU is too high or is getting throttled, it could be the root cause. Bringing up another vtgate to take on additional load or increasing the CPU quota of the VTGate should resolve the problem.
+* **Check vtgate CPU usage:** If the vtgate CPU is too high or is getting throttled, it could be the root cause. Bringing up another vtgate to take on additional load or increasing the CPU quota of the VTGate should resolve the problem.
 
-Check vttablet CPU usage: If vttablet CPU usage is maxed out, the immediate solution is to increase the quota. If the vttablet is a replica, then bringing up more replicas should help distribute the load. If it is a primary, then you need to plan on splitting the shard into smaller parts, or reshard in the case of an unsharded keyspace.
+* **Check vttablet CPU usage:** If vttablet CPU usage is maxed out, the immediate solution is to increase the quota. If the vttablet is a replica, then bringing up more replicas should help distribute the load. If it is a primary, then you need to plan on splitting the shard into smaller parts, or reshard in the case of an unsharded keyspace.
 
-Check MySQL resource usage: If MySQL is resource constrained, for example IOPS, then you need to provision more. Also, you will then need to add more replicas or plan a reshard or split just like in the case of a vttablet. More often than not, MySQL will run into resource constraints before vttablet does.
+* **Check MySQL resource usage:** If MySQL is resource constrained, for example IOPS, then you need to provision more. Also, you will then need to add more replicas or plan a reshard or split just like in the case of a vttablet. More often than not, MySQL will run into resource constraints before vttablet does.
 
-Check Network packet limits. Some cloud providers limit network capacity by limiting the number of packets per second. Check to see if this limit has been reached. If so, you will need to request a quota increase from the cloud provider.
+* **Check Network packet limits:** Some cloud providers limit network capacity by limiting the number of packets per second. Check to see if this limit has been reached. If so, you will need to request a quota increase from the cloud provider.
 
 If none of the processes are resource constrained, the next step is to check connection pool waits in vttablet. If there are long waits, then we know that the connection pool is under-provisioned. Restarting the vttablets with increased pool sizes should fix the problem.
 
 If latency continues to be elevated after increasing the pool size, it most likely means that the contention has shifted from vttablet to MySQL. In that case, it is likely that MySQL is the one resource constrained. You may have to roll back the pool size increase and instead look at increasing resources for MySQL.
 
-#### Approach 2: Find the problematic query
+#### Approach 2: Find the Problematic Query
 
 Typically, resource constraints are encountered during the early stages of a rollout where things are not tuned well. Once the system is well tuned and running smoothly, the root cause is likely to be related to how the application sends queries.
 
@@ -78,7 +78,7 @@ The actual identification of the root cause may not be as straightforward as des
 
 The analysis for elevated error rates for read queries follows steps similar to elevated latency. You should essentially use the same drill down approach to identify the root cause.
 
-### Transaction timeouts
+### Transaction Timeouts
 
 Transaction timeouts manifest as the following errors:
 
@@ -93,7 +93,7 @@ If you see such errors, you may have to do one of the following:
 
 It is recommended to minimize long running transactions in MySQL. This is because the efficiency of MySQL drastically drops as the number of concurrent transactions increases.
 
-### Transaction connection limit errors
+### Transaction Connection Limit Errors
 
 If you encounter errors that contain the following text: `transaction pool connection limit exceeded`, it means that your connection pool for transactions is full and Vitess timed out waiting for a connection. This issue can have multiple root causes.
 
@@ -119,7 +119,7 @@ If an errant GTID is detected, the first task is to identify the GTIDs that are 
 
 If the data has diverged, you have to make a decision about which one is authoritative. Once that is decided, it is recommended that you first take a backup of the instance that you have determined to be authoritative. Following this, you can bring down the instances that were non-authoritative and restart them with empty directories. This will trigger the restore workflow that will start with the authoritative backup. Once restored, the MySQL will point itself to the current primary and catch up to a consistent state.
 
-### Replica vttablet not receiving queries
+### Replica vttablet not Receiving Queries
 
 A number of reasons can cause a vtgate to not send queries to a replica vttablet. The first step is to visit the `/debug/status` page of vtgate and look at the `Health Check Cache` section.
 
@@ -134,7 +134,7 @@ It may be worth proactively monitoring `TopologyWatcherErrors` and `TopologyWatc
 
 If there are no topo errors in vtgate, check to see if the tablet record has been created by vttablet using the `vtctldclient GetTablets` command. If the tablet record is absent or does not contain the correct host and port info, check the vttablet logs to see if it has trouble connecting to the topo and is unable to publish its existence. If there are errors, fixing the issue should resolve the problem.
 
-### Read-only errors
+### Read-only Errors
 
 If you see the following error string `The MySQL server is running with the --read-only option so it cannot execute this statement (errno 1290) (sqlstate HY000)` while trying to write to the primary, then it likely means that a previous `PlannedReparentShard` operation failed in the middle.
 
@@ -146,11 +146,11 @@ This error can also be encountered if a new primary has been elected, but the ol
 
 Eventually, the new primary will inform the vtgates of its existence, and they will start sending traffic to the new primary instead of the old one. The old primary will also eventually notice that a new primary was elected. When it notices it, it will demote itself to a replica.
 
-### Local TopoServer of a Cell is getting overloaded
+### Local TopoServer of a Cell is Getting Overloaded
 
 This situation can happen if a large number of vtgates continuously spam the local toposerver to check for changes in the list of tablet servers. If this is the case, you may have to reduce the polling frequency of the vtgates by reducing the `--tablet_refresh_interval` value.
 
-### Global Topo or Cell Topo is down
+### Global Topo or Cell Topo is Down
 
 Vitess servers are built to survive brief topo outages in the order of many minutes. All Vitess servers cache the necessary information to serve traffic. If there is an outage, they use the cached information to continue serving traffic.
 

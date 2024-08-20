@@ -27,13 +27,13 @@ To analyze multiple SQL queries and determine how, or if, Vitess executes each s
 1. Run the VTexplain tool and capture the output
 1. Check your output for errors
 
-## 1. Gather the queries from your current MySQL database environment
+## 1. Gather the Queries from Your Current MySQL Database Environment
 
 These queries should be most, if not all, of the queries that are sent to your current MySQL database over an extended period of time. You may need to record your queries for days or weeks depending on the nature of your application(s) and workload. You will need to normalize the queries you will be analyzing. Depending on the scope and complexity of your applications you may have a few hundred to thousands of distinct normalized queries. To obtain normalized queries you can use common MySQL monitoring tools like VividCortex, Monyog or PMM.
 
 It is also possible to use the MySQL [general query log](https://dev.mysql.com/doc/refman/8.0/en/query-log.html) feature to capture raw queries and then normalize it using post-processing.
 
-## 2. Filter out specific queries
+## 2. Filter Out Specific Queries
 
 Remove from your list any unsupported queries or queries from non-application sources. The following are examples of queries to remove are:
 
@@ -61,7 +61,7 @@ cat queries.txt \
  | grep -v mysql > queries_for_vtexplain.txt
 ```
 
-## 3. Populate fake values for your queries
+## 3. Populate Fake Values for Your Queries
 
 Once the queries are normalized in prepared statement style, populate fake values to allow VTexplain to run properly. This is because `vtexplain` operates only on concrete (or un-normalized) queries. Doing this by textual substitution is shown below and typically requires some trial and error. An alternative is to use a MySQL monitoring tool. This tool sometimes has a feature where it can provide one concrete query example for every normalized query form, which is ideal for this purpose.
 
@@ -95,7 +95,7 @@ cat queries.txt \
  | grep -v mysql > queries_for_vtexplain.txt
  ```
 
-## 4. Run the VTexplain tool via a script
+## 4. Run the VTexplain Tool via a Script
 
 In order to analyze every query in your list, create and run a script. The following is an example Python script that assumes a sharded database with 4 shards. You can adjust this script to match your individual requirements.
 
@@ -116,7 +116,7 @@ If you choose to use the single invocation, it would look something like:
 $ vtexplain --schema-file schema.sql --vschema-file vschema.json --shards 4 --sql-file queries_for_vtexplain.txt
 ```
 
-## 5. Add your SQL schema to the output file
+## 5. Add your SQL Schema to the Output File
 
 Add your proposed SQL schema to the file created by the script (e.g. schema.sql). The following is an example SQL schema:
 
@@ -131,7 +131,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ```
 
-## 6. Add your VSchema
+## 6. Add Your VSchema
 
 Add your VSchema to the file created by the script: in this example, the file is named `schema.json`. The following is an example VSchema to match the example SQL schema above.
 
@@ -160,7 +160,7 @@ $ cat vschema.json
 ```
 Note that unlike the VSchema used in Vitess, e.g. in `vtctldclient GetVSchema` and `vtctldclient ApplyVSchema`, the format required by `vtexplain` differs slightly. There is an extra level of JSON objects at the top-level of the JSON format to allow you to have a single file that represents the VSchema for multiple Vitess keyspaces. In the above example, there is just a single keyspace called `ks1`.
 
-## 7. Run the VTexplain tool and capture the output
+## 7. Run the VTexplain Tool and Capture the Output
 
 This step will generate the output you need to analyze to determine what queries may have issues with your proposed VSchema. It may take a long time to finish if you have a number of queries.
 
@@ -168,11 +168,11 @@ This step will generate the output you need to analyze to determine what queries
 $ sh -x run_vtexplain.sh 2> vtexplain.output
 ```
 
-## 8. Check your output
+## 8. Check Your Output
 
 Once you have your full output in vtexplain.output, use `grep` to search for the string "ERROR" to review any issues that VTExplain found.
 
-### Example: Scattered across shards
+### Example: Scattered Across Shards
 
 In the following example, VTGate scatters the example query across both shards, and then aggregates the query results.
 
@@ -194,7 +194,7 @@ This is not an error, but illustrates a few things about the query:
  * The phases of the scatter operation will occur in parallel. This is because the number `1` on the left-hand-side of the output indicates the ordering of the operations in time. The same number indicates parallel processing.
  * The implicit Vitess row limit of 10000 rows is also seen, even though that was not present in the original query.
 
-### Example: Query returns an error
+### Example: Query Returns an Error
 
 The following query produces an error because Vitess does not support the `AVG` function for scatter queries across multiple shards.
 
@@ -203,7 +203,7 @@ $ vtexplain --schema-file schema.sql --vschema-file vschema.json --shards 4 --sq
 ERROR: vtexplain execute error in 'SELECT AVG(balance) FROM user': unsupported: in scatter query: complex aggregate expression
 ```
 
-### Example: Targeting a single shard
+### Example: Targeting a Single Shard
 
 The following query only targets a single shard because the query supplies the sharding key.
 

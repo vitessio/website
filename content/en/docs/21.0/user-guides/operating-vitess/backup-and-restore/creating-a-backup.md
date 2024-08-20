@@ -4,7 +4,7 @@ weight: 2
 aliases: ['/docs/user-guides/backup-and-restore/']
 ---
 
-## Choosing the backup type
+## Choosing the Backup Type
 
 As described in [Backup types](../overview/#backup-types), you choose to run a full Backup (the default) or an incremental Backup.
 
@@ -80,7 +80,7 @@ I0310 12:49:32.279773  215835 backup.go:163] I0310 20:49:32.279485 xtrabackupeng
 
 To continue with risk: Set `--xtrabackup_backup_flags=--no-server-version-check`. Note this occurs when your MySQL server version is technically unsupported by `xtrabackup`.
 
-## Create a full backup with vtctl
+## Create a Full Backup with vtctl
 
 __Run the following vtctl command to create a backup:__
 
@@ -98,7 +98,7 @@ __Run the following vtctl command to backup a specific shard:__
 vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard [--allow_primary=false] [--upgrade-safe=false] <keyspace/shard>
 ```
 
-## Create an incremental backup with vtctl
+## Create an Incremental Backup with vtctl
 
 An incremental backup requires additional information: the point from which to start the backup. An incremental backup is taken by supplying `--incremental-from-pos` to the `Backup` or `BackupShard` command. The argument may either indicate:
 

@@ -17,7 +17,7 @@ Normally, schema migrations are coupled with the original MySQL server they oper
 - An unexpected external reparent
 - As long as no more than `10` minutes pass between failure/demotion of previous `primary` tablet and the promotion of the new `primary` tablet. 
 
-## Behavior and limitations
+## Behavior and Limitations
 
 Whether by planned operation or an unplanned failure, a `vitess` migration's VReplication stream is interrupted while copying/applying data. VReplication's mechanism persists the state of data transfer transactionally with the transfer itself. Any replica will have a _consistent_ state of the migration, even if that replica lags behind the primary.
 

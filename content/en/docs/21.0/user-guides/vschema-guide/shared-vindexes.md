@@ -157,7 +157,7 @@ Foreign key constraints across shards or keyspaces are not supported in Vitess. 
 
 A more detailed analysis of foreign keys in Vitess can be found on the [foreign keys](../foreign-keys) page.
 
-### Many-to-Many relationships
+### Many-to-Many Relationships
 
 In the case where a table has relationships with multiple other tables, you can only choose one of those relationships for shard grouping. All other relationships will end up being cross-shard, and will incur cross-shard penalties.
 

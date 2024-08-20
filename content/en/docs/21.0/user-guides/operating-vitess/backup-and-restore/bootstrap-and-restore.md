@@ -5,6 +5,7 @@ aliases: ['/docs/user-guides/backup-and-restore/']
 ---
 
 Restores can be done automatically by way of seeding/bootstrapping new tablets, or they can be invoked manually on a tablet to restore a full backup or do a point-in-time recovery.
+
 ## Auto restoring a backup on startup
 
 When a tablet starts, Vitess checks the value of the `--restore_from_backup` command-line flag to determine whether to restore a backup to that tablet. Restores will always be done with whichever engine was used to create the backup.
@@ -36,11 +37,11 @@ Bootstrapping a new tablet is almost identical to restoring an existing tablet. 
 
 The bootstrapped tablet will restore the data from the backup and then apply changes, which occurred after the backup, by restarting replication.
 
-## Manual restore
+## Manual Restore
 
 A manual restore is done on a specific tablet. The tablet's MySQL server is shut down and its data is wiped out.
 
-### Restore a full backup
+### Restore a Full Backup
 
 To restore the tablet from the most recent full backup, run:
 
@@ -60,7 +61,7 @@ If successful, the tablet's MySQL server rejoins the shard's replication stream,
 
 Vitess supports restoring to a _timestamp_ or to a specific _position_. Either way, this restore method assumes backups have been taken that cover the specified position. The restore process will first determine a restore path: a sequence of backups, starting with a full backup followed by zero or more incremental backups, that when combined, include the specified timestamp or position. See more on [Restore Types](../overview/#restore-types) and on [Taking Incremental Backup](../creating-a-backup/#create-an-incremental-backup-with-vtctl).
 
-#### Restore to timestamp
+#### Restore to Timestamp
 
 Starting with `v18`, it is possible to restore to a given timestamp. The restore process will apply all events up to, and excluding, the given timestamp, at 1 second granularity. That is, the restore will bring the database to a point in time which is _about_ 1 second before the specified timestamp. Example:
 
@@ -70,7 +71,7 @@ vtctldclient RestoreFromBackup --restore-to-timestamp "2023-06-15T09:49:50Z" zon
 
 The timestamp must be in `RFC3339` format.
 
-#### Restore to a position
+#### Restore to a Position
 
 It is possible to restore onto a precise GTID position. Vitess will restore up to, and including, the exact requested position. This gives you the utmost granularity into the state of the restored database.
 
@@ -84,7 +85,7 @@ Example:
 vtctldclient RestoreFromBackup --restore-to-pos "MySQL56/0d7aaca6-1666-11ee-aeaf-0a43f95f28a3:1-60" zone1-0000000102
 ```
 
-#### Dry run
+#### Dry Run
 
 It is possible to verify whether a restore-to-timestamp or restore-to-pos is possible without actually performing the restore. Run:
 

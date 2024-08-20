@@ -87,7 +87,7 @@ test` from the root of the Git tree.
 If you haven't installed all dependencies for `make test`, you can rely on the CI test results as well.
 These results will be present on your pull request.
 
-## Committing your work
+## Committing Your Work
 
 When running `git commit` use the `-s` option to add a Signed-off-by line.
 This is needed for [the Developer Certificate of Origin](https://github.com/apps/dco).

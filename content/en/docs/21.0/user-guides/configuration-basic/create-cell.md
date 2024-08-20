@@ -24,7 +24,7 @@ The cell information is saved in the global toposerver. Vitess takes care of dep
 You will only need to specify the topo global root for launching the Vitess servers. The cell-specific information including its root path will be automatically loaded from the cell info.
 {{< /info >}}
 
-## Mapping cells to zones and regions
+## Mapping Cells to Zones and Regions
 
 Most public clouds offer a hierarchy of failure boundaries. Regions are data centers that are far apart. Depending on the distance, the latency between two regions can be in the 10s to 100s of milliseconds. Zones are partitions within a region where the machines are in different buildings. Latency between zones is typically in the range of sub-millisecond to 1-2ms.
 
