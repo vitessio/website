@@ -21,7 +21,7 @@ When it comes to dealing with **isolation** and **atomicity** in the database se
 
 Before we dive in, let us state that in the simple case, where a read (`SELECT`) or write (`INSERT`, `UPDATE`, `DELETE`) only addresses data in a single shard, there are no cross-shard concerns, and in general, both the isolation and atomicity guarantees are similar (or the same) to that of MySQL.
 
-## Cross-shard isolation
+## Cross-shard Isolation
 
 Because cross-shard writes might not be [completely atomic](../shard-isolation-atomicity/#cross-shard-atomicity), cross-shard primary reads (even if they all go to the primary) might not display **isolation**, i.e. they may show partial results for in-flight cross-shard write operations. A simple example may be that the all the rows for a multi-valued insert might not become visible across all shards at the same time.
 
@@ -35,7 +35,7 @@ This is typically not a big issue for most applications, since so-called read-af
 
 If you perform replica or rdonly reads instead of primary reads (using the `@replica` or `@rdonly` Vitess dbname syntax extension), you will face the same issues you would if you read from a single MySQL replica instance. Accordingly, writes might not become visible for an extended period of time, depending on **replica lag**. That being said, since Vitess helps you to keep your individual primary instances smaller, replica lag should be less of an issue than it would be with an unsharded large MySQL setup.
 
-## Cross-shard atomicity
+## Cross-shard Atomicity
 
 When performing a write (`INSERT`, `UPDATE`, `DELETE`) across multiple shards, Vitess attempts to optimize performance, while also trying to ensure as much **atomicity** as possible. That is, Vitess will attempt to ensure that the whole write operation succeeds across all shards, or is rolled back.  However, if you think about what actually needs to happen across the multiple shards, achieving full atomicity across a (potentially large) number of shards can be very expensive. As a result, Vitess does not even try to guarantee cross-shard **isolation**, but rather focuses on trying to optimize cross-shard **atomicity**. The difference here is that while the results of a single transaction might not become visible across all shards in the same instant, Vitess does try to ensure that write failures on a subset of the shards are:
 
@@ -44,7 +44,7 @@ When performing a write (`INSERT`, `UPDATE`, `DELETE`) across multiple shards, V
 
 As an example, imagine an insert of 20 rows into a sharded table with 4 shards. There are many ways for Vitess to take an insert like this and perform the inserts to the backend shards:
 
-### Method 1:  The naive way
+### Method 1:  The Naive Way
 
 The first method would be to launch an autocommit insert of the subset of rows for each shard to the 4 shards. This would insert concurrently across the 4 shards, so would be great for performance. However, there are significant drawbacks:
 
@@ -77,7 +77,7 @@ INSERT /*vt+ MULTI_SHARD_AUTOCOMMIT=1 */ INTO t1 (c1) values (1),(2),(3),(4),(5)
 
 As can be seen from this output, we just issue all the inserts with the subset of values destined for each shard without any transactions.
 
-### Method 2:  The I-don't-want-this way (a.k.a. SINGLE)
+### Method 2:  The I-don't-want-this Way (a.k.a. SINGLE)
 
 In certain situations, a schema may be constructed in a fashion where cross-shard writes are very rare (or should not happen). In a situation like this Vitess provides for a transaction mode (set via the MySQL set statement `set transaction_mode = 'single'`) called **SINGLE**.  In this transaction mode, any write that needs to span multiple shards will fail with an error. Similarly, any **transactional read** (i.e. using `BEGIN` & `COMMIT`) that spans multiple shards will also get an error.
 
@@ -129,7 +129,7 @@ multi-db transaction attempted: [target:{keyspace:"ks1" shard:"c0-" tablet_type:
 ```
 
 
-### Method 3:  The default way
+### Method 3:  The Default Way
 
 By default, Vitess employs a default setting for `transaction_mode` of **MULTI** (`set transaction_mode = 'multi'`).  This mode is a tradeoff between atomicity, isolation and performance, where Vitess will attempt to minimize (but not guarantee) the chances of a partial cross-shard update.  What Vitess does in a case like this is:
 
@@ -195,6 +195,6 @@ In TWOPC mode, Vitess uses the `_vt` sidecar database to record metadata related
 Unfortunately, we cannot use `vtexplain` to illustrate the working of TWOPC mode.
 
 
-## In closing
+## In Closing
 
 From the above examples, it should be clear that as the number of shards increase, large write operations that span multiple shards become more problematic from a performance point of view. It is therefore important for Vitess keyspaces (databases) that will span a large number of shards to be designed in a way that individual writes will affect a minimum of shards.

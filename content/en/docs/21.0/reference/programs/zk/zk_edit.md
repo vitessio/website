@@ -18,7 +18,7 @@ zk edit <path> [flags]
   -h, --help    help for edit
 ```
 
-### SEE ALSO
+### See Also
 
 * [zk](../)	 - zk is a tool for wrangling zookeeper.
 

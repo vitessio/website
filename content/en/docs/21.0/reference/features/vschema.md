@@ -32,7 +32,7 @@ You can still specify a tablet type for the unspecified mode. For example, you c
 
 Some frameworks require you to specify an explicit database name while connecting. In order to make them work in unspecified mode, you can specify the database name as `@replica` or `@primary` instead of a blank one.
 
-## Sharded keyspaces require a VSchema
+## Sharded Keyspaces Require a VSchema
 
 A VSchema is needed to tie together all the databases that Vitess manages. For a very trivial setup where there is only one unsharded keyspace, there is no need to specify a VSchema because Vitess will know that there is no other place to route a query.
 
@@ -62,7 +62,7 @@ The Vschema contains the [Vindex](../vindexes) for any sharded tables. The Vinde
 
 Auto-increment columns do not work very well for sharded tables. [Vitess sequences](../vitess-sequences) solve this problem. Sequence tables must be specified in the VSchema, and then tied to table columns. At the time of insert, if no value is specified for such a column, VTGate will generate a number for it using the sequence table.
 
-## Reference tables
+## Reference Tables
 
 Vitess allows you to create an unsharded table and deploy it into all shards of a sharded keyspace. The data in such a table is assumed to be identical for all shards. In this case, you can specify that the table is of type `reference`, and should not specify any vindex for it. Any joins of this table with an unsharded table will be treated as a local join.
 
@@ -262,7 +262,7 @@ To recap, a checklist for creating the shared Secondary Vindex is:
 
 Currently, these steps have to be currently performed manually. However, extended DDLs backed by improved automation will simplify these tasks in the future.
 
-### The columns field
+### The Columns Field
 
 For a table, you can specify an additional columns field. This can be used for two purposes:
 
@@ -301,7 +301,7 @@ If `column_list_authoritative` is false or not specified, then VTGate will treat
 
 Vtgates also have the capability to track the schema changes and populate the columns list on its own. To know more about this feature, read [here](../schema-tracking).
 
-### Advanced usage
+### Advanced Usage
 
 The examples/demo also shows more tricks you can perform:
 

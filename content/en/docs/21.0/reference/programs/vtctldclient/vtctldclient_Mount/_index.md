@@ -3,6 +3,7 @@ title: Mount
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient Mount
 
 Mount is used to link an external Vitess cluster in order to migrate data from it.
@@ -13,7 +14,7 @@ Mount is used to link an external Vitess cluster in order to migrate data from i
   -h, --help   help for Mount
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -24,7 +25,7 @@ Mount is used to link an external Vitess cluster in order to migrate data from i
       --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 * [vtctldclient Mount list](./vtctldclient_mount_list/)	 - List all mounted external Vitess Clusters.

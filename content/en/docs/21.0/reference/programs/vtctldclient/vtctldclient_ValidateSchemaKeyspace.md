@@ -3,6 +3,7 @@ title: ValidateSchemaKeyspace
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient ValidateSchemaKeyspace
 
 Validates that the schema on the primary tablet for shard 0 matches the schema on all other tablets in the keyspace.
@@ -21,7 +22,7 @@ vtctldclient ValidateSchemaKeyspace [--exclude-tables=<exclude_tables>] [--inclu
       --skip-no-primary          Skips validation on whether or not a primary exists in shards.
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -32,7 +33,7 @@ vtctldclient ValidateSchemaKeyspace [--exclude-tables=<exclude_tables>] [--inclu
       --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 

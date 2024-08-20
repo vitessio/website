@@ -3,6 +3,7 @@ title: SetShardIsPrimaryServing
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient SetShardIsPrimaryServing
 
 Add or remove a shard from serving. This is meant as an emergency function. It does not rebuild any serving graphs; i.e. it does not run `RebuildKeyspaceGraph`.
@@ -17,7 +18,7 @@ vtctldclient SetShardIsPrimaryServing <keyspace/shard> <true/false>
   -h, --help   help for SetShardIsPrimaryServing
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -28,7 +29,7 @@ vtctldclient SetShardIsPrimaryServing <keyspace/shard> <true/false>
       --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 

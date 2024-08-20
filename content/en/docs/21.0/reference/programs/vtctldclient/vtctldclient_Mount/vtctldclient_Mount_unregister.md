@@ -3,6 +3,7 @@ title: Mount unregister
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient Mount unregister
 
 Unregister a previously mounted external Vitess Cluster.
@@ -24,7 +25,7 @@ vtctldclient --server localhost:15999 mount unregister --name ext1
       --name string   Name of the mount.
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -35,7 +36,7 @@ vtctldclient --server localhost:15999 mount unregister --name ext1
       --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient Mount](../)	 - Mount is used to link an external Vitess cluster in order to migrate data from it.
 

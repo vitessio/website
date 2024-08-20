@@ -3,6 +3,7 @@ title: vttablet
 series: vttablet
 commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
+
 ## vttablet
 
 The VTTablet server controls a running MySQL server.

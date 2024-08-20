@@ -28,13 +28,13 @@ RevokeCert --root /tmp --parent mail.mycoolsite.com postman1
       --parent string   Parent cert name to use. Use 'ca' for the toplevel CA. (default "ca")
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --root string   root directory for all artifacts (default ".")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vttlstest](../)	 - vttlstest is a tool for generating test certificates, keys, and related artifacts for TLS tests.
 

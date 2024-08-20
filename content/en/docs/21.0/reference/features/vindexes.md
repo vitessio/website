@@ -4,7 +4,7 @@ weight: 10
 aliases: ['/docs/schema-management/consistent-lookup/','/docs/reference/vindexes/']
 ---
 
-## A Vindex maps column values to keyspace IDs
+## A Vindex Maps Column Values to Keyspace IDs
 
 A Vindex provides a way to map a column value to a `keyspace ID`. Since each shard in Vitess covers a range of `keyspace ID` values, this mapping can be used to identify which shard contains a row. A variety of vindexes are available to choose from with different trade-offs, and you can choose one that best suits your needs.
 
@@ -58,7 +58,7 @@ Typically, the Primary Vindex for a table is Functional. In some cases, it is th
 A Lookup Vindex is implemented as a MySQL lookup table that maps a column value to the keyspace id. This is usually needed when database user needs to efficiently find a row using a WHERE clause that does not contain the Primary Vindex. At the time of insert, the computed keyspace ID of the row is stored in the lookup table against the column value.
 
 
-### Lookup Vindex types
+### Lookup Vindex Types
 
 The lookup table that implements a Lookup Vindex can be sharded or unsharded.  Note that the lookup row is most likely not going to be in the same shard as the keyspace id it points to.
 
@@ -71,7 +71,7 @@ There are currently two vindex types in Vitess for consistent lookup:
 * `consistent_lookup_unique`
 * `consistent_lookup`
 
-#### Consistent Lookup usage
+#### Consistent Lookup Usage
 
 There are 3 sessions which VTGate can open when a consistent lookup is involved.
 
@@ -105,7 +105,7 @@ As for a `lookup` vindex, it can be changed it to a `consistent_lookup` only if 
 
 Functional Vindexes can be also be shared. However, there is no concept of ownership because the column to keyspace ID mapping is pre-established.
 
-### Lookup Vindex guidance
+### Lookup Vindex Guidance
 
 The guidance for implementing lookup vindexes has been to create a two-column table. The first column (`from` column) should match the type of the column of the main table that needs the vindex. The second column (`to` column) should be a `BINARY` or a `VARBINARY` large enough to accommodate the keyspace id.
 
@@ -153,7 +153,7 @@ Every Vindex has an optional `params` section that contains a map of string key-
 
 There is an optional fourth parameter: `batch_lookup`. To read more about how to use `batch_lookup` see our [Unique Lookup user guide](../../../user-guides/vschema-guide/unique-lookup/).
 
-### How Vindexes are used
+### How Vindexes are Used
 
 #### Cost
 
@@ -261,7 +261,7 @@ There are also the following legacy (deprecated) Vindexes. **Do not use these**:
 | lookup\_unicodeloosemd5\_hash | Lookup NonUnique | No | No | 20 |
 | lookup\_unicodeloosemd5\_hash\_unique | Lookup Unique | If unowned | No | 10 |
 
-### Query Vindex functions
+### Query Vindex Functions
 
 You can query Vindex functions to see the resulting `keyspace_id` it produces (the resulting hash is a 64-bit hexadecimal number) and thus which shard a particular row would be placed on within the keyspace. You would query the Vindex functions by referencing their name as defined in your VSchema, and using query predicates specifically on the fixed name `id` field (this is not related to your actual schema). The Vindex functions support both equality (`WHERE id = X`) and list (`WHERE id IN(...)`) lookups. Here's a full example using the `customer` keyspace:
 
@@ -323,7 +323,7 @@ hex_keyspace_id: d9e62c0ad204fe91658ecc758049e515
 
 ```
 
-### Unknown Vindex parameters
+### Unknown Vindex Parameters
 
 Most Vindexes will accept unknown parameters without complaint. For example, the following `lookup` Vindex can be applied without error:
 

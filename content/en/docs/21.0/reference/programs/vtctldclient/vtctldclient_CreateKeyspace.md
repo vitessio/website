@@ -3,6 +3,7 @@ title: CreateKeyspace
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient CreateKeyspace
 
 Creates the specified keyspace in the topology.
@@ -31,7 +32,7 @@ vtctldclient CreateKeyspace <keyspace> [--force|-f] [--type KEYSPACE_TYPE] [--ba
       --type cli.KeyspaceTypeFlag   The type of the keyspace. (default NORMAL)
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -42,7 +43,7 @@ vtctldclient CreateKeyspace <keyspace> [--force|-f] [--type KEYSPACE_TYPE] [--ba
       --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 

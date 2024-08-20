@@ -18,7 +18,7 @@ zk stat <path> [flags]
   -h, --help    help for stat
 ```
 
-### SEE ALSO
+### See Also
 
 * [zk](../)	 - zk is a tool for wrangling zookeeper.
 

@@ -6,7 +6,7 @@ weight: 10
 
 Backup and restore operations export several metrics using the expvars interface. These are available at the `/debug/vars` endpoint of Vtbackup's and VTTablet's http status pages. [More details can be found here](../../features/monitoring/#3-push-based-metrics-system).
 
-## Backup metrics
+## Backup Metrics
 
 Metrics related to backup operations are available in both Vtbackup and VTTablet.
 
@@ -20,7 +20,7 @@ Depending on the Backup Engine and Backup Storage in-use, a backup may be a comp
 
 These operations are counted and timed, and the number of bytes consumed or produced by each stage of the pipeline are counted as well.
 
-## Restore metrics
+## Restore Metrics
 
 Metrics related to restore operations are available in both Vtbackup and VTTablet.
 
@@ -38,7 +38,7 @@ These operations are counted and timed, and the number of bytes consumed or prod
 
 _RestoredBackupTime_ captures the timestamp associated with the backup from which the current process was restored. _RestorePosition_ captures the GTID position associated with that backup.
 
-## Vtbackup metrics
+## Vtbackup Metrics
 
 Vtbackup exports some metrics which are not available elsewhere.
 

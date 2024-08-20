@@ -3,6 +3,7 @@ title: ExecuteFetchAsDBA
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient ExecuteFetchAsDBA
 
 Executes the given query as the DBA user on the remote tablet.
@@ -21,7 +22,7 @@ vtctldclient ExecuteFetchAsDBA [--max-rows <max-rows>] [--json|-j] [--disable-bi
       --reload-schema     Instructs the tablet to reload its schema after executing the query.
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -32,7 +33,7 @@ vtctldclient ExecuteFetchAsDBA [--max-rows <max-rows>] [--json|-j] [--disable-bi
       --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 

@@ -184,7 +184,7 @@ thundering herds.
 Messages that have been successfully acked will be deleted after their age
 exceeds the time period specified by `vt_purge_after`.
 
-## Advanced usage
+## Advanced Usage
 
 The `MessageAck` functionality is currently a gRPC API call and cannot be used
 from the SQL interface. However, you can manually ack messages using a regular
@@ -210,7 +210,7 @@ aggressive.
 
 You can also view messages using regular `SELECT` queries against the message table.
 
-## Known limitations
+## Known Limitations
 
 Here is a short list of possible limitations/improvements:
 

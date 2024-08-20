@@ -27,13 +27,13 @@ CreateCRL --root /tmp mail.mycoolsite.com
   -h, --help   help for CreateCRL
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --root string   root directory for all artifacts (default ".")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vttlstest](../)	 - vttlstest is a tool for generating test certificates, keys, and related artifacts for TLS tests.
 

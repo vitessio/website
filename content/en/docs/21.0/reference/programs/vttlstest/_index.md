@@ -18,7 +18,7 @@ vttlstest is a tool for generating test certificates, keys, and related artifact
       --root string   root directory for all artifacts (default ".")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vttlstest CreateCA](./vttlstest_createca/)	 - Create certificate authority
 * [vttlstest CreateCRL](./vttlstest_createcrl/)	 - Create certificate revocation list

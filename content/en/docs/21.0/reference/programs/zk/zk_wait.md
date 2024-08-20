@@ -28,7 +28,7 @@ zk wait /zk/path/children/
   -h, --help   help for wait
 ```
 
-### SEE ALSO
+### See Also
 
 * [zk](../)	 - zk is a tool for wrangling zookeeper.
 

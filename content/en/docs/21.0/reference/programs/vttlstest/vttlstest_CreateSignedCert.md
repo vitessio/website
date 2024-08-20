@@ -30,13 +30,13 @@ CreateSignedCert --root /tmp --common-name mail.mysite.com --parent mail.mycools
       --serial string        Serial number for the certificate to create. Should be different for two certificates with the same parent. (default "01")
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --root string   root directory for all artifacts (default ".")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vttlstest](../)	 - vttlstest is a tool for generating test certificates, keys, and related artifacts for TLS tests.
 

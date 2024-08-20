@@ -15,12 +15,12 @@ rpc ExecuteVtctlCommand(ExecuteVtctlCommandRequest) returns (stream ExecuteVtctl
 The new interface has individual RPCs for each command, with command-specific request and response types.
 Most RPCs are unary, while a few (`Backup`, for example) are streaming RPCs.
 
-### Enabling the new service
+### Enabling the New Service
 
 In order to enable the new service interface, add `grpc-vtctld` to the list of services in the `--service_map` flag provided to `vtctld`.
 Both the new and old interfaces may be run from the same `vtctld` instance, so during transition, most users will set `--service_map="grpc-vtctl,grpc-vtctld"`.
 
-### Transitioning clients
+### Transitioning Clients
 
 The new service implementation comes with a corresponding client implementation, which is called [`vtctldclient`][vtctldclient_docs].
 Most existing commands can be run directly from the new client, for example:

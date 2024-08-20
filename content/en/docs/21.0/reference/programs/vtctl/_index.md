@@ -163,7 +163,6 @@ Note that wherever `vtctl` commands produced master or MASTER for tablet type, t
 
 The following global options apply to `vtctl`:
 
-
 | Name | Type | Definition |
 | :------------------------------------ | :--------- | :----------------------------------------------------------------------------------------- |
 | --alsologtostderr | | log to standard error as well as files |

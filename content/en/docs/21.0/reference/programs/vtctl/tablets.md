@@ -33,7 +33,6 @@ Deprecated. It is no longer necessary to run this command to initialize a tablet
 | shard | string | The shard to which this tablet belongs |
 | tags | string | A comma-separated list of key:value pairs that are used to tag the tablet |
 
-
 #### Arguments
 
 * <code>&lt;tablet alias&gt;</code> &ndash; Required. A Tablet Alias uniquely identifies a vttablet. The argument value is in the format <code>&lt;cell name&gt;-&lt;uid&gt;</code>.
@@ -49,11 +48,9 @@ Deprecated. It is no longer necessary to run this command to initialize a tablet
   * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
   * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential primary tablet.
 
-
 #### Errors
 
 * the <code>&lt;tablet alias&gt;</code> and <code>&lt;tablet type&gt;</code> arguments are both required for the <code>&lt;InitTablet&gt;</code> command This error occurs if the command is not called with exactly 2 arguments.
-
 
 ### GetTablet
 
@@ -70,7 +67,6 @@ Outputs a JSON structure that contains information about the Tablet.
 #### Errors
 
 * the <code>&lt;tablet alias&gt;</code> argument is required for the <code>&lt;GetTablet&gt;</code> command This error occurs if the command is not called with exactly one argument.
-
 
 ### IgnoreHealthError
 
@@ -94,7 +90,6 @@ Deprecated. Updates the IP address and port numbers of a tablet.
 | mysql_host | string | The mysql host for the mysql server |
 | vt-port | Int | The main port for the vttablet process |
 
-
 #### Arguments
 
 * <code>&lt;tablet alias&gt;</code> &ndash; Required. A Tablet Alias uniquely identifies a vttablet. The argument value is in the format <code>&lt;cell name&gt;-&lt;uid&gt;</code>.
@@ -116,7 +111,6 @@ Deletes tablet(s) from the topology.
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | allow_primary | Boolean | Allows for the primary tablet of a shard to be deleted. Use with caution. |
-
 
 #### Arguments
 
@@ -207,7 +201,6 @@ Changes the db type for the specified tablet, if possible. This command is used 
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | dry-run | Boolean | Lists the proposed change without actually executing it |
-
 
 #### Arguments
 
@@ -430,7 +423,6 @@ Reparent a tablet to the current primary in the shard. This only works if the cu
 
 * action <code>&lt;ReparentTablet&gt;</code> requires <code>&lt;tablet alias&gt;</code> This error occurs if the command is not called with exactly one argument.
 * active reparent commands disabled (unset the -disable_active_reparents flag to enable)
-
 
 ## See Also
 

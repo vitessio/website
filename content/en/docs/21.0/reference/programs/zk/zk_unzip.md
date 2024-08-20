@@ -24,7 +24,7 @@ zk unzip zktree.zip /zk/prefix
   -h, --help   help for unzip
 ```
 
-### SEE ALSO
+### See Also
 
 * [zk](../)	 - zk is a tool for wrangling zookeeper.
 

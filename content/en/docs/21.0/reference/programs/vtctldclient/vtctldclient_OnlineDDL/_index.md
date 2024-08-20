@@ -3,6 +3,7 @@ title: OnlineDDL
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient OnlineDDL
 
 Operates on online DDL (schema migrations).
@@ -13,7 +14,7 @@ Operates on online DDL (schema migrations).
   -h, --help   help for OnlineDDL
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -24,7 +25,7 @@ Operates on online DDL (schema migrations).
       --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 * [vtctldclient OnlineDDL cancel](./vtctldclient_onlineddl_cancel/)	 - Cancel one or all migrations, terminating any running ones as needed.

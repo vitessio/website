@@ -28,14 +28,14 @@ vtctldclient InitShardPrimary <keyspace/shard> <primary alias>
       --wait-replicas-timeout duration   Time to wait for replicas to catch up in reparenting. (default 30s)
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration   timeout for the total command (default 1h0m0s)
       --server string             server to use for connection (required)
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 

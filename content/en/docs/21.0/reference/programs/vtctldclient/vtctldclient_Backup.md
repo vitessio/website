@@ -3,6 +3,7 @@ title: Backup
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient Backup
 
 Uses the BackupStorage service on the given tablet to create and store a new backup.
@@ -21,7 +22,7 @@ vtctldclient Backup [--concurrency <concurrency>] [--allow-primary] [--increment
       --upgrade-safe                  Whether to use innodb_fast_shutdown=0 for the backup so it is safe to use for MySQL upgrades.
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -32,7 +33,7 @@ vtctldclient Backup [--concurrency <concurrency>] [--allow-primary] [--increment
       --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 

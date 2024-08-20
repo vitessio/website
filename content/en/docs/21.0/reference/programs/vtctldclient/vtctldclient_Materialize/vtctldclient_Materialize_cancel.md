@@ -3,6 +3,7 @@ title: Materialize cancel
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient Materialize cancel
 
 Cancel a Materialize VReplication workflow.
@@ -23,7 +24,7 @@ vtctldclient --server localhost:15999 Materialize --workflow product_sales --tar
   -h, --help   help for cancel
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -37,7 +38,7 @@ vtctldclient --server localhost:15999 Materialize --workflow product_sales --tar
   -w, --workflow string                      The workflow you want to perform the command on.
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient Materialize](../)	 - Perform commands related to materializing query results from the source keyspace into tables in the target keyspace.
 

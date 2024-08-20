@@ -13,7 +13,7 @@ Vitess was created in 2010 to solve the MySQL scalability challenges that the te
 
 Vitess let YouTube remove that logic from the application source code, introducing a proxy between the application and the database to route and manage database interactions. Since then, YouTube has scaled its user base by a factor of more than 50, greatly increasing its capacity to serve pages, process newly uploaded videos, and more. Even more importantly, Vitess is a platform that continues to scale.
 
-## Vitess becomes a CNCF project
+## Vitess Becomes a CNCF Project
 
 The [CNCF](https://www.cncf.io) serves as the vendor-neutral home for many of the fastest-growing open source projects. In [February 2018](https://www.cncf.io/blog/2018/02/05/cncf-host-vitess/) the Technical Oversight Committee (TOC) voted to accept Vitess as a CNCF incubation project. Vitess became the eighth CNCF project to graduate in [November 2019](https://www.cncf.io/announcement/2019/11/05/cloud-native-computing-foundation-announces-vitess-graduation/), joining Kubernetes, Prometheus, Envoy, CoreDNS, containerd, Fluentd, and Jaeger.
 

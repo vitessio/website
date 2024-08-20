@@ -3,6 +3,7 @@ title: GetTablets
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient GetTablets
 
 Looks up tablets according to filter criteria.
@@ -45,7 +46,7 @@ vtctldclient GetTablets [--strict] [{--cell $c1 [--cell $c2 ...] [--tablet-type 
       --tablet-type topodatapb.TabletType   Tablet type to filter by (e.g. primary or replica). (default UNKNOWN)
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -56,7 +57,7 @@ vtctldclient GetTablets [--strict] [{--cell $c1 [--cell $c2 ...] [--tablet-type 
       --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 

@@ -27,7 +27,7 @@ zk cp ./config /zk/path/
   -h, --help   help for cp
 ```
 
-### SEE ALSO
+### See Also
 
 * [zk](../)	 - zk is a tool for wrangling zookeeper.
 

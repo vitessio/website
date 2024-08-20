@@ -22,7 +22,7 @@ Vitess Sequences fill that gap:
 * Transparent use, similar to MySQL `auto_increment`: when the field is omitted in
   an `insert` statement, the next sequence value is used.
 
-## When *not* to use `auto_increment`
+## When *not* to Use `auto_increment`
 
 Let us start by exploring the limitations and drawbacks of using an
 `auto_increment` column.
@@ -145,6 +145,7 @@ Now any table that will be using the new sequence can reference it in its VSchem
 ```
 
 ## Initializing a Sequence
+
 The sequence backing table needs to be pre-populated with a single row where:
 
 * `id` must always be 0.
@@ -160,7 +161,7 @@ For example:
 insert into user_seq(id, next_id, cache) values(0, 1, 1000);
 ```
 
-### Accessing a Sequence directly
+### Accessing a Sequence Directly
 
 If a sequence is used to fill in an ID column for a table, nothing further needs to
 be done. Just sending no value for the column will make vtgate insert the next
@@ -176,7 +177,7 @@ select next value from user_seq;
 select next 5 values from user_seq;
 ```
 
-### Sequence limitations
+### Sequence Limitations
 
 Vitess sequences do not behave like a MySQL `auto_increment` column in all
 ways.  One significant example is if you mix cases where you provide values
@@ -209,8 +210,8 @@ mysql> select * from t1;
 4 rows in set (0.00 sec)
 ```
 
-
 Vitess sequence mixed insert case (`c1` is the sequence column):
+
 ``` sql
 mysql> insert into t1 (c1,c2) values (1,1),(2,2),(3,3);
 Query OK, 3 rows affected (0.04 sec)
@@ -228,6 +229,7 @@ mysql> select * from t1;
 mysql> insert into t1 (c2) values (4);
 ERROR 1062 (23000): transaction rolled back to reverse changes of partial DML execution: target: sharded.-80.primary: vttablet: Duplicate entry '1' for key 't1.PRIMARY' (errno 1062) (sqlstate 23000) (CallerID: user): Sql: "insert into t1(c2, c1) values (:_c2_0, :_c1_0)", BindVars: {__seq0: "type:INT64 value:\"1\""_c1_0: "type:INT64 value:\"1\""_c2_0: "type:INT64 value:\"4\""vtg1: "type:INT64 value:\"4\""}
 mysql> select * from t1;
+
 +----+------+
 | c1 | c2   |
 +----+------+

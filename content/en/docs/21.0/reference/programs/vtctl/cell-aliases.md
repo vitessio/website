@@ -46,7 +46,6 @@ Updates the content of a CellAlias with the provided parameters. Empty values an
 | :-------- | :--------- | :--------- |
 | cells | string |The list of cell names that are members of this alias. |
 
-
 #### Arguments
 
 * <code>&lt;alias&gt;</code> &ndash; Required. Alias name group to update.

@@ -37,7 +37,7 @@ Initializes and controls zookeeper with Vitess-specific configuration.
       --zk.myid uint                                                which server do you want to be? only needed when running multiple instance on one box, otherwise myid is implied by hostname
 ```
 
-### SEE ALSO
+### See Also
 
 * [zkctl init](./zkctl_init/)	 - Generates a new config and then starts zookeeper.
 * [zkctl shutdown](./zkctl_shutdown/)	 - Terminates a zookeeper server but keeps its data dir intact.

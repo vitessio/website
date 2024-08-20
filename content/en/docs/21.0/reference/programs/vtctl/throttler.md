@@ -26,7 +26,6 @@ Update tablet throttler configuration for all tablets of a given keyspace.
 
 ```UpdateThrottlerConfig -- --unthrottle-app="vreplication" commerce```
 
-
 #### Flags
 
 | Name | Type | Definition |
@@ -37,7 +36,6 @@ Update tablet throttler configuration for all tablets of a given keyspace.
 | `custom-query` | String | override the default replication lag measurement, and suggest a different query. Valid values are:<br />  - _empty_, meaning the throttler should use the default replication lag query<br />  - A `SELECT` that returns a single line, single column, floating point value<br />  - A `SHOW GLOBAL STATUS|VARIABLES LIKE '...'`, for example `show global status like 'threads_running'` |
 | `check-as-check-shard` | Boolean | this is the default behavior. A `/throttler/check` request checks the shard health. When using the default replication lag query, this is the desired check: the primary tablet's throttler responds by evaluating the overall lag throughout the shard/replicas |
 | `check-as-check-self` | Boolean | override default behavior, and this can be useful when a `--custom-query` is set. A `/throttler/check` request will only consider the tablet's own metrics, and not the overall shard metrics |
-
 
 #### Arguments
 

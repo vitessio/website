@@ -3,6 +3,7 @@ title: SourceShardAdd
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient SourceShardAdd
 
 Adds the SourceShard record with the provided index for emergencies only. It does not call RefreshState for the shard primary.
@@ -19,7 +20,7 @@ vtctldclient SourceShardAdd [--key-range <keyrange>] [--tables <table1,table2,..
       --tables strings     Comma-separated lists of tables to replicate (for MoveTables). Each table name is either an exact match, or a regular expression of the form "/regexp/".
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -30,7 +31,7 @@ vtctldclient SourceShardAdd [--key-range <keyrange>] [--tables <table1,table2,..
       --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 

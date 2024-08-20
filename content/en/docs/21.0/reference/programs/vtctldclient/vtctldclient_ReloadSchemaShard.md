@@ -3,6 +3,7 @@ title: ReloadSchemaShard
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient ReloadSchemaShard
 
 Reloads the schema on all tablets in a shard. This is done on a best-effort basis.
@@ -19,7 +20,7 @@ vtctldclient ReloadSchemaShard [--concurrency=10] [--include-primary] <keyspace/
       --include-primary     Also reload the primary tablet.
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -30,7 +31,7 @@ vtctldclient ReloadSchemaShard [--concurrency=10] [--include-primary] <keyspace/
       --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 

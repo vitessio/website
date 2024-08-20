@@ -6,7 +6,7 @@ aliases: ['/docs/launching/scalability-philosophy/']
 
 Scalability problems can be solved using many approaches. This document describes Vitess' approach to address these problems.
 
-## Small instances
+## Small Instances
 
 When deciding to shard or break databases up into smaller parts, it's tempting to break them just enough that they fit in one machine. In the industry, it’s common to run only one MySQL instance per host.
 
@@ -14,7 +14,7 @@ Vitess recommends that instances be broken up into manageable chunks (250GB per 
 
 There are fewer lock contentions to worry about, replication is a lot happier, production impact of outages is smaller, backups and restores run faster, and a lot more secondary advantages can be realized. For example, you can shuffle instances around to get better machine or rack diversity leading to even smaller production impact on outages, and improved resource usage.
 
-## Durability through replication
+## Durability Through Replication
 
 Traditional data storage software treated data as durable as soon as it was flushed to disk. However, this approach is impractical in today’s world of commodity hardware. Such an approach also does not address disaster scenarios.
 
@@ -24,7 +24,7 @@ Many of the workflows in Vitess have been built with this approach in mind. For 
 
 Relying on replication also allows you to loosen some of the disk-based durability settings. For example, you can turn off `sync_binlog`, which greatly reduces the number of IOPS to the disk thereby increasing effective throughput.
 
-## Consistency model
+## Consistency Model
 
 Before sharding or moving tables to different keyspaces, the application needs to be verified (or changed) such that it can tolerate the following changes:
 
@@ -51,7 +51,7 @@ As for atomicity, the following levels are supported:
 * `MULTI`: multi-db transactions with best effort commit.
 * `TWOPC`: multi-db transactions with 2PC commit.
 
-### No active-active replication
+### No active-active Replication
 
 Vitess doesn’t support active-active replication setup (previously called multi-master). It has alternate ways of addressing most of the use cases that are typically solved by such a configuration.
 

@@ -126,7 +126,7 @@ Currently, Vitess does not have support for recursive CTEs.
 ### Window Functions
 Vitess does not yet support Window Functions.
 
-### Killing running queries
+### Killing Running Queries
 
 In v18, Vitess introduced the ability to terminate running queries using the [`KILL` command](https://dev.mysql.com/doc/refman/8.0/en/kill.html) through VTGate.
 To execute a "kill connection" or "kill query" statement, the client needs to establish a new connection.

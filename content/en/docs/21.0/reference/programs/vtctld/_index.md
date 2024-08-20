@@ -3,6 +3,7 @@ title: vtctld
 series: vtctld
 commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
+
 ## vtctld
 
 The Vitess cluster management daemon.
@@ -197,4 +198,3 @@ vtctld \
       --vmodule vModuleFlag                                              comma-separated list of pattern=N settings for file-filtered logging
       --vtctld_sanitize_log_messages                                     When true, vtctld sanitizes logging.
 ```
-

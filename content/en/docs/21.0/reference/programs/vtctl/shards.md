@@ -24,7 +24,6 @@ Creates the specified shard.
 | force | Boolean | Proceeds with the command even if the keyspace already exists |
 | parent | Boolean | Creates the parent keyspace if it doesn't already exist |
 
-
 #### Arguments
 
 * <code>&lt;keyspace/shard&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables as well as the shard associated with the command. The keyspace must be identified by a string that does not contain whitespace, while the shard is typically identified by a string in the format <code>&lt;range start&gt;-&lt;range end&gt;</code>.
@@ -63,7 +62,6 @@ Validates that all nodes that are reachable from this shard are consistent.
 | :-------- | :--------- | :--------- |
 | ping-tablets | Boolean | Indicates whether all tablets should be pinged during the validation process |
 
-
 #### Arguments
 
 * <code>&lt;keyspace/shard&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables as well as the shard associated with the command. The keyspace must be identified by a string that does not contain whitespace, while the shard is typically identified by a string in the format <code>&lt;range start&gt;-&lt;range end&gt;</code>.
@@ -87,7 +85,6 @@ Shows the replication status of each replica machine in the shard graph. In this
 #### Errors
 
 * the <code>&lt;keyspace/shard&gt;</code> argument is required for the <code>&lt;ShardReplicationPositions&gt;</code> command This error occurs if the command is not called with exactly one argument.
-
 
 ### ListShardTablets
 
@@ -158,7 +155,6 @@ RefreshStateByShard &lt;keyspace/shard&gt;</pre>
 | disable_query_service | Boolean | Disables query service on the provided nodes. This flag requires 'denied_tables' and 'remove' to be unset, otherwise it's ignored.                                      |
 | remove | Boolean | Removes cells for MoveTables.                                                                                                                                           |
 
-
 #### Arguments
 
 * <code>&lt;keyspace/shard&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables as well as the shard associated with the command. The keyspace must be identified by a string that does not contain whitespace, while the shard is typically identified by a string in the format <code>&lt;range start&gt;-&lt;range end&gt;</code>.
@@ -173,7 +169,6 @@ RefreshStateByShard &lt;keyspace/shard&gt;</pre>
   * <code>replica</code> &ndash; A replicated copy of data ready to be promoted to primary
   * <code>restore</code> &ndash; A tablet that is restoring from a snapshot. Typically, this happens at tablet startup, then it goes to its right state.
   * <code>spare</code> &ndash; A replicated copy of data that is ready but not serving query traffic. The data could be a potential primary tablet.
-
 
 #### Errors
 
@@ -276,7 +271,6 @@ Removes the cell from the shard's Cells list.
 | force | Boolean | Proceeds even if the cell's topology service cannot be reached. The assumption is that you turned down the entire cell, and just need to update the global topo data. |
 | recursive | Boolean | Also delete all tablets in that cell belonging to the specified shard. |
 
-
 #### Arguments
 
 * <code>&lt;keyspace/shard&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables as well as the shard associated with the command. The keyspace must be identified by a string that does not contain whitespace, while the shard is typically identified by a string in the format <code>&lt;range start&gt;-&lt;range end&gt;</code>.
@@ -300,7 +294,6 @@ Deletes the specified shard(s). In recursive mode, it also deletes all tablets b
 | :-------- | :--------- | :--------- |
 | even_if_serving | Boolean | Remove the shard even if it is serving. Use with caution. |
 | recursive | Boolean | Also delete all tablets belonging to the shard. |
-
 
 #### Arguments
 
@@ -361,7 +354,6 @@ Sets the initial primary for a shard. Will make all other tablets in the shard r
 | force | Boolean | will force the reparent even if the provided tablet is not writable or the shard primary |
 | wait_replicas_timeout | Duration | time to wait for replicas to catch up in reparenting |
 
-
 #### Arguments
 
 * <code>&lt;keyspace/shard&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables as well as the shard associated with the command. The keyspace must be identified by a string that does not contain whitespace, while the shard is typically identified by a string in the format <code>&lt;range start&gt;-&lt;range end&gt;</code>.
@@ -401,7 +393,6 @@ failover time.
 | new_primary | string | alias of a tablet that should be the new primary |
 | wait_replicas_timeout | Duration | time to wait for replicas to catch up in reparenting |
 
-
 #### Errors
 
 * action <code>&lt;PlannedReparentShard&gt;</code> requires --keyspace_shard=<code>&lt;keyspace/shard&gt;</code> [--new_primary=<code>&lt;tablet alias&gt;</code>] [--avoid_tablet=<code>&lt;tablet alias&gt;</code>] This error occurs if the command is not called with exactly 0 arguments.
@@ -424,13 +415,11 @@ Reparents the shard to the new primary. Assumes the old primary is dead and not 
 | new_primary | string | alias of a tablet that should be the new primary |
 | wait_replicas_timeout | Duration | time to wait for replicas to catch up in reparenting |
 
-
 #### Errors
 
 * action <code>&lt;EmergencyReparentShard&gt;</code> requires --keyspace_shard=<code>&lt;keyspace/shard&gt;</code> --new_primary=<code>&lt;tablet alias&gt;</code> This error occurs if the command is not called with exactly 0 arguments.
 * active reparent commands disabled (unset the --disable_active_reparents flag to enable)
 * cannot use legacy syntax and flag --<code>&lt;new_primary&gt;</code> for action <code>&lt;EmergencyReparentShard&gt;</code> at the same time
-
 
 ### TabletExternallyReparented
 

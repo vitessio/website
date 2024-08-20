@@ -18,7 +18,7 @@ This document describes the [`vtctl`](../../../reference/programs/vtctl/) comman
 
 It is not recommended to run schema changes through this command. Instead, use [managed, online schema changes](../../../user-guides/schema-changes/managed-online-schema-changes/).
 
-## Reviewing your schema
+## Reviewing Your Schema
 
 This section describes the following vtctl commands, which let you look at the schema and validate its consistency across tablets or shards:
 
@@ -68,7 +68,7 @@ The [`GetVSchema`](../../../reference/programs/vtctl/#getvschema) command displa
 
 The [`GetSrvVSchema`](../../../reference/programs/vtctl/#getsrvvschema) command displays the combined VSchema for a given cell.
 
-## Changing your schema
+## Changing Your Schema
 
 This section describes the following commands:
 
@@ -99,7 +99,7 @@ Further reading:
 * [Managed schema changes](../../../user-guides/schema-changes/managed-online-schema-changes/)
 * [DDL strategies](../../../user-guides/schema-changes/ddl-strategies/)
 
-#### Permitted schema changes
+#### Permitted Schema Changes
 
 The `ApplySchema` command supports these commands:
 

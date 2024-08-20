@@ -35,7 +35,7 @@ Point in Time Recovery leverages two Vitess features:
 1. The use of `SNAPSHOT` keyspaces for recovery of the last backup before a requested specific timestamp to restore to.
 2. Integration with a binlog server to allow vttablet to apply binary logs from the recovered backup up to the specified timestamp.
 
-### Use cases
+### Use Cases
 
 - Accidental deletion of data, e.g. dropping a table by mistake, running an UPDATE or DELETE with an incorrect WHERE clause, etc.
 - Corruption of data due to application bugs.
@@ -47,7 +47,7 @@ Point in Time Recovery leverages two Vitess features:
 - There should be continuous binlogs available from the backup time to the desired point in time.
 - This feature is tested using [Ripple](https://github.com/google/mysql-ripple) as the binlog server.  However, it should be possible to use a MySQL instance as source for the binlogs as well.
 
-### Example usage
+### Example Usage
 
 To use this feature, you need a usable backup of Vitess data and continuous binlogs.
 

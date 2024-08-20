@@ -24,7 +24,7 @@ zk chmod n+mode /zk/path
   -h, --help   help for chmod
 ```
 
-### SEE ALSO
+### See Also
 
 * [zk](../)	 - zk is a tool for wrangling zookeeper.
 

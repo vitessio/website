@@ -7,7 +7,7 @@ aliases: ['/docs/tutorials/vttestserver/']
 
 This guide covers using the vttestserver docker image for testing purposes. This is also the docker image that we use for testing in [Vitess Framework Testing](https://github.com/planetscale/vitess-framework-testing).
 
-## Get the docker image
+## Get the Docker Image
 
 The first step is to get the docker image. There are two ways of doing this :
 
@@ -24,7 +24,7 @@ Clone the GitHub repository via:
 cd vitess
 ```
 
-#### Build the docker image
+#### Build the Docker Image
 
 In your shell, execute:
 
@@ -43,11 +43,11 @@ docker pull vitess/vttestserver:mysql57
 docker pull vitess/vttestserver:mysql80
 ```
 
-## Run the docker image
+## Run the Docker Image
 
 At this point, you should have a docker image named `vitess/vttestserver:mysql57` or `vitess/vttestserver:mysql80`.
 
-### Environment variables
+### Environment Variables
 
 The docker image expects some of the environment variables to be set to function properly. The following table lists all the environment variables available along with their usages.
 
@@ -69,18 +69,18 @@ The docker image expects some of the environment variables to be set to function
 
 Environment variables in docker can be specified using the `-e` aka `--env` flag.
 
-### Sending queries to vttestserver container from outside
+### Sending Queries to vttestserver Container from Outside
 
 The vtgate listens for MySQL connections on 3 + the `PORT` environment variable specified. i.e. if you specify `PORT` to be 33574, then vtgate will be listening to connections on 33577, on the `MYSQL_BIND_HOST` which defaults to localhost. But this port will be on the docker container side. To connect to vtgate externally from a MySQL client, you will need to publish that port as well and specify the `MYSQL_BIND_HOST` to `0.0.0.0`. This can be done via the `-p` aka `--publish` flag to docker. For eg: adding `-p 33577:33577` to the `docker
 run` command will publish the container's 33577 port to your local 33577 port, which can now be used to connect to the vtgate.
 
-### Viewing the vtcombo `/debug/status` dashboard and running vtctld commands
+### Viewing the vtcombo `/debug/status` Dashboard and Running vtctld Commands
 
 The vtcombo `/debug/status` page is viewable at the port specified by the `PORT` environment variable on the docker side. To view it in a browser outside, you will need to publish that port as well and specify the `VTCOMBO_BIND_HOST` to `0.0.0.0`. This can be done via the `-p` aka `--publish` flag to docker.
 
 Similarily, vtctld listens for grpc requests at the port 1 + `PORT`. So, in order to run vtctld commands using vtctldclient binary, this port must also be published.
  
-### Persisting container data
+### Persisting Container Data
 
 If you wish to keep the state of the test container across reboots, such as when running the vttestserver container as a database container in local application development environments, you may optionally pass the `--persistent_mode` flag, along with a `--data_dir` directory which is bound to a docker volume. Due to a bug, the `--port` argument must also be present for correct operation.
 

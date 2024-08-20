@@ -11,7 +11,7 @@ This document explains the types of reparenting that Vitess supports:
 * [Active reparenting](../../configuration-advanced/reparenting/#active-reparenting) occurs when Vitess manages the entire reparenting process.
 * [External reparenting](../../configuration-advanced/reparenting/#external-reparenting) occurs when another tool handles the reparenting process, and Vitess just updates its topology service, replication graph, and serving graph to accurately reflect primary-replica relationships.
 
-## MySQL requirements
+## MySQL Requirements
 
 ### GTIDs
 
@@ -20,7 +20,7 @@ Vitess requires the use of global transaction identifiers ([GTIDs](https://dev.m
 * During active reparenting, Vitess uses GTIDs to initialize the replication process and then depends on the GTID stream to be correct when reparenting. (During external reparenting, Vitess assumes the external tool manages the replication process.)
 * During resharding, Vitess uses GTIDs for [VReplication](../../../reference/vreplication), the process by which source tablet data is transferred to the proper destination tablets.
 
-### Semisynchronous replication
+### Semisynchronous Replication
 
 Vitess does not depend on [semisynchronous replication](https://dev.mysql.com/doc/refman/8.0/en/replication-semisync.html) but encourages its usage. Larger Vitess deployments typically do implement semisynchronous replication.
 
@@ -35,7 +35,7 @@ Both commands lock the Shard record in the global topology service. The two comm
 
 Both commands are both dependent on the global topology service being available, and they both insert rows in the topology service's `_vt.reparent_journal` table. As such, you can review your database's reparenting history by inspecting that table.
 
-### PlannedReparentShard: Planned reparenting
+### PlannedReparentShard: Planned Reparenting
 
 The `PlannedReparentShard` command reparents a healthy shard to a new primary. It can be used to initialize the shard primary when the shard is brought up. If it is used to change the primary of an already running shard, then both the current and new primary must be up and running. In case the current primary is down, use `EmergencyReparentShard` instead.
 
@@ -58,7 +58,7 @@ This command performs the following actions when used to initialize the first pr
 
 The new primary (if unspecified) is chosen using the configured [Durability Policy](../../configuration-basic/durability_policy).
 
-### EmergencyReparentShard: Emergency reparenting
+### EmergencyReparentShard: Emergency Reparenting
 
 The `EmergencyReparentShard` command is used to force a reparent to a new primary when the current primary is unavailable. The command assumes that data cannot be retrieved from the current primary because it is dead or not working properly.
 

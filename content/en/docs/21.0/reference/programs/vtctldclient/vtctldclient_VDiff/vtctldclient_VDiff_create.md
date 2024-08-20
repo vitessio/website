@@ -3,6 +3,7 @@ title: VDiff create
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient VDiff create
 
 Create and run a VDiff to compare the tables involved in a VReplication workflow between the source and target.
@@ -40,7 +41,7 @@ vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --targe
       --wait-update-interval duration             When waiting on a vdiff to finish, check and display the current status this often. (default 1m0s)
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -54,7 +55,7 @@ vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --targe
   -w, --workflow string                      The workflow you want to perform the command on.
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient VDiff](../)	 - Perform commands related to diffing tables involved in a VReplication workflow between the source and target.
 

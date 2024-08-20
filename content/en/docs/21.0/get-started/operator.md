@@ -43,7 +43,7 @@ Install the operator:
 kubectl apply -f operator.yaml
 ```
 
-## Bring up an initial cluster
+## Bring up an Initial Cluster
 
 In this directory, you will see a group of yaml files. The first digit of each file name indicates the phase of example. The next two digits indicate the order in which to execute them. For example, `101_initial_cluster.yaml` is the first file of the first phase. We shall execute that now:
 
@@ -51,7 +51,7 @@ In this directory, you will see a group of yaml files. The first digit of each f
 kubectl apply -f 101_initial_cluster.yaml
 ```
 
-### Verify cluster
+### Verify Cluster
 
 You can check the state of your cluster with `kubectl get pods`. After a few minutes, it should show that all pods are in the status of running:
 
@@ -97,7 +97,7 @@ vtctldclient ApplySchema --sql-file="create_commerce_schema.sql" commerce
 vtctldclient ApplyVSchema --vschema-file="vschema_commerce_initial.json" commerce
 ```
 
-### Connect to your cluster
+### Connect to Your Cluster
 
 You should now be able to connect to the VTGate Server in your cluster with the MySQL client:
 

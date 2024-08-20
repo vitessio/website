@@ -17,7 +17,7 @@ zkctl shutdown [flags]
   -h, --help   help for shutdown
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --alsologtostderr                                             log to standard error as well as files
@@ -46,7 +46,7 @@ zkctl shutdown [flags]
       --zk.myid uint                                                which server do you want to be? only needed when running multiple instance on one box, otherwise myid is implied by hostname
 ```
 
-### SEE ALSO
+### See Also
 
 * [zkctl](../)	 - Initializes and controls zookeeper with Vitess-specific configuration.
 

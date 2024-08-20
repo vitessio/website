@@ -69,7 +69,7 @@ Vitess handles system variables in one of five different ways:
 In addition to this, Vitess makes sure that @@version includes both the emulated MySQL version and the Vitess version, such as: `5.7.9-vitess-14.0.0`. This value can be changed by using the vtgate flag `--mysql_server_version`.
 
 
-### Special functions
+### Special Functions
 
 There are a few special functions that Vitess handles without delegating to MySQL.
 

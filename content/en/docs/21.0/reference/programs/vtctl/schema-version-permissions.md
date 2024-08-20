@@ -25,7 +25,6 @@ Displays the full schema for a tablet, or just the schema for the specified tabl
 | table_names_only | Boolean | Only displays table names that match |
 | tables | string | Specifies a comma-separated list of tables for which we should gather information. Each is either an exact match, or a regular expression of the form /regexp/ |
 
-
 #### Arguments
 
 * <code>&lt;tablet alias&gt;</code> &ndash; Required. A Tablet Alias uniquely identifies a vttablet. The argument value is in the format <code>&lt;cell name&gt;-&lt;uid&gt;</code>.
@@ -138,7 +137,6 @@ Validates that the schema on the primary tablet for shard 0 matches the schema o
 | exclude_tables | string | Specifies a comma-separated list of tables to exclude. Each is either an exact match, or a regular expression of the form /regexp/ |
 | include-views | Boolean | Includes views in the validation |
 
-
 #### Arguments
 
 * <code>&lt;keyspace name&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables. Vitess distributes keyspace shards into multiple machines and provides an SQL interface to query the data. The argument value must be a string that does not contain whitespace.
@@ -191,7 +189,6 @@ Copies the schema from a source shard's primary (or a specific tablet) to a dest
 | include-views | Boolean | Includes views in the output |
 | tables | string | Specifies a comma-separated list of tables to copy. Each is either an exact match, or a regular expression of the form /regexp/ |
 | wait_replicas_timeout | Duration | The amount of time to wait for replicas to receive the schema change via replication. |
-
 
 #### Arguments
 
@@ -359,7 +356,6 @@ ApplyRoutingRules -- {--rules=<rules> | --rules_file=<rules_file>} [--cells=c1,c
 | rules | string | Specify rules as a string. |
 | rules_file | string | Specify rules in a file. |
 
-
 ### RebuildVSchemaGraph
 
 Rebuilds the cell-specific SrvVSchema from the global VSchema objects in the provided cells (or all cells if none provided).
@@ -373,7 +369,6 @@ Rebuilds the cell-specific SrvVSchema from the global VSchema objects in the pro
 | Name | Type | Definition |
 | :-------- | :--------- | :--------- |
 | cells | string | Specifies a comma-separated list of cells to look for tablets |
-
 
 #### Errors
 

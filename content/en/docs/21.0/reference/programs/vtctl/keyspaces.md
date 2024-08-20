@@ -382,7 +382,6 @@ VDiff -- [--source_cell=&lt;cell&gt;] [--target_cell=&lt;cell&gt;] [--tablet_typ
 | wait | Boolean | When creating or resuming a vdiff, wait for it to finish before exiting |
 | wait-update-interval | Duration |When waiting on a vdiff to finish, check and display the current status this often (default 1m0s) |
 
-
 ## See Also
 
 * [vtctl command index](../../vtctl)

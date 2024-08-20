@@ -3,6 +3,7 @@ title: init
 series: mysqlctl
 commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
+
 ## mysqlctl init
 
 Initializes the directory structure and starts mysqld.
@@ -34,7 +35,7 @@ mysqlctl \
       --wait_time duration        How long to wait for mysqld startup. (default 5m0s)
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --alsologtostderr                                             log to standard error as well as files
@@ -113,7 +114,7 @@ mysqlctl \
       --vmodule vModuleFlag                                         comma-separated list of pattern=N settings for file-filtered logging
 ```
 
-### SEE ALSO
+### See Also
 
 * [mysqlctl](../)	 - mysqlctl initializes and controls mysqld with Vitess-specific configuration.
 

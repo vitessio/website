@@ -22,7 +22,6 @@ Validates that all nodes reachable from the global replication graph and that al
 | :-------- | :--------- | :--------- |
 | ping-tablets | Boolean | Indicates whether all tablets should be pinged during the validation process |
 
-
 ### ListAllTablets
 
 Lists all tablets in an awk-friendly way.

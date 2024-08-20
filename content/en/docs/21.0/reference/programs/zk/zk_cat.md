@@ -29,7 +29,7 @@ zk cat -l /zk/path1 /zk/path2
   -l, --longListing   long listing
 ```
 
-### SEE ALSO
+### See Also
 
 * [zk](../)	 - zk is a tool for wrangling zookeeper.
 

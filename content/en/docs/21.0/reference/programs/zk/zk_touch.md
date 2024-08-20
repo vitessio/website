@@ -38,7 +38,7 @@ zk touch -p /zk/path
   -c, --touchonly      touch only - don't create
 ```
 
-### SEE ALSO
+### See Also
 
 * [zk](../)	 - zk is a tool for wrangling zookeeper.
 

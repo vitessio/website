@@ -3,6 +3,7 @@ title: LookupVindex create
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient LookupVindex create
 
 Create the Lookup Vindex in the specified keyspace and backfill it with a VReplication workflow.
@@ -34,7 +35,7 @@ vtctldclient --server localhost:15999 LookupVindex --name corder_lookup_vdx --ta
       --type string                        The type of Lookup Vindex to create.
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -47,7 +48,7 @@ vtctldclient --server localhost:15999 LookupVindex --name corder_lookup_vdx --ta
       --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient LookupVindex](../)	 - Perform commands related to creating, backfilling, and externalizing Lookup Vindexes using VReplication workflows.
 

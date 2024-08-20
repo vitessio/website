@@ -253,7 +253,7 @@ source ../common/env.sh
 
 Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctldclient` or close your session.
 
-## Connect to your cluster
+## Connect to Your Cluster
 
 You should now be able to connect to the VTGate server that was started in `101_initial_cluster.sh`:
 

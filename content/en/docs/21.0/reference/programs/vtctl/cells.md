@@ -23,7 +23,6 @@ Registers a local topology service in a new cell by creating the CellInfo with t
 | root | string | The root path the topology service is using for that cell. |
 | server_address | string | The address the topology service is using for that cell. |
 
-
 #### Arguments
 
 * <code>&lt;addr&gt;</code> &ndash; Required.

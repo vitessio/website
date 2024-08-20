@@ -40,7 +40,7 @@ Vitess served all YouTube database traffic for over five years. Many enterprises
     - Vertical and Horizontal sharding support
     - Multiple sharding schemes, with the ability to plug-in custom ones
 
-## Comparisons to other storage options
+## Comparisons to Other Storage Options
 
 The following sections compare Vitess to two common alternatives, a vanilla MySQL implementation and a NoSQL implementation.
 

@@ -150,7 +150,7 @@ You can alternatively specify `--all-cells` if you want to replicate from source
 
 #### --defer-secondary-keys
 **optional**\
-**default** false
+**defaulteserved connections** false
 
 {{< warning >}}
 This flag is currently **experimental**.

@@ -21,7 +21,7 @@ minimal invocation of the `vtadmin` and `vtadmin-web` binaries.
 
 - Building `vtadmin-web` requires [node](https://nodejs.org/en/) at the version given in the [package.json file](https://github.com/vitessio/vitess/blob/main/web/vtadmin/package.json).
 
-### 1. Define the cluster configuration
+### 1. Define the Cluster Configuration
 
 VTAdmin is mapped to one or more Vitess clusters two ways:
 
@@ -101,7 +101,7 @@ For example, you should avoid applying a `*` actor to a write action, or a `*` a
 
 For further reading on VTAdmin's RBAC design, please refer to the [reference page][rbac_docs].
 
-### Deploy in a trusted environment
+### Deploy in a Trusted Environment
 
 There is no trust boundary between `vtadmin-web` and `vtadmin-api`, with deployment-specific authentication mechanisms being left to the operator to design for their specific environment.
 As such, you should deploy VTAdmin **within** a trusted environment, for example, behind a single sign-on (SSO) integration, such as [okta](https://developer.okta.com/docs/guides/sign-into-web-app-redirect/go/main/).

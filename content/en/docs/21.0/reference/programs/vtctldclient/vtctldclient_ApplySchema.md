@@ -3,6 +3,7 @@ title: ApplySchema
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient ApplySchema
 
 Applies the schema change to the specified keyspace on every primary, running in parallel on all shards. The changes are then propagated to replicas via replication.
@@ -41,7 +42,7 @@ vtctldclient ApplySchema [--ddl-strategy <strategy>] [--uuid <uuid> ...] [--migr
       --wait-replicas-timeout duration   Amount of time to wait for replicas to receive the schema change via replication. (default 10s)
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -52,7 +53,7 @@ vtctldclient ApplySchema [--ddl-strategy <strategy>] [--uuid <uuid> ...] [--migr
       --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 

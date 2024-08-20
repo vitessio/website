@@ -3,6 +3,7 @@ title: Query Consolidation
 weight: 50
 aliases: []
 ---
+
 Query consolidation is a VTTablet feature meant to protect your database from an overload caused by a spike in QPS for a specific query.
 
 Without this feature enabled such spikes can completely overwhelm the database. With this feature enabled the following will occur: when a vttablet receives a query, if an identical query is already in the process of being executed, the query will then wait.

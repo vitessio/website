@@ -22,7 +22,7 @@ It should also be noted that while Vitess provides the mechanism for securing th
 
 Indeed, the hardest part of deploying TLS with Vitess in a large organization may be to integrate with whatever certificate policies and procedures the organization mandates. It should be noted that the manual issuing and rotation of certificates in a Vitess environment of a non-trivial size is impractical, and some provisioning and configuration management automation will need to be built.
 
-## Protocols involved
+## Protocols Involved
 
 Of all the data, meta-data and control paths enumerated above, they use one of three protocols:
 
@@ -49,7 +49,7 @@ All three the protocol types above use TLS in one form or another to encrypt com
     * If required, adjust other Vitess component options to enforce/require
       TLS-only communications.
 
-## Server authentication
+## Server Authentication
 
 In addition to encrypting the connection, you may want or need to configure client-side server authentication.  This is the process by which the client verifies that the server it is trying to establish a TLS connection to is who they claim to be, and not an imposter or man-in-the-middle.  We achieve this by:
 
@@ -57,7 +57,7 @@ In addition to encrypting the connection, you may want or need to configure clie
     * Install the CA cert used by your certificate issuing process to sign the server component certificates.
     * Adjust the Vitess client component options to verify the server certificate using the installed CA cert.  This would typically involve specifying the CA cert, as well as the server or common name to expect from the server component, if it isn't the same as the DNS name (or has an IP SAN configured).
 
-## Client authentication
+## Client Authentication
 
 Client authentication in Vitess can take two forms, depending on the protocol in question:
 
@@ -68,7 +68,7 @@ Client authentication in Vitess can take two forms, depending on the protocol in
 
 We will now cover how to setup the various TLS component combinations. We will start with the data path, then move on to the control paths. We will handle [encryption](#encryption) and [server authentication](#server-authentication) together, and then handle [client authentication](#client-authentication) separately.
 
-### Certificate generation
+### Certificate Generation
 
 As discussed above, large organizations will often have established tools to secure a TLS certificate hierarchy and issue certificates. For the purpose of these walkthroughs, we could use bare `openssl` commands to step through every detail. However, since we consider this an implementation detail that is likely to vary from user to user, we will leverage a shell-script-based tool called [easy-rsa](https://github.com/OpenVPN/easy-rsa) that uses `openssl` under the covers, and hides much of the complexity.
 
@@ -371,7 +371,7 @@ If you just wish to encrypt the vttablet -> MySQL server communication and you d
 
 Note that using the above `db_flags` will also result in the MySQL to MySQL communication for replication between the replica/rdonly instances of a Vitess shard and its primary to be encrypted, as long as the upstream MySQL instance the replica is connecting to has been configured correctly to support TLS MySQL protocol connections (see above).
 
-## vttablet data and control paths
+## vttablet Data and Control Paths
 
 In Vitess, communication between vtgate and vttablet instances are via gRPC. gRPC uses HTTP/2 as a transport protocol, but by default this is not encrypted in Vitess.  To secure this data path you need to, at a minimum, configure TLS for gRPC on the server (vttablet) side.
 
@@ -495,7 +495,7 @@ In case of VTOrc, you will need to add following to VTOrc instance to successful
   --tablet_manager_grpc_server_name vttablet1 --tablet_manager_grpc_ca /home/user/config/ca.crt
 ```
 
-#### vttablet to vtablet:  vreplication within or across shards
+#### vttablet to vtablet:  vreplication within or Across Shards
 
 For vreplication to work between vttablet instances once the gRPC server TLS options above are activated, you will need to add the following additional vttablet options:
 
@@ -616,7 +616,7 @@ At this point, all vtctldclient connections to vtctld will need the appropriate 
   --vtctld_grpc_ca /home/user/config/ca.crt --vtctld_grpc_server_name vtctld1
 ```
 
-## Topology server data paths
+## Topology Server Data Paths
 
 Vitess supports several topology server implementations, with the major ones being `etcd` and `ZooKeeper`. Since each of these use their own protocols, securing communications between Vitess components (like vtgate, vttablet and vtctld) and the topology server is specific to the topology server implementation.  We we will cover `etcd` first, then `ZooKeeper`.
 
@@ -628,11 +628,11 @@ It should be noted that regardless of the implementation, no sensitive data is s
  * Only metadata (VSchema, keyspace and shard information) is stored in the
    topology server data store.
 
-### Configuring etcd for secure connections
+### Configuring etcd for Secure Connections
 
 We will not cover setting up `etcd` with certificates in this guide. You can consult the `etcd` documenation [here](https://etcd.io/docs/v3.5/op-guide/security/). Note that you can use `easy-rsa` as above to generate your server private key and certificate pairs. If you do not require client authentication, that is sufficient, and you then just have to distribute your CA certificate (`/home/user/CA/pki/ca.crt` in the examples above) to your clients, and proceed as in the next section.
 
-### Configuring secure connectivity between vtgate/vttablet/vtctld and etcd
+### Configuring Secure Connectivity between vtgate/vttablet/vtctld and etcd
 
 The Vitess servers (vtgate/vttablet/vtctld) share the same set of parameters to connect via TLS to `etcd`:
 
@@ -642,7 +642,7 @@ The Vitess servers (vtgate/vttablet/vtctld) share the same set of parameters to 
 
 As is necessary for your design/architecture, add one or more of the above options to your vtgate, vttablet and vtctld instances.
 
-### Configuring etcd for secure connections
+### Configuring etcd for Secure Connections
 
 We will just mention the basic flags here for getting `etcd` to accept encrypted client connections.  We will not cover the flags to make sure that communication between `etcd` cluster members (peers) are encrypted.
 
@@ -658,11 +658,11 @@ Note that the Vitess client components will negotiate any of the standard golang
 
 It is also possible to configure `etcd` to require/verify client certificates from the clients; for that use the `--trusted-ca-file` option to point to the PEM CA cert that the client certs are signed with.
 
-### Configuring ZooKeeper for secure connections
+### Configuring ZooKeeper for Secure Connections
 
 We will not cover setting up `Zookeeper` with certificates in this guide. You can consult the `Zookeeper` documenation [here](https://cwiki.apache.org/confluence/display/ZOOKEEPER/ZooKeeper+SSL+User+Guide), specifically the `Server` section. Note that you can use `easy-rsa` as above to generate your server private key and certificate pairs. If you do not require client authentication, that is sufficient, and you then just have to distribute your CA certificate (`/home/user/CA/pki/ca.crt` in the examples above) to your clients, and proceed as in the next section.
 
-### Configuring secure connectivity between vtgate/vttablet/vtctld and ZooKeeper
+### Configuring Secure Connectivity between vtgate/vttablet/vtctld and ZooKeeper
 
 The Vitess servers (vtgate/vttablet/vtctld) share the same set of parameters to connect via TLS to `Zookeeper`:
 
@@ -673,7 +673,7 @@ The Vitess servers (vtgate/vttablet/vtctld) share the same set of parameters to 
 
 As is necessary for your design/architecture, add one or more of the above options to your vtgate, vttablet and vtctld instances.
 
-## Generating client certificates with easy-rsa
+## Generating client Certificates with easy-rsa
 
 `easy-rsa` can also be used to generate client certificates (i.e for mTLS or mutual TLS).  Mutual TLS needs at least two additional parameters on the client side, and one additional parameter on the server side:
 

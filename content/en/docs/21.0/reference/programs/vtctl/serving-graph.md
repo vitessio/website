@@ -64,7 +64,6 @@ Outputs a JSON structure that contains information about the SrvVSchema.
 DeleteSrvVSchema  <cell>
 ```
 
-
 ## See Also
 
 * [vtctl command index](../../vtctl)

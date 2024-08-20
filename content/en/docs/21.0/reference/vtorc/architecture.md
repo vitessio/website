@@ -29,7 +29,7 @@ stateDiagram-v2
   problems --> fixes: RPCs to Vttablets
 ```
 
-# Coordination among VTOrc instances and `vtctld`
+# Coordination among VTOrc Instances and `vtctld`
 
 Users are encouraged to run multiple instances of VTOrc monitoring the same cluster because VTOrc too, like any other service is liable to failure
 for reasons out of its control. Also, users run `vtctld` instances which can be used to run commands which alter the desired topology ([PlannedReparentShard](../../../user-guides/configuration-advanced/reparenting/#plannedreparentshard-planned-reparenting))

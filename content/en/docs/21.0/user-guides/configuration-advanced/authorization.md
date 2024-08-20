@@ -23,7 +23,7 @@ characteristics:
  * Permissions are applied on a specified set of tables, which can be
    enumerated or specified by regex.
 
-## VTTablet parameters for table ACLs
+## VTTablet Parameters for Table ACLs
 
 Note that the Vitess authorization via ACLs are applied at the VTTablet
 level, as opposed to on VTGate, where authentication is enforced.
@@ -58,7 +58,7 @@ behavior of ACLs.  Let's review these:
    VTTablet to reload the ACL config file from disk by sending a SIGHUP
    signal to your VTTablet process.
 
-## Warning regarding ACL reloading
+## Warning Regarding ACL Reloading
 
 If you choose to reload the ACL config manually or on an interval,
 and you are using the `-enforce-tableacl-config` option, your VTTablet
@@ -68,7 +68,7 @@ the highest level of security. Accordingly, it is very important to test
 your ACL config thoroughly before applying, pay attention to access
 permissions on the ACL config file, etc.
 
-## Format of the table ACL config file
+## Format of the Table ACL Config File
 
 The file specified in the `--table-acl-config` parameter above is a JSON
 file with the following example to explain the format:

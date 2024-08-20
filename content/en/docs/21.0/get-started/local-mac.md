@@ -236,7 +236,7 @@ vtorc killed (pid 226397)
 user@computer:~/Github/vitess/examples/local$ rm -rf ./vtdataroot
 ```
 
-## Connect to your cluster
+## Connect to Your Cluster
 
 You should now be able to connect to the VTGate server that was started in `101_initial_cluster.sh`:
 

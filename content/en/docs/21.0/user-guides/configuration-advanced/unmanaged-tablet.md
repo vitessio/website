@@ -10,7 +10,7 @@ This guide follows on from the [local](../../../get-started/local) installation 
 
 This guide uses the Vitess components vtctld, Topology Service and VTGate which have already been started in the local installation guide. It assumes that you have an existing MySQL Server setup that you would like to add to Vitess as a new keyspace, which we will call `legacy`. The same set of steps can be used to create a tablet that uses Amazon RDS, AWS Aurora, or Google CloudSQL.
 
-## Ensure all components are up
+## Ensure all Components are Up
 
 You should have previously executed `./101_initial_cluster.sh` in the get-started guide. This will ensure that you have a Topology Service, vtgate, vtctld. For the unmanaged MySQL instance, I will be using an instance running on `127.0.0.1:5726`:
 
@@ -48,7 +48,7 @@ mysql: [Warning] Using a password on the command line interface can be insecure.
 +------------------+
 ```
 
-## Start a tablet to correspond to legacy
+## Start a Tablet to Correspond to Legacy
 
 The variables `TOPOLOGY_FLAGS` and `VTDATAROOT` should already be in the environment from sourcing env.sh earlier. We will call the new tablet UID 401.
 
@@ -117,7 +117,7 @@ mysql> select corder.order_id from corder inner join legacy.legacytable on corde
 Empty set (0.01 sec)
 ```
 
-## Move legacytable to the commerce keyspace
+## Move legacytable to the Commerce Keyspace
 
 Move the table:
 

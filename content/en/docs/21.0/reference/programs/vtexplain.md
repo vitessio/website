@@ -55,7 +55,7 @@ mapping will be used and `--shards` will be ignored.
 
 ## Limitations
 
-### The VSchema must use a keyspace name.
+### The VSchema must Use a Keyspace Name
 
 VTExplain requires a keyspace name for each keyspace in an input VSchema:
 

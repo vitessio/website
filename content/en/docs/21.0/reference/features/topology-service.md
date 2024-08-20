@@ -8,7 +8,7 @@ This document describes the Topology Service, a key part of the Vitess architect
 
 Vitess uses a plugin implementation to support multiple backend technologies for the Topology Service (etcd, ZooKeeper, Consul). Concretely, the Topology Service handles two functions: it is both a [distributed lock manager](http://en.wikipedia.org/wiki/Distributed_lock_manager) and a repository for topology metadata. In earlier versions of Vitess, the Topology Serice was also referred to as the Lock Service.
 
-## Requirements and usage
+## Requirements and Usage
 
 The Topology Service is used to store information about the Keyspaces, the
 Shards, the Tablets, the Replication Graph, and the Serving Graph. We store
@@ -58,7 +58,7 @@ If the Global Topology Service dies and is not recoverable, this is more of a
 problem. All the Keyspace / Shard objects have to be recreated or be restored.
 Then the cells should recover.
 
-## Global data
+## Global Data
 
 This section describes the data structures stored in the Global instance of the
 topology service.
@@ -92,12 +92,12 @@ A Shard can be locked. We use this during operations that affect either the
 Shard record, or multiple tablets within a Shard (like reparenting), so multiple
 tasks cannot concurrently alter the data.
 
-### VSchema data
+### VSchema Data
 
 The VSchema data contains sharding and routing information for
 the [VTGate API](https://github.com/vitessio/vitess/blob/main/doc/design-docs/VTGateV3Features.md).
 
-## Local data
+## Local Data
 
 This section describes the data structures stored in the Local instance (per
 cell) of the topology service.
@@ -124,14 +124,14 @@ The only way a Tablet record will be updated is one of:
 * If a tablet becomes unresponsive, it may be forced to spare to make it
   unhealthy when it restarts.
 
-### Replication graph
+### Replication Graph
 
 The Replication Graph allows us to find Tablets in a given Cell / Keyspace /
 Shard. It used to contain information about which Tablet is replicating from
 which other Tablet, but that was too complicated to maintain. Now it is just a
 list of Tablets.
 
-### Serving graph
+### Serving Graph
 
 The Serving Graph is what the clients use to find the per-cell topology of a
 Keyspace. It is a roll-up of global data (Keyspace + Shard). vtgates only open a
@@ -160,7 +160,7 @@ keyspaces in a single object.
 It can be rebuilt by running `vtctl RebuildVSchemaGraph`. It is automatically
 rebuilt when using `vtctl ApplyVSchema` (unless prevented by flags).
 
-## Workflows involving the Topology Service
+## Workflows Involving the Topology Service
 
 The Topology Service is involved in many Vitess workflows.
 
@@ -191,7 +191,7 @@ will change the global Shard records, and the local SrvKeyspace records. A
 vertical split will change the global Keyspace records, and the local
 SrvKeyspace records.
 
-## Exploring the data in a Topology Service
+## Exploring the Data in a Topology Service
 
 We store the proto3 serialized binary data for each object.
 
@@ -294,7 +294,7 @@ specifying the addresses of the observers in the server address, after a `|`,
 for instance:
 `global_server1:p1,global_server2:p2|observer1:po1,observer2:po2`.
 
-#### Implementation details
+#### Implementation Details
 
 We use the following paths for Zookeeper specific data, in addition to the
 regular files:
@@ -349,7 +349,7 @@ If only one cell is used, the same etcd instances can be used for both
 global and local data. A local cell record still needs to be created, just use
 the same server address and, very importantly, a *different* root directory.
 
-#### Implementation details
+#### Implementation Details
 
 For locks, we use a subdirectory named `locks` in the directory to lock, and an
 ephemeral file in that subdirectory (it is associated with a lease, whose TTL
@@ -368,7 +368,7 @@ the `etcdctl` tool, you will have to tell it to use the v3 API, e.g.:
 ETCDCTL_API=3 etcdctl get / --prefix --keys-only
 ```
 
-### Consul `consul` implementation
+### Consul `consul` Implementation
 
 This topology service plugin is meant to use Consul clusters as storage backend
 for the topology data.
@@ -405,7 +405,7 @@ If only one cell is used, the same consul instances can be used for both
 global and local data. A local cell record still needs to be created, just use
 the same server address and, very importantly, a *different* root node path.
 
-#### Implementation details
+#### Implementation Details
 
 For locks, we use a file named `Lock` in the directory to lock, and the regular
 Consul Lock API.
@@ -418,7 +418,7 @@ use a long poll whose duration is set by the
 `-topo_consul_watch_poll_duration` flag. Canceling a watch may have to
 wait until the end of a polling cycle with that duration before returning.
 
-## Running multi cell environments
+## Running Multi Cell Environments
 
 When running an environment with multiple cells, it is essential to first create
 and configure your global topology service. Then define each local topology
@@ -456,7 +456,7 @@ etcd, zookeeper, or consul. At a higher level overview:
   you may connect to multiple local topology services.
 
 
-### Simple local configuration
+### Simple Local Configuration
 
 For this example run through, we will be using two etcd services one for
 the global and one for local topology service.
@@ -578,7 +578,7 @@ vtctldclient --server ${VTCTLD_IP}:15999 RebuildVSchemaGraph
 ```
 
 
-## Running single cell environments
+## Running Single Cell Environments
 
 The topology service is meant to be distributed across multiple cells, and
 survive single cell outages. However, one common usage is to run a Vitess
@@ -595,7 +595,7 @@ cell as well. Let's use a short cell name, like `local`, as the local data in
 that topology service will later on be moved to a different topology service,
 which will have the real cell name.
 
-### Extending to more cells
+### Extending to More Cells
 
 To then run in multiple cells, the current topology service needs to be split
 into a global instance and one local instance per cell. Whereas, the initial
@@ -642,7 +642,7 @@ After this split, the configuration is completely symmetrical:
   contains local topology data about Tablets, and roll-ups of global data for
   efficient access. Typically, it has 3 servers in each cell.
 
-## Migration between implementations
+## Migration Between Implementations
 
 We provide the `topo2topo` utility to migrate between one implementation
 and another of the topology service.
@@ -724,7 +724,7 @@ vtctl ${GLOBAL_TOPOLOGY} RebuildVSchemaGraph
 # any more.
 ```
 
-### Migration using the `Tee` implementation
+### Migration Using the `Tee` Implementation
 
 If your migration is more complex, or has special requirements, we also support
 a 'tee' implementation of the topo service interface. It is defined in

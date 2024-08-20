@@ -25,7 +25,6 @@ Retrieves the file(s) at &lt;path&gt; from the topo service, and displays it. It
 | decode_proto_json | Boolean | decode proto files and display them as json. Defaults to false. |
 | long | Boolean | long listing. Defaults to false.                                |
 
-
 #### Arguments
 
 * <code>&lt;cell&gt;</code> &ndash; Required. A cell is a location for a service. Generally, a cell resides in only one cluster. In Vitess, the terms "cell" and "data center" are interchangeable. The argument value is a string that does not contain whitespace.
@@ -62,7 +61,6 @@ Copy data at given path from topo service to local file or vice versa.
 #### Errors
 
 * <code>&lt;TopoCp&gt;</code>: need source and destination. This error occurs if the command is not called with proper `src` and `dst`.
-
 
 ## See Also
 

@@ -3,6 +3,7 @@ title: VDiff delete
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient VDiff delete
 
 Delete VDiffs.
@@ -24,7 +25,7 @@ vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --targe
   -h, --help   help for delete
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -38,7 +39,7 @@ vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --targe
   -w, --workflow string                      The workflow you want to perform the command on.
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient VDiff](../)	 - Perform commands related to diffing tables involved in a VReplication workflow between the source and target.
 

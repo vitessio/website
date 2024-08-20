@@ -3,6 +3,7 @@ title: position
 series: mysqlctl
 commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
+
 ## mysqlctl position
 
 Compute operations on replication positions
@@ -17,7 +18,7 @@ mysqlctl position <operation> <pos1> <pos2 | gtid> [flags]
   -h, --help   help for position
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --alsologtostderr                                             log to standard error as well as files
@@ -96,7 +97,7 @@ mysqlctl position <operation> <pos1> <pos2 | gtid> [flags]
       --vmodule vModuleFlag                                         comma-separated list of pattern=N settings for file-filtered logging
 ```
 
-### SEE ALSO
+### See Also
 
 * [mysqlctl](../)	 - mysqlctl initializes and controls mysqld with Vitess-specific configuration.
 

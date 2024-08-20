@@ -163,7 +163,7 @@ The response includes:
 The response also includes an HTTP status (e.g. `200` for "OK"). This value is being deprecated and will be removed in `v22` or later.
 {{</ info >}}
 
-## How concepts are combined and used
+## How Concepts are Combined and Used
 
 ### Metric thresholds
 
@@ -326,7 +326,7 @@ $ vtctldclient UpdateThrottlerConfig --app-name "all" --app-metrics "" commerce
 
 The special app `vitess` is internally assigned all known metrics, at all times.
 
-### App rules
+### App Rules
 
 The user may impose additional throttling rules on any given app. A rule is limited by a duration (after which the rule expires and removed), and can:
 
@@ -367,7 +367,7 @@ It is possible to expire (remove the rule) early via:
 $ vtctldclient UpdateThrottlerConfig --unthrottle-app "vreplication" commerce
 ```
 
-## Commands and flags
+## Commands and Flags
 
 These are the `vtctldclient` commands to control or query the tablet throttler:
 
@@ -715,9 +715,9 @@ $ vtctldclient GetKeyspace commerce | jq .keyspace.throttler_config
 }
 ```
 
-## Additional notes
+## Additional Notes
 
-### Throttler operation
+### Throttler Operation
 
 - Each tablet owns its own metrics (the `self` scope).
 - In addition, the shard's `PRIMARY` is responsible for collecting metrics from all shard's tablet.
@@ -738,7 +738,7 @@ It does not make much sense to use a lag threshold like `1s` due to the above re
 As a general guideline, it is also not useful to set the lag threshold above `30s` for operational reasons (Online DDL cut-over, plannet reparents, etc.)
 {{</ info >}}
 
-### Response codes
+### Response Codes
 
 Throttler returns one of the following response codes in a check response:
 
@@ -750,20 +750,20 @@ Throttler returns one of the following response codes in a check response:
 
 An `OK` response is the only one where the app should proceed to write. All Vitess internal apps handle these values automatically.
 
-### The custom query
+### The Custom Query
 
 The custom query can be either:
 
 - A `show global status like '<var>'` that returns a single value.
 - A `select` query with a single row, single column numeric result.
 
-### Exempting apps
+### Exempting Apps
 
 Exempting app should be done with caution. When an app is exempted, it had no controls and can negatively impact the shard's health. Moreover, it is likely that an exempted app will push one or more metrics beyond the configured threshold. For example, it may push replication lag beyond a `5s` threshold. In such scenario, no other app could may any progress whatsoever, leading to starvation of all unexempted apps.
 
 Some internal Vitess apps are always exempted. These are critical for the ongoing operation of the cluster, and do not generate high load. An example is the schema tracker, which tails the binary logs for changes, but does not otherwise copy or write any data.
 
-### Heartbeat configuration
+### Heartbeat Configuration
 
 {{< info >}}
 Configuring heartbeats is not strictly required, as the throttler will initiate an on-demand heartbeat lease while serving requests.
@@ -789,7 +789,7 @@ The throttler does also provide a HTTP endpoint for external apps such as `gh-os
 
 The tablet throttler exports several metrics using the expvars interface. These are available at the `/debug/vars` endpoint of vttablet's http status pages. [More details can be found here](../../features/monitoring/#3-push-based-metrics-system).
 
-#### Aggregated metrics
+#### Aggregated Metrics
 
 These are the metrics by which the throttler compares with the threshold and decides whether to accept or reject throttle checks.
 
@@ -812,7 +812,7 @@ Gauge, on the `PRIMARY` tablet only, this is the aggregated collected metric val
 - `ThrottlerAggregatedShardLoadavg`
 - `ThrottlerAggregatedShardThreads_running`
   
-#### Check metrics
+#### Check Metrics
 
 The throttler is checked by apps (`vreplication`, `online-ddl`, etc), and responds with status codes, "OK" for "good to proceed" or any other code for "hold off".
 
@@ -850,7 +850,7 @@ Gauge, number of seconds since the last good self-check across all metrics.
 
 Gauge, number of seconds since the last good shard-check across all metrics.
 
-#### Internal throttler metrics
+#### Internal throttler Metrics
 
 These metrics are helpful when analyzing the throttler behavior, how it interacts with other shard throttlers, its heartbeat mechanism.
 

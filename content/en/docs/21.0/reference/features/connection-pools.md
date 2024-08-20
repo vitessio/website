@@ -66,7 +66,7 @@ As a result, connection pools should be sized mindful of the capacity of the und
  * Used in the (non-default) TWOPC `transaction_mode` for metadata state management.  
   This pool will always be empty unless TWOPC is used.
 
-### Pools associated with online DDL
+### Pools Associated with Online DDL
   
 #### online_ddl_executor_pool
 
@@ -82,7 +82,7 @@ As a result, connection pools should be sized mindful of the capacity of the und
  * Potentially uses `--db_app_user`, `--db_dba_user` and `--db_appdebug_user` i.e. defaults 'vt_app', 'vt_dba' and 'vt_appdebug'
  * Used in Online DDL to purge/evac/drop origin tables after Online DDL operations from them have been completed.
 
-## Other DB connections used without pools:
+## Other DB Connections Used Without pools:
 
 ### vttablet user flag:
 
@@ -106,9 +106,9 @@ As a result, connection pools should be sized mindful of the capacity of the und
  * (default 'vt_filtered')
  * Used by VReplication on the source (vstreamer) and target (vplayer) side when copying data.
 
-## Other relevant pool-related variables
+## Other Relevant pool-related Variables
 
-### vttablet user limit
+### vttablet User Limit
 Flag: `--transaction_limit_per_user` 
 
  * (default 0.4)
@@ -118,12 +118,12 @@ Flag: `--transaction_limit_per_user`
  Or disable this limit feature by setting `--transaction_limit_by_username` to `false` as the default is `true`.
  This option only comes into play if the TX limiter is enabled by `--enable_transaction_limit`, which it is not by default.
 
-### vtgate system settings
+### vtgate System Settings
 Flag: `--enable_system_settings`
 
 This vtgate flag allows clients to modify a [subset of system settings](https://github.com/vitessio/vitess/blob/main/go/vt/sysvars/sysvars.go#L174-L217) on the MySQL.
 
-## Calculating maximum db connections used by vttablet
+## Calculating Maximum db Connections Used by vttablet
 
 You can use the following formula to approximate the maximum MySQL connections per vttablet instance:
 ```

@@ -3,6 +3,7 @@ title: AddCellsAlias
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient AddCellsAlias
 
 Defines a group of cells that can be referenced by a single name (the alias).
@@ -26,7 +27,7 @@ vtctldclient AddCellsAlias --cells <cell1,cell2,...> [--cells <cell3> ...] <alia
   -h, --help            help for AddCellsAlias
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -37,7 +38,7 @@ vtctldclient AddCellsAlias --cells <cell1,cell2,...> [--cells <cell3> ...] <alia
       --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 

@@ -24,7 +24,7 @@ zk zip <path> [<path> ...] <archive> [flags]
   -h, --help   help for zip
 ```
 
-### SEE ALSO
+### See Also
 
 * [zk](../)	 - zk is a tool for wrangling zookeeper.
 

@@ -57,7 +57,7 @@ $ mysql -h 127.0.0.1 -u myuser1 -pincorrect_password -e "select 1"
 ERROR 1045 (28000): Access denied for user 'myuser1'
 ```
 
-## Password format
+## Password Format
 
 In the above example we used plaintext passwords.  Vitess supports the
 MySQL [mysql_native_password](https://dev.mysql.com/doc/refman/8.0/en/native-pluggable-authentication.html)
@@ -115,7 +115,7 @@ equivalent to the authorization layer (i.e. multiple users having the same
 `UserData` strings), but are different in the authentication layer (i.e.
 have different usernames and passwords).
 
-## Multiple passwords
+## Multiple Passwords
 
 A very convenient feature of the VTGate authorization is that, as can be
 seen in the example JSON authentication files, you have a **list** of

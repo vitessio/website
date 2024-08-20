@@ -3,6 +3,8 @@ title: Migrate status
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
+
 ## vtctldclient Migrate status
 
 Show the current status for a Migrate VReplication workflow.
@@ -23,7 +25,7 @@ vtctldclient --server localhost:15999 Migrate --workflow import --target-keyspac
   -h, --help   help for status
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -37,7 +39,7 @@ vtctldclient --server localhost:15999 Migrate --workflow import --target-keyspac
   -w, --workflow string                      The workflow you want to perform the command on.
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient Migrate](../)	 - Migrate is used to import data from an external cluster into the current cluster.
 

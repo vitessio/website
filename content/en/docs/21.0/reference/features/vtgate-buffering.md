@@ -29,7 +29,7 @@ handle errors appropriately if/when they occur (e.g. unplanned outages, planned 
 VReplication migrations, etc.)
 {{< /warning >}}
 
-## VTGate flags to enable buffering
+## VTGate Flags to Enable Buffering
 
 First, let us cover the flags that need to be set in VTGate to enable
 buffering:
@@ -64,13 +64,13 @@ buffering:
   buffer again. The purpose of this setting is to avoid consecutive fail over
   events where vtgate may be buffering, but never purging the buffer.
 
-## Types of queries that can be buffered
+## Types of Queries That Can Be Buffered
 
  * Only requests to tablets of type `PRIMARY` are buffered. In-flight requests
  to a `REPLICA` in the process of transitioning to `PRIMARY` because of a PRS
  should be unaffected, and do not require buffering.
 
-## What happens during a PlannedReparentShard with Buffering
+## What Happens During a PlannedReparentShard with Buffering
 
 Fundamentally Vitess will:
 
@@ -82,7 +82,7 @@ Fundamentally Vitess will:
  * Drain the buffered queries to the new `PRIMARY` tablet.
  * Begin the countdown timer for `buffer_max_failover_duration`.
 
-## What happens during a MoveTables or Reshard SwitchTraffic or ReverseTraffic with Buffering
+## What Happens During a MoveTables or Reshard SwitchTraffic or ReverseTraffic with Buffering
 
 Fundamentally Vitess will:
 
@@ -90,7 +90,7 @@ Fundamentally Vitess will:
  * Perform the traffic switching work so that application traffic against the tables (MoveTables) or shards (Reshard) are transparently switched to the new keyspace (MoveTables) or shards (Reshard).
  * Drain the buffered queries to the new keyspace or shards — or if the switch failed then back to the original keyspace or shards.
 
-## How does it work?
+## How Does it work?
 
 The following steps are considerably simplified, but to give a high level
 overview of how buffering works:
@@ -113,7 +113,7 @@ overview of how buffering works:
   do not buffer again if another fail over starts within that period.
 
 
-## What the application sees
+## What the Application Sees
 
 When buffering executes as expected the application will see a pause in their
 query processing. Each query will consume a slot from the configured
@@ -131,7 +131,7 @@ Buffering was implemented to minimize downtime, but there is still potential for
 errors to occur, and your application should be configured to handle them
 appropriately. Below are a few errors which may occur:
 
-### Lost connection
+### Lost Connection
 
 ```
 Error Number: 2013
@@ -143,7 +143,7 @@ delays in their query request. If your client has a `read_timeout` or
 `write_timeout` set, the value should be greater than the `buffer_window` value set
 in vtgate.
 
-### Primary not serving
+### Primary not Serving
 
 ```
 Error Number: 1105

@@ -49,7 +49,7 @@ set transaction_mode='twopc';
 
 ### gRPC Clients
 
-#### Go driver
+#### Go Driver
 
 For the Go driver, you request the atomicity by adding it to the context using the `WithAtomicity` function. For more details, please refer to the respective GoDocs.
 
@@ -57,7 +57,7 @@ For the Go driver, you request the atomicity by adding it to the context using t
 
 For Python, the begin function of the cursor has an optional `single_db` flag. If the flag is `True`, then the request is for a single-db transaction. If `False` (or unspecified), then the following commit call's twopc flag decides if the commit is 2PC or Best Effort (multi).
 
-#### Adding support in a new driver
+#### Adding Support in a New Driver
 
 The VTGate RPC API extends the Begin and Commit functions to specify atomicity. The API mimics the Python driver: The BeginRequest message provides a `single_db` flag and the `CommitRequest` message provides an atomic flag which is synonymous to twopc.
 
@@ -79,14 +79,14 @@ The usual default values of MySQL are sufficient. However, it is important to ve
 
 A few additional variables have been added to `/debug/vars`. Failures described below should be rare. But these variables are present so you can build an alert mechanism if anything were to go wrong.
 
-## Critical failures
+## Critical Failures
 
 The following errors are not expected to happen. If they do, it means that 2PC transactions have failed to commit atomically:
 
 * **InternalErrors.TwopcCommit**: This is a counter that shows the number of times a prepared transaction failed to fulfil a commit request.
 * **InternalErrors.TwopcResurrection**: This counter is incremented if a new primary failed to resurrect a previously prepared (and unresolved) transaction.
 
-## Alertable failures
+## Alertable Failures
 
 The following failures are not urgent, but require investigation:
 

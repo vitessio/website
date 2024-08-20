@@ -3,6 +3,7 @@ title: PlannedReparentShard
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient PlannedReparentShard
 
 Reparents the shard to a new primary, or away from an old primary. Both the old and new primaries must be up and running.
@@ -21,7 +22,7 @@ vtctldclient PlannedReparentShard <keyspace/shard>
       --wait-replicas-timeout duration       Time to wait for replicas to catch up on replication both before and after reparenting. (default 15s)
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -32,7 +33,7 @@ vtctldclient PlannedReparentShard <keyspace/shard>
       --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 

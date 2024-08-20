@@ -34,7 +34,7 @@ zk ls -R /zk
   -R, --recursivelisting   recursive listing
 ```
 
-### SEE ALSO
+### See Also
 
 * [zk](../)	 - zk is a tool for wrangling zookeeper.
 

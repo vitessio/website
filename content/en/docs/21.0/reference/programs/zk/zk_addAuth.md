@@ -17,7 +17,7 @@ zk addAuth <digest> <user:pass> [flags]
   -h, --help   help for addAuth
 ```
 
-### SEE ALSO
+### See Also
 
 * [zk](../)	 - zk is a tool for wrangling zookeeper.
 

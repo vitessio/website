@@ -3,6 +3,7 @@ title: mysqlctl
 series: mysqlctl
 commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
+
 ## mysqlctl
 
 mysqlctl initializes and controls mysqld with Vitess-specific configuration.
@@ -95,7 +96,7 @@ This helps ensure that `mysqld` is automatically restarted after failures.
       --vmodule vModuleFlag                                         comma-separated list of pattern=N settings for file-filtered logging
 ```
 
-### SEE ALSO
+### See Also
 
 * [mysqlctl init](./mysqlctl_init/)	 - Initializes the directory structure and starts mysqld.
 * [mysqlctl init_config](./mysqlctl_init_config/)	 - Initializes the directory structure, creates my.cnf file, but does not start mysqld.

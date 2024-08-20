@@ -31,7 +31,7 @@ zk rm -f /zk/path
   -r, --recursivedelete   recursive delete
 ```
 
-### SEE ALSO
+### See Also
 
 * [zk](../)	 - zk is a tool for wrangling zookeeper.
 

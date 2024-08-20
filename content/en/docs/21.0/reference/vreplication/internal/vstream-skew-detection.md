@@ -80,5 +80,4 @@ This is how you would turn on the skew detection and alignment feature in a [VSt
     flags.MinimizeSkew = true;
 
     reader, err := conn.VStream(ctx, topodatapb.TabletType_PRIMARY, vgtid, filter, flags)
-
 ```

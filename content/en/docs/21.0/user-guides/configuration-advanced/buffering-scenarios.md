@@ -181,7 +181,6 @@ vtgate_buffer_requests_skipped{keyspace="commerce",reason="Shutdown",shard_name=
 
 NOTE: Once again no queries are being buffered in these examples.
 
-
 ### Scenario 3: Solving with Buffering
 
 Another approach to this problem, is to employ buffering on vtgate. It is highly
@@ -257,8 +256,6 @@ vtgate_buffer_requests_skipped{keyspace="commerce",reason="Shutdown",shard_name=
 NOTE: You will see each of our 6 established connections were buffered during
 the PRS event.
 
-
-
 ### Scenario 4: Quickly issued PRS events
 
 In this scenario we are going to look at the buffering behavior when quickly
@@ -327,8 +324,6 @@ should be doing. Another way to handle the issue is to ensure you are waiting
 for the `--buffer_min_time_between_failovers` timer to expire before issuing
 the next PlannedReparentShard command.
 
-
-
 ### Scenario 5: Too many connections
 
 Another aspect to be aware of is the `--buffer_size`. For this scenario we will
@@ -387,8 +382,6 @@ vtgate_buffer_requests_skipped{keyspace="commerce",reason="Shutdown",shard_name=
 NOTE: Here we can see the `BufferFull` metric set to 4 to let us know the buffer
 had an overflow.
 
-
-
 ### Scenario 6: Buffer time too Short
 
 In this scenario we are going to set the `buffer_window` to a short period of
@@ -442,8 +435,6 @@ vtgate_buffer_requests_skipped{keyspace="commerce",reason="Shutdown",shard_name=
 
 NOTE: Reviewing these results we can see value for `WindowExceeded` at 6;
 informing us the `buffer_window` was not long enough for these request.
-
-
 
 ### Scenario 7: Replica never becomes Primary
 

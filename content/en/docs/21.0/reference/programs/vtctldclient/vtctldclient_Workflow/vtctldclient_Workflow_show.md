@@ -3,6 +3,7 @@ title: Workflow show
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient Workflow show
 
 Show the details for a VReplication workflow.
@@ -26,7 +27,7 @@ vtctldclient --server localhost:15999 workflow --keyspace customer show --workfl
   -w, --workflow string   The workflow you want the details for.
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -38,7 +39,7 @@ vtctldclient --server localhost:15999 workflow --keyspace customer show --workfl
       --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient Workflow](../)	 - Administer VReplication workflows (Reshard, MoveTables, etc) in the given keyspace.
 

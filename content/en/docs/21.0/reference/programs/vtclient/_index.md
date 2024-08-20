@@ -3,6 +3,7 @@ title: vtclient
 series: vtclient
 commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
 ---
+
 ## vtclient
 
 vtclient connects to a vtgate server using the standard go driver API.

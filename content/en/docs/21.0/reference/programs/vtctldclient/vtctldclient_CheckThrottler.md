@@ -3,6 +3,7 @@ title: CheckThrottler
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient CheckThrottler
 
 Issue a throttler check on the given tablet.
@@ -27,7 +28,7 @@ CheckThrottler --app-name online-ddl zone1-0000000101
       --scope string         check scope ('shard', 'self' or leave empty for per-metric defaults)
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -38,7 +39,7 @@ CheckThrottler --app-name online-ddl zone1-0000000101
       --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 

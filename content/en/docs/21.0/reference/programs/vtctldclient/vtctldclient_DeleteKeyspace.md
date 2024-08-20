@@ -3,6 +3,7 @@ title: DeleteKeyspace
 series: vtctldclient
 commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
 ---
+
 ## vtctldclient DeleteKeyspace
 
 Deletes the specified keyspace from the topology.
@@ -26,7 +27,7 @@ vtctldclient DeleteKeyspace [--recursive|-r] [--force|-f] <keyspace>
   -r, --recursive   Recursively delete all shards in the keyspace, and all tablets in those shards.
 ```
 
-### Options inherited from parent commands
+### Options Inherited from Parent Commands
 
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
@@ -37,7 +38,7 @@ vtctldclient DeleteKeyspace [--recursive|-r] [--force|-f] <keyspace>
       --topo-implementation string           the topology implementation to use (default "etcd2")
 ```
 
-### SEE ALSO
+### See Also
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 

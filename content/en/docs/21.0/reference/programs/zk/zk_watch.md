@@ -23,7 +23,7 @@ watch /zk/path
   -h, --help   help for watch
 ```
 
-### SEE ALSO
+### See Also
 
 * [zk](../)	 - zk is a tool for wrangling zookeeper.
 

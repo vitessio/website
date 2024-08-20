@@ -3,23 +3,23 @@ title: Monitoring
 weight: 8
 ---
 
-# Current state of monitoring
+# Current State of Monitoring
 
 There are currently three main ways that a Vitess cluster can be monitored. Depending on your needs, you can use any of the following methods:
 
-## 1. Vitess status pages
+## 1. Vitess Status Pages
 
 The status HTML pages of various Vitess components can be accessed by pointing your browser to `http://<host>:<port>/debug/status`. The status pages will often display some basic, but useful, information for monitoring. For example, the status page of a vttablet will show the QPS graph for the past few minutes.
 
 Viewing a status page can be useful since it works out of the box, but it only provides very basic monitoring capabilities.
 
-## 2. Pull-based metrics system
+## 2. Pull-based Metrics System
 
 Vitess uses Go’s [expvar package](https://golang.org/pkg/expvar/) to expose various metrics, with the expectation that a user can configure a pull-based metrics system to ingest those metrics. Metrics are published to `http://<host>:<port>/debug/vars` as JSON key-value pairs, which should be easy for any metrics system to parse.
 
 Scraping Vitess variables is a good way to integrate Vitess into an existing monitoring system, and is useful for building up detailed monitoring dashboards. It is also the officially supported way for monitoring Vitess.
 
-## 3. Push-based metrics system
+## 3. Push-based Metrics System
 
 Vitess also includes support for push-based metrics systems via plug-ins. Each Vitess component would need to be run with the `--emit_stats` flag.
 

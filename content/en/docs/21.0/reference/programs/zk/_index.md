@@ -32,7 +32,7 @@ variable.
       --server string                  server(s) to connect to
 ```
 
-### SEE ALSO
+### See Also
 
 * [zk addAuth](./zk_addauth/)	 - 
 * [zk cat](./zk_cat/)	 - 
