@@ -1,7 +1,7 @@
 ---
 title: init
 series: zkctl
-commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
+commit: 5cb66a1797a17c05b447acda5f923c62e5912b27
 ---
 ## zkctl init
 
@@ -24,7 +24,7 @@ zkctl init [flags]
       --config-file string                                          Full path of the config file (with extension) to use. If set, --config-path, --config-type, and --config-name are ignored.
       --config-file-not-found-handling ConfigFileNotFoundHandling   Behavior when a config file is not found. (Options: error, exit, ignore, warn) (default warn)
       --config-name string                                          Name of the config file (without extension) to search for. (default "vtconfig")
-      --config-path strings                                         Paths to search for config files in. (default [<WORKDIR>])
+      --config-path strings                                         Paths to search for config files in. (default [/tmp/pull_request_handler/vitess])
       --config-persistence-min-interval duration                    minimum interval between persisting dynamic config changes back to disk (if no change has occurred, nothing is done). (default 1s)
       --config-type string                                          Config file type (omit to infer config type from file extension).
       --keep_logs duration                                          keep logs for this long (using ctime) (zero to keep forever)

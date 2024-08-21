@@ -1,7 +1,7 @@
 ---
 title: shutdown
 series: mysqlctl
-commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
+commit: 5cb66a1797a17c05b447acda5f923c62e5912b27
 ---
 ## mysqlctl shutdown
 
@@ -40,7 +40,7 @@ mysqlctl --tablet_uid 101 --alsologtostderr shutdown
       --config-file string                                          Full path of the config file (with extension) to use. If set, --config-path, --config-type, and --config-name are ignored.
       --config-file-not-found-handling ConfigFileNotFoundHandling   Behavior when a config file is not found. (Options: error, exit, ignore, warn) (default warn)
       --config-name string                                          Name of the config file (without extension) to search for. (default "vtconfig")
-      --config-path strings                                         Paths to search for config files in. (default [<WORKDIR>])
+      --config-path strings                                         Paths to search for config files in. (default [/tmp/pull_request_handler/vitess])
       --config-persistence-min-interval duration                    minimum interval between persisting dynamic config changes back to disk (if no change has occurred, nothing is done). (default 1s)
       --config-type string                                          Config file type (omit to infer config type from file extension).
       --db-credentials-file string                                  db credentials file; send SIGHUP to reload this file
@@ -54,7 +54,7 @@ mysqlctl --tablet_uid 101 --alsologtostderr shutdown
       --db-credentials-vault-tls-ca string                          Path to CA PEM for validating Vault server certificate
       --db-credentials-vault-tokenfile string                       Path to file containing Vault auth token; token can also be passed using VAULT_TOKEN environment variable
       --db-credentials-vault-ttl duration                           How long to cache DB credentials from the Vault server (default 30m0s)
-      --db_charset string                                           Character set used for this tablet. (default "utf8mb4")
+      --db_charset string                                           Character set/collation used for this tablet. Make sure to configure this to a charset/collation supported by the lowest MySQL version in your environment. (default "utf8mb4")
       --db_conn_query_info                                          enable parsing and processing of QUERY_OK info fields
       --db_connect_timeout_ms int                                   connection timeout to mysqld in milliseconds (0 for no timeout)
       --db_dba_password string                                      db dba password
