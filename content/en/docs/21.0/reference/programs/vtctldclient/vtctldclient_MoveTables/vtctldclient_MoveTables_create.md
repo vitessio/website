@@ -1,7 +1,7 @@
 ---
 title: MoveTables create
 series: vtctldclient
-commit: 7e8f008834c0278b8df733d606940a629b67a9d9
+commit: 4bc3b998941037e0446f5c0899587e4093d79f57
 ---
 ## vtctldclient MoveTables create
 

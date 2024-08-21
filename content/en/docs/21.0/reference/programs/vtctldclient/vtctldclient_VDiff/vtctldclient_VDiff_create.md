@@ -1,7 +1,7 @@
 ---
 title: VDiff create
 series: vtctldclient
-commit: 7e8f008834c0278b8df733d606940a629b67a9d9
+commit: 4bc3b998941037e0446f5c0899587e4093d79f57
 ---
 ## vtctldclient VDiff create
 
@@ -15,7 +15,7 @@ vtctldclient VDiff create
 
 ```
 vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --target-keyspace customer create
-vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --target-keyspace customer create b3f59678-5241-11ee-be56-0242ac120002
+vtctldclient --server :15999 vdiff --workflow c2c --target-keyspace customer create b3f59678-5241-11ee-be56-0242ac120002 --source-cells zone1 --tablet-types "rdonly,replica" --target-cells zone1 --update-table-stats --max-report-sample-rows 1000 --wait --wait-update-interval 5s --auto-retry --max-diff-duration 1h --row-diff-column-truncate-at 0
 ```
 
 ### Options
