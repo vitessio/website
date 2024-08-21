@@ -13,7 +13,7 @@ One of the key challenges in implementing recursive CTEs within a sharded enviro
 
 In scenarios where merging is not feasible, Vitess takes advantage of its powerful `vtgate` proxy. The `vtgate` handles recursion, allowing recursive CTEs to function seamlessly across sharded keyspaces. This ensures that recursive queries are no longer a barrier when working with large, distributed datasets.
 
-It’s important to note that support for recursive CTEs is still in the experimental stage. We encourage the community to explore this feature and provide feedback on any issues encountered. Your input is invaluable as we continue to refine and enhance Vitess.
+It’s important to note that support for recursive CTEs is still in the experimental stage and has just been merged into the main branch. This feature is not yet available in any official release but will be part of the upcoming Vitess 21 release. We encourage the community to explore this feature and provide feedback on any issues encountered. Your input is invaluable as we continue to refine and enhance Vitess.
 
 This development brings us even closer to our goal of fully supporting MySQL’s feature set. With recursive CTEs now implemented, Vitess is on the verge of achieving complete MySQL compatibility. We remain dedicated to expanding Vitess’s capabilities, and this advancement marks another significant milestone in that ongoing journey.
 
