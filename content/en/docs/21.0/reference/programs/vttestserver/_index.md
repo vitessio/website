@@ -1,7 +1,7 @@
 ---
 title: vttestserver
 series: vttestserver
-commit: 471ab1a20a1f7f1f333ddd378b3edc71ad6de7a3
+commit: c2d41acc97e6aabba902ff5a7f5b2300612b7b7c
 ---
 ## vttestserver
 
@@ -97,6 +97,12 @@ vttestserver [flags]
       --max-stack-size int                                               configure the maximum stack size in bytes (default 67108864)
       --max_table_shard_size int                                         The maximum number of initial rows in a table shard. Ignored if--initialize_with_random_data is false. The actual number is chosen randomly (default 10000)
       --min_table_shard_size int                                         The minimum number of initial rows in a table shard. Ignored if--initialize_with_random_data is false. The actual number is chosen randomly. (default 1000)
+      --mysql-shell-backup-location string                               location where the backup will be stored
+      --mysql-shell-dump-flags string                                    flags to pass to mysql shell dump utility. This should be a JSON string and will be saved in the MANIFEST (default "{\"threads\": 2}")
+      --mysql-shell-flags string                                         execution flags to pass to mysqlsh binary to be used during dump/load (default "--defaults-file=/dev/null --js -h localhost")
+      --mysql-shell-load-flags string                                    flags to pass to mysql shell load utility. This should be a JSON string (default "{\"threads\": 4, \"updateGtidSet\": \"replace\", \"skipBinlog\": true, \"progressFile\": \"\"}")
+      --mysql-shell-should-drain                                         decide if we should drain while taking a backup or continue to serving traffic
+      --mysql-shell-speedup-restore                                      speed up restore by disabling redo logging and double write buffer during the restore process
       --mysql_bind_host string                                           which host to bind vtgate mysql listener to (default "localhost")
       --mysql_only                                                       If this flag is set only mysql is initialized. The rest of the vitess components are not started. Also, the output specifies the mysql unix socket instead of the vtgate port.
       --mysql_server_version string                                      MySQL server version to advertise. (default "8.0.30-Vitess")
