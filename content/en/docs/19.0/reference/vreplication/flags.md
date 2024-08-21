@@ -48,9 +48,9 @@ It is recommended **not** to increase this flag beyond the number of vCPUs avail
 
 **Type** duration\
 **Default** 1h (1 hour)\
-**Applicable on** source and target
+**Applicable on** target
 
-When copying the contents of a table we go through 1+ cycles of copying rows, catching up on changes made (binlog events) while we copied rows, and applying those changes to the rows that have been copied (copy,catchup,fastforward). This flag determines at most how long we copy rows before moving through the other stages in the cycle. These cycles will continue until all of the rows have been copied. This value is used by the target tablet for the context timeout in the RPC call and it is used on the source tablet for the `MAX_EXECUTION_TIME` query timeout hint.
+When copying the contents of a table we go through 1+ cycles of copying rows, catching up on changes made (binlog events) while we copied rows, and applying those changes to the rows that have been copied (copy,catchup,fastforward). This flag determines at most how long we copy rows before moving through the other stages in the cycle. These cycles will continue until all of the rows have been copied.
 
 * You can see metrics related to the copy phase in the following values at the `/debug/vars` vttablet endpoint: `VReplicationPhaseTimings`, `VReplicationPhaseTimingsCounts`, `VReplicationPhaseTimingsTotal`, `VReplicationCopyLoopCount`, `VReplicationCopyLoopCountTotal`, `VReplicationCopyRowCount`, `VReplicationCopyRowCountTotal`, `VStreamerPhaseTiming`, and `VStreamerErrors`
 

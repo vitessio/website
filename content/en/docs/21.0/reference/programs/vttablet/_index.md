@@ -1,7 +1,7 @@
 ---
 title: vttablet
 series: vttablet
-commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
+commit: 471ab1a20a1f7f1f333ddd378b3edc71ad6de7a3
 ---
 ## vttablet
 
@@ -128,7 +128,7 @@ vttablet \
       --db_appdebug_password string                                      db appdebug password
       --db_appdebug_use_ssl                                              Set this flag to false to make the appdebug connection to not use ssl (default true)
       --db_appdebug_user string                                          db appdebug user userKey (default "vt_appdebug")
-      --db_charset string                                                Character set used for this tablet. (default "utf8mb4")
+      --db_charset string                                                Character set/collation used for this tablet. Make sure to configure this to a charset/collation supported by the lowest MySQL version in your environment. (default "utf8mb4")
       --db_conn_query_info                                               enable parsing and processing of QUERY_OK info fields
       --db_connect_timeout_ms int                                        connection timeout to mysqld in milliseconds (0 for no timeout)
       --db_dba_password string                                           db dba password
@@ -183,7 +183,7 @@ vttablet \
       --gc_purge_check_interval duration                                 Interval between purge discovery checks (default 1m0s)
       --gcs_backup_storage_bucket string                                 Google Cloud Storage bucket to use for backups.
       --gcs_backup_storage_root string                                   Root prefix for all backup-related object names.
-      --gh-ost-path string                                               override default gh-ost binary full path
+      --gh-ost-path string                                               override default gh-ost binary full path (default "gh-ost")
       --grpc_auth_mode string                                            Which auth plugin implementation to use (eg: static)
       --grpc_auth_mtls_allowed_substrings string                         List of substrings of at least one of the client certificate names (separated by colon).
       --grpc_auth_static_client_creds string                             When using grpc_static_auth in the server, this file provides the credentials to use to authenticate with server.
@@ -230,7 +230,7 @@ vttablet \
       --keep_logs duration                                               keep logs for this long (using ctime) (zero to keep forever)
       --keep_logs_by_mtime duration                                      keep logs for this long (using mtime) (zero to keep forever)
       --lameduck-period duration                                         keep running at least this long after SIGTERM before stopping (default 50ms)
-      --lock-timeout duration                                            Maximum time for which a shard/keyspace lock can be acquired for (default 45s)
+      --lock-timeout duration                                            Maximum time to wait when attempting to acquire a lock from the topo server (default 45s)
       --lock_tables_timeout duration                                     How long to keep the table locked before timing out (default 1m0s)
       --log_backtrace_at traceLocations                                  when logging hits line file:N, emit a stack trace
       --log_dir string                                                   If non-empty, write log files in this directory
@@ -274,13 +274,14 @@ vttablet \
       --port int                                                         port for the server
       --pprof strings                                                    enable profiling
       --pprof-http                                                       enable pprof http endpoints
-      --pt-osc-path string                                               override default pt-online-schema-change binary full path
+      --pt-osc-path string                                               override default pt-online-schema-change binary full path (default "/usr/bin/pt-online-schema-change")
       --publish_retry_interval duration                                  how long vttablet waits to retry publishing the tablet record (default 30s)
       --purge_logs_interval duration                                     how often try to remove old logs (default 1h0m0s)
       --query-log-stream-handler string                                  URL handler for streaming queries log (default "/debug/querylog")
       --querylog-filter-tag string                                       string that must be present in the query for it to be logged; if using a value as the tag, you need to disable query normalization
       --querylog-format string                                           format for query logs ("text" or "json") (default "text")
       --querylog-row-threshold uint                                      Number of rows a query has to return or affect before being logged; not useful for streaming queries. 0 means all queries will be logged.
+      --querylog-sample-rate float                                       Sample rate for logging queries. Value must be between 0.0 (no logging) and 1.0 (all queries)
       --queryserver-config-acl-exempt-acl string                         an acl that exempt from table acl checking (this acl is free to access any vitess tables).
       --queryserver-config-annotate-queries                              prefix queries to MySQL backend with comment indicating vtgate principal (user) and target tablet type
       --queryserver-config-enable-table-acl-dry-run                      If this flag is enabled, tabletserver will emit monitoring metrics and let the request pass regardless of table acl check results
@@ -306,7 +307,6 @@ vttablet \
       --queryserver-config-truncate-error-len int                        truncate errors sent to client if they are longer than this value (0 means do not truncate)
       --queryserver-config-txpool-timeout duration                       query server transaction pool timeout, it is how long vttablet waits if tx pool is full (default 1s)
       --queryserver-config-warn-result-size int                          query server result size warning threshold, warn if number of rows returned from vttablet for non-streaming queries exceeds this
-      --queryserver-enable-settings-pool                                 Enable pooling of connections with modified system settings (default true)
       --queryserver-enable-views                                         Enable views support in vttablet.
       --queryserver_enable_online_ddl                                    Enable online DDL. (default true)
       --redact-debug-ui-queries                                          redact full queries and bind variables from debug UI
@@ -405,7 +405,6 @@ vttablet \
       --transaction_limit_by_username                                    Include VTGateCallerID.username when considering who the user is for the purpose of transaction limit. (default true)
       --transaction_limit_per_user float                                 Maximum number of transactions a single user is allowed to use at any time, represented as fraction of -transaction_cap. (default 0.4)
       --twopc_abandon_age float                                          time in seconds. Any unresolved transaction older than this time will be sent to the coordinator to be resolved.
-      --twopc_coordinator_address string                                 address of the (VTGate) process(es) that will be used to notify of abandoned transactions.
       --twopc_enable                                                     if the flag is on, 2pc is enabled. Other 2pc flags must be supplied.
       --tx-throttler-config string                                       Synonym to -tx_throttler_config (default "target_replication_lag_sec:2 max_replication_lag_sec:10 initial_rate:100 max_increase:1 emergency_decrease:0.5 min_duration_between_increases_sec:40 max_duration_between_increases_sec:62 min_duration_between_decreases_sec:20 spread_backlog_across_sec:20 age_bad_rate_after_sec:180 bad_rate_increase:0.1 max_rate_approach_threshold:0.9")
       --tx-throttler-default-priority int                                Default priority assigned to queries that lack priority information (default 100)
@@ -435,7 +434,6 @@ vttablet \
       --vstream-binlog-rotation-threshold int                            Byte size at which a VStreamer will attempt to rotate the source's open binary log before starting a GTID snapshot based stream (e.g. a ResultStreamer or RowStreamer) (default 67108864)
       --vstream_dynamic_packet_size                                      Enable dynamic packet sizing for VReplication. This will adjust the packet size during replication to improve performance. (default true)
       --vstream_packet_size int                                          Suggested packet size for VReplication streamer. This is used only as a recommendation. The actual packet size may be more or less than this amount. (default 250000)
-      --vtgate_protocol string                                           how to talk to vtgate (default "grpc")
       --vttablet_skip_buildinfo_tags string                              comma-separated list of buildinfo tags to skip from merging with --init_tags. each tag is either an exact match or a regular expression of the form '/regexp/'. (default "/.*/")
       --wait_for_backup_interval duration                                (init restore parameter) if this is greater than 0, instead of starting up empty when no backups are found, keep checking at this interval for a backup to appear
       --watch_replication_stream                                         When enabled, vttablet will stream the MySQL replication stream from the local server, and use it to update schema when it sees a DDL.

@@ -1,7 +1,7 @@
 ---
 title: vttestserver
 series: vttestserver
-commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
+commit: 471ab1a20a1f7f1f333ddd378b3edc71ad6de7a3
 ---
 ## vttestserver
 
@@ -102,6 +102,7 @@ vttestserver [flags]
       --mysql_server_version string                                      MySQL server version to advertise. (default "8.0.30-Vitess")
       --mysqlctl_mycnf_template string                                   template file to use for generating the my.cnf file during server init
       --mysqlctl_socket string                                           socket file to use for remote mysqlctl actions (empty for local actions)
+      --no_scatter                                                       when set to true, the planner will fail instead of producing a plan that includes scatter queries
       --null_probability float                                           The probability to initialize a field with 'NULL'  if --initialize_with_random_data is true. Only applies to fields that can contain NULL values. (default 0.1)
       --num_shards strings                                               Comma separated shard count (one per keyspace) (default [2])
       --onclose_timeout duration                                         wait no more than this for OnClose handlers before stopping (default 10s)
@@ -115,7 +116,7 @@ vttestserver [flags]
       --pprof-http                                                       enable pprof http endpoints
       --proto_topo string                                                Define the fake cluster topology as a compact text format encoded vttest proto. See vttest.proto for more information.
       --purge_logs_interval duration                                     how often try to remove old logs (default 1h0m0s)
-      --queryserver-config-transaction-timeout float                     query server transaction timeout (in seconds), a transaction will be killed if it takes longer than this value
+      --queryserver-config-transaction-timeout duration                  query server transaction timeout, a transaction will be killed if it takes longer than this value (default 30s)
       --rdonly_count int                                                 Rdonly tablets per shard (default 1)
       --replica_count int                                                Replica tablets per shard (includes primary) (default 2)
       --replication_connect_retry duration                               how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s)

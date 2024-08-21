@@ -1,7 +1,7 @@
 ---
 title: vtctldclient
 series: vtctldclient
-commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
+commit: 471ab1a20a1f7f1f333ddd378b3edc71ad6de7a3
 ---
 ## vtctldclient
 

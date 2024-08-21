@@ -1,28 +1,26 @@
 ---
-title: MoveTables mirrortraffic
+title: Reshard cancel
 series: vtctldclient
-commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
+commit: 471ab1a20a1f7f1f333ddd378b3edc71ad6de7a3
 ---
-## vtctldclient MoveTables mirrortraffic
+## vtctldclient Reshard cancel
 
-Mirror traffic for a MoveTables MoveTables workflow.
+Cancel a Reshard VReplication workflow.
 
 ```
-vtctldclient MoveTables mirrortraffic
+vtctldclient Reshard cancel
 ```
 
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --target-keyspace customer mirrortraffic --percent 5.0
+vtctldclient --server localhost:15999 Reshard --workflow cust2cust --target-keyspace customer cancel
 ```
 
 ### Options
 
 ```
-  -h, --help                   help for mirrortraffic
-      --percent float32        Percentage of traffic to mirror. (default 1)
-      --tablet-types strings   Tablet types to mirror traffic for.
+  -h, --help   help for cancel
 ```
 
 ### Options inherited from parent commands
@@ -41,5 +39,5 @@ vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --
 
 ### SEE ALSO
 
-* [vtctldclient MoveTables](../)	 - Perform commands related to moving tables from a source keyspace to a target keyspace.
+* [vtctldclient Reshard](./vtctldclient_reshard/)	 - Perform commands related to resharding a keyspace.
 
