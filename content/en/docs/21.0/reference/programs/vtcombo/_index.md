@@ -1,7 +1,7 @@
 ---
 title: vtcombo
 series: vtcombo
-commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
+commit: c2d41acc97e6aabba902ff5a7f5b2300612b7b7c
 ---
 ## vtcombo
 
@@ -90,7 +90,7 @@ vtcombo [flags]
       --db_appdebug_password string                                      db appdebug password
       --db_appdebug_use_ssl                                              Set this flag to false to make the appdebug connection to not use ssl (default true)
       --db_appdebug_user string                                          db appdebug user userKey (default "vt_appdebug")
-      --db_charset string                                                Character set used for this tablet. (default "utf8mb4")
+      --db_charset string                                                Character set/collation used for this tablet. Make sure to configure this to a charset/collation supported by the lowest MySQL version in your environment. (default "utf8mb4")
       --db_conn_query_info                                               enable parsing and processing of QUERY_OK info fields
       --db_connect_timeout_ms int                                        connection timeout to mysqld in milliseconds (0 for no timeout)
       --db_dba_password string                                           db dba password
@@ -153,7 +153,7 @@ vtcombo [flags]
       --gate_query_cache_memory int                                      gate server query cache size in bytes, maximum amount of memory to be cached. vtgate analyzes every incoming query and generate a query plan, these plans are being cached in a lru cache. This config controls the capacity of the lru cache. (default 33554432)
       --gc_check_interval duration                                       Interval between garbage collection checks (default 1h0m0s)
       --gc_purge_check_interval duration                                 Interval between purge discovery checks (default 1m0s)
-      --gh-ost-path string                                               override default gh-ost binary full path
+      --gh-ost-path string                                               override default gh-ost binary full path (default "gh-ost")
       --grpc-send-session-in-streaming                                   If set, will send the session as last packet in streaming api to support transactions in streaming
       --grpc-use-effective-groups                                        If set, and SSL is not used, will set the immediate caller's security groups from the effective caller id's groups.
       --grpc-use-static-authentication-callerid                          If set, will set the immediate caller id to the username authenticated by the static auth plugin.
@@ -203,7 +203,7 @@ vtcombo [flags]
       --keep_logs_by_mtime duration                                      keep logs for this long (using mtime) (zero to keep forever)
       --keyspaces_to_watch strings                                       Specifies which keyspaces this vtgate should have access to while routing queries or accessing the vschema.
       --lameduck-period duration                                         keep running at least this long after SIGTERM before stopping (default 50ms)
-      --lock-timeout duration                                            Maximum time for which a shard/keyspace lock can be acquired for (default 45s)
+      --lock-timeout duration                                            Maximum time to wait when attempting to acquire a lock from the topo server (default 45s)
       --lock_heartbeat_time duration                                     If there is lock function used. This will keep the lock connection active by using this heartbeat (default 5s)
       --lock_tables_timeout duration                                     How long to keep the table locked before timing out (default 1m0s)
       --log_backtrace_at traceLocations                                  when logging hits line file:N, emit a stack trace
@@ -237,8 +237,15 @@ vtcombo [flags]
       --mycnf_slow_log_path string                                       mysql slow query log path
       --mycnf_socket_file string                                         mysql socket file
       --mycnf_tmp_dir string                                             mysql tmp directory
+      --mysql-server-drain-onterm                                        If set, the server waits for --onterm_timeout for already connected clients to complete their in flight work
       --mysql-server-keepalive-period duration                           TCP period between keep-alives
       --mysql-server-pool-conn-read-buffers                              If set, the server will pool incoming connection read buffers
+      --mysql-shell-backup-location string                               location where the backup will be stored
+      --mysql-shell-dump-flags string                                    flags to pass to mysql shell dump utility. This should be a JSON string and will be saved in the MANIFEST (default "{\"threads\": 2}")
+      --mysql-shell-flags string                                         execution flags to pass to mysqlsh binary to be used during dump/load (default "--defaults-file=/dev/null --js -h localhost")
+      --mysql-shell-load-flags string                                    flags to pass to mysql shell load utility. This should be a JSON string (default "{\"threads\": 4, \"updateGtidSet\": \"replace\", \"skipBinlog\": true, \"progressFile\": \"\"}")
+      --mysql-shell-should-drain                                         decide if we should drain while taking a backup or continue to serving traffic
+      --mysql-shell-speedup-restore                                      speed up restore by disabling redo logging and double write buffer during the restore process
       --mysql-shutdown-timeout duration                                  timeout to use when MySQL is being shut down. (default 5m0s)
       --mysql_allow_clear_text_without_tls                               If set, the server will allow the use of a clear text password over non-SSL connections.
       --mysql_auth_server_impl string                                    Which auth server implementation to use. Options: none, ldap, clientcert, static, vault. (default "static")
@@ -277,7 +284,7 @@ vtcombo [flags]
       --proto_topo vttest.TopoData                                       vttest proto definition of the topology, encoded in compact text format. See vttest.proto for more information.
       --proxy_protocol                                                   Enable HAProxy PROXY protocol on MySQL listener socket
       --proxy_tablets                                                    Setting this true will make vtctld proxy the tablet status instead of redirecting to them
-      --pt-osc-path string                                               override default pt-online-schema-change binary full path
+      --pt-osc-path string                                               override default pt-online-schema-change binary full path (default "/usr/bin/pt-online-schema-change")
       --publish_retry_interval duration                                  how long vttablet waits to retry publishing the tablet record (default 30s)
       --purge_logs_interval duration                                     how often try to remove old logs (default 1h0m0s)
       --query-log-stream-handler string                                  URL handler for streaming queries log (default "/debug/querylog")
@@ -286,6 +293,7 @@ vtcombo [flags]
       --querylog-filter-tag string                                       string that must be present in the query for it to be logged; if using a value as the tag, you need to disable query normalization
       --querylog-format string                                           format for query logs ("text" or "json") (default "text")
       --querylog-row-threshold uint                                      Number of rows a query has to return or affect before being logged; not useful for streaming queries. 0 means all queries will be logged.
+      --querylog-sample-rate float                                       Sample rate for logging queries. Value must be between 0.0 (no logging) and 1.0 (all queries)
       --queryserver-config-acl-exempt-acl string                         an acl that exempt from table acl checking (this acl is free to access any vitess tables).
       --queryserver-config-annotate-queries                              prefix queries to MySQL backend with comment indicating vtgate principal (user) and target tablet type
       --queryserver-config-enable-table-acl-dry-run                      If this flag is enabled, tabletserver will emit monitoring metrics and let the request pass regardless of table acl check results
@@ -311,7 +319,6 @@ vtcombo [flags]
       --queryserver-config-truncate-error-len int                        truncate errors sent to client if they are longer than this value (0 means do not truncate)
       --queryserver-config-txpool-timeout duration                       query server transaction pool timeout, it is how long vttablet waits if tx pool is full (default 1s)
       --queryserver-config-warn-result-size int                          query server result size warning threshold, warn if number of rows returned from vttablet for non-streaming queries exceeds this
-      --queryserver-enable-settings-pool                                 Enable pooling of connections with modified system settings (default true)
       --queryserver-enable-views                                         Enable views support in vttablet.
       --queryserver_enable_online_ddl                                    Enable online DDL. (default true)
       --redact-debug-ui-queries                                          redact full queries and bind variables from debug UI
@@ -351,6 +358,7 @@ vtcombo [flags]
       --stream_health_buffer_size uint                                   max streaming health entries to buffer per streaming health client (default 20)
       --table-refresh-interval int                                       interval in milliseconds to refresh tables in status page with refreshRequired class
       --table_gc_lifecycle string                                        States for a DROP TABLE garbage collection cycle. Default is 'hold,purge,evac,drop', use any subset ('drop' implicitly always included) (default "hold,purge,evac,drop")
+      --tablet-filter-tags StringMap                                     Specifies a comma-separated list of tablet tags (as key:value pairs) to filter the tablets to watch.
       --tablet_dir string                                                The directory within the vtdataroot to store vttablet/mysql files. Defaults to being generated by the tablet uid.
       --tablet_filters strings                                           Specifies a comma-separated list of 'keyspace|shard_name or keyrange' values to filter the tablets to watch.
       --tablet_health_keep_alive duration                                close streaming tablet health connection if there are no requests for this long (default 5m0s)
@@ -390,6 +398,7 @@ vtcombo [flags]
       --tracing-enable-logging                                           whether to enable logging in the tracing service
       --tracing-sampling-rate float                                      sampling rate for the probabilistic jaeger sampler (default 0.1)
       --tracing-sampling-type string                                     sampling strategy to use for jaeger. possible values are 'const', 'probabilistic', 'rateLimiting', or 'remote' (default "const")
+      --track-udfs                                                       Track UDFs in vtgate.
       --track_schema_versions                                            When enabled, vttablet will store versions of schemas at each position that a DDL is applied and allow retrieval of the schema corresponding to a position
       --transaction-log-stream-handler string                            URL handler for streaming transactions log (default "/debug/txlog")
       --transaction_limit_by_component                                   Include CallerID.component when considering who the user is for the purpose of transaction limit.
@@ -400,7 +409,6 @@ vtcombo [flags]
       --transaction_mode string                                          SINGLE: disallow multi-db transactions, MULTI: allow multi-db transactions with best effort commit, TWOPC: allow multi-db transactions with 2pc commit (default "MULTI")
       --truncate-error-len int                                           truncate errors sent to client if they are longer than this value (0 means do not truncate)
       --twopc_abandon_age float                                          time in seconds. Any unresolved transaction older than this time will be sent to the coordinator to be resolved.
-      --twopc_coordinator_address string                                 address of the (VTGate) process(es) that will be used to notify of abandoned transactions.
       --twopc_enable                                                     if the flag is on, 2pc is enabled. Other 2pc flags must be supplied.
       --tx-throttler-config string                                       Synonym to -tx_throttler_config (default "target_replication_lag_sec:2 max_replication_lag_sec:10 initial_rate:100 max_increase:1 emergency_decrease:0.5 min_duration_between_increases_sec:40 max_duration_between_increases_sec:62 min_duration_between_decreases_sec:20 spread_backlog_across_sec:20 age_bad_rate_after_sec:180 bad_rate_increase:0.1 max_rate_approach_threshold:0.9")
       --tx-throttler-default-priority int                                Default priority assigned to queries that lack priority information (default 100)

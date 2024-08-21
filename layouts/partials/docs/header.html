@@ -1,11 +1,6 @@
 {{ $docsSections := where site.Sections "Section" "docs" }}
 
 <header class="docs-header">
-  {{/* Hide on mobile / compact view because it crowds the UI and there's always a footer link anyway */}}
-  <div class="is-pulled-right is-hidden-touch edit-this-page-small">
-    {{ partial "docs/edit-this-page.html" . }}
-  </div>
-
   {{/* Hide breadcrumbs on mobile since bulma.io doesn't handle overflows nicely for long crumbs */}}
   <nav class="breadcrumb is-hidden-touch" aria-label="breadcrumbs">
     <ul>

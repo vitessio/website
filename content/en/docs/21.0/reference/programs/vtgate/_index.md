@@ -1,7 +1,7 @@
 ---
 title: vtgate
 series: vtgate
-commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
+commit: 471ab1a20a1f7f1f333ddd378b3edc71ad6de7a3
 ---
 ## vtgate
 
@@ -124,7 +124,7 @@ vtgate \
       --keyspaces_to_watch strings                                       Specifies which keyspaces this vtgate should have access to while routing queries or accessing the vschema.
       --lameduck-period duration                                         keep running at least this long after SIGTERM before stopping (default 50ms)
       --legacy_replication_lag_algorithm                                 Use the legacy algorithm when selecting vttablets for serving. (default true)
-      --lock-timeout duration                                            Maximum time for which a shard/keyspace lock can be acquired for (default 45s)
+      --lock-timeout duration                                            Maximum time to wait when attempting to acquire a lock from the topo server (default 45s)
       --lock_heartbeat_time duration                                     If there is lock function used. This will keep the lock connection active by using this heartbeat (default 5s)
       --log_backtrace_at traceLocations                                  when logging hits line file:N, emit a stack trace
       --log_dir string                                                   If non-empty, write log files in this directory
@@ -137,6 +137,7 @@ vtgate \
       --max_payload_size int                                             The threshold for query payloads in bytes. A payload greater than this threshold will result in a failure to handle the query.
       --message_stream_grace_period duration                             the amount of time to give for a vttablet to resume if it ends a message stream, usually because of a reparent. (default 30s)
       --min_number_serving_vttablets int                                 The minimum number of vttablets for each replicating tablet_type (e.g. replica, rdonly) that will be continue to be used even with replication lag above discovery_low_replication_lag, but still below discovery_high_replication_lag_minimum_serving. (default 2)
+      --mysql-server-drain-onterm                                        If set, the server waits for --onterm_timeout for already connected clients to complete their in flight work
       --mysql-server-keepalive-period duration                           TCP period between keep-alives
       --mysql-server-pool-conn-read-buffers                              If set, the server will pool incoming connection read buffers
       --mysql_allow_clear_text_without_tls                               If set, the server will allow the use of a clear text password over non-SSL connections.
@@ -192,6 +193,7 @@ vtgate \
       --querylog-filter-tag string                                       string that must be present in the query for it to be logged; if using a value as the tag, you need to disable query normalization
       --querylog-format string                                           format for query logs ("text" or "json") (default "text")
       --querylog-row-threshold uint                                      Number of rows a query has to return or affect before being logged; not useful for streaming queries. 0 means all queries will be logged.
+      --querylog-sample-rate float                                       Sample rate for logging queries. Value must be between 0.0 (no logging) and 1.0 (all queries)
       --redact-debug-ui-queries                                          redact full queries and bind variables from debug UI
       --remote_operation_timeout duration                                time to wait for a remote operation (default 15s)
       --retry-count int                                                  retry count (default 2)
@@ -213,6 +215,7 @@ vtgate \
       --stderrthreshold severityFlag                                     logs at or above this threshold go to stderr (default 1)
       --stream_buffer_size int                                           the number of bytes sent from vtgate for each stream call. It's recommended to keep this value in sync with vttablet's query-server-config-stream-buffer-size. (default 32768)
       --table-refresh-interval int                                       interval in milliseconds to refresh tables in status page with refreshRequired class
+      --tablet-filter-tags StringMap                                     Specifies a comma-separated list of tablet tags (as key:value pairs) to filter the tablets to watch.
       --tablet_filters strings                                           Specifies a comma-separated list of 'keyspace|shard_name or keyrange' values to filter the tablets to watch.
       --tablet_grpc_ca string                                            the server ca to use to validate servers when connecting
       --tablet_grpc_cert string                                          the cert to use to connect
@@ -246,6 +249,7 @@ vtgate \
       --tracing-enable-logging                                           whether to enable logging in the tracing service
       --tracing-sampling-rate float                                      sampling rate for the probabilistic jaeger sampler (default 0.1)
       --tracing-sampling-type string                                     sampling strategy to use for jaeger. possible values are 'const', 'probabilistic', 'rateLimiting', or 'remote' (default "const")
+      --track-udfs                                                       Track UDFs in vtgate.
       --transaction_mode string                                          SINGLE: disallow multi-db transactions, MULTI: allow multi-db transactions with best effort commit, TWOPC: allow multi-db transactions with 2pc commit (default "MULTI")
       --truncate-error-len int                                           truncate errors sent to client if they are longer than this value (0 means do not truncate)
       --v Level                                                          log level for V logs

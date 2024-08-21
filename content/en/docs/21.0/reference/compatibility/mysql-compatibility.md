@@ -119,9 +119,9 @@ USE `mykeyspace:-80@rdonly`
 
 A similar effect can be achieved by using a database name like `mykeyspace:-80@rdonly` in your MySQL application client connection string.
 
-### Common Table Expressions 
-Non-recursive CTEs are supported in Vitess.
-Currently, Vitess has experimental support for recursive CTEs. Users are encouraged to test this feature and provide feedback.
+### Common Table Expressions
+Vitess supports Non-recursive CTEs with the limitation that CTE aliases cannot be the same as a base table used in the CTE. 
+Currently, Vitess does not have support for recursive CTEs. 
 
 ### Window Functions
 Vitess does not yet support Window Functions.

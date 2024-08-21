@@ -59,8 +59,6 @@ sudo yum install -y make unzip g++ etcd curl git wget
 
 * We will be using etcd as the topology service. The command `make tools` can also install Zookeeper or Consul for you, which requires additional dependencies.
 
-{{<warning>}}Be sure to follow all the steps in this guide to avoid running into problems later on.{{</warning>}}
-
 ### Disable SELinux
 
 SELinux will not allow Vitess to launch MySQL in any data directory by default. You will need to disable it:
@@ -145,18 +143,3 @@ E1027 18:28:23.464780   19483 mysqld.go:734] mysqld --initialize-insecure failed
 mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
 ```
 
-### Mysqlctl Fails to Start 
-This error is because some tests need `VTROOT`, but it is missing. You can manually run `source dev.env` to solve this:
-```
-Running tool: /usr/local/go/bin/go test -timeout 30s -run ^TestFloatFormatting$ vitess.io/vitess/go/vt/vtgate/evalengine/integration
-
-E0316 20:47:00.173050   63268 local_cluster.go:313] Mysqlctl failed to start: fork/exec bin/mysqlctl: no such file or directory
-could not launch mysql: fork/exec bin/mysqlctl: no such file or directory
-FAIL    vitess.io/vitess/go/vt/vtgate/evalengine/integration    0.018s
-```
-If you use an IDE to run these tests, you need to set `VTROOT` previously. For example, in VScode
-```
-"go.testEnvVars": {
-    "VTROOT": "<path to my vitess checkout>"
-}
-```

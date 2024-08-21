@@ -1,7 +1,7 @@
 ---
 title: vtbackup
 series: vtbackup
-commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
+commit: c2d41acc97e6aabba902ff5a7f5b2300612b7b7c
 ---
 ## vtbackup
 
@@ -106,7 +106,7 @@ vtbackup [flags]
       --db_appdebug_password string                                 db appdebug password
       --db_appdebug_use_ssl                                         Set this flag to false to make the appdebug connection to not use ssl (default true)
       --db_appdebug_user string                                     db appdebug user userKey (default "vt_appdebug")
-      --db_charset string                                           Character set used for this tablet. (default "utf8mb4")
+      --db_charset string                                           Character set/collation used for this tablet. Make sure to configure this to a charset/collation supported by the lowest MySQL version in your environment. (default "utf8mb4")
       --db_conn_query_info                                          enable parsing and processing of QUERY_OK info fields
       --db_connect_timeout_ms int                                   connection timeout to mysqld in milliseconds (0 for no timeout)
       --db_dba_password string                                      db dba password
@@ -161,7 +161,7 @@ vtbackup [flags]
       --keep-alive-timeout duration                                 Wait until timeout elapses after a successful backup before shutting down.
       --keep_logs duration                                          keep logs for this long (using ctime) (zero to keep forever)
       --keep_logs_by_mtime duration                                 keep logs for this long (using mtime) (zero to keep forever)
-      --lock-timeout duration                                       Maximum time for which a shard/keyspace lock can be acquired for (default 45s)
+      --lock-timeout duration                                       Maximum time to wait when attempting to acquire a lock from the topo server (default 45s)
       --log_backtrace_at traceLocations                             when logging hits line file:N, emit a stack trace
       --log_dir string                                              If non-empty, write log files in this directory
       --log_err_stacks                                              log stack traces for errors
@@ -189,6 +189,12 @@ vtbackup [flags]
       --mycnf_slow_log_path string                                  mysql slow query log path
       --mycnf_socket_file string                                    mysql socket file
       --mycnf_tmp_dir string                                        mysql tmp directory
+      --mysql-shell-backup-location string                          location where the backup will be stored
+      --mysql-shell-dump-flags string                               flags to pass to mysql shell dump utility. This should be a JSON string and will be saved in the MANIFEST (default "{\"threads\": 2}")
+      --mysql-shell-flags string                                    execution flags to pass to mysqlsh binary to be used during dump/load (default "--defaults-file=/dev/null --js -h localhost")
+      --mysql-shell-load-flags string                               flags to pass to mysql shell load utility. This should be a JSON string (default "{\"threads\": 4, \"updateGtidSet\": \"replace\", \"skipBinlog\": true, \"progressFile\": \"\"}")
+      --mysql-shell-should-drain                                    decide if we should drain while taking a backup or continue to serving traffic
+      --mysql-shell-speedup-restore                                 speed up restore by disabling redo logging and double write buffer during the restore process
       --mysql-shutdown-timeout duration                             how long to wait for mysqld shutdown (default 5m0s)
       --mysql_port int                                              mysql port (default 3306)
       --mysql_server_version string                                 MySQL server version to advertise. (default "8.0.30-Vitess")

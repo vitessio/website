@@ -39,13 +39,12 @@ sudo systemctl disable etcd
 
 ## Install Node
 
-```sh
+```
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 ```
 
 Ensure the following is in your bashrc/zshrc or similar. `nvm` automatically attempts to add them:
-
-```bash
+```
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
@@ -53,7 +52,7 @@ export NVM_DIR="$HOME/.nvm"
 
 Finally, install [node](https://nodejs.org/):
 
-```sh
+```
 nvm install 18
 nvm use 18
 ```
@@ -65,7 +64,6 @@ See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmi
 AppArmor/SELinux will not allow Vitess to launch MySQL in any data directory by default. You will need to disable it:
 
 __AppArmor__:
-
 ```sh
 # Debian and Ubuntu
 sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
@@ -76,7 +74,6 @@ sudo aa-status | grep mysqld
 ```
 
 __SELinux__:
-
 ```sh
 # CentOS
 sudo setenforce 0
