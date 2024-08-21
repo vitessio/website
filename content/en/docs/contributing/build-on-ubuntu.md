@@ -65,6 +65,8 @@ sudo systemctl disable etcd
 
 * We will be using etcd as the topology service. The command `make tools` can also install Zookeeper or Consul for you, which requires additional dependencies.
 
+{{<warning>}}Be sure to follow all the steps in this guide to avoid running into problems later on.{{</warning>}}
+
 ### Disable mysqld AppArmor Profile
 
 The `mysqld` AppArmor profile will not allow Vitess to launch MySQL in any data directory by default. You will need to disable it:

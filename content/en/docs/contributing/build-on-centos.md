@@ -59,6 +59,8 @@ sudo yum install -y make unzip g++ etcd curl git wget
 
 * We will be using etcd as the topology service. The command `make tools` can also install Zookeeper or Consul for you, which requires additional dependencies.
 
+{{<warning>}}Be sure to follow all the steps in this guide to avoid running into problems later on.{{</warning>}}
+
 ### Disable SELinux
 
 SELinux will not allow Vitess to launch MySQL in any data directory by default. You will need to disable it:
@@ -142,3 +144,4 @@ mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
 E1027 18:28:23.464780   19483 mysqld.go:734] mysqld --initialize-insecure failed: /usr/sbin/mysqld: exit status 1, output: mysqld: [ERROR] Failed to open required defaults file: /home/morgo/vitess/vtdataroot/vt_0000000101/my.cnf
 mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
 ```
+
