@@ -1,4 +1,4 @@
-{{ $inServerMode := hugo.IsServer }}
+{{ $inServerMode := site.IsServer }}
 {{ $style        := "sass/style.sass" }}
 {{ $target       := "css/style.css" }}
 {{ $includes     := (slice "node_modules") }}
