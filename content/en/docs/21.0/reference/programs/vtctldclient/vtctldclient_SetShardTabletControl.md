@@ -1,7 +1,7 @@
 ---
 title: SetShardTabletControl
 series: vtctldclient
-commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
+commit: 7e8f008834c0278b8df733d606940a629b67a9d9
 ---
 ## vtctldclient SetShardTabletControl
 
@@ -32,11 +32,11 @@ vtctldclient SetShardTabletControl [--cells=c1,c2...] [--denied-tables=t1,t2,...
 ### Options
 
 ```
-  -c, --cells strings           Specifies a comma-separated list of cells to update.
-      --denied-tables strings   Specifies a comma-separated list of tables to add to the denylist (for MoveTables). Each table name is either an exact match, or a regular expression of the form '/regexp/'.
-      --disable-query-service   Sets the DisableQueryService flag in the specified cells. This flag requires --denied-tables and --remove to be unset; if either is set, this flag is ignored.
+  -c, --cells strings           Specifies a comma-separated list of cells to update (all cells will be used by default).
+      --denied-tables strings   Specifies a comma-separated list of tables to add to the DeniedTables list, or remove from the list if --remove is also specified, in the Shard records (MoveTables). Each table name is either an exact match, or a regular expression of the form '/regexp/'.
+      --disable-query-service   Adds or removes the DisableQueryService field in the SrvKeyspace record (Reshard) for the specified cells (using all cells by deefault). This flag requires --denied-tables and --remove to be unset; if either is set, this flag is ignored.
   -h, --help                    help for SetShardTabletControl
-  -r, --remove                  Removes the specified cells for MoveTables operations.
+  -r, --remove                  Removes the TabletControl field and its DeniedTables entries, or if specified with --denied-tables then only remove the specified tables from the DeniedTables list, in the Shard records (MoveTables) in the specified cells (using all cells by default).
 ```
 
 ### Options inherited from parent commands

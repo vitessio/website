@@ -1,14 +1,14 @@
 ---
 title: OnlineDDL cleanup
 series: vtctldclient
-commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
+commit: 7e8f008834c0278b8df733d606940a629b67a9d9
 ---
 ## vtctldclient OnlineDDL cleanup
 
-Mark a given schema migration ready for artifact cleanup.
+Mark a given schema migration, or all complete/failed/cancelled migrations, ready for artifact cleanup.
 
 ```
-vtctldclient OnlineDDL cleanup <keyspace> <uuid>
+vtctldclient OnlineDDL cleanup <keyspace> <uuid|all>
 ```
 
 ### Examples
