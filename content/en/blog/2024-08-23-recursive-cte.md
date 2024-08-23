@@ -1,8 +1,8 @@
 ---
 author: 'Andrés Taylor'
-date: 2024-08-20
-slug: '2024-08-20-recursive-cte'
-tags: ['Vitess', 'PlanetScale', 'MySQL', "Compability", "CTE"]
+date: 2024-08-23
+slug: '2024-08-23-recursive-cte'
+tags: ['Vitess', 'PlanetScale', 'MySQL', "Compatibility", "CTE"]
 title: 'Vitess Now Supports Recursive CTEs: A Step Closer to Full MySQL Compatibility'
 description: "Vitess introduces support for recursive CTEs, enabling powerful query capabilities across sharded keyspaces, as we continue our progress toward full MySQL feature compatibility"
 ---
