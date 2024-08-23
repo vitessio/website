@@ -17,99 +17,31 @@ sets or evaluates a user defined variable, the `vtgate` will rewrite the query
 so that it does not actually do anything with user variables. Instead, it keeps 
 the state in the Vitess layer.
 
-In other cases, this approach is not enough, and Vitess can use 
-**reserved connections**, which are controlled via the `--enable_system_settings` vtgate flag.
-Enabling reserved connections means a dedicated connection is maintained for 
-the `vtgate` session from the relevant `vttablet` to the MySQL server. Reserved 
-connections are used when changing system variables, using temporary tables, 
-or when using MySQL locking functions to acquire advisory locks. In general, it 
-is better to use reserved connections sparingly, because they reduce the 
+In other cases, this approach is not enough, and Vitess can use **reserved connections**.
+A dedicated connection is maintained for the `vtgate` session 
+from the relevant `vttablet` to its underlying MySQL server. Reserved connections are used when using 
+temporary tables, or when using MySQL locking functions to acquire advisory locks. 
+In general, it is better to use reserved connections sparingly, because they reduce the 
 effectiveness of the `vttablet` connection pooling. This may also reduce, or even 
 eliminate, the advantages of using connection pooling between `vttablet` and 
-MySQL. As such, take note of the `SET` statements that your application's 
-MySQL connector and/or ORM sends to MySQL/`vtgate`. Or if those settings will
-result in reserved connections being employed for some/all of the application's
-sessions.
+MySQL.
 
-### Settings pool and reserved connections
+### Reserved connections
 
-We will see how reserved connections get triggered for different use cases in subsequent sections of this document.
-What we want to highlight at the beginning is that there is a known issue when a reserved connection is used as it cannot be reused by vttablet. More details about it are given [below](#number-of-vttablet---mysql-connections).
+`SET` statements used to cause use of `reserved connections`. This is no longer the case with the new connection pool implementation used by vttablet.
+The connection pool now tracks connections with modified settings instead of pinning connections to specific client sessions. 
+Any client requesting a connection with or without settings is provided a connection that has the correct settings.
+With this enhancement, we reduce the likelihood of MySQL running out of connections due to reserved connections, 
+because the scenarios where we still need reserved connections have drastically reduced.
 
-To solve this problem, the connection pool implementation used by vttablet has been enhanced to keep the connections with settings in the pool and not to pin the connection to the client session.
-With this enhancement, we reduce the likelihood of MySQL running out of connections due to reserved connections, because the scenarios where we still need reserved connections are sharply reduced.
-
-This is enabled by default from v17 onwards. It can be disabled by setting the flag `--queryserver-enable-settings-pool` on vttablet.
-This change takes effect only for the cases when system variable changes need a reserved connection.
 There are still cases like [temporary tables](#temporary-tables-and-reserved-connections) and [advisory locks](#get_lock-and-reserved-connections) where reserved connections will continue to be used.
-
-### System variables and reserved connections
-
-If a user changes a system variable and reserved connections are enabled, 
-the user connection will be marked as needing reserved connections.
-For all subsequent calls to Vitess, connection pooling is turned off for
-a particular session. This only applies to certain system settings. For more
-details see [here](../../../../design-docs/query-serving/set-stmt/). Any queries to a
-tablet from this session will create a reserved connection on that tablet. This 
-means a connection is reserved only for that session.
-
-Connection pooling is an important part of what makes Vitess performant, so
-using constructs that turn it off should only be done in rare circumstances.
-
-If you are using an application or library that issues these kind of `SET`
-statements, the best way to avoid reserved connections is to make sure the
-global MySQL settings match the ones the application is trying to set (e.g.
-`sql_mode`, or `wait_timeout`). When Vitess discovers that you are changing
-a system setting to the global value, Vitess just ignores those `SET`s.
-
-Once a session has been marked as reserved, it remain reserved until the user
-disconnects from `vtgate`.
-
-### Enabling reserved connections
-
-Use of reserved connections are controlled by the `vtgate` flag
-`--enable_system_settings`.  This flag has traditionally defaulted to **false**
-(or off) in release versions (i.e. `x.0` and `x.0.y`) of Vitess, and to
-**true** (or on) in development versions. 
-
-From Vitess 12.0 onwards, it defaults to **true** in all release and 
-development versions. You can read more [here](https://github.com/vitessio/vitess/issues/9125). 
-Thus you should specify this flag explicitly, so you are sure whether
-it is enabled or not, independent of which Vitess release/build/version
-you are running.
-
-If you have reserved connections disabled, you will get the "old" Vitess behavior:
-where most setting most system settings (e.g. `sql_mode`) are just silently
-ignored by Vitess. In situations where you know your backend MySQL defaults
-are acceptable, this may be the correct tradeoff to ensure the best possible
-performance of the `vttablet` <-> MySQL connection pools. As noted above,
-this comes down to a trade-off between compatibility and
-performance/scalability. You should also review [this section](#number-of-vttablet---mysql-connections)
-when deciding on whether or not to enable reserved connections.
-
-### Avoiding the use of reserved connections
-
-In MySQL80 a new query hint (`SET_VAR`) allows setting the session value of certain system variables during
-the execution of a statement. More information about this MySQL feature on the
-[MySQL documentation](https://dev.mysql.com/doc/refman/8.0/en/optimizer-hints.html#optimizer-hints-set-var).
-Vitess leverages this query hint to reduce the number of reserved connections. When setting a system variable,
-instead of creating a reserved connection, the variable and its new value will be sent to MySQL using the
-`SET_VAR` query hint. This applies only if the system variable is supported by the `SET_VAR` hint
-(list of supported variables [here](https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html)).
-
-
-For example, executing: `set @@sql_mode = 'NO_ZERO_DATE'` will not create a reserved connection for future queries.
-If we execute a `select` statement like: `select foo from bar`, VTGate will rewrite the query as 
-`select /*+ SET_VAR(sql_mode = 'NO_ZERO_DATE') foo from bar */`.
-
-This feature can be disabled using the VTGate flag `--enable_set_var` (by default set to true).
 
 ### Temporary tables and reserved connections
 
 Temporary tables exist only in the context of a particular MySQL connection.
 If using a temporary table, Vitess will mark the session as needing a
 reserved connection. It will continue to use the reserved connection
-until the user disconnects. Note that removing the temp table is not enough to reset this.
+until the user disconnects. Note that removing the temporary table is not enough to reset the connection.
 More info can be found [here](../../compatibility/mysql-compatibility/#temporary-tables).
 
 ### GET_LOCK() and reserved connections

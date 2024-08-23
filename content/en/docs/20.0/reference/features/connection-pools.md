@@ -121,17 +121,7 @@ Flag: `--transaction_limit_per_user`
 ### vtgate system settings
 Flag: `--enable_system_settings`
 
-This vtgate flag allows clients to modify a [subset of system settings](https://github.com/vitessio/vitess/blob/main/go/vt/sysvars/sysvars.go#L174-L217) on the MySQL. This is done using the mechanism of [reserved connection](../../query-serving/reserved-conn/#enabling-reserved-connections).
-Once a reserved connection is created, it lives for the life of the vtgate client session. These connections live outside of the regular connection pool and as a result, the number of MySQL server connections used by
-vttablet may become significantly higher than what you might expect based on the pool settings.
-
-### vttablet settings pool
-Flag: `--queryserver-enable-settings-pool`
-
-This vttablet flag enables pooling of connections with modified settings.
-This overcomes the issue described with the number of MySQL connections in [vtgate system settings](#vtgate-system-settings).
-Both these flags should be enabled for clients to be able to modify system settings without foregoing the benefits of connection pooling.
-
+This vtgate flag allows clients to modify a [subset of system settings](https://github.com/vitessio/vitess/blob/v20.0.0/go/vt/sysvars/sysvars.go#L186-L231) on the MySQL.
 
 ## Calculating maximum db connections used by vttablet
 
