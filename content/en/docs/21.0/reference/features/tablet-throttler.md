@@ -783,7 +783,6 @@ The primary throttler uses `CheckThrottler` gRPC calls on the replicas. Apps int
 The throttler does also provide a HTTP endpoint for external apps such as `gh-ost` and `pt-online-schema-change`:
 
 - `/throttler/check?app=<app-name>` is the equivalent of `vtctldclient CheckThrottler --app-name=<app-name>`.
-- `/throttler/check-self`, is the equivalent of `vtctldclient CheckThrottler --scope="self"`.
 
 ### Metrics
 
@@ -875,6 +874,30 @@ Counter. Number of times throttler was probed via `CheckRequest` gRPC.
 ##### `ThrottlerHeartbeatRequests`
 
 Counter. Number of times the throttler has requested a heartbeat lease. Correlated with `HeartbeatWrites` metric, and specifically when `--heartbeat_on_demand_duration` is set, this helps diagnose throttler/heartbeat negotiation and behavior.
+
+## Deprecations
+
+The following are deprecated in `v21`, and will be removed in `v22` or later:
+
+### Flags
+
+- The flags `--check-as-check-self` and `--check-as-check-shard` in `vtctldclient UpdateThrottlerConfig`. These flags were useful in the single-metric throttler. The new multi-metric design allows a per app configuration of not only a list of metrics, but also the scope of each metrics. For example, both these commands can be applied:
+
+```shell
+$ vtctldclient UpdateThrottlerConfig --app-name "all" --app-metrics "lag,self/loadavg" commerce
+$ vtctldclient UpdateThrottlerConfig --app-name "online-ddl" --app-metrics "lag,threads_running,shard/loadavg" commerce
+```
+Each applies different metrics to different apps, and each can assign a different scope to any specific metric.
+
+### HTTP endpoints
+
+- `/throttler/check-self` - use `vtctldclient CheckThrottler --scope-self` instead
+- `/throttler/status` - use `vtctldclient GetThrottlerStatus` instead
+- `/throttler/throttle-app` - use `vtctldclient UpdateThrottlerConfig --throttle-app=<name> ...` instead
+- `/throttler/unthrottle-app` - use `vtctldclient UpdateThrottlerConfig --unthrottle-app=<name>` instead
+- `/throttler/throttled-apps` - use `vtctldclient GetThrottlerStatus` instead
+
+The endpoint `/throttler/check` is kept but unsupported. It is used by `gh-ost`. External use of this endpoint is discouraged.
 
 ## Notes
 
