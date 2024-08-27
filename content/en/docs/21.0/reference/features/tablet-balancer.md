@@ -1,6 +1,5 @@
 ---
 title: VTGate Tablet Balancer
-aliases: ['/docs/user-guides/tablet-balancer/','/docs/reference/tablet-balancer/']
 ---
 
 # VTGate Tablet Balancer
