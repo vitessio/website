@@ -1,7 +1,7 @@
 ---
 title: VDiff create
 series: vtctldclient
-commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
+commit: 4bc3b998941037e0446f5c0899587e4093d79f57
 ---
 ## vtctldclient VDiff create
 
@@ -15,7 +15,7 @@ vtctldclient VDiff create
 
 ```
 vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --target-keyspace customer create
-vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --target-keyspace customer create b3f59678-5241-11ee-be56-0242ac120002
+vtctldclient --server :15999 vdiff --workflow c2c --target-keyspace customer create b3f59678-5241-11ee-be56-0242ac120002 --source-cells zone1 --tablet-types "rdonly,replica" --target-cells zone1 --update-table-stats --max-report-sample-rows 1000 --wait --wait-update-interval 5s --max-diff-duration 1h --row-diff-column-truncate-at 0
 ```
 
 ### Options
@@ -30,6 +30,7 @@ vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --targe
       --max-extra-rows-to-compare int             If there are collation differences between the source and target, you can have rows that are identical but simply returned in a different order from MySQL. We will do a second pass to compare the rows for any actual differences in this case and this flag allows you to control the resources used for this operation. (default 1000)
       --max-report-sample-rows int                Maximum number of row differences to report (0 for all differences). NOTE: when increasing this value it is highly recommended to also specify --only-pks (default 10)
       --only-pks                                  When reporting missing rows, only show primary keys in the report.
+      --row-diff-column-truncate-at int           When showing row differences, truncate the non Primary Key column values to this length. A value less than 1 means do not truncate. (default 128)
       --source-cells strings                      The source cell(s) to compare from; default is any available cell.
       --tables strings                            Only run vdiff for these tables in the workflow.
       --tablet-types strings                      Tablet types to use on the source and target.

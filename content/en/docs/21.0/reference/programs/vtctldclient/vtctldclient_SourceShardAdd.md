@@ -1,7 +1,7 @@
 ---
 title: SourceShardAdd
 series: vtctldclient
-commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
+commit: 4bc3b998941037e0446f5c0899587e4093d79f57
 ---
 ## vtctldclient SourceShardAdd
 

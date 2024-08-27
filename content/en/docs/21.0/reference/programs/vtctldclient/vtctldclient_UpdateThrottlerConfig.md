@@ -1,23 +1,21 @@
 ---
 title: UpdateThrottlerConfig
 series: vtctldclient
-commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
+commit: 4bc3b998941037e0446f5c0899587e4093d79f57
 ---
 ## vtctldclient UpdateThrottlerConfig
 
 Update the tablet throttler configuration for all tablets in the given keyspace (across all cells)
 
 ```
-vtctldclient UpdateThrottlerConfig [--enable|--disable] [--threshold=<float64>] [--custom-query=<query>] [--check-as-check-self|--check-as-check-shard] [--throttle-app|unthrottle-app=<name>] [--throttle-app-ratio=<float, range [0..1]>] [--throttle-app-duration=<duration>] <keyspace>
+vtctldclient UpdateThrottlerConfig [--enable|--disable] [--metric-name=<name>] [--threshold=<float64>] [--custom-query=<query>] [--throttle-app|unthrottle-app=<name>] [--throttle-app-ratio=<float, range [0..1]>] [--throttle-app-duration=<duration>] [--throttle-app-exempt=<bool>] [--app-name=<name> --app-metrics=<metrics>] <keyspace>
 ```
 
 ### Options
 
 ```
-      --app-metrics strings              metrics to be used when checking the throttler for the app (requires --app-name). Empty to restore to default metrics
+      --app-metrics strings              metrics to be used when checking the throttler for the app (requires --app-name). Empty to restore to default metrics. Example: --app-metrics=lag,custom,shard/loadavg
       --app-name string                  app name for which to assign metrics (requires --app-metrics)
-      --check-as-check-self              /throttler/check requests behave as is /throttler/check-self was called
-      --check-as-check-shard             use standard behavior for /throttler/check requests
       --custom-query string              custom throttler check query
       --disable                          Disable the throttler
       --enable                           Enable the throttler

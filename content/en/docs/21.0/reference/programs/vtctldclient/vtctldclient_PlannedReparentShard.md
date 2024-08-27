@@ -1,7 +1,7 @@
 ---
 title: PlannedReparentShard
 series: vtctldclient
-commit: cd0c2b594b2d5178a9c8ac081eaee7d1b7eef28a
+commit: 4bc3b998941037e0446f5c0899587e4093d79f57
 ---
 ## vtctldclient PlannedReparentShard
 
@@ -14,6 +14,7 @@ vtctldclient PlannedReparentShard <keyspace/shard>
 ### Options
 
 ```
+      --allow-cross-cell-promotion           Allow cross cell promotion
       --avoid-primary string                 Alias of a tablet that should not be the primary; i.e. "reparent to any other tablet if this one is the primary".
   -h, --help                                 help for PlannedReparentShard
       --new-primary string                   Alias of a tablet that should be the new primary.
