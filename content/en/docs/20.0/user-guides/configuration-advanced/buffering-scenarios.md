@@ -1,8 +1,7 @@
 ---
 title: VTGate Buffering Scenarios
 weight: 12
-aliases: ['/docs/reference/features/vtgate-buffering',
-'/docs/reference/programs/vtgate']
+aliases: ['/docs/user-guides/buffering-scenarios/']
 ---
 
 For documentation on buffering behaviors please see
