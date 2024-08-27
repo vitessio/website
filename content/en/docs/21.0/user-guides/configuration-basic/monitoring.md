@@ -16,8 +16,6 @@ The two critical Vitess processes to monitor are vttablet and vtgate. Additional
 
 Beyond what the tools export, it is important to also monitor system resource usage: CPU, memory, network and disk usage.
 
-There is a [popular mixin](https://github.com/vitessio/vitess/tree/main/vitess-mixin) contributed by [Slack](https://slack.com) that is based on how they monitor Vitess internally. It can be used as a starting point if you intend to use Prometheus and Grafana.
-
 Beyond the monitoring variables, the Vitess processes export additional information about their status on other URL paths. Some of those pages are for human consumption, and others are machine-readable meant for building automation.
 
 ## VTTablet
