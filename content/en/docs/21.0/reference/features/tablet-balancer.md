@@ -81,7 +81,7 @@ converge on the desired balanced query load.
 
 To enable the balancer requires the following configuration:
 
-  * `--balancer-enabled`:  Enables the balancer.  **Not enabled by default**
+  * `--enable-balancer`:  Enables the balancer.  **Not enabled by default**
   * `--balancer-vtgate-cells`:  Specifies the set of cells that contain vtgates
 
 Optionally this behavior can be restricted only when routing to certain keyspaces as a means of controlling rollout:
