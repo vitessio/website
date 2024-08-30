@@ -65,32 +65,32 @@ language_alternatives = ["en"]
 # Features (English)
 [[languages.en.params.features]]
 title = "Scalability"
-description = "Vitess combines many important MySQL features with the scalability of a NoSQL database. Its built-in sharding features let you grow your database without adding sharding logic to your application."
+description = "Vitess is compatible with MySQL while extending its scalability. Its built-in sharding lets you grow your database without adding sharding logic to your application."
 icon = "cubes"
 
 [[languages.en.params.features]]
 title = "Performance"
-description = "Vitess automatically rewrites queries that hurt database performance. It also uses caching mechanisms to mediate queries and prevent duplicate queries from simultaneously reaching your database. Performance is monitored through nightly <a href='https://benchmark.vitess.io'>benchmarks</a>."
+description = "Vitess improves on MySQL performance through query rewriting, caching and connection pooling. This allows the number of concurrent client connections to scale to orders of magnitude higher than traditional MySQL. Performance is monitored through nightly <a href='https://benchmark.vitess.io'>benchmarks</a>."
 icon = "fighter-jet"
 
 [[languages.en.params.features]]
-title = "Manageability"
-description = "Vitess automatically handles functions like failovers and backups. It uses a topology server to track and administer servers, letting your application be blissfully ignorant of database topology."
+title = "High Availability"
+description = "Vitess automatically detects and repairs primary failures. Data migrations into Vitess, and resharding operations within Vitess are all accomplished with near-zero downtime."
 icon = "tachometer-alt"
 
 [[languages.en.params.features]]
-title = "Connection pooling"
-description = "Vitess eliminates the high-memory overhead of MySQL connections. Vitess servers easily handle thousands of connections at once."
+title = "Features"
+description = "Vitess improves on MySQL by providing materialized views and messaging features that work across shards."
 icon = "share-alt"
 
 [[languages.en.params.features]]
 title = "Shard management"
-description = "MySQL doesn't natively support sharding, but you will likely need it as your database grows. Vitess saves you from having to add sharding logic to your application. It also enables live resharding with minimal read-only downtime."
+description = "MySQL doesn't natively support sharding, but you will likely need it as your database grows. Vitess provides flexible sharding schemes that are completely transparent to the application. It also enables live resharding with minimal read-only downtime."
 icon = "object-ungroup"
 
 [[languages.en.params.features]]
-title = "Workflow"
-description = "Vitess keeps track of all of the metadata about your cluster configuration so that the cluster view is always up-to-date and consistent for different clients."
+title = "Schema Management"
+description = "Vitess allows you to easily manage your schema while maintaining consistency across shards. Schema changes happen in the background without disrupting running workloads. This feature comes with a rich set of monitoring and fine-grained controls."
 icon = "magic"
 
 # Features (Chinese)
