@@ -1,7 +1,7 @@
 ---
 title: Migrate complete
 series: vtctldclient
-commit: 4bc3b998941037e0446f5c0899587e4093d79f57
+commit: bc454ac97c1b595141ae098cb8cd531f9c427404
 ---
 ## vtctldclient Migrate complete
 

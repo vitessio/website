@@ -1,7 +1,7 @@
 ---
 title: VDiff resume
 series: vtctldclient
-commit: 4bc3b998941037e0446f5c0899587e4093d79f57
+commit: bc454ac97c1b595141ae098cb8cd531f9c427404
 ---
 ## vtctldclient VDiff resume
 
@@ -20,7 +20,8 @@ vtctldclient --server localhost:15999 vdiff --workflow commerce2customer --targe
 ### Options
 
 ```
-  -h, --help   help for resume
+  -h, --help                    help for resume
+      --target-shards strings   The target shards to resume the vdiff on; default is all shards.
 ```
 
 ### Options inherited from parent commands
