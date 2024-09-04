@@ -204,7 +204,10 @@ $ vtctldclient OnlineDDL show customer cancelled --limit 1
 Note in the above each migration appears twice. For example, `d729b47e_6b52_11ee_808b_0a43f95f28a3` appears once for shard `-80` and once for shard `80-`. The two migrations run independently on each shard. It is possible to coordinate a near-atomic cut-over, aka [gated cut-over](../advanced-usage/#gated-cut-over).
 - `show vitess_migrations` shows the entire history of migrations.
 - `show vitess_migrations like ...` filters migrations by `migration_uuid`, or `migration_context`, or `migration_status`.
-- `show vitess_migrations where ...` lets the user specify arbitrary conditions.
+- `show vitess_migrations where ...` lets the user specify arbitrary conditions. Example:
+  ```sql
+  show vitess_migrations where completed_timestamp > now() - interval 7 day;
+  ```
 - All commands return results for the keyspace (schema) in use.
 
 #### Via vtctldclient
