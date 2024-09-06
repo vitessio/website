@@ -1,7 +1,7 @@
 ---
 title: vtctldclient
 series: vtctldclient
-commit: bc454ac97c1b595141ae098cb8cd531f9c427404
+commit: 6dba35de0eeeb6e86d22938f644ac8493d348413
 ---
 ## vtctldclient
 
@@ -83,6 +83,7 @@ vtctldclient [flags]
 * [vtctldclient GetTablets](./vtctldclient_gettablets/)	 - Looks up tablets according to filter criteria.
 * [vtctldclient GetThrottlerStatus](./vtctldclient_getthrottlerstatus/)	 - Get the throttler status for the given tablet.
 * [vtctldclient GetTopologyPath](./vtctldclient_gettopologypath/)	 - Gets the value associated with the particular path (key) in the topology server.
+* [vtctldclient GetUnresolvedTransactions](./vtctldclient_getunresolvedtransactions/)	 - Retrieves unresolved transactions for the given keyspace.
 * [vtctldclient GetVSchema](./vtctldclient_getvschema/)	 - Prints a JSON representation of a keyspace's topo record.
 * [vtctldclient GetWorkflows](./vtctldclient_getworkflows/)	 - Gets all vreplication workflows (Reshard, MoveTables, etc) in the given keyspace.
 * [vtctldclient LegacyVtctlCommand](./vtctldclient_legacyvtctlcommand/)	 - Invoke a legacy vtctlclient command. Flag parsing is best effort.

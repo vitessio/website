@@ -1,7 +1,7 @@
 ---
 title: VDiff create
 series: vtctldclient
-commit: bc454ac97c1b595141ae098cb8cd531f9c427404
+commit: 6dba35de0eeeb6e86d22938f644ac8493d348413
 ---
 ## vtctldclient VDiff create
 
@@ -22,8 +22,8 @@ vtctldclient --server :15999 vdiff --workflow c2c --target-keyspace customer cre
 
 ```
       --auto-retry                                Should this vdiff automatically retry and continue in case of recoverable errors. (default true)
+      --auto-start                                Start the vdiff upon creation. When false, the vdiff will be created but will not run until resumed. (default true)
       --debug-query                               Adds a mysql query to the report that can be used for further debugging.
-      --do-not-start                              Don't start the vdiff upon creation. When specified, the vdiff will be created but will not run until resumed.
       --filtered-replication-wait-time duration   Specifies the maximum time to wait, in seconds, for replication to catch up when syncing tablet streams. (default 30s)
   -h, --help                                      help for create
       --limit int                                 Max rows to stop comparing after. (default 9223372036854775807)

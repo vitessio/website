@@ -1,7 +1,7 @@
 ---
 title: OnlineDDL show
 series: vtctldclient
-commit: bc454ac97c1b595141ae098cb8cd531f9c427404
+commit: 6dba35de0eeeb6e86d22938f644ac8493d348413
 ---
 ## vtctldclient OnlineDDL show
 
