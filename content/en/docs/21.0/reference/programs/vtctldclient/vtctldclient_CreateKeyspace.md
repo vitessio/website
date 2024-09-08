@@ -1,7 +1,7 @@
 ---
 title: CreateKeyspace
 series: vtctldclient
-commit: 6dba35de0eeeb6e86d22938f644ac8493d348413
+commit: f52a0b141fd20db5af050f5d0e2d8724597b60c0
 ---
 ## vtctldclient CreateKeyspace
 
