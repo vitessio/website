@@ -4,7 +4,7 @@ weight: 1
 featured: true
 ---
 
-Vitess is a database solution for deploying, scaling and managing large clusters of open-source database instances. It currently supports MySQL and Percona Server for MySQL. It's architected to run as effectively in a public or private cloud architecture as it does on dedicated hardware. It combines and extends many important SQL features with the scalability of a NoSQL database. Vitess can help you with the following problems:
+Vitess is a database solution for deploying, scaling and managing large clusters of open-source database instances. It currently supports MySQL, Percona Server for MySQL and MariaDB. It's architected to run as effectively in a public or private cloud architecture as it does on dedicated hardware. It combines and extends many important SQL features with the scalability of a NoSQL database. Vitess can help you with the following problems:
 
 1. Scaling a SQL database by allowing you to shard it, while keeping application changes to a minimum.
 2. Migrating from bare-metal or VMs to a private or public cloud.
