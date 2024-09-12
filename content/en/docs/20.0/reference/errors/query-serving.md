@@ -42,7 +42,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT03027 | The column cannot have null value. | Column '%s' cannot be null | 1048 | 23000 |
 | VT03028 | The column cannot have null value. | Column '%s' cannot be null on row %d, col %d | 1048 | 23000 |
 | VT03029 | The number of columns you want to insert do not match the number of columns of your SELECT query. | column count does not match value count with the row for vindex '%s' | 1136 | 21S01 |
-| VT03030 | The number of columns you want to insert do not match the number of columns of your SELECT query. | lookup column count does not match value count with the row (columns, count): (%v, %!d(MISSING)) | 1136 | 21S01 |
+| VT03030 | The number of columns you want to insert do not match the number of columns of your SELECT query. | lookup column count does not match value count with the row (columns, count): (%v, %d) | 1136 | 21S01 |
 | VT03031 | EXPLAIN has to be sent down as a single query to the underlying MySQL, and this is not possible if it uses tables from multiple keyspaces | EXPLAIN is only supported for single keyspace | 0 |  |
 | VT03032 | You cannot update a table that is not a real MySQL table. | the target table %s of the UPDATE is not updatable | 1288 | HY000 |
 | VT03033 | The table column list and derived column list have different column counts. | In definition of view, derived table or common table expression, SELECT list and column names list have different column counts | 1353 | HY000 |
@@ -65,7 +65,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09008 | vexplain queries/all will actually run queries. `/*vt+ EXECUTE_DML_QUERIES */` must be set to run DML queries in vtexplain. Example: `vexplain /*vt+ EXECUTE_DML_QUERIES */ queries delete from t1` | vexplain queries/all will actually run queries | 0 |  |
 | VT09009 | Stream is only supported for primary tablets, please use a stream on those tablets. | stream is supported only for primary tablet type, current type: %v | 0 |  |
 | VT09010 | SHOW VITESS_THROTTLER STATUS works only on primary tablet. | SHOW VITESS_THROTTLER STATUS works only on primary tablet | 0 |  |
-| VT09011 | The prepared statement is not available | Unknown prepared statement handler (%!s(MISSING)) given to %s | 1243 | HY000 |
+| VT09011 | The prepared statement is not available | Unknown prepared statement handler (%s) given to %s | 1243 | HY000 |
 | VT09012 | This type of statement is not allowed on the given tablet. | %s statement with %s tablet not allowed | 0 |  |
 | VT09013 | Durability policy wants Vitess to use semi-sync, but the MySQL instances don't have the semi-sync plugin loaded. | semi-sync plugins are not loaded | 0 |  |
 | VT09014 | The vindex cannot be used as table in DML statement | vindex cannot be modified | 0 |  |
