@@ -79,6 +79,10 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09022 | Cannot send query to multiple shards. | Destination does not have exactly one shard: %v | 0 |  |
 | VT09023 | Unable to determine the shard for the given row. | could not map %v to a keyspace id | 0 |  |
 | VT09024 | Unable to determine the shard for the given row. | could not map %v to a unique keyspace id: %v | 0 |  |
+| VT09026 |  | Recursive Common Table Expression '%s' should contain a UNION | 3573 | HY000 |
+| VT09027 |  | Recursive Common Table Expression '%s' can contain neither aggregation nor window functions in recursive query block | 3575 | HY000 |
+| VT09028 |  | In recursive query block of Recursive Common Table Expression '%s', the recursive table must neither be in the right argument of a LEFT JOIN, nor be forced to be non-first with join order hints | 3576 | HY000 |
+| VT09029 |  | In recursive query block of Recursive Common Table Expression %s, the recursive table must be referenced only once, and not in any subquery | 3577 | HY000 |
 | VT10001 | Foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/. | foreign key constraints are not allowed | 0 |  |
 | VT10002 | The distributed transaction cannot be committed. A rollback decision is taken. | atomic distributed transaction not allowed: %s | 0 |  |
 | VT12001 | This statement is unsupported by Vitess. Please rewrite your query to use supported syntax. | unsupported: %s | 0 |  |
