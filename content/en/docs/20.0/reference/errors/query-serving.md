@@ -40,7 +40,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT03025 | The execute statement have wrong number of arguments | Incorrect arguments to %s | 1210 | HY000 |
 | VT03024 | The query cannot be executed as missing the bind variable. | '%s' bind variable does not exists | 0 |  |
 | VT03027 | The column cannot have null value. | Column '%s' cannot be null | 1048 | 23000 |
-| VT03028 | The column cannot have null value. | Column '%s' cannot be null on row %!d(MISSING), col %!d(MISSING) | 1048 | 23000 |
+| VT03028 | The column cannot have null value. | Column '%s' cannot be null on row %d, col %d | 1048 | 23000 |
 | VT03029 | The number of columns you want to insert do not match the number of columns of your SELECT query. | column count does not match value count with the row for vindex '%s' | 1136 | 21S01 |
 | VT03030 | The number of columns you want to insert do not match the number of columns of your SELECT query. | lookup column count does not match value count with the row (columns, count): (%v, %!d(MISSING)) | 1136 | 21S01 |
 | VT03031 | EXPLAIN has to be sent down as a single query to the underlying MySQL, and this is not possible if it uses tables from multiple keyspaces | EXPLAIN is only supported for single keyspace | 0 |  |
