@@ -13,20 +13,20 @@ These error messages are internal to Vitess. If you are getting other errors fro
 
 | ID | Description | Error | MySQL Error Code | SQL State |
 | --- | --- | --- | --- | --- |
-| VT03001 | This aggregation function only takes a single argument. | aggregate functions take a single argument '%!s(MISSING)' | 1149 | 42000 |
-| VT03002 | This schema change is not allowed. You cannot change the keyspace of a table. | changing schema from '%!s(MISSING)' to '%!s(MISSING)' is not allowed | 1450 | HY000 |
-| VT03003 | The specified table in this DELETE statement is unknown. | unknown table '%!s(MISSING)' in MULTI DELETE | 1109 | 42S02 |
-| VT03004 | You cannot delete something that is not a real MySQL table. | the target table %!s(MISSING) of the DELETE is not updatable | 1288 | HY000 |
-| VT03005 | The planner does not allow grouping on certain field. For instance, aggregation function. | cannot group on '%!s(MISSING)' | 1056 | 42000 |
+| VT03001 | This aggregation function only takes a single argument. | aggregate functions take a single argument '%s' | 1149 | 42000 |
+| VT03002 | This schema change is not allowed. You cannot change the keyspace of a table. | changing schema from '%s' to '%s' is not allowed | 1450 | HY000 |
+| VT03003 | The specified table in this DELETE statement is unknown. | unknown table '%s' in MULTI DELETE | 1109 | 42S02 |
+| VT03004 | You cannot delete something that is not a real MySQL table. | the target table %s of the DELETE is not updatable | 1288 | HY000 |
+| VT03005 | The planner does not allow grouping on certain field. For instance, aggregation function. | cannot group on '%s' | 1056 | 42000 |
 | VT03006 | The number of columns you want to insert do not match the number of columns of your SELECT query. | column count does not match value count with the row | 1136 | 21S01 |
 | VT03007 | You need to add a keyspace qualifier. | keyspace not specified | 0 |  |
-| VT03008 | The given token is not usable in this situation. Please refer to the MySQL documentation to learn more about your token's syntax. | incorrect usage/placement of '%!s(MISSING)' | 1234 | 42000 |
-| VT03009 | You cannot assign this type to the given variable. | unexpected value type for '%!s(MISSING)': %!v(MISSING) | 1231 | 42000 |
-| VT03010 | You cannot set the given variable as it is a read-only variable. | variable '%!s(MISSING)' is a read only variable | 1238 | HY000 |
+| VT03008 | The given token is not usable in this situation. Please refer to the MySQL documentation to learn more about your token's syntax. | incorrect usage/placement of '%s' | 1234 | 42000 |
+| VT03009 | You cannot assign this type to the given variable. | unexpected value type for '%s': %v | 1231 | 42000 |
+| VT03010 | You cannot set the given variable as it is a read-only variable. | variable '%s' is a read only variable | 1238 | HY000 |
 | VT03011 | The given value type is not accepted. | invalid value type: %v | 0 |  |
 | VT03012 | The syntax is invalid. Please refer to the MySQL documentation for the proper syntax. | invalid syntax: %s | 0 |  |
-| VT03013 | This table or alias name is already use. Please use another one that is unique. | not unique table/alias: '%!s(MISSING)' | 1066 | 42000 |
-| VT03014 | The given column is unknown. | unknown column '%!s(MISSING)' in '%!s(MISSING)' | 1054 | 42S22 |
+| VT03013 | This table or alias name is already use. Please use another one that is unique. | not unique table/alias: '%s' | 1066 | 42000 |
+| VT03014 | The given column is unknown. | unknown column '%s' in '%s' | 1054 | 42S22 |
 | VT03015 | Cannot assign multiple values to a column in an update statement. | column has duplicate set values: '%v' | 0 |  |
 | VT03016 | The given column is unknown in the vindex table. | unknown vindex column: '%s' | 0 |  |
 | VT03017 | This vstream where clause can only be a greater than filter. | where clause can only be of the type 'pos > <value>' | 1149 | 42000 |
@@ -37,26 +37,26 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT03022 | The given column cannot be found. | column %v not found in %v | 0 |  |
 | VT03023 | When targeting a range of shards, Vitess does not know which shard to send the INSERT to. | INSERT not supported when targeting a key range: %s | 0 |  |
 | VT03024 | The query cannot be prepared using the user defined variable as it does not exists for this session. | '%s' user defined variable does not exists | 0 |  |
-| VT03025 | The execute statement have wrong number of arguments | Incorrect arguments to %!s(MISSING) | 1210 | HY000 |
+| VT03025 | The execute statement have wrong number of arguments | Incorrect arguments to %s | 1210 | HY000 |
 | VT03024 | The query cannot be executed as missing the bind variable. | '%s' bind variable does not exists | 0 |  |
-| VT03027 | The column cannot have null value. | Column '%!s(MISSING)' cannot be null | 1048 | 23000 |
-| VT03028 | The column cannot have null value. | Column '%!s(MISSING)' cannot be null on row %!d(MISSING), col %!d(MISSING) | 1048 | 23000 |
-| VT03029 | The number of columns you want to insert do not match the number of columns of your SELECT query. | column count does not match value count with the row for vindex '%!s(MISSING)' | 1136 | 21S01 |
-| VT03030 | The number of columns you want to insert do not match the number of columns of your SELECT query. | lookup column count does not match value count with the row (columns, count): (%!v(MISSING), %!d(MISSING)) | 1136 | 21S01 |
+| VT03027 | The column cannot have null value. | Column '%s' cannot be null | 1048 | 23000 |
+| VT03028 | The column cannot have null value. | Column '%s' cannot be null on row %!d(MISSING), col %!d(MISSING) | 1048 | 23000 |
+| VT03029 | The number of columns you want to insert do not match the number of columns of your SELECT query. | column count does not match value count with the row for vindex '%s' | 1136 | 21S01 |
+| VT03030 | The number of columns you want to insert do not match the number of columns of your SELECT query. | lookup column count does not match value count with the row (columns, count): (%v, %!d(MISSING)) | 1136 | 21S01 |
 | VT03031 | EXPLAIN has to be sent down as a single query to the underlying MySQL, and this is not possible if it uses tables from multiple keyspaces | EXPLAIN is only supported for single keyspace | 0 |  |
-| VT03032 | You cannot update a table that is not a real MySQL table. | the target table %!s(MISSING) of the UPDATE is not updatable | 1288 | HY000 |
+| VT03032 | You cannot update a table that is not a real MySQL table. | the target table %s of the UPDATE is not updatable | 1288 | HY000 |
 | VT03033 | The table column list and derived column list have different column counts. | In definition of view, derived table or common table expression, SELECT list and column names list have different column counts | 1353 | HY000 |
-| VT05001 | The given database does not exist; Vitess cannot drop it. | cannot drop database '%!s(MISSING)'; database does not exists | 1008 | HY000 |
-| VT05002 | The given database does not exist; Vitess cannot alter it. | cannot alter database '%!s(MISSING)'; unknown database | 1049 | 42000 |
-| VT05003 | The given database does not exist in the VSchema. | unknown database '%!s(MISSING)' in vschema | 1049 | 42000 |
-| VT05004 | The given table is unknown. | table '%!s(MISSING)' does not exist | 1109 | 42S02 |
-| VT05005 | The given table does not exist in this keyspace. | table '%!s(MISSING)' does not exist in keyspace '%!s(MISSING)' | 1146 | 42S02 |
-| VT05006 | The given system variable is unknown. | unknown system variable '%!s(MISSING)' | 1193 | HY000 |
+| VT05001 | The given database does not exist; Vitess cannot drop it. | cannot drop database '%s'; database does not exists | 1008 | HY000 |
+| VT05002 | The given database does not exist; Vitess cannot alter it. | cannot alter database '%s'; unknown database | 1049 | 42000 |
+| VT05003 | The given database does not exist in the VSchema. | unknown database '%s' in vschema | 1049 | 42000 |
+| VT05004 | The given table is unknown. | table '%s' does not exist | 1109 | 42S02 |
+| VT05005 | The given table does not exist in this keyspace. | table '%s' does not exist in keyspace '%s' | 1146 | 42S02 |
+| VT05006 | The given system variable is unknown. | unknown system variable '%s' | 1193 | HY000 |
 | VT05007 | Table information is not available. | no table info | 0 |  |
-| VT06001 | The given database name already exists. | cannot create database '%!s(MISSING)'; database exists | 1007 | HY000 |
-| VT07001 | Kill statement is not allowed. More in docs about how to enable it and its limitations. | %!s(MISSING) | 1095 | HY000 |
-| VT09001 | the table does not have a primary vindex, the operation is impossible. | table '%!s(MISSING)' does not have a primary vindex | 1173 | 42000 |
-| VT09002 | This type of DML statement is not allowed on a replica target. | %!s(MISSING) statement with a replica target | 1874 | HY000 |
+| VT06001 | The given database name already exists. | cannot create database '%s'; database exists | 1007 | HY000 |
+| VT07001 | Kill statement is not allowed. More in docs about how to enable it and its limitations. | %s | 1095 | HY000 |
+| VT09001 | the table does not have a primary vindex, the operation is impossible. | table '%s' does not have a primary vindex | 1173 | 42000 |
+| VT09002 | This type of DML statement is not allowed on a replica target. | %s statement with a replica target | 1874 | HY000 |
 | VT09003 | A vindex column is mandatory for the insert, please provide one. | INSERT query does not have primary vindex column '%v' in the column list | 0 |  |
 | VT09004 | You need to provide the list of columns you want to insert, or provide a VSchema with authoritative columns. If schema tracking is disabled you can enable it to automatically have authoritative columns. | INSERT should contain column list or the table should have authoritative columns in vschema | 0 |  |
 | VT09005 | A database must be selected. | no database selected: use keyspace<:shard><@type> or keyspace<[range]><@type> (<> are optional) | 1046 | 3D000 |
@@ -65,7 +65,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09008 | vexplain queries/all will actually run queries. `/*vt+ EXECUTE_DML_QUERIES */` must be set to run DML queries in vtexplain. Example: `vexplain /*vt+ EXECUTE_DML_QUERIES */ queries delete from t1` | vexplain queries/all will actually run queries | 0 |  |
 | VT09009 | Stream is only supported for primary tablets, please use a stream on those tablets. | stream is supported only for primary tablet type, current type: %v | 0 |  |
 | VT09010 | SHOW VITESS_THROTTLER STATUS works only on primary tablet. | SHOW VITESS_THROTTLER STATUS works only on primary tablet | 0 |  |
-| VT09011 | The prepared statement is not available | Unknown prepared statement handler (%!s(MISSING)) given to %!s(MISSING) | 1243 | HY000 |
+| VT09011 | The prepared statement is not available | Unknown prepared statement handler (%!s(MISSING)) given to %s | 1243 | HY000 |
 | VT09012 | This type of statement is not allowed on the given tablet. | %s statement with %s tablet not allowed | 0 |  |
 | VT09013 | Durability policy wants Vitess to use semi-sync, but the MySQL instances don't have the semi-sync plugin loaded. | semi-sync plugins are not loaded | 0 |  |
 | VT09014 | The vindex cannot be used as table in DML statement | vindex cannot be modified | 0 |  |
@@ -75,7 +75,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09018 | Invalid syntax for the vindex function statement. | %s | 0 |  |
 | VT09019 | Vitess doesn't support cyclic foreign keys. | keyspace '%s' has cyclic foreign keys. Cycle exists between %v | 0 |  |
 | VT09020 | Vitess does not allow using multiple vindex hints on the same table. | can not use multiple vindex hints for table %s | 0 |  |
-| VT09021 | Vindex hints have to reference an existing vindex, and no such vindex could be found for the given table. | Vindex '%!s(MISSING)' does not exist in table '%!s(MISSING)' | 1176 | 42000 |
+| VT09021 | Vindex hints have to reference an existing vindex, and no such vindex could be found for the given table. | Vindex '%s' does not exist in table '%s' | 1176 | 42000 |
 | VT09022 | Cannot send query to multiple shards. | Destination does not have exactly one shard: %v | 0 |  |
 | VT09023 | Unable to determine the shard for the given row. | could not map %v to a keyspace id | 0 |  |
 | VT09024 | Unable to determine the shard for the given row. | could not map %v to a unique keyspace id: %v | 0 |  |
