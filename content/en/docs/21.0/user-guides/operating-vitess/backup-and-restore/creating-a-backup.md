@@ -80,6 +80,95 @@ I0310 12:49:32.279773  215835 backup.go:163] I0310 20:49:32.279485 xtrabackupeng
 
 To continue with risk: Set `--xtrabackup_backup_flags=--no-server-version-check`. Note this occurs when your MySQL server version is technically unsupported by `xtrabackup`.
 
+## Using mysqlshell (EXPERIMENTAL)
+
+An alternative option to physical backups (`xtrabackup` and `builtin`) is to take logical backups.
+Vitess supports MySQL Shell to dump and compress databases in a easy to recover plain text format
+using tab-separated values. Physical backups have the potential to suffer from silent corruption
+if pages are not often accessed and a logical backup will read and dump all the data on a tablet,
+flushing out any issues that could spread on a physical backup.
+
+### Prerequisites
+The `mysqlsh` binary should be present as it is used to handle the dump/load process. It is included
+in the MySQL distribution and also included in vitess provided containers.
+
+### Supported Versions
+
+* [MySQL 8.0](https://www.percona.com/doc/percona-xtrabackup/8.0/index.html#installation)
+
+	Note that MySQL >=8.0.21 is recommended, but not required. It allows you yo disable redo logs and
+the double write buffer to make restores faster.
+
+
+### How it works
+
+This engine differs from the other engines in vitess in the sense that they usually manage the
+entire backup workflow, including uploading the generated data to the respective backend.
+
+Because MySQL Shell doesn't provide a single stream and has many optimisations for dumping data faster,
+it outputs data into a target directory in many files (often thousands). If you are using an object
+storage like S3, Google Cloud Storage, Ceph, etc, MySQL Shell will need additional configuration
+as it needs direct access to those bakend storages, while the other engines rely on Vitess to 
+upload the backup output.
+
+The backup location configured for Vitess will only be used to store the MANIFEST for the metadata,
+which will point to the actual location of the backup in your preferred destination. This will also
+be used during the restore process, as Vitess needs to pass the location of the backup to MySQL Shell
+to initiate the restore process.
+
+### Configuration
+
+`mysqlshell`'s configuration requires understanding some of the features of MySQL Shell. It is
+recommended users are familiar with the [dump](https://dev.mysql.com/doc/mysql-shell/8.0/en/mysql-shell-utilities-dump-instance-schema.html)/[load](https://dev.mysql.com/doc/mysql-shell/8.0/en/mysql-shell-utilities-load-dump.html) options as well as the options related to their backend storage included in these links.
+
+__Required flags:__
+
+* `--backup_engine_implementation=mysqlshell`
+* `--mysql-shell-backup-location string`
+	* This stores the location where MySQL Shell will store the backups. As mentioned above, this
+	is different than the Vitess backup location.
+* `--mysql-shell-flags="-js"`
+	* `-js` is required to be in the mysql shell flags otherwise we can't run the necessary commands.
+	* There you can also pass other seetings that you would add to connect to your database, including
+	hostname, username and password.
+	* if you require a different way to pass credentials, you can look into the MySQL Shell's `--credential-store-helper` flag as that allows you to plug your own facility to fetch credentials
+	without passing them via the command line
+
+
+__Optional flags:__
+
+* `--mysql-shell-dump-flags="{\"threads\": 4}"`
+	* you can control how many threads and other options with this flag. See the [MySQL docs](https://dev.mysql.com/doc/mysql-shell/8.0/en/mysql-shell-utilities-dump-instance-schema.html) for other 
+	options
+* `--mysql-shell-load-flags="{\"updateGtidSet\": \"replace\", \"progressFile\": \"\", \"skipBinlog\": true}"`
+	* `updateGtidSet` must be set to `true` so MySQL Shell updates the executed GTID at the 
+	end of the restore
+	* `progressFile` must be empty indicate we are starting a new backup and not continuing an
+	existing one
+	* `skipBinlog` must be `true` so we are not logging the statements to binary logs during the restore
+	* `loadUsers` defaults to `true`, but it is not required. This is ideal if you rely on Vitess
+	managing credentials as we will delete users by default during the dump process. If you perform
+	your own credential management you might want to disable this.
+	* these are all defaults in Vitess, but if you define this flag it must include the values above. other options can be found in the [MySQL docs](https://dev.mysql.com/doc/mysql-shell/8.0/en/mysql-shell-utilities-load-dump.html)
+* `--mysql-shell-should-drain=false` 
+	* This flag controls if the tablet should be drained during backup or not. If true, it will transition to `BACKUP` type and will return to the original type once done, otherwise it will continue to serve during the backup (similar to the `xtrabackup` engine)
+* `--mysql-shell-speedup-restore=false`
+	* If you are using MySQL >=8.0.21, this allows you to disable redo logs and the double write buffer for the duration of the restore, increasing the restore speed.
+
+### Limitations and Caveats to be aware
+
+Since MySQL needs to be running for the entire backup/restore process, we can't just replace all the files like we do with the physical backups. To account for this, Vitess handles things differently:
+
+#### Databases
+All databases will be backed up, with the exception of `information_schema`, `mysql`, `ndbinfo`, `performance_schema` and `sys`. This is a MySQL Shell limitation. During the restore process, Vitess will drop all databases in the host ahead of the restore before starting the `mysqlsh` load process. 
+
+#### Users
+Since user grants are stored in the `mysql` database, they are not backed up like the other databases. MySQL Shell works around that saving users separately and allow the user to pass the `loadUsers: true` option during the load process to restore users to the state they were during the backup. 
+
+Internal users (`mysql.sys@localhost`, `mysql.session@localhost`, `mysql.infoschema@localhost`) are not restored, as well as the current user logged in to MySQL. You might as well have issue restoring `root` if the `vt_dba` user doesn't have the right permissions, so that why by default Vitess also excludes it.
+
+Because MySQL Shell will fail the restore if any users already exist, Vitess will drop all users in MySQL (except the ones noted above) before the restore if you specify `loadUsers: true`.
+
 ## Create a full backup with vtctl
 
 __Run the following vtctl command to create a backup:__

@@ -25,6 +25,7 @@ The engine is the techology used for generating the backup. Currently Vitess has
 
 * Builtin: Shutdown an instance and copy all the database files (default)
 * XtraBackup: An online backup using Percona's [XtraBackup](https://www.percona.com/software/mysql-database/percona-xtrabackup)
+* MySQL Shell: a logical backup engine using the upstream [mysqlsh](https://dev.mysql.com/doc/mysql-shell/8.0/en/) dump/load tool (EXPERIMENTAL)
 
 ### Backup types
 
