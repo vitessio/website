@@ -91,8 +91,9 @@ Download the [latest binary release](https://github.com/vitessio/vitess/releases
 * Ubuntu is the only fully supported OS, for another OS please [build Vitess by yourself](/docs/contributing) or use the Docker images.
 
 ```sh
-version=20.0.0-rc2
-file=vitess-${version}-4af99b5.tar.gz
+# Set the Vitess version to the latest stable release (20.0.2 in this case)
+version=20.0.2
+file=vitess-${version}-2592c59.tar.gz
 wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
 tar -xzf ${file}
 cd ${file/.tar.gz/}
