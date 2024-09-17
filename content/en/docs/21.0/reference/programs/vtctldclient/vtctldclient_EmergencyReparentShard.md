@@ -1,7 +1,7 @@
 ---
 title: EmergencyReparentShard
 series: vtctldclient
-commit: f52a0b141fd20db5af050f5d0e2d8724597b60c0
+commit: 069651aed3c06088dc00f8f699a276665056e3d0
 ---
 ## vtctldclient EmergencyReparentShard
 

@@ -1,7 +1,7 @@
 ---
 title: vtctldclient
 series: vtctldclient
-commit: f52a0b141fd20db5af050f5d0e2d8724597b60c0
+commit: 069651aed3c06088dc00f8f699a276665056e3d0
 ---
 ## vtctldclient
 
@@ -52,6 +52,7 @@ vtctldclient [flags]
 * [vtctldclient DeleteShards](./vtctldclient_deleteshards/)	 - Deletes the specified shards from the topology.
 * [vtctldclient DeleteSrvVSchema](./vtctldclient_deletesrvvschema/)	 - Deletes the SrvVSchema object in the given cell.
 * [vtctldclient DeleteTablets](./vtctldclient_deletetablets/)	 - Deletes tablet(s) from the topology.
+* [vtctldclient DistributedTransaction](./vtctldclient_distributedtransaction/)	 - Perform commands on distributed transaction
 * [vtctldclient EmergencyReparentShard](./vtctldclient_emergencyreparentshard/)	 - Reparents the shard to the new primary. Assumes the old primary is dead and not responding.
 * [vtctldclient ExecuteFetchAsApp](./vtctldclient_executefetchasapp/)	 - Executes the given query as the App user on the remote tablet.
 * [vtctldclient ExecuteFetchAsDBA](./vtctldclient_executefetchasdba/)	 - Executes the given query as the DBA user on the remote tablet.
@@ -83,7 +84,6 @@ vtctldclient [flags]
 * [vtctldclient GetTablets](./vtctldclient_gettablets/)	 - Looks up tablets according to filter criteria.
 * [vtctldclient GetThrottlerStatus](./vtctldclient_getthrottlerstatus/)	 - Get the throttler status for the given tablet.
 * [vtctldclient GetTopologyPath](./vtctldclient_gettopologypath/)	 - Gets the value associated with the particular path (key) in the topology server.
-* [vtctldclient GetUnresolvedTransactions](./vtctldclient_getunresolvedtransactions/)	 - Retrieves unresolved transactions for the given keyspace.
 * [vtctldclient GetVSchema](./vtctldclient_getvschema/)	 - Prints a JSON representation of a keyspace's topo record.
 * [vtctldclient GetWorkflows](./vtctldclient_getworkflows/)	 - Gets all vreplication workflows (Reshard, MoveTables, etc) in the given keyspace.
 * [vtctldclient LegacyVtctlCommand](./vtctldclient_legacyvtctlcommand/)	 - Invoke a legacy vtctlclient command. Flag parsing is best effort.
