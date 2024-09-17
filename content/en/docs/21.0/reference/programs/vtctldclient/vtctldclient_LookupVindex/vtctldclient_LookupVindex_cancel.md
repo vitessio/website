@@ -1,7 +1,7 @@
 ---
 title: LookupVindex cancel
 series: vtctldclient
-commit: 4bc3b998941037e0446f5c0899587e4093d79f57
+commit: 069651aed3c06088dc00f8f699a276665056e3d0
 ---
 ## vtctldclient LookupVindex cancel
 

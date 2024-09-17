@@ -1,7 +1,7 @@
 ---
 title: MoveTables reversetraffic
 series: vtctldclient
-commit: 4bc3b998941037e0446f5c0899587e4093d79f57
+commit: 069651aed3c06088dc00f8f699a276665056e3d0
 ---
 ## vtctldclient MoveTables reversetraffic
 
@@ -23,6 +23,7 @@ vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --
   -c, --cells strings                          Cells and/or CellAliases to switch traffic in.
       --dry-run                                Print the actions that would be taken and report any known errors that would have occurred.
       --enable-reverse-replication             Setup replication going back to the original source keyspace to support rolling back the traffic cutover. (default true)
+      --force                                  Force the traffic switch even if some potentially non-critical actions cannot be performed; for example the tablet refresh fails on some tablets in the keyspace. WARNING: this should be used with extreme caution and only in emergency situations!
   -h, --help                                   help for reversetraffic
       --max-replication-lag-allowed duration   Allow traffic to be switched only if VReplication lag is below this. (default 30s)
       --shards strings                         (Optional) Specifies a comma-separated list of shards to operate on.

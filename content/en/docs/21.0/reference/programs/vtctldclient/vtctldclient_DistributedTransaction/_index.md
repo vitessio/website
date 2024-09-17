@@ -1,20 +1,16 @@
 ---
-title: ValidateVersionShard
+title: DistributedTransaction
 series: vtctldclient
 commit: 069651aed3c06088dc00f8f699a276665056e3d0
 ---
-## vtctldclient ValidateVersionShard
+## vtctldclient DistributedTransaction
 
-Validates that the version on the primary matches all of the replicas.
-
-```
-vtctldclient ValidateVersionShard <keyspace/shard>
-```
+Perform commands on distributed transaction
 
 ### Options
 
 ```
-  -h, --help   help for ValidateVersionShard
+  -h, --help   help for DistributedTransaction
 ```
 
 ### Options inherited from parent commands
@@ -31,4 +27,6 @@ vtctldclient ValidateVersionShard <keyspace/shard>
 ### SEE ALSO
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
+* [vtctldclient DistributedTransaction conclude](./vtctldclient_distributedtransaction_conclude/)	 - Concludes the unresolved transaction by rolling back the prepared transaction on each participating shard and removing the transaction metadata record.
+* [vtctldclient DistributedTransaction list](./vtctldclient_distributedtransaction_list/)	 - Retrieves unresolved transactions for the given keyspace.
 
