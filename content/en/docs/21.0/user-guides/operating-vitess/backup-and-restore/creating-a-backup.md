@@ -141,7 +141,7 @@ __Optional flags:__
 	* you can control how many threads and other options with this flag. See the [MySQL docs](https://dev.mysql.com/doc/mysql-shell/8.0/en/mysql-shell-utilities-dump-instance-schema.html) for other 
 	options
 * `--mysql-shell-load-flags="{\"updateGtidSet\": \"replace\", \"progressFile\": \"\", \"skipBinlog\": true}"`
-	* `updateGtidSet` must be set to `true` so MySQL Shell updates the executed GTID at the 
+	* `updateGtidSet` must be set to `"replace"` so MySQL Shell updates the executed GTID at the 
 	end of the restore
 	* `progressFile` must be empty indicate we are starting a new backup and not continuing an
 	existing one
