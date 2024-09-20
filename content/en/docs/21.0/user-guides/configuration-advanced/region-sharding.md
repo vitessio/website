@@ -150,41 +150,7 @@ We then run the 201 script:
 
 That script creates our sharded vschema as defined in the `main_vschema_sharded.json` file and it
 creates a [lookup vindex](../../../reference/features/vindexes/#functional-and-lookup-vindex) using the
-[`CreateLookupVindex` command](../../migration/move-tables/) with the definition found in the
-`lookup_vindex.json` file.
-
-That file is where we both define the [lookup vindex](../../../reference/features/vindexes/#functional-and-lookup-vindex)
-and associate it with the `customer` table in the `main` keyspace:
-
-```json
-$ cat ./lookup_vindex.json
-{
-  "sharded": true,
-  "vindexes": {
-    "customer_region_lookup": {
-      "type": "consistent_lookup_unique",
-      "params": {
-        "table": "main.customer_lookup",
-        "from": "id",
-        "to": "keyspace_id"
-      },
-      "owner": "customer"
-    }
-  },
-  "tables": {
-    "customer": {
-      "column_vindexes": [
-        {
-          "column": "id",
-          "name": "customer_region_lookup"
-        }
-      ]
-    }
-  }
-}
-```
-
-</br>
+[`LookupVindex create` command](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/).
 
 Now if we look at the `main` keyspace's vschema again we can see that it now includes the `region_vdx` vindex and
 a lookup vindex called `customer_region_lookup`:
@@ -264,7 +230,7 @@ $ vtctldclient GetVSchema main
 </br>
 
 Notice that the vschema shows a `hash` [vindex type](../../../reference/features/vindexes/#predefined-vindexes) for
-the lookup table. This is automatically created by the `CreateLookupVindex` workflow, along with the 
+the lookup table. This is automatically created by the `LookupVindex` workflow, along with the
 backing table needed to hold the vindex and populating it with the correct rows (for additional details on this
 command see [the associated user-guide](../createlookupvindex/)). We can see that by checking our `main`
 database/keyspace again:

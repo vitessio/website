@@ -643,7 +643,7 @@ mysql> vexplain select * from corder where sku = "Product_1";
 </br>
 
 As expected, we can see it is not scattering anymore, which it would have
-before we executed the `CreateLookupVindex` command.
+before we executed the `LookupVindex create` command.
 
 Lastly, let's ensure that the lookup Vindex is being updated appropriately
 when we insert and delete rows:
