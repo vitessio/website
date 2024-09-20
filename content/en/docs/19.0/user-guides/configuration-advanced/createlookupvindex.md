@@ -93,7 +93,7 @@ If we look at the [VSchema](../../../reference/features/vschema/) for the
 `customer_id` column:
 
 ```json
-$ vtctldclient GetVSchema customer
+$ vtctldclient --server localhost:15999 GetVSchema customer
 {
   "sharded": true,
   "vindexes": {
