@@ -150,7 +150,7 @@ We then run the 201 script:
 
 That script creates our sharded vschema as defined in the `main_vschema_sharded.json` file and it
 creates a [lookup vindex](../../../reference/features/vindexes/#functional-and-lookup-vindex) using the
-[`LookupVindex create` command](../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/).
+[`LookupVindex create` command](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/).
 
 Now if we look at the `main` keyspace's vschema again we can see that it now includes the `region_vdx` vindex and
 a lookup vindex called `customer_region_lookup`:
