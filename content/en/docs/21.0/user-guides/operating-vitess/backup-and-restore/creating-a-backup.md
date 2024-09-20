@@ -165,9 +165,9 @@ All databases will be backed up, with the exception of `information_schema`, `my
 #### Users
 Since user grants are stored in the `mysql` database, they are not backed up like the other databases. MySQL Shell works around that saving users separately and allow the user to pass the `loadUsers: true` option during the load process to restore users to the state they were during the backup. 
 
-Internal users (`mysql.sys@localhost`, `mysql.session@localhost`, `mysql.infoschema@localhost`) are not restored, as well as the current user logged in to MySQL. You might as well have issue restoring `root` if the `vt_dba` user doesn't have the right permissions, so that's why by default Vitess also excludes it.
+Internal users (`mysql.sys@localhost`, `mysql.session@localhost`, `mysql.infoschema@localhost`) are not restored, as well as the current user logged in to MySQL. It is also possible to exclude some users from being imported by using adjusting your `--mysql-shell-load-flags` if necessary.
 
-Because MySQL Shell will fail the restore if any users already exist, Vitess will drop all users in MySQL (except the ones noted above) before the restore if you specify `loadUsers: true`.
+Because MySQL Shell will fail the restore if any user already exists, Vitess will drop all users in MySQL (except the ones noted above) before the restore if you specify `loadUsers: true`.
 
 ## Create a full backup with vtctl
 
