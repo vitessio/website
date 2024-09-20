@@ -109,7 +109,7 @@ Now that we have some data in our unsharded `main` keyspace, let's go ahead and 
 for resharding. The initial vschema is unsharded and simply lists the customer table:
 
 ```json
-$ vtctldclient GetVSchema main
+$ vtctldclient --server localhost:15999 GetVSchema main
 {
   "sharded": false,
   "vindexes": {},
@@ -150,33 +150,60 @@ We then run the 201 script:
 
 That script creates our sharded vschema as defined in the `main_vschema_sharded.json` file and it
 creates a [lookup vindex](../../../reference/features/vindexes/#functional-and-lookup-vindex) using the
-[`CreateLookupVindex` command](../../migration/move-tables/) with the definition found in the
-`lookup_vindex.json` file.
+[`LookupVindex create` command](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/).
 
-That file is where we both define the [lookup vindex](../../../reference/features/vindexes/#functional-and-lookup-vindex)
-and associate it with the `customer` table in the `main` keyspace:
+Now if we look at the `main` keyspace's vschema again we can see that it now includes the `region_vdx` vindex and
+a lookup vindex called `customer_region_lookup`:
 
 ```json
-$ cat ./lookup_vindex.json
+$ vtctldclient --server=localhost:15999 GetVSchema main --compact
 {
   "sharded": true,
   "vindexes": {
     "customer_region_lookup": {
       "type": "consistent_lookup_unique",
       "params": {
-        "table": "main.customer_lookup",
         "from": "id",
+        "ignore_nulls": "false",
+        "table": "main.customer_region_lookup",
         "to": "keyspace_id"
       },
       "owner": "customer"
+    },
+    "region_vdx": {
+      "type": "region_json",
+      "params": {
+        "region_bytes": "1",
+        "region_map": "./countries.json"
+      }
+    },
+    "hash": {
+      "type": "hash"
     }
   },
   "tables": {
     "customer": {
       "column_vindexes": [
         {
+          "name": "region_vdx",
+          "columns": [
+            "id",
+            "country"
+          ]
+        },
+        {
+          "name": "customer_region_lookup",
+          "columns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    "customer_region_lookup": {
+      "column_vindexes": [
+        {
           "column": "id",
-          "name": "customer_region_lookup"
+          "name": "hash"
         }
       ]
     }
@@ -186,85 +213,8 @@ $ cat ./lookup_vindex.json
 
 </br>
 
-Now if we look at the `main` keyspace's vschema again we can see that it now includes the `region_vdx` vindex and
-a lookup vindex called `customer_region_lookup`:
-
-```json
-$ vtctldclient GetVSchema main
-{
-  "sharded": true,
-  "vindexes": {
-    "customer_region_lookup": {
-      "type": "consistent_lookup_unique",
-      "params": {
-        "from": "id",
-        "table": "main.customer_lookup",
-        "to": "keyspace_id"
-      },
-      "owner": "customer"
-    },
-    "hash": {
-      "type": "hash",
-      "params": {},
-      "owner": ""
-    },
-    "region_vdx": {
-      "type": "region_json",
-      "params": {
-        "region_bytes": "1",
-        "region_map": "./countries.json"
-      },
-      "owner": ""
-    }
-  },
-  "tables": {
-    "customer": {
-      "type": "",
-      "column_vindexes": [
-        {
-          "column": "",
-          "name": "region_vdx",
-          "columns": [
-            "id",
-            "country"
-          ]
-        },
-        {
-          "column": "id",
-          "name": "customer_region_lookup",
-          "columns": []
-        }
-      ],
-      "auto_increment": null,
-      "columns": [],
-      "pinned": "",
-      "column_list_authoritative": false,
-      "source": ""
-    },
-    "customer_lookup": {
-      "type": "",
-      "column_vindexes": [
-        {
-          "column": "id",
-          "name": "hash",
-          "columns": []
-        }
-      ],
-      "auto_increment": null,
-      "columns": [],
-      "pinned": "",
-      "column_list_authoritative": false,
-      "source": ""
-    }
-  },
-  "require_explicit_routing": false
-}
-```
-
-</br>
-
 Notice that the vschema shows a `hash` [vindex type](../../../reference/features/vindexes/#predefined-vindexes) for
-the lookup table. This is automatically created by the `CreateLookupVindex` workflow, along with the 
+the lookup table. This is automatically created by the `LookupVindex` workflow, along with the
 backing table needed to hold the vindex and populating it with the correct rows (for additional details on this
 command see [the associated user-guide](../createlookupvindex/)). We can see that by checking our `main`
 database/keyspace again:
@@ -327,7 +277,7 @@ Now we have tablets for our original unsharded `main` keyspace — shard `0` —
 we'll be using when we reshard the `main` keyspace:
 
 ```bash
-$ vtctldclient GetTablets --keyspace=main
+$ vtctldclient --server localhost:15999 GetTablets --keyspace=main
 zone1-0000000100 main 0 primary localhost:15100 localhost:17100 [] 2023-01-24T04:31:08Z
 zone1-0000000200 main -40 primary localhost:15200 localhost:17200 [] 2023-01-24T04:45:38Z
 zone1-0000000300 main 40-80 primary localhost:15300 localhost:17300 [] 2023-01-24T04:45:38Z
@@ -356,7 +306,7 @@ Now that our new tablets are up, we can go ahead with the resharding:
 This script executes one command:
 
 ```bash
-vtctldclient Reshard --target-keyspace main --workflow main2regions create --source-shards '0' --target-shards '-40,40-80,80-c0,c0-' --tablet-types=PRIMARY
+vtctldclient --server localhost:15999 Reshard --target-keyspace main --workflow main2regions create --source-shards '0' --target-shards '-40,40-80,80-c0,c0-' --tablet-types=PRIMARY
 ```
 
 </br>
@@ -372,10 +322,10 @@ We can check the correctness of the copy using the [`VDiff` command](../../../re
 and the `<keyspace>.<workflow>` name we used for `Reshard` command above:
 
 ```bash
-$ vtctldclient VDiff --target-keyspace main --workflow main2regions create
+$ vtctldclient --server localhost:15999 VDiff --target-keyspace main --workflow main2regions create
 VDiff 044e8da0-9ba4-11ed-8bc7-920702940ee0 scheduled on target shards, use show to view progress
 
-$ vtctldclient VDiff --format=json --target-keyspace main --workflow main2regions show last
+$ vtctldclient --server localhost:15999 VDiff --format=json --target-keyspace main --workflow main2regions show last
 {
 	"Workflow": "main2regions",
 	"Keyspace": "main",
@@ -395,7 +345,7 @@ We can take a look at the VReplication workflow's status using the
 [`show` action](../../../reference/programs/vtctldclient/vtctldclient_reshard/vtctldclient_reshard_show/):
 
 ```bash
-vtctldclient Reshard --target-keyspace main --workflow main2regions show
+vtctldclient --server localhost:15999 Reshard --target-keyspace main --workflow main2regions show
 ```
 
 </br>
@@ -510,7 +460,7 @@ All we have now is the sharded `main` keyspace and the original unsharded `main`
 longer exists:
 
 ```bash
-$ vtctldclient GetTablets
+$ vtctldclient --server localhost:15999 GetTablets
 zone1-0000000200 main -40 primary localhost:15200 localhost:17200 [] 2023-01-24T04:45:38Z
 zone1-0000000300 main 40-80 primary localhost:15300 localhost:17300 [] 2023-01-24T04:45:38Z
 zone1-0000000400 main 80-c0 primary localhost:15400 localhost:17400 [] 2023-01-24T04:45:38Z

@@ -93,7 +93,7 @@ If we look at the [VSchema](../../../reference/features/vschema/) for the
 `customer_id` column:
 
 ```json
-$ vtctldclient GetVSchema customer
+$ vtctldclient --server localhost:15999 GetVSchema customer
 {
   "sharded": true,
   "vindexes": {
@@ -193,7 +193,7 @@ any schema to create as it will do it automatically. Now, let us
 actually execute the `LookupVindex create` command:
 
 ```bash
-vtctldclient --server localhost:15999 LookupVindex --name customer_region_lookup --table-keyspace main create --keyspace main --type consistent_lookup_unique --table-owner customer --table-owner-columns=id --tablet-types=PRIMARY
+vtctldclient --server localhost:15999 LookupVindex --name corder_lookup --table-keyspace customer create --keyspace customer --type consistent_lookup_unique --table-owner corder --table-owner-columns=sku --tablet-types=PRIMARY
 ```
 
 </br>
@@ -234,105 +234,211 @@ Now we can look what happened in greater detail:
 
 Lets observe the VReplication streams that got created using the `show` sub-command.
 
-{{< info >}}
-The created vreplication workflow will have a generated name of `<target_table_name>_vdx`.
-So in our example here: `corder_lookup_vdx`.
-{{< /info >}}
-
 ```json
-$ vtctldclient --server localhost:15999 LookupVindex --name customer_region_lookup --table-keyspace main show --include-logs=false
+$ vtctldclient --server localhost:15999 LookupVindex --name corder_lookup --table-keyspace customer show --compact
 {
   "workflows": [
     {
-      "name": "customer_region_lookup",
+      "name": "corder_lookup",
       "source": {
-        "keyspace": "main",
+        "keyspace": "customer",
         "shards": [
-          "0"
+          "-80",
+          "80-"
         ]
       },
       "target": {
-        "keyspace": "main",
+        "keyspace": "customer",
         "shards": [
-          "0"
+          "-80",
+          "80-"
         ]
       },
-      "max_v_replication_lag": "0",
       "shard_streams": {
-        "0/zone1-0000000100": {
+        "-80/zone1-0000000301": {
           "streams": [
             {
-              "id": "1",
-              "shard": "0",
+              "id": "2",
+              "shard": "-80",
               "tablet": {
                 "cell": "zone1",
-                "uid": 100
+                "uid": 301
               },
               "binlog_source": {
-                "keyspace": "main",
-                "shard": "0",
-                "tablet_type": "UNKNOWN",
-                "key_range": null,
-                "tables": [],
+                "keyspace": "customer",
+                "shard": "-80",
                 "filter": {
                   "rules": [
                     {
-                      "match": "customer_region_lookup",
-                      "filter": "select id as id, keyspace_id() as keyspace_id from customer where in_keyrange(id, 'main.xxhash', '-') group by id, keyspace_id",
-                      "convert_enum_to_text": {},
-                      "convert_charset": {},
-                      "source_unique_key_columns": "",
-                      "target_unique_key_columns": "",
-                      "source_unique_key_target_columns": "",
-                      "convert_int_to_enum": {}
+                      "match": "corder_lookup",
+                      "filter": "select sku as sku, keyspace_id() as keyspace_id from corder where in_keyrange(sku, 'customer.xxhash', '-80') group by sku, keyspace_id"
                     }
-                  ],
-                  "field_event_mode": "ERR_ON_MISMATCH",
-                  "workflow_type": "0",
-                  "workflow_name": ""
-                },
-                "on_ddl": "IGNORE",
-                "external_mysql": "",
-                "stop_after_copy": false,
-                "external_cluster": "",
-                "source_time_zone": "",
-                "target_time_zone": ""
+                  ]
+                }
               },
-              "position": "63c84d28-6888-11ee-93b0-81b2fbd12545:1-63",
-              "stop_position": "",
+              "position": "34cf0c58-7766-11ef-b70b-17a4f2cf39af:1-1838",
               "state": "Running",
-              "db_name": "vt_main",
+              "db_name": "vt_customer",
               "transaction_timestamp": {
-                "seconds": "1697064644",
-                "nanoseconds": 0
+                "seconds": "1726847304"
               },
               "time_updated": {
-                "seconds": "1697064646",
-                "nanoseconds": 0
+                "seconds": "1726847306"
               },
-              "message": "",
-              "copy_states": [],
-              "logs": [],
-              "log_fetch_error": "",
-              "tags": [],
-              "rows_copied": "0",
+              "tags": [
+                ""
+              ],
               "throttler_status": {
-                "component_throttled": "",
-                "time_throttled": {
-                  "seconds": "0",
-                  "nanoseconds": 0
+                "time_throttled": {}
+              },
+              "tablet_types": [
+                "REPLICA",
+                "PRIMARY"
+              ],
+              "cells": [
+                "zone1"
+              ]
+            },
+            {
+              "id": "3",
+              "shard": "-80",
+              "tablet": {
+                "cell": "zone1",
+                "uid": 301
+              },
+              "binlog_source": {
+                "keyspace": "customer",
+                "shard": "80-",
+                "filter": {
+                  "rules": [
+                    {
+                      "match": "corder_lookup",
+                      "filter": "select sku as sku, keyspace_id() as keyspace_id from corder where in_keyrange(sku, 'customer.xxhash', '-80') group by sku, keyspace_id"
+                    }
+                  ]
                 }
-              }
+              },
+              "position": "3b54ffe2-7766-11ef-930d-f41db225a1b8:1-1841",
+              "state": "Running",
+              "db_name": "vt_customer",
+              "transaction_timestamp": {
+                "seconds": "1726847304"
+              },
+              "time_updated": {
+                "seconds": "1726847306"
+              },
+              "tags": [
+                ""
+              ],
+              "throttler_status": {
+                "time_throttled": {}
+              },
+              "tablet_types": [
+                "REPLICA",
+                "PRIMARY"
+              ],
+              "cells": [
+                "zone1"
+              ]
             }
           ],
-          "tablet_controls": [],
+          "is_primary_serving": true
+        },
+        "80-/zone1-0000000401": {
+          "streams": [
+            {
+              "id": "2",
+              "shard": "80-",
+              "tablet": {
+                "cell": "zone1",
+                "uid": 401
+              },
+              "binlog_source": {
+                "keyspace": "customer",
+                "shard": "-80",
+                "filter": {
+                  "rules": [
+                    {
+                      "match": "corder_lookup",
+                      "filter": "select sku as sku, keyspace_id() as keyspace_id from corder where in_keyrange(sku, 'customer.xxhash', '80-') group by sku, keyspace_id"
+                    }
+                  ]
+                }
+              },
+              "position": "34cf0c58-7766-11ef-b70b-17a4f2cf39af:1-1838",
+              "state": "Running",
+              "db_name": "vt_customer",
+              "transaction_timestamp": {
+                "seconds": "1726847304"
+              },
+              "time_updated": {
+                "seconds": "1726847306"
+              },
+              "tags": [
+                ""
+              ],
+              "rows_copied": "4",
+              "throttler_status": {
+                "time_throttled": {}
+              },
+              "tablet_types": [
+                "REPLICA",
+                "PRIMARY"
+              ],
+              "cells": [
+                "zone1"
+              ]
+            },
+            {
+              "id": "3",
+              "shard": "80-",
+              "tablet": {
+                "cell": "zone1",
+                "uid": 401
+              },
+              "binlog_source": {
+                "keyspace": "customer",
+                "shard": "80-",
+                "filter": {
+                  "rules": [
+                    {
+                      "match": "corder_lookup",
+                      "filter": "select sku as sku, keyspace_id() as keyspace_id from corder where in_keyrange(sku, 'customer.xxhash', '80-') group by sku, keyspace_id"
+                    }
+                  ]
+                }
+              },
+              "position": "3b54ffe2-7766-11ef-930d-f41db225a1b8:1-1841",
+              "state": "Running",
+              "db_name": "vt_customer",
+              "transaction_timestamp": {
+                "seconds": "1726847304"
+              },
+              "time_updated": {
+                "seconds": "1726847306"
+              },
+              "tags": [
+                ""
+              ],
+              "rows_copied": "1",
+              "throttler_status": {
+                "time_throttled": {}
+              },
+              "tablet_types": [
+                "REPLICA",
+                "PRIMARY"
+              ],
+              "cells": [
+                "zone1"
+              ]
+            }
+          ],
           "is_primary_serving": true
         }
       },
       "workflow_type": "CreateLookupIndex",
       "workflow_sub_type": "None",
-      "max_v_replication_transaction_lag": "0",
-      "defer_secondary_keys": false
+      "options": {}
     }
   ]
 }
@@ -399,8 +505,8 @@ the VReplication streams and also clear the `write_only` flag from the
 Vindex indicating that it is *not* backfilling anymore.
 
 ```bash
-$ vtctldclient --server localhost:15999 LookupVindex --name customer_region_lookup --table-keyspace main externalize
-LookupVindex customer_region_lookup has been externalized and the customer_region_lookup VReplication workflow has been deleted
+$ vtctldclient --server localhost:15999 LookupVindex --name corder_lookup --table-keyspace customer externalize
+LookupVindex corder_lookup has been externalized and the corder_lookup VReplication workflow has been deleted
 ```
 
 </br>
@@ -537,7 +643,7 @@ mysql> vexplain select * from corder where sku = "Product_1";
 </br>
 
 As expected, we can see it is not scattering anymore, which it would have
-before we executed the `CreateLookupVindex` command.
+before we executed the `LookupVindex create` command.
 
 Lastly, let's ensure that the lookup Vindex is being updated appropriately
 when we insert and delete rows:

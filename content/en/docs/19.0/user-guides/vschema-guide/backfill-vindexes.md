@@ -39,76 +39,22 @@ To create such a lookup vindex on a real Vitess cluster, you can use the followi
 
 *Continued from [Unique Lookup Vindex Page](../unique-lookup)*
 
-Save the following json into a file, say `corder_keyspace_idx.json`:
+Issue the `vtctldclient` command:
 
-```json
-{
-  "sharded": true,
-  "vindexes": {
-    "corder_keyspace_idx": {
-      "type": "consistent_lookup_unique",
-      "params": {
-        "table": "product.corder_keyspace_idx",
-        "from": "corder_id",
-        "to": "keyspace_id"
-      },
-      "owner": "corder"
-    }
-  },
-  "tables": {
-    "corder": {
-      "column_vindexes": [{
-          "column": "corder_id",
-          "name": "corder_keyspace_idx"
-      }],
-    }
-  }
-}
+```bash
+vtctldclient --server localhost:15999 LookupVindex --name corder_keyspace --table-keyspace product create --keyspace product --type consistent_lookup_unique --table-owner corder --table-owner-columns corder_id --tablet-types=PRIMARY
 ```
 
-And issue the vtctldclient command:
-
-```sh
-$ vtctldclient --server <vtctld_grpc_address> CreateLookupVindex -- --tablet_types=REPLICA customer "$(cat corder_keyspace_idx.json)"
-```
-
-The workflow will automatically create the necessary Primary Vindex entries for vindex table `corder_keyspace_idx` knowing that it is sharded.
+The workflow will automatically create the necessary Primary Vindex entries for vindex table `corder_keyspace` knowing that it is sharded.
 
 #### Non-unique Lookup Vindex Example
 
 *Continued from [Non-unique Lookup Vindex Page](../non-unique-lookup)*
 
-Save the following json into a file, say `oname_keyspace_idx.json`:
+Issue the `vtctldclient` command:
 
-```json
-{
-  "sharded": true,
-  "vindexes": {
-    "oname_keyspace_idx": {
-      "type": "consistent_lookup",
-      "params": {
-        "table": "customer.oname_keyspace_idx",
-        "from": "oname,corder_id",
-        "to": "keyspace_id"
-      },
-      "owner": "corder"
-    }
-  },
-  "tables": {
-    "corder": {
-      "column_vindexes": [{
-        "columns": ["oname", "corder_id"],
-        "name": "oname_keyspace_idx"
-      }]
-    }
-  }
-}
+```bash
+vtctldclient --server localhost:15999 LookupVindex --name oname_keyspace --table-keyspace customer create --keyspace customer --type consistent_lookup --table-owner corder --table-owner-columns 'oname,corder_id' --tablet-types=PRIMARY
 ```
 
-And issue the vtctldclient command:
-
-```sh
-$ vtctldclient --server <vtctld_grpc_address> CreateLookupVindex -- --tablet_types=REPLICA customer "$(cat oname_keyspace_idx.json)"
-```
-
-The workflow will automatically create the necessary Primary Vindex entries for vindex table `oname_keyspace_idx` knowing that it is sharded.
+The workflow will automatically create the necessary Primary Vindex entries for vindex table `oname_keyspace` knowing that it is sharded.
