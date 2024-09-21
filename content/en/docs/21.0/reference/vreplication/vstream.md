@@ -91,37 +91,6 @@ events will be generated.
 
 #### VStreamFlags
 
-##### MinimizeSkew
-
-**Type** bool\
-**Default** false
-
-When enabled the `vtgate` will keep the events in the stream roughly time aligned — it is aggregating streams coming
-from each of the shards involved — using the event timestamps to ensure the maximum time skew between the source
-tablet shard streams is kept under 10 minutes. When it detects skew between the source streams it will pause sending
-the client more events and allow the lagging shard(s) to catch up.
-
-{{< info >}}
-There is no strict ordering of events across shards and the client will need to examine the event timestamps.
-{{</ info >}}
-
-##### HeartbeatInterval
-
-**Type** unsigned integer\
-**Default** 0 (none)
-
-How frequently, in seconds, to send heartbeat events to the client when there are no other events in the stream to
-send.
-
-##### StopOnReshard
-
-**Type** bool\
-**Default** false
-
-When enabled the `vtgate` will send a reshard event to the client along with an `EOF`
-`error` in the [`VStreamReader.Recv`](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate/vtgateconn#VStreamReader)
-response and stop sending any further events.
-
 ##### Cells
 
 **Type** string\
@@ -139,6 +108,44 @@ default to looking for source tablets within its own local cell.
 If specified, this determines which cells to give preference to during [tablet selection](../tablet_selection/). 
 By default, `preferlocalwithalias` is used in order to give preference to the caller's local cell and then any alias its cell belongs to. 
 If `onlyspecified` is given, then only tablets within the specified `Cells` field value will be considered.
+
+##### HeartbeatInterval
+
+**Type** unsigned integer\
+**Default** 0 (none)
+
+How frequently, in seconds, to send heartbeat events to the client when there are no other events in the stream to
+send.
+
+##### IncludeReshardJournalEvents
+
+**Type** bool\
+**Default** false
+
+When enabled the `vtgate` will include reshard journal events in the stream along with all other events.
+
+##### MinimizeSkew
+
+**Type** bool\
+**Default** false
+
+When enabled the `vtgate` will keep the events in the stream roughly time aligned — it is aggregating streams coming
+from each of the shards involved — using the event timestamps to ensure the maximum time skew between the source
+tablet shard streams is kept under 10 minutes. When it detects skew between the source streams it will pause sending
+the client more events and allow the lagging shard(s) to catch up.
+
+{{< info >}}
+There is no strict ordering of events across shards and the client will need to examine the event timestamps.
+{{</ info >}}
+
+##### StopOnReshard
+
+**Type** bool\
+**Default** false
+
+When enabled the `vtgate` will send a reshard journal event to the client along with an `EOF`
+`error` in the [`VStreamReader.Recv`](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate/vtgateconn#VStreamReader)
+response and stop sending any further events.
 
 ##### TabletOrder
 
