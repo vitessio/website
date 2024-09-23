@@ -163,7 +163,7 @@ The schema has been simplified to include only those fields that are significant
 
 ## Common Issues and Solutions
 
-<b>Issue:</b> Starting Minikube produces the following error:
+ ### Starting Minikube produces the following error:
 ```sh
 The "docker" driver should not be used with root privileges. If you wish to continue as root, use --force. 
 If you are running minikube within a VM, consider using --driver=none: 
@@ -173,7 +173,7 @@ Exiting due to to DRV_AS_ROOT: The "docker" driver should not be used with root 
 
 <b>Solution:</b> Create a new user and add it to your [docker group](https://docs.docker.com/engine/install/linux-postinstall).
 
-<b>Issue:</b> Port conflicts when running the port-forward script
+<!-- <b>Issue:</b> Port conflicts when running the port-forward script
 After running the command:
 ```sh
 ./pf.sh &
@@ -195,8 +195,26 @@ Stop the conflicting processes:If you find processes using these ports, terminat
 ```sh
 sudo kill <PID> #Replace <PID> with the process ID of the conflicting process.
 ```
-After resolving the port conflicts, try running the port-forward script again. The command should now run smoothly.
+After resolving the port conflicts, try running the port-forward script again. The command should now run smoothly. -->
 
+### Port conflicts when running the port-forward script
+```sh
+./pf.sh &
+```
+You may encounter an error indicating that the port-forwarding (pf.sh) is unable to start because the necessary network ports are already in use by other processes on your system.
+
+  <b>Solution:</b>  Run the following command to determine which applications or services are occupying the ports needed by the port-forwarding script:
+   ```sh
+   # Replace <port_number> with the specific port mentioned in the error message
+   sudo lsof -i :<port_number>
+   ```
+   If you find processes using these ports, you can terminate them using:
+   ```sh
+   # Replace <PID> with the process ID of the conflicting process
+   sudo kill <PID> 
+   ```
+
+ Run the port-forward script (pf.sh) again. The command should now run smoothly.
 
 ## Next Steps
 
