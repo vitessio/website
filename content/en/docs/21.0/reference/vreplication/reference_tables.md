@@ -87,8 +87,7 @@ the corresponding reference tables in all other shards.
 The VReplication Materialize workflow is the mechanism that you can use to keep reference tables in sync
 with the source across all shards. An example of how to create such a workflow is:
 
-`Materialize --target-keyspace target --workflow ref1 create --source-keyspace source --reference --tables 
-countries, currencies`
+`Materialize --target-keyspace target --workflow ref1 create --source-keyspace source --reference-tables countries,currencies`
 
 ## Useful to know
 
