@@ -94,7 +94,7 @@ Download the [latest binary release](https://github.com/vitessio/vitess/releases
 version="{{< param version >}}"
 url="$(curl -s https://api.github.com/repos/vitessio/vitess/releases | jq --arg version "${version}" -r '[.[] | select(.tag_name | contains($version))] | sort_by(.created_at) | reverse | .[0:1] | .[] | .assets[] | select(.content_type | contains("application/gzip")) | .browser_download_url')"
 file="${url##*/}"
-curl -LO "${url}
+curl -LO "${url}"
 
 tar -xzf ${file}
 cd ${file/.tar.gz/}
