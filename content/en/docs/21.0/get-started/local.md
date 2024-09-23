@@ -84,16 +84,18 @@ sudo setenforce 0
 
 ## Install Vitess
 
-Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux. For example:
+Download the [latest binary release](https://github.com/vitessio/vitess/releases) for Vitess on Linux:
 
 **Notes:**
 
 * Ubuntu is the only fully supported OS, for another OS please [build Vitess by yourself](/docs/contributing) or use the Docker images.
 
 ```sh
-version=20.0.0-rc2
-file=vitess-${version}-4af99b5.tar.gz
-wget https://github.com/vitessio/vitess/releases/download/v${version}/${file}
+version="{{< latest_release >}}"
+url="$(curl -s https://api.github.com/repos/vitessio/vitess/releases | jq --arg version "${version}" -r '[.[] | select(.tag_name | contains($version))] | sort_by(.created_at) | reverse | .[0:1] | .[] | .assets[] | select(.content_type | contains("application/gzip")) | .browser_download_url')"
+file="${url##*/}"
+curl -LO "${url}"
+
 tar -xzf ${file}
 cd ${file/.tar.gz/}
 sudo mkdir -p /usr/local/vitess

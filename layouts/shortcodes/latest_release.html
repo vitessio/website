@@ -1,0 +1,7 @@
+{{- $current := (printf "v%s" $.Site.Params.versions.current) -}}
+{{- $next := (printf "v%s" $.Site.Params.versions.next) -}}
+{{ if eq $.Page.Params.version $next }}
+{{- $current -}}
+{{ else }}
+{{- $.Page.Params.version -}}
+{{ end }}
