@@ -173,30 +173,6 @@ Exiting due to to DRV_AS_ROOT: The "docker" driver should not be used with root 
 
 <b>Solution:</b> Create a new user and add it to your [docker group](https://docs.docker.com/engine/install/linux-postinstall).
 
-<!-- <b>Issue:</b> Port conflicts when running the port-forward script
-After running the command:
-```sh
-./pf.sh &
-alias vtctldclient="vtctldclient --server=localhost:15999"
-alias mysql="mysql -h 127.0.0.1 -P 15306 -u user"
-```
-You may encounter an error indicating that Vitess is unable to start because the necessary network ports are already in use by other processes on your system.
-
-<b>Solution:</b>
-Identify the processes using the ports:
-
-Run the following command to determine which applications or services are occupying the ports Vitess needs:
-```sh
-#Replace <port_number> with the specific port mentioned in the error message.
-sudo lsof -i :<port_number>
-```
-
-Stop the conflicting processes:If you find processes using these ports, terminate them using:
-```sh
-sudo kill <PID> #Replace <PID> with the process ID of the conflicting process.
-```
-After resolving the port conflicts, try running the port-forward script again. The command should now run smoothly. -->
-
 ### Port conflicts when running the port-forward script
 ```sh
 ./pf.sh &
