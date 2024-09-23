@@ -1,3 +1,3 @@
-{{ $key := .Get 0 }}
-{{ $value := .Get 1 }}
-{{ if eq site.Params.version site.Params.next }}v{{ site.Params.current }}{{ else }}{{ .Inner }}{{ end }}
+{{- $current := (printf "v%s" $.Site.Params.versions.current) -}}
+{{- $next := (printf "v%s" $.Site.Params.versions.next) -}}
+{{ if eq $.Page.Params.version $next }}{{- $current -}}{{ else }}{{- $.Page.Params.version -}}{{ end }}
