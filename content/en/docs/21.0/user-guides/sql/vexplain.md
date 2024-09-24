@@ -296,33 +296,33 @@ The `KEYS` format provides a concise summary of the query structure, highlightin
 
 The output is a JSON object containing the following key information:
 
-- `GroupingColumns`: Columns used in GROUP BY clauses
-- `JoinColumns`: Columns used in join conditions
-- `FilterColumns`: Columns used in WHERE clauses (including SARGable columns)
-- `StatementType`: The type of SQL statement (e.g., SELECT, INSERT, UPDATE, DELETE)
+- `groupingColumns`: Columns used in GROUP BY clauses
+- `joinColumns`: Columns used in join conditions, not matter if they are on the WHERE or the JOIN ... ON clause
+- `filterColumns`: Columns used in WHERE clauses that are potential candidates for indexes (or vindexes), primary keys, or sharding keys. These typically include columns used in equality comparisons or range conditions.
+- `statementType`: The type of SQL statement (e.g., SELECT, INSERT, UPDATE, DELETE)
 
 ### Example:
 
 ```mysql
 mysql> vexplain keys select u.foo, ue.bar, count(*) from user u join user_extra ue on u.id = ue.user_id where u.name = 'John Doe' group by 1, 2;
-+-------------------------------------------------------------------------------------------+
-| VEXPLAIN KEYS                                                                             |
-+-------------------------------------------------------------------------------------------+
-| {                                                                                         |
-|     "GroupingColumns": [                                                                  |
-|         "user.foo",                                                                       |
-|         "user_extra.bar"                                                                  |
-|     ],                                                                                    |
-|     "JoinColumns": [                                                                      |
-|         "user.id",                                                                        |
-|         "user_extra.user_id"                                                              |
-|     ],                                                                                    |
-|     "FilterColumns": [                                                                    |
-|         "user.name"                                                                       |
-|     ],                                                                                    |
-|     "StatementType": "SELECT"                                                             |
-| }                                                                                         |
-+-------------------------------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ColumnUsage                                                                                                                                                                                |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| {
+        "groupingColumns": [
+                "user.foo",
+                "user_extra.bar"
+        ],
+        "joinColumns": [
+                "user.id",
+                "user_extra.user_id"
+        ],
+        "filterColumns": [
+                "user.name"
+        ],
+        "statementType": "SELECT"
+} |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 1 row in set (0.00 sec)
 ```
 
