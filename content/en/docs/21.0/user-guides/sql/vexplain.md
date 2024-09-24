@@ -326,6 +326,16 @@ mysql> vexplain keys select u.foo, ue.bar, count(*) from user u join user_extra 
 1 row in set (0.00 sec)
 ```
 
+## When to use KEYS
+Use vexplain keys when you need to:
+
+* Identify potential sharding key candidates
+* Optimize query performance by understanding which columns are frequently used in filters and joins
+* Analyze query patterns across your application to inform database design decisions
+* Quickly understand the structure of complex queries
+
+By analyzing the KEYS output across multiple queries, you can make more informed decisions about sharding strategies, potentially improving query performance and data distribution in your Vitess deployment.
+
 # Safety for DML
 
 The normal behaviour for `VEXPLAIN` is to not actually run the query for DMLs — it usually only plans the query and presents the produced plan for the `PLAN` type.
