@@ -6,7 +6,7 @@ aliases: ['/docs/user-guides/vtexplain/']
 
 # Introduction
 
-To see which queries are run on your behalf on the MySQL instances when you execute a query on vtgate, you can use `vexplain [ALL|PLAN|QUERIES|TRACE]`.
+To see which queries are run on your behalf on the MySQL instances when you execute a query on vtgate, you can use `vexplain [ALL|PLAN|QUERIES|TRACE|KEYS]`.
 
 # `QUERIES` Type
 
@@ -283,6 +283,48 @@ Use `vexplain trace` when you need to thoroughly understand what a query is doin
 4. Debugging unexpected query behavior
 
 By analyzing the trace output, you can gain insights into how your query is executed across different shards and operators, helping you make informed decisions about query optimization and database design.
+
+# `KEYS` Type
+
+The `KEYS` format provides a concise summary of the query structure, highlighting columns used in joins, filters, and grouping operations. This information is crucial for making informed decisions about sharding keys and optimizing query performance.
+
+## How it works
+
+`VEXPLAIN KEYS` analyzes the query structure without executing it. It identifies important columns that are potential candidates for sharding keys, including SARGable columns in the WHERE clause, join conditions, and grouping columns.
+
+## How to read the output
+
+The output is a JSON object containing the following key information:
+
+- `GroupingColumns`: Columns used in GROUP BY clauses
+- `JoinColumns`: Columns used in join conditions
+- `FilterColumns`: Columns used in WHERE clauses (including SARGable columns)
+- `StatementType`: The type of SQL statement (e.g., SELECT, INSERT, UPDATE, DELETE)
+
+### Example:
+
+```mysql
+mysql> vexplain keys select u.foo, ue.bar, count(*) from user u join user_extra ue on u.id = ue.user_id where u.name = 'John Doe' group by 1, 2;
++-------------------------------------------------------------------------------------------+
+| VEXPLAIN KEYS                                                                             |
++-------------------------------------------------------------------------------------------+
+| {                                                                                         |
+|     "GroupingColumns": [                                                                  |
+|         "user.foo",                                                                       |
+|         "user_extra.bar"                                                                  |
+|     ],                                                                                    |
+|     "JoinColumns": [                                                                      |
+|         "user.id",                                                                        |
+|         "user_extra.user_id"                                                              |
+|     ],                                                                                    |
+|     "FilterColumns": [                                                                    |
+|         "user.name"                                                                       |
+|     ],                                                                                    |
+|     "StatementType": "SELECT"                                                             |
+| }                                                                                         |
++-------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+```
 
 # Safety for DML
 
