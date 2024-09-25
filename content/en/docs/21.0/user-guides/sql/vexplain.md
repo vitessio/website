@@ -6,7 +6,7 @@ aliases: ['/docs/user-guides/vtexplain/']
 
 # Introduction
 
-To see which queries are run on your behalf on the MySQL instances when you execute a query on vtgate, you can use `vexplain [ALL|PLAN|QUERIES]`.  
+To see which queries are run on your behalf on the MySQL instances when you execute a query on vtgate, you can use `vexplain [ALL|PLAN|QUERIES|TRACE|KEYS]`.
 
 # `QUERIES` Type
 
@@ -55,12 +55,12 @@ This is a query where the planner has to do a vindex lookup to find which shard 
 
 # `PLAN` Type
 
-The `PLAN` format returns the vtgate plan for the given query. 
-It does so without actually running any queries - it just plans the given query and presents the plan. 
+The `PLAN` format returns the vtgate plan for the given query.
+It does so without actually running any queries - it just plans the given query and presents the plan.
 
 ## How to read the output
 
-The output contains a scalar output having a JSON description of the plan that vtgate will use for the query. 
+The output contains a scalar output having a JSON description of the plan that vtgate will use for the query.
 
 ### Example:
 ```mysql
@@ -221,6 +221,121 @@ mysql> vexplain all select * from corder join commerce.product as prod on corder
 
 This example uses the same query as the previous ones. For all the Route operators, we are annotating them with the MySQL explain output for the query that the route is executing.
 
+# `TRACE` Type
+
+The `TRACE` format provides a detailed execution trace of the query, showing how it's processed through various operators and interactions with tablets.
+
+## How it works
+
+`VEXPLAIN TRACE` runs the query and logs all interactions between the operators and the tablets. VExplain returns a single row with a single column containing the execution plan in JSON format, including all the interactions between the operators and the tablets.
+## How to read the output
+
+The output is a JSON representation of the query execution plan, with additional fields for each operator:
+
+- `NoOfCalls`: Number of times the operator was invoked
+- `AvgNumberOfRows`: Average number of rows processed by the operator
+- `MedianNumberOfRows`: Median number of rows processed by the operator
+- `ShardsQueried`: (For operators interacting with vttablets) Number of shards queried
+
+### Example:
+
+```mysql
+mysql> vexplain trace select ... ;
+```
+
+```json
+{
+  "OperatorType": "Projection",
+  "NoOfCalls": 1,
+  "AvgNumberOfRows": 5,
+  "MedianNumberOfRows": 5,
+  "Inputs": [
+    {
+      "OperatorType": "Aggregate",
+      "Variant": "Ordered",
+      "NoOfCalls": 1,
+      "AvgNumberOfRows": 5,
+      "MedianNumberOfRows": 5,
+      "Inputs": [
+        {
+          "OperatorType": "Route",
+          "Variant": "Scatter",
+          "NoOfCalls": 1,
+          "AvgNumberOfRows": 8,
+          "MedianNumberOfRows": 8,
+          "ShardsQueried": 2
+        }
+      ]
+    }
+  ]
+}
+```
+
+This trace output shows the execution flow through different operators (Projection, Aggregate, Route) and provides statistics on the number of calls and rows processed at each step.
+
+## When to use TRACE
+
+Use `vexplain trace` when you need to thoroughly understand what a query is doing and where it's performing the most work. It's particularly useful for:
+
+1. Identifying performance bottlenecks
+2. Understanding query execution patterns
+3. Optimizing complex queries
+4. Debugging unexpected query behavior
+
+By analyzing the trace output, you can gain insights into how your query is executed across different shards and operators, helping you make informed decisions about query optimization and database design.
+
+# `KEYS` Type
+
+The `KEYS` format provides a concise summary of the query structure, highlighting columns used in joins, filters, and grouping operations. This information is crucial for making informed decisions about sharding keys and optimizing query performance.
+
+## How it works
+
+`VEXPLAIN KEYS` analyzes the query structure without executing it. It identifies important columns that are potential candidates for sharding keys, including SARGable columns in the WHERE clause, join conditions, and grouping columns.
+
+## How to read the output
+
+The output is a JSON object containing the following key information:
+
+- `groupingColumns`: Columns used in GROUP BY clauses
+- `joinColumns`: Columns used in join conditions, not matter if they are on the WHERE or the JOIN ... ON clause
+- `filterColumns`: Columns used in WHERE clauses that are potential candidates for indexes (or vindexes), primary keys, or sharding keys. These typically include columns used in equality comparisons or range conditions.
+- `statementType`: The type of SQL statement (e.g., SELECT, INSERT, UPDATE, DELETE)
+
+### Example:
+
+```mysql
+mysql> vexplain keys select u.foo, ue.bar, count(*) from user u join user_extra ue on u.id = ue.user_id where u.name = 'John Doe' group by 1, 2;
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ColumnUsage                                                                                                                                                                                |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| {
+        "groupingColumns": [
+                "user.foo",
+                "user_extra.bar"
+        ],
+        "joinColumns": [
+                "user.id",
+                "user_extra.user_id"
+        ],
+        "filterColumns": [
+                "user.name"
+        ],
+        "statementType": "SELECT"
+} |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+```
+
+## When to use KEYS
+Use vexplain keys when you need to:
+
+* Identify potential sharding key candidates
+* Optimize query performance by understanding which columns are frequently used in filters and joins
+* Analyze query patterns across your application to inform database design decisions
+* Quickly understand the structure of complex queries
+
+By analyzing the KEYS output across multiple queries, you can make more informed decisions about sharding strategies, potentially improving query performance and data distribution in your Vitess deployment.
+
 # Safety for DML
 
 The normal behaviour for `VEXPLAIN` is to not actually run the query for DMLs — it usually only plans the query and presents the produced plan for the `PLAN` type.
@@ -249,5 +364,5 @@ mysql> vexplain /*vt+ EXECUTE_DML_QUERIES */ queries insert into customer(email)
 
 Here we can see how vtgate will insert rows to the main table, but also to the two lookup vindexes declared for this table.
 
-Note - MySQL client by default strips out the comments from the queries before it sends to the server. 
+Note - MySQL client by default strips out the comments from the queries before it sends to the server.
 So you'll need to run the client with `-c` flag to allow passing in comments.
