@@ -163,7 +163,7 @@ The schema has been simplified to include only those fields that are significant
 
 ## Common Issues and Solutions
 
- ### Starting Minikube produces the following error:
+<b>Issue:</b> Starting Minikube produces the following error:
 ```sh
 The "docker" driver should not be used with root privileges. If you wish to continue as root, use --force. 
 If you are running minikube within a VM, consider using --driver=none: 
@@ -182,7 +182,7 @@ You may encounter an error indicating that the port-forwarding (pf.sh) is unable
   <b>Solution:</b>  Run the following command to determine which applications or services are occupying the ports needed by the port-forwarding script:
    ```sh
    # Replace <port_number> with the specific port mentioned in the error message
-   sudo lsof -i :<port_number>
+   lsof -I :<port_number> -sTCP:LISTEN
    ```
    If you find processes using these ports, you can terminate them using:
    ```sh
