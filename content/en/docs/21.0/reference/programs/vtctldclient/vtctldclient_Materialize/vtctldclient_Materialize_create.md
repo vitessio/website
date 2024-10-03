@@ -1,7 +1,7 @@
 ---
 title: Materialize create
 series: vtctldclient
-commit: 069651aed3c06088dc00f8f699a276665056e3d0
+commit: 14b6873142558358a99a68d2b5ef0ec204f3776a
 ---
 ## vtctldclient Materialize create
 
@@ -53,6 +53,7 @@ vtctldclient --server localhost:15999 materialize --workflow product_sales --tar
   -c, --cells strings                      Cells and/or CellAliases to copy table data from.
   -h, --help                               help for create
       --mysql_server_version string        Configure the MySQL version to use for example for the parser. (default "8.0.30-Vitess")
+  -r, --reference-tables strings           Used to specify the reference tables to materialize on every target shard.
       --source-keyspace string             Keyspace where the tables queried in the 'source_expression' values within table-settings live.
       --sql-max-length-errors int          truncate queries in error logs to the given length (default unlimited)
       --sql-max-length-ui int              truncate queries in debug UIs to the given length (default 512) (default 512)

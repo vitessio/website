@@ -1,7 +1,7 @@
 ---
 title: Migrate create
 series: vtctldclient
-commit: 069651aed3c06088dc00f8f699a276665056e3d0
+commit: 14b6873142558358a99a68d2b5ef0ec204f3776a
 ---
 ## vtctldclient Migrate create
 
@@ -24,6 +24,7 @@ vtctldclient --server localhost:15999 migrate --workflow import --target-keyspac
       --all-tables                         Copy all tables from the source.
       --auto-start                         Start the workflow after creating it. (default true)
   -c, --cells strings                      Cells and/or CellAliases to copy table data from.
+      --config-overrides strings           Specify one or more VReplication config flags to override as a comma-separated list of key=value pairs.
       --defer-secondary-keys               Defer secondary index creation for a table until after it has been copied.
       --exclude-tables strings             Source tables to exclude from copying.
   -h, --help                               help for create
