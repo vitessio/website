@@ -163,7 +163,7 @@ This is also a flag for the [`Create` sub-command](../../programs/vtctldclient/v
 If specified for the [`SwitchTraffic` sub-command](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_switchtraffic/), then when switching write (primary tablet) traffic for tables that are being moved from an unsharded keyspace to a sharded one, initialize any sequences being used by those tables on the target. They are initialized using the current maximum value for the column across all shards on the target.
 
 {{< info >}}
-If this option is _not_ specifed then when it comes to [switching the write traffic](#switchtraffic) you will need to manually ensure that you [create](../../features/vitess-sequences/#creating-a-sequence) and [initialize](../../features/vitess-sequences/#initializing-a-sequence) the sequence tables so that the next values they provide are higher than any already used (with ample buffer in between to avoid potential identifier reuse and duplicate key errors immediately during and following the cutover).
+If this option is _not_ specifed then when it comes to [switching the write traffic](#switchtraffic) you will need to manually ensure that you [create](../../features/vitess-sequences/#creating-a-sequence) and [initialize](../../features/vitess-sequences/#initializing-a-sequence) the sequence tables so that the next values they provide are higher than any already used (with ample buffer in between to avoid potential identifier reuse and duplicate key errors during and immediately following the cutover).
 {{< /info>}}
 
 </div>
