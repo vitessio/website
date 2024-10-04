@@ -127,7 +127,48 @@ This is a destructive command
 
 </div>
 
-### Options
+### Auto Increment Handling
+
+When migrating tables from an unsharded keyspace to a sharded one using the the `MoveTables` command, options are provided for how to handle auto incrementing values for the table(s) being moved. This is important as now that these tables will be sharded in the target keyspace you cannot rely on the [MySQL `auto_increment` clauses](https://dev.mysql.com/doc/refman/en/example-auto-increment.html) — as the values will need to be unique _across all shards in the sharded target keyspace_ — and you would instead need to rely on [Vitess Sequences](../../reference/features/vitess-sequences/) to achieve the equivalent behavior. Vitess supports fully managing these auto incrementing values when moving tables with:
+
+1. A combination of these [`MoveTables create` flags](../..//reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_create/): `--sharded-auto-increment-handling=replace --global-keyspace=foo` where `foo` is an unsharded keyspace that can be used for sequences, [reference tables](../..//reference/vreplication/reference_tables/), and other "global" resources. That keyspace is where the sequence tables will be created if needed.
+2. Then, when switching the application traffic to the target keyspace you would specify the [`--initialize-target-sequences` flag for the `MoveTables switchtraffic` command](../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_switchtraffic/). It's at this point where the sequence tables will be created, if needed, and the starting value used will be initialized based on the current maximum value used for the table in the unsharded source keyspace.
+
+This combination allows Vitess to replace the MySQL feature with the equivalent Vitess one in a way that is entirely transparent to the application and its users — they can continue to elide values for the column where auto incrementing values are desired on `INSERT`, and there will be no visible difference in the behavior resulting from the traffic switch.
+
+Please see additional information about these flags below.
+
+#### --sharded-auto-increment-handling
+**optional**\
+**default** REMOVE
+
+This is a flag for the [`Create` sub-command](../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_create/) and it takes a string where the valid values are `LEAVE` (leave the MySQL `auto_increment` clauses in place), `REMOVE` (remove the clauses), and `REPLACE` (replace them with Vitess sequences). When `REPLACE` is specifed then not only are the MySQL `auto_increment` clauses removed when copying the table schemas from the source keyspace to the target, but the target keyspace's [VSchema](../../reference/features/vschema/#sequences) is also updated so that auto increment values will be retrieved from the sequence table (which can automatically be created using the two flags covered below).
+
+{{< info >}}
+If you do _not_ specify `REPLACE` then you will need to manually [update the target keyspace's VSchema](../../reference/features/vitess-sequences/#creating-a-sequence) to add the `AutoIncrement` definitions prior to the `SwitchTraffic` step.
+{{< /info>}}
+
+#### --global-keyspace
+**optional**\
+**default** ""
+
+This is also a flag for the [`Create` sub-command](../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_create/) and it takes a string where the value must be an _existing unsharded_ keyspace. This keyspace will then be used to create the backing sequence tables if they do not already exist, provided you also request that the target sequences be setup and initialized using the next flag below.
+
+#### --initialize-target-sequences
+**optional**\
+**default** false
+
+<div class="cmd">
+
+If specified for the [`SwitchTraffic` sub-command](../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_switchtraffic/), then when switching write (primary tablet) traffic for tables that are being moved from an unsharded keyspace to a sharded one, initialize any sequences being used by those tables on the target. They are initialized using the current maximum value for the column across all shards on the target.
+
+{{< info >}}
+If this option is _not_ specifed then when it comes to [switching the write traffic](#switchtraffic) then you will need to manually ensure that you [create](../../reference/features/vitess-sequences/#creating-a-sequence) and [initialize](../../features/vitess-sequences/#initializing-a-sequence) the sequence tables so that the next values they provide are higher than any already used on the source (with ample buffer in between to avoid potential identifier reuse and duplicate key errors immediately during and following the cutover).
+{{< /info>}}
+
+</div>
+
+### Additional Key Options
 
 Each [`action` or sub-command](../../programs/vtctldclient/vtctldclient_movetables/#see-also) has additional options/parameters that can be used to modify its behavior. Please see the [command's reference docs](../../programs/vtctldclient/vtctldclient_movetables/) for the full list of command options or flags. Below we will add additional information for a subset of key options.
 
@@ -191,37 +232,6 @@ parallel index builds. This is logically similar to the
 [`mysqldump` `--disable-keys` option](https://dev.mysql.com/doc/refman/en/mysqldump.html#option_mysqldump_disable-keys).
 
 </div>
-
-#### --initialize-target-sequences
-**optional**\
-**default** false
-
-<div class="cmd">
-
-If specified, when switching write (primary tablet) traffic for tables that are being moved from an unsharded keyspace to a
-sharded one, initialize any sequences being used by those tables on the target. They are initialized using the current
-maximum value for the column across all shards on the target.
-
-</div>
-
-###### Uses
-
-* It's common that users import unsharded data into Vitess — sharding it in the process — or move
-tables from an unsharded keyspace to a sharded one as they become too large for a single MySQL instance.
-When doing either of these you would typically be leveraging [MySQL auto_increment](https://dev.mysql.com/doc/refman/en/example-auto-increment.html)
-columns for primary keys on the unsharded tables (source). On the sharded target, however, you will then
-need to use [Vitess Sequences](../../features/vitess-sequences/) in order to ensure that you continue having
-automatically generated incrementing unique primary keys _across all shards_. When it comes to [switching the write traffic](#switchtraffic)
-during this move you would need to manually ensure that you [initialize the sequences](../../features/vitess-sequences/#initializing-a-sequence)
-so that the next values they provide are higher than any already used on the source (with ample buffer in between
-to avoid potential identifier reuse and duplicate key errors immediately following the cutover). This flag tells Vitess
-to manage this sequence initialization for you as part of the `SwitchTraffic` operation to ensure a seamless cutover
-without any additional manual steps. For more information, please see [the feature request](https://github.com/vitessio/vitess/issues/13685).
-
-{{< info >}}
-You will still need to take the manual step of [creating each backing sequence table](../../features/vitess-sequences/#creating-a-sequence)
-in an unsharded keyspace of your choosing prior to the `SwitchTraffic` operation.
-{{< /info>}}
 
 #### --max-replication-lag-allowed
 **optional**\
@@ -367,4 +377,4 @@ the command will error out. For setups with high write qps you may need to incre
 ### More Reading
 
 * [`MoveTables` in practice](../../../concepts/move-tables/)
-* [`MoveTables` reference docs](../../programs/vtctldclient/vtctldclient_movetables/)
+* [`MoveTables` client command reference docs](../../programs/vtctldclient/vtctldclient_movetables/)
