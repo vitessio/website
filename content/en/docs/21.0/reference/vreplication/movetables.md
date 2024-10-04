@@ -142,17 +142,25 @@ Please see additional information about these flags below.
 **optional**\
 **default** REMOVE
 
+<div class="cmd">
+
 This is a flag for the [`Create` sub-command](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_create/) and it takes a string where the valid values are `LEAVE` (leave the MySQL `auto_increment` clauses in place), `REMOVE` (remove the clauses), and `REPLACE` (replace them with Vitess sequences). When `REPLACE` is specifed then not only are the MySQL `auto_increment` clauses removed when copying the table schemas from the source keyspace to the target, but the target keyspace's [VSchema](../../features/vschema/#sequences) is also updated so that auto increment values will be retrieved from the sequence table (which can automatically be created using the two flags covered below).
 
 {{< info >}}
 If you do _not_ specify `REPLACE` then you will need to manually [update the target keyspace's VSchema](../../features/vitess-sequences/#creating-a-sequence) to add the `AutoIncrement` definitions prior to the `SwitchTraffic` step.
 {{< /info>}}
 
+</div>
+
 #### --global-keyspace
 **optional**\
 **default** ""
 
+<div class="cmd">
+
 This is also a flag for the [`Create` sub-command](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_create/) and it takes a string where the value must be an _existing unsharded_ keyspace. This keyspace will then be used to create the backing sequence tables if they do not already exist, provided you also request that the target sequences be setup and initialized using the next flag below.
+
+</div>
 
 #### --initialize-target-sequences
 **optional**\
