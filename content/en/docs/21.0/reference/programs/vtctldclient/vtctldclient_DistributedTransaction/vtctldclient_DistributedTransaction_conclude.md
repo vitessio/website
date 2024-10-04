@@ -1,20 +1,21 @@
 ---
 title: DistributedTransaction conclude
 series: vtctldclient
-commit: 069651aed3c06088dc00f8f699a276665056e3d0
+commit: 14b6873142558358a99a68d2b5ef0ec204f3776a
 ---
 ## vtctldclient DistributedTransaction conclude
 
 Concludes the unresolved transaction by rolling back the prepared transaction on each participating shard and removing the transaction metadata record.
 
 ```
-vtctldclient DistributedTransaction conclude <dtid> [<keyspace/shard> ...]
+vtctldclient DistributedTransaction conclude --dtid <dtid>
 ```
 
 ### Options
 
 ```
-  -h, --help   help for conclude
+  -d, --dtid string   conclude transaction for the given distributed transaction ID.
+  -h, --help          help for conclude
 ```
 
 ### Options inherited from parent commands

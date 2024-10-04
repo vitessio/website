@@ -1,7 +1,7 @@
 ---
 title: Reshard create
 series: vtctldclient
-commit: 069651aed3c06088dc00f8f699a276665056e3d0
+commit: 14b6873142558358a99a68d2b5ef0ec204f3776a
 ---
 ## vtctldclient Reshard create
 
@@ -23,6 +23,7 @@ vtctldclient --server localhost:15999 reshard --workflow customer2customer --tar
   -a, --all-cells                          Copy table data from any existing cell.
       --auto-start                         Start the workflow after creating it. (default true)
   -c, --cells strings                      Cells and/or CellAliases to copy table data from.
+      --config-overrides strings           Specify one or more VReplication config flags to override as a comma-separated list of key=value pairs.
       --defer-secondary-keys               Defer secondary index creation for a table until after it has been copied.
   -h, --help                               help for create
       --on-ddl string                      What to do when DDL is encountered in the VReplication stream. Possible values are IGNORE, STOP, EXEC, and EXEC_IGNORE. (default "IGNORE")

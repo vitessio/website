@@ -1,7 +1,7 @@
 ---
 title: MoveTables switchtraffic
 series: vtctldclient
-commit: 069651aed3c06088dc00f8f699a276665056e3d0
+commit: 14b6873142558358a99a68d2b5ef0ec204f3776a
 ---
 ## vtctldclient MoveTables switchtraffic
 
@@ -25,7 +25,7 @@ vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --
       --enable-reverse-replication             Setup replication going back to the original source keyspace to support rolling back the traffic cutover. (default true)
       --force                                  Force the traffic switch even if some potentially non-critical actions cannot be performed; for example the tablet refresh fails on some tablets in the keyspace. WARNING: this should be used with extreme caution and only in emergency situations!
   -h, --help                                   help for switchtraffic
-      --initialize-target-sequences            When moving tables from an unsharded keyspace to a sharded keyspace, initialize any sequences that are being used on the target when switching writes.
+      --initialize-target-sequences            When moving tables from an unsharded keyspace to a sharded keyspace, initialize any sequences that are being used on the target when switching writes. If the sequence table is not found, and the sequence table reference was fully qualified OR a value was specified for --global-keyspace, then we will attempt to create the sequence table in that keyspace.
       --max-replication-lag-allowed duration   Allow traffic to be switched only if VReplication lag is below this. (default 30s)
       --shards strings                         (Optional) Specifies a comma-separated list of shards to operate on.
       --tablet-types strings                   Tablet types to switch traffic for.

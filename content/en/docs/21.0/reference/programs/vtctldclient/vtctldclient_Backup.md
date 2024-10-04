@@ -1,20 +1,21 @@
 ---
 title: Backup
 series: vtctldclient
-commit: 069651aed3c06088dc00f8f699a276665056e3d0
+commit: 14b6873142558358a99a68d2b5ef0ec204f3776a
 ---
 ## vtctldclient Backup
 
 Uses the BackupStorage service on the given tablet to create and store a new backup.
 
 ```
-vtctldclient Backup [--concurrency <concurrency>] [--allow-primary] [--incremental-from-pos=<pos>|<backup-name>|auto] [--upgrade-safe] <tablet_alias>
+vtctldclient Backup [--concurrency <concurrency>] [--allow-primary] [--incremental-from-pos=<pos>|<backup-name>|auto] [--upgrade-safe] [--backup-engine=enginename] <tablet_alias>
 ```
 
 ### Options
 
 ```
       --allow-primary                 Allow the primary of a shard to be used for the backup. WARNING: If using the builtin backup engine, this will shutdown mysqld on the primary and stop writes for the duration of the backup.
+      --backup-engine string          Request a specific backup engine for this backup request. Defaults to the preferred backup engine of the target vttablet
       --concurrency int32             Specifies the number of compression/checksum jobs to run simultaneously. (default 4)
   -h, --help                          help for Backup
       --incremental-from-pos string   Position, or name of backup from which to create an incremental backup. Default: empty. If given, then this backup becomes an incremental backup from given position or given backup. If value is 'auto', this backup will be taken from the last successful backup position.

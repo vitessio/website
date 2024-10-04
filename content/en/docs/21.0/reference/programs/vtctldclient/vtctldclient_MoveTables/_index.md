@@ -1,7 +1,7 @@
 ---
 title: MoveTables
 series: vtctldclient
-commit: 069651aed3c06088dc00f8f699a276665056e3d0
+commit: 14b6873142558358a99a68d2b5ef0ec204f3776a
 ---
 ## vtctldclient MoveTables
 
