@@ -178,18 +178,19 @@ Exiting due to to DRV_AS_ROOT: The "docker" driver should not be used with root 
 
 You may encounter an error indicating that the port-forwarding (pf.sh) is unable to start because the necessary network ports are already in use by other processes on your system.
 
-  <b>Solution:</b>  Run the following command to determine which applications or services are occupying the ports needed by the port-forwarding script:
-   ```sh
-   # Replace <port_number> with the specific port mentioned in the error message
-   lsof -I :<port_number> -sTCP:LISTEN
-   ```
-   If you find processes using these ports, you can terminate them using:
-   ```sh
-   # Replace <PID> with the process ID of the conflicting process
-   sudo kill <PID> 
-   ```
+<b>Solution:</b>  Run the following command to determine which applications or services are occupying the ports needed by the port-forwarding script:
+```sh
+# Replace <port_number> with the specific port mentioned in the error message
+lsof -I :<port_number> -sTCP:LISTEN
+```
 
- Run the port-forward script (pf.sh) again. The command should now run smoothly.
+If you find processes using these ports, you can terminate them using:
+```sh
+# Replace <PID> with the process ID of the conflicting process
+sudo kill <PID> 
+```
+
+Run the port-forward script (pf.sh) again. The command should now run smoothly.
 
 ## Next Steps
 
