@@ -173,9 +173,10 @@ Exiting due to to DRV_AS_ROOT: The "docker" driver should not be used with root 
 
 <b>Solution:</b> Create a new user and add it to your [docker group](https://docs.docker.com/engine/install/linux-postinstall).
 
-<b>Issue:</b> Port conflicts when [running the port-forward script (pfs.sh)](./#setup-port-forward)
 
-You may encounter an error indicating that [the port-forwarding (pf.sh)](./#setup-port-forward) is unable to start because the necessary network ports are already in use by other processes on your system.
+<b>Issue:</b> Port conflicts when [running the port-forward script (pf.sh)](./#setup-port-forward)
+
+You may encounter an error indicating that the port-forwarding (pf.sh) is unable to start because the necessary network ports are already in use by other processes on your system.
 
   <b>Solution:</b>  Run the following command to determine which applications or services are occupying the ports needed by the port-forwarding script:
    ```sh
