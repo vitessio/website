@@ -500,7 +500,7 @@ Current State: All Reads Switched. Writes Switched
 
 `MirrorTraffic` increases VTGate CPU usage and memory allocations, while decreasing performance. It is recommended to start with small values of `--percent` (between `0` and `1`), and increase in small increments. If you observe decreases in performance or increases in VTGate memory usage, either revert to smaller values of `--percent` or increase the amount of resources allocated to VTGate.
 
-Check [VTTablet-level metrics](../configuration-basic/monitoring/) in the target keyspace to see how queries are performing there.
+Check VTGate `/debug/querylog` for VTGate-level visibility into mirrored queries. Check [VTTablet-level metrics](../configuration-basic/monitoring/) in the target keyspace to see how queries are performing there.
 
 ## Switching Traffic
 
