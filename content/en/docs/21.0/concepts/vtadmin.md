@@ -11,30 +11,13 @@ title: VTAdmin
 * Operational Tasks: Facilitates operations like resharding, backups, and failovers.
 * Security: Implements authentication, authorization, and audit logging.
 
+3. **Integration**: VTAdmin interacts with key Vitess components like VTGate, VTTablet, and the topology service through vtctld, which is the main API endpoint. vtctld is essential for VTAdmin to retrieve cluster metadata, shard details, and other relevant information, enabling efficient management and monitoring of the Vitess cluster.VTAdmin interacts with key Vitess components like VTGate, VTTablet, and the topology service through vtctld, which is the main API endpoint for retrieving cluster metadata and information.
+VTAdmin operates with two binaries: **vtadmin-api** and **vtadmin-web**.
 
-3. **Integration**: VTAdmin interacts with other Vitess components like VTGate, VTTablet, and the topology service to perform its functions.
+ * **vtadmin-api:** This binary acts as the backend service that interacts with vtctld, gathering data from various Vitess components like VTGate, VTTablet, and the topology service. It processes and serves this data to the web interface.
+
+* **vtadmin-web:** This binary provides the frontend interface for users to visualize and manage Vitess clusters. It communicates with vtadmin-api to present information in a user-friendly way, allowing users to monitor and manage the Vitess cluster efficiently.
+
 4. **User Interface**: Typically offers a web-based interface for easy access and management.
-5. **Importance**: Simplifies the management of complex, distributed Vitess deployments, making it easier for    organizations to leverage Vitess's capabilities.
 
-For reference, please refer to the **VTAdmin Workfow Diagram:** below:
-
-This workflow demonstrates how VTAdmin serves as a central management tool for Vitess, allowing administrators to oversee and control various aspects of the cluster from a single interface.
-```mermaid
-graph TD
-    A[Administrator] -->|Accesses| B(VTAdmin Interface)
-    B -->|Authenticates| C{Authentication}
-    C -->|Success| D[Dashboard]
-    C -->|Failure| B
-    D -->|View| E[Cluster Overview]
-    D -->|Manage| F[Keyspaces]
-    D -->|Configure| G[VSchema]
-    D -->|Monitor| H[Health & Metrics]
-    D -->|Perform| I[Operational Tasks]
-    F -->|Shard| J[Resharding]
-    F -->|Backup| K[Backup/Restore]
-    G -->|Update| L[Apply VSchema Changes]
-    H -->|Alert| M[Troubleshoot Issues]
-    I -->|Execute| N[Planned Maintenance]
-    J & K & L & M & N -->|Log| O[Audit Logs]
-    O -->|Review| A
-```
+5. **Importance**: Simplifies the management of complex, distributed Vitess deployments, making it easier for organizations to leverage Vitess's capabilities.
