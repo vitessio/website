@@ -163,7 +163,7 @@ The schema has been simplified to include only those fields that are significant
 
 ## Common Issues and Solutions
 
-<b>Issue:</b> Starting Minikube produces the following error:
+### Starting Minikube produces the following error:
 ```sh
 The "docker" driver should not be used with root privileges. If you wish to continue as root, use --force. 
 If you are running minikube within a VM, consider using --driver=none: 
@@ -174,7 +174,7 @@ Exiting due to to DRV_AS_ROOT: The "docker" driver should not be used with root 
 <b>Solution:</b> Create a new user and add it to your [docker group](https://docs.docker.com/engine/install/linux-postinstall).
 
 
-<b>Issue:</b> Port conflicts when [running the port-forward script (pf.sh)](./#setup-port-forward)
+### Port conflicts when [running the port-forward script (pf.sh)](./#setup-port-forward)
 
 You may encounter an error indicating that the port-forwarding (pf.sh) is unable to start because the necessary network ports are already in use by other processes on your system.
 
@@ -203,5 +203,3 @@ kubectl delete -f 101_initial_cluster.yaml
 ```
 Congratulations on completing this exercise!
 
-
-[def]: ./#setup-port-forward
