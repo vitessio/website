@@ -5,7 +5,7 @@ title: VTAdmin
 ## VTAdmin
 VTAdmin is a component in Vitess that serves as a centralized management and administration tool for Vitess clusters.
 
- ## Purpose
+## Purpose
 VTAdmin provides a unified interface for database administrators to monitor, manage, and maintain Vitess deployments.
 
 ## Key Features

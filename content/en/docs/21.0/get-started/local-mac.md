@@ -38,7 +38,7 @@ nvm install --lts 18.16.0
 nvm use 18.16.0
 ```
 
-See the [VTAdmin Docs](../../concepts/vtadmin) for more details.
+See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
 
 ## PATH Settings
 

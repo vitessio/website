@@ -58,7 +58,7 @@ nvm install 18
 nvm use 18
 ```
 
-See the [VTAdmin docs](../../concepts/vtadmin) for more details. for more details.
+See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details. for more details.
 
 ## Disable AppArmor or SELinux
 
