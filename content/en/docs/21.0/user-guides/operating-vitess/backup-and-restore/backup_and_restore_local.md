@@ -19,7 +19,7 @@ If you are not already familiar with [how backups work](../overview/) in Vitess 
 
 ## Local Environment Backup And Restore Steps:
 
-### Adding a Backup for Local Environment
+### Taking a Backup
 
 In this section, we will explain how to perform backups of the customer keyspace and its shards to ensure data protection. The backups will be stored locally on your machine. You can customize the script to change the backup location if needed.
 
@@ -27,9 +27,7 @@ Run the script:
 ```bash
 $ ./401_backup.sh
 ```
-This will start the backup process for the customer keyspace and all its shards.
-
-When you run the script, the following output can be expected:
+This will start the backup process for the customer keyspace and all its shards. When you run the script, the following output can be expected:
 ```
 Ensuring keyspace customer exists and shards are healthy...
 Backing up shard -80 in keyspace customer...
@@ -68,8 +66,8 @@ Since this is a local environment, the backups will be stored directly on your m
 
 For example, navigating to the directory:
 ```bash
-$ cd /vtdataroot/backups
-shail_pujan@SHAIL-PUJAN:~/vtdataroot/backups $ ls
+shail_pujan@SHAIL-PUJAN:~$ cd $VTDATAROOT/backups
+shail_pujan@SHAIL-PUJAN:~/vtdataroot/backups$ ls
 customer
 shail_pujan@SHAIL-PUJAN:~/vtdataroot/backups$ cd customer
 shail_pujan@SHAIL-PUJAN:~/vtdataroot/backups/customer$ ls
@@ -135,8 +133,7 @@ To clean up your Vitess environment, use the `501_teardown.sh` script for a comp
 
 This script ensures that the full cluster is cleaned up, removing any associated resources. To execute the teardown:
 ```bash
-./501_teardown.sh
+$ ./501_teardown.sh
 ```
-This will safely remove the cluster and associated data, ensuring a clean environment without manual deletions.
 
-If needed, use the [vtctldclient](../../backup-and-restore/managing-backups)command to remove specific backups, but this is generally not required if you are running the teardown script.
+If needed, use the [vtctldclient](../../backup-and-restore/managing-backups) command to remove specific backups, but this is generally not required if you are running the teardown script.
