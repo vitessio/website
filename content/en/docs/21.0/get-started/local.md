@@ -59,7 +59,6 @@ nvm use 18
 ```
 
 See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
-
 ## Disable AppArmor or SELinux
 
 AppArmor/SELinux will not allow Vitess to launch MySQL in any data directory by default. You will need to disable it:
@@ -289,7 +288,7 @@ mysql> show tables;
 
 </br>
 
-You can also now browse and administer your new Vitess cluster using the [VTAdmin](../../reference/vtadmin/) UI at the following URL:
+You can also now browse and administer your new Vitess cluster using the [VTAdmin](../../concepts/vtadmin) UI at the following URL:
 
 ```text
 http://localhost:14201
