@@ -1,7 +1,7 @@
 ---
 title: vtctldclient
 series: vtctldclient
-commit: 14b6873142558358a99a68d2b5ef0ec204f3776a
+commit: 376c478ce7daca627d063f22af9121e173787e31
 ---
 ## vtctldclient
 
@@ -42,6 +42,7 @@ vtctldclient [flags]
 * [vtctldclient ApplyVSchema](./vtctldclient_applyvschema/)	 - Applies the VTGate routing schema to the provided keyspace. Shows the result after application.
 * [vtctldclient Backup](./vtctldclient_backup/)	 - Uses the BackupStorage service on the given tablet to create and store a new backup.
 * [vtctldclient BackupShard](./vtctldclient_backupshard/)	 - Finds the most up-to-date REPLICA, RDONLY, or SPARE tablet in the given shard and uses the BackupStorage service on that tablet to create and store a new backup.
+* [vtctldclient ChangeTabletTags](./vtctldclient_changetablettags/)	 - Changes the tablet tags for the specified tablet, if possible.
 * [vtctldclient ChangeTabletType](./vtctldclient_changetablettype/)	 - Changes the db type for the specified tablet, if possible.
 * [vtctldclient CheckThrottler](./vtctldclient_checkthrottler/)	 - Issue a throttler check on the given tablet.
 * [vtctldclient CreateKeyspace](./vtctldclient_createkeyspace/)	 - Creates the specified keyspace in the topology.
