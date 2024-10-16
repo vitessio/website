@@ -364,5 +364,8 @@ rm -rf ${VTDATAROOT}/vt_000000020{0,1,2}/
 
 ## Next Steps
 
-Congratulations, you have successfully resharded your `customer` keyspace into two shards.
-Now, let's learn [how to schedule backups](../../operating-vitess/backup-and-restore/scheduled-backups) of your Vitess cluster.
+Congratulations! You have successfully resharded your customer keyspace into two shards. Now, let's learn how to take backups of your Vitess cluster.
+
+* For Local Environment: If you are using a local machine, you can refer to the section on [Backups and Restore for Local Environment](../../operating-vitess/backup-and-restore/backup_and_restore_local) to perform backups and restorations.
+
+* For Kubernetes Environment: If you are using Kubernetes, you can follow the instructions on [how to schedule backups](../../operating-vitess/backup-and-restore/scheduled-backups) to automate your backup processes.
