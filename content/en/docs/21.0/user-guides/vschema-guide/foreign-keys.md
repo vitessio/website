@@ -162,6 +162,53 @@ flowchart TD
 
 Changing any of the 3 foreign key constraints to use `ON DELETE RESTRICT ON UPDATE RESTRICT` reference action will prevent the cycle.
 
+Example 4: Consider the following schema - 
+```sql
+CREATE TABLE `t1` (
+    `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+    `name` varchar(255) NOT NULL,
+    `parent_id` bigint unsigned,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_t1_parent` FOREIGN KEY (`parent_id`) REFERENCES `t1` (`id`)
+        ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE InnoDB, CHARSET utf8mb4, COLLATE utf8mb4_0900_ai_ci;
+
+CREATE TABLE `t2` (
+    `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+    `name` varchar(255) NOT NULL,
+    `t1_id` bigint unsigned NOT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_t2_t1` FOREIGN KEY (`t1_id`) REFERENCES `t1` (`id`)
+        ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE InnoDB, CHARSET utf8mb4, COLLATE utf8mb4_0900_ai_ci;
+
+CREATE TABLE `t3` (
+    `t1_id` bigint unsigned NOT NULL,
+    `count` int NOT NULL,
+    `last_t2_id` bigint unsigned,
+    PRIMARY KEY (`t1_id`),
+    CONSTRAINT `fk_t3_t1` FOREIGN KEY (`t1_id`) REFERENCES `t1` (`id`)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `fk_t3_t2` FOREIGN KEY (`last_t2_id`) REFERENCES `t2` (`id`)
+        ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE InnoDB, CHARSET utf8mb4, COLLATE utf8mb4_0900_ai_ci;
+```
+
+Because of the `ON DELETE CASCADE and ON UPDATE CASCADE` in the foreign keys, we'll end up with a graph like so - 
+
+```mermaid
+    flowchart TD
+    t1["t1"]
+    t2["t2"]
+    t3["t3"]
+
+    t1 -->|parent_id| t1
+    t1 -->|t1_id| t2
+    t1 -->|t1_id| t3
+    t2 -->|last_t2_id| t3
+```
+
+To fix the schema, we should change the reference action of one of the foreign keys. Changing the foreign key in t3 referencing t2 to use `ON UPDATE RESTRICT` will prevent cycle.
 ### Vitess Disallows Foreign Keys
 
 You can run Vitess such that it explicitly disallows any DDL statements that try to create a foreign key constraint. To run Vitess in this mode, set the VSchema property `foreignKeyMode` to `disallow` at the keyspace level.
