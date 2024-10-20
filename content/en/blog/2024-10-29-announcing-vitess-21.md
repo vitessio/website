@@ -38,8 +38,6 @@ support, improving overall scalability and deployment flexibility.
 
 Let’s take a deeper look at some key highlights of this release.
 
-###  
-
 ### Query Compatibility
 
 #### Atomic Distributed Transactions
