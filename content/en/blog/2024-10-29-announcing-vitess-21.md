@@ -94,10 +94,10 @@ in v22, where all tablet throttlers will be expected to communicate multi-metric
 
 Other key throttler changes:
 
-* With the above, the sub-flags ``--check-as-check-self`` and ``--check-as-check-shard`` to
-  the ``UpdateThrottlerConfig`` command are deprecated and slated to be removed in a future version. \
-  Similarly, ``SHOW VITESS_THROTTLER STATUS`` and ``SHOW VITESS_THROTTLED_APPS`` queries, and all ``/throttler/`` 
-* API access points (with the exception of ``/throttler/check``) are deprecated and slated to be removed in v22.
+* With the above, the sub-flags `--check-as-check-self` and `--check-as-check-shard` to
+  the `UpdateThrottlerConfig` command are deprecated and slated to be removed in a future version. \
+  Similarly, `SHOW VITESS_THROTTLER STATUS` and `SHOW VITESS_THROTTLED_APPS` queries, and all `/throttler/` 
+API access points (with the exception of `/throttler/check`) are deprecated and slated to be removed in v22.
 * When enabled, the throttler ensures it leases heartbeat updates, even if heartbeat configuration is otherwise unset.
   In other words, the throttler overrides the configuration when it requires heartbeat information.
 * Throttler check response now includes a human readable summary detailing exactly why a request was rejected (if
@@ -107,12 +107,12 @@ Other key throttler changes:
 
 Several bug fixes and improvements, including:
 
-* Added support for the ``ALTER VITESS_MIGRATION CLEANUP ALL`` command.
-* More ``INSTANT`` DDL scenario analysis, going further beyond the documented limitations.
+* Added support for the `ALTER VITESS_MIGRATION CLEANUP ALL` command.
+* More `INSTANT` DDL scenario analysis, going further beyond the documented limitations.
 * In schema changes where columns change charsets, Online DDL now converts the text programmatically rather than using
-  a ``CONVERT(... USING utf8mb4)`` clause, thereby improving performance when such columns are part of the Primary Key
+  a `CONVERT(... USING utf8mb4)` clause, thereby improving performance when such columns are part of the Primary Key
   or the iteration key.
-* Internally, more of the schema and diff analysis is now delegated to ``schemadiff`` library, which means more
+* Internally, more of the schema and diff analysis is now delegated to `schemadiff` library, which means more
   programmatic power and better testability.
 * Fixes for self-referencing foreign key tables (only relevant when using the PlanetScale MySQL build).
 
