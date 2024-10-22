@@ -25,7 +25,7 @@ support, improving overall scalability and deployment flexibility.
 
 * **Query Compatibility**: Experimental support for atomic distributed transactions and recursive CTEs
 * **VReplication**: Reference table materialization, dynamic workflow configuration
-* **Cluster Management And VTOrc**: Errant GTID detection in VTTablets
+* **Cluster Management And VTOrc**: More metrics in VTOrc to track errant GTIDs
 * **Throttler**: multi-metric support
 * **Online DDL**: Various improvements
 * **Backup & restore**: Experimental mysqlshell engine
@@ -57,9 +57,9 @@ and provide feedback to help us improve it further.
 
 ### Cluster Management and VTOrc
 
-VTTablets can now detect whether they have errant GTIDs when they join the replication stream on their own. This
-prevents replica tablets with errant GTIDs from joining the cluster. We have also added a new metric in VTOrc that shows
-the count of errant GTIDs in all the tablets for better visibility and alerting.
+We have added a new metric in VTOrc that shows
+the count of errant GTIDs in all the tablets for better visibility and alerting. This will help
+operators to track and manage errant GTIDs across the cluster.
 
 ### VReplication
 
