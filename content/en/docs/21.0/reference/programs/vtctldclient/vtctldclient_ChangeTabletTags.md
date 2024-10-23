@@ -1,28 +1,27 @@
 ---
-title: Workflow start
+title: ChangeTabletTags
 series: vtctldclient
 commit: 477bb22995e2e6a6dbaf9b45cc8259c017cb95db
 ---
-## vtctldclient Workflow start
+## vtctldclient ChangeTabletTags
 
-Start a VReplication workflow.
+Changes the tablet tags for the specified tablet, if possible.
+
+### Synopsis
+
+Changes the tablet tags for the specified tablet, if possible.
+
+Tags must be specified as key=value pairs.
 
 ```
-vtctldclient Workflow start
-```
-
-### Examples
-
-```
-vtctldclient --server localhost:15999 workflow --keyspace customer start --workflow commerce2customer
+vtctldclient ChangeTabletTags <alias> <tablet-tag> [ <tablet-tag> ... ]
 ```
 
 ### Options
 
 ```
-  -h, --help              help for start
-      --shards strings    (Optional) Specifies a comma-separated list of shards to operate on.
-  -w, --workflow string   The workflow you want to start.
+  -h, --help      help for ChangeTabletTags
+  -r, --replace   Replace all tablet tags with the tags provided. By default tags are merged/updated.
 ```
 
 ### Options inherited from parent commands
@@ -30,7 +29,6 @@ vtctldclient --server localhost:15999 workflow --keyspace customer start --workf
 ```
       --action_timeout duration              timeout to use for the command (default 1h0m0s)
       --compact                              use compact format for otherwise verbose outputs
-  -k, --keyspace string                      Keyspace context for the workflow.
       --server string                        server to use for the connection (required)
       --topo-global-root string              the path of the global topology data in the global topology server (default "/vitess/global")
       --topo-global-server-address strings   the address of the global topology server(s) (default [localhost:2379])
@@ -39,5 +37,5 @@ vtctldclient --server localhost:15999 workflow --keyspace customer start --workf
 
 ### SEE ALSO
 
-* [vtctldclient Workflow](../)	 - Administer VReplication workflows (Reshard, MoveTables, etc) in the given keyspace.
+* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 

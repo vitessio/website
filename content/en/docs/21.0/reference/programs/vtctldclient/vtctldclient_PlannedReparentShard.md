@@ -1,7 +1,7 @@
 ---
 title: PlannedReparentShard
 series: vtctldclient
-commit: 14b6873142558358a99a68d2b5ef0ec204f3776a
+commit: 477bb22995e2e6a6dbaf9b45cc8259c017cb95db
 ---
 ## vtctldclient PlannedReparentShard
 
@@ -16,6 +16,7 @@ vtctldclient PlannedReparentShard <keyspace/shard>
 ```
       --allow-cross-cell-promotion           Allow cross cell promotion
       --avoid-primary string                 Alias of a tablet that should not be the primary; i.e. "reparent to any other tablet if this one is the primary".
+      --expected-primary string              Alias of a tablet that must be the current primary in order for the reparent to be processed.
   -h, --help                                 help for PlannedReparentShard
       --new-primary string                   Alias of a tablet that should be the new primary.
       --tolerable-replication-lag duration   Amount of replication lag that is considered acceptable for a tablet to be eligible for promotion when Vitess makes the choice of a new primary.

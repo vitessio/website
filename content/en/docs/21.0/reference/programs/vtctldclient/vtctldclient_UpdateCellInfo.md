@@ -1,7 +1,7 @@
 ---
 title: UpdateCellInfo
 series: vtctldclient
-commit: 14b6873142558358a99a68d2b5ef0ec204f3776a
+commit: 477bb22995e2e6a6dbaf9b45cc8259c017cb95db
 ---
 ## vtctldclient UpdateCellInfo
 
