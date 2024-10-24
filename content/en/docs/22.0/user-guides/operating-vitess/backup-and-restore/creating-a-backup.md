@@ -146,7 +146,7 @@ __Optional flags:__
 	* `progressFile` must be empty indicate we are starting a new backup and not continuing an
 	existing one
 	* `skipBinlog` must be `true` so we are not logging the statements to binary logs during the restore
-	* `loadUsers` defaults to `true`, but it is not required. This is ideal if you rely on Vitess
+	* `loadUsers` defaults to `false`, but it is not required. This is ideal if you rely on Vitess
 	managing credentials as we will delete users by default during the dump process. If you perform
 	your own credential management you might want to disable this.
 	* these are all defaults in Vitess, but if you define this flag it must include the values above. other options can be found in the [MySQL docs](https://dev.mysql.com/doc/mysql-shell/8.0/en/mysql-shell-utilities-load-dump.html)
