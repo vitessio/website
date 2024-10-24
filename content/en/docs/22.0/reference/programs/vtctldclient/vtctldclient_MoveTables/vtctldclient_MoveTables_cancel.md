@@ -1,7 +1,7 @@
 ---
 title: MoveTables cancel
 series: vtctldclient
-commit: 14b6873142558358a99a68d2b5ef0ec204f3776a
+commit: b0b79813f21f8ecbf409f558ad6f8864332637cf
 ---
 ## vtctldclient MoveTables cancel
 
@@ -20,10 +20,11 @@ vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --
 ### Options
 
 ```
-  -h, --help                 help for cancel
-      --keep-data            Keep the partially copied table data from the MoveTables workflow in the target keyspace.
-      --keep-routing-rules   Keep the routing rules created for the MoveTables workflow.
-      --shards strings       (Optional) Specifies a comma-separated list of shards to operate on.
+      --delete-batch-size int   When cleaning up the migrated data in tables moved as part of a multi-tenant workflow, delete the records in batches of this size. (default 1000)
+  -h, --help                    help for cancel
+      --keep-data               Keep the partially copied table data from the MoveTables workflow in the target keyspace.
+      --keep-routing-rules      Keep the routing rules created for the MoveTables workflow.
+      --shards strings          (Optional) Specifies a comma-separated list of shards to operate on.
 ```
 
 ### Options inherited from parent commands

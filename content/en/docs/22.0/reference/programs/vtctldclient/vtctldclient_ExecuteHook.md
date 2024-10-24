@@ -1,7 +1,7 @@
 ---
 title: ExecuteHook
 series: vtctldclient
-commit: 14b6873142558358a99a68d2b5ef0ec204f3776a
+commit: b0b79813f21f8ecbf409f558ad6f8864332637cf
 ---
 ## vtctldclient ExecuteHook
 

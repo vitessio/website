@@ -1,7 +1,7 @@
 ---
 title: LookupVindex
 series: vtctldclient
-commit: 376c478ce7daca627d063f22af9121e173787e31
+commit: 477bb22995e2e6a6dbaf9b45cc8259c017cb95db
 ---
 ## vtctldclient LookupVindex
 

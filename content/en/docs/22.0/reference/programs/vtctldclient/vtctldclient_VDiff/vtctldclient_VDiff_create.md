@@ -1,7 +1,7 @@
 ---
 title: VDiff create
 series: vtctldclient
-commit: 14b6873142558358a99a68d2b5ef0ec204f3776a
+commit: b0b79813f21f8ecbf409f558ad6f8864332637cf
 ---
 ## vtctldclient VDiff create
 
@@ -30,7 +30,7 @@ vtctldclient --server :15999 vdiff --workflow c2c --target-keyspace customer cre
       --max-diff-duration duration                How long should an individual table diff run before being stopped and restarted in order to lessen the impact on tablets due to holding open database snapshots for long periods of time (0 is the default and means no time limit).
       --max-extra-rows-to-compare int             If there are collation differences between the source and target, you can have rows that are identical but simply returned in a different order from MySQL. We will do a second pass to compare the rows for any actual differences in this case and this flag allows you to control the resources used for this operation. (default 1000)
       --max-report-sample-rows int                Maximum number of row differences to report (0 for all differences). NOTE: when increasing this value it is highly recommended to also specify --only-pks (default 10)
-      --only-pks                                  When reporting missing rows, only show primary keys in the report.
+      --only-pks                                  When reporting row differences, only show primary keys in the report.
       --row-diff-column-truncate-at int           When showing row differences, truncate the non Primary Key column values to this length. A value less than 1 means do not truncate. (default 128)
       --source-cells strings                      The source cell(s) to compare from; default is any available cell.
       --tables strings                            Only run vdiff for these tables in the workflow.

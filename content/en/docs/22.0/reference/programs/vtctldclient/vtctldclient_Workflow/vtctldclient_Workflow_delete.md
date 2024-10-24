@@ -1,7 +1,7 @@
 ---
 title: Workflow delete
 series: vtctldclient
-commit: 14b6873142558358a99a68d2b5ef0ec204f3776a
+commit: b0b79813f21f8ecbf409f558ad6f8864332637cf
 ---
 ## vtctldclient Workflow delete
 
@@ -20,11 +20,12 @@ vtctldclient --server localhost:15999 workflow --keyspace customer delete --work
 ### Options
 
 ```
-  -h, --help                 help for delete
-      --keep-data            Keep the partially copied table data from the workflow in the target keyspace.
-      --keep-routing-rules   Keep the routing rules created for the workflow.
-      --shards strings       (Optional) Specifies a comma-separated list of shards to operate on.
-  -w, --workflow string      The workflow you want to delete.
+      --delete-batch-size int   When cleaning up the migrated data in tables moved as part of a multi-tenant MoveTables workflow, delete the records in batches of this size. (default 1000)
+  -h, --help                    help for delete
+      --keep-data               Keep the partially copied table data from the workflow in the target keyspace.
+      --keep-routing-rules      Keep the routing rules created for the workflow.
+      --shards strings          (Optional) Specifies a comma-separated list of shards to operate on.
+  -w, --workflow string         The workflow you want to delete.
 ```
 
 ### Options inherited from parent commands

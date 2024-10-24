@@ -1,7 +1,7 @@
 ---
 title: EmergencyReparentShard
 series: vtctldclient
-commit: 14b6873142558358a99a68d2b5ef0ec204f3776a
+commit: b0b79813f21f8ecbf409f558ad6f8864332637cf
 ---
 ## vtctldclient EmergencyReparentShard
 
@@ -14,6 +14,7 @@ vtctldclient EmergencyReparentShard <keyspace/shard>
 ### Options
 
 ```
+      --expected-primary string          Alias of a tablet that must be the current primary in order for the reparent to be processed.
   -h, --help                             help for EmergencyReparentShard
   -i, --ignore-replicas strings          Comma-separated, repeated list of replica tablet aliases to ignore during the emergency reparent.
       --new-primary string               Alias of a tablet that should be the new primary. If not specified, the vtctld will select the best candidate to promote.
