@@ -188,7 +188,7 @@ Vitess also supports (assuming the vtgate and vttablets have been configured app
 
 It should be emphasized that if you need to use **TWOPC** extensively in your application, you may be using Vitess incorrectly;  the vast majority of Vitess users do not use it at all.
 
-See our [TWOPC page](../../../reference/features/two-phase-commit/) for more details on how to configure **TWOPC**.
+See our [TWOPC page](../../../reference/features/distributed-transaction/) for more details on how to configure **TWOPC**.
 
 In TWOPC mode, Vitess uses the `_vt` sidecar database to record metadata related to each transactions across multiple tables.  As a result, any multi-shard write in **TWOPC** mode is likely to be an order of a magnitude slower than in **MULTI** mode.
 
