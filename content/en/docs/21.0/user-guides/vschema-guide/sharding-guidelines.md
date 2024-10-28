@@ -44,7 +44,7 @@ It is important to keep transactions within a single shard whenever possible.
 
 Grouping related rows together usually results in transactions also falling within the same shard, but there are situations where this may not be possible. For such use-cases, Vitess supports [configurable atomicity levels for transactions that go across shards](../../configuration-advanced/shard-isolation-atomicity).
 
-In the cases where a cross-shard transaction simply cannot be avoided, the [usage of 2PC](../../../reference/features/two-phase-commit/) allows for atomic writes across shards in a single logical transaction.
+In the cases where a cross-shard transaction simply cannot be avoided, the [usage of 2PC](../../../reference/features/distributed-transaction/) allows for atomic writes across shards in a single logical transaction.
 
 ### Large Tenants
 

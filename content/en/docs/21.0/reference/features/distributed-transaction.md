@@ -1,7 +1,7 @@
 ---
 title: Two-Phase Commit
 weight: 11
-aliases: ['/docs/launching/twopc/','/docs/reference/two-phase-commit/']
+aliases: ['/docs/launching/twopc/','/docs/reference/two-phase-commit/','/docs/reference/distributed-transaction/']
 ---
 
 {{< warning >}}
