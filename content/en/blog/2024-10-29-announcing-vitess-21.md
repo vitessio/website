@@ -16,7 +16,7 @@ Operator.
 
 Version 21 focuses on enhancing query compatibility, improving cluster management, and expanding VReplication
 capabilities, with experimental support for atomic distributed transactions and recursive CTEs. Key features include
-reference table materialization, multi-metric throttler support, and enhanced online DDL functionality. Backup and
+reference table materialization, multi-metric throttler support, and enhanced Online DDL functionality. Backup and
 restore processes benefit from a new **mysqlshell** engine, while **vexplain** now offers detailed execution traces and
 schema analysis. The Vitess Kubernetes Operator introduces horizontal auto-scaling for VTGate pods and Kubernetes 1.31
 support, improving overall scalability and deployment flexibility.
@@ -31,7 +31,7 @@ support, improving overall scalability and deployment flexibility.
 * **Backup & restore**: Experimental mysqlshell engine
 * **Vitess Operator**: VTGate scaling, image customization, Kubernetes 1.31 support
 * **VTAdmin**: VReplication workflow creation and management, distributed transaction management
-* **VExplain**: **vexplain trace** for detailed query execution insights, **vexplain keys** for analyzing sharding key
+* **VExplain**: `vexplain trace` for detailed query execution insights, `vexplain keys` for analyzing sharding key
   usage and optimizing query performance
 
 ## Let’s Dive Deeper
@@ -43,7 +43,7 @@ Let’s take a deeper look at some key highlights of this release.
 #### Atomic Distributed Transactions
 
 We’re reintroducing atomic distributed transactions with a revamped, more resilient design. This feature now offers
-deeper integration with core Vitess components and workflows, such as OnlineDDL and VReplication (including operations
+deeper integration with core Vitess components and workflows, such as Online DDL and VReplication (including operations
 like **MoveTables** and **Reshard**). We have also greatly simplified the configuration required to use atomic
 distributed transactions. This feature is currently in an experimental state, and we encourage you to explore it and
 share your feedback to help us improve it further.
@@ -95,8 +95,8 @@ in v22, where all tablet throttlers will be expected to communicate multi-metric
 Other key throttler changes:
 
 * With the above, the sub-flags `--check-as-check-self` and `--check-as-check-shard` to
-  the `UpdateThrottlerConfig` command are deprecated and slated to be removed in a future version. \
-  Similarly, `SHOW VITESS_THROTTLER STATUS` and `SHOW VITESS_THROTTLED_APPS` queries, and all `/throttler/` 
+  the `UpdateThrottlerConfig` command are deprecated and slated to be removed in a future version. 
+* Similarly, `SHOW VITESS_THROTTLER STATUS` and `SHOW VITESS_THROTTLED_APPS` queries, and all `/throttler/` 
 API access points (with the exception of `/throttler/check`) are deprecated and slated to be removed in v22.
 * When enabled, the throttler ensures it leases heartbeat updates, even if heartbeat configuration is otherwise unset.
   In other words, the throttler overrides the configuration when it requires heartbeat information.
