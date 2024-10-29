@@ -50,7 +50,6 @@ generated-docs: mysqlctl-docs \
 	topo2topo-docs \
 	vtaclcheck-docs \
 	vtbackup-docs \
-	vtbench-docs \
 	vtclient-docs \
 	vtcombo-docs \
 	vtctld-docs \
@@ -72,7 +71,7 @@ generated-docs: mysqlctl-docs \
 	LC_ALL=C find content -type f -exec sed -i '' 's;${VITESS_DIR};\<WORKDIR\>;g' {} +
 	find . -type f -name '*md-e' -exec rm -f {} +
 	git add content
-	git commit -s -m "Update cobra docs using make generated-docs for vitess repo sha `git -C ${VITESS_DIR} rev-parse HEAD` "
+	git commit --allow-empty -s -m "Update cobra docs using make generated-docs for $* (vitess sha `git -C ${VITESS_DIR} rev-parse HEAD`) "
 
 
 
