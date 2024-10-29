@@ -1,0 +1,56 @@
+{{ define "main" }}
+<!-- filter panel on desktop -->
+<div class="filter-container">
+    {{ partial "resources/filter-panel.html" . }}
+</div>
+
+<!-- filter panel on mobile -->
+<div class="filter-mobile-modal container">
+    <div class="flex justify-content-space width-90 mt-40">
+        <p>Filter resources accordingly</p>
+        <div>
+            <button onclick="closeModal()">x</button>
+        </div>
+    </div>
+    {{ partial "resources/filter-panel.html" . }}
+</div>
+
+<!-- Resource pane -->
+<a class="td-offset-anchor"></a>
+<div class="page td-content container resource">
+    {{ .Content | markdownify }}
+    <div class="filter-mobile-btn mt-100">
+        <button onclick="openModal()">
+            <i class="fa-solid fa-filter" aria-hidden="true"></i>
+            Filter</button>
+    </div>
+    
+    {{ $resources := $.Site.Data.resources.resources }}
+    {{ $years := slice }}
+    {{ range $resources }}
+        {{ $years = $years | append (time.Format "2006" .date) }}
+        {{ $years = uniq $years }}
+    {{ end }}
+    {{ range $years }}
+    {{ $year := . }}
+    <div class="mt-100">
+    <h2 id="{{ . }}">{{ . }}</h2>
+    <a id=td-block-0 class=td-offset-anchor></a>
+    <section class="row td-box td-box--white td-box--gradient td-box--height-auto">
+        <div class=col>
+            <div class=row>
+                {{ range $resources }}
+                {{ if eq (time.Format "2006" .date) $year }}
+                    {{ partial "resource.html" . }}
+                {{ end }}
+                {{ end }}
+            </div>
+        </div>
+    </section>
+    </div>
+    {{ end }}
+</div>
+
+<!-- template for resource pane -->
+{{ partial "learning-resources/template-container.html" . }}
+{{ end }}
