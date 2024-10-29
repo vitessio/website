@@ -67,7 +67,14 @@ generated-docs: mysqlctl-docs \
 
 
 %-docs:
+	set -e
 	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" $*
+	LC_ALL=C find content -type f -exec sed -i '' 's;${VITESS_DIR};\<WORKDIR\>;g' {} +
+	find . -type f -name '*md-e' -exec rm -f {} +
+	git add content
+	git commit -s -m "Update cobra docs using make generated-docs for vitess repo sha `git -C ${VITESS_DIR} rev-parse HEAD` "
+
+
 
 .PHONY: generated-docs
 
