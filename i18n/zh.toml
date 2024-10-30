@@ -27,6 +27,9 @@ other = "Vitess 是 [Cloud Native Computing Foundation](https://cncf.io) 毕业�
 [intro_vitess]
 other = "Vitess介绍"
 
+[scaling_vitess]
+other = "Scaling Databases with Vitess"
+
 # Navbar/footer links
 [docs]
 other = "文档"
