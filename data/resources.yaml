@@ -13,278 +13,278 @@ resources:
 
   - youtube: uRB-Qni_bCM
     title: "Vitess: Introduction, New Features and the Vinted User Story - Florent Poinsard, Deepthi Sigireddi, PlanetScale & Kazimieras Aliulis, Vinted"
-    date: "2024"
+    date: 2024
     type: video
   - url: "https://www.infoq.com/podcasts/distributed-database-architecture-deepthi-sigireddi/"
     title: "Distributed Database Architecture in the Cloud Native Era - Deepthi Sigireddi, PlanetScale"
-    date: "2024"
+    date: 2024
     type: podcast
   - youtube: _Xl24s_0mZs
     title: "Vitess at GitHub - Arthur Schreiber, GitHub"
-    date: "2023"
+    date: 2023
     type: video
   - youtube: Nl2d1cnNNQo
     title: "Continuous and Automated Performance Benchmarking for Your Database - Florent Poinsard, PlanetScale"
-    date: "2023"
+    date: 2023
     type: video
   - youtube: 85KIra7c2Iw
     title: "MySQL and Vitess (and Kubernetes) at HubSpot - Jean-François Gagné & Swetha Narayanaswamy, HubSpot"
-    date: "2023"
+    date: 2023
     type: video
   - youtube: C2DsT1_zK_4
     title: "Introduction to Vitess and Real World Usage - Arthur Schreiber, GitHub & Florent Poinsard, PlanetScale"
-    date: "2023"
+    date: 2023
     type: video
   - youtube: _ba9tbivT28
     title: "Scaling Databases at Activision - Greg Smith & Vladimir Kovacik, Activision/Blizzard"
-    date: "2023"
+    date: 2023
     type: video
   - url: "https://ftp.fau.de/fosdem/2023/K.3.201/life_query_vitess.webm"
     title: "Life of a Query in Vitess - Harshit Gangal, PlanetScale"
-    date: "2023"
+    date: 2023
     type: video
   - url: "https://www.mysql.com/news-and-events/events/preFOSDEM_MySQL_Days_2023/preFOSDEM_MySQL_Days_-_How_Vitess_achieves_Consensus_with_Replicated_MySQL.pdf"
     title: "How Vitess achieves Consensus with Replicated MySQL - Deepthi Sigireddi, PlanetScale"
-    date: "2023"
+    date: 2023
     type: slides
   - youtube: upmByX8uD6E
     title: "One VTOrc To Rule Them All – High Availability In a Distributed Database System - Deepthi Sigireddi & Manan Gupta, PlanetScale"
-    date: "2022"
+    date: 2022
     type: video
   - youtube: cPQuj4eTCdY
     title: "Vitess: Introduction and New Features - Deepthi Sigireddi, Matt Lord & Rohit Nayak, PlanetScale"
-    date: "2022"
+    date: 2022
     type: video
   - youtube: HgSlmzC7O-E
     title: "Scaling Databases with Vitess - Harshit Gangal & Manan Gupta, PlanetScale"
-    date: "2022"
+    date: 2022
     type: video
   - youtube: ltoJ8gxs0YU
     title: "Vitess VReplication: Standing on the Shoulders of a MySQL Giant - Matt Lord, PlanetScale"
-    date: "2022"
+    date: 2022
     type: video
   - url: "https://video.fosdem.org/2022/D.mysql/relational_model_dev.webm"
     title: "The relational model in the modern development age - Shlomi Noach, PlanetScale"
-    date: "2022"
+    date: 2022
     type: video
   - url: "https://se-radio.net/2022/05/episode-510-deepthi-sigireddi-on-how-vitess-scales-mysql/"
     title: "How Vitess Scales MySQL - Deepthi Sigireddi, PlanetScale"
-    date: "2022"
+    date: 2022
     type: podcast
   - youtube: fLullHPddvg
     title: "Continuous Performance Benchmarking for Vitess - Alkin Tezuysal, Florent Poinsard & Manan Gupta, PlanetScale"
-    date: "2021"
+    date: 2021
     type: video
   - youtube: uKdMR89mfdE
     title: "Vitess: Introduction and New Features - Deepthi Sigireddi & Alkin Tezuysal, PlanetScale; Andrew Mason & Malcolm Akinje, Slack Corp."
-    date: "2021"
+    date: 2021
     type: video
   - youtube: Bllc-u_cCGA
     title: "Deploying a Sharded Vitess Sandbox Cluster in Public Cloud Kubernetes in 10 Minutes - Jordan Moldow, Box"
-    date: "2021"
+    date: 2021
     type: video
   - youtube: fbI6wIIKs50
     title: "Scaling MySQL @LinkedIn with Vitess - Apoorv Purohit and Karthik Appigatla, LinkedIn"
-    date: "2021"
+    date: 2021
     type: video
   - youtube: 0a4xqQ3JYjw
     title: "Integrating Best of Breed Open Source Tools to Vitess: Orchestrator - Alkin Tezuysal, PlanetScale"
-    date: "2021"
+    date: 2021
     type: video
   - youtube: kB7ziLxXft4
     title: "Revertible, Recoverable Schema Migrations in Vitess - Shlomi Noach, PlanetScale"
-    date: "2021"
+    date: 2021
     type: video
   - youtube: Cwpu0y119I0
     title: "Introduction to Vitess - Deepthi Sigireddi & Alkin Tezuysal, PlanetScale with David McKay @rawkode"
-    date: "2021"
+    date: 2021
     type: video
   - youtube: 8e3IC-lAgXs
     title: "All Things Vitess, MySQL, and Sailing Passion - Alkin Tezuysal, PlanetScale"
-    date: "2021"
+    date: 2021
     type: video
   - url: "http://bofh.nikhef.nl/events/FOSDEM/2021/D.mysql/vitess.webm"
     title: "Open Source Database Infrastructure with Vitess - Shlomi Noach, PlanetScale"
-    date: "2021"
+    date: 2021
     type: video
   - url: "http://bofh.nikhef.nl/events/FOSDEM/2021/D.mariadb/mariadb_shard.webm"
     title: "How to shard MariaDB like a Pro? - Alkin Tezuysal, PlanetScale"
-    date: "2021"
+    date: 2021
     type: video
   - youtube: uNpZA5fz5o8
     title: "Keynote: CNCF Projects Update - CNCF"
-    date: "2020"
+    date: 2020
     type: video
   - youtube: Nqzhgzg5WCw
     title: "Vitess: Introduction and New Features - Sugu Sougoumarane & Deepthi Sigireddi, PlanetScale"
-    date: "2020"
+    date: 2020
     type: video
   - youtube: k51L0xdClGQ
     title: "Codename VIFL - How to Migrate MySQL Database Clusters to Vitess - Guido Iaquinti & Rafael Chacon , Slack"
-    date: "2020"
+    date: 2020
     type: video
   - youtube: iQYZ0dRe7O8
     title: "Vitess Online Schema Migration Automation - Shlomi Noach, PlanetScale"
-    date: "2020"
+    date: 2020
     type: video
   - youtube: FaFzrVqkueI
     title: "Transactional microservices with Vitess - coordination without state -Dan Kozlowski"
-    date: "2020"
+    date: 2020
     type: video
   - youtube: TZb6m5ACIsA
     title: "Query Planning for a Sharded System like Vitess - Sugu Sougoumarane, CTO, PlanetScale"
-    date: "2020"
+    date: 2020
     type: video
   - youtube: WRNftOqRVVY
     title: "Vitess Intro: How to Migrate a MySQL Database to Vitess - Sugu Sougoumarane & Morgan Tocker"
-    date: "2020"
+    date: 2020
     type: video
   - youtube: 6--4bQKMNF4
     title: "Zero Downtime Data Relocation with Vitess - Liz van Dijk & Deepthi Sigireddi, PlanetScale"
-    date: "2020"
+    date: 2020
     type: video
   - youtube: NulLc7DxXg8
     title: "Multicloud Vitess over Network Service Mesh - Tim Swanson, Cisco & John Watson, PlanetScale"
-    date: "2020"
+    date: 2020
     type: video
   - youtube: JVHi2oN3lxM
     title: "A demo of the new Vitess-native Orchestrator - Sugu Sougoumarane, CTO, PlanetScale"
-    date: "2020"
+    date: 2020
     type: video
   - youtube: kHPSp8coQ5g
     title: "Unbounded scale: Using Vitess for scaling write intensive workloads - Morgan Tocker, PlanetScale; Daniel Guzman Burgos, Percona"
-    date: "2020"
+    date: 2020
     type: video
   - youtube: W8VbiXo39Ik
     title: "Lizz van Dijk demonstrates how to migrate from a regular MySQL release to Vitess."
-    date: "2020"
+    date: 2020
     type: video
   - url: "/ViewerJS/#../files/2020-lizz-prefosdem.pdf"
     title: "Lizz van Dijk presents an introduction to Vitess for MySQL users."
-    date: "2020"
+    date: 2020
     type: slides
   - url: "https://www.infoq.com/presentations/vitess/"
     title: "Sugu Sougoumarane gives an overview of the salient features of Vitess."
-    date: "2019"
+    date: 2019
     type: video
   - youtube: aTItjMJE17c
     title: "Scaling Resilient Systems: A Journey into Slack's Database Service - Rafael Chacon & Guido Iaquinti, Slack"
-    date: "2019"
+    date: 2019
     type: video
   - youtube: OCS45iy5v1M
     title: "How to Migrate a MySQL Database to Vitess - Sugu Sougoumarane & Morgan Tocker, PlanetScale"
-    date: "2019"
+    date: 2019
     type: video
   - youtube: 469NOldFOgw
     title: "Building a Database as a Service on Kubernetes - Abhi Vaidyanatha & Lucy Burns, PlanetScale"
-    date: "2019"
+    date: 2019
     type: video
   - youtube: z63dtNj6ctY
     title: "Vitess: Stateless Storage in the Cloud - Sugu Sougoumarane, PlanetScale"
-    date: "2019"
+    date: 2019
     type: video
   - youtube: -Hz6LFJu1cY
     title: "Geo-partitioning with Vitess - Deepthi Sigireddi & Jitendra Vaidya, PlanetScale"
-    date: "2019"
+    date: 2019
     type: video
   - youtube: KpygSD-v_ws
     title: "Gone in 60 Minutes: Migrating 20 TB from AKS to GKE in an Hour with Vitess - Derek Perkins, Nozzle"
-    date: "2019"
+    date: 2019
     type: video
   - url: "/ViewerJS/#../files/2019-sugu-highload.pdf"
     title: "Overview of Vitess at Highload - Sugu Sougoumarane"
-    date: "2019"
+    date: 2019
     type: slides
   - url: "/ViewerJS/#../files/2019-jiten-utah.pdf"
     title: "How you can extend Vitess to create jurisdiction-aware database clusters - Jiten Vaidya"
-    date: "2019"
+    date: 2019
     type: slides
   - url: "/ViewerJS/#../files/2019-paris-cncf.pdf"
     title: "Sugu Sougoumarane and Morgan Tocker present a three hour Vitess workshop on Kubernetes."
-    date: "2019"
+    date: 2019
     type: slides
   - url: "/ViewerJS/#../files/2019-morgan-percona-eu.pdf"
     title: "My First 90 Days with VitessL - Morgan Tocker"
-    date: "2019"
+    date: 2019
     type: slides
   - url: "/ViewerJS/#../files/2019-sugu-percona-eu.pdf"
     title: "Sharded MySQL on Kubernetes - Sugu Sougoumarane."
-    date: "2019"
+    date: 2019
     type: slides
   - url: "/ViewerJS/#../files/2019-deepthi-vitess-meetup.pdf"
     title: "Vitess: New and Coming Soon! - Deepthi Sigireddi"
-    date: "2019"
+    date: 2019
     type: slides
   - url: "/ViewerJS/#../files/2019-rafael-vitess-meetup.pdf"
     title: "Deploying multi-cell Vitess - Rafael Chacon"
-    date: "2019"
+    date: 2019
     type: slides
   - youtube: 1cWWlaqlia8
     title: "Vitess at Pinterest - David Weitzman, Pinterest"
-    date: "2019"
+    date: 2019
     type: video
   - youtube: B1Nrtptjtcs
     title: "No more Regrets - Sugu Sougoumarane"
-    date: "2019"
+    date: 2019
     type: video
   - url: "https://anchor.fm/cloud-native-show/episodes/Vitess-at-scale---how-Nozzle-io-runs-MySQL-on-Kubernetes-e4m5lo"
     title: "Vitess at scale - how Nozzle.io runs MySQL on Kubernetes - Derek Perkins"
-    date: "2019"
+    date: 2019
     type: podcast
   - youtube: E6H4bgJ3Z6c
     title: "Vitess: Sharded MySQL on Kubernetes - Sugu Sougoumarane"
-    date: "2019"
+    date: 2019
     type: video
   - youtube: qww4UVNG3Io
     title: "How JD.Com runs the World's Largest Vitess - Xuhaihua & Jin Ke Xie, PlanetScale"
-    date: "2019"
+    date: 2019
     type: video
   - youtube: bhzJJF82mFc
     title: "OLTP or OLAP: why not both? - Jiten Vaidya, PlanetScale"
-    date: "2019"
+    date: 2019
     type: video
   - youtube: H4B5zLBfGN8
     title: "Vitess Intro - Deepthi Sigireddi & Sugu Sougoumarane, PlanetScale"
-    date: "2019"
+    date: 2019
     type: video
   - youtube: OZl4HrB9p-8
     title: "Vitess Deep Dive - Jiten Vaidya & Dan Kozlowski, PlanetScale"
-    date: "2019"
+    date: 2019
     type: video
   - youtube: v7oxiVmGXp4
     title: "Vitess: Running Sharded MySQL on Kubernetes - Sugu Sougoumarane, PlanetScale"
-    date: "2019"
+    date: 2019
     type: video
   - url: "/ViewerJS/#../files/20181002-ameet-velocity-slides.pdf"
     title: "Smooth scaling: Slack’s journey toward a new database - Ameet Kotkian, Slack"
-    date: "2018"
+    date: 2018
     type: slides
   - url: "/ViewerJS/#../files/2017-demmer-percona.pdf"
     title: "Migrating to Vitess at (Slack) Scale - Michael Demmer, Slack"
-    date: "2017"
+    date: 2017
     type: slides
   - youtube: 6yOjF7qhmyY
     title: "Vitess Deep Dive sessions"
-    date: "2017"
+    date: 2017
     type: video
   - url: "/ViewerJS/#../files/percona-2016.pdf"
     title: "Vitess: The complete story - Sugu & Anthony, PlanetScale"
-    date: "2016"
+    date: 2016
     type: slides
   - url: "/ViewerJS/#../files/coreos-meetup-2016-01-27.pdf"
     title: "YouTube Vitess: Anatomy of a Distributed Database on Kubernetes - Anthony Yeh"
-    date: "2016"
+    date: 2016
     type: slides
   - url: "/ViewerJS/#../files/openworld-2015-vitess.pdf"
     title: "YouTube Vitess: Cloud-Native MySQL - Anthony Yeh"
-    date: "2015"
+    date: 2015
     type: slides
   - url: "/ViewerJS/#../files/percona-2015-vitess-and-kubernetes.pdf"
     title: "YouTube Vitess: Scaling MySQL in the cloud with Vitess and Kubernetes - Anthony Yeh"
-    date: "2015"
+    date: 2015
     type: slides
   - youtube: midJ6b1LkA0
     title: "Scaling with Go: YouTube's Vitess - Sugu Sougoumarane, PlanetScale"
-    date: "2015"
+    date: 2015
     type: video
   

@@ -229,23 +229,41 @@ details summary
 .mermaid
   margin: 2rem 0 4rem 0
 
+section.row
+  justify-content: center !important
+  & > .col 
+    max-width: 1140px
+    & > .row
+      padding-left: 0
+      padding-right: 0
+    &.td-box
+      padding-top: 2rem
+      padding-bottom: 1.5rem
+  
+  .td-box--primary p > a
+    color: white
+    text-decoration: underline
+
 main.td-main
   &section.template-row
     justify-content: unset !important
 
 .filter
-  position: absolute
-  top: 36%
-  left: 40px
+  top: 16%
+  left: -15px
+  z-index: 100
   +tablet
-    top: 16%
-    left: -15px
-    z-index: 100
+    top: 0
+    left: 0
+    margin-top: 4px
+    
+    
 
 .filter-container
-  display: block
+  display: none
+  width: 100px
   +tablet
-    display: none
+    display: block
 
 .mt-100
   margin-top: 100px
@@ -317,9 +335,9 @@ label.date
   display: none
 
 .filter-mobile-btn
-  display: none
+  display: inline-block
   +tablet
-    display: inline-block
+    display: none
 
 .template-resource
   display: none
