@@ -30,6 +30,9 @@ other = "An introduction to Vitess"
 [scaling_vitess]
 other = "Scaling Databases with Vitess"
 
+[learn_vitess]
+other = "Learn More"
+
 # Navbar/footer links
 [docs]
 other = "Docs"
