@@ -1,11 +1,19 @@
 ---
 author: 'Andrés Taylor'
 date: 2024-11-05
-slug: '2024-11-05-optimizing-query-planning-in-vitess-a-step-by-step-approach'
-tags: ['Vitess', 'PlanetScale', 'MySQL', 'Query Serving', 'Vindex', 'plan', 'execution plan', 'explain', 'optimizer', "aggregate", "group by", "order by"]
-title: 'Choosing sharding keys in Vitess: Tools and best practices'
-description: "See how Vitess acts as a database proxy that creates an illusion of a single database when technically, the query is sent to multiple MySQL instances."
+slug: 'optimizing-sharding-strategies-vitess'
+tags: ['Vitess', 'Sharding', 'MySQL', 'Query Optimization', 'Database Scaling', 'Vindex', 'VExplain', 'Performance Analysis', 'SQL Planning']
+title: 'Mastering Sharding in Vitess: Tools, Strategies, and Best Practices'
+description: "Explore how to optimize sharding strategies in Vitess for scalable query performance, leveraging tools like `vexplain` and `vt` for deep analysis and schema design."
 ---
+
+## Introduction to Sharding in Vitess
+
+Sharding data effectively is a cornerstone of database scalability, especially when using a powerful orchestration layer like Vitess. 
+By understanding how to analyze and refine your sharding strategy, you can minimize data transfer, optimize query plans, and enhance application performance. 
+This guide dives into practical methodologies and introduces key tools in Vitess, including `vexplain` and the `vt` CLI, to help you design efficient sharding schemes and analyze query behavior at scale.
+
+## The Importance of Choosing the Right Sharding Key
 
 Vitess can split the content in tables across multiple MySQL instances.
 This is called sharding the data.
