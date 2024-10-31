@@ -331,6 +331,23 @@ $ vtctldclient OnlineDDL complete commerce 9e8a9249_3976_11ed_9442_0a43f95f28a3
 }
 ```
 
+## Changing the migration cut-over threshold
+
+Applicable to `ALTER TABLE` migrations in `vitess` strategy, the cut-over threshold controls if and how a cut-over operates:
+- It is a cut-over minimal requirement that `vreplication`'s lag is at most that value.
+- It is used as table locking/renaming and query buffering timeout at cut-over time.
+
+The value may be supplied using e.g. `--cut-over-threshold=15s` [DDL strategy flag](../ddl-strategy-flags), but can be overridden at any point in time, or as many times as desired in the lifetime of the migration. A use case would be to increase the value for migrations that are struggling to cut-over due to consistent delays and lags.
+
+The value is forced to be in the range `5s..30s` even if the user attempts to set it outside that range. The default cut-over threshold value is `10s`.
+
+#### Via VTGate/SQL
+
+```sql
+mysql> alter vitess_migration 'aa89f255_8d68_11eb_815f_f875a4d24e90' cutover_threshold `20s`;
+Query OK, 1 row affected (0.01 sec)
+```
+
 ## Forcing a migration cut-over
 
 Applicable to `ALTER TABLE` migrations in `vitess` strategy and on MySQL `8.0`. The final step of the migration, the cut-over, involves acquiring locks on the migrated table. This operation can time out when the table is otherwise locked by the user or the app, in which case Vitess retries it later on, until successful. On very busy workloads, or in workloads where the app holds long running transactions locking the table, the migration may never be able to complete.
