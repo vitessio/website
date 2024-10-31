@@ -1,0 +1,251 @@
+[
+  {
+    "queryStructure": "SELECT `c`.`id` AS `customer_id`, `c`.`name` AS `customer_name`, sum(`oi`.`quantity` * `oi`.`unit_price`) AS `total_spent` FROM `customers` AS `c` JOIN `orders` AS `o` ON `c`.`id` = `o`.`customer_id` JOIN `order_items` AS `oi` ON `o`.`id` = `oi`.`order_id` WHERE `o`.`status` = :_o_status /* VARCHAR */ GROUP BY `c`.`id`, `c`.`name` ORDER BY sum(`oi`.`quantity` * `oi`.`unit_price`) DESC",
+    "usageCount": 1,
+    "lineNumbers": [
+      1
+    ],
+    "tableName": [
+      "customers",
+      "orders",
+      "order_items"
+    ],
+    "groupingColumns": [
+      "customers.id",
+      "customers.name"
+    ],
+    "joinColumns": [
+      "customers.id",
+      "order_items.order_id",
+      "orders.customer_id",
+      "orders.id"
+    ],
+    "filterColumns": [
+      "orders.status"
+    ],
+    "statementType": "SELECT"
+  },
+  {
+    "queryStructure": "SELECT `p`.`category`, avg(`oi`.`quantity` * `oi`.`unit_price`) AS `avg_order_amount` FROM `products` AS `p` JOIN `order_items` AS `oi` ON `p`.`id` = `oi`.`product_id` JOIN `orders` AS `o` ON `oi`.`order_id` = `o`.`id` WHERE `o`.`status` IN ::1 GROUP BY `p`.`category` ORDER BY avg(`oi`.`quantity` * `oi`.`unit_price`) DESC",
+    "usageCount": 1,
+    "lineNumbers": [
+      13
+    ],
+    "tableName": [
+      "products",
+      "order_items",
+      "orders"
+    ],
+    "groupingColumns": [
+      "products.category"
+    ],
+    "joinColumns": [
+      "order_items.order_id",
+      "order_items.product_id",
+      "orders.id",
+      "products.id"
+    ],
+    "filterColumns": [
+      "orders.status"
+    ],
+    "statementType": "SELECT"
+  },
+  {
+    "queryStructure": "SELECT `c`.`id` AS `customer_id`, `c`.`name` AS `customer_name`, COUNT(`o`.`id`) AS `total_orders` FROM `customers` AS `c` JOIN `orders` AS `o` ON `c`.`id` = `o`.`customer_id` GROUP BY `c`.`id`, `c`.`name` HAVING COUNT(`o`.`id`) \u003e :1 /* INT64 */ ORDER BY COUNT(`o`.`id`) DESC",
+    "usageCount": 1,
+    "lineNumbers": [
+      24
+    ],
+    "tableName": [
+      "customers",
+      "orders"
+    ],
+    "groupingColumns": [
+      "customers.id",
+      "customers.name"
+    ],
+    "joinColumns": [
+      "customers.id",
+      "orders.customer_id"
+    ],
+    "statementType": "SELECT"
+  },
+  {
+    "queryStructure": "SELECT `p`.`id` AS `product_id`, `p`.`name` AS `product_name`, sum(`oi`.`quantity` * `oi`.`unit_price`) AS `total_revenue` FROM `products` AS `p` JOIN `order_items` AS `oi` ON `p`.`id` = `oi`.`product_id` GROUP BY `p`.`id`, `p`.`name` ORDER BY sum(`oi`.`quantity` * `oi`.`unit_price`) DESC LIMIT :1 /* INT64 */",
+    "usageCount": 1,
+    "lineNumbers": [
+      34
+    ],
+    "tableName": [
+      "products",
+      "order_items"
+    ],
+    "groupingColumns": [
+      "products.id",
+      "products.name"
+    ],
+    "joinColumns": [
+      "order_items.product_id",
+      "products.id"
+    ],
+    "statementType": "SELECT"
+  },
+  {
+    "queryStructure": "SELECT `customer_id`, `customer_name`, `total_spent` FROM (SELECT `c`.`id` AS `customer_id`, `c`.`name` AS `customer_name`, sum(`oi`.`quantity` * `oi`.`unit_price`) AS `total_spent` FROM `customers` AS `c` JOIN `orders` AS `o` ON `c`.`id` = `o`.`customer_id` JOIN `order_items` AS `oi` ON `o`.`id` = `oi`.`order_id` WHERE `o`.`status` = :_o_status /* VARCHAR */ GROUP BY `c`.`id`, `c`.`name`) AS `spending_summary` ORDER BY `spending_summary`.`total_spent` DESC LIMIT :1 /* INT64 */",
+    "usageCount": 1,
+    "lineNumbers": [
+      43
+    ],
+    "tableName": [
+      "customers",
+      "orders",
+      "order_items"
+    ],
+    "groupingColumns": [
+      "customers.id",
+      "customers.name"
+    ],
+    "joinColumns": [
+      "customers.id",
+      "order_items.order_id",
+      "orders.customer_id",
+      "orders.id"
+    ],
+    "filterColumns": [
+      "orders.status"
+    ],
+    "statementType": "SELECT"
+  },
+  {
+    "queryStructure": "SELECT `p`.`category`, COALESCE(sum(`oi`.`quantity`), :1 /* INT64 */) AS `total_quantity_sold` FROM `products` AS `p` LEFT JOIN `order_items` AS `oi` ON `p`.`id` = `oi`.`product_id` GROUP BY `p`.`category` ORDER BY COALESCE(sum(`oi`.`quantity`), :1 /* INT64 */) DESC",
+    "usageCount": 1,
+    "lineNumbers": [
+      58
+    ],
+    "tableName": [
+      "products",
+      "order_items"
+    ],
+    "groupingColumns": [
+      "products.category"
+    ],
+    "joinColumns": [
+      "order_items.product_id",
+      "products.id"
+    ],
+    "statementType": "SELECT"
+  },
+  {
+    "queryStructure": "SELECT `o`.`id` AS `order_id`, COUNT(DISTINCT `oi`.`product_id`) AS `distinct_product_count` FROM `orders` AS `o` JOIN `order_items` AS `oi` ON `o`.`id` = `oi`.`order_id` GROUP BY `o`.`id` ORDER BY COUNT(DISTINCT `oi`.`product_id`) DESC LIMIT :1 /* INT64 */",
+    "usageCount": 1,
+    "lineNumbers": [
+      66
+    ],
+    "tableName": [
+      "orders",
+      "order_items"
+    ],
+    "groupingColumns": [
+      "orders.id"
+    ],
+    "joinColumns": [
+      "order_items.order_id",
+      "orders.id"
+    ],
+    "statementType": "SELECT"
+  },
+  {
+    "queryStructure": "SELECT DISTINCT `c`.`id` AS `customer_id`, `c`.`name` AS `customer_name` FROM `customers` AS `c` JOIN `orders` AS `o` ON `c`.`id` = `o`.`customer_id` JOIN `order_items` AS `oi` ON `o`.`id` = `oi`.`order_id` JOIN `products` AS `p` ON `oi`.`product_id` = `p`.`id` WHERE `p`.`price` \u003e (SELECT avg(`price`) FROM `products`) ORDER BY `c`.`name` ASC",
+    "usageCount": 1,
+    "lineNumbers": [
+      74
+    ],
+    "tableName": [
+      "customers",
+      "orders",
+      "order_items",
+      "products",
+      "products"
+    ],
+    "joinColumns": [
+      "customers.id",
+      "order_items.order_id",
+      "order_items.product_id",
+      "orders.customer_id",
+      "orders.id",
+      "products.id"
+    ],
+    "filterColumns": [
+      "products.price"
+    ],
+    "statementType": "SELECT"
+  },
+  {
+    "queryStructure": "SELECT `c`.`id` AS `customer_id`, `c`.`name` AS `customer_name`, COALESCE(sum(`oi`.`quantity` * `oi`.`unit_price`), :1 /* INT64 */) AS `total_revenue` FROM `customers` AS `c` LEFT JOIN `orders` AS `o` ON `c`.`id` = `o`.`customer_id` AND `o`.`status` = :_o_status /* VARCHAR */ LEFT JOIN `order_items` AS `oi` ON `o`.`id` = `oi`.`order_id` GROUP BY `c`.`id`, `c`.`name` ORDER BY COALESCE(sum(`oi`.`quantity` * `oi`.`unit_price`), :1 /* INT64 */) DESC",
+    "usageCount": 1,
+    "lineNumbers": [
+      86
+    ],
+    "tableName": [
+      "customers",
+      "orders",
+      "order_items"
+    ],
+    "groupingColumns": [
+      "customers.id",
+      "customers.name"
+    ],
+    "joinColumns": [
+      "customers.id",
+      "order_items.order_id",
+      "orders.customer_id",
+      "orders.id"
+    ],
+    "filterColumns": [
+      "orders.status"
+    ],
+    "statementType": "SELECT"
+  },
+  {
+    "queryStructure": "SELECT `o`.`id` AS `order_id` FROM `orders` AS `o` JOIN `order_items` AS `oi` ON `o`.`id` = `oi`.`order_id` JOIN `products` AS `p` ON `oi`.`product_id` = `p`.`id` GROUP BY `o`.`id` HAVING COUNT(DISTINCT `p`.`category`) = :1 /* INT64 */ AND max(`p`.`category`) = :2 /* VARCHAR */",
+    "usageCount": 1,
+    "lineNumbers": [
+      97
+    ],
+    "tableName": [
+      "orders",
+      "order_items",
+      "products"
+    ],
+    "groupingColumns": [
+      "orders.id"
+    ],
+    "joinColumns": [
+      "order_items.order_id",
+      "order_items.product_id",
+      "orders.id",
+      "products.id"
+    ],
+    "statementType": "SELECT"
+  },
+  {
+    "queryStructure": "SELECT `c`.`id` AS `customer_id`, `c`.`name` AS `customer_name`, sum(CASE WHEN `o`.`status` = :_o_status /* VARCHAR */ THEN :1 /* INT64 */ ELSE :2 /* INT64 */ END) AS `completed_orders`, sum(CASE WHEN `o`.`status` = :_o_status1 /* VARCHAR */ THEN :1 /* INT64 */ ELSE :2 /* INT64 */ END) AS `pending_orders` FROM `customers` AS `c` LEFT JOIN `orders` AS `o` ON `c`.`id` = `o`.`customer_id` GROUP BY `c`.`id`, `c`.`name` ORDER BY sum(CASE WHEN `o`.`status` = :_o_status /* VARCHAR */ THEN :1 /* INT64 */ ELSE :2 /* INT64 */ END) DESC, sum(CASE WHEN `o`.`status` = :_o_status1 /* VARCHAR */ THEN :1 /* INT64 */ ELSE :2 /* INT64 */ END) DESC",
+    "usageCount": 1,
+    "lineNumbers": [
+      107
+    ],
+    "tableName": [
+      "customers",
+      "orders"
+    ],
+    "groupingColumns": [
+      "customers.id",
+      "customers.name"
+    ],
+    "joinColumns": [
+      "customers.id",
+      "orders.customer_id"
+    ],
+    "statementType": "SELECT"
+  }
+]
