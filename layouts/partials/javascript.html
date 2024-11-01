@@ -270,7 +270,6 @@ $versions.current}}
 </script>
 
 <!-- logic for resource filter -->
-<script src="https://unpkg.com/lunr/lunr.js"></script>
 <script>
   let filterModal = document.querySelector(".filter-mobile-modal");
   window.addEventListener(
@@ -397,23 +396,23 @@ $versions.current}}
             element.querySelector(".thumbnail-link").appendChild(slideDeck);
           } else {
             element.querySelector(".thumbnail-link").href = doc.youtube
-              ? `https://www.youtube.com/watch?v=${doc.youtube}`
+              ? "https://www.youtube.com/watch?v=" + doc.youtube
               : doc.url
               ? doc.url
               : "";
             element.querySelector(".img-thumbnail").src = doc.youtube
-              ? `https://i3.ytimg.com/vi/${doc.youtube}/0.jpg`
+              ? "https://i3.ytimg.com/vi/" + doc.youtube + "/0.jpg"
               : doc.thumbnail_url ? doc.thumbnail_url : "/img/logos/vitess-horizontal.png";
             element.querySelector(".img-thumbnail").alt = doc.title;
             element.querySelector(".resource-title-link").href = doc.youtube
-              ? `https://www.youtube.com/watch?v=${doc.youtube}`
+              ? "https://www.youtube.com/watch?v=" + doc.youtube
               : doc.url
               ? doc.url
               : "";
             element.querySelector(".resource-title-heading").textContent =
               doc.title;
             element.querySelector(".tag").textContent = doc.type;
-            element.querySelector(".year").textContent = doc.year;
+            element.querySelector(".date").textContent = doc.year;
           }
           target.appendChild(element);
         }

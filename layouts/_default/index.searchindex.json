@@ -1,0 +1,5 @@
+{{- $searchindex := slice -}}
+{{- range $resources := $.Site.Data.resources.resources -}}
+    {{- $searchindex = $searchindex | append (dict "title" $resources.title "youtube" $resources.youtube "url" $resources.url "thumbnail_url" $resources.thumbnail_url "type" $resources.type "year" $resources.date ) -}}
+{{- end -}}
+{{- $searchindex | jsonify -}}
