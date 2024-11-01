@@ -43,7 +43,7 @@
           {{ $resources := $.Site.Data.resources.resources }} {{ $years := slice
           }} {{ range $resources }} {{ $years = $years | append .date }} {{ $years = uniq $years }} {{ end }} {{ range $years
           }} {{ $year := . }}
-          <div class="">
+          <div class="mb-50">
             <h2 id="{{ . }}">{{ . }}</h2>
             <a id="td-block-0" class="td-offset-anchor"></a>
             <section

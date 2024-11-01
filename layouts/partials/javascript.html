@@ -394,6 +394,15 @@ $versions.current}}
             slideDeck.allowfullscreen = true;
             slideDeck.className = "has-ratio";
             element.querySelector(".thumbnail-link").appendChild(slideDeck);
+            element.querySelector(".resource-title-heading").textContent =
+              doc.title;
+            element.querySelector(".resource-title-link").href = doc.youtube
+              ? "https://www.youtube.com/watch?v=" + doc.youtube
+              : doc.url
+              ? doc.url
+              : "";
+            element.querySelector(".tag").textContent = doc.type;
+            element.querySelector(".date").textContent = doc.year;
           } else {
             element.querySelector(".thumbnail-link").href = doc.youtube
               ? "https://www.youtube.com/watch?v=" + doc.youtube
@@ -402,7 +411,9 @@ $versions.current}}
               : "";
             element.querySelector(".img-thumbnail").src = doc.youtube
               ? "https://i3.ytimg.com/vi/" + doc.youtube + "/0.jpg"
-              : doc.thumbnail_url ? doc.thumbnail_url : "/img/logos/vitess-horizontal.png";
+              : doc.thumbnail_url
+              ? doc.thumbnail_url
+              : "/img/logos/vitess-horizontal.png";
             element.querySelector(".img-thumbnail").alt = doc.title;
             element.querySelector(".resource-title-link").href = doc.youtube
               ? "https://www.youtube.com/watch?v=" + doc.youtube
@@ -423,10 +434,10 @@ $versions.current}}
 
   // handler functions for filter modal
   const openModal = () => {
-        filterModal.style.display = "block";
+    filterModal.style.display = "block";
   };
 
   const closeModal = () => {
-        filterModal.style.display = "none";
+    filterModal.style.display = "none";
   };
-  </script>
+</script>
