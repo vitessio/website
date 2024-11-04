@@ -339,7 +339,7 @@ Applicable to `ALTER TABLE` migrations in `vitess` strategy, the cut-over thresh
 
 The value may be supplied using e.g. `--cut-over-threshold=15s` [DDL strategy flag](../ddl-strategy-flags), but can be overridden at any point in time, or as many times as desired in the lifetime of the migration. A use case would be to increase the value for migrations that are struggling to cut-over due to consistent delays and lags.
 
-The value is forced to be in the range `5s..30s` even if the user attempts to set it outside that range. The default cut-over threshold value is `10s`.
+The allowed range `5s..30s`. Attempting to set a value outside the allowed range returns an error. A special case is when the user submits a `0` value, which subsequently presets the threshold to the default value of `10s`.
 
 #### Via VTGate/SQL
 
