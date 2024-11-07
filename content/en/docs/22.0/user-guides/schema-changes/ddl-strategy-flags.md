@@ -47,6 +47,8 @@ Vitess respects the following flags. They can be combined unless specifically in
 
   It does not make sense to combine `--singleton` and `--singleton-context`.
 
+- `--singleton-table`: reject submission for a table or view that is already pending migration.
+
 ## Pass-through flags
 
 Flags unrecognized by Vitess are passed on to the underlying schema change tools. For example, a `gh-ost` migration can run with:
