@@ -1,7 +1,7 @@
 ---
 title: PlannedReparentShard
 series: vtctldclient
-commit: 477bb22995e2e6a6dbaf9b45cc8259c017cb95db
+commit: d9bc0da8c46a6f69fec4dd3d50187501d1d6268b
 ---
 ## vtctldclient PlannedReparentShard
 

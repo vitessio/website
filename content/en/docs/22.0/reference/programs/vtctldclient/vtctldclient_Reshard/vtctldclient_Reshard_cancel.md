@@ -1,7 +1,7 @@
 ---
 title: Reshard cancel
 series: vtctldclient
-commit: b0b79813f21f8ecbf409f558ad6f8864332637cf
+commit: 1a4f2b9d6c7f22f6792ee562d639482f90ad8490
 ---
 ## vtctldclient Reshard cancel
 

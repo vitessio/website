@@ -1,7 +1,7 @@
 ---
 title: ApplyRoutingRules
 series: vtctldclient
-commit: b5b3114ab9371f882762dd66ae0efc5af3a3dbc0
+commit: d3ff5982ddbbb04da1c9ac3c0bff9b09c904c749
 ---
 ## vtctldclient ApplyRoutingRules
 
