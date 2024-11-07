@@ -58,6 +58,23 @@ Validate that the `wait_timeout` (28800 seconds by default) has not been modifie
 
 ## Monitoring
 
+The user can monitor distributed transactions at a per-transaction level with `SHOW STATEMENT` and at a higher level with metrics.
+
+When a commit failure is received from VTGate on the session, the user can issue `show warnings` statement to retrieve the Distributed transaction ID (DTID).
+This DTID can be tracked to understand the state of the transaction.
+The `SHOW TRANSACTION STATUS FOR <DTID>` statement can be used to get the status of the transaction.
+
+Example:
+```mysql
+> show transaction status for <dtid>;
++-------------+---------+-------------------------------+-------------------+
+| id          | state   | record_time                   | participants      |
++-------------+---------+-------------------------------+-------------------+
+| ks:-80:4334 | PREPARE | 2024-07-06 04:05:34 +0000 UTC | ks:80-a0,ks:a0-c0 |
++-------------+---------+-------------------------------+-------------------+
+1 row in set (0.00 sec)
+```
+
 Additional metrics have been added to monitor the distributed transactions. The alert system could be built around understanding the metrics and failures described below.
 
 ### VTGate Watchers
