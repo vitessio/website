@@ -1,7 +1,7 @@
 ---
 title: GetShard
 series: vtctldclient
-commit: b0b79813f21f8ecbf409f558ad6f8864332637cf
+commit: d9ab9f7a1cf3cae19a1ea06963798a7646e8fb27
 ---
 ## vtctldclient GetShard
 

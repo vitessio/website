@@ -1,7 +1,7 @@
 ---
 title: vtorc
 series: vtorc
-commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
+commit: d9ab9f7a1cf3cae19a1ea06963798a7646e8fb27
 ---
 ## vtorc
 
@@ -47,6 +47,7 @@ vtorc \
       --config-type string                                          Config file type (omit to infer config type from file extension).
       --consul_auth_static_file string                              JSON File to read the topos/tokens from.
       --emit_stats                                                  If set, emit stats to push-based monitoring and stats backends
+      --grpc-dial-concurrency-limit int                             Maximum concurrency of grpc dial operations. This should be less than the golang max thread limit of 10000. (default 1024)
       --grpc_auth_static_client_creds string                        When using grpc_static_auth in the server, this file provides the credentials to use to authenticate with server.
       --grpc_compression string                                     Which protocol to use for compressing gRPC. Default: nothing. Supported: snappy
       --grpc_enable_tracing                                         Enable gRPC tracing.
@@ -61,7 +62,7 @@ vtorc \
       --keep_logs duration                                          keep logs for this long (using ctime) (zero to keep forever)
       --keep_logs_by_mtime duration                                 keep logs for this long (using mtime) (zero to keep forever)
       --lameduck-period duration                                    keep running at least this long after SIGTERM before stopping (default 50ms)
-      --lock-timeout duration                                       Maximum time for which a shard/keyspace lock can be acquired for (default 45s)
+      --lock-timeout duration                                       Maximum time to wait when attempting to acquire a lock from the topo server (default 45s)
       --log_backtrace_at traceLocations                             when logging hits line file:N, emit a stack trace
       --log_dir string                                              If non-empty, write log files in this directory
       --log_err_stacks                                              log stack traces for errors
@@ -111,6 +112,7 @@ vtorc \
       --topo_global_root string                                     the path of the global topology data in the global topology server
       --topo_global_server_address string                           the address of the global topology server
       --topo_implementation string                                  the topology implementation to use
+      --topo_read_concurrency int                                   Concurrency of topo reads. (default 32)
       --topo_zk_auth_file string                                    auth to use when connecting to the zk topo server, file contents should be <scheme>:<auth>, e.g., digest:user:pass
       --topo_zk_base_timeout duration                               zk base timeout (see zk.Connect) (default 30s)
       --topo_zk_max_concurrency int                                 maximum number of pending requests to send to a Zookeeper server. (default 64)

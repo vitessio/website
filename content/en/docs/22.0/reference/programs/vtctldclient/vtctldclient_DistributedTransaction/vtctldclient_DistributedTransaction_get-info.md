@@ -1,25 +1,21 @@
 ---
-title: UpdateCellsAlias
+title: DistributedTransaction get-info
 series: vtctldclient
-commit: 087964bd26b69c5b16c3af9d26515966de9f14bf
+commit: d9ab9f7a1cf3cae19a1ea06963798a7646e8fb27
 ---
-## vtctldclient UpdateCellsAlias
+## vtctldclient DistributedTransaction get-info
 
-Updates the content of a CellsAlias with the provided parameters, creating the CellsAlias if it does not exist.
-
-### Synopsis
-
-Updates the content of a CellsAlias with the provided parameters, creating the CellsAlias if it does not exist.
+Reads the state of the unresolved transaction by querying each participating shard.
 
 ```
-vtctldclient UpdateCellsAlias [--cells <cell1,cell2,...> [--cells <cell4> ...]] <alias>
+vtctldclient DistributedTransaction get-info --dtid <dtid>
 ```
 
 ### Options
 
 ```
-  -c, --cells strings   The list of cell names that are members of this alias.
-  -h, --help            help for UpdateCellsAlias
+  -d, --dtid string   read transaction state for the given distributed transaction ID.
+  -h, --help          help for get-info
 ```
 
 ### Options inherited from parent commands
@@ -35,5 +31,5 @@ vtctldclient UpdateCellsAlias [--cells <cell1,cell2,...> [--cells <cell4> ...]] 
 
 ### SEE ALSO
 
-* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
+* [vtctldclient DistributedTransaction](../)	 - Perform commands on distributed transaction
 

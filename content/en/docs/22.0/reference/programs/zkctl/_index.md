@@ -1,7 +1,7 @@
 ---
 title: zkctl
 series: zkctl
-commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
+commit: d9ab9f7a1cf3cae19a1ea06963798a7646e8fb27
 ---
 ## zkctl
 

@@ -1,7 +1,7 @@
 ---
 title: vtgateclienttest
 series: vtgateclienttest
-commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
+commit: d9ab9f7a1cf3cae19a1ea06963798a7646e8fb27
 ---
 ## vtgateclienttest
 
@@ -24,6 +24,7 @@ vtgateclienttest [flags]
       --config-persistence-min-interval duration                         minimum interval between persisting dynamic config changes back to disk (if no change has occurred, nothing is done). (default 1s)
       --config-type string                                               Config file type (omit to infer config type from file extension).
       --default_tablet_type topodatapb.TabletType                        The default tablet type to set for queries, when one is not explicitly selected. (default PRIMARY)
+      --grpc-dial-concurrency-limit int                                  Maximum concurrency of grpc dial operations. This should be less than the golang max thread limit of 10000. (default 1024)
       --grpc_auth_mode string                                            Which auth plugin implementation to use (eg: static)
       --grpc_auth_mtls_allowed_substrings string                         List of substrings of at least one of the client certificate names (separated by colon).
       --grpc_auth_static_client_creds string                             When using grpc_static_auth in the server, this file provides the credentials to use to authenticate with server.

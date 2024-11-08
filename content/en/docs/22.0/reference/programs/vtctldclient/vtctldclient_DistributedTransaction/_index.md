@@ -1,7 +1,7 @@
 ---
 title: DistributedTransaction
 series: vtctldclient
-commit: b0b79813f21f8ecbf409f558ad6f8864332637cf
+commit: d9ab9f7a1cf3cae19a1ea06963798a7646e8fb27
 ---
 ## vtctldclient DistributedTransaction
 
@@ -28,5 +28,6 @@ Perform commands on distributed transaction
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
 * [vtctldclient DistributedTransaction conclude](./vtctldclient_distributedtransaction_conclude/)	 - Concludes the unresolved transaction by rolling back the prepared transaction on each participating shard and removing the transaction metadata record.
+* [vtctldclient DistributedTransaction get-info](./vtctldclient_distributedtransaction_get-info/)	 - Reads the state of the unresolved transaction by querying each participating shard.
 * [vtctldclient DistributedTransaction unresolved-list](./vtctldclient_distributedtransaction_unresolved-list/)	 - Retrieves unresolved transactions for the given keyspace.
 

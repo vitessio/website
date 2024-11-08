@@ -1,7 +1,7 @@
 ---
 title: init config
 series: mysqlctl
-commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
+commit: d9ab9f7a1cf3cae19a1ea06963798a7646e8fb27
 ---
 ## mysqlctl init_config
 
@@ -56,7 +56,7 @@ mysqlctl \
       --db-credentials-vault-tls-ca string                          Path to CA PEM for validating Vault server certificate
       --db-credentials-vault-tokenfile string                       Path to file containing Vault auth token; token can also be passed using VAULT_TOKEN environment variable
       --db-credentials-vault-ttl duration                           How long to cache DB credentials from the Vault server (default 30m0s)
-      --db_charset string                                           Character set used for this tablet. (default "utf8mb4")
+      --db_charset string                                           Character set/collation used for this tablet. Make sure to configure this to a charset/collation supported by the lowest MySQL version in your environment. (default "utf8mb4")
       --db_conn_query_info                                          enable parsing and processing of QUERY_OK info fields
       --db_connect_timeout_ms int                                   connection timeout to mysqld in milliseconds (0 for no timeout)
       --db_dba_password string                                      db dba password

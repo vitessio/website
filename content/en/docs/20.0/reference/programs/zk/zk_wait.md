@@ -1,7 +1,7 @@
 ---
 title: wait
 series: zk
-commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
+commit: 6eddcaeac58bed83ebfa3b9ada903ddc8ff36ff6
 ---
 ## zk wait
 

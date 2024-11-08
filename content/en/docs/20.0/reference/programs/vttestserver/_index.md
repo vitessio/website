@@ -1,7 +1,7 @@
 ---
 title: vttestserver
 series: vttestserver
-commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
+commit: 6eddcaeac58bed83ebfa3b9ada903ddc8ff36ff6
 ---
 ## vttestserver
 
@@ -102,6 +102,7 @@ vttestserver [flags]
       --mysql_server_version string                                      MySQL server version to advertise. (default "8.0.30-Vitess")
       --mysqlctl_mycnf_template string                                   template file to use for generating the my.cnf file during server init
       --mysqlctl_socket string                                           socket file to use for remote mysqlctl actions (empty for local actions)
+      --no_scatter                                                       when set to true, the planner will fail instead of producing a plan that includes scatter queries
       --null_probability float                                           The probability to initialize a field with 'NULL'  if --initialize_with_random_data is true. Only applies to fields that can contain NULL values. (default 0.1)
       --num_shards strings                                               Comma separated shard count (one per keyspace) (default [2])
       --onclose_timeout duration                                         wait no more than this for OnClose handlers before stopping (default 10s)
