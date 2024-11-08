@@ -1,7 +1,7 @@
 ---
 title: RevokeCert
 series: vttlstest
-commit: 1a4f2b9d6c7f22f6792ee562d639482f90ad8490
+commit: d9ab9f7a1cf3cae19a1ea06963798a7646e8fb27
 ---
 ## vttlstest RevokeCert
 

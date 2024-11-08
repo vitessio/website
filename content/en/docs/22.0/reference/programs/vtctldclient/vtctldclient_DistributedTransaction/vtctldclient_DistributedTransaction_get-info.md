@@ -1,20 +1,21 @@
 ---
-title: GetTabletVersion
+title: DistributedTransaction get-info
 series: vtctldclient
 commit: d9ab9f7a1cf3cae19a1ea06963798a7646e8fb27
 ---
-## vtctldclient GetTabletVersion
+## vtctldclient DistributedTransaction get-info
 
-Print the version of a tablet from its debug vars.
+Reads the state of the unresolved transaction by querying each participating shard.
 
 ```
-vtctldclient GetTabletVersion <alias>
+vtctldclient DistributedTransaction get-info --dtid <dtid>
 ```
 
 ### Options
 
 ```
-  -h, --help   help for GetTabletVersion
+  -d, --dtid string   read transaction state for the given distributed transaction ID.
+  -h, --help          help for get-info
 ```
 
 ### Options inherited from parent commands
@@ -30,5 +31,5 @@ vtctldclient GetTabletVersion <alias>
 
 ### SEE ALSO
 
-* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
+* [vtctldclient DistributedTransaction](../)	 - Perform commands on distributed transaction
 
