@@ -5,7 +5,5 @@ type: learning-resources
 weight: 2200
 ---
 
-## Resources
-
 A curated list of resources our community has put together. Enjoy!
 
