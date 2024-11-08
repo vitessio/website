@@ -3,28 +3,28 @@ title: Troubleshooting Distributed Atomic Transactions
 weight: 65
 ---
 
-For users running sharded keyspaces in Vitess, we support atomic transactions across multiple shards using 2PC (Two-Phase Commit). More details on how to configure your cluster to allow distributed transactions can be found in the [Distributed Transaction](../../../reference/features/distributed-transaction/) documentation.
+For users running sharded keyspaces in Vitess, we support atomic transactions across multiple shards using 2PC (Two-Phase Commit). You can find more details on configuring your cluster for distributed transactions in the [Distributed Transaction](../../../reference/features/distributed-transaction/) documentation.
 
-While we don't expect any problems, it is possible that you may encounter issues when running distributed transactions. This guide will help you troubleshoot and resolve these issues.
+Although distributed transactions are designed to run smoothly, issues may occasionally occur. This guide will help you troubleshoot and resolve these issues.
 
 ## Finding Issues
 
-There are a couple of ways to know whether something has gone wrong in distributed transactions - 
+There are several methods to determine whether something has gone wrong in distributed transactions:
 
-1. **Metrics provided by `vttablet`s** - The `vttablet` process exposes a number of metrics that can be used to monitor the health of the system. Here are the ones to look out for -
-   1. `CommitPreparedFail` - This metric shows the number of times a commit has failed after it was already prepared. It is further sub-divided into 2 class of errors. One retryable, and the other not. Any non-retryable error will require human intervention.
-   2. `RedoPreparedFail` - Similar to the previous metric, it shows the number of times a redoing a transaction has failed after it was already prepared. Any non-retryable error here too will require human intervention.
-2. **`GetUnresolvedTransactions` RPC** - This command shows the list of unresolved transactions in the system. The state of these transactions can be checked to see if they are stuck in a failed state or not. More details on the command can be found [here](//TODO: add link).
-3. **Transactions page in VTAdmin** - The VTAdmin UI provides a page to view all the unresolved transactions in the system. It works using the RPC same command as the previous one.
+1. **Monitor `vttablet` metrics** - The `vttablet` process exposes various metrics that can be used to monitor the health of the system. Here are the ones to look out for -
+   1. `CommitPreparedFail` - This metric indicates the number of times a commit has failed after being prepared. It is categorized into two classes of errors: retryable and non-retryable. Non-retryable errors will require human intervention.
+   2. `RedoPreparedFail` - Similar to `CommitPreparedFail`, this metric shows the number of times redoing a transaction has failed after preparation. Non-retryable errors here will also need human intervention.
+2. **`GetUnresolvedTransactions` RPC** - This command lists unresolved transactions in the system. You can check the state of these transactions to determine if any are stuck in a failed state. More details on the command can be found [here](//TODO: add link).
+3. **Transactions page in VTAdmin** - The VTAdmin UI provides a page to view all unresolved transactions in the system. It uses the same RPC command as mentioned above.
 
 ## Fixing The Issue
 
-Once we have found a transaction that is permanently failed, we need human intervention to fix the database state. Here are the steps to follow -
-1. Get more information about the transaction using the dtid of the transaction. This can be done by running the `GetTransactionInfo` RPC command. More information about the command can be found [here](//TODO: add link).
-2. The output of the command will contain the list of participating shards in the transaction. For each shard, it will have the status of the transaction on that shard. For the shards where the transaction has failed, it will have the writes that were part of the transaction.
-3. With this information, you can rerun the writes on all the failing shards.
-4. Once all the changes are made, the transaction can be concluded by running the `ConcludeTransaction` RPC command. More information about the command can be found [here](//TODO: add link).
+Once a transaction has been identified as irreversibly failed, human intervention is required to correct the database state. Follow these steps:
+1. Obtain detailed information about the transaction using its dtid by running the `GetTransactionInfo` RPC command. Further details about this command can be found [here](//TODO: add link).
+2. The command output will list the participating shards in the transaction, along with the status of the transaction on each shard. For shards where the transaction has failed, it will also display the writes that were part of the transaction.
+3. Using this information, rerun the writes on all the failing shards.
+4. After making the necessary changes, conclude the transaction by running the `ConcludeTransaction` RPC command. More details about this command can be found [here](//TODO: add link).
 
-The same information can be gleaned from VTAdmin page by navigating to the transactions page, and clicking on the transaction in question.
+You can also find this information on the VTAdmin page by navigating to the transactions section and clicking on the transaction in question.
 
-We would also request you to open an issue on Vitess, so that the underlying problem can be investigated and fixed.
+Please open an issue on the Vitess GitHub repository to allow further investigation and resolution of the problem.
