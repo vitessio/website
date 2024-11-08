@@ -9,33 +9,31 @@ description: "Explore how to optimize sharding strategies in Vitess for scalable
 
 ## Introduction to Sharding in Vitess
 
-Sharding data effectively is a cornerstone of database scalability, especially when using a powerful orchestration layer like Vitess. 
-By understanding how to analyze and refine your sharding strategy, you can minimize data transfer, optimize query plans, and enhance application performance. 
-This guide dives into practical methodologies and introduces key tools in Vitess, including `vexplain` and the `vt` CLI, to help you design efficient sharding schemes and analyze query behavior at scale.
+Effective sharding is essential for database scalability, especially when using an orchestration layer like Vitess. 
+By analyzing and refining your sharding strategy, you can minimize data transfer, optimize query plans, and improve application performance. 
+This guide explores practical methodologies and key tools in Vitess, including vexplain and the vt CLI, to help you design efficient sharding schemes and analyze query behavior at scale.
 
-## The Importance of Choosing the Right Sharding Key
+## The Importance of Choosing the Right Sharding Key [^1]
+[^1]: For a visual breakdown, refer to Benjamin’s post on the PlanetScale website about sharding keys.
+  
+  When your database grows beyond the capacity of a single MySQL instance,
 
-Vitess can split the content in tables across multiple MySQL instances.
-This is called sharding the data.
-Sharding is the process of splitting a large database into smaller, more manageable parts called shards.
-Each shard is stored on a separate MySQL instance.
-Vitess acts as a database proxy that creates an illusion of a single database when technically, the query is sent to multiple MySQL instances.
+As your database outgrows the capacity of a single MySQL instance, Vitess can distribute the data across multiple instances through sharding. 
+Sharding splits a large database into smaller, more manageable pieces called shards, with each shard stored on a separate MySQL instance. 
+Vitess acts as a database proxy, creating the illusion of a single database while routing queries to the appropriate shards.
 
-When sharding a table, you need to choose a sharding key.
-The sharding key is a column or set of columns that determine how the data is split across the shards.
-The sharding key is used to route queries to the correct shard.
-It's similar to a primary key, but it's used for sharding instead of indexing.
-Choosing the right sharding keys is crucial for the performance of your application.
+Choosing an effective sharding key—a column or set of columns that dictates how data is distributed across shards—is crucial for application performance. 
+The sharding key routes queries to the correct shard, functioning similarly to a primary key but used for data partitioning.
 
-When inspecting a query, if Vitess can see that a join is being performed on columns that are sharded with the same rules, it knows that the join between these tables can be pushed down to the shard and solved there.
-This is the best case scenario, as it minimizes the amount of data that needs to be transferred between shards.
+When analyzing a query, if Vitess detects a join performed on columns sharded by the same rules, it can push the join down to the shard level.
+This is the ideal scenario, minimizing data transfer between shards.
 
-Say we have two tables, `orders` and `customer`, and both are sharded by their primary keys (order_id and customer_id respectively).
+Consider an example with two tables, `orders` and `customers`, each sharded by their primary keys (`order_id` and `customer_id`, respectively):
 
 ```sql
 select *
 from orders o
-       join customers c on o.customer_id = c.id
+       join customers c on o.customer_id = c.customer_id
 ```
 
 Since the join is not being done on the sharding key, Vitess will need to perform the join in the vtgate layer, which is the query router that sits between the application and the MySQL instances.
@@ -53,7 +51,7 @@ It's similar to mysql's `explain` command, showing the query plan that Vitess wi
 ```sql
 vexplain plan select *
   from orders o 
-    join customers c on o.customer_id = c.id
+    join customers c on o.customer_id = c.customer_id
 ```
 
 This will output the query plan that Vitess will use to execute the query. It's represented as a JSON tree:
@@ -75,8 +73,8 @@ This will output the query plan that Vitess will use to execute the query. It's 
         "Name": "ks_derived",
         "Sharded": true
       },
-      "FieldQuery": "select o.id, o.customer_id, o.`status`, o.total_amount, o.created_at from orders as o where 1 != 1",
-      "Query": "select o.id, o.customer_id, o.`status`, o.total_amount, o.created_at from orders as o",
+      "FieldQuery": "select o.order_id, o.customer_id, o.`status`, o.total_amount, o.created_at from orders as o where 1 != 1",
+      "Query": "select o.order_id, o.customer_id, o.`status`, o.total_amount, o.created_at from orders as o",
       "Table": "orders"
     },
     {
@@ -86,8 +84,8 @@ This will output the query plan that Vitess will use to execute the query. It's 
         "Name": "ks_derived",
         "Sharded": true
       },
-      "FieldQuery": "select c.id, c.email, c.`name`, c.created_at from customers as c where 1 != 1",
-      "Query": "select c.id, c.email, c.`name`, c.created_at from customers as c where c.id = :o_customer_id /* INT32 */",
+      "FieldQuery": "select c.customer_id, c.email, c.`name`, c.created_at from customers as c where 1 != 1",
+      "Query": "select c.customer_id, c.email, c.`name`, c.created_at from customers as c where c.customer_id = :o_customer_id /* INT32 */",
       "Table": "customers",
       "Values": [
         ":o_customer_id"
