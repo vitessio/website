@@ -21,13 +21,13 @@
               <button onclick="closeModal()">x</button>
             </div>
           </div>
-          {{ partial "resources/filter-panel.html" . }}
+          {{ partial "learning-resources/filter-panel.html" . }}
         </div>
 
         <div class="flex flex-gap-md mt-100">
         <!-- filter panel on desktop -->
         <div class="filter-container">
-          {{ partial "resources/filter-panel.html" . }}
+          {{ partial "learning-resources/filter-panel.html" . }}
         </div>
         <div>
         <!-- Resource pane -->
@@ -52,7 +52,7 @@
               <div class="col">
                 <div class="columns is-flex-wrap-wrap row">
                   {{ range $resources }} {{ if eq .date
-                  $year }} {{ partial "resources/resource.html" . }} {{ end }}
+                  $year }} {{ partial "learning-resources/resource.html" . }} {{ end }}
                   {{ end }}
                 </div>
               </div>
@@ -61,7 +61,7 @@
           {{ end }}
         </div>
         <!-- template for resource pane -->
-        {{ partial "resources/template-container.html" . }}
+        {{ partial "learning-resources/template-container.html" . }}
         </div>
       </div>
 

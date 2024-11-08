@@ -1,0 +1,39 @@
+{{ $youtube := .youtube }}
+{{ $youtube_url := print "https://www.youtube.com/watch?v=" $youtube }}
+{{ $thumbnail := printf "https://i3.ytimg.com/vi/%s/0.jpg" $youtube }}
+
+{{ if .url }}
+{{ $thumbnail = "/img/logos/vitess-horizontal.png" }}
+{{ end }}
+
+{{ if .thumbnail_url }}
+{{ $thumbnail = .thumbnail_url }}
+{{ end }}
+
+{{ $url := .url | default $youtube_url }}
+{{ $title := .title | default "Video title" }}
+
+{{ $t := .date }}
+{{ $dateTime := $t }} 
+
+<div class="column is-4 col-lg-4 mb-3 mb-lg-0 text-center relative">
+  <a href="{{ $url }}"><img class="img-fluid img-thumbnail" alt="{{ $title | markdownify }}" src="{{ $thumbnail }}"></a>
+  <a href="{{ $url }}"><h4>{{ $title | markdownify }}</h4></a>
+  <span class="tag1 tag">
+    {{ .type }}
+</span>
+<label class="date">{{ $dateTime }}</label>
+</div>
+
+<template id="search-result" hidden>
+<div class="col-lg-4 mb-3 mb-lg-0 text-center col-hidden relative">
+  <a href="" class="thumbnail-link"><img class="img-fluid img-thumbnail" alt="" src=""></a>
+  <a href="" class="resource-title-link"><h4 class="resource-title-heading"></h4></a>
+  <span class="tag1 tag">
+  </span>
+  <label class="date"></label>
+
+ <h4 class="resource-description"></h4>
+
+</div>
+</template>
