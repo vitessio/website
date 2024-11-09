@@ -1,5 +1,5 @@
 ---
-title: v18.0 (Stable)
+title: v18.0 (EOL)
 description: >
   
   Everything you need to know about scaling MySQL with Vitess.
