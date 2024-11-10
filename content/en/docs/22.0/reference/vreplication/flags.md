@@ -180,7 +180,7 @@ Stop automatically retrying when we've had consecutive failures with the same er
 #### vreplication_experimental_flags
 
 **Type** bitmask\
-**Default** 3 (VReplicationExperimentalFlagOptimizeInserts | VReplicationExperimentalFlagAllowNoBlobBinlogRowImage)\
+**Default** 7 (VReplicationExperimentalFlagOptimizeInserts | VReplicationExperimentalFlagAllowNoBlobBinlogRowImage | VReplicationExperimentalFlagVPlayerBatching)\
 **Applicable on** target
 
 Features that are not yet adequately field-tested, that are not backward-compatible, or need to be proven in production environments are put behind _vreplication_experimental_flags_. These features are temporary and will either be made permanent, removed, or put behind a separate vttablet option. Currently, the only experimental features are expected to be performance improvements.
