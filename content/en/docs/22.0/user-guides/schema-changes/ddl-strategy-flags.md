@@ -47,7 +47,7 @@ Vitess respects the following flags. They can be combined unless specifically in
 
   It does not make sense to combine `--singleton` and `--singleton-context`.
 
-- `--singleton-table`: reject a new submission for a table or view which already has a running migration.
+- `--singleton-table`: reject a new submission for a table or view which already has a pending migration.
 
 ## Pass-through flags
 
