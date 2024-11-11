@@ -4,27 +4,26 @@ weight: 11
 aliases: ['/docs/launching/twopc/','/docs/reference/two-phase-commit/','/docs/reference/distributed-transaction/']
 ---
 
-{{< info >}}
-Atomic Distributed Transactions will increase commit latency. The maintainers of Vitess recommend designing your VSchema to minimize cross-shard updates.
-{{< /info >}}
-
 # Distributed Transactions in Vitess
 
 ## Overview
 
-A distributed transaction is an operation that spans multiple database shards while maintaining data consistency. Vitess supports distributed transactions through a Two-Phase Commit (TwoPC) protocol, allowing you to perform atomic updates across different shards in your database cluster.
+A distributed transaction is an operation that spans multiple database shards while maintaining data consistency. 
+Vitess supports distributed transactions through a Two-Phase Commit (TwoPC) protocol, 
+allowing you to perform atomic updates across different shards in your database cluster.
 
-> **Performance Note:** Using atomic distributed transactions will impact commit speed. We recommend designing your VSchema to minimize cross-shard updates where possible.
+> **Performance Note:** Using atomic distributed transactions will impact commit latency. 
+> We recommend designing your VSchema to minimize cross-shard updates where possible.
 
 ## Transaction Modes
 
 Vitess supports three levels of transaction atomicity, each offering different guarantees and performance characteristics:
 
-| Mode | Description | Use Case | Guarantees | Performance Impact |
-|------|-------------|----------|------------|-------------------|
-| Single | Transactions limited to one shard | Simple CRUD operations | Full ACID within shard | Fastest |
-| Multi | Can span multiple shards with best-effort commits | Bulk updates where partial success is acceptable | No atomicity guarantee | Medium |
-| TwoPC | Atomic commits across multiple shards | Financial transactions, inventory updates | Atomic commits guaranteed | Slowest |
+| Mode | Description | Use Case | Guarantees |
+|------|-------------|----------|-----------|
+| Single | Transactions limited to one shard | Simple CRUD operations | Full ACID |
+| Multi | Can span multiple shards with best-effort commits | Bulk updates where partial success is acceptable | No atomicity |
+| TwoPC | Atomic commits across multiple shards | Financial transactions, inventory updates | Atomic commits |
 
 ### When to Use TwoPC
 
@@ -35,11 +34,8 @@ Choose TwoPC when you need guaranteed atomic commits across shards, such as:
 
 ## Understanding Isolation Level
 
-While TwoPC guarantees atomicity (all-or-nothing commits), it does not provide isolation in the traditional ACID sense. This means:
-
-- Other transactions may see partial results during a commit
-- Cross-shard reads might observe inconsistent states
-- No serializable isolation across shards
+While TwoPC guarantees atomicity (all-or-nothing commits), it does not provide isolation in the traditional ACID sense. 
+The Applications might observe fractured reads in a cross-shard query i.e. a query might see partial commits while a TwoPC transaction commit is in progress.
 
 This design choice prioritizes performance for common use cases. Full ACID isolation across shards would introduce significant performance overhead.
 
@@ -76,6 +72,8 @@ Enable TwoPC on VTTablet with these flags:
 # Time in seconds before marking transaction as abandoned
 -twopc_abandon_age=300  # Recommended: 5 minutes minimum
 ```
+
+Transaction watcher at VTTablet sends signal to VTGate for any pending abandoned transaction for resolution.
 
 ### MySQL Prerequisites
 

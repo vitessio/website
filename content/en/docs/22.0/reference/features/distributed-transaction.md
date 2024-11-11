@@ -4,57 +4,86 @@ weight: 11
 aliases: ['/docs/launching/twopc/','/docs/reference/two-phase-commit/','/docs/reference/distributed-transaction/']
 ---
 
-{{< info >}}
-Commit is will slow when using Atomic Distributed Transaction. The maintainers of Vitess recommend that you design your VSchema so that cross-shard updates are minimal.
-{{< /info >}}
+# Distributed Transactions in Vitess
 
-Vitess **TwoPC** (2PC) allows you to perform atomic distributed commits. The feature is implemented using traditional MySQL transactions and thus inherits the same guarantees. With this addition, Vitess can be configured to support the following three levels of atomicity:
+## Overview
 
-1. **Single**: At this level, only single-shard transactions are allowed. Any transaction that tries to go beyond a single shard will fail and be rolled back.
-2. **Multi**: A transaction can span multiple shards. The commit guarantees are best effort, meaning partial commits are possible.
-3. **TwoPC**: This is similar to **Multi** but with an atomic commit guarantee across shards.
+A distributed transaction is an operation that spans multiple database shards while maintaining data consistency.
+Vitess supports distributed transactions through a Two-Phase Commit (TwoPC) protocol,
+allowing you to perform atomic updates across different shards in your database cluster.
 
-**TwoPC** commits are more expensive than **Multi** as the system must persist the statements before starting the commit process, and later purge them after a successful commit. This is why it is a separate option instead of being always on.
+> **Performance Note:** Using atomic distributed transactions will impact commit latency.
+> We recommend designing your VSchema to minimize cross-shard updates where possible.
 
-## Isolation
+## Transaction Modes
 
-**TwoPC** transactions guarantee atomicity: either the whole transaction commits, or it is rolled back entirely. However, they do not guarantee isolation (in the ACID sense). This means that a third party performing cross-database reads may observe partial commits while a **TwoPC** transaction is in progress.
+Vitess supports three levels of transaction atomicity, each offering different guarantees and performance characteristics:
 
-Guaranteeing ACID isolation is highly contentious and incurs significant costs. Providing it by default would have made Vitess impractical for the most common use cases.
+| Mode | Description | Use Case | Guarantees |
+|------|-------------|----------|-----------|
+| Single | Transactions limited to one shard | Simple CRUD operations | Full ACID |
+| Multi | Can span multiple shards with best-effort commits | Bulk updates where partial success is acceptable | No atomicity |
+| TwoPC | Atomic commits across multiple shards | Financial transactions, inventory updates | Atomic commits |
 
-## Enabling TwoPC
+### When to Use TwoPC
 
-### Configuring VTGate and/or Connection Session
+Choose TwoPC when you need guaranteed atomic commits across shards, such as:
+- Financial transactions where partial commits could lead to inconsistent balances
+- Inventory systems where items must be updated together
+- User transactions that modify data in multiple shards
 
-The atomicity policy is controlled by the `transaction_mode` flag. The default value is `multi` and sets all transactions to multi-shard best-effort commit mode.
+## Understanding Isolation Level
 
-To enforce single-shard transactions as the default, the VTGates can be started by specifying `transaction_mode=single`.
+While TwoPC guarantees atomicity (all-or-nothing commits), it does not provide isolation in the traditional ACID sense.
+The Applications might observe fractured reads in a cross-shard query i.e. a query might see partial commits while a TwoPC transaction commit is in progress.
 
-To enable 2PC as the default, the VTGates need to be started with `transaction_mode=twopc`.
+This design choice prioritizes performance for common use cases. Full ACID isolation across shards would introduce significant performance overhead.
 
-The VTGate's default `transaction_mode` can be overridden for a specific workflow in the session by modifying the session variable using `set transaction_mode=<mode>` where necessary.
+## Configuration
 
+### VTGate Setup
+
+Set the default transaction mode via the `transaction_mode` flag:
+
+```bash
+# Default mode (multi-shard, best-effort)
+transaction_mode=multi
+
+# Force single-shard transactions
+transaction_mode=single
+
+# Enable TwoPC by default
+transaction_mode=twopc
 ```
-set transaction_mode=twopc
+
+Override the default mode for specific sessions:
+```sql
+SET transaction_mode='twopc';
 ```
 
-### Configuring VTTablet
+### VTTablet Requirements
 
-The following flags need to be set to enable 2PC in VTTablet:
+Enable TwoPC on VTTablet with these flags:
 
-* **twopc_enable**: This flag needs to be turned on.
-* **twopc_abandon_age**: This is the time in seconds that specifies how long to wait before requesting VTGate to resolve an abandoned transaction.
+```bash
+# Enable TwoPC support
+-twopc_enable
 
-With the above flags specified, every primary VTTablet also enables the transaction watcher.
-If any 2PC transaction lingers for longer than `twopc_abandon_age` seconds, VTTablet sends a signal to VTGate via the health stream to resolve all abandoned transactions older than `twopc_abandon_age`.
+# Time in seconds before marking transaction as abandoned
+-twopc_abandon_age=300  # Recommended: 5 minutes minimum
+```
 
-Ideally, `twopc_abandon_age` should be substantially longer than the time it takes for a typical 2PC commit to complete (tens of seconds).
+Transaction watcher at VTTablet sends signal to VTGate for any pending abandoned transaction for resolution.
 
-### Configuring MySQL
+### MySQL Prerequisites
 
-Validate that the `wait_timeout` (28800 seconds by default) has not been modified or has a reasonably high value. If this value is changed to be too short, MySQL could prematurely close a prepared transaction connection, causing data loss or out-of-order commits.
+1. **Semi-sync Replication**
+- Required for atomic commit guarantees
+- TwoPC transactions will roll back if semi-sync is not enabled
 
-`Semi-sync` replication is required for 2PC to provide an atomic guarantee. If semi-sync is not enabled, the 2PC transaction will be rolled back.
+2. **Connection Timeout**
+- Verify `wait_timeout` is set appropriately (default: 28800 seconds)
+- Short timeouts risk premature connection closure during prepared transactions
 
 ## Monitoring
 
@@ -71,8 +100,8 @@ Example:
 | id          | state   | record_time                   | participants      |
 +-------------+---------+-------------------------------+-------------------+
 | ks:-80:4334 | PREPARE | 2024-07-06 04:05:34 +0000 UTC | ks:80-a0,ks:a0-c0 |
-+-------------+---------+-------------------------------+-------------------+
-1 row in set (0.00 sec)
+  +-------------+---------+-------------------------------+-------------------+
+  1 row in set (0.00 sec)
 ```
 
 Additional metrics have been added to monitor the distributed transactions. The alert system could be built around understanding the metrics and failures described below.
