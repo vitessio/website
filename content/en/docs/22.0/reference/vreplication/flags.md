@@ -16,12 +16,12 @@ VReplication functionality. Some of the flags are relevant when tablets are acti
 
 This is not a VReplication specific flag, but it does affect VReplication handling of [compressed transaction payloads when
 `binlog_transaction_compression` is enabled](https://dev.mysql.com/doc/refman/en/binary-log-transaction-compression.html) on the source mysqld
-instances. This flag limits the memory used when decompressing and processing these events and their payload. When the *compressed* payload
-size is smaller than this value the payload is decompressed using in-memory buffers. If larger than this size then the decompression will be done
-as a stream, with the maximum memory used for the stream also set by this flag. The in-memory decompression is much faster but because the
-*uncompressed* payload can be N times larger than the decompressed one — the compressed payload is limited by MySQL's
-[`max_allowed_packet`](https://dev.mysql.com/doc/refman/en/server-system-variables.html#sysvar_max_allowed_packet) but the size of the
-uncompressed payload is not strictly limited — the default value can lead to out-of-memory errors in memory constrained environments.
+instances. This flag limits the memory used when decompressing and processing these events and their payload. Note that the compressed payload
+size is limited by MySQL's [`max_allowed_packet`](https://dev.mysql.com/doc/refman/en/server-system-variables.html#sysvar_max_allowed_packet) but
+the size of the uncompressed payload is not strictly limited. When the *uncompressed* payload size (read from the header) is smaller than this
+value the payload is decompressed using in-memory buffers. If larger than this size then the decompression will be done as a stream, using the
+minimum amount of memory possible. The in-memory buffer based decompression is much faster but is memory intensive so the default value can
+lead to out-of-memory errors in memory constrained environments.
 
 This is a typical trade-off between memory usage and execution time. You will likely want to decrease this value if you are running in memory
 constrained environments where you do not have several multiples of the flag's value of memory available. In contrast, if you have a lot of memory
@@ -32,12 +32,6 @@ If you are using [multi-threaded replication](https://dev.mysql.com/doc/mysql-re
 then *each* worker thread could be decompressing a compressed transaction payload concurrently. So this is a key factor to keep in mind when
 considering this setting *if you often have very large transactions due to the usage of large JSON or BLOB values, large bulk writes, etc.*
 {{< /info >}}
-
-{{< warning >}}
-If you set this to something lower than the source mysqld instance's [`max_allowed_packet`](https://dev.mysql.com/doc/refman/en/server-system-variables.html#sysvar_max_allowed_packet))
-value (default is 64MiB) then transactions can be executed on the source that you will **not** be able to decompress and replicate in the
-VReplication stream.
-{{< /warning >}}
 
 #### relay_log_max_size
 
