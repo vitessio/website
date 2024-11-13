@@ -33,6 +33,12 @@ then *each* worker thread could be decompressing a compressed transaction payloa
 considering this setting *if you often have very large transactions due to the usage of large JSON or BLOB values, large bulk writes, etc.*
 {{< /info >}}
 
+{{< warning >}}
+If you set this to something lower than the source mysqld instance's [`max_allowed_packet`](https://dev.mysql.com/doc/refman/en/server-system-variables.html#sysvar_max_allowed_packet))
+value (default is 64MiB) then transactions can be executed on the source that you will **not** be able to decompress and replicate in the
+VReplication stream.
+{{< /warning >}}
+
 #### relay_log_max_size
 
 **Type** integer\
