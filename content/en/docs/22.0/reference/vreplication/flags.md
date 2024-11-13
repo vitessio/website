@@ -7,6 +7,32 @@ weight: 80
 There are several flags that can be specified when `vttablet` is launched that are related to the
 VReplication functionality. Some of the flags are relevant when tablets are acting as targets and others when tablets are acting as sources in a VReplication workflow.
 
+#### binlog-in-memory-decompressor-max-size
+
+**Type** integer\
+**Unit** bytes\
+**Default** (134217728) 128MiB\
+**Applicable on** source
+
+This is not a VReplication specific flag, but it does affect VReplication handling of [compressed transaction payloads when
+`binlog_transaction_compression` is enabled](https://dev.mysql.com/doc/refman/en/binary-log-transaction-compression.html) on the source mysqld
+instances. This flag limits the memory used when decompressing and processing these events and their payload. When the *compressed* payload
+size is smaller than this value the payload is decompressed using in-memory buffers. If larger than this size then the decompression will be done
+as a stream, with the maximum memory used for the stream also set by this flag. The in-memory decompression is much faster but because the
+*uncompressed* payload can be N times larger than the decompressed one — the compressed payload is limited by MySQL's
+[`max_allowed_packet`](https://dev.mysql.com/doc/refman/en/server-system-variables.html#sysvar_max_allowed_packet) but the size of the
+uncompressed payload is not strictly limited — the default value can lead to out-of-memory errors in memory constrained environments.
+
+This is a typical trade-off between memory usage and execution time. You will likely want to decrease this value if you are running in memory
+constrained environments where you do not have several multiples of the flag's value of memory available. In contrast, if you have a lot of memory
+available you may want increase this value to speed up the decompression process for larger payloads.
+
+{{< info >}}
+If you are using [multi-threaded replication](https://dev.mysql.com/doc/mysql-replication-excerpt/en/replication-options-replica.html#sysvar_replica_parallel_workers)
+then *each* worker thread could be decompressing a compressed transaction payload concurrently. So this is a key factor to keep in mind when
+considering this setting *if you often have very large transactions due to the usage of large JSON or BLOB values, large bulk writes, etc.*
+{{< /info >}}
+
 #### relay_log_max_size
 
 **Type** integer\
