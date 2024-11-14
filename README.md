@@ -41,7 +41,7 @@ You can check the site's internal links by running `make check-internal-links` a
 
 The Vitess website uses [Bulma](https://bulma.io/), a CSS (and SASS) framework that provides all kinds of variables, utilities, and components.
 
-### Adding a new filter option
+### Adding a new learning resources filter option
 
 To add a new filter option, simply follow these steps:
 
