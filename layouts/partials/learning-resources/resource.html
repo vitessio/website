@@ -11,10 +11,7 @@
 {{ end }}
 
 {{ $url := .url | default $youtube_url }}
-{{ $title := .title | default "Video title" }}
-
-{{ $t := .date }}
-{{ $dateTime := $t }} 
+{{ $title := .title | default "Unnamed Resource" }}
 
 <div class="column col-lg-4 mb-3 mb-lg-0 text-center relative">
   <a href="{{ $url }}"><img class="img-fluid img-thumbnail" alt="{{ $title | markdownify }}" src="{{ $thumbnail }}"></a>
@@ -22,18 +19,7 @@
   <span class="tag1 tag">
     {{ .type }}
 </span>
-<label class="date">{{ $dateTime }}</label>
+<label class="date">{{ .date }}</label>
 </div>
 
-<template id="search-result" hidden>
-<div class="col-lg-4 mb-3 mb-lg-0 text-center col-hidden relative">
-  <a href="" class="thumbnail-link"><img class="img-fluid img-thumbnail" alt="" src=""></a>
-  <a href="" class="resource-title-link"><h4 class="resource-title-heading"></h4></a>
-  <span class="tag1 tag">
-  </span>
-  <label class="date"></label>
-
- <h4 class="resource-description"></h4>
-
-</div>
-</template>
+<div>{{ partial "learning-resources/template-resource.html" . }}</div>
