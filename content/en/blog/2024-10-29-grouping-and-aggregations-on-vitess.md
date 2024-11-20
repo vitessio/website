@@ -46,7 +46,26 @@ FROM order JOIN
 GROUP BY order.office
 ```
 
-Route is the operator that sends a query to one or more shards. The `order` and the `order_line` join cannot be merged into a single route, so we have to do the joining and some of the aggregation at the VTGate level. The routing planner has decided that the best plan is to first query the `order` table and then for each row in this table, we’ll issue a query against the `order_line` table. So after planning how to send the queries, we have this plan:
+Route is the operator that sends a query to one or more shards.
+The `order` and the `order_line` join cannot be merged into a single route, so we have to do the joining and some of the aggregation at the VTGate level. 
+The routing planner has decided that the best plan is to first query the `order` table and then for each row in this table, we’ll issue a query against the `order_line` table.
+So after planning how to send the queries, we have this plan:
+
+```mermaid
+graph TD
+    Join[Join]
+    RouteOrder[Route<br>order]
+    RouteOrderLine[Route<br>order_line]
+
+    QueryOrder[SELECT<br>FROM order]
+    QueryOrderLine[SELECT<br>FROM order_line<br>WHERE order_id = :__order_id]
+
+    Join --> RouteOrder
+    Join --> RouteOrderLine
+
+    RouteOrder --> QueryOrder
+    RouteOrderLine --> QueryOrderLine
+```
 
 This is a VTGate execution plan for the query above. Everything under a Route is going to be sent to the underlying MySQL as a single query. Everything above the route is evaluated at the VTGate level. The plan so far says that we’ll have to send a scatter query to the `orders` keyspace, hitting all shards.
 
