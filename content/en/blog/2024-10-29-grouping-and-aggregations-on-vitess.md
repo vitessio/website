@@ -125,7 +125,7 @@ graph TD
     RouteOrderLine[Route<br>order_line]
 
     QueryOrder[SELECT office, id<br>FROM order group by office, id]
-    QueryOrderLine[SELECT **sum(amount)**<br>FROM order_line<br>WHERE order_id = :__order_id]
+    QueryOrderLine["SELECT sum(amount)<br>FROM order_line<br>WHERE order_id = :__order_id"]
 
     Join --> RouteOrder
     Join --> RouteOrderLine
@@ -144,8 +144,8 @@ graph TD
     RouteOrder[Route<br>order]
     RouteOrderLine[Route<br>order_line]
 
-    QueryOrder[SELECT office, id, **count(*)**<br>FROM order group by office, id]
-    QueryOrderLine[SELECT sum(amount<br>FROM order_line<br>WHERE order_id = :__order_id]
+    QueryOrder["SELECT office, id, **count(*)**<br>FROM order group by office, id"]
+    QueryOrderLine["SELECT sum(amount<br>FROM order_line<br>WHERE order_id = :__order_id"]
 
     Join --> RouteOrder
     Join --> RouteOrderLine
@@ -205,13 +205,13 @@ This is what the `Project` operator will take care of; it allows the use of the 
 
 ```mermaid
 graph TD
-    Project[π Project<br>count(*) * sum(amount)]
+    Project["π Project<br>count(*) * sum(amount)"]
     Join["⨝ Join"]
     RouteOrder[Route<br>order]
     RouteOrderLine[Route<br>order_line]
 
-    QueryOrder[SELECT office, id, count(*)<br>FROM order<br>GROUP BY office, id]
-    QueryOrderLine[SELECT sum(amount)<br>FROM order_line<br>WHERE order_id = :__order_id]
+    QueryOrder["SELECT office, id, count(*)<br>FROM order<br>GROUP BY office, id"]
+    QueryOrderLine["SELECT sum(amount)<br>FROM order_line<br>WHERE order_id = :__order_id"]
 
     Project --> Join
     Join --> RouteOrder
@@ -243,14 +243,14 @@ The final plan ended up being:
 
 ```mermaid
 graph TD
-    Aggregate[∑ Aggregate<br>sum(col) by office]
-    Project[π Project<br>count(*) * sum(amount)]
+    Aggregate["∑ Aggregate<br>sum(col) by office"]
+    Project["π Project<br>count(*) * sum(amount)"]
     Join["⨝ Join"]
     RouteOrder[Route<br>order]
     RouteOrderLine[Route<br>order_line]
 
-    QueryOrder[SELECT office, id, count(*)<br>FROM order<br>GROUP BY office, id]
-    QueryOrderLine[SELECT sum(amount)<br>FROM order_line<br>WHERE order_id = :__order_id]
+    QueryOrder["SELECT office, id, count(*)<br>FROM order<br>GROUP BY office, id"]
+    QueryOrderLine["SELECT sum(amount)<br>FROM order_line<br>WHERE order_id = :__order_id"]
 
     Aggregate --> Project
     Project --> Join
