@@ -8,8 +8,6 @@ aliases: ['/docs/tutorials/local/']
 
 This guide covers installing Vitess locally for testing purposes, from pre-compiled binaries. We will launch multiple copies of `mysqld`, so it is recommended to have greater than 4GB RAM, as well as 20GB of available disk space.
 
-A [docker setup](../local-docker/) is also available, which requires no dependencies on your local host.
-
 ## Install MySQL and etcd
 
 Vitess supports the databases listed [here](../../overview/supported-databases/). We recommend MySQL 8.0 if your installation method provides that option:
