@@ -11,7 +11,7 @@ The mirror rules are global and can be viewed using the [`GetMirrorRules` client
 
 ## Updating Mirror Rules
 
-Mirror rules are managed by the [`MoveTables MirrorTraffic` client command](../../programs/vtctldclient/vtctldclient_getmirrorrules/). For advanced use cases, you can manage mirror rules using the [`ApplyMirrorRules` client command](../../programs/vtctldclient/vtctldclient_applymirrorrules/).
+Mirror rules are managed by the [`MoveTables MirrorTraffic` client command](../../programs/vtctldclient/vtctldclient_movetables_mirrortraffic/).
 
 ## Syntax
 
@@ -61,15 +61,4 @@ Mirror rules are evaluated after routing rules. So, if there are routing rules i
 
 ## Evaluating the Impact of Mirror Rules
 
-At the moment, there are no VTGate-level metrics reporting the performance of mirrored queries. Check [VTTablet-level metrics](../../configuration-basic/monitoring/) to observe the performance of mirrored queries.
-
-## Additional Details
-
-For most cases, you should use `MoveTables MirrorTraffic` to manage mirror rules. Here are some details to keep in mind if you will be creating and managing your own custom mirror rules:
-
-- `from_table` may optionally specify a `@<tablet-type>`; `to_table` may not.
-- `from_table` and `to_table` must both be fully qualified.
-- For a given `from_table` value, there can be at most one mirror rule.
-- A keyspace that is named in the `from_table` of one rule may not be named in the `to_table` of that rule or any other rule.
-- `percent` may be a value between `0` and `100`, inclusive.
-- Setting `percent` to `0` removes that mirror rule.
+At the VTGate-level, the impact of mirrored queries can be seen in the query log (`MirrorSourceExecuteTime`, `MirrorTargetExecuteTime`, and `MirrorTargetError`), and in metrics reporting the performance of mirrored queries. Check [VTTablet-level metrics](../../configuration-basic/monitoring/) to observe the performance of mirrored queries.
