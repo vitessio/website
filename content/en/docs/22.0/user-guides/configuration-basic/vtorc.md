@@ -7,6 +7,8 @@ VTOrc is the automated fault detection and repair tool of Vitess. It started off
 An overview of the architecture of VTOrc can be found on this [page](../../../reference/vtorc/architecture).
 
 Setting up VTOrc lets you avoid performing the `InitShardPrimary` step. It automatically detects that the new shard doesn't have a primary and elects one for you.
+It detects any configuration problems in the cluster and fixes them. It also detects dead primary instances and promotes a new primary.
+Moreover, it can also be configured to detect errant GTIDs on replica tablets and drain them.
 
 
 ### Flags
