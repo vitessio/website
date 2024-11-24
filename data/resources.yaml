@@ -11,6 +11,14 @@ resources:
   # Note: To generate "thumbnail_url", visit https://embed.ly/docs/explore/extract
   # and enter the link to the resource. Once you do that, select any thumbnail url of choice to use.
 
+  - youtube: MZXToqM8mds
+    title: "Introduction, New Features & Running in Production - Deepthi Sigireddi, PlanetScale, Derek Perkins, Nozzle & Sudhi Vijayakumar, Backblaze"
+    date: 2024
+    type: video
+  - youtube: ex3OJeftybM
+    title: "Vitess Arewefastyet: Benchmarking Vitess and Mentorship Stories - Deepthi Sigireddi, PlanetScale & Jad Chahed, Bashroom"
+    date: 2024
+    type: video
   - youtube: uRB-Qni_bCM
     title: "Vitess: Introduction, New Features and the Vinted User Story - Florent Poinsard, Deepthi Sigireddi, PlanetScale & Kazimieras Aliulis, Vinted"
     date: 2024
@@ -287,4 +295,3 @@ resources:
     title: "Scaling with Go: YouTube's Vitess - Sugu Sougoumarane, PlanetScale"
     date: 2015
     type: video
-  
