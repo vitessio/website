@@ -1,5 +1,5 @@
 ---
-title: Distributed Transaction
+title: Distributed Transactions
 weight: 11
 aliases: ['/docs/launching/twopc/','/docs/reference/two-phase-commit/','/docs/reference/distributed-transaction/']
 ---
@@ -27,21 +27,18 @@ Vitess supports three levels of transaction atomicity, each offering different g
 
 ### When to Use TwoPC
 
-Choose TwoPC when you need guaranteed atomic commits across shards, such as:
-- Financial transactions where partial commits could lead to inconsistent balances
-- Inventory systems where items must be updated together
-- User transactions that modify data in multiple shards
+Choose TwoPC when your application has low tolerance for data inconsistency and needs to modify data across multiple shards or keyspaces that must remain consistent.
 
-## Understanding Isolation Level
+## Understanding Isolation Levels
 
 While TwoPC guarantees atomicity (all-or-nothing commits), it does not provide isolation in the traditional ACID sense. 
-The Applications might observe fractured reads in a cross-shard query i.e. a query might see partial commits while a TwoPC transaction commit is in progress.
+Applications might observe fractured reads in a cross-shard query i.e. a query might see partial commits while a TwoPC transaction commit is in progress.
 
-This design choice prioritizes performance for common use cases. Full ACID isolation across shards would introduce significant performance overhead.
+The current implementation prioritizes performance for common use cases. Full ACID isolation across shards would introduce significant performance overhead.
 
 ## Configuration
 
-### VTGate Setup
+### VTGate
 
 Set the default transaction mode via the `transaction_mode` flag:
 
@@ -61,19 +58,19 @@ Override the default mode for specific sessions:
 SET transaction_mode='twopc';
 ```
 
-### VTTablet Requirements
+### VTTablet
 
 Enable TwoPC on VTTablet with these flags:
 
 ```bash
 # Enable TwoPC support
--twopc_enable
-
+--twopc_enable
 # Time in seconds before marking transaction as abandoned
--twopc_abandon_age=300  # Recommended: 5 minutes minimum
+# Recommended: 5-10 minutes
+--twopc_abandon_age=300
 ```
 
-Transaction watcher at VTTablet sends signal to VTGate for any pending abandoned transaction for resolution.
+Transaction watcher at VTTablet uses `twopc_abandon_age` to count the pending abandoned transaction and sends signal to VTGate for resolution.
 
 ### MySQL Prerequisites
 
@@ -87,11 +84,11 @@ Transaction watcher at VTTablet sends signal to VTGate for any pending abandoned
 
 ## Monitoring
 
-The user can monitor distributed transactions at a per-transaction level with `SHOW STATEMENT` and at a higher level with metrics.
+Users can monitor distributed transactions at a per-transaction level with `SHOW STATEMENT` and at a higher level with metrics.
 
-When a commit failure is received from VTGate on the session, the user can issue `show warnings` statement to retrieve the Distributed transaction ID (DTID).
-This DTID can be tracked to understand the state of the transaction.
-The `SHOW TRANSACTION STATUS FOR <DTID>` statement can be used to get the status of the transaction.
+When a commit failure is received from VTGate on the session, a `show warnings` statement can be issued to retrieve the Distributed transaction ID (DTID).
+This DTID can be tracked to monitor the state of the transaction.
+The `SHOW TRANSACTION STATUS FOR <DTID>` statement can be used to retrieve the status of the transaction.
 
 Example:
 ```mysql
@@ -104,39 +101,38 @@ Example:
 1 row in set (0.00 sec)
 ```
 
-Additional metrics have been added to monitor the distributed transactions. The alert system could be built around understanding the metrics and failures described below.
+Additional metrics have been added for monitoring the distributed transactions.
 
-### VTGate Watchers
-* **CommitModeTimings**: This is a histogram that shows the time taken to commit a transaction in different transaction modes.
+### VTGate
+* **CommitModeTimings**: This is a histogram that shows the time taken to commit transactions in different transaction modes.
 * **CommitUnresolved**: This is a counter that shows the number of commits that were not concluded by VTGate after a commit decision was made.
 * **QueriesRouted**: This is a counter with PlanType (Commit) as a dimension to track the number of shards involved in a transaction.
 
-### VTTablet Watchers
+### VTTablet
 * **QueryTimings**: This is a histogram that shows the time taken to perform an operation.
-  It can be used to track 2PC commit operations for MM, such as **CreateTransaction**, **StartCommit**, **SetRollback**, and **Resolve**, and for RM, such as **Prepare**, **CommitPrepared**, and **RollbackPrepared**.
+  It can be used to track TwoPC commit operations such as **CreateTransaction**, **Prepare**, **StartCommit**, **SetRollback**, **CommitPrepared**, **RollbackPrepared** and **Resolve**.
 * **Unresolved**: This is a gauge that shows the number of unresolved transactions that have been lingering longer than the abandon age.
 
-### Critical Failures
+#### Critical Failures
 
 The following errors are not expected to happen. If they do, it means that TwoPC transactions have failed to commit atomically:
 
-* **InternalErrors.TwopcOpen**: This counter is incremented if VTTablet is unable to open the 2PC engine. Any unresolved prepared transactions would be abandoned.
-* **InternalErrors.TwopcCommit**: This is a counter that shows the number of times a prepared transaction failed to fulfill a commit request.
-* **InternalErrors.TwopcPrepareRedo**: This counter shows the number of times VTTablet failed to re-prepare a previously prepared transaction.
-* **InternalErrors.TwopcResurrection**: This counter is incremented to notify a failure in resurrecting prepared transactions.
+* **InternalErrors.TwopcOpen**: This is a counter that tracks the number of failures the TwoPC engine is unable to open. Any unresolved prepared transactions will remain abandoned.
+* **InternalErrors.TwopcCommit**: This is a counter that tracks the number of failures to fulfill a commit request on the prepared transactions.
+* **InternalErrors.TwopcPrepareRedo**: This is a counter that tracks the number of failures to re-prepare a previously prepared transaction.
+* **InternalErrors.TwopcResurrection**: This is a counter that tracks the number of failures in resurrecting prepared transactions.
 
-### Alertable Failures
+#### Alertable Failures
 
 The following failures are not urgent but require investigation:
 
-* **InternalErrors.RedoWatcherFail**: This counter is incremented if there is a failure in reading the 2PC redo state.
-* **InternalErrors.TransactionWatcherFail**: This counter is incremented if there is a failure in reading the 2PC transaction state.
-* **Unresolved**: This is a gauge mentioned above that should be tracked to keep a check on the number of open 2PC transactions.
+* **InternalErrors.RedoWatcherFail**: This counter is incremented if there is a failure in reading the TwoPC redo state.
+* **InternalErrors.TransactionWatcherFail**: This counter is incremented if there is a failure in reading the TwoPC transaction state.
 
-### Repairs
+## Repairs
 
-If any of the alerts are triggered, the user may need to scan the VTGate/VTTablet logs for investigation to identify the DTID and/or VTTablet.
+If any of the alerts are triggered, an administrator may need to scan the VTGate/VTTablet logs for investigation to identify the DTID and/or VTTablet.
 The user can navigate to the `VTAdmin` UI to see the list of in-flight transactions for each keyspace.
 
-The `VTAdmin` UI has the option to display the DTID information, which can be used to manually repair the transaction.
-Later, the user can force `Conclude` on the transaction to remove it from the unresolved list.
+`VTAdmin` can display the DTID information which can be used to manually repair the transaction.
+Once it is handled, the administrator can force `Conclude` on the transaction to remove it from the unresolved list.
