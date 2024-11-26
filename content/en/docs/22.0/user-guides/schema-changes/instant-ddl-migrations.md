@@ -75,3 +75,15 @@ mysql> show vitess_migrations like 'f0070c6e_abe1_11ef_a809_b27afeff3c85' \G
 ```
 
 Note the migration has not `artifacts`, and that it is executed with `special_plan: {"operation":"instant-ddl"}`.
+
+## PARTITIONING notes
+
+MySQL partitioning changes sometimes exhibit behaviors similar to `INSTANT` DDL, although partition management really operates on entire hidden tables.
+
+Vitess specifically addresses the common use case of [`RANGE` partitioned](https://dev.mysql.com/doc/refman/8.0/en/partitioning-management-range-list.html) tables and partition rotation.
+
+The operation `ALTER TABLE ... ADD PARTITION` creates a new empty hidden table, which implements the new partition. The operation is as fast as `CREATE TABLE`. It is wasteful to run this operation with Online DDL because the existing data is completely unaffected. Vitess always opts to run `ADD PARTITION` directly against MySQL, much like an `INSTANT` DDL, and the operation is not revertible. This behavior is not controlled by any flags.
+
+The operation `ALTER TABLE ... DROP PARTITION` drops one or more partitions, hence effectively drops one or more tables imlementing those partitions. It would be a logical error to run this operation with Online DDL, because the intended outcome is to drop rows of data, where an Online DDL operation would just copy those rows of data onto the next compatible partition. Vitess thus always opts to run `DROP PARTITION` directly against MySQL, and the operation is not revertible. This behavior is likewise not controlled by any flags.
+
+Vitess does not offer any special behavior for other types of partitioning schemes and operations.
