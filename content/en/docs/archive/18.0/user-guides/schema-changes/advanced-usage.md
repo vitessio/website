@@ -189,7 +189,7 @@ $ vtctldclient ApplySchema --ddl-strategy='vitess --allow-concurrent --in-order-
 - in-order completion also works with `--postpone-launch` and `--postpone-completion`.
 {{< /info >}}
 
-## `INSTANT` DDL
+## INSTANT DDL
 
 Vitess can predict ahead of time whether a migration is eligible for `ALGORITHM=INSTANT`. As such, you may submit a migration opting in to `INSTANT` DDL if applicable. In such case, Vitess adds `ALGORITHM=INSTANT` to your migration. Otherwise, it runs an Online DDL migration. Example:
 
