@@ -46,6 +46,7 @@ The objective of the throttler is to push back work based on database load. Prev
 - `custom`: a custom query as defined by the user.
 - `mysqld-loadavg`: load average, per core, on the MySQL server/container.
 - `mysqld-datadir-used-ratio`: disk space usage on MySQL's `datadir` mount, range `0.0` (empty) to `1.0` (full)
+- `history_list_length`: InnoDB's history list length value.
 
 This list is expected to expand in the future.
 
@@ -66,6 +67,7 @@ Each metric has a "factory default" threshold, e.g.:
 - `100` for `threads_running`.
 - `1.0` (per core) for `mysqld-loadavg`.
 - `0.98` (98%) for `mysqld-datadir-used-ratio`.
+- `1000000000` for `history_list_length`.
 
 
 Thresholds are positive values. A threshold of `0` is considered _undefined_.
@@ -802,6 +804,7 @@ These are the metrics by which the throttler compares with the threshold and dec
 Gauge, the current metric value on the tablet. This is the result of a self-check, done continuously when the throttler is enabled. Available per metric:
 
 - `ThrottlerAggregatedSelfCustom`
+- `ThrottlerAggregatedSelfHistoryListLength`
 - `ThrottlerAggregatedSelfLag`
 - `ThrottlerAggregatedSelfLoadavg`
 - `ThrottlerAggregatedSelfThreadsRunning`
@@ -813,6 +816,7 @@ Gauge, the current metric value on the tablet. This is the result of a self-chec
 Gauge, on the `PRIMARY` tablet only, this is the aggregated collected metric value from all serving shard tables, including the `PRIMARY`. The value is the highest (aka _worst_) of all collected tablets. Available per metric:
 
 - `ThrottlerAggregatedShardCustom`
+- `ThrottlerAggregatedShardHistoryListLength`
 - `ThrottlerAggregatedShardLag`
 - `ThrottlerAggregatedShardLoadavg`
 - `ThrottlerAggregatedShardThreadsRunning`
