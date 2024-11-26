@@ -90,6 +90,7 @@ Vitess offers [managed schema migration](../../../user-guides/schema-changes/man
 * Support for [postponed migrations](../../../user-guides/schema-changes/postponed-migrations/)
 * Support for [failover agnostic migrations](../../../user-guides/schema-changes/recoverable-migrations/)
 * Support for [concurrent migrations](../../../user-guides/schema-changes/concurrent-migrations/)
+* Support for [INSTANT DDL](../../../user-guides/schema-changes/instant-ddl-migrations/)
 
 The [ApplySchema](../../../reference/programs/vtctl/schema-version-permissions/#applyschema) command applies a schema change to the specified keyspace on all shards. The command format is: `ApplySchema -- {--sql=<sql> || --sql_file=<filename>} <keyspace>`
 
