@@ -88,7 +88,7 @@ Starting in Vitess `v20`, the table naming format will change. Tables will be na
 - `_vt_evc_6ace8bcef73211ea87e9f875a4d24e90_20200915120410_`
 - `_vt_drp_6ace8bcef73211ea87e9f875a4d24e90_20200915120410_`
 
-`v19` supports the new naming format, but does not generate any tables in this format. `v20` will generate tables in the new format, and will support the old format. Support for old format will be dropped in `v21` or later.
+`v19` supports the new naming format, but does not generate any tables in this format. `v20` will generate tables in the new format, and will support the old format. Support for old format will be dropped in `v22` or later.
 {{< /info >}}
 
 ## Automated lifecycle
