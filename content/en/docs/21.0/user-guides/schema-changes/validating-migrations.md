@@ -1,6 +1,6 @@
 ---
 title: Validating schema migrations using `VDiff`
-weight: 15
+weight: 17
 aliases: [ '/docs/user-guides/schema-changes/validating-migrations/' ]
 ---
 

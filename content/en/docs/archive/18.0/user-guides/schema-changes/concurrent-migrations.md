@@ -1,6 +1,6 @@
 ---
 title: Concurrent migration execution
-weight: 15
+weight: 16
 aliases: ['/docs/user-guides/schema-changes/concurrent-migrations/']
 ---
 
