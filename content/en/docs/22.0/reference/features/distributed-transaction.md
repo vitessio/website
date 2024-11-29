@@ -135,4 +135,4 @@ If any of the alerts are triggered, an administrator may need to scan the VTGate
 The user can navigate to the `VTAdmin` UI to see the list of in-flight transactions for each keyspace.
 
 `VTAdmin` can display the DTID information which can be used to manually repair the transaction.
-Once it is handled, the administrator can force `Conclude` on the transaction to remove it from the unresolved list.
+Once that is done, the administrator can force `Conclude` on the transaction to remove it from the unresolved list.
