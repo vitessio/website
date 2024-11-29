@@ -27,7 +27,10 @@ Vitess supports three levels of transaction atomicity, each offering different g
 
 ### When to Use TwoPC
 
-Choose TwoPC when your application has low tolerance for data inconsistency and needs to modify data across multiple shards or keyspaces that must remain consistent.
+Choose TwoPC when you need guaranteed atomic commits across shards, such as:
+- Financial transactions where partial commits could lead to inconsistent balances
+- Inventory systems where items must be updated together
+- Other user transactions that modify data across multiple shards or keyspaces that must remain consistent.
 
 ## Understanding Isolation Levels
 
@@ -135,4 +138,4 @@ If any of the alerts are triggered, an administrator may need to scan the VTGate
 The user can navigate to the `VTAdmin` UI to see the list of in-flight transactions for each keyspace.
 
 `VTAdmin` can display the DTID information which can be used to manually repair the transaction.
-Once it is handled, the administrator can force `Conclude` on the transaction to remove it from the unresolved list.
+Once that is done, the administrator can force `Conclude` on the transaction to remove it from the unresolved list.
