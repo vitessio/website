@@ -74,7 +74,7 @@ mysql> show vitess_migrations like 'f0070c6e_abe1_11ef_a809_b27afeff3c85' \G
                    special_plan: {"operation":"instant-ddl"}
 ```
 
-Note the migration has not `artifacts`, and that it is executed with `special_plan: {"operation":"instant-ddl"}`.
+Note the migration has no `artifacts`, and that it is executed with `special_plan: {"operation":"instant-ddl"}`.
 
 ## PARTITIONING notes
 
