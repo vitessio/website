@@ -4,9 +4,9 @@ weight: 15
 aliases: ['/docs/user-guides/schema-changes/instant-ddl-migrations/']
 ---
 
-MySQL's [INSTANT DDL](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html) is accessible in both unmanaged and managed vitess migrations.
+MySQL's [INSTANT DDL](https://dev.mysql.com/doc/refman/en/innodb-online-ddl-operations.html) is accessible in both unmanaged and managed vitess migrations.
 
-`INSTANT` DDL refers to `ALTER TABLE ... ALGORITHM=INSTANT` which runs near-instantaneously, though some locking is still witnessed in heavy workloads. It is limited to a subset of operations. The [documentation](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html) lists the general limitations but does not cover the precise range of scenarios.
+`INSTANT` DDL refers to `ALTER TABLE ... ALGORITHM=INSTANT` which runs near-instantaneously, though some locking is still witnessed in heavy workloads. It is limited to a subset of operations. The [documentation](https://dev.mysql.com/doc/refman/en/innodb-online-ddl-operations.html) lists the general limitations but does not cover the precise range of scenarios.
 
 A common naive approach to using `INSTANT` DDL is to optimistically attempt an `ALTER TABLE ... ALGORITHM=INSTANT`, and if that turns to be unsupported by `INSTANT` DDL, resort to standard `ALTER TABLE`.
 
@@ -79,7 +79,7 @@ Note the migration has no `artifacts`, and that it is executed with `special_pla
 
 MySQL partitioning changes sometimes exhibit behaviors similar to `INSTANT` DDL, although partition management really operates on entire hidden tables.
 
-Vitess specifically addresses the common use case of [`RANGE` partitioned](https://dev.mysql.com/doc/refman/8.0/en/partitioning-management-range-list.html) tables and partition rotation.
+Vitess specifically addresses the common use case of [`RANGE` partitioned](https://dev.mysql.com/doc/refman/en/partitioning-management-range-list.html) tables and partition rotation.
 
 The operation `ALTER TABLE ... ADD PARTITION` creates a new empty hidden table, which implements the new partition. The operation is as fast as `CREATE TABLE`. It is wasteful to run this operation with Online DDL because the existing data is completely unaffected. Vitess always opts to run `ADD PARTITION` directly against MySQL, much like an `INSTANT` DDL, and the operation is not revertible. This behavior is not controlled by any flags.
 
