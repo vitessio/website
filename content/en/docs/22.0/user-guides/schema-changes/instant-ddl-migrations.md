@@ -21,7 +21,6 @@ With the `vitess` strategy, Vitess always prefers an Online DDL migration, which
 Vitess can predict whether a schema change is eligible to `INSTANT` DDL based on the existing table schema and the requested change. It is aware of the MySQL limitations (some of which are listed in the documentation) and can devise a plan for each distinct migration. If eligible for `INSTANT` DDL, and if `--prefer-instant-ddl` is specified, Vitess will automatically add `ALGORITHM=INSTANT` to the statement. Otherwise any `ALGORITHM` directive is ignored.
 
 If chosen to run as `INSTANT` DDL, the migration has no shadow table and is not revertible.
- only to actually execute hours later.
 
 ## Example
 
