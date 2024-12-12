@@ -34,8 +34,9 @@ Change to the operator example directory:
 
 ```bash
 git clone https://github.com/vitessio/vitess
-cd vitess/examples/operator
+cd vitess
 git checkout release-21.0
+cd examples/operator
 ```
 
 Install the operator:
