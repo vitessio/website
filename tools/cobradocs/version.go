@@ -78,9 +78,11 @@ func (v version) GenerateDocs(workdir string, vitessDir string, docgenPath strin
 
 	docgen := exec.Command("go", "run", docgenPath, "-d", v.Dir(workdir))
 	debugf(docgen.String())
-	if err = docgen.Run(); err != nil {
+	var output []byte
+	if output, err = docgen.CombinedOutput(); err != nil {
 		return err
 	}
+	debugf("docgen output: %s", output)
 
 	return err
 }
