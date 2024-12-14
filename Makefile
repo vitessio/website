@@ -60,7 +60,7 @@ BINS := mysqlctl mysqlctld vtaclcheck topo2topo vtbackup vtclient vtcombo \
 %-docs:
 	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" $(patsubst %-docs,%,$@)
 	COMMIT_HASH=$(shell cd $(VITESS_DIR) && git rev-parse --short HEAD) && \
-        git add -u content && git commit -s -m "Update cobradocs for $$COMMIT_HASH"
+        git add -u content && git commit -s -m "Update cobradocs for $$COMMIT_HASH for $(patsubst %-docs,%,$@)"
 
 # Target to run them all.
 .PHONY: generated-docs
