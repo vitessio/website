@@ -59,8 +59,11 @@ BINS := mysqlctl mysqlctld vtaclcheck topo2topo vtbackup vtclient vtcombo \
 # `make mysqlctl-docs COBRADOC_VERSION_PAIRS="main:22.0" VITESS_DIR=~/go/src/github.com/vitessio/vitess`
 %-docs:
 	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" $(patsubst %-docs,%,$@)
-	COMMIT_HASH=$(shell cd $(VITESS_DIR) && git rev-parse --short HEAD) && \
-        git add -u content && git commit -s -m "Update cobradocs for $$COMMIT_HASH for $(patsubst %-docs,%,$@)"
+	COMMIT_HASH=$(shell cd $(VITESS_DIR) && git rev-parse --short HEAD); \
+    	git add -u content && \
+    	if ! git diff --cached --quiet HEAD --; then \
+    	  git commit -s -m "Update cobradocs for $$COMMIT_HASH for $(patsubst %-docs,%,$@)"; \
+    	fi
 
 # Target to run them all.
 .PHONY: generated-docs
