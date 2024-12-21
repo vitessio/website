@@ -28,9 +28,17 @@ These requirements will changed based on the durability policy.
 
 With regard to replication lag, note that this does **not** guarantee there is always at least one replica from which queries will always return up-to-date results. Semi-sync guarantees that at least one replica has the transaction in its relay log, but it has not necessarily been applied yet. The only way Vitess guarantees a fully up-to-date read is to send the request to the primary.
 
+## MySQL Replication Modes
+
+Vitess requires the use of [Row-Based Replication (RBR)](https://dev.mysql.com/doc/refman/en/replication-formats.html) with [GTIDs](https://dev.mysql.com/doc/refman/en/replication-gtids.html) enabled: [`--binlog-row-format=ROW`](https://dev.mysql.com/doc/refman/en/replication-options-binary-log.html#sysvar_binlog_format) and [`--gtid-mode=ON`](https://dev.mysql.com/doc/refman/en/replication-options-gtids.html#sysvar_gtid_mode).
+
+Vitess also recommends [`FULL`](https://dev.mysql.com/doc/refman/en/replication-options-binary-log.html#sysvar_binlog_row_image) binary log images in order to support all manner of transformations in [VReplication workflows](../../vreplication/vreplication/), but in v17 we added *experimental* support for [`--binlog-row-image=NOBLOB`](https://dev.mysql.com/doc/refman/en/replication-options-binary-log.html#sysvar_binlog_row_image) (see [#1290](https://github.com/vitessio/vitess/pull/12905) for more details).
+
+Vitess v22 and later fully supports the usage of [`--binlog-row-value-options=PARTIAL_JSON`](https://dev.mysql.com/doc/refman/en/replication-options-binary-log.html#sysvar_binlog_row_value_options) with MySQL 8.0 and later.
+
 ## Database Schema Considerations
 
-* Row-based replication requires that replicas have the same schema as the primary, and corruption will likely occur if the column order does not match. Earlier versions of Vitess which used Statement-Based replication recommended applying schema changes on replicas first, and then swapping their role to primary. This method is no longer recommended in favour of the use of Online-DDL. More information can be found [here](../../../user-guides/schema-changes).
+* Row-based replication requires that replicas have the same schema as the primary, and corruption will likely occur if the column order does not match.
 
 * Using a column of type `FLOAT` or `DOUBLE` as part of a Primary Key is not supported. This limitation is because Vitess may try to execute a query for a value (for example 2.2) which MySQL will return zero results, even when the approximate value is present.
 
