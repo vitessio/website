@@ -1,0 +1,19 @@
+<section class="changelog">
+  <div class="flex justify-content-space">
+    <h2>Changelog</h2>
+    <a href="/changelog/">view all changes</a>
+  </div>
+  <div class="flex flex-gap-md">
+    {{- $changelogList := where .Site.RegularPages "Section" "changelog" -}}
+    {{- range $index, $changelog := $changelogList | first 4 -}}
+    <div>
+      <a class="title is-size-3 has-text-weight-bolder" href="{{ .RelPermalink }}">
+        {{ $changelog.Title }}
+      </a>
+      <span class="is-size-1 has-text-weight-light">
+        {{ $changelog.Date.Format "January 2, 2006" }}
+      </span>
+    </div>
+    {{- end -}}
+  </div>
+</section>

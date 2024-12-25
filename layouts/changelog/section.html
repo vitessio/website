@@ -1,0 +1,61 @@
+{{ define "main" }}
+{{ $subtitle := site.Params.changelog.subtitle | markdownify }}
+{{ $posts    := where site.RegularPages "Section" "changelog" }}
+
+{{ partial "navbar.html" . }}
+{{ partial "blog/hero.html" . }}
+<section class="section">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-3 has-text-right">
+        <p class="title is-size-1 has-text-weight-light">
+          {{ .Title }}
+        </p>
+
+        <hr class="has-background-primary" />
+
+        <p class="is-size-4 has-text-weight-light">
+          {{ $subtitle }}
+        </p>
+      </div>
+
+      <div class="column is-8 is-blog-container">
+        {{ range $posts }}
+        {{ $date    := dateFormat "January 2, 2006" .Date }}
+        {{ $summary := .Summary | truncate 250 | markdownify }}
+        <div class="card is-blog-card">
+          <div class="card-content">
+            <div class="media">
+              <div class="media-content">
+                <a class="title is-size-3 has-text-weight-bolder is-blog-post-title" href="{{ .RelPermalink }}">
+                  {{ .Title }}
+                </a>
+
+                <nav class="level is-size-4">
+                  <div class="level-left">
+                    <span class="has-text-weight-bolder">
+                      {{ .Params.author }}
+                    </span>
+                  </div>
+                  <div class="level-right">
+                    <span class="has-text-weight-light">
+                      {{ $date }}
+                    </span>
+                  </div>
+                </nav>
+
+                <hr />
+
+                <div class="content is-blog-summary">
+                  {{ $summary }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}
