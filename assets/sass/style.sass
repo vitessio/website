@@ -271,6 +271,8 @@ main.td-main
 
 .flex-gap-md
   gap: 110px
+  +tablet
+    gap: 50px
 
 .tag-heading
   font-size: 1rem !important
@@ -355,6 +357,10 @@ label.date
 .flex
   display: flex
 
+.flex-col--mobile
+  +touch
+    flex-direction: column
+
 
 .justify-content-space
   justify-content: space-between
@@ -382,4 +388,10 @@ label.date
   display: flex
   flex-direction: column
   border-radius: 6px
+  border: 1px solid #D0D7DF
   padding: 48px 40px
+
+.text-underlined-on-hover
+  &:hover
+    text-decoration: underline
+

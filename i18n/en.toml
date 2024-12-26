@@ -40,6 +40,9 @@ other = "Docs"
 [blog]
 other = "Blog"
 
+[changelog]
+other = "Changelog"
+
 [community]
 other = "Community"
 
