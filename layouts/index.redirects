@@ -48,7 +48,7 @@
 /blog/rss                                /blog/index.xml 301
 
 # Redirect to Slack invite link.
-/slack https://join.slack.com/t/vitess/shared_invite/zt-2he4t8glg-hyLiiW~f_0YM2YD9oYYuuA 302
+/slack https://join.slack.com/t/vitess/shared_invite/zt-2x79jeadd-zLYBssoc~phT956nowO77g 302
 
 # Redirect archived docs
 /docs/18.0/                              /docs/archive/18.0/
