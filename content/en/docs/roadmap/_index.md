@@ -29,6 +29,8 @@ Last Updated: Jan 16, 2024
   - Schema Management
 - Throttler
   - Multi-metrics
+- Online DDL
+  - Range partition management
 - VTOrc
   - Stalled Disk recovery
 - Vitess operator
