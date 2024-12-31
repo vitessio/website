@@ -3,27 +3,19 @@ title: Configuration
 weight: 2
 ---
 
-## What foreign key support exists in Vitess?
-
-If you are getting errors with foreign keys, please note that we generally discourage the use of foreign keys, and more specifically foreign key constraints. There may be unexpected consequences when using them in sharded keyspaces.  
-
-However, you can use foreign key constraints when their scope is contained within a shard or unsharded keyspace. You may find that some foreign key syntax will not be accepted through `vtctlclient ApplySchema...`. You may be able to submit the foreign key syntax through vtgate or directly through the mysqld instance.  
-
-Please note that if you do shard or re-shard an existing keyspqce with foreign keys, you will need to take extra steps to confirm they are working as intended. 
-
 ## How do I connect to vtgate using MySQL protocol?
 
 In the example [vtgate-up.sh](https://github.com/vitessio/vitess/blob/main/examples/common/scripts/vtgate-up.sh) script you'll see the following lines:
 
-```sql
--mysql_server_port $mysql_server_port \
--mysql_server_socket_path $mysql_server_socket_path \
--mysql_auth_server_static_file "./mysql_auth_server_static_creds.json" \
+```sh
+--mysql_server_port $mysql_server_port \
+--mysql_server_socket_path $mysql_server_socket_path \
+--mysql_auth_server_static_file "./mysql_auth_server_static_creds.json" \
 ```
 
 In this example, vtgate accepts MySQL connections on port 15306 and the authentication information is stored in the json file. You can then connect to it using the following command:
 
-```sql
+```sh
 mysql -h 127.0.0.1 -P 15306 -u mysql_user --password=mysql_password
 ```
 
