@@ -2,6 +2,8 @@
 title: FAQ
 description: Frequently Asked Questions about Vitess
 weight: 2900
+cascade:
+  skipversions: true
 aliases: ['/docs/user-guides/faq/']
 ---
 
