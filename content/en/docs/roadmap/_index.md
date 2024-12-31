@@ -16,33 +16,35 @@ Last Updated: Jan 16, 2024
 
 - Query serving
   - Support more MySQL Syntax (improve compatibility as a drop-in replacement)
-    - Better information_schema support
-  - Improve error messages
-  - Foreign Key constraints
+  - Performance improvements
+  - Views GA
+  - Better visibility through metrics
 - Improve Usability
-  - Viper framework for flags
+  - Use viper framework to implement dynamic flags
 - VReplication
   - Benchmarking
   - Performance improvements
-  - Migrating data with Foreign Key constraints
 - VTAdmin
-  - Schema management APIs
+  - VReplication
+  - Schema Management
+- Throttler
+  - Multi-metrics
+- VTOrc
+  - Stalled Disk recovery
+- Vitess operator
+  - Multiple namespaces
+  - Improve and document rollouts
+  - Support for node draining
 
 ## Medium / Long Term (4-18 months)
 
 - MySQL compatibility
   - Support more frameworks
+  - Window Functions, JSON_TABLE etc.
 - Query Serving improvements
-  - Performance
-  - More supported queries
-- Schema changes
-  - Usability
-- VTAdmin UI
-  - VReplication
-  - Schema Management
-- VTOrc improvements
-  - Reduce client downtime
-- Vitess operator
-  - Documentation
+  - Cost-based optimization
+- VT/VExplain tooling to help with migration into Vitess
+- VTAdmin UI enhancements
 - Read-After-Write consistency
-- Distributed Transactions
+- Read Isolation
+- Cross-shard Foreign Key support
