@@ -1,19 +1,20 @@
 ---
-title: GetTabletVersion
+title: WriteTopologyPath
 series: vtctldclient
 ---
-## vtctldclient GetTabletVersion
+## vtctldclient WriteTopologyPath
 
-Print the version of a tablet from its debug vars.
+Copies a local file to the topology server at the given path.
 
 ```
-vtctldclient GetTabletVersion <alias>
+vtctldclient WriteTopologyPath --server=local <path> <file>
 ```
 
 ### Options
 
 ```
-  -h, --help   help for GetTabletVersion
+      --cell string   Topology server cell to copy the file to. (default "global")
+  -h, --help          help for WriteTopologyPath
 ```
 
 ### Options inherited from parent commands

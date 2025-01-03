@@ -1,11 +1,10 @@
 ---
 title: ValidateSchemaKeyspace
 series: vtctldclient
-commit: d9ab9f7a1cf3cae19a1ea06963798a7646e8fb27
 ---
 ## vtctldclient ValidateSchemaKeyspace
 
-Validates that the schema on the primary tablet for shard 0 matches the schema on all other tablets in the keyspace.
+Validates that the schema on the primary tablet for the first shard matches the schema on all other tablets in the keyspace.
 
 ```
 vtctldclient ValidateSchemaKeyspace [--exclude-tables=<exclude_tables>] [--include-views] [--skip-no-primary] [--include-vschema] <keyspace>

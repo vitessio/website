@@ -1,19 +1,19 @@
 ---
-title: GetTabletVersion
+title: ValidatePermissionsKeyspace
 series: vtctldclient
 ---
-## vtctldclient GetTabletVersion
+## vtctldclient ValidatePermissionsKeyspace
 
-Print the version of a tablet from its debug vars.
+Validates that the permissions on primary of the first shard match those of all of the other tablets in the keyspace.
 
 ```
-vtctldclient GetTabletVersion <alias>
+vtctldclient ValidatePermissionsKeyspace <keyspace name>
 ```
 
 ### Options
 
 ```
-  -h, --help   help for GetTabletVersion
+  -h, --help   help for ValidatePermissionsKeyspace
 ```
 
 ### Options inherited from parent commands

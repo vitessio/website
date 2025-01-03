@@ -1,19 +1,23 @@
 ---
-title: GetTabletVersion
+title: ValidateSchemaShard
 series: vtctldclient
 ---
-## vtctldclient GetTabletVersion
+## vtctldclient ValidateSchemaShard
 
-Print the version of a tablet from its debug vars.
+Validates that the schema on the primary tablet for the specified shard matches the schema on all other tablets in that shard.
 
 ```
-vtctldclient GetTabletVersion <alias>
+vtctldclient ValidateSchemaShard [--exclude-tables=<exclude_tables>] [--include-views] [--skip-no-primary] [--include-vschema] <keyspace/shard>
 ```
 
 ### Options
 
 ```
-  -h, --help   help for GetTabletVersion
+      --exclude-tables strings   Tables to exclude during schema comparison.
+  -h, --help                     help for ValidateSchemaShard
+      --include-views            Includes views in compared schemas.
+      --include-vschema          Includes VSchema validation in validation results.
+      --skip-no-primary          Skips validation on whether or not a primary exists in shards.
 ```
 
 ### Options inherited from parent commands

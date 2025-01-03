@@ -1,11 +1,10 @@
 ---
 title: ValidateVersionKeyspace
 series: vtctldclient
-commit: d9ab9f7a1cf3cae19a1ea06963798a7646e8fb27
 ---
 ## vtctldclient ValidateVersionKeyspace
 
-Validates that the version on the primary tablet of shard 0 matches all of the other tablets in the keyspace.
+Validates that the version on the primary tablet of the first shard matches all of the other tablets in the keyspace.
 
 ```
 vtctldclient ValidateVersionKeyspace <keyspace>

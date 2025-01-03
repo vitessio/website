@@ -15,7 +15,7 @@ For stronger guarantees of compatibility, we highly encourage programming direct
 | | `vtctlclient` command name (OLD) | `vtctldclient` command name (NEW) |
 |-|-|-|
 | | N/A | [`ApplyShardRoutingRules`](../../programs/vtctldclient/vtctldclient_applyroutingrules/) |
-| | `CopySchemaShard` | (deleted) |
+| | `CopySchemaShard` | [`CopySchemaShard`](../../programs/vtctldclient/vtctldclient_copyschemashard/) |
 | | `CreateLookupVindex` | [`LookupVindex create`](../../programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) |
 | | `DeleteShard` | [`DeleteShards`](../../programs/vtctldclient/vtctldclient_deleteshards/) |
 | | `DeleteTablet` | [`DeleteTablets`](../../programs/vtctldclient/vtctldclient_deletetablets/) |
@@ -30,18 +30,15 @@ For stronger guarantees of compatibility, we highly encourage programming direct
 | | N/A | [`GetSrvVSchemas`](../../programs/vtctldclient/vtctldclient_getsrvvschemas/) |
 | | N/A | [`GetTabletVersion`](../../programs/vtctldclient/vtctldclient_gettabletversion/) |
 | | `ListAllTablets`, `ListShardTablets`, `ListTablets` | [`GetTablets`](../../programs/vtctldclient/vtctldclient_gettablets/) |
-| | N/A | [`GetTopologyPath`](../../programs/vtctldclient/vtctldclient_gettopologypath/) |
 | | N/A | [`GetWorkflows`](../../programs/vtctldclient/vtctldclient_getworkflows/) |
-| | `InitShardPrimary` | (deleted) |
 | | `Ping` | [`PingTablet`](../../programs/vtctldclient/vtctldclient_pingtablet/) |
 | | N/A | [`SetKeyspaceDurabilityPolicy`](../../programs/vtctldclient/vtctldclient_setkeyspacedurabilitypolicy/) |
 | | `SetReadOnly`, `SetReadWrite` | [`SetWritable`](../../programs/vtctldclient/vtctldclient_setwritable/) |
 | | `Sleep` | [`SleepTablet`](../../programs/vtctldclient/vtctldclient_sleeptablet/) |
 | | `TopoCat` | [`GetTopologyPath`](../../programs/vtctldclient/vtctldclient_gettopologypath/) |
-| | `TopoCp` | (not yet migrated) |
+| | `TopoCp` | [`WriteTopologyPath`](../../programs/vtctldclient/vtctldclient_writetopologypath/) |
 | | `UpdateSrvKeyspacePartition` | (not yet migrated) |
 | | `UpdateTabletAddrs` | (deleted) |
 | | `VReplicationExec` | (deleted) |
-| | `ValidatePermissionsKeyspace`, `ValidatePermissionsShard` | (deleted) |
 | | `VtctldCommand` | N/A |
 | | `WaitForFilteredReplication` | (deleted) |

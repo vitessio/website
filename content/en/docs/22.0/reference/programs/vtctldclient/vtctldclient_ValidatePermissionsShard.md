@@ -1,19 +1,19 @@
 ---
-title: GetTabletVersion
+title: ValidatePermissionsShard
 series: vtctldclient
 ---
-## vtctldclient GetTabletVersion
+## vtctldclient ValidatePermissionsShard
 
-Print the version of a tablet from its debug vars.
+Validates that the permissions on primary match all the replicas.
 
 ```
-vtctldclient GetTabletVersion <alias>
+vtctldclient ValidatePermissionsShard <keyspace/shard>
 ```
 
 ### Options
 
 ```
-  -h, --help   help for GetTabletVersion
+  -h, --help   help for ValidatePermissionsShard
 ```
 
 ### Options inherited from parent commands

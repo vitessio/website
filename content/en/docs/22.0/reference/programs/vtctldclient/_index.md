@@ -1,7 +1,6 @@
 ---
 title: vtctldclient
 series: vtctldclient
-commit: d9ab9f7a1cf3cae19a1ea06963798a7646e8fb27
 ---
 ## vtctldclient
 
@@ -45,6 +44,7 @@ vtctldclient [flags]
 * [vtctldclient ChangeTabletTags](./vtctldclient_changetablettags/)	 - Changes the tablet tags for the specified tablet, if possible.
 * [vtctldclient ChangeTabletType](./vtctldclient_changetablettype/)	 - Changes the db type for the specified tablet, if possible.
 * [vtctldclient CheckThrottler](./vtctldclient_checkthrottler/)	 - Issue a throttler check on the given tablet.
+* [vtctldclient CopySchemaShard](./vtctldclient_copyschemashard/)	 - Copies the schema from a source shard's primary (or a specific tablet) to a destination shard. The schema is applied directly on the primary of the destination shard, and it is propagated to the replicas through binlogs.
 * [vtctldclient CreateKeyspace](./vtctldclient_createkeyspace/)	 - Creates the specified keyspace in the topology.
 * [vtctldclient CreateShard](./vtctldclient_createshard/)	 - Creates the specified shard in the topology.
 * [vtctldclient DeleteCellInfo](./vtctldclient_deletecellinfo/)	 - Deletes the CellInfo for the provided cell.
@@ -128,9 +128,13 @@ vtctldclient [flags]
 * [vtctldclient VDiff](./vtctldclient_vdiff/)	 - Perform commands related to diffing tables involved in a VReplication workflow between the source and target.
 * [vtctldclient Validate](./vtctldclient_validate/)	 - Validates that all nodes reachable from the global replication graph, as well as all tablets in discoverable cells, are consistent.
 * [vtctldclient ValidateKeyspace](./vtctldclient_validatekeyspace/)	 - Validates that all nodes reachable from the specified keyspace are consistent.
-* [vtctldclient ValidateSchemaKeyspace](./vtctldclient_validateschemakeyspace/)	 - Validates that the schema on the primary tablet for shard 0 matches the schema on all other tablets in the keyspace.
+* [vtctldclient ValidatePermissionsKeyspace](./vtctldclient_validatepermissionskeyspace/)	 - Validates that the permissions on primary of the first shard match those of all of the other tablets in the keyspace.
+* [vtctldclient ValidatePermissionsShard](./vtctldclient_validatepermissionsshard/)	 - Validates that the permissions on primary match all the replicas.
+* [vtctldclient ValidateSchemaKeyspace](./vtctldclient_validateschemakeyspace/)	 - Validates that the schema on the primary tablet for the first shard matches the schema on all other tablets in the keyspace.
+* [vtctldclient ValidateSchemaShard](./vtctldclient_validateschemashard/)	 - Validates that the schema on the primary tablet for the specified shard matches the schema on all other tablets in that shard.
 * [vtctldclient ValidateShard](./vtctldclient_validateshard/)	 - Validates that all nodes reachable from the specified shard are consistent.
-* [vtctldclient ValidateVersionKeyspace](./vtctldclient_validateversionkeyspace/)	 - Validates that the version on the primary tablet of shard 0 matches all of the other tablets in the keyspace.
+* [vtctldclient ValidateVersionKeyspace](./vtctldclient_validateversionkeyspace/)	 - Validates that the version on the primary tablet of the first shard matches all of the other tablets in the keyspace.
 * [vtctldclient ValidateVersionShard](./vtctldclient_validateversionshard/)	 - Validates that the version on the primary matches all of the replicas.
 * [vtctldclient Workflow](./vtctldclient_workflow/)	 - Administer VReplication workflows (Reshard, MoveTables, etc) in the given keyspace.
+* [vtctldclient WriteTopologyPath](./vtctldclient_writetopologypath/)	 - Copies a local file to the topology server at the given path.
 
