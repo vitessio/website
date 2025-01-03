@@ -269,10 +269,9 @@ main.td-main
 .mt-100
   margin-top: 100px
 
-.changelog > .is-size-3 
-  font-size: 2rem !important
+.changelog > div > .is-size-4 
   +touch
-    font-size: 1rem !important
+    font-size: 1.3rem !important
 
 .flex-gap-md
   gap: 110px
@@ -364,6 +363,9 @@ label.date
 .flex
   display: flex
 
+.flex-1
+  flex: 1
+
 .flex-col--mobile
   +touch
     flex-direction: column
@@ -397,6 +399,8 @@ label.date
   border-radius: 6px
   border: 1px solid #D0D7DF
   padding: 48px 40px
+  +touch
+    padding: 48px 28px
 
 .text-underlined-on-hover
   &:hover
