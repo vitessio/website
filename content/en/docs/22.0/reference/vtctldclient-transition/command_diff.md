@@ -15,7 +15,6 @@ For stronger guarantees of compatibility, we highly encourage programming direct
 | | `vtctlclient` command name (OLD) | `vtctldclient` command name (NEW) |
 |-|-|-|
 | | N/A | [`ApplyShardRoutingRules`](../../programs/vtctldclient/vtctldclient_applyroutingrules/) |
-| | `CopySchemaShard` | [`CopySchemaShard`](../../programs/vtctldclient/vtctldclient_copyschemashard/) |
 | | `CreateLookupVindex` | [`LookupVindex create`](../../programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) |
 | | `DeleteShard` | [`DeleteShards`](../../programs/vtctldclient/vtctldclient_deleteshards/) |
 | | `DeleteTablet` | [`DeleteTablets`](../../programs/vtctldclient/vtctldclient_deletetablets/) |
