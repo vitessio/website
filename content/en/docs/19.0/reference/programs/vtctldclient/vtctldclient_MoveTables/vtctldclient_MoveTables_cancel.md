@@ -1,7 +1,7 @@
 ---
 title: MoveTables cancel
 series: vtctldclient
-commit: cb5464edf5d7075feae744f3580f8bc626d185aa
+commit: 087964bd26b69c5b16c3af9d26515966de9f14bf
 ---
 ## vtctldclient MoveTables cancel
 

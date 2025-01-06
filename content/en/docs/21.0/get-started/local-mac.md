@@ -76,6 +76,7 @@ With everything now in place you can clone and build Vitess.
 ```sh
 $ git clone https://github.com/vitessio/vitess.git
 $ cd vitess
+$ git checkout release-21.0
 $ make build
 ```
 
@@ -246,7 +247,7 @@ $ mysql -P 15306 -u root --protocol tcp
 
 </br>
 
-You can also now browse and administer your new Vitess cluster using the [VTAdmin](../../reference/vtadmin/) UI at the following URL:
+You can also now browse and administer your new Vitess cluster using the [VTAdmin](../../concepts/vtadmin) UI at the following URL:
 
 ```text
 http://localhost:14201

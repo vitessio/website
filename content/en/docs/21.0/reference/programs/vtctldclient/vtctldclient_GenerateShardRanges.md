@@ -1,7 +1,7 @@
 ---
 title: GenerateShardRanges
 series: vtctldclient
-commit: 14b6873142558358a99a68d2b5ef0ec204f3776a
+commit: d9bc0da8c46a6f69fec4dd3d50187501d1d6268b
 ---
 ## vtctldclient GenerateShardRanges
 

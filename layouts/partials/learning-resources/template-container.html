@@ -1,0 +1,26 @@
+<!-- template container for resource pane -->
+<div class="page td-content container template-resource">
+
+  <div class="filter-mobile-btn">
+    <button onclick="openModal()">
+      <i class="fa-solid fa-filter" aria-hidden="true"></i>
+      Filter</button>
+  </div>
+
+  <p id="tag-section" class="">
+    <template id="template-tag-section">
+      <span class="tag tag-heading"> </span>
+    </template>
+  </p>
+
+  <div>
+    <a id="td-block-0" class="td-offset-anchor"></a>
+    <section
+      class="flex columns is-flex-wrap-wrap template-row row td-box td-box--white td-box--gradient td-box--height-auto"
+    >
+      <div class="col">
+        <div class="row">{{ partial "learning-resources/template-resource.html" . }}</div>
+      </div>
+    </section>
+  </div>
+</div>

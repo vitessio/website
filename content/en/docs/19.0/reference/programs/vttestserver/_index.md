@@ -1,7 +1,7 @@
 ---
 title: vttestserver
 series: vttestserver
-commit: cb5464edf5d7075feae744f3580f8bc626d185aa
+commit: 087964bd26b69c5b16c3af9d26515966de9f14bf
 ---
 ## vttestserver
 
@@ -130,7 +130,7 @@ vttestserver [flags]
       --tablet_hostname string                                           The hostname to use for the tablet otherwise it will be derived from OS' hostname (default "localhost")
       --tablet_manager_grpc_ca string                                    the server ca to use to validate servers when connecting
       --tablet_manager_grpc_cert string                                  the cert to use to connect
-      --tablet_manager_grpc_concurrency int                              concurrency to use to talk to a vttablet server for performance-sensitive RPCs (like ExecuteFetchAs{Dba,App} and CheckThrottler) (default 8)
+      --tablet_manager_grpc_concurrency int                              concurrency to use to talk to a vttablet server for performance-sensitive RPCs (like ExecuteFetchAs{Dba,App}, CheckThrottler and FullStatus) (default 8)
       --tablet_manager_grpc_connpool_size int                            number of tablets to keep tmclient connections open to (default 100)
       --tablet_manager_grpc_crl string                                   the server crl to use to validate server certificates when connecting
       --tablet_manager_grpc_key string                                   the key to use to connect

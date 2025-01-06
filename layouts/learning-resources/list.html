@@ -1,0 +1,84 @@
+{{ define "title" }} The Vitess Docs | {{ .Title }} {{ end }} {{ define "main"
+}}
+<div class="docs-wrapper">
+  <div class="docs-sidebar is-hidden-touch">
+    {{ partial "docs/sidebar.html" . }}
+  </div>
+
+  <div class="docs-article">
+    {{ partial "navbar.html" . }}
+
+    <article class="docs-content">
+      {{ partial "docs/header.html" . }}
+
+      <div class="content">
+        {{ .Content }}
+        <!-- filter panel on mobile -->
+        <div class="filter-mobile-modal container">
+          <div class="flex justify-content-space width-90 mt-40">
+            <p>Filter resources accordingly</p>
+            <div>
+              <button onclick="closeModal()">x</button>
+            </div>
+          </div>
+          {{ partial "learning-resources/filter-panel.html" . }}
+        </div>
+
+        <div class="flex flex-gap-md mt-100">
+        <!-- filter panel on desktop -->
+        <div class="filter-container">
+          {{ partial "learning-resources/filter-panel.html" . }}
+        </div>
+        <div>
+        <!-- Resource pane -->
+        <a class="td-offset-anchor"></a>
+        <div class="page td-content container resource">
+          <div class="filter-mobile-btn">
+            <button onclick="openModal()">
+              <i class="fa-solid fa-filter" aria-hidden="true"></i>
+              Filter
+            </button>
+          </div>
+
+          {{ $resources := $.Site.Data.resources.resources }} {{ $years := slice
+          }} {{ range $resources }} {{ $years = $years | append .date }} {{ $years = uniq $years }} {{ end }} {{ range $years
+          }} {{ $year := . }}
+          <div class="mb-50">
+            <h2 id="{{ . }}">{{ . }}</h2>
+            <a id="td-block-0" class="td-offset-anchor"></a>
+            <section
+              class="flex td-box td-box--white td-box--gradient td-box--height-auto"
+            >
+              <div class="col">
+                <div class="columns is-flex-wrap-wrap row">
+                  {{ range $resources }} {{ if eq .date
+                  $year }} {{ partial "learning-resources/resource.html" . }} {{ end }}
+                  {{ end }}
+                </div>
+              </div>
+            </section>
+          </div>
+          {{ end }}
+        </div>
+        <!-- template for resource pane -->
+        {{ partial "learning-resources/template-container.html" . }}
+        </div>
+      </div>
+
+        <hr
+          style="
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            border: none;
+            border-top: 0.1rem solid darkgrey;
+            width: 100%;
+          "
+        />
+        {{ partial "docs/next-prev-navigation.html" . }}
+      </div>
+    </article>
+
+    {{ partial "docs/footer.html" . }}
+  </div>
+</div>
+{{ end }}

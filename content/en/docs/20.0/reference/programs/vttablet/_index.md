@@ -1,7 +1,7 @@
 ---
 title: vttablet
 series: vttablet
-commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
+commit: 6eddcaeac58bed83ebfa3b9ada903ddc8ff36ff6
 ---
 ## vttablet
 
@@ -183,7 +183,7 @@ vttablet \
       --gc_purge_check_interval duration                                 Interval between purge discovery checks (default 1m0s)
       --gcs_backup_storage_bucket string                                 Google Cloud Storage bucket to use for backups.
       --gcs_backup_storage_root string                                   Root prefix for all backup-related object names.
-      --gh-ost-path string                                               override default gh-ost binary full path
+      --gh-ost-path string                                               override default gh-ost binary full path (default "gh-ost")
       --grpc_auth_mode string                                            Which auth plugin implementation to use (eg: static)
       --grpc_auth_mtls_allowed_substrings string                         List of substrings of at least one of the client certificate names (separated by colon).
       --grpc_auth_static_client_creds string                             When using grpc_static_auth in the server, this file provides the credentials to use to authenticate with server.
@@ -230,7 +230,7 @@ vttablet \
       --keep_logs duration                                               keep logs for this long (using ctime) (zero to keep forever)
       --keep_logs_by_mtime duration                                      keep logs for this long (using mtime) (zero to keep forever)
       --lameduck-period duration                                         keep running at least this long after SIGTERM before stopping (default 50ms)
-      --lock-timeout duration                                            Maximum time for which a shard/keyspace lock can be acquired for (default 45s)
+      --lock-timeout duration                                            Maximum time to wait when attempting to acquire a lock from the topo server (default 45s)
       --lock_tables_timeout duration                                     How long to keep the table locked before timing out (default 1m0s)
       --log_backtrace_at traceLocations                                  when logging hits line file:N, emit a stack trace
       --log_dir string                                                   If non-empty, write log files in this directory
@@ -274,13 +274,14 @@ vttablet \
       --port int                                                         port for the server
       --pprof strings                                                    enable profiling
       --pprof-http                                                       enable pprof http endpoints
-      --pt-osc-path string                                               override default pt-online-schema-change binary full path
+      --pt-osc-path string                                               override default pt-online-schema-change binary full path (default "/usr/bin/pt-online-schema-change")
       --publish_retry_interval duration                                  how long vttablet waits to retry publishing the tablet record (default 30s)
       --purge_logs_interval duration                                     how often try to remove old logs (default 1h0m0s)
       --query-log-stream-handler string                                  URL handler for streaming queries log (default "/debug/querylog")
       --querylog-filter-tag string                                       string that must be present in the query for it to be logged; if using a value as the tag, you need to disable query normalization
       --querylog-format string                                           format for query logs ("text" or "json") (default "text")
       --querylog-row-threshold uint                                      Number of rows a query has to return or affect before being logged; not useful for streaming queries. 0 means all queries will be logged.
+      --querylog-sample-rate float                                       Sample rate for logging queries. Value must be between 0.0 (no logging) and 1.0 (all queries)
       --queryserver-config-acl-exempt-acl string                         an acl that exempt from table acl checking (this acl is free to access any vitess tables).
       --queryserver-config-annotate-queries                              prefix queries to MySQL backend with comment indicating vtgate principal (user) and target tablet type
       --queryserver-config-enable-table-acl-dry-run                      If this flag is enabled, tabletserver will emit monitoring metrics and let the request pass regardless of table acl check results

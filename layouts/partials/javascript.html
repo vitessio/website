@@ -268,3 +268,176 @@ $versions.current}}
     });
   }
 </script>
+
+<!-- logic for resource filter -->
+<script>
+  let filterModal = document.querySelector(".filter-mobile-modal");
+  window.addEventListener(
+    "DOMContentLoaded",
+    function (event) {
+      let index = null;
+      let searchQueue = [];
+      let lookup = null;
+      let queuedTerm = null;
+      let resource = document.querySelector(".resource");
+      let templateResource = document.querySelector(".template-resource");
+      var tagTemplate = document.getElementById("template-tag-section");
+      var tagSection = document.getElementById("tag-section");
+
+      let checkboxes = document.querySelectorAll(
+        'input[name="resource_filter"]'
+      );
+      checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", function (event) {
+          if (checkbox.checked) {
+            searchQueue.push(event.target.value);
+            queuedTerm = searchQueue.join(" ");
+            renderTags(searchQueue);
+            startSearch(queuedTerm);
+          } else {
+            searchQueue = searchQueue.filter(
+              (word) => word != event.target.value
+            );
+            queuedTerm = searchQueue.join(" ");
+            renderTags(searchQueue);
+            startSearch(queuedTerm);
+          }
+        });
+      });
+
+      function renderTags(tagArray) {
+        while (tagSection.firstChild)
+          tagSection.removeChild(tagSection.firstChild);
+
+        for (var tag of tagArray) {
+          var tagElement = tagTemplate.content.cloneNode(true);
+          tagElement.querySelector(".tag-heading").textContent = tag;
+          tagSection.appendChild(tagElement);
+        }
+      }
+
+      function startSearch(term) {
+        if (term.length >= 1) {
+          resource.style.display = "none";
+          templateResource.style.display = "block";
+
+          if (index) {
+            // Index already present, search directly.
+            search(term);
+          } else {
+            // perform the search.
+            initIndex();
+          }
+        } else {
+          resource.style.display = "block";
+          templateResource.style.display = "none";
+        }
+      }
+
+      function initIndex() {
+        var request = new XMLHttpRequest();
+        request.open("GET", "/searchindex.json");
+        request.responseType = "json";
+        request.addEventListener(
+          "load",
+          function (event) {
+            lookup = {};
+            index = lunr(function () {
+              // If you're looking to support a different language other than english, uncomment the following line and replace en by the right language
+              // code to use a lunr language pack. Remember to install the lunr languages package before anything else.
+
+              // this.use(lunr.en);
+
+              this.ref("title");
+
+              this.field("title");
+              this.field("youtube");
+              this.field("url");
+              this.field("thumbnail_url");
+              this.field("type");
+              this.field("year");
+
+              for (var doc of request.response) {
+                this.add(doc);
+                lookup[doc.title] = doc;
+              }
+            });
+
+            // Search index is ready, perform the search now
+            search(queuedTerm);
+          },
+          false
+        );
+        request.send(null);
+      }
+
+      function search(term) {
+        var results = index.search(term);
+
+        // The element where search results should be displayed, adjust as needed.
+        var target = document.querySelector(".template-row");
+
+        while (target.firstChild) target.removeChild(target.firstChild);
+
+        var template = document.getElementById("search-result");
+        for (var result of results) {
+          var doc = lookup[result.ref];
+
+          // Fill out search result template, adjust as needed.
+          var element = template.content.cloneNode(true);
+          if (doc.type === "slides") {
+            const slideDeck = document.createElement("iframe");
+            slideDeck.src = doc.url;
+            slideDeck.width = "100%";
+            slideDeck.height = "400px";
+            slideDeck.frameborder = "0";
+            slideDeck.allowfullscreen = true;
+            slideDeck.className = "has-ratio";
+            element.querySelector(".thumbnail-link").appendChild(slideDeck);
+            element.querySelector(".resource-title-heading").textContent =
+              doc.title;
+            element.querySelector(".resource-title-link").href = doc.youtube
+              ? "https://www.youtube.com/watch?v=" + doc.youtube
+              : doc.url
+              ? doc.url
+              : "";
+            element.querySelector(".tag").textContent = doc.type;
+            element.querySelector(".date").textContent = doc.year;
+          } else {
+            element.querySelector(".thumbnail-link").href = doc.youtube
+              ? "https://www.youtube.com/watch?v=" + doc.youtube
+              : doc.url
+              ? doc.url
+              : "";
+            element.querySelector(".img-thumbnail").src = doc.youtube
+              ? "https://i3.ytimg.com/vi/" + doc.youtube + "/0.jpg"
+              : doc.thumbnail_url
+              ? doc.thumbnail_url
+              : "/img/logos/vitess-horizontal.png";
+            element.querySelector(".img-thumbnail").alt = doc.title;
+            element.querySelector(".resource-title-link").href = doc.youtube
+              ? "https://www.youtube.com/watch?v=" + doc.youtube
+              : doc.url
+              ? doc.url
+              : "";
+            element.querySelector(".resource-title-heading").textContent =
+              doc.title;
+            element.querySelector(".tag").textContent = doc.type;
+            element.querySelector(".date").textContent = doc.year;
+          }
+          target.appendChild(element);
+        }
+      }
+    },
+    false
+  );
+
+  // handler functions for filter modal
+  const openModal = () => {
+    filterModal.style.display = "block";
+  };
+
+  const closeModal = () => {
+    filterModal.style.display = "none";
+  };
+</script>

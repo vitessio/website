@@ -16,6 +16,7 @@ Vitess offers managed, online schema migrations (aka Online DDL), transparently 
 - Support for [postponed migrations](../postponed-migrations/)
 - Support for [failover agnostic migrations](../recoverable-migrations/)
 - Support for [concurrent migrations](../concurrent-migrations/)
+- Support for [INSTANT DDL](../instant-ddl-migrations/)
 - See also [advanced usage](../advanced-usage/)
 
 As general overview:

@@ -35,6 +35,7 @@ Change to the operator example directory:
 ```bash
 git clone https://github.com/vitessio/vitess
 cd vitess/examples/operator
+git checkout release-21.0
 ```
 
 Install the operator:
@@ -86,7 +87,7 @@ alias mysql="mysql -h 127.0.0.1 -P 15306 -u user"
 
 Setting up aliases changes `mysql` to always connect to Vitess for your current session. To revert this, type `unalias mysql && unalias vtctldclient` or close your session.
 
-Once the port-forward starts running, the VTAdmin UI will be available at [http://localhost:14000/](http://localhost:14000/)
+Once the port-forward starts running, the [VTAdmin](../../concepts/vtadmin) UI will be available at [http://localhost:14000/](http://localhost:14000/)
 
 ## Create Schema
 

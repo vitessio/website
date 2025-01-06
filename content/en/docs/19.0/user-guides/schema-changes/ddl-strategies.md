@@ -79,6 +79,11 @@ The `vitess` strategy invokes Vitess's built in [VReplication](../../../referenc
 - Support cut-over backoff: should a cut-over fail due to timeout, next cut-overs take place at increasing intervals and up to `30min` intevals, so as to not overwhelm production traffic.
 - Support forced cut-over, to prioritise completion of the migration over any queries using the mgirated table, or over any transactions holding locks on the table.
 
+#### Notes and exceptions
+
+- `vitess` migrations support `INSTANT` DDL where applicable. See [INSTANT DDL](../instant-ddl-migrations/). A migration that runs with `ALGORITHM=INSTANT` does not use a shadow table and is not revertible.
+- `RANGE` partitioning rotation: `ADD PARTITION` and `DROP PARTITION` statements are executed directly against MySQL and not as a `vreplication` Online DDL. See [PARTITIONING notes](../instant-ddl-migrations/#partitioning-notes)
+
 ### gh-ost
 
 [gh-ost](https://github.com/github/gh-ost) was developed by [GitHub](https://github.com) as a lightweight and safe schema migration tool.

@@ -13,8 +13,8 @@ pygmentsStyle = "fruity"
 # Versions (folder-based)
 
 [params.versions]
-current = "20.0"
-next = "21.0"
+current = "21.0"
+next = "22.0"
 
 # end Versions
 
@@ -139,10 +139,16 @@ baseName = "_redirects"
 notAlternative = true
 
 [outputs]
-home = [ "HTML", "REDIRECTS", "RSS", "Lunr" ]
+home = [ "HTML", "REDIRECTS", "RSS", "Lunr", "SearchIndex" ]
 
 [outputFormats.Lunr]
 baseName = "index"
+isPlainText = true
+mediaType = "application/json"
+notAlternative = true
+
+[outputFormats.SearchIndex]
+baseName = "searchindex"
 isPlainText = true
 mediaType = "application/json"
 notAlternative = true

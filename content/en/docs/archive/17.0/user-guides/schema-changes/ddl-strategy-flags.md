@@ -31,6 +31,8 @@ Vitess respects the following flags. They can be combined unless specifically in
 
 - `--postpone-launch`: initiate a migration that remains `queued` and only launches per user command. See [postponed migrations](../postponed-migrations).
 
+- `--prefer-instant-ddl`: where possible, apply `ALGORITHM=INSTANT` to the migration. This is applicable to `ALTER TABLE` migrations with `vitess` strategy. Vitess pre-computes whether the migration is eligible for `INSTANT` DDL. The [MySQL documentation](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html) references an incomplete list of eligible changes. If applicable, vitess does not create a shadow table and the migration is not revertible.
+
 - `--singleton`: only allow a single pending migration to be submitted at a time. From the moment the migration is queued, and until either completion, failure or cancellation, no other new `--singleton` migration can be submitted. New requests will be rejected with error. `--singleton` works as a an exclusive lock for pending migrations. Note that this only affects migrations with `--singleton` flag. Migrations running without that flag are unaffected and unblocked.
 
 - `--singleton-context`: only allow migrations submitted under same _context_ to be pending at any given time. Migrations submitted with a different _context_ are rejected for as long as at least one of the initially submitted migrations is pending.

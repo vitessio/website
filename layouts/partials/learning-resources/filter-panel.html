@@ -1,0 +1,33 @@
+<div class="filter">
+  <div>
+      <h5>Type</h5>
+      <div>
+          <input id="video" type="checkbox" name="resource_filter" value="video">
+          <label for="video">Video</label>
+      </div>
+      <div>
+          <input id="slides" type="checkbox" name="resource_filter" value="slides">
+          <label for="slides">Slides</label>
+      </div>
+      <div>
+        <input id="podcast" type="checkbox" name="resource_filter" value="podcast">
+        <label for="podcast">Podcast</label>
+    </div>
+  </div>
+  <div class="mt-5">
+      <h5>Year</h5>
+      {{ $resources := $.Site.Data.resources.resources }}
+      {{ $years := slice }}
+      {{ range $resources }}
+          {{ $years = $years | append .date }}
+          {{ $years = uniq $years }}
+      {{ end }}
+      {{ range $years }}
+      {{ $year := . }}
+       <div>
+          <input id="{{ . }}" type="checkbox" name="resource_filter" value="{{ . }}">
+          <label for="{{ . }}">{{ . }}</label>
+      </div>
+      {{ end }}
+  </div>
+</div>

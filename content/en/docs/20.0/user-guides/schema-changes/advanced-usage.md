@@ -188,3 +188,14 @@ $ vtctldclient ApplySchema --ddl-strategy='vitess --allow-concurrent --in-order-
 - `--allow-concurrent` is optional, but is likely to be the main use case for using in-order completion.
 - in-order completion also works with `--postpone-launch` and `--postpone-completion`.
 {{< /info >}}
+
+## INSTANT DDL
+
+Vitess can predict ahead of time whether a migration is eligible for `ALGORITHM=INSTANT`. As such, you may submit a migration opting in to `INSTANT` DDL if applicable. In such case, Vitess adds `ALGORITHM=INSTANT` to your migration. Otherwise, it runs an Online DDL migration. Example:
+
+
+```sh
+$ vtctldclient ApplySchema --ddl-strategy='vitess --prefer-instant-ddl' --sql "alter table corder add column name varchar(32); alter table users add unique key login_idx (login);" commerce
+```
+
+You may submit multiple migrations with the `--prefer-instant-ddl` DDL strategy flag. Vitess will determine per migration whether `INSTANT` DDL is applicable or not. In the above example, it will apply `INSTANT` DDL onto the `corder` migration, but will run a `vitess` Online DDL for the `users` migration.

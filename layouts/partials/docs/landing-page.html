@@ -45,6 +45,7 @@
 {{ if and
   (not (isset .Page.Params "version"))
   (not (isset .Page.Params "designdoc"))
+  (not (isset .Page.Params "skipversions"))
 }}
 <h1>Versions</h1>
 {{ end }}

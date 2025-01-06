@@ -1,7 +1,7 @@
 ---
 title: init
 series: zkctl
-commit: 6cd09cce61fa79a1b7aacb36886b7dc44ae82a94
+commit: d9bc0da8c46a6f69fec4dd3d50187501d1d6268b
 ---
 ## zkctl init
 

@@ -27,6 +27,12 @@ other = "Vitess is a [Cloud Native Computing Foundation](https://cncf.io) gradua
 [intro_vitess]
 other = "An introduction to Vitess"
 
+[scaling_vitess]
+other = "Scaling Databases with Vitess"
+
+[learn_vitess]
+other = "Learn More"
+
 # Navbar/footer links
 [docs]
 other = "Docs"

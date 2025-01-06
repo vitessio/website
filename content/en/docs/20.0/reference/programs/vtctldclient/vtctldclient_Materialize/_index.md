@@ -1,7 +1,7 @@
 ---
 title: Materialize
 series: vtctldclient
-commit: b9b567acbb1f36404f46b5daa168d37831dd137f
+commit: 6eddcaeac58bed83ebfa3b9ada903ddc8ff36ff6
 ---
 ## vtctldclient Materialize
 
