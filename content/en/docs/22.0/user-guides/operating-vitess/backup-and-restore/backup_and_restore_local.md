@@ -6,22 +6,22 @@ aliases: ['/docs/user-guides/backup-and-restore/']
 
 {{< info >}}
 This guide follows on from the Get Started guides. Please make sure that you have
-an [local](../../../../get-started/local) installation ready. It also assumes
+a [local](../../../../get-started/local) installation ready. It also assumes
 that the [MoveTables](../../../migration/move-tables/) and [Resharding](../../../configuration-advanced/resharding) user guides have been followed (which take you through
 steps `101` to `306`).
 
-This guide is specifically useful for users running Vitess in a local environment. If you're running Vitess on K8S, consider following similar steps with the necessary K8S-specific configurations.
+This guide is specifically useful for users running Vitess in a local environment. If you are running Vitess on K8S, consider following similar steps with the necessary K8S-specific configurations, or follow the [K8S guide on how to schedule backups](../scheduled-backups/).
 {{< /info >}}
 
 ## Backups
 
 If you are not already familiar with [how backups work](../overview/) in Vitess we suggest you familiarize yourself with them first.
 
-## Local Environment Backup And Restore Steps:
+## Backing Up and Restoring
 
 ### Taking a Backup
 
-In this section, we will explain how to perform backups of the customer keyspace and its shards to ensure data protection. The backups will be stored locally on your machine. You can customize the script to change the backup location if needed.
+In this section, we will explain how to backup the `customer` keyspace and its shards. The backups will be stored locally on your machine. You can decide to store the backup files on [any of the supported storage services](../overview/#backup-storage-services) too.
 
 Run the script:
 ```bash
@@ -45,14 +45,11 @@ Backup process completed successfully for all shards in customer.
 
 ### Listing Backups
 
-Now we can list the available backups created in our local environment by executing the appropriate script or command. These backups are stored directly on your local machine (or VM), as defined in the configuration.
-
-Run the following command to list the available backups:
+Let's now list the backups we have created by running the following script. Each backup will labeled according to the keyspace and shard it belongs to.
 ``` bash
 ./402_list_backup.sh
 ```
 
-This will display the backups you’ve created. Each backup will be labeled according to the keyspace and shard it belongs to.
 
 When you run the script, the following output can be expected:
 ```
@@ -85,7 +82,7 @@ drwxr-xr-x 2 user user 4096 Oct 12 12:15 2024-10-12.064523.zone1-0000000401
 ~/vtdataroot/backups/customer/-80/2024-10-12.064518.zone1-0000000300$ ls -l
 ```
 
-This will display a detailed list of backups stored locally, such as:
+There, you will find all the files for the backup:
 ```
 total 3336
 -rw-r--r-- 1 user user    1035 Oct 12 12:15 0
@@ -103,13 +100,12 @@ Each backup directory contains the necessary data files that can be restored lat
 
 ### Restore From Backup
 
-To restore your backups for the customer keyspace and its shards, you can use the provided script to easily initiate the restoration process. The backups will be restored from the local machine where they were saved.
+To restore your backups for the `customer` keyspace and its shards, you can use the provided script to easily initiate the restoration process. The backups will be restored from the local machine where they were saved.
 
 Run the script to initiate the restoration process:
 ```bash
 ./403_restore_from_backup.sh
 ```
-This will start the restoration process for the customer keyspace and all its shards from the previously taken backups.
 
 When you run the restore script, the following output can be expected:
 ```
@@ -125,6 +121,7 @@ customer/80- (zone1-0000000401): time:{seconds:1728641929 nanoseconds:165948068}
 ...
 Restore process completed successfully for customer.
 ```
+
 ### Clean Up
 Congratulations! You have successfully completed the backup and restore process for your local Vitess environment.
 
