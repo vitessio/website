@@ -25,7 +25,7 @@ In this section, we will explain how to perform backups of the customer keyspace
 
 Run the script:
 ```bash
-$ ./401_backup.sh
+./401_backup.sh
 ```
 This will start the backup process for the customer keyspace and all its shards. When you run the script, the following output can be expected:
 ```
@@ -49,12 +49,12 @@ Now we can list the available backups created in our local environment by execut
 
 Run the following command to list the available backups:
 ``` bash
-$ ./402_list_backup.sh
+./402_list_backup.sh
 ```
 
 This will display the backups you’ve created. Each backup will be labeled according to the keyspace and shard it belongs to.
 
-Expected Output When you run the script, the following output can be expected:
+When you run the script, the following output can be expected:
 ```
 Listing available backups for keyspace customer and shard -80...
 2024-10-12.064518.zone1-0000000300
@@ -66,38 +66,38 @@ Since this is a local environment, the backups will be stored directly on your m
 
 For example, navigating to the directory:
 ```bash
-shail_pujan@SHAIL-PUJAN:~$ cd $VTDATAROOT/backups
-shail_pujan@SHAIL-PUJAN:~/vtdataroot/backups$ ls
+~$ cd $VTDATAROOT/backups
+~/vtdataroot/backups$ ls
 customer
-shail_pujan@SHAIL-PUJAN:~/vtdataroot/backups$ cd customer
-shail_pujan@SHAIL-PUJAN:~/vtdataroot/backups/customer$ ls
+~/vtdataroot/backups$ cd customer
+~/vtdataroot/backups/customer$ ls
 -80  80-
  ls -l ./-80/ ./80-/
 ./-80/:
 total 4
-drwxr-xr-x 2 shail_pujan shail_pujan 4096 Oct 12 12:15 2024-10-12.064518.zone1-0000000300
+drwxr-xr-x 2 user user 4096 Oct 12 12:15 2024-10-12.064518.zone1-0000000300
 
 ./80-/:
 total 4
-drwxr-xr-x 2 shail_pujan shail_pujan 4096 Oct 12 12:15 2024-10-12.064523.zone1-0000000401
+drwxr-xr-x 2 user user 4096 Oct 12 12:15 2024-10-12.064523.zone1-0000000401
 
-shail_pujan@SHAIL-PUJAN:~/vtdataroot/backups/customer$ cd ./-80/2024-10-12.064518.zone1-0000000300
-shail_pujan@SHAIL-PUJAN:~/vtdataroot/backups/customer/-80/2024-10-12.064518.zone1-0000000300$ ls -l
+~/vtdataroot/backups/customer$ cd ./-80/2024-10-12.064518.zone1-0000000300
+~/vtdataroot/backups/customer/-80/2024-10-12.064518.zone1-0000000300$ ls -l
 ```
 
 This will display a detailed list of backups stored locally, such as:
 ```
 total 3336
--rw-r--r-- 1 shail_pujan shail_pujan    1035 Oct 12 12:15 0
--rw-r--r-- 1 shail_pujan shail_pujan   21102 Oct 12 12:15 1
--rw-r--r-- 1 shail_pujan shail_pujan    1153 Oct 12 12:15 104
--rw-r--r-- 1 shail_pujan shail_pujan    1209 Oct 12 12:15 105
--rw-r--r-- 1 shail_pujan shail_pujan    1263 Oct 12 12:15 106
+-rw-r--r-- 1 user user    1035 Oct 12 12:15 0
+-rw-r--r-- 1 user user   21102 Oct 12 12:15 1
+-rw-r--r-- 1 user user    1153 Oct 12 12:15 104
+-rw-r--r-- 1 user user    1209 Oct 12 12:15 105
+-rw-r--r-- 1 user user    1263 Oct 12 12:15 106
 ...
 ...
--rw-r--r-- 1 shail_pujan shail_pujan    1300 Oct 12 12:15 98
--rw-r--r-- 1 shail_pujan shail_pujan    1819 Oct 12 12:15 99
--rw-r--r-- 1 shail_pujan shail_pujan   24559 Oct 12 12:15 MANIFEST
+-rw-r--r-- 1 user user    1300 Oct 12 12:15 98
+-rw-r--r-- 1 user user    1819 Oct 12 12:15 99
+-rw-r--r-- 1 user user   24559 Oct 12 12:15 MANIFEST
 ```
 Each backup directory contains the necessary data files that can be restored later.
 
@@ -107,11 +107,10 @@ To restore your backups for the customer keyspace and its shards, you can use th
 
 Run the script to initiate the restoration process:
 ```bash
-$ ./403_restore_from_backup.sh
+./403_restore_from_backup.sh
 ```
 This will start the restoration process for the customer keyspace and all its shards from the previously taken backups.
 
-Expected Output
 When you run the restore script, the following output can be expected:
 ```
 Finding replica tablets for shard -80...
@@ -133,7 +132,7 @@ To clean up your Vitess environment, use the `501_teardown.sh` script for a comp
 
 This script ensures that the full cluster is cleaned up, removing any associated resources. To execute the teardown:
 ```bash
-$ ./501_teardown.sh
+./501_teardown.sh
 ```
 
 If needed, use the [vtctldclient](../../backup-and-restore/managing-backups) command to remove specific backups, but this is generally not required if you are running the teardown script.
