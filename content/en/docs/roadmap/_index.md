@@ -24,6 +24,8 @@ Last Updated: Jan 16, 2024
 - VReplication
   - Benchmarking
   - Performance improvements
+  - Improve unit test coverage
+  - Deprecate vtctlclient
 - VTAdmin
   - VReplication
   - Schema Management
