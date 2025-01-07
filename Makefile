@@ -58,7 +58,24 @@ BINS := mysqlctl mysqlctld vtaclcheck topo2topo vtbackup vtclient vtcombo \
 # For a specific version, you can specify COBRADOC_VERSION_PAIRS as an environment variable, Example:
 # `make mysqlctl-docs COBRADOC_VERSION_PAIRS="main:22.0" VITESS_DIR=~/go/src/github.com/vitessio/vitess`
 %-docs:
+	set -x
+	@if echo "$$COBRADOC_VERSION_PAIRS" | grep -qE '20\.0|19\.0'; then \
+    		if [ "$${GOROOT##*/}" != "go1.21" ]; then \
+    			echo "Error: Go 1.21 is required when COBRADOC_VERSION_PAIRS contains 20.0 or 19.0."; \
+    			echo "Current GOROOT is: $$GOROOT"; \
+    			exit 1; \
+    		fi; \
+    fi
 	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" $(patsubst %-docs,%,$@)
+	find . -name "*md-e" -exec rm {} \;
+	@CHANGED_FILES=$$(git diff --name-only) && \
+    	if [ -n "$$CHANGED_FILES" ]; then \
+    		for file in $$CHANGED_FILES; do \
+    			sed -i "" -e 's|${VITESS_DIR}|<WORKDIR>|g' $$file; \
+    		done; \
+    	else \
+    		echo "No changed files found."; \
+    	fi
 	COMMIT_HASH=$(shell cd $(VITESS_DIR) && git rev-parse --short HEAD); \
     	git add -u content && \
     	if ! git diff --cached --quiet HEAD --; then \
