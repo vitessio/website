@@ -107,7 +107,8 @@ USE `mykeyspace:-80@rdonly`
 Or refer to another keyspace’s table via standard dot notation:
 
 ```sql
-SELECT * FROM other_keyspace.table;
+SELECT * 
+FROM other_keyspace.table;
 ```
 
 ## Common Table Expressions
@@ -158,7 +159,9 @@ Vitess supports `LAST_INSERT_ID` both for returning the last auto-generated ID a
 **Example**:
 
 ```sql
-SELECT LAST_INSERT_ID(col) FROM table ORDER BY foo;
+SELECT LAST_INSERT_ID(col) 
+FROM table 
+ORDER BY foo;
 ```
 
  - MySQL behavior: The session’s `LAST_INSERT_ID` is set to the value from the final row returned.
