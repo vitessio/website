@@ -51,7 +51,7 @@ Vitess offers MySQL default semantics (`REPEATABLE READ`) for single-shard trans
 
 # SQL Support
 
-Below are various aspects of SQL support and limitations within Vitess. A current list of unsupported queries is maintained in the [Vitess GitHub repo](https://github.com/vitessio/vitess/blob/main/go/vt/vtgate/planbuilder/testdata/unsupported_cases.json).
+While Vitess is mostly compatible with MySQL, there are some limitations. A current list of unsupported queries is maintained in the [Vitess GitHub repo](https://github.com/vitessio/vitess/blob/main/go/vt/vtgate/planbuilder/testdata/unsupported_cases.json).
 
 ## DDL
 
@@ -59,12 +59,12 @@ Vitess supports all DDL queries:
 - **Managed, online schema changes** (non-blocking, revertible, etc.).
 - **Non-managed DDL** is also supported.
 
-Refer to [making schema changes](../../../user-guides/schema-changes) for more details.
+Refer to [making schema changes](../../user-guides/schema-changes) for more details.
 
 ## Join, Subqueries, Union, Aggregation, Grouping, Having, Ordering, Limit Queries
 
 Vitess supports most of these query types. For the best experience:
-- Leave [schema tracking](../../features/schema-tracking) enabled to leverage full support.
+- Leave [schema tracking](../features/schema-tracking) enabled to leverage full support.
 
 ## Prepared Statements
 
@@ -87,14 +87,14 @@ You can call stored procedures (`CALL`) with the following limitations:
 Views are supported for **sharded keyspaces** as an experimental feature:
 - Enable with `--enable-views` on VTGate and `--queryserver-enable-views` on VTTablet.
 - Views are only readable (no updatable views).
-- Table referenced by the view must belong to the same keyspace.
+- All tables referenced by the view must belong to the same keyspace.
 
 See the [Views RFC](https://github.com/vitessio/vitess/issues/11559) for more details.
 
 ## Temporary Tables
 
 Vitess has limited support for temporary tables, only for **unsharded keyspaces**:
-- Creating a temporary table forces the session to start using reserved connections.
+- Creating a temporary table forces the session to start using [reserved connections](../query-serving/reserved-conn).
 - Query plans in this session won’t be cached.
 
 ## USE Statements
@@ -121,33 +121,33 @@ Window Functions are not currently supported in Vitess.
 ## Killing Running Queries
 
 Starting with Vitess v18, you can terminate running queries with the KILL command through VTGate:
- - Issue KILL connection or KILL query from a new client connection (similar to ctrl+c in MySQL shell).
- - You can also set:
- - query_timeout_ms (per-query timeouts).
- - mysql_server_query_timeout command-line flag (global default timeout).
+ - Issue `KILL connection` or `KILL query` from a new client connection (similar to `ctrl+c` in MySQL shell).
+ - You can also ask Vitess to kill queries that run beyond a specified timeout. The timeout can be set per query or globally.
+ - `query_timeout_ms` (per-query timeouts).
+ - `mysql_server_query_timeout command-line` flag (global default timeout).
 
 ## SELECT … INTO Statement
 
-Vitess supports SELECT ... INTO DUMPFILE and SELECT ... INTO OUTFILE for unsharded keyspaces:
- - Position of INTO must be at the end of the query.
- - For sharded keyspaces, you must specify the exact shard with a USE Statement.
+Vitess supports `SELECT ... INTO DUMPFILE` and `SELECT ... INTO OUTFILE` for unsharded keyspaces:
+ - Position of `INTO` must be at the end of the query.
+ - For sharded keyspaces, you must specify the exact shard with a `USE` statement.
 
 ## LOAD DATA Statement
 
-LOAD DATA (the counterpart to SELECT ... INTO OUTFILE) is supported only in unsharded keyspaces:
- - Must be used similarly to the SELECT ... INTO statement.
+`LOAD DATA` (the counterpart to `SELECT ... INTO OUTFILE`) is supported only in unsharded keyspaces:
+ - Must be used similarly to the `SELECT ... INTO` statement.
  - For sharded keyspaces, use the USE Statement to target an exact shard.
 
 ## Create/Drop Database
 
-Vitess does not support CREATE DATABASE or DROP DATABASE by default:
- - A plugin mechanism (DBDDLPlugin interface) exists for provisioning databases.
+Vitess does not support `CREATE DATABASE` or `DROP DATABASE` by default:
+ - A plugin mechanism (`DBDDLPlugin` interface) exists for provisioning databases.
  - The plugin must handle database creation, topology updates, and VSchema updates.
- - Register the plugin with DBDDLRegister and specify --dbddl_plugin=myPluginName when running vtgate.
+ - Register the plugin with `DBDDLRegister` and specify `--dbddl_plugin=myPluginName` when running vtgate.
 
 ## User Defined Functions
 
-Vitess can track UDFs if you enable the --enable-udfs flag on VTGate. More details on creating UDFs can be found in the MySQL Docs.
+Vitess can track UDFs if you enable the `--enable-udfs` flag on VTGate. More details on creating UDFs can be found in the MySQL Docs.
 
 ## LAST_INSERT_ID
 
@@ -156,28 +156,29 @@ Vitess supports `LAST_INSERT_ID` both for returning the last auto-generated ID a
 **Limitation**: When using `LAST_INSERT_ID(x)` as a SELECT expression in *ordered queries*, MySQL sets the session’s `LAST_INSERT_ID` value based on the *last row returned*. Vitess, however, does **not** guarantee which row’s value will be used.
 
 **Example**:
+
 ```sql
 SELECT LAST_INSERT_ID(col) FROM table ORDER BY foo;
 ```
 
- - MySQL behavior: The session’s LAST_INSERT_ID is set to the value from the final row returned.
- - Vitess behavior: The exact value used to set LAST_INSERT_ID is not guaranteed.
+ - MySQL behavior: The session’s `LAST_INSERT_ID` is set to the value from the final row returned.
+ - Vitess behavior: The exact value used to set `LAST_INSERT_ID` is not guaranteed.
 
 # Cross-shard Transactions
 
-Vitess supports multiple transaction modes: SINGLE, MULTI, and TWOPC.
- - Default: MULTI — multi-shard transactions on a best-effort basis.
+Vitess supports multiple [transaction modes](../../user-guides/configuration-advanced/shard-isolation-atomicity): `SINGLE`, `MULTI` and `TWOPC` .
+ - Default: `MULTI` — multi-shard transactions on a best-effort basis.
  - A single-shard transaction is fully ACID-compliant.
  - Multi-shard commits are done in a specific order; partial commits can be manually undone if needed.
 
 # Auto Increment
 
-Avoid the auto_increment column attribute in sharded keyspaces; values won’t be unique across shards.
-Use Vitess Sequences instead — they behave similarly to auto_increment.
+Avoid the `auto_increment` column attribute in sharded keyspaces; values won’t be unique across shards.
+Use [Vitess Sequences](../../user-guides) instead — they behave similarly to `auto_increment`.
 
 # Character Set and Collation
 
-Vitess supports ~99% of MySQL collations. For details, see the collations documentation.
+Vitess supports ~99% of MySQL collations. For details, see the [collations documentation](../../user-guides/configuration-basic/collations).
 
 # Data Types
 
@@ -191,13 +192,13 @@ Vitess behaves similarly to STRICT_TRANS_TABLES and does not recommend changing 
 
 ## Authentication Plugins
 
-Vitess supports both MySQL 5.7 and 8.0 authentication plugins, such as mysql_native_password and caching_sha2_password.
+Vitess supports MySQL authentication plugins, such as `mysql_native_password` and `caching_sha2_password`.
 
 ## Transport Security
 
 To enable TLS on VTGate:
- - Set --mysql_server_ssl_cert and --mysql_server_ssl_key.
- - Optionally require client certificates with --mysql_server_ssl_ca.
+ - Set `--mysql_server_ssl_cert` and `--mysql_server_ssl_key`.
+ - Optionally require client certificates with `--mysql_server_ssl_ca`.
  - If no CA is specified, TLS is optional.
 
 ## X Dev API
@@ -207,7 +208,7 @@ Vitess does not support the X Dev API.
 # Workload
 
 By default, Vitess applies strict limitations on execution time and row counts, often referred to as OLTP mode:
- - These parameters can be tweaked with queryserver-config-query-timeout, queryserver-config-transaction-timeout, and others on vttablet.
+ - These parameters can be tweaked with `queryserver-config-query-timeout`, `queryserver-config-transaction-timeout`, and [others](../programs/vttablet) on vttablet.
  - You can switch to OLAP mode by issuing:
 
 ```sql
