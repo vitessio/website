@@ -59,12 +59,12 @@ Vitess supports all DDL queries:
 - **Managed, online schema changes** (non-blocking, revertible, etc.).
 - **Non-managed DDL** is also supported.
 
-Refer to [making schema changes](../../user-guides/schema-changes) for more details.
+Refer to [making schema changes](../../../user-guides/schema-changes) for more details.
 
 ## Join, Subqueries, Union, Aggregation, Grouping, Having, Ordering, Limit Queries
 
 Vitess supports most of these query types. For the best experience:
-- Leave [schema tracking](../features/schema-tracking) enabled to leverage full support.
+- Leave [schema tracking](../../features/schema-tracking) enabled to leverage full support.
 
 ## Prepared Statements
 
@@ -94,7 +94,7 @@ See the [Views RFC](https://github.com/vitessio/vitess/issues/11559) for more de
 ## Temporary Tables
 
 Vitess has limited support for temporary tables, only for **unsharded keyspaces**:
-- Creating a temporary table forces the session to start using [reserved connections](../query-serving/reserved-conn).
+- Creating a temporary table forces the session to start using [reserved connections](../../query-serving/reserved-conn).
 - Query plans in this session won’t be cached.
 
 ## USE Statements
@@ -169,7 +169,7 @@ ORDER BY foo;
 
 # Cross-shard Transactions
 
-Vitess supports multiple [transaction modes](../../user-guides/configuration-advanced/shard-isolation-atomicity): `SINGLE`, `MULTI` and `TWOPC` .
+Vitess supports multiple [transaction modes](../../../user-guides/configuration-advanced/shard-isolation-atomicity): `SINGLE`, `MULTI` and `TWOPC` .
  - Default: `MULTI` — multi-shard transactions on a best-effort basis.
  - A single-shard transaction is fully ACID-compliant.
  - Multi-shard commits are done in a specific order; partial commits can be manually undone if needed.
@@ -177,11 +177,11 @@ Vitess supports multiple [transaction modes](../../user-guides/configuration-adv
 # Auto Increment
 
 Avoid the `auto_increment` column attribute in sharded keyspaces; values won’t be unique across shards.
-Use [Vitess Sequences](../../user-guides) instead — they behave similarly to `auto_increment`.
+Use [Vitess Sequences](../../../user-guides) instead — they behave similarly to `auto_increment`.
 
 # Character Set and Collation
 
-Vitess supports ~99% of MySQL collations. For details, see the [collations documentation](../../user-guides/configuration-basic/collations).
+Vitess supports ~99% of MySQL collations. For details, see the [collations documentation](../../../user-guides/configuration-basic/collations).
 
 # Data Types
 
@@ -211,7 +211,7 @@ Vitess does not support the X Dev API.
 # Workload
 
 By default, Vitess applies strict limitations on execution time and row counts, often referred to as OLTP mode:
- - These parameters can be tweaked with `queryserver-config-query-timeout`, `queryserver-config-transaction-timeout`, and [others](../programs/vttablet) on vttablet.
+ - These parameters can be tweaked with `queryserver-config-query-timeout`, `queryserver-config-transaction-timeout`, and [others](../../programs/vttablet) on vttablet.
  - You can switch to OLAP mode by issuing:
 
 ```sql
