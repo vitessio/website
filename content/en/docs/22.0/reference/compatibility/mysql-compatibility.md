@@ -25,6 +25,7 @@ Vitess supports MySQL and gRPC server protocols, allowing it to serve as a drop-
    12. [LOAD DATA Statement](#load-data-statement)
    13. [Create/Drop Database](#createdrop-database)
    14. [User Defined Functions (UDFs)](#user-defined-functions)
+   15. [LAST_INSERT_ID](#last_insert_id)
 3. [Cross-shard Transactions](#cross-shard-transactions)
 4. [Auto Increment](#auto-increment)
 5. [Character Set and Collation](#character-set-and-collation)
