@@ -152,9 +152,19 @@ Vitess can track UDFs if you enable the `--enable-udfs` flag on VTGate. More det
 
 ### LAST_INSERT_ID
 
-Vitess supports `LAST_INSERT_ID` both for returning the last auto-generated ID and for the form `LAST_INSERT_ID(x)`, which sets the session’s last-insert-id value.
+Vitess supports `LAST_INSERT_ID` both for returning the last auto-generated ID and for the form `LAST_INSERT_ID(expr)`, which sets the session’s last-insert-id value.
 
-**Limitation**: When using `LAST_INSERT_ID(x)` as a SELECT expression in *ordered queries*, MySQL sets the session’s `LAST_INSERT_ID` value based on the *last row returned*. Vitess, however, does **not** guarantee which row’s value will be used.
+**Example**:
+
+```sql
+insert into test (id) values (null); -- Inserts a row with an auto-generated ID
+select LAST_INSERT_ID(); -- Returns the last auto-generated ID
+SELECT LAST_INSERT_ID(123); -- Sets the session’s last-insert-id value to 123
+SELECT LAST_INSERT_ID(); -- Returns 123
+```
+
+**Limitation**: When using `LAST_INSERT_ID(expr)` as a SELECT expression in *ordered queries*, MySQL sets the session’s `LAST_INSERT_ID` value based on the *last row returned*. 
+Vitess, however, does **not** guarantee which row’s value will be used.
 
 **Example**:
 
@@ -163,9 +173,6 @@ SELECT LAST_INSERT_ID(col)
 FROM table 
 ORDER BY foo;
 ```
-
- - MySQL behavior: The session’s `LAST_INSERT_ID` is set to the value from the final row returned.
- - Vitess behavior: The exact value used to set `LAST_INSERT_ID` is not guaranteed.
 
 ## Cross-shard Transactions
 
