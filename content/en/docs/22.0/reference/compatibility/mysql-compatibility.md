@@ -141,7 +141,7 @@ Vitess supports `SELECT ... INTO DUMPFILE` and `SELECT ... INTO OUTFILE` for uns
 ## Create/Drop Database
 
 Vitess does not support `CREATE DATABASE` or `DROP DATABASE` by default:
- - A plugin mechanism (`DBDDLPlugin` interface) exists for provisioning databases.
+ - A plugin mechanism ([`DBDDLPlugin`](https://github.com/vitessio/vitess/blob/release-21.0/go/vt/vtgate/engine/dbddl.go#L53) interface) exists for provisioning databases.
  - The plugin must handle database creation, topology updates, and VSchema updates.
  - Register the plugin with `DBDDLRegister` and specify `--dbddl_plugin=myPluginName` when running vtgate.
 
