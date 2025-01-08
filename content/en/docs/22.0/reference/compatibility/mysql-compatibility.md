@@ -185,11 +185,11 @@ Vitess supports ~99% of MySQL collations. For details, see the [collations docum
 
 # Data Types
 
-Vitess supports all MySQL data types. Using FLOAT as part of a PRIMARY KEY is discouraged because it can break features like filtered replication and VReplication.
+Vitess supports all MySQL data types. Using `FLOAT` as part of a `PRIMARY KEY` is discouraged because it can break features like filtered replication and VReplication.
 
 # SQL Mode
 
-Vitess behaves similarly to STRICT_TRANS_TABLES and does not recommend changing the SQL Mode.
+Vitess behaves similarly to `STRICT_TRANS_TABLES` and does not recommend changing the SQL Mode.
 
 # Network Protocol
 
