@@ -10,7 +10,7 @@ As an open source project, Vitess is developed by a community of contributors. M
 If you have a specific question about the Roadmap, we recommend posting in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
 {{< /info >}}
 
-Last Updated: Jan 16, 2024
+Last Updated: Jan 7, 2025
 
 ## Short Term (1-4 months)
 
