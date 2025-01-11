@@ -66,7 +66,7 @@ BINS := mysqlctl mysqlctld vtaclcheck topo2topo vtbackup vtclient vtcombo \
     			exit 1; \
     		fi; \
     fi
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" $(patsubst %-docs,%,$@)
+	go run ./tools/cobradocs/  --debug --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" $(patsubst %-docs,%,$@)
 	find . -name "*md-e" -exec rm {} \;
 	@CHANGED_FILES=$$(git diff --name-only) && \
     	if [ -n "$$CHANGED_FILES" ]; then \
