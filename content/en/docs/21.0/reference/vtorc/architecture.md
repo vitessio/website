@@ -21,8 +21,8 @@ stateDiagram-v2
   problems: Problems Found
   fixes: Run Fixes
   
-  start --> topoServer: Every `topo-information-refresh-duration`
-  start --> vttablets: Every `instance-poll-time`
+  start --> topoServer: Every <code>topo-information-refresh-duration</code>
+  start --> vttablets: Every <code>instance-poll-time</code>
   topoServer --> infoCollected: Keyspace and Vttablet records
   vttablets --> infoCollected: MySQL information
   infoCollected --> problems: Analyze collected information
