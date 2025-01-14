@@ -4,14 +4,14 @@ description: Learn about how Vitess releases work
 weight: 3000
 ---
 
-The Vitess maintainers support the last 3 major releases of Vitess.
+The Vitess maintainers aim to release a major version of Vitess every 6 months.
 Each major release is maintained for 1 year.
 
 > The release lifecycle of Vitess has evolved over the years, each iteration is written down in a VEP (Vitess Enhancement Proposal).
 >
-> VEPs [#1](https://github.com/vitessio/enhancements/blob/main/veps/vep-1.md), [#2](https://github.com/vitessio/enhancements/blob/main/veps/vep-2.md), and [#5](https://github.com/vitessio/enhancements/blob/main/veps/vep-5.md) all mention the release lifecycle of Vitess.
+> VEPs [#1](https://github.com/vitessio/enhancements/blob/main/veps/vep-1.md), [#2](https://github.com/vitessio/enhancements/blob/main/veps/vep-2.md), [#5](https://github.com/vitessio/enhancements/blob/main/veps/vep-5.md), and [#6](https://github.com/vitessio/enhancements/blob/main/veps/vep-6.md) all mention the release lifecycle of Vitess.
 > 
-> The last up-to-date VEP is [VEP #5](https://github.com/vitessio/enhancements/blob/main/veps/vep-5.md).
+> The last up-to-date VEP is [VEP #6](https://github.com/vitessio/enhancements/blob/main/veps/vep-6.md).
 
 ## Release History
 
@@ -76,5 +76,3 @@ Each major release is maintained for 1 year.
 - **Initial GA release:** [v13.0.0](https://github.com/vitessio/vitess/releases/tag/v13.0.0) (2022-02-22)
 - **End of life:** 2023-02-22
 - **Patch releases:** [v13.0.1](https://github.com/vitessio/vitess/releases/tag/v13.0.1), [v13.0.2](https://github.com/vitessio/vitess/releases/tag/v13.0.2), [v13.0.3](https://github.com/vitessio/vitess/releases/tag/v13.0.3)
-
-
