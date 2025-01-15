@@ -1,6 +1,6 @@
 ---
 author: 'Andrés Taylor'
-date: 2024-11-05
+date: 2025-01-25
 slug: 'optimizing-sharding-strategies-vitess'
 tags: ['Vitess', 'Sharding', 'MySQL', 'Query Optimization', 'Database Scaling', 'Vindex', 'VExplain', 'Performance Analysis', 'SQL Planning']
 title: 'Mastering Sharding in Vitess: Tools, Strategies, and Best Practices'
@@ -12,11 +12,11 @@ description: "Explore how to optimize sharding strategies in Vitess for scalable
 Effective sharding is essential for database scalability, especially when using an orchestration layer like Vitess. 
 By analyzing and refining your sharding strategy, you can minimize data transfer, optimize query plans, and improve application performance. 
 This guide explores practical methodologies and key tools in Vitess, including vexplain and the vt CLI, to help you design efficient sharding schemes and analyze query behavior at scale.
+A portion of this introduction recaps Ben’s excellent [post about sharding](https://planetscale.com/blog/database-sharding). 
+If you haven’t read it yet, I recommend checking it out first to get the background—you can always return here afterward.
 
 ## The Importance of Choosing the Right Sharding Key [^1]
 [^1]: For a visual breakdown, refer to Benjamin’s post on the PlanetScale website about sharding keys.
-  
-  When your database grows beyond the capacity of a single MySQL instance,
 
 As your database outgrows the capacity of a single MySQL instance, Vitess can distribute the data across multiple instances through sharding. 
 Sharding splits a large database into smaller, more manageable pieces called shards, with each shard stored on a separate MySQL instance. 
@@ -28,7 +28,8 @@ The sharding key routes queries to the correct shard, functioning similarly to a
 When analyzing a query, if Vitess detects a join performed on columns sharded by the same rules, it can push the join down to the shard level.
 This is the ideal scenario, minimizing data transfer between shards.
 
-Consider an example with two tables, `orders` and `customers`, each sharded by their primary keys (`order_id` and `customer_id`, respectively):
+Consider an example with two tables, `orders` and `customers`, each sharded by their primary keys (`order_id` and `customer_id`, respectively). 
+This choice is usually not a great choice, but just to illustrate what happens when using a suboptimal sharding key, let's start with this design.
 
 ```sql
 select *
@@ -36,11 +37,12 @@ from orders o
        join customers c on o.customer_id = c.customer_id
 ```
 
-Since the join is not being done on the sharding key, Vitess will need to perform the join in the vtgate layer, which is the query router that sits between the application and the MySQL instances.
-This is not ideal, as it means that all the data from both tables will need to be transferred to the vtgate layer, and the join will be performed there.
+Since the join is not being done on the sharding keys, Vitess will need to perform the join in the vtgate layer, which is the query router that sits between the application and the MySQL instances.
+This is suboptimal, as it means that all the data from both tables will need to be transferred to the vtgate layer, and the join will be performed there.
 
 If we were to shard the `orders` table by `customer_id` instead of `order_id`, the join could be pushed down to the shard, and the join would be performed there.
 This would be much more efficient, as only the data that is needed for the join would need to be transferred between shards.
+The sharding key does not have to be unique, it's just a value used to decide which shard this row should live on, this column is perfectly fine as a sharding key.
 
 ## Analyzing How Queries Execute
 
@@ -185,15 +187,4 @@ The tool will also show columns used for filtering or grouping, which can be use
 
 This tool is very useful when you're designing your schema and trying to figure out which columns to use as sharding keys.
 
-## Analyzing Query Patterns at Scale
-
-So far we've looked at individual queries, but real applications have hundreds or thousands of queries. 
-Let's look at a more realistic example. We've collected a [sample query log](link-to-query-log.sql) from our e-commerce application running in production.
-
-Using the `vt` command line tool, we can analyze all these queries at once:
-
-```bash
-vt keys query-log.sql > keys-log.json
-vt benchstat keys-log.json
-```
-
+In a follow-up blog post, I'll show you can do this at scale with [`vt`](https://github.com/vitessio/vt).
