@@ -1,10 +1,11 @@
 ---
 title: vtctldclient
 series: vtctldclient
+aliases: ['/docs/reference/programs/vtctl/']
 ---
 ## vtctldclient
 
-Executes a cluster management command on the remote vtctld server.
+Executes a cluster management command on the remote vtctld server or alternatively as a standalone binary using --server=internal.
 
 ### Synopsis
 
