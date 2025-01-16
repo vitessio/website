@@ -29,7 +29,6 @@ As indicated by the comment name (QUERY_TIMEOUT_MS), this timeout is in millisec
 ### Limitation and caveats:
 
 - Only works for `SELECT` (read) queries.
-- Does not work when doing manual shard-targeting. See [this issue](https://github.com/vitessio/vitess/issues/7031).
 - Cannot set a higher limit to evade the settings for `--queryserver-config-query-timeout` and/or `--queryserver-config-transaction-timeout`.
 
 ## Multi-shard Autocommit (`MULTI_SHARD_AUTOCOMMIT`)

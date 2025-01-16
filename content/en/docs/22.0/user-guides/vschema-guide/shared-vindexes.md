@@ -5,7 +5,7 @@ weight: 7
 
 Let us now look at creating the `corder` table that will contain orders placed by the customers. It will be beneficial to group the rows of the orders in the same shard as that of the customer that placed the orders. Doing things this way will allow for simpler join queries between `customer` and `corder`. There will also be transactional benefits: any transaction that also updates the customer row along with an order will be a single shard transaction.
 
-To make this happen in Vitess, all you have to do is specify that `corder.customer_id` uses the `hash` vindex, which is the same one used by `customer.customer_id`.
+To make this happen in Vitess, all you have to do is specify that `corder.customer_id` uses the `xxhash` vindex, which is the same one used by `customer.customer_id`.
 
 This is one situation where a Primary Vindex conceptually differs from a traditional database Primary Key. Whereas a Primary Key makes a row unique, a Vitess Primary Vindex only yields a Unique value. But multiple rows with the same Primary Vindex value can exist.
 
@@ -35,7 +35,7 @@ VSchema:
     "corder": {
       "column_vindexes": [{
           "column": "customer_id",
-          "name": "hash"
+          "name": "xxhash"
         }],
       "auto_increment": {
         "column": "corder_id",
@@ -47,7 +47,7 @@ VSchema:
 Alternate VSchema DDL:
 
 ```sql
-alter vschema on customer.corder add vindex hash(customer_id);
+alter vschema on customer.corder add vindex xxhash(customer_id);
 alter vschema add sequence product.corder_seq;
 alter vschema on customer.corder add auto_increment corder_id using product.corder_seq;
 ```

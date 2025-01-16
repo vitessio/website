@@ -27,7 +27,7 @@ Thus: `-80` == `00-80` == `0000-8000` == `000000-800000` == `0000000000000000-80
 
 `80-` means: ‘anything greater than or equal to `0x80`
 
-A `hash` type vindex produces an unsigned 64 bit integer as output. This means that all integers **less** than `0x8000000000000000` will fall in shard `-80`. Any number with the highest bit set will be >= `0x8000000000000000`, and will therefore belong to shard `80-`.
+A `xxhash` type vindex produces an unsigned 64 bit integer as output. This means that all integers **less** than `0x8000000000000000` will fall in shard `-80`. Any number with the highest bit set will be >= `0x8000000000000000`, and will therefore belong to shard `80-`.
 
 This left-justified approach allows you to have keyspace ids of arbitrary length. However, the most significant bits are the ones on the left.
 

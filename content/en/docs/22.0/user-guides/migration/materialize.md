@@ -91,14 +91,14 @@ $ cat <<EOF | mysql commerce
 CREATE TABLE corder_view (
   order_id bigint NOT NULL,
   customer_id bigint DEFAULT NULL,
-  sku varbinary(128) DEFAULT NULL,
+  sku varchar(128) DEFAULT NULL,
   price bigint DEFAULT NULL,
   PRIMARY KEY (order_id)
 );
 CREATE TABLE corder_view_redacted (
   order_id bigint NOT NULL,
   customer_id bigint DEFAULT NULL,
-  sku varbinary(128) DEFAULT NULL,
+  sku varchar(128) DEFAULT NULL,
   PRIMARY KEY (order_id)
 );
 EOF

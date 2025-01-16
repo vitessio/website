@@ -60,7 +60,7 @@ Finally, we must associate `customer.corder_id` with the lookup vindex:
 ```json
       "column_vindexes": [{
           "column": "customer_id",
-          "name": "hash"
+          "name": "xxhash"
         }, {
           "column": "corder_id",
           "name": "corder_keyspace_idx"
@@ -105,7 +105,7 @@ And then, issuing a query like `select * from corder where corder_id=1` results 
 
 Looking at the rows in `corder_keyspace_idx` reveals a few things. We get to now see actual keyspace id values that were previously invisible. We can also notice that two different inputs `1` and `2` map to the same keyspace id `166B40B44ABA4BD6`. In other words, a unique vindex does not necessarily guarantee that two different values yield different keyspace ids. In fact, this is derived from the fact that there are two order rows for customer id `1`.
 
-Vindexes that do have a one-to-one correspondence between the input value and keyspace id , like `hash`, are known as reversible vindexes: Given a keyspace id, the input value can be back-computed. This property will be used in a later example.
+Vindexes that do have a one-to-one correspondence between the input value and keyspace id , like `xxhash`, are known as reversible vindexes: Given a keyspace id, the input value can be back-computed. This property will be used in a later example.
 
 ### Backfill
 

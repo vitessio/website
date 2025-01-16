@@ -269,8 +269,20 @@ main.td-main
 .mt-100
   margin-top: 100px
 
+.changelog > div > .is-size-3
+  +touch
+    font-size: 1.4rem !important
+
+.changelog > div > .is-size-4
+  +touch
+    font-size: 1.2rem !important
+
 .flex-gap-md
   gap: 110px
+  +tablet
+    gap: 50px
+  +touch
+    gap: 20px
 
 .tag-heading
   font-size: 1rem !important
@@ -355,6 +367,13 @@ label.date
 .flex
   display: flex
 
+.flex-1
+  flex: 1
+
+.flex-col--mobile
+  +touch
+    flex-direction: column
+
 
 .justify-content-space
   justify-content: space-between
@@ -377,3 +396,17 @@ label.date
 .img-thumbnail
   height: 222px
   object-fit: contain
+
+.changelog
+  display: flex
+  flex-direction: column
+  border-radius: 6px
+  border: 1px solid #D0D7DF
+  padding: 48px 40px
+  +touch
+    padding: 48px 28px
+
+.text-underlined-on-hover
+  &:hover
+    text-decoration: underline
+

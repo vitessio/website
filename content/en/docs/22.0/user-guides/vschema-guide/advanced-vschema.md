@@ -115,7 +115,7 @@ However, we can modify the VSchema as follows:
     "customer": {
       "column_vindexes": [{
         "column": "customer_id",
-        "name": "hash"
+        "name": "xxhash"
       }],
       "auto_increment": {
         "column": "customer_id",
@@ -161,7 +161,7 @@ If you have listed all columns of a table in the VSchema, you can add the `colum
     "customer": {
       "column_vindexes": [{
         "column": "customer_id",
-        "name": "hash"
+        "name": "xxhash"
       }],
       "auto_increment": {
         "column": "customer_id",

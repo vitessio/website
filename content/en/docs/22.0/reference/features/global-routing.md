@@ -66,7 +66,7 @@ mysql> show columns from corder;
 +-------------+----------------+------+-----+---------+-------+
 | order_id    | bigint         | NO   | PRI | NULL    |       |
 | customer_id | bigint         | YES  |     | NULL    |       |
-| sku         | varbinary(128) | YES  |     | NULL    |       |
+| sku         | varchar(128)   | YES  |     | NULL    |       |
 | price       | bigint         | YES  |     | NULL    |       |
 +-------------+----------------+------+-----+---------+-------+
 4 rows in set (0.01 sec)
@@ -75,8 +75,8 @@ mysql> show columns from product;
 +-------------+----------------+------+-----+---------+-------+
 | Field       | Type           | Null | Key | Default | Extra |
 +-------------+----------------+------+-----+---------+-------+
-| sku         | varbinary(128) | NO   | PRI | NULL    |       |
-| description | varbinary(128) | YES  |     | NULL    |       |
+| sku         | varchar(128)   | NO   | PRI | NULL    |       |
+| description | varchar(128)   | YES  |     | NULL    |       |
 | price       | bigint         | YES  |     | NULL    |       |
 +-------------+----------------+------+-----+---------+-------+
 3 rows in set (0.00 sec)
@@ -106,7 +106,7 @@ mysql> show columns from customer;
 | Field       | Type           | Null | Key | Default | Extra |
 +-------------+----------------+------+-----+---------+-------+
 | customer_id | bigint         | NO   | PRI | NULL    |       |
-| email       | varbinary(128) | YES  |     | NULL    |       |
+| email       | varchar(128)   | YES  |     | NULL    |       |
 +-------------+----------------+------+-----+---------+-------+
 2 rows in set (0.01 sec)
 
@@ -116,7 +116,7 @@ mysql> show columns from corder;
 +-------------+----------------+------+-----+---------+-------+
 | order_id    | bigint         | NO   | PRI | NULL    |       |
 | customer_id | bigint         | YES  |     | NULL    |       |
-| sku         | varbinary(128) | YES  |     | NULL    |       |
+| sku         | varchar(128)   | YES  |     | NULL    |       |
 | price       | bigint         | YES  |     | NULL    |       |
 +-------------+----------------+------+-----+---------+-------+
 4 rows in set (0.00 sec)
@@ -145,8 +145,8 @@ mysql> show columns from commerce.product;
 +-------------+----------------+------+-----+---------+-------+
 | Field       | Type           | Null | Key | Default | Extra |
 +-------------+----------------+------+-----+---------+-------+
-| sku         | varbinary(128) | NO   | PRI | NULL    |       |
-| description | varbinary(128) | YES  |     | NULL    |       |
+| sku         | varchar(128)   | NO   | PRI | NULL    |       |
+| description | varchar(128)   | YES  |     | NULL    |       |
 | price       | bigint         | YES  |     | NULL    |       |
 +-------------+----------------+------+-----+---------+-------+
 3 rows in set (0.00 sec)

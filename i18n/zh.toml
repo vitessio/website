@@ -40,6 +40,9 @@ other = "文档"
 [blog]
 other = "博客"
 
+[changelog]
+other = "更新日志"
+
 [community]
 other = "社区"
 

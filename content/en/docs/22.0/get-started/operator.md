@@ -136,20 +136,20 @@ In this example, we deployed a single unsharded keyspace named `commerce`. Unsha
 
 ``` sql
 create table product(
-  sku varbinary(128),
-  description varbinary(128),
+  sku varchar(128),
+  description varchar(128),
   price bigint,
   primary key(sku)
 );
 create table customer(
   customer_id bigint not null auto_increment,
-  email varbinary(128),
+  email varchar(128),
   primary key(customer_id)
 );
 create table corder(
   order_id bigint not null auto_increment,
   customer_id bigint,
-  sku varbinary(128),
+  sku varchar(128),
   price bigint,
   primary key(order_id)
 );

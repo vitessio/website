@@ -303,7 +303,7 @@ Let's begin again as a trivial example, both tables have same `PRIMARY KEY`s:
 CREATE TABLE `corder` (
   `order_id` bigint NOT NULL AUTO_INCREMENT,
   `customer_id` bigint DEFAULT NULL,
-  `sku` varbinary(128) DEFAULT NULL,
+  `sku` varchar(128) DEFAULT NULL,
   `price` bigint DEFAULT NULL,
   PRIMARY KEY (`order_id`)
 )

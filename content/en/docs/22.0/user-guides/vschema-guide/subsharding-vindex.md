@@ -45,7 +45,7 @@ Example usage in VSchema:
     "params": {
       "column_count": "3",
       "column_bytes": "1,3,4",
-      "column_vindex": "hash,binary,unicode_loose_xxhash"
+      "column_vindex": "xxhash,binary,unicode_loose_xxhash"
     }
   }
 }
@@ -66,7 +66,7 @@ Example usage in VSchema:
 A maximum of 8 columns can be used in this vindex i.e. `column_count <= 8`
 
 `column_vindex` should contain the vindex names in a comma-separated list. It should be less than or equal to column_count.
-The default vindex is `hash`, If a vindex is not provided for a column, then `hash` will be used for that column.
+The default vindex is `xxhash`, If a vindex is not provided for a column, then `xxhash` will be used for that column.
 Each vindex in `column_vindex` should implement the following interface otherwise the initialization will fail. See below for the list of [standard Vitess vindexes](#hashing-function-implementation) that implement this interface.
 
 ```go

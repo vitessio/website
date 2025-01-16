@@ -31,7 +31,7 @@ should be copied as-is from the source keyspace. Here's an example value for tab
   {
     "target_table": "sales_by_sku",
     "source_expression": "select sku, count(*) as orders, sum(price) as revenue from corder group by sku",
-    "create_ddl": "create table sales_by_sku (sku varbinary(128) not null primary key, orders bigint, revenue bigint)"
+    "create_ddl": "create table sales_by_sku (sku varchar(128) not null primary key, orders bigint, revenue bigint)"
   }
 ]
 
@@ -43,7 +43,7 @@ vtctldclient Materialize create
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 materialize --workflow product_sales --target-keyspace commerce create --source-keyspace commerce --table-settings '[{"target_table": "sales_by_sku", "create_ddl": "create table sales_by_sku (sku varbinary(128) not null primary key, orders bigint, revenue bigint)", "source_expression": "select sku, count(*) as orders, sum(price) as revenue from corder group by sku"}]' --cells zone1 --cells zone2 --tablet-types replica
+vtctldclient --server localhost:15999 materialize --workflow product_sales --target-keyspace commerce create --source-keyspace commerce --table-settings '[{"target_table": "sales_by_sku", "create_ddl": "create table sales_by_sku (sku varchar(128) not null primary key, orders bigint, revenue bigint)", "source_expression": "select sku, count(*) as orders, sum(price) as revenue from corder group by sku"}]' --cells zone1 --cells zone2 --tablet-types replica
 ```
 
 ### Options

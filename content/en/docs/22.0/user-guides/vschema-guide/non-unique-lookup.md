@@ -79,7 +79,7 @@ Finally, we tie the associated columns in `corder` to the vindex:
     "corder": {
       "column_vindexes": [{
         "column": "customer_id",
-        "name": "hash"
+        "name": "xxhash"
       }, {
         "column": "corder_id",
         "name": "corder_keyspace_idx"

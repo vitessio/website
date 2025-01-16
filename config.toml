@@ -31,6 +31,9 @@ stackoverflow = "vitess"
 [params.blog]
 subtitle = "Updates and insights from the **Vitess** team."
 
+[params.changelog]
+subtitle = "Track all the changes and updates in the **Vitess** project."
+
 [sitemap]
 changefreq = "monthly"
 filename = "sitemap.xml"

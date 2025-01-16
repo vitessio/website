@@ -21,28 +21,28 @@ In our example, we are going to designate `customer` as a sharded keyspace, and 
 create table customer(customer_id bigint, uname varchar(128), primary key(customer_id));
 ```
 
-In the VSchema, we need to designate which column should be the Primary Vindex, and choose the vindex type for it. The `customer_id` column seems to be the natural choice. Since it is a number, we will choose `hash` as the vindex type:
+In the VSchema, we need to designate which column should be the Primary Vindex, and choose the vindex type for it. The `customer_id` column seems to be the natural choice. Since it is a number, we will choose `xxhash` as the vindex type:
 
 ```json
 {
   "sharded": true,
   "vindexes": {
-    "hash": {
-      "type": "hash"
+    "xxhash": {
+      "type": "xxhash"
     }
   },
   "tables": {
     "customer": {
       "column_vindexes": [{
         "column": "customer_id",
-        "name": "hash"
+        "name": "xxhash"
       }]
     }
   }
 }
 ```
 
-In the above section, we are instantiating a vindex named `hash` from the vindex type `hash`. Such instantiations are listed in the `vindexes` section of the vschema. The tables are expected to refer to the instantiated name. There are a few reasons why this additional level of indirection is necessary:
+In the above section, we are instantiating a vindex named `xxhash` from the vindex type `xxhash`. Such instantiations are listed in the `vindexes` section of the vschema. The tables are expected to refer to the instantiated name. There are a few reasons why this additional level of indirection is necessary:
 
 * As we will see later, vindexes can be instantiated with different input parameters. In such cases, they have to have their own distinct names.
 * Vindexes can be shared by tables, and this has special meaning. We will cover this in a later section.
@@ -53,16 +53,16 @@ The `column_vindexes` section is a list. This is because a table can have multip
 Alternate VSchema DDL:
 
 ```sql
-alter vschema on customer.customer add vindex hash(customer_id) using hash;
+alter vschema on customer.customer add vindex xxhash(customer_id) using xxhash;
 ```
 
-The DDL creates the `hash` vindex under the `vindexes` section, the `customer` table under the `tables` section, and associates the `customer_id` column to `hash`. For sharded keyspaces, the only way to create a table is using the above construct. This is because a primary vindex is mandatory for sharded tables.
+The DDL creates the `xxhash` vindex under the `vindexes` section, the `customer` table under the `tables` section, and associates the `customer_id` column to `xxhash`. For sharded keyspaces, the only way to create a table is using the above construct. This is because a primary vindex is mandatory for sharded tables.
 
 {{< info >}}
 Every sharded table must have a Primary Vindex. A Primary Vindex must be instantiated from a vindex type that is Unique. `xxhash`, `unicode_loose_xxhash` and `binary_md5` are unique vindex types.
 {{< /info >}}
 
-The demo brings up the `customer` table as two shards: `-80` and `80-`. For a `hash` vindex, input values of 1, 2 and 3 fall in the `-80` range, and 4 falls in the `80-` range. Restarting the demo with the updated configs should allow you to perform the following:
+The demo brings up the `customer` table as two shards: `-80` and `80-`. For a `xxhash` vindex, input values of 1, 2 and 3 fall in the `-80` range, and 4 falls in the `80-` range. Restarting the demo with the updated configs should allow you to perform the following:
 
 ```text
 mysql> insert into customer(customer_id,uname) values(1,'alice'),(4,'dan');
@@ -97,7 +97,7 @@ Consequently, you cannot make changes to a row that can cause the keyspace id to
 
 ```text
 mysql> update customer set customer_id=2 where customer_id=1;
-ERROR 1235 (HY000): vtgate: http://sougou-lap1:12345/: unsupported: You can't update primary vindex columns. Invalid update on vindex: hash
+ERROR 1235 (HY000): vtgate: http://sougou-lap1:12345/: unsupported: You can't update primary vindex columns. Invalid update on vindex: xxhash
 ```
 
 A Primary Vindex can also be used to find rows if referenced in a where clause:

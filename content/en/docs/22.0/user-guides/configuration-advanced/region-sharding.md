@@ -65,9 +65,9 @@ mysql> show create table customer\G
        Table: customer
 Create Table: CREATE TABLE `customer` (
   `id` int NOT NULL,
-  `fullname` varbinary(256) DEFAULT NULL,
-  `nationalid` varbinary(256) DEFAULT NULL,
-  `country` varbinary(256) DEFAULT NULL,
+  `fullname` varchar(256) DEFAULT NULL,
+  `nationalid` varchar(256) DEFAULT NULL,
+  `country` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 1 row in set (0.00 sec)

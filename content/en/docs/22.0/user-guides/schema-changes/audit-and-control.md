@@ -707,7 +707,7 @@ mysql> show create table corder\G
 Create Table: CREATE TABLE `corder` (
   `order_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `customer_id` bigint(20) DEFAULT NULL,
-  `sku` varbinary(128) DEFAULT NULL,
+  `sku` varchar(128) DEFAULT NULL,
   `price` bigint(20) DEFAULT NULL,
   `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`order_id`)
@@ -728,7 +728,7 @@ mysql> show create table corder\G
 Create Table: CREATE TABLE `corder` (
   `order_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `customer_id` bigint(20) DEFAULT NULL,
-  `sku` varbinary(128) DEFAULT NULL,
+  `sku` varchar(128) DEFAULT NULL,
   `price` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`order_id`),
   KEY `customer_idx` (`customer_id`)
@@ -747,7 +747,7 @@ mysql> show create table corder\G
 Create Table: CREATE TABLE `corder` (
   `order_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `customer_id` bigint(20) DEFAULT NULL,
-  `sku` varbinary(128) DEFAULT NULL,
+  `sku` varchar(128) DEFAULT NULL,
   `price` bigint(20) DEFAULT NULL,
   `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`order_id`)

@@ -276,7 +276,7 @@ $ vtctldclient --server=localhost:15999 GetVSchema customer | jq '.vindexes'
     "type": "binary"
   },
   "hash_vdx": {
-    "type": "hash"
+    "type": "xxhash"
   }
 }
 ```

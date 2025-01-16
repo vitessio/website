@@ -141,8 +141,8 @@ $ cat vschema.json
     "ks1": {
         "sharded": true,
         "vindexes": {
-            "hash": {
-                "type": "hash"
+            "xxhash": {
+                "type": "xxhash"
             }
         },
         "tables": {
@@ -150,7 +150,7 @@ $ cat vschema.json
                 "column_vindexes": [
                     {
                         "column": "user_id",
-                        "name": "hash"
+                        "name": "xxhash"
                     }
                 ]
             }

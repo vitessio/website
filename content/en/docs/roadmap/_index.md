@@ -10,39 +10,45 @@ As an open source project, Vitess is developed by a community of contributors. M
 If you have a specific question about the Roadmap, we recommend posting in our [Slack channel](https://vitess.slack.com), click the Slack icon in the top right to join. This is a very active community forum and a great place to interact with other users.
 {{< /info >}}
 
-Last Updated: Jan 16, 2024
+Last Updated: Jan 7, 2025
 
 ## Short Term (1-4 months)
 
 - Query serving
   - Support more MySQL Syntax (improve compatibility as a drop-in replacement)
-    - Better information_schema support
-  - Improve error messages
-  - Foreign Key constraints
+  - Performance improvements
+  - Views GA
+  - Better visibility through metrics
 - Improve Usability
-  - Viper framework for flags
+  - Use viper framework to implement dynamic flags
 - VReplication
   - Benchmarking
   - Performance improvements
-  - Migrating data with Foreign Key constraints
+  - Improve unit test coverage
+  - Deprecate vtctlclient
 - VTAdmin
-  - Schema management APIs
+  - VReplication
+  - Schema Management
+- Throttler
+  - Multi-metrics
+- Online DDL
+  - Range partition management
+- VTOrc
+  - Stalled Disk recovery
+- Vitess operator
+  - Multiple namespaces
+  - Improve and document rollouts
+  - Support for node draining
 
 ## Medium / Long Term (4-18 months)
 
 - MySQL compatibility
   - Support more frameworks
+  - Window Functions, JSON_TABLE etc.
 - Query Serving improvements
-  - Performance
-  - More supported queries
-- Schema changes
-  - Usability
-- VTAdmin UI
-  - VReplication
-  - Schema Management
-- VTOrc improvements
-  - Reduce client downtime
-- Vitess operator
-  - Documentation
+  - Cost-based optimization
+- VT/VExplain tooling to help with migration into Vitess
+- VTAdmin UI enhancements
 - Read-After-Write consistency
-- Distributed Transactions
+- Read Isolation
+- Cross-shard Foreign Key support
