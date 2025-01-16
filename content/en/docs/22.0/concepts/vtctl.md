@@ -2,7 +2,7 @@
 title: vtctl
 ---
 
-**vtctl** is a command-line tool, `vtctldclient`, that is used to administer a Vitess cluster. It is available as both a standalone tool (`vtctldclient --server=internal`) and client-server (`vtctldclient` in combination with `vtctld`). Using client-server is recommended, as it provides an additional layer of security when using the client remotely.
+**vtctl** is a command-line tool, `vtctldclient`, that is used as both a standalone tool (`vtctldclient --server=internal`) and client-server (`vtctldclient` in combination with `vtctld`) to administer a Vitess cluster. Using client-server is recommended, as it provides an additional layer of security when using the client remotely.
 
 Using this you can identify primary and replica databases, create tables, initiate failovers, perform resharding operations, and so forth.
 
