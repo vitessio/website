@@ -43,8 +43,7 @@ Each major release is maintained for 1 year.
 - **Current version:** [v18.0.8](https://github.com/vitessio/vitess/releases/tag/v18.0.8) (2024-11-06)
 - **Initial GA release:** [v18.0.0](https://github.com/vitessio/vitess/releases/tag/v18.0.0) (2023-11-07)
 - **End of life:** 2024-11-07
-- **Patch releases:** [v18.0.1](https://github.com/vitessio/vitess/releases/tag/v18.0.1), [v18.0.2](https://github.
-  com/vitessio/vitess/releases/tag/v18.0.2), [v18.0.3](https://github.com/vitessio/vitess/releases/tag/v18.0.3), [v18.0.4](https://github.com/vitessio/vitess/releases/tag/v18.0.4), [v18.0.5](https://github.com/vitessio/vitess/releases/tag/v18.0.5), [v18.0.6](https://github.com/vitessio/vitess/releases/tag/v18.0.6), [v18.0.7](https://github.com/vitessio/vitess/releases/tag/v18.0.7), [v18.0.8](https://github.com/vitessio/vitess/releases/tag/v18.0.8)
+- **Patch releases:** [v18.0.1](https://github.com/vitessio/vitess/releases/tag/v18.0.1), [v18.0.2](https://github.com/vitessio/vitess/releases/tag/v18.0.2), [v18.0.3](https://github.com/vitessio/vitess/releases/tag/v18.0.3), [v18.0.4](https://github.com/vitessio/vitess/releases/tag/v18.0.4), [v18.0.5](https://github.com/vitessio/vitess/releases/tag/v18.0.5), [v18.0.6](https://github.com/vitessio/vitess/releases/tag/v18.0.6), [v18.0.7](https://github.com/vitessio/vitess/releases/tag/v18.0.7), [v18.0.8](https://github.com/vitessio/vitess/releases/tag/v18.0.8)
 
 ### v17.0
 - **Current version:** [v17.0.7](https://github.com/vitessio/vitess/releases/tag/v17.0.7) (2024-05-08)
