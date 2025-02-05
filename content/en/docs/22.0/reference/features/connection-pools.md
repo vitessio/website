@@ -73,7 +73,7 @@ As a result, connection pools should be sized mindful of the capacity of the und
  * Hardcoded (size 3)
  * metric:  `vttablet_online_ddl_executor_pool_capacity`
  * Potentially uses `--db_app_user`, `--db_dba_user` and `--db_appdebug_user` i.e. defaults 'vt_app', 'vt_dba' and 'vt_appdebug'
- * Used in Online DDL to during the actual process of running gh-ost or pt-osc.
+ * Used in Online DDL to during the actual process of running migrations.
 
 #### table_gc_pool
 

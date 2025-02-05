@@ -27,7 +27,7 @@ As general overview:
 - Vitess resolves affected shards.
 - A shard's `primary` tablet schedules the migration to run when possible.
 - Tablets will independently run schema migrations:
-  - `ALTER TABLE` statements run via `VReplication`, `gh-ost` or `pt-online-schema-change`, as per selected [strategy](../ddl-strategies)
+  - `ALTER TABLE` statements run via a `VReplication` workflow. Read more on [ddl strategies](../ddl-strategies)
   - `CREATE TABLE` and `CREATE VIEW` statements run directly.
   - `DROP TABLE` statements run [safely and lazily](https://github.com/vitessio/vitess/blob/main/doc/design-docs/SafeLazyDropTables.md).
   - `ALTER VIEW` and `DROP VIEW` are internally modified to allow quick revert.
@@ -68,8 +68,7 @@ ALTER TABLE demo MODIFY id bigint UNSIGNED;
 This statement can be executed as:
 
 - a `vitess` (aka `online`), managed online migration
-- a `gh-ost`, managed online migration ((**unsupported** and slated to be removed in future versions)
-- a `pt-online-schema-change`, managed online migration (**experimental** and slated to be removed in future versions)
+- a synchronous, managed schema change
 - a synchronous, [unmanaged schema change](../unmanaged-schema-changes/)
 
 See [DDL Strategies](../ddl-strategies) for discussion around the different options.
@@ -95,15 +94,7 @@ Vitess may modify your queries to qualify for online DDL statement. Modification
 
 ## ddl_strategy
 
-You will either set `vtgate` `--ddl_strategy` command line flag value, or will override it with the `@@ddl_strategy` session variable, or use the `vtctldclient` --ddl-strategy` flag to control your schema migration strategy, and specifically, to enable and configure online DDL. Details in [DDL Strategies](../ddl-strategies). A quick overview:
-
-- The value `"vitess"` instructs Vitess to run an `ALTER TABLE` online DDL via `VReplication`. This is the preferred method.
-- The value `"gh-ost"` instructs Vitess to run an `ALTER TABLE` online DDL via `gh-ost`.
-- The value `"pt-osc"` instructs Vitess to run an `ALTER TABLE` online DDL via `pt-online-schema-change`.
-- You may specify arguments for your tool of choice, e.g. `"gh-ost --max-load Threads_running=200"`. Details follow.
-- The value `"direct"`, means not an online DDL. The empty value (`""`) is also interpreted as `direct`. A query is immediately pushed and applied on backend servers. This is the default strategy. The migration is not managed and is not trackable.
-
-`CREATE` and `DROP` statements run in the same way for `"vitess"`, `"gh-ost"` and `"pt-osc"` strategies, and we consider them all to be _online_.
+You will either set `vtgate` `--ddl_strategy` command line flag value, or will override it with the `@@ddl_strategy` session variable, or use the `vtctldclient` --ddl-strategy` flag to control your schema migration strategy, and specifically, to enable and configure online DDL. Details in [DDL Strategies](../ddl-strategies).
 
 See also [ddl_strategy flags](../ddl-strategy-flags).
 
@@ -204,7 +195,7 @@ The new primary must be available within `10 minutes`, or else the migration is 
 
 ## Auto retry after failure
 
-Neither `gh-ost` and `pt-osc` are able to resume from point of failure, or after a failover. However, Vitess management can issue an automated retry (starting the migration afresh).
+Vitess management can issue an automated retry (starting the migration afresh).
 
 - which `vttablet` initiated the migration
 - how many times a migration has been retried
@@ -222,11 +213,7 @@ The primary use case is a primary failure and failover. The newly promoted table
 
 ## Throttling
 
-All three strategies: `vitess`, `gh-ost` and `pt-osc` utilize the tablet throttler, which is a cooperative throttler service based on replication lag. The tablet throttler automatically detects topology `REPLICA` tablets and adapts to changes in the topology. See [Tablet throttler](../../../reference/features/tablet-throttler/).
-
-- `vitess` strategy uses the throttler by the fact VReplication natively uses the throttler on both source and target ends (for both reads and writes)
-- `gh-ost` uses the throttler via `--throttle-http`, which is automatically provided by Vitess
-- `pt-osc` uses the throttler by replication lag plugin, automatically injected by Vitess.
+`vitess` utilizes the tablet throttler, which is a cooperative throttler service based on replication lag. The tablet throttler automatically detects topology `REPLICA` tablets and adapts to changes in the topology. See [Tablet throttler](../../../reference/features/tablet-throttler/).
 
 **NOTE** that at this time (and subject to change) the tablet throttler is disabled by default. Enable it via `vtctldclient UpdateThrottlerConfig --enable <keyspace>`. If the tablet throttler is disabled, schema migrations will not throttle on replication lag.
 

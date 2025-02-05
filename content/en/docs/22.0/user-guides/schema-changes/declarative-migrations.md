@@ -91,10 +91,8 @@ Note how while the migration statement is `create`, the migration's `ddl_action`
 
 You may add `--declarative` even if you otherwise supply flags to your favorite strategy. For example, the following is valid:
 ```sql
-set @@ddl_strategy='gh-ost --declarative --max-load=Threads_running=100';
+set @@ddl_strategy='vitess --declarative --allow-concurrent --postpone-completion';
 ```
-
-Vitess notes down the `--declarative` flag and does not pass it to `gh-ost`, `pt-osc` or `VReplication`.
 
 ## Implementation details
 

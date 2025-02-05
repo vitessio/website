@@ -23,7 +23,7 @@ Having semi-sync enabled, gives you the property that, in case of primary failur
 
 Thus, you can survive sudden primary failure without losing any transactions that were reported to clients as completed. In MySQL 5.7+, this guarantee is strengthened slightly to preventing loss of any transactions that were ever **committed** on the original primary, eliminating so-called [phantom reads](http://bugs.mysql.com/bug.php?id=62174).
 
-On the other hand these behaviors also give a requirement that each shard must have at least 2 tablets with type *replica* (with addition of the primary that can be demoted to type *replica* this gives a minimum of 3 tablets with initial type *replica*). This will allow for the primary to have a semi-sync acker when one of the replica tablets is down for any reason (for a version update, machine reboot, schema swap or anything else).
+On the other hand these behaviors also give a requirement that each shard must have at least 2 tablets with type *replica* (with addition of the primary that can be demoted to type *replica* this gives a minimum of 3 tablets with initial type *replica*). This will allow for the primary to have a semi-sync acker when one of the replica tablets is down for any reason (for a version update, machine reboot, or anything else).
 These requirements will changed based on the durability policy.
 
 With regard to replication lag, note that this does **not** guarantee there is always at least one replica from which queries will always return up-to-date results. Semi-sync guarantees that at least one replica has the transaction in its relay log, but it has not necessarily been applied yet. The only way Vitess guarantees a fully up-to-date read is to send the request to the primary.

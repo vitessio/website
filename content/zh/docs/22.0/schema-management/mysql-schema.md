@@ -29,5 +29,3 @@ This approach is not recommended for changing large tables.
 You can apply schema changes directly to MySQL. VTTablet will eventually notice the change and update itself. You can also
 explicitly issue the vtctlclient `ReloadSchema` command to make it reload immediately.
 
-This approach can be extended to use schema deployment tools like `gh-ost` or `pt-online-schema-change`. Using these schema
-deployment tools is the recommended approach for large tables, because they incur no downtime.

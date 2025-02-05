@@ -63,14 +63,7 @@ Note if the main use case is Filtered Replication for resharding, this limitatio
 
 ### Applying Schema Changes
 
-When using RBR, [Schema Swap](../vitess-replication#vitess-schema-swap) becomes useless, as replication between hosts with different schemas will most likely break. This is however an existing limitation that is already known and handled by MySQL DBAs.
-
-Vitess at this point does not provide an integrated way of applying involved schema changes through RBR. A number of external tools however already exist to handle this case, like gh-ost.
-
-We have future plans to:
-
-* Integrate with a tool like gh-ost to provide a seamless schema change story.
-* Maintain a history of the schema changes that happen on all shards, so events can be parsed correctly in all cases.
+Vitess migrations (based on VReplication) use RBR for change data capture.
 
 ## Unsupported Features
 

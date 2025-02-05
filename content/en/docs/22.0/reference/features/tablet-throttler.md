@@ -103,7 +103,7 @@ A client that connects to the throttler and asks for throttling advice identifie
 
 - `vreplication`: any VReplication workflow.
 - `tablegc`: table lifecycle.
-- `online-ddl`: any Online DDL operation, whether Vitess or `gh-ost`.
+- `online-ddl`: any Online DDL operation.
 - `vplayer`: a submodule of VReplication.
 - `schema-tracker`: the internal schema tracker.
 
@@ -787,10 +787,6 @@ To measure replication lag, the throttler uses the heartbeat writer service in V
 
 The primary throttler uses `CheckThrottler` gRPC calls on the replicas. Apps internal to vitess use `ThrottlerClient` as a library client.
 
-The throttler does also provide a HTTP endpoint for external apps such as `gh-ost` and `pt-online-schema-change`:
-
-- `/throttler/check?app=<app-name>` is the equivalent of `vtctldclient CheckThrottler --app-name=<app-name>`.
-
 ### Metrics
 
 The tablet throttler exports several metrics using the expvars interface. These are available at the `/debug/vars` endpoint of vttablet's http status pages. [More details can be found here](../../features/monitoring/#3-push-based-metrics-system).
@@ -903,13 +899,12 @@ Each applies different metrics to different apps, and each can assign a differen
 
 ### HTTP endpoints
 
+- `/throttler/check` - use `vtctldclient CheckThrottler` instead
 - `/throttler/check-self` - use `vtctldclient CheckThrottler --scope-self` instead
 - `/throttler/status` - use `vtctldclient GetThrottlerStatus` instead
 - `/throttler/throttle-app` - use `vtctldclient UpdateThrottlerConfig --throttle-app=<name> ...` instead
 - `/throttler/unthrottle-app` - use `vtctldclient UpdateThrottlerConfig --unthrottle-app=<name>` instead
 - `/throttler/throttled-apps` - use `vtctldclient GetThrottlerStatus` instead
-
-The endpoint `/throttler/check` is kept but unsupported. It is used by `gh-ost`. External use of this endpoint is discouraged.
 
 ## Notes
 
