@@ -29,6 +29,7 @@ resources:
     type: video
   - url: "https://www.infoq.com/podcasts/distributed-database-architecture-deepthi-sigireddi/"
     title: "Distributed Database Architecture in the Cloud Native Era - Deepthi Sigireddi, PlanetScale"
+    thumbnail_url: "https://res.infoq.com/podcasts/distributed-database-architecture-deepthi-sigireddi/en/card_header_image/generatedCard-1715083315093.jpg"
     date: 2024
     type: podcast
   - youtube: _Xl24s_0mZs
@@ -82,6 +83,7 @@ resources:
   - url: "https://se-radio.net/2022/05/episode-510-deepthi-sigireddi-on-how-vitess-scales-mysql/"
     title: "How Vitess Scales MySQL - Deepthi Sigireddi, PlanetScale"
     date: 2022
+    thumbnail_url: "https://se-radio.net/wp-content/uploads/2022/05/deepthi-sigreddi.jpeg"
     type: podcast
   - youtube: fLullHPddvg
     title: "Continuous Performance Benchmarking for Vitess - Alkin Tezuysal, Florent Poinsard & Manan Gupta, PlanetScale"
@@ -178,6 +180,7 @@ resources:
   - url: "https://www.infoq.com/presentations/vitess/"
     title: "Sugu Sougoumarane gives an overview of the salient features of Vitess."
     date: 2019
+    thumbnail_url: "https://res.infoq.com/presentations/vitess/en/headerimage/Sugubig-1550628002702.JPG"
     type: video
   - youtube: aTItjMJE17c
     title: "Scaling Resilient Systems: A Journey into Slack's Database Service - Rafael Chacon & Guido Iaquinti, Slack"
@@ -242,6 +245,7 @@ resources:
   - url: "https://anchor.fm/cloud-native-show/episodes/Vitess-at-scale---how-Nozzle-io-runs-MySQL-on-Kubernetes-e4m5lo"
     title: "Vitess at scale - how Nozzle.io runs MySQL on Kubernetes - Derek Perkins"
     date: 2019
+    thumbnail_url: "https://s3-us-west-2.amazonaws.com/anchor-generated-image-bank/production/podcast_uploaded_nologo400/617797/617797-1553202830695-b790ce2d7ad84.jpg"
     type: podcast
   - youtube: E6H4bgJ3Z6c
     title: "Vitess: Sharded MySQL on Kubernetes - Sugu Sougoumarane"
