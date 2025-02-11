@@ -41,5 +41,5 @@ vtctldclient UpdateThrottlerConfig [--enable|--disable] [--metric-name=<name>] [
 
 ### SEE ALSO
 
-* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
+* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server or alternatively as a standalone binary using --server=internal.
 

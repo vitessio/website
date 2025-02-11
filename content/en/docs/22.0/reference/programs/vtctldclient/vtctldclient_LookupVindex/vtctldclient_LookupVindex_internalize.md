@@ -1,26 +1,25 @@
 ---
-title: LookupVindex externalize
+title: LookupVindex internalize
 series: vtctldclient
 ---
-## vtctldclient LookupVindex externalize
+## vtctldclient LookupVindex internalize
 
-Externalize the Lookup Vindex. If the Vindex has an owner the VReplication workflow will also be stopped/deleted.
+Internalize the Vindex again to continue the backfill, making it unusable for queries again.
 
 ```
-vtctldclient LookupVindex externalize
+vtctldclient LookupVindex internalize
 ```
 
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 LookupVindex --name corder_lookup_vdx --table-keyspace customer externalize
+vtctldclient --server localhost:15999 LookupVindex --name corder_lookup_vdx --table-keyspace customer internalize
 ```
 
 ### Options
 
 ```
-      --delete            Delete the VReplication workflow after externalizing the Vindex, instead of stopping (default false).
-  -h, --help              help for externalize
+  -h, --help              help for internalize
       --keyspace string   The keyspace containing the Lookup Vindex. If no value is specified then the table-keyspace will be used.
 ```
 

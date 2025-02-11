@@ -30,7 +30,7 @@ vtctldclient Workflow --keyspace <keyspace> [command] [command-flags]
 
 ### SEE ALSO
 
-* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
+* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server or alternatively as a standalone binary using --server=internal.
 * [vtctldclient Workflow delete](./vtctldclient_workflow_delete/)	 - Delete a VReplication workflow.
 * [vtctldclient Workflow list](./vtctldclient_workflow_list/)	 - List the VReplication workflows in the given keyspace.
 * [vtctldclient Workflow show](./vtctldclient_workflow_show/)	 - Show the details for a VReplication workflow.

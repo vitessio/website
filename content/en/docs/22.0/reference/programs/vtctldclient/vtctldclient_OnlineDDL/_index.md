@@ -25,7 +25,7 @@ Operates on online DDL (schema migrations).
 
 ### SEE ALSO
 
-* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
+* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server or alternatively as a standalone binary using --server=internal.
 * [vtctldclient OnlineDDL cancel](./vtctldclient_onlineddl_cancel/)	 - Cancel one or all migrations, terminating any running ones as needed.
 * [vtctldclient OnlineDDL cleanup](./vtctldclient_onlineddl_cleanup/)	 - Mark a given schema migration, or all complete/failed/cancelled migrations, ready for artifact cleanup.
 * [vtctldclient OnlineDDL complete](./vtctldclient_onlineddl_complete/)	 - Complete one or all migrations executed with --postpone-completion

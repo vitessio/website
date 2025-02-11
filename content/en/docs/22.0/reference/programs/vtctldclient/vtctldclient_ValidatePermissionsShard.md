@@ -4,7 +4,7 @@ series: vtctldclient
 ---
 ## vtctldclient ValidatePermissionsShard
 
-Validates that the permissions on primary match all the replicas.
+Validates that the permissions on the primary match all of the replicas.
 
 ```
 vtctldclient ValidatePermissionsShard <keyspace/shard>
@@ -29,5 +29,5 @@ vtctldclient ValidatePermissionsShard <keyspace/shard>
 
 ### SEE ALSO
 
-* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
+* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server or alternatively as a standalone binary using --server=internal.
 

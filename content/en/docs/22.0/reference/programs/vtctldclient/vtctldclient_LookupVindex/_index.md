@@ -27,9 +27,11 @@ Perform commands related to creating, backfilling, and externalizing Lookup Vind
 
 ### SEE ALSO
 
-* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
+* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server or alternatively as a standalone binary using --server=internal.
 * [vtctldclient LookupVindex cancel](./vtctldclient_lookupvindex_cancel/)	 - Cancel the VReplication workflow that backfills the Lookup Vindex.
+* [vtctldclient LookupVindex complete](./vtctldclient_lookupvindex_complete/)	 - Complete the LookupVindex workflow. The Vindex must have been previously externalized. If you want to delete the workflow without externalizing the Vindex then use the cancel command instead.
 * [vtctldclient LookupVindex create](./vtctldclient_lookupvindex_create/)	 - Create the Lookup Vindex in the specified keyspace and backfill it with a VReplication workflow.
-* [vtctldclient LookupVindex externalize](./vtctldclient_lookupvindex_externalize/)	 - Externalize the Lookup Vindex. If the Vindex has an owner the VReplication workflow will also be deleted.
+* [vtctldclient LookupVindex externalize](./vtctldclient_lookupvindex_externalize/)	 - Externalize the Lookup Vindex. If the Vindex has an owner the VReplication workflow will also be stopped/deleted.
+* [vtctldclient LookupVindex internalize](./vtctldclient_lookupvindex_internalize/)	 - Internalize the Vindex again to continue the backfill, making it unusable for queries again.
 * [vtctldclient LookupVindex show](./vtctldclient_lookupvindex_show/)	 - Show the status of the VReplication workflow that backfills the Lookup Vindex.
 

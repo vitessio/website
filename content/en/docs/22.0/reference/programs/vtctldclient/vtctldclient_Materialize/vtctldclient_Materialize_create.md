@@ -31,7 +31,7 @@ should be copied as-is from the source keyspace. Here's an example value for tab
   {
     "target_table": "sales_by_sku",
     "source_expression": "select sku, count(*) as orders, sum(price) as revenue from corder group by sku",
-    "create_ddl": "create table sales_by_sku (sku varchar(128) not null primary key, orders bigint, revenue bigint)"
+    "create_ddl": "create table sales_by_sku (sku varbinary(128) not null primary key, orders bigint, revenue bigint)"
   }
 ]
 
@@ -43,7 +43,7 @@ vtctldclient Materialize create
 ### Examples
 
 ```
-vtctldclient --server localhost:15999 materialize --workflow product_sales --target-keyspace commerce create --source-keyspace commerce --table-settings '[{"target_table": "sales_by_sku", "create_ddl": "create table sales_by_sku (sku varchar(128) not null primary key, orders bigint, revenue bigint)", "source_expression": "select sku, count(*) as orders, sum(price) as revenue from corder group by sku"}]' --cells zone1 --cells zone2 --tablet-types replica
+vtctldclient --server localhost:15999 materialize --workflow product_sales --target-keyspace commerce create --source-keyspace commerce --table-settings '[{"target_table": "sales_by_sku", "create_ddl": "create table sales_by_sku (sku varbinary(128) not null primary key, orders bigint, revenue bigint)", "source_expression": "select sku, count(*) as orders, sum(price) as revenue from corder group by sku"}]' --cells zone1 --cells zone2 --tablet-types replica
 ```
 
 ### Options
@@ -51,7 +51,7 @@ vtctldclient --server localhost:15999 materialize --workflow product_sales --tar
 ```
   -c, --cells strings                      Cells and/or CellAliases to copy table data from.
   -h, --help                               help for create
-      --mysql_server_version string        Configure the MySQL version to use for example for the parser. (default "8.0.30-Vitess")
+      --mysql_server_version string        Configure the MySQL version to use for example for the parser. (default "8.0.40-Vitess")
   -r, --reference-tables strings           Used to specify the reference tables to materialize on every target shard.
       --source-keyspace string             Keyspace where the tables queried in the 'source_expression' values within table-settings live.
       --sql-max-length-errors int          truncate queries in error logs to the given length (default unlimited)

@@ -4,7 +4,7 @@ series: vtctldclient
 ---
 ## vtctldclient ValidatePermissionsKeyspace
 
-Validates that the permissions on primary of the first shard match those of all of the other tablets in the keyspace.
+Validates that the permissions on the primary of the first shard match those of all of the other tablets in the keyspace.
 
 ```
 vtctldclient ValidatePermissionsKeyspace <keyspace name>
@@ -29,5 +29,5 @@ vtctldclient ValidatePermissionsKeyspace <keyspace name>
 
 ### SEE ALSO
 
-* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
+* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server or alternatively as a standalone binary using --server=internal.
 

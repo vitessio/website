@@ -25,7 +25,7 @@ Perform commands on distributed transaction
 
 ### SEE ALSO
 
-* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
+* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server or alternatively as a standalone binary using --server=internal.
 * [vtctldclient DistributedTransaction conclude](./vtctldclient_distributedtransaction_conclude/)	 - Concludes the unresolved transaction by rolling back the prepared transaction on each participating shard and removing the transaction metadata record.
 * [vtctldclient DistributedTransaction get-info](./vtctldclient_distributedtransaction_get-info/)	 - Reads the state of the unresolved transaction by querying each participating shard.
 * [vtctldclient DistributedTransaction unresolved-list](./vtctldclient_distributedtransaction_unresolved-list/)	 - Retrieves unresolved transactions for the given keyspace.

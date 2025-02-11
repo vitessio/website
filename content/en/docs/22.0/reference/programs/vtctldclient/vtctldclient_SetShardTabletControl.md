@@ -51,5 +51,5 @@ vtctldclient SetShardTabletControl [--cells=c1,c2...] [--denied-tables=t1,t2,...
 
 ### SEE ALSO
 
-* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
+* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server or alternatively as a standalone binary using --server=internal.
 

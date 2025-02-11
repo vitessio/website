@@ -1,7 +1,6 @@
 ---
 title: vtctldclient
 series: vtctldclient
-aliases: ['/docs/reference/programs/vtctl/']
 ---
 ## vtctldclient
 
@@ -9,7 +8,7 @@ Executes a cluster management command on the remote vtctld server or alternative
 
 ### Synopsis
 
-Executes a cluster management command on the remote vtctld server.
+Executes a cluster management command on the remote vtctld server or alternatively as a standalone binary using --server=internal.
 If there are no running vtctld servers -- for example when bootstrapping
 a new Vitess cluster -- you can specify a --server value of 'internal'.
 When doing so, you would use the --topo* flags so that the client can
@@ -129,8 +128,8 @@ vtctldclient [flags]
 * [vtctldclient VDiff](./vtctldclient_vdiff/)	 - Perform commands related to diffing tables involved in a VReplication workflow between the source and target.
 * [vtctldclient Validate](./vtctldclient_validate/)	 - Validates that all nodes reachable from the global replication graph, as well as all tablets in discoverable cells, are consistent.
 * [vtctldclient ValidateKeyspace](./vtctldclient_validatekeyspace/)	 - Validates that all nodes reachable from the specified keyspace are consistent.
-* [vtctldclient ValidatePermissionsKeyspace](./vtctldclient_validatepermissionskeyspace/)	 - Validates that the permissions on primary of the first shard match those of all of the other tablets in the keyspace.
-* [vtctldclient ValidatePermissionsShard](./vtctldclient_validatepermissionsshard/)	 - Validates that the permissions on primary match all the replicas.
+* [vtctldclient ValidatePermissionsKeyspace](./vtctldclient_validatepermissionskeyspace/)	 - Validates that the permissions on the primary of the first shard match those of all of the other tablets in the keyspace.
+* [vtctldclient ValidatePermissionsShard](./vtctldclient_validatepermissionsshard/)	 - Validates that the permissions on the primary match all of the replicas.
 * [vtctldclient ValidateSchemaKeyspace](./vtctldclient_validateschemakeyspace/)	 - Validates that the schema on the primary tablet for the first shard matches the schema on all other tablets in the keyspace.
 * [vtctldclient ValidateSchemaShard](./vtctldclient_validateschemashard/)	 - Validates that the schema on the primary tablet for the specified shard matches the schema on all other tablets in that shard.
 * [vtctldclient ValidateShard](./vtctldclient_validateshard/)	 - Validates that all nodes reachable from the specified shard are consistent.

@@ -28,7 +28,7 @@ Perform commands related to materializing query results from the source keyspace
 
 ### SEE ALSO
 
-* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server.
+* [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server or alternatively as a standalone binary using --server=internal.
 * [vtctldclient Materialize cancel](./vtctldclient_materialize_cancel/)	 - Cancel a Materialize VReplication workflow.
 * [vtctldclient Materialize create](./vtctldclient_materialize_create/)	 - Create and run a Materialize VReplication workflow.
 * [vtctldclient Materialize show](./vtctldclient_materialize_show/)	 - Show the details for a Materialize VReplication workflow.
