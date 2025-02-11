@@ -4,7 +4,7 @@ description:
 weight: 10
 ---
 
-Vitess introduces enhanced query plan classification and new metrics to improve query execution analysis and monitoring. 
+Vitess introduces enhanced query plan classification and new metrics to improve query execution analysis and monitoring.
 These updates help users track query performance, identify costly execution plans, and optimize queries for better efficiency.
 
 ## Query Plan Classification Enhancements
@@ -26,22 +26,23 @@ The classifications include:
 
 ## Query Metrics for Monitoring
 
-The new metrics added have dimensions on `Query Type`, `Plan Type`, and `Tablet Type`. 
-This provides a more granular view of query execution patterns and performance bottlenecks. 
+The new metrics include dimensions for Query Type, Plan Type, and Tablet Type, 
+providing a more granular view of query execution patterns and performance bottlenecks.
 
 The new metrics include:
 
 - `QueryProcessed`: Tracks queries received at VTGate.
-- `QueryRouted`: Tracks queries routed by VTGate to how many shards.
+- `QueryRouted`: Tracks the number of shards a query is routed to by VTGate.
 
 ## How to Use These Metrics for Optimization
 
 By enabling monitoring for these metrics, users can analyze query execution patterns and optimize costly plans.
-Some of the common optimization include:
+Some common optimizations include:
+
 * Rewrite queries to include shard-aware filtering conditions.
 * Adding new lookup vindexes to improve query routing efficiency.
-* Leverage sharded indexes to push computation down to the database instead of VTGate.
-* Break down complex queries into smaller, more efficient queries executed at the database level.
+* Leverage sharded indexes to push computation down to the MySQL instead of VTGate.
+* Break down complex queries into smaller, more efficient queries executed at the MySQL level.
 
-Users can identify unoptimized queries using the plan classification in VTGate’s /debug/query_plans endpoint and apply the necessary improvements. 
+Users can identify unoptimized queries using the plan classification in VTGate’s /debug/query_plans endpoint and apply the necessary improvements.
 By analyzing these metrics, users can fine-tune query execution, reduce latency, and improve overall performance in Vitess.
