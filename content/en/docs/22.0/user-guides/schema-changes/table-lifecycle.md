@@ -93,7 +93,7 @@ Starting in Vitess `v20`, the table naming format will change. Tables will be na
 
 ## Automated lifecycle
 
-Vitess internally uses the above table lifecycle for [online, managed schema migrations](../../../user-guides/schema-changes/managed-online-schema-changes/). All online strategies: `vitess`, `gh-ost`, and `pt-online-schema-change`, create artifact tables or end with leftover tables: Vitess automatically collects those tables. The artifact or leftover tables are immediate moved to `hold` state. Depending on `vttablet`'s `--table_gc_lifecycle` flag, they may spend time in this state, getting purged, or immediately transitioned to the next state.
+Vitess internally uses the above table lifecycle for [online, managed schema migrations](../../../user-guides/schema-changes/managed-online-schema-changes/). Online DDL operations create artifact tables or end with leftover tables: Vitess automatically collects those tables. The artifact or leftover tables are immediate moved to `hold` state. Depending on `vttablet`'s `--table_gc_lifecycle` flag, they may spend time in this state, getting purged, or immediately transitioned to the next state.
 
 ## User-facing DROP TABLE lifecycle
 

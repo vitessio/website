@@ -58,10 +58,6 @@ vtctldclient ApplySchema --ddl-strategy "vitess --allow-concurrent" -sql "REVERT
 - There may be an unlimited number of concurrent migrations running at any given time, on top of potentially a single non-concurrent migration.
 - But there will never be two migrations running concurrently that operate on the same table.
 
-To clarify:
-
-- `gh-ost` and `pt-osc` `ALTER` migrations are not eligible to run concurrently
-
 ## Scheduling notes
 
 - Multiple migrations can be in `ready` state. The scheduler will check them one by one to see which is eligible to next run.

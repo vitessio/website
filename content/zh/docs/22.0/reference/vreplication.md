@@ -22,9 +22,8 @@ many features. It can be used for the following use cases:
 * **Backfilling lookup vindexes**: VReplication can be used to backfill a
   newly created lookup vindex. Workflows can be built to manage the switching
   from a backfill mode to the vindex itself keeping it up-to-date.
-* **Schema deployment**: We can use VReplication to recreate the workflow
-  performed by gh-ost and thereby support zero-downtime schema deployments
-  in vitess natively.
+* **Schema deployment**: We use VReplication to create an Online DDL workflow
+  and thereby support zero-downtime schema deployments in vitess natively.
 * **Data migration**: VReplication can be setup to migrate data from an
   existing system into vitess. The replication could also be reversed after
   a cutover giving you the option to rollback a migration if something went

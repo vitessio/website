@@ -32,7 +32,7 @@ Vitess respects the following flags. They can be combined unless specifically in
 - `--in-order-completion`: a migration that runs with this DDL strategy flag may only complete if no prior migrations are still pending (pending means either `queued`, `ready` or `running` states). `--in-order-completion` considers the order by which migrations were submitted. Note that `--in-order-completion` still allows concurrency. In fact, it is designed to work with concurrent migrations. The idea is that while many migrations may run concurrently, they must _complete_ in-order.
   - This lets the user submit multiple migrations which may have some dependencies (for example, introduce two views, one of which reads from the other). As long as the migrations are submitted in a valid order, the user can then expect `vitess` to complete the migrations successfully (and in that order).
   - This strategy flag applies to any `CREATE|DROP TABLE|VIEW` statements, and to `ALTER TABLE` with `vitess|online` strategy.
-  - It _does not_ apply to `ALTER TABLE` when using the `gh-ost`, `pt-osc`, `mysql`, or `direct` strategies.
+  - It _does not_ apply to `ALTER TABLE` when using the `mysql`, or `direct` strategies.
 
 - `--postpone-completion`: initiate a migration that will only cut-over per user command, i.e. will not auto-complete. This gives the user control over the time when the schema change takes effect. See [postponed migrations](../postponed-migrations).
 
@@ -52,18 +52,6 @@ Vitess respects the following flags. They can be combined unless specifically in
 
 - `--singleton-table`: reject a new submission for a table or view which already has a pending migration.
 
-## Pass-through flags
+## Notes
 
-Flags unrecognized by Vitess are passed on to the underlying schema change tools. For example, a `gh-ost` migration can run with:
-```sql
-set @@ddl_strategy='gh-ost --max-load Threads_running=200'
-```
-Since Vitess knows nothing about `--max-load` it will pass it on as a command line argument to `gh-ost`. Consult [gh-ost documentation](https://github.com/github/gh-ost) for supported command line flags.
-
-Similarly, a `pt-online-schema-change` migration can run with:
-```sql
-set @@ddl_strategy='pt-osc --null-to-not-null'
-```
-Consult [pt-online-schema-change documentation](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html) for supported command line flags.
-
-The `vitess` strategy (formerly known as `online`) uses Vitess internal mechanisms and is not a standalone command line tool. therefore, it has no particular command line flags. For internal testing/CI purposes, the `vitess` strategy supports `--vreplication-test-suite`, and this flag must **not** be used in production as it can have destructive consequences.
+For internal testing/CI purposes, the `vitess` strategy (formerly known as `online`) supports `--vreplication-test-suite`, and this flag must **not** be used in production as it can have destructive consequences.

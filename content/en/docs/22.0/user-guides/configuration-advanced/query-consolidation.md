@@ -14,6 +14,7 @@ Flags:
 
 * `--enable_consolidator`: Defaults to true.
 * `--enable_consolidator_replicas`: Only enable query consolidation on non-primary tablets.
+* `--consolidator-query-waiter-cap`: The maximum number of clients allowed to wait on the consolidator for each query. No limit by default.
 
 ## Consistency
 

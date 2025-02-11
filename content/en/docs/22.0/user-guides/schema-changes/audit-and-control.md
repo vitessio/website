@@ -53,7 +53,7 @@ mysql> drop table customer;
 
 - `@@ddl_strategy` behaves like a MySQL session variable, though is only recognized by `VTGate`. Setting `@@ddl_strategy` only applies to that same connection and does not affect other connections. The strategy applies to all migrations executed in that session. You may subsequently set `@@ddl_strategy` to different value.
 - If you run `vtgate` without `--ddl_strategy`, then `@@ddl_strategy` defaults to `'direct'`, which implies schema migrations are synchronous. You will need to `set @@ddl_strategy='vitess'` to run followup `ALTER TABLE` statements via Vitess.
-- If you run `vtgate --ddl_strategy "vitess"`, then `@@ddl_strategy` defaults to `'vitess'` in each new session. Any `ALTER TABLE` will run via Vitess online DDL. You may `set @@ddl_strategy='gh-ost'` to make migrations run through `gh-ost`, or `set @@ddl_strategy='direct'` to run migrations synchronously.
+- If you run `vtgate --ddl_strategy "vitess"`, then `@@ddl_strategy` defaults to `'vitess'` in each new session. Any `ALTER TABLE` will run via Vitess online DDL. You may `set @@ddl_strategy='direct'` to run migrations synchronously, or `set @@ddl_strategy='mysql'` to let Vitess manage the lifecycle of a MySQL migration.
 
 #### Via vtctldclient
 
@@ -568,7 +568,7 @@ $ vtctldclient OnlineDDL cancel commerce all
 
 The user may retry running a migration. If the migration is in `failed` or in `cancelled` state, Vitess will re-run the migration, with exact same arguments as previously intended. If the migration is in any other state, `retry` does nothing.
 
-It is not possible to retry a migration with different options. e.g. if the user initially runs `ALTER TABLE demo MODIFY id BIGINT` with `@@ddl_strategy='gh-ost --max-load Threads_running=200'` and the migration fails, retrying it will use exact same options. It is not possible to retry with `@@ddl_strategy='gh-ost --max-load Threads_running=500'`.
+It is not possible to retry a migration with different options. e.g. if the user initially runs `ALTER TABLE demo MODIFY id BIGINT` with `@@ddl_strategy='vitess --allow-concurrent'` and the migration fails, retrying it will use exact same options. It is not possible to retry with `@@ddl_strategy='vitess --postpone-completion'`.
 
 #### Via VTGate/SQL
 

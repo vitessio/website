@@ -33,7 +33,7 @@ Such direct `ALTER TABLE` is fine in development or possibly staging environment
 Busy production systems tend to use either of these two approaches, to make schema changes less disruptive to ongoing production traffic:
 
 - Using general purpose online schema change tools, such as [gh-ost](https://github.com/github/gh-ost) and [pt-online-schema-change](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html). These tools _emulate_ an `ALTER TABLE` statement by creating a _ghost_ table in the new desired format, and slowly working through copying data from the existing table, while also applying ongoing changes throughout the migration.
-  - Vitess offers a built in online schema change flow based on VReplication, and additionally supports `gh-ost` and `pt-online-schema-change`.
+  - Vitess offers a built in online schema change flow based on VReplication.
   - Online schema change tools can be throttled on high load, and can be interrupted at will.
 - Run the migration independently on replicas; when all replicas have the new schema, demote the `primary` and promote a `replica` as the new `primary`; then, at leisure, run the migration on the demoted server. Two considerations if using this approach are:
   - Each migration requires a failover (aka _successover_, aka _planned reparent_).
@@ -46,7 +46,7 @@ The cycle of schema changes, from idea to production, is complex, involves multi
 1. Design: the developer designs a change, tests locally
 2. Publish: the developer requests a review of their changes (e.g. on a Pull Request)
 3. Review: developer's colleagues and database engineers to check the changes and their impact
-4. Formalize: what is the precise `ALTER TABLE` statement to be executed? If running with `gh-ost` or `pt-online-schema-change`, what are the precise command line flags?
+4. Formalize: what is the precise `ALTER TABLE` statement to be executed?
 5. Locate: where does this change need to go? Which keyspace/cluster? Is this cluster sharded? What are the shards?
   Having located the affected MySQL clusters, which is the `primary` server per cluster?
 6. Schedule: is there an already running migration on the relevant keyspace/cluster(s)?
@@ -84,7 +84,7 @@ In managed, online schema changes, Vitess owns and tracks all pending and active
 
 ### Execute
 
-In managed, online schema changes, Vitess owns the execution of `vitess`, `gh-ost` or `pt-online-schema-change` migrations. While these run in the background, Vitess keeps track of the migration state.
+In managed, online schema changes, Vitess owns the execution of the `vitess` migration (and the underlying VReplication workflow). While these run in the background, Vitess keeps track of the migration state.
 
 In direct schema changes via `vtctldclient` or `vtgate`, Vitess issues a synchronous `ALTER TABLE` statement on the relevant shards.
 
@@ -98,9 +98,7 @@ By default, Vitess runs automated cut-overs. The migration will complete as soon
 
 ### Cleanup
 
-Vitess automatically garbage-collects the "old" tables, artifacts of `vitess`, `gh-ost` and `pt-online-schema-change` migrations. It drops those tables in an incremental, non blocking method.
-
-In the case of managed, online schema changes via `pt-online-schema-change`, Vitess will ensure to drop the triggers in case the tool failed to do so for whatever reason.
+Vitess automatically garbage-collects the "old" tables, artifacts of all migrations. It drops those tables in an incremental, non blocking method.
 
 ## The various approaches
 

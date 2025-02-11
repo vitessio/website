@@ -11,6 +11,10 @@ resources:
   # Note: To generate "thumbnail_url", visit https://embed.ly/docs/explore/extract
   # and enter the link to the resource. Once you do that, select any thumbnail url of choice to use.
 
+  - youtube: PM213WqA-vg
+    title: "Introduction to Vitess: Scalable Database for Modern Applications"
+    date: 2024
+    type: video
   - youtube: MZXToqM8mds
     title: "Introduction, New Features & Running in Production - Deepthi Sigireddi, PlanetScale, Derek Perkins, Nozzle & Sudhi Vijayakumar, Backblaze"
     date: 2024
