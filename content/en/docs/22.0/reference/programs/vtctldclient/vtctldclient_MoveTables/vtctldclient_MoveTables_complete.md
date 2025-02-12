@@ -19,12 +19,13 @@ vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --
 ### Options
 
 ```
-      --dry-run              Print the actions that would be taken and report any known errors that would have occurred.
-  -h, --help                 help for complete
-      --keep-data            Keep the original source table data that was copied by the MoveTables workflow.
-      --keep-routing-rules   Keep the routing rules in place that direct table traffic from the source keyspace to the target keyspace of the MoveTables workflow.
-      --rename-tables        Keep the original source table data that was copied by the MoveTables workflow, but rename each table to '_<tablename>_old'.
-      --shards strings       (Optional) Specifies a comma-separated list of shards to operate on.
+      --dry-run                  Print the actions that would be taken and report any known errors that would have occurred.
+  -h, --help                     help for complete
+      --ignore-source-keyspace   WARNING: This option should only be used when absolutely necessary. Ignore the source keyspace as the workflow is completed and cleaned up. This allows the workflow to be completed if the source keyspace has been deleted or is not currently available.
+      --keep-data                Keep the original source table data that was copied by the MoveTables workflow.
+      --keep-routing-rules       Keep the routing rules in place that direct table traffic from the source keyspace to the target keyspace of the MoveTables workflow.
+      --rename-tables            Keep the original source table data that was copied by the MoveTables workflow, but rename each table to '_<tablename>_old'.
+      --shards strings           (Optional) Specifies a comma-separated list of shards to operate on.
 ```
 
 ### Options inherited from parent commands

@@ -19,11 +19,12 @@ vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --
 ### Options
 
 ```
-      --delete-batch-size int   When cleaning up the migrated data in tables moved as part of a multi-tenant workflow, delete the records in batches of this size. (default 1000)
-  -h, --help                    help for cancel
-      --keep-data               Keep the partially copied table data from the MoveTables workflow in the target keyspace.
-      --keep-routing-rules      Keep the routing rules created for the MoveTables workflow.
-      --shards strings          (Optional) Specifies a comma-separated list of shards to operate on.
+      --delete-batch-size int    When cleaning up the migrated data in tables moved as part of a multi-tenant workflow, delete the records in batches of this size. (default 1000)
+  -h, --help                     help for cancel
+      --ignore-source-keyspace   WARNING: This option should only be used when absolutely necessary. Ignore the source keyspace as the workflow is canceled and cleaned up. This allows the workflow to be canceled if the source keyspace has been deleted or is not currently available.
+      --keep-data                Keep the partially copied table data from the MoveTables workflow in the target keyspace.
+      --keep-routing-rules       Keep the routing rules created for the MoveTables workflow.
+      --shards strings           (Optional) Specifies a comma-separated list of shards to operate on.
 ```
 
 ### Options inherited from parent commands

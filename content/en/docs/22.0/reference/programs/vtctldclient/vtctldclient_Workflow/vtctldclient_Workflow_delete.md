@@ -19,12 +19,13 @@ vtctldclient --server localhost:15999 workflow --keyspace customer delete --work
 ### Options
 
 ```
-      --delete-batch-size int   When cleaning up the migrated data in tables moved as part of a multi-tenant MoveTables workflow, delete the records in batches of this size. (default 1000)
-  -h, --help                    help for delete
-      --keep-data               Keep the partially copied table data from the workflow in the target keyspace.
-      --keep-routing-rules      Keep the routing rules created for the workflow.
-      --shards strings          (Optional) Specifies a comma-separated list of shards to operate on.
-  -w, --workflow string         The workflow you want to delete.
+      --delete-batch-size int    When cleaning up the migrated data in tables moved as part of a multi-tenant MoveTables workflow, delete the records in batches of this size. (default 1000)
+  -h, --help                     help for delete
+      --ignore-source-keyspace   WARNING: This option should only be used when absolutely necessary. Ignore the source keyspace as the workflow is deleted and cleaned up. This allows the workflow to be deleted if the source keyspace has been deleted or is not currently available. NOTE: this is only used with MoveTables.
+      --keep-data                Keep the partially copied table data from the workflow in the target keyspace.
+      --keep-routing-rules       Keep the routing rules created for the workflow.
+      --shards strings           (Optional) Specifies a comma-separated list of shards to operate on.
+  -w, --workflow string          The workflow you want to delete.
 ```
 
 ### Options inherited from parent commands
