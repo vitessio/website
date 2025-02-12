@@ -96,7 +96,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT14003 | No connection for the given tablet. | no connection for tablet %v | 0 |  |
 | VT14004 | The specified keyspace could not be found. | cannot find keyspace for: %s | 0 |  |
 | VT14005 | Failed to read sidecar database identifier. | cannot lookup sidecar database for keyspace: %s | 0 |  |
-| VT15001 | This error means that the opened transaction should be closed by the application and re-opened. | session invalidated: close/reopen connection if applicable: %s |  |  |
+| VT15001 | The opened transaction should be closed by the application and re-tried. | transient error, please retry the transaction: %s |  |  |
 <!-- end -->
 
 ## Old Errors
