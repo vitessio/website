@@ -23,6 +23,7 @@ The classifications include:
 * `OnlineDDL`: DDLs executed though Online Schema change workflow.
 * `DirectDDL`: DDLs directly executed on the shards.
 * `Transaction`: Queries managing transactions, including BEGIN, COMMIT, ROLLBACK, and SAVEPOINT.
+* `Topology`: Queries that involves accessing Topology Server for Get/Put.
 
 ## Query Metrics for Monitoring
 
