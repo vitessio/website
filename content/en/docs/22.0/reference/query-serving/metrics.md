@@ -12,17 +12,17 @@ These updates help users track query performance, identify costly execution plan
 Vitess now classifies query plans based on their execution strategies, allowing for more precise execution decisions.
 
 The classifications include:
-* `PlanLocal`: Queries executed locally on VTGate without involving any shard.
-* `PlanPassthrough`: Queries forwarded to single shard without having any additional processing at VTGate.
-* `PlanMultiShard`: Queries executed across multiple shards with controlled routing.
-* `PlanLookup`: Queries using lookup vindexes to resolve keyspace IDs efficiently and route to specific shards.
-* `PlanScatter`: Queries broadcast to all shards.
-* `PlanJoinOp`: Queries involving join operations across multiple shards, with Join on VTGate.
-* `PlanForeignKey`: Queries handling foreign key constraints, such as cascades and validations.
-* `PlanComplex`: Queries with intricate execution logic requiring VTGate to process results, such as aggregation, ordering, or other transformations.
-* `PlanOnlineDDL`: DDLs executed though Online Schema change workflow.
-* `PlanDirectDDL`: DDLs directly executed on the shards.
-* `PlanTransaction`: Queries managing transactions, including BEGIN, COMMIT, ROLLBACK, and SAVEPOINT.
+* `Local`: Queries executed locally on VTGate without involving any shard.
+* `Passthrough`: Queries forwarded to single shard without having any additional processing at VTGate.
+* `MultiShard`: Queries executed across multiple shards with controlled routing.
+* `Lookup`: Queries using lookup vindexes to resolve keyspace IDs efficiently and route to specific shards.
+* `Scatter`: Queries broadcast to all shards.
+* `JoinOp`: Queries involving join operations across multiple shards, with Join on VTGate.
+* `ForeignKey`: Queries handling foreign key constraints, such as cascades and validations.
+* `Complex`: Queries with intricate execution logic requiring VTGate to process results, such as aggregation, ordering, or other transformations.
+* `OnlineDDL`: DDLs executed though Online Schema change workflow.
+* `DirectDDL`: DDLs directly executed on the shards.
+* `Transaction`: Queries managing transactions, including BEGIN, COMMIT, ROLLBACK, and SAVEPOINT.
 
 ## Query Metrics for Monitoring
 
