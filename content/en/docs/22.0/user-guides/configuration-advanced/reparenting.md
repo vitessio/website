@@ -17,7 +17,7 @@ This document explains the types of reparenting that Vitess supports:
 
 Vitess requires the use of global transaction identifiers ([GTIDs](https://dev.mysql.com/doc/refman/8.0/en/replication-gtids-concepts.html)) for its operations:
 
-* Vitess uses GTIDs to initialize replication when a cluster is initialized. It depends on the GTID stream to be correct when reparenting. 
+* Vitess uses GTIDs to initialize replication when a cluster is initialized. It depends on the GTID stream to be correct when reparenting.
 * If using external reparenting, Vitess assumes that the external tool manages the replication process.
 
 ### Semi-synchronous replication
@@ -47,7 +47,7 @@ This command performs the following actions when used to change the current prim
 1. Promotes the primary-elect tablet as the new primary.
 1. Ensures replication is functioning properly via the following steps:
     - On the primary-elect tablet, insert a row into an internal table and then update the global shard object's PrimaryAlias property.
-    - In parallel on each replica, including the old primary, set the new primary as the replication source and wait for the inserted row to replicate to the replica tablets. 
+    - In parallel on each replica, including the old primary, set the new primary as the replication source and wait for the inserted row to replicate to the replica tablets.
 
 This command performs the following actions when used to initialize the first primary in the shard:
 1. Promote the new primary that is specified.
@@ -80,7 +80,7 @@ This command performs the following actions:
 1. Promotes the primary-elect tablet to be the new primary. In addition to changing its tablet type to primary, the primary-elect performs any other changes that might be required for its new state.
 1. Ensures replication is functioning properly via the following steps:
     - On the primary-elect tablet, insert a row in the `reparent_journal` table and then updates the `PrimaryAlias` property of the global shard object.
-    - In parallel on each replica, excluding the old primary, set the new primary as the replication source and wait for the inserted row to replicate to the replica tablets. 
+    - In parallel on each replica, excluding the old primary, set the new primary as the replication source and wait for the inserted row to replicate to the replica tablets.
 
 ### Metrics
 
@@ -112,5 +112,5 @@ Active reparenting might be a dangerous practice in any system that depends on e
 
 ## Fixing Replication
 
-A tablet can be orphaned after a reparenting if it is unavailable when the reparent operation is running but then recovers later on. Its replication will be automatically fixed by [VTOrc](../../configuration-basic/vtorc). 
+A tablet can be orphaned after a reparenting if it is unavailable when the reparent operation is running but then recovers later on. Its replication will be automatically fixed by [VTOrc](../../configuration-basic/vtorc).
 You can also manually reset the tablet's primary to the current shard primary using the [`vtctl ReparentTablet`](../../../reference/programs/vtctl/tablets/#reparenttablet) command. You can then restart replication on the tablet if it was stopped by calling the [`vtctl StartReplication`](../../../reference/programs/vtctl/tablets/#startreplication) command.
