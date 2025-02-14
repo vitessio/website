@@ -12,7 +12,7 @@ can be copies, aggregations, or views. The target tables are kept in sync in nea
 You can specify multiple tables to materialize using the [`create`](../../programs/vtctldclient/vtctldclient_materialize/vtctldclient_materialize_create/) sub-command's `--table-settings` flag.
 There are limitations, however, to the queries which can be used with `Materialize`:
   - The query must be a `SELECT` statement
-  - Only the following operators are supported: `=`, `<`, `<=`, `>`, `>=`, `<>`, `!=` (e.g. no `IN`, `OR`, or `LIKE`)
+  - Only the following operators are supported: `=`, `<`, `<=`, `>`, `>=`, `<>`, `!=`, `IN`, `BETWEEN` (e.g. no `OR`, or `LIKE`)
   - The query must be against a single table (so no `JOIN`s)
   - The query cannot use `DISTINCT`
   - The query cannot use a derived table
