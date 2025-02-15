@@ -77,7 +77,7 @@ this.field("FILTER_NAME");
 
 Replace FILTER_NAME with the same name represented in the frontmatter (see step 2 above for reference).
 
-1. Navigate to `layouts/partials/learning-resources/filter-panel.html`. Locate the div with a class name of `filter`. Within the div, add this new block:
+7. Navigate to `layouts/partials/learning-resources/filter-panel.html`. Locate the div with a class name of `filter`. Within the div, add this new block:
 
 ```html
 <div class="mt-5">
