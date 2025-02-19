@@ -93,6 +93,10 @@ resources:
     title: "Vitess: Introduction and New Features - Deepthi Sigireddi & Alkin Tezuysal, PlanetScale; Andrew Mason & Malcolm Akinje, Slack Corp."
     date: 2021
     type: video
+  - youtube: 6ZZkxrM7Rk0
+    title: "Horizontal Scaling with Vitess - Deepthi Sigireddi, PlanetScale"
+    date: 2021
+    type: video
   - youtube: Bllc-u_cCGA
     title: "Deploying a Sharded Vitess Sandbox Cluster in Public Cloud Kubernetes in 10 Minutes - Jordan Moldow, Box"
     date: 2021
