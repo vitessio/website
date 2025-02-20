@@ -65,7 +65,7 @@ This can be useful when debugging issues with VReplication workflows if you want
 
 **Type** duration\
 **Default** 0 (no time limit)\
-**Applicable on** source and target
+**Applicable on** target
 
 After encountering the same error repeatedly for the provided amount of time, stop automatically retrying the workflow and set the state to STOPPED when persisting the error. This is useful because at this point the error is likely not transient and the workflow will not be able to make further progress without
 human intervention. This is important because the retry behavior can make it difficult to detect and alert on the workflow error state because it so quickly retries again and in doing so clears the previous error.
@@ -242,14 +242,6 @@ By default the historian loads up to 10,000 rows from the `_vt.schema_version` t
 
 The target might encounter connection failures during a workflow. VReplication automatically retries
 stalled streams after _vreplication_retry_delay_ seconds
-
-#### vreplication_max_time_to_retry_on_error
-
-**Type** duration\
-**Default** 0 (unlimited)\
-**Applicable on** target
-
-Stop automatically retrying when we've had consecutive failures with the same error for this long after the first occurrence (default 0, meaning no time limit).
 
 #### vreplication_experimental_flags
 
