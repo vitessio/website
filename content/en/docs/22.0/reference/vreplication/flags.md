@@ -58,7 +58,7 @@ Alternatively, you can use **relay_log_max_items** to set the limit based on the
 **Default** false\
 **Applicable on** target
 
-This will enable an additional HTTP endpoint — `/debug/vrlog` — which will produce a log of the events replicated on primary tablets in the target keyspace by all VReplication workflows that are in the running/replicating phase.
+This will enable an additional vttablet HTTP endpoint — `/debug/vrlog` — which will produce a log of the events replicated on primary tablets in the target keyspace by all VReplication workflows that are in the running/replicating phase.
 This can be useful when debugging issues with VReplication workflows if you want to see the events that are being replicated and how long they are taking. Example output:
 
 ```proto
