@@ -59,7 +59,15 @@ Alternatively, you can use **relay_log_max_items** to set the limit based on the
 **Applicable on** target
 
 This will enable an additional HTTP endpoint — `/debug/vrlog` — which will produce a log of the events replicated on primary tablets in the target keyspace by all VReplication workflows that are in the running/replicating phase.
-This can be useful when debugging issues with VReplication workflows if you want to see the events that are being replicated and how long they are taking.
+This can be useful when debugging issues with VReplication workflows if you want to see the events that are being replicated and how long they are taking. Example output:
+
+```proto
+FIELD Event	table_name:"customer" fields:{name:"customer_id" type:INT64 table:"customer" org_table:"customer" database:"vt_commerce" org_name:"customer_id" column_length:20 charset:63 flags:49667 column_type:"bigint"} fields:{name:"email" type:VARCHAR table:"customer" org_table:"customer" database:"vt_commerce" org_name:"email" column_length:512 charset:255 column_type:"varchar(128)"} keyspace:"commerce" shard:"0"	2025-02-21T11:58:47	158333
+ROWCHANGE Event	insert into customer(customer_id,email) values (15,'email1'), (16,'email2')	2025-02-21T11:58:47	5375
+ROW Event	table_name:"customer" row_changes:{after:{lengths:2 lengths:6 values:"15email1"}} row_changes:{after:{lengths:2 lengths:6 values:"16email2"}} keyspace:"commerce" shard:"0" flags:1	2025-02-21T11:58:47	133792
+ROWCHANGE Event	insert into customer(customer_id,email) values (18,'email3'), (17,'email4')	2025-02-21T11:59:01	7084
+ROW Event	table_name:"customer" row_changes:{after:{lengths:2 lengths:6 values:"18email3"}} row_changes:{after:{lengths:2 lengths:6 values:"17email4"}} keyspace:"commerce" shard:"0" flags:1	2025-02-21T11:59:01	116500
+```
 
 ### vreplication_max_time_to_retry_on_error
 
