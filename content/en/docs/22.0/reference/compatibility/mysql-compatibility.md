@@ -41,11 +41,20 @@ Vitess supports MySQL and gRPC server protocols, allowing it to serve as a drop-
 
 ## Transaction and Isolation Levels
 
-Vitess offers MySQL default semantics (`REPEATABLE READ`) for single-shard transactions. For multi-shard transactions, the semantics change to `READ COMMITTED`.
+Vitess provides `MySQL’s default REPEATABLE READ semantics` for `single-shard transactions`, ensuring strong consistency within a shard. 
+For `multi-shard transactions`, Vitess optimizes for `performance and scalability` by using `READ COMMITTED semantics`, enabling efficient distributed transactions.
 
-- You can change the isolation level at the shard level using the `SET` statement on a connection.
-- `START TRANSACTION` supports modifiers like `WITH CONSISTENT SNAPSHOT`, `READ WRITE`, and `READ ONLY`, but they apply only to the next transaction.
-- `SET TRANSACTION` is currently supported only for changing the isolation level at the session scope in Vitess (affecting shard-level isolation, not global Vitess).
+- With `Two-Phase Commit (2PC)` support, Vitess ensures `atomic writes across shards`, making it easier to manage distributed transactions reliably. 
+- You can adjust the isolation level at the shard level using the `SET statement` on a connection. 
+- `START TRANSACTION` supports MySQL modifiers like `WITH CONSISTENT SNAPSHOT`, `READ WRITE`, and `READ ONLY`, applying them to the next transaction on the same shard. 
+- `SET TRANSACTION` allows setting the isolation level at the `session scope`, influencing how transactions behave at the shard level.
+
+### Optimizing Read Consistency in Multi-Shard Transactions
+
+- If an application `requires strong consistency`, it can issue `queries with update locks (SELECT ... FOR UPDATE)` to ensure the latest data is read while preventing modifications until the transaction completes. 
+- Using `Vitess’s two-phase commit (2PC)` ensures atomicity for distributed writes, providing reliable transaction execution across shards. 
+- For workloads requiring `higher isolation`, transactions can be designed to operate within `single shards`, where `REPEATABLE READ` consistency is fully maintained. 
+- By leveraging `Vitess’s query routing and connection pooling`, applications can optimize for both `performance and consistency`, depending on their specific requirements.
 
 ---
 
