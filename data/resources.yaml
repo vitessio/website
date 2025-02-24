@@ -48,6 +48,11 @@ resources:
     title: "MySQL and Vitess (and Kubernetes) at HubSpot - Jean-François Gagné & Swetha Narayanaswamy, HubSpot"
     date: 2023
     type: video
+  - url: "https://se-radio.net/2023/04/se-radio-560-sugu-sougoumarane-on-distributed-sql-with-vitess/"
+    title: "Distributed SQL with Vitess - Sugu Sougoumarane, PlanetScale"
+    date: 2022
+    thumbnail_url: "https://se-radio.net/wp-content/uploads/2023/04/sugu.png"
+    type: podcast
   - youtube: C2DsT1_zK_4
     title: "Introduction to Vitess and Real World Usage - Arthur Schreiber, GitHub & Florent Poinsard, PlanetScale"
     date: 2023
@@ -72,16 +77,12 @@ resources:
     title: "Vitess: Introduction and New Features - Deepthi Sigireddi, Matt Lord & Rohit Nayak, PlanetScale"
     date: 2022
     type: video
-  - youtube: HgSlmzC7O-E
-    title: "Scaling Databases with Vitess - Harshit Gangal & Manan Gupta, PlanetScale"
-    date: 2022
-    type: video
   - youtube: ltoJ8gxs0YU
     title: "Vitess VReplication: Standing on the Shoulders of a MySQL Giant - Matt Lord, PlanetScale"
     date: 2022
     type: video
-  - url: "https://video.fosdem.org/2022/D.mysql/relational_model_dev.webm"
-    title: "The relational model in the modern development age - Shlomi Noach, PlanetScale"
+  - youtube: HgSlmzC7O-E
+    title: "Scaling Databases with Vitess - Harshit Gangal & Manan Gupta, PlanetScale"
     date: 2022
     type: video
   - url: "https://se-radio.net/2022/05/episode-510-deepthi-sigireddi-on-how-vitess-scales-mysql/"
@@ -89,6 +90,14 @@ resources:
     date: 2022
     thumbnail_url: "https://se-radio.net/wp-content/uploads/2022/05/deepthi-sigreddi.jpeg"
     type: podcast
+  - url: "https://changelog.com/podcast/485"
+    title: "The Story of Vitess - Deepthi Sigireddi, PlanetScale"
+    date: 2022
+    type: podcast
+  - url: "https://video.fosdem.org/2022/D.mysql/relational_model_dev.webm"
+    title: "The relational model in the modern development age - Shlomi Noach, PlanetScale"
+    date: 2022
+    type: video
   - youtube: fLullHPddvg
     title: "Continuous Performance Benchmarking for Vitess - Alkin Tezuysal, Florent Poinsard & Manan Gupta, PlanetScale"
     date: 2021
