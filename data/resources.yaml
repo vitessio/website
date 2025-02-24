@@ -51,7 +51,7 @@ resources:
   - url: "https://se-radio.net/2023/04/se-radio-560-sugu-sougoumarane-on-distributed-sql-with-vitess/"
     title: "Distributed SQL with Vitess - Sugu Sougoumarane, PlanetScale"
     date: 2023
-    thumbnail_url: "https://se-radio.net/wp-content/uploads/2023/04/sugu.png"
+    thumbnail_url: "https://se-radio.net/wp-content/uploads/2023/10/SE-radio-logo-color-600x100-1-e1704759241296.png"
     type: podcast
   - youtube: C2DsT1_zK_4
     title: "Introduction to Vitess and Real World Usage - Arthur Schreiber, GitHub & Florent Poinsard, PlanetScale"
@@ -88,7 +88,7 @@ resources:
   - url: "https://se-radio.net/2022/05/episode-510-deepthi-sigireddi-on-how-vitess-scales-mysql/"
     title: "How Vitess Scales MySQL - Deepthi Sigireddi, PlanetScale"
     date: 2022
-    thumbnail_url: "https://se-radio.net/wp-content/uploads/2022/05/deepthi-sigreddi.jpeg"
+    thumbnail_url: "https://se-radio.net/wp-content/uploads/2023/10/SE-radio-logo-color-600x100-1-e1704759241296.png"
     type: podcast
   - url: "https://changelog.com/podcast/485"
     title: "The Story of Vitess - Deepthi Sigireddi, PlanetScale"
