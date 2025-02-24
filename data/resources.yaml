@@ -50,7 +50,7 @@ resources:
     type: video
   - url: "https://se-radio.net/2023/04/se-radio-560-sugu-sougoumarane-on-distributed-sql-with-vitess/"
     title: "Distributed SQL with Vitess - Sugu Sougoumarane, PlanetScale"
-    date: 2022
+    date: 2023
     thumbnail_url: "https://se-radio.net/wp-content/uploads/2023/04/sugu.png"
     type: podcast
   - youtube: C2DsT1_zK_4
@@ -94,6 +94,7 @@ resources:
     title: "The Story of Vitess - Deepthi Sigireddi, PlanetScale"
     date: 2022
     type: podcast
+    thumbnail_url: "https://snap.fly.dev/podcast/485/img"
   - url: "https://video.fosdem.org/2022/D.mysql/relational_model_dev.webm"
     title: "The relational model in the modern development age - Shlomi Noach, PlanetScale"
     date: 2022
