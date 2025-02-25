@@ -11,6 +11,10 @@ resources:
   # Note: To generate "thumbnail_url", visit https://embed.ly/docs/explore/extract
   # and enter the link to the resource. Once you do that, select any thumbnail url of choice to use.
 
+  - youtube: TjyzDlQEgdU
+    title: "Atomic Distributed Transactions in Vitess - Harshit Gangal & Manan Gupta, PlanetScale"
+    date: 2025
+    type: video
   - url: "https://video.fosdem.org/2025/ua2114/fosdem-2025-4759-migrating-massive-aurora-and-mysql-databases-to-vitess-kubernetes-clusters-with-near-zero-downtime.mp4"
     title: "Migrating Massive Aurora and MySQL Databases to Vitess Kubernetes Clusters with Near-Zero Downtime - Matthias Crauwels & Rohit Nayak, PlanetScale"
     date: 2025
