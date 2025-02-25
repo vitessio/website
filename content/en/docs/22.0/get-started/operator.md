@@ -57,17 +57,19 @@ You can check the state of your cluster with `kubectl get pods`. After a few min
 
 ```bash
 $ kubectl get pods
-NAME                                                         READY   STATUS    RESTARTS        AGE
-example-commerce-x-x-zone1-vtorc-c13ef6ff-5db4c77865-l96xq   1/1     Running   2 (2m49s ago)   5m16s
-example-etcd-faf13de3-1                                      1/1     Running   0               5m17s
-example-etcd-faf13de3-2                                      1/1     Running   0               5m17s
-example-etcd-faf13de3-3                                      1/1     Running   0               5m17s
-example-vttablet-zone1-2469782763-bfadd780                   3/3     Running   1 (2m43s ago)   5m16s
-example-vttablet-zone1-2548885007-46a852d0                   3/3     Running   1 (2m47s ago)   5m16s
-example-zone1-vtadmin-c03d7eae-7c6f6c98f8-f4f5z              2/2     Running   0               5m17s
-example-zone1-vtctld-1d4dcad0-57b9d7bc4b-2tnqd               1/1     Running   2 (2m53s ago)   5m17s
-example-zone1-vtgate-bc6cde92-7d445d676-x6npk                1/1     Running   2 (3m ago)      5m17s
-vitess-operator-5f47c6c45d-bgqp2                             1/1     Running   0               6m52s
+NAME                                                         READY   STATUS      RESTARTS        AGE
+example-90089e05-vitessbackupstorage-subcontroller           1/1     Running     0               3m22s
+example-commerce-x-x-vtbackup-init-c6db73c9                  0/1     Completed   0               2m9s
+example-commerce-x-x-zone1-vtorc-c13ef6ff-776f5676cb-7rcb7   1/1     Running     0               2m9s
+example-etcd-faf13de3-1                                      1/1     Running     0               3m22s
+example-etcd-faf13de3-2                                      1/1     Running     0               3m22s
+example-etcd-faf13de3-3                                      1/1     Running     0               3m22s
+example-vttablet-zone1-2469782763-bfadd780                   3/3     Running     0               2m9s
+example-vttablet-zone1-2548885007-46a852d0                   3/3     Running     0               2m9s
+example-zone1-vtadmin-c03d7eae-6db4c646bc-kslw9              2/2     Running     0               3m22s
+example-zone1-vtctld-1d4dcad0-5674cc8448-qqjv7               1/1     Running     2 (3m7s ago)    3m22s
+example-zone1-vtgate-bc6cde92-5bfb8f645-9flp9                1/1     Running     3 (2m47s ago)   3m22s
+vitess-operator-5f4fb4dffb-7kpmq                             1/1     Running     0               9m11s
 ```
 
 ## Setup Port-forward
