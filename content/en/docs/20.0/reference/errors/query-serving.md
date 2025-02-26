@@ -96,8 +96,8 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT14003 | No connection for the given tablet. | no connection for tablet %v | 0 |  |
 | VT14004 | The specified keyspace could not be found. | cannot find keyspace for: %s | 0 |  |
 | VT14005 | Failed to read sidecar database identifier. | cannot lookup sidecar database for keyspace: %s | 0 |  |
-| VT15002 | This error appears after a VT15001 error was sent back to the client, future queries on the same session will fail until the client acknowledge the situation by a sending a ROLLBACK or SHOW WARNINGS query. | previous transaction failed fatally: issue a ROLLBACK or SHOW WARNINGS query in order to acknowledge the failed transaction | 0 |  |
-| VT15001 | The opened transaction must be ROLLBACK by the application and re-tried. | transient transaction error, please issue a ROLLBACK or SHOW WARNINGS and retry the transaction: %s |  |  |
+| VT15002 | This error occurs after a VT15001 error was sent to the client. Future queries in the same session will continue to fail until the client resolves the issue by sending a ROLLBACK query. | previous transaction failed fatally. Issue a ROLLBACK query to resolve the failure. | 0 |  |
+| VT15001 | The opened transaction must be ROLLBACK by the application and re-tried. | transaction error, issue ROLLBACK and retry the transaction: %s |  |  |
 <!-- end -->
 
 ## Old Errors
