@@ -32,8 +32,8 @@ providing a more granular view of query execution patterns and performance bottl
 
 The new metrics include:
 
-- `QueryProcessed`: Tracks queries received at VTGate.
-- `QueryRouted`: Tracks the number of shards a query is routed to by VTGate.
+- `Queries`: Tracks queries received at VTGate.
+- `QueryRoutes`: Tracks the number of vttablets a query is routed to by VTGate.
 
 ## How to Use These Metrics for Optimization
 
