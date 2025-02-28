@@ -1,7 +1,7 @@
 ---
 title: Reserved Connections
 description:
-weight: 1
+weight: 20
 ---
 
 ## Feature Description
