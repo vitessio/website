@@ -1,7 +1,7 @@
 ---
 title: Query Plans Classification
 description:
-weight: 10
+weight: 1
 ---
 
 Vitess introduces enhanced query plan classification and new metrics to improve query execution analysis and monitoring.
@@ -32,7 +32,7 @@ providing a more granular view of query execution patterns and performance bottl
 
 The new metrics include:
 
-- `Queries`: Tracks queries received at VTGate.
+- `QueryExecutions`: Tracks queries processed at VTGate.
 - `QueryRoutes`: Tracks the number of vttablets a query is routed to by VTGate.
 
 ## How to Use These Metrics for Optimization
