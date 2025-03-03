@@ -17,7 +17,7 @@ Before we get started, let’s get a few pre-requisites out of the way:
 
 1. Install [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) and start a Minikube engine:
     ```bash
-    minikube start --kubernetes-version=v1.28.5 --cpus=4 --memory=11000 --disk-size=32g
+    minikube start --kubernetes-version=v1.32.2 --cpus=4 --memory=11000 --disk-size=32g
     ```
 
     {{<warning>}}Allocating less memory than specified will cause crashes in subsequent steps and break the process{{</warning>}}
