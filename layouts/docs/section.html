@@ -25,7 +25,9 @@
             {{ partial "docs/regular-pages-in-section.html" . }}
           {{ end }}
         {{ else }}
-          {{ partial "docs/pages-in-section.html" . }}
+          {{ if not .CurrentSection.Params.skip_pages_in_section }}
+            {{ partial "docs/pages-in-section.html" . }}
+          {{ end }}
           {{ .Content }}
         {{ end }}
       </div>
