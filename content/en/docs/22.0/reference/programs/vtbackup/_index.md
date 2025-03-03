@@ -1,7 +1,6 @@
 ---
 title: vtbackup
 series: vtbackup
-commit: d9ab9f7a1cf3cae19a1ea06963798a7646e8fb27
 ---
 ## vtbackup
 
@@ -12,19 +11,25 @@ vtbackup is a batch command to perform a single pass of backup maintenance for a
 vtbackup is a batch command to perform a single pass of backup maintenance for a shard.
 
 When run periodically for each shard, vtbackup can ensure these configurable policies:
-	* There is always a recent backup for the shard.
-	* Old backups for the shard are removed.
+ * There is always a recent backup for the shard.
+
+ * Old backups for the shard are removed.
 
 Whatever system launches vtbackup is responsible for the following:
-	- Running vtbackup with similar flags that would be used for a vttablet and
-    mysqlctld in the target shard to be backed up.
-	- Provisioning as much disk space for vtbackup as would be given to vttablet.
-    The data directory MUST be empty at startup. Do NOT reuse a persistent disk.
-	- Running vtbackup periodically for each shard, for each backup storage location.
-	- Ensuring that at most one instance runs at a time for a given pair of shard
-    and backup storage location.
-	- Retrying vtbackup if it fails.
-	- Alerting human operators if the failure is persistent.
+ - Running vtbackup with similar flags that would be used for a vttablet and 
+   mysqlctld in the target shard to be backed up.
+
+ - Provisioning as much disk space for vtbackup as would be given to vttablet.
+   The data directory MUST be empty at startup. Do NOT reuse a persistent disk.
+
+ - Running vtbackup periodically for each shard, for each backup storage location.
+
+ - Ensuring that at most one instance runs at a time for a given pair of shard
+   and backup storage location.
+
+ - Retrying vtbackup if it fails.
+
+ - Alerting human operators if the failure is persistent.
 
 The process vtbackup follows to take a new backup has the following steps:
  1. Restore from the most recent backup.
@@ -198,7 +203,7 @@ vtbackup [flags]
       --mysql-shell-speedup-restore                                 speed up restore by disabling redo logging and double write buffer during the restore process
       --mysql-shutdown-timeout duration                             how long to wait for mysqld shutdown (default 5m0s)
       --mysql_port int                                              mysql port (default 3306)
-      --mysql_server_version string                                 MySQL server version to advertise. (default "8.0.30-Vitess")
+      --mysql_server_version string                                 MySQL server version to advertise. (default "8.0.40-Vitess")
       --mysql_socket string                                         path to the mysql socket
       --mysql_timeout duration                                      how long to wait for mysqld startup (default 5m0s)
       --opentsdb_uri string                                         URI of opentsdb /api/put method
@@ -209,6 +214,7 @@ vtbackup [flags]
       --remote_operation_timeout duration                           time to wait for a remote operation (default 15s)
       --restart_before_backup                                       Perform a mysqld clean/full restart after applying binlogs, but before taking the backup. Only makes sense to work around xtrabackup bugs.
       --s3_backup_aws_endpoint string                               endpoint of the S3 backend (region must be provided).
+      --s3_backup_aws_min_partsize int                              Minimum part size to use, defaults to 5MiB but can be increased due to the dataset size. (default 5242880)
       --s3_backup_aws_region string                                 AWS region to use. (default "us-east-1")
       --s3_backup_aws_retries int                                   AWS request retries. (default -1)
       --s3_backup_force_path_style                                  force the s3 path style.
@@ -245,6 +251,7 @@ vtbackup [flags]
       --topo_global_root string                                     the path of the global topology data in the global topology server
       --topo_global_server_address string                           the address of the global topology server
       --topo_implementation string                                  the topology implementation to use
+      --topo_read_concurrency int                                   Maximum concurrency of topo reads per global or local cell. (default 32)
       --topo_zk_auth_file string                                    auth to use when connecting to the zk topo server, file contents should be <scheme>:<auth>, e.g., digest:user:pass
       --topo_zk_base_timeout duration                               zk base timeout (see zk.Connect) (default 30s)
       --topo_zk_max_concurrency int                                 maximum number of pending requests to send to a Zookeeper server. (default 64)

@@ -1,7 +1,6 @@
 ---
 title: vtgateclienttest
 series: vtgateclienttest
-commit: d9ab9f7a1cf3cae19a1ea06963798a7646e8fb27
 ---
 ## vtgateclienttest
 
@@ -63,7 +62,7 @@ vtgateclienttest [flags]
       --log_rotate_max_size uint                                         size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
       --logtostderr                                                      log to standard error instead of files
       --max-stack-size int                                               configure the maximum stack size in bytes (default 67108864)
-      --mysql_server_version string                                      MySQL server version to advertise. (default "8.0.30-Vitess")
+      --mysql_server_version string                                      MySQL server version to advertise. (default "8.0.40-Vitess")
       --onclose_timeout duration                                         wait no more than this for OnClose handlers before stopping (default 10s)
       --onterm_timeout duration                                          wait no more than this for OnTermSync handlers before stopping (default 10s)
       --pid_file string                                                  If set, the process will write its pid to the named file, and delete it on graceful shutdown.
