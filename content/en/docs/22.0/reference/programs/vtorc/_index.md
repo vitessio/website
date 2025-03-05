@@ -1,7 +1,6 @@
 ---
 title: vtorc
 series: vtorc
-commit: d9ab9f7a1cf3cae19a1ea06963798a7646e8fb27
 ---
 ## vtorc
 
@@ -34,11 +33,12 @@ vtorc \
       --audit-purge-duration duration                               Duration for which audit logs are held before being purged. Should be in multiples of days (default 168h0m0s)
       --audit-to-backend                                            Whether to store the audit log in the VTOrc database
       --audit-to-syslog                                             Whether to store the audit log in the syslog
+      --backend-read-concurrency int                                Maximum concurrency for reads to the backend (default 32)
+      --backend-write-concurrency int                               Maximum concurrency for writes to the backend (default 24)
       --bind-address string                                         Bind address for the server. If empty, the server will listen on all available unicast and anycast IP addresses of the local system.
       --catch-sigpipe                                               catch and ignore SIGPIPE on stdout and stderr if specified
       --change-tablets-with-errant-gtid-to-drained                  Whether VTOrc should be changing the type of tablets with errant GTIDs to DRAINED
-      --clusters_to_watch strings                                   Comma-separated list of keyspaces or keyspace/shards that this instance will monitor and repair. Defaults to all clusters in the topology. Example: "ks1,ks2/-80"
-      --config string                                               config file name
+      --clusters_to_watch strings                                   Comma-separated list of keyspaces or keyspace/keyranges that this instance will monitor and repair. Defaults to all clusters in the topology. Example: "ks1,ks2/-80"
       --config-file string                                          Full path of the config file (with extension) to use. If set, --config-path, --config-type, and --config-name are ignored.
       --config-file-not-found-handling ConfigFileNotFoundHandling   Behavior when a config file is not found. (Options: error, exit, ignore, warn) (default warn)
       --config-name string                                          Name of the config file (without extension) to search for. (default "vtconfig")
@@ -47,6 +47,7 @@ vtorc \
       --config-type string                                          Config file type (omit to infer config type from file extension).
       --consul_auth_static_file string                              JSON File to read the topos/tokens from.
       --emit_stats                                                  If set, emit stats to push-based monitoring and stats backends
+      --enable-primary-disk-stalled-recovery                        Whether VTOrc should detect a stalled disk on the primary and failover
       --grpc-dial-concurrency-limit int                             Maximum concurrency of grpc dial operations. This should be less than the golang max thread limit of 10000. (default 1024)
       --grpc_auth_static_client_creds string                        When using grpc_static_auth in the server, this file provides the credentials to use to authenticate with server.
       --grpc_compression string                                     Which protocol to use for compressing gRPC. Default: nothing. Supported: snappy
@@ -112,7 +113,7 @@ vtorc \
       --topo_global_root string                                     the path of the global topology data in the global topology server
       --topo_global_server_address string                           the address of the global topology server
       --topo_implementation string                                  the topology implementation to use
-      --topo_read_concurrency int                                   Concurrency of topo reads. (default 32)
+      --topo_read_concurrency int                                   Maximum concurrency of topo reads per global or local cell. (default 32)
       --topo_zk_auth_file string                                    auth to use when connecting to the zk topo server, file contents should be <scheme>:<auth>, e.g., digest:user:pass
       --topo_zk_base_timeout duration                               zk base timeout (see zk.Connect) (default 30s)
       --topo_zk_max_concurrency int                                 maximum number of pending requests to send to a Zookeeper server. (default 64)

@@ -1,7 +1,6 @@
 ---
 title: position
 series: mysqlctl
-commit: d9ab9f7a1cf3cae19a1ea06963798a7646e8fb27
 ---
 ## mysqlctl position
 
@@ -71,7 +70,7 @@ mysqlctl position <operation> <pos1> <pos2 | gtid> [flags]
       --logtostderr                                                 log to standard error instead of files
       --max-stack-size int                                          configure the maximum stack size in bytes (default 67108864)
       --mysql_port int                                              MySQL port. (default 3306)
-      --mysql_server_version string                                 MySQL server version to advertise. (default "8.0.30-Vitess")
+      --mysql_server_version string                                 MySQL server version to advertise. (default "8.0.40-Vitess")
       --mysql_socket string                                         Path to the mysqld socket file.
       --mysqlctl_client_protocol string                             the protocol to use to talk to the mysqlctl server (default "grpc")
       --mysqlctl_mycnf_template string                              template file to use for generating the my.cnf file during server init

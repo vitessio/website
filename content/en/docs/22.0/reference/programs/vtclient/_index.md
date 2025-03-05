@@ -1,7 +1,6 @@
 ---
 title: vtclient
 series: vtclient
-commit: d9ab9f7a1cf3cae19a1ea06963798a7646e8fb27
 ---
 ## vtclient
 
@@ -38,10 +37,20 @@ vtclient --server vtgate:15991 --target '@primary' --bind_variables '[ 12345, 1,
       --config-persistence-min-interval duration                    minimum interval between persisting dynamic config changes back to disk (if no change has occurred, nothing is done). (default 1s)
       --config-type string                                          Config file type (omit to infer config type from file extension).
       --count int                                                   DMLs only: Number of times each thread executes the query. Useful for simple, sustained load testing. (default 1)
+      --datadog-agent-host string                                   host to send spans to. if empty, no tracing will be done
+      --datadog-agent-port string                                   port to send spans to. if empty, no tracing will be done
+      --grpc-dial-concurrency-limit int                             Maximum concurrency of grpc dial operations. This should be less than the golang max thread limit of 10000. (default 1024)
+      --grpc_auth_static_client_creds string                        When using grpc_static_auth in the server, this file provides the credentials to use to authenticate with server.
+      --grpc_compression string                                     Which protocol to use for compressing gRPC. Default: nothing. Supported: snappy
       --grpc_enable_tracing                                         Enable gRPC tracing.
+      --grpc_initial_conn_window_size int                           gRPC initial connection window size
+      --grpc_initial_window_size int                                gRPC initial window size
+      --grpc_keepalive_time duration                                After a duration of this time, if the client doesn't see any activity, it pings the server to see if the transport is still alive. (default 10s)
+      --grpc_keepalive_timeout duration                             After having pinged for keepalive check, the client waits for a duration of Timeout and if no activity is seen even after that the connection is closed. (default 10s)
       --grpc_max_message_size int                                   Maximum allowed RPC message size. Larger messages will be rejected by gRPC with the error 'exceeding the max size'. (default 16777216)
       --grpc_prometheus                                             Enable gRPC monitoring with Prometheus.
   -h, --help                                                        help for vtclient
+      --jaeger-agent-host string                                    host and port to send spans to. if empty, no tracing will be done
       --json                                                        Output JSON instead of human-readable table
       --keep_logs duration                                          keep logs for this long (using ctime) (zero to keep forever)
       --keep_logs_by_mtime duration                                 keep logs for this long (using mtime) (zero to keep forever)
@@ -52,7 +61,7 @@ vtclient --server vtgate:15991 --target '@primary' --bind_variables '[ 12345, 1,
       --logtostderr                                                 log to standard error instead of files
       --max_sequence_id int                                         max sequence ID.
       --min_sequence_id int                                         min sequence ID to generate. When max_sequence_id > min_sequence_id, for each query, a number is generated in [min_sequence_id, max_sequence_id) and attached to the end of the bind variables.
-      --mysql_server_version string                                 MySQL server version to advertise. (default "8.0.30-Vitess")
+      --mysql_server_version string                                 MySQL server version to advertise. (default "8.0.40-Vitess")
       --parallel int                                                DMLs only: Number of threads executing the same query in parallel. Useful for simple load testing. (default 1)
       --pprof strings                                               enable profiling
       --pprof-http                                                  enable pprof http endpoints
@@ -64,9 +73,19 @@ vtclient --server vtgate:15991 --target '@primary' --bind_variables '[ 12345, 1,
       --streaming                                                   use a streaming query
       --target string                                               keyspace:shard@tablet_type
       --timeout duration                                            timeout for queries (default 30s)
+      --tracer string                                               tracing service to use (default "noop")
+      --tracing-enable-logging                                      whether to enable logging in the tracing service
+      --tracing-sampling-rate float                                 sampling rate for the probabilistic jaeger sampler (default 0.1)
+      --tracing-sampling-type string                                sampling strategy to use for jaeger. possible values are 'const', 'probabilistic', 'rateLimiting', or 'remote' (default "const")
       --use_random_sequence                                         use random sequence for generating [min_sequence_id, max_sequence_id)
       --v Level                                                     log level for V logs
   -v, --version                                                     print binary version
       --vmodule vModuleFlag                                         comma-separated list of pattern=N settings for file-filtered logging
+      --vtgate_grpc_ca string                                       the server ca to use to validate servers when connecting
+      --vtgate_grpc_cert string                                     the cert to use to connect
+      --vtgate_grpc_crl string                                      the server crl to use to validate server certificates when connecting
+      --vtgate_grpc_key string                                      the key to use to connect
+      --vtgate_grpc_server_name string                              the server name to use to validate server certificate
+      --vtgate_protocol string                                      how to talk to vtgate (default "grpc")
 ```
 
