@@ -98,18 +98,22 @@ After a few minutes the pods should appear running:
 
 ```bash
 $ kubectl get pods
-example-commerce-x-x-zone1-vtorc-c13ef6ff-5d658d78d8-dvmnn   1/1     Running   1 (4m39s ago)   65d
-example-etcd-faf13de3-1                                      1/1     Running   1 (4m39s ago)   65d
-example-etcd-faf13de3-2                                      1/1     Running   1 (4m39s ago)   65d
-example-etcd-faf13de3-3                                      1/1     Running   1 (4m39s ago)   65d
-example-vttablet-zone1-1250593518-17c58396                   3/3     Running   1 (27s ago)     32s
-example-vttablet-zone1-2469782763-bfadd780                   3/3     Running   3 (4m39s ago)   65d
-example-vttablet-zone1-2548885007-46a852d0                   3/3     Running   3 (4m39s ago)   65d
-example-vttablet-zone1-3778123133-6f4ed5fc                   3/3     Running   1 (26s ago)     32s
-example-zone1-vtadmin-c03d7eae-7dcd4d75c7-szbwv              2/2     Running   2 (4m39s ago)   65d
-example-zone1-vtctld-1d4dcad0-6b9cd54f8f-jmdt9               1/1     Running   2 (4m39s ago)   65d
-example-zone1-vtgate-bc6cde92-856d44984b-lqfvg               1/1     Running   2 (4m6s ago)    65d
-vitess-operator-8df7cc66b-6vtk6                              1/1     Running   0               55s
+NAME                                                         READY   STATUS      RESTARTS        AGE
+example-90089e05-vitessbackupstorage-subcontroller           1/1     Running     0               8m45s
+example-commerce-x-x-zone1-vtorc-c13ef6ff-776f5676cb-7rcb7   1/1     Running     0               7m32s
+example-customer-x-x-vtbackup-init-115abf93                  0/1     Completed   0               112s
+example-customer-x-x-zone1-vtorc-53d270f6-7df84448fb-hnnps   1/1     Running     0               112s
+example-etcd-faf13de3-1                                      1/1     Running     0               8m45s
+example-etcd-faf13de3-2                                      1/1     Running     0               8m45s
+example-etcd-faf13de3-3                                      1/1     Running     0               8m45s
+example-vttablet-zone1-1250593518-17c58396                   3/3     Running     0               112s
+example-vttablet-zone1-2469782763-bfadd780                   3/3     Running     0               7m32s
+example-vttablet-zone1-2548885007-46a852d0                   3/3     Running     0               7m32s
+example-vttablet-zone1-3778123133-6f4ed5fc                   3/3     Running     0               112s
+example-zone1-vtadmin-c03d7eae-6db4c646bc-kslw9              2/2     Running     0               8m45s
+example-zone1-vtctld-1d4dcad0-5674cc8448-qqjv7               1/1     Running     2 (8m30s ago)   8m45s
+example-zone1-vtgate-bc6cde92-5bfb8f645-9flp9                1/1     Running     3 (8m10s ago)   8m45s
+vitess-operator-5f4fb4dffb-7kpmq                             1/1     Running     0               14m
 ```
 
 Again, the operator will promote one of the tablets to `PRIMARY` implicitly for you.
