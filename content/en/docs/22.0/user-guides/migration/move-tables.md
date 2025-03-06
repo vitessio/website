@@ -97,7 +97,7 @@ $ kubectl apply -f 201_customer_tablets.yaml
 After a few minutes the pods should appear running:
 
 ```bash
-$ kubectl get pods
+$ kubectl get pods -n example
 NAME                                                         READY   STATUS      RESTARTS        AGE
 example-90089e05-vitessbackupstorage-subcontroller           1/1     Running     0               8m45s
 example-commerce-x-x-zone1-vtorc-c13ef6ff-776f5676cb-7rcb7   1/1     Running     0               7m32s
@@ -113,7 +113,6 @@ example-vttablet-zone1-3778123133-6f4ed5fc                   3/3     Running    
 example-zone1-vtadmin-c03d7eae-6db4c646bc-kslw9              2/2     Running     0               8m45s
 example-zone1-vtctld-1d4dcad0-5674cc8448-qqjv7               1/1     Running     2 (8m30s ago)   8m45s
 example-zone1-vtgate-bc6cde92-5bfb8f645-9flp9                1/1     Running     3 (8m10s ago)   8m45s
-vitess-operator-5f4fb4dffb-7kpmq                             1/1     Running     0               14m
 ```
 
 Again, the operator will promote one of the tablets to `PRIMARY` implicitly for you.

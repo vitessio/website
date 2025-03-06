@@ -39,7 +39,7 @@ are managed by a Kubernetes Job, and their goal is to take a backup of Vitess, a
 of the `401_scheduled_backups.yaml` file.
 
 ```bash
-$ kubectl get pods
+$ kubectl get pods -n example
 NAME                                                              READY   STATUS      RESTARTS      AGE
 ...
 example-vbsc-commerce-ca641fc1-commerce-x-x-1740521040-b892727l   0/1     Completed   0             2m7s
@@ -60,7 +60,7 @@ $ minikube ssh
 docker@minikube:~$ sudo chmod o+rwx -R /tmp/example/ # required to give Minikube permissions to read the Vitess backups
 docker@minikube:~$ exit
 
-$ kubectl get vtb
+$ kubectl get vtb -n example
 NAME                                                      AGE
 example-commerce-x-x-20250225-214735-b82e162-74db1145     16m
 example-commerce-x-x-20250225-220602-47f20b54-75d9f5c5    46s

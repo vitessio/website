@@ -37,10 +37,27 @@ git clone https://github.com/vitessio/vitess
 cd vitess/examples/operator
 ```
 
+For this example we will have two namespaces:
+- `default` where the operator will run.
+- `example` where the Vitess cluster will run.
+
+Create the `example` namespace:
+
+```bash
+kubectl create namespace example
+```
+
 Install the operator:
 
 ```bash
 kubectl apply -f operator.yaml
+```
+
+We can verify that the operator is correctly running:
+```bash
+$ kubectl get pods
+NAME                              READY   STATUS    RESTARTS   AGE
+vitess-operator-b56f5f6cf-r58wf   1/1     Running   0          88s
 ```
 
 ## Bring up an initial cluster
@@ -53,10 +70,10 @@ kubectl apply -f 101_initial_cluster.yaml
 
 ### Verify cluster
 
-You can check the state of your cluster with `kubectl get pods`. After a few minutes, it should show that all pods are in the status of running:
+You can check the state of your cluster with `kubectl get pods -n example`. After a few minutes, it should show that all pods are in the status of running:
 
 ```bash
-$ kubectl get pods
+$ kubectl get pods -n example
 NAME                                                         READY   STATUS      RESTARTS        AGE
 example-90089e05-vitessbackupstorage-subcontroller           1/1     Running     0               3m22s
 example-commerce-x-x-vtbackup-init-c6db73c9                  0/1     Completed   0               2m9s
@@ -69,7 +86,6 @@ example-vttablet-zone1-2548885007-46a852d0                   3/3     Running    
 example-zone1-vtadmin-c03d7eae-6db4c646bc-kslw9              2/2     Running     0               3m22s
 example-zone1-vtctld-1d4dcad0-5674cc8448-qqjv7               1/1     Running     2 (3m7s ago)    3m22s
 example-zone1-vtgate-bc6cde92-5bfb8f645-9flp9                1/1     Running     3 (2m47s ago)   3m22s
-vitess-operator-5f4fb4dffb-7kpmq                             1/1     Running     0               9m11s
 ```
 
 ## Setup Port-forward
