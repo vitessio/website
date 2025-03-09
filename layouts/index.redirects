@@ -51,6 +51,8 @@
 /slack https://join.slack.com/t/vitess/shared_invite/zt-2x79jeadd-zLYBssoc~phT956nowO77g 302
 
 # Redirect archived docs
+/docs/19.0/                              /docs/archive/19.0/
+/docs/19.0/*                             /docs/archive/19.0/:splat
 /docs/18.0/                              /docs/archive/18.0/
 /docs/18.0/*                             /docs/archive/18.0/:splat
 /docs/17.0/                              /docs/archive/17.0/
