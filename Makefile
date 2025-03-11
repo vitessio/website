@@ -42,7 +42,7 @@ check-all-links: clean build link-checker-setup
 	bin/htmltest --conf .htmltest.external.yml
 
 ifndef COBRADOC_VERSION_PAIRS
-export COBRADOC_VERSION_PAIRS="main:22.0,v21.0.0:21.0,v20.0.3:20.0,v19.0.7:19.0"
+export COBRADOC_VERSION_PAIRS="main:22.0,v21.0.3:21.0,v20.0.6:20.0"
 endif
 
 BINS := mysqlctl mysqlctld vtaclcheck topo2topo vtbackup vtclient vtcombo \
@@ -59,9 +59,9 @@ BINS := mysqlctl mysqlctld vtaclcheck topo2topo vtbackup vtclient vtcombo \
 # `make mysqlctl-docs COBRADOC_VERSION_PAIRS="main:22.0" VITESS_DIR=~/go/src/github.com/vitessio/vitess`
 %-docs:
 	set -x
-	@if echo "$$COBRADOC_VERSION_PAIRS" | grep -qE '20\.0|19\.0'; then \
+	@if echo "$$COBRADOC_VERSION_PAIRS" | grep -qE '20\.0'; then \
     		if [ "$${GOROOT##*/}" != "go1.21" ]; then \
-    			echo "Error: Go 1.21 is required when COBRADOC_VERSION_PAIRS contains 20.0 or 19.0."; \
+    			echo "Error: Go 1.21 is required when COBRADOC_VERSION_PAIRS contains 20.0."; \
     			echo "Current GOROOT is: $$GOROOT"; \
     			exit 1; \
     		fi; \
