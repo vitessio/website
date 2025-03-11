@@ -42,101 +42,46 @@ check-all-links: clean build link-checker-setup
 	bin/htmltest --conf .htmltest.external.yml
 
 ifndef COBRADOC_VERSION_PAIRS
-export COBRADOC_VERSION_PAIRS="main:22.0,v21.0.2:21.0,v20.0.5:20.0,v19.0.9:19.0,v18.0.8:18.0"
+export COBRADOC_VERSION_PAIRS="main:22.0,v21.0.3:21.0,v20.0.6:20.0"
 endif
 
-generated-docs: mysqlctl-docs \
-	mysqlctld-docs \
-	topo2topo-docs \
-	vtaclcheck-docs \
-	vtbackup-docs \
-	vtbench-docs \
-	vtclient-docs \
-	vtcombo-docs \
-	vtctld-docs \
-	vtctldclient-docs \
-	vtgate-docs \
-	vtgateclienttest-docs \
-	vtorc-docs \
-	vttablet-docs \
-	vttestserver-docs \
-	vttlstest-docs \
-	zk-docs \
-	zkctl-docs \
-	zkctld-docs
+BINS := mysqlctl mysqlctld vtaclcheck topo2topo vtbackup vtclient vtcombo \
+        vtctld vtctldclient vtgate vtgateclienttest vtorc vttablet vttestserver \
+        vttlstest zk zkctl zkctld
 
-# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make mysqlctl-docs
-mysqlctl-docs:
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" mysqlctl
+# Pattern rule for building docs for a single binary.
+# Running `make mysqlctl-docs` will trigger this rule, for example.
+# VITESS_DIR should be specified as an environment variable, pointing to the root of the local Vitess repository
+# with most recent code and all release branches fetched, for which the docs are being generated.
+# Example, to make all current release  versions:
+# `make mysqlctl-docs VITESS_DIR=~/go/src/github.com/vitessio/vitess`
+# For a specific version, you can specify COBRADOC_VERSION_PAIRS as an environment variable, Example:
+# `make mysqlctl-docs COBRADOC_VERSION_PAIRS="main:22.0" VITESS_DIR=~/go/src/github.com/vitessio/vitess`
+%-docs:
+	set -x
+	@if echo "$$COBRADOC_VERSION_PAIRS" | grep -qE '20\.0'; then \
+    		if [[ "$${GOROOT##*/}" != *go1.21* ]]; then \
+    			echo "Error: Go 1.21 is required when COBRADOC_VERSION_PAIRS contains 20.0."; \
+    			echo "Current GOROOT is: $$GOROOT"; \
+    			exit 1; \
+    		fi; \
+    fi
+	go run ./tools/cobradocs/  --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" $(patsubst %-docs,%,$@)
+	find . -name "*md-e" -exec rm {} \;
+	@CHANGED_FILES=$$(git diff --name-only) && \
+    	if [ -n "$$CHANGED_FILES" ]; then \
+    		for file in $$CHANGED_FILES; do \
+    			sed -i "" -e 's|${VITESS_DIR}|<WORKDIR>|g' $$file; \
+    		done; \
+    	else \
+    		echo "No changed files found."; \
+    	fi
+	COMMIT_HASH=$(shell cd $(VITESS_DIR) && git rev-parse --short HEAD); \
+    	git add -u content && \
+    	if ! git diff --cached --quiet HEAD --; then \
+    	  git commit -s -m "Update cobradocs for $$COMMIT_HASH for $(patsubst %-docs,%,$@)"; \
+    	fi
 
-# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make mysqlctld-docs
-mysqlctld-docs:
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" mysqlctld
-
-# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtaclcheck-docs
-vtaclcheck-docs:
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtaclcheck
-
-# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make topo2topo-docs
-topo2topo-docs:
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" topo2topo
-
-# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtbackup-docs
-vtbackup-docs:
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtbackup
-
-# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtbench-docs
-vtbench-docs:
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtbench
-
-# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtclient-docs
-vtclient-docs:
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtclient
-
-# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtcombo-docs
-vtcombo-docs:
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtcombo
-
-# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtctld-docs
-vtctld-docs:
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtctld
-
-# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtctldclient-docs
-vtctldclient-docs:
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtctldclient
-
-# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtgate-docs
-vtgate-docs:
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtgate
-
-# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtgateclienttest-docs
-vtgateclienttest-docs:
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtgateclienttest
-
-# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vtorc-docs
-vtorc-docs:
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vtorc
-
-# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vttablet-docs
-vttablet-docs:
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vttablet
-
-# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vttestserver-docs
-vttestserver-docs:
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vttestserver
-
-# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make vttlstest-docs
-vttlstest-docs:
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" vttlstest
-
-# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make zk-docs
-zk-docs:
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" zk
-
-# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make zkctl-docs
-zkctl-docs:
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" zkctl
-
-# Usage: VITESS_DIR=/full/path/to/vitess.io/vitess make zkctld-docs
-zkctld-docs:
-	go run ./tools/cobradocs/ --vitess-dir "${VITESS_DIR}" --version-pairs "${COBRADOC_VERSION_PAIRS}" zkctld
+# Target to run them all.
+.PHONY: generated-docs
+generated-docs: $(BINS:%=%-docs)

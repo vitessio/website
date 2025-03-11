@@ -40,28 +40,26 @@ func (v version) GenerateDocs(workdir string, vitessDir string, docgenPath strin
 	}
 
 	defer func() {
-		debugf("chdir %s", workdir)
+		debugf("in defer: chdir %s", workdir)
 		if cderr := os.Chdir(workdir); cderr != nil {
 			if err == nil {
 				err = cderr
 			}
 		}
 	}()
-
 	if v.Ref != "HEAD" {
 		gitCheckout := exec.Command("git", "checkout", v.Ref)
-		debugf(gitCheckout.String())
-		if err = gitCheckout.Run(); err != nil {
+		if output, err := gitCheckout.CombinedOutput(); err != nil {
+			debugf("output: %s, err: %s", output, err)
 			return err
 		}
-
 		defer func() {
 			gitCheckout := exec.Command("git", "checkout", "-")
-			debugf(gitCheckout.String())
-			if checkoutErr := gitCheckout.Run(); checkoutErr != nil {
+			if output, checkoutErr := gitCheckout.CombinedOutput(); checkoutErr != nil {
 				if err == nil {
 					err = checkoutErr
 				}
+				debugf("output: %s, err: %s", output, checkoutErr)
 			}
 		}()
 	}
@@ -78,9 +76,11 @@ func (v version) GenerateDocs(workdir string, vitessDir string, docgenPath strin
 
 	docgen := exec.Command("go", "run", docgenPath, "-d", v.Dir(workdir))
 	debugf(docgen.String())
-	if err = docgen.Run(); err != nil {
+	var output []byte
+	if output, err = docgen.CombinedOutput(); err != nil {
+		debugf("docgen output: %s, err %s", output, err)
 		return err
 	}
-
+	debugf("docgen output: %s", output)
 	return err
 }
