@@ -60,7 +60,7 @@ BINS := mysqlctl mysqlctld vtaclcheck topo2topo vtbackup vtclient vtcombo \
 %-docs:
 	set -x
 	@if echo "$$COBRADOC_VERSION_PAIRS" | grep -qE '20\.0'; then \
-    		if [ "$${GOROOT##*/}" != "go1.21" ]; then \
+    		if [[ "$${GOROOT##*/}" != *go1.21* ]]; then \
     			echo "Error: Go 1.21 is required when COBRADOC_VERSION_PAIRS contains 20.0."; \
     			echo "Current GOROOT is: $$GOROOT"; \
     			exit 1; \
