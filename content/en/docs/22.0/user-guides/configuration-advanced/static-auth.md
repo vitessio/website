@@ -65,7 +65,8 @@ hash format, and you should always specify your passwords using this
 in a non-test or external environment. 
 
 Vitess does not support the full [caching_sha2_password](https://dev.mysql.com/doc/refman/8.0/en/caching-sha2-pluggable-authentication.html) 
-authentication cycle, it is only supported through ssl.
+authentication cycle, it is only supported through TLS. You can use this
+in the file when connecting to Vitess over TLS.
 
 To use a `mysql_native_password` hash, your user section in your static
 JSON authentication file would look something like this instead:
@@ -101,6 +102,38 @@ So, you would use `*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19` as the
 `MysqlNativePassword` hash value for the cleartext password `password`.
 
 
+To use a `caching_sha2_password` hash, your user section in your static
+JSON authentication file would look something like this instead:
+
+```json
+{
+  "vitess": [
+    {
+      "UserData": "vitess",
+      "CachingSha2Password": "*EDD6D7297051F55BF680A727FB9732672035A2AB65AB0426BA5ED76E1A0D9FCF"
+    }
+  ]
+}
+```
+
+You can generate a `caching_sha2_password` hash by using SHA256 on
+the cleartext password string twice, e.g. doing it in
+MySQL for the cleartext password `password`:
+
+```mysql
+mysql> SELECT UPPER(SHA256(UNHEX(SHA256("password")))) as hash;
++------------------------------------------------------------------+
+| hash                                                             |
++------------------------------------------------------------------+
+| 73641C99F7719F57D8F4BEB11A303AFCD190243A51CED8782CA6D3DBE014D146 |
++------------------------------------------------------------------+
+1 row in set (0.01 sec)
+```
+
+So, you would use `*73641C99F7719F57D8F4BEB11A303AFCD190243A51CED8782CA6D3DBE014D146`
+as the `CachingSha2Password` hash value for the cleartext password `password`.
+
+
 ## UserData
 
 In the static authentication JSON file, the `UserData` string is **not**
@@ -119,10 +152,10 @@ have different usernames and passwords).
 
 A very convenient feature of the VTGate authorization is that, as can be
 seen in the example JSON authentication files, you have a **list** of
-`UserData` and `Password`/`MysqlNativePassword` pairs associated with
-a user.  You can optionally leverage this to assign multiple different
-passwords to a single user, and VTGate will allow a user to authenticate
-with any of the defined passwords.  This makes password rotation
+`UserData` and `Password`/`MysqlNativePassword`/`CachingSha2Password`
+pairs associated with a user.  You can optionally leverage this to assign
+multiple different passwords to a single user, and VTGate will allow a user
+to authenticate with any of the defined passwords.  This makes password rotation
 much easier;  and less likely to require or cause downtime.
 
 An example could be:
