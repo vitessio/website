@@ -1,7 +1,6 @@
 ---
 title: vtorc
 series: vtorc
-commit: 6eddcaeac58bed83ebfa3b9ada903ddc8ff36ff6
 ---
 ## vtorc
 

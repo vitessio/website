@@ -1,7 +1,6 @@
 ---
 title: vttestserver
 series: vttestserver
-commit: 6eddcaeac58bed83ebfa3b9ada903ddc8ff36ff6
 ---
 ## vttestserver
 
@@ -116,7 +115,7 @@ vttestserver [flags]
       --pprof-http                                                       enable pprof http endpoints
       --proto_topo string                                                Define the fake cluster topology as a compact text format encoded vttest proto. See vttest.proto for more information.
       --purge_logs_interval duration                                     how often try to remove old logs (default 1h0m0s)
-      --queryserver-config-transaction-timeout float                     query server transaction timeout (in seconds), a transaction will be killed if it takes longer than this value
+      --queryserver-config-transaction-timeout duration                  query server transaction timeout, a transaction will be killed if it takes longer than this value (default 30s)
       --rdonly_count int                                                 Rdonly tablets per shard (default 1)
       --replica_count int                                                Replica tablets per shard (includes primary) (default 2)
       --replication_connect_retry duration                               how long to wait in between replica reconnect attempts. Only precise to the second. (default 10s)
