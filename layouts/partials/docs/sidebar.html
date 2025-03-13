@@ -27,6 +27,8 @@
       {{ $activeClass := cond $isActive "active" "" }}
 
       {{ $isExpanded := in $currentRelPermalink .RelPermalink }}
+      {{/* 'hide_pages_in_nav' is used to hide .Pages/sub-sections from nav */}}
+      {{ $isExpanded := and $isExpanded (not .Params.hide_pages_in_nav) }}
       {{ $expandedClass := cond $isExpanded "expanded" "" }}
 
       {{/* 'docs_nav_disable_expand' is (currently only) used to hide the caret on the "Older Version Docs" link */}}

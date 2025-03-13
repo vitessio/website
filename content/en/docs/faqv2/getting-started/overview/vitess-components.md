@@ -1,6 +1,6 @@
 ---
 title: What are the main components of Vitess?
-question: What are the main components of Vitess?
+shorten_nav_links: true
 weight: 5
 ---
 

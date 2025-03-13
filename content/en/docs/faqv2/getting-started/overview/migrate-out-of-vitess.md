@@ -1,6 +1,6 @@
 ---
 title: How can I migrate out of Vitess?
-question: How can I migrate out of Vitess?
+shorten_nav_links: true
 weight: 3
 ---
 

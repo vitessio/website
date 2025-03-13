@@ -1,6 +1,6 @@
 ---
 title: Are microservices recommended for scaling?
-question: Are microservices recommended for scaling?
+shorten_nav_links: true
 weight: 6
 ---
 

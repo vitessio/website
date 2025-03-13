@@ -1,8 +1,11 @@
 <div>
-  {{ range .Page.Pages }} {{ if .Params.question }}
-  <h3>
-    <a href="{{ .RelPermalink }}"> {{ .Params.question }} </a>
-  </h3>
-  <b>{{ .Params.description }}</b>
-  {{ end }} {{ end }}
+  {{ range .Page.Pages }}
+  {{ $question := default .Params.title .Params.question }}
+        <h3>{{ $question }}
+          <span style="font-size: 1rem; font-weight: normal;">
+          <a href="{{ .RelPermalink }}">Goto FAQ</a>
+        </span>
+      </h3>
+      <b>{{ .Params.description }}</b>
+  {{ end }}
 </div>

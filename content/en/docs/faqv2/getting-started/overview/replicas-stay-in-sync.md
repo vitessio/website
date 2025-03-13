@@ -1,6 +1,6 @@
 ---
 title: How do Vitess replicas stay in sync? Do replicas use VReplication?
-question: How do Vitess replicas stay in sync? Do replicas use VReplication?
+shorten_nav_links: true
 weight: 4
 ---
 
