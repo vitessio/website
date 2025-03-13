@@ -1,6 +1,7 @@
 ---
 title: What are the main components of Vitess?
 shorten_nav_links: true
+notoc: true
 weight: 5
 ---
 

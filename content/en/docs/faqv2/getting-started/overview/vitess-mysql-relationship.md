@@ -2,6 +2,7 @@
 title: What is Vitess and MySQL's relationship?
 description: Vitess is not a database itself, instead it is a distributed database system built around MySQL.
 shorten_nav_links: true
+notoc: true
 weight: 2
 ---
 
