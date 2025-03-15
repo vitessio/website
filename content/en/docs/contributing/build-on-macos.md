@@ -69,6 +69,23 @@ Set environment variables that Vitess will require. It is recommended to put the
 export PATH=~/vitess/bin:${PATH}
 ```
 
+After setting these variables, apply the environment changes:
+
+```
+source ~/.bash_profile
+```
+
+Next, set up the development environment:
+
+```
+source dev.env
+```
+
+Notes:
+ * ```dev.env``` sets up important Git pre-commit hooks that automatically run gofmt and linters on your code before commits.
+ * If you encounter any issues (e.g., the command hangs), try running ```source build.env``` instead.
+
+
 Build Vitess:
 
 ```shell
