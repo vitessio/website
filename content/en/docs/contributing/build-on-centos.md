@@ -105,7 +105,7 @@ source dev.env
 ```
 
 Notes:
- * ```dev.env``` sets up important Git pre-commit hooks that automatically run gofmt and linters on your code before commits.
+ * ```dev.env``` sets up important environment variables, directories, and Git pre-commit hooks that automatically run gofmt and linters before commits.
  * If you encounter any issues (e.g., the command hangs), try running ```source build.env``` instead.
 
 
