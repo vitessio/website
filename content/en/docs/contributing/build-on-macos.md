@@ -62,7 +62,7 @@ git clone https://github.com/vitessio/vitess.git
 cd vitess
 ```
 
-Set environment variables that Vitess will require. It is recommended to put these in your `~/.bash_profile` file:
+Set environment variables that Vitess will require. It is recommended to put these in your `~/.zshrc` file:
 
 ```
 # Vitess binaries
@@ -72,7 +72,7 @@ export PATH=~/vitess/bin:${PATH}
 After setting these variables, apply the environment changes:
 
 ```
-source ~/.bash_profile
+source ~/.zshrc
 ```
 
 Next, set up the development environment:
