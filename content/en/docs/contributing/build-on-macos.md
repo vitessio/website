@@ -62,12 +62,29 @@ git clone https://github.com/vitessio/vitess.git
 cd vitess
 ```
 
-Set environment variables that Vitess will require. It is recommended to put these in your `~/.bash_profile` file:
+Set environment variables that Vitess will require. It is recommended to put these in your `~/.zshrc` file:
 
 ```
 # Vitess binaries
 export PATH=~/vitess/bin:${PATH}
 ```
+
+After setting these variables, apply the environment changes:
+
+```
+source ~/.zshrc
+```
+
+Next, set up the development environment:
+
+```
+source dev.env
+```
+
+Notes:
+ * ```dev.env``` sets up important environment variables, directories, and Git pre-commit hooks that automatically run gofmt and linters before commits.
+ * If you encounter any issues (e.g., the command hangs), try running ```source build.env``` instead.
+
 
 Build Vitess:
 
