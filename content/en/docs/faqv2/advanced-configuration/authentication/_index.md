@@ -1,5 +1,5 @@
 ---
-title: "Overview"
+title: "Authentication"
 hide_pages_in_nav: true
 docs_nav_disable_expand: true
 weight: 1

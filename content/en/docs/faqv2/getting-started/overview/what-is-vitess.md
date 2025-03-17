@@ -1,5 +1,5 @@
 ---
-title: What is Vitess?
+title: "What is Vitess?"
 shorten_nav_links: true
 notoc: true
 weight: 1

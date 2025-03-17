@@ -32,16 +32,16 @@ There are many channels available and we encourage you to join as many or as few
 
 ## How can I contribute a Pull Request to Vitess?
 
-We welcome new contributors to Vitess. Just be sure to read the [ contributing guide](../contributing) before you start.
+We welcome new contributors to Vitess. Just be sure to read the [ contributing guide](../contributing/) before you start.
 
 If you are already familiar with Vitess and you would like to know how to submit a Pull Request or file an Issue check out the following links:
 
-* [GitHub Workflow](../contributing/github-workflow)
-* [Submitting Issues](../contributing/github-workflow#submitting-issues)
+* [GitHub Workflow](../contributing/github-workflow/)
+* [Submitting Issues](../contributing/github-workflow/#submitting-issues)
 
 ## What are good videos to watch to get started learning about Vitess?
 
-We have a number of [recorded presentations and videos](../learning-resources) that can be watched to start learning about Vitess.
+We have a number of [recorded presentations and videos](../learning-resources/) that can be watched to start learning about Vitess.
 
 PlanetScale has also published a [Learn Vitess playlist](https://www.youtube.com/playlist?list=PLQiYtJSQdSEAJqEa5rh7Xa-RVCZWGzADN) on YouTube.
 

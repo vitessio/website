@@ -1,5 +1,5 @@
 ---
-title: What is Vitess and MySQL's relationship?
+title: "What is Vitess and MySQL's relationship?"
 shorten_nav_links: true
 notoc: true
 weight: 2

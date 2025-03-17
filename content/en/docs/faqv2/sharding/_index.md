@@ -1,6 +1,6 @@
 ---
-title: Getting Started
+title: Sharding
 docs_nav_disable_expand: true
-weight: 1
+weight: 5
 ---
 
