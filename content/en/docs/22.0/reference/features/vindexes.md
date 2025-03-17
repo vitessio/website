@@ -53,7 +53,7 @@ A Unique Vindex is a vindex that yields at most one keyspace ID for a given inpu
 Knowing that a Vindex is Unique is useful because VTGate can push down certain complex queries into VTTablet if it knows that the scope of that query can be limited to a single shard. 
 Uniqueness is also a prerequisite for a Vindex to be used as Primary Vindex.
 
-A NonUnique Vindex is analogous to a database non-unique index. It is a secondary index for searching by an alternate WHERE clause. 
+A NonUnique Vindex is analogous to a database non-unique index. It is a secondary index for searching by an alternate `WHERE` clause. 
 An input value could yield multiple keyspace IDs, and rows could be matched from multiple shards. 
 For example, if a table has a `name` column that allows duplicates, you can define a cross-shard NonUnique Vindex for it, and this will allow an efficient search for users that match a certain `name`.
 
