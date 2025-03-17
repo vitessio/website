@@ -1,10 +1,11 @@
 ---
 title: What is Vitess and MySQL's relationship?
-description: Vitess is not a database itself, instead it is a distributed database system built around MySQL.
 shorten_nav_links: true
 notoc: true
 weight: 2
 ---
+
+**Vitess is not a database itself, instead it is a distributed database system built around MySQL.**
 
 Vitess provides a sharding system for MySQL, as well as some operational management for its instances. Vitess will assist with actions like sharding, managing backup and restore, and adding replicas. 
 

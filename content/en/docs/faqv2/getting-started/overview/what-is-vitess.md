@@ -1,10 +1,11 @@
 ---
 title: What is Vitess?
-description: Vitess is a database solution for deploying, scaling and managing large clusters of database instances.
 shorten_nav_links: true
 notoc: true
 weight: 1
 ---
+
+**Vitess is a database solution for deploying, scaling and managing large clusters of database instances.** 
 
 It is architected to run as effectively in a public or private cloud architecture as it does on dedicated hardware. It combines and extends many SQL features with the scalability of a NoSQL database. Vitess can help you with the following problems:
 
