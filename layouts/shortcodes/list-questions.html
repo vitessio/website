@@ -6,7 +6,7 @@
         {{ $question }}
       </a>
     </h3>
-    {{ $preview := .Content | plainify | truncate 256 }}
+    {{ $preview := .Content | plainify | htmlUnescape | safeHTML | truncate 256 }}
     {{ if strings.HasSuffix $preview "…" }}
       {{ $preview = $preview | strings.TrimRight "…" }}
     {{ end }}
