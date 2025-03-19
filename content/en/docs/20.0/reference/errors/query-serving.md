@@ -79,15 +79,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09022 | Cannot send query to multiple shards. | Destination does not have exactly one shard: %v | 0 |  |
 | VT09023 | Unable to determine the shard for the given row. | could not map %v to a keyspace id | 0 |  |
 | VT09024 | Unable to determine the shard for the given row. | could not map %v to a unique keyspace id: %v | 0 |  |
-| VT09026 |  | Recursive Common Table Expression '%s' should contain a UNION | 3573 | HY000 |
-| VT09027 |  | Recursive Common Table Expression '%s' can contain neither aggregation nor window functions in recursive query block | 3575 | HY000 |
-| VT09028 |  | In recursive query block of Recursive Common Table Expression '%s', the recursive table must neither be in the right argument of a LEFT JOIN, nor be forced to be non-first with join order hints | 3576 | HY000 |
-| VT09029 |  | In recursive query block of Recursive Common Table Expression %s, the recursive table must be referenced only once, and not in any subquery | 3577 | HY000 |
-| VT09030 |  | Recursive query aborted after 1000 iterations. | 3636 | HY000 |
-| VT09031 |  | Primary demotion is stalled | 0 |  |
-| VT09032 | This error occurs after a VT15001 error was sent to the client. Later queries in the same session will continue to fail until the client sends a ROLLBACK. | previous transaction failed. Issue a ROLLBACK to resolve the failure. | 0 |  |
 | VT10001 | Foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/. | foreign key constraints are not allowed | 0 |  |
-| VT10002 | The distributed transaction cannot be committed. A rollback decision is taken. | atomic distributed transaction not allowed: %s | 0 |  |
 | VT12001 | This statement is unsupported by Vitess. Please rewrite your query to use supported syntax. | unsupported: %s | 0 |  |
 | VT12002 | Vitess does not support cross shard foreign keys. | unsupported: cross-shard foreign keys | 0 |  |
 | VT13001 | This error should not happen and is a bug. Please file an issue on GitHub: https://github.com/vitessio/vitess/issues/new/choose. | [BUG] %s | 0 |  |
@@ -97,7 +89,6 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT14003 | No connection for the given tablet. | no connection for tablet %v | 0 |  |
 | VT14004 | The specified keyspace could not be found. | cannot find keyspace for: %s | 0 |  |
 | VT14005 | Failed to read sidecar database identifier. | cannot lookup sidecar database for keyspace: %s | 0 |  |
-| VT15001 | Transaction must be rolled back by the application and re-tried. | transaction error, issue ROLLBACK and retry the transaction: %s |  |  |
 <!-- end -->
 
 ## Old Errors
