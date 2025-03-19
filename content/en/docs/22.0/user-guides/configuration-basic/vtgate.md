@@ -44,12 +44,13 @@ For those who wish to use the MySQL protocol, you must specify a `mysql_server_p
 
 The `vschema_ddl_authorized_users` specifies which users can alter the vschema by issuing “[vschema ddls](../../vschema-guide/vschema_ddl)” directly to vtgate. VSchema DDL is an experimental feature.
 
-Here are the contents of an example file that shows the ability to specify MySQL native passwords as well as plain text:
+Here are the contents of an example file that shows the ability to specify MySQL caching sha2, native passwords as well as plain text:
 
 ```json
 {
   "mysql_user": [
     {
+      "CachingSha2Password": "*EDD6D7297051F55BF680A727FB9732672035A2AB65AB0426BA5ED76E1A0D9FCF",
       "MysqlNativePassword": "*9E128DA0C64A6FCCCDCFBDD0FC0A2C967C6DB36F",
       "Password": "mysql_password",
       "UserData": "mysql_user"
