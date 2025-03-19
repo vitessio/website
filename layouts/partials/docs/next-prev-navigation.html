@@ -1,22 +1,34 @@
 
     {{ if or (.PrevInSection) (.NextInSection) }}
-    <div style="padding:0;display=inline-block">
+    <div style="padding:0;">
 
       {{ if .NextInSection }}
+      {{/* We show the next section on the left side of the screen, so it's better to display this as "Prev" */}}
+      {{ $prevText := "Prev" }}
+      {{/* 'shorten_nav_links' is used if we want to just use 'Next' or 'Prev' instead of whole title. */}}
+        {{ if not .Params.shorten_nav_links }}
+          {{ $prevText = .NextInSection.Name }}
+        {{ end }}
         <a class="button has-background-black has-text-grey-light is-size-6 is-size-6-mobile;" style="max-width:50%;float:left" href={{.NextInSection.Permalink }}>
             <b class="has-text-orange"><<</b>&nbsp;
           <span class="limit-text">
-            {{ .NextInSection.Name }}
+            {{ $prevText }}
           </span>
         </a>
 
       {{ end }}
 
       {{ if .PrevInSection }}
+      {{/* We show the prev section on the right side of the screen, so it's better to display this as "Next" */}}
+      {{/* .PrevInSection */}}
+      {{ $nextText := "Next" }}
+        {{ if not .Params.shorten_nav_links }}
+          {{ $nextText = .PrevInSection.Name }}
+        {{ end }}
         <a class="button has-background-black has-text-grey-light is-size-6 is-size-6-mobile;" style="max-width:50%;float:right" href={{.PrevInSection.Permalink }}>
 
           <span class="limit-text">
-            {{ .PrevInSection.Name }}
+            {{ $nextText }}
           </span>
             &nbsp;<b class="has-text-orange">>></b>
 

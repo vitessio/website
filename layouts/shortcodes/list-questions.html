@@ -1,0 +1,16 @@
+<div>
+  {{ range .Page.Pages }}
+    {{ $question := default .Params.title .Params.question }}
+    <h3>
+      <a href="{{ .RelPermalink }}">
+        {{ $question }}
+      </a>
+    </h3>
+    {{ $preview := .Content | plainify | htmlUnescape | safeHTML | truncate 256 }}
+    {{ if strings.HasSuffix $preview "…" }}
+      {{ $preview = $preview | strings.TrimRight "…" }}
+    {{ end }}
+    {{ $preview }}
+    <a href="{{ .RelPermalink }}">...more</a>
+  {{ end }}
+</div>
