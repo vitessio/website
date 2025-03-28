@@ -18,7 +18,7 @@ See also [ddl_strategy flags](../ddl-strategy-flags).
 
 You can apply DDL strategies to your schema changes in these different ways:
 
-- The command `vtctldclient ApplySchema` takes a `--ddl-strategy` flag. The strategy applies to the specific changes requested in the command. The following example applies the `vitess` strategy to three migrations submitted together: 
+- The command `vtctldclient ApplySchema` takes a `--ddl-strategy` flag. The strategy applies to the specific changes requested in the command. The following example applies the `vitess` strategy to three migrations submitted together:
 
 ```sh
 $ vtctldclient ApplySchema --ddl-strategy "vitess" --sql "ALTER TABLE demo MODIFY id bigint UNSIGNED; CREATE TABLE sample (id int PRIMARY KEY); DROP TABLE another;" commerce
@@ -71,7 +71,7 @@ The `vitess` strategy invokes Vitess's built in [VReplication](../../../referenc
 - Are [revertible](../revertible-migrations): you may switch back to the pre-migration schema without losing any data accumulated during and post migration.
 - Support a wider range of schema changes. For example, while `gh-ost` has a strict requirement for a shared unique key pre/post migration, `vitess` migrations may work with different keys, making it possible to modify a table's `PRIMARY KEY` without having to rely on an additional `UNIQUE KEY`.
 - Support cut-over backoff: should a cut-over fail due to timeout, next cut-overs take place at increasing intervals and up to `30min` intevals, so as to not overwhelm production traffic.
-- Support forced cut-over, to prioritise completion of the migration over any queries using the mgirated table, or over any transactions holding locks on the table.
+- Support forced cut-over, to prioritise completion of the migration over any queries using the migrated table, or over any transactions holding locks on the table.
 
 - `vitess` migrations support `INSTANT` DDL where applicable. See [INSTANT DDL](../instant-ddl-migrations/). A migration that runs with `ALGORITHM=INSTANT` does not use a shadow table and is not revertible.
 - `RANGE` partitioning rotation: `ADD PARTITION` and `DROP PARTITION` statements are executed directly against MySQL and not as a `vreplication` Online DDL. See [PARTITIONING notes](../instant-ddl-migrations/#partitioning-notes)
