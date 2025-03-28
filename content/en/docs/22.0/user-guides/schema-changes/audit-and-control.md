@@ -245,7 +245,7 @@ $ vtctldclient OnlineDDL show customer cancelled --limit 1
 |                                      |          |       |              |             | default null                   |          |         |                     |                     |                 |                   |                    |                     |                   |           |          |           |         |                  |                |          |                                            |            |                           |             |             |            |                   |                     |          |                            |                     |                          |                                 |                       |                  |                  |               |         |                   |                           |                     |              |                          |                     |                     |                 |       |                  |                        |                    |                             |
 +--------------------------------------+----------+-------+--------------+-------------+--------------------------------+----------+---------+---------------------+---------------------+-----------------+-------------------+--------------------+---------------------+-------------------+-----------+----------+-----------+---------+------------------+----------------+----------+--------------------------------------------+------------+---------------------------+-------------+-------------+------------+-------------------+---------------------+----------+----------------------------+---------------------+--------------------------+---------------------------------+-----------------------+------------------+------------------+---------------+---------+-------------------+---------------------------+---------------------+--------------+--------------------------+---------------------+---------------------+-----------------+-------+------------------+------------------------+--------------------+-----------------------------+
 ```
-The syntax for tracking migrations is: 
+The syntax for tracking migrations is:
 ```
 vtctldclient OnlineDDL show <keyspace> <all|recent|queued|ready|running|complete|failed|cancelled|<migration uuid>|<migration context>>
 ```
@@ -360,7 +360,7 @@ Notes:
 - Actual cut-over expected to take place within a few seconds of issuing this command.
 - Normally, migration cut-over intervals have an increasing backoff intervals. Once marked for forced cut-over, the migration ignores any such intervals and attempts at the earliest opportunity.
 - It is possible to mark a migration for forced cut-over even before it completes, or before it even starts. The migration will still run normally until the point of cut-over, at which time it will attempt `KILL`ing queries and transactions.
-- Not to be confused with `COMPLETE` command, above. This command does not compelte a `--postpone-completion` migration.
+- Not to be confused with `COMPLETE` command, above. This command does not complete a `--postpone-completion` migration.
 
 See also `--force-cut-over-after=<duration>` [DDL strategy flag](../ddl-strategy-flags).
 
