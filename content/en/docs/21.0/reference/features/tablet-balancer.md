@@ -16,7 +16,7 @@ In other words, the balancer attempts to achieve two objectives:
 
 ## Default Policy
 
-The default behavior is a local cell affinity round robin policy.
+The default behavior is a local cell affinity random choice policy.
 
 This means that when routing a given query, all the available tablets are randomly shuffled while preferring tablets
 in the same cell as the VTGate. So if there is one or more available tablets in the same cell as the VTGate, the query
