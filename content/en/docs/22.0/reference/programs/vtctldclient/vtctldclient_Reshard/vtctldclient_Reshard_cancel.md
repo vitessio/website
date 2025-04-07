@@ -19,7 +19,8 @@ vtctldclient --server localhost:15999 Reshard --workflow cust2cust --target-keys
 ### Options
 
 ```
-  -h, --help   help for cancel
+  -h, --help        help for cancel
+      --keep-data   Keep the partially copied table data from the Reshard workflow in the target shards.
 ```
 
 ### Options inherited from parent commands

@@ -19,11 +19,12 @@ vtctldclient BackupShard [--concurrency <concurrency>] [--allow-primary] [--incr
 ### Options
 
 ```
-      --allow-primary                 Allow the primary of a shard to be used for the backup. WARNING: If using the builtin backup engine, this will shutdown mysqld on the primary and stop writes for the duration of the backup.
-      --concurrency int32             Specifies the number of compression/checksum jobs to run simultaneously. (default 4)
-  -h, --help                          help for BackupShard
-      --incremental-from-pos string   Position, or name of backup from which to create an incremental backup. Default: empty. If given, then this backup becomes an incremental backup from given position or given backup. If value is 'auto', this backup will be taken from the last successful backup position.
-      --upgrade-safe                  Whether to use innodb_fast_shutdown=0 for the backup so it is safe to use for MySQL upgrades.
+      --allow-primary                     Allow the primary of a shard to be used for the backup. WARNING: If using the builtin backup engine, this will shutdown mysqld on the primary and stop writes for the duration of the backup.
+      --concurrency int32                 Specifies the number of compression/checksum jobs to run simultaneously. (default 4)
+  -h, --help                              help for BackupShard
+      --incremental-from-pos string       Position, or name of backup from which to create an incremental backup. Default: empty. If given, then this backup becomes an incremental backup from given position or given backup. If value is 'auto', this backup will be taken from the last successful backup position.
+      --mysql-shutdown-timeout duration   Timeout to use when MySQL is being shut down. (default 5m0s)
+      --upgrade-safe                      Whether to use innodb_fast_shutdown=0 for the backup so it is safe to use for MySQL upgrades.
 ```
 
 ### Options inherited from parent commands
