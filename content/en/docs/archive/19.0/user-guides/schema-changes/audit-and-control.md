@@ -335,7 +335,7 @@ $ vtctldclient OnlineDDL complete commerce 9e8a9249_3976_11ed_9442_0a43f95f28a3
 
 Applicable to `ALTER TABLE` migrations in `vitess` strategy and on MySQL `8.0`. The final step of the migration, the cut-over, involves acquiring locks on the migrated table. This operation can time out when the table is otherwise locked by the user or the app, in which case Vitess retries it later on, until successful. On very busy workloads, or in workloads where the app holds long running transactions locking the table, the migration may never be able to complete.
 
-The user may instruct Vitess to force the upcoming cut-over(s) of a specific migration, or of all pending migrations. When Vitess cuts-over such a migration, it searches for, and `KILL`s all queries still pending on the mgirated table, as well as all transactions that are holding locks on the table (by `KILL`ing their connections). This has a high likelihood to succeed and to allow the cut-over process to pass. If the cut-over still fails, then Vitess retries it later on, and keeps on `KILL`ing queries and connections on each such attempt.
+The user may instruct Vitess to force the upcoming cut-over(s) of a specific migration, or of all pending migrations. When Vitess cuts-over such a migration, it searches for, and `KILL`s all queries still pending on the migrated table, as well as all transactions that are holding locks on the table (by `KILL`ing their connections). This has a high likelihood to succeed and to allow the cut-over process to pass. If the cut-over still fails, then Vitess retries it later on, and keeps on `KILL`ing queries and connections on each such attempt.
 
 Notes:
 
