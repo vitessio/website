@@ -15,7 +15,7 @@ Vitess respects the following flags. They can be combined unless specifically in
 
 - `--analyze-table`: for `ALTER TABLE` operation, and in `online/vitess` strategy, run an `ANALYZE NO_WRITE_TO_BINLOG TABLE` just before starting the migration process, to get better estimation of the number of rows on the migrated table.
 
-- `--cut-over-threshold=<duration>"`: set an explicit threshold and timeout for a `vitess` `ALTER TABLE` cut-over phase. The default cut-over threshold, if not specified, is `10s`. A `vitess` migration will not attempt to cut-over if the vstream, or replication lag, is more than the cut-over threshold. Also, during cut-over, table locks will timeout after the same cut-over threshold (aborting the operation).
+- `--cut-over-threshold="<duration>"`: set an explicit threshold and timeout for a `vitess` `ALTER TABLE` cut-over phase. The default cut-over threshold, if not specified, is `10s`. A `vitess` migration will not attempt to cut-over if the vstream, or replication lag, is more than the cut-over threshold. Also, during cut-over, table locks will timeout after the same cut-over threshold (aborting the operation).
   The allowed range `5s..30s`. Too low and cut-over may never succeed because of the inherent async nature of `vitess` migrations. Too high and table locks will be placed for too long, effectively rendering the table inaccessible. Attempting to set a value outside the allowed range returns an error. A special case is when the user submits a `0` value, which subsequently presets the threshold to the default value of `10s`.
   The user may override this value later on via `ALTER VITESS_MIGRATION '...' CUTOVER_THRESHOLD '...'`
 
