@@ -95,7 +95,7 @@ Vitess may modify your queries to qualify for online DDL statement. Modification
 
 ## ddl_strategy
 
-You will either set `vtgate` `--ddl_strategy` command line flag value, or will override it with the `@@ddl_strategy` session variable, or use the `vtctldclient` --ddl-strategy` flag to control your schema migration strategy, and specifically, to enable and configure online DDL. Details in [DDL Strategies](../ddl-strategies). A quick overview:
+You will either set `vtgate` `--ddl_strategy` command line flag value, or will override it with the `@@ddl_strategy` session variable, or use the `vtctldclient` `--ddl-strategy` flag to control your schema migration strategy, and specifically, to enable and configure online DDL. Details in [DDL Strategies](../ddl-strategies). A quick overview:
 
 - The value `"vitess"` instructs Vitess to run an `ALTER TABLE` online DDL via `VReplication`. This is the preferred method.
 - The value `"gh-ost"` instructs Vitess to run an `ALTER TABLE` online DDL via `gh-ost`.
@@ -193,7 +193,7 @@ For more about internals of the scheduler and how migration states are controlle
 - `--enable_online_ddl`: (`vtgate`) whether Online DDL operations are at all possible through `VTGate`. Type: boolean. Default: `true`
 
   Example: `vtgate --enable_online_ddl=false` to disable access to Online DDL via `VTGate`.
- 
+
 ## Auto resume after failure
 
 VReplication based migrations (`ddl_strategy="vitess"`) are [failover agnostic](../recoverable-migrations/). They automatically resume after either planned promotion ([PlannedReparentShard](../../configuration-advanced/reparenting/#plannedreparentshard-planned-reparenting)), emergency promotion ([EmergencyReparentShard](../../configuration-advanced/reparenting/#emergencyreparentshard-emergency-reparenting)) or completely external reparenting.
