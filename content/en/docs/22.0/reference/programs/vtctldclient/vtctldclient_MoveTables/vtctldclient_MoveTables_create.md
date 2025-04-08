@@ -25,7 +25,7 @@ vtctldclient --server localhost:15999 movetables --workflow commerce2customer --
       --auto-start                               Start the workflow after creating it. (default true)
   -c, --cells strings                            Cells and/or CellAliases to copy table data from.
       --config-overrides strings                 Specify one or more VReplication config flags to override as a comma-separated list of key=value pairs.
-      --defer-secondary-keys                     Defer secondary index creation for a table until after it has been copied.
+      --defer-secondary-keys                     Defer secondary index creation for a table until after it has been copied. (default true)
       --exclude-tables strings                   Source tables to exclude from copying.
       --global-keyspace string                   If specified, then attempt to create any global resources here such as sequence tables needed to replace auto_increment table clauses that are removed due to --sharded-auto-increment-handling=REPLACE. The value must be an unsharded keyspace that already exists.
   -h, --help                                     help for create

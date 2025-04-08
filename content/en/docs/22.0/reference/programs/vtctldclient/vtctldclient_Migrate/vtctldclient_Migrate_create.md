@@ -24,7 +24,7 @@ vtctldclient --server localhost:15999 migrate --workflow import --target-keyspac
       --auto-start                         Start the workflow after creating it. (default true)
   -c, --cells strings                      Cells and/or CellAliases to copy table data from.
       --config-overrides strings           Specify one or more VReplication config flags to override as a comma-separated list of key=value pairs.
-      --defer-secondary-keys               Defer secondary index creation for a table until after it has been copied.
+      --defer-secondary-keys               Defer secondary index creation for a table until after it has been copied. (default true)
       --exclude-tables strings             Source tables to exclude from copying.
   -h, --help                               help for create
       --mount-name string                  Name external cluster is mounted as.

@@ -9,7 +9,8 @@ Operates on online DDL (schema migrations).
 ### Options
 
 ```
-  -h, --help   help for OnlineDDL
+      --caller-id string   Effective caller ID used for the operation and should map to an ACL name which grants this identity the necessary permissions to perform the operation (this is only necessary when strict table ACLs are used).
+  -h, --help               help for OnlineDDL
 ```
 
 ### Options inherited from parent commands

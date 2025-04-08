@@ -23,7 +23,7 @@ vtctldclient --server localhost:15999 reshard --workflow customer2customer --tar
       --auto-start                         Start the workflow after creating it. (default true)
   -c, --cells strings                      Cells and/or CellAliases to copy table data from.
       --config-overrides strings           Specify one or more VReplication config flags to override as a comma-separated list of key=value pairs.
-      --defer-secondary-keys               Defer secondary index creation for a table until after it has been copied.
+      --defer-secondary-keys               Defer secondary index creation for a table until after it has been copied. (default true)
   -h, --help                               help for create
       --on-ddl string                      What to do when DDL is encountered in the VReplication stream. Possible values are IGNORE, STOP, EXEC, and EXEC_IGNORE. (default "IGNORE")
       --skip-schema-copy                   Skip copying the schema from the source shards to the target shards.
