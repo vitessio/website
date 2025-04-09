@@ -79,7 +79,7 @@ vttablet \
  --db_allprivs_user msandbox \
  --db_allprivs_password msandbox \
  --init_db_name_override legacy \
- --disable_active_reparents &
+ --unmanaged &
 ```
 
 You should be able to see debug information written to screen confirming Vitess can reach the unmanaged server. A common problem is that you may need to change the authentication plugin to `mysql_native_password` (MySQL 8.0).
