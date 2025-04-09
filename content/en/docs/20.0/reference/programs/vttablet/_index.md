@@ -13,8 +13,6 @@ The VTTablet server _controls_ a running MySQL server. VTTablet supports two pri
 * Managed MySQL (most common)
 * External MySQL
 
-In addition to these deployment types, a partially managed VTTablet is also possible by setting `--disable_active_reparents`.
-
 ### Managed MySQL
 
 In this mode, Vitess actively manages MySQL.

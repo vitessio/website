@@ -142,7 +142,7 @@ There are some additional parameters that we recommend setting:
 * `queryserver-config-query-timeout`: This value should be set to the upper limit you’re willing to allow an OLTP query to run before it’s deemed too expensive or detrimental to the rest of the system. VTTablet will kill any query that exceeds this timeout. This value is usually around 15-30s.
 * `queryserver-config-transaction-timeout`: This value is meant to protect the situation where a client has crashed without completing a transaction. Typical value for this timeout is 30s.
 * `queryserver-config-idle-timeout`:  This value sets a time in seconds after which, if a connection has not been used, this connection will be removed from pool. This effectively manages number of connection objects and optimizes the pool performance.
-* `queryserver-config-max-result-size`: This parameter prevents the OLTP application from accidentally requesting too many rows. If the result exceeds the specified number of rows, VTTablet returns an error. The default value is 10,000.
+* `queryserver-config-max-result-size`: This parameter acts as a safeguard, ensuring the OLTP application doesn’t unintentionally query or modify an excessive number of rows. If a query returns more rows than the defined limit, or if a DML operation targets more rows than permitted, VTTablet will generate an error. The default limit is 10,000 rows.
 
 Here is a typical vttablet invocation:
 
