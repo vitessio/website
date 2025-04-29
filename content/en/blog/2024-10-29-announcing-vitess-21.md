@@ -2,8 +2,7 @@
 author: 'Vitess Maintainer Team'
 date: 2024-10-29
 slug: '2024-10-29-announcing-vitess-21'
-tags: [ 'release', 'Vitess', 'v21', 'MySQL', 'kubernetes', 'operator', 'vreplication', 'multi-tenancy', 'Usability', 
-        'Online DDL' ]
+tags: [ 'release', 'Vitess', 'v21', 'MySQL', 'kubernetes', 'operator', 'vreplication', 'multi-tenancy', 'Usability', 'Online DDL' ]
 title: 'Announcing Vitess 21'
 description: "Vitess 21 is now Generally Available"
 ---
