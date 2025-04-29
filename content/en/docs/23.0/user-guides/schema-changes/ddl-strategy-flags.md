@@ -27,7 +27,7 @@ Vitess respects the following flags. They can be combined unless specifically in
 
   For example, say `--force-cut-over-after=2h`, and that the migration takes `7h` to run. Say there is constant workload/locking that prevents the migration from cutting over. The first cut-over attempt takes place at the end of the `7h` run, and fails due to lock wait timeout. During the next 2 hours there will be multiuple additional attempt to cut-over, and say they all continue to fail. At the `2h` mark (`9h` since starting the migration), give or take, Vitess runs a cut-over that `KILL`s existing queries and transactions on the table. This is likely to make the cut-over successful. Should this still fail, Vitess will continue to forcefully `KILL` queries and transactions in all additional cut-over attempts.
 
-  The flag also works for migrations eligible for `INSTANT` DDL (see `--prefer-instant-ddl`). The same logic that `KILL`s queries and transaction is applied on the migrated table just before issuing the `ALTER TABLE ... ALGORITHM=INSTANT` statement.
+  The flag also works for migrations eligible for `INSTANT` DDL (see `--prefer-instant-ddl`). The same logic that `KILL`s queries and transactions is applied on the migrated table just before issuing the `ALTER TABLE ... ALGORITHM=INSTANT` statement.
 
   See also [forcing a migration cut-over](../audit-and-control/#forcing-a-migration-cut-over)
 
