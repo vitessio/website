@@ -23,7 +23,7 @@ For a more detailed description of the release, please refer to the [release not
 ## Summary
 
 * **Query Serving**: Prepared statements and new VTGate metrics
-* **Cluster Management and VTOrc**: Stalled-disk recovery, improved errant GTID discovery and VTOrc performance improvements
+* **Cluster Management and VTOrc**: Stalled-disk recovery, improved errant GTID discovery and performance improvements
 * **Kubernetes Operator**: Automated backups, Kubernetes 1.32 support, better examples
 * **Performance**: Improvements compared to v21.0.0
 
@@ -35,7 +35,7 @@ Vitess 22.0 brings a host of query‑serving enhancements focused on observabili
 
 #### Observability
 
-Vitess now emits metrics for query execution plans, which help you analyze execution patterns and optimize costly plans—see the [Query Serving metrics guide](https://vitess.io/docs/22.0/reference/query-serving/metrics/).
+Vitess now emits metrics for query execution plans, which help you analyze execution patterns and optimize costly plans — see the [Query Serving metrics guide](https://vitess.io/docs/22.0/reference/query-serving/metrics/).
 
 #### Prepared Statements
 
@@ -43,7 +43,7 @@ We have overhauled VTGate’s prepare pipeline: prepared statements are cached a
 
 #### Views and Atomic Distributed Transactions
 
-Sharded view support is GA now, and the atomic distributed transaction feature is complete—learn more in the [Distributed Transactions guide](https://vitess.io/docs/22.0/reference/features/distributed-transaction/).
+Sharded view support is GA now, and the atomic distributed transaction feature is complete — learn more in the [Distributed Transactions guide](https://vitess.io/docs/22.0/reference/features/distributed-transaction/).
 
 
 ### Cluster Management and VTOrc
@@ -66,10 +66,10 @@ This new release follows the same release cycle as Vitess.
 As part of this release, the officially supported Kubernetes version is v1.32.
 
 The original implementation of automated and scheduled backups done in v2.13.0 used an empty pod running `vtctldclient BackupShard` to execute the backup.
-This approach had trade-offs, the backup process ran faster but effectively removed a serving tablet from the available tablet pool.
+This approach had trade-offs: the backup process ran faster but removed a serving tablet from the available tablet pool.
 In v2.15.0, we have changed the implementation to use a VTBackup pod instead, to be consistent with our own recommendations for production deployments and to reduce impact on availability.
 
-All our provided examples have been enhanced to illustrate how the VitessOperator and VitessCluster can be run in two different namespaces.
+We have also added support for multiple namespaces in operator deployments. All our provided examples have been enhanced to illustrate how the VitessOperator and VitessCluster can be run in two different namespaces.
 
 Please refer to the [operator release notes](https://github.com/planetscale/vitess-operator/releases/tag/v2.15.0) to learn more about v2.15.0.
 
