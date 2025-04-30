@@ -20,7 +20,6 @@ For creating and backfilling multiple Lookup Vindexes `params-file` can be used.
                   <table_owner_column_1>,
                   <table_owner_column_2>
             ],
-            "lookup_vindex_type": <lookup_vindex_type>,
             "table_name": <table_name> (optional),
             "table_vindex_type": <table_vindex_type> (optional),
             "ignore_nulls": <true|false> (optional)
