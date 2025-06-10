@@ -331,6 +331,43 @@ $ vtctldclient OnlineDDL complete commerce 9e8a9249_3976_11ed_9442_0a43f95f28a3
 }
 ```
 
+
+## Postpone completing a migration
+
+Sometimes a high workload prevents a successful completion. The Online DDL mechanism will backoff multiple retries. With `--force-cut-over-after` chances are that the migration will be able to push through to completion, but even that is not guaranteed. In these unlikely situations, you may choose to forcibly postpone the completion of the migration via a `alter vitess_migration ... postpone complete` command. This is the counter-command to `alter vitess_migration ... complete`. It tells Vitess to keep the migration running, keep the shadow table up-to-date, but never cut-over.
+
+It is similar in essence to supplying a `--postpone-completion` DDL strategy flag, except it can be done after the fact.
+
+`alter vitess_migration ... postpone complete` and `alter vitess_migration ... complete` can be interleaved, and one undoes the other. To finally cut-over the migration run `alter vitess_migration ... complete`.
+
+#### Via VTGate/SQL
+
+```sql
+mysql> alter vitess_migration 'aa89f255_8d68_11eb_815f_f875a4d24e90' postpone complete;
+Query OK, 1 row affected (0.01 sec)
+```
+
+or
+
+```sql
+mysql> alter vitess_migration postpone complete all;
+Query OK, 1 row affected (0.01 sec)
+```
+
+#### Via vtctldclient
+
+Complete a specific migration:
+
+```shell
+$ vtctldclient ApplySchema --sql "alter vitess_migration '9e8a9249_3976_11ed_9442_0a43f95f28a3' postpone complete" commerce
+```
+
+Or complete all:
+
+```shell
+$ vtctldclient ApplySchema --sql "alter vitess_migration postpone complete all" commerce
+```
+
 ## Changing the migration cut-over threshold
 
 Applicable to `ALTER TABLE` migrations in `vitess` strategy, the cut-over threshold controls if and how a cut-over operates:
