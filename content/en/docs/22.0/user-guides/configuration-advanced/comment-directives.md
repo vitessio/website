@@ -70,6 +70,12 @@ In Vitess, it is possible to use the `vtgate` parameter `--no_scatter` to preven
 
 This comment directive is used to override that limitation, allowing application code to be customized to allow scatters for certain chosen use-cases, but not for the general case.
 
+## Allow block joins (`ALLOW_BLOCK_JOIN`)
+
+In the query planner of `vtgate`, there are several ways to plan a join between two tables. Including `block joins` that were introduced in [#17641](https://github.com/vitessio/vitess/pull/17641) (RFC: [#16508](https://github.com/vitessio/vitess/issues/16508)).
+
+This comment directive will allow the query planner to use block joins, when possible.
+
 ## Consolidator (`CONSOLIDATOR`)
 
 In `vttablet`, the consolidator is enabled with the `--enable_consolidator` and `--enable_consolidator_replicas` flags. Those settings may be overridden with this comment directive, allowing application code to opt into (or out of) consolidation for individual `SELECT` queries.
