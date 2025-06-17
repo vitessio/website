@@ -28,7 +28,7 @@ Vitess respects the following flags. They can be combined unless specifically in
 
 - `--postpone-launch`: initiate a migration that remains `queued` and only launches per user command. See [postponed migrations](../postponed-migrations).
 
-- `--singleton`: only allow a single pending migration to be submitted at a time. From the moment the migration is queued, and until either completion, failure or cancellation, no other new `--singleton` migration can be submitted. New requests will be rejected with error. `--singleton` works as a an exclusive lock for pending migrations. Note that this only affects migrations with `--singleton` flag. Migrations running without that flag are unaffected and unblocked.
+- `--singleton`: only allow a single pending migration to be submitted at a time. From the moment the migration is queued, and until either completion, failure or cancellation, no other new `--singleton` migration can be submitted. New requests will be rejected with error. `--singleton` works as an exclusive lock for pending migrations. Note that this only affects migrations with `--singleton` flag. Migrations running without that flag are unaffected and unblocked.
 
 - `--singleton-context`: only allow migrations submitted under same _context_ to be pending at any given time. Migrations submitted with a different _context_ are rejected for as long as at least one of the initially submitted migrations is pending.
 
@@ -48,4 +48,4 @@ set @@ddl_strategy='pt-osc --null-to-not-null'
 ```
 Consult [pt-online-schema-change documentation](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html) for supported command line flags.
 
-The `vitess` strategy (formerly known as `online`) uses Vitess internal mechanisms and is not a standalone command line tool. therefore, it has no particular command line flags. For internal testing/CI purposes, the `vitess` strategy supports `--vreplication-test-suite`, and this flag must **not** be used in production as it can have destructive consequences.
+The `vitess` strategy (formerly known as `online`) uses Vitess internal mechanisms and is not a standalone command line tool. Therefore, it has no particular command line flags. For internal testing/CI purposes, the `vitess` strategy supports `--vreplication-test-suite`, and this flag must **not** be used in production as it can have destructive consequences.

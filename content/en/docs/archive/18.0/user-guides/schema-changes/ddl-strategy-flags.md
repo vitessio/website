@@ -15,7 +15,7 @@ Vitess respects the following flags. They can be combined unless specifically in
 
 - `--analyze-table`: for `ALTER TABLE` operation, and in `online/vitess` strategy, run an `ANALYZE NO_WRITE_TO_BINLOG TABLE` just before starting the migration process, to get better estimation of the number of rows on the migrated table.
 
-- `cut-over-threshold=<duration>"`: set an explicit threshold and timeout for a `vitess` `ALTER TABLE` cut-over phase. The default cut-over threshold, if not specified, is `10s`. A `vitess` migration will not attempt to cut-over if the vstream, or replication lag, is more than the cut-over threshold. Also, during cut-over, table locks will timeout after the same cut-over threshold (aborting the operation).
+- `cut-over-threshold="<duration>"`: set an explicit threshold and timeout for a `vitess` `ALTER TABLE` cut-over phase. The default cut-over threshold, if not specified, is `10s`. A `vitess` migration will not attempt to cut-over if the vstream, or replication lag, is more than the cut-over threshold. Also, during cut-over, table locks will timeout after the same cut-over threshold (aborting the operation).
   Normal values are in the range `5s`..`30s`. Too low and cut-over may never succeed because of the inherent async nature of `vitess` migrations. Too high and table locks will be placed for too long, effectively rendering the table inaccessible.
 
 - `--declarative`: mark the migration as declarative. You will define a desired schema state by supplying `CREATE` and `DROP` statements, ad Vitess will infer how to achieve the desired schema. If need be, it will generate an `ALTER` migration to convert to the new schema. See [declarative migrations](../declarative-migrations).
@@ -37,7 +37,7 @@ Vitess respects the following flags. They can be combined unless specifically in
 
 - `--retain-artifacts=<duration>`: set an explicit artifact retention for this migration. If nonzero, this value overrides the `vttablet --retain_online_ddl_tables` value.
 
-- `--singleton`: only allow a single pending migration to be submitted at a time. From the moment the migration is queued, and until either completion, failure or cancellation, no other new `--singleton` migration can be submitted. New requests will be rejected with error. `--singleton` works as a an exclusive lock for pending migrations. Note that this only affects migrations with `--singleton` flag. Migrations running without that flag are unaffected and unblocked.
+- `--singleton`: only allow a single pending migration to be submitted at a time. From the moment the migration is queued, and until either completion, failure or cancellation, no other new `--singleton` migration can be submitted. New requests will be rejected with error. `--singleton` works as an exclusive lock for pending migrations. Note that this only affects migrations with `--singleton` flag. Migrations running without that flag are unaffected and unblocked.
 
 - `--singleton-context`: only allow migrations submitted under same _context_ to be pending at any given time. Migrations submitted with a different _context_ are rejected for as long as at least one of the initially submitted migrations is pending.
 
@@ -57,4 +57,4 @@ set @@ddl_strategy='pt-osc --null-to-not-null'
 ```
 Consult [pt-online-schema-change documentation](https://www.percona.com/doc/percona-toolkit/3.0/pt-online-schema-change.html) for supported command line flags.
 
-The `vitess` strategy (formerly known as `online`) uses Vitess internal mechanisms and is not a standalone command line tool. therefore, it has no particular command line flags. For internal testing/CI purposes, the `vitess` strategy supports `--vreplication-test-suite`, and this flag must **not** be used in production as it can have destructive consequences.
+The `vitess` strategy (formerly known as `online`) uses Vitess internal mechanisms and is not a standalone command line tool. Therefore, it has no particular command line flags. For internal testing/CI purposes, the `vitess` strategy supports `--vreplication-test-suite`, and this flag must **not** be used in production as it can have destructive consequences.
