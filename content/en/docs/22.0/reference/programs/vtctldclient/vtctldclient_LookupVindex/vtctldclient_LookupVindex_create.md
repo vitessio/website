@@ -10,10 +10,53 @@ Create the Lookup Vindex in the specified keyspace and backfill it with a VRepli
 vtctldclient LookupVindex create
 ```
 
+For creating and backfilling multiple Lookup Vindexes `params-file` can be used. `params-file` should be a JSON file with this format:
+```
+{
+      <vindex_name>: {
+            "lookup_vindex_type": <lookup_vindex_type>,
+            "table_owner": <table_owner>,
+            "table_owner_columns": [
+                  <table_owner_column_1>,
+                  <table_owner_column_2>
+            ],
+            "table_name": <table_name> (optional),
+            "table_vindex_type": <table_vindex_type> (optional),
+            "ignore_nulls": <true|false> (optional)
+      },
+      ...
+}
+```
+
 ### Examples
 
 ```
 vtctldclient --server localhost:15999 LookupVindex --name corder_lookup_vdx --table-keyspace customer create --keyspace customer --type consistent_lookup_unique --table-owner corder --table-owner-columns sku --table-name corder_lookup_tbl --table-vindex-type unicode_loose_xxhash
+```
+
+For creating and backfilling multiple Lookup Vindexes:
+```
+vtctldclient --server localhost:15999 LookupVindex --name "lookup_workflow1" --table-keyspace customer create --keyspace="customer" --params-file="vindex_params.json"
+```
+
+Here's an example for params-file:
+```json
+{
+    "corder_lookup": {
+        "lookup_vindex_type": "consistent_lookup_unique",
+        "table_owner": "corder",
+        "table_owner_columns": [
+            "sku"
+        ],
+    },
+    "customer_lookup": {
+        "lookup_vindex_type": "consistent_lookup_unique",
+        "table_owner": "customer",
+        "table_owner_columns": [
+            "email"
+        ]
+    }
+}
 ```
 
 ### Options
@@ -24,6 +67,7 @@ vtctldclient --server localhost:15999 LookupVindex --name corder_lookup_vdx --ta
   -h, --help                               help for create
       --ignore-nulls                       Do not add corresponding records in the lookup table if any of the owner table's 'from' fields are NULL.
       --keyspace string                    The keyspace to create the Lookup Vindex in. This is also where the table-owner must exist.
+      --params-file string                 JSON file containing lookup vindex parameters. Use this for creating multiple lookup vindexes.
       --table-name string                  The name of the lookup table. If not specified, then it will be created using the same name as the Lookup Vindex.
       --table-owner string                 The table holding the data which we should use to backfill the Lookup Vindex. This must exist in the same keyspace as the Lookup Vindex.
       --table-owner-columns strings        The columns to read from the owner table. These will be used to build the hash which gets stored as the keyspace_id value in the lookup table.
