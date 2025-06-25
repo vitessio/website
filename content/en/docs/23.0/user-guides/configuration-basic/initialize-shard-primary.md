@@ -1,5 +1,5 @@
 ---
-title: Initialize Shard Primary
+title: Initializing Shard Primary
 weight: 9
 ---
 

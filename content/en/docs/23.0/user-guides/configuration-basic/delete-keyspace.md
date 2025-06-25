@@ -1,5 +1,5 @@
 ---
-title: Delete a Keyspace
+title: Deleting a Keyspace
 weight: 14
 ---
 
