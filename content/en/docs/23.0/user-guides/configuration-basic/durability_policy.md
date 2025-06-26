@@ -9,9 +9,9 @@ The interface definition looks like:
 ```go
 // Durabler is the interface which is used to get the promotion rules for candidates and the semi sync setup
 type Durabler interface {
-	promotionRule(*topodatapb.Tablet) promotionrule.CandidatePromotionRule
-	semiSyncAckers(*topodatapb.Tablet) int
-	isReplicaSemiSync(primary, replica *topodatapb.Tablet) bool
+	PromotionRule(*topodatapb.Tablet) promotionrule.CandidatePromotionRule
+	SemiSyncAckers(*topodatapb.Tablet) int
+	IsReplicaSemiSync(primary, replica *topodatapb.Tablet) bool
 }
 ```
 
