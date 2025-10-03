@@ -28,8 +28,6 @@ The following command line options are required for every Vitess component:
 --topo_implementation=etcd2 --topo_global_server_address=<comma_separated_addresses> --topo_global_root=/vitess/global
 ```
 
-To avoid repetition we will use `<topo_flags>` in our examples to signify the above flags.
-
 Note that the topo implementation for etcd is `etcd2`. This is because Vitess uses the v2 API of etcd.
 
 {{< info >}}
