@@ -67,17 +67,33 @@ Use the examples provided in the respective test guide to apply schema and VSche
 
 ---
 
-## Next steps: Move to production
+## What’s next: roadmap to move to production
 
-The Docker test image is for evaluation only. When you’re ready to take the next step, use these task‑oriented guides to plan and operate a production cluster:
+After you’ve completed the quick start, follow this linear roadmap to build and operate a production Vitess cluster:
 
-* **Planning** — capacity, topology, cells, and prerequisites  
-  [../user-guides/configuration-basic/planning/](../user-guides/configuration-basic/planning/)
-* **Backups & restores** — choose storage, configure backup flags, and test restores  
-  [../user-guides/configuration-basic/backups-restores/](../user-guides/configuration-basic/backups-restores/)
-* **Monitoring** — metrics, dashboards, and health checks for Vitess components  
-  [../user-guides/configuration-basic/monitoring/](../user-guides/configuration-basic/monitoring/)
-* **Troubleshooting** — common issues and diagnostic steps  
-  [../user-guides/configuration-basic/troubleshooting/](../user-guides/configuration-basic/troubleshooting/)
-* **Migrating data (if needed)** — options for bringing existing MySQL data into Vitess (dump/restore vs. online VReplication)  
-  [../user-guides/migration/migrate-data/](../user-guides/migration/migrate-data/)
+1. Plan production installation — capacity, topology, cells, prerequisites  
+   [Planning](../user-guides/configuration-basic/planning/)
+
+2. Install & wire up the cluster — (Kubernetes is recommended; use the [Vitess Operator](./operator/) or your automation)  
+   * [Create a cell](../user-guides/configuration-basic/create-cell/)
+   * [Keyspaces & shards](../user-guides/configuration-basic/keyspaces-shards/)
+   * [VTGate](../user-guides/configuration-basic/vtgate/)
+
+3. Configure the production environment — durability, backups, monitoring  
+   * [Backups & restores](../user-guides/configuration-basic/backups-restores/)
+   * [Monitoring](../user-guides/configuration-basic/monitoring/)
+   * [Troubleshooting](../user-guides/configuration-basic/troubleshooting/)
+
+4. Populate databases — migrate existing MySQL data with VReplication or dump/restore  
+   [Migrating data](../user-guides/migration/migrate-data/)
+
+5. Run queries & evolve schemas — connect apps, manage changes safely  
+   * [VSchema overview](../user-guides/vschema-guide/overview/)
+   * [Managed, Online Schema Changes](../user-guides/schema-changes/managed-online-schema-changes/)
+
+6. Operate & scale — shard and maintain your cluster over time  
+   * [Reshard (VReplication)](../reference/vreplication/reshard/)
+   * [Reparenting](../user-guides/configuration-advanced/reparenting/)
+   * [VTOrc](../reference/programs/vtorc/)
+
+> Role hints: **Developers** start with VSchema & Query Serving (step 5). **DBAs/Operators** prioritize backups/monitoring (step 3). **SREs** focus on VTOrc and reparenting (step 6).
