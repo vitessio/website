@@ -4,41 +4,53 @@ weight: 1
 featured: true
 ---
 
-Vitess is a database solution for deploying, scaling and managing large clusters of open-source database instances. It currently supports MySQL and Percona Server for MySQL. It's architected to run as effectively in a public or private cloud architecture as it does on dedicated hardware. It combines and extends many important SQL features with the scalability of a NoSQL database. Vitess can help you with the following problems:
+Vitess is an **open-source, cloud-native, horizontally scalable, distributed database system built around MySQL**. It presents a single logical MySQL interface to applications through a stateless proxy (**VTGate**), while managing shards across multiple database instances called **VTTablets**. Vitess handles **data sharding**, **query routing**, **connection pooling**, and **automated failover**, so applications can keep using the familiar MySQL protocol without embedding sharding logic.
 
-1. Scaling a SQL database by allowing you to shard it, while keeping application changes to a minimum.
-2. Migrating from bare-metal or VMs to a private or public cloud.
-3. Deploying and managing a large number of SQL database instances.
+Vitess achieves scale through **generalized sharding** and supports **online resharding** with an atomic cutover that typically takes only seconds. It runs efficiently on **Kubernetes** (via the Vitess Operator) and also on VMs or bare metal. Vitess currently supports **MySQL** and **Percona Server for MySQL**.
 
-Vitess includes compliant JDBC and Go database drivers using a native query protocol. Additionally, it implements the MySQL server protocol which is compatible with virtually any other language.
+### How it works (at a glance)
 
-Vitess served all YouTube database traffic for over five years. Many enterprises have now adopted Vitess for their production needs.
+- **VTGate** – stateless proxy that speaks the MySQL protocol; applications connect here.
+- **VSchema** – logical schema that describes keyspaces/tables and how data is partitioned; VTGate uses it to route queries.
+- **VTTablet** – process that manages a single MySQL instance and exposes it to Vitess.
+- **Topology Service** – consistent store (e.g., etcd / ZooKeeper) for cluster metadata and coordination.
+- **Operational tooling** – e.g., **VTOrc** for automated failure detection and reparenting; built-in workflows for **resharding**. See [architecture](./architecture) for further details.
+
+### What Vitess helps with
+
+1. **Scaling** a SQL database via sharding while keeping application changes to a minimum.  
+2. **Migrating** from bare metal/VMs to private or public cloud.  
+3. **Operating** and managing large fleets of MySQL instances.
+
+Vitess includes compliant JDBC and Go database drivers and implements the MySQL server protocol, making it compatible with virtually any language and driver ecosystem.
+
+Vitess powered YouTube’s database traffic for years and is used by multiple enterprises in production today see [history](./history).
 
 ## Features
 
-* Performance
-    - Connection pooling - Multiplex front-end application queries onto a pool of MySQL connections to optimize performance.
-    - Query de-duping – Reuse results of an in-flight query for any identical requests received while the in-flight query was still executing.
-    - Transaction manager – Limit number of concurrent transactions and manage timeouts to optimize overall throughput.
+- Performance
+  - Connection pooling - Multiplex front-end application queries onto a pool of MySQL connections to optimize performance.
+  - Query de-duping – Reuse results of an in-flight query for any identical requests received while the in-flight query was still executing.
+  - Transaction manager – Limit number of concurrent transactions and manage timeouts to optimize overall throughput.
 
-* Protection
-    - Query rewriting and sanitization – Add limits and avoid non-deterministic updates.
-    - Query blocking – Customize rules to prevent potentially problematic queries from hitting your database.
-    - Query killing – Terminate queries that take too long to return data.
-    - Table ACLs – Specify access control lists (ACLs) for tables based on the connected user.
+- Protection
+  - Query rewriting and sanitization – Add limits and avoid non-deterministic updates.
+  - Query blocking – Customize rules to prevent potentially problematic queries from hitting your database.
+  - Query killing – Terminate queries that take too long to return data.
+  - Table ACLs – Specify access control lists (ACLs) for tables based on the connected user.
 
-* Monitoring
-    - Performance analysis tools let you monitor, diagnose, and analyze your database performance.
+- Monitoring
+  - Performance analysis tools let you monitor, diagnose, and analyze your database performance.
 
-* Topology Management Tools
-    - Cluster management tools (handles planned and unplanned failovers)
-    - Web-based management GUI
-    - Designed to work in multiple data centers / regions
+- Topology Management Tools
+  - Cluster management tools (handles planned and unplanned failovers)
+  - Web-based management GUI
+  - Designed to work in multiple data centers / regions
 
-* Sharding
-    - Virtually seamless dynamic re-sharding
-    - Vertical and Horizontal sharding support
-    - Multiple sharding schemes, with the ability to plug-in custom ones
+- Sharding
+  - Virtually seamless dynamic re-sharding
+  - Vertical and Horizontal sharding support
+  - Multiple sharding schemes, with the ability to plug-in custom ones
 
 ## Comparisons to other storage options
 
@@ -55,7 +67,6 @@ Vitess improves a vanilla MySQL implementation in several ways:
 | Sharding is a process of partitioning your data to improve scalability and performance. MySQL lacks native sharding support, requiring you to write sharding code and embed sharding logic in your application.                                                                                                                                                                 | Vitess supports a variety of sharding schemes. It can also migrate tables into different databases and scale the number of shards up or down. These functions are performed non-intrusively, completing most data transitions with just a few seconds of read-only downtime.  |
 | A MySQL cluster using replication for availability has a primary database and a few replicas. If the primary fails, a replica should become the new primary. This requires you to manage the database lifecycle and communicate the current system state to your application.                                                                                                     | Vitess helps to manage the lifecycle of your database servers. It supports and automatically handles various scenarios, including primary failure detection and recovery. It also has support for data backups and restores.                                                                                                          |
 | A MySQL cluster can have custom database configurations for different workloads, like a primary database for writes, fast read-only replicas for web clients, slower read-only replicas for batch jobs, and so forth. If the database has horizontal sharding, the setup is repeated for each shard, and the app needs baked-in logic to know how to find the right  database. | Vitess uses a topology backed by a consistent data store, like etcd or ZooKeeper. This means the cluster view is always up-to-date and consistent for different clients. Vitess also provides a proxy that routes queries efficiently to the most appropriate MySQL instance. |
-
 
 ### Vitess vs. NoSQL
 
