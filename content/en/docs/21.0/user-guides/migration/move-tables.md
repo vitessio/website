@@ -492,10 +492,10 @@ Optionally, you can test how queries will perform once traffic is switched by mi
 
 ```bash
 $ vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer MirrorTraffic --percent 1.0
-SwitchTraffic was successful for workflow customer.commerce2customer
+MirrorTraffic was successful for workflow customer.commerce2customer
 
 Start State: Reads Not Switched. Writes Not Switched
-Current State: All Reads Switched. Writes Switched
+Current State: Reads Not Switched. Writes Not Switched
 ```
 
 `MirrorTraffic` increases VTGate CPU usage and memory allocations, while decreasing performance. It is recommended to start with small values of `--percent` (between `0` and `1`), and increase in small increments. If you observe decreases in performance or increases in VTGate memory usage, either revert to smaller values of `--percent` or increase the amount of resources allocated to VTGate.
