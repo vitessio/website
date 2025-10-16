@@ -26,7 +26,7 @@ vtctldclient --server localhost:15999 workflow --keyspace customer list
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --action-timeout duration              timeout to use for the command (default 1h0m0s)
       --compact                              use compact format for otherwise verbose outputs
   -k, --keyspace string                      Keyspace context for the workflow.
       --server string                        server to use for the connection (required)

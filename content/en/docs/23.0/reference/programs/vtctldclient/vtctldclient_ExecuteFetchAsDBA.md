@@ -23,7 +23,7 @@ vtctldclient ExecuteFetchAsDBA [--max-rows <max-rows>] [--json|-j] [--disable-bi
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --action-timeout duration              timeout to use for the command (default 1h0m0s)
       --compact                              use compact format for otherwise verbose outputs
       --server string                        server to use for the connection (required)
       --topo-global-root string              the path of the global topology data in the global topology server (default "/vitess/global")

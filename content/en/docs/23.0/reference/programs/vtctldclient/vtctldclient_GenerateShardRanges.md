@@ -7,19 +7,20 @@ series: vtctldclient
 Print a set of shard ranges assuming a keyspace with N shards.
 
 ```
-vtctldclient GenerateShardRanges <num_shards>
+vtctldclient GenerateShardRanges <num_shards> [--hex-width=w]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for GenerateShardRanges
+  -h, --help            help for GenerateShardRanges
+      --hex-width int   The number of hex characters to use for the shard range start and end. If not set or set to 0, it will be automatically computed based on the number of requested shards.
 ```
 
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --action-timeout duration              timeout to use for the command (default 1h0m0s)
       --compact                              use compact format for otherwise verbose outputs
       --server string                        server to use for the connection (required)
       --topo-global-root string              the path of the global topology data in the global topology server (default "/vitess/global")

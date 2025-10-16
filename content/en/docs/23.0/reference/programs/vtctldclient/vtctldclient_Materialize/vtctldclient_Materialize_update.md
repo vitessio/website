@@ -1,25 +1,20 @@
 ---
-title: Reshard complete
+title: Materialize update
 series: vtctldclient
 ---
-## vtctldclient Reshard complete
+## vtctldclient Materialize update
 
-Complete a Reshard VReplication workflow.
-
-```
-vtctldclient Reshard complete
-```
-
-### Examples
+Update existing materialize workflow.
 
 ```
-vtctldclient --server localhost:15999 Reshard --workflow cust2cust --target-keyspace customer complete
+vtctldclient Materialize update --add-tables='table1,table2' [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for complete
+      --add-reference-tables strings   Used to specify the reference tables to be added to the existing workflow
+  -h, --help                           help for update
 ```
 
 ### Options inherited from parent commands
@@ -38,5 +33,5 @@ vtctldclient --server localhost:15999 Reshard --workflow cust2cust --target-keys
 
 ### SEE ALSO
 
-* [vtctldclient Reshard](../)	 - Perform commands related to resharding a keyspace.
+* [vtctldclient Materialize](../)	 - Perform commands related to materializing query results from the source keyspace into tables in the target keyspace.
 

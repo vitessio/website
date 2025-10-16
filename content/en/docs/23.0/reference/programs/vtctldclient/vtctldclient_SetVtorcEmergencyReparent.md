@@ -1,19 +1,21 @@
 ---
-title: ValidatePermissionsShard
+title: SetVtorcEmergencyReparent
 series: vtctldclient
 ---
-## vtctldclient ValidatePermissionsShard
+## vtctldclient SetVtorcEmergencyReparent
 
-Validates that the permissions on the primary match all of the replicas.
+Enable/disables the use of EmergencyReparentShard in VTOrc recoveries for a given keyspace or keyspace/shard.
 
 ```
-vtctldclient ValidatePermissionsShard <keyspace/shard>
+vtctldclient SetVtorcEmergencyReparent [--enable|-e] [--disable|-d] <keyspace> <shard>
 ```
 
 ### Options
 
 ```
-  -h, --help   help for ValidatePermissionsShard
+  -d, --disable   Disable the use of EmergencyReparentShard in recoveries.
+  -e, --enable    Enable the use of EmergencyReparentShard in recoveries.
+  -h, --help      help for SetVtorcEmergencyReparent
 ```
 
 ### Options inherited from parent commands

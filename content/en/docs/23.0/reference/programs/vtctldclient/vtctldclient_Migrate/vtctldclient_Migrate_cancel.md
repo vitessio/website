@@ -25,7 +25,7 @@ vtctldclient --server localhost:15999 Migrate --workflow import --target-keyspac
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --action-timeout duration              timeout to use for the command (default 1h0m0s)
       --compact                              use compact format for otherwise verbose outputs
       --format string                        The format of the output; supported formats are: text,json. (default "text")
       --server string                        server to use for the connection (required)
