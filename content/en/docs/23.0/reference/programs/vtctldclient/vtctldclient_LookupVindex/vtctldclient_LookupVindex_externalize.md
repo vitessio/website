@@ -27,9 +27,9 @@ vtctldclient --server localhost:15999 LookupVindex --name corder_lookup_vdx --ta
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --action-timeout duration              timeout to use for the command (default 1h0m0s)
       --compact                              use compact format for otherwise verbose outputs
-      --name string                          The name of the Lookup Vindex to create. This will also be the name of the VReplication workflow created to backfill the Lookup Vindex.
+      --name string                          The name of the Lookup Vindex to create. This will also be the name of the VReplication workflow created to backfill the Lookup Vindex. This will be used only for the workflow name if params-file is used.
       --server string                        server to use for the connection (required)
       --table-keyspace string                The keyspace to create the lookup table in. This is also where the VReplication workflow is created to backfill the Lookup Vindex.
       --topo-global-root string              the path of the global topology data in the global topology server (default "/vitess/global")

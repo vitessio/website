@@ -21,7 +21,7 @@ vtctldclient [flags]
 ### Options
 
 ```
-      --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --action-timeout duration              timeout to use for the command (default 1h0m0s)
       --compact                              use compact format for otherwise verbose outputs
   -h, --help                                 help for vtctldclient
       --server string                        server to use for the connection (required)
@@ -113,6 +113,7 @@ vtctldclient [flags]
 * [vtctldclient SetKeyspaceDurabilityPolicy](./vtctldclient_setkeyspacedurabilitypolicy/)	 - Sets the durability-policy used by the specified keyspace.
 * [vtctldclient SetShardIsPrimaryServing](./vtctldclient_setshardisprimaryserving/)	 - Add or remove a shard from serving. This is meant as an emergency function. It does not rebuild any serving graphs; i.e. it does not run `RebuildKeyspaceGraph`.
 * [vtctldclient SetShardTabletControl](./vtctldclient_setshardtabletcontrol/)	 - Sets the TabletControl record for a shard and tablet type. Only use this for an emergency fix or after a finished MoveTables.
+* [vtctldclient SetVtorcEmergencyReparent](./vtctldclient_setvtorcemergencyreparent/)	 - Enable/disables the use of EmergencyReparentShard in VTOrc recoveries for a given keyspace or keyspace/shard.
 * [vtctldclient SetWritable](./vtctldclient_setwritable/)	 - Sets the specified tablet as writable or read-only.
 * [vtctldclient ShardReplicationFix](./vtctldclient_shardreplicationfix/)	 - Walks through a ShardReplication object and fixes the first error encountered.
 * [vtctldclient ShardReplicationPositions](./vtctldclient_shardreplicationpositions/)	 - 

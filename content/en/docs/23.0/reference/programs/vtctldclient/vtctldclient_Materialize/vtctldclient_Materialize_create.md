@@ -51,7 +51,7 @@ vtctldclient --server localhost:15999 materialize --workflow product_sales --tar
 ```
   -c, --cells strings                      Cells and/or CellAliases to copy table data from.
   -h, --help                               help for create
-      --mysql_server_version string        Configure the MySQL version to use for example for the parser. (default "8.0.40-Vitess")
+      --mysql-server-version string        Configure the MySQL version to use for example for the parser. (default "8.4.6-Vitess")
   -r, --reference-tables strings           Used to specify the reference tables to materialize on every target shard.
       --source-keyspace string             Keyspace where the tables queried in the 'source_expression' values within table-settings live.
       --sql-max-length-errors int          truncate queries in error logs to the given length (default unlimited)
@@ -65,7 +65,7 @@ vtctldclient --server localhost:15999 materialize --workflow product_sales --tar
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --action-timeout duration              timeout to use for the command (default 1h0m0s)
       --compact                              use compact format for otherwise verbose outputs
       --format string                        The format of the output; supported formats are: text,json. (default "text")
       --server string                        server to use for the connection (required)

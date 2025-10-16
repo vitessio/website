@@ -18,7 +18,7 @@ Perform commands related to materializing query results from the source keyspace
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --action-timeout duration              timeout to use for the command (default 1h0m0s)
       --compact                              use compact format for otherwise verbose outputs
       --server string                        server to use for the connection (required)
       --topo-global-root string              the path of the global topology data in the global topology server (default "/vitess/global")
@@ -34,4 +34,5 @@ Perform commands related to materializing query results from the source keyspace
 * [vtctldclient Materialize show](./vtctldclient_materialize_show/)	 - Show the details for a Materialize VReplication workflow.
 * [vtctldclient Materialize start](./vtctldclient_materialize_start/)	 - Start a Materialize workflow.
 * [vtctldclient Materialize stop](./vtctldclient_materialize_stop/)	 - Stop a Materialize workflow.
+* [vtctldclient Materialize update](./vtctldclient_materialize_update/)	 - Update existing materialize workflow.
 
