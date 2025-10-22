@@ -1,9 +1,6 @@
 ---
 title: Managed, Online Schema Changes
 weight: 2
-aliases:
-  - /docs/user-guides/managed-online-schema-changes/
-  - /docs/23.0/user-guides/schema-changes/managed-online-schema-changes/#ddl_strategy
 ---
 
 Vitess offers managed, online schema migrations (aka Online DDL), transparently to the user. Vitess Online DDL offers:

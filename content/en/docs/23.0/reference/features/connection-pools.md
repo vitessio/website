@@ -1,11 +1,6 @@
 ---
 title: VTTablet Connection Pools and Sizing
 weight: 20
-aliases:
-  - /docs/23.0/reference/features/connection-pools/#--db_allprivs_user
-  - /docs/23.0/reference/features/connection-pools/#--db_erepl_user
-  - /docs/23.0/reference/features/connection-pools/#--db_repl_user
-  - /docs/23.0/reference/features/connection-pools/#--db_filtered_user
 ---
 
 VTTablet uses a variety of connection pools to connect to MySQLd. 
