@@ -6,7 +6,7 @@ aliases: ['/docs/reference/vreplication/v2/movetables/']
 ---
 
 {{< warning >}}
-These workflows can have a significant impact on the source tablets (which are often in production) — especially when a PRIMARY tablet is used as a source. You can limit the impact on the source tablets using the [`--vreplication-copy-phase-max-*` vttablet flags](../flags/#vreplication_copy_phase_max_innodb_history_list_length)
+These workflows can have a significant impact on the source tablets (which are often in production) — especially when a PRIMARY tablet is used as a source. You can limit the impact on the source tablets using the [`--vreplication-copy-phase-max-*` vttablet flags](../flags/#vreplication-copy-phase-max-innodb-history-list-length)
 {{< /warning >}}
 
 ## Description
