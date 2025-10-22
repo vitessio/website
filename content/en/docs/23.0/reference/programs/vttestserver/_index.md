@@ -91,8 +91,8 @@ vttestserver [flags]
       --lameduck-period duration                                         keep running at least this long after SIGTERM before stopping (default 50ms)
       --log-err-stacks                                                   log stack traces for errors
       --log-rotate-max-size uint                                         size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
-      --log_backtrace_at traceLocations                                  when logging hits line file:N, emit a stack trace
-      --log_dir string                                                   If non-empty, write log files in this directory
+      --log-backtrace-at traceLocations                                  when logging hits line file:N, emit a stack trace
+      --log-dir string                                                   If non-empty, write log files in this directory
       --logtostderr                                                      log to standard error instead of files
       --manifest-external-decompressor string                            command with arguments to store in the backup manifest when compressing a backup with an external compression engine.
       --max-stack-size int                                               configure the maximum stack size in bytes (default 67108864)
@@ -114,7 +114,7 @@ vttestserver [flags]
       --num-shards strings                                               Comma separated shard count (one per keyspace) (default [2])
       --onclose-timeout duration                                         wait no more than this for OnClose handlers before stopping (default 10s)
       --onterm-timeout duration                                          wait no more than this for OnTermSync handlers before stopping (default 10s)
-      --persistent-mode                                                  If this flag is set, the MySQL data directory is not cleaned up when LocalCluster.TearDown() is called. This is useful for running vttestserver as a database container in local developer environments. Note that db migration files (--schema-dir option) and seeding of random data (--initialize-with-random-data option) will only run during cluster startup if the data directory does not already exist.  Changes to VSchema are persisted across cluster restarts using a simple watcher if the --data_dir argument is specified.
+      --persistent-mode                                                  If this flag is set, the MySQL data directory is not cleaned up when LocalCluster.TearDown() is called. This is useful for running vttestserver as a database container in local developer environments. Note that db migration files (--schema-dir option) and seeding of random data (--initialize-with-random-data option) will only run during cluster startup if the data directory does not already exist.  Changes to VSchema are persisted across cluster restarts using a simple watcher if the --data-dir argument is specified.
       --pid-file string                                                  If set, the process will write its pid to the named file, and delete it on graceful shutdown.
       --planner-version string                                           Sets the default planner to use when the session has not changed it. Valid values are: Gen4, Gen4Greedy, Gen4Left2Right
       --pool-hostname-resolve-interval duration                          if set force an update to all hostnames and reconnect if changed, defaults to 0 (disabled)

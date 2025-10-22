@@ -82,9 +82,9 @@ Similarily, vtctld listens for grpc requests at the port 1 + `PORT`. So, in orde
  
 ### Persisting container data
 
-If you wish to keep the state of the test container across reboots, such as when running the vttestserver container as a database container in local application development environments, you may optionally pass the `--persistent_mode` flag, along with a `--data_dir` directory which is bound to a docker volume. Due to a bug, the `--port` argument must also be present for correct operation.
+If you wish to keep the state of the test container across reboots, such as when running the vttestserver container as a database container in local application development environments, you may optionally pass the `--persistent-mode` flag, along with a `--data-dir` directory which is bound to a docker volume. Due to a bug, the `--port` argument must also be present for correct operation.
 
-When running in this mode, underlying MySQL table schemas, their data, and the Vitess VSchema objects are persisted under the provided `--data_dir`.
+When running in this mode, underlying MySQL table schemas, their data, and the Vitess VSchema objects are persisted under the provided `--data-dir`.
 
 For example:
 
@@ -101,13 +101,13 @@ docker run --name=vttestserver \
   vitess/vttestserver:mysql80 \
   /vt/bin/vttestserver \
   --alsologtostderr \
-  --data_dir=/vt/vtdataroot/ \
-  --persistent_mode \
+  --data-dir=/vt/vtdataroot/ \
+  --persistent-mode \
   --port=33574 \
-  --mysql_bind_host=0.0.0.0 \
+  --mysql-bind-host=0.0.0.0 \
   --vtcombo-bind-host=0.0.0.0 \
   --keyspaces=test,unsharded \
-  --num_shards=2,1
+  --num-shards=2,1
 ```
 
 ## Example

@@ -17,8 +17,8 @@ Most RPCs are unary, while a few (`Backup`, for example) are streaming RPCs.
 
 ### Enabling the new service
 
-In order to enable the new service interface, add `grpc-vtctld` to the list of services in the `--service_map` flag provided to `vtctld`.
-Both the new and old interfaces may be run from the same `vtctld` instance, so during transition, most users will set `--service_map="grpc-vtctl,grpc-vtctld"`.
+In order to enable the new service interface, add `grpc-vtctld` to the list of services in the `--service-map` flag provided to `vtctld`.
+Both the new and old interfaces may be run from the same `vtctld` instance, so during transition, most users will set `--service-map="grpc-vtctl,grpc-vtctld"`.
 
 ### Transitioning clients
 

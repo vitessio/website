@@ -22,8 +22,8 @@ receive a DDL event resulting in multiple reloads for the same DDL.
 
 {{< info >}}
 For full functionality, schema tracking relies on these non-default Vitess `vttablet` flags:
-[`--watch_replication_stream`](../../flags/#watch_replication_stream) and
-[`--track_schema_versions`](../../flags/#track_schema_versions). Specifically, performing a vstream from a non-PRIMARY
+[`--watch-replication-stream`](../../flags/#watch-replication-stream) and
+[`--track-schema-versions`](../../flags/#track-schema-versions). Specifically, performing a vstream from a non-PRIMARY
 tablet while concurrently making DDL changes to the keyspace without one or both of these tablet options could result in
 incorrect vstream results.
 {{< /info >}}
@@ -112,12 +112,12 @@ resulting in a `SchemaUpdated()` call. There are two independent flows here:
 1. Replication Watcher is running
 2. Schema snapshots are saved to `_vt.schema_version` when `SchemaUpdated()` is called
 
-Point 2 is performed only when the [`--track_schema_versions`](../../flags/#track_schema_versions) `vttablet` flag is enabled.
-This implies that #1 also has to happen when [`--track_schema_versions`](../../flags/#track_schema_versions) is enabled
-independently of the [`--watch_replication_stream`](../../flags/#watch_replication_stream) flag.
+Point 2 is performed only when the [`--track-schema-versions`](../../flags/#track-schema-versions) `vttablet` flag is enabled.
+This implies that #1 also has to happen when [`--track-schema-versions`](../../flags/#track-schema-versions) is enabled
+independently of the [`--watch-replication-stream`](../../flags/#watch-replication-stream) flag.
 
-However if the [`--watch_replication_stream`](../../flags/#watch_replication_stream) flag is enabled but
-[`--track_schema_versions`](../../flags/#track_schema_versions) is disabled we still need to run the Replication
+However if the [`--watch-replication-stream`](../../flags/#watch-replication-stream) flag is enabled but
+[`--track-schema-versions`](../../flags/#track-schema-versions) is disabled we still need to run the Replication
 Watcher since the user has requested it, but we do not store any schema versions.
 
 So the logic is:

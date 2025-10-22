@@ -521,7 +521,7 @@ Current State: All Reads Switched. Writes Switched
 
 {{< info >}}
 While we have switched all traffic in this example, you can also switch non-primary reads and writes separately by
-specifying the [`--tablet_types`](../../../reference/vreplication/movetables/#--tablet_types) parameter to
+specifying the [`--tablet-types`](../../../reference/vreplication/movetables/#--tablet-types) parameter to
 `SwitchTraffic`.
 {{</ info >}}
 

@@ -278,7 +278,7 @@ vtctldclient Reshard --target-keyspace customer --workflow cust2cust SwitchTraff
 ## Note
 
 While we have switched tablet type targeted reads and writes separately in this example, you can also switch
-all traffic at the same time. This is done by default as if you don't specify the `--tablet_types` parameter
+all traffic at the same time. This is done by default as if you don't specify the `--tablet-types` parameter
 then `SwitchTraffic` will start serving all traffic from the target for all tablet types.
 
 You should now be able to see the data that has been copied over to the new shards (assuming you 

@@ -28,14 +28,14 @@ To use `xtrabackup` with Vtbackup, VTTablet or Vtctld, the following flags must 
 
 __Required flags:__
 
-* `--backup_engine_implementation=xtrabackup`
-* `--xtrabackup_user string` 
+* `--backup-engine-implementation=xtrabackup`
+* `--xtrabackup-user string` 
 	* The user that xtrabackup will use to connect to the database server. This user must have the [necessary privileges](https://www.percona.com/doc/percona-xtrabackup/2.4/using_xtrabackup/privileges.html#permissions-and-privileges-needed).
     * This user will need to be authorized to connect to mysql locally without a password using [auth_socket](https://dev.mysql.com/doc/refman/8.0/en/socket-pluggable-authentication.html).
 
 Additionally required for MySQL 8.0:
 
-* `--xtrabackup_stream_mode=xbstream`
+* `--xtrabackup-stream-mode=xbstream`
 
 <!-- TODO: create backups with vtbackup
 ## Create backups with vtctl
@@ -49,7 +49,7 @@ __No xtrabackup User passed to vttablet:__
 E0310 08:15:45.336083  197442 main.go:72] remote error: rpc error: code = Unknown desc = TabletManager.Backup on zone1-0000000102 error: xtrabackupUser must be specified.: xtrabackupUser must be specified
 ```
 
-Fix: Set the vtctld and vttablet flag `--xtrabackup_user`
+Fix: Set the vtctld and vttablet flag `--xtrabackup-user`
 
 __xtrabackup binary not found in $PATH:__
 
@@ -60,7 +60,7 @@ E0310 08:22:22.260044  200147 main.go:72] remote error: rpc error: code = Unknow
 Fixes:
 
 	* Ensure the xtrabackup binary is in the $PATH for the $USER running vttablet
-	* Alternatively, set --xtrabackup_root_path on vttablet provide path to xtrabackup/xbstream binaries via vtctld and vttablet flags
+	* Alternatively, set --xtrabackup-root-path on vttablet provide path to xtrabackup/xbstream binaries via vtctld and vttablet flags
 
 __Tar format no longer supported in 8.0:__
 
@@ -69,7 +69,7 @@ I0310 12:34:47.900363  211809 backup.go:163] I0310 20:34:47.900004 xtrabackupeng
 Streaming in tar format is no longer supported in 8.0; use xbstream instead
 ```
 
-Fix: Set the `--xtrabackup_stream_mode` flag to to xbstream on vttablets and vtctlds
+Fix: Set the `--xtrabackup-stream-mode` flag to to xbstream on vttablets and vtctlds
 
 __Unsupported mysql server version:__
 
@@ -78,7 +78,7 @@ I0310 12:49:32.279729  215835 backup.go:163] I0310 20:49:32.279435 xtrabackupeng
 I0310 12:49:32.279773  215835 backup.go:163] I0310 20:49:32.279485 xtrabackupengine.go:310] xtrabackup stderr: Please upgrade PXB, if a new version is available. To continue with risk, use the option --no-server-version-check.
 ```
 
-To continue with risk: Set `--xtrabackup_backup_flags=--no-server-version-check`. Note this occurs when your MySQL server version is technically unsupported by `xtrabackup`.
+To continue with risk: Set `--xtrabackup-backup-flags=--no-server-version-check`. Note this occurs when your MySQL server version is technically unsupported by `xtrabackup`.
 
 ## Using mysqlshell (EXPERIMENTAL)
 
@@ -123,7 +123,7 @@ recommended users are familiar with the [dump](https://dev.mysql.com/doc/mysql-s
 
 __Required flags:__
 
-* `--backup_engine_implementation=mysqlshell`
+* `--backup-engine-implementation=mysqlshell`
 * `--mysql-shell-backup-location string`
 	* This stores the location where MySQL Shell will store the backups. As mentioned above, this
 	is different than the Vitess backup location.
@@ -184,7 +184,7 @@ If the engine is `xtrabackup`, the tablet can continue to serve traffic while th
 __Run the following vtctl command to backup a specific shard:__
 
 ``` sh
-vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard [--allow_primary=false] [--upgrade-safe=false] <keyspace/shard>
+vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard [--allow-primary=false] [--upgrade-safe=false] <keyspace/shard>
 ```
 
 ## Create an incremental backup with vtctl

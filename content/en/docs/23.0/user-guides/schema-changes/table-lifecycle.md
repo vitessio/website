@@ -60,9 +60,9 @@ Different environments and users have different requirements and workflows. For 
 - Some want to keep the table's data for a few days, then directly drop it.
 - Some just wish to directly drop the table, they see no locking issues (e.g. smaller table).
 
-Vitess supports all subsets via `--table_gc_lifecycle` flag to `vttablet`. The default is `"hold,purge,evac,drop"` (the complete cycle). Users may configure any subset, e.g. `"purge,drop"`, `"hold,drop"`, `"hold,evac,drop"` or even just `"drop"`.
+Vitess supports all subsets via `--table-gc-lifecycle` flag to `vttablet`. The default is `"hold,purge,evac,drop"` (the complete cycle). Users may configure any subset, e.g. `"purge,drop"`, `"hold,drop"`, `"hold,evac,drop"` or even just `"drop"`.
 
-Vitess will always work the steps in this order: `hold -> purge -> evac -> drop`. For example, setting `--table_gc_lifecycle "drop,hold"` still first _holds_, then _drops_
+Vitess will always work the steps in this order: `hold -> purge -> evac -> drop`. For example, setting `--table-gc-lifecycle "drop,hold"` still first _holds_, then _drops_
 
 All subsets end with a `drop`, even if not explicitly mentioned. Thus, `"purge"` is interpreted as `"purge,drop"`.
 
@@ -93,7 +93,7 @@ Starting in Vitess `v20`, the table naming format will change. Tables will be na
 
 ## Automated lifecycle
 
-Vitess internally uses the above table lifecycle for [online, managed schema migrations](../../../user-guides/schema-changes/managed-online-schema-changes/). Online DDL operations create artifact tables or end with leftover tables: Vitess automatically collects those tables. The artifact or leftover tables are immediate moved to `hold` state. Depending on `vttablet`'s `--table_gc_lifecycle` flag, they may spend time in this state, getting purged, or immediately transitioned to the next state.
+Vitess internally uses the above table lifecycle for [online, managed schema migrations](../../../user-guides/schema-changes/managed-online-schema-changes/). Online DDL operations create artifact tables or end with leftover tables: Vitess automatically collects those tables. The artifact or leftover tables are immediate moved to `hold` state. Depending on `vttablet`'s `--table-gc-lifecycle` flag, they may spend time in this state, getting purged, or immediately transitioned to the next state.
 
 ## User-facing DROP TABLE lifecycle
 

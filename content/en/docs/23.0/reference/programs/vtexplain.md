@@ -34,7 +34,7 @@ The following parameters apply to `mysqlctl`:
 | --execution-mode       | string  | The execution mode to simulate -- must be set to multi, legacy-autocommit, or twopc (default "multi")                                |
 | --ks-shard-map         | string  | JSON map of keyspace name -> shard name -> ShardReference object. The inner map is the same as the output of FindAllShardsInKeyspace |
 | --ks-shard-map-file    | string  | File containing json blob of keyspace name -> shard name -> ShardReference object                                                    |
-| --mysql_server_version | string  | MySQL server version to advertise. (default "8.0.30-Vitess")                                                                         |
+| --mysql-server-version | string  | MySQL server version to advertise. (default "8.4.6-Vitess")                                                                         |
 | --normalize            | boolean | Whether to enable vtgate normalization                                                                                               |
 | --output-mode          | string  | Output in human-friendly text or json (default "text")                                                                               |
 | --planner-version      | string  | Sets the default planner to use. Valid values are: Gen4, Gen4Greedy, Gen4Left2Right                                                  |

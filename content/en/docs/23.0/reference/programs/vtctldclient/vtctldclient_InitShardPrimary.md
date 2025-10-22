@@ -31,7 +31,7 @@ vtctldclient InitShardPrimary <keyspace/shard> <primary alias>
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration   timeout for the total command (default 1h0m0s)
+      --action-timeout duration   timeout for the total command (default 1h0m0s)
       --server string             server to use for connection (required)
 ```
 

@@ -13,7 +13,7 @@ vtctldclient DeleteShards --recursive commerce/0
 
 The `recursive` flag is required to ensure that the shard is deleted from all cells. If there are tablets still running against the shard, the command will fail.
 
-You can add an `--even_if_serving` flag to ignore running tablets, but it is not recommended. Otherwise, this would cause existing vttablets to get confused about their tablet records being deleted.
+You can add an `--even-if-serving` flag to ignore running tablets, but it is not recommended. Otherwise, this would cause existing vttablets to get confused about their tablet records being deleted.
 
 If a keyspace has more than one shard, you may pass multiple shard names to `DeleteShards`.
 They will be deleted sequentially; if one deletion fails, the operation stops there.

@@ -21,9 +21,9 @@ Scraping Vitess variables is a good way to integrate Vitess into an existing mon
 
 ## 3. Push-based metrics system
 
-Vitess also includes support for push-based metrics systems via plug-ins. Each Vitess component would need to be run with the `--emit_stats` flag.
+Vitess also includes support for push-based metrics systems via plug-ins. Each Vitess component would need to be run with the `--emit-stats` flag.
 
-By default, the stats_emit_period is 60s, so each component will push stats to the selected backend every minute. This is configurable via the `--stats_emit_period` flag.
+By default, the stats-emit-period is 60s, so each component will push stats to the selected backend every minute. This is configurable via the `--stats-emit-period` flag.
 
 Vitess has preliminary plug-ins to support OpenTSDB as a push-based metrics backend.
 
@@ -31,7 +31,7 @@ It should be fairly straightforward to write your own plug-in, if you want to su
 
 Once you’ve written the backend plug-in, you also need to register the plug-in from within all the relevant Vitess binaries. An example of how to do this can be seen in [this pull request](https://github.com/vitessio/vitess/pull/469).
 
-You can then specify that Vitess should publish stats to the backend that you’re targeting by using the `--stats_backend` flag.  
+You can then specify that Vitess should publish stats to the backend that you're targeting by using the `--stats-backend` flag.
 
 Connecting Vitess to a push-based metrics system can be useful if you’re already running a push-based system that you would like to integrate into.
 
