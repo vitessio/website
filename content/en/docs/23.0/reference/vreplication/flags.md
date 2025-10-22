@@ -2,22 +2,6 @@
 title: VTTablet Flags
 description: vttablet flags related to VReplication functionality
 weight: 80
-aliases:
-  - /docs/23.0/reference/vreplication/flags/#relay_log_max_size
-  - /docs/23.0/reference/vreplication/flags/#vreplication_max_time_to_retry_on_error
-  - /docs/23.0/reference/vreplication/flags/#vreplication_net_read_timeout
-  - /docs/23.0/reference/vreplication/flags/#vreplication_net_write_timeout
-  - /docs/23.0/reference/vreplication/flags/#vreplication_copy_phase_duration
-  - /docs/23.0/reference/vreplication/flags/#vreplication_copy_phase_max_innodb_history_list_length
-  - /docs/23.0/reference/vreplication/flags/#vreplication_copy_phase_max_mysql_replication_lag
-  - /docs/23.0/reference/vreplication/flags/#vreplication_heartbeat_update_interval
-  - /docs/23.0/reference/vreplication/flags/#vreplication_replica_lag_tolerance
-  - /docs/23.0/reference/vreplication/flags/#vreplication_store_compressed_gtid
-  - /docs/23.0/reference/vreplication/flags/#vstream_packet_size
-  - /docs/23.0/reference/vreplication/flags/#watch_replication_stream
-  - /docs/23.0/reference/vreplication/flags/#track_schema_versions
-  - /docs/23.0/reference/vreplication/flags/#vreplication_retry_delay
-  - /docs/23.0/reference/vreplication/flags/#vreplication_experimental_flags
 ---
 
 There are several flags that can be specified when `vttablet` is launched that are related to the
