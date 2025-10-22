@@ -57,28 +57,28 @@ mkdir -p $VTDATAROOT/vt_0000000401
 vttablet \
  $TOPOLOGY_FLAGS \
  --logtostderr \
- --log_queries_to_file $VTDATAROOT/tmp/vttablet_0000000401_querylog.txt \
+ --log-queries-to-file $VTDATAROOT/tmp/vttablet_0000000401_querylog.txt \
  --tablet-path "zone1-0000000401" \
- --init_keyspace legacy \
- --init_shard 0 \
- --init_tablet_type replica \
+ --init-keyspace legacy \
+ --init-shard 0 \
+ --init-tablet-type replica \
  --port 15401 \
- --grpc_port 16401 \
- --service_map 'grpc-queryservice,grpc-tabletmanager,grpc-updatestream' \
- --pid_file $VTDATAROOT/vt_0000000401/vttablet.pid \
- --db_host 127.0.0.1 \
- --db_port 5726 \
- --db_app_user msandbox \
- --db_app_password msandbox \
- --db_dba_user msandbox \
- --db_dba_password msandbox \
- --db_repl_user msandbox \
- --db_repl_password msandbox \
- --db_filtered_user msandbox \
- --db_filtered_password msandbox \
- --db_allprivs_user msandbox \
- --db_allprivs_password msandbox \
- --init_db_name_override legacy \
+ --grpc-port 16401 \
+ --service-map 'grpc-queryservice,grpc-tabletmanager,grpc-updatestream' \
+ --pid-file $VTDATAROOT/vt_0000000401/vttablet.pid \
+ --db-host 127.0.0.1 \
+ --db-port 5726 \
+ --db-app-user msandbox \
+ --db-app-password msandbox \
+ --db-dba-user msandbox \
+ --db-dba-password msandbox \
+ --db-repl-user msandbox \
+ --db-repl-password msandbox \
+ --db-filtered-user msandbox \
+ --db-filtered-password msandbox \
+ --db-allprivs-user msandbox \
+ --db-allprivs-password msandbox \
+ --init-db-name-override legacy \
  --unmanaged &
 ```
 

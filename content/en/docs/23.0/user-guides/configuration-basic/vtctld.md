@@ -9,10 +9,10 @@ Even if brought up within each cell, vtctld itself is not tied to that cell. It 
 
 ```sh
 vtctld <topo_flags> <backup_flags> \
-  --log_dir=${VTDATAROOT}/tmp \
+  --log-dir=${VTDATAROOT}/tmp \
   --port=15000 \
-  --grpc_port=15999 \
-  --service_map='grpc-vtctl,grpc-vtctld'
+  --grpc-port=15999 \
+  --service-map='grpc-vtctl,grpc-vtctld'
 ```
 
 If the TopoServer is unreachable, or if the topo flags are incorrectly configured, vtctld will fail to start. You may see an error message like the following in the logs:

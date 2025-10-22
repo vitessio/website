@@ -37,7 +37,7 @@ binlog_row_image=full
 </pre>
 {{< /expand >}}
 
-{{< expand `If I can't turn GTIDs on, can I run a VReplication workflow using --db_flavor=FilePos instead?`>}}
+{{< expand `If I can't turn GTIDs on, can I run a VReplication workflow using --db-flavor=FilePos instead?`>}}
 Yes, you can run VReplication workflows with the pre MySQL 5.6 file and position method but this should only be used as a last resort when it's not possible
 to modify the configuration of the source. This is because the File and Position method is not fault tolerant and if any error or failure/failover is encountered
 you will need to throw away the existing workflow and start another one anew.

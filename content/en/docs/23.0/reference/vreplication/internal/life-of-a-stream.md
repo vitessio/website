@@ -160,7 +160,7 @@ quick. So the position can diverge much more at T2 than at T4. Hence, we call st
 #### Catchup
 
 As detailed above the catchup phase runs between copy phase cycles (time limited by the
-[`vreplication_copy_phase_max_duration`](../../flags/#vreplication_copy_phase_duration) flag). During the copy phase the
+[`vreplication-copy-phase-max-duration`](../../flags/#vreplication-copy-phase-duration) flag). During the copy phase the
 GTID position can move significantly ahead. So we run a catchup and fast-forward phase until we come close to the current
 position — i.e. the replication lag is small. At that point we execute another Copy cycle.
 

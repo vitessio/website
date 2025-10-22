@@ -84,7 +84,7 @@ All three programs can be made aware of Backup Engine and Backup Storage using t
   </thead>
   <tbody>
     <tr>
-      <td><code>backup_storage_implementation</code></td>
+      <td><code>backup-storage-implementation</code></td>
       <td>Specifies the implementation of the Backup Storage interface to
         use.<br><br>
         Current plugin options available are:
@@ -97,7 +97,7 @@ All three programs can be made aware of Backup Engine and Backup Storage using t
       </td>
     </tr>
     <tr>
-      <td><code>backup_engine_implementation</code></td>
+      <td><code>backup-engine-implementation</code></td>
       <td>Specifies the implementation of the Backup Engine to
         use.<br><br>
         Current options available are:
@@ -108,20 +108,20 @@ All three programs can be made aware of Backup Engine and Backup Storage using t
       </td>
     </tr>
     <tr>
-      <td><code>backup_storage_compress</code></td>
+      <td><code>backup-storage-compress</code></td>
       <td>This flag controls if the backups are compressed by the Vitess code.
         By default it is set to true. Use
-        <code>--backup_storage_compress=false</code> to disable.</br>
+        <code>--backup-storage-compress=false</code> to disable.</br>
       </td>
     </tr>
     <tr>
-      <td><code>backup_storage_block_size</code></td>
-      <td>If <code>--backup_storage_compress</code> is true, <code>backup_storage_block_size</code> sets the block size in bytes to use while compressing (default is 250000).
+      <td><code>backup-storage-block-size</code></td>
+      <td>If <code>--backup-storage-compress</code> is true, <code>backup-storage-block-size</code> sets the block size in bytes to use while compressing (default is 250000).
       </td>
     </tr>
     <tr>
-      <td><code>backup_storage_number_blocks</code></td>
-      <td>If <code>--backup_storage_compress</code> is true, <code>backup_storage_number_blocks</code> sets the number of blocks that can be processed, in parallel, before the writer blocks, during compression. It should be equal to the number of CPUs available for compression. (default 2)
+      <td><code>backup-storage-number-blocks</code></td>
+      <td>If <code>--backup-storage-compress</code> is true, <code>backup-storage-number-blocks</code> sets the number of blocks that can be processed, in parallel, before the writer blocks, during compression. It should be equal to the number of CPUs available for compression. (default 2)
       </td>
     </tr>
     <td><code>compression-level</code></td>
@@ -168,28 +168,28 @@ All three programs can be made aware of Backup Engine and Backup Storage using t
       </td>
     </tr>
     <tr>
-      <td><code>file_backup_storage_root</code></td>
+      <td><code>file-backup-storage-root</code></td>
       <td>For the <code>file</code> plugin, this identifies the root directory
         for backups. This path <b>must</b> exist on shared storage to provide a global backup view for all vtctlds and vttablets.
       </td>
     </tr>
     <tr>
-      <td><code>gcs_backup_storage_bucket</code></td>
+      <td><code>gcs-backup-storage-bucket</code></td>
       <td>For the <code>gcs</code> plugin, this identifies the
         <a href="https://cloud.google.com/storage/docs/concepts-techniques#concepts">bucket</a>
         to use.</td>
     </tr>
     <tr>
-      <td><code>s3_backup_aws_region</code></td>
+      <td><code>s3-backup-aws-region</code></td>
       <td>For the <code>s3</code> plugin, this identifies the AWS region.</td>
     </tr>
     <tr>
-      <td><code>s3_backup_storage_bucket</code></td>
+      <td><code>s3-backup-storage-bucket</code></td>
       <td>For the <code>s3</code> plugin, this identifies the AWS S3
         bucket.</td>
     </tr>
     <tr>
-      <td><code>ceph_backup_storage_config</code></td>
+      <td><code>ceph-backup-storage-config</code></td>
       <td>For the <code>ceph</code> plugin, this identifies the path to a text
         file with a JSON object as configuration. The JSON object requires the
         following keys: <code>accessKey</code>, <code>secretKey</code>,
@@ -198,41 +198,41 @@ All three programs can be made aware of Backup Engine and Backup Storage using t
         keyspaces / shards.</td>
     </tr>
     <tr>
-      <td><code>restart_before_backup</code></td>
+      <td><code>restart-before-backup</code></td>
       <td>If set, perform a clean MySQL shutdown and startup cycle. Note this is not
        	executing any `FLUSH` statements. This enables users to work around <a href="https://jira.percona.com/browse/PXB-2205">xtrabackup
 	DDL issues.</a></td>
     </tr>
     <tr>
-      <td><code>xbstream_restore_flags</code></td>
+      <td><code>xbstream-restore-flags</code></td>
       <td>The flags to pass to the xbstream command during restore. These should be space separated and will be added to the end of the command. These need to match the ones used for backup e.g. <code>--compress</code> / <code>--decompress</code>, <code>--encrypt</code> / <code>--decrypt</code></td>
     </tr>
     <tr>
-      <td><code>xtrabackup_root_path</code></td>
+      <td><code>xtrabackup-root-path</code></td>
       <td>For the <code>xtrabackup</code> backup engine, directory location of the xtrabackup executable, e.g., `/usr/bin`</td>
     </tr>
     <tr>
-      <td><code>xtrabackup_backup_flags</code></td>
+      <td><code>xtrabackup-backup-flags</code></td>
       <td>For the <code>xtrabackup</code> backup engine, flags to pass to the backup command. These should be space separated and will be added to the end of the command.</td>
     </tr>
     <tr>
-      <td><code>xtrabackup_stream_mode</code></td>
+      <td><code>xtrabackup-stream-mode</code></td>
       <td>For the <code>xtrabackup</code> backup engine, which mode to use if streaming, valid values are <code>tar</code> and <code>xbstream</code>. Defaults to <code>tar</code>.</td>
     </tr>
     <tr>
-      <td><code>xtrabackup_user</code></td>
+      <td><code>xtrabackup-user</code></td>
       <td>For the <code>xtrabackup</code> backup engine, required user that xtrabackup will use to connect to the database server. This user must have all necessary privileges. For details, please refer to xtrabackup documentation.</td>
     </tr>
     <tr>
-      <td><code>xtrabackup_stripes</code></td>
+      <td><code>xtrabackup-stripes</code></td>
       <td>For the <code>xtrabackup</code> backup engine, if greater than 0, use data striping across this many destination files to parallelize data transfer and decompression.</td>
     </tr>
     <tr>
-      <td><code>xtrabackup_stripe_block_size</code></td>
+      <td><code>xtrabackup-stripe-block-size</code></td>
       <td>For the <code>xtrabackup</code> backup engine, size in bytes of each block that gets sent to a given stripe before rotating to the next stripe. Defaults to <code>102400</code>.</td>
     </tr>
     <tr>
-      <td><code>xtrabackup_prepare_flags</code></td>
+      <td><code>xtrabackup-prepare-flags</code></td>
       <td>Flags to pass to the prepare command. These should be space separated and will be added to the end of the command.</td>
     </tr> 
   </tbody>
@@ -251,13 +251,13 @@ Only VTTablet can be configured to restore from a previous backup. The flags bel
   </thead>
   <tbody>
     <tr>
-      <td><code>restore_from_backup</code></td>
+      <td><code>restore-from-backup</code></td>
       <td>Indicates that, when started with an empty MySQL instance, the
         tablet should restore the most recent backup from the specified
         storage plugin. This flag only applies to VTTablet.</td>
     </tr>
     <tr>
-      <td><code>restore_from_backup_ts</code></td>
+      <td><code>restore-from-backup-ts</code></td>
       <td>If set, restore the latest backup taken at or before this timestamp
         rather than using the most recent one. Example: ‘2021-04-29.133050’.
         (Vitess 12.0+)</td>
@@ -285,7 +285,7 @@ For example, suppose you typically keep four days of replication logs and you cr
 The backup and restore processes simultaneously copy and either compress or decompress multiple files to increase throughput. You can control the concurrency using command-line flags:
 
 * The vtctl [Backup](https://vitess.io/docs/reference/programs/vtctl/tablets/#backup) command uses the `--concurrency` flag.
-* vttablet uses the `--restore_concurrency` flag.
+* vttablet uses the `--restore-concurrency` flag.
 
 If the network link is fast enough, the concurrency matches the CPU usage of the process during the backup or restore process.
 

@@ -112,7 +112,7 @@ The total number of events streamed by this vttablet across all workflows
 
 #### VStreamPacketSize
 
-The value of the `vstream_packet_size` flag specified for this tablet
+The value of the `vstream-packet-size` flag specified for this tablet
 
 #### VStreamerNumPackets
 

@@ -34,7 +34,7 @@ The throttler runs as part of the tablet server. The throttler can be disabled o
 
 Tablets in the same shard collaborate. The `Primary` tablet polls the replica tablets, and replica tablets report and sometimes push throttler notifications to the `Primary`.
 
-However, we limit the collaboration to specific tablet types, based on `--throttle_tablet_types` VTTablet flag. By default, the `Primary` only collaborates with `replica` tablet types, which means tablets such as `backup` do not affect any throttling behavior. The throttler routinely updates the roster of participating tablets.
+However, we limit the collaboration to specific tablet types, based on `--throttle-tablet-types` VTTablet flag. By default, the `Primary` only collaborates with `replica` tablet types, which means tablets such as `backup` do not affect any throttling behavior. The throttler routinely updates the roster of participating tablets.
 
 ### Metrics
 
@@ -776,12 +776,12 @@ Some internal Vitess apps are always exempted. These are critical for the ongoin
 Configuring heartbeats is not strictly required, as the throttler will initiate an on-demand heartbeat lease while serving requests.
 {{< /info >}}
 
-To measure replication lag, the throttler uses the heartbeat writer service in Vitess. We recommend enabling heartbeats via `--heartbeat_on_demand_duration` in conjunction with `--heartbeat_interval` as follows:
+To measure replication lag, the throttler uses the heartbeat writer service in Vitess. We recommend enabling heartbeats via `--heartbeat-on-demand-duration` in conjunction with `--heartbeat-interval` as follows:
 
-- `--heartbeat_interval` indicates how frequently heartbeats are injected. The interval should over-sample the `--throttle_threshold` by a factor of `2` to `4`. For example,if `--throttle_threshold` is `5s`, use a heartbeat interval of `1s` or `2s`.
-- `--heartbeat_on_demand_duration` ensures heartbeats are only injected when needed (e.g. during active VReplication workflows such as MoveTables or Online DDL). Heartbeats are written to the binary logs, and can therefore bloat them. If this is a concern, configure for example: `--heartbeat_on_demand_duration 5s`. This setting means: any throttler request starts a `5s` lease of heartbeat writes.
+- `--heartbeat-interval` indicates how frequently heartbeats are injected. The interval should over-sample the `--throttle-threshold` by a factor of `2` to `4`. For example,if `--throttle-threshold` is `5s`, use a heartbeat interval of `1s` or `2s`.
+- `--heartbeat-on-demand-duration` ensures heartbeats are only injected when needed (e.g. during active VReplication workflows such as MoveTables or Online DDL). Heartbeats are written to the binary logs, and can therefore bloat them. If this is a concern, configure for example: `--heartbeat-on-demand-duration 5s`. This setting means: any throttler request starts a `5s` lease of heartbeat writes.
   In normal times, heartbeats are not written. Once a throttle check is requested (e.g. by a running migration), the throttler asks the tablet to start a `5s` lease of heartbeats. that first check is likely to return a non-OK code, because heartbeats were stale. However, subsequent checks will soon pick up on the newly injected heartbeats. Checks made while the lease is held, further extend the lease time. In the scenario of a running migration, we can expect heartbeats to begin as soon as the migration begins, and terminate `5s` (in our example) after the migration completes.
-  A recommended value is a multiple of `--throttle_threshold`. If `--throttle_threshold` is `5s`, reasonable values would be `10s` to `60s`.
+  A recommended value is a multiple of `--throttle-threshold`. If `--throttle-threshold` is `5s`, reasonable values would be `10s` to `60s`.
 
 ### API
 
@@ -881,7 +881,7 @@ Counter. Number of times throttler was probed via `CheckRequest` gRPC.
 
 ##### `ThrottlerHeartbeatRequests`
 
-Counter. Number of times the throttler has requested a heartbeat lease. Correlated with `HeartbeatWrites` metric, and specifically when `--heartbeat_on_demand_duration` is set, this helps diagnose throttler/heartbeat negotiation and behavior.
+Counter. Number of times the throttler has requested a heartbeat lease. Correlated with `HeartbeatWrites` metric, and specifically when `--heartbeat-on-demand-duration` is set, this helps diagnose throttler/heartbeat negotiation and behavior.
 
 ## Deprecations
 

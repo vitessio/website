@@ -67,13 +67,13 @@ Enable TwoPC on VTTablet with these flags:
 
 ```bash
 # Enable TwoPC support
---twopc_enable
+--twopc-enable
 # Time in seconds before marking transaction as abandoned
 # Recommended: 5-10 minutes
---twopc_abandon_age=300
+--twopc-abandon-age=300
 ```
 
-Transaction watcher at VTTablet uses `twopc_abandon_age` to count the pending abandoned transaction and sends signal to VTGate for resolution.
+Transaction watcher at VTTablet uses `twopc-abandon-age` to count the pending abandoned transaction and sends signal to VTGate for resolution.
 
 ### MySQL Prerequisites
 

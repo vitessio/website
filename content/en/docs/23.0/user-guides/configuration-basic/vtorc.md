@@ -29,11 +29,11 @@ For information about the UI, API and metrics that VTOrc exports, please consult
 You can bring VTOrc using the following invocation:
 
 ```sh
-vtorc --topo_implementation etcd2 \
-  --topo_global_server_address "localhost:2379" \
-  --topo_global_root /vitess/global \
+vtorc --topo-implementation etcd2 \
+  --topo-global-server-address "localhost:2379" \
+  --topo-global-root /vitess/global \
   --port 15000 \
-  --log_dir=${VTDATAROOT}/tmp \
+  --log-dir=${VTDATAROOT}/tmp \
   --recovery-period-block-duration "10m" \
   --instance-poll-time "1s" \
   --topo-information-refresh-duration "30s" \

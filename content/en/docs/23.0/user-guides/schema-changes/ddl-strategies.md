@@ -25,10 +25,10 @@ $ vtctldclient ApplySchema --ddl-strategy "vitess" --sql "ALTER TABLE demo MODIF
 ab185fdf_6e46_11ee_8f23_0a43f95f28a3
 ```
 
-- Set `vtgate --ddl_strategy` flag. Migrations executed from within `vtgate` will use said strategy.
+- Set `vtgate --ddl-strategy` flag. Migrations executed from within `vtgate` will use said strategy.
 
 ```sh
-$ vtgate --ddl_strategy="vitess"
+$ vtgate --ddl-strategy="vitess"
 
 $ mysql
 ```
@@ -41,7 +41,7 @@ mysql> alter table corder force;
 +--------------------------------------+
 ```
 
-- Set the `@@ddl_strategy` session variable to override the value of `vtgate`'s `--ddl_strategy` flag, for the current session.
+- Set the `@@ddl_strategy` session variable to override the value of `vtgate`'s `--ddl-strategy` flag, for the current session.
 
 ```sql
 mysql> set @@ddl_strategy="vitess --postpone-completion --allow-concurrent";

@@ -18,7 +18,7 @@ aliases: ['/docs/user-guides/backup-and-restore/']
     vtctldclient --server=<vtctld_host>:<vtctld_port> RemoveBackup <keyspace/shard> <backup name>
     ```
 
-You can also confirm your backup finished by viewing the files in your configured `--<engine>_backup_storage_root` location. You will still need to test and verify these backups for completeness. Note that backups are stored by keyspace and shard under `--<engine>_backup_storage_root`. For example, when using `--file_backup_storage_root=/vt/vtdataroot/backups`:
+You can also confirm your backup finished by viewing the files in your configured `--<engine>-backup-storage-root` location. You will still need to test and verify these backups for completeness. Note that backups are stored by keyspace and shard under `--<engine>-backup-storage-root`. For example, when using `--file-backup-storage-root=/vt/vtdataroot/backups`:
 
 ```sh
 /vt/vtdataroot/backups/commerce/0/2021-03-10.205419.zone1-0000000102:
