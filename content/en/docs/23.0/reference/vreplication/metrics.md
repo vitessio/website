@@ -29,6 +29,10 @@ by the type of error.
 
 _VReplicationHeartbeat_ records, for each stream, the timestamp sent by the last heartbeat event for that stream.
 
+#### VReplicationLag
+
+_VReplicationLag_ is a timeseries of VReplicationLagSeconds samples. This allows you to track and graph a workflow's lag over time.
+
 #### VReplicationLagSeconds, VReplicationLagSecondsMax, VReplicationLagSecondsTotal
 
 These metrics show the replication lag of the target stream with respect to the source stream. _VReplicationLagSeconds_ shows the current replication lag and _VReplicationLagSecondsMax_ has the maximum lag in this stream. Note that these values are only valid during the replication phase of a workflow.
