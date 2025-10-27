@@ -31,7 +31,7 @@ _VReplicationHeartbeat_ records, for each stream, the timestamp sent by the last
 
 #### VReplicationLag
 
-_VReplicationLag_ is a timeseries of VReplicationLagSeconds samples. This allows you to track and graph a workflow's lag over time.
+_VReplicationLag_ is a timeseries of _VReplicationLagSeconds_ samples. This allows you to track and graph a workflow's lag over time.
 
 #### VReplicationLagSeconds, VReplicationLagSecondsMax, VReplicationLagSecondsTotal
 
