@@ -35,7 +35,7 @@ _VReplicationLag_ is a timeseries of VReplicationLagSeconds samples. This allows
 
 #### VReplicationLagSeconds, VReplicationLagSecondsMax, VReplicationLagSecondsTotal
 
-These metrics show the replication lag of the target stream with respect to the source stream. _VReplicationLagSeconds_ shows the current replication lag and _VReplicationLagSecondsMax_ has the maximum lag in this stream. Note that these values are only valid during the replication phase of a workflow.
+These metrics show the replication lag of the target with respect to the source. _VReplicationLagSeconds_ shows the current replication lag and _VReplicationLagSecondsMax_ has the maximum lag in this stream. Note that these values are only valid during the replication phase of a workflow.
 
 #### VReplicationMessages
 
