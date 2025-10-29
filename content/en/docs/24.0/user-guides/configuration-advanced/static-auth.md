@@ -34,8 +34,8 @@ EOF
 Then we can load this into VTGate with the additional commandline parameters:
 ```sh
 vtgate $(cat <<END_OF_COMMAND
-    --mysql_auth_server_impl=static
-    --mysql_auth_server_static_file=users.json
+    --mysql-auth-server-impl=static
+    --mysql-auth-server-static-file=users.json
     ...
     ...
     ...

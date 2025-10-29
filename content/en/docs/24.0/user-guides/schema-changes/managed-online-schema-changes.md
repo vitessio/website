@@ -1,7 +1,6 @@
 ---
 title: Managed, Online Schema Changes
 weight: 2
-aliases: ['/docs/user-guides/managed-online-schema-changes/']
 ---
 
 Vitess offers managed, online schema migrations (aka Online DDL), transparently to the user. Vitess Online DDL offers:
@@ -94,7 +93,7 @@ Vitess may modify your queries to qualify for online DDL statement. Modification
 
 ## ddl_strategy
 
-You will either set `vtgate` `--ddl_strategy` command line flag value, or will override it with the `@@ddl_strategy` session variable, or use the `vtctldclient` --ddl-strategy` flag to control your schema migration strategy, and specifically, to enable and configure online DDL. Details in [DDL Strategies](../ddl-strategies).
+You will either set `vtgate` `--ddl-strategy` command line flag value, or will override it with the `@@ddl_strategy` session variable, or use the `vtctldclient` --ddl-strategy` flag to control your schema migration strategy, and specifically, to enable and configure online DDL. Details in [DDL Strategies](../ddl-strategies).
 
 See also [ddl_strategy flags](../ddl-strategy-flags).
 
@@ -152,8 +151,8 @@ $ vtctldclient ApplySchema --ddl-strategy "vitess" --sql "ALTER TABLE demo MODIF
 
 `ApplySchema` accepts the following flags:
 
-- `--ddl_strategy`: by default migrations run directly via MySQL standard DDL. This flag must be applied to indicate an online strategy. See also [DDL strategies](../ddl-strategies) and [ddl_strategy flags](../ddl-strategy-flags).
-- `--migration_context <unique-value>`: all migrations in a `ApplySchema` command are logically grouped via a unique _context_. A unique value will be supplied automatically. The user may choose to supply their own value, and it's their responsibility to provide with a unique value. Any string format is accepted.
+- `--ddl-strategy`: by default migrations run directly via MySQL standard DDL. This flag must be applied to indicate an online strategy. See also [DDL strategies](../ddl-strategies) and [ddl_strategy flags](../ddl-strategy-flags).
+- `--migration-context <unique-value>`: all migrations in a `ApplySchema` command are logically grouped via a unique _context_. A unique value will be supplied automatically. The user may choose to supply their own value, and it's their responsibility to provide with a unique value. Any string format is accepted.
   The context can then be used to search for migrations, via `SHOW VITESS_MIGRATIONS LIKE 'the-context'`. It is visible in `SHOW VITESS_MIGRATIONS ...` output as the `migration_context` column.
 
 ## Migration flow and states
@@ -173,17 +172,17 @@ For more about internals of the scheduler and how migration states are controlle
 
 ## Configuration
 
-- `--retain_online_ddl_tables`: (`vttablet`) determines how long vttablet should keep an old migrated table before purging it. Type: duration. Default: 24 hours.
+- `--retain-online-ddl-tables`: (`vttablet`) determines how long vttablet should keep an old migrated table before purging it. Type: duration. Default: 24 hours.
 
   Example: `vttablet -retain_online_ddl_tables 48h`
 
-- `--migration_check_interval`: (`vttablet`) interval between checks for submitted migrations. Type: duration Default: 1 minute.
+- `--migration-check-interval`: (`vttablet`) interval between checks for submitted migrations. Type: duration Default: 1 minute.
 
-  Example: `vttablet --migration_check_interval 30s`
+  Example: `vttablet --migration-check-interval 30s`
 
-- `--enable_online_ddl`: (`vtgate`) whether Online DDL operations are at all possible through `VTGate`. Type: boolean. Default: `true`
+- `--enable-online-ddl`: (`vtgate`) whether Online DDL operations are at all possible through `VTGate`. Type: boolean. Default: `true`
 
-  Example: `vtgate --enable_online_ddl=false` to disable access to Online DDL via `VTGate`.
+  Example: `vtgate --enable-online-ddl=false` to disable access to Online DDL via `VTGate`.
  
 ## Auto resume after failure
 

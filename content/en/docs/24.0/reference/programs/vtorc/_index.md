@@ -17,7 +17,7 @@ vtorc \
 	--topo-implementation etcd2 \
 	--topo-global-server-address localhost:2379 \
 	--topo-global-root /vitess/global \
-	--log_dir $VTDATAROOT/tmp \
+	--log-dir $VTDATAROOT/tmp \
 	--port 15000 \
 	--instance-poll-time "1s" \
 	--topo-information-refresh-duration "30s" \
@@ -68,8 +68,8 @@ vtorc \
       --lock-timeout duration                                       Maximum time to wait when attempting to acquire a lock from the topo server (default 45s)
       --log-err-stacks                                              log stack traces for errors
       --log-rotate-max-size uint                                    size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
-      --log_backtrace_at traceLocations                             when logging hits line file:N, emit a stack trace
-      --log_dir string                                              If non-empty, write log files in this directory
+      --log-backtrace-at traceLocations                             when logging hits line file:N, emit a stack trace
+      --log-dir string                                              If non-empty, write log files in this directory
       --logtostderr                                                 log to standard error instead of files
       --max-stack-size int                                          configure the maximum stack size in bytes (default 67108864)
       --onclose-timeout duration                                    wait no more than this for OnClose handlers before stopping (default 10s)

@@ -38,13 +38,13 @@ the terminal window and hit enter:
 
 ```
 Terminal 1
-    $ vtgate --topo_implementation etcd2 --topo_global_server_address localhost:2379 \
-    --topo_global_root /vitess/global --log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
-    --log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
-    --port 15001 --grpc_port 15991 --mysql_server_port 15306 --mysql_server_socket_path /tmp/mysql.sock \
-    --cell zone1 --cells_to_watch zone1 --tablet_types_to_wait PRIMARY,REPLICA \
-    --service_map grpc-vtgateservice --pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
-    --mysql_auth_server_impl none
+    $ vtgate --topo-implementation etcd2 --topo-global-server-address localhost:2379 \
+    --topo-global-root /vitess/global --log-dir ~/github/vitess/examples/local/vtdataroot/tmp \
+    --log-queries-to-file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
+    --port 15001 --grpc-port 15991 --mysql-server-port 15306 --mysql-server-socket-path /tmp/mysql.sock \
+    --cell zone1 --cells-to-watch zone1 --tablet-types-to-wait PRIMARY,REPLICA \
+    --service-map grpc-vtgateservice --pid-file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
+    --mysql-auth-server-impl none
 ```
 
 #### Terminal 2:
@@ -201,13 +201,13 @@ to our vtgate process: `-enable_buffer=1`
 
 ```
 Terminal 1:
-    $ vtgate --topo_implementation etcd2 --topo_global_server_address localhost:2379 \
-    --topo_global_root /vitess/global --log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
-    --log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
-    --port 15001 --grpc_port 15991 --mysql_server_port 15306 --mysql_server_socket_path /tmp/mysql.sock \
-    --cell zone1 --cells_to_watch zone1 --tablet_types_to_wait PRIMARY,REPLICA \
-    --service_map grpc-vtgateservice --pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
-    --mysql_auth_server_impl none --enable_buffer=1
+    $ vtgate --topo-implementation etcd2 --topo-global-server-address localhost:2379 \
+    --topo-global-root /vitess/global --log-dir ~/github/vitess/examples/local/vtdataroot/tmp \
+    --log-queries-to-file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
+    --port 15001 --grpc-port 15991 --mysql-server-port 15306 --mysql-server-socket-path /tmp/mysql.sock \
+    --cell zone1 --cells-to-watch zone1 --tablet-types-to-wait PRIMARY,REPLICA \
+    --service-map grpc-vtgateservice --pid-file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
+    --mysql-auth-server-impl none --enable-buffer=1
 ```
 
 We're using the `01_light_traffic.ini` which has error handling disabled.
@@ -269,13 +269,13 @@ Restart the vtgate process to clear metrics:
 ```
 Terminal 1:
     Ctrl + C
-    $ vtgate --topo_implementation etcd2 --topo_global_server_address localhost:2379 \
-    --topo_global_root /vitess/global --log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
-    --log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
-    --port 15001 -grpc_port 15991 --mysql_server_port 15306 --mysql_server_socket_path /tmp/mysql.sock \
-    --cell zone1 -cells_to_watch zone1 --tablet_types_to_wait PRIMARY,REPLICA \
-    --service_map grpc-vtgateservice -pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
-    --mysql_auth_server_impl none --enable_buffer=1
+    $ vtgate --topo-implementation etcd2 --topo-global-server-address localhost:2379 \
+    --topo-global-root /vitess/global --log-dir ~/github/vitess/examples/local/vtdataroot/tmp \
+    --log-queries-to-file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
+    --port 15001 -grpc_port 15991 --mysql-server-port 15306 --mysql-server-socket-path /tmp/mysql.sock \
+    --cell zone1 -cells_to_watch zone1 --tablet-types-to-wait PRIMARY,REPLICA \
+    --service-map grpc-vtgateservice -pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
+    --mysql-auth-server-impl none --enable-buffer=1
 ```
 
 ```
@@ -298,7 +298,7 @@ Terminal 3:
 In this scenario, back to back PRS events were issued, only 5 seconds apart.
 Due to the close nature of these events, buffering is disabled to protect Vitess
 against events where PRS may be issued in a looping fashion. This behavior is
-adjustable with the vtgate flag `--buffer_min_time_between_failovers`.
+adjustable with the vtgate flag `--buffer-min-time-between-failovers`.
 
 ```sh
 $ curl -s localhost:15001/metrics | grep -v '^#' | grep buffer_requests
@@ -323,14 +323,14 @@ see 6 events which were buffered from the first PRS event.
 
 We can prevent this issue by implementing error handling, which your application
 should be doing. Another way to handle the issue is to ensure you are waiting
-for the `--buffer_min_time_between_failovers` timer to expire before issuing
+for the `--buffer-min-time-between-failovers` timer to expire before issuing
 the next PlannedReparentShard command.
 
 
 
 ### Scenario 5: Too many connections
 
-Another aspect to be aware of is the `--buffer_size`. For this scenario we will
+Another aspect to be aware of is the `--buffer-size`. For this scenario we will
 be setting the buffer size lower than the number of connections from the
 application. As we're using 6 connections in our example we will set the
 `buffer_size` down from the default of `1000` to `4`.
@@ -341,13 +341,13 @@ Restart the vtgate process to clear metrics:
 Terminal 1:
     Hit "Ctrl + C" to kill the vtgate process
 
-    $ vtgate --topo_implementation etcd2 --topo_global_server_address localhost:2379 \
-    --topo_global_root /vitess/global --log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
-    --log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
-    --port 15001 --grpc_port 15991 --mysql_server_port 15306 --mysql_server_socket_path /tmp/mysql.sock \
-    --cell zone1 --cells_to_watch zone1 --tablet_types_to_wait PRIMARY,REPLICA \
-    --service_map grpc-vtgateservice --pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
-    --mysql_auth_server_impl none --enable_buffer=1 --buffer_size=4
+    $ vtgate --topo-implementation etcd2 --topo-global-server-address localhost:2379 \
+    --topo-global-root /vitess/global --log-dir ~/github/vitess/examples/local/vtdataroot/tmp \
+    --log-queries-to-file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
+    --port 15001 --grpc-port 15991 --mysql-server-port 15306 --mysql-server-socket-path /tmp/mysql.sock \
+    --cell zone1 --cells-to-watch zone1 --tablet-types-to-wait PRIMARY,REPLICA \
+    --service-map grpc-vtgateservice --pid-file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
+    --mysql-auth-server-impl none --enable-buffer=1 --buffer-size=4
 ```
 
 ```
@@ -399,13 +399,13 @@ Restart the vtgate process to clear metrics:
 Terminal 1:
     Hit "Ctrl + C" to kill the vtgate process
 
-    $ vtgate --topo_implementation etcd2 --topo_global_server_address localhost:2379 \
-    --topo_global_root /vitess/global --log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
-    --log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
-    --port 15001 --grpc_port 15991 --mysql_server_port 15306 --mysql_server_socket_path /tmp/mysql.sock \
-    --cell zone1 --cells_to_watch zone1 --tablet_types_to_wait PRIMARY,REPLICA \
-    --service_map grpc-vtgateservice --pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
-    --mysql_auth_server_impl none --enable_buffer=1 --buffer_window=1s
+    $ vtgate --topo-implementation etcd2 --topo-global-server-address localhost:2379 \
+    --topo-global-root /vitess/global --log-dir ~/github/vitess/examples/local/vtdataroot/tmp \
+    --log-queries-to-file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
+    --port 15001 --grpc-port 15991 --mysql-server-port 15306 --mysql-server-socket-path /tmp/mysql.sock \
+    --cell zone1 --cells-to-watch zone1 --tablet-types-to-wait PRIMARY,REPLICA \
+    --service-map grpc-vtgateservice --pid-file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
+    --mysql-auth-server-impl none --enable-buffer=1 --buffer-window=1s
 ```
 
 ```
@@ -471,13 +471,13 @@ Terminal 1:
     $ ./101_initial_cluster.sh
     $ ps aux | grep [v]tgate
     $ pkill vtgate
-    $ vtgate --topo_implementation etcd2 --topo_global_server_address localhost:2379 \
-    --topo_global_root /vitess/global --log_dir ~/github/vitess/examples/local/vtdataroot/tmp \
-    --log_queries_to_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
-    --port 15001 --grpc_port 15991 --mysql_server_port 15306 --mysql_server_socket_path /tmp/mysql.sock \
-    --cell zone1 --cells_to_watch zone1 --tablet_types_to_wait PRIMARY,REPLICA \
-    --service_map grpc-vtgateservice --pid_file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
-    --mysql_auth_server_impl none --enable_buffer=1
+    $ vtgate --topo-implementation etcd2 --topo-global-server-address localhost:2379 \
+    --topo-global-root /vitess/global --log-dir ~/github/vitess/examples/local/vtdataroot/tmp \
+    --log-queries-to-file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
+    --port 15001 --grpc-port 15991 --mysql-server-port 15306 --mysql-server-socket-path /tmp/mysql.sock \
+    --cell zone1 --cells-to-watch zone1 --tablet-types-to-wait PRIMARY,REPLICA \
+    --service-map grpc-vtgateservice --pid-file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate.pid \
+    --mysql-auth-server-impl none --enable-buffer=1
 ```
 
 ```
@@ -553,7 +553,7 @@ the buffered queries expired. If this is common you may want to increase your
 `buffer_window` to cover these failures. Retrying this scenario with the following
 vtgate flags appended resolves many of these errors:
 
-`--buffer_max_failover_duration=1m --buffer_min_time_between_failovers=2m --buffer_window=60s`
+`--buffer-max-failover-duration=1m --buffer-min-time-between-failovers=2m --buffer-window=60s`
 
 ## Revert your configurations
 

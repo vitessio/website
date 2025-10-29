@@ -22,16 +22,16 @@ You can also use this to transition a command in two phases, for example:
 1. Start with the existing invocation:
 
 ```shell
-vtctlclient --server ":15999" -- AddCellInfo --root /mycell --server_address "${some_topo_server}:1234"
+vtctlclient --server ":15999" -- AddCellInfo --root /mycell --server-address "${some_topo_server}:1234"
 ```
 
 2. Then "switch" to the new client but use the old code and syntax:
 
 ```shell
-vtctldclient --server ":15999" LegacyVtctlCommand -- AddCellInfo --root /mycell --server_address "${some_topo_server}:1234"
+vtctldclient --server ":15999" LegacyVtctlCommand -- AddCellInfo --root /mycell --server-address "${some_topo_server}:1234"
 ```
 
-3. Finally, update the command to use the new code and CLI (notice the flag change from `--server_address` to `--server-address` and the removal of the `--`):
+3. Finally, update the command to use the new code and CLI (notice the flag change from `--server-address` to `--server-address` and the removal of the `--`):
 
 ```shell
 vtctldclient --server ":15999" AddCellInfo --root /mycell --server-address "${some_topo_server}:1234"
@@ -48,10 +48,10 @@ Taking the same example as above, in reverse:
 1. Start with the existing invocation:
 
 ```shell
-vtctlclient --server ":15999" -- AddCellInfo --root /mycell --server_address "${some_topo_server}:1234"
+vtctlclient --server ":15999" -- AddCellInfo --root /mycell --server-address "${some_topo_server}:1234"
 ```
 
-2. Then switch to the new code and syntax (note the flag change from `--server_address` to `--server-address`) _without_ switching the invoked client binary:
+2. Then switch to the new code and syntax (note the flag change from `--server-address` to `--server-address`) _without_ switching the invoked client binary:
 
 ```shell
 vtctlclient --server ":15999" -- VtctldCommand AddCellInfo --root /mycell --server-address "${some_topo_server}:1234"

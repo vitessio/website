@@ -108,7 +108,7 @@ The `TabletExternallyReparented` command fails in the following cases:
 
 * The global topology service is not available for locking and modification. In that case, the operation fails completely.
 
-Active reparenting might be a dangerous practice in any system that depends on external reparents. You can disable active reparents by starting `vtctld` with the `--disable_active_reparents` flag set to true. (You cannot set the flag after `vtctld` is started.)
+Active reparenting might be a dangerous practice in any system that depends on external reparents. You can disable active reparents by starting `vtctld` with the `--disable-active-reparents` flag set to true. (You cannot set the flag after `vtctld` is started.)
 
 ## Fixing Replication
 

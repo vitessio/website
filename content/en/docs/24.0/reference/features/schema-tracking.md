@@ -18,7 +18,7 @@ More information on this feature can be found in [this blog post](https://vitess
 
 ## VTGate
 
-Schema tracking is enabled in VTGate with the flag `--schema_change_signal`, defaults to `true`. When enabled, VTGate listens for schema changes from VTTablet.
+Schema tracking is enabled in VTGate with the flag `--schema-change-signal`, defaults to `true`. When enabled, VTGate listens for schema changes from VTTablet.
 A change triggers a `GetSchema` rpc call to VTTablet to retrieve the stored schema.
 
 ## VTTablet

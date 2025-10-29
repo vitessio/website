@@ -60,7 +60,7 @@ The docker image expects some of the environment variables to be set to function
 | *MYSQL_MAX_CONNECTIONS*   | no       | Maximum number of connections that the MySQL instance will support. If unspecified, it defaults to 1000.                                          |
 | *MYSQL_BIND_HOST*         | no       | Which host to bind the MySQL listener to. If unspecified, it defaults to `127.0.0.1`.                                                             |
 | *VTCOMBO_BIND_HOST*       | no       | Which host to bind the vtcombo servenv listener to. If unspecified, it defaults to `127.0.0.1`.                                                   |
-| *MYSQL_SERVER_VERSION*    | no       | MySQL server version to advertise. If unspecified, it defaults to `8.0.31-vitess` or `5.7.9-vitess` according to the version of vttestserver run. |
+| *MYSQL_SERVER_VERSION*    | no       | MySQL server version to advertise. If unspecified, it defaults to `8.0.31-vitess` or `8.4.6-Vitess` according to the version of vttestserver run. |
 | *CHARSET*                 | no       | Default charset to use. If unspecified, it defaults to `utf8mb4`.                                                                                 |
 | *FOREIGN_KEY_MODE*        | no       | This is to provide how to handle foreign key constraint in create/alter table. Valid values are: allow (default), disallow.                       |
 | *ENABLE_ONLINE_DDL*       | no       | Allow users to submit, review and control Online DDL. Valid values are: true (default), false.                                                    |
@@ -83,9 +83,9 @@ Similarily, vtctld listens for grpc requests at the port 1 + `PORT`. So, in orde
  
 ### Persisting container data
 
-If you wish to keep the state of the test container across reboots, such as when running the vttestserver container as a database container in local application development environments, you may optionally pass the `--persistent_mode` flag, along with a `--data_dir` directory which is bound to a docker volume. Due to a bug, the `--port` argument must also be present for correct operation.
+If you wish to keep the state of the test container across reboots, such as when running the vttestserver container as a database container in local application development environments, you may optionally pass the `--persistent-mode` flag, along with a `--data-dir` directory which is bound to a docker volume. Due to a bug, the `--port` argument must also be present for correct operation.
 
-When running in this mode, underlying MySQL table schemas, their data, and the Vitess VSchema objects are persisted under the provided `--data_dir`.
+When running in this mode, underlying MySQL table schemas, their data, and the Vitess VSchema objects are persisted under the provided `--data-dir`.
 
 For example:
 
@@ -102,13 +102,13 @@ docker run --name=vttestserver \
   vitess/vttestserver:mysql80 \
   /vt/bin/vttestserver \
   --alsologtostderr \
-  --data_dir=/vt/vtdataroot/ \
-  --persistent_mode \
+  --data-dir=/vt/vtdataroot/ \
+  --persistent-mode \
   --port=33574 \
-  --mysql_bind_host=0.0.0.0 \
+  --mysql-bind-host=0.0.0.0 \
   --vtcombo-bind-host=0.0.0.0 \
   --keyspaces=test,unsharded \
-  --num_shards=2,1
+  --num-shards=2,1
 ```
 
 ## Example

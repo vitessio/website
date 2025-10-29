@@ -147,7 +147,7 @@ $ cat > acls_for_keyspace1.json << EOF
 }
 EOF
 
-$ vttablet --init_keyspace "keyspace1" --table-acl-config=acls_for_keyspace1.json --enforce-tableacl-config --queryserver-config-strict-table-acl ........
+$ vttablet --init-keyspace "keyspace1" --table-acl-config=acls_for_keyspace1.json --enforce-tableacl-config --queryserver-config-strict-table-acl ........
 ```
 
 Note that the `%` specifier for `table_names_or_prefixes` translates to
@@ -169,7 +169,7 @@ $ cat > acls_for_keyspace2.json << EOF
 }
 EOF
 
-$ vttablet --init_keyspace "keyspace2" --table-acl-config=acls_for_keyspace2.json --enforce-tableacl-config --queryserver-config-strict-table-acl ........
+$ vttablet --init-keyspace "keyspace2" --table-acl-config=acls_for_keyspace2.json --enforce-tableacl-config --queryserver-config-strict-table-acl ........
 ```
 
 With this setup, the `myuser1` and `myuser2` users can only access their respective keyspaces, but the `vitess`
