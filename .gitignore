@@ -21,3 +21,6 @@ tags
 
 # vscode files
 .vscode/
+
+# For mac users
+.DS_Store
