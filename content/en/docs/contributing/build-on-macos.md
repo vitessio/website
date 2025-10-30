@@ -103,8 +103,7 @@ NOVTADMINBUILD=1 make build
 The unit tests require that you first install a Java runtime. This is required for running ZooKeeper tests:
 
 ```shell
-brew tap adoptopenjdk/openjdk
-brew install adoptopenjdk8
+brew install java
 brew info java
 ```
 
