@@ -1,8 +1,12 @@
 ---
 title: "Announcing Vitess 23.0.0"
 date: 2025-11-03  
-authors: [“Vitess Maintainer Team”]  
+authors: [“Vitess Maintainer Team”]
+slug: '2025-04-29-announcing-vitess-22'
+tags: [ 'release', 'Vitess', 'v22', 'MySQL', 'kubernetes', 'operator', 'vreplication', 'multi-tenancy', 'Usability', 'Online DDL' ]
+description: "Vitess 22 is now Generally Available"
 ---
+
 
 # Announcing Vitess 23.0.0
 We’re excited to release Vitess 23.0.0 — the latest major version of Vitess — bringing new defaults, better operational tooling, and refined metrics.  
