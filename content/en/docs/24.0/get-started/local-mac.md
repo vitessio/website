@@ -76,7 +76,7 @@ With everything now in place you can clone and build Vitess.
 ```sh
 $ git clone https://github.com/vitessio/vitess.git
 $ cd vitess
-$ git checkout release-23.0
+$ git checkout main
 $ make build
 ```
 
