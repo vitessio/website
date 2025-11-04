@@ -1,6 +1,6 @@
 ---
 title: "Announcing Vitess 23.0.0"
-date: 2025-11-03  
+date: 2025-11-04
 authors: [“Vitess Maintainer Team”]
 slug: '2025-11-04-announcing-vitess-23'
 tags: [ 'release', 'Vitess', 'v23', 'MySQL', 'kubernetes', 'operator', 'vreplication', 'multi-tenancy', 'Usability', 'Online DDL' ]
