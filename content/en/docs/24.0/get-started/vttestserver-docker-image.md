@@ -22,7 +22,7 @@ Clone the GitHub repository via:
 
 ```shell
 cd vitess
-git checkout release-23.0
+git checkout main
 ```
 
 #### Build the docker image
@@ -40,8 +40,8 @@ This creates 2 docker images named `vitess/vttestserver:mysql57` and `vitess/vtt
 Alternately, you can get the latest docker images from the docker hub. In your shell, execute:
 
 ```shell
-docker pull vitess/vttestserver:mysql57
 docker pull vitess/vttestserver:mysql80
+docker pull vitess/vttestserver:mysql84
 ```
 
 ## Run the docker image
