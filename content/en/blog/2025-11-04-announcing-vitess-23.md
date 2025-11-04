@@ -2,9 +2,9 @@
 title: "Announcing Vitess 23.0.0"
 date: 2025-11-03  
 authors: [“Vitess Maintainer Team”]
-slug: '2025-04-29-announcing-vitess-22'
-tags: [ 'release', 'Vitess', 'v22', 'MySQL', 'kubernetes', 'operator', 'vreplication', 'multi-tenancy', 'Usability', 'Online DDL' ]
-description: "Vitess 22 is now Generally Available"
+slug: '2025-11-04-announcing-vitess-23'
+tags: [ 'release', 'Vitess', 'v23', 'MySQL', 'kubernetes', 'operator', 'vreplication', 'multi-tenancy', 'Usability', 'Online DDL' ]
+description: "Vitess 23 is now Generally Available"
 ---
 
 # Announcing Vitess 23.0.0
