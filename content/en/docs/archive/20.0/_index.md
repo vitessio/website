@@ -1,5 +1,5 @@
 ---
-title: v20.0 (Stable)
+title: v20.0 (Archived)
 description: >
   
   Everything you need to know about scaling MySQL with Vitess.
