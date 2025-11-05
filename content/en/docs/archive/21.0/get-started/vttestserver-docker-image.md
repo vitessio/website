@@ -33,20 +33,19 @@ In your shell, execute:
 make docker_vttestserver
 ```
 
-This creates 2 docker images named `vitess/vttestserver:mysql57` and `vitess/vttestserver:mysql80`
+This creates 1 docker image named `vitess/vttestserver:mysql80`
 
 ### <span style="color:red"> 2. Pulling from docker hub </span>
 
-Alternately, you can get the latest docker images from the docker hub. In your shell, execute:
+Alternately, you can get the latest docker image from the docker hub. In your shell, execute:
 
 ```shell
-docker pull vitess/vttestserver:mysql57
 docker pull vitess/vttestserver:mysql80
 ```
 
 ## Run the docker image
 
-At this point, you should have a docker image named `vitess/vttestserver:mysql57` or `vitess/vttestserver:mysql80`.
+At this point, you should have a docker image named `vitess/vttestserver:mysql80`.
 
 ### Environment variables
 
