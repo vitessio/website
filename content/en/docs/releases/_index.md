@@ -27,21 +27,21 @@ Each major release is maintained for 1 year.
 - **Initial GA release:** [v22.0.0](https://github.com/vitessio/vitess/releases/tag/v22.0.0) (2025-04-29)
 - **End of life:** 2026-04-29
 
+----
+
+## Archived Releases
+
 ### v21.0
-- **Current version:** [v21.0.5](https://github.com/vitessio/vitess/releases/tag/v21.0.3) (2025-06-18)
+- **Current version:** [v21.0.6](https://github.com/vitessio/vitess/releases/tag/v21.0.6) (2025-11-05)
 - **Initial GA release:** [v21.0.0](https://github.com/vitessio/vitess/releases/tag/v21.0.0) (2024-10-29)
 - **End of life:** 2025-10-29
-- **Patch releases:** [v21.0.1](https://github.com/vitessio/vitess/releases/tag/v21.0.1), [v21.0.2](https://github.com/vitessio/vitess/releases/tag/v21.0.2), [v21.0.3](https://github.com/vitessio/vitess/releases/tag/v21.0.3)
+- **Patch releases:** [v21.0.1](https://github.com/vitessio/vitess/releases/tag/v21.0.1), [v21.0.2](https://github.com/vitessio/vitess/releases/tag/v21.0.2), [v21.0.3](https://github.com/vitessio/vitess/releases/tag/v21.0.3), [v21.0.4](https://github.com/vitessio/vitess/releases/tag/v21.0.4), [v21.0.5](https://github.com/vitessio/vitess/releases/tag/v21.0.5), [v21.0.6](https://github.com/vitessio/vitess/releases/tag/v21.0.6)
 
 ### v20.0
 - **Current version:** [v20.0.6](https://github.com/vitessio/vitess/releases/tag/v20.0.6) (2025-02-12)
 - **Initial GA release:** [v20.0.0](https://github.com/vitessio/vitess/releases/tag/v20.0.0) (2024-06-27)
 - **End of life:** 2025-06-27
 - **Patch releases:** [v20.0.1](https://github.com/vitessio/vitess/releases/tag/v20.0.1), [v20.0.2](https://github.com/vitessio/vitess/releases/tag/v20.0.2), [v20.0.3](https://github.com/vitessio/vitess/releases/tag/v20.0.3), [v20.0.4](https://github.com/vitessio/vitess/releases/tag/v20.0.4), [v20.0.5](https://github.com/vitessio/vitess/releases/tag/v20.0.5), [v20.0.6](https://github.com/vitessio/vitess/releases/tag/v20.0.6)
-
-----
-
-## Archived Releases
 
 ### v19.0
 - **Current version:** [v19.0.10](https://github.com/vitessio/vitess/releases/tag/v19.0.10) (2025-02-12)
