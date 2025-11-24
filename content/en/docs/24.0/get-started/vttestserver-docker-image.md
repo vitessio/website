@@ -111,6 +111,39 @@ docker run --name=vttestserver \
   --num-shards=2,1
 ```
 
+### Optimizing startup time for testing
+
+By default, VTGate waits up to 30 seconds at startup to discover at least one tablet for each keyspace/shard/tablet type combination. In testing and CI environments where tablets start quickly, you can use the `--gateway-initial-tablet-timeout` flag to lower this timeout and reduce startup time by approximately 30 seconds. For example, setting this to `1s` works well for typical test scenarios.
+
+This helps when:
+- Running vttestserver in CI/CD pipelines
+- Running automated test suites that create and destroy vttestserver instances frequently
+- Keyspaces and tablets are known to start quickly (typical for small test databases)
+
+Pass the flag directly to vttestserver as a command-line argument:
+
+```shell
+docker run --name=vttestserver \
+  -p 33574:33574 \
+  -p 33575:33575 \
+  -p 33577:33577 \
+  --health-cmd="mysqladmin ping -h127.0.0.1 -P33577" \
+  --health-interval=5s \
+  --health-timeout=2s \
+  --health-retries=5 \
+  vitess/vttestserver:mysql80 \
+  /vt/bin/vttestserver \
+  --alsologtostderr \
+  --port=33574 \
+  --mysql-bind-host=0.0.0.0 \
+  --vtcombo-bind-host=0.0.0.0 \
+  --keyspaces=test,unsharded \
+  --num-shards=2,1 \
+  --gateway-initial-tablet-timeout=1s
+```
+
+Note: If tablets take longer than the timeout to start, VTGate may report that no tablets are available. For production deployments, keep the default 30-second timeout or adjust based on how long your tablets take to start.
+
 ## Example
 
 An example command to run the docker image is as follows :
