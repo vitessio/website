@@ -159,7 +159,7 @@ This replaces the `in_order` hint (e.g. `"in_order:REPLICA,PRIMARY"`) previously
 **Type** int64 (bytes)\
 **Default** 134217728 (128MB)
 
-Transaction chunk threshold in bytes. When a transaction exceeds this size, VTGate will acquire a lock to ensure contiguous, non-interleaved delivery (BEGIN...ROW...COMMIT sent sequentially without mixing events from other shards). Events are still chunked to prevent OOM. Transactions smaller than this threshold are sent without locking for better parallelism.
+Transaction chunking threshold in bytes. When a transaction exceeds this size, VTGate will acquire a lock to ensure contiguous, non-interleaved delivery:  BEGIN...ROW...COMMIT sent sequentially without mixing events from other shards. Events within the transaction are sent in chunks of this size in order to prevent having to process the entire transaction in memory at once, resulting in excessive memory usage and risking an OOM event. Transactions smaller than this threshold are processed as a single batch, entirely in memory, and sent as a single message (and without locking for better parallelism).
 
 ### RPC Response
 
