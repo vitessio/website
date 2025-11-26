@@ -5,6 +5,14 @@ weight: 12
 
 For applications which scale out read queries using replicas, Vitess can safely avoid sending queries to replicas with replication lag beyond acceptable thresholds.
 
+{{< info >}}
+**Note:** Starting in Vitess v24, VTGate uses a simpler default algorithm for handling replication lag based on low lag thresholds, high lag thresholds, and minimum number of tablets. This algorithm is more stable in production environments.
+
+The legacy algorithm is deprecated and will be removed in a future release.
+
+For more details about the algorithm change, see the [v24.0 release notes](https://github.com/vitessio/vitess/blob/main/changelog/24.0/24.0.0/summary.md#vtgate-new-default-legacy-replication-lag-algorithm).
+{{< /info >}}
+
 ## Flags
 
 You can set the following flags on VTGate to control load-balancing of read queries for replicas:
