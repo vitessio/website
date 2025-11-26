@@ -154,6 +154,13 @@ response and stop sending any further events.
 
 This replaces the `in_order` hint (e.g. `"in_order:REPLICA,PRIMARY"`) previously used to specify tablet type order [during source tablet selection](../tablet_selection/).
 
+##### TransactionChunkSize
+
+**Type** int64 (bytes)\
+**Default** 134217728 (128MB)
+
+Transaction chunk threshold in bytes. When a transaction exceeds this size, VTGate will acquire a lock to ensure contiguous, non-interleaved delivery (BEGIN...ROW...COMMIT sent sequentially without mixing events from other shards). Events are still chunked to prevent OOM. Transactions smaller than this threshold are sent without locking for better parallelism.
+
 ### RPC Response
 
 The [`VStream` gRPC](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate/vtgateconn#VTGateConn.VStream) returns
