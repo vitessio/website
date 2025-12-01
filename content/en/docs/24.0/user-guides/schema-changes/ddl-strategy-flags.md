@@ -33,6 +33,7 @@ Vitess respects the following flags. They can be combined unless specifically in
 
 - `--in-order-completion`: a migration that runs with this DDL strategy flag may only complete if no prior migrations are still pending (pending means either `queued`, `ready` or `running` states). `--in-order-completion` considers the order by which migrations were submitted. Note that `--in-order-completion` still allows concurrency. In fact, it is designed to work with concurrent migrations. The idea is that while many migrations may run concurrently, they must _complete_ in-order.
   - This lets the user submit multiple migrations which may have some dependencies (for example, introduce two views, one of which reads from the other). As long as the migrations are submitted in a valid order, the user can then expect `vitess` to complete the migrations successfully (and in that order).
+  - When a migration uses `--in-order-completion`, the `dependent_migrations` field shows a comma-separated list of UUIDs for migrations that must complete first.
   - This strategy flag applies to any `CREATE|DROP TABLE|VIEW` statements, and to `ALTER TABLE` with `vitess|online` strategy.
   - It _does not_ apply to `ALTER TABLE` when using the `mysql`, or `direct` strategies.
 
