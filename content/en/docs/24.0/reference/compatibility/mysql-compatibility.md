@@ -135,9 +135,9 @@ Window functions are fully supported in unsharded keyspaces with no restrictions
 
 For sharded keyspaces, window functions work without restrictions when the query targets a single shard (e.g., queries with `WHERE id = 5` using a unique vindex on `id`).
 
-For multi-shard queries, window functions require the `PARTITION BY` clause to include all sharding key columns:
-- Tables with a single-column sharding key must include that column in `PARTITION BY`
-- Tables with composite sharding keys must include all columns from the sharding key in `PARTITION BY`
+For multi-shard queries, window functions require the `PARTITION BY` clause to include all columns of a unique vindex:
+- Tables with a single-column unique vindex must include that column in `PARTITION BY`
+- Tables with multi-column unique vindexes must include all columns from the vindex in `PARTITION BY`
 
 **Examples:**
 
@@ -147,39 +147,38 @@ SELECT id, name, ROW_NUMBER() OVER (PARTITION BY status ORDER BY created_at) as 
 FROM users
 WHERE id = 100;
 
--- Supported: Multi-shard query with sharding key in PARTITION BY
--- Assumes 'user_id' is the sharding key
+-- Supported: Multi-shard query with unique vindex in PARTITION BY
+-- Assumes 'user_id' is a unique vindex
 SELECT user_id, order_id, amount,
        ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY order_date) as rn
 FROM orders
 WHERE user_id IN (1, 2, 3);
 
--- Supported: Composite vindex with all columns in PARTITION BY
--- Assumes 'tenant_id' and 'user_id' form the composite sharding key
+-- Supported: Multi-column unique vindex with all columns in PARTITION BY
+-- Assumes 'tenant_id' and 'user_id' together form a unique vindex
 SELECT tenant_id, user_id, score,
        RANK() OVER (PARTITION BY tenant_id, user_id ORDER BY score DESC) as rnk
 FROM user_scores
 WHERE tenant_id = 'A' AND user_id = 'B';
 
--- NOT Supported: Multi-shard query without sharding key in PARTITION BY
+-- NOT Supported: Multi-shard query without unique vindex in PARTITION BY
 SELECT id, name, ROW_NUMBER() OVER (PARTITION BY status ORDER BY created_at) as rn
 FROM users;
--- Error: VT12001: unsupported: window function PARTITION BY must include 
--- all sharding key columns id for multi-shard queries
+-- Error: VT12001: unsupported: window functions are only supported for single-shard queries
 
 -- NOT Supported: Window function without PARTITION BY on sharded table
 SELECT id, name, ROW_NUMBER() OVER (ORDER BY name) as row_num
 FROM users;
--- Error: VT12001: unsupported: OVER CLAUSE with sharded keyspace
+-- Error: VT12001: unsupported: window functions are only supported for single-shard queries
 ```
 
 **Limitations:**
 
 - Window functions without a `PARTITION BY` clause are not supported in sharded keyspaces
-- Multi-shard queries must partition by the sharding key columns
-- Composite sharding keys require all columns in the `PARTITION BY` clause
+- Multi-shard queries must partition by all columns of a unique vindex
+- Multi-column unique vindexes require all columns in the `PARTITION BY` clause
 
-These restrictions ensure window function calculations remain correct and consistent across shards, as each shard can independently compute window functions over its partition of the data.
+These restrictions ensure window function calculations remain correct and consistent across shards, as each shard can independently compute window functions over its partition of the data when partitioned by a unique vindex.
 
 ### Killing Running Queries
 
