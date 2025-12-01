@@ -5,7 +5,7 @@ title: VTGate Tablet Balancer
 # VTGate Tablet Balancer
 
 When a VTGate routes a query and has multiple available tablets for a given shard / tablet type (e.g. REPLICA),
-it implements a balancing mechainsm to pick a candidate tablet to route to. At a high level, this process aims to
+it implements a balancing mechanism to pick a candidate tablet to route to. At a high level, this process aims to
 maintain an even distribution of query load to each tablet, while preferentially routing to tablets in the same cell
 as the VTGate to reduce latency.
 
