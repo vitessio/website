@@ -34,6 +34,7 @@ MySQL 8.0 xbstream Manifest
   "Position": "MySQL56/c022ad67-81fc-11eb-aa0e-1c1bb572885f:1-50",
   "BackupTime": "2021-03-11T00:01:37Z",
   "FinishedTime": "2021-03-11T00:01:42Z",
+  "Hostname": "tablet-zone1-0000000102.example.com",
   "FileName": "backup.xbstream.gz",
   "ExtraCommandLineParams": "--no-server-version-check",
   "StreamMode": "xbstream",
