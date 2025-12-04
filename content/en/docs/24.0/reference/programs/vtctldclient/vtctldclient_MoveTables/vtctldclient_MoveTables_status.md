@@ -16,6 +16,76 @@ vtctldclient MoveTables status
 vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --target-keyspace customer status
 ```
 
+#### Text Output
+
+```
+The following vreplication streams exist for workflow customer.commerce2customer:
+
+id=1 on customer/zone1-200: Status: Copying. VStream Lag: -1s; ; Tx time: Thu Oct 30 13:04:18 2025..
+
+Table Copy Status:
+	corder: RowsCopied:0, RowsTotal:0, RowsPercentage:100.00, BytesCopied:16384, BytesTotal:16384, BytesPercentage:100.00, Phase:COMPLETE
+	customer: RowsCopied:0, RowsTotal:47609, RowsPercentage:0.00, BytesCopied:16384, BytesTotal:4734976, BytesPercentage:0.35, Phase:NOT_STARTED
+
+Traffic State: Reads Not Switched. Writes Not Switched
+```
+
+The Table Copy Status section shows detailed progress for all tables in the workflow:
+- **Phase**: Current copy phase - `COMPLETE`, `IN_PROGRESS`, or `NOT_STARTED`
+- **RowsCopied/RowsTotal**: Number of rows copied and total rows to copy
+- **RowsPercentage**: Percentage of rows copied
+- **BytesCopied/BytesTotal**: Number of bytes copied and total bytes to copy
+- **BytesPercentage**: Percentage of bytes copied
+
+#### JSON Output
+
+```
+vtctldclient --server localhost:15999 MoveTables --workflow commerce2customer --target-keyspace customer status --format=json
+```
+
+```json
+{
+  "table_copy_state": {
+    "corder": {
+      "rows_copied": "11",
+      "rows_total": "11",
+      "rows_percentage": 100,
+      "bytes_copied": "16384",
+      "bytes_total": "16384",
+      "bytes_percentage": 100,
+      "phase": "COMPLETE"
+    },
+    "customer": {
+      "rows_copied": "0",
+      "rows_total": "47609",
+      "rows_percentage": 0,
+      "bytes_copied": "16384",
+      "bytes_total": "4734976",
+      "bytes_percentage": 0.34602076,
+      "phase": "NOT_STARTED"
+    }
+  },
+  "shard_streams": {
+    "customer/0": {
+      "streams": [
+        {
+          "id": 1,
+          "tablet": {
+            "cell": "zone1",
+            "uid": 200
+          },
+          "source_shard": "commerce/0",
+          "position": "f3918180-b58f-11f0-9085-360472309971:1-29655",
+          "status": "Copying",
+          "info": "VStream Lag: -1s; ; Tx time: Thu Oct 30 13:04:18 2025."
+        }
+      ]
+    }
+  },
+  "traffic_state": "Reads Not Switched. Writes Not Switched"
+}
+```
+
 ### Options
 
 ```

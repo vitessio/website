@@ -99,7 +99,26 @@ values. For example:
 ```bash
 $ vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer status --format=json
 {
-  "table_copy_state": {},
+  "table_copy_state": {
+    "corder": {
+      "rows_copied": "0",
+      "rows_total": "0",
+      "rows_percentage": 100,
+      "bytes_copied": "16384",
+      "bytes_total": "16384",
+      "bytes_percentage": 100,
+      "phase": "COMPLETE"
+    },
+    "customer": {
+      "rows_copied": "500",
+      "rows_total": "1000",
+      "rows_percentage": 50,
+      "bytes_copied": "51200",
+      "bytes_total": "102400",
+      "bytes_percentage": 50,
+      "phase": "IN_PROGRESS"
+    }
+  },
   "shard_streams": {
     "customer/0": {
       "streams": [
@@ -130,7 +149,26 @@ You would see this error in the `status`/`show` or `Workflow show` output. For e
 ```bash
 $ vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer status --format=json
 {
-  "table_copy_state": {},
+  "table_copy_state": {
+    "corder": {
+      "rows_copied": "0",
+      "rows_total": "0",
+      "rows_percentage": 100,
+      "bytes_copied": "16384",
+      "bytes_total": "16384",
+      "bytes_percentage": 100,
+      "phase": "COMPLETE"
+    },
+    "customer": {
+      "rows_copied": "750",
+      "rows_total": "1000",
+      "rows_percentage": 75,
+      "bytes_copied": "76800",
+      "bytes_total": "102400",
+      "bytes_percentage": 75,
+      "phase": "IN_PROGRESS"
+    }
+  },
   "shard_streams": {
     "customer/0": {
       "streams": [

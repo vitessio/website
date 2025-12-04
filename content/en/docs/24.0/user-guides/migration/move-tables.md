@@ -286,7 +286,26 @@ In this example there are only a few rows in the tables, so the `MoveTables` ope
 ```bash
 $ vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer status --format=json
 {
-  "table_copy_state": {},
+  "table_copy_state": {
+    "corder": {
+      "rows_copied": "0",
+      "rows_total": "0",
+      "rows_percentage": 100,
+      "bytes_copied": "16384",
+      "bytes_total": "16384",
+      "bytes_percentage": 100,
+      "phase": "COMPLETE"
+    },
+    "customer": {
+      "rows_copied": "800",
+      "rows_total": "1000",
+      "rows_percentage": 80,
+      "bytes_copied": "81920",
+      "bytes_total": "102400",
+      "bytes_percentage": 80,
+      "phase": "IN_PROGRESS"
+    }
+  },
   "shard_streams": {
     "customer/0": {
       "streams": [
@@ -298,7 +317,7 @@ $ vtctldclient MoveTables --target-keyspace customer --workflow commerce2custome
           },
           "source_shard": "commerce/0",
           "position": "5d8e0b24-6873-11ee-9359-49d03ab2cdee:1-51",
-          "status": "Running",
+          "status": "Copying",
           "info": "VStream Lag: 0s"
         }
       ]
@@ -307,6 +326,8 @@ $ vtctldclient MoveTables --target-keyspace customer --workflow commerce2custome
   "traffic_state": "Reads Not Switched. Writes Not Switched"
 }
 ```
+
+The `table_copy_state` field shows detailed progress for each table being copied, including the current phase (`COMPLETE`, `IN_PROGRESS`, or `NOT_STARTED`), rows and bytes copied, and percentage complete.
 
 You can get more detailed status information using the
 [`show`](../../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_show/) sub-command:
