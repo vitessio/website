@@ -244,8 +244,8 @@ Note that when using [`vtbackup`](https://vitess.io/docs/reference/programs/vtba
 
 When taking backups with `vtctldclient Backup`, `vtctldclient BackupShard`, or `vtbackup`, you can use the following flags:
 
-* `--init-backup-sql-queries`: SQL queries to execute before initializing the backup. You can specify this flag multiple times to run multiple queries in sequence.
-* `--init-backup-tablet-types`: Comma-separated list of tablet types where the init SQL queries will run (e.g., `replica,rdonly`). The backup will only execute the queries if the tablet taking the backup matches one of these types.
+* `--init-backup-sql-queries`: SQL queries to execute before initializing the backup. You can specify this flag multiple times or provide a single comma-seperated value to run multiple queries in sequence.
+* `--init-backup-tablet-types`: Comma-separated list of tablet types where the init SQL queries will run (e.g., `replica,rdonly`). The backup will only execute the queries if the tablet taking the backup matches one of these types. You can also specify the flag multiple times to specify the set of tablet types.
 * `--init-backup-sql-timeout`: Maximum time to wait for the init SQL queries to complete. If the queries don't finish within this time, the behavior depends on the `--init-backup-sql-fail-on-error` flag.
 * `--init-backup-sql-fail-on-error`: Whether to fail the entire backup if the init SQL queries fail or timeout. Default is `false`, which means the backup continues even if the queries fail.
 
