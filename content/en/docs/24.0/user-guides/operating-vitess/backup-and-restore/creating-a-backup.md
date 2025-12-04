@@ -316,7 +316,7 @@ vtbackup \
 * Choose timeout values based on how long your queries typically take, with some buffer for variability
 * Run expensive operations like `OPTIMIZE TABLE` on replica or rdonly tablets rather than the primary
 * Check the backup logs to see whether init queries were executed, skipped, or failed
-* When optimizing tables, consider using `OPTIMIZE LOCAL TABLE` to avoid replication overhead
+* When optimizing tables, consider using `OPTIMIZE LOCAL TABLE` to avoid binlogging and potentially replicating the statement
 
 ## Backing up Topology Server
 
