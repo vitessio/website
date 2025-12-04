@@ -61,39 +61,39 @@ VTTablet exposes the following metrics for monitoring QueryThrottler activity:
 Tracks the total number of requests evaluated by the query throttler.
 
 **Labels:**
-* `strategy`: The throttling strategy being used (e.g., "MockStrategy", "Unknown")
-* `workload`: The workload name from ExecuteOptions (defaults to "default" or "unknown")
-* `priority`: The query priority value (0-100, defaults to 100)
+* `Strategy`: The throttling strategy being used (e.g., "TabletThrottlerStrategy")
+* `Workload`: The client application workload name from the `WORKLOAD_NAME` comment directive
+* `Priority`: The query priority value (0-100) determining query throttling preference (lower = higher priority)
 
 #### QueryThrottlerThrottled
 
 Tracks the number of requests that were throttled by the query throttler.
 
 **Labels:**
-* `strategy`: The throttling strategy being used
-* `workload`: The workload name from ExecuteOptions
-* `priority`: The query priority value (0-100)
-* `metric_name`: Name of the metric that triggered throttling (e.g., "cpu", "memory")
-* `metric_value`: The value of the metric that triggered throttling
-* `dry_run`: Whether the throttler is in dry-run mode (true/false). In dry-run mode, throttling decisions are logged but queries are not throttled.
+* `Strategy`: The throttling strategy being used
+* `Workload`: The client application workload name from the `WORKLOAD_NAME` comment directive
+* `Priority`: The query priority value (0-100) determining query throttling preference (lower = higher priority)
+* `MetricName`: Name of the metric that triggered throttling (e.g., "cpu", "lag")
+* `MetricValue`: The value of the metric that triggered throttling
+* `DryRun`: Whether the throttler is in dry-run mode (true/false). In dry-run mode, throttling decisions are logged but queries are not throttled.
 
 #### QueryThrottlerTotalLatencyNs
 
-Measures the total latency of the QueryThrottler.Throttle function call in nanoseconds, from entry to exit.
+Measures the total latency in nanoseconds for each throttling request from entry to exit, including evaluation, metric checks, and all overhead.
 
 **Labels:**
-* `strategy`: The throttling strategy being used
-* `workload`: The workload name from ExecuteOptions
-* `priority`: The query priority value (0-100)
+* `Strategy`: The throttling strategy being used
+* `Workload`: The client application workload name from the `WORKLOAD_NAME` comment directive
+* `Priority`: The query priority value (0-100) determining query throttling preference (lower = higher priority)
 
 #### QueryThrottlerEvaluateLatencyNs
 
-Measures the latency of the strategy evaluation phase in nanoseconds, from when the Throttle function begins to when the Evaluate method completes.
+Measures the latency in nanoseconds of the strategy evaluation phase, specifically the time taken to make the throttling decision. 
 
 **Labels:**
-* `strategy`: The throttling strategy being used
-* `workload`: The workload name from ExecuteOptions
-* `priority`: The query priority value (0-100)
+* `Strategy`: The throttling strategy being used
+* `Workload`: The client application workload name from the `WORKLOAD_NAME` comment directive
+* `Priority`: The query priority value (0-100) determining query throttling preference (lower = higher priority)
 
 ### Using QueryThrottler Metrics
 
