@@ -157,9 +157,11 @@ This replaces the `in_order` hint (e.g. `"in_order:REPLICA,PRIMARY"`) previously
 ##### TransactionChunkSize
 
 **Type** int64 (bytes)\
-**Default** 134217728 (128MB)
+**Default** 0 (disabled)
 
-When a transaction exceeds this size threshold, VTGate acquires a lock to ensure contiguous, non-interleaved delivery
+If the size threshold is <= 0, transaction chunking is disabled. Clients must explicitly set this to opt-in to transaction chunking.
+
+If enabled, when a transaction exceeds this size threshold, VTGate acquires a lock to ensure contiguous, non-interleaved delivery
 of the transaction's events. All events for the transaction (BEGIN...ROW...COMMIT) are sent sequentially without mixing in events from other shards.
 By setting this threshold, VTGate can stream large transaction events in chunks rather than buffering the entire
 transaction in memory before sending to the client. This prevents out-of-memory (OOM) errors while maintaining transaction integrity and ordering guarantees.
