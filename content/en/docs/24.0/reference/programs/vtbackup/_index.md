@@ -148,6 +148,10 @@ vtbackup [flags]
       --gcs-backup-storage-bucket string                            Google Cloud Storage bucket to use for backups.
       --gcs-backup-storage-root string                              Root prefix for all backup-related object names.
       --grpc-auth-static-client-creds string                        When using grpc_static_auth in the server, this file provides the credentials to use to authenticate with server.
+      --init-backup-sql-fail-on-error                               Whether or not to fail the backup if the init SQL queries (--init-backup-sql-queries) fail, which includes if they fail to complete before the specified timeout (--init-backup-sql-timeout)
+      --init-backup-sql-queries strings                             Queries to execute before initializing the backup
+      --init-backup-sql-timeout duration                            At what point should we time out the init SQL query (--init-backup-sql-queries) work and either fail the backup job (--init-backup-sql-fail-on-error) or continue on with the backup
+      --init-backup-tablet-types strings                            Tablet types used for the backup where the init SQL queries (--init-backup-sql-queries) will be executed before initializing the backup
       --grpc-compression string                                     Which protocol to use for compressing gRPC. Default: nothing. Supported: snappy
       --grpc-dial-concurrency-limit int                             Maximum concurrency of grpc dial operations. This should be less than the golang max thread limit of 10000. (default 1024)
       --grpc-enable-tracing                                         Enable gRPC tracing.

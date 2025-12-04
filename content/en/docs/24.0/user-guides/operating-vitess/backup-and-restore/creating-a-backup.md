@@ -219,6 +219,105 @@ If Vitess finds that the database made no writes since the requested backup/posi
 
 An incremental backup fails when it is unable to find binary log files that covers the requested position. This can happen if the binary logs are purged earlier than the incremental backup was taken. It essentially means there's a gap in the changelog events. **Note** that while on one tablet the binary logs may be missing, another tablet may still have binary logs that cover the requested position.
 
+## Running SQL Queries Before Backup
+
+You can execute SQL queries on the mysqld instance immediately before initializing a backup. This is similar to MySQL's [`--init-file`](https://dev.mysql.com/doc/refman/en/server-system-variables.html#sysvar_init_file) and [`--init-connect`](https://dev.mysql.com/doc/refman/en/server-system-variables.html#sysvar_init_connect) options.
+
+### When to Use Init SQL Queries
+
+Running SQL queries before a backup can be useful in various scenarios, for example:
+
+* Running [`OPTIMIZE TABLE`](https://dev.mysql.com/doc/refman/en/optimize-table.html) on specific tables can reduce the backup size, speed up the backup process, and improve restore times
+* Execute maintenance tasks that prepare the database for backup
+* Temporarily modify settings for the backup operation
+
+### How It Works
+
+Init SQL queries are executed only on tablets that match the specified tablet types. If the backup tablet's type is not in the allowed list, the queries are skipped and the backup proceeds normally. The queries are executed with a configurable timeout. If they fail to complete within the timeout, you can choose to either fail the backup or continue anyway.
+
+{{< info >}}
+Note that when using [`vtbackup`](https://vitess.io/docs/reference/programs/vtbackup) there is no real tablet involved and the tablet-type used for this feature is always `BACKUP`.
+{{< /info >}}
+
+
+### Configuration Flags
+
+When taking backups with `vtctldclient Backup`, `vtctldclient BackupShard`, or `vtbackup`, you can use the following flags:
+
+* `--init-backup-sql-queries`: SQL queries to execute before initializing the backup. You can specify this flag multiple times or provide a single comma-seperated value to run multiple queries in sequence.
+* `--init-backup-tablet-types`: Comma-separated list of tablet types where the init SQL queries will run (e.g., `replica,rdonly`). The backup will only execute the queries if the tablet taking the backup matches one of these types. You can also specify the flag multiple times to specify the set of tablet types.
+* `--init-backup-sql-timeout`: Maximum time to wait for the init SQL queries to complete. If the queries don't finish within this time, the behavior depends on the `--init-backup-sql-fail-on-error` flag.
+* `--init-backup-sql-fail-on-error`: Whether to fail the entire backup if the init SQL queries fail or timeout. Default is `false`, which means the backup continues even if the queries fail.
+
+### Requirements
+
+If you specify init SQL queries, you must also provide:
+* At least one tablet type via `--init-backup-tablet-types`
+* A non-zero timeout value via `--init-backup-sql-timeout`
+
+These requirements prevent accidentally running queries without proper safeguards.
+
+### Examples
+
+#### Optimize a Single Table
+
+```sh
+vtctldclient --server=<vtctld_host>:<vtctld_port> Backup \
+  --init-backup-sql-queries="OPTIMIZE LOCAL TABLE mydb.large_table" \
+  --init-backup-tablet-types=replica,rdonly \
+  --init-backup-sql-timeout=1h \
+  zone1-0000000102
+```
+
+#### Run Multiple Queries in Sequence
+
+You can specify multiple queries that will be executed in order:
+
+```sh
+vtctldclient --server=<vtctld_host>:<vtctld_port> Backup \
+  --init-backup-sql-queries="SET sql_log_bin=0" \
+  --init-backup-sql-queries="OPTIMIZE TABLE mydb.table1" \
+  --init-backup-sql-queries="OPTIMIZE TABLE mydb.table2" \
+  --init-backup-sql-queries="SET sql_log_bin=1" \
+  --init-backup-tablet-types=replica,rdonly \
+  --init-backup-sql-timeout=2h \
+  zone1-0000000102
+```
+
+#### Fail Backup on Query Errors
+
+To ensure the backup only succeeds if the init queries complete successfully:
+
+```sh
+vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard \
+  --init-backup-sql-queries="OPTIMIZE LOCAL TABLE mydb.critical_table" \
+  --init-backup-tablet-types=replica,rdonly \
+  --init-backup-sql-timeout=30m \
+  --init-backup-sql-fail-on-error \
+  commerce/0
+```
+
+#### Using with vtbackup
+
+The same flags work with `vtbackup` for scheduled or automated backups:
+
+```sh
+vtbackup \
+  --init-backup-sql-queries="OPTIMIZE LOCAL TABLE mydb.large_table" \
+  --init-backup-tablet-types=backup \
+  --init-backup-sql-timeout=1h \
+  --init-backup-sql-fail-on-error=false \
+  # ... other vtbackup flags ...
+```
+
+### Best Practices
+
+* Test your init SQL queries on a non-production tablet to ensure they complete within your timeout and have the desired effect
+* Choose timeout values based on how long your queries typically take, with some buffer for variability
+* Run expensive operations like `OPTIMIZE TABLE` on replica or rdonly tablets rather than the primary
+* Check the backup logs to see whether init queries were executed, skipped, or failed
+* When optimizing tables, consider using `OPTIMIZE LOCAL TABLE` to avoid binlogging and potentially replicating the statement
+
 ## Backing up Topology Server
 
 The Topology Server stores metadata (and not tablet data). It is recommended to create a backup using the method described by the underlying plugin:
