@@ -221,13 +221,13 @@ An incremental backup fails when it is unable to find binary log files that cove
 
 ## Running SQL Queries Before Backup
 
-You can execute SQL queries on the mysqld instance immediately before initializing a backup. This is similar to MySQL's `--init-file` and `--init-connect` options.
+You can execute SQL queries on the mysqld instance immediately before initializing a backup. This is similar to MySQL's [`--init-file`](https://dev.mysql.com/doc/refman/en/server-system-variables.html#sysvar_init_file) and [`--init-connect`](https://dev.mysql.com/doc/refman/en/server-system-variables.html#sysvar_init_connect) options.
 
 ### When to Use Init SQL Queries
 
 Running SQL queries before a backup can be useful in several scenarios:
 
-* Running `OPTIMIZE TABLE` on specific tables can reduce the backup size, speed up the backup process, and improve restore times
+* Running [`OPTIMIZE TABLE`](https://dev.mysql.com/doc/refman/en/optimize-table.html) on specific tables can reduce the backup size, speed up the backup process, and improve restore times
 * Execute maintenance tasks that prepare the database for backup
 * Temporarily modify settings for the backup operation
 
@@ -236,7 +236,7 @@ Running SQL queries before a backup can be useful in several scenarios:
 Init SQL queries are executed only on tablets that match the specified tablet types. If the backup tablet's type is not in the allowed list, the queries are skipped and the backup proceeds normally. The queries are executed with a configurable timeout. If they fail to complete within the timeout, you can choose to either fail the backup or continue anyway.
 
 {{< info >}}
-Note that when using `vtbackup` there is no real tablet involved and the tablet-type used for this feature is always `BACKUP`.
+Note that when using [`vtbackup`](https://vitess.io/docs/reference/programs/vtbackup) there is no real tablet involved and the tablet-type used for this feature is always `BACKUP`.
 {{< /info >}}
 
 
