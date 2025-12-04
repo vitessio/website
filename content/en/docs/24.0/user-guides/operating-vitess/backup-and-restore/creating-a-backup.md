@@ -304,7 +304,7 @@ The same flags work with `vtbackup` for scheduled or automated backups:
 ```sh
 vtbackup \
   --init-backup-sql-queries="OPTIMIZE LOCAL TABLE mydb.large_table" \
-  --init-backup-tablet-types=replica,rdonly \
+  --init-backup-tablet-types=backup \
   --init-backup-sql-timeout=1h \
   --init-backup-sql-fail-on-error=false \
   # ... other vtbackup flags ...
