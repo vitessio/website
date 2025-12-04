@@ -18,6 +18,10 @@ vtctldclient Backup [--concurrency <concurrency>] [--allow-primary] [--increment
       --concurrency int32                 Specifies the number of compression/checksum jobs to run simultaneously. (default 4)
   -h, --help                              help for Backup
       --incremental-from-pos string       Position, or name of backup from which to create an incremental backup. Default: empty. If given, then this backup becomes an incremental backup from given position or given backup. If value is 'auto', this backup will be taken from the last successful backup position.
+      --init-backup-sql-fail-on-error          Whether or not to fail the backup if the init SQL queries (--init-backup-sql-queries) fail, which includes if they fail to complete before the specified timeout (--init-backup-sql-timeout)
+      --init-backup-sql-queries strings        Queries to execute before initializing the backup
+      --init-backup-sql-timeout duration       At what point should we time out the init SQL query (--init-backup-sql-queries) work and either fail the backup job (--init-backup-sql-fail-on-error) or continue on with the backup
+      --init-backup-tablet-types strings       Tablet types used for the backup where the init SQL queries (--init-backup-sql-queries) will be executed before initializing the backup
       --mysql-shutdown-timeout duration   Timeout to use when MySQL is being shut down. (default 5m0s)
       --upgrade-safe                      Whether to use innodb_fast_shutdown=0 for the backup so it is safe to use for MySQL upgrades.
 ```
