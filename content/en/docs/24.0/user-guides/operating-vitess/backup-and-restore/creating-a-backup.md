@@ -225,7 +225,7 @@ You can execute SQL queries on the mysqld instance immediately before initializi
 
 ### When to Use Init SQL Queries
 
-Running SQL queries before a backup can be useful in several scenarios:
+Running SQL queries before a backup can be useful in various scenarios, for example:
 
 * Running [`OPTIMIZE TABLE`](https://dev.mysql.com/doc/refman/en/optimize-table.html) on specific tables can reduce the backup size, speed up the backup process, and improve restore times
 * Execute maintenance tasks that prepare the database for backup
