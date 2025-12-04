@@ -75,21 +75,11 @@ In MySQL **8.0.23** and later, table drops do not acquire locks on the InnoDB bu
 
 Vitess does not track the state of the table lifecycle. The process is stateless thanks to an encoding scheme in the table names. Examples:
 
-- The table `_vt_HOLD_6ace8bcef73211ea87e9f875a4d24e90_20210915120000` is held until `2021-09-15 12:00:00`. The data remains intact.
-- The table `_vt_PURGE_6ace8bcef73211ea87e9f875a4d24e90_20210915123000` is at the state where it is being purged, or queued to be purged. Once it's fully purged (zero rows remain), it transitions to the next stage.
-- The table `_vt_EVAC_6ace8bcef73211ea87e9f875a4d24e90_20210918093000` is held until `2021-09-18 09:30:00`
-- The table `_vt_DROP_6ace8bcef73211ea87e9f875a4d24e90_20210921170000` is eligible to be dropped on `2021-09-21 17:00:00`
+- The table `_vt_hld_6ace8bcef73211ea87e9f875a4d24e90_20210915120000_` is held until `2021-09-15 12:00:00`. The data remains intact.
+- The table `_vt_prg_6ace8bcef73211ea87e9f875a4d24e90_20210915123000_` is at the state where it is being purged, or queued to be purged. Once it's fully purged (zero rows remain), it transitions to the next stage.
+- The table `_vt_evc_6ace8bcef73211ea87e9f875a4d24e90_20210918093000_` is held until `2021-09-18 09:30:00`
+- The table `_vt_drp_6ace8bcef73211ea87e9f875a4d24e90_20210921170000_` is eligible to be dropped on `2021-09-21 17:00:00`
 
-{{< info >}}
-Starting in Vitess `v20`, the table naming format will change. Tables will be named like so:
-
-- `_vt_hld_6ace8bcef73211ea87e9f875a4d24e90_20200915120410_`
-- `_vt_prg_6ace8bcef73211ea87e9f875a4d24e90_20200915120410_`
-- `_vt_evc_6ace8bcef73211ea87e9f875a4d24e90_20200915120410_`
-- `_vt_drp_6ace8bcef73211ea87e9f875a4d24e90_20200915120410_`
-
-`v19` supports the new naming format, but does not generate any tables in this format. `v20` will generate tables in the new format, and will support the old format. Support for old format will be dropped in `v22` or later.
-{{< /info >}}
 
 ## Automated lifecycle
 
@@ -97,6 +87,6 @@ Vitess internally uses the above table lifecycle for [online, managed schema mig
 
 ## User-facing DROP TABLE lifecycle
 
-When using an online `ddl_strategy`, a `DROP TABLE` is a [managed schema migration](../../../user-guides/schema-changes/managed-online-schema-changes/). It is internally replaced by a `RENAME TABLE` statement, renaming it into a `HOLD` state (e.g. `_vt_HOLD_6ace8bcef73211ea87e9f875a4d24e90_20210915120000`). It will then participate in the table lifecycle mechanism. If `table_gc_lifecycle` does not include the `hold` state, the table proceeds to transition to next included state. 
+When using an online `ddl_strategy`, a `DROP TABLE` is a [managed schema migration](../../../user-guides/schema-changes/managed-online-schema-changes/). It is internally replaced by a `RENAME TABLE` statement, renaming it into a `HOLD` state (e.g. `_vt_hld_6ace8bcef73211ea87e9f875a4d24e90_20210915120000_`). It will then participate in the table lifecycle mechanism. If `table_gc_lifecycle` does not include the `hold` state, the table proceeds to transition to next included state. 
 
 A multi-table `DROP TABLE` statement is converted to multiple single-table `DROP TABLE` statements, each to then convert to a `RENAME TABLE` statement.
