@@ -168,6 +168,10 @@ transaction in memory before sending to the client. This prevents out-of-memory 
 Transactions smaller than this threshold are sent without locking for better parallelism across shards. The default
 128MB works for most use cases, but you may want to adjust it based on your expected transaction sizes and available memory.
 
+{{< warning >}}
+This flag will be ignored if the `MinimizeSkew` flag is also specified because the combination of these two features can lead to deadlocks.
+{{< /warning >}}
+
 ### RPC Response
 
 The [`VStream` gRPC](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate/vtgateconn#VTGateConn.VStream) returns
