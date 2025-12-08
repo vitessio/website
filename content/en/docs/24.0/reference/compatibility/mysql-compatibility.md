@@ -112,6 +112,30 @@ Vitess allows selecting a keyspace (and shard/tablet-type) using the MySQL `USE`
 USE `mykeyspace:-80@rdonly`
 ```
 
+#### Tablet-Specific Targeting
+
+For debugging and troubleshooting, you can route queries to a specific tablet by its alias:
+
+```sql
+USE `keyspace:shard@tablet_type|tablet-alias`
+```
+
+For example:
+```sql
+USE `mykeyspace:-80@replica|zone1-0000000100`
+```
+
+This targets a specific tablet within a shard, providing stable routing when you don't have direct access to the underlying MySQL instance. The tablet alias uses the format `cell-uid` (e.g., `zone1-0000000100`).
+
+Keep in mind:
+- You must specify both the shard and tablet type (before the `|`) when targeting a tablet.
+- Once set, all queries in the session route to this tablet until you change or clear the target.
+
+This is useful for:
+- Debugging queries on a specific tablet
+- Testing replica consistency by targeting individual replicas
+- Ensuring query stability during troubleshooting
+
 Or refer to another keyspace’s table via standard dot notation:
 
 ```sql
@@ -125,60 +149,7 @@ FROM other_keyspace.table;
 
 ### Window Functions
 
-Vitess supports window functions in both unsharded and sharded keyspaces, with some restrictions for sharded deployments.
-
-#### Unsharded Keyspaces
-
-Window functions are fully supported in unsharded keyspaces with no restrictions.
-
-#### Sharded Keyspaces
-
-For sharded keyspaces, window functions work without restrictions when the query targets a single shard (e.g., queries with `WHERE id = 5` using a unique vindex on `id`).
-
-For multi-shard queries, window functions require the `PARTITION BY` clause to include all columns of a unique vindex:
-- Tables with a single-column unique vindex must include that column in `PARTITION BY`
-- Tables with multi-column unique vindexes must include all columns from the vindex in `PARTITION BY`
-
-**Examples:**
-
-```sql
--- Supported: Single-shard query
-SELECT id, name, ROW_NUMBER() OVER (PARTITION BY status ORDER BY created_at) as rn
-FROM users
-WHERE id = 100;
-
--- Supported: Multi-shard query with unique vindex in PARTITION BY
--- Assumes 'user_id' is a unique vindex
-SELECT user_id, order_id, amount,
-       ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY order_date) as rn
-FROM orders
-WHERE user_id IN (1, 2, 3);
-
--- Supported: Multi-column unique vindex with all columns in PARTITION BY
--- Assumes 'tenant_id' and 'user_id' together form a unique vindex
-SELECT tenant_id, user_id, score,
-       RANK() OVER (PARTITION BY tenant_id, user_id ORDER BY score DESC) as rnk
-FROM user_scores
-WHERE tenant_id = 'A' AND user_id = 'B';
-
--- NOT Supported: Multi-shard query without unique vindex in PARTITION BY
-SELECT id, name, ROW_NUMBER() OVER (PARTITION BY status ORDER BY created_at) as rn
-FROM users;
--- Error: VT12001: unsupported: window functions are only supported for single-shard queries
-
--- NOT Supported: Window function without PARTITION BY on sharded table
-SELECT id, name, ROW_NUMBER() OVER (ORDER BY name) as row_num
-FROM users;
--- Error: VT12001: unsupported: window functions are only supported for single-shard queries
-```
-
-**Limitations:**
-
-- Window functions without a `PARTITION BY` clause are not supported in sharded keyspaces
-- Multi-shard queries must partition by all columns of a unique vindex
-- Multi-column unique vindexes require all columns in the `PARTITION BY` clause
-
-These restrictions ensure window function calculations remain correct and consistent across shards, as each shard can independently compute window functions over its partition of the data when partitioned by a unique vindex.
+Window Functions are not currently supported in Vitess.
 
 ### Killing Running Queries
 
