@@ -100,60 +100,60 @@ $ mysql commerce
 ```sql
 mysql> show vitess_migrations like 'c26f3b5e_6b50_11ee_808b_0a43f95f28a3' \G
 *************************** 1. row ***************************
-                             id: 1
-                 migration_uuid: c26f3b5e_6b50_11ee_808b_0a43f95f28a3
-                       keyspace: commerce
-                          shard: 0
-                   mysql_schema: vt_commerce
-                    mysql_table: product
-            migration_statement: alter table product add column ts_entry TIMESTAMP not null
-                       strategy: vitess
-                        options:
-                added_timestamp: 2023-10-15 11:48:29
-            requested_timestamp: 2023-10-15 11:48:30
-                ready_timestamp: NULL
-              started_timestamp: 2023-10-15 11:48:31
-             liveness_timestamp: 2023-10-15 11:48:37
-            completed_timestamp: 2023-10-15 11:48:38.232430
-              cleanup_timestamp: NULL
-               migration_status: complete
-                       log_path:
-                      artifacts: _c26f3b5e_6b50_11ee_808b_0a43f95f28a3_20231015114830_vrepl,
-                        retries: 0
-                         tablet: zone1-0000000100
-                 tablet_failure: 0
-                       progress: 100
-              migration_context: vtctl:c26e658d-6b50-11ee-808b-0a43f95f28a3
-                     ddl_action: alter
-                        message:
-                    eta_seconds: 0
-                    rows_copied: 0
-                     table_rows: 0
-              added_unique_keys: 0
-            removed_unique_keys: 0
-                       log_file:
-       retain_artifacts_seconds: 86400
-            postpone_completion: 0
-       removed_unique_key_names:
-dropped_no_default_column_names:
-          expanded_column_names:
-               revertible_notes:
-               allow_concurrent: 0
-                  reverted_uuid:
-                        is_view: 0
-              ready_to_complete: 1
-      vitess_liveness_indicator: 1697370514
-            user_throttle_ratio: 0
-                   special_plan:
-       last_throttled_timestamp: NULL
-            component_throttled:
-            cancelled_timestamp: NULL
-                postpone_launch: 0
-                          stage: re-enabling writes
-               cutover_attempts: 1
-         is_immediate_operation: 0
-             reviewed_timestamp: 2023-10-15 11:48:31
-    ready_to_complete_timestamp: 2023-10-15 11:48:35
+                                id: 1
+                    migration_uuid: c26f3b5e_6b50_11ee_808b_0a43f95f28a3
+                          keyspace: commerce
+                             shard: 0
+                      mysql_schema: vt_commerce
+                       mysql_table: product
+               migration_statement: alter table product add column ts_entry TIMESTAMP not null
+                          strategy: vitess
+                           options:
+                   added_timestamp: 2023-10-15 11:48:29
+               requested_timestamp: 2023-10-15 11:48:30
+                   ready_timestamp: NULL
+                 started_timestamp: 2023-10-15 11:48:31
+                liveness_timestamp: 2023-10-15 11:48:37
+               completed_timestamp: 2023-10-15 11:48:38.232430
+                 cleanup_timestamp: NULL
+                  migration_status: complete
+                          log_path:
+                         artifacts: _c26f3b5e_6b50_11ee_808b_0a43f95f28a3_20231015114830_vrepl,
+                           retries: 0
+                            tablet: zone1-0000000100
+                    tablet_failure: 0
+                          progress: 100
+                 migration_context: vtctl:c26e658d-6b50-11ee-808b-0a43f95f28a3
+                        ddl_action: alter
+                           message:
+                       eta_seconds: 0
+                       rows_copied: 0
+                        table_rows: 0
+                 added_unique_keys: 0
+               removed_unique_keys: 0
+                          log_file:
+          retain_artifacts_seconds: 86400
+               postpone_completion: 0
+          removed_unique_key_names:
+   dropped_no_default_column_names:
+             expanded_column_names:
+                  revertible_notes:
+                  allow_concurrent: 0
+                     reverted_uuid:
+                           is_view: 0
+                 ready_to_complete: 1
+         vitess_liveness_indicator: 1697370514
+               user_throttle_ratio: 0
+                      special_plan:
+          last_throttled_timestamp: NULL
+               component_throttled:
+               cancelled_timestamp: NULL
+                   postpone_launch: 0
+                             stage: re-enabling writes
+                  cutover_attempts: 1
+            is_immediate_operation: 0
+                reviewed_timestamp: 2023-10-15 11:48:31
+       ready_to_complete_timestamp: 2023-10-15 11:48:35
  in_order_completion_pending_count: 0
 ```
 
