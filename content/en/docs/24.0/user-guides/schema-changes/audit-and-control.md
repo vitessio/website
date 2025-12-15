@@ -154,6 +154,7 @@ dropped_no_default_column_names:
          is_immediate_operation: 0
              reviewed_timestamp: 2023-10-15 11:48:31
     ready_to_complete_timestamp: 2023-10-15 11:48:35
+ in_order_completion_pending_count: 0
 ```
 
 ```sql

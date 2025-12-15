@@ -35,6 +35,7 @@ Vitess respects the following flags. They can be combined unless specifically in
   - This lets the user submit multiple migrations which may have some dependencies (for example, introduce two views, one of which reads from the other). As long as the migrations are submitted in a valid order, the user can then expect `vitess` to complete the migrations successfully (and in that order).
   - This strategy flag applies to any `CREATE|DROP TABLE|VIEW` statements, and to `ALTER TABLE` with `vitess|online` strategy.
   - It _does not_ apply to `ALTER TABLE` when using the `mysql`, or `direct` strategies.
+  - When using `--in-order-completion`, the `in_order_completion_pending_count` field in the migration output tracks how many migrations are blocking the current migration from completing. When greater than `0`, the migration is waiting for earlier migrations to finish. The value updates automatically as migrations complete and clears when the migration finishes (successfully or otherwise).
 
 - `--postpone-completion`: initiate a migration that will only cut-over per user command, i.e. will not auto-complete. This gives the user control over the time when the schema change takes effect. See [postponed migrations](../postponed-migrations).
 
