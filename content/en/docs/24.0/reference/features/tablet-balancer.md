@@ -120,9 +120,11 @@ tablet pool to specific cells, but it's not required.
 
 The session balancer ensures that a session always reads from the same replica to maintain monotonic consistency. Without this, a connection might read a value from one tablet, then get routed to a different tablet with higher replication lag and read an older value, effectively reading "backwards in time."
 
-The session balancer uses rendezvous hashing (also called highest random weight hashing) to route each session to the same tablet throughout its lifetime. Rendezvous hashing ensures minimal connections moving when tablets enter or leave the pool. For each session, it computes a hash weight for every available tablet using the tablet's alias and the session's unique identifier. The tablet with the highest weight is selected; as this process is deterministic, the same session always routes to the same tablet.
+The session balancer uses rendezvous hashing (also called highest random weight hashing) to route each session to the same tablet throughout its lifetime. Rendezvous hashing ensures minimal connections move when tablets enter or leave the pool. For each session, it computes a hash weight for every available tablet using the tablet's alias and the session's unique identifier. The tablet with the highest weight is selected; as this process is deterministic, the same session always routes to the same tablet.
 
 The algorithm prefers tablets in the local cell to minimize latency. If there are no available tablets in the local cell, the balancer will route traffic to external cells as a fallback.
+
+Note that there are still cases where the monotonic consistency guarantee can be broken. For example, if a session is currently connected to a specific tablet, and that tablet goes down or goes out of serving, the session balancer will automatically route the session to a new, healthy tablet. If the new tablet is not as up-to-date as the previous tablet, the session may observe an older value for the same read.
 
 **When to use session mode:**
 * Your application requires monotonic consistency within a session
