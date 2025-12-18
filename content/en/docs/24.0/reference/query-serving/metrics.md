@@ -51,11 +51,11 @@ By analyzing these metrics, users can fine-tune query execution, reduce latency,
 
 ## QueryThrottler Metrics
 
-The [QueryThrottler](../QueryThrottler/) is a VTTablet component that evaluates queries to determine if they should be throttled based on configurable throttling strategies. VTTablet exposes several metrics to monitor [QueryThrottler](../QueryThrottler/) activity.
+The [QueryThrottler](../../features/query-throttler/) is a VTTablet component that evaluates queries to determine if they should be throttled based on configurable throttling strategies. VTTablet exposes several metrics to monitor [QueryThrottler](../../features/query-throttler/) activity.
 
 ### Available Metrics
 
-VTTablet exposes the following metrics for monitoring [QueryThrottler](../QueryThrottler/) activity:
+VTTablet exposes the following metrics for monitoring [QueryThrottler](../../features/query-throttler/) activity:
 
 #### QueryThrottlerRequests
 
