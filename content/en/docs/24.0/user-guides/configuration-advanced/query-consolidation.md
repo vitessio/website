@@ -16,6 +16,20 @@ Flags:
 * `--enable-consolidator-replicas`: Only enable query consolidation on non-primary tablets.
 * `--consolidator-query-waiter-cap`: The maximum number of clients allowed to wait on the consolidator for each query. No limit by default.
 
+## Waiter Cap Behavior
+
+The `--consolidator-query-waiter-cap` flag limits the number of clients that can wait for the result of an already-executing identical query. This helps prevent resource exhaustion when many duplicate queries arrive simultaneously.
+
+When the waiter cap is reached for a particular query, additional queries will not wait for the consolidated result. Instead, they fall back to independent execution. Each query executes separately and returns its own result.
+
+For example, if you set `--consolidator-query-waiter-cap=10` and 15 identical queries arrive while the first query is still executing:
+
+* The first query executes normally
+* Queries 2-11 wait for the result (10 waiters)
+* Queries 12-15 exceed the cap and execute independently
+
+This fallback mechanism ensures all queries return correct results, even under heavy load. The waiter cap still provides resource protection by limiting how many queries can be waiting at once.
+
 ## Consistency
 
 It is important to note that in some cases read-after-write consistency can be lost.
