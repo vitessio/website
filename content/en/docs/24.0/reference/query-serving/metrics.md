@@ -12,6 +12,7 @@ These updates help users track query performance, identify costly execution plan
 Vitess now classifies query plans based on their execution strategies, allowing for more precise execution decisions.
 
 The classifications include:
+
 * `Local`: Queries executed locally on VTGate without involving any shard.
 * `Passthrough`: Queries forwarded to single shard without having any additional processing at VTGate.
 * `MultiShard`: Queries executed across multiple shards with controlled routing.
@@ -50,18 +51,19 @@ By analyzing these metrics, users can fine-tune query execution, reduce latency,
 
 ## QueryThrottler Metrics
 
-The QueryThrottler is a VTTablet component that evaluates queries to determine if they should be throttled based on configurable throttling strategies. VTTablet exposes several metrics to monitor QueryThrottler activity.
+The [QueryThrottler](../QueryThrottler/) is a VTTablet component that evaluates queries to determine if they should be throttled based on configurable throttling strategies. VTTablet exposes several metrics to monitor [QueryThrottler](../QueryThrottler/) activity.
 
 ### Available Metrics
 
-VTTablet exposes the following metrics for monitoring QueryThrottler activity:
+VTTablet exposes the following metrics for monitoring [QueryThrottler](../QueryThrottler/) activity:
 
 #### QueryThrottlerRequests
 
 Tracks the total number of requests evaluated by the query throttler.
 
 **Labels:**
-* `Strategy`: The throttling strategy being used (e.g., "TabletThrottlerStrategy")
+
+* `Strategy`: The throttling strategy being used (e.g., `TabletThrottler`)
 * `Workload`: The client application workload name from the `WORKLOAD_NAME` comment directive
 * `Priority`: The query priority value (0-100) determining query throttling preference (lower = higher priority)
 
@@ -70,6 +72,7 @@ Tracks the total number of requests evaluated by the query throttler.
 Tracks the number of requests that were throttled by the query throttler.
 
 **Labels:**
+
 * `Strategy`: The throttling strategy being used
 * `Workload`: The client application workload name from the `WORKLOAD_NAME` comment directive
 * `Priority`: The query priority value (0-100) determining query throttling preference (lower = higher priority)
@@ -82,15 +85,17 @@ Tracks the number of requests that were throttled by the query throttler.
 Measures the total latency in nanoseconds for each throttling request from entry to exit, including evaluation, metric checks, and all overhead.
 
 **Labels:**
+
 * `Strategy`: The throttling strategy being used
 * `Workload`: The client application workload name from the `WORKLOAD_NAME` comment directive
 * `Priority`: The query priority value (0-100) determining query throttling preference (lower = higher priority)
 
 #### QueryThrottlerEvaluateLatencyNs
 
-Measures the latency in nanoseconds of the strategy evaluation phase, specifically the time taken to make the throttling decision. 
+Measures the latency in nanoseconds of the strategy evaluation phase, specifically the time taken to make the throttling decision.
 
 **Labels:**
+
 * `Strategy`: The throttling strategy being used
 * `Workload`: The client application workload name from the `WORKLOAD_NAME` comment directive
 * `Priority`: The query priority value (0-100) determining query throttling preference (lower = higher priority)
@@ -98,6 +103,7 @@ Measures the latency in nanoseconds of the strategy evaluation phase, specifical
 ### Using QueryThrottler Metrics
 
 You can use these metrics to:
+
 * Monitor queries being evaluated for throttling
 * Track throttling rates by strategy, workload, and priority
 * Identify which metrics are triggering throttling decisions
