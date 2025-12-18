@@ -3,7 +3,7 @@ title: Query Throttler
 weight: 22
 ---
 
-VTTablet runs a query throttler that protects tablets from being overloaded by incoming queries. Unlike the [Tablet Throttler](../tablet-throttler/), which manages outgoing operations like VReplication and Online DDL, the query throttler manages incoming user queries to prevent database overload.
+VTTablet runs a query throttler that protects tablets from being overloaded by incoming queries. Unlike the [Tablet Throttler](../tablet-throttler/), which manages outgoing operations like VReplication and OnlineDDL, the query throttler manages incoming user queries to prevent database overload.
 
 ## Why throttle incoming queries?
 
@@ -30,7 +30,7 @@ The throttler adds minimal overhead in healthy conditions (typically less than 5
 
 ## Architecture
 
-The query throttler uses a pluggable architecture:
+The query throttler uses a pluggable strategy architecture.
 
 ### Strategies
 
@@ -43,8 +43,6 @@ The throttler supports different throttling strategies, which can be selected vi
 ### Configuration
 
 The throttler loads configuration from a JSON file at `/config/throttler-config.json` by default. Configuration is refreshed periodically (default: every 1 minute) without requiring tablet restarts.
-
-## Configuration
 
 ### Basic configuration
 
@@ -82,14 +80,15 @@ When using the `TabletThrottler` strategy, you can define rules for different ta
 ```
 
 This configuration:
+
 - Enables the throttler
-- Uses the TabletThrottler strategy
-- Applies a rule to PRIMARY tablets for INSERT statements
-- When replication lag exceeds 10 seconds, throttles 25% of INSERT queries
+- Uses the `TabletThrottler` strategy
+- Applies a rule to `PRIMARY` tablets for `INSERT` statements
+- When replication lag exceeds 10 seconds, throttles 25% of `INSERT` queries
 
 ### Advanced configuration
 
-You can define multiple thresholds for graduated throttling and monitor multiple metrics:
+You can define multiple thresholds for graduated throttling along with monitoring multiple metrics:
 
 ```json
 {
@@ -142,17 +141,18 @@ You can define multiple thresholds for graduated throttling and monitor multiple
 ```
 
 This configuration:
-- Sets different rules for PRIMARY and REPLICA tablets
+
+- Sets different rules for `PRIMARY` and `REPLICA` tablets
 - Uses graduated thresholds (higher metric values trigger more aggressive throttling)
-- Monitors multiple metrics simultaneously (lag, threads_running, loadavg)
-- Applies different rules for different SQL statement types (INSERT, UPDATE, SELECT)
+- Monitors multiple metrics simultaneously (`lag`, `threads_running`, `loadavg`)
+- Applies different rules for different SQL statement types (`INSERT`, `UPDATE`, `SELECT`)
 
 ### Supported metrics
 
-The TabletThrottler strategy can monitor the same metrics as the [Tablet Throttler](../tablet-throttler/):
+The `TabletThrottler` strategy can monitor the same metrics as the [Tablet Throttler](../tablet-throttler/):
 
 - `lag`: Replication lag in seconds
-- `threads_running`: MySQL's Threads_running value
+- `threads_running`: MySQL's `Threads_running` status value
 - `loadavg`: Load average per core on the tablet server
 - `mysqld-loadavg`: Load average per core on the MySQL server
 - `custom`: Custom query results
@@ -165,11 +165,11 @@ The query throttler supports priority-based query execution using the `PRIORITY`
 
 ### How priority works
 
-Priority is specified as a value from 0 to 100:
+Priority is specified as a value from 0 to 100, with 0 being the highest priority and 100 the lowest. The value determines whether or not the query is *potentially* throttled based on the current configuration and system state:
 
 - **Priority 0**: Never throttled. Reserved for the most critical queries.
-- **Priority 1-99**: Probabilistically throttled based on the priority value. Higher numbers mean more likely to be throttled.
-- **Priority 100**: Always evaluated for throttling.
+- **Priority 1-99**: Probabilistically throttled based on the priority value. Higher numbers mean it's more likely to be throttled.
+- **Priority 100**: Always evaluated for potential throttling.
 
 If no priority is specified, queries default to priority 100.
 
@@ -192,6 +192,7 @@ The throttler uses probabilistic priority checking:
 3. If the random number is greater than or equal to the priority, allow the query without checking metrics
 
 This means:
+
 - Priority 0 queries always skip throttling (random 0-99 is never < 0)
 - Priority 50 queries are checked 50% of the time
 - Priority 100 queries are always checked
@@ -213,10 +214,11 @@ The query throttler emits several metrics:
 - `QueryThrottlerRequests`: Total number of queries evaluated by the throttler
 - `QueryThrottlerThrottled`: Number of queries that were throttled
 - `QueryThrottlerTotalLatencyNs`: Total latency added by throttler evaluation
-- `QueryThrottlerEvaluateLatencyNs`: Latency of throttling decision evaluation
+- `QueryThrottlerEvaluateLatencyNs`: Latency of the throttling decision evaluation
 
 These metrics include labels for:
-- `strategy`: The throttling strategy used (NoOp, TabletThrottler)
+
+- `strategy`: The throttling strategy used (`NoOp`, `TabletThrottler`)
 - `workload`: The workload name (if specified via `WORKLOAD_NAME` directive)
 - `priority`: The query priority (if specified via `PRIORITY` directive)
 
@@ -231,6 +233,7 @@ vttablet: rpc error: code = ResourceExhausted desc = [VTTabletThrottler] Query t
 ```
 
 The error message includes:
+
 - The metric that triggered throttling
 - The current metric value
 - The configured threshold
@@ -242,10 +245,10 @@ The query throttler differs from the [Tablet Throttler](../tablet-throttler/):
 
 | Feature | Tablet Throttler | Query Throttler |
 |---------|------------------|-----------------|
-| **Purpose** | Throttles outgoing operations (VReplication, Online DDL) | Throttles incoming user queries |
+| **Purpose** | Throttles outgoing operations (VReplication, OnlineDDL) | Throttles incoming user queries |
 | **What it protects** | Prevents background jobs from overloading the database | Prevents user queries from overloading the database |
-| **Default behavior** | Enabled by default | Disabled by default (NoOp strategy) |
-| **Strategies** | Single strategy | Pluggable strategies (NoOp, TabletThrottler, custom) |
+| **Default behavior** | Enabled by default | Disabled by default (`NoOp` strategy) |
+| **Strategies** | Single strategy | Pluggable strategies (`NoOp`, `TabletThrottler`, or custom) |
 
 Both throttlers can monitor the same set of metrics and can coexist in the same cluster.
 
@@ -260,7 +263,7 @@ The query throttler adds minimal overhead:
 
 ## Best practices
 
-1. **Start with NoOp**: Begin with the NoOp strategy to ensure the throttler is working without impacting traffic
+1. **Start with NoOp**: Begin with the `NoOp` strategy to ensure the throttler is working without impacting traffic
 2. **Use priority carefully**: Reserve priority 0 for truly critical queries only
 3. **Set graduated thresholds**: Use multiple threshold levels to gradually increase throttling as metrics worsen
 4. **Monitor metrics**: Watch the `QueryThrottlerRequests` and `QueryThrottlerThrottled` metrics to understand throttling behavior
@@ -270,12 +273,12 @@ The query throttler adds minimal overhead:
 
 ## Flags
 
-The query throttler behavior can be configured with vttablet flags:
+The query throttler behavior can be configured with `vttablet` flags:
 
 - `--query-throttler-config-refresh-interval`: How frequently to refresh configuration (default: 1 minute)
 
 ## See also
 
 - [Tablet Throttler](../tablet-throttler/): For throttling outgoing operations
-- [Comment Directives](../../../user-guides/configuration-advanced/comment-directives/): For using PRIORITY and WORKLOAD_NAME
+- [Comment Directives](../../../user-guides/configuration-advanced/comment-directives/): For using `PRIORITY` and `WORKLOAD_NAME`
 - [Query Serving Metrics](../../query-serving/metrics/): For monitoring throttler behavior
