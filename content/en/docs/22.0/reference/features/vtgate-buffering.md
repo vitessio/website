@@ -54,7 +54,7 @@ buffering:
   * `--buffer_max_failover_duration`:  Default: `20s`.  If buffering is active
   longer than this set duration, stop buffering and return errors to the client.
   * `--buffer_window`: Default: `10s`.  The maximum time any individual request
-  should be buffered for. Should probably be less than the value for
+  should be buffered for. This value should not be larger than
   `--buffer_max_failover_duration`. Adjust according to your application
   requirements. Be aware, if your MySQL client has  `write_timeout` or
   `read_timeout` settings those values should be greater than the
