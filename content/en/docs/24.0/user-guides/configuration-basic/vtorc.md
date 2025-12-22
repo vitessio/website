@@ -32,6 +32,7 @@ You can bring VTOrc using the following invocation:
 vtorc --topo-implementation etcd2 \
   --topo-global-server-address "localhost:2379" \
   --topo-global-root /vitess/global \
+  --cell zone1 \
   --port 15000 \
   --log-dir=${VTDATAROOT}/tmp \
   --recovery-period-block-duration "10m" \
@@ -41,6 +42,12 @@ vtorc --topo-implementation etcd2 \
  ```
 
 You can optionally add a `clusters_to_watch` flag that contains a comma separated list of keyspaces or `keyspace/shard` values. If specified, VTOrc will manage only those clusters.
+
+### Cell Awareness
+
+Starting in v24, VTOrc supports the `--cell` flag to specify which cell the VTOrc instance is running in. This flag is optional in v24 but will become required in v25 and later versions.
+
+The `--cell` flag enables VTOrc to be cell-aware, which will be used in future releases for cross-cell problem validation. When specified, VTOrc validates that the cell exists in the topology. If the cell doesn't exist, VTOrc will fail to start. If the flag is not provided in v24, VTOrc will log a warning but continue to operate normally.
 
 
 ### Durability Policies
