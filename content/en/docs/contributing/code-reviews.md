@@ -13,7 +13,7 @@ It is very important the changes made by contributors do not break any existing 
 In order to avoid disruption, the following concerns need to be kept in mind:
 
 * Does the change affect any external APIs? If so, make sure the change satisfies the [compatibility rules](https://github.com/vitessio/enhancements/blob/main/veps/vep-3.md).
-* Can the change introduce a performance regression? If so, it will be good to measure the impact using benchmarks. To run the micro and macro benchmarks via [arewefastyet](https://github.com/vitessio/arewefastyet) just add the label `Benchmark me` to the PR.
+* Can the change introduce a performance regression? If so, it will be good to measure the impact using benchmarks. To run the micro and macro benchmarks via [arewefastyet](https://github.com/vitessio/arewefastyet) just add the label `Benchmark me` to the PR. You'll get an automated comment with a link to track the benchmarking progress.
 * If the change is substantial or is a breaking change, you must publish the proposal as an issue with a title like `RFC: Changing behavior of feature xxx`. Following this, sufficient time has to be given for others to give feedback. A breaking change must still satisfy the compatibility rules.
 * New features that affect existing behavior must be introduced "behind a flag". Users will then be encouraged to enable them, but will have the option to fallback to the old behavior if issues are found.
 
@@ -92,9 +92,24 @@ During discussions, you can also refer to somebody using the *@username* syntax 
 
 If you want to receive notifications even when you aren't mentioned, you can go to the [repository page](https://github.com/vitessio/vitess) and click *Watch*.
 
+## Automatic PR Labels
+
+When you open a new pull request, several labels are automatically added as reminders:
+
+* `NeedsWebsiteDocsUpdate` - Update the documentation in the vitessio/website repository if your change affects user-facing behavior.
+* `NeedsDescriptionUpdate` - Provide a detailed description of your changes following the PR template.
+* `NeedsIssue` - Link to a GitHub issue that describes the bug or enhancement.
+* `NeedsBackportReason` - Justify backporting if you've added "Backport to:" labels.
+
+These labels work as a checklist. Remove each label as you complete the corresponding item.
+
+## Error Code Documentation
+
+If your PR modifies `go/vt/vterrors/code.go`, an automated workflow will create a corresponding pull request in the [vitessio/website](https://github.com/vitessio/website) repository to update the error code documentation. The automation handles this for you, so you don't need to manually update the website documentation for error code changes.
+
 ## Reviewing a Pull Request
 
-The [Vitess bot](https://github.com/apps/vitess-bot) will add a comment with a review checklist on every pull request.
+A review checklist comment will be automatically added to every pull request.
 Reviewers should go through this list and mark the items as checked as they go along. If anything is incomplete, changes to the PR can be requested until 
 all the items on the checklist are satisfied.
 
