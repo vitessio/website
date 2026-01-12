@@ -160,11 +160,7 @@ There are some key details to keep in mind if you will be creating and managing 
 
 ## View Routing Rules
 
-Starting in v24.0, Vitess supports routing rules for views.
-
-### How View Routing Rules Work
-
-View routing rules can be applied the same as tables with `vtctldclient ApplyRoutingRules`. When a view routing rule is active, VTGate will rewrite queries referencing the source view using the target view's definition instead. For example, consider a view defined in the source keyspace:
+Starting in v24.0, Vitess supports routing rules for views. View routing rules can be applied the same as tables with `vtctldclient ApplyRoutingRules`. When a view routing rule is active, VTGate will rewrite queries referencing the source view using the target view's definition instead. For example, consider a view defined in the source keyspace:
 
 ```sql
 CREATE VIEW source_ks.user_view AS SELECT id, name FROM user;
