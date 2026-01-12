@@ -5,7 +5,7 @@ aliases: ['/docs/schema-management/routing-rules/','/docs/reference/schema-routi
 ---
 
 The Vitess routing rules feature is a powerful mechanism for directing query traffic to the right keyspaces, shards, and tablet types in
-[Vitess Gateways](../../../concepts/vtgate/) (`vtgate`). Their primary usage today is for the following use case:
+[Vitess Gateways](../../../concepts/vtgate/) (`vtgate`). Routing rules support both tables and views. Their primary usage today is for the following use case:
 
 * **Routing traffic during data migrations**: during e.g. [`MoveTables`](../../vreplication/movetables/) and
   [`Reshard`](../../vreplication/reshard/) operations, routing rules dictate where to send reads and writes. These routing rules are managed
@@ -157,3 +157,64 @@ There are some key details to keep in mind if you will be creating and managing 
       ]
     }
     ```
+
+## View Routing Rules
+
+Starting in v24.0, Vitess supports routing rules for views.
+
+### How View Routing Rules Work
+
+View routing rules can be applied the same as tables with `vtctldclient ApplyRoutingRules`. When a view routing rule is active, VTGate will rewrite queries referencing the source view using the target view's definition instead. For example, consider a view defined in the source keyspace:
+
+```sql
+CREATE VIEW source_ks.user_view AS SELECT id, name FROM user;
+```
+
+And a corresponding view in the target keyspace:
+
+```sql
+CREATE VIEW target_ks.user_view AS SELECT id, name FROM user;
+```
+
+You can apply a routing rule to redirect queries from `source_ks.user_view` to `target_ks.user_view`:
+
+```json
+{
+  "rules": [
+    {
+      "from_table": "user_view",
+      "to_tables": ["target_ks.user_view"]
+    },
+    {
+      "from_table": "source_ks.user_view",
+      "to_tables": ["target_ks.user_view"]
+    },
+    {
+      "from_table": "source_ks.user_view@replica",
+      "to_tables": ["target_ks.user_view"]
+    }
+  ]
+}
+```
+
+With these routing rules in place, when you execute:
+
+```sql
+SELECT * FROM source_ks.user_view;
+```
+
+VTGate will rewrite the query to use the target view's definition:
+
+```sql
+SELECT * FROM (SELECT id, name FROM target_ks.user) AS user_view;
+```
+
+### Requirements and Configuration
+
+To use view routing rules, you must enable view tracking in your Vitess deployment:
+
+1. **VTGate**: Add the `--enable-views` flag when starting VTGate.
+2. **VTTablet**: Add the `--queryserver-enable-views` flag when starting VTTablet.
+
+These flags enable the schema tracker to monitor and track views alongside tables, making view information available for routing decisions.
+
