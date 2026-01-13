@@ -28,9 +28,9 @@ each tablet.
 
 ## Balancer Modes
 
-However, in some topologies, a simple affinity algorithm does not effectively balance the load.
-VTGate provides two additional balancer modes to address different topology and traffic patterns:
-**prefer-cell** and **random**.
+However, you may want more control over how traffic gets balanced across tablets.
+VTGate provides three additional balancer modes to address different topology and traffic patterns:
+**prefer-cell**, **random**, and **session**.
 
 ### When Default Policy is Insufficient
 
@@ -116,24 +116,40 @@ guaranteed even load distribution across all tablets, regardless of where traffi
 With the random balancer, you can optionally use `--balancer-vtgate-cells` to restrict the
 tablet pool to specific cells, but it's not required.
 
+### Session Balancer
+
+The session balancer ensures that a session always reads from the same replica to maintain monotonic consistency. Without this, a connection might read a value from one tablet, then get routed to a different tablet with higher replication lag and read an older value, effectively reading "backwards in time."
+
+The session balancer uses rendezvous hashing (also called highest random weight hashing) to route each session to the same tablet throughout its lifetime. Rendezvous hashing ensures minimal connections move when tablets enter or leave the pool. For each session, it computes a hash weight for every available tablet using the tablet's alias and the session's unique identifier. The tablet with the highest weight is selected; as this process is deterministic, the same session always routes to the same tablet.
+
+The algorithm prefers tablets in the local cell to minimize latency. If there are no available tablets in the local cell, the balancer will route traffic to external cells as a fallback.
+
+Note that there are still cases where the monotonic consistency guarantee can be broken. For example, if a session is currently connected to a specific tablet, and that tablet goes down or goes out of serving, the session balancer will automatically route the session to a new, healthy tablet. If the new tablet is not as up-to-date as the previous tablet, the session may observe an older value for the same read.
+
+**When to use session mode:**
+* Your application requires monotonic consistency within a session
+* Session stickiness is more important than absolute load distribution
+* You want to eliminate the possibility of "backwards" reads due to replication lag differences
+
 ## Configuration
 
-VTGate provides three balancer modes, controlled by the `--vtgate-balancer-mode` flag:
+VTGate provides four balancer modes, controlled by the `--vtgate-balancer-mode` flag:
 
 ### Balancer Mode Selection
 
 * **`--vtgate-balancer-mode=cell`** (default): Uses local cell affinity random choice (default policy described above)
 * **`--vtgate-balancer-mode=prefer-cell`**: Uses the prefer-cell balancer algorithm
 * **`--vtgate-balancer-mode=random`**: Uses uniform random selection across all tablets
+* **`--vtgate-balancer-mode=session`**: Uses the session balancer algorithm to maintain session stickiness
 
 ### Configuration Flags
 
-* **`--vtgate-balancer-mode`**: Specifies which balancer mode to use (cell, prefer-cell, or random). Defaults to `cell`.
+* **`--vtgate-balancer-mode`**: Specifies which balancer mode to use (cell, prefer-cell, random, or session). Defaults to `cell`.
 
 * **`--balancer-vtgate-cells`**: Comma-separated list of cells that contain vtgates.
   * **Required** for `prefer-cell` mode
   * **Optional** for `random` mode (filters tablets to specified cells if provided)
-  * Ignored for `cell` mode
+  * Ignored for `cell` and `session` modes
 
 * **`--balancer-keyspaces`**: Comma-separated list of keyspaces for which to use the configured balancer mode. If empty, applies to all keyspaces. This allows gradual rollout of balancer modes.
 
