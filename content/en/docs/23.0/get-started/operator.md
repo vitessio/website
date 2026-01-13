@@ -68,7 +68,8 @@ In this directory, you will see a group of yaml files. The first digit of each f
 ```bash
 kubectl apply -f 101_initial_cluster.yaml
 ```
-{{}}If it's not a minikube cluster, and the backup engine is xtrabackup, please configure the locations to file, gcs, s3, ceph, etc., or customize pvc.{{}}
+
+{{<info>}} If it's not a minikube cluster, and the backup engine is xtrabackup, please configure the locations to file, gcs, s3, ceph, etc., or customize pvc.{{<info>}}
 
 for example
 ```yaml
