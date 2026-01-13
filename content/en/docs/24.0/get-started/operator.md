@@ -69,6 +69,20 @@ In this directory, you will see a group of yaml files. The first digit of each f
 kubectl apply -f 101_initial_cluster.yaml
 ```
 
+{{< info >}}
+If you are not a running the examples in a minikube cluster, and the backup engine is xtrabackup, then you will need to configure a proper shared storage resource that can be used across pods, or you will need to create a custom PVC to be used by the backdup engine. For example:
+
+```yaml
+  backup:
+    engine: xtrabackup
+    locations:
+      - volume:
+          persistentVolumeClaim:
+            claimName: vitess-backup-pvc # required ReadWriteMany
+```
+
+{{</ info >}}
+
 ### Verify cluster
 
 You can check the state of your cluster with `kubectl get pods -n example`. After a few minutes, it should show that all pods are in the status of running:
