@@ -69,9 +69,9 @@ In this directory, you will see a group of yaml files. The first digit of each f
 kubectl apply -f 101_initial_cluster.yaml
 ```
 
-{{<info>}} If it's not a minikube cluster, and the backup engine is xtrabackup, please configure the locations to file, gcs, s3, ceph, etc., or customize pvc. {{</info>}}
+{{< info >}}
+If you are not a running the examples in a minikube cluster, and the backup engine is xtrabackup, then you will need to configure a proper shared storage resource that can be used across pods, or you will need to create a custom PVC to be used by the backdup engine. For example:
 
-for example
 ```yaml
   backup:
     engine: xtrabackup
@@ -80,6 +80,8 @@ for example
           persistentVolumeClaim:
             claimName: vitess-backup-pvc # required ReadWriteMany
 ```
+
+{{</ info >}}
 
 ### Verify cluster
 
