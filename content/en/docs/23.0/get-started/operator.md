@@ -70,7 +70,7 @@ kubectl apply -f 101_initial_cluster.yaml
 ```
 
 {{< info >}}
-If you are not a running the examples in a minikube cluster, and the backup engine is xtrabackup, then you will need to configure a proper shared storage resource that can be used across pods, or you will need to create a custom PVC to be used by the backdup engine. For example:
+If you are not a running the examples in a minikube cluster, and the backup engine is xtrabackup, then you will need to configure a proper shared storage resource that can be used across pods, or you will need to create a custom PVC to be used by the backup engine. For example:
 
 ```yaml
   backup:
