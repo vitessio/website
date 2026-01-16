@@ -101,6 +101,9 @@ vtbackup [flags]
       --db-appdebug-use-ssl                                         Set this flag to false to make the appdebug connection to not use ssl (default true)
       --db-appdebug-user string                                     db appdebug user userKey (default "vt_appdebug")
       --db-charset string                                           Character set/collation used for this tablet. Make sure to configure this to a charset/collation supported by the lowest MySQL version in your environment. (default "utf8mb4")
+      --db-clone-password string                                    db clone password
+      --db-clone-use-ssl                                            Set this flag to false to make the clone connection to not use ssl (default true)
+      --db-clone-user string                                        db clone user userKey (default "vt_clone")
       --db-conn-query-info                                          enable parsing and processing of QUERY_OK info fields
       --db-connect-timeout-ms int                                   connection timeout to mysqld in milliseconds (0 for no timeout)
       --db-credentials-file string                                  db credentials file; send SIGHUP to reload this file
@@ -148,10 +151,6 @@ vtbackup [flags]
       --gcs-backup-storage-bucket string                            Google Cloud Storage bucket to use for backups.
       --gcs-backup-storage-root string                              Root prefix for all backup-related object names.
       --grpc-auth-static-client-creds string                        When using grpc_static_auth in the server, this file provides the credentials to use to authenticate with server.
-      --init-backup-sql-fail-on-error                               Whether or not to fail the backup if the init SQL queries (--init-backup-sql-queries) fail, which includes if they fail to complete before the specified timeout (--init-backup-sql-timeout)
-      --init-backup-sql-queries strings                             Queries to execute before initializing the backup
-      --init-backup-sql-timeout duration                            At what point should we time out the init SQL query (--init-backup-sql-queries) work and either fail the backup job (--init-backup-sql-fail-on-error) or continue on with the backup
-      --init-backup-tablet-types strings                            Tablet types used for the backup where the init SQL queries (--init-backup-sql-queries) will be executed before initializing the backup
       --grpc-compression string                                     Which protocol to use for compressing gRPC. Default: nothing. Supported: snappy
       --grpc-dial-concurrency-limit int                             Maximum concurrency of grpc dial operations. This should be less than the golang max thread limit of 10000. (default 1024)
       --grpc-enable-tracing                                         Enable gRPC tracing.
@@ -163,6 +162,10 @@ vtbackup [flags]
       --grpc-prometheus                                             Enable gRPC monitoring with Prometheus.
   -h, --help                                                        help for vtbackup
       --incremental-from-pos string                                 Position, or name of backup from which to create an incremental backup. Default: empty. If given, then this backup becomes an incremental backup from given position or given backup. If value is 'auto', this backup will be taken from the last successful backup position.
+      --init-backup-sql-fail-on-error                               Whether or not to fail the backup if the init SQL queries (--init-backup-sql-queries) fail, which includes if they fail to complete before the specified timeout (--init-backup-sql-timeout)
+      --init-backup-sql-queries strings                             Queries to execute before initializing the backup
+      --init-backup-sql-timeout duration                            At what point should we time out the init SQL query (--init-backup-sql-queries) work and either fail the backup job (--init-backup-sql-fail-on-error) or continue on with the backup
+      --init-backup-tablet-types strings                            Tablet types used for the backup where the init SQL queries (--init-backup-sql-queries) will be executed before initializing the backup
       --init-db-name-override string                                (init parameter) override the name of the db used by vttablet
       --init-db-sql-file string                                     path to .sql file to run after mysql_install_db
       --init-keyspace string                                        (init parameter) keyspace to use for this tablet
@@ -174,8 +177,8 @@ vtbackup [flags]
       --lock-timeout duration                                       Maximum time to wait when attempting to acquire a lock from the topo server (default 45s)
       --log-err-stacks                                              log stack traces for errors
       --log-rotate-max-size uint                                    size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
-      --log-backtrace-at traceLocations                             when logging hits line file:N, emit a stack trace
-      --log-dir string                                              If non-empty, write log files in this directory
+      --log_backtrace_at traceLocations                             when logging hits line file:N, emit a stack trace
+      --log_dir string                                              If non-empty, write log files in this directory
       --logtostderr                                                 log to standard error instead of files
       --manifest-external-decompressor string                       command with arguments to store in the backup manifest when compressing a backup with an external compression engine.
       --min-backup-interval duration                                Only take a new backup if it's been at least this long since the most recent backup.
