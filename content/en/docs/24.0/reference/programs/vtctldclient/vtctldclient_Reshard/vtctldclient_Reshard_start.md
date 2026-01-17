@@ -19,7 +19,8 @@ vtctldclient --server localhost:15999 Reshard --workflow cust2cust --target-keys
 ### Options
 
 ```
-  -h, --help   help for start
+  -h, --help             help for start
+      --shards strings   (Optional) Specifies a comma-separated list of shards to operate on.
 ```
 
 ### Options inherited from parent commands
