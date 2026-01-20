@@ -185,8 +185,7 @@ This variable determines at what point VReplication considers the workflow to be
 **Default** false\
 **Applicable on** target
 
-When set to true, the target tablet will store the GTID set/position in a compressed binary format. This is useful when the GTID is large and you want to save space in the `_vt.vreplication` table. Changing this should not typically be necessary but
-it is available in the event that you bump up against the limit of the [`pos` column used in the `vreplication` sidecar database table](https://github.com/vitessio/vitess/blob/main/go/vt/sidecardb/schema/vreplication/vreplication.sql).
+When set to true, the target tablet stores the GTID set/position in a compressed binary format. This is useful for saving space in the `_vt.vreplication` table when GTID sets grow large (common in larger clusters after many failover operations over time). Most deployments don't need this, but it can help reduce storage overhead in the sidecar database for environments with exceptionally large GTID sets.
 
 #### vstream-binlog-rotation-threshold
 
