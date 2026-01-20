@@ -119,6 +119,32 @@ SELECT *
 FROM other_keyspace.table;
 ```
 
+#### Tablet-Specific Targeting
+
+Route queries to a specific tablet by alias:
+
+```sql
+USE `keyspace:shard@tablet_type|tablet_alias`;
+```
+
+For example, to target a specific replica tablet:
+
+```sql
+USE `commerce:-80@replica|zone1-0000000100`;
+```
+
+All subsequent queries route to the specified tablet until you issue a standard `USE keyspace` or `USE keyspace@tablet_type` statement.
+
+Constraints:
+- A shard must be specified
+- Bypasses vindex-based routing (like shard targeting)
+- Cannot change tablet target mid-transaction
+
+Use cases:
+- Debugging specific tablet behavior
+- Per-tablet monitoring or cache warming
+- Operational tasks requiring stable routing to a specific tablet
+
 ### Common Table Expressions
  - Non-recursive CTEs are supported.
  - Recursive CTEs have experimental support; feedback is encouraged.
