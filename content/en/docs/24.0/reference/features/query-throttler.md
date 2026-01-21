@@ -42,7 +42,9 @@ The throttler supports different throttling strategies, which can be selected vi
 
 ### Configuration
 
-The throttler loads configuration from a JSON file at `/config/throttler-config.json` by default. Configuration is refreshed periodically (default: every 1 minute) without requiring tablet restarts.
+The query throttler reads its configuration from the topology server's `SrvKeyspace` record. Storing configuration in the topology server means changes propagate immediately to all tablets in the keyspace, without waiting for periodic refreshes. This also centralizes configuration management and makes changes easier to track and audit.
+
+When vttablet starts, it loads the initial configuration from `SrvKeyspace.QueryThrottlerConfig` and then watches for subsequent changes. Updates are applied automatically without requiring tablet restarts.
 
 ### Basic configuration
 
@@ -270,12 +272,6 @@ The query throttler adds minimal overhead:
 5. **Test in development**: Test throttling configurations in non-production environments first
 6. **Combine with workload names**: Use `WORKLOAD_NAME` to track which workloads are being throttled most
 7. **Adjust thresholds**: Start with conservative thresholds and adjust based on observed behavior
-
-## Flags
-
-The query throttler behavior can be configured with `vttablet` flags:
-
-- `--query-throttler-config-refresh-interval`: How frequently to refresh configuration (default: 1 minute)
 
 ## See also
 
