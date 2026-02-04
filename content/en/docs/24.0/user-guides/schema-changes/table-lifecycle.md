@@ -15,7 +15,7 @@ to minutes and more. This is typically less of a problem in Vitess than it might
 be in normal MySQL, if you are keeping your shard instances (and thus shard
 table instances) small, but could still be a problem.
 
-{{< info >}}MySQL 8.0.23 addresses the issues of DROP TABLE. Vitess changes its course of action based on the MySQL version, see below.{{< /info >}}
+{{< info >}}MySQL 8.0.23 and later addresses the issues of DROP TABLE when the [Adaptive Hash Index](https://dev.mysql.com/doc/refman/en/innodb-adaptive-hash.html) (AHI) is disabled. Vitess changes its course of action based on the MySQL version and AHI setting, see below.{{< /info >}}
 
 
 There are two locking aspects to dropping tables:
@@ -66,10 +66,14 @@ Vitess will always work the steps in this order: `hold -> purge -> evac -> drop`
 
 All subsets end with a `drop`, even if not explicitly mentioned. Thus, `"purge"` is interpreted as `"purge,drop"`.
 
-In MySQL **8.0.23** and later, table drops do not acquire locks on the InnoDB buffer pool, and are non-blocking for queries that do not reference the table being dropped. Vitess automatically identifies whether the underlying MySQL server is at that version or later and will:
+In MySQL **8.0.23** and later, table drops do not acquire locks on the InnoDB buffer pool, and are non-blocking for queries that do not reference the table being dropped. However, due to a [MySQL bug](https://bugs.mysql.com/bug.php?id=113312), this only applies when the [Adaptive Hash Index](https://dev.mysql.com/doc/refman/en/innodb-adaptive-hash.html) (AHI) is disabled. AHI is enabled by default in MySQL 8.0 but disabled by default in MySQL 8.4 and later.
+
+Vitess automatically detects the MySQL version and AHI setting. When fast drops are supported and AHI is disabled, Vitess will:
 
 - Implicitly skip the `purge` stage, even if defined
 - Implicitly skip the `evac` stage, even if defined
+
+If you are running MySQL 8.0.x with AHI enabled (the default), Vitess uses the full lifecycle including `purge` and `evac` stages unless you have explicitly modified the `--table-gc-lifecycle` flag to remove them.
 
 ## Stateless flow by table name hints
 
