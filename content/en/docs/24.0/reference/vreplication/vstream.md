@@ -31,6 +31,8 @@ Events in the stream are [MySQL row based binary log events](https://dev.mysql.c
 Other products such as [AirByte](https://airbyte.com) can also be used with [custom
 Vitess connectors](https://docs.airbyte.com/connector-development/).
 
+VStream also handles schema changes that occur while streaming. The [Schema Tracker](../tracker/) maintains versioned schema snapshots so that row events are interpreted using the correct table structure at the time they were written. This requires the [`--track-schema-versions`](../flags/#track-schema-versions) flag on source tablets. The schema tracker is disabled by default because it has overhead, adding another active set of vstreams on the tablets involved. This is primarily useful if you frequently run schema changes that will impact your VTGate VStreams. To manage memory overhead from these schema version snapshots, use the [`--schema-version-max-age-seconds`](../flags/#schema-version-max-age-seconds) flag to prune snapshots older than a specified duration (for example, 1 day or 1 week).
+
 {{< warning >}}
 We recommend Debezium as it has native Vitess support and has been used in production
 environments by many Vitess users.
@@ -338,6 +340,7 @@ VTGates publish vstream metrics listed [here](../metrics/#vtgate-metrics).
 * [VStream Copy](https://github.com/vitessio/vitess/issues/6277)
 * [VStream API and Resharding](../internal/vstream-stream-migration/)
 * [VStream Skew Minimization](../internal/vstream-skew-detection/)
+* [Schema Tracker](../tracker/)
 * Debezium Connector for Vitess
   * [Docs](https://debezium.io/documentation/reference/stable/connectors/vitess.html)
   * [Source](https://github.com/debezium/debezium-connector-vitess/)

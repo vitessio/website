@@ -159,6 +159,18 @@ We caution against against using `EXEC` or `EXEC_IGNORE` for the following reaso
   * The DDL may take a long time to apply on the target and may disrupt replication, performance, and query execution while it is being applied (if serving traffic from the target)
 {{< /warning >}}
 
+### Schema Change Tracking
+
+VStreams must interpret row events using the table schema that was in effect when those events were written. If DDLs are executed on the source, lagging streams could see an incorrect schema version when using only the latest schema.
+
+The [Schema Tracker](../tracker/) solves this by storing versioned schema snapshots. When you enable the [`--track-schema-versions`](../flags/#track-schema-versions) `vttablet` flag, the primary tablet monitors replication for DDL events and stores schema snapshots in the `_vt.schema_version` table. VStreams then retrieve the appropriate schema version for each event based on its GTID position.
+
+{{< info >}}
+The schema tracker is disabled by default because it has overhead, adding another active set of vstreams on the tablets involved. This is primarily useful if you frequently run schema changes that will impact your [VTGate VStreams](../vstream) or VReplication workflows.
+
+To manage memory overhead from these schema version snapshots, use the [`--schema-version-max-age-seconds`](../flags/#schema-version-max-age-seconds) flag to prune snapshots older than a specified duration (for example, 1 day or 1 week).
+{{< /info >}}
+
 ### Failover Continuation
 
 If a failover is performed on the target keyspace/shard, the new primary will
