@@ -211,6 +211,10 @@ On the source, events are buffered and batched where applicable, to minimize net
 
 #### watch-replication-stream
 
+{{< warning >}}
+The `--watch-replication-stream` flag is deprecated and ignored as of v25 — it will be removed in a future release. Use [`--track-schema-versions`](#track-schema-versions) instead.
+{{< /warning >}}
+
 **Type** bool\
 **Default** false\
 **Applicable on** source

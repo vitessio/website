@@ -21,11 +21,7 @@ In addition, reloading schemas is an expensive operation. If there are multiple 
 receive a DDL event resulting in multiple reloads for the same DDL.
 
 {{< info >}}
-For full functionality, schema tracking relies on these non-default Vitess `vttablet` flags:
-[`--watch-replication-stream`](../../flags/#watch-replication-stream) and
-[`--track-schema-versions`](../../flags/#track-schema-versions). Specifically, performing a vstream from a non-PRIMARY
-tablet while concurrently making DDL changes to the keyspace without one or both of these tablet options could result in
-incorrect vstream results.
+For full functionality, schema tracking requires the [`--track-schema-versions`](../../flags/#track-schema-versions) `vttablet` flag. Without this flag, streaming from a non-PRIMARY tablet while DDL changes are being made to the keyspace could produce incorrect results.
 {{< /info >}}
 
 ## Goals
@@ -48,14 +44,9 @@ if the schema changes. It polls for the latest schema at intervals or can be exp
 a tablet using the [`ReloadSchemaKeyspace`](../../../programs/vtctl/schema-version-permissions/#reloadschemakeyspace)
 vtctl client command.
 
-#### Replication Watcher
-
-Replication watcher is a separate vstream that is started by the tabletserver. It notifies subscribers when it encounters
-a DDL in the workflow stream.
-
 #### Version Tracker
 
-Version tracker runs on the `PRIMARY` tablet. It subscribes to the replication watcher and inserts a new row into the
+Version tracker runs on the `PRIMARY` tablet. It monitors the replication stream for DDL events and inserts a new row into the
 `_vt.schema_version` table with the latest schema.
 
 #### Version Historian
@@ -68,8 +59,6 @@ change notification.
 ### Notes
 
 - Schema Engine is an existing service
-- Replication Watcher is used as an optional vstream that the user can run. It doesn’t do anything user specific: it is only
-used for the side-effect that a vstream loads the schema on a DDL to proactively load the latest schema
 
 ## Basic Flow for Version Tracking
 
@@ -77,12 +66,10 @@ used for the side-effect that a vstream loads the schema on a DDL to proactively
 
 #### Version Tracker:
 
-1. When the primary comes up the replication watcher (a vstream) is started from the current `GTID` position. The
-tracker subscribes to the watcher.
+1. When the primary comes up, a vstream is started from the current `GTID` position to monitor replication events
 1. Say, a DDL is applied
-1. The watcher vstream sees the DDL and
-1. Asks the schema engine to reload the schema, also providing the corresponding `GTID` position
-1. Notifies the tracker of a schema change
+1. The vstream sees the DDL and asks the schema engine to reload the schema, providing the corresponding `GTID` position
+1. The tracker is notified of the schema change
 1. Tracker stores its latest schema into the `_vt.schema_version` table associated with the given `GTID` and DDL
 
 #### Historian/VStreams:
@@ -106,47 +93,19 @@ database
 
 ### Primary
 
-Schema version snapshots are stored only on the `PRIMARY`. This is done when the Replication Watcher gets a DDL event
-resulting in a `SchemaUpdated()` call. There are two independent flows here:
+Schema version snapshots are stored only on the `PRIMARY` tablet. When a DDL event is detected, it triggers a `SchemaUpdated()` call.
 
-1. Replication Watcher is running
-2. Schema snapshots are saved to `_vt.schema_version` when `SchemaUpdated()` is called
+When the [`--track-schema-versions`](../../flags/#track-schema-versions) `vttablet` flag is enabled:
+- The replication stream is monitored for DDL events automatically
+- Schema snapshots are saved to `_vt.schema_version` when DDLs are detected
 
-Point 2 is performed only when the [`--track-schema-versions`](../../flags/#track-schema-versions) `vttablet` flag is enabled.
-This implies that #1 also has to happen when [`--track-schema-versions`](../../flags/#track-schema-versions) is enabled
-independently of the [`--watch-replication-stream`](../../flags/#watch-replication-stream) flag.
+The historian behaves the same as on replicas: if no versions are stored in `_vt.schema_versions`, it provides the latest schema.
 
-However if the [`--watch-replication-stream`](../../flags/#watch-replication-stream) flag is enabled but
-[`--track-schema-versions`](../../flags/#track-schema-versions) is disabled we still need to run the Replication
-Watcher since the user has requested it, but we do not store any schema versions.
-
-So the logic is:
-
-1. WatchReplication==true \
-   => Replication Watcher is running
-
-2. TrackSchemaVersions==false  
-   => SchemaUpdated is a noop
-
-3. TrackSchemaVersions=true  
-   => Replication Watcher is running \
-   => SchemaUpdated is handled
-
-The historian behavior is identical to that of the replica: of course if versions are not stored in `_vt.schema_versions`
-it will always provide the latest version of the schema.
+You can use [`--schema-version-max-age-seconds`](../../flags/#schema-version-max-age-seconds) to periodically purge older schema version records from memory. This does not remove the rows stored in the database.
 
 ### Replica
 
-Schema versions are never stored directly on `REPLICA` tablets, so SchemaUpdated is always a noop. Versions are provided
-as appropriate by the historian. The historian provides the latest schema if there is no appropriate version.
-
-So the logic is:
-
-1. WatchReplication==true \
-   => Replication Watcher is running
-
-2. TrackSchemaVersions==false || true //noop \
-   => Historian tries to get appropriate schema version
+`REPLICA` tablets never store schema versions directly, so `SchemaUpdated` is always a noop. The historian provides the appropriate schema version when available, falling back to the latest schema otherwise.
 
 ## Caveat
 
