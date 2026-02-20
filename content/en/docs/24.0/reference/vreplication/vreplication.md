@@ -163,7 +163,7 @@ We caution against against using `EXEC` or `EXEC_IGNORE` for the following reaso
 
 VStreams must interpret row events using the table schema that was in effect when those events were written. If DDLs are executed on the source, lagging streams could see an incorrect schema version when using only the latest schema.
 
-The [Schema Tracker](../internal/tracker/) solves this by storing versioned schema snapshots. When you enable the [`--track-schema-versions`](../flags/#track-schema-versions) `vttablet` flag, the primary tablet monitors replication for DDL events and stores schema snapshots in the `_vt.schema_version` table. VStreams then retrieve the appropriate schema version for each event based on its GTID position.
+The [Schema Tracker](../tracker/) solves this by storing versioned schema snapshots. When you enable the [`--track-schema-versions`](../flags/#track-schema-versions) `vttablet` flag, the primary tablet monitors replication for DDL events and stores schema snapshots in the `_vt.schema_version` table. VStreams then retrieve the appropriate schema version for each event based on its GTID position.
 
 {{< info >}}
 The schema tracker is disabled by default because it has overhead: enabling it effectively doubles the number of active vstreams on the tablets involved. This is primarily useful if you frequently run schema changes that will impact your VStreams or VReplication workflows.

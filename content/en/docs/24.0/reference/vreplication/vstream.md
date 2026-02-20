@@ -31,7 +31,7 @@ Events in the stream are [MySQL row based binary log events](https://dev.mysql.c
 Other products such as [AirByte](https://airbyte.com) can also be used with [custom
 Vitess connectors](https://docs.airbyte.com/connector-development/).
 
-VStream also handles schema changes that occur while streaming. The [Schema Tracker](../internal/tracker/) maintains versioned schema snapshots so that row events are interpreted using the correct table structure at the time they were written. This requires the [`--track-schema-versions`](../flags/#track-schema-versions) flag on source tablets. Enabling the schema tracker has overhead — it effectively doubles the number of active vstreams on the tablets involved — so it's primarily useful if you frequently make schema changes that impact your VStreams. You can use [`--schema-version-max-age-seconds`](../flags/#schema-version-max-age-seconds) to limit storage overhead by pruning older schema snapshots.
+VStream also handles schema changes that occur while streaming. The [Schema Tracker](../tracker/) maintains versioned schema snapshots so that row events are interpreted using the correct table structure at the time they were written. This requires the [`--track-schema-versions`](../flags/#track-schema-versions) flag on source tablets. Enabling the schema tracker has overhead — it effectively doubles the number of active vstreams on the tablets involved — so it's primarily useful if you frequently make schema changes that impact your VStreams. You can use [`--schema-version-max-age-seconds`](../flags/#schema-version-max-age-seconds) to limit storage overhead by pruning older schema snapshots.
 
 {{< warning >}}
 We recommend Debezium as it has native Vitess support and has been used in production
@@ -340,7 +340,7 @@ VTGates publish vstream metrics listed [here](../metrics/#vtgate-metrics).
 * [VStream Copy](https://github.com/vitessio/vitess/issues/6277)
 * [VStream API and Resharding](../internal/vstream-stream-migration/)
 * [VStream Skew Minimization](../internal/vstream-skew-detection/)
-* [Schema Tracker](../internal/tracker/)
+* [Schema Tracker](../tracker/)
 * Debezium Connector for Vitess
   * [Docs](https://debezium.io/documentation/reference/stable/connectors/vitess.html)
   * [Source](https://github.com/debezium/debezium-connector-vitess/)
