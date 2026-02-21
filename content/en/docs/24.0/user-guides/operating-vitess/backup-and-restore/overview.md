@@ -331,3 +331,28 @@ the `--external-compressor` parameter
     - First change the `--compression-engine-name` to a supported one and remove the `--external-compressor`
     - Once the first backup is completed, you can then remove `--external-decompressor`
     - After this all new backups will be done using the new engine. Restoring an older backup will still require the `--external-decompressor` flag to be provided
+
+### Hooks
+
+Vitess supports hooks that run at specific points during backup and restore operations. Hooks are executable scripts that let you integrate with external systems like monitoring, alerting, or notification services.
+
+Place hook scripts in the `${VTROOT}/vthook/` directory on the tablet.
+
+#### vttablet_restore_done
+
+The `vttablet_restore_done` hook runs when a tablet completes a restore, whether the restore succeeded or failed. This hook is useful for:
+
+* Sending notifications when restores complete
+* Updating monitoring or alerting systems
+* Tracking restore metrics and duration
+* Triggering downstream automation based on restore outcomes
+
+The following environment variables are passed to the hook:
+
+| Variable | Description |
+|----------|-------------|
+| `TM_RESTORE_DATA_START_TS` | UTC timestamp when the restore started (RFC3339 format) |
+| `TM_RESTORE_DATA_STOP_TS` | UTC timestamp when the restore ended (RFC3339 format) |
+| `TM_RESTORE_DATA_DURATION` | Total duration of the restore operation (e.g., `5m30s`) |
+| `TM_RESTORE_DATA_BACKUP_ENGINE` | The backup engine used to create the backup being restored (e.g., `builtin`, `xtrabackup`). Not set when restoring from a MySQL clone. |
+| `TM_RESTORE_DATA_ERROR` | Error message if the restore failed. Only set when an error occurred. |
