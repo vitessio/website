@@ -99,6 +99,26 @@ $ vtctldclient --server=localhost:15999 VDiff --format=json --target-keyspace cu
 }
 ```
 
+##### Per-Shard and Per-Table Detail
+
+The JSON output includes a `ShardSummaries` field with per-shard VDiff state and per-table detail. This is useful for API consumers who need to monitor progress or troubleshoot issues on individual shards without querying each tablet directly via SQL.
+
+{{< info >}}
+`ShardSummaries` are only populated when using `--verbose` or when there's a mismatch, consistent with `Reports` and `TableSummary`.
+{{< /info >}}
+
+Each shard summary includes:
+- `State`: The VDiff state for the shard
+- `StartedAt`, `CompletedAt`: Timestamps for when the VDiff started and completed
+- `LastError`: Any error message if the VDiff encountered an issue
+- `TableStates`: A map of table names to their per-table state
+
+Each table state includes:
+- `State`: The VDiff state for the table
+- `RowsCompared`, `MatchingRows`, `MismatchedRows`: Row comparison counts
+- `ExtraRowsSource`, `ExtraRowsTarget`: Count of extra rows found on source or target
+- `HasMismatch`: Whether any mismatches were found for this table
+
 `show all` lists all VDiffs created for the specified keyspace and workflow.
 
 {{< info >}}
