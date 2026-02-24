@@ -20,6 +20,12 @@ During the active move process, data is copied from replicas instead of the prim
 
 During the `SwitchTraffic` phase of the MoveTables operation, for primary tablets, Vitess may be briefly unavailable. This unavailability is usually a few seconds, but will be higher in the event that your system has a high replication delay from primary to replica(s).
 
+## Views Support
+
+As of v24.0, MoveTables can move views alongside tables. Views are recreated in the target keyspace with routing rules, just like tables. The `SwitchTraffic` and `Complete` operations handle views the same way as tables.
+
+By default, MoveTables validates that views only reference tables being moved or tables that already exist in the target keyspace. This prevents broken views on the target. To bypass this validation, use the `--skip-view-validation` flag.
+
 
 **Related Vitess Documentation**
 
