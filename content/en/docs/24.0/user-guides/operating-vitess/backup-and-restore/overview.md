@@ -168,6 +168,15 @@ All three programs can be made aware of Backup Engine and Backup Storage using t
       </td>
     </tr>
     <tr>
+      <td><code>external-decompressor-use-manifest</code></td>
+      <td>
+      Allows the decompressor command stored in the backup manifest to be used at restore time. 
+      This is disabled by default for security reasons: an attacker with write access to backup storage 
+      could modify the manifest to execute arbitrary commands on the tablet as the Vitess user. 
+      Only enable this flag if you trust your backup storage and understand the risks involved.
+      </td>
+    </tr>
+    <tr>
       <td><code>file-backup-storage-root</code></td>
       <td>For the <code>file</code> plugin, this identifies the root directory
         for backups. This path <b>must</b> exist on shared storage to provide a global backup view for all vtctlds and vttablets.
