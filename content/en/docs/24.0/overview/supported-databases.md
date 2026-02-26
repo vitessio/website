@@ -16,6 +16,11 @@ Vitess supports the core features of MySQL 8.0.\* & 8.4.\*,
 with [some limitations](../../reference/compatibility/mysql-compatibility/). Vitess also
 supports [Percona Server for MySQL](https://www.percona.com/software/mysql-database/percona-server) 8.0.\* & 8.4.\*.
 
+{{< warning >}}
+Vitess v24 will be the *final* release with support for MySQL 8.0.
+In Vitess v25 we plan to replace support for MySQL 8.0 with support for [the next MySQL LTS release after 8.4 which should be 9.7](https://dev.mysql.com/doc/refman/en/mysql-releases.html).
+{{</ warning >}}
+
 ## Supported Databases For Imports
 
 Vitess supports importing from a wide range of databases that include: 
