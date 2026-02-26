@@ -21,7 +21,7 @@ VTOrc supports the following APIs which can be used for monitoring and changing 
  | `/api/enable-global-recoveries`  | This API enables the global recoveries in VTOrc.                                                                                                                                                        |
  | `/debug/health`                  | This API outputs the health of the VTOrc process.                                                                                                                                                       |
  | `/debug/liveness`                | This API outputs the liveness of the VTOrc process.                                                                                                                                                     |
-| `/api/replication-analysis`      | This API shows the replication analysis of VTOrc. Output is in JSON format.                                                                                                                             |
+| `/api/detection-analysis`        | This API shows the detection analysis of VTOrc. Output is in JSON format.                                                                                                                               |
 | `/api/errant-gtids`              | This API shows the tablets that have errant GTIDs as detected by VTOrc. Output is in JSON format. This API supports filtering by keyspace and shard name.                                               |
 | `/api/database-state`            | This API shows the internal database state of VTOrc. This API can be used to debug VTOrc.                                                                                                               |
 
