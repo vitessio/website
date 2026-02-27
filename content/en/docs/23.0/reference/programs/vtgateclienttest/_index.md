@@ -59,8 +59,8 @@ vtgateclienttest [flags]
       --lameduck-period duration                                         keep running at least this long after SIGTERM before stopping (default 50ms)
       --log-err-stacks                                                   log stack traces for errors
       --log-rotate-max-size uint                                         size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
-      --log_backtrace_at traceLocations                                  when logging hits line file:N, emit a stack trace
-      --log_dir string                                                   If non-empty, write log files in this directory
+      --log-backtrace-at traceLocations                                  when logging hits line file:N, emit a stack trace
+      --log-dir string                                                   If non-empty, write log files in this directory
       --logtostderr                                                      log to standard error instead of files
       --max-stack-size int                                               configure the maximum stack size in bytes (default 67108864)
       --mysql-server-version string                                      MySQL server version to advertise. (default "8.4.6-Vitess")
@@ -80,4 +80,3 @@ vtgateclienttest [flags]
       --vmodule vModuleFlag                                              comma-separated list of pattern=N settings for file-filtered logging
       --vschema-ddl-authorized-users string                              List of users authorized to execute vschema ddl operations, or '%' to allow all users.
 ```
-

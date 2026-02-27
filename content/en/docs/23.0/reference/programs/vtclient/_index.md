@@ -22,7 +22,7 @@ vtclient <query> [flags]
 ```
 vtclient --server vtgate:15991 "SELECT * FROM messages"
 
-vtclient --server vtgate:15991 --target '@primary' --bind_variables '[ 12345, 1, "msg 12345" ]' "INSERT INTO messages (page,time_created_ns,message) VALUES (:v1, :v2, :v3)"
+vtclient --server vtgate:15991 --target '@primary' --bind-variables '[ 12345, 1, "msg 12345" ]' "INSERT INTO messages (page,time_created_ns,message) VALUES (:v1, :v2, :v3)"
 ```
 
 ### Options
@@ -57,8 +57,8 @@ vtclient --server vtgate:15991 --target '@primary' --bind_variables '[ 12345, 1,
       --keep-logs-by-mtime duration                                 keep logs for this long (using mtime) (zero to keep forever)
       --log-err-stacks                                              log stack traces for errors
       --log-rotate-max-size uint                                    size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
-      --log_backtrace_at traceLocations                             when logging hits line file:N, emit a stack trace
-      --log_dir string                                              If non-empty, write log files in this directory
+      --log-backtrace-at traceLocations                             when logging hits line file:N, emit a stack trace
+      --log-dir string                                              If non-empty, write log files in this directory
       --logtostderr                                                 log to standard error instead of files
       --max-sequence-id int                                         max sequence ID.
       --min-sequence-id int                                         min sequence ID to generate. When max-sequence-id > min-sequence-id, for each query, a number is generated in [min-sequence-id, max-sequence-id) and attached to the end of the bind variables.
@@ -90,4 +90,3 @@ vtclient --server vtgate:15991 --target '@primary' --bind_variables '[ 12345, 1,
       --vtgate-grpc-server-name string                              the server name to use to validate server certificate
       --vtgate-protocol string                                      how to talk to vtgate (default "grpc")
 ```
-

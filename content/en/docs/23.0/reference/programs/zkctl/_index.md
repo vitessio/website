@@ -21,8 +21,8 @@ Initializes and controls zookeeper with Vitess-specific configuration.
       --keep-logs-by-mtime duration                                 keep logs for this long (using mtime) (zero to keep forever)
       --log-err-stacks                                              log stack traces for errors
       --log-rotate-max-size uint                                    size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
-      --log_backtrace_at traceLocations                             when logging hits line file:N, emit a stack trace
-      --log_dir string                                              If non-empty, write log files in this directory
+      --log-backtrace-at traceLocations                             when logging hits line file:N, emit a stack trace
+      --log-dir string                                              If non-empty, write log files in this directory
       --logtostderr                                                 log to standard error instead of files
       --pprof strings                                               enable profiling
       --pprof-http                                                  enable pprof http endpoints
@@ -42,4 +42,3 @@ Initializes and controls zookeeper with Vitess-specific configuration.
 * [zkctl shutdown](./zkctl_shutdown/)	 - Terminates a zookeeper server but keeps its data dir intact.
 * [zkctl start](./zkctl_start/)	 - Runs an already initialized zookeeper server.
 * [zkctl teardown](./zkctl_teardown/)	 - Shuts down the zookeeper server and removes its data dir.
-

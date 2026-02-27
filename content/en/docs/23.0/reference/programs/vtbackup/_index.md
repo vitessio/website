@@ -171,8 +171,8 @@ vtbackup [flags]
       --lock-timeout duration                                       Maximum time to wait when attempting to acquire a lock from the topo server (default 45s)
       --log-err-stacks                                              log stack traces for errors
       --log-rotate-max-size uint                                    size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
-      --log_backtrace_at traceLocations                             when logging hits line file:N, emit a stack trace
-      --log_dir string                                              If non-empty, write log files in this directory
+      --log-backtrace-at traceLocations                             when logging hits line file:N, emit a stack trace
+      --log-dir string                                              If non-empty, write log files in this directory
       --logtostderr                                                 log to standard error instead of files
       --manifest-external-decompressor string                       command with arguments to store in the backup manifest when compressing a backup with an external compression engine.
       --min-backup-interval duration                                Only take a new backup if it's been at least this long since the most recent backup.
@@ -273,4 +273,3 @@ vtbackup [flags]
       --xtrabackup-stripes uint                                     If greater than 0, use data striping across this many destination files to parallelize data transfer and decompression
       --xtrabackup-user string                                      User that xtrabackup will use to connect to the database server. This user must have all necessary privileges. For details, please refer to xtrabackup documentation.
 ```
-

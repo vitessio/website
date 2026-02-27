@@ -26,7 +26,7 @@ mysqlctld [flags]
 
 ```
 mysqlctld \
-	--log_dir=${VTDATAROOT}/logs \
+	--log-dir=${VTDATAROOT}/logs \
 	--tablet-uid=100 \
 	--mysql-port=17100 \
 	--socket-file=/path/to/socket-file
@@ -111,8 +111,8 @@ mysqlctld \
       --lameduck-period duration                                         keep running at least this long after SIGTERM before stopping (default 50ms)
       --log-err-stacks                                                   log stack traces for errors
       --log-rotate-max-size uint                                         size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
-      --log_backtrace_at traceLocations                                  when logging hits line file:N, emit a stack trace
-      --log_dir string                                                   If non-empty, write log files in this directory
+      --log-backtrace-at traceLocations                                  when logging hits line file:N, emit a stack trace
+      --log-dir string                                                   If non-empty, write log files in this directory
       --logtostderr                                                      log to standard error instead of files
       --max-stack-size int                                               configure the maximum stack size in bytes (default 67108864)
       --mysql-port int                                                   MySQL port (default 3306)
@@ -142,4 +142,3 @@ mysqlctld \
       --vmodule vModuleFlag                                              comma-separated list of pattern=N settings for file-filtered logging
       --wait-time duration                                               How long to wait for mysqld startup (default 5m0s)
 ```
-

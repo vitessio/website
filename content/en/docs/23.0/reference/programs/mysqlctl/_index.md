@@ -64,8 +64,8 @@ This helps ensure that `mysqld` is automatically restarted after failures.
       --lameduck-period duration                                    keep running at least this long after SIGTERM before stopping (default 50ms)
       --log-err-stacks                                              log stack traces for errors
       --log-rotate-max-size uint                                    size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
-      --log_backtrace_at traceLocations                             when logging hits line file:N, emit a stack trace
-      --log_dir string                                              If non-empty, write log files in this directory
+      --log-backtrace-at traceLocations                             when logging hits line file:N, emit a stack trace
+      --log-dir string                                              If non-empty, write log files in this directory
       --logtostderr                                                 log to standard error instead of files
       --max-stack-size int                                          configure the maximum stack size in bytes (default 67108864)
       --mysql-port int                                              MySQL port. (default 3306)
@@ -103,4 +103,3 @@ This helps ensure that `mysqld` is automatically restarted after failures.
 * [mysqlctl shutdown](./mysqlctl_shutdown/)	 - Shuts down mysqld, without removing any files.
 * [mysqlctl start](./mysqlctl_start/)	 - Starts mysqld on an already 'init'-ed directory.
 * [mysqlctl teardown](./mysqlctl_teardown/)	 - Shuts mysqld down and removes the directory.
-
