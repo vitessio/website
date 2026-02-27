@@ -271,4 +271,3 @@ vtgate \
       --warn-payload-size int                                            The warning threshold for query payloads in bytes. A payload greater than this threshold will cause the VtGateWarnings.WarnPayloadSizeExceeded counter to be incremented.
       --warn-sharded-only                                                If any features that are only available in unsharded mode are used, query execution warnings will be added to the session
 ```
-

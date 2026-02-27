@@ -39,4 +39,3 @@ vtaclcheck [flags]
   -v, --version                                                     print binary version
       --vmodule vModuleFlag                                         comma-separated list of pattern=N settings for file-filtered logging
 ```
-

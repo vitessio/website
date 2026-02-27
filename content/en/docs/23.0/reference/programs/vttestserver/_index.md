@@ -47,6 +47,7 @@ vttestserver [flags]
       --external-compressor string                                       command with arguments to use when compressing a backup.
       --external-compressor-extension string                             extension to use when using an external compressor.
       --external-decompressor string                                     command with arguments to use when decompressing a backup.
+      --external-decompressor-use-manifest                               allows the decompressor command stored in the backup manifest to be used at restore time. Enabling this is a security risk: an attacker with write access to the backup storage could modify the manifest to execute arbitrary commands on the tablet as the Vitess user. NOT RECOMMENDED.
       --external-topo-global-root string                                 the path of the global topology data in the global topology server for vtcombo process
       --external-topo-global-server-address string                       the address of the global topology server for vtcombo process
       --external-topo-implementation string                              the topology implementation to use for vtcombo process
@@ -185,4 +186,3 @@ vttestserver [flags]
       --xtrabackup-stripes uint                                          If greater than 0, use data striping across this many destination files to parallelize data transfer and decompression
       --xtrabackup-user string                                           User that xtrabackup will use to connect to the database server. This user must have all necessary privileges. For details, please refer to xtrabackup documentation.
 ```
-
