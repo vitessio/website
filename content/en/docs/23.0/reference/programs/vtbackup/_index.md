@@ -144,6 +144,7 @@ vtbackup [flags]
       --external-compressor string                                  command with arguments to use when compressing a backup.
       --external-compressor-extension string                        extension to use when using an external compressor.
       --external-decompressor string                                command with arguments to use when decompressing a backup.
+      --external-decompressor-use-manifest                          allows the decompressor command stored in the backup manifest to be used at restore time. Enabling this is a security risk: an attacker with write access to the backup storage could modify the manifest to execute arbitrary commands on the tablet as the Vitess user. NOT RECOMMENDED.
       --file-backup-storage-root string                             Root directory for the file backup storage.
       --gcs-backup-storage-bucket string                            Google Cloud Storage bucket to use for backups.
       --gcs-backup-storage-root string                              Root prefix for all backup-related object names.
@@ -170,8 +171,8 @@ vtbackup [flags]
       --lock-timeout duration                                       Maximum time to wait when attempting to acquire a lock from the topo server (default 45s)
       --log-err-stacks                                              log stack traces for errors
       --log-rotate-max-size uint                                    size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
-      --log-backtrace-at traceLocations                             when logging hits line file:N, emit a stack trace
-      --log-dir string                                              If non-empty, write log files in this directory
+      --log_backtrace_at traceLocations                             when logging hits line file:N, emit a stack trace
+      --log_dir string                                              If non-empty, write log files in this directory
       --logtostderr                                                 log to standard error instead of files
       --manifest-external-decompressor string                       command with arguments to store in the backup manifest when compressing a backup with an external compression engine.
       --min-backup-interval duration                                Only take a new backup if it's been at least this long since the most recent backup.
