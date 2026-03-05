@@ -339,6 +339,6 @@ You can now proceed with [MoveTables](../../user-guides/migration/move-tables).
 Or alternatively, if you would like to teardown your example:
 
 ```bash
-./401_teardown.sh
+./501_teardown.sh
 rm -rf vtdataroot
 ```

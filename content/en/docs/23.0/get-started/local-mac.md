@@ -296,10 +296,10 @@ The schema has been simplified to include only those fields that are significant
 
 You can now proceed with [MoveTables](../../user-guides/migration/move-tables).
 
-Or alternatively, once you are finished with the local examples or if you would like to start over, you can clean up by running the 401_teardown script:
+Or alternatively, once you are finished with the local examples or if you would like to start over, you can clean up by running the 501_teardown script:
 
 ```sh
-$ ./401_teardown.sh
+$ ./501_teardown.sh
 $ rm -rf ./vtdataroot
 ```
 
