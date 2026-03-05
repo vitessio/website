@@ -463,7 +463,7 @@ rebuild:
 Terminal 1:
     Hit "Ctrl + C" to kill the vtgate process
 
-    $ ./401_teardown.sh
+    $ ./501_teardown.sh
     $ rm -rf ./vtdataroot
 
     $ sudo apt-get install mysql-client-core-8.0=8.0.19-0ubuntu5 mysql-server-core-8.0=8.0.19-0ubuntu5
@@ -564,7 +564,7 @@ then rebuild the vitess cluster:
 Terminal 1:
     Ctrl + C
 
-    $ ./401_teardown.sh
+    $ ./501_teardown.sh
     $ rm -rf ./vtdataroot
 
     $ sudo apt-get upgrade && sudo apt-get update
