@@ -10,7 +10,7 @@ vreplication features.
 
 Some of these documents might not be representative of the current state of Vitess.
 
-- [VDiff2: Reimplementing VDiff on tablets](https://github.com/vitessio/vitess/issues/10134)
-- [VStream Copy: streaming events from the beginning](https://github.com/vitessio/vitess/issues/6277)
-- [Cross-Cluster Data Migration](https://github.com/vitessio/vitess/issues/7545)
-- [File:Position based VReplication](https://github.com/vitessio/vitess/issues/5424)
+- [VDiff2: Reimplementing VDiff on tablets](https://github.com/vitessio/vitess/issues/10134)| ✅ Completed |
+- [VStream Copy: streaming events from the beginning](https://github.com/vitessio/vitess/issues/6277)| ✅ Completed |
+- [Cross-Cluster Data Migration](https://github.com/vitessio/vitess/issues/7545)| ✅ Completed |
+- [File:Position based VReplication](https://github.com/vitessio/vitess/issues/5424)| ✅ Completed |
