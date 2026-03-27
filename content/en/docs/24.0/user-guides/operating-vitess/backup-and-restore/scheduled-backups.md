@@ -19,6 +19,114 @@ If you are not already familiar with [how backups work](../overview/) in Vitess 
 
 ## Scheduling backups
 
+The vitess-operator uses `VitessBackupSchedule` resources to define when and what to back up. Each schedule contains one or more **strategies** that specify which shards to include.
+
+### Strategy scopes
+
+Use the `scope` field to target different levels of your cluster:
+
+- **Shard** (default): Backs up a single shard. Requires both `keyspace` and `shard` fields.
+- **Keyspace**: Discovers and backs up all shards in the specified keyspace. Requires only `keyspace`.
+- **Cluster**: Discovers and backs up all shards across all keyspaces. No `keyspace` or `shard` required.
+
+Keyspace and Cluster scopes automatically detect new shards added during resharding, so you don't need to update your backup configuration when shards change.
+
+#### Shard scope example
+
+This is the default behavior. You specify exactly which shard to back up:
+
+```yaml
+strategies:
+  - name: customer-80
+    keyspace: customer
+    shard: "-80"
+  - name: customer-80-
+    keyspace: customer
+    shard: "80-"
+```
+
+#### Keyspace scope example
+
+Back up all shards in a keyspace without listing them individually:
+
+```yaml
+strategies:
+  - name: customer-all
+    scope: Keyspace
+    keyspace: customer
+```
+
+#### Cluster scope example
+
+Back up all shards in all keyspaces:
+
+```yaml
+strategies:
+  - name: all-shards
+    scope: Cluster
+```
+
+### Frequency-based scheduling
+
+Instead of specifying a cron expression with `schedule`, you can use `frequency` with a Go duration string (like `24h`, `6h`, or `30m`). The operator generates staggered cron schedules for each shard, preventing bandwidth spikes from simultaneous backups.
+
+```yaml
+apiVersion: planetscale.com/v2
+kind: VitessBackupSchedule
+metadata:
+  name: daily-backup
+spec:
+  cluster: example
+  frequency: "24h"
+  strategies:
+    - name: all-shards
+      scope: Cluster
+```
+
+With frequency-based scheduling:
+- Each shard gets a deterministic cron schedule offset within the interval
+- Different shards back up at different times, spreading the load
+- You can view the generated schedules in `.status.generatedSchedules`
+
+Supported frequencies must be representable as cron expressions. Common values include `30m`, `1h`, `2h`, `4h`, `6h`, `8h`, `12h`, and `24h`.
+
+### Combining scopes with overrides
+
+When you define a Keyspace-scope strategy for a keyspace, that keyspace is automatically excluded from any Cluster-scope strategies. This lets you set cluster-wide defaults while overriding specific keyspaces.
+
+To use different frequencies for different parts of your cluster, create separate `VitessBackupSchedule` resources:
+
+```yaml
+# Cluster-wide default: daily backups
+apiVersion: planetscale.com/v2
+kind: VitessBackupSchedule
+metadata:
+  name: cluster-daily
+spec:
+  cluster: example
+  frequency: "24h"
+  strategies:
+    - name: all
+      scope: Cluster
+---
+# Override for customer keyspace: every 6 hours
+apiVersion: planetscale.com/v2
+kind: VitessBackupSchedule
+metadata:
+  name: customer-frequent
+spec:
+  cluster: example
+  frequency: "6h"
+  strategies:
+    - name: customer-all
+      scope: Keyspace
+      keyspace: customer
+```
+
+In this example, the `customer` keyspace is backed up every 6 hours, while all other keyspaces are backed up daily. There's no overlap or duplicate backups because the Keyspace-scope strategy automatically excludes `customer` from the Cluster-scope strategy.
+
+Shard-scope strategies do not trigger exclusion. They are additive, allowing you to schedule extra backups for specific high-traffic shards.
+
 ### Adding the schedule
 
 {{< warning >}}
