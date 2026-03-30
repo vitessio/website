@@ -153,6 +153,12 @@ vtbackup --init-keyspace=commerce \
 
 The `--restore-with-clone` flag tells vtbackup to clone from a donor tablet instead of restoring from backup storage. After the clone completes, vtbackup proceeds with its normal workflow: catching up on replication and taking a new backup.
 
+### Supervisor-less Environments
+
+When mysqld runs without a supervisor process (such as mysqld_safe), MySQL cannot restart itself after completing a clone operation. Instead of dropping the connection, MySQL returns error 3707 (`ER_RESTART_SERVER_FAILED`) and exits. VTBackup handles this gracefully: it treats error 3707 the same as a connection drop, recognizing that the clone data transfer completed successfully. VTBackup then restarts mysqld externally and verifies clone completion before proceeding.
+
+This is common in containerized deployments where mysqld runs directly without a supervisor wrapper.
+
 ## Use Cases
 
 ### Initializing New Tablets
