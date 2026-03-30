@@ -86,7 +86,7 @@ spec:
 With frequency-based scheduling:
 - Each shard gets a deterministic cron schedule offset within the interval
 - Different shards back up at different times, spreading the load
-- You can view the generated schedules in `.status.generatedSchedules`
+- You can view the generated schedules in `.status.generatedSchedules` and the next scheduled times in `.status.nextScheduledTimes`
 
 Supported frequencies must be representable as cron expressions. Common values include `30m`, `1h`, `2h`, `4h`, `6h`, `8h`, `12h`, and `24h`.
 
