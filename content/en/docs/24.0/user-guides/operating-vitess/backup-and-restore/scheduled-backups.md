@@ -68,7 +68,9 @@ strategies:
 
 ### Frequency-based scheduling
 
-Instead of specifying a cron expression with `schedule`, you can use `frequency` with a Go duration string (like `24h`, `6h`, or `30m`). The operator generates staggered cron schedules for each shard, preventing bandwidth spikes from simultaneous backups.
+Instead of specifying a cron expression with `schedule`, you can use `frequency` with a Go duration string (like `24h`, `6h`, or `30m`). The `schedule` and `frequency` fields are mutually exclusive—you must use one or the other.
+
+When you use `frequency`, the operator generates staggered cron schedules for each shard, preventing bandwidth spikes from simultaneous backups.
 
 ```yaml
 apiVersion: planetscale.com/v2
@@ -88,7 +90,7 @@ With frequency-based scheduling:
 - Different shards back up at different times, spreading the load
 - You can view the generated schedules in `.status.generatedSchedules` and the next scheduled times in `.status.nextScheduledTimes`
 
-Supported frequencies must be representable as cron expressions. Common values include `30m`, `1h`, `2h`, `4h`, `6h`, `8h`, `12h`, and `24h`.
+Supported frequencies must be representable as cron expressions. Common values include `30m`, `1h`, `2h`, `4h`, `6h`, `8h`, `12h`, and `24h`. If you specify an unsupported frequency (such as `45m` or `90m`), the operator rejects the configuration with an error message listing valid examples.
 
 ### Combining scopes with overrides
 
@@ -126,6 +128,16 @@ spec:
 In this example, the `customer` keyspace is backed up every 6 hours, while all other keyspaces are backed up daily. There's no overlap or duplicate backups because the Keyspace-scope strategy automatically excludes `customer` from the Cluster-scope strategy.
 
 Shard-scope strategies do not trigger exclusion. They are additive, allowing you to schedule extra backups for specific high-traffic shards.
+
+### Shard readiness requirements
+
+Before scheduling a backup for a shard, the operator verifies that the shard is ready:
+
+- The shard has a primary tablet
+- The shard has an initial backup (from vtbackup)
+- All tablets in the shard are in a ready state
+
+If a shard doesn't meet these requirements (for example, during initial cluster bootstrap or while resharding), the operator skips scheduling backups for that shard and retries on the next reconcile. This prevents backup failures for shards that are still being set up.
 
 ### Adding the schedule
 
