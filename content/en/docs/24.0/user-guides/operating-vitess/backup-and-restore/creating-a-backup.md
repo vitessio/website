@@ -221,19 +221,27 @@ An incremental backup fails when it is unable to find binary log files that cove
 
 ## Running SQL Queries Before Backup
 
-You can execute SQL queries on the mysqld instance immediately before initializing a backup. This is similar to MySQL's [`--init-file`](https://dev.mysql.com/doc/refman/en/server-system-variables.html#sysvar_init_file) and [`--init-connect`](https://dev.mysql.com/doc/refman/en/server-system-variables.html#sysvar_init_connect) options.
+You can execute SQL queries on the mysqld instance after catch-up replication completes but before initializing a backup. This is similar to MySQL's [`--init-file`](https://dev.mysql.com/doc/refman/en/server-system-variables.html#sysvar_init_file) and [`--init-connect`](https://dev.mysql.com/doc/refman/en/server-system-variables.html#sysvar_init_connect) options.
 
 ### When to Use Init SQL Queries
 
 Running SQL queries before a backup can be useful in various scenarios, for example:
 
-* Running [`OPTIMIZE TABLE`](https://dev.mysql.com/doc/refman/en/optimize-table.html) on specific tables can reduce the backup size, speed up the backup process, and improve restore times
+* Running [`OPTIMIZE TABLE`](https://dev.mysql.com/doc/refman/en/optimize-table.html) on specific tables can reduce the backup size, speed up the backup process, and improve restore times. Because init queries run after catch-up replication, you can use `OPTIMIZE TABLE` to combat table fragmentation introduced during the catch-up replication process.
 * Execute maintenance tasks that prepare the database for backup
 * Temporarily modify settings for the backup operation
 
 ### How It Works
 
+When taking a backup with `vtbackup`, the backup process follows these steps:
+1. Restore from the most recent backup
+2. Start mysqld and catch up on replication from the primary
+3. Execute any configured init SQL queries
+4. Take the backup
+
 Init SQL queries are executed only on tablets that match the specified tablet types. If the backup tablet's type is not in the allowed list, the queries are skipped and the backup proceeds normally. The queries are executed with a configurable timeout. If they fail to complete within the timeout, you can choose to either fail the backup or continue anyway.
+
+If MySQL was started with `super_read_only` enabled, Vitess temporarily disables it while executing the init SQL queries and restores it afterward.
 
 {{< info >}}
 Note that when using [`vtbackup`](https://vitess.io/docs/reference/programs/vtbackup) there is no real tablet involved and the tablet-type used for this feature is always `BACKUP`.
@@ -244,7 +252,7 @@ Note that when using [`vtbackup`](https://vitess.io/docs/reference/programs/vtba
 
 When taking backups with `vtctldclient Backup`, `vtctldclient BackupShard`, or `vtbackup`, you can use the following flags:
 
-* `--init-backup-sql-queries`: SQL queries to execute before initializing the backup. You can specify this flag multiple times or provide a single comma-seperated value to run multiple queries in sequence.
+* `--init-backup-sql-queries`: SQL queries to execute after catch-up replication, before initializing the backup. You can specify this flag multiple times or provide a single comma-separated value to run multiple queries in sequence.
 * `--init-backup-tablet-types`: Comma-separated list of tablet types where the init SQL queries will run (e.g., `replica,rdonly`). The backup will only execute the queries if the tablet taking the backup matches one of these types. You can also specify the flag multiple times to specify the set of tablet types.
 * `--init-backup-sql-timeout`: Maximum time to wait for the init SQL queries to complete. If the queries don't finish within this time, the behavior depends on the `--init-backup-sql-fail-on-error` flag.
 * `--init-backup-sql-fail-on-error`: Whether to fail the entire backup if the init SQL queries fail or timeout. Default is `false`, which means the backup continues even if the queries fail.
