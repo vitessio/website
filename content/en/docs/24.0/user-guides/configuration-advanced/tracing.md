@@ -23,7 +23,7 @@ To enable OpenTelemetry tracing, add the following flags to `vtgate`, `vttablet`
 The available OpenTelemetry flags are:
 
 * `--otel-endpoint`: OpenTelemetry collector endpoint (host:port for gRPC). Defaults to `localhost:4317`.
-* `--otel-insecure`: Use an insecure connection to the collector. Defaults to `true`.
+* `--otel-insecure`: Use an insecure connection to the collector. Defaults to `false`.
 * `--tracing-sampling-rate`: Sampling rate for traces (0.0 to 1.0). Defaults to `0.1`.
 
 ### Running Jaeger with OTLP support
