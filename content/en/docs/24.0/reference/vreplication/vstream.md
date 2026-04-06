@@ -174,6 +174,17 @@ Transactions smaller than this threshold are sent without locking for better par
 This flag will be ignored if the `MinimizeSkew` flag is also specified because the combination of these two features can lead to deadlocks.
 {{< /warning >}}
 
+##### MaxStreamAgeSeconds
+
+**Type** unsigned integer\
+**Default** 0 (disabled)
+
+Maximum duration (in seconds) a VStream can run before termination. When set, the VStream terminates with an `UNAVAILABLE` error after the specified duration, prompting clients to reconnect. A random jitter of +/-10% is applied to spread reconnections across clients.
+
+This is useful for client-side load balancing. Periodically terminating streams forces clients to reconnect and potentially route to different VTGate servers, improving load distribution. When used with [gRPC ORCA metrics](https://github.com/cncf/xds/blob/main/xds/data/orca/v3/orca_load_report.proto) for client-side load balancing, metrics are preserved across stream age expirations, enabling more even load distribution across VTGate servers.
+
+Set to `0` to disable (streams run indefinitely until client disconnection or error).
+
 ### RPC Response
 
 The [`VStream` gRPC](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate/vtgateconn#VTGateConn.VStream) returns
