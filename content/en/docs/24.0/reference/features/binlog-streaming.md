@@ -6,7 +6,7 @@ weight: 5
 VTGate supports direct binlog streaming via the MySQL replication protocol (`COM_BINLOG_DUMP_GTID`) and gRPC (`BinlogDumpGTID` RPC). This allows binlog clients to connect to Vitess without special VStream-aware adapters.
 
 {{< warning >}}
-Only GTID-based replication (`COM_BINLOG_DUMP_GTID`) is supported. File/position-based replication (`COM_BINLOG_DUMP`) is not supported and returns an error.
+Only GTID-based streaming is supported. File/position-based streaming is not available through either `COM_BINLOG_DUMP` or `COM_BINLOG_DUMP_GTID`.
 {{< /warning >}}
 
 For workflows that need automatic resharding, multi-shard aggregation, or event filtering, use [VStream](../../vreplication/vstream/) instead.
