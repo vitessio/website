@@ -105,12 +105,16 @@ VTGate also exposes binlog streaming via gRPC through the `BinlogDumpGTID` strea
 | `shard` | string | Yes | The specific shard within the keyspace |
 | `tablet_type` | TabletType | No | Tablet type to stream from (default: PRIMARY) |
 | `tablet_alias` | TabletAlias | No | Target a specific tablet by alias |
-| `binlog_filename` | string | No | Binlog filename to start from (requires `tablet_alias`) |
-| `binlog_position` | uint64 | No | Position within binlog file (requires `tablet_alias`) |
+| `binlog_filename` | string | Yes | Must be set to an empty string (`""`). Other values are not supported. |
+| `binlog_position` | uint64 | Yes | Must be set to `4`. Other values are not supported. |
 | `gtid_set` | string | No | GTID set to start streaming from (e.g., `uuid:1-100`) |
 | `flags` | uint32 | No | Raw MySQL flags (e.g., `BINLOG_DUMP_NON_BLOCK`) |
 
-If you don't specify `tablet_alias`, VTGate uses health-check-based tablet selection for routing. If you specify `binlog_filename` or a non-default `binlog_position`, you must also provide `tablet_alias` since binlog filenames and positions differ across replicas.
+If you don't specify `tablet_alias`, VTGate uses health-check-based tablet selection for routing.
+
+{{< info >}}
+The `binlog_filename` and `binlog_position` fields must be set to an empty string and `4` respectively. Setting other values is not currently supported, regardless of whether you're using tablet-level targeting or not.
+{{< /info >}}
 
 ### Response
 
