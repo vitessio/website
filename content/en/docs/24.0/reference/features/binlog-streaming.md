@@ -129,10 +129,10 @@ mysql -h vtgate-host -P 15306 -u vt_repl -p
 # Set the target shard
 USE `commerce:0@primary`;
 
-# Get current binlog position
-SHOW MASTER STATUS;
+# Get the current GTID set
+SELECT @@GLOBAL.gtid_executed;
 
-# The binlog client would then use this position to start COM_BINLOG_DUMP_GTID
+# The binlog client would then use this GTID set to start COM_BINLOG_DUMP_GTID
 ```
 
 {{< info >}}
