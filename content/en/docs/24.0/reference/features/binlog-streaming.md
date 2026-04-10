@@ -3,25 +3,25 @@ title: Binlog Streaming
 weight: 5
 ---
 
-VTGate supports direct binlog streaming via the MySQL replication protocol (`COM_BINLOG_DUMP_GTID`) and gRPC (`BinlogDumpGTID` RPC). This allows standard CDC (Change Data Capture) tools to connect to Vitess without special VStream-aware adapters.
+VTGate supports direct binlog streaming via the MySQL replication protocol (`COM_BINLOG_DUMP_GTID`) and gRPC (`BinlogDumpGTID` RPC). This allows binlog clients to connect to Vitess without special VStream-aware adapters.
 
 {{< warning >}}
 Only GTID-based replication (`COM_BINLOG_DUMP_GTID`) is supported. File/position-based replication (`COM_BINLOG_DUMP`) is not supported and returns an error.
 {{< /warning >}}
 
-For CDC workflows that need automatic resharding, multi-shard aggregation, or event filtering, use [VStream](../../vreplication/vstream/) instead.
+For workflows that need automatic resharding, multi-shard aggregation, or event filtering, use [VStream](../../vreplication/vstream/) instead.
 
 ## How It Works
 
 ```
 ┌─────────────┐      MySQL       ┌─────────────┐       gRPC        ┌─────────────┐      MySQL       ┌─────────────┐
 │             │    Protocol      │             │                   │             │    Protocol      │             │
-│  CDC Client │◄────────────────►│   VTGate    │◄─────────────────►│  vttablet   │◄────────────────►│    MySQL    │
+│Binlog Client│◄────────────────►│   VTGate    │◄─────────────────►│  vttablet   │◄────────────────►│    MySQL    │
 │             │                  │             │                   │             │                  │             │
 └─────────────┘                  └─────────────┘                   └─────────────┘                  └─────────────┘
 ```
 
-When a CDC client sends `COM_BINLOG_DUMP_GTID` to VTGate:
+When a binlog client sends `COM_BINLOG_DUMP_GTID` to VTGate:
 
 1. VTGate routes the request to the targeted vttablet
 2. vttablet opens a MySQL replication connection to its underlying MySQL instance
@@ -44,7 +44,7 @@ By default, no users can perform binlog dump operations. Use `--binlog-dump-auth
 
 ```bash
 # Allow specific users (comma-separated)
-vtgate --enable-binlog-dump --binlog-dump-authorized-users="repl_user,cdc_user"
+vtgate --enable-binlog-dump --binlog-dump-authorized-users="repl_user,binlog_user"
 
 # Allow all users
 vtgate --enable-binlog-dump --binlog-dump-authorized-users="%"
@@ -54,7 +54,7 @@ vtgate --enable-binlog-dump --binlog-dump-authorized-users="%"
 
 Binlog streaming requires targeting a specific shard. You can target at the shard level (`keyspace:shard`) or at the tablet level (`keyspace:shard@type|alias`).
 
-Shard-level targeting routes through the gateway's health checking, so CDC tools don't need to know specific tablet aliases. However, tablet-level targeting is recommended when consistency between the initial snapshot and binlog position matters. This ensures:
+Shard-level targeting routes through the gateway's health checking, so binlog clients don't need to know specific tablet aliases. However, tablet-level targeting is recommended when consistency between the initial snapshot and binlog position matters. This ensures:
 
 1. The initial binlog position obtained from the tablet
 2. Data read via `SELECT` statements
@@ -64,7 +64,7 @@ all come from the same tablet.
 
 ### Specifying Target via USE Statement
 
-If your CDC tool supports it, you can issue a `USE` statement before starting the binlog dump:
+If your binlog client supports it, you can issue a `USE` statement before starting the binlog dump:
 
 ```sql
 USE `commerce:0@primary`;
@@ -82,13 +82,13 @@ Binlog streaming has limitations compared to [VStream](../../vreplication/vstrea
 | Automatic failover | No | Yes |
 | Reshard support | No | Yes |
 | MoveTables support | No | Yes |
-| Client compatibility | Any MySQL CDC tool | Requires VStream adapter |
+| Client compatibility | Any MySQL binlog client | Requires VStream adapter |
 
 Key limitations to be aware of:
 
 - **Per-shard streaming**: You must run a separate binlog stream per shard. There's no automatic merging of events from multiple shards.
-- **No automatic failover**: If the targeted tablet becomes unavailable, the stream fails. Your CDC client must detect this and reconnect to a different tablet.
-- **No resharding support**: Binlog streaming doesn't handle `MoveTables` or `Reshard` operations. If your keyspace is resharded while streaming, you'll need to manually reconfigure your CDC streams.
+- **No automatic failover**: If the targeted tablet becomes unavailable, the stream fails. Your binlog client must detect this and reconnect to a different tablet.
+- **No resharding support**: Binlog streaming doesn't handle `MoveTables` or `Reshard` operations. If your keyspace is resharded while streaming, you'll need to manually reconfigure your binlog streams.
 - **No event filtering**: All binlog events from the underlying MySQL are streamed. Filtering must be done client-side.
 
 If any of these limitations are problematic for your use case, use [VStream](../../vreplication/vstream/) instead.
@@ -128,7 +128,7 @@ USE `commerce:0@primary`;
 # Get current binlog position
 SHOW MASTER STATUS;
 
-# The CDC tool would then use this position to start COM_BINLOG_DUMP_GTID
+# The binlog client would then use this position to start COM_BINLOG_DUMP_GTID
 ```
 
 {{< info >}}
