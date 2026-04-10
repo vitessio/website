@@ -62,22 +62,6 @@ Shard-level targeting routes through the gateway's health checking, so CDC tools
 
 all come from the same tablet.
 
-### Specifying Target via Username
-
-Many CDC tools don't support setting a default database at connection time. VTGate allows specifying the target as part of the username using a pipe-delimited format:
-
-```
-user|keyspace:shard@type|alias
-```
-
-| Format | Username Example | Description |
-|--------|-----------------|-------------|
-| 2-piece | `vt_repl|commerce:0@primary` | User with target |
-| 3-piece | `vt_repl|commerce:0@primary|zone1-100` | User with target and tablet alias |
-| 4-piece | `vt_repl|commerce:0@primary|zone1-100|olap` | User with target, alias, and OLAP workload |
-
-The target string follows the standard Vitess format: `keyspace:shard@tablet_type`.
-
 ### Specifying Target via USE Statement
 
 If your CDC tool supports it, you can issue a `USE` statement before starting the binlog dump:
@@ -135,8 +119,11 @@ If you don't specify `tablet_alias`, VTGate uses health-check-based tablet selec
 ## Example: Connecting with a MySQL Client
 
 ```bash
-# Connect with tablet target in username
-mysql -h vtgate-host -P 15306 -u 'vt_repl|commerce:0@primary|zone1-100' -p
+# Connect to VTGate
+mysql -h vtgate-host -P 15306 -u vt_repl -p
+
+# Set the target shard
+USE `commerce:0@primary`;
 
 # Get current binlog position
 SHOW MASTER STATUS;
