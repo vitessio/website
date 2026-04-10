@@ -3,7 +3,7 @@ title: Binlog Streaming
 weight: 5
 ---
 
-VTGate supports direct binlog streaming via the MySQL replication protocol (`COM_BINLOG_DUMP_GTID`) and gRPC (`BinlogDumpGTID` RPC). This allows standard CDC (Change Data Capture) tools like Debezium and Fivetran to connect to Vitess without special VStream-aware adapters.
+VTGate supports direct binlog streaming via the MySQL replication protocol (`COM_BINLOG_DUMP_GTID`) and gRPC (`BinlogDumpGTID` RPC). This allows standard CDC (Change Data Capture) tools to connect to Vitess without special VStream-aware adapters.
 
 {{< warning >}}
 Only GTID-based replication (`COM_BINLOG_DUMP_GTID`) is supported. File/position-based replication (`COM_BINLOG_DUMP`) is not supported and returns an error.
