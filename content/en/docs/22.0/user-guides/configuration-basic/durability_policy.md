@@ -12,6 +12,7 @@ type Durabler interface {
 	PromotionRule(*topodatapb.Tablet) promotionrule.CandidatePromotionRule
 	SemiSyncAckers(*topodatapb.Tablet) int
 	IsReplicaSemiSync(primary, replica *topodatapb.Tablet) bool
+	HasSemiSync() bool
 }
 ```
 
