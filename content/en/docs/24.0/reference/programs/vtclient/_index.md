@@ -28,7 +28,6 @@ vtclient --server vtgate:15991 --target '@primary' --bind_variables '[ 12345, 1,
 ### Options
 
 ```
-      --alsologtostderr                                             log to standard error as well as files
       --bind-variables float                                        bind variables as a json list (default null)
       --config-file string                                          Full path of the config file (with extension) to use. If set, --config-path, --config-type, and --config-name are ignored.
       --config-file-not-found-handling ConfigFileNotFoundHandling   Behavior when a config file is not found. (Options: error, exit, ignore, warn) (default warn)
@@ -56,13 +55,15 @@ vtclient --server vtgate:15991 --target '@primary' --bind_variables '[ 12345, 1,
       --keep-logs duration                                          keep logs for this long (using ctime) (zero to keep forever)
       --keep-logs-by-mtime duration                                 keep logs for this long (using mtime) (zero to keep forever)
       --log-err-stacks                                              log stack traces for errors
+      --log-format string                                           log output format: json for machine-readable JSON, text for human-readable colored output (default "json")
+      --log-level string                                            minimum log level when structured logging is enabled (debug, info, warn, error) (default "info")
       --log-rotate-max-size uint                                    size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
-      --log_backtrace_at traceLocations                             when logging hits line file:N, emit a stack trace
-      --log_dir string                                              If non-empty, write log files in this directory
-      --logtostderr                                                 log to standard error instead of files
+      --log-structured                                              enable structured JSON logging (default true)
       --max-sequence-id int                                         max sequence ID.
       --min-sequence-id int                                         min sequence ID to generate. When max-sequence-id > min-sequence-id, for each query, a number is generated in [min-sequence-id, max-sequence-id) and attached to the end of the bind variables.
       --mysql-server-version string                                 MySQL server version to advertise. (default "8.4.6-Vitess")
+      --otel-endpoint string                                        OpenTelemetry collector endpoint (host:port for gRPC); if empty, the OTEL_EXPORTER_OTLP_ENDPOINT env var is used
+      --otel-insecure                                               use insecure connection to OpenTelemetry collector
       --parallel int                                                DMLs only: Number of threads executing the same query in parallel. Useful for simple load testing. (default 1)
       --pprof strings                                               enable profiling
       --pprof-http                                                  enable pprof http endpoints
@@ -70,18 +71,15 @@ vtclient --server vtgate:15991 --target '@primary' --bind_variables '[ 12345, 1,
       --qps int                                                     queries per second to throttle each thread at.
       --security-policy string                                      the name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only)
       --server string                                               vtgate server to connect to
-      --stderrthreshold severityFlag                                logs at or above this threshold go to stderr (default 1)
       --streaming                                                   use a streaming query
       --target string                                               keyspace:shard@tablet_type
       --timeout duration                                            timeout for queries (default 30s)
       --tracer string                                               tracing service to use (default "noop")
       --tracing-enable-logging                                      whether to enable logging in the tracing service
-      --tracing-sampling-rate float                                 sampling rate for the probabilistic jaeger sampler (default 0.1)
+      --tracing-sampling-rate float                                 sampling parameter for traces; for jaeger this is passed as the sampler parameter (see --tracing-sampling-type), for opentelemetry/datadog it is a probability between 0.0 and 1.0 (default 0.1)
       --tracing-sampling-type string                                sampling strategy to use for jaeger. possible values are 'const', 'probabilistic', 'rateLimiting', or 'remote' (default "const")
       --use-random-sequence                                         use random sequence for generating [min-sequence-id, max-sequence-id)
-      --v Level                                                     log level for V logs
   -v, --version                                                     print binary version
-      --vmodule vModuleFlag                                         comma-separated list of pattern=N settings for file-filtered logging
       --vtgate-grpc-ca string                                       the server ca to use to validate servers when connecting
       --vtgate-grpc-cert string                                     the cert to use to connect
       --vtgate-grpc-crl string                                      the server crl to use to validate server certificates when connecting
