@@ -35,7 +35,7 @@ Change to the operator example directory:
 ```bash
 git clone https://github.com/vitessio/vitess
 cd vitess/examples/operator
-git checkout main
+git checkout release-24.0
 ```
 
 For this example we will have two namespaces:

@@ -38,7 +38,7 @@ sudo systemctl disable etcd
 ## Install Node
 
 ```sh
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
 ```
 
 Ensure the following is in your bashrc/zshrc or similar. `nvm` automatically attempts to add them:
@@ -52,8 +52,8 @@ export NVM_DIR="$HOME/.nvm"
 Finally, install [node](https://nodejs.org/):
 
 ```sh
-nvm install 18
-nvm use 18
+nvm install 22
+nvm use 22
 ```
 
 See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
