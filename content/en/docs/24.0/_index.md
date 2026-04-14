@@ -1,7 +1,7 @@
 ---
-title: v24.0 (Development)
+title: v24.0 (Release Candidate)
 description: >
-  The current development release.
+  The current RC release.
   Everything you need to know about scaling MySQL with Vitess.
 notoc: true
 cascade:
