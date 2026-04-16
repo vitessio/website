@@ -30,15 +30,15 @@ When MySQL installs with brew it will startup, you will want to shut this proces
 $ brew services stop mysql
 ```
 
-### Install Node 18.16.0+ (required to run VTAdmin)
+### Install Node 22+ (required to run VTAdmin)
 
 ```bash
 brew install nvm
-nvm install --lts 18.16.0
-nvm use 18.16.0
+nvm install --lts 22
+nvm use 22
 ```
 
-See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
+See the [vtadmin README](https://github.com/vitessio/vitess/blob/release-24.0/web/vtadmin/README.md) for more details.
 
 ## PATH Settings
 
@@ -76,7 +76,7 @@ With everything now in place you can clone and build Vitess.
 ```sh
 $ git clone https://github.com/vitessio/vitess.git
 $ cd vitess
-$ git checkout main
+$ git checkout release-24.0
 $ make build
 ```
 
