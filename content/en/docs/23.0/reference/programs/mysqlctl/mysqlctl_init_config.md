@@ -113,4 +113,3 @@ mysqlctl \
 ### SEE ALSO
 
 * [mysqlctl](../)	 - mysqlctl initializes and controls mysqld with Vitess-specific configuration.
-

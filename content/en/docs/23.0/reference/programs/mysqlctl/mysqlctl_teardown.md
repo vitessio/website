@@ -114,4 +114,3 @@ mysqlctl --tablet-uid 101 --alsologtostderr teardown
 ### SEE ALSO
 
 * [mysqlctl](../)	 - mysqlctl initializes and controls mysqld with Vitess-specific configuration.
-

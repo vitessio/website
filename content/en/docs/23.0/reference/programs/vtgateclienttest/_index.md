@@ -80,4 +80,3 @@ vtgateclienttest [flags]
       --vmodule vModuleFlag                                              comma-separated list of pattern=N settings for file-filtered logging
       --vschema-ddl-authorized-users string                              List of users authorized to execute vschema ddl operations, or '%' to allow all users.
 ```
-

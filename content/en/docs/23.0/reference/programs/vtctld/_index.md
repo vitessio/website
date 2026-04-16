@@ -199,4 +199,3 @@ vtctld \
       --vmodule vModuleFlag                                              comma-separated list of pattern=N settings for file-filtered logging
       --vtctld-sanitize-log-messages                                     When true, vtctld sanitizes logging.
 ```
-

@@ -103,4 +103,3 @@ This helps ensure that `mysqld` is automatically restarted after failures.
 * [mysqlctl shutdown](./mysqlctl_shutdown/)	 - Shuts down mysqld, without removing any files.
 * [mysqlctl start](./mysqlctl_start/)	 - Starts mysqld on an already 'init'-ed directory.
 * [mysqlctl teardown](./mysqlctl_teardown/)	 - Shuts mysqld down and removes the directory.
-

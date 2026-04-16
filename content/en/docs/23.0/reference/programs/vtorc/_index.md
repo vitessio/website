@@ -127,4 +127,3 @@ vtorc \
       --vmodule vModuleFlag                                         comma-separated list of pattern=N settings for file-filtered logging
       --wait-replicas-timeout duration                              Duration for which to wait for replica's to respond when issuing RPCs (default 30s)
 ```
-

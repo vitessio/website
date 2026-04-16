@@ -63,4 +63,3 @@ LegacyVtctlCommand -- AddCellInfo --server-address "localhost:5678" --root "/vit
 ### SEE ALSO
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server or alternatively as a standalone binary using --server=internal.
-

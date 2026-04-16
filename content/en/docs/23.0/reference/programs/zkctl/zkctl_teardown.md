@@ -48,4 +48,3 @@ zkctl teardown [flags]
 ### SEE ALSO
 
 * [zkctl](../)	 - Initializes and controls zookeeper with Vitess-specific configuration.
-

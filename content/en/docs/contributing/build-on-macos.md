@@ -30,10 +30,10 @@ Add `mysql` to your `PATH`:
 echo 'export PATH="/usr/local/opt/mysql/bin:$PATH"' >> ~/.bash_profile
 ```
 
-[Download and install](http://golang.org/doc/install) Golang. For example for `go1.26.0`, at writing:
+[Download and install](http://golang.org/doc/install) Golang. For example for `go1.26.1`, at writing:
 ```shell
-curl -LO https://golang.org/dl/go1.26.0.darwin-amd64.pkg
-sudo installer -pkg go1.26.0.darwin-amd64.pkg -target /
+curl -LO https://golang.org/dl/go1.26.1.darwin-amd64.pkg
+sudo installer -pkg go1.26.1.darwin-amd64.pkg -target /
 ```
 
 > Vitess is tested and shipped using a specific Golang version for each release.
@@ -126,7 +126,7 @@ In addition to running tests, you can try running the [local example](../../get-
 
 ### Key Already Exists
 
-This error is because etcd was not cleaned up from the previous run of the example. You can manually fix this by running `./401_teardown.sh`, removing vtdataroot and then starting again:
+This error is because etcd was not cleaned up from the previous run of the example. You can manually fix this by running `./501_teardown.sh`, removing vtdataroot and then starting again:
 ```
 Error:  105: Key already exists (/vitess/zone1) [6]
 Error:  105: Key already exists (/vitess/global) [6]

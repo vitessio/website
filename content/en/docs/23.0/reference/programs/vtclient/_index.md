@@ -90,4 +90,3 @@ vtclient --server vtgate:15991 --target '@primary' --bind-variables '[ 12345, 1,
       --vtgate-grpc-server-name string                              the server name to use to validate server certificate
       --vtgate-protocol string                                      how to talk to vtgate (default "grpc")
 ```
-

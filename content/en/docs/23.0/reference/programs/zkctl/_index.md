@@ -42,4 +42,3 @@ Initializes and controls zookeeper with Vitess-specific configuration.
 * [zkctl shutdown](./zkctl_shutdown/)	 - Terminates a zookeeper server but keeps its data dir intact.
 * [zkctl start](./zkctl_start/)	 - Runs an already initialized zookeeper server.
 * [zkctl teardown](./zkctl_teardown/)	 - Shuts down the zookeeper server and removes its data dir.
-

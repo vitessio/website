@@ -649,5 +649,5 @@ COrder
 如果您不继续进行其他练习，则可以删除整个示例。
 
 ``` sh
-./401_teardown.sh
+./501_teardown.sh
 ```

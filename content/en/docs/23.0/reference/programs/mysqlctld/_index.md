@@ -142,4 +142,3 @@ mysqlctld \
       --vmodule vModuleFlag                                              comma-separated list of pattern=N settings for file-filtered logging
       --wait-time duration                                               How long to wait for mysqld startup (default 5m0s)
 ```
-

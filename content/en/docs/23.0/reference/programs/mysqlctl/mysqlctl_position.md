@@ -98,4 +98,3 @@ mysqlctl position <operation> <pos1> <pos2 | gtid> [flags]
 ### SEE ALSO
 
 * [mysqlctl](../)	 - mysqlctl initializes and controls mysqld with Vitess-specific configuration.
-
