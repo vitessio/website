@@ -22,7 +22,7 @@ Clone the GitHub repository via:
 
 ```shell
 cd vitess
-git checkout main
+git checkout release-24.0
 ```
 
 #### Build the docker image
