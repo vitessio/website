@@ -87,6 +87,10 @@ Note that VTGate can [buffer queries](../../features/vtgate-buffering/) when rev
 [`cancel`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_cancel/) can be used if a workflow was created in error or was misconfigured and you prefer to create a new workflow instead of fixing this one. Cancel can only be called if no traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with the new target shards from the topo and, by default, the target tables on the target keyspace
 (see `--keep-data` and `--rename-tables`).
 
+{{< info >}}
+For `_reverse` workflows (created automatically during `SwitchTraffic` when `--enable-reverse-replication` is true), the `--keep-data` flag defaults to `true` to protect production data on the original source. A warning is displayed when this protective default is applied. To explicitly remove the data, pass `--keep-data=false`.
+{{< /info >}}
+
 </div>
 
 #### Complete
@@ -98,6 +102,10 @@ This is a destructive command
 
 [`complete`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_complete/) is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with the original source shards from the topo. By default, the source tables are also dropped on the source shards
 (see `--keep-data` and `--rename-tables`) .
+
+{{< info >}}
+For `_reverse` workflows (created automatically during `SwitchTraffic` when `--enable-reverse-replication` is true), the `--keep-data` flag defaults to `true` to protect production data on the original source. A warning is displayed when this protective default is applied. To explicitly remove the data, pass `--keep-data=false`.
+{{< /info >}}
 
 </div>
 
@@ -183,11 +191,13 @@ but the command logs all the steps that would be taken.
 
 #### --keep-data
 **optional**\
-**default** false
+**default** false (true for `_reverse` workflows)
 
 <div class="cmd">
 
 Usually, the target tables are deleted by `Cancel`. If this flag is used the target tables will not be deleted.
+
+For `_reverse` workflows (created automatically during `SwitchTraffic` when `--enable-reverse-replication` is true), this flag defaults to `true` to protect production data on the original source. To explicitly remove the data on these workflows, pass `--keep-data=false`.
 
 </div>
 
