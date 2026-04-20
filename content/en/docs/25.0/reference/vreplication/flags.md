@@ -78,6 +78,33 @@ ROW Event	table_name:"customer" row_changes:{after:{lengths:2 lengths:6 values:"
 After encountering the same error repeatedly for the provided amount of time, stop automatically retrying the workflow and set the state to STOPPED when persisting the error. This is useful because at this point the error is likely not transient and the workflow will not be able to make further progress without
 human intervention. This is important because the retry behavior can make it difficult to detect and alert on the workflow error state because it so quickly retries again and in doing so clears the previous error.
 
+### vreplication-max-row-json-bytes
+
+**Type** integer\
+**Unit** bytes\
+**Default** 0 (unlimited)\
+**Applicable on** target
+
+Limits the combined byte size of JSON columns in a single row during VReplication copy and replay phases. This protects the target mysqld from out-of-memory (OOM) errors caused by large JSON values.
+
+VReplication re-emits JSON columns as nested `JSON_OBJECT(CAST(JSON_QUOTE(...)))` expressions to preserve MySQL's extended JSON types. For JSON documents with many scalar values (such as arrays containing hundreds of thousands of short strings), this causes significant memory amplification on the target mysqld—a ~20 MB JSON value can expand to ~40-50 MB of SQL with millions of nested function calls, and the target mysqld must parse and evaluate this into an in-memory tree, potentially using 60-100x the original JSON size in memory. On memory-constrained mysqld containers, this can OOM-kill the target and cause crash loops.
+
+When a row's combined JSON column size exceeds this limit, the workflow transitions to an Error state with an actionable message that includes the target table name, the largest JSON column name, and its size. This fail-fast behavior prevents crash loops by stopping replication before the problematic row is applied.
+
+The default value of 0 means no limit is enforced, preserving existing behavior. If you are running on memory-constrained tiers, set a value based on your target mysqld's safe per-row memory budget. As a rough guide, ~16 MB works well on mysqld instances with ~1.6 GiB of memory; scale proportionally with your target's available memory.
+
+{{< info >}}
+This flag only counts JSON-typed columns. BLOB and TEXT columns are not included in the calculation, as they do not exhibit the same memory amplification. NULL JSON columns are treated as zero-size.
+{{< /info >}}
+
+To override this setting for a specific workflow, use the `--config-overrides` flag when creating or updating the workflow:
+
+```sh
+vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer create \
+  --source-keyspace commerce --tables 'customer,corder' \
+  --config-overrides 'max-row-json-bytes=16777216'
+```
+
 ### vreplication-net-read-timeout and vreplication-net-write-timeout
 
 **Type** integer\
