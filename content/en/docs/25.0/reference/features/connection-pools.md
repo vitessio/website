@@ -123,6 +123,29 @@ Flag: `--enable-system-settings`
 
 This vtgate flag allows clients to modify a [subset of system settings](https://github.com/vitessio/vitess/blob/main/go/vt/sysvars/sysvars.go#L174-L217) on the MySQL.
 
+Flag: `--denied-system-variables`
+
+This vtgate flag accepts a comma-separated list of system variable names that clients are not allowed to SET. Any attempt to SET a listed variable returns an unsupported error at query planning time. Variable names are matched case-insensitively.
+
+Use this flag to block specific system variables that could cause replication issues in your topology. For example, setting `unique_checks=0` from a client session can cause non-deterministic duplicate-key errors on replicas. To prevent this:
+
+```
+vtgate --denied-system-variables=unique_checks,sql_log_off
+```
+
+When a client attempts to SET a denied variable:
+
+```sql
+mysql> SET unique_checks = 0;
+ERROR 1235 (42000): VT12001: unsupported: system setting: unique_checks
+```
+
+This flag provides finer-grained control than `--enable-system-settings`. While `--enable-system-settings=false` disables all system variable forwarding, `--denied-system-variables` lets you selectively block specific variables while allowing others.
+
+{{< info >}}
+Changes to `--denied-system-variables` require a VTGate restart to take effect.
+{{< /info >}}
+
 ## Calculating maximum db connections used by vttablet
 
 You can use the following formula to approximate the maximum MySQL connections per vttablet instance:
