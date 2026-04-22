@@ -8,7 +8,7 @@ aliases: ['/docs/user-guides/tracing/']
 
 Vitess allows you to generate trace events from major server components: `vtgate`, `vttablet`, and `vtctld`. [OpenTelemetry](https://opentelemetry.io/) is the tracing backend, exporting traces via OTLP/gRPC to any compatible backend. The legacy OpenTracing-based backends (`opentracing-jaeger` and `opentracing-datadog`) were removed in v25.
 
-## OpenTelemetry (Recommended)
+## OpenTelemetry
 
 OpenTelemetry traces can be received by any OTLP-compatible backend, including Jaeger (v1.35+), Grafana Tempo, and Datadog Agent.
 
