@@ -1,80 +1,113 @@
 ---
 title: Tracing
 weight: 40
-aliases: ['/docs/user-guides/tracing/'] 
+aliases: ['/docs/user-guides/tracing/']
 ---
 
 # Vitess tracing
 
-Vitess allows you to generate Jaeger / OpenTracing compatible trace events from the Vitess major server components: `vtgate`, `vttablet`, and `vtctld`. To sync these trace events you need an OpenTracing compatible server (e.g. Jaeger). Vitess can send tracing events to this server in the Jaeger compact Thrift protocol wire format which is usually UDP on port 6381.
+Vitess allows you to generate trace events from major server components: `vtgate`, `vttablet`, and `vtctld`. Starting with v24, [OpenTelemetry](https://opentelemetry.io/) is the recommended tracing backend, exporting traces via OTLP/gRPC to any compatible backend. The legacy OpenTracing-based backends (`opentracing-jaeger` and `opentracing-datadog`) are deprecated and will be removed in v25.
 
-## Configuring tracing
+## OpenTelemetry (Recommended)
 
-The first step of configuring tracing is to make sure you have tracing collectors properly setup. The tracing collectors must be located where they can be reached from the various Vitess components on which you want to configure tracing.  We will not cover the entire setup process in this guide. The guide will cover the minimal config for testing/running locally, using the Jaeger docker container running on `localhost`. You can read more about Jaeger [here](https://www.jaegertracing.io/docs/1.20/features/).
+OpenTelemetry traces can be received by any OTLP-compatible backend, including Jaeger (v1.35+), Grafana Tempo, and Datadog Agent.
 
-### Running Jaeger in docker
+### Configuring OpenTelemetry tracing
 
-You can follow the Jaeger getting started documentation [here](https://www.jaegertracing.io/docs/1.20/getting-started/). In essence you need to run the Jaeger docker container:
+To enable OpenTelemetry tracing, add the following flags to `vtgate`, `vttablet`, `vtctld`, or any other Vitess component:
+
+``` shell
+--tracer opentelemetry --otel-endpoint localhost:4317
+```
+
+The available OpenTelemetry flags are:
+
+* `--otel-endpoint`: OpenTelemetry collector endpoint (host:port for gRPC). Defaults to `localhost:4317`.
+* `--otel-insecure`: Use an insecure connection to the collector. Defaults to `false`.
+* `--tracing-sampling-rate`: Sampling rate for traces (0.0 to 1.0). Defaults to `0.1`.
+
+### Running Jaeger with OTLP support
+
+Jaeger v1.35 and later natively supports OTLP ingestion on port 4317. You can run Jaeger with OTLP support using Docker:
 
 ``` shell
 $ docker run -d --name jaeger \
-  -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 \
-  -p 5775:5775/udp \
-  -p 6831:6831/udp \
-  -p 6832:6832/udp \
-  -p 5778:5778 \
+  -p 4317:4317 \
   -p 16686:16686 \
-  -p 14268:14268 \
-  -p 14250:14250 \
-  -p 9411:9411 \
-  jaegertracing/all-in-one:1.20
+  jaegertracing/all-in-one:latest
 ```
 
-Note that you don't need to expose all these ports, Vitess only cares about port 6831 (the UDP compact Thrift Jaeger protocol listener). You will also need port 16686 for the Jaeger web UI to browse the spans reported.
+Port 4317 receives OTLP/gRPC traces from Vitess, and port 16686 provides the Jaeger web UI.
 
-### Configuring tracing for vtgate, vttablet and vtctld
+## OpenTracing (Deprecated)
 
-Now that you have the Jaeger server running, you can add the necessary startup options to `vtgate`, `vttablet` and `vtctld`. This will enable you to send trace spans to the server.  The command line options for doing this are the same across `vtgate`, `vttablet` and `vtctld`. Add the following options for a tracing agent running on the `localhost`:
+The following OpenTracing-based tracing backends are deprecated as of v24 and will be removed in v25:
+
+* `opentracing-jaeger`: Uses the archived [jaeger-client-go](https://github.com/uber/jaeger-client-go) library. The Jaeger project recommends migrating to OpenTelemetry.
+* `opentracing-datadog`: Uses the OpenTracing bridge in dd-trace-go.
+
+These backends still work in v24 but log a deprecation warning at startup. The following flags are also deprecated:
+
+* `--jaeger-agent-host`
+* `--tracing-sampling-type`
+
+### Configuring OpenTracing (Legacy)
+
+If you are still using the legacy OpenTracing backends, you can configure them with:
 
 ``` shell
---tracer opentracing-jaeger --jaeger-agent-host 127.0.0.1:6831 --tracing-sampling-rate 0.0 
+--tracer opentracing-jaeger --jaeger-agent-host 127.0.0.1:6831 --tracing-sampling-rate 0.0
 ```
 
 There are a few things to note:
 
-  * There are other tracing plugins and the `-tracer` option allows you to select them. Currently we have `opentracing-jaeger` and `opentracing-datadog`. Only `opentracing-jaeger` is covered in this document.
   * `--jaeger-agent-host` should point to the `hostname:port` or `ip:port` of the tracing collector running the Jaeger compact Thrift protocol.
-  * The tracing sample rate (`--tracing-sampling-rate`) is expressed as a fraction from 0.0 (no sampling) to 1.0 (100% of all events are sent to the server). In the example, this option is set to zero, because we will be passing custom span contexts to the queries we want to trace. In this way, we only instrument the queries we want.  This is recommended for large installations because it is typically very hard to organize and consume the volume of tracing events generated by even a small fraction of events from a non-trivial production Vitess system. However, if you just want events to flow automatically without you having to instrument queries, you can set this to a value other than `0.0` and skip the following section on instrumenting queries.
+  * The tracing sample rate (`--tracing-sampling-rate`) is expressed as a fraction from 0.0 (no sampling) to 1.0 (100% of all events are sent to the server). If set to zero, you can pass custom span contexts to trace only specific queries. This is recommended for large installations because it is typically very hard to organize and consume the volume of tracing events generated by even a small fraction of events from a non-trivial production Vitess system.
 
-After adding these options, you must restart the Vitess components in question.
+### Migrating from OpenTracing to OpenTelemetry
 
-### Instrumenting queries
+To migrate from `opentracing-jaeger` to `opentelemetry`:
 
-Now that you have the Vitess components setup, you can start instrumenting your queries to choose which queries (or application actions) for which you want to generate trace events. This is obviously an application-specific process, but there are a few things to note:
+1. Make sure your Jaeger deployment is v1.35 or later (older versions don't support OTLP).
+2. Replace the tracing flags:
 
-  * The `SpanContext` id you have to instrument your Vitess queries with, in order for them to generate trace events, has a very specific format.  It is recommended to use one of the Jaeger / OpenTracing client libraries to generate these for you. They take the format of a base64 string of a JSON object that, at it simplest, looks something like [this](https://www.jaegertracing.io/docs/1.19/client-libraries/#tracespan-identity):
-  
-    ``` shell
-    {"uber-trace-id":"{trace-id}:{span-id}:{parent-span-id}:{flags}"}
-    ```
-    Note the very specific format requirements in the documentation. Because of these requirements, it can be tiresome to generate them yourself, and it is more convenient to use the client libraries instead.
-    
-  * Once you have the `SpanContext` string in its encoded base64 format, you can then generate your SQL query/queries related to this span to send them to Vitess.  To inform Vitess of the `SpanContext`, you need to use a special SQL comment style, e.g.:
-  
-    ``` shell
-    /*VT_SPAN_CONTEXT=<base64 value>*/ SELECT * from product;
-    ```
-    There are additional notes here:
-    
-    * The underlying tracing libraries are very particular about the base64 value, so if you have any formatting problems (including trailing spaces between the base64 value and the closing of the comment); you will get many warnings in your `vtgate` logs.
-    * When testing with, for example, the `mysql` CLI tool, make sure you are using the `-c` (or `--comments` flag), since the default is `--skip-comments`, which will never send your comments to the server (`vtgate`).
+| Before | After |
+|--------|-------|
+| `--tracer opentracing-jaeger` | `--tracer opentelemetry` |
+| `--jaeger-agent-host host:6831` | `--otel-endpoint host:4317` |
 
-### Inspecting trace spans in the Jaeger web UI
+To migrate from `opentracing-datadog`, configure the Datadog Agent to accept OTLP traces and use `--tracer opentelemetry` with `--otel-endpoint` pointing to the Agent's OTLP endpoint.
 
-This is beyond the scope of this guide. However, in general, if you have set everything above up correctly and you have instrumented and executed some queries appropriately, you can now access the Jager web UI to look at the spans recorded. If you are using the local docker container version of Jaeger, you can access the web UI in your browser at http://localhost:16686/. 
+## Instrumenting queries
 
-You should be able to search for and find spans based on the `trace-id` or `span-id` with which your query/queries were instrumented. Once you find a query, you will be able to see the trace events emitted by different
-parts of the code as the query moves through `vtgate` and the `vttablet(s)` involved in the query. An example would look something like this:
+You can instrument your queries to choose which queries (or application actions) generate trace events. This is useful when `--tracing-sampling-rate` is set to `0.0` and you want to trace only specific operations.
+
+The `SpanContext` id you need to instrument your Vitess queries with has a very specific format. It is recommended to use one of the Jaeger / OpenTracing client libraries (or OpenTelemetry SDK for the new backend) to generate these. For OpenTracing, the format is a base64 string of a JSON object that looks like [this](https://www.jaegertracing.io/docs/1.19/client-libraries/#tracespan-identity):
+
+``` shell
+{"uber-trace-id":"{trace-id}:{span-id}:{parent-span-id}:{flags}"}
+```
+
+Note the very specific format requirements in the documentation. Because of these requirements, it can be tiresome to generate them yourself, and it is more convenient to use the client libraries instead.
+
+Once you have the `SpanContext` string in its encoded base64 format, you can then generate your SQL query/queries related to this span to send them to Vitess. To inform Vitess of the `SpanContext`, use a special SQL comment style:
+
+``` shell
+/*VT_SPAN_CONTEXT=<base64 value>*/ SELECT * from product;
+```
+
+There are additional notes here:
+
+* The underlying tracing libraries are very particular about the base64 value, so if you have any formatting problems (including trailing spaces between the base64 value and the closing of the comment), you will get warnings in your `vtgate` logs.
+* When testing with, for example, the `mysql` CLI tool, make sure you are using the `-c` (or `--comments` flag), since the default is `--skip-comments`, which will never send your comments to the server (`vtgate`).
+
+## Inspecting trace spans
+
+Once you have configured tracing and instrumented (or enabled sampling for) some queries, you can access the tracing backend's web UI to look at the recorded spans.
+
+If you are using the local Docker container version of Jaeger, you can access the web UI in your browser at http://localhost:16686/.
+
+You should be able to search for and find spans based on the `trace-id` or `span-id` with which your query/queries were instrumented. Once you find a query, you will be able to see the trace events emitted by different parts of the code as the query moves through `vtgate` and the `vttablet(s)` involved in the query. An example would look something like this:
 
 ![](../trace1.png)
 
