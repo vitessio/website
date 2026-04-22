@@ -38,6 +38,10 @@ Both commands are dependent on the global topology service being available, and 
 
 The `PlannedReparentShard` command reparents a healthy shard to a new primary. It can be used to initialize the shard primary when the shard is brought up. If it is used to change the primary of an already running shard, then both the current and new primary must be up and running. If the primary for a shard is down, use `EmergencyReparentShard` instead.
 
+{{< info >}}
+Tablets in `RESTORE` type (actively restoring from a backup) do not need to be reachable during `PlannedReparentShard`. These tablets are automatically excluded from the reachability check because they are not yet part of the active replication topology.
+{{< /info >}}
+
 This command performs the following actions when used to change the current primary:
 
 1. Puts the current primary tablet in read-only mode.
