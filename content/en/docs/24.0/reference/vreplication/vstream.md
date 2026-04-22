@@ -181,7 +181,9 @@ This flag will be ignored if the `MinimizeSkew` flag is also specified because t
 
 Maximum duration (in seconds) a VStream can run before termination. When set, the VStream terminates with an `UNAVAILABLE` error after the specified duration, prompting clients to reconnect. A random jitter of +/-10% is applied to spread reconnections across clients.
 
-This is useful for client-side load balancing. Periodically terminating streams forces clients to reconnect and potentially route to different VTGate servers, improving load distribution. When used with [gRPC ORCA metrics](https://github.com/cncf/xds/blob/main/xds/data/orca/v3/orca_load_report.proto) for client-side load balancing, metrics are preserved across stream age expirations, enabling more even load distribution across VTGate servers.
+This is a best-effort timeout: if a send to the client is in-flight when the maximum age is reached, the server waits for that send to complete before terminating. This prevents unsafe concurrent access to the gRPC stream.
+
+This flag is useful for client-side load balancing. Periodically terminating streams forces clients to reconnect and potentially route to different VTGate servers, improving load distribution. When used with [gRPC ORCA metrics](https://github.com/cncf/xds/blob/main/xds/data/orca/v3/orca_load_report.proto) for client-side load balancing, metrics are preserved across stream age expirations, enabling more even load distribution across VTGate servers.
 
 Set to `0` to disable (streams run indefinitely until client disconnection or error).
 
