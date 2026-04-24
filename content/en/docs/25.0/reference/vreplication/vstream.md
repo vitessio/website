@@ -111,6 +111,15 @@ If specified, this determines which cells to give preference to during [tablet s
 By default, `preferlocalwithalias` is used in order to give preference to the caller's local cell and then any alias its cell belongs to. 
 If `onlyspecified` is given, then only tablets within the specified `Cells` field value will be considered.
 
+##### ExcludeKeyspaceFromTableName
+
+**Type** bool\
+**Default** false
+
+When streaming from multiple keyspaces, `vtgate` prefixes table names with the keyspace name to disambiguate
+duplicate table names across keyspaces. When this flag is enabled, the keyspace prefix is omitted. This improves
+performance by avoiding the need to clone events. This is typically safe to use when streaming from a single keyspace.
+
 ##### HeartbeatInterval
 
 **Type** unsigned integer\
@@ -149,12 +158,28 @@ When enabled the `vtgate` will send a reshard journal event to the client along 
 `error` in the [`VStreamReader.Recv`](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate/vtgateconn#VStreamReader)
 response and stop sending any further events.
 
+##### StreamKeyspaceHeartbeats
+
+**Type** bool\
+**Default** false
+
+When enabled, all new row events from the `heartbeat` table in the sidecar database, for all shards, will be
+included in the stream. This can be useful for monitoring replication lag across shards.
+
 ##### TabletOrder
 
 **Type** string\
 **Default** ""
 
 This replaces the `in_order` hint (e.g. `"in_order:REPLICA,PRIMARY"`) previously used to specify tablet type order [during source tablet selection](../tablet_selection/).
+
+##### TablesToCopy
+
+**Type** repeated string\
+**Default** [] (all tables)
+
+If specified, only these tables will be copied during the initial copy phase, skipping the rest of the tables
+matched by the [filter](#filter). If not provided, the default behavior is to copy all tables.
 
 ##### TransactionChunkSize
 
@@ -173,6 +198,16 @@ Transactions smaller than this threshold are sent without locking for better par
 {{< warning >}}
 This flag will be ignored if the `MinimizeSkew` flag is also specified because the combination of these two features can lead to deadlocks.
 {{< /warning >}}
+
+##### MaxStreamAgeSeconds
+
+**Type** unsigned integer\
+**Default** 0 (no maximum age)
+
+Maximum duration (in seconds) a VStream connection may run before the server terminates it with error code
+`UNAVAILABLE`. This is best-effort: if a send to the client is in-flight when the age is reached, the server waits
+for it to complete before returning. The client is expected to reconnect. A random jitter of +/-10% is added to
+spread out reconnections across clients.
 
 ### RPC Response
 
