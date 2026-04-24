@@ -33,10 +33,11 @@ One of `cluster`, `cluster-defaults`, or `cluster-config` file is required. Mult
 | -------- | --------- | --------- | --------- |--------- |
 | `grpc-tracing` | Optional | boolean | `false` | If true, enables tracing on the gRPC server. |
 | `http-tracing` | Optional | boolean | `false` | If true, enables tracing on the HTTP server. |
-| `tracer` | Optional | string | "noop" | Which tracing service to use; see [go/trace/trace.go](https://github.com/vitessio/vitess/blob/main/go/trace/trace.go). |
-| `tracing-enable-logging` | Optional | boolean | `false` | Whether to enable logging in the tracing service; see [go/trace/trace.go](https://github.com/vitessio/vitess/blob/main/go/trace/trace.go).  |
-| `tracing-sampling-type` | Optional | string | - | Sampling strategy to use for jaeger. Possible values are "const", "probabilistic", "rateLimiting", or "remote"; see [go/trace/plugin_jaeger.go](https://github.com/vitessio/vitess/blob/main/go/trace/plugin_jaeger.go). |
-| `tracing-sampling-rate` | Optional | float | 0.1 | Sampling rate for the probabilistic jaeger sampler; see [go/trace/plugin_jaeger.go](https://github.com/vitessio/vitess/blob/main/go/trace/plugin_jaeger.go). |
+| `tracer` | Optional | string | "noop" | Tracing backend to use. Valid values: `noop`, `opentelemetry`. |
+| `tracing-enable-logging` | Optional | boolean | `false` | Whether to enable logging in the tracing service. |
+| `tracing-sampling-rate` | Optional | float | 0.1 | Sampling rate for traces (0.0 to 1.0). |
+| `otel-endpoint` | Optional | string | "localhost:4317" | OpenTelemetry collector endpoint (host:port for gRPC). |
+| `otel-insecure` | Optional | boolean | `false` | Use an insecure connection to the OpenTelemetry collector. |
 ### gRPC server flags
 
 | Name | Required | Type | Default | Definition |
