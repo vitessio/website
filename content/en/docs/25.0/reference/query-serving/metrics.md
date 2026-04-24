@@ -111,3 +111,45 @@ You can use these metrics to:
 * Verify dry-run mode behavior before enabling throttling
 
 For example, you can use these metrics to determine if a particular workload or query priority is being throttled more frequently, or to measure the latency impact of throttling evaluation on query execution.
+
+## Warming Reads Metrics
+
+VTGate's warming reads feature forwards a percentage of primary reads to replicas in the background to keep their buffer pools warm. The following metrics help monitor warming reads activity and identify potential issues.
+
+### Available Metrics
+
+#### ReplicaWarmingReadsMirrored
+
+Tracks the number of read queries successfully forwarded to replicas for buffer pool warming.
+
+**Labels:**
+
+* `Keyspace`: The keyspace where the warming read was executed
+
+#### ReplicaWarmingReadsDropped
+
+Tracks the number of warming reads that were shed due to concurrency limits or invalid priority values. A high count indicates the warming reads concurrency pool (controlled by `--warming-reads-concurrency`) may be undersized for the workload.
+
+**Labels:**
+
+* `Keyspace`: The keyspace where the warming read was dropped
+
+#### ReplicaWarmingReadsErrors
+
+Tracks the number of warming reads that failed during execution on replicas.
+
+**Labels:**
+
+* `Keyspace`: The keyspace where the warming read failed
+* `Code`: The gRPC error code returned (e.g., `UNAVAILABLE`, `DEADLINE_EXCEEDED`)
+
+### Using Warming Reads Metrics
+
+You can use these metrics to:
+
+* Track warming reads effectiveness by monitoring `ReplicaWarmingReadsMirrored`
+* Identify capacity issues when `ReplicaWarmingReadsDropped` is consistently high
+* Detect replica health problems through `ReplicaWarmingReadsErrors`
+* Tune `--warming-reads-concurrency` based on drop rates
+
+For example, you can use these metrics to determine if your warming reads concurrency pool is undersized for your workload, or to identify replicas experiencing errors. You can also use the `PRIORITY` comment directive to prioritize critical warming queries over less important ones.
