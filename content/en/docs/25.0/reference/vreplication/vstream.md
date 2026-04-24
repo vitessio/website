@@ -209,6 +209,14 @@ Maximum duration (in seconds) a VStream connection may run before the server ter
 for it to complete before returning. The client is expected to reconnect. A random jitter of +/-10% is added to
 spread out reconnections across clients.
 
+This flag is useful for client-side load balancing. Periodically terminating streams forces clients to reconnect
+and potentially route to different `vtgate` servers, improving load distribution. When used with
+[gRPC ORCA metrics](https://github.com/cncf/xds/blob/main/xds/data/orca/v3/orca_load_report.proto) for
+client-side load balancing, metrics are preserved across stream age expirations, enabling more even load
+distribution across `vtgate` servers.
+
+Set to `0` (default) to disable — streams run indefinitely until client disconnection or error.
+
 ### RPC Response
 
 The [`VStream` gRPC](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate/vtgateconn#VTGateConn.VStream) returns
