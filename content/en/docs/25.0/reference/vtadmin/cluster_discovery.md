@@ -11,7 +11,7 @@ vtadmin \
   --addr ":14200" \
   --http-origin "http://localhost:14201" \
   --http-tablet-url-tmpl "http://{{ .Tablet.Hostname }}:15{{ .Tablet.Alias.Uid }}" \
-  --tracer "opentracing-jaeger" \
+  --tracer opentelemetry \
   --grpc-tracing \
   --http-tracing \
   --logtostderr \
@@ -62,7 +62,7 @@ vtadmin \
   --addr ":14200" \
   --http-origin "http://localhost:14201" \
   --http-tablet-url-tmpl "http://{{ .Tablet.Hostname }}:15{{ .Tablet.Alias.Uid }}" \
-  --tracer "opentracing-jaeger" \
+  --tracer opentelemetry \
   --grpc-tracing \
   --http-tracing \
   --logtostderr \
