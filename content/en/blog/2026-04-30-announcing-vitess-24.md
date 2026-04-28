@@ -119,7 +119,7 @@ Set `--tracer opentelemetry` on any Vitess binary to enable it; traces are expor
 Any OTEL-compatible backend (Jaeger v1.35+, Grafana Tempo, Datadog Agent, etc.) can receive these traces.
 
 The existing `opentracing-jaeger` and `opentracing-datadog` tracers are deprecated in v24 and will be removed in v25.
-The Jaeger client-go library that backs `opentracing-jaeger` has been archived, and the Jaeger project [recommends migrating to OpenTelemetry](https://www.jaegertracing.io/docs/next-release/getting-started/#migrating-from-jaeger-clients-to-opentelemetry-sdk).
+The Jaeger client-go library that backs `opentracing-jaeger` has been archived, and the Jaeger project [recommends migrating to OpenTelemetry](https://www.jaegertracing.io/sdk-migration/).
 To migrate, replace `--tracer opentracing-jaeger` with `--tracer opentelemetry`, and `--jaeger-agent-host host:port` with `--otel-endpoint host:4317`.
 
 #### QueryThrottler Observability and Configuration
