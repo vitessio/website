@@ -23,6 +23,7 @@
 
   <ul class="docs-navlist">
     {{ range $entries }}
+      {{ if not .Params.archived }}
       {{ $isActive := eq $currentRelPermalink .RelPermalink }}
       {{ $activeClass := cond $isActive "active" "" }}
 
@@ -53,6 +54,7 @@
           {{ end }}
         {{ end }}
       </li>
+      {{ end }}
     {{ end }}
   </ul>
 {{ end }}

@@ -34,6 +34,22 @@
     {{ end }}
   </nav>
 
+  {{ $pageVersion := .Params.version }}
+  {{ $currentVersion := printf "v%s" site.Params.versions.current }}
+  {{ $currentDocsPath := printf "/docs/%s/" site.Params.versions.current }}
+
+  {{ if eq .Language.Lang "zh" }}
+    {{ $currentDocsPath = printf "/zh/docs/%s/" site.Params.versions.current }}
+  {{ end }}
+
+  {{ if .Params.archived }}
+  <div class="notification is-warning is-light is-radiusless" role="status">
+    <strong>You are viewing documentation for {{ $pageVersion }}.</strong>
+    These docs are no longer current and may not match the latest Vitess behavior.
+    <a href="{{ $currentDocsPath }}">View the current {{ $currentVersion }} docs.</a>
+  </div>
+  {{ end }}
+
   <p class="title is-size-1 is-size-2-mobile has-text-weight-light{{ if .Params.description }} is-spaced{{ end }}">
     {{ .Title }}
   </p>

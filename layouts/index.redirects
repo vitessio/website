@@ -50,25 +50,11 @@
 # Redirect to Slack invite link.
 /slack https://join.slack.com/t/vitess/shared_invite/zt-39md39eck-L4jzfgRC6hzsPKxungoUNQ 302
 
-# Redirect archived docs
-/docs/19.0/                              /docs/archive/19.0/
-/docs/19.0/*                             /docs/archive/19.0/:splat
-/docs/18.0/                              /docs/archive/18.0/
-/docs/18.0/*                             /docs/archive/18.0/:splat
-/docs/17.0/                              /docs/archive/17.0/
-/docs/17.0/*                             /docs/archive/17.0/:splat
-/docs/16.0/                              /docs/archive/16.0/
-/docs/16.0/*                             /docs/archive/16.0/:splat
-/docs/15.0/                              /docs/archive/15.0/
-/docs/15.0/*                             /docs/archive/15.0/:splat
-/docs/14.0/                              /docs/archive/14.0/
-/docs/14.0/*                             /docs/archive/14.0/:splat
-/docs/13.0/                              /docs/archive/13.0/
-/docs/13.0/*                             /docs/archive/13.0/:splat
-/docs/12.0/                              /docs/archive/12.0/
-/docs/12.0/*                             /docs/archive/12.0/:splat
-/docs/11.0/                              /docs/archive/11.0/
-/docs/11.0/*                             /docs/archive/11.0/:splat
+# Redirect legacy archive docs URLs.
+/docs/archive/:version                   /docs/:version/ 301
+/docs/archive/:version/*                 /docs/:version/:splat 301
+/zh/docs/archive/:version                /zh/docs/:version/ 301
+/zh/docs/archive/:version/*              /zh/docs/:version/:splat 301
 
 # Blog post
 /blog/2024-02-28-announcing-vitess-19/   /blog/2024-03-06-announcing-vitess-19/

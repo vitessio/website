@@ -1,12 +1,12 @@
 ---
-title: v19.0 (Archived)
+title: v22.0 (Archived)
 archived: true
 description:  因为这些文档不维护，所以它们是旧的。你想了解的有关世界上最具扩展性的开源MySQL平台的一切，都在这里
 notoc: true
 cascade:
-  version: v19.0
+  version: v22.0
   archived: true
-weight: 81
+weight: 78
 ---
 Vitess是一个用于部署、扩展和管理大型MySQL实例集群的数据库解决方案。它可以运行在本地硬件环境、私有云、公用云架构上，效率相差无几。
 ## Vitess 和 MySQL
