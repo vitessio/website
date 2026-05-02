@@ -113,6 +113,10 @@ Note that VTGate can [buffer queries](../../features/vtgate-buffering/) when rev
 [`cancel`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_cancel/) can be used if a workflow was created in error or was misconfigured and you prefer to create a new workflow instead of fixing this one. `cancel` can only be called if no traffic has been switched. It removes vreplication-related artifacts like rows from the vreplication and copy_state tables in the sidecar `_vt` database along with routing rules and blacklisted tables from the topo and, by default, the target tables on the target keyspace
 (see `--keep-data` and `--rename-tables`).
 
+{{< info >}}
+For `_reverse` workflows (created automatically during `SwitchTraffic` when `--enable-reverse-replication` is true), the `--keep-data` flag defaults to `true` to protect production data on the original source. A warning is displayed when this protective default is applied. To explicitly remove the data, pass `--keep-data=false`.
+{{< /info >}}
+
 </div>
 
 #### Complete
@@ -124,6 +128,10 @@ This is a destructive command
 
 [`complete`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_complete/) is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with routing rules and and blocklisted tables from the topo. By default, the source tables are also dropped on the target keyspace
 (see `--keep-data` and `--rename-tables`).
+
+{{< info >}}
+For `_reverse` workflows (created automatically during `SwitchTraffic` when `--enable-reverse-replication` is true), the `--keep-data` flag defaults to `true` to protect production data on the original source. A warning is displayed when this protective default is applied. To explicitly remove the data, pass `--keep-data=false`.
+{{< /info >}}
 
 </div>
 
