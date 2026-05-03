@@ -10,7 +10,7 @@ Listed below are recipes for advanced online DDL usage:
 - [Duplicate migration indication](#duplicate-migration-indication)
 - [Near instant REVERTs](#near-instant-reverts)
 
-## Duplicate migration detection
+## Detecting duplicate migration
 
 Two migrations sharing the same context and DDL are considered duplicate, and only one will run to completion.
 
