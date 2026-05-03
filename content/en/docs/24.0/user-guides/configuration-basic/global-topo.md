@@ -38,7 +38,7 @@ To be safe, you may want to bring up etcd with `--enable-v2=true`, even though i
 
 It is generally not recommended that you migrate from one type of toposerver to another. However, if absolutely necessary, you can use the [topo2topo](../../../reference/features/topology-service/#migration-between-implementations) command line tool to perform this migration.
 
-## Backups
+## Backing up TopoServer data
 
 It is important to periodically backup the data in the TopoServer. Although most of the information in the TopoServer can be manually reconstructed, it is still a painful task. This can be avoided if a recent backup was readily available.
 

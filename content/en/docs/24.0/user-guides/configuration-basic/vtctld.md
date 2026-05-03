@@ -26,7 +26,7 @@ Similarly, if grpc-vtctld is not specified as a service\_map for vtctld, you wil
 
 vtctld is usually not very resource intensive. But you may need to provision more if you plan to run the `VDiff` command. This functionality will soon be moved to vttablet.
 
-## vtctldclient
+## Configuring an alias for vtctldclient
 
 Since we will be using `vtctldclient` often, it will be convenient to configure an alias for it:
 
