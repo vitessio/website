@@ -6,7 +6,7 @@ featured: true
 
 Vitess is an open-source database clustering system for horizontal scaling of MySQL. It distributes data across multiple MySQL instances through sharding while presenting a unified database interface to your application. Queries work as if hitting a single MySQL server, but Vitess routes them to the appropriate shards automatically.
 
-Vitess runs in cloud environments (public or private) and on dedicated hardware. It supports MySQL and Percona Server for MySQL.
+Vitess runs in public and private cloud environments, and on dedicated hardware. It supports MySQL and Percona Server for MySQL.
 
 ## Why use Vitess
 
