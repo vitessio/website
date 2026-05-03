@@ -335,7 +335,7 @@ This URL has an MRU list of consolidations. This is a way of identifying if mult
 
 #### /debug/query\_rules
 
-This URL displays the currently active query blacklist rules.
+This URL displays the currently active query blocklist rules.
 
 ### Alerting
 
