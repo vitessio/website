@@ -1,5 +1,5 @@
 ---
-title: Move Tables
+title: Moving Tables
 weight: 2
 aliases: ['/docs/user-guides/move-tables/']
 ---

@@ -1,5 +1,5 @@
 ---
-title: Backfill Lookup Vindexes
+title: Backfilling Lookup Vindexes
 weight: 11
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Authorization
+title: Configuring Authorization
 weight: 10
 aliases: ['/docs/user-guides/authorization/'] 
 ---

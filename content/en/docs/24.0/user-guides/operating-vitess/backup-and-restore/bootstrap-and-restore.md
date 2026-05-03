@@ -1,5 +1,5 @@
 ---
-title: Bootstrap and Restore
+title: Bootstrapping and Restoring
 weight: 3
 aliases: ['/docs/user-guides/backup-and-restore/']
 ---
