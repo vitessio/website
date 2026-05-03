@@ -1,7 +1,9 @@
 ---
 title: Glossary
 description: Definitions of terms used in Vitess documentation
-weight: 1
+weight: 3000
+cascade:
+  skipversions: true
 ---
 
 This document defines terms used throughout Vitess documentation, command-line tools, and source code.
