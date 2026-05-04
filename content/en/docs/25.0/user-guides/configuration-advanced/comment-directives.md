@@ -90,37 +90,6 @@ select /*vt+ PLANNER=gen4 */ * from user;
 
 Valid values are the same as for the planner flag - `Gen4`, `Gen4Greedy` and `Gen4Left2Right`.
 
-## Warming reads priority (`PRIORITY`)
-
-The `PRIORITY` directive sets the priority of warming read queries forwarded from the primary to replicas. Warming reads help keep replica buffer pools warm by sending a percentage of primary reads to replicas in the background. This feature is controlled by the `vtgate` flags `--warming-reads-percent` and `--warming-reads-concurrency`.
-
-The priority value is an integer from 0 to 100:
-
-- **Priority 0** (default): Highest priority, least likely to be shed under load
-- **Priority 100**: Lowest priority, most likely to be shed when the concurrency pool is contended
-
-When the warming reads concurrency pool is under contention, lower-priority queries (higher priority values) are shed first. The system uses a weighted semaphore where weight = 100 + priority value. With `--warming-reads-concurrency=5`, the semaphore capacity is 500, allowing at most 5 concurrent priority-0 queries (weight 100 each) or fewer lower-priority queries.
-
-```sql
-SELECT /*vt+ PRIORITY=50 */ * FROM users WHERE id = 123;
-```
-
-This allows applications to mark less critical warming queries so they are shed first when approaching the concurrency limit.
-
-### Monitoring
-
-VTGate exposes the following metrics for monitoring warming reads:
-
-- `ReplicaWarmingReadsMirrored`: Count of warming reads successfully sent to replicas (keyed by keyspace)
-- `ReplicaWarmingReadsDropped`: Count of warming reads shed due to concurrency limits or invalid priority (keyed by keyspace)
-- `ReplicaWarmingReadsErrors`: Count of warming reads that failed during execution (keyed by keyspace and gRPC error code)
-
-### Limitations
-
-- Only affects warming read queries forwarded to replicas; does not affect the primary query execution
-- Invalid priority values (non-numeric) are ignored and clear any previously set priority
-- Priority values outside the 0-100 range are clamped to the nearest valid value
-
 ### Workload name (`WORKLOAD_NAME`)
 
 Specifies the client application workload name. This does not affect query execution, but can be used to instrument

@@ -102,21 +102,6 @@ select /*vt+ PLANNER=gen4 */ * from user;
 
 Valid values are the same as for the planner flag - `Gen4`, `Gen4Greedy` and `Gen4Left2Right`.
 
-## Warming reads priority (`PRIORITY`)
-
-The `PRIORITY` directive sets the priority of warming read queries forwarded from the primary to replicas. Warming reads are controlled by the `vtgate` parameter `--warming-reads-percent`, which determines what percentage of primary reads are also sent to replicas to keep their buffer pools warm.
-
-The priority value is an integer from 0 to 100. Priority 0 (default) uses 1 slot of the warming reads concurrency limit, while priority 100 uses 2 slots, making the query more likely to be shed when the concurrency pool is full. Higher priority values consume more concurrency slots, meaning those queries are deprioritized when the system is under load. This allows a Vitess-aware application to mark less critical warming queries so they are shed first when approaching the concurrency limit set by `--warming-reads-concurrency`.
-
-```sql
-SELECT /*vt+ PRIORITY=50 */ * FROM users WHERE id = 123;
-```
-
-### Limitation and caveats:
-
-- Only affects warming read queries (queries forwarded to replicas when warming reads are enabled).
-- Does not affect the primary query execution.
-
 ### Workload name (`WORKLOAD_NAME`)
 
 Specifies the client application workload name. This does not affect query execution, but can be used to instrument
