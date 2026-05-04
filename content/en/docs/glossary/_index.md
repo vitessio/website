@@ -10,7 +10,7 @@ This document defines terms used throughout Vitess documentation, command-line t
 
 ## Backup
 
-A tablet state indicating the tablet is currently taking a backup of its data.
+A consistent snapshot of data stored for disaster recovery and provisioning new tablets. Vitess supports full backups (entire dataset) and incremental backups (binary log changes). See also the [backup tablet type](#backup-tablet-type).
 
 ## Cell
 
@@ -42,7 +42,7 @@ The range of [keyspace IDs](#keyspace-id) that a [shard](#shard) is responsible 
 
 ## Keyspace
 
-A logical database that maps to one or more MySQL databases. If using [sharding](#shard), a keyspace spans multiple databases; otherwise it maps to a single MySQL database. Applications interact with keyspaces as if they were single databases.
+A logical database that maps to one or more MySQL replica sets. If using [sharding](#shard), a keyspace spans multiple MySQL replica sets (one replica set per shard); otherwise it maps to a single MySQL database. Applications interact with keyspaces as if they were single MySQL servers.
 
 ## Keyspace ID
 
@@ -70,7 +70,7 @@ A command-line utility for managing the lifecycle of local MySQL instances used 
 
 ## Online DDL
 
-Non-blocking schema changes that allow tables to remain available during migrations. Vitess supports multiple strategies including its native approach, gh-ost, and pt-osc.
+Non-blocking schema changes that allow tables to remain available during migrations.
 
 ## Primary
 
@@ -130,7 +130,7 @@ A unique identifier for a [tablet](#tablet) in the format `cell-uid`, such as `z
 
 ## Topology Service
 
-A metadata store (backed by etcd or ZooKeeper) that holds cluster configuration, [replication graph](#replication-graph), and serving state. Often abbreviated as "topo."
+A metadata store (backed by etcd, Consul, or ZooKeeper) that holds cluster configuration, [replication graph](#replication-graph), and serving state. Often abbreviated as "topo."
 
 ## Unsharded
 
@@ -175,10 +175,6 @@ A single-process test environment that runs all Vitess components together. Usef
 ## VTAdmin
 
 A web-based administrative interface for managing and monitoring Vitess clusters.
-
-## vtctl
-
-The legacy command-line administration tool for Vitess. Deprecated in favor of [vtctldclient](#vtctldclient).
 
 ## vtctld
 
