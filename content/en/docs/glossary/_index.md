@@ -12,6 +12,10 @@ This document defines terms used throughout Vitess documentation, command-line t
 
 A consistent snapshot of data stored for disaster recovery and provisioning new tablets. Vitess supports full backups (entire dataset) and incremental backups (binary log changes). See also the [backup tablet type](#backup-tablet-type).
 
+## Backup (tablet type) {#backup-tablet-type}
+
+A [tablet](#tablet) state indicating the tablet has stopped replication at a consistent snapshot to upload a new [backup](#backup). After completion, it resumes replication and returns to its previous type.
+
 ## Cell
 
 A data center, availability zone, or other failure domain. Vitess uses cells to isolate failures and route queries to geographically appropriate tablets.
