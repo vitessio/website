@@ -24,9 +24,9 @@ A data center, availability zone, or other failure domain. Vitess uses cells to 
 
 A [lookup vindex](#lookup-vindex) that maintains consistency without requiring two-phase commit.
 
-## Drained
+## Drained (tablet type) {#drained-tablet-type}
 
-A tablet state reserved for Vitess background operations. Drained tablets do not serve queries.
+A [tablet](#tablet) state reserved for Vitess background operations such as resharding. Drained tablets do not serve queries.
 
 ## Functional Vindex
 
@@ -78,15 +78,19 @@ Non-blocking schema changes that allow tables to remain available during migrati
 
 ## Primary
 
-The tablet type for the MySQL primary of a [shard](#shard). Handles all write operations. Formerly called "master."
+In MySQL replication, the database server that receives write operations and streams changes to replicas. In Vitess, each [shard](#shard) has one primary. See also [Primary (tablet type)](#primary-tablet-type).
+
+## Primary (tablet type) {#primary-tablet-type}
+
+A [tablet](#tablet) currently serving as the MySQL primary for its [shard](#shard). Handles all write operations. Formerly called "master." A [replica](#replica-tablet-type) tablet that has been promoted to primary through [reparenting](#reparenting).
 
 ## Primary Vindex
 
 The [vindex](#vindex) that determines row-to-shard mapping. Equivalent to the sharding key.
 
-## Rdonly
+## Rdonly (tablet type) {#rdonly-tablet-type}
 
-A tablet type for read-only replicas that are not eligible for promotion to primary. Used for batch jobs, analytics, and other background operations.
+A [tablet](#tablet) type for read-only MySQL replicas that are not eligible for promotion to [primary](#primary-tablet-type). Used for batch jobs, analytics, backups, and other background operations.
 
 ## Reparenting
 
@@ -94,7 +98,11 @@ The process of changing which [tablet](#tablet) serves as the [primary](#primary
 
 ## Replica
 
-A tablet type for MySQL replicas that are eligible for promotion to [primary](#primary).
+In MySQL replication, a database server that receives and applies changes from a primary. See also [Replica (tablet type)](#replica-tablet-type).
+
+## Replica (tablet type) {#replica-tablet-type}
+
+A [tablet](#tablet) type for MySQL replicas that are eligible for promotion to [primary](#primary-tablet-type). Conventionally used for serving live, user-facing read requests.
 
 ## Replication Graph
 
@@ -104,9 +112,9 @@ Metadata that tracks MySQL primary-replica relationships within the cluster.
 
 A VReplication workflow that splits or merges [shards](#shard) to scale horizontally.
 
-## Restore
+## Restore (tablet type) {#restore-tablet-type}
 
-A tablet state indicating the tablet is restoring data from a backup.
+A [tablet](#tablet) state indicating the tablet is restoring data from a [backup](#backup). After completion, it begins replicating and becomes either [replica](#replica-tablet-type) or [rdonly](#rdonly-tablet-type).
 
 ## Routing Rules
 
