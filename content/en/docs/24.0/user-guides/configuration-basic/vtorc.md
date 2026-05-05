@@ -51,7 +51,7 @@ The `--cell` flag enables VTOrc to be cell-aware, which will be used in future r
 
 ### Filtering Tablets
 
-By default, VTOrc monitors all tablets across all cells. You can restrict which tablets it watches using the `--clusters-to-watch` and `--cells-to-watch` flags.
+By default, VTOrc monitors all tablets across all cells. You can restrict which tablets it watches using the `--clusters-to-watch` flag.
 
 #### Filtering by Keyspace/Shard
 
@@ -65,28 +65,7 @@ vtorc --clusters-to-watch "keyspace1,keyspace2" ...
 vtorc --clusters-to-watch "keyspace1,keyspace2/-80" ...
 ```
 
-#### Filtering by Cell
-
-The `--cells-to-watch` flag accepts a comma-separated list of cells. VTOrc will only monitor tablets in those cells:
-
-```sh
-# Only watch tablets in zone1 and zone2
-vtorc --cells-to-watch "zone1,zone2" ...
-```
-
-VTOrc validates that each specified cell exists in the topology. If any cell doesn't exist, VTOrc will fail to start.
-
-#### Combining Filters
-
-When both flags are set, a tablet must match **both** filters to be monitored:
-
-```sh
-vtorc --clusters-to-watch "keyspace1" --cells-to-watch "zone1,zone2" ...
-```
-
-This configuration makes VTOrc monitor only tablets in `keyspace1` that are located in `zone1` or `zone2`.
-
-When neither flag is set, VTOrc monitors all tablets in the topology.
+When `--clusters-to-watch` is not set, VTOrc monitors all tablets in the topology.
 
 ### Durability Policies
 
