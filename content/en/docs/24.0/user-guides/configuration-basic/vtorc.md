@@ -43,29 +43,13 @@ vtorc --topo-implementation etcd2 \
   --alsologtostderr
  ```
 
+You can optionally add a `clusters_to_watch` flag that contains a comma separated list of keyspaces or `keyspace/shard` values. If specified, VTOrc will manage only those clusters.
+
 ### Cell Awareness
 
 Starting in v24, VTOrc supports the `--cell` flag to specify which cell the VTOrc instance is running in. This flag is optional in v24 but will become required in v25 and later versions.
 
 The `--cell` flag enables VTOrc to be cell-aware, which will be used in future releases for cross-cell problem validation. When specified, VTOrc validates that the cell exists in the topology. If the cell doesn't exist, VTOrc will fail to start. If the flag is not provided in v24, VTOrc will log a warning but continue to operate normally.
-
-### Filtering Tablets
-
-By default, VTOrc monitors all tablets across all cells. You can restrict which tablets it watches using the `--clusters-to-watch` flag.
-
-#### Filtering by Keyspace/Shard
-
-The `--clusters-to-watch` flag accepts a comma-separated list of keyspaces or keyspace/shard combinations:
-
-```sh
-# Watch all shards in keyspace1 and keyspace2
-vtorc --clusters-to-watch "keyspace1,keyspace2" ...
-
-# Watch specific shards
-vtorc --clusters-to-watch "keyspace1,keyspace2/-80" ...
-```
-
-When `--clusters-to-watch` is not set, VTOrc monitors all tablets in the topology.
 
 ### Durability Policies
 
