@@ -78,6 +78,33 @@ ROW Event	table_name:"customer" row_changes:{after:{lengths:2 lengths:6 values:"
 After encountering the same error repeatedly for the provided amount of time, stop automatically retrying the workflow and set the state to STOPPED when persisting the error. This is useful because at this point the error is likely not transient and the workflow will not be able to make further progress without
 human intervention. This is important because the retry behavior can make it difficult to detect and alert on the workflow error state because it so quickly retries again and in doing so clears the previous error.
 
+### vreplication-max-row-json-bytes
+
+**Type** integer\
+**Unit** bytes\
+**Default** 0 (unlimited)\
+**Applicable on** target
+
+Limits the combined byte size of JSON columns in a single row during VReplication copy and replay phases. This is a target-side guardrail for workflows that may contain very large JSON documents.
+
+VReplication encodes JSON values in generated SQL in order to preserve MySQL JSON behavior. Very large JSON documents, especially documents with many scalar values such as large arrays of strings, can produce SQL that is much larger and more expensive for the target `mysqld` to parse and evaluate than the original JSON payload. On memory-constrained targets, this can cause `mysqld` out-of-memory (OOM) failures and repeated workflow retries.
+
+When a row's combined JSON column size exceeds this limit, the workflow fails before applying that row. The error includes the target table name, the largest JSON column name, and its size, so operators can identify the data that exceeded the configured budget.
+
+The default value of 0 means no limit is enforced, preserving existing behavior. Values must be non-negative. Use this flag when target tablets or `mysqld` instances have a known memory ceiling and the source data may contain large JSON rows. A practical starting point is a conservative per-row JSON budget that leaves room for concurrent VReplication work and normal target traffic. If legitimate rows are stopped, raise the value; if the target still shows memory pressure while applying JSON-heavy rows, lower it.
+
+{{< info >}}
+This flag only counts JSON-typed columns. BLOB and TEXT columns are not included in the calculation. NULL JSON columns are treated as zero-size.
+{{< /info >}}
+
+To override this setting for a specific workflow, use the `--config-overrides` flag when creating or updating the workflow. The workflow config key is `max-row-json-bytes`:
+
+```sh
+vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer create \
+  --source-keyspace commerce --tables 'customer,corder' \
+  --config-overrides 'max-row-json-bytes=16777216'
+```
+
 ### vreplication-net-read-timeout and vreplication-net-write-timeout
 
 **Type** integer\
