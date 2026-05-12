@@ -86,10 +86,11 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09030 |  | Recursive query aborted after 1000 iterations. | 3636 | HY000 |
 | VT09031 |  | Primary demotion is stalled | 0 |  |
 | VT09032 | This error occurs after a VT15001 error was sent to the client. Later queries in the same session will continue to fail until the client sends a ROLLBACK. | previous transaction failed. Issue a ROLLBACK to resolve the failure. | 0 |  |
+| VT09033 | VTGate does not allow modifications to internal Vitess tables. | modification of internal table '%s' is not allowed | 0 |  |
 | VT10001 | Foreign key constraints are not allowed, see https://vitess.io/blog/2021-06-15-online-ddl-why-no-fk/. | foreign key constraints are not allowed | 0 |  |
 | VT10002 | The distributed transaction cannot be committed. A rollback decision is taken. | atomic distributed transaction not allowed: %s | 0 |  |
 | VT12001 | This statement is unsupported by Vitess. Please rewrite your query to use supported syntax. | unsupported: %s | 0 |  |
-| VT12002 | Vitess does not support cross shard foreign keys. | unsupported: cross-shard foreign keys | 0 |  |
+| VT12002 | Vitess does not support cross shard foreign keys. | unsupported: cross-shard foreign keys between table '%s' and '%s' | 0 |  |
 | VT13001 | This error should not happen and is a bug. Please file an issue on GitHub: https://github.com/vitessio/vitess/issues/new/choose. | [BUG] %s | 0 |  |
 | VT13002 | This error should not happen and is a bug. Please file an issue on GitHub: https://github.com/vitessio/vitess/issues/new/choose. | unexpected AST struct for query: %s | 0 |  |
 | VT14001 | The connection failed. | connection error | 0 |  |

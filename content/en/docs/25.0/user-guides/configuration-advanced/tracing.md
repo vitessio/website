@@ -57,6 +57,8 @@ Once you have the `SpanContext` string in its encoded base64 format, you can the
 /*VT_SPAN_CONTEXT=<base64 value>*/ SELECT * from product;
 ```
 
+`VT_SPAN_CONTEXT` works with both text queries (`COM_QUERY`) and prepared statements (`COM_STMT_EXECUTE`). This means trace context propagation works regardless of which MySQL protocol your client library uses, including libraries that use prepared statements by default, such as PHP/Laravel, Python, and Go's `database/sql` with query parameters.
+
 There are additional notes here:
 
 * The underlying tracing libraries are very particular about the base64 value, so if you have any formatting problems (including trailing spaces between the base64 value and the closing of the comment), you will get warnings in your `vtgate` logs.

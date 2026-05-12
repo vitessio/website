@@ -174,9 +174,11 @@ It is possible to submit inter-dependent migrations within the same `ApplySchema
 
 In the above examples there has to be a strict ordering to the migrations. You cannot just create a view that reads from a yet non-existent column.
 
-`vitess` offers the `--in-order-completion` DDL strategy flag. It is the responsibility of the user to supply the migrations in a valid ordering, and it is `vitess`'s responsibility to _complete_ the migrations in that same order.
+`vitess` offers the `--in-order-completion` DDL strategy flag. It is the responsibility of the user to supply the migrations in a valid ordering, and it is `vitess`'s responsibility to _complete_ the migrations in that same order within each migration context.
 
-If any migration in an in-order sequence fails or is cancelled, all subsequent migrations in that sequence are automatically marked as `failed`. This ensures that migrations cannot complete out-of-order and helps maintain schema consistency.
+Migrations from different migration contexts form independent ordered sequences and do not block each other. This allows multiple deployment pipelines or applications to run migrations concurrently without interference—each context maintains its own ordering guarantees.
+
+If any migration in an in-order sequence fails or is cancelled, all subsequent migrations in that sequence (within the same context) are automatically marked as `failed`. This ensures that migrations cannot complete out-of-order within a context and helps maintain schema consistency.
 
 Note that there can be scenarios with impossible ordering. Those hardly make sense in production, in the first place, and it is the user's responsibility to supply a sequence that works. When in doubt, it's advisable to submit migrations in stages: only apply one migration to completion, and then apply another.
 

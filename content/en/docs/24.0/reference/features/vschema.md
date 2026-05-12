@@ -68,6 +68,29 @@ Vitess allows you to create an unsharded table and deploy it into all shards of 
 
 Typically, such a table has a canonical source in an unsharded keyspace, and the copies in the sharded keyspace are kept up-to-date through VReplication.
 
+## Controlling cross-keyspace JOINs
+
+By default, Vitess will execute JOINs across tables in different keyspaces. You can restrict this behavior at two levels:
+
+1. **Globally via VTGate**: Use the `--no-cross-keyspace-joins` flag when starting VTGate to deny all cross-keyspace JOINs.
+
+2. **Per-keyspace via VSchema**: Set `no_cross_keyspace_joins: true` in a keyspace's VSchema to deny cross-keyspace JOINs involving that keyspace.
+
+When cross-keyspace JOINs are denied, the planner rejects queries that join tables from different keyspaces with an error like:
+
+```
+cross-keyspace join between keyspaces 'ks1' and 'ks2' (use /*vt+ ALLOW_CROSS_KEYSPACE_JOINS */ to override)
+```
+
+The VTGate flag takes precedence—when `--no-cross-keyspace-joins` is set, cross-keyspace JOINs are denied globally regardless of per-keyspace VSchema settings.
+
+### Per-query override
+
+To override the restriction for a specific query, use the `ALLOW_CROSS_KEYSPACE_JOINS` [comment directive](../../../user-guides/configuration-advanced/comment-directives/):
+
+```sql
+SELECT /*vt+ ALLOW_CROSS_KEYSPACE_JOINS */ * FROM ks1.t1 JOIN ks2.t2 ON t1.id = t2.id;
+```
 
 ## Per-Keyspace VSchema
 

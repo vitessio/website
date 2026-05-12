@@ -13,7 +13,7 @@ Applies the schema change to the specified keyspace on every primary, running in
 If --allow-long-unavailability is set, schema changes affecting a large number of rows (and possibly incurring a longer period of unavailability) will not be rejected.
 --ddl-strategy is used to instruct migrations via vreplication, mysql or direct with optional parameters.
 --migration-context allows the user to specify a custom migration context for online DDL migrations.
-If --skip-preflight, SQL goes directly to shards without going through sanity checks.
+If --skip-preflight, SQL goes directly to shards without going through validation checks.
 
 The --uuid and --sql flags are repeatable, so they can be passed multiple times to build a list of values.
 For --uuid, this is used like "--uuid $first_uuid --uuid $second_uuid".
