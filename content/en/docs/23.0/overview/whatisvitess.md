@@ -4,15 +4,31 @@ weight: 1
 featured: true
 ---
 
-Vitess is a database solution for deploying, scaling and managing large clusters of open-source database instances. It currently supports MySQL and Percona Server for MySQL. It's architected to run as effectively in a public or private cloud architecture as it does on dedicated hardware. It combines and extends many important SQL features with the scalability of a NoSQL database. Vitess can help you with the following problems:
+Vitess is an open-source database clustering system for horizontal scaling of MySQL. It distributes data across multiple MySQL instances through sharding while presenting a unified database interface to your application. Queries work as if hitting a single MySQL server, but Vitess routes them to the appropriate shards automatically.
 
-1. Scaling a SQL database by allowing you to shard it, while keeping application changes to a minimum.
-2. Migrating from bare-metal or VMs to a private or public cloud.
-3. Deploying and managing a large number of SQL database instances.
+Vitess runs in public and private cloud environments, and on dedicated hardware. It supports MySQL and Percona Server for MySQL.
 
-Vitess includes compliant JDBC and Go database drivers using a native query protocol. Additionally, it implements the MySQL server protocol which is compatible with virtually any other language.
+## Why use Vitess
 
-Vitess served all YouTube database traffic for over five years. Many enterprises have now adopted Vitess for their production needs.
+Vitess addresses three challenges that arise when scaling MySQL:
+
+1. **Scaling beyond a single server** - Vitess shards data across multiple MySQL instances without requiring you to embed sharding logic in your application.
+2. **Managing database clusters** - Vitess handles failovers, backups, and topology changes across many MySQL instances.
+3. **Protecting your database** - Vitess pools connections, rewrites problematic queries, and enforces limits to prevent any single query from degrading performance.
+
+## How it works
+
+Vitess sits between your application and MySQL. It consists of:
+
+- **VTGate** - A proxy that accepts MySQL protocol connections from your application and routes queries to the appropriate shards.
+- **VTTablet** - An agent running alongside each MySQL instance that manages queries, connections, and replication.
+- **Topology Service** - A consistent data store (etcd, ZooKeeper, or Consul) that maintains the cluster state.
+
+Your application connects to VTGate using any MySQL-compatible driver. Vitess also includes native JDBC and Go drivers for optimized performance.
+
+## Adoption
+
+Vitess served all YouTube database traffic for over five years. Companies including Slack, Square, and JD.com run Vitess in production.
 
 ## Features
 
