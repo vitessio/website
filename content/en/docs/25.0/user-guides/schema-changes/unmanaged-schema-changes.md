@@ -18,7 +18,7 @@ CREATE TABLE `demo` (
 
 ## ApplySchema
 
-`ApplySchema` is a `vtctldclient` command that can be used to apply a schema change to a keyspace. The main advantage of using this tool is that it performs some sanity checks about the schema before applying it. However, a downside is that it can be a little too strict and may not work for all use cases.
+`ApplySchema` is a `vtctldclient` command that can be used to apply a schema change to a keyspace. The main advantage of using this tool is that it performs some validation checks about the schema before applying it. However, a downside is that it can be a little too strict and may not work for all use cases.
 
 Consider the following examples:
 
