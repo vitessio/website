@@ -16,8 +16,8 @@ Supported interactions are:
 - [Launching a migration](#launching-a-migration) or all migrations, if explicitly set to postpone launch.
 - [Completing a migration](#completing-a-migration) or all migrations, if explicitly set to postpone completion.
 - [Cancelling a migration](#cancelling-a-migration)
-- [Cancelling a migration](#cancelling-a-migration)
 - [Cancelling all pending migrations](#cancelling-all-keyspace-migrations)
+- [Cancelling migrations by context](#cancelling-migrations-by-context)
 - [Retrying a migration](#retrying-a-migration)
 - [Cleaning migration artifacts](#cleaning-migration-artifacts)
 - [Reverting a migration](#reverting-a-migration)
@@ -600,6 +600,27 @@ $ vtctldclient OnlineDDL cancel commerce all
     "0": "0"
   }
 }
+```
+
+## Cancelling migrations by context
+
+The user may cancel all pending migrations that belong to a specific [migration context](../advanced-usage/#migration-context). Only migrations in that context are cancelled; migrations in other contexts remain unaffected. This is useful when multiple deployment pipelines or applications submit migrations concurrently and you need to cancel only those from a specific pipeline.
+
+A migration is cancellable if it is in `queued`, `ready` or `running` states.
+
+#### Via VTGate/SQL
+
+```sql
+mysql> alter vitess_migration cancel context 'vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3';
+Query OK, 2 rows affected (0.02 sec)
+```
+
+The command returns the number of migrations cancelled across all shards.
+
+#### Via vtctldclient
+
+```shell
+$ vtctldclient ApplySchema --sql "alter vitess_migration cancel context 'vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3'" commerce
 ```
 
 ## Retrying a migration
