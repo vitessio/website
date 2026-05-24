@@ -13,14 +13,17 @@ Supported interactions are:
 
 - [Running migrations](#running-migrations) (submitting Online DDL requests)
 - [Tracking migrations](#tracking-migrations)
-- [Launching a migration](#launching-a-migration) or all migrations, if explicitly set to postpone launch.
-- [Completing a migration](#completing-a-migration) or all migrations, if explicitly set to postpone completion.
+- [Launching a migration](#launching-a-migration) or all migrations, or [by context](#launching-migrations-by-context), if explicitly set to postpone launch.
+- [Completing a migration](#completing-a-migration) or all migrations, or [by context](#completing-migrations-by-context), if explicitly set to postpone completion.
+- [Postponing completion](#postpone-completing-a-migration) of a migration, or all, or [by context](#postponing-completion-by-context).
+- [Forcing cutover](#forcing-a-migration-cut-over) of a migration, or all, or [by context](#forcing-cutover-by-context).
 - [Cancelling a migration](#cancelling-a-migration)
 - [Cancelling all pending migrations](#cancelling-all-keyspace-migrations)
 - [Cancelling migrations by context](#cancelling-migrations-by-context)
 - [Retrying a migration](#retrying-a-migration)
-- [Cleaning migration artifacts](#cleaning-migration-artifacts)
+- [Cleaning migration artifacts](#cleaning-migration-artifacts), or [by context](#cleaning-migrations-by-context)
 - [Reverting a migration](#reverting-a-migration)
+- [Throttling/unthrottling](#controlling-throttling) migrations, including [by context](#throttling-by-context)
 
 ## Running migrations
 
@@ -289,6 +292,23 @@ Or launch all:
 $ vtctldclient ApplySchema --sql "alter vitess_migration launch all" commerce
 ```
 
+## Launching migrations by context
+
+The user may launch all postponed migrations that belong to a specific [migration context](../advanced-usage/#migration-context). Only migrations in that context are launched; migrations in other contexts remain unaffected.
+
+#### Via VTGate/SQL
+
+```sql
+mysql> alter vitess_migration launch context 'vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3';
+Query OK, 2 rows affected (0.02 sec)
+```
+
+#### Via vtctldclient
+
+```shell
+$ vtctldclient ApplySchema --sql "alter vitess_migration launch context 'vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3'" commerce
+```
+
 ## Completing a migration
 
 Migrations submitted with [`--postpone-completion`](../postponed-migrations) remain `ready` or `running` until told to complete. The user may complete a specific migration or they may complete all postponed migrations:
@@ -332,6 +352,22 @@ $ vtctldclient OnlineDDL complete commerce 9e8a9249_3976_11ed_9442_0a43f95f28a3
 }
 ```
 
+## Completing migrations by context
+
+The user may complete all postponed migrations that belong to a specific [migration context](../advanced-usage/#migration-context). Only migrations in that context are completed; migrations in other contexts remain unaffected.
+
+#### Via VTGate/SQL
+
+```sql
+mysql> alter vitess_migration complete context 'vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3';
+Query OK, 2 rows affected (0.02 sec)
+```
+
+#### Via vtctldclient
+
+```shell
+$ vtctldclient ApplySchema --sql "alter vitess_migration complete context 'vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3'" commerce
+```
 
 ## Postpone completing a migration
 
@@ -367,6 +403,23 @@ Or complete all:
 
 ```shell
 $ vtctldclient ApplySchema --sql "alter vitess_migration postpone complete all" commerce
+```
+
+## Postponing completion by context
+
+The user may postpone completion for all migrations that belong to a specific [migration context](../advanced-usage/#migration-context). Only migrations in that context are affected; migrations in other contexts remain unaffected.
+
+#### Via VTGate/SQL
+
+```sql
+mysql> alter vitess_migration postpone complete context 'vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3';
+Query OK, 2 rows affected (0.02 sec)
+```
+
+#### Via vtctldclient
+
+```shell
+$ vtctldclient ApplySchema --sql "alter vitess_migration postpone complete context 'vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3'" commerce
 ```
 
 ## Changing the migration cut-over threshold
@@ -445,6 +498,23 @@ $ vtctldclient OnlineDDL force-cutover commerce all
     "0": "4"
   }
 }
+```
+
+## Forcing cutover by context
+
+The user may mark all pending migrations in a specific [migration context](../advanced-usage/#migration-context) for forced cut-over. Only migrations in that context are affected; migrations in other contexts remain unaffected.
+
+#### Via VTGate/SQL
+
+```sql
+mysql> alter vitess_migration force_cutover context 'vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3';
+Query OK, 2 rows affected (0.02 sec)
+```
+
+#### Via vtctldclient
+
+```shell
+$ vtctldclient ApplySchema --sql "alter vitess_migration force_cutover context 'vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3'" commerce
 ```
 
 ## Cancelling a migration
@@ -752,6 +822,27 @@ $ vtctldclient OnlineDDL cleanup customer 075088b9_6b56_11ee_808b_0a43f95f28a3
 }
 ```
 
+## Cleaning migrations by context
+
+The user may clean up artifacts from all terminal migrations that belong to a specific [migration context](../advanced-usage/#migration-context). Only migrations in that context are affected; migrations in other contexts remain unaffected.
+
+{{< warning >}}
+Once cleanup is requested, the migration cannot be reverted.
+{{< /warning >}}
+
+#### Via VTGate/SQL
+
+```sql
+mysql> alter vitess_migration cleanup context 'vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3';
+Query OK, 2 rows affected (0.02 sec)
+```
+
+#### Via vtctldclient
+
+```shell
+$ vtctldclient ApplySchema --sql "alter vitess_migration cleanup context 'vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3'" commerce
+```
+
 ## Reverting a migration
 
 Vitess offers _lossless revert_ for online schema migrations: the user may regret a table migration after completion, and roll back the table's schema to previous state _without loss of data_. See [Revertible Migrations](../revertible-migrations/).
@@ -882,4 +973,29 @@ $ vtctldclient OnlineDDL throttle customer 075088b9_6b56_11ee_808b_0a43f95f28a3
 $ vtctldclient OnlineDDL throttle customer all
 $ vtctldclient OnlineDDL unthrottle customer 075088b9_6b56_11ee_808b_0a43f95f28a3
 $ vtctldclient OnlineDDL unthrottle customer all
+```
+
+### Throttling by context
+
+The user may throttle or unthrottle all pending migrations that belong to a specific [migration context](../advanced-usage/#migration-context). Only migrations in that context are affected; migrations in other contexts remain unaffected.
+
+Context-scoped throttling works by throttling each migration in the context individually (by UUID), rather than using the application-wide throttler.
+
+#### Via VTGate/SQL
+
+```sql
+mysql> alter vitess_migration throttle context 'vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3' expire '24h' ratio 1;
+Query OK, 2 rows affected (0.02 sec)
+```
+
+```sql
+mysql> alter vitess_migration unthrottle context 'vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3';
+Query OK, 2 rows affected (0.02 sec)
+```
+
+#### Via vtctldclient
+
+```shell
+$ vtctldclient ApplySchema --sql "alter vitess_migration throttle context 'vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3' expire '24h' ratio 1" commerce
+$ vtctldclient ApplySchema --sql "alter vitess_migration unthrottle context 'vtctl:c91857d2-6b50-11ee-808b-0a43f95f28a3'" commerce
 ```
