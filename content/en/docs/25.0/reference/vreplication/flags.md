@@ -236,20 +236,6 @@ On the source, events are buffered and batched where applicable, to minimize net
 
 **vstream-packet-size** specifies the suggested packet size for VReplication vstreamer. This is used only as a recommendation. The actual packet size may be more or less than this amount depending on the number and type of events yet to be sent on the source.
 
-#### watch-replication-stream
-
-{{< warning >}}
-The `--watch-replication-stream` flag is deprecated and ignored as of v25 — it will be removed in a future release. Use [`--track-schema-versions`](#track-schema-versions) instead.
-{{< /warning >}}
-
-**Type** bool\
-**Default** false\
-**Applicable on** source
-
-By default vttablets reload their schema every `--queryserver-config-schema-reload-time` seconds (default 30 minutes). This can cause a problem while streaming events if DDLs are applied on the source and streaming is started _after_ the DDL was applied but _before_ vttablet refreshed its schema. This is alleviated by enabling the _watcher_.
-
-When enabled, vttablet will start the _watcher_ which streams the MySQL replication stream from the local database, and uses it to proactively update its schema when it encounters a DDL.
-
 #### track-schema-versions
 
 **Type** bool\
