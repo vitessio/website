@@ -47,9 +47,7 @@ You can optionally add a `clusters_to_watch` flag that contains a comma separate
 
 ### Cell Awareness
 
-Starting in v24, VTOrc supports the `--cell` flag to specify which cell the VTOrc instance is running in. This flag is optional in v24 but will become required in v25 and later versions.
-
-The `--cell` flag enables VTOrc to be cell-aware, which will be used in future releases for cross-cell problem validation. When specified, VTOrc validates that the cell exists in the topology. If the cell doesn't exist, VTOrc will fail to start. If the flag is not provided in v24, VTOrc will log a warning but continue to operate normally.
+VTOrc requires the `--cell` flag to specify which cell the VTOrc instance is running in. This flag enables VTOrc to be cell-aware, which is used for cross-cell problem validation. VTOrc validates that the cell exists in the topology. If the cell doesn't exist or the flag is not provided, VTOrc will fail to start with a `FAILED_PRECONDITION` error.
 
 ### Durability Policies
 
