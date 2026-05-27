@@ -82,6 +82,21 @@ This command performs the following actions:
     - On the primary-elect tablet, insert a row in the `reparent_journal` table and then updates the `PrimaryAlias` property of the global shard object.
     - In parallel on each replica, excluding the old primary, set the new primary as the replication source and wait for the inserted row to replicate to the replica tablets.
 
+#### Split-brain detection
+
+For GTID-based shards, ERS detects suspected split-brain scenarios by comparing the `Combined` (relay log) GTID positions of leading candidates. When two or more candidates have incomparable GTID positions—meaning neither tablet's position is a superset of the other—ERS aborts with a `FAILED_PRECONDITION` error naming the diverged tablets. This prevents silently promoting one side while leaving the other side's unique GTIDs to become errant.
+
+If you encounter this error and know which side to keep, use the `--allow-split-brain-promotion` flag to proceed. This converts the abort into a warning and allows ERS to continue. The non-promoted side's unique GTIDs will become errant after promotion. When using this flag:
+
+- Use `--new-primary` to specify which tablet to promote, ensuring deterministic side selection.
+- Consider using `--ignore-replicas` to exclude tablets on the side you want to discard from the candidate pool.
+
+#### Partial relay-log-apply tolerance
+
+For GTID-based shards, ERS tolerates partial relay-log-apply failures. As long as at least one tablet at the leading `Combined` GTID position successfully applies its relay logs, ERS proceeds. Lagging or stuck replicas no longer block the operation, making ERS more resilient in degraded scenarios.
+
+For non-GTID flavors (FilePos, MariaDB), the previous behavior is preserved: ERS requires every candidate to successfully apply relay logs.
+
 ### Metrics
 
 Metrics are available on the `/debug/vars` pages of VTOrc and VTCtld for the reparent operations that they execute. Corresponding Prometheus-compatible metrics are available at `/metrics`.
@@ -91,6 +106,9 @@ Metrics are available on the `/debug/vars` pages of VTOrc and VTCtld for the rep
 | `planned_reparent_counts`          | Number of times PlannedReparentShard has been run. Available dimensions are keyspace, shard and the result of the operation.   |
 | `emergency_reparent_counts`        | Number of times EmergencyReparentShard has been run. Available dimensions are keyspace, shard and the result of the operation. |
 | `reparent_shard_operation_timings` | Timings of reparent shard operations indexed by the type of operation.                                                         |
+| `EmergencyReparentFilteredCandidates` | Number of candidates excluded from the relay-log wait during ERS because their `Combined` position was behind the leading group. Keyed by keyspace and shard. |
+| `EmergencyReparentRelayLogFailedCandidates` | Number of candidates that failed to apply relay logs during ERS. Keyed by keyspace and shard. |
+| `EmergencyReparentSplitBrainOverrides` | Number of split-brain detections bypassed by `--allow-split-brain-promotion` during ERS. Keyed by keyspace and shard. Stays at zero unless an operator has deliberately invoked the escape hatch. |
 
 ## External Reparenting
 
