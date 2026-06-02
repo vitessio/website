@@ -271,6 +271,7 @@ There are a few variables with the above prefixes that report the status of the 
   "TransactionPoolResetSetting": 0,
   "TransactionPoolWaitCount": 0,
   "TransactionPoolWaitTime": 0,
+  "TransactionPoolWaiterCapRejected": 0,
   "TransactionPoolWaiterQueueFull": 0,
   "FoundRowsPoolActive": 0,
   "FoundRowsPoolAvailable": 20,
@@ -288,6 +289,7 @@ There are a few variables with the above prefixes that report the status of the 
   "FoundRowsPoolResetSetting": 0,
   "FoundRowsPoolWaitCount": 0,
   "FoundRowsPoolWaitTime": 0,
+  "FoundRowsPoolWaiterCapRejected": 0,
   "FoundRowsPoolWaiterQueueFull": 0,
 ```
 
@@ -295,6 +297,7 @@ The choice of which pool gets used depends on whether the application connected 
 
 * `WaitCount` will give you how often the transaction pool gets full, which causes new transactions to wait.
 * `WaitTime`/`WaitCount` will tell you the average wait time.
+* `WaiterCapRejected` counts requests rejected because the waiter queue reached its configured cap (set via `--queryserver-config-txpool-waiter-cap` and related flags). When this counter increases, new requests are being immediately rejected with `RESOURCE_EXHAUSTED` instead of waiting for a connection.
 * `Available` is a gauge that tells you the number of available connections in the pool in real-time. `Capacity-Available` is the number of connections in use. Note that this number could be misleading if the traffic is spiky.
 
 #### Other Pool variables
