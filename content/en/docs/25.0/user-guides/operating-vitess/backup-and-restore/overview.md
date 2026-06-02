@@ -243,7 +243,27 @@ All three programs can be made aware of Backup Engine and Backup Storage using t
     <tr>
       <td><code>xtrabackup-prepare-flags</code></td>
       <td>Flags to pass to the prepare command. These should be space separated and will be added to the end of the command.</td>
-    </tr> 
+    </tr>
+    <tr>
+      <td><code>builtinbackup-file-chunk-threshold</code></td>
+      <td>For the <code>builtin</code> backup engine, files larger than this size
+        (in bytes) are split into chunks for parallel backup and restore. Each chunk
+        is backed up as an independent object in storage and can be restored
+        concurrently. Set to <code>0</code> to disable chunking (default).
+        <br><br>
+        <b>Compatibility note:</b> Backups created with chunking enabled are
+        <b>not restorable by older Vitess versions</b> that do not understand the
+        <code>Chunks</code> field in the backup MANIFEST. See more below.
+      </td>
+    </tr>
+    <tr>
+      <td><code>builtinbackup-file-chunk-size</code></td>
+      <td>For the <code>builtin</code> backup engine, the target size in bytes for
+        each chunk when splitting large files. Only used when
+        <code>builtinbackup-file-chunk-threshold</code> is greater than 0.
+        Minimum allowed value is 4 MiB. (default 1073741824 / 1 GiB)
+      </td>
+    </tr>
   </tbody>
 </table>
 
@@ -297,6 +317,21 @@ The backup and restore processes simultaneously copy and either compress or deco
 * vttablet uses the `--restore-concurrency` flag.
 
 If the network link is fast enough, the concurrency matches the CPU usage of the process during the backup or restore process.
+
+### Chunked Backup and Restore
+
+The builtin backup engine can split large files into chunks for parallel restore. This improves restore performance for keyspaces with large tables, where a single large file would otherwise bottleneck the restore regardless of the `--restore-concurrency` setting.
+
+Chunking is disabled by default. To enable it, set `--builtinbackup-file-chunk-threshold` to a non-zero value. Example:
+
+```bash
+--builtinbackup-file-chunk-threshold=5368709120 # 5 GiB
+--builtinbackup-file-chunk-size=1073741824 # 1 GiB
+```
+
+This splits files larger than 5 GiB into 1 GiB chunks during backup. On restore, those chunks are restored in parallel up to the configured `--restore-concurrency`.
+
+**Important:** Backups created with chunking enabled require Vitess v25.0+ to restore. Non-chunked backups (the default) remain compatible with all versions.
 
 ### Backup Compression
 
