@@ -15,12 +15,13 @@ Flags:
 * `--enable-consolidator`: Defaults to true.
 * `--enable-consolidator-replicas`: Only enable query consolidation on non-primary tablets.
 * `--consolidator-query-waiter-cap`: The maximum number of clients allowed to wait on the consolidator for each query. No limit by default.
+* `--consolidator-reject-on-cap`: When enabled, queries that exceed the waiter cap are rejected with a `RESOURCE_EXHAUSTED` error instead of falling back to independent execution. Defaults to false. Requires `--consolidator-query-waiter-cap` to be set to a non-zero value.
 
 ## Waiter Cap Behavior
 
 The `--consolidator-query-waiter-cap` flag limits the number of clients that can wait for the result of an already-executing identical query. This helps prevent resource exhaustion when many duplicate queries arrive simultaneously.
 
-When the waiter cap is reached for a particular query, additional queries will not wait for the consolidated result. Instead, they fall back to independent execution. Each query executes separately and returns its own result.
+When the waiter cap is reached for a particular query, additional queries will not wait for the consolidated result. By default, they fall back to independent execution—each query executes separately and returns its own result.
 
 For example, if you set `--consolidator-query-waiter-cap=10` and 15 identical queries arrive while the first query is still executing:
 
@@ -28,7 +29,21 @@ For example, if you set `--consolidator-query-waiter-cap=10` and 15 identical qu
 * Queries 2-11 wait for the result (10 waiters)
 * Queries 12-15 exceed the cap and execute independently
 
-This fallback mechanism ensures all queries return correct results, even under heavy load. The waiter cap still provides resource protection by limiting how many queries can be waiting at once.
+This fallback mechanism ensures all queries return correct results, even under heavy load.
+
+### Rejecting Queries on Cap
+
+Instead of falling back to independent execution, you can reject queries that exceed the waiter cap. Enable `--consolidator-reject-on-cap` to return a `RESOURCE_EXHAUSTED` error for these queries.
+
+Using the same example with `--consolidator-reject-on-cap` enabled:
+
+* The first query executes normally
+* Queries 2-11 wait for the result (10 waiters)
+* Queries 12-15 are rejected with a `RESOURCE_EXHAUSTED` error
+
+This makes consolidation overload visible through explicit error responses. Clients can implement retry logic or backoff strategies based on these errors.
+
+**Note**: `--consolidator-reject-on-cap` requires `--consolidator-query-waiter-cap` to be set to a non-zero value. Without a waiter cap, there is no limit to trigger rejection.
 
 ## Consistency
 
