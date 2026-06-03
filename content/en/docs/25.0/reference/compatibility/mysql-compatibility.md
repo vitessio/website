@@ -297,14 +297,14 @@ SELECT 42, id FROM DUAL, user;
 
 **Migration Notes:**
 
-If you have an existing table named `dual`, update your queries to use backtick quoting:
+In v24 and earlier, real tables named `dual` were inaccessible—even backtick-quoting `` `dual` `` still referred to the virtual DUAL table. In v25, this is fixed: backtick-quoting now correctly references a real table if one exists.
 
 ```sql
--- Before v25 (no longer works)
-SELECT * FROM dual;  -- Ambiguous: could mean virtual or real table
+-- v24 and earlier
+SELECT * FROM `dual`;  -- Always referred to virtual DUAL, not a real table
 
 -- v25 and later
-SELECT * FROM `dual`;  -- Real table
+SELECT * FROM `dual`;  -- Real table (if it exists)
 SELECT * FROM DUAL;    -- Virtual pseudo-table (equivalent to SELECT without FROM)
 ```
 
