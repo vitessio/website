@@ -15,6 +15,7 @@ Flags:
 * `--enable-consolidator`: Defaults to true.
 * `--enable-consolidator-replicas`: Only enable query consolidation on non-primary tablets.
 * `--consolidator-query-waiter-cap`: The maximum number of clients allowed to wait on the consolidator for each query. No limit by default.
+* `--consolidator-cache-proto3-rows`: Cache proto3 row encoding during query consolidation to reduce memory usage. Defaults to false.
 * `--consolidator-reject-on-cap`: When enabled, queries that exceed the waiter cap are rejected with a `RESOURCE_EXHAUSTED` error instead of falling back to independent execution. Defaults to false. Requires `--consolidator-query-waiter-cap` to be set to a non-zero value.
 
 ## Waiter Cap Behavior
@@ -44,6 +45,14 @@ Using the same example with `--consolidator-reject-on-cap` enabled:
 This makes consolidation overload visible through explicit error responses. Clients can implement retry logic or backoff strategies based on these errors.
 
 **Note**: `--consolidator-reject-on-cap` requires `--consolidator-query-waiter-cap` to be set to a non-zero value. Without a waiter cap, there is no limit to trigger rejection.
+
+## Memory Optimization
+
+When multiple clients consolidate on the same query, the consolidator shares a single result pointer across all waiters. However, each waiter independently encodes the result into proto3 format for transmission, creating redundant memory allocations. For a 100MB result with 50 consolidated waiters, this produces approximately 5GB of transient allocations from row encoding alone.
+
+The `--consolidator-cache-proto3-rows` flag caches the proto3 row encoding. When enabled, the consolidator leader computes the encoding once and reuses it for all waiters instead of each waiter encoding independently.
+
+This optimization defaults to false to allow safe rollout. Enable it for workloads with high consolidation fan-out to reduce memory pressure.
 
 ## Consistency
 
