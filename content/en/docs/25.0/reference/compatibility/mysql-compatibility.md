@@ -26,6 +26,7 @@ Vitess supports MySQL and gRPC server protocols, allowing it to serve as a drop-
    13. [Create/Drop Database](#createdrop-database)
    14. [User Defined Functions (UDFs)](#user-defined-functions)
    15. [LAST_INSERT_ID](#last_insert_id)
+   16. [Reserved Keywords](#reserved-keywords)
 3. [Cross-shard Transactions](#cross-shard-transactions)
 4. [Auto Increment](#auto-increment)
 5. [Character Set and Collation](#character-set-and-collation)
@@ -259,6 +260,52 @@ Vitess, however, does **not** guarantee which row’s value will be used.
 SELECT LAST_INSERT_ID(col) 
 FROM table 
 ORDER BY foo;
+```
+
+### Reserved Keywords
+
+Vitess treats certain SQL keywords as reserved, matching MySQL's reserved keyword list. Starting in v25, `DUAL` is a reserved keyword.
+
+#### The DUAL Keyword
+
+`DUAL` is now a reserved keyword in Vitess, matching MySQL behavior:
+
+- Unquoted `DUAL` refers to the virtual pseudo-table for queries that don't need a real table (e.g., `SELECT 1 FROM DUAL`)
+- Backtick-quoted `` `dual` `` refers to an actual table named `dual`
+
+**Examples:**
+
+```sql
+-- Virtual dual (no real table)
+SELECT 1 FROM DUAL;
+SELECT NOW() FROM DUAL;
+
+-- Real table named dual (must be backtick-quoted)
+SELECT * FROM `dual`;
+INSERT INTO `dual` (col) VALUES (1);
+```
+
+**Limitations:**
+
+Joining `DUAL` with other tables is not supported, matching MySQL behavior:
+
+```sql
+-- NOT Supported: Joining DUAL with other tables
+SELECT 42, id FROM DUAL, user;
+-- Error: syntax error
+```
+
+**Migration Notes:**
+
+In v24 and earlier, real tables named `dual` were inaccessible—even backtick-quoting `` `dual` `` still referred to the virtual DUAL table. In v25, this is fixed: backtick-quoting now correctly references a real table if one exists.
+
+```sql
+-- v24 and earlier
+SELECT * FROM `dual`;  -- Always referred to virtual DUAL, not a real table
+
+-- v25 and later
+SELECT * FROM `dual`;  -- Real table (if it exists)
+SELECT * FROM DUAL;    -- Virtual pseudo-table (equivalent to SELECT without FROM)
 ```
 
 ## Cross-shard Transactions
