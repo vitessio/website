@@ -43,6 +43,10 @@ available at the time.
 When using the [VTGate VStream API](../vstream/) you should instead migrate to using the new `TabletOrder` field in the [VStreamFlags](https://pkg.go.dev/vitess.io/vitess/go/vt/proto/vtgate#VStreamFlags) request object as usage of the "in_order" string hint will eventually be deprecated and removed.
 {{< /info >}}
 
+{{< warning >}}
+This means that if you enable the [tablet throttler](../../features/tablet-throttler/) and want to use `RDONLY` tablets as the source for any [VReplication workflow](../vreplication/) or [VTGate VStreams](../vstream/) (CDC) then you will have to use `--throttle-tablet-types "replica,rdonly"` with your `vttablet` processes, in addition to explicitly specifing `RDONLY` as a tablet type to use in the RPC call or `vtctldclient` command.
+{{</ warning >}}
+
 #### VStream
 
 For a VStream there is no default tablet type. You must specify an individual tablet type using the
