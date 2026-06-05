@@ -416,7 +416,7 @@ You can find us [on GitHub][vitess_repo] or in the [Vitess slack][vitess_slack] 
 [vitess_slack]: https://vitess.io/slack
 [vtadmin_blog_post]: ../../blog/2022-12-05-vtadmin-intro/
 [vtctlcommand_deprecation]: https://github.com/vitessio/vitess/blob/7af519e7b983a5fb6bcb87a5c1ab9e8520f2e5f2/go/cmd/vtctl/vtctl.go#L177
-[vtctldclient_reference_docs]: ../../docs/17.0/reference/programs/vtctldclient/
+[vtctldclient_reference_docs]: ../../docs/17.0/reference/command-line-reference/vtctldclient/
 [vtctldserver_protobuf]: https://github.com/vitessio/vitess/blob/4e28f163609d5378a34d5b021e4d16261091905c/proto/vtctlservice.proto#L33
 
 [^1]: Is this a new oxymoron?

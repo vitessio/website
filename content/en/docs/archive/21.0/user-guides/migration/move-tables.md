@@ -306,7 +306,7 @@ $ vtctldclient MoveTables --target-keyspace customer --workflow commerce2custome
 ```
 
 You can get more detailed status information using the
-[`show`](../../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_show/) sub-command:
+[`show`](../../../reference/command-line-reference/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_show/) sub-command:
 
 ```json
 $ vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer show --include-logs=false 

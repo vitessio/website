@@ -5,4 +5,4 @@ notoc: true
 weight: 2
 ---
 
-Vitess provides a CLI command [ApplyVSchema](https://vitess.io/docs/reference/programs/vtctldclient/vtctldclient_applyvschema/) to make updates to the vschema within Vitess.
+Vitess provides a CLI command [ApplyVSchema](https://vitess.io/docs/reference/command-line-reference/vtctldclient/vtctldclient_applyvschema/) to make updates to the vschema within Vitess.

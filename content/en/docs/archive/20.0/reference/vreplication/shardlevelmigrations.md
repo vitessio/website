@@ -8,12 +8,12 @@ aliases: ['/docs/reference/vreplication/v2/shardlevelmigrations/']
 ## Description
 
 {{< warning >}}
-This feature is an **experimental** variant of the [`MoveTables`](../../../reference/programs/vtctldclient/vtctldclient_movetables/) command that
+This feature is an **experimental** variant of the [`MoveTables`](../../../reference/command-line-reference/vtctldclient/vtctldclient_movetables/) command that
 allows you to migrate individual shards from one keyspace to another. Please be
 sure to understand the limitations and requirements below.
 {{< /warning >}}
 
-The full set of options for the `MoveTables` command [can be found here](../../../reference/programs/vtctldclient/vtctldclient_movetables/).
+The full set of options for the `MoveTables` command [can be found here](../../../reference/command-line-reference/vtctldclient/vtctldclient_movetables/).
 The options and other aspects specific to shard level migrations will be covered here.
 
 ## Use Case
@@ -56,7 +56,7 @@ to the target keyspace.
 that you wish to migrate* and you would use [`SwitchTraffic --tablet-types=RDONLY,REPLICA,PRIMARY`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_switchtraffic/)
 to switch *read and write traffic* all at once for the shard(s)
   - When the entire migration is complete, you cannot use the standard
-[`complete`](../../../reference/programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_complete/) workflow action and the final cleanup step requires manual work:
+[`complete`](../../../reference/command-line-reference/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_complete/) workflow action and the final cleanup step requires manual work:
     - The _reverse workflows should be [`cancel`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_cancel/)ed. This will clean up
     the both the global routing rules and the shard routing rules associated with the migration
       - Note: [`Workflow delete`](../../programs/vtctldclient/vtctldclient_workflow/vtctldclient_workflow_delete/) does not clean up the shard routing rules

@@ -210,7 +210,7 @@ We use the following paths for the data, in all implementations:
 * SrvKeyspace: `keyspaces/<keyspace>/SrvKeyspace`
 * SrvVSchema: `SvrVSchema`
 
-The [`vtctl TopoCat`](https://vitess.io/docs/16.0/reference/programs/vtctl/topo/#topocat) utility can decode these files when using the
+The [`vtctl TopoCat`](https://vitess.io/docs/16.0/reference/command-line-reference/vtctl/topo/#topocat) utility can decode these files when using the
 `--decode_proto` option:
 
 ``` sh

@@ -132,7 +132,7 @@ vtctldclient MoveTables --target-keyspace commerce --workflow legacy2commerce sh
 vtctldclient MoveTables --target-keyspace commerce --workflow legacy2commerce status
 ```
 
-You can alternatively use the [`Workflow show`](../../../reference/programs/vtctldclient/vtctldclient_workflow/vtctldclient_workflow_show/) command to get the details as well.
+You can alternatively use the [`Workflow show`](../../../reference/command-line-reference/vtctldclient/vtctldclient_workflow/vtctldclient_workflow_show/) command to get the details as well.
 
 ```bash
 vtctldclient Workflow --keyspace commerce show --workflow legacy2commerce

@@ -50,6 +50,6 @@ One of the main differences between vtctld and VTAdmin API is that VTAdmin API r
 | Stop replication on tablet | - | - | PUT `/api/tablet/<tablet>/stop_replication` | <li>`cluster_id`: Optional cluster filter</li> | - |
 | Mark tablet as externally promoted | - | - | POST `/api/tablet/<tablet>/externally_promoted` |  <li>`cluster_id`: Optional cluster filter</li>  | - |
 | Delete tablet | POST `/tablets/<tablet>` | `action`: `DeleteTablet` | DELETE `/api/tablet/<tablet>` | <li>`allow_primary`: Whether or not the primary can be deleted</li> <li>`cluster_id`: Optional cluster filter </li> | - |
-| Run a vtctl command | GET `/vtctl` | `body`: array of vtctl commands | Unsupported by VTAdmin | - | We recommend using [vtctldclient](https://vitess.io/docs/16.0/reference/programs/vtctldclient/) for running any other vtctl commands |
+| Run a vtctl command | GET `/vtctl` | `body`: array of vtctl commands | Unsupported by VTAdmin | - | We recommend using [vtctldclient](https://vitess.io/docs/16.0/reference/command-line-reference/vtctldclient/) for running any other vtctl commands |
 | Apply schema changes | POST `/schema/apply` | `keyspace`, `sql`, `ddl_strategy`, `replica_timeout_seconds` | Unsupported by VTAdmin | - | Unsupported by VTAdmin |
-| Get vtctl features | GET `/features` | - | GET `/debug/env` | - | Returns the current env vars for VTAdmin API. Must have [`http-no-debug` flag](https://vitess.io/docs/14.0/reference/programs/vtadmin/#http-server-flags) set to false. |
+| Get vtctl features | GET `/features` | - | GET `/debug/env` | - | Returns the current env vars for VTAdmin API. Must have [`http-no-debug` flag](https://vitess.io/docs/14.0/reference/command-line-reference/vtadmin/#http-server-flags) set to false. |

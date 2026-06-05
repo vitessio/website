@@ -140,7 +140,7 @@ Updates the sharding information for a keyspace.</pre>
 
 ### SetKeyspaceServedFrom
 
-Changes the ServedFromMap manually. This command is intended for emergency fixes. This field is automatically set when you call the [*MigrateServedFrom*](https://vitess.io/docs/reference/programs/vtctl/keyspaces/#migrateservedfrom) command. This command does not rebuild the serving graph.
+Changes the ServedFromMap manually. This command is intended for emergency fixes. This field is automatically set when you call the [*MigrateServedFrom*](https://vitess.io/docs/reference/command-line-reference/vtctl/keyspaces/#migrateservedfrom) command. This command does not rebuild the serving graph.
 
 #### Example
 

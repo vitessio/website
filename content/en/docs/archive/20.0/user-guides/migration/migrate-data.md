@@ -45,7 +45,7 @@ Vitess provides the [`MoveTables`](../../../reference/vreplication/movetables/) 
 fully online data migrations into Vitess with the ability to (temporarily) revert the migration if needed — all
 without incurring application downtime.
 
-An ["unmanaged Vitess tablet"](../../configuration-advanced/unmanaged-tablet/) will be placed in front of your existing MySQL database. This tablet will then be the bridge that allows you to migrate the data into Vitess. This unmanaged tablet ([`vttablet`](../../../reference/programs/vttablet/)) must be able to communicate with your new Vitess cluster over the network.
+An ["unmanaged Vitess tablet"](../../configuration-advanced/unmanaged-tablet/) will be placed in front of your existing MySQL database. This tablet will then be the bridge that allows you to migrate the data into Vitess. This unmanaged tablet ([`vttablet`](../../../reference/command-line-reference/vttablet/)) must be able to communicate with your new Vitess cluster over the network.
 
 This method uses a combination of transactional SELECTs and filtered MySQL replication to safely and accurately copy each
 of the tables in the source database to Vitess without disrupting normal traffic to your existing database. Once all the
@@ -53,7 +53,7 @@ data is copied, the two databases are then kept in sync using a replication stre
 verify that the source and destination are fully in sync using [`VDiff`](../../../reference/vreplication/vdiff/) command
 and perform final testing on the Vitess keyspace before cutting over your application traffic.
 
-Once your testing has completed, application traffic can be moved from the source MySQL database itself and switched to the Vitess cluster's [`vtgate`](../../../reference/programs/vtgate/) instance(s). For this switch, a small amount of downtime will likely be necessary. This downtime could be seconds or minutes, depending on the application and application automation.
+Once your testing has completed, application traffic can be moved from the source MySQL database itself and switched to the Vitess cluster's [`vtgate`](../../../reference/command-line-reference/vtgate/) instance(s). For this switch, a small amount of downtime will likely be necessary. This downtime could be seconds or minutes, depending on the application and application automation.
 
 Once your application traffic is going to Vitess — while your original MySQL instance is still serving the queries — you can prepare to fully cutover all traffic and query serving using the [`SwitchTraffic`](../../../reference/vreplication/movetables/#switchtraffic) action. This will cause the Vitess cluster to start serving all traffic for the tables that were migrated. At this point the VReplication workflow automatically reverses and the original MySQL instance is automatically kept in sync with Vitess. Once the switch is complete and you have confirmed that everything is working
 correctly you can complete the migration using the [`Complete`](../../../reference/vreplication/movetables/#complete)

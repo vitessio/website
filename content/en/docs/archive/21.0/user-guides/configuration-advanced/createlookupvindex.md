@@ -10,19 +10,19 @@ an [Operator](../../../get-started/operator) or [local](../../../get-started/loc
 are at the point where you have the sharded keyspace called `customer` setup.
 {{< /info >}}
 
-[`LookupVindex create`](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) uses a [VReplication](../../../reference/vreplication/) workflow used to create **and** backfill
+[`LookupVindex create`](../../../reference/command-line-reference/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) uses a [VReplication](../../../reference/vreplication/) workflow used to create **and** backfill
 a [Lookup Vindex](../../../reference/features/vindexes/#lookup-vindex-types) automatically for a table that already
 exists, and may have a significant amount of data in it already.
 
-Internally, the [`LookupVindex create`](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) command uses
+Internally, the [`LookupVindex create`](../../../reference/command-line-reference/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) command uses
 VReplication for the backfill process, until the lookup Vindex is "in sync". Then the normal process for
 adding/deleting/updating rows in the lookup Vindex via the usual
 [transactional flow when updating the "owner" table for the Vindex](../../../reference/features/vindexes/#lookup-vindex-types)
 takes over.
 
-In this guide, we will walk through the process of using the [`LookupVindex create`](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) command, and give some insight into what happens underneath the covers.
+In this guide, we will walk through the process of using the [`LookupVindex create`](../../../reference/command-line-reference/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) command, and give some insight into what happens underneath the covers.
 
-You can see the details of the [`LookupVindex create` command](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) in the reference docs.
+You can see the details of the [`LookupVindex create` command](../../../reference/command-line-reference/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) in the reference docs.
 
 In the context of the `customer` database that is part of the Vitess examples we
 started earlier, let's add some rows into the `customer.corder` table, and then

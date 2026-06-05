@@ -1,7 +1,7 @@
 ---
 title: VTGate Buffering
 weight: 5
-aliases: ['/docs/user-guides/buffering/','/docs/reference/programs/vtgate']
+aliases: ['/docs/user-guides/buffering/','/docs/reference/command-line-reference/vtgate']
 ---
 
 VTGate in Vitess supports the **buffering** of queries in certain situations.

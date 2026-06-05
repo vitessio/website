@@ -150,7 +150,7 @@ We then run the 201 script:
 
 That script creates our sharded vschema as defined in the `main_vschema_sharded.json` file and it
 creates a [lookup vindex](../../../reference/features/vindexes/#functional-and-lookup-vindex) using the
-[`LookupVindex create` command](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/).
+[`LookupVindex create` command](../../../reference/command-line-reference/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/).
 
 Now if we look at the `main` keyspace's vschema again we can see that it now includes the `region_vdx` vindex and
 a lookup vindex called `customer_region_lookup`:
@@ -342,7 +342,7 @@ $ vtctldclient --server localhost:15999 VDiff --format=json --target-keyspace ma
 </br>
 
 We can take a look at the VReplication workflow's status using the
-[`show` action](../../../reference/programs/vtctldclient/vtctldclient_reshard/vtctldclient_reshard_show/):
+[`show` action](../../../reference/command-line-reference/vtctldclient/vtctldclient_reshard/vtctldclient_reshard_show/):
 
 ```bash
 vtctldclient --server localhost:15999 Reshard --target-keyspace main --workflow main2regions show

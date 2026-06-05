@@ -18,7 +18,7 @@ It detects any configuration problems in the cluster and fixes them. Here is the
 
 ### Flags
 
-For a full list of supported flags, please look at [VTOrc reference page](../../../reference/programs/vtorc).
+For a full list of supported flags, please look at [VTOrc reference page](../../../reference/command-line-reference/vtorc).
 
 ### UI, API and Metrics
 

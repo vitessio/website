@@ -67,13 +67,13 @@ vttablet ... --backup_storage_implementation=file \
 
 **vtctldclient** provides two commands for managing backups:
 
-* [GetBackups](https://vitess.io/docs/reference/programs/vtctldclient/vtctldclient_getbackups/) displays the existing backups for a keyspace/shard in chronological order.
+* [GetBackups](https://vitess.io/docs/reference/command-line-reference/vtctldclient/vtctldclient_getbackups/) displays the existing backups for a keyspace/shard in chronological order.
 
     ``` sh
     vtctldclient --server=<vtctld_host>:<vtctld_port> GetBackups <keyspace/shard>
     ```
 
-* [RemoveBackup](https://vitess.io/docs/reference/programs/vtctldclient/vtctldclient_removebackup/) deletes a specified backup for a keyspace/shard.
+* [RemoveBackup](https://vitess.io/docs/reference/command-line-reference/vtctldclient/vtctldclient_removebackup/) deletes a specified backup for a keyspace/shard.
 
     ``` sh
     vtctldclient --server=<vtctld_host>:<vtctld_port> RemoveBackup <keyspace/shard> <backup name>

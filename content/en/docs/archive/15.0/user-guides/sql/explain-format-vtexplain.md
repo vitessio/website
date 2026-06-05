@@ -7,7 +7,7 @@ aliases: ['/docs/user-guides/vtexplain/']
 # Introduction
 
 To see which queries are run on your behalf on the MySQL instances when you execute a query on vtgate, you can use `explain format=vtexplain`.  
-It returns an output similar to what the command line application [`vtexplain`](../../../reference/programs/vtexplain) returns - a list of the queries that have been run on MySQL, and against which shards they were issued.
+It returns an output similar to what the command line application [`vtexplain`](../../../reference/command-line-reference/vtexplain) returns - a list of the queries that have been run on MySQL, and against which shards they were issued.
 
 # How it works
 

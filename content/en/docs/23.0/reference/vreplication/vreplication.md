@@ -22,7 +22,7 @@ many features. It can be used for the following use cases:
 * **Realtime Rollups**: Use [`Materialize`](../materialize/) with aggregation
   expressions in which case Vitess will create a rolled up version of the
   source table which can be used for realtime analytics.
-* **Lookup Vindexes**: Use the [`LookupVindex`](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/) command to create and backfill Lookup Vindexes. See the [`Creating a Lookup Vindex`](../../../user-guides/vschema-guide/backfill-vindexes/#createlookupvindex) section of the vschema user guide for example usage.
+* **Lookup Vindexes**: Use the [`LookupVindex`](../../../reference/command-line-reference/vtctldclient/vtctldclient_lookupvindex/) command to create and backfill Lookup Vindexes. See the [`Creating a Lookup Vindex`](../../../user-guides/vschema-guide/backfill-vindexes/#createlookupvindex) section of the vschema user guide for example usage.
 * **Online Schema Changes**: Use a [`ddl strategy of vitess`](../../../user-guides/schema-changes/ddl-strategies/) for native [online non-blocking schema
   migrations](../../../user-guides/schema-changes/managed-online-schema-changes/) that are trackable, cancellable, revertible, and retryable.
   All being safe to run in production due to intelligent throttling and

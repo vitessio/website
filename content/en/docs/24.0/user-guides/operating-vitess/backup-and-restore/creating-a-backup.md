@@ -244,7 +244,7 @@ Init SQL queries are executed only on tablets that match the specified tablet ty
 If MySQL was started with `super_read_only` enabled, Vitess temporarily disables it while executing the init SQL queries and restores it afterward.
 
 {{< info >}}
-Note that when using [`vtbackup`](https://vitess.io/docs/reference/programs/vtbackup) there is no real tablet involved and the tablet-type used for this feature is always `BACKUP`.
+Note that when using [`vtbackup`](https://vitess.io/docs/reference/command-line-reference/vtbackup) there is no real tablet involved and the tablet-type used for this feature is always `BACKUP`.
 {{< /info >}}
 
 

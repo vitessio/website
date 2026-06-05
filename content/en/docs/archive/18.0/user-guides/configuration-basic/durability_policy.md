@@ -25,5 +25,5 @@ There are 3 implementations supported in this release:
 
 [EmergencyReparentShard](../../configuration-advanced/reparenting/#emergencyreparentshard-emergency-reparenting) and [PlannedReparentShard](../../configuration-advanced/reparenting/#plannedreparentshard-planned-reparenting) will use the durability rules while choosing the correct candidate for promotion.
 
-This configuration must be stored in the topo server in the keyspace record using the command [CreateKeyspace](../../../reference/programs/vtctldclient/vtctldclient_createkeyspace/) or [SetKeyspaceDurabilityPolicy](../../../reference/programs/vtctldclient/vtctldclient_setkeyspacedurabilitypolicy/).
+This configuration must be stored in the topo server in the keyspace record using the command [CreateKeyspace](../../../reference/command-line-reference/vtctldclient/vtctldclient_createkeyspace/) or [SetKeyspaceDurabilityPolicy](../../../reference/command-line-reference/vtctldclient/vtctldclient_setkeyspacedurabilitypolicy/).
 

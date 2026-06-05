@@ -6,7 +6,7 @@ aliases: ['/docs/user-guides/vtexplain-in-bulk/']
 
 # Introduction 
 
-This document covers the way the [VTexplain tool](../../../reference/programs/vtexplain) can be used to evaluate if Vitess is compatible with a list of SQL statements. Enabling the evaluation of if queries from an existing application that accesses a MySQL database are generally Vitess-compatible. If there are any issues identified they can be used to target any necessary application changes needed for a successful migration from MySQL to Vitess.
+This document covers the way the [VTexplain tool](../../../reference/command-line-reference/vtexplain) can be used to evaluate if Vitess is compatible with a list of SQL statements. Enabling the evaluation of if queries from an existing application that accesses a MySQL database are generally Vitess-compatible. If there are any issues identified they can be used to target any necessary application changes needed for a successful migration from MySQL to Vitess.
 
 ## Prerequisites
 

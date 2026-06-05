@@ -94,6 +94,6 @@ Cool a hot tablet | For read access, add replicas or split shards. For write acc
 
 Vitess provides the following tools to help manage range-based shards:
 
-* The [vtctldclient GenerateShardRanges](../../../reference/programs/vtctldclient/vtctldclient_generateshardranges) command-line tool supports generating shard ranges based on the provided number of shards.
-* There are additional [Shard specific vtctldclient](../../../reference/programs/vtctldclient) command-line tools.
+* The [vtctldclient GenerateShardRanges](../../../reference/command-line-reference/vtctldclient/vtctldclient_generateshardranges) command-line tool supports generating shard ranges based on the provided number of shards.
+* There are additional [Shard specific vtctldclient](../../../reference/command-line-reference/vtctldclient) command-line tools.
 * Client APIs account for sharding operations.

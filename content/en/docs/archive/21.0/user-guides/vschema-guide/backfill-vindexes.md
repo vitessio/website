@@ -6,7 +6,7 @@ weight: 11
 Creating a Lookup Vindex after the main table already contains rows does not automatically backfill the lookup table for the existing entries.
 Only newer inserts cause automatic population of the lookup table.
 
-This backfill can be set up using the [LookupVindex create](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) command covered below.
+This backfill can be set up using the [LookupVindex create](../../../reference/command-line-reference/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) command covered below.
 
 ### Manual Backfill Checklist
 
@@ -23,7 +23,7 @@ Creating a unique Lookup Vindex is an elaborate process. It is good to use the f
 
 ### Creating a Lookup Vindex
 
-vtctldclient supports the [LookupVindex create](../../../reference/programs/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) command that can perform all the above steps as well as the backfill.
+vtctldclient supports the [LookupVindex create](../../../reference/command-line-reference/vtctldclient/vtctldclient_lookupvindex/vtctldclient_lookupvindex_create/) command that can perform all the above steps as well as the backfill.
 
 {{< warning >}}
 This will not work against the `vtcombo` based demo app because it does not support vreplication. You can only try this against a real Vitess cluster.

@@ -7,7 +7,7 @@ title: 'Introducing VTAdmin'
 description: "Vitess's cluster management API and UI"
 ---
 
-[VTAdmin](https://vitess.io/docs/reference/vtadmin/) is now generally available for use! VTAdmin provides both a web client and API for managing multiple Vitess clusters, and is the successor to the now-deprecated UI for [vtctld](https://vitess.io/docs/reference/programs/vtctld/).
+[VTAdmin](https://vitess.io/docs/reference/vtadmin/) is now generally available for use! VTAdmin provides both a web client and API for managing multiple Vitess clusters, and is the successor to the now-deprecated UI for [vtctld](https://vitess.io/docs/reference/command-line-reference/vtctld/).
 
 ## What is VTAdmin?
 VTAdmin is made up of two components: 

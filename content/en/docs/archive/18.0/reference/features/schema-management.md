@@ -14,7 +14,7 @@ The workflow for the `VSchema` is as follows:
 1. Apply the `VSchema` for each keyspace using the `ApplyVschema` command. This saves the VSchemas in the global topology service.
 2. Execute `RebuildVSchemaGraph` for each cell (or all cells). This command propagates a denormalized version of the combined VSchema to all the specified cells. The main purpose for this propagation is to minimize the dependency of each cell from the global topology. The ability to push a change to only specific cells allows you to canary the change to make sure that it's good before deploying it everywhere.
 
-This document describes the [`vtctl`](../../../reference/programs/vtctl/) commands that you can use to [review](#reviewing-your-schema) or [update](#changing-your-schema) your schema in Vitess.
+This document describes the [`vtctl`](../../../reference/command-line-reference/vtctl/) commands that you can use to [review](#reviewing-your-schema) or [update](#changing-your-schema) your schema in Vitess.
 
 It is not recommended to run schema changes through this command. Instead, use [managed, online schema changes](../../../user-guides/schema-changes/managed-online-schema-changes/).
 
@@ -32,7 +32,7 @@ This section describes the following vtctl commands, which let you look at the s
 
 The [GetSchema](../../programs/vtctl/schema-version-permissions#getschema) command displays the full schema for a tablet or a subset of the tablet's tables. When you call `GetSchema`, you specify the tablet alias that uniquely identifies the tablet. The `<tablet alias>` argument value has the format `<cell name>-<uid>`.
 
-**Note**: You can use the [`vtctl ListAllTablets`](../../../reference/programs/vtctl/#listalltablets) command to retrieve a list of tablets in a cell and their unique IDs.
+**Note**: You can use the [`vtctl ListAllTablets`](../../../reference/command-line-reference/vtctl/#listalltablets) command to retrieve a list of tablets in a cell and their unique IDs.
 
 The following example retrieves the schema for the tablet with the unique ID test-000000100:
 
@@ -42,7 +42,7 @@ GetSchema test-000000100
 
 ### ValidateSchemaShard
 
-The [`ValidateSchemaShard`](../../../reference/programs/vtctl/#validateschemashard) command confirms that for a given keyspace, all of the replica tablets in a specified shard have the same schema as the primary tablet in that shard. When you call `ValidateSchemaShard`, you specify both the keyspace and the shard that you are validating.
+The [`ValidateSchemaShard`](../../../reference/command-line-reference/vtctl/#validateschemashard) command confirms that for a given keyspace, all of the replica tablets in a specified shard have the same schema as the primary tablet in that shard. When you call `ValidateSchemaShard`, you specify both the keyspace and the shard that you are validating.
 
 The following command confirms that the primary and replica tablets in shard `0` all have the same schema for the `user` keyspace:
 
@@ -52,7 +52,7 @@ ValidateSchemaShard user/0
 
 ### ValidateSchemaKeyspace
 
-The [`ValidateSchemaKeyspace`](../../../reference/programs/vtctl/#validateschemakeyspace) command confirms that all of the tablets in a given keyspace have the the same schema as the primary tablet on shard `0` in that keyspace. Thus, whereas the `ValidateSchemaShard` command confirms the consistency of the schema on tablets within a shard for a given keyspace, `ValidateSchemaKeyspace` confirms the consistency across all tablets in all shards for that keyspace.
+The [`ValidateSchemaKeyspace`](../../../reference/command-line-reference/vtctl/#validateschemakeyspace) command confirms that all of the tablets in a given keyspace have the the same schema as the primary tablet on shard `0` in that keyspace. Thus, whereas the `ValidateSchemaShard` command confirms the consistency of the schema on tablets within a shard for a given keyspace, `ValidateSchemaKeyspace` confirms the consistency across all tablets in all shards for that keyspace.
 
 The following command confirms that all tablets in all shards have the same schema as the primary tablet in shard 0 for the user keyspace:
 
@@ -62,11 +62,11 @@ ValidateSchemaKeyspace user
 
 ### GetVSchema
 
-The [`GetVSchema`](../../../reference/programs/vtctl/#getvschema) command displays the global VSchema for the specified keyspace.
+The [`GetVSchema`](../../../reference/command-line-reference/vtctl/#getvschema) command displays the global VSchema for the specified keyspace.
 
 ### GetSrvVSchema
 
-The [`GetSrvVSchema`](../../../reference/programs/vtctl/#getsrvvschema) command displays the combined VSchema for a given cell.
+The [`GetSrvVSchema`](../../../reference/command-line-reference/vtctl/#getsrvvschema) command displays the combined VSchema for a given cell.
 
 ## Changing your schema
 
@@ -92,7 +92,7 @@ Vitess offers [managed schema migration](../../../user-guides/schema-changes/man
 * Support for [concurrent migrations](../../../user-guides/schema-changes/concurrent-migrations/)
 * Support for [INSTANT DDL](../../../user-guides/schema-changes/instant-ddl-migrations/)
 
-The [ApplySchema](../../../reference/programs/vtctl/schema-version-permissions/#applyschema) command applies a schema change to the specified keyspace on all shards. The command format is: `ApplySchema -- {--sql=<sql> || --sql_file=<filename>} <keyspace>`
+The [ApplySchema](../../../reference/command-line-reference/vtctl/schema-version-permissions/#applyschema) command applies a schema change to the specified keyspace on all shards. The command format is: `ApplySchema -- {--sql=<sql> || --sql_file=<filename>} <keyspace>`
 
 Further reading:
 
@@ -111,8 +111,8 @@ The `ApplySchema` command supports these commands:
 
 ### ApplyVSchema
 
-The [`ApplyVSchema`](../../../reference/programs/vtctl/#applyvschema) command applies the specified VSchema to the keyspace. The VSchema can be specified as a string or in a file.
+The [`ApplyVSchema`](../../../reference/command-line-reference/vtctl/#applyvschema) command applies the specified VSchema to the keyspace. The VSchema can be specified as a string or in a file.
 
 ### RebuildVSchemaGraph
 
-The [`RebuildVSchemaGraph`](../../../reference/programs/vtctl/#rebuildvschemagraph) command propagates the global VSchema to a specific cell or the list of specified cells.
+The [`RebuildVSchemaGraph`](../../../reference/command-line-reference/vtctl/#rebuildvschemagraph) command propagates the global VSchema to a specific cell or the list of specified cells.

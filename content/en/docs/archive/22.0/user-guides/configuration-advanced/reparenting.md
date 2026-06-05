@@ -94,7 +94,7 @@ Metrics are available on the `/debug/vars` pages of VTOrc and VTCtld for the rep
 
 ## External Reparenting
 
-External reparenting occurs when another tool handles the process of changing a shard's primary tablet. After that occurs, the tool needs to call the [`vtctl TabletExternallyReparented`](../../../reference/programs/vtctl/shards/#tabletexternallyreparented) command to ensure that the topology service, replication graph, and serving graph are updated accordingly.
+External reparenting occurs when another tool handles the process of changing a shard's primary tablet. After that occurs, the tool needs to call the [`vtctl TabletExternallyReparented`](../../../reference/command-line-reference/vtctl/shards/#tabletexternallyreparented) command to ensure that the topology service, replication graph, and serving graph are updated accordingly.
 
 `TabletExternallyReparented` performs the following operations:
 
@@ -113,4 +113,4 @@ Active reparenting might be a dangerous practice in any system that depends on e
 ## Fixing Replication
 
 A tablet can be orphaned after a reparenting if it is unavailable when the reparent operation is running but then recovers later on. Its replication will be automatically fixed by [VTOrc](../../configuration-basic/vtorc).
-You can also manually reset the tablet's primary to the current shard primary using the [`vtctl ReparentTablet`](../../../reference/programs/vtctl/tablets/#reparenttablet) command. You can then restart replication on the tablet if it was stopped by calling the [`vtctl StartReplication`](../../../reference/programs/vtctl/tablets/#startreplication) command.
+You can also manually reset the tablet's primary to the current shard primary using the [`vtctl ReparentTablet`](../../../reference/command-line-reference/vtctl/tablets/#reparenttablet) command. You can then restart replication on the tablet if it was stopped by calling the [`vtctl StartReplication`](../../../reference/command-line-reference/vtctl/tablets/#startreplication) command.

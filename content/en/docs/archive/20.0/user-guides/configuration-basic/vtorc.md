@@ -11,7 +11,7 @@ Setting up VTOrc lets you avoid performing the `InitShardPrimary` step. It autom
 
 ### Flags
 
-For a full list of supported flags, please look at [VTOrc reference page](../../../reference/programs/vtorc).
+For a full list of supported flags, please look at [VTOrc reference page](../../../reference/command-line-reference/vtorc).
 
 ### UI, API and Metrics
 

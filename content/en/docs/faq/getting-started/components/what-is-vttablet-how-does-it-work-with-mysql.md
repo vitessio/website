@@ -12,5 +12,5 @@ Things to note about VTTablet are:
 * VTTablet tracks long running queries and kills them when they exceed a defined threshold.
 * The combination of a VTTablet process and a MySQL process is called a Tablet.
 
-Please note that in some cases VTTablets may be deployed as [unmanaged/remote or partially managed](https://vitess.io/docs/reference/programs/vttablet/#managed-mysql).
+Please note that in some cases VTTablets may be deployed as [unmanaged/remote or partially managed](https://vitess.io/docs/reference/command-line-reference/vttablet/#managed-mysql).
 The recommendation is to start with unmanaged mode but eventually migrate to managed mode. Operations like resharding are possible only with vitess-managed MySQL servers.

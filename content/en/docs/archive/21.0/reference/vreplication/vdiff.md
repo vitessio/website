@@ -24,11 +24,11 @@ it's strongly recommended that you define a PK for the table.
 
 ### Command
 
-VDiff takes different sub-commands or actions similar to how the [`MoveTables`](../movetables/)/[`Reshard`](../reshard/) commands work. Please see [the command's reference docs](../../../reference/programs/vtctldclient/vtctldclient_vdiff/) for additional info. The following sub-commands or actions are supported:
+VDiff takes different sub-commands or actions similar to how the [`MoveTables`](../movetables/)/[`Reshard`](../reshard/) commands work. Please see [the command's reference docs](../../../reference/command-line-reference/vtctldclient/vtctldclient_vdiff/) for additional info. The following sub-commands or actions are supported:
 
 #### Start a New VDiff
 
-The [`create` action](../../../reference/programs/vtctldclient/vtctldclient_vdiff/vtctldclient_vdiff_create/) schedules a VDiff to run on the primary tablet of each target shard to verify the subset of data that will live on the given shard. If you do not pass a specific UUID then one will be generated.
+The [`create` action](../../../reference/command-line-reference/vtctldclient/vtctldclient_vdiff/vtctldclient_vdiff_create/) schedules a VDiff to run on the primary tablet of each target shard to verify the subset of data that will live on the given shard. If you do not pass a specific UUID then one will be generated.
 
 Each scheduled VDiff has an associated UUID which is returned by the `create` action. You can use it
 to monitor progress. Example:
@@ -40,7 +40,7 @@ VDiff a35b0006-e6d9-416e-bea9-917795dc5bf3 scheduled on target shards, use show 
 
 #### Resume a Previous VDiff
 
-The [`resume` action](../../../reference/programs/vtctldclient/vtctldclient_vdiff/vtctldclient_vdiff_resume/) allows you to resume a previously completed VDiff, picking up where it left off and comparing the records where the Primary Key column(s) are greater than the last record processed — with the progress and other status information saved when the run ends. This allows you to do approximate rolling or differential VDiffs (e.g. done after `MoveTables` finishes the initial copy phase and then again just before `SwitchTraffic`).
+The [`resume` action](../../../reference/command-line-reference/vtctldclient/vtctldclient_vdiff/vtctldclient_vdiff_resume/) allows you to resume a previously completed VDiff, picking up where it left off and comparing the records where the Primary Key column(s) are greater than the last record processed — with the progress and other status information saved when the run ends. This allows you to do approximate rolling or differential VDiffs (e.g. done after `MoveTables` finishes the initial copy phase and then again just before `SwitchTraffic`).
 
 Example:
 
@@ -55,7 +55,7 @@ We cannot guarantee accurate results for `resume` when different collations are 
 
 #### Show Progress/Status of a VDiff
 
-Using the [`show` action](../../../reference/programs/vtctldclient/vtctldclient_vdiff/vtctldclient_vdiff_show/) you can either `show` a specific UUID or use the `last` convenience shorthand to look at the most recently created VDiff. Example:
+Using the [`show` action](../../../reference/command-line-reference/vtctldclient/vtctldclient_vdiff/vtctldclient_vdiff_show/) you can either `show` a specific UUID or use the `last` convenience shorthand to look at the most recently created VDiff. Example:
 
 ```shell
 $ vtctldclient --server=localhost:15999 VDiff --target-keyspace customer --workflow commerce2customer show last
@@ -116,7 +116,7 @@ VDiff in order to improve the accuracy of the progress report.
 
 #### Stopping a VDiff
 
-The [`stop` action](../../../reference/programs/vtctldclient/vtctldclient_vdiff/vtctldclient_vdiff_stop/) allows you to stop a running VDiff for any reason — for example, the load on the system(s) may be too high at the moment and you want to postpone the work until off hours. You can then later use the [`resume` action](../../../reference/programs/vtctldclient/vtctldclient_vdiff/vtctldclient_vdiff_resume/) to start the VDiff again from where it left off. Example:
+The [`stop` action](../../../reference/command-line-reference/vtctldclient/vtctldclient_vdiff/vtctldclient_vdiff_stop/) allows you to stop a running VDiff for any reason — for example, the load on the system(s) may be too high at the moment and you want to postpone the work until off hours. You can then later use the [`resume` action](../../../reference/command-line-reference/vtctldclient/vtctldclient_vdiff/vtctldclient_vdiff_resume/) to start the VDiff again from where it left off. Example:
 
 ```shell
 $ vtctldclient --server=localhost:15999 VDiff --format=json --target-keyspace customer --workflow commerce2customer stop ad9bd40e-0c92-11ed-b568-920702940ee0
@@ -133,7 +133,7 @@ Attempting to `stop` a VDiff that is already completed is a no-op.
 
 #### Delete VDiff Results
 
-You use the [`delete` action](../../../reference/programs/vtctldclient/vtctldclient_vdiff/vtctldclient_vdiff_delete/) to either `delete` a specific UUID or use the `all` shorthand to delete all VDiffs created for the specified keyspace and workflow. Example:
+You use the [`delete` action](../../../reference/command-line-reference/vtctldclient/vtctldclient_vdiff/vtctldclient_vdiff_delete/) to either `delete` a specific UUID or use the `all` shorthand to delete all VDiffs created for the specified keyspace and workflow. Example:
 
 ```shell
 $ vtctldclient --server=localhost:15999 VDiff --target-keyspace customer --workflow commerce2customer delete all

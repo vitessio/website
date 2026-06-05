@@ -284,7 +284,7 @@ For example, suppose you typically keep four days of replication logs and you cr
 
 The backup and restore processes simultaneously copy and either compress or decompress multiple files to increase throughput. You can control the concurrency using command-line flags:
 
-* The vtctl [Backup](https://vitess.io/docs/reference/programs/vtctl/tablets/#backup) command uses the `--concurrency` flag.
+* The vtctl [Backup](https://vitess.io/docs/reference/command-line-reference/vtctl/tablets/#backup) command uses the `--concurrency` flag.
 * vttablet uses the `--restore-concurrency` flag.
 
 If the network link is fast enough, the concurrency matches the CPU usage of the process during the backup or restore process.

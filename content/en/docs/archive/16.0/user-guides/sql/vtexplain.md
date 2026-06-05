@@ -6,7 +6,7 @@ aliases: ['/docs/user-guides/vtexplain/']
 
 # Introduction
 
-This document covers the way Vitess executes a particular SQL statement using the [VTExplain tool](../../../reference/programs/vtexplain). 
+This document covers the way Vitess executes a particular SQL statement using the [VTExplain tool](../../../reference/command-line-reference/vtexplain). 
 This tool works similarly to the MySQL `EXPLAIN` statement.
 You can run `vtexplain` before you have a running Vitess cluster, which lets you quickly try different schema/vschema.
 If you're already running a cluster, you can also use the [VEXPLAIN QUERIES|ALL|PLAN](../vexplain) command from a SQL console.
@@ -304,4 +304,4 @@ SELECT * FROM users WHERE id IN (10, 17, 42, 1000)
 
 ## See also
 
-* For detailed configuration options for VTExplain, see the [VTExplain syntax reference](../../../reference/programs/vtexplain).
+* For detailed configuration options for VTExplain, see the [VTExplain syntax reference](../../../reference/command-line-reference/vtexplain).
