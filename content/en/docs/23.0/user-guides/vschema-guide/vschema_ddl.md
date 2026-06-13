@@ -70,7 +70,7 @@ Drops a vindex from the VSchema.
 ### ALTER VSCHEMA ON tbl_name ADD VINDEX
 
 ```
-ALTER VSCHEMA ON tbl_name ADD VINDEX tbl_name.vindex_name (column_name[, column_name] ...) [USING vindex_type] [WITH vindex_option[, vindex_option] ...]
+ALTER VSCHEMA ON tbl_name ADD VINDEX vindex_name (column_name[, column_name] ...) [USING vindex_type] [WITH vindex_option[, vindex_option] ...]
 ```
 
 Adds a vindex for table `tbl_name` and columns `column_name`.
@@ -78,13 +78,13 @@ Adds a vindex for table `tbl_name` and columns `column_name`.
 For the various vindex types and vindex options see [Vindexes documentation](https://vitess.io/docs/17.0/reference/features/vindexes/#predefined-vindexes).
 
 
-### ALTER VSCHEMA ON tbl_name REMOVE VINDEX
+### ALTER VSCHEMA ON tbl_name DROP VINDEX
 
 ```
-ALTER VSCHEMA ON tbl_name REMOVE VINDEX tbl_name.vindex_name
+ALTER VSCHEMA ON tbl_name DROP VINDEX vindex_name
 ```
 
-Removes a vindex from table `tbl_name`.
+Drops a vindex from table `tbl_name`.
 
 
 ### ALTER VSCHEMA ADD SEQUENCE
