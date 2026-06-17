@@ -37,7 +37,7 @@ sudo installer -pkg go1.26.1.darwin-amd64.pkg -target /
 ```
 
 > Vitess is tested and shipped using a specific Golang version for each release.
-> For maximum compatibility we encourage you to use the same Golang version as [the one mentioned in our `build.env` file](https://github.com/vitessio/vitess/blob/main/build.env#L20).
+> For maximum compatibility we encourage you to use the same Golang version as [the one specified in our `go.mod` file](https://github.com/vitessio/vitess/blob/main/go.mod#L3).
 
 Do not install etcd via brew otherwise it will not be the version that is supported. Let it be installed when running make build.
 
