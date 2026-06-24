@@ -18,7 +18,7 @@ Each major release is maintained for 1 year.
 > The latest and current vitess release is v24.0
 
 ### v24.0
-- **Current version:** [v24.0.1](https://github.com/vitessio/vitess/releases/tag/v24.0.1) (2026-05-07)
+- **Current version:** [v24.0.2](https://github.com/vitessio/vitess/releases/tag/v24.0.2) (2026-06-24)
 - **Initial GA release:** [v24.0.0](https://github.com/vitessio/vitess/releases/tag/v24.0.0) (2026-04-30)
 - **End of life:** 2027-04-30
 
