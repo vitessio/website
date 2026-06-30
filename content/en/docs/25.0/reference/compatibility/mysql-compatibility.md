@@ -358,3 +358,11 @@ By default, Vitess applies strict limitations on execution time and row counts, 
 ```sql
 SET workload = olap;
 ```
+
+### Streaming query errors
+
+In OLAP mode, query results are streamed to the client. Starting in v25, if an error occurs after VTGate has already streamed one or more rows of a result, VTGate sends the actual error to the client in place of the result terminator. In v24 and earlier, an error that surfaced mid-stream caused VTGate to drop the connection, so the client saw `ERROR 2013 (HY000): Lost connection to MySQL server during query` instead of the underlying cause.
+
+With this change, the client receives the real error code and message, and the connection remains usable for subsequent queries. For example, a `KILL QUERY` against a streaming session now surfaces `errno 1317` (`context canceled`), and a planner error that only appears once results have begun streaming is reported as itself rather than as a lost connection.
+
+This applies to all streaming query paths, including OLAP-mode queries, multi-statement queries, and prepared-statement execution. Applications whose error handling or retry logic branched on `2013` or lost-connection errors for streaming queries should be updated to handle the real error codes.
