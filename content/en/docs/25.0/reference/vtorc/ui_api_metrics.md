@@ -24,7 +24,7 @@ VTOrc supports the following APIs which can be used for monitoring and changing 
 | `/api/detection-analysis`        | This API shows the detection analysis of VTOrc. Output is in JSON format.                                                                                                                               |
 | `/api/errant-gtids`              | This API shows the tablets that have errant GTIDs as detected by VTOrc. Output is in JSON format. This API supports filtering by keyspace and shard name.                                               |
 | `/api/database-state`            | This API shows the internal database state of VTOrc. This API can be used to debug VTOrc.                                                                                                               |
-| `/api/shard-quorum`              | This read-only API shows the live per-shard quorum state used by quorum-confirmed emergency reparenting of an unreachable primary `vttablet`. For each shard it reports the primary, the down verdict, the per-observer vote tally, and the configured quorum thresholds. Output is in JSON format. |
+| `/api/shard-tablet-health-quorum` | This read-only API shows the live per-shard quorum state used by quorum-confirmed emergency reparenting of an unreachable primary `vttablet`. For each shard it reports the primary, the down verdict, the per-observer vote tally, and the configured quorum thresholds. Output is in JSON format. |
 
 # Metrics
 
