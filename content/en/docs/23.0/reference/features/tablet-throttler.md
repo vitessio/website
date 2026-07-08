@@ -36,6 +36,10 @@ Tablets in the same shard collaborate. The `Primary` tablet polls the replica ta
 
 However, we limit the collaboration to specific tablet types, based on `--throttle-tablet-types` VTTablet flag. By default, the `Primary` only collaborates with `replica` tablet types, which means tablets such as `backup` do not affect any throttling behavior. The throttler routinely updates the roster of participating tablets.
 
+{{< warning >}}
+This means that if you enable the throttler and want to use `RDONLY` tablets as the source for any [VReplication workflow](../../vreplication/) or [VTGate VStreams](../../vreplication/vstream/) (CDC) then you will have to use `--throttle-tablet-types "replica,rdonly"` with your `vttablet` processes.
+{{</ warning >}}
+
 ### Metrics
 
 The objective of the throttler is to push back work based on database load. Previously, this was done based on a single metric, which could be either the replication lag, or the result of a custom query. Now, the throttler collects multiple metrics. The current supported metrics are:

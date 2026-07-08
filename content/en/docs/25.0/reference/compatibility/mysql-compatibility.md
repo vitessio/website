@@ -26,6 +26,7 @@ Vitess supports MySQL and gRPC server protocols, allowing it to serve as a drop-
    13. [Create/Drop Database](#createdrop-database)
    14. [User Defined Functions (UDFs)](#user-defined-functions)
    15. [LAST_INSERT_ID](#last_insert_id)
+   16. [Reserved Keywords](#reserved-keywords)
 3. [Cross-shard Transactions](#cross-shard-transactions)
 4. [Auto Increment](#auto-increment)
 5. [Character Set and Collation](#character-set-and-collation)
@@ -261,6 +262,52 @@ FROM table
 ORDER BY foo;
 ```
 
+### Reserved Keywords
+
+Vitess treats certain SQL keywords as reserved, matching MySQL's reserved keyword list. Starting in v25, `DUAL` is a reserved keyword.
+
+#### The DUAL Keyword
+
+`DUAL` is now a reserved keyword in Vitess, matching MySQL behavior:
+
+- Unquoted `DUAL` refers to the virtual pseudo-table for queries that don't need a real table (e.g., `SELECT 1 FROM DUAL`)
+- Backtick-quoted `` `dual` `` refers to an actual table named `dual`
+
+**Examples:**
+
+```sql
+-- Virtual dual (no real table)
+SELECT 1 FROM DUAL;
+SELECT NOW() FROM DUAL;
+
+-- Real table named dual (must be backtick-quoted)
+SELECT * FROM `dual`;
+INSERT INTO `dual` (col) VALUES (1);
+```
+
+**Limitations:**
+
+Joining `DUAL` with other tables is not supported, matching MySQL behavior:
+
+```sql
+-- NOT Supported: Joining DUAL with other tables
+SELECT 42, id FROM DUAL, user;
+-- Error: syntax error
+```
+
+**Migration Notes:**
+
+In v24 and earlier, real tables named `dual` were inaccessible—even backtick-quoting `` `dual` `` still referred to the virtual DUAL table. In v25, this is fixed: backtick-quoting now correctly references a real table if one exists.
+
+```sql
+-- v24 and earlier
+SELECT * FROM `dual`;  -- Always referred to virtual DUAL, not a real table
+
+-- v25 and later
+SELECT * FROM `dual`;  -- Real table (if it exists)
+SELECT * FROM DUAL;    -- Virtual pseudo-table (equivalent to SELECT without FROM)
+```
+
 ## Cross-shard Transactions
 
 Vitess supports multiple [transaction modes](../../../user-guides/configuration-advanced/shard-isolation-atomicity): `SINGLE`, `MULTI` and `TWOPC` .
@@ -311,3 +358,11 @@ By default, Vitess applies strict limitations on execution time and row counts, 
 ```sql
 SET workload = olap;
 ```
+
+### Streaming query errors
+
+In OLAP mode, query results are streamed to the client. Starting in v25, if an error occurs after VTGate has already streamed one or more rows of a result, VTGate sends the actual error to the client in place of the result terminator. In v24 and earlier, an error that surfaced mid-stream caused VTGate to drop the connection, so the client saw `ERROR 2013 (HY000): Lost connection to MySQL server during query` instead of the underlying cause.
+
+With this change, the client receives the real error code and message, and the connection remains usable for subsequent queries. For example, a `KILL QUERY` against a streaming session now surfaces `errno 1317` (`context canceled`), and a planner error that only appears once results have begun streaming is reported as itself rather than as a lost connection.
+
+This applies to all streaming query paths, including OLAP-mode queries, multi-statement queries, and prepared-statement execution. Applications whose error handling or retry logic branched on `2013` or lost-connection errors for streaming queries should be updated to handle the real error codes.

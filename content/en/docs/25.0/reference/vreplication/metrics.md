@@ -110,6 +110,10 @@ The total number of errors that caused a stream to stall
 
 The number of errors per category across workflows
 
+#### VStreamerThrottledCounts
+
+The number of times vstreamer was throttled by the tablet throttler, labeled by workflow name (see [the other tablet throttler metrics](../../features/tablet-throttler/#metrics))
+
 #### VStreamerEventsStreamed
 
 The total number of events streamed by this vttablet across all workflows

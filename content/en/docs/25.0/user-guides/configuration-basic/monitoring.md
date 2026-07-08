@@ -271,6 +271,7 @@ There are a few variables with the above prefixes that report the status of the 
   "TransactionPoolResetSetting": 0,
   "TransactionPoolWaitCount": 0,
   "TransactionPoolWaitTime": 0,
+  "TransactionPoolWaiterCapRejected": 0,
   "TransactionPoolWaiterQueueFull": 0,
   "FoundRowsPoolActive": 0,
   "FoundRowsPoolAvailable": 20,
@@ -288,6 +289,7 @@ There are a few variables with the above prefixes that report the status of the 
   "FoundRowsPoolResetSetting": 0,
   "FoundRowsPoolWaitCount": 0,
   "FoundRowsPoolWaitTime": 0,
+  "FoundRowsPoolWaiterCapRejected": 0,
   "FoundRowsPoolWaiterQueueFull": 0,
 ```
 
@@ -295,6 +297,7 @@ The choice of which pool gets used depends on whether the application connected 
 
 * `WaitCount` will give you how often the transaction pool gets full, which causes new transactions to wait.
 * `WaitTime`/`WaitCount` will tell you the average wait time.
+* `WaiterCapRejected` counts requests rejected because the waiter queue reached its configured cap (set via `--queryserver-config-txpool-waiter-cap` and related flags). When this counter increases, new requests are being immediately rejected with `RESOURCE_EXHAUSTED` instead of waiting for a connection.
 * `Available` is a gauge that tells you the number of available connections in the pool in real-time. `Capacity-Available` is the number of connections in use. Note that this number could be misleading if the traffic is spiky.
 
 #### Other Pool variables
@@ -414,6 +417,35 @@ These two variables track events related to how vtgate watches the topology. It 
 
 Gauges the number of unknown Vindex params in the latest VSchema obtained from the topology.
 
+#### SlowQueries
+
+This counter tracks queries that vtgate classifies as slow when `--slow-query-threshold` is set to a non-zero duration. The counter is keyed by query type, plan type, and tablet type.
+
+``` json
+"SlowQueries": {
+  "UPDATE.Passthrough.PRIMARY": 1,
+  "SELECT.Select.REPLICA": 3
+}
+```
+
+Prometheus exposes this counter as `vtgate_slow_queries` with labels `query`, `plan`, and `tablet`:
+
+```
+vtgate_slow_queries{plan="Passthrough",query="UPDATE",tablet="PRIMARY"} 1
+```
+
+You can use this metric to alert on slow-query percentage. For example, the following alert fires when more than 1% of primary writes are slow over a five-minute window:
+
+```promql
+100 *
+sum(rate(vtgate_slow_queries{query=~"INSERT|UPDATE|DELETE",tablet="PRIMARY"}[5m]))
+/
+sum(rate(vtgate_query_executions{query=~"INSERT|UPDATE|DELETE",tablet="PRIMARY"}[5m]))
+> 1
+```
+
+Slow queries are also marked in the vtgate query log with `SlowQuery=true` and visible in `/debug/querylogz` in the `SlowQuery` column.
+
 ### /debug/health
 
 This URL prints out a simple "ok" or “not ok” string that can be used to check if the server is healthy.
@@ -436,4 +468,5 @@ For vtgate, here’s a list of possible variables to alert on:
 * vtgate serving graph is stale by x minutes (topology service is down)
 * QPS/core
 * Latency
+* Slow query percentage (when `--slow-query-threshold` is configured)
 
