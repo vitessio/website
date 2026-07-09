@@ -254,8 +254,8 @@ All three programs can be made aware of Backup Engine and Backup Storage using t
         Must be greater than or equal to <code>builtinbackup-file-chunk-size</code>;
         this is validated when the backup starts, and a violation fails the backup.
         <br><br>
-        <b>Compatibility note:</b> Backups created with chunking enabled are
-        <b>not restorable by older Vitess versions</b> that do not understand the
+        <b>Compatibility note:</b> Backups created with chunking enabled
+        <b>cannot be restored by Vitess versions earlier than v25</b>, as these versions do not understand the
         <code>Chunks</code> field in the backup MANIFEST. See more below.
       </td>
     </tr>
