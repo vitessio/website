@@ -104,6 +104,43 @@ This is not enabled by default, as usually the different Vitess servers will run
 
 Additionally, if a client uses a certificate to connect to Vitess (VTGate) via gRPC, the common name of that certificate is passed to vttablet as the Immediate Caller ID. It can then be used by table ACLs to grant read, write or admin access to individual tables. This should be used if different clients should have different access to Vitess tables.
 
+### Static Authentication
+
+In addition to TLS client certificates, the gRPC server can authenticate clients using static username/password credentials. To enable this, set `--grpc-auth-mode=static` and point `--grpc-auth-static-password-file` at a JSON file listing the authorized users. A client then presents its username and password to the gRPC server, which validates them against the entries in that file. Note that this static gRPC auth plugin is distinct from the static authentication used for the MySQL protocol to VTGate; the two use separate credentials files and formats.
+
+The credentials file is a JSON array of entries. Each entry contains a `Username` and either a plaintext `Password` or a hex-encoded `CachingSha2Password` hash. A single file can mix plaintext and hashed entries:
+
+```json
+[
+  {
+    "Username": "user1",
+    "Password": "plaintext_password"
+  },
+  {
+    "Username": "user2",
+    "CachingSha2Password": "*49bbd275dd4bfb1170ced93e839a8ec1d5b86eab6acb0842502130a31702390d"
+  }
+]
+```
+
+Storing plaintext passwords on disk is discouraged outside of test environments. Instead, set `CachingSha2Password` to the hex-encoded `SHA256(SHA256(password))` of the user's password, with an optional leading `*`. This is the same format as the `CachingSha2Password` field used by the MySQL protocol's static auth server, so a single stored credential value can authenticate a user on both the MySQL and gRPC endpoints, and hashes that operators already manage for `caching_sha2_password` can be copied verbatim. The hash value is case-insensitive, and the leading `*` is optional.
+
+You can generate a `CachingSha2Password` hash by applying `SHA256` to the cleartext password string twice, for example in MySQL for the cleartext password `password`:
+
+```mysql
+mysql> SELECT UPPER(SHA256(UNHEX(SHA256("password")))) as hash;
++------------------------------------------------------------------+
+| hash                                                             |
++------------------------------------------------------------------+
+| 73641C99F7719F57D8F4BEB11A303AFCD190243A51CED8782CA6D3DBE014D146 |
++------------------------------------------------------------------+
+1 row in set (0.01 sec)
+```
+
+When an entry sets both `Password` and `CachingSha2Password`, the hash takes precedence and the plaintext `Password` is ignored. Hashes are validated when VTGate starts, so an invalid hex string or a value that is not a valid SHA256 digest causes startup to fail.
+
+When the static auth plugin is in use, the `grpc-use-static-authentication-callerid` flag copies the authenticated username into the Immediate Caller ID, which can then drive table ACLs as described above.
+
 ### Caller ID Override
 
 In a private network, where TLS security is not required, it might still be desirable to use table ACLs as a safety mechanism to prevent a user from accessing sensitive data. The gRPC connector provides the `grpc_use_effective_callerid` flag for this purpose: if specified when running vtgate, the Effective Caller ID's principal is copied into the Immediate Caller ID, and then used throughout the Vitess stack.
