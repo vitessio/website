@@ -165,7 +165,7 @@ Vitess supports `SELECT ... INTO DUMPFILE` and `SELECT ... INTO OUTFILE` for uns
 Vitess does not support `CREATE DATABASE` or `DROP DATABASE` by default:
  - A plugin mechanism ([`DBDDLPlugin`](https://github.com/vitessio/vitess/blob/release-21.0/go/vt/vtgate/engine/dbddl.go#L53) interface) exists for provisioning databases.
  - The plugin must handle database creation, topology updates, and VSchema updates.
- - Register the plugin with `DBDDLRegister` and specify `--dbddl_plugin=myPluginName` when running vtgate.
+ - Register the plugin with `DBDDLRegister` and specify `--dbddl-plugin=myPluginName` when running vtgate.
 
 ### User Defined Functions
 
@@ -228,8 +228,8 @@ Vitess supports MySQL authentication plugins, such as `mysql_native_password` an
 ### Transport Security
 
 To enable TLS on VTGate:
- - Set `--mysql_server_ssl_cert` and `--mysql_server_ssl_key`.
- - Optionally require client certificates with `--mysql_server_ssl_ca`.
+ - Set `--mysql-server-ssl-cert` and `--mysql-server-ssl-key`.
+ - Optionally require client certificates with `--mysql-server-ssl-ca`.
  - If no CA is specified, TLS is optional.
 
 ### X Dev API

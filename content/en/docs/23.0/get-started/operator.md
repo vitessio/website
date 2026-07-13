@@ -35,6 +35,7 @@ Change to the operator example directory:
 ```bash
 git clone https://github.com/vitessio/vitess
 cd vitess/examples/operator
+git checkout release-23.0
 ```
 
 For this example we will have two namespaces:
@@ -67,6 +68,20 @@ In this directory, you will see a group of yaml files. The first digit of each f
 ```bash
 kubectl apply -f 101_initial_cluster.yaml
 ```
+
+{{< info >}}
+If you are not a running the examples in a minikube cluster, and the backup engine is xtrabackup, then you will need to configure a proper shared storage resource that can be used across pods, or you will need to create a custom PVC to be used by the backup engine. For example:
+
+```yaml
+  backup:
+    engine: xtrabackup
+    locations:
+      - volume:
+          persistentVolumeClaim:
+            claimName: vitess-backup-pvc # required ReadWriteMany
+```
+
+{{</ info >}}
 
 ### Verify cluster
 

@@ -26,16 +26,16 @@ zkctl start [flags]
       --config-path strings                                         Paths to search for config files in. (default [<WORKDIR>])
       --config-persistence-min-interval duration                    minimum interval between persisting dynamic config changes back to disk (if no change has occurred, nothing is done). (default 1s)
       --config-type string                                          Config file type (omit to infer config type from file extension).
-      --keep_logs duration                                          keep logs for this long (using ctime) (zero to keep forever)
-      --keep_logs_by_mtime duration                                 keep logs for this long (using mtime) (zero to keep forever)
-      --log_backtrace_at traceLocations                             when logging hits line file:N, emit a stack trace
-      --log_dir string                                              If non-empty, write log files in this directory
-      --log_err_stacks                                              log stack traces for errors
-      --log_rotate_max_size uint                                    size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
+      --keep-logs duration                                          keep logs for this long (using ctime) (zero to keep forever)
+      --keep-logs-by-mtime duration                                 keep logs for this long (using mtime) (zero to keep forever)
+      --log-err-stacks                                              log stack traces for errors
+      --log-rotate-max-size uint                                    size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
+      --log-backtrace-at traceLocations                             when logging hits line file:N, emit a stack trace
+      --log-dir string                                              If non-empty, write log files in this directory
       --logtostderr                                                 log to standard error instead of files
       --pprof strings                                               enable profiling
       --pprof-http                                                  enable pprof http endpoints
-      --purge_logs_interval duration                                how often try to remove old logs (default 1h0m0s)
+      --purge-logs-interval duration                                how often try to remove old logs (default 1h0m0s)
       --stderrthreshold severityFlag                                logs at or above this threshold go to stderr (default 1)
       --v Level                                                     log level for V logs
   -v, --version                                                     print binary version
@@ -48,4 +48,3 @@ zkctl start [flags]
 ### SEE ALSO
 
 * [zkctl](../)	 - Initializes and controls zookeeper with Vitess-specific configuration.
-

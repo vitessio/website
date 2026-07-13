@@ -54,25 +54,25 @@ The `SCATTER_ERRORS_AS_WARNINGS` comment directive enables exactly this, by retu
 
 ## Ignore max payload size (`IGNORE_MAX_PAYLOAD_SIZE`)
 
-By default, Vitess will try to handle queries of any size. It is possible to use the `vtgate` parameter `--max_payload_size` (default unlimited) to limit the size of an incoming query to a certain number of bytes. Queries larger than this limit will then be rejected by `vtgate`.
+By default, Vitess will try to handle queries of any size. It is possible to use the `vtgate` parameter `--max-payload-size` (default unlimited) to limit the size of an incoming query to a certain number of bytes. Queries larger than this limit will then be rejected by `vtgate`.
 
 The `IGNORE_MAX_PAYLOAD_SIZE` comment directive allows a Vitess-aware application to bypass this limit, essentially setting it to the default of unlimited for that query.
 
 ## Ignore max memory rows (`IGNORE_MAX_MEMORY_ROWS`)
 
-By default, `vtgate` will allow intermediate results for things like in-vtgate sorting and joining, up to a maximum of number of rows per query. This is to avoid using massive amounts of memory in `vtgate`. This limit is set using the `vtgate` parameter `--max_memory_rows`, which defaults to 300,000. Note that this limit is not a direct memory usage limit, since 300,000 very large rows could still be a huge amount of memory.
+By default, `vtgate` will allow intermediate results for things like in-vtgate sorting and joining, up to a maximum of number of rows per query. This is to avoid using massive amounts of memory in `vtgate`. This limit is set using the `vtgate` parameter `--max-memory-rows`, which defaults to 300,000. Note that this limit is not a direct memory usage limit, since 300,000 very large rows could still be a huge amount of memory.
 
 The `IGNORE_MAX_MEMORY_ROWS` comment directive allows a Vitess-aware application to bypass this limit, essentially setting it to an unlimited number of rows for that query. Since this override can result in very large, and even potentially effectively unbounded, amounts of memory being used by `vtgate`, it should be used with extreme caution.
 
 ## Allow scatter (`ALLOW_SCATTER`)
 
-In Vitess, it is possible to use the `vtgate` parameter `--no_scatter` to prevent `vtgate` from issuing scatter queries. Thus only queries that do not scatter will be allowed.
+In Vitess, it is possible to use the `vtgate` parameter `--no-scatter` to prevent `vtgate` from issuing scatter queries. Thus only queries that do not scatter will be allowed.
 
 This comment directive is used to override that limitation, allowing application code to be customized to allow scatters for certain chosen use-cases, but not for the general case.
 
 ## Consolidator (`CONSOLIDATOR`)
 
-In `vttablet`, the consolidator is enabled with the `--enable_consolidator` and `--enable_consolidator_replicas` flags. Those settings may be overridden with this comment directive, allowing application code to opt into (or out of) consolidation for individual `SELECT` queries.
+In `vttablet`, the consolidator is enabled with the `--enable-consolidator` and `--enable-consolidator-replicas` flags. Those settings may be overridden with this comment directive, allowing application code to opt into (or out of) consolidation for individual `SELECT` queries.
 
 This directive requires one of the following values:
 

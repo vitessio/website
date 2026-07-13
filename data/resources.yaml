@@ -11,6 +11,22 @@ resources:
   # Note: To generate "thumbnail_url", visit https://embed.ly/docs/explore/extract
   # and enter the link to the resource. Once you do that, select any thumbnail url of choice to use.
 
+  - youtube: 2B0FB0A_c_Q
+    title: "Under the Hood of Vitess: Database Engineered for Scale and Resilience - Matt Lord & Florent Poinsard, PlanetScale"
+    date: 2025
+    type: video
+  - youtube: qDBgHS2bE7s
+    title: "Why Is My Query Slow? Real AI Use Cases With Vitess + Kubernetes + Prometheus - Brett Warminski & Gourav Khanijoe, HubSpot"
+    date: 2025
+    type: video
+  - youtube: 6QWRHln3VO8
+    title: "Inside Vitess: Building Resilient Distributed Databases - Harshit Gangal, PlanetScale"
+    date: 2025
+    type: video
+  - youtube: Zbi46yTlSVo
+    title: "Vitess: Schema Changes at Scale - Rohit Nayak & Shlomi Noach, PlanetScale"
+    date: 2025
+    type: video
   - youtube: TjyzDlQEgdU
     title: "Atomic Distributed Transactions in Vitess - Harshit Gangal & Manan Gupta, PlanetScale"
     date: 2025

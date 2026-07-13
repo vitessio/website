@@ -51,7 +51,7 @@ func (v version) GenerateDocs(workdir string, vitessDir string, docgenPath strin
 		gitCheckout := exec.Command("git", "checkout", v.Ref)
 		if output, err := gitCheckout.CombinedOutput(); err != nil {
 			debugf("output: %s, err: %s", output, err)
-			return err
+			return fmt.Errorf("failed to checkout git ref %q in %s: %w\nOutput: %s\nHint: run 'cd %s && git fetch --all --tags' to fetch all refs", v.Ref, vitessDir, err, string(output), vitessDir)
 		}
 		defer func() {
 			gitCheckout := exec.Command("git", "checkout", "-")

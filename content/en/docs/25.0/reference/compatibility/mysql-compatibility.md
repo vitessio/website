@@ -1,0 +1,368 @@
+---
+title: MySQL Compatibility
+weight: 1
+aliases: ['/docs/reference/mysql-server-protocol/', '/docs/reference/mysql-compatibility/']
+---
+
+## Introduction
+
+Vitess supports MySQL and gRPC server protocols, allowing it to serve as a drop-in replacement for MySQL Server without changes to application code. However, because Vitess is a distributed system, there are compatibility differences to be aware of.
+
+## Table of Contents
+1. [Transaction and Isolation Levels](#transaction-and-isolation-levels)
+2. [SQL Support](#sql-support)
+   1. [DDL](#ddl)
+   2. [Join, Subqueries, Union, Aggregation, Grouping, Having, Ordering, Limit Queries](#join-subqueries-union-aggregation-grouping-having-ordering-limit-queries)
+   3. [Prepared Statements](#prepared-statements)
+   4. [Stored Procedures](#stored-procedures)
+   5. [Views](#views)
+   6. [Temporary Tables](#temporary-tables)
+   7. [USE Statements](#use-statements)
+   8. [Common Table Expressions (CTEs)](#common-table-expressions)
+   9. [Window Functions](#window-functions)
+   10. [Killing Running Queries](#killing-running-queries)
+   11. [SELECT ... INTO Statement](#select--into-statement)
+   12. [LOAD DATA Statement](#load-data-statement)
+   13. [Create/Drop Database](#createdrop-database)
+   14. [User Defined Functions (UDFs)](#user-defined-functions)
+   15. [LAST_INSERT_ID](#last_insert_id)
+   16. [Reserved Keywords](#reserved-keywords)
+3. [Cross-shard Transactions](#cross-shard-transactions)
+4. [Auto Increment](#auto-increment)
+5. [Character Set and Collation](#character-set-and-collation)
+6. [Data Types](#data-types)
+7. [SQL Mode](#sql-mode)
+8. [Network Protocol](#network-protocol)
+   1. [Authentication Plugins](#authentication-plugins)
+   2. [Transport Security](#transport-security)
+   3. [X Dev API](#x-dev-api)
+9. [Workload](#workload)
+
+---
+
+## Transaction and Isolation Levels
+
+Vitess provides MySQL’s default `REPEATABLE READ` semantics for **single-shard transactions**, ensuring strong consistency within a shard. 
+For **multi-shard transactions**, Vitess optimizes for performance and scalability by using `READ COMMITTED` semantics, enabling efficient distributed transactions.
+
+- With **Two-Phase Commit** (2PC) support, Vitess ensures **atomic writes** across shards, making it easier to manage distributed transactions reliably. 
+- You can adjust the isolation level at the shard level using the `SET` statement on a connection. 
+- `START TRANSACTION` supports MySQL modifiers like `WITH CONSISTENT SNAPSHOT`, `READ WRITE`, and `READ ONLY`, applying them to the next transaction on the same shard. 
+- `SET TRANSACTION` allows setting the isolation level at the session scope, influencing how transactions behave at the shard level.
+
+### Optimizing Read Consistency in Multi-Shard Transactions
+
+- If an application requires **strong consistency**, it can issue queries with update locks (SELECT ... FOR UPDATE) to ensure the latest data is read while preventing modifications until the transaction completes. 
+- Using Vitess’s two-phase commit (2PC) ensures atomicity for distributed writes, providing reliable transaction execution across shards. 
+- For workloads requiring **higher isolation**, transactions can be designed to operate within **single shards**, where `REPEATABLE READ` consistency is fully maintained. 
+
+---
+
+## SQL Support
+
+While Vitess is mostly compatible with MySQL, there are some limitations. A current list of unsupported queries is maintained in the [Vitess GitHub repo](https://github.com/vitessio/vitess/blob/main/go/vt/vtgate/planbuilder/testdata/unsupported_cases.json).
+
+### DDL
+
+Vitess supports all DDL queries:
+- **Managed, online schema changes** (non-blocking, revertible, etc.).
+- **Non-managed DDL** is also supported.
+
+Refer to [making schema changes](../../../user-guides/schema-changes) for more details.
+
+### Join, Subqueries, Union, Aggregation, Grouping, Having, Ordering, Limit Queries
+
+Vitess supports most of these query types. For the best experience:
+- Leave [schema tracking](../../features/schema-tracking) enabled to leverage full support.
+
+### Prepared Statements
+
+Vitess supports:
+- Prepared statements via MySQL binary protocol.
+- SQL statements: [`PREPARE`, `EXECUTE`, `DEALLOCATE`](https://dev.mysql.com/doc/refman/8.0/en/sql-prepared-statements.html).
+
+### Stored Procedures
+
+You can call stored procedures (`CALL`) with the following limitations:
+- Must be on an **unsharded keyspace** or target a **specific shard**.
+- No results can be returned.
+- Only `IN` parameters are supported.
+- Transaction state cannot be changed by the procedure.
+
+`CREATE PROCEDURE` is not supported through Vitess; create procedures on the underlying MySQL servers directly.
+
+### Views
+
+Views are supported for **sharded keyspaces** as an experimental feature:
+- Enable with `--enable-views` on VTGate and `--queryserver-enable-views` on VTTablet.
+- Views are only readable (no updatable views).
+- All tables referenced by the view must belong to the same keyspace.
+
+See the [Views RFC](https://github.com/vitessio/vitess/issues/11559) for more details.
+
+### Temporary Tables
+
+Vitess has limited support for temporary tables, only for **unsharded keyspaces**:
+- Creating a temporary table forces the session to start using [reserved connections](../../query-serving/reserved-conn).
+- Query plans in this session won’t be cached.
+
+### USE Statements
+
+Vitess allows selecting a keyspace (and shard/tablet-type) using the MySQL `USE` statement:
+```sql
+USE `mykeyspace:-80@rdonly`
+```
+
+Or refer to another keyspace’s table via standard dot notation:
+
+```sql
+SELECT * 
+FROM other_keyspace.table;
+```
+
+#### Tablet-Specific Targeting
+
+Route queries to a specific tablet by alias:
+
+```sql
+USE `keyspace:shard@tablet_type|tablet_alias`;
+```
+
+For example, to target a specific replica tablet:
+
+```sql
+USE `commerce:-80@replica|zone1-0000000100`;
+```
+
+All subsequent queries route to the specified tablet until you issue a standard `USE keyspace` or `USE keyspace@tablet_type` statement.
+
+Constraints:
+- A shard must be specified
+- Bypasses vindex-based routing (like shard targeting)
+- Cannot change tablet target mid-transaction
+
+Use cases:
+- Debugging specific tablet behavior
+- Per-tablet monitoring or cache warming
+- Operational tasks requiring stable routing to a specific tablet
+
+### Common Table Expressions
+ - Non-recursive CTEs are supported.
+ - Recursive CTEs have experimental support; feedback is encouraged.
+
+### Window Functions
+
+Vitess supports window functions in both unsharded and sharded keyspaces, with some restrictions for sharded deployments.
+
+#### Unsharded Keyspaces
+
+Window functions are fully supported in unsharded keyspaces with no restrictions.
+
+#### Sharded Keyspaces
+
+For sharded keyspaces, window functions work without restrictions when the query targets a single shard (e.g., queries with `WHERE id = 5` using a unique vindex on `id`).
+
+For multi-shard queries, window functions require the `PARTITION BY` clause to include all columns of a unique vindex:
+- Tables with a single-column unique vindex must include that column in `PARTITION BY`
+- Tables with multi-column unique vindexes must include all columns from the vindex in `PARTITION BY`
+
+**Examples:**
+
+```sql
+-- Supported: Single-shard query
+SELECT id, name, ROW_NUMBER() OVER (PARTITION BY status ORDER BY created_at) as rn
+FROM users
+WHERE id = 100;
+
+-- Supported: Multi-shard query with unique vindex in PARTITION BY
+-- Assumes 'user_id' is a unique vindex
+SELECT user_id, order_id, amount,
+       ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY order_date) as rn
+FROM orders
+WHERE user_id IN (1, 2, 3);
+
+-- Supported: Multi-column unique vindex with all columns in PARTITION BY
+-- Assumes 'tenant_id' and 'user_id' together form a unique vindex
+SELECT tenant_id, user_id, score,
+       RANK() OVER (PARTITION BY tenant_id, user_id ORDER BY score DESC) as rnk
+FROM user_scores
+WHERE tenant_id = 'A' AND user_id = 'B';
+
+-- NOT Supported: Multi-shard query without unique vindex in PARTITION BY
+SELECT id, name, ROW_NUMBER() OVER (PARTITION BY status ORDER BY created_at) as rn
+FROM users;
+-- Error: VT12001: unsupported: window functions are only supported for single-shard queries
+
+-- NOT Supported: Window function without PARTITION BY on sharded table
+SELECT id, name, ROW_NUMBER() OVER (ORDER BY name) as row_num
+FROM users;
+-- Error: VT12001: unsupported: window functions are only supported for single-shard queries
+```
+
+**Limitations:**
+
+- Window functions without a `PARTITION BY` clause are not supported in sharded keyspaces
+- Multi-shard queries must partition by all columns of a unique vindex
+- Multi-column unique vindexes require all columns in the `PARTITION BY` clause
+
+These restrictions ensure window function calculations remain correct and consistent across shards, as each shard can independently compute window functions over its partition of the data when partitioned by a unique vindex.
+
+### Killing Running Queries
+
+Starting with Vitess v18, you can terminate running queries with the KILL command through VTGate:
+ - Issue `KILL connection` or `KILL query` from a new client connection (similar to `ctrl+c` in MySQL shell).
+ - You can also ask Vitess to kill queries that run beyond a specified timeout. The timeout can be set per query or globally.
+ - `query_timeout_ms` (per-query timeouts).
+ - `mysql_server_query_timeout command-line` flag (global default timeout).
+
+### SELECT … INTO Statement
+
+Vitess supports `SELECT ... INTO DUMPFILE` and `SELECT ... INTO OUTFILE` for unsharded keyspaces:
+ - Position of `INTO` must be at the end of the query.
+ - For sharded keyspaces, you must specify the exact shard with a `USE` statement.
+
+### LOAD DATA Statement
+
+`LOAD DATA` (the counterpart to `SELECT ... INTO OUTFILE`) is supported only in unsharded keyspaces:
+ - Must be used similarly to the `SELECT ... INTO` statement.
+ - For sharded keyspaces, use the USE Statement to target an exact shard.
+
+### Create/Drop Database
+
+Vitess does not support `CREATE DATABASE` or `DROP DATABASE` by default:
+ - A plugin mechanism ([`DBDDLPlugin`](https://github.com/vitessio/vitess/blob/release-21.0/go/vt/vtgate/engine/dbddl.go#L53) interface) exists for provisioning databases.
+ - The plugin must handle database creation, topology updates, and VSchema updates.
+ - Register the plugin with `DBDDLRegister` and specify `--dbddl-plugin=myPluginName` when running vtgate.
+
+### User Defined Functions
+
+Vitess can track UDFs if you enable the `--enable-udfs` flag on VTGate. More details on creating UDFs can be found in the MySQL Docs.
+
+### LAST_INSERT_ID
+
+Vitess supports `LAST_INSERT_ID` both for returning the last auto-generated ID and for the form `LAST_INSERT_ID(expr)`, which sets the session’s last-insert-id value.
+
+**Example**:
+
+```sql
+insert into test (id) values (null); -- Inserts a row with an auto-generated ID
+select LAST_INSERT_ID(); -- Returns the last auto-generated ID
+SELECT LAST_INSERT_ID(123); -- Sets the session’s last-insert-id value to 123
+SELECT LAST_INSERT_ID(); -- Returns 123
+```
+
+**Limitation**: When using `LAST_INSERT_ID(expr)` as a SELECT expression in *ordered queries*, MySQL sets the session’s `LAST_INSERT_ID` value based on the *last row returned*. 
+Vitess, however, does **not** guarantee which row’s value will be used.
+
+**Example**:
+
+```sql
+SELECT LAST_INSERT_ID(col) 
+FROM table 
+ORDER BY foo;
+```
+
+### Reserved Keywords
+
+Vitess treats certain SQL keywords as reserved, matching MySQL's reserved keyword list. Starting in v25, `DUAL` is a reserved keyword.
+
+#### The DUAL Keyword
+
+`DUAL` is now a reserved keyword in Vitess, matching MySQL behavior:
+
+- Unquoted `DUAL` refers to the virtual pseudo-table for queries that don't need a real table (e.g., `SELECT 1 FROM DUAL`)
+- Backtick-quoted `` `dual` `` refers to an actual table named `dual`
+
+**Examples:**
+
+```sql
+-- Virtual dual (no real table)
+SELECT 1 FROM DUAL;
+SELECT NOW() FROM DUAL;
+
+-- Real table named dual (must be backtick-quoted)
+SELECT * FROM `dual`;
+INSERT INTO `dual` (col) VALUES (1);
+```
+
+**Limitations:**
+
+Joining `DUAL` with other tables is not supported, matching MySQL behavior:
+
+```sql
+-- NOT Supported: Joining DUAL with other tables
+SELECT 42, id FROM DUAL, user;
+-- Error: syntax error
+```
+
+**Migration Notes:**
+
+In v24 and earlier, real tables named `dual` were inaccessible—even backtick-quoting `` `dual` `` still referred to the virtual DUAL table. In v25, this is fixed: backtick-quoting now correctly references a real table if one exists.
+
+```sql
+-- v24 and earlier
+SELECT * FROM `dual`;  -- Always referred to virtual DUAL, not a real table
+
+-- v25 and later
+SELECT * FROM `dual`;  -- Real table (if it exists)
+SELECT * FROM DUAL;    -- Virtual pseudo-table (equivalent to SELECT without FROM)
+```
+
+## Cross-shard Transactions
+
+Vitess supports multiple [transaction modes](../../../user-guides/configuration-advanced/shard-isolation-atomicity): `SINGLE`, `MULTI` and `TWOPC` .
+ - Default: `MULTI` — multi-shard transactions on a best-effort basis.
+ - A single-shard transaction is fully ACID-compliant.
+ - Multi-shard commits are done in a specific order; partial commits can be manually undone if needed.
+
+## Auto Increment
+
+Avoid the `auto_increment` column attribute in sharded keyspaces; values won’t be unique across shards.
+Use [Vitess Sequences](../../../user-guides) instead — they behave similarly to `auto_increment`.
+
+## Character Set and Collation
+
+Vitess supports ~99% of MySQL collations. For details, see the [collations documentation](../../../user-guides/configuration-basic/collations).
+
+## Data Types
+
+Vitess supports all MySQL data types. Using `FLOAT` as part of a `PRIMARY KEY` is discouraged because it can break features like filtered replication and VReplication.
+
+## SQL Mode
+
+Vitess behaves similarly to `STRICT_TRANS_TABLES` and does not recommend changing the SQL Mode.
+
+## Network Protocol
+
+### Authentication Plugins
+
+Vitess supports MySQL authentication plugins, such as `mysql_native_password` and `caching_sha2_password`.
+
+### Transport Security
+
+To enable TLS on VTGate:
+ - Set `--mysql-server-ssl-cert` and `--mysql-server-ssl-key`.
+ - Optionally require client certificates with `--mysql-server-ssl-ca`.
+ - If no CA is specified, TLS is optional.
+
+### X Dev API
+
+Vitess does not support the X Dev API.
+
+## Workload
+
+By default, Vitess applies strict limitations on execution time and row counts, often referred to as OLTP mode:
+ - These parameters can be tweaked with `queryserver-config-query-timeout`, `queryserver-config-transaction-timeout`, and [others](../../programs/vttablet) on vttablet.
+ - You can switch to OLAP mode by issuing:
+
+```sql
+SET workload = olap;
+```
+
+### Streaming query errors
+
+In OLAP mode, query results are streamed to the client. Starting in v25, if an error occurs after VTGate has already streamed one or more rows of a result, VTGate sends the actual error to the client in place of the result terminator. In v24 and earlier, an error that surfaced mid-stream caused VTGate to drop the connection, so the client saw `ERROR 2013 (HY000): Lost connection to MySQL server during query` instead of the underlying cause.
+
+With this change, the client receives the real error code and message, and the connection remains usable for subsequent queries. For example, a `KILL QUERY` against a streaming session now surfaces `errno 1317` (`context canceled`), and a planner error that only appears once results have begun streaming is reported as itself rather than as a lost connection.
+
+This applies to all streaming query paths, including OLAP-mode queries, multi-statement queries, and prepared-statement execution. Applications whose error handling or retry logic branched on `2013` or lost-connection errors for streaming queries should be updated to handle the real error codes.
