@@ -1,9 +1,9 @@
 ---
-title: Add or Delete a Cell
+title: Adding or Deleting a Cell
 weight: 15
 ---
 
-## Add
+## Adding a Cell
 To add a cell after a cluster is up and running, you start off by creating one using the same steps previously performed to create the first cell:
 
 ```sh
@@ -31,7 +31,7 @@ If the `cells` option is not specified, the rebuild deploys to all cells.
 
 Once these steps are done, you can bring up the necessary MySQLs, vttablets and vtgates under that cell.
 
-## Delete
+## Deleting a Cell
 
 To delete a cell, bring down all servers in that cell, and then remove its entry from the global topo with:
 

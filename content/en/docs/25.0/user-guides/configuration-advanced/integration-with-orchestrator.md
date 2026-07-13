@@ -1,5 +1,5 @@
 ---
-title: Integration with Orchestrator
+title: Integrating with Orchestrator
 weight: 100
 aliases: ['/docs/user-guides/integration-with-orchestrator/'] 
 ---

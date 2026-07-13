@@ -1,5 +1,5 @@
 ---
-title: Backups and Restores
+title: Backing Up and Restoring Data
 weight: 12
 ---
 

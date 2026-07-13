@@ -1,5 +1,5 @@
 ---
-title: Scheduled Backups
+title: Scheduling Backups
 weight: 5
 aliases: ['/docs/user-guides/backup-and-restore/']
 ---

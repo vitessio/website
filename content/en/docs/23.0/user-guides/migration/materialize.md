@@ -1,5 +1,5 @@
 ---
-title: Materialize
+title: Materializing Data
 weight: 3
 aliases: ['/docs/user-guides/materialize/'] 
 ---
