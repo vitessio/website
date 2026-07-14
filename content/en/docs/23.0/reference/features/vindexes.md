@@ -6,7 +6,7 @@ aliases: ['/docs/schema-management/consistent-lookup/','/docs/reference/vindexes
 
 ## A Vindex maps column values to keyspace IDs
 
-A Vindex provides a way to map a column value to a [Keyspace ID](../../../concepts/keyspace-id.md). Since each shard in Vitess covers a range of `Keyspace ID` values, this mapping can be used to identify which shard contains a row. 
+A Vindex provides a way to map a column value to a [Keyspace ID](../../../concepts/keyspace-id). Since each shard in Vitess covers a range of `Keyspace ID` values, this mapping can be used to identify which shard contains a row. 
 Vitess offers various vindexes, each with different trade-offs, allowing you to choose the one that best fits your needs.
 
 The Sharding Key is a concept that was introduced by NoSQL datastores. It is based on the fact that, in NoSQL databases, there is only one access path to the data, which is the Key. 
