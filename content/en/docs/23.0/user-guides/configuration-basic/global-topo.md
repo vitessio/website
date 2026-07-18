@@ -25,10 +25,8 @@ In the case of ZooKeeper, you will also need to create this directory on the ser
 The following command line options are required for every Vitess component:
 
 ```text
---topo_implementation=etcd2 --topo_global_server_address=<comma_separated_addresses> --topo_global_root=/vitess/global
+--topo-implementation=etcd2 --topo-global-server-address=<comma_separated_addresses> --topo-global-root=/vitess/global
 ```
-
-To avoid repetition we will use `<topo_flags>` in our examples to signify the above flags.
 
 Note that the topo implementation for etcd is `etcd2`. This is because Vitess uses the v2 API of etcd.
 
@@ -44,9 +42,9 @@ It is generally not recommended that you migrate from one type of toposerver to 
 
 It is important to periodically backup the data in the TopoServer. Although most of the information in the TopoServer can be manually reconstructed, it is still a painful task. This can be avoided if a recent backup was readily available.
 
-## Checklist for TopoSever setup
+## Checklist for TopoServer setup
 
 * Ensure toposerver is up, and that you can set and get values using their provided client tools.
-* Ensure you have the mechanism to include the correct topo flags for all the components: `--topo_implementation`, `--topo_global_server_address` and `--topo_global_root`.
+* Ensure you have the mechanism to include the correct topo flags for all the components: `--topo-implementation`, `--topo-global-server-address` and `--topo-global-root`.
 * If using zookeeper, ensure the global root path is created. It may be beneficial to do the same for etcd also.
 * Ensure that the servers are reachable from other parts of the system where Vitess components will be launched.

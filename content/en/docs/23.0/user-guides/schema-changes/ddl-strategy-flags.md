@@ -27,6 +27,8 @@ Vitess respects the following flags. They can be combined unless specifically in
 
   For example, say `--force-cut-over-after=2h`, and that the migration takes `7h` to run. Say there is constant workload/locking that prevents the migration from cutting over. The first cut-over attempt takes place at the end of the `7h` run, and fails due to lock wait timeout. During the next 2 hours there will be multiuple additional attempt to cut-over, and say they all continue to fail. At the `2h` mark (`9h` since starting the migration), give or take, Vitess runs a cut-over that `KILL`s existing queries and transactions on the table. This is likely to make the cut-over successful. Should this still fail, Vitess will continue to forcefully `KILL` queries and transactions in all additional cut-over attempts.
 
+  Any positive duration of `1ms` or less (for example `--force-cut-over-after=1ns` or `--force-cut-over-after=1ms`) is interpreted as _effective immediately_: Vitess will aggressively `KILL` queries and transactions starting with the very first cut-over attempt. The value must be strictly greater than zero.
+
   The flag also works for migrations eligible for `INSTANT` DDL (see `--prefer-instant-ddl`). The same logic that `KILL`s queries and transactions is applied on the migrated table just before issuing the `ALTER TABLE ... ALGORITHM=INSTANT` statement.
 
   See also [forcing a migration cut-over](../audit-and-control/#forcing-a-migration-cut-over)
@@ -44,7 +46,7 @@ Vitess respects the following flags. They can be combined unless specifically in
 
 - `--prefer-instant-ddl`: where possible, apply `ALGORITHM=INSTANT` to the migration. This is applicable to `ALTER TABLE` migrations with `vitess` strategy. Vitess pre-computes whether the migration is eligible for `INSTANT` DDL. The [MySQL documentation](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html) references an incomplete list of eligible changes. If applicable, vitess does not create a shadow table and the migration is not revertible.
 
-- `--retain-artifacts=<duration>`: set an explicit artifact retention for this migration. If nonzero, this value overrides the `vttablet --retain_online_ddl_tables` value.
+- `--retain-artifacts=<duration>`: set an explicit artifact retention for this migration. If nonzero, this value overrides the `vttablet --retain-online-ddl-tables` value.
 
 - `--singleton`: only allow a single pending migration to be submitted at a time. From the moment the migration is queued, and until either completion, failure or cancellation, no other new `--singleton` migration can be submitted. New requests will be rejected with error. `--singleton` works as a an exclusive lock for pending migrations. Note that this only affects migrations with `--singleton` flag. Migrations running without that flag are unaffected and unblocked.
 

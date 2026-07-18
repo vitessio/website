@@ -33,7 +33,7 @@ then *each* worker thread could be decompressing a compressed transaction payloa
 considering this setting *if you often have very large transactions due to the usage of large JSON or BLOB values, large bulk writes, etc.*
 {{< /info >}}
 
-#### relay_log_max_size
+#### relay-log-max-size
 
 **Type** integer\
 **Unit** bytes\
@@ -58,18 +58,13 @@ Alternatively, you can use **relay_log_max_items** to set the limit based on the
 **Default** false\
 **Applicable on** target
 
-This will enable an additional vttablet HTTP endpoint — `/debug/vrlog` — which will produce a log of the events replicated on primary tablets in the target keyspace by all VReplication workflows that are in the running/replicating phase.
-This can be useful when debugging issues with VReplication workflows if you want to see the events that are being replicated and how long they are taking. Example output:
+{{< warning >}}
+This flag is deprecated and is now a no-op. It will be removed entirely in v26.
+{{< /warning >}}
 
-```proto
-FIELD Event	table_name:"customer" fields:{name:"customer_id" type:INT64 table:"customer" org_table:"customer" database:"vt_commerce" org_name:"customer_id" column_length:20 charset:63 flags:49667 column_type:"bigint"} fields:{name:"email" type:VARCHAR table:"customer" org_table:"customer" database:"vt_commerce" org_name:"email" column_length:512 charset:255 column_type:"varchar(128)"} keyspace:"commerce" shard:"0"	2025-02-21T11:58:47	158333
-ROWCHANGE Event	insert into customer(customer_id,email) values (15,'email1'), (16,'email2')	2025-02-21T11:58:47	5375
-ROW Event	table_name:"customer" row_changes:{after:{lengths:2 lengths:6 values:"15email1"}} row_changes:{after:{lengths:2 lengths:6 values:"16email2"}} keyspace:"commerce" shard:"0" flags:1	2025-02-21T11:58:47	133792
-ROWCHANGE Event	insert into customer(customer_id,email) values (18,'email3'), (17,'email4')	2025-02-21T11:59:01	7084
-ROW Event	table_name:"customer" row_changes:{after:{lengths:2 lengths:6 values:"18email3"}} row_changes:{after:{lengths:2 lengths:6 values:"17email4"}} keyspace:"commerce" shard:"0" flags:1	2025-02-21T11:59:01	116500
-```
+This flag previously enabled an additional vttablet HTTP endpoint — `/debug/vrlog` — which produced a log of the events replicated on primary tablets in the target keyspace by all VReplication workflows in the running/replicating phase. The `/debug/vrlog` endpoint and the underlying VRLog feature have been removed, so this flag no longer has any effect and passing it logs a deprecation warning on startup. Remove `--vreplication-enable-http-log` from your vttablet startup arguments.
 
-### vreplication_max_time_to_retry_on_error
+### vreplication-max-time-to-retry-on-error
 
 **Type** duration\
 **Default** 0 (no time limit)\
@@ -78,7 +73,7 @@ ROW Event	table_name:"customer" row_changes:{after:{lengths:2 lengths:6 values:"
 After encountering the same error repeatedly for the provided amount of time, stop automatically retrying the workflow and set the state to STOPPED when persisting the error. This is useful because at this point the error is likely not transient and the workflow will not be able to make further progress without
 human intervention. This is important because the retry behavior can make it difficult to detect and alert on the workflow error state because it so quickly retries again and in doing so clears the previous error.
 
-### vreplication_net_read_timeout and vreplication_net_write_timeout
+### vreplication-net-read-timeout and vreplication-net-write-timeout
 
 **Type** integer\
 **Unit** seconds \
@@ -95,7 +90,7 @@ These determine the MySQL session values used for [`net_read_timeout`](https://d
 
 This flag is intended as an option to improve the performance of the [VReplication copy phase](https://vitess.io/docs/design-docs/vreplication/life-of-a-stream/#copy).
 
-During the VReplication copy phase, the target tablet reads batches of rows in VStream packets (the size of which is managed by the [`--vstream_packet_size` flag](#vstream_packet_size)) from the source tablet and inserts them on the target. By default, the target does this sequentially: it reads a batch, then it inserts a batch, then it reads a batch, etc. This flag adds a degree of parallelism so that, while a new batch is being read from the source, up to `--vreplication-parallel-insert-workers` may be inserting previously read batches.
+During the VReplication copy phase, the target tablet reads batches of rows in VStream packets (the size of which is managed by the [`--vstream-packet-size` flag](#vstream-packet-size)) from the source tablet and inserts them on the target. By default, the target does this sequentially: it reads a batch, then it inserts a batch, then it reads a batch, etc. This flag adds a degree of parallelism so that, while a new batch is being read from the source, up to `--vreplication-parallel-insert-workers` may be inserting previously read batches.
 
 {{< info >}}
 Batches of rows insert in parallel, but commit in order. In other words, given two batches B1 and B2 with all primary key IDs in B1 less than those in B2, rows in B2 may be inserted before those in B1, but the B1 transaction will commit before the B2 transaction.
@@ -109,7 +104,7 @@ A rule of thumb to follow is to see if there are idle resources (especially CPU 
 
 It is recommended **not** to increase this flag beyond the number of vCPUs available to the target tablet.
 
-#### vreplication_copy_phase_duration
+#### vreplication-copy-phase-duration
 
 **Type** duration\
 **Default** 1h (1 hour)\
@@ -123,7 +118,7 @@ When copying the contents of a table we go through 1+ cycles of copying rows, ca
 You should not generally need to change this. But, you may want to increase this duration if the source has little to no write traffic occurring during the copy phase (to speed things along) and you may want to decrease it if the write rate is very high on the source during the copy phase (to ensure we can stay caught up with changes that are happening).
 {{< /info >}}
 
-#### vreplication_copy_phase_max_innodb_history_list_length
+#### vreplication-copy-phase-max-innodb-history-list-length
 
 **Type** integer\
 **Default** 1000000\
@@ -136,7 +131,7 @@ When copying the contents of a table we go through 1+ cycles of copy,catchup,fas
 * You can see the total (global) number of waits and time spent waiting for MySQL on the source tablet as `waitForMySQL` in `RowStreamerWaits` at the `/debug/vars` vttablet endpoint
 * You can see the number of waits and time spent waiting for MySQL on the source tablet by table (we do not have the workflow name on the source) as `<tablename>:waitForMySQL` in `VStreamerPhaseTiming` at the `/debug/vars` vttablet endpoint
 
-#### vreplication_copy_phase_max_mysql_replication_lag
+#### vreplication-copy-phase-max-mysql-replication_lag
 
 **Type** integer\
 **Unit** seconds\
@@ -150,7 +145,7 @@ When copying the contents of a table we go through 1+ cycles of copy,catchup,fas
 * You can see the total (global) number of waits and time spent waiting for MySQL on the source tablet as `waitForMySQL` in `RowStreamerWaits` at the `/debug/vars` vttablet endpoint
 * You can see the number of waits and time spent waiting for MySQL on the source tablet by table (we do not have the workflow name on the source) as `<tablename>:waitForMySQL` in `VStreamerPhaseTiming` at the `/debug/vars` vttablet endpoint
 
-#### vreplication_heartbeat_update_interval
+#### vreplication-heartbeat-update-interval
 
 **Type** integer\
 **Unit** seconds\
@@ -171,7 +166,7 @@ _vreplication_heartbeat_update_interval_ determines how often the time_updated c
 
 Some internal processes (like OnlineDDL) depend on the heartbeat updates for operating properly. Hence there is an upper limit on this interval, which is 60 seconds.
 
-### vreplication_replica_lag_tolerance
+### vreplication-replica-lag-tolerance
 
 **Type** duration\
 **Default** 1m\
@@ -179,7 +174,7 @@ Some internal processes (like OnlineDDL) depend on the heartbeat updates for ope
 
 This variable determines at what point VReplication considers the workflow to be caught up enough to switch from the copy phase to the running/replicating phase.
 
-### vreplication_store_compressed_gtid
+### vreplication-store-compressed-gtid
 
 **Type** boolean\
 **Default** false\
@@ -199,7 +194,7 @@ When starting a vstream which executes a query based on a [GTID](https://dev.mys
 
 * You can see the number of successful binlog rotations that vstreams have performed (an attempt can fail e.g. due to lack of permissions) using the `VStreamerFlushedBinlogs` status variable in the running process at the [`/debug/vars` `vttablet` endpoint](../../../user-guides/configuration-basic/monitoring/#debugvars)
 
-#### vstream_packet_size
+#### vstream-packet-size
 
 **Type** integer\
 **Unit** bytes\
@@ -208,9 +203,9 @@ When starting a vstream which executes a query based on a [GTID](https://dev.mys
 
 On the source, events are buffered and batched where applicable, to minimize network overhead. For example, multiple row events in a transaction or the set of begin/dml/commit event sets are buffered and sent together. Commits, DDLs, and synthetic events generated by VReplication like heartbeats and resharding journals cause the events buffered on the source to be sent immediately.
 
-**vstream_packet_size** specifies the suggested packet size for VReplication vstreamer. This is used only as a recommendation. The actual packet size may be more or less than this amount depending on the number and type of events yet to be sent on the source.
+**vstream-packet-size** specifies the suggested packet size for VReplication vstreamer. This is used only as a recommendation. The actual packet size may be more or less than this amount depending on the number and type of events yet to be sent on the source.
 
-#### watch_replication_stream
+#### watch-replication-stream
 
 **Type** bool\
 **Default** false\
@@ -220,7 +215,7 @@ By default vttablets reload their schema every `--queryserver-config-schema-relo
 
 When enabled, vttablet will start the _watcher_ which streams the MySQL replication stream from the local database, and uses it to proactively update its schema when it encounters a DDL.
 
-#### track_schema_versions
+#### track-schema-versions
 
 **Type** bool\
 **Default** false\
@@ -241,7 +236,7 @@ By default the historian loads up to 10,000 rows from the `_vt.schema_version` t
 
 `schema-version-max-age-seconds` provides a way to periodically purge those schema version rows from the tablet's memory by removing rows older than the max age in seconds. The default of 0 means no records will be purged. This option **only** controls removing the records in the tablet's memory and does not remove the rows stored in the database. A safe option is to choose a max age at least as old as your [binlog retention seconds](https://dev.mysql.com/doc/refman/8.0/en/replication-options-binary-log.html#sysvar_binlog_expire_logs_seconds) to avoid removing schema versions that are needed to serialize binlog events that require a schema different from the most recent schema.
 
-#### vreplication_retry_delay
+#### vreplication-retry-delay
 
 **Type** integer\
 **Unit** seconds\
@@ -251,7 +246,7 @@ By default the historian loads up to 10,000 rows from the `_vt.schema_version` t
 The target might encounter connection failures during a workflow. VReplication automatically retries
 stalled streams after _vreplication_retry_delay_ seconds
 
-#### vreplication_experimental_flags
+#### vreplication-experimental-flags
 
 **Type** bitmask\
 **Default** 7 (VReplicationExperimentalFlagOptimizeInserts | VReplicationExperimentalFlagAllowNoBlobBinlogRowImage | VReplicationExperimentalFlagVPlayerBatching)\

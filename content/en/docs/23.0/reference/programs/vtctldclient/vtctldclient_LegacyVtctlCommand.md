@@ -39,8 +39,8 @@ LegacyVtctlCommand -- help # displays help for supported legacy vtctl commands
 # before the first flag argument, like in the first example. The double dash may
 # be used, however, at any point after the "LegacyVtctlCommand" string, as in
 # the second example.
-LegacyVtctlCommand AddCellInfo -- --server_address "localhost:1234" --root "/vitess/cell1"
-LegacyVtctlCommand -- AddCellInfo --server_address "localhost:5678" --root "/vitess/cell1"
+LegacyVtctlCommand AddCellInfo -- --server-address "localhost:1234" --root "/vitess/cell1"
+LegacyVtctlCommand -- AddCellInfo --server-address "localhost:5678" --root "/vitess/cell1"
 ```
 
 ### Options
@@ -52,7 +52,7 @@ LegacyVtctlCommand -- AddCellInfo --server_address "localhost:5678" --root "/vit
 ### Options inherited from parent commands
 
 ```
-      --action_timeout duration              timeout to use for the command (default 1h0m0s)
+      --action-timeout duration              timeout to use for the command (default 1h0m0s)
       --compact                              use compact format for otherwise verbose outputs
       --server string                        server to use for the connection (required)
       --topo-global-root string              the path of the global topology data in the global topology server (default "/vitess/global")
@@ -63,4 +63,3 @@ LegacyVtctlCommand -- AddCellInfo --server_address "localhost:5678" --root "/vit
 ### SEE ALSO
 
 * [vtctldclient](../)	 - Executes a cluster management command on the remote vtctld server or alternatively as a standalone binary using --server=internal.
-

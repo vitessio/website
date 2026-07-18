@@ -22,14 +22,14 @@ vtclient <query> [flags]
 ```
 vtclient --server vtgate:15991 "SELECT * FROM messages"
 
-vtclient --server vtgate:15991 --target '@primary' --bind_variables '[ 12345, 1, "msg 12345" ]' "INSERT INTO messages (page,time_created_ns,message) VALUES (:v1, :v2, :v3)"
+vtclient --server vtgate:15991 --target '@primary' --bind-variables '[ 12345, 1, "msg 12345" ]' "INSERT INTO messages (page,time_created_ns,message) VALUES (:v1, :v2, :v3)"
 ```
 
 ### Options
 
 ```
       --alsologtostderr                                             log to standard error as well as files
-      --bind_variables float                                        bind variables as a json list (default null)
+      --bind-variables float                                        bind variables as a json list (default null)
       --config-file string                                          Full path of the config file (with extension) to use. If set, --config-path, --config-type, and --config-name are ignored.
       --config-file-not-found-handling ConfigFileNotFoundHandling   Behavior when a config file is not found. (Options: error, exit, ignore, warn) (default warn)
       --config-name string                                          Name of the config file (without extension) to search for. (default "vtconfig")
@@ -39,35 +39,36 @@ vtclient --server vtgate:15991 --target '@primary' --bind_variables '[ 12345, 1,
       --count int                                                   DMLs only: Number of times each thread executes the query. Useful for simple, sustained load testing. (default 1)
       --datadog-agent-host string                                   host to send spans to. if empty, no tracing will be done
       --datadog-agent-port string                                   port to send spans to. if empty, no tracing will be done
+      --datadog-trace-debug-mode                                    enable debug mode for datadog tracing
+      --grpc-auth-static-client-creds string                        When using grpc_static_auth in the server, this file provides the credentials to use to authenticate with server.
+      --grpc-compression string                                     Which protocol to use for compressing gRPC. Default: nothing. Supported: snappy
       --grpc-dial-concurrency-limit int                             Maximum concurrency of grpc dial operations. This should be less than the golang max thread limit of 10000. (default 1024)
-      --grpc_auth_static_client_creds string                        When using grpc_static_auth in the server, this file provides the credentials to use to authenticate with server.
-      --grpc_compression string                                     Which protocol to use for compressing gRPC. Default: nothing. Supported: snappy
-      --grpc_enable_tracing                                         Enable gRPC tracing.
-      --grpc_initial_conn_window_size int                           gRPC initial connection window size
-      --grpc_initial_window_size int                                gRPC initial window size
-      --grpc_keepalive_time duration                                After a duration of this time, if the client doesn't see any activity, it pings the server to see if the transport is still alive. (default 10s)
-      --grpc_keepalive_timeout duration                             After having pinged for keepalive check, the client waits for a duration of Timeout and if no activity is seen even after that the connection is closed. (default 10s)
-      --grpc_max_message_size int                                   Maximum allowed RPC message size. Larger messages will be rejected by gRPC with the error 'exceeding the max size'. (default 16777216)
-      --grpc_prometheus                                             Enable gRPC monitoring with Prometheus.
+      --grpc-enable-tracing                                         Enable gRPC tracing.
+      --grpc-initial-conn-window-size int                           gRPC initial connection window size
+      --grpc-initial-window-size int                                gRPC initial window size
+      --grpc-keepalive-time duration                                After a duration of this time, if the client doesn't see any activity, it pings the server to see if the transport is still alive. (default 10s)
+      --grpc-keepalive-timeout duration                             After having pinged for keepalive check, the client waits for a duration of Timeout and if no activity is seen even after that the connection is closed. (default 10s)
+      --grpc-max-message-size int                                   Maximum allowed RPC message size. Larger messages will be rejected by gRPC with the error 'exceeding the max size'. (default 16777216)
+      --grpc-prometheus                                             Enable gRPC monitoring with Prometheus.
   -h, --help                                                        help for vtclient
       --jaeger-agent-host string                                    host and port to send spans to. if empty, no tracing will be done
       --json                                                        Output JSON instead of human-readable table
-      --keep_logs duration                                          keep logs for this long (using ctime) (zero to keep forever)
-      --keep_logs_by_mtime duration                                 keep logs for this long (using mtime) (zero to keep forever)
-      --log_backtrace_at traceLocations                             when logging hits line file:N, emit a stack trace
-      --log_dir string                                              If non-empty, write log files in this directory
-      --log_err_stacks                                              log stack traces for errors
-      --log_rotate_max_size uint                                    size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
+      --keep-logs duration                                          keep logs for this long (using ctime) (zero to keep forever)
+      --keep-logs-by-mtime duration                                 keep logs for this long (using mtime) (zero to keep forever)
+      --log-err-stacks                                              log stack traces for errors
+      --log-rotate-max-size uint                                    size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
+      --log-backtrace-at traceLocations                             when logging hits line file:N, emit a stack trace
+      --log-dir string                                              If non-empty, write log files in this directory
       --logtostderr                                                 log to standard error instead of files
-      --max_sequence_id int                                         max sequence ID.
-      --min_sequence_id int                                         min sequence ID to generate. When max_sequence_id > min_sequence_id, for each query, a number is generated in [min_sequence_id, max_sequence_id) and attached to the end of the bind variables.
-      --mysql_server_version string                                 MySQL server version to advertise. (default "8.0.40-Vitess")
+      --max-sequence-id int                                         max sequence ID.
+      --min-sequence-id int                                         min sequence ID to generate. When max-sequence-id > min-sequence-id, for each query, a number is generated in [min-sequence-id, max-sequence-id) and attached to the end of the bind variables.
+      --mysql-server-version string                                 MySQL server version to advertise. (default "8.4.6-Vitess")
       --parallel int                                                DMLs only: Number of threads executing the same query in parallel. Useful for simple load testing. (default 1)
       --pprof strings                                               enable profiling
       --pprof-http                                                  enable pprof http endpoints
-      --purge_logs_interval duration                                how often try to remove old logs (default 1h0m0s)
+      --purge-logs-interval duration                                how often try to remove old logs (default 1h0m0s)
       --qps int                                                     queries per second to throttle each thread at.
-      --security_policy string                                      the name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only)
+      --security-policy string                                      the name of a registered security policy to use for controlling access to URLs - empty means allow all for anyone (built-in policies: deny-all, read-only)
       --server string                                               vtgate server to connect to
       --stderrthreshold severityFlag                                logs at or above this threshold go to stderr (default 1)
       --streaming                                                   use a streaming query
@@ -77,15 +78,15 @@ vtclient --server vtgate:15991 --target '@primary' --bind_variables '[ 12345, 1,
       --tracing-enable-logging                                      whether to enable logging in the tracing service
       --tracing-sampling-rate float                                 sampling rate for the probabilistic jaeger sampler (default 0.1)
       --tracing-sampling-type string                                sampling strategy to use for jaeger. possible values are 'const', 'probabilistic', 'rateLimiting', or 'remote' (default "const")
-      --use_random_sequence                                         use random sequence for generating [min_sequence_id, max_sequence_id)
+      --use-random-sequence                                         use random sequence for generating [min-sequence-id, max-sequence-id)
       --v Level                                                     log level for V logs
   -v, --version                                                     print binary version
       --vmodule vModuleFlag                                         comma-separated list of pattern=N settings for file-filtered logging
-      --vtgate_grpc_ca string                                       the server ca to use to validate servers when connecting
-      --vtgate_grpc_cert string                                     the cert to use to connect
-      --vtgate_grpc_crl string                                      the server crl to use to validate server certificates when connecting
-      --vtgate_grpc_key string                                      the key to use to connect
-      --vtgate_grpc_server_name string                              the server name to use to validate server certificate
-      --vtgate_protocol string                                      how to talk to vtgate (default "grpc")
+      --vtgate-grpc-ca string                                       the server ca to use to validate servers when connecting
+      --vtgate-grpc-cert string                                     the cert to use to connect
+      --vtgate-grpc-crl string                                      the server crl to use to validate server certificates when connecting
+      --vtgate-grpc-fail-fast                                       whether to enable grpc fail fast when connecting
+      --vtgate-grpc-key string                                      the key to use to connect
+      --vtgate-grpc-server-name string                              the server name to use to validate server certificate
+      --vtgate-protocol string                                      how to talk to vtgate (default "grpc")
 ```
-

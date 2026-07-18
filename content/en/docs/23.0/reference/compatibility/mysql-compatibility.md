@@ -10,6 +10,7 @@ Vitess supports MySQL and gRPC server protocols, allowing it to serve as a drop-
 
 ## Table of Contents
 1. [Transaction and Isolation Levels](#transaction-and-isolation-levels)
+   1. [Transaction Timeouts](#transaction-timeouts)
 2. [SQL Support](#sql-support)
    1. [DDL](#ddl)
    2. [Join, Subqueries, Union, Aggregation, Grouping, Having, Ordering, Limit Queries](#join-subqueries-union-aggregation-grouping-having-ordering-limit-queries)
@@ -54,6 +55,18 @@ For **multi-shard transactions**, Vitess optimizes for performance and scalabili
 - If an application requires **strong consistency**, it can issue queries with update locks (SELECT ... FOR UPDATE) to ensure the latest data is read while preventing modifications until the transaction completes. 
 - Using Vitess’s two-phase commit (2PC) ensures atomicity for distributed writes, providing reliable transaction execution across shards. 
 - For workloads requiring **higher isolation**, transactions can be designed to operate within **single shards**, where `REPEATABLE READ` consistency is fully maintained. 
+
+### Transaction Timeouts
+
+The `transaction_timeout` session variable sets the maximum transaction duration in milliseconds:
+
+```sql
+SET transaction_timeout = 5000;
+```
+
+The effective timeout is the smaller nonzero value of `transaction_timeout` and the vttablet
+`--queryserver-config-transaction-timeout` setting. Setting `transaction_timeout` to `0` removes the session limit,
+but the vttablet setting still applies.
 
 ---
 
@@ -152,7 +165,7 @@ Vitess supports `SELECT ... INTO DUMPFILE` and `SELECT ... INTO OUTFILE` for uns
 Vitess does not support `CREATE DATABASE` or `DROP DATABASE` by default:
  - A plugin mechanism ([`DBDDLPlugin`](https://github.com/vitessio/vitess/blob/release-21.0/go/vt/vtgate/engine/dbddl.go#L53) interface) exists for provisioning databases.
  - The plugin must handle database creation, topology updates, and VSchema updates.
- - Register the plugin with `DBDDLRegister` and specify `--dbddl_plugin=myPluginName` when running vtgate.
+ - Register the plugin with `DBDDLRegister` and specify `--dbddl-plugin=myPluginName` when running vtgate.
 
 ### User Defined Functions
 
@@ -215,8 +228,8 @@ Vitess supports MySQL authentication plugins, such as `mysql_native_password` an
 ### Transport Security
 
 To enable TLS on VTGate:
- - Set `--mysql_server_ssl_cert` and `--mysql_server_ssl_key`.
- - Optionally require client certificates with `--mysql_server_ssl_ca`.
+ - Set `--mysql-server-ssl-cert` and `--mysql-server-ssl-key`.
+ - Optionally require client certificates with `--mysql-server-ssl-ca`.
  - If no CA is specified, TLS is optional.
 
 ### X Dev API

@@ -1,11 +1,10 @@
 ---
-title: v23.0 (Development)
+title: v23.0 (Stable)
 description: >
-  Under construction, development release.
+
   Everything you need to know about scaling MySQL with Vitess.
 notoc: true
 cascade:
   version: v23.0
 weight: 77
 ---
-

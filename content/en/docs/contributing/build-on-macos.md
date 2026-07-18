@@ -30,14 +30,14 @@ Add `mysql` to your `PATH`:
 echo 'export PATH="/usr/local/opt/mysql/bin:$PATH"' >> ~/.bash_profile
 ```
 
-[Download and install](http://golang.org/doc/install) Golang. For example for `go1.20.2`, at writing:
+[Download and install](http://golang.org/doc/install) Golang. For example for `go1.26.4`, at writing:
 ```shell
-curl -LO https://golang.org/dl/go1.20.2.darwin-amd64.pkg
-sudo installer -pkg go1.20.2.darwin-amd64.pkg -target /
+curl -LO https://golang.org/dl/go1.26.4.darwin-amd64.pkg
+sudo installer -pkg go1.26.4.darwin-amd64.pkg -target /
 ```
 
 > Vitess is tested and shipped using a specific Golang version for each release.
-> For maximum compatibility we encourage you to use the same Golang version as [the one mentioned in our `build.env` file](https://github.com/vitessio/vitess/blob/d1ba6258ea2462d5d28d67661aace7b79bb7e27b/build.env#L20).
+> For maximum compatibility we encourage you to use the same Golang version as [the one specified in our `go.mod` file](https://github.com/vitessio/vitess/blob/main/go.mod#L3).
 
 Do not install etcd via brew otherwise it will not be the version that is supported. Let it be installed when running make build.
 
@@ -103,8 +103,7 @@ NOVTADMINBUILD=1 make build
 The unit tests require that you first install a Java runtime. This is required for running ZooKeeper tests:
 
 ```shell
-brew tap adoptopenjdk/openjdk
-brew install adoptopenjdk8
+brew install java
 brew info java
 ```
 
@@ -127,7 +126,7 @@ In addition to running tests, you can try running the [local example](../../get-
 
 ### Key Already Exists
 
-This error is because etcd was not cleaned up from the previous run of the example. You can manually fix this by running `./401_teardown.sh`, removing vtdataroot and then starting again:
+This error is because etcd was not cleaned up from the previous run of the example. You can manually fix this by running `./501_teardown.sh`, removing vtdataroot and then starting again:
 ```
 Error:  105: Key already exists (/vitess/zone1) [6]
 Error:  105: Key already exists (/vitess/global) [6]

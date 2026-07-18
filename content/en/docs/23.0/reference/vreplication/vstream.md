@@ -40,7 +40,7 @@ environments by many Vitess users.
 
 [`VStream` is a gRPC](https://pkg.go.dev/vitess.io/vitess/go/vt/vtgate/vtgateconn#VTGateConn.VStream)
 that is part of the [`vtgate`](../../../concepts/vtgate/) service and is accessible via a
-[`vtgate`](../../../concepts/vtgate/) process's `--grpc_port`.
+[`vtgate`](../../../concepts/vtgate/) process's `--grpc-port`.
 
 ### RPC Parameters
 

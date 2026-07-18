@@ -16,7 +16,7 @@ The following has been verified to work on __CentOS 7__. If you are new to Vites
 ### Install Go
 
 [Download and install](http://golang.org/doc/install) Golang. Vitess is tested and shipped using a specific Golang version for each release.
-For maximum compatibility we encourage you to use the same Golang version as [the one mentioned in our `build.env` file](https://github.com/vitessio/vitess/blob/main/build.env#L20).
+For maximum compatibility we encourage you to use the same Golang version as [the one specified in our `go.mod` file](https://github.com/vitessio/vitess/blob/main/go.mod#L3).
 
 ### Install Node 16.13.0+
 
@@ -142,7 +142,7 @@ In addition to running tests, you can try running the [local example](../../get-
 
 ### Key Already Exists
 
-This error is because etcd was not cleaned up from the previous run of the example. You can manually fix this by running `./401_teardown.sh`, removing vtdataroot and then starting again:
+This error is because etcd was not cleaned up from the previous run of the example. You can manually fix this by running `./501_teardown.sh`, removing vtdataroot and then starting again:
 ```
 Error:  105: Key already exists (/vitess/zone1) [6]
 Error:  105: Key already exists (/vitess/global) [6]
