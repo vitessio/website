@@ -123,6 +123,7 @@ vtcombo [flags]
       --ddl-strategy string                                              Set default strategy for DDL statements. Override with @@ddl_strategy session variable (default "direct")
       --default-tablet-type topodatapb.TabletType                        The default tablet type to set for queries, when one is not explicitly selected. (default PRIMARY)
       --degraded-threshold duration                                      replication lag after which a replica is considered degraded (default 30s)
+      --demote-primary-lock-wait-timeout duration                        Sets the session lock_wait_timeout when enabling super_read_only during a primary demotion. 0 leaves it unset and uses the default of the MySQL server.
       --disk-write-dir string                                            if provided, tablet will attempt to write a file to this directory to check if the disk is stalled
       --disk-write-interval duration                                     how often to write to the disk to check whether it is stalled (default 5s)
       --disk-write-timeout duration                                      if writes exceed this duration, the disk is considered stalled (default 30s)
