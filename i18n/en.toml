@@ -37,6 +37,9 @@ other = "Learn More"
 [docs]
 other = "Docs"
 
+[releases]
+other = "Releases"
+
 [blog]
 other = "Blog"
 

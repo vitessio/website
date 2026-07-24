@@ -1,7 +1,9 @@
 ---
 title: Releases
 description: Learn about how Vitess releases work
-weight: 3000
+type: docs
+aliases:
+  - /docs/releases/
 ---
 
 The Vitess maintainers aim to release a major version of Vitess every 6 months.

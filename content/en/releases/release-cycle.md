@@ -2,6 +2,8 @@
 title: Release Cycle
 description: Learn how the Vitess release cycle works
 weight: 1
+aliases:
+  - /docs/releases/release-cycle/
 ---
 
 The release cycle of a major version is five months long, which can be converted into 21 weeks.
