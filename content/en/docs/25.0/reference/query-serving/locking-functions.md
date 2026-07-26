@@ -19,7 +19,7 @@ Supporting the advisory locking functions in MySQL is important, given that they
 
 Vitess will initially only support locking functions with these limitations:
 
- * Can only be used in SELECT queries
+ * Can only be used in SELECT queries, or in DO statements (which Vitess executes as the equivalent SELECT statement).
  * The queries can either have only the table `dual`, or have no `FROM` clause.
 
  ## Functionality
@@ -37,6 +37,7 @@ SELECT RELEASE_LOCK('lock1');
 SELECT GET_LOCK('lock1',10), GET_LOCK('lock2',10);
 SELECT RELEASE_ALL_LOCKS()
 SELECT GET_LOCK(@customVariable, 10);
+DO GET_LOCK('lock1',10);
 ```
 
 ## Examples of queries not supported in the first implementation
@@ -44,5 +45,4 @@ SELECT GET_LOCK(@customVariable, 10);
 ```
 SELECT GET_LOCK(user_name,10) FROM users;
 INSERT INTO T (id) VALUES (GET_LOCK('lock2',10));
-DO GET_LOCK('lock1',10);
 ```
