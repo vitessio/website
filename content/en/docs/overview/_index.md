@@ -1,10 +1,8 @@
 ---
-title: "Overview"
-type: docs
-hide_pages_in_nav: true
-docs_nav_disable_expand: true
+title: Overview
+description: High-level information about Vitess
 weight: 1
-skip_pages_in_section: true
+aliases: ['/docs/overview/scalingwithvitess/','/user-guide/introduction.html']
 ---
 
-{{< list-questions >}}
+The Vitess overview documentation provides general information about Vitess that's less immediately practical than what you'll find in [Get Started](../get-started) section and the [User Guides](../user-guides).
