@@ -59,7 +59,7 @@ This command performs the following actions when used to initialize the first pr
     - On the primary-elect tablet, insert a row into an internal table and then update the global shard object's PrimaryAlias record.
     - In parallel on each replica, set the new primary as the replication source and wait for the inserted row to replicate to the replica tablets.
 
-The new primary (if unspecified) is chosen using the configured [Durability Policy](../../configuration-basic/durability_policy).
+The new primary (if unspecified) is chosen using the configured [Durability Policy](../../configuration-basic/durability_policy). Among eligible candidates, Vitess also factors in each candidate's MySQL server version (see [MySQL version-aware primary election](#mysql-version-aware-primary-election)).
 
 In order to make planned maintenance operations zero-downtime, Vitess provides the capability of [buffering]((../../../reference/features/vtgate-buffering)) queries for the duration of the reparent operation.
 While this is optional, it is highly recommended. With the proper settings, buffering can handle all non-transactional queries with zero errors.
@@ -74,7 +74,7 @@ The `EmergencyReparentShard` command is used to force a reparent to a new primar
 
 As such, this command does not rely on the current primary at all to replicate data to the new primary. Instead, it makes sure that the primary-elect is the most advanced in replication among all available replicas or that the primary-elect has caught up to the most advanced one. In either case, the candidate will only be promoted once it is the most advanced replica.
 
-**Important**: You can specify which replica you want to promote. If not specified, Vitess will choose it for you depending on the durability policy specified for the keyspace.
+**Important**: You can specify which replica you want to promote. If not specified, Vitess will choose it for you depending on the durability policy specified for the keyspace. The candidate's MySQL server version is also considered during this selection (see [MySQL version-aware primary election](#mysql-version-aware-primary-election)).
 
 This command performs the following actions:
 
@@ -85,6 +85,31 @@ This command performs the following actions:
 1. Ensures replication is functioning properly via the following steps:
     - On the primary-elect tablet, insert a row in the `reparent_journal` table and then updates the `PrimaryAlias` property of the global shard object.
     - In parallel on each replica, excluding the old primary, set the new primary as the replication source and wait for the inserted row to replicate to the replica tablets.
+
+### MySQL version-aware primary election
+
+When choosing a new primary, both `PlannedReparentShard` and `EmergencyReparentShard` also consider each candidate's MySQL server version and prefer a candidate running a lower version. This is because MySQL only guarantees forward replication compatibility: an older-version source can replicate to a newer-version replica, but not the reverse. During a rolling MySQL upgrade, promoting a newer-version tablet could break replication for replicas that are still on the older version. Version awareness is an *additional* factor layered on top of the durability-policy and replication-position logic described above — it does not replace either of them. Because version awareness is applied when candidates are ranked, it affects both manually triggered reparents and those [VTOrc](../../configuration-basic/vtorc) performs automatically.
+
+The version factor sits at a different point in each command's candidate sort order:
+
+* `PlannedReparentShard`: promotion rules (durability policy) → MySQL version (lower preferred) → replication (GTID) position → InnoDB buffer pool size → tablet alias.
+* `EmergencyReparentShard`: replication (GTID) position → promotion rules (durability policy) → MySQL version (lower preferred) → InnoDB buffer pool size → tablet alias.
+
+The asymmetry is intentional. `PlannedReparentShard` places version *before* replication position because it always catches the primary-elect up to the old primary's demotion position before promoting it. As a result, electing a slightly-behind lower-version tablet is safe. `EmergencyReparentShard` keeps replication position *first* because it must promote (or catch up to) the most-advanced available replica to avoid data loss; the version preference cannot override that safety requirement.
+
+Version-aware election has a few limitations to be aware of:
+
+* **Version granularity.** Comparison is normally by *MAJOR.MINOR* version only, because patch-level differences generally do not affect replication compatibility. The one exception is within the MySQL 8.0 series: when the lower of the two versions being compared is an 8.0 release earlier than 8.0.34, the patch level is compared as well, because some pre-8.0.34 releases introduced features that break replication from a newer 8.0 source to an older 8.0 replica.
+* **Replication family.** Version-aware election applies only when all candidates share the same replication family. MySQL and Percona Server form one comparable family, while MariaDB is a separate lineage. When candidates span different families, version-aware election is disabled and Vitess falls back to that command's previous ordering, using replication position and promotion rules without the version factor. `PlannedReparentShard` applies version-aware election on any shard where all candidates share one replication family. `EmergencyReparentShard` additionally requires the shard to use MySQL GTID-based replication — on shards using file-position replication (or MariaDB), `EmergencyReparentShard` falls back to its prior position/promotion ordering even when all candidates share a family.
+* **Unknown versions.** Vitess treats tablets that do not report a server version (for example, those running an older Vitess build) as an unknown version and sorts them last for the version factor, preserving prior behavior when no version information is available.
+
+{{< info >}}
+When performing a rolling MySQL upgrade, keep the following in mind:
+
+* `PlannedReparentShard` may now elect a slightly-behind, lower-version tablet and catch it up to the old primary's position, which can increase reparent latency. Ensure [`--wait-replicas-timeout`](../../../reference/programs/vtctldclient/vtctldclient_PlannedReparentShard/) (default 15s) is generous enough to accommodate the catch-up.
+* The cell boundary remains a hard filter applied *before* version comparison. Without [`--allow-cross-cell-promotion`](../../../reference/programs/vtctldclient/vtctldclient_PlannedReparentShard/), `PlannedReparentShard` can still promote a higher-version tablet in the current primary's cell over a lower-version tablet in another cell. Operators who want cross-cell version preference during an upgrade must opt in with `--allow-cross-cell-promotion`. `EmergencyReparentShard` instead uses [`--prevent-cross-cell-promotion`](../../../reference/programs/vtctldclient/vtctldclient_EmergencyReparentShard/), which is off by default — so cross-cell promotion (and therefore cross-cell version preference) is already allowed for emergency reparents unless you explicitly enable that flag.
+* Upgrade non-`REPLICA` tablets (such as `RDONLY`) before `REPLICA` tablets. Version-aware election only considers `REPLICA` candidates. A completed reparent, however, repoints all non-`RESTORE` tablets (including `RDONLY`) at the new primary, so an older `RDONLY` tablet could end up replicating from a newer primary. This is operational guidance and is not enforced by Vitess.
+{{< /info >}}
 
 ### Metrics
 
