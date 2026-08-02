@@ -13,7 +13,7 @@ vtctldclient EmergencyReparentShard <keyspace/shard>
 ### Options
 
 ```
-      --allow-split-brain-promotion      Allow ERS to proceed when two leading candidates have incomparable Combined GTID positions (suspected split-brain). Off by default. Operator escape hatch — accepts that the losing side's unique GTIDs will become errant.
+      --allow-split-brain-promotion      Allow promoting --new-primary when divergent GTID histories are detected.
       --expected-primary string          Alias of a tablet that must be the current primary in order for the reparent to be processed.
   -h, --help                             help for EmergencyReparentShard
   -i, --ignore-replicas strings          Comma-separated, repeated list of replica tablet aliases to ignore during the emergency reparent.

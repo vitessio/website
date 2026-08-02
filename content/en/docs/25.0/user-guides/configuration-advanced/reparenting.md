@@ -84,12 +84,33 @@ This command performs the following actions:
 
 #### Split-brain detection
 
-For GTID-based shards, ERS detects suspected split-brain scenarios by comparing the `Combined` (relay log) GTID positions of leading candidates. When two or more candidates have incomparable GTID positions—meaning neither tablet's position is a superset of the other—ERS aborts with a `FAILED_PRECONDITION` error naming the diverged tablets. This prevents silently promoting one side while leaving the other side's unique GTIDs to become errant.
+For GTID-based shards, ERS identifies the leading GTID histories — those whose `Combined` (relay-log) GTID position is not a subset of another candidate's — and compares them. Two histories are "incomparable" when neither position is a superset of the other: a suspected split-brain. By default, ERS fails closed: once errant GTIDs have been filtered out, it promotes only when exactly one leading candidate remains. If more than one leading history remains, ERS aborts with a `FAILED_PRECONDITION` error that names every diverging leader. Because ERS runs only when the shard's primary is already unavailable, the shard stays without a primary — and writes to it keep failing — until the reparent completes, so resolve the split-brain promptly.
 
-If you encounter this error and know which side to keep, use the `--allow-split-brain-promotion` flag to proceed. This converts the abort into a warning and allows ERS to continue. The non-promoted side's unique GTIDs will become errant after promotion. When using this flag:
+```
+suspected split-brain: leading candidates have incomparable Combined GTID positions: <list>; specify --new-primary with --allow-split-brain-promotion to continue
+```
 
-- Use `--new-primary` to specify which tablet to promote, ensuring deterministic side selection.
-- Consider using `--ignore-replicas` to exclude tablets on the side you want to discard from the candidate pool.
+This prevents ERS from silently promoting one diverged history — or a lagging but clean candidate — and discarding another leader's transactions without an operator's explicit choice. To decide which history to preserve, compare the executed GTID positions of the leading candidates named in the error — for example with [`ShardReplicationPositions`](../../../reference/programs/vtctldclient/vtctldclient_ShardReplicationPositions) — and choose the tablet whose transactions you want to keep.
+
+If you know which history to preserve, an operator can override the abort with `--allow-split-brain-promotion`. Accepting the override emits a warning and lets ERS proceed. When using this override:
+
+{{< warning >}}
+Accepting the override intentionally discards the divergent transactions on the leading candidates that are not promoted. Those tablets' unique GTIDs become errant after the new primary is promoted, and those tablets may need to be re-cloned.
+{{< /warning >}}
+
+- `--allow-split-brain-promotion` requires `--new-primary`. Using it without `--new-primary` fails validation with an `INVALID_ARGUMENT` error and the message `--allow-split-brain-promotion requires --new-primary`.
+- The tablet named by `--new-primary` must be one of the leading candidates in the suspected split-brain, or ERS aborts with `requested primary <alias> is not a leading candidate in the suspected split-brain: <list>`.
+- The override only bypasses the split-brain abort — it does not bypass ERS's other safety checks. The chosen primary must still:
+    - apply its relay logs
+    - satisfy the durability and promotion rules (a tablet with a `MustNotPromoteRule` cannot be promoted; see [Durability Policy](../../configuration-basic/durability_policy))
+    - respect the cross-cell restriction when `--prevent-cross-cell-promotion` is set
+    - meet the semi-sync quorum
+    - hold the shard lock
+- Optionally, you can use `--ignore-replicas` to exclude tablets on the side you intend to discard from the candidate pool.
+
+Automated ERS (VTOrc) never enables this override — it is operator-only and off by default — so VTOrc's automated recovery hits the same fail-closed abort and stops without promoting. Resolving a suspected split-brain always requires deliberate operator action.
+
+Each accepted override increments the `EmergencyReparentSplitBrainOverrides` metric (see [Metrics](#metrics) below), which you can use to confirm the override was recorded.
 
 #### Partial relay-log-apply tolerance
 
@@ -108,7 +129,7 @@ Metrics are available on the `/debug/vars` pages of VTOrc and VTCtld for the rep
 | `reparent_shard_operation_timings` | Timings of reparent shard operations indexed by the type of operation.                                                         |
 | `EmergencyReparentFilteredCandidates` | Number of candidates excluded from the relay-log wait during ERS because their `Combined` position was behind the leading group. Keyed by keyspace and shard. |
 | `EmergencyReparentRelayLogFailedCandidates` | Number of candidates that failed to apply relay logs during ERS. Keyed by keyspace and shard. |
-| `EmergencyReparentSplitBrainOverrides` | Number of split-brain detections bypassed by `--allow-split-brain-promotion` during ERS. Keyed by keyspace and shard. Stays at zero unless an operator has deliberately invoked the escape hatch. |
+| `EmergencyReparentSplitBrainOverrides` | Number of split-brain detections accepted for an explicitly selected primary (via `--allow-split-brain-promotion` with `--new-primary`) during ERS. Keyed by keyspace and shard. Stays at zero unless an operator deliberately uses the override. |
 
 ## External Reparenting
 
