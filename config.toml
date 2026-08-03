@@ -1,5 +1,5 @@
 baseURL = "https://vitess.io"
-canonifyurls = false
+canonifyurls = true
 disableKinds = ["taxonomy", "taxonomyTerm"]
 enableGitInfo = true
 googleAnalytics = "G-JWT03RNV4P"
