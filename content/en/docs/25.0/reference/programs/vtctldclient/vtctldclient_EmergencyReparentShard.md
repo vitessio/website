@@ -13,7 +13,6 @@ vtctldclient EmergencyReparentShard <keyspace/shard>
 ### Options
 
 ```
-      --allow-split-brain-promotion      Allow promoting --new-primary when divergent GTID histories are detected.
       --expected-primary string          Alias of a tablet that must be the current primary in order for the reparent to be processed.
   -h, --help                             help for EmergencyReparentShard
   -i, --ignore-replicas strings          Comma-separated, repeated list of replica tablet aliases to ignore during the emergency reparent.
