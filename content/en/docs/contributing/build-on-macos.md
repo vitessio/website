@@ -30,10 +30,10 @@ Add `mysql` to your `PATH`:
 echo 'export PATH="/usr/local/opt/mysql/bin:$PATH"' >> ~/.bash_profile
 ```
 
-[Download and install](http://golang.org/doc/install) Golang. For example for `go1.26.5`, at writing:
+[Download and install](http://golang.org/doc/install) Golang. For example for `go1.26.6`, at writing:
 ```shell
-curl -LO https://golang.org/dl/go1.26.5.darwin-amd64.pkg
-sudo installer -pkg go1.26.5.darwin-amd64.pkg -target /
+curl -LO https://golang.org/dl/go1.26.6.darwin-amd64.pkg
+sudo installer -pkg go1.26.6.darwin-amd64.pkg -target /
 ```
 
 > Vitess is tested and shipped using a specific Golang version for each release.
