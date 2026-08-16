@@ -86,6 +86,18 @@ This command performs the following actions:
     - On the primary-elect tablet, insert a row in the `reparent_journal` table and then updates the `PrimaryAlias` property of the global shard object.
     - In parallel on each replica, excluding the old primary, set the new primary as the replication source and wait for the inserted row to replicate to the replica tablets.
 
+### Unmanaged tablets
+
+Both `PlannedReparentShard` and `EmergencyReparentShard` refuse a shard that contains an [unmanaged tablet](../../configuration-advanced/unmanaged-tablet). This check runs up front, before any per-tablet RPC or reparent action, so the command fails fast: Vitess cannot revoke writes from a tablet it does not manage, so the shard cannot be reparented safely. The refusal cannot be overridden — there is no force or bypass flag — so the only remedy is to move the unmanaged tablet into its own keyspace, which matters most mid-incident, such as an `EmergencyReparentShard` refused while the primary is down.
+
+The command returns a `FAILED_PRECONDITION` error that names the offending tablets, for example (the aliases vary):
+
+```text
+shard has unmanaged tablets [zone1-0000000100] that Vitess cannot revoke writes from, so it cannot be reparented safely; unmanaged tablets belong in a keyspace of their own
+```
+
+To keep a shard reparentable, unmanaged tablets must occupy their own keyspace, separate from managed tablets. Vitess does not warn ahead of time when a shard drifts into a mixed managed/unmanaged layout — the refused reparent is the first signal — so audit shard topology to keep unmanaged tablets isolated. See [VTOrc](../../configuration-basic/vtorc) for how VTOrc similarly excludes unmanaged tablets from its recoveries.
+
 ### Metrics
 
 Metrics are available on the `/debug/vars` pages of VTOrc and VTCtld for the reparent operations that they execute. Corresponding Prometheus-compatible metrics are available at `/metrics`.

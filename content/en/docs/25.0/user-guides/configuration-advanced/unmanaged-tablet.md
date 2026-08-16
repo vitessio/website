@@ -10,6 +10,14 @@ This guide follows on from the [local](../../../get-started/local) installation 
 
 This guide uses the Vitess components vtctld, Topology Service and VTGate which have already been started in the local installation guide. It assumes that you have an existing MySQL Server setup that you would like to add to Vitess as a new keyspace, which we will call `legacy`. The same set of steps can be used to create a tablet that uses Amazon RDS, AWS Aurora, or Google CloudSQL.
 
+As of v25, each tablet records in its topology entry whether it is managed or unmanaged when it starts, and Vitess deliberately leaves an unmanaged tablet alone:
+
+- [VTOrc](../../configuration-basic/vtorc) does not monitor or repair it.
+- The tablet rejects replication and reparent RPCs, though read-only operations, `ChangeTabletType`, and `TabletExternallyReparented` still work.
+- Reparent operations (`PlannedReparentShard` and `EmergencyReparentShard`) refuse a shard that contains one — see [Reparenting](../../configuration-advanced/reparenting).
+
+A tablet already running with `--unmanaged` gains these protections only after it is restarted on the v25 `vttablet` binary; until then Vitess still treats it as managed. Because those exemptions hold, the steps below remain valid, and because Vitess does not manage it, an unmanaged tablet must occupy its own keyspace, separate from managed tablets.
+
 ## Ensure all components are up
 
 You should have previously executed `./101_initial_cluster.sh` in the get-started guide. This will ensure that you have a Topology Service, vtgate, vtctld. For the unmanaged MySQL instance, I will be using an instance running on `127.0.0.1:5726`:
