@@ -1,9 +1,9 @@
 # The Vitess website
-[![Netlify Status](https://api.netlify.com/api/v1/badges/b3bcaec5-2ef4-40d2-9b40-a833b3457b3c/deploy-status)](https://app.netlify.com/projects/vitess-demo-docs/deploys)
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/c27ea8e4-51d5-41b5-abfd-0597410506a3/deploy-status)](https://app.netlify.com/sites/vitess/deploys)
 
 
-
-This repo houses the assets used to build the website at https://vitess-demo-docs.netlify.app/
+This repo houses the assets used to build the website at https://vitess.io.
 
 ## Running the site locally
 
