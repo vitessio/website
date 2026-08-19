@@ -47,4 +47,4 @@ The *primary* tablet of each shard should always be updated last in the followin
 * reparent away from the current *primary* to a *replica* tablet
 * upgrade old *primary* tablet
 
-When you are performing a rolling MySQL (not Vitess) upgrade, note that `PlannedReparentShard` and `EmergencyReparentShard` prefer a lower-MySQL-version tablet when electing a new primary, so a reparent does not promote a newer-version primary that older-version replicas cannot replicate from. See [MySQL version-aware primary election](../../configuration-advanced/reparenting/#mysql-version-aware-primary-election) for the ordering rules and rolling-upgrade guidance.
+When you are performing a rolling MySQL (not Vitess) upgrade, note that `PlannedReparentShard` and `EmergencyReparentShard` prefer a lower-MySQL-version tablet when electing a new primary, which reduces the chance that a reparent promotes a newer-version primary that older-version replicas cannot replicate from. See [MySQL version-aware primary election](../../configuration-advanced/reparenting/#mysql-version-aware-primary-election) for the ordering rules and rolling-upgrade guidance.
