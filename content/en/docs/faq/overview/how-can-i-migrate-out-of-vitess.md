@@ -3,6 +3,8 @@ title: "How can I migrate out of Vitess?"
 shorten_nav_links: true
 notoc: true
 weight: 3
+aliases:
+  - /docs/faq/getting-started/overview/how-can-i-migrate-out-of-vitess/
 ---
 
 In order to migrate out of Vitess you will need to take a backup of your data using one of the three possible methods: backup and restore, mysqldump, and go-mydumper.

@@ -3,6 +3,8 @@ title: "What are the main components of Vitess?"
 shorten_nav_links: true
 notoc: true
 weight: 5
+aliases: 
+    - /docs/faq/getting-started/overview/what-are-the-main-components-of-vitess/
 ---
 
 Vitess consists of a number of server processes and command-line utilities and is backed by a consistent metadata store. The main server components consist of: 
