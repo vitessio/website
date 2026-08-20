@@ -7,5 +7,5 @@ notoc: true
 cascade:
   version: v24.0
 weight: 1
-hide_in_sidebar: false
+hide_in_sidebar: true
 ---
