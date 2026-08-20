@@ -8,7 +8,7 @@ aliases: ['/docs/tutorials/']
 Choose the right installation method for your use case. Each option serves different needs, from local development to production deployments.
 
 ## Quickstart Guide (Linux)
-If you are new to Vitess, start with the local install guide to install Vitess locally for testing purposes, from pre-compiled binaries.
+If you are new to Vitess, start with the local install guide to install Vitess for testing purposes, from pre-compiled binaries.
 
 The [Local Install](local/) guide runs Vitess directly on Linux using pre-compiled binaries. Use the local install to get hands-on experience without container orchestration.
 
