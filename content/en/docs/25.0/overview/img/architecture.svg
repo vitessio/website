@@ -83,4 +83,10 @@
 <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_1988_1286" result="shape"/>
 </filter>
 </defs>
+
+<!-- Capitalize control-plane labels for consistency (vitessio/website#1734) -->
+<rect x="368" y="194" width="126" height="30" rx="14" fill="#D7FBDF"/>
+<text x="431" y="214" text-anchor="middle" font-family="Inter, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" font-weight="500" fill="#1A1A1A">VTCtld</text>
+<rect x="368" y="251" width="126" height="30" rx="14" fill="#D7FBDF"/>
+<text x="431" y="271" text-anchor="middle" font-family="Inter, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" font-weight="500" fill="#1A1A1A">VTOrc</text>
 </svg>
