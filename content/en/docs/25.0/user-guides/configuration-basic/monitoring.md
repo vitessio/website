@@ -329,6 +329,10 @@ These variables are another multi-dimensional view of Queries. They have a lot m
 
 These variables are yet another view of Queries, but broken out by user, table and plan. If you have well-compartmentalized app users, this is another priceless way of identifying a rogue "user app" that could be misbehaving.
 
+#### PrimaryTermStartTimeSeconds
+
+A gauge holding the Unix time, in seconds, at which this tablet's current primary term began; `0` when the tablet is not the current primary. Prometheus exposes it as `vttablet_primary_term_start_time_seconds`. See the reparenting guide's [Metrics](../../configuration-advanced/reparenting/#metrics) section for the full framing.
+
 #### /debug/health
 
 This URL prints out a simple "ok" or “not ok” string that can be used to check if the server is healthy. The health check makes sure mysqld connections work, and replication is configured (though not necessarily running) if not on primary.
@@ -392,6 +396,7 @@ Alerting is built on top of the variables you monitor. Before setting up alerts,
 * High replication lag
 * Errant transactions
 * Primary is in read-only mode
+* Unexpected reparent (see the [reparenting guide](../../configuration-advanced/reparenting/#metrics) for detection and a PromQL example)
 
 ## VTGate
 

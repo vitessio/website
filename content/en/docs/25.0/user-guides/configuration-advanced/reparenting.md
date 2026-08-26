@@ -128,6 +128,28 @@ Metrics are available on the `/debug/vars` pages of VTOrc and VTCtld for the rep
 | `emergency_reparent_counts`        | Number of times EmergencyReparentShard has been run. Available dimensions are keyspace, shard and the result of the operation. |
 | `reparent_shard_operation_timings` | Timings of reparent shard operations indexed by the type of operation.                                                         |
 
+Unlike the metrics above, which VTOrc and VTCtld emit to count and time the reparent operations they run, VTTablet emits the following gauge. VTTablet publishes it on [`/debug/vars`](../../configuration-basic/monitoring/#primarytermstarttimeseconds) under the expvar name `PrimaryTermStartTimeSeconds`, which Prometheus exposes as `vttablet_primary_term_start_time_seconds`. Its value is a Unix timestamp, in seconds, that marks the moment this tablet's current primary term began.
+
+| Metric                                     | Usage                                                                                                                     |
+|--------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| `vttablet_primary_term_start_time_seconds` | Unix time, in seconds, at which this tablet's current primary term began; `0` when the tablet is not the current primary.  |
+
+The gauge is `0` when the tablet is not the current primary, and it resets to `0` when the tablet is demoted. It reflects the current primary term no matter how the tablet became primary — through `PlannedReparentShard`, `EmergencyReparentShard`, `TabletExternallyReparented`, or the initial primary election — and it is set correctly for a tablet that is already primary when it starts up.
+
+Because the value is a timestamp rather than a count, `changes()` over it tells you *that* a reparent happened, while the value itself tells you *when*. Once you detect a change, cross-check the `planned_reparent_counts` and `emergency_reparent_counts` counters above over the same window to tell a planned reparent from an emergency one. You can also plot the value on dashboards to compare a change of primary against a change in [query latency](../../configuration-basic/monitoring/#queries).
+
+Two limitations apply. The value has second resolution, so two reparents that occur within the same second are indistinguishable (the same idiom as `process_start_time_seconds`). And it is process-global: under `vtcombo`, where several tablets share one process, it reflects whichever tablet published last, consistent with the existing `IsInSrvKeyspace` vttablet gauge.
+
+The metric is additive. It adds no flags, changes no existing behavior, and publishes one new time series per vttablet with no new labels, so no operator action is required to adopt it. The gauge carries no labels of its own, so each vttablet emits a single series identified only by the standard Prometheus target labels (`job` and `instance`) that Prometheus attaches at scrape time, not by keyspace or shard. To attribute a detected change to a shard, map the vttablet target back to the shard it serves, or use the keyspace and shard dimensions on the counters above.
+
+To detect that a reparent occurred, alert on a change in the gauge over a window. The following query flags any vttablet whose primary term start time changed within the last hour:
+
+```promql
+changes(vttablet_primary_term_start_time_seconds{job="<vttablet-job>"}[1h]) > 0
+```
+
+The gauge is maintained for planned reparents too, so an alert on any change also fires for routine `PlannedReparentShard` maintenance. Treat it as an informational, correlative signal — suppress it during maintenance windows, or use the planned/emergency cross-check described above to confirm which kind of reparent triggered it — rather than a standalone page-the-operator alert.
+
 ## External Reparenting
 
 External reparenting occurs when another tool handles the process of changing a shard's primary tablet. After that occurs, the tool needs to call the [`vtctl TabletExternallyReparented`](../../../reference/programs/vtctl/shards/#tabletexternallyreparented) command to ensure that the topology service, replication graph, and serving graph are updated accordingly.
