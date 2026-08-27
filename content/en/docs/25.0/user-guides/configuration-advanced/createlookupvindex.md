@@ -511,6 +511,10 @@ LookupVindex corder_lookup has been externalized and the corder_lookup VReplicat
 
 </br>
 
+{{< warning >}}
+If the owner keyspace is also part of a `MoveTables` workflow, complete or externalize this lookup Vindex backfill before you run `Complete` on that workflow — `Complete` drops the source tables the backfill reads from. Switching traffic with `--enable-reverse-replication=false` can also leave the backfill stale. See [Interaction with MoveTables and Reshard](../../../reference/vreplication/lookupvindex/#interaction-with-movetables-and-reshard) for details.
+{{< /warning >}}
+
 Next, to confirm the lookup Vindex is doing what we think it should, we can
 use the [`vexplain plan` SQL statement](../../sql/vexplain/):
 

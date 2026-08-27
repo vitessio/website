@@ -124,6 +124,8 @@ For `_reverse` workflows (created automatically during `SwitchTraffic` when `--e
 
 {{< warning >}}
 This is a destructive command
+
+If a lookup Vindex backfill is in progress on the source keyspace, finish or externalize it before running `Complete`, because `Complete` drops the source tables the backfill reads from. See [Interaction with MoveTables and Reshard](../lookupvindex/#interaction-with-movetables-and-reshard).
 {{< /warning >}}
 
 [`complete`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_complete/) is used after all traffic has been switched. It removes vreplication-related artifacts like rows from vreplication and copy_state tables in the sidecar `_vt` database along with routing rules and and blocklisted tables from the topo. By default, the source tables are also dropped on the target keyspace
@@ -324,6 +326,8 @@ Such tables are automatically skipped by VReplication if they exist on the sourc
 `SwitchTraffic` for primary tablet types, by default, starts a reverse replication stream with the current target as the source, replicating back to the original source. This enables a quick and simple rollback mechanism using `ReverseTraffic`. This reverse workflow name is that of the original workflow concatenated with \_reverse.
 
 If set to false these reverse replication streams will not be created and you will not be able to rollback once you have switched write traffic over to the target.
+
+If a lookup Vindex backfill is sourcing the keyspace being switched, setting this to false can leave the backfill stale, since nothing feeds its source keyspace after the switch (see [Interaction with MoveTables and Reshard](../lookupvindex/#interaction-with-movetables-and-reshard)).
 
 </div>
 
