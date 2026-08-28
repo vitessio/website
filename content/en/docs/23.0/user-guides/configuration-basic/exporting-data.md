@@ -21,7 +21,7 @@ to the database.  As a result, you will only be guaranteed to get a 100%
 consistent dump using these tools if you are sure that you are not writing
 to the database while running the dump.
 
-### mysqldump
+## mysqldump
 
 The default invocation of `mysqldump` attempts to execute statements which are [not supported by Vitess](../../../reference/compatibility/mysql-compatibility/), such as attempting to lock tables and dump GTID coordinates. The following options are required when using the `mysqldump` binary from MySQL 5.7 to export data from the `commerce` keyspace:
 

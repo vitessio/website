@@ -1,5 +1,5 @@
 ---
-title: Initializing the Shard Primary
+title: Initializing Shard Primary
 weight: 9
 ---
 

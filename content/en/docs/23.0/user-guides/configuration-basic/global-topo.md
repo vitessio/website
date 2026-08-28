@@ -1,5 +1,5 @@
 ---
-title: Global TopoServer
+title: Configuring a Global TopoServer
 weight: 4
 aliases: ['/docs/user-guide/topology-service/']
 ---
@@ -34,15 +34,15 @@ Note that the topo implementation for etcd is `etcd2`. This is because Vitess us
 To be safe, you may want to bring up etcd with `--enable-v2=true`, even though it is the default value. Also, you will need to set the `ETCDCTL_API=2` environment variable before bringing up etcd.
 {{< /info >}}
 
-## Moving to a different TopoServer
+## Moving TopoServers
 
 It is generally not recommended that you migrate from one type of toposerver to another. However, if absolutely necessary, you can use the [topo2topo](../../../reference/features/topology-service/#migration-between-implementations) command line tool to perform this migration.
 
-## Backing Up TopoServer Data
+## Backing up TopoServer Data
 
 It is important to periodically backup the data in the TopoServer. Although most of the information in the TopoServer can be manually reconstructed, it is still a painful task. This can be avoided if a recent backup was readily available.
 
-## Checklist
+## Checklist for TopoServer setup
 
 * Ensure toposerver is up, and that you can set and get values using their provided client tools.
 * Ensure you have the mechanism to include the correct topo flags for all the components: `--topo-implementation`, `--topo-global-server-address` and `--topo-global-root`.
