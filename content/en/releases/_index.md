@@ -49,10 +49,10 @@ Each major release is maintained for 1 year.
 - **Patch releases:** [v21.0.1](https://github.com/vitessio/vitess/releases/tag/v21.0.1), [v21.0.2](https://github.com/vitessio/vitess/releases/tag/v21.0.2), [v21.0.3](https://github.com/vitessio/vitess/releases/tag/v21.0.3), [v21.0.4](https://github.com/vitessio/vitess/releases/tag/v21.0.4), [v21.0.5](https://github.com/vitessio/vitess/releases/tag/v21.0.5), [v21.0.6](https://github.com/vitessio/vitess/releases/tag/v21.0.6)
 
 ### v20.0
-- **Current version:** [v20.0.6](https://github.com/vitessio/vitess/releases/tag/v20.0.6) (2025-02-12)
-- **Initial GA release:** [v20.0.0](https://github.com/vitessio/vitess/releases/tag/v20.0.0) (2024-06-27)
+- **Current version:** [v20.0.8](https://github.com/vitessio/vitess/releases/tag/v20.0.8) (2025-06-18)
+- **Initial GA release:** [v20.0.6](https://github.com/vitessio/vitess/releases/tag/v20.0.6) (2025-02-12)
 - **End of life:** 2025-06-27
-- **Patch releases:** [v20.0.1](https://github.com/vitessio/vitess/releases/tag/v20.0.1), [v20.0.2](https://github.com/vitessio/vitess/releases/tag/v20.0.2), [v20.0.3](https://github.com/vitessio/vitess/releases/tag/v20.0.3), [v20.0.4](https://github.com/vitessio/vitess/releases/tag/v20.0.4), [v20.0.5](https://github.com/vitessio/vitess/releases/tag/v20.0.5), [v20.0.6](https://github.com/vitessio/vitess/releases/tag/v20.0.6)
+- **Patch releases:** [v20.0.1](https://github.com/vitessio/vitess/releases/tag/v20.0.1), [v20.0.2](https://github.com/vitessio/vitess/releases/tag/v20.0.2), [v20.0.3](https://github.com/vitessio/vitess/releases/tag/v20.0.3), [v20.0.4](https://github.com/vitessio/vitess/releases/tag/v20.0.4), [v20.0.5](https://github.com/vitessio/vitess/releases/tag/v20.0.5), [v20.0.6](https://github.com/vitessio/vitess/releases/tag/v20.0.6), [v20.0.8](https://github.com/vitessio/vitess/releases/tag/v20.0.8)
 
 ### v19.0
 - **Current version:** [v19.0.10](https://github.com/vitessio/vitess/releases/tag/v19.0.10) (2025-02-12)
