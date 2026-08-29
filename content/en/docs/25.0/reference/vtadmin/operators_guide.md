@@ -85,6 +85,27 @@ window.env = {
 
 After running `build` command, the production build of the front-end assets will be in the `$web_dir/build` directory. They can be served as any other static content; for example, [Go's embed package][go_embed] or npm's [serve package][npm_serve]. Each filename inside of `$web_dir/build/assets` will contain a unique hash of the file contents.
 
+### Serve the experimental server-rendered UI (`vtadmin2`)
+
+`vtadmin2` is an experimental, server-rendered UI for VTAdmin. It is written in Go and renders its pages as HTML on the server, reusing the same `vtadmin-api` backend and its [RBAC configuration][rbac_docs], so it requires no Node, npm, or React build toolchain.
+
+{{< warning >}}
+`vtadmin2` is experimental and opt-in. The React `vtadmin-web` UI described above remains the default and is unchanged; `vtadmin2` is served only when you explicitly enable it.
+{{< /warning >}}
+
+You can enable `vtadmin2` in either of two ways:
+
+- **On the existing `vtadmin` binary**, set the `--ui` flag to `vtadmin2`. The server-rendered UI is then served on a separate listen address, chosen with `--ui-addr`, alongside the JSON API. Add `--ui-read-only` to run it in read-only mode, or `--ui-debug-json` to expose page data in JSON form for debugging.
+- **Run the standalone `vtadmin2` binary**, which takes the same cluster-configuration flags as `vtadmin` and opens its own connections to each configured cluster rather than proxying to a separately running `vtadmin-api`; plan its connection capacity as you would for a `vtadmin` process. It requires you to choose an RBAC posture explicitly by passing either `--rbac` or `--no-rbac`.
+
+In both cases, `vtadmin2` logs the address it listens on at startup, so you can confirm it started from that log line. Reach the UI in a browser at that address — set with `--ui-addr` on the `vtadmin` binary, or `--addr` on the standalone binary. To stop serving it, drop `--ui vtadmin2` so `vtadmin` returns to the React UI, or stop the standalone `vtadmin2` binary.
+
+`vtadmin2` is not compatible with `--enable-dynamic-clusters`. If you set both `--ui vtadmin2` and `--enable-dynamic-clusters`, `vtadmin` refuses to start, which also prevents the JSON API that `vtadmin-web` depends on from starting; the standalone `vtadmin2` binary likewise refuses to start when you pass `--enable-dynamic-clusters`. While the UI is experimental, feature parity with the React `vtadmin-web` UI is not guaranteed.
+
+As with the React UI, there is no trust boundary between `vtadmin2` and `vtadmin-api`, so you should deploy it only [within a trusted environment](#deploy-in-a-trusted-environment) and [with RBAC configured](#use-role-based-access-control-rbac), as described below. Within the UI, read-only mode and cross-site request forgery (CSRF) protection gate mutating actions. Authorization runs in the reused `vtadmin-api` layer. When you configure an authenticator, VTAdmin identifies the caller and enforces your RBAC rules on each route. Without one, VTAdmin treats requests as unauthenticated and silently omits any data the rules do not permit, rather than reporting an error — exactly as with `vtadmin-web` (see the [RBAC reference][rbac_docs] for the full semantics).
+
+For the full list of flags and their defaults, including the UI flags described here, see the [`vtadmin` reference documentation][vtadmin_flag_ref].
+
 ## Best Practices
 
 Now that you can build and run VTAdmin, there are a few best practices you should follow before deploying into production.
