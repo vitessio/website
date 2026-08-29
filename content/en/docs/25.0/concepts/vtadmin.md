@@ -21,4 +21,4 @@ For more information about VTAdmin, please refer to the following links:
 
 * [VTAdmin Intro Blog Post](/blog/2022-12-05-vtadmin-intro/)
 
-* [VTAdmin Documentation](/docs/25.0/reference/vtadmin/)
+* [VTAdmin Documentation]({{< relref "/docs/25.0/reference/vtadmin/" >}})
