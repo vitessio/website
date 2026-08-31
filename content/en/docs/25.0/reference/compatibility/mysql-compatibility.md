@@ -20,14 +20,15 @@ Vitess supports MySQL and gRPC server protocols, allowing it to serve as a drop-
    6. [Temporary Tables](#temporary-tables)
    7. [USE Statements](#use-statements)
    8. [Common Table Expressions (CTEs)](#common-table-expressions)
-   9. [Window Functions](#window-functions)
-   10. [Killing Running Queries](#killing-running-queries)
-   11. [SELECT ... INTO Statement](#select--into-statement)
-   12. [LOAD DATA Statement](#load-data-statement)
-   13. [Create/Drop Database](#createdrop-database)
-   14. [User Defined Functions (UDFs)](#user-defined-functions)
-   15. [LAST_INSERT_ID](#last_insert_id)
-   16. [Reserved Keywords](#reserved-keywords)
+   9. [VALUES Table Constructors](#values-table-constructors)
+   10. [Window Functions](#window-functions)
+   11. [Killing Running Queries](#killing-running-queries)
+   12. [SELECT ... INTO Statement](#select--into-statement)
+   13. [LOAD DATA Statement](#load-data-statement)
+   14. [Create/Drop Database](#createdrop-database)
+   15. [User Defined Functions (UDFs)](#user-defined-functions)
+   16. [LAST_INSERT_ID](#last_insert_id)
+   17. [Reserved Keywords](#reserved-keywords)
 3. [Cross-shard Transactions](#cross-shard-transactions)
 4. [Auto Increment](#auto-increment)
 5. [Character Set and Collation](#character-set-and-collation)
@@ -162,6 +163,52 @@ Use cases:
 ### Common Table Expressions
  - Non-recursive CTEs are supported.
  - Recursive CTEs have experimental support; feedback is encouraged.
+
+### VALUES Table Constructors
+
+Starting in v25, Vitess plans the MySQL 8.0.19+ `VALUES ROW(...)` table constructor when it is used as a query source. It is supported in four positions: a derived table, a subquery, a `UNION` branch, and a common table expression (CTE) definition. No configuration is required. The standalone `VALUES` statement is not supported.
+
+Unnamed constructor columns follow MySQL naming: the first is `column_0`, the second `column_1`, and so on. You can also supply an explicit derived-table column alias list, such as `AS sub(a, b)`. Like MySQL, `VALUES` does not deduplicate, so duplicate rows are preserved. A `LIMIT` clause on the query is honored as usual.
+
+**Examples:**
+
+```sql
+-- Supported: VALUES ROW as a derived table
+SELECT * FROM (VALUES ROW(1, 1)) AS sub;
+
+-- Supported: explicit column alias list; duplicate rows are preserved
+SELECT a, b FROM (VALUES ROW(1, 2), ROW(1, 2)) AS sub(a, b);
+
+-- NOT Supported: standalone VALUES statement
+VALUES ROW(1, 2);
+-- Error: VT12001: unsupported: VALUES as a standalone statement
+
+-- NOT Supported: VALUES with an ORDER BY
+SELECT * FROM (VALUES ROW(1, 1) ORDER BY column_0) AS sub;
+-- Error: VT12001: unsupported: VALUES with an ORDER BY
+
+-- NOT Supported: empty row
+SELECT * FROM (VALUES ROW()) AS sub;
+-- Error: VT03012: invalid syntax: each row of a VALUES clause must have at least one column
+
+-- NOT Supported: rows with differing column counts
+SELECT * FROM (VALUES ROW(1, 2), ROW(3)) AS sub;
+-- Error: VT03006: column count does not match value count with the row
+
+-- NOT Supported: list argument
+SELECT * FROM (VALUES ::listarg) AS sub;
+-- Error: VT12001: unsupported: VALUES with a list argument
+```
+
+**Limitations:**
+
+- A standalone `VALUES` statement (not used as a query source) fails with `VT12001: unsupported: VALUES as a standalone statement`
+- An `ORDER BY` on a `VALUES` query fails with `VT12001: unsupported: VALUES with an ORDER BY`
+- An empty row `ROW()` fails with `VT03012: invalid syntax: each row of a VALUES clause must have at least one column`
+- Rows with differing column counts fail with `VT03006: column count does not match value count with the row`
+- A list argument such as `VALUES ::listarg` fails with `VT12001: unsupported: VALUES with a list argument`
+
+For the full list of Vitess error codes, see the [query serving error reference](../../errors/query-serving).
 
 ### Window Functions
 
