@@ -50,6 +50,32 @@ You can optionally add a `clusters_to_watch` flag that contains a comma separate
 
 VTOrc requires the `--cell` flag to specify which cell the VTOrc instance is running in. This flag enables VTOrc to be cell-aware, which is used for cross-cell problem validation. VTOrc validates that the cell exists in the topology. If the cell doesn't exist or the flag is not provided, VTOrc will fail to start with a `FAILED_PRECONDITION` error.
 
+### Skipping recovery actions in specific cells
+
+For a keyspace that spans multiple cells, you can tell VTOrc to leave recovery in certain cells alone with the `--cells-no-recovery` flag. The flag takes a comma-separated list of cell names, for example `--cells-no-recovery zone1,zone2`, and is empty by default, so VTOrc's behavior does not change unless you set it. VTOrc reads it only at startup, so changing or removing the denylist requires restarting VTOrc. This is a denylist on recovery actions only. VTOrc still discovers tablets across all cells and still records detections for cells on the list. You keep full visibility into a cross-cell keyspace even though VTOrc suppresses recovery there.
+
+For a per-tablet analysis, VTOrc skips the recovery action whenever the analyzed tablet's cell is on the list.
+
+VTOrc handles the `ClusterHasNoPrimary` recovery at the shard level rather than per tablet, so it follows a stricter rule. **VTOrc suppresses it only when every cell that has tablets in the shard is on the list; a partial denylist still lets the primary election proceed.** This recovery maps to `PlannedReparentShard`.
+
+At startup, VTOrc validates the listed cells against the cells the topology knows about:
+
+- A listed cell does not exist while the topology is reachable: VTOrc exits at startup.
+- The topology is unreachable at startup: VTOrc defers validation and holds all recovery clusterwide until validation succeeds (see the warning below).
+- A listed cell is found absent once the topology becomes reachable: VTOrc exits.
+
+{{< warning >}}
+**While startup validation is deferred because the topology was unreachable, VTOrc holds all recovery clusterwide — not only in the listed cells.** Every held recovery is recorded under `SkippedRecoveries` with the reason `CellNoRecoveryUnvalidated`, and recovery stays suppressed everywhere until validation succeeds.
+{{< /warning >}}
+
+Recoveries that this flag suppresses are counted under the existing `SkippedRecoveries` stat with the reason `CellNoRecovery`, which is how you confirm that the flag is taking effect.
+
+{{< warning >}}
+This flag does not stop a replica in a no-recovery cell from being chosen as a promotion candidate during an `EmergencyReparentShard` or reparent triggered elsewhere. If you need to keep a cell's tablets from being promoted, use `--prevent-cross-cell-failover`.
+{{< /warning >}}
+
+**Upgrading from `--cells-to-watch`?** If you are upgrading and have set VTOrc's `--cells-to-watch` flag, remove it: VTOrc no longer accepts that flag. `--cells-no-recovery` is not a like-for-like replacement — the removed flag filtered which tablets VTOrc discovered, whereas `--cells-no-recovery` only suppresses recovery actions and leaves discovery unchanged.
+
 ### Durability Policies
 
 All the failovers that VTOrc performs will be honoring the [durability policies](../../configuration-basic/durability_policy). Please be careful in setting the
