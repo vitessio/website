@@ -88,7 +88,11 @@ It is too expensive to get real-time row counts of tables, using _count(*)_, say
 #### SwitchTraffic
 <div class="cmd">
 
-[`switchtraffic`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_switchtraffic/) switches traffic forward for the `tablet-types` specified. You can switch all traffic with just one command, and this is the default behavior. Note that you can now switch replica, rdonly, and primary traffic in any order.
+[`switchtraffic`](../../programs/vtctldclient/vtctldclient_movetables/vtctldclient_movetables_switchtraffic/) switches traffic forward for the `tablet-types` specified. You can switch all traffic with just one command, and this is the default behavior.
+
+{{< warning >}}
+If you switch traffic per tablet type instead of all at once, a forward switch that moves writes (`--tablet-types=primary`) requires that read traffic has already been switched, or that replica and rdonly are included in the same command (for example, `--tablet-types=rdonly,replica,primary`). Otherwise, the command is refused; pass `--force` to override it, in which case the switch proceeds and logs a warning. Omitting `--tablet-types` switches all tablet types together and is not affected. Switching writes before reads leaves read traffic on a source that no longer receives writes, so those reads return stale data.
+{{< /warning >}}
 
 {{< info >}}
 Note that VTGate can [buffer queries](../../features/vtgate-buffering/) when switching traffic which can virtually eliminate any visible impact on application users.
