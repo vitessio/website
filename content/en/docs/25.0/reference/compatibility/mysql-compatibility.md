@@ -345,6 +345,34 @@ Vitess supports all MySQL data types. Using `FLOAT` as part of a `PRIMARY KEY` i
 
 Vitess behaves similarly to `STRICT_TRANS_TABLES` and does not recommend changing the SQL Mode.
 
+Starting in v25, Vitess rejects the [`sql_mode`](https://dev.mysql.com/doc/refman/8.0/en/sql-mode.html) values that change how SQL text is parsed — the "lexer modes" — because the Vitess parser cannot honor them. Setting any of the following returns an error:
+
+- `ANSI_QUOTES`
+- `NO_BACKSLASH_ESCAPES`
+- `PIPES_AS_CONCAT`
+- `REAL_AS_FLOAT`
+- `IGNORE_SPACE`
+- `HIGH_NOT_PRECEDENCE`
+- `ANSI` (a combination mode that turns on several of the modes above)
+
+A `SET sql_mode` statement is rejected whether you name the mode directly, pass it as part of a numeric bitmask, enable it through `ANSI`, or assign a `sql_mode` value that already matches the backend's current setting:
+
+```sql
+-- All rejected: an unsupported sql_mode cannot be set
+SET sql_mode = 'ANSI_QUOTES';           -- Error: setting the ANSI_QUOTES sql_mode is unsupported
+SET sql_mode = 'ANSI';                  -- Error: setting an unsupported sql_mode (ANSI turns one on)
+SET sql_mode = 1048576;                 -- Error: setting the NO_BACKSLASH_ESCAPES sql_mode is unsupported
+SET sql_mode = 'NO_BACKSLASH_ESCAPES';  -- Error: setting the NO_BACKSLASH_ESCAPES sql_mode is unsupported (rejected even when it matches the backend)
+```
+
+Vitess doesn't require clients to set these modes. If you hit this error, remove the offending `SET sql_mode` statement — or the connection-pool or driver initialization option that issues it.
+
+The same restriction applies when you connect directly to the VTTablet query service rather than through VTGate. It also applies to the `--session-variable` DDL strategy flag inside the `--ddl-strategy` value passed to `ApplySchema`, which sets MySQL session variables such as `sql_mode` for the migration. Neither path lets you bypass the restriction. Before upgrading to v25, check the list of rejected modes above against any existing `ApplySchema --ddl-strategy` automation that uses `--session-variable`, and against any client that sets `sql_mode`. Calls that pass a rejected mode will start failing.
+
+On every MySQL connection it opens, Vitess strips these lexer modes from the session `sql_mode`. Because of this, the `sql_mode` configured in the backend `my.cnf` does not affect this restriction, so you do not need to change your backend configuration for correctness.
+
+Runtime modes such as `STRICT_TRANS_TABLES` and zero-date handling are unaffected and continue to behave as they did before, so the strict-mode guidance above still holds.
+
 ## Network Protocol
 
 ### Authentication Plugins
