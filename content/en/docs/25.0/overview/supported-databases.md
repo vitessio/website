@@ -29,6 +29,12 @@ Vitess supports importing from a wide range of databases that include:
 - [Percona Server for MySQL](https://www.percona.com/software/mysql-database/percona-server) version 5.7 to 8.4.
 - [MariaDB](https://mariadb.com) versions 10.10+
 
+{{< warning >}}
+MariaDB-backed serving shards (a MariaDB instance managed by Vitess as a serving tablet in a Vitess keyspace) are deprecated as of Vitess v25 and will become unsupported in v26.0.0. A topology with such a managed serving tablet must move to a supported configuration before then.
+
+MariaDB remains fully supported as an import source, using an unmanaged tablet (`--unmanaged`) in an external keyspace. This is the same MariaDB 10.10+ import support listed above, and it is not affected by the deprecation. See the [unmanaged tablet guide](../../user-guides/configuration-advanced/unmanaged-tablet/) for the configuration.
+{{</ warning >}}
+
 ## See also
 
 + [MySQL Compatibility](../../reference/compatibility/mysql-compatibility/)
