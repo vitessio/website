@@ -2,6 +2,7 @@ node_modules/
 /public
 resources/
 !content/en/docs/resources
+*.zip
 
 # Link checker
 bin/
