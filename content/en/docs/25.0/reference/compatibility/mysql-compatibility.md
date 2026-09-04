@@ -343,33 +343,30 @@ Vitess supports all MySQL data types. Using `FLOAT` as part of a `PRIMARY KEY` i
 
 ## SQL Mode
 
-Vitess behaves similarly to `STRICT_TRANS_TABLES` and does not recommend changing the SQL Mode.
+Vitess behaves similarly to `STRICT_TRANS_TABLES` and does not recommend changing the runtime SQL Mode. This guidance concerns the runtime SQL Mode only; it is separate from the parse-relevant "lexer modes" covered below, which v25 does support. If your application never changes `sql_mode`, none of this section applies to it.
 
-Starting in v25, Vitess rejects the [`sql_mode`](https://dev.mysql.com/doc/refman/8.0/en/sql-mode.html) values that change how SQL text is parsed — the "lexer modes" — because the Vitess parser cannot honor them. Setting any of the following returns an error:
+Starting in v25, Vitess supports the [`sql_mode`](https://dev.mysql.com/doc/refman/8.0/en/sql-mode.html) values that change how SQL text is parsed (the "lexer modes"), and parses your queries under them. When you set one, Vitess honors it:
 
-- `ANSI_QUOTES`
-- `NO_BACKSLASH_ESCAPES`
-- `PIPES_AS_CONCAT`
-- `REAL_AS_FLOAT`
-- `IGNORE_SPACE`
-- `HIGH_NOT_PRECEDENCE`
-- `ANSI` (a combination mode that turns on several of the modes above)
+- `ANSI_QUOTES` — `"..."` is a quoted identifier rather than a string literal.
+- `PIPES_AS_CONCAT` — `||` is the string concatenation operator rather than logical `OR`.
+- `IGNORE_SPACE` — whitespace is allowed between a built-in function name and its opening `(`.
+- `NO_BACKSLASH_ESCAPES` — backslash is a literal character rather than an escape character.
+- `HIGH_NOT_PRECEDENCE` — the precedence of the `NOT` operator is raised.
+- `REAL_AS_FLOAT` — `REAL` is treated as a synonym for `FLOAT` rather than `DOUBLE`.
+- `ANSI` — a combination mode that enables several of the modes above.
 
-A `SET sql_mode` statement is rejected whether you name the mode directly, pass it as part of a numeric bitmask, enable it through `ANSI`, or assign a `sql_mode` value that already matches the backend's current setting:
+You set these modes with a `SET sql_mode` statement, or present a session `sql_mode` when you connect. Reading `@@sql_mode` back always returns MySQL's canonical form: uppercase mode names, in MySQL's bit order, with combination modes expanded into their components. This canonical form appears whether you set the mode by name or as a numeric bitmask.
 
-```sql
--- All rejected: an unsupported sql_mode cannot be set
-SET sql_mode = 'ANSI_QUOTES';           -- Error: setting the ANSI_QUOTES sql_mode is unsupported
-SET sql_mode = 'ANSI';                  -- Error: setting an unsupported sql_mode (ANSI turns one on)
-SET sql_mode = 1048576;                 -- Error: setting the NO_BACKSLASH_ESCAPES sql_mode is unsupported
-SET sql_mode = 'NO_BACKSLASH_ESCAPES';  -- Error: setting the NO_BACKSLASH_ESCAPES sql_mode is unsupported (rejected even when it matches the backend)
-```
+Vitess parses each query under the session's modes and forwards mode-independent (canonical) SQL to the backend MySQL, so the modes take effect without depending on the backend's own `sql_mode`.
 
-Vitess doesn't require clients to set these modes. If you hit this error, remove the offending `SET sql_mode` statement — or the connection-pool or driver initialization option that issues it.
+A few Vitess-specific caveats apply:
 
-The same restriction applies when you connect directly to the VTTablet query service rather than through VTGate. It also applies to the `--session-variable` DDL strategy flag inside the `--ddl-strategy` value passed to `ApplySchema`, which sets MySQL session variables such as `sql_mode` for the migration. Neither path lets you bypass the restriction. Before upgrading to v25, check the list of rejected modes above against any existing `ApplySchema --ddl-strategy` automation that uses `--session-variable`, and against any client that sets `sql_mode`. Calls that pass a rejected mode will start failing.
+- `NO_BACKSLASH_ESCAPES` is the one mode Vitess never forwards to the backend MySQL. Through VTGate it is still accepted and honored for parsing. A client that connects directly to the VTTablet query service, bypassing VTGate, has `NO_BACKSLASH_ESCAPES` rejected. Separately, the `ApplySchema --session-variable` DDL-strategy option rejects all of the lexer modes above, because it applies the session variable without parsing queries under them. That rejection surfaces up front, when the DDL strategy is parsed, so it fails at submission rather than mid-migration. It affects schema-change automation, not ordinary queries served through VTGate.
+- A non-constant `SET sql_mode` (for example, a value built with `CONCAT(...)`) is rejected upfront in connection settings. On a dedicated ([reserved](../../query-serving/reserved-conn)) connection the `SET` executes, is read back, and is judged: a value that must not persist fails the statement and closes the connection.
+- A non-constant `sql_mode` must be the only assignment in its `SET` statement; a multi-assignment `SET` with a non-constant `sql_mode` is rejected upfront.
+- Prepared statements keep their prepare-time parsing meaning across later `sql_mode` changes, matching MySQL, which parses a statement at prepare time and never re-parses it. Runtime modes still follow the live session at execute time.
 
-On every MySQL connection it opens, Vitess strips these lexer modes from the session `sql_mode`. Because of this, the `sql_mode` configured in the backend `my.cnf` does not affect this restriction, so you do not need to change your backend configuration for correctness.
+Invalid `sql_mode` values still fail with MySQL's own errors, such as `ER_WRONG_VALUE_FOR_VAR` (1231) and `ER_UNSUPPORTED_SQL_MODE` (3899).
 
 Runtime modes such as `STRICT_TRANS_TABLES` and zero-date handling are unaffected and continue to behave as they did before, so the strict-mode guidance above still holds.
 
