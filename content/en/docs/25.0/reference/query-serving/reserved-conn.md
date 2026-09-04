@@ -44,6 +44,26 @@ reserved connection. It will continue to use the reserved connection
 until the user disconnects. Note that removing the temporary table is not enough to reset the connection.
 More info can be found [here](../../compatibility/mysql-compatibility/#temporary-tables).
 
+**Keeping the connection alive for a live session.** Previously, a reserved connection holding temporary tables could be closed by the tablet's own idle timeout even while the `vtgate` session was still connected, dropping the session's temporary tables. Vitess now keeps such a connection alive with a low-frequency background keepalive, much like the connection behind an [advisory lock](#get_lock-and-reserved-connections), so a still-live session no longer loses its temporary tables to the tablet's internal idle timeout.
+
+**MySQL parity.** The keepalive refreshes only the tablet's own reserved-connection timers; it sends nothing to `mysqld`. MySQL's `wait_timeout` therefore keeps counting only real session traffic, so an idle session still loses its connection — and its temporary tables — at `wait_timeout`, exactly as it would on a direct MySQL connection.
+
+**Tuning the keepalive.** The [`--temp-table-heartbeat-time`](../../programs/vtgate/) VTGate flag (a duration, default `10s`) controls the keepalive interval for sessions on the MySQL protocol. Setting it to `0` disables the keepalive, in which case temp-table reserved connections are reclaimed at the tablet's transaction timeout, as they were before this feature. The interval must stay below the tablet's effective reserved-connection timeout (`--queryserver-config-transaction-timeout`, or `--queryserver-config-olap-transaction-timeout` for OLAP sessions) by at least one keepalive round-trip (against whichever of the two is smaller, since one interval covers both session types). As a rule of thumb, keep the interval under half that timeout. There is no hard minimum or maximum. Because `--temp-table-heartbeat-time` is set at `vtgate` startup, changing it means restarting `vtgate`, which disconnects that `vtgate`'s sessions and drops their temporary tables (see [Shutting down reserved connections](#shutting-down-reserved-connections)).
+
+**gRPC-API sessions.** Sessions that use the gRPC API travel with each request and have no wire connection for `vtgate` to anchor a heartbeat to, so the tablet covers their temp-table reserved connections instead, through the [`--queryserver-config-temp-table-idle-timeout`](../../programs/vttablet/) VTTablet flag (a duration, default `-1`):
+
+- `-1` (auto) mirrors the tablet's `mysqld` `@@global.wait_timeout`.
+- `0` (disabled) means these reserved connections are reclaimed at the transaction timeout, the fallback that restores the behavior from before this feature.
+- A value greater than `0` (explicit) sets an idle timeout, which should be kept at or above the transaction timeout and at or below `mysqld`'s `wait_timeout`.
+
+{{< warning >}}
+With the `-1` default, an abandoned gRPC temp-table session (for example, one left behind by a crashed client) now lingers for up to `wait_timeout` rather than the transaction timeout. By default that is 8h for `wait_timeout` (though you may have tuned it) versus 30s for the transaction timeout. These connections occupy the stateful pool capped by [`--queryserver-config-transaction-cap`](../../features/connection-pools/) (default 20), so a burst of such sessions can pin most of that pool for the full window. Size the cap and the flag together, or set the flag to `0`, to bound this.
+{{< /warning >}}
+
+**Resilience and upgrade order.** If `vtgate` stops sending keepalives (because it died, for instance), the tablet reclaims the affected connections at its normal timeout, so nothing leaks. Upgrade `vttablet`s before `vtgate`s: a tablet running a version from before this feature simply falls back to the old tablet-timeout behavior and never closes a reserved connection because of the keepalive.
+
+**Observability.** The tablet exposes two metrics: `TempTableUnmanagedConnections` (a gauge counting temp-table connections that have no keepalive coverage) and `TempTableIdleTimeoutKills` (a counter of connections reclaimed when this idle timeout elapsed). A nonzero or growing `TempTableIdleTimeoutKills` means gRPC-API sessions are reaching the idle timeout and losing their temporary tables; if that is unexpected, raise `--queryserver-config-temp-table-idle-timeout` or investigate clients that abandon sessions. `TempTableUnmanagedConnections` shows how many temp-table connections currently rely on that tablet-side timeout rather than the vtgate keepalive.
+
 ### GET_LOCK() and reserved connections
 
 The MySQL locking functions allow users to work with user level locks. Since

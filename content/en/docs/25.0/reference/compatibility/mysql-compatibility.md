@@ -118,6 +118,7 @@ See the [Views RFC](https://github.com/vitessio/vitess/issues/11559) for more de
 Vitess has limited support for temporary tables, only for **unsharded keyspaces**:
 - Creating a temporary table forces the session to start using [reserved connections](../../query-serving/reserved-conn).
 - Query plans in this session won’t be cached.
+- The reserved connection (and its temporary tables) is now kept alive for a live session, so Vitess's own idle timeout no longer reclaims it. MySQL's `wait_timeout` still applies exactly as on a direct MySQL connection, so an idle session can still lose its temporary tables, and no application change is needed. See [temporary tables and reserved connections](../../query-serving/reserved-conn/#temporary-tables-and-reserved-connections).
 
 ### USE Statements
 
