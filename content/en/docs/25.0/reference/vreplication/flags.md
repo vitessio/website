@@ -100,6 +100,10 @@ vtctldclient MoveTables --target-keyspace customer --workflow commerce2customer 
   --config-overrides 'max-row-json-bytes=16777216'
 ```
 
+{{< info >}}
+When you update a workflow, `--config-overrides` performs a partial merge for any config key you pass: it applies only the keys you name and leaves every other stored override unchanged. Giving a key an empty value (`key=`) removes just that one override and leaves the rest intact.
+{{< /info >}}
+
 ### vreplication-net-read-timeout and vreplication-net-write-timeout
 
 **Type** integer\
