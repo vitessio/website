@@ -28,6 +28,7 @@ Vitess supports MySQL and gRPC server protocols, allowing it to serve as a drop-
    14. [User Defined Functions (UDFs)](#user-defined-functions)
    15. [LAST_INSERT_ID](#last_insert_id)
    16. [Reserved Keywords](#reserved-keywords)
+   17. [Built-in Function Name Parsing](#built-in-function-name-parsing)
 3. [Cross-shard Transactions](#cross-shard-transactions)
 4. [Auto Increment](#auto-increment)
 5. [Character Set and Collation](#character-set-and-collation)
@@ -320,6 +321,77 @@ SELECT * FROM `dual`;  -- Always referred to virtual DUAL, not a real table
 -- v25 and later
 SELECT * FROM `dual`;  -- Real table (if it exists)
 SELECT * FROM DUAL;    -- Virtual pseudo-table (equivalent to SELECT without FROM)
+```
+
+### Built-in Function Name Parsing
+
+Starting in v25, Vitess lexes MySQL's built-in function names the way MySQL 8.0 does; this behavior was verified against MySQL 8.0.46. It aligns Vitess with MySQL's [Function Name Parsing and Resolution](https://dev.mysql.com/doc/refman/8.0/en/function-resolution.html) rules and removes several cases where Vitess had been more lenient than MySQL about recognizing a built-in such as `NOW()`. Where a bare name previously parsed as a built-in, Vitess now treats it as a plain identifier or a stored-function call, matching MySQL.
+
+**The rule:**
+
+A built-in function name is treated as the built-in function keyword only when both of these hold:
+
+- It is immediately followed by `(` with no whitespace in between.
+- It is not qualified by a database or table name, such as `db.name(`.
+
+**Otherwise:**
+
+- With a space before the paren, such as `name (`, or when qualified, such as `db.name(`, the name is a generic or stored-function call.
+- Used anywhere else, the bare name is a plain identifier — a column, table, or alias.
+
+**Examples:**
+
+The examples below assume a table `t(id INT, c CHAR(1), x INT)` unless a `CREATE TABLE` statement is shown.
+
+```sql
+-- Built-in function: the name is attached to the open paren
+SELECT NOW();
+SELECT COUNT(id) FROM t;
+
+-- Parentheses are now required where the built-in was previously bare
+CREATE TABLE events (
+  created TIMESTAMP DEFAULT NOW(),    -- was accepted as: DEFAULT NOW
+  updated TIMESTAMP ON UPDATE NOW()   -- was accepted as: ON UPDATE NOW
+);
+
+-- A space before the paren is now a syntax error for built-ins that
+-- need the attached paren for their argument syntax
+SELECT count (*) FROM t;                  -- Error: syntax error
+SELECT cast (1 as char);                  -- Error: syntax error
+SELECT trim (leading ' ' from c) FROM t;  -- Error: syntax error
+
+-- A space before the paren for a plain-argument built-in is now a
+-- generic (stored-function) call, serialized with the name quoted
+SELECT count (id) FROM t;  -- generic call `count`(id), no longer the aggregate
+SELECT sum (x) FROM t;     -- generic call `sum`(x), no longer the aggregate
+SELECT now ();             -- generic call `now`()
+SELECT session_user ();    -- generic call `session_user`()
+
+-- A backtick-quoted name is a stored-function call, not the built-in
+SELECT `user`(), `current_user`();
+
+-- A bare name is a plain identifier
+CREATE TABLE now (id INT);                    -- `now` is a table name
+CREATE TABLE metrics (count INT, sum INT, now INT);
+SELECT count, sum, now FROM metrics;          -- `count`, `sum`, and `now` are columns
+```
+
+**Migration Notes:**
+
+In v24 and earlier, Vitess accepted the bare, spaced, and backtick-quoted forms above as calls to the corresponding built-in functions. In v25, these forms follow MySQL: a built-in written without parentheses (`DEFAULT NOW`) no longer parses, a space before the paren either raises a syntax error or becomes a generic call, and a backtick-quoted or qualified name is a stored-function call.
+
+```sql
+-- v24 and earlier
+CREATE TABLE events (created TIMESTAMP DEFAULT NOW);  -- accepted
+SELECT count (id) FROM t;                             -- accepted as the COUNT aggregate
+SELECT sum (x) FROM t;                                -- accepted as the SUM aggregate
+SELECT `user`();                                      -- the built-in USER() function
+
+-- v25 and later
+CREATE TABLE events (created TIMESTAMP DEFAULT NOW()); -- parentheses required
+SELECT count (id) FROM t;                             -- generic call, serialized as `count`(id)
+SELECT sum (x) FROM t;                                -- generic call, serialized as `sum`(x)
+SELECT `user`();                                      -- stored-function call, not the built-in
 ```
 
 ## Cross-shard Transactions
