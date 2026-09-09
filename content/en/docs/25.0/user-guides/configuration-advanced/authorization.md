@@ -44,6 +44,8 @@ behavior of ACLs.  Let's review these:
  * `--queryserver-config-strict-table-acl`: Set to `true` to enforce table ACL
    checking.  **This needs to be enabled for your ACLs to have any effect.**
    Any users that are not specified in an ACL policy will be denied.
+   Some statement types are also denied under strict table ACL. See
+   [Statements denied under strict table ACL](#statements-denied-under-strict-table-acl).
    Default is `false`.
  * `--queryserver-config-acl-exempt-acl`:  Allows you to specify the name
    of an ACL (see below for format) that is exempt from enforcement.
@@ -57,6 +59,34 @@ behavior of ACLs.  Let's review these:
    Note that even if you do not set this parameter, you can always force
    VTTablet to reload the ACL config file from disk by sending a SIGHUP
    signal to your VTTablet process.
+
+## Statements denied under strict table ACL
+
+When `--queryserver-config-strict-table-acl` is enabled, VTTablet fails closed
+for statement types whose table set it cannot determine. Rather than skip the
+ACL check for these statements, it denies them. The affected statements are
+`DO`, `CALL`, `REPAIR`, `OPTIMIZE`, and `LOAD DATA`. This closes a security gap:
+non-exempt callers could otherwise use these statements to reach tables their
+ACL denied.
+
+The denial applies to every caller that is not in the exempt ACL, including
+callers whose table grants would otherwise be sufficient, because VTTablet
+cannot determine which tables the statement touches.
+
+To keep running these statements, add the caller to the exempt ACL through
+`--queryserver-config-acl-exempt-acl`. Exempt callers short-circuit the check
+and can still run them. The name you list there is the `name` field of an ACL
+rule, described in
+[Format of the table ACL config file](#format-of-the-table-acl-config-file).
+
+To gauge impact before enforcing, enable
+`--queryserver-config-enable-table-acl-dry-run`. The denial is then only
+recorded, emitting the
+[TableACLPseudoDenied](../../configuration-basic/monitoring) metric, and the
+statement still runs.
+
+When strict table ACL is off, which is the default, nothing changes and these
+statements run as before.
 
 ## Warning regarding ACL reloading
 
