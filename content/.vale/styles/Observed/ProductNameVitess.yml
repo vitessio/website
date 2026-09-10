@@ -1,0 +1,10 @@
+# rung: Observed — source: collection style-observations.md (product-name casing).
+# "Vitess" is the dominant prose form (~95% of sampled pages); lowercase "vitess"
+# occurs only as paths, org names, and identifiers. RE2 has no lookarounds, so the
+# path-excluding boundary character is part of the match span (nonword: true).
+extends: existence
+message: "Use 'Vitess' for the product name in prose (observed dominant casing on ~95 percent of sampled pages; lowercase 'vitess' is correct only in paths, org names, and identifiers)."
+level: suggestion
+nonword: true
+tokens:
+  - '(?:^|[^\w/.@-])vitess(?:[^\w/.@-]|$)'

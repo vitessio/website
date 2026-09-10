@@ -1,0 +1,10 @@
+# rung: Observed — source: collection style-observations.md (MySQL casing).
+# "MySQL" is the dominant prose form; lowercase "mysql" occurs as the binary name,
+# language hint, or identifier. RE2 has no lookarounds, so the path-excluding
+# boundary character is part of the match span (nonword: true).
+extends: existence
+message: "Write 'MySQL' in prose (observed dominant casing; lowercase 'mysql' is correct only as the binary name, language hint, or identifier)."
+level: suggestion
+nonword: true
+tokens:
+  - '(?:^|[^\w/.@-])mysql(?:[^\w/.@-]|$)'
