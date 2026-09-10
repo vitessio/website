@@ -394,6 +394,17 @@ SELECT sum (x) FROM t;                                -- generic call, serialize
 SELECT `user`();                                      -- stored-function call, not the built-in
 ```
 
+**Qualified calls are sent to MySQL:**
+
+Because a qualified name is always a stored-function call, Vitess forwards a schema-qualified call to MySQL as written instead of evaluating or rewriting it. In v24 and earlier, Vitess matched several functions by name alone and intercepted a qualified call as the built-in of that name: it rewrote `db.last_insert_id()`, `db.found_rows()`, `db.row_count()`, and `db.database()` (or `db.schema()`) to the session's own values, and it computed `db.abs()`, `db.user()`, and similar functions itself. In v25, Vitess sends these to MySQL unchanged and MySQL resolves them. A query that relied on Vitess evaluating a qualified call now runs at MySQL, which reports an error such as `FUNCTION db.abs does not exist` unless a stored function of that name exists in that schema — the same result MySQL returns for the query. No schema or configuration change is involved.
+
+```sql
+-- A schema-qualified call is a stored-function call: Vitess sends it to
+-- MySQL unchanged instead of evaluating or rewriting it.
+SELECT db.last_insert_id();  -- not rewritten to the session value; run at MySQL
+SELECT db.abs(-1);           -- not evaluated by Vitess; MySQL: FUNCTION db.abs does not exist
+```
+
 ## Cross-shard Transactions
 
 Vitess supports multiple [transaction modes](../../../user-guides/configuration-advanced/shard-isolation-atomicity): `SINGLE`, `MULTI` and `TWOPC` .
