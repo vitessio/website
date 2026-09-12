@@ -108,6 +108,27 @@ All three programs can be made aware of Backup Engine and Backup Storage using t
       </td>
     </tr>
     <tr>
+      <td><code>backup-log-to-storage</code></td>
+      <td>Optional, disabled by default (<code>false</code>). When enabled, a backup
+        operation writes the backup engine's log output to a separate file and uploads
+        it to the backup storage as <code>BACKUP.log</code>. This lets operators inspect
+        backup-specific engine output, or audit a backup, without searching the full
+        <code>vttablet</code> log.<br><br>
+        What gets uploaded depends on the backup result:
+        <ul>
+          <li>On a successful backup, the log is uploaded.</li>
+          <li>On a failed backup, the log is uploaded on a best-effort basis, and the
+            local copy is also retained on the tablet host, with its path written to the
+            tablet log, because the storage directory is cleaned up when a backup is
+            aborted.</li>
+          <li>On an empty backup, no log is uploaded.</li>
+        </ul>
+        Enabling this flag adds one uploaded file per backup. The log is stored in the
+        same backup storage directory (file, GCS, S3, or Ceph) as the backup data and
+        MANIFEST.
+      </td>
+    </tr>
+    <tr>
       <td><code>backup-storage-compress</code></td>
       <td>This flag controls if the backups are compressed by the Vitess code.
         By default it is set to true. Use
