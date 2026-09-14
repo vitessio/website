@@ -154,6 +154,7 @@ __Optional flags:__
 	* This flag controls if the tablet should be drained during backup or not. If true, it will transition to `BACKUP` type and will return to the original type once done, otherwise it will continue to serve during the backup (similar to the `xtrabackup` engine)
 * `--mysql-shell-speedup-restore=false`
 	* If you are using MySQL >=8.0.21, this allows you to disable redo logs and the double write buffer for the duration of the restore, increasing the restore speed.
+	* When enabled, it also sets `innodb_change_buffering` to `inserts` for the duration of the mysqlshell restore load and resets it to `none` once the load finishes, which can significantly speed up the inserts performed during the load. If the running MySQL server does not support the `innodb_change_buffering` variable, this step is skipped: the restore logs a message and continues. The redo-log and double-write-buffer behavior above is unaffected either way.
 
 ### Limitations and Caveats to be aware
 
