@@ -3,6 +3,8 @@ title: "What is Vitess and MySQL's relationship?"
 shorten_nav_links: true
 notoc: true
 weight: 2
+aliases:
+  - /docs/faq/getting-started/overview/what-is-vitess-and-mysqls-relationship/
 ---
 
 **Vitess is not a database itself, instead it is a distributed database system built around MySQL.**

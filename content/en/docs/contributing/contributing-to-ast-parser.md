@@ -1,6 +1,7 @@
 ---
 title: Parser and AST
 description: Everything you need to know to contribute to parser and AST of Vitess
+weeight: 5
 ---
 
 Vitess houses its own SQL parser that is used to parse the queries users send us both at Vtgate and Vttablet. The output of the parser is stored in a Abstract Syntax Tree which is used for further processing by the planner. 

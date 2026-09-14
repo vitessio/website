@@ -13,6 +13,7 @@ preview-build: install
 	--baseURL $(DEPLOY_PRIME_URL) \
 	--minify
 
+
 serve: install
 	$(HUGO) server \
 	--buildDrafts \

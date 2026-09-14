@@ -7,6 +7,13 @@ aliases: ['/docs/tutorials/']
 
 Choose the right installation method for your use case. Each option serves different needs, from local development to production deployments.
 
+## Quickstart Guide (Linux)
+If you are new to Vitess, start with the local install guide to install Vitess for testing purposes, from pre-compiled binaries.
+
+The [Local Install](local/) guide runs Vitess directly on Linux using pre-compiled binaries. Use the local install to get hands-on experience without container orchestration.
+
+**Prerequisites:** 4GB+ RAM, 20GB disk, MySQL 8.0, etcd, Node.js.
+
 ## Installation Options
 
 ### Vitess Operator for Kubernetes
@@ -15,11 +22,7 @@ The [Vitess Operator](operator/) automates deploying and managing Vitess on Kube
 
 **Prerequisites:** Kubernetes cluster (Minikube for testing, or GKE/EKS/AKS for production), kubectl, and Docker.
 
-### Local Install (Linux)
 
-The [Local Install](local/) guide runs Vitess directly on Linux using pre-compiled binaries. Use the local install to get hands-on experience without container orchestration.
-
-**Prerequisites:** 4GB+ RAM, 20GB disk, MySQL 8.0, etcd, Node.js.
 
 ### Local Install via Source (macOS)
 

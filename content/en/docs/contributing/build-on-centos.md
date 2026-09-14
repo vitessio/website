@@ -2,7 +2,7 @@
 title: Build on CentOS
 description: Instructions for building Vitess on your machine for testing and development purposes
 aliases: ['/docs/contributing/build-from-source/']
-weight: 3
+weight: 8
 ---
 
 {{< info >}}
