@@ -44,7 +44,8 @@ behavior of ACLs.  Let's review these:
  * `--queryserver-config-strict-table-acl`: Set to `true` to enforce table ACL
    checking.  **This needs to be enabled for your ACLs to have any effect.**
    Any users that are not specified in an ACL policy will be denied.
-   Default is `false`.
+   Default is `false`. See [Table ACL and CTE names](#table-acl-and-cte-names)
+   for how table ACL resolves CTE names under this setting.
  * `--queryserver-config-acl-exempt-acl`:  Allows you to specify the name
    of an ACL (see below for format) that is exempt from enforcement.
    Allows you to separate the rollout and the subsequent enforcement of
@@ -57,6 +58,51 @@ behavior of ACLs.  Let's review these:
    Note that even if you do not set this parameter, you can always force
    VTTablet to reload the ACL config file from disk by sending a SIGHUP
    signal to your VTTablet process.
+
+## Table ACL and CTE names
+
+VTTablet decides which real tables a query touches. It does not require a
+permission for a name that is only a Common Table Expression (CTE) — a temporary
+named result set that a `WITH` clause declares. VTTablet now resolves those
+names the way MySQL does. Under strict table ACL
+(`--queryserver-config-strict-table-acl`), this resolution change affects
+enforcement in two ways, both without any flag or configuration change.
+
+**Tightened.** A query can no longer hide a real table behind a same-named,
+non-recursive CTE. In `WITH t AS (SELECT * FROM t) SELECT * FROM t`, the inner
+reference to `t` is the real table. Only a recursive CTE may refer to its own
+name inside its body, and this CTE is not recursive, so its inner `t` can only
+mean the underlying table. The caller now needs the table's normal read
+permission, the same permission a plain read of `t` always required. Previously,
+such a query read the table with no permission at all.
+
+Two narrower cases tighten the same way:
+
+ * A `NEXT VALUE` statement requires write permission on its sequence,
+   regardless of any same-named CTE a `WITH` clause declares.
+ * Once one arm of a `UNION` declares its own `WITH`, the CTE names the union
+   declares before its first `SELECT` are no longer visible inside the arms, so
+   a same-named reference there is the real table and needs its permission. In
+   `WITH t AS (SELECT * FROM real1) SELECT * FROM t UNION ALL (WITH t AS (SELECT * FROM t) SELECT * FROM t)`,
+   the second arm declares its own `WITH t`, so each inner `t` resolves to the
+   real table `t`.
+
+**Loosened.** VTTablet no longer requires a permission for a CTE's name when the
+CTE is referenced from a subquery, a derived table, or a union arm of the query
+that declares it, or when the CTE is joined into a multi-table `UPDATE` or
+`DELETE`. Such queries were previously denied under strict table ACL when no ACL
+rule matched that name. In
+`WITH t AS (SELECT * FROM real1) UPDATE real2 JOIN t ON real2.id = t.id SET real2.x = 8`,
+`t` is a read source joined into the update, never a write target, so it needs
+no permission of its own; the caller still needs its normal permissions on
+`real1` and `real2`.
+
+When strict table ACL is off, which is the default, nothing changes.
+
+To find queries this change would newly deny before enforcing it, set
+`--queryserver-config-enable-table-acl-dry-run` to `true` and watch the
+[TableACLPseudoDenied](../../configuration-basic/monitoring) metric; the requests
+still run while dry-run is on.
 
 ## Warning regarding ACL reloading
 
