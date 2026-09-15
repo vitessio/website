@@ -97,6 +97,17 @@ rule matched that name. In
 no permission of its own; the caller still needs its normal permissions on
 `real1` and `real2`.
 
+**Case sensitivity.** VTTablet compares a CTE's name to table names
+byte-for-byte, case-sensitively, whereas MySQL matches them according to the
+server's `lower_case_table_names` setting. On a server configured to fold
+table-name case, `WITH T AS (SELECT * FROM real1) SELECT * FROM t` declares the
+CTE as `T` and references it as `t`: MySQL reads the lowercase `t` as the CTE,
+but VTTablet treats it as a real table `t` and requires that table's read
+permission. This divergence is intentional. VTTablet does not know the server's
+`lower_case_table_names` setting, and folding case blindly would open a bypass
+on a case-sensitive server. It can only ever require an extra permission, never
+skip one, so it errs toward denying and cannot cause an ACL bypass.
+
 When strict table ACL is off, which is the default, nothing changes.
 
 To find queries this change would newly deny before enforcing it, set
