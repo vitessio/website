@@ -160,3 +160,55 @@ It first sets up all the certificates, some table ACLs, and then uses the golang
 To get VTGate to support TLS use the `--mysql-server-ssl-cert` and `--mysql-server-ssl-key` VTGate options. To require client certificates, you can set `--mysql-server-ssl-ca`, containing the CA certificate you expect the client TLS certificates to be verified against.
 
 Finally, if you want to require all VTGate clients to only be able to connect using TLS, you can use the `--mysql-server-require-secure-transport` flag.
+
+## Certificate Revocation Lists (CRLs)
+
+Vitess uses a configured certificate revocation list (CRL) to reject certificates that an operator has revoked before they expire. A CRL is a signed list of certificates that their issuer has invalidated ahead of their scheduled expiry. When Vitess loads one, Vitess refuses any TLS connection whose certificate chain contains a revoked certificate. This section covers configuring Vitess to enforce a CRL, not generating, distributing, or rotating the CRL itself, and it assumes familiarity with the TLS and CA/certificate-chain concepts covered earlier on this page. With a CRL in place, a certificate you revoke stops being accepted, on new and resumed connections alike.
+
+### CRL Flags
+
+You configure a CRL by pointing the `*-crl` flag for the component and transport you are securing at a CRL file: `--grpc-crl`, `--mysql-server-ssl-crl`, `--vtgate-grpc-crl`, `--tablet-grpc-crl`, `--vtctld-grpc-crl`, `--tablet-manager-grpc-crl`, and `--binlog-player-grpc-crl`. Each is paired with the corresponding `-ca` flag — for example, `--grpc-crl` with `--grpc-ca`, and `--vtgate-grpc-crl` with `--vtgate-grpc-ca` — which supplies the CA that the revocation check builds and validates chains against.
+
+### Enforcement Scope
+
+A configured CRL is checked on every connection: in every SSL mode (`preferred`, `required`, `verify_ca`, and `verify_identity`), on resumed TLS sessions, and on both the client and server sides.
+
+The subsections below describe this enforcement in each SSL mode, the checks Vitess runs when it loads a CRL at startup, and how it treats verified chains during a CA rollover.
+
+### Behavior by SSL Mode
+
+In `preferred`, `required`, and `verify_ca` modes, Go's built-in TLS verification is disabled and Vitess builds the certificate chain manually inside the revocation checker — to the configured CA, or to the system roots when no CA is configured — and rejects the connection when that chain cannot be built or verified. A configured CRL rejects each of these connections. Each entry below pairs the rejection with the fix that restores it:
+
+* `required` with a CRL but no CA, against a privately issued server certificate — configure the CA the server's chain leads to.
+* A CRL and a root CA, against a server that omits its intermediate certificate — have the server present its whole chain.
+* A CRL against a server certificate that has expired or is not valid for server authentication — re-issue the server certificate.
+
+In `verify_identity` mode, Go's own TLS verification stays in effect: it builds and verifies the chain and validates the server's hostname against the certificate, and the CRL check then runs on that already-verified chain.
+
+### Startup Validation
+
+Vitess refuses a CRL at startup when it cannot apply the file as a complete list validated by its issuer. The conditions are:
+
+* a bad signature;
+* an issuer CA that lacks the `cRLSign` key usage (the X.509 extension marking a CA authorized to sign CRLs);
+* an issuer that is mismatched or differently encoded from the issuer named on the certificates;
+* an unsupported signature algorithm;
+* a delta, indirect, or scope-limited CRL;
+* a file that contains no X.509 CRL block;
+* a server CRL configured without a CA;
+* a CRL dated more than 5 minutes in the future;
+* unsupported critical extensions.
+
+Re-issue the CRL so that its issuer, encoding, authority key identifier, `cRLSign` usage, and signature algorithm are valid and its date is no more than 5 minutes ahead of the current time.
+
+### gRPC Clients
+
+A gRPC client configured with a CRL but with neither a client certificate nor a CA connects with TLS, verifying the server against the system roots.
+
+### Verified Chains and CA Rollover
+
+A peer passes the check when any one verified chain holds no revoked certificate. Within a chain, every certificate except the trust anchor is looked up in the CRLs signed by its issuer, which is the next certificate in the chain. During a CA rollover, a cross-signed intermediate that one root has revoked still passes through the other root. A trust anchor is trusted as configured. Because its own issuer is not part of the peer's chain, Vitess checks it against a CRL only when its issuing certificate is also present in the configured CA file. If that issuer's CRL lists the anchor as revoked, the anchor is rejected for every connection that would end at it — even when the anchor has more than one configured issuer, unlike an interior certificate of a chain, which can still pass through a different, non-revoking issuer.
+
+{{< warning >}}
+A configured CRL was not previously enforced by clients in `preferred`, `required`, and `verify_ca` modes, nor on resumed sessions, so connections that succeeded before may now fail closed. Check whether any component is started with a `*-crl` flag before assuming this does not affect you. To keep a formerly working connection alive, configure the CA that the server's chain leads to, have the server present its whole valid chain, or drop the CRL. For a gRPC client, configure the CA alongside the CRL or drop the CRL. Re-issue any CRL that is invalid or dated more than 5 minutes in the future.
+{{< /warning >}}
