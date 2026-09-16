@@ -85,7 +85,7 @@ This distinction is important. If one tablet received transactions through `120`
 
 [PR #20578](https://github.com/vitessio/vitess/pull/20578) uses these frozen positions to identify the leading group early in the operation, before waiting for relay logs to apply
 
-v25 ERS:
+Improved v25 ERS:
 
 1. Stops replication receivers and collects each surviving tablet's received and applied positions
 2. Filters the candidate-wait phase to the most-advanced received histories
