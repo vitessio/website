@@ -100,7 +100,7 @@ graph TD
     subgraph Positions["Frozen received positions"]
         R1["R1<br/>received=120, applied=118<br/>MySQL lag: 2s"]
         R2["R2<br/>received=120, applied=120<br/>MySQL lag: 0s"]
-        D1["D1<br/>received=95, applied=80<br/>MySQL lag: 300s"]
+        D1["D1<br/>received=95, applied=80<br/>MySQL lag: 900s"]
     end
 
     R1 --> Filter["Filter to most-advanced<br/>received history: 120"]
