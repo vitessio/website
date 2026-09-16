@@ -79,7 +79,7 @@ This is not an unusual state. A busy `RDONLY`, a saturated replica, a replica ca
 
 ### Fix
 
-MySQL GTIDs give ERS a shard-wide view of how advanced each surviving tablet is. Close to the start of the operation, ERS stops the replication threads and collects each reachable tablet's received and applied positions. The received history is now frozen; the SQL thread can keep applying it, but no new transactions arrive from the old primary
+MySQL GTIDs give ERS a shard-wide view of how advanced each surviving tablet is. Close to the start of the operation, ERS stops the replication receivers and collects each reachable tablet's received and applied positions. The received history is now frozen; the SQL thread can keep applying it, but no new transactions arrive from the old primary
 
 This distinction is important. If one tablet received transactions through `120` and another only received through `95` from the same history, waiting for the second tablet to apply through `95` cannot put it ahead of the first. Before v25, ERS already had this information but did not use it to narrow the candidate-wait phase
 
@@ -87,7 +87,7 @@ This distinction is important. If one tablet received transactions through `120`
 
 v25 ERS:
 
-1. Stops replication threads and collects each surviving tablet's received and applied positions
+1. Stops replication receivers and collects each surviving tablet's received and applied positions
 2. Filters the candidate-wait phase to the most-advanced received histories
 3. When those histories are equal, races relay-log application and continues as soon as the first tablet finishes apply
 4. Completes the safety checks and primary selection, catching up a different promotion candidate if needed
