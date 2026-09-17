@@ -12,7 +12,7 @@ description: 'How Vitess 25 reduces unnecessary waiting during emergency reparen
 
 ## What is `EmergencyReparentShard`?
 
-[`EmergencyReparentShard`](https://vitess.io/docs/user-guides/configuration-advanced/reparenting/) (ERS) is the Vitess failover process used when a shard's current primary is dead or unreachable. While `PlannedReparentShard` gets a clean handoff from a healthy primary, ERS has to pick a replacement using only surviving tablets. It compares their transaction histories, promotes an eligible replacement, updates the topology and points the other tablets at the new primary
+[`EmergencyReparentShard`](https://vitess.io/docs/user-guides/configuration-advanced/reparenting/) (ERS) is the Vitess failover process used when a shard's current primary is dead or unreachable. While `PlannedReparentShard` gets a clean handoff from a healthy primary, ERS has to pick a replacement using only surviving tablets. It compares their transaction histories, promotes an eligible replacement, updates the topology and points the other tablets at the new primary. `VTOrc` uses ERS to resolve many unplanned failures automatically
 
 The goal is to promote a tablet that has applied the most-advanced surviving transaction history as quickly as possible, as an outage of the primary blocks shard writes - this is an emergency!
 
@@ -128,7 +128,11 @@ graph TD
     Skipped -.-> Repoint
 
     classDef default fill:#f3f4f6,stroke:#6b7280,color:#111827
+    classDef healthy fill:#dcfce7,stroke:#22c55e,color:#14532d
+    classDef warning fill:#fef9c3,stroke:#eab308,color:#713f12
     classDef completed fill:#14532d,stroke:#22c55e,color:#f0fdf4
+    class R1,R2,D1,ApplyR1 healthy
+    class Skipped warning
     class ApplyR2,Primary,Repoint completed
     style Positions fill:#ffffff,stroke:#6b7280,color:#111827
     style Race fill:#ffffff,stroke:#6b7280,color:#111827
