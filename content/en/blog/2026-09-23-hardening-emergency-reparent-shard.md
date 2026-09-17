@@ -118,10 +118,10 @@ graph TD
     subgraph Race["Relay-log-apply race (parallel)"]
         ApplyR1["R1: still applying ⏳"]
         ApplyR2["R2: finishes applying first ✅<br/>wins apply race"]
+        ApplyR1 --> Cancelled["R1: apply wait cancelled ⏹️<br/>SQL thread continues ☑️"]
+        ApplyR2 -.-> Cancelled
     end
 
-    ApplyR1 --> Cancelled["R1: apply wait cancelled ⏹️<br/>SQL thread continues ☑️"]
-    ApplyR2 -.-> Cancelled
     ApplyR2 --> Checks["Complete safety checks<br/>and primary selection"]
     Checks --> Primary["R2: new PRIMARY ✅"]
     Primary --> Repoint["R1 and R3 repointed to R2 ✅"]
