@@ -171,6 +171,14 @@ A is ahead of B because it contains all of B's transactions. C is incomparable w
 
 [PR #20728](https://github.com/vitessio/vitess/pull/20728) fixes this by counting how many other candidates strictly dominate each candidate's history. A candidate cannot rank ahead of a tablet that dominates it. Existing preferences, such as promotion rules, then break ties
 
+Using the same example sets:
+
+- A has `{1, 2, 3, 4}` and is dominated by `0` candidates
+- B has `{1, 2, 3}` and is dominated by `1` candidate: A
+- C has `{1, 2, 5}` and is dominated by `0` candidates
+
+Sorting by this count puts A and C ahead of B. Existing preferences decide whether A or C comes first, but B can never move ahead of A
+
 ERS and `PlannedReparentShard` share this sorter, so both benefit from the fix. This makes the ordering consistent; it does not tell us which of 2 x divergent histories should survive. That is a separate problem
 
 ## Strict recovery from split brain with MySQL GTIDs
@@ -216,3 +224,4 @@ These changes will be released in Vitess 25, expected in October 2026. See the [
 - [PR #20728: `reparentutil`: order reparent candidates by GTID dominance for a consistent sort](https://github.com/vitessio/vitess/pull/20728)
 - [PR #20762: `reparentutil`: keep nil-alias tablets out of candidate ordering](https://github.com/vitessio/vitess/pull/20762)
 - [PR #20780: `EmergencyReparentShard`: add explicit split-brain recovery](https://github.com/vitessio/vitess/pull/20780)
+- [PR #20831: `EmergencyReparentShard`: skip zero-position candidates in errant GTID detection](https://github.com/vitessio/vitess/pull/20831)
