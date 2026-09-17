@@ -97,13 +97,13 @@ Improved v25 ERS:
 4. Completes the safety checks and primary selection, catching up a different promotion candidate if needed
 5. Promotes the selected tablet and repoints the remaining tablets as part of the reparent
 
-The example below uses transaction numbers from one shared history instead of full GTID sets. The MySQL lag values are illustrative, not derived from the transaction counts. Here, `R2` has already applied the leading history and also satisfies the final promotion requirements:
+The example below uses transaction numbers from one shared history instead of full GTID sets. The MySQL lag values are illustrative, not derived from the transaction counts. Here, `R2` wins the apply race and also satisfies the final promotion requirements:
 
 ```mermaid
 graph TD
     subgraph Positions["Frozen received positions"]
         R1["R1<br/>received=120, applied=118<br/>MySQL lag: 2s"]
-        R2["R2<br/>received=120, applied=120<br/>MySQL lag: 0s"]
+        R2["R2<br/>received=120, applied=119<br/>MySQL lag: 0s"]
         R3["R3<br/>received=95, applied=80<br/>MySQL lag: 900s ❗"]
     end
 
@@ -117,7 +117,7 @@ graph TD
     Leading --> ApplyR2
     subgraph Race["Relay-log-apply race (parallel)"]
         ApplyR1["R1: still applying ⏳"]
-        ApplyR2["R2: already fully applied ✅<br/>wins apply race"]
+        ApplyR2["R2: finishes applying first ✅<br/>wins apply race"]
     end
 
     ApplyR1 --> Cancelled["R1: apply wait cancelled ⏹️<br/>SQL thread continues ☑️"]
