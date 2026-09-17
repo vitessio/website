@@ -8,7 +8,7 @@ title: 'Hardening EmergencyReparentShard in v25'
 description: 'How Vitess 25 reduces unnecessary waiting during emergency reparents and adds explicit recovery from split brain'
 ---
 
-`EmergencyReparentShard` operations are being hardened in upcoming release v25. In this blog, we cover how ERS works and the upcoming changes that make recovery safer, faster and less brittle
+[`EmergencyReparentShard`](https://vitess.io/docs/user-guides/configuration-advanced/reparenting/) operations are being hardened in upcoming release v25. In this blog, we cover how ERS works and the upcoming changes that make recovery safer, faster and less brittle
 
 ## What is `EmergencyReparentShard`?
 
@@ -30,7 +30,9 @@ graph TD
 
     classDef default fill:#f3f4f6,stroke:#6b7280,color:#111827
     classDef unavailable fill:#7f1d1d,stroke:#ef4444,color:#fef2f2
+    classDef healthy fill:#dcfce7,stroke:#22c55e,color:#14532d
     class P unavailable
+    class R1,R2,D1 healthy
 ```
 
 And after ERS:
@@ -47,8 +49,10 @@ graph TD
     classDef default fill:#f3f4f6,stroke:#6b7280,color:#111827
     classDef unavailable fill:#7f1d1d,stroke:#ef4444,color:#fef2f2
     classDef completed fill:#14532d,stroke:#22c55e,color:#f0fdf4
+    classDef healthy fill:#dcfce7,stroke:#22c55e,color:#14532d
     class OldPrimary unavailable
     class NewPrimary completed
+    class Replica,ReadOnly healthy
 ```
 
 At a high level, ERS moves through these phases:
@@ -100,7 +104,7 @@ graph TD
     subgraph Positions["Frozen received positions"]
         R1["R1<br/>received=120, applied=118<br/>MySQL lag: 2s"]
         R2["R2<br/>received=120, applied=120<br/>MySQL lag: 0s"]
-        D1["D1<br/>received=95, applied=80<br/>MySQL lag: 900s"]
+        D1["D1<br/>received=95, applied=80<br/>MySQL lag: 900s ❗"]
     end
 
     R1 --> Filter["Filter to most-advanced<br/>received history: 120"]
@@ -116,7 +120,7 @@ graph TD
         ApplyR2["R2: already fully applied ✅<br/>wins apply race"]
     end
 
-    ApplyR1 --> Cancelled["R1: wait cancelled ⏹️<br/>SQL thread continues ☑️"]
+    ApplyR1 --> Cancelled["R1: apply wait cancelled ⏹️<br/>SQL thread continues ☑️"]
     ApplyR2 -.-> Cancelled
     ApplyR2 --> Checks["Complete safety checks<br/>and primary selection"]
     Checks --> Primary["R2: new PRIMARY ✅"]
@@ -129,6 +133,8 @@ graph TD
     style Positions fill:#ffffff,stroke:#6b7280,color:#111827
     style Race fill:#ffffff,stroke:#6b7280,color:#111827
 ```
+
+Before v25, waiting for `D1` would likely cause the entire ERS to time out. Here, it does not time out the ERS because `D1` is skipped during the candidate-wait phase
 
 Why is this safe? `R1` and `R2` received the same transactions, so applying their relay logs brings them to the same state. This is what makes the relay-log-apply race safe: ERS needs one successful apply, not every tablet to finish. It cancels the other waits, not their SQL threads
 
