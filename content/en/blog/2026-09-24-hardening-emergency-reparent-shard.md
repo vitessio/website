@@ -5,7 +5,7 @@ draft: false
 slug: '2026-09-24-hardening-emergency-reparent-shard'
 tags: ['Vitess', 'MySQL', 'EmergencyReparentShard', 'reparenting', 'high availability']
 title: 'Hardening EmergencyReparentShard in v25'
-description: 'How Vitess 25 reduces unnecessary waiting during emergency reparents and adds explicit recovery from split brain'
+description: 'How Vitess 25 reduces unnecessary waiting during emergency reparents and adds explicit MySQL/Percona GTID recovery from split brain'
 ---
 
 [`EmergencyReparentShard`](https://vitess.io/docs/user-guides/configuration-advanced/reparenting/) operations are being hardened in upcoming release v25. In this blog, we cover how ERS works and the upcoming changes that make recovery safer, faster and less brittle
@@ -166,9 +166,9 @@ For example, A can be ahead of B, while C contains a divergent history that neit
 
 ERS and `PlannedReparentShard` share this sorter, so both benefit from the fix. This makes the ordering consistent; it does not tell us which of 2 x divergent histories should survive. That is a separate problem
 
-## Strict recovery from split brain
+## Strict recovery from split brain with MySQL/Percona GTIDs
 
-_TL;DR: in v25, ERS refuses to choose between unresolved split-brain histories automatically. Operators can explicitly choose which history to preserve, accepting the loss of transactions unique to the other branches. `VTOrc` never makes that choice automatically_
+_TL;DR: in v25, ERS on MySQL and Percona GTID shards refuses to choose between unresolved split-brain histories automatically. Operators can explicitly choose which history to preserve, accepting the loss of transactions unique to the other branches. `VTOrc` never makes that choice automatically_
 
 ### Problem
 
@@ -178,7 +178,7 @@ Picking one automatically means deciding which transactions to discard. Picking 
 
 ### Fix
 
-[PR #20780](https://github.com/vitessio/vitess/pull/20780) adds explicit split-brain recovery to Vitess 25. ERS records the divergent leaders before the candidate-wait phase and errant-GTID filtering. The default path can only proceed if that filtering leaves exactly one of the original leaders; otherwise ERS fails with the aliases and positions of the competing leaders
+[PR #20780](https://github.com/vitessio/vitess/pull/20780) adds explicit split-brain recovery for MySQL and Percona GTID shards in Vitess 25. ERS records the divergent leaders before the candidate-wait phase and errant-GTID filtering. The default path can only proceed if that filtering leaves exactly one of the original leaders; otherwise ERS fails with the aliases and positions of the competing leaders
 
 An operator who has determined which history to preserve can choose it explicitly:
 
@@ -188,7 +188,7 @@ vtctldclient EmergencyReparentShard <keyspace/shard> \
   --allow-split-brain-promotion
 ```
 
-The flag requires `--new-primary`, and the requested tablet must be one of the original undominated leaders _(no other candidate contains a strictly more complete version of its history)_. ERS promotes exactly that tablet and preserves its full history
+The flag is available only to shards using MySQL or Percona GTIDs. MariaDB and file-position replication remain on the existing non-GTID path and cannot use this override. The flag requires `--new-primary`, and the requested tablet must be one of the original undominated leaders _(no other candidate contains a strictly more complete version of its history)_. ERS promotes exactly that tablet and preserves its full history
 
 This is lossy recovery, not a merge. Transactions unique to the other branches will not be part of the new primary's history, and tablets holding those branches may need to be rebuilt. `VTOrc` never enables this automatically; choosing which data to preserve is an operator decision
 
@@ -198,6 +198,6 @@ The override does not bypass the other promotion checks. The chosen tablet still
 
 In some common scenarios, Vitess 25 makes ERS safer, faster and less brittle. The biggest benefit is in environments where MySQL replication lag on some tablets would otherwise time out an ERS, despite an up-to-date replacement being available. Narrowing the candidate-wait phase and racing tablets with the same leading history can shorten recovery and let it succeed where it previously failed
 
-Candidate ordering is now consistent, and unresolved split brains fail closed rather than choosing a history automatically. Operators have an explicit recovery path when they need to make that choice, accepting the loss of transactions unique to other branches. The other promotion checks still apply
+Candidate ordering is now consistent. For MySQL and Percona GTID shards, unresolved split brains fail closed rather than choosing a history automatically. Operators have an explicit recovery path when they need to make that choice, accepting the loss of transactions unique to other branches. The other promotion checks still apply
 
 These changes will be released in Vitess 25, expected in October 2026. See the [in-progress Vitess 25 release summary](https://github.com/vitessio/vitess/blob/main/changelog/25.0/25.0.0/summary.md) and [reparenting documentation](https://vitess.io/docs/user-guides/configuration-advanced/reparenting/) for more detail
