@@ -166,7 +166,7 @@ For example, A can be ahead of B, while C contains a divergent history that neit
 
 ERS and `PlannedReparentShard` share this sorter, so both benefit from the fix. This makes the ordering consistent; it does not tell us which of 2 x divergent histories should survive. That is a separate problem
 
-## Strict recovery from split brain with MySQL/Percona GTIDs
+## Strict recovery from split brain with MySQL GTIDs
 
 _TL;DR: in v25, ERS on MySQL and Percona GTID shards refuses to choose between unresolved split-brain histories automatically. Operators can explicitly choose which history to preserve, accepting the loss of transactions unique to the other branches. `VTOrc` never makes that choice automatically_
 
