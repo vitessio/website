@@ -181,7 +181,7 @@ Using the same example sets:
 
 Sorting reliably places A and C (`0`) before B (`1`). In this scenario, A and C are the two most-advanced sides of a split brain: neither contains the other's full history
 
-ERS and `PlannedReparentShard` share this sorter, so both benefit from the fix. This makes the ordering consistent; it does not tell us which of 2 x divergent histories should survive. That is a separate problem
+ERS and `PlannedReparentShard` share this sorter, so both benefit from the fix. This makes the ordering consistent, but it cannot decide which side of an unresolved split brain to preserve. The next improvement gives operators an explicit way to make that choice
 
 ## Strict recovery from split brain
 
