@@ -20,7 +20,7 @@ A shard with 4 x tablets might look like this before ERS runs; notice the unavai
 
 ```mermaid
 graph TD
-    P["❌ P: PRIMARY<br/>unavailable"]
+    P["P: PRIMARY ❌<br/>unavailable"]
     R1["R1: REPLICA<br/>MySQL lag: 0s"]
     R2["R2: REPLICA<br/>MySQL lag: 0s"]
     D1["D1: RDONLY<br/>MySQL lag: 0s"]
@@ -29,7 +29,7 @@ graph TD
     P -.-> D1
 
     classDef default fill:#f3f4f6,stroke:#6b7280,color:#111827
-    classDef unavailable fill:#fef2f2,stroke:#b91c1c,color:#111827
+    classDef unavailable fill:#7f1d1d,stroke:#ef4444,color:#fef2f2
     class P unavailable
 ```
 
@@ -37,7 +37,7 @@ And after ERS:
 
 ```mermaid
 graph TD
-    OldPrimary["❌ P: still unavailable"]
+    OldPrimary["P: still unavailable ❌"]
     NewPrimary["R2: new PRIMARY ✅"]
     Replica["R1: REPLICA<br/>MySQL lag: 0s"]
     ReadOnly["D1: RDONLY<br/>MySQL lag: 0s"]
@@ -45,7 +45,7 @@ graph TD
     NewPrimary --> ReadOnly
 
     classDef default fill:#f3f4f6,stroke:#6b7280,color:#111827
-    classDef unavailable fill:#fef2f2,stroke:#b91c1c,color:#111827
+    classDef unavailable fill:#7f1d1d,stroke:#ef4444,color:#fef2f2
     classDef completed fill:#14532d,stroke:#22c55e,color:#f0fdf4
     class OldPrimary unavailable
     class NewPrimary completed
