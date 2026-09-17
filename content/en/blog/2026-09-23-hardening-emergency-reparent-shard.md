@@ -159,6 +159,8 @@ _TL;DR: candidate sorting could produce inconsistent results when GTID histories
 
 While improving candidate selection, there was another problem to address: GTID sets do not always have a simple ahead-or-behind relationship
 
+When candidate histories form a simple ahead-or-behind chain, as with ordinary replication lag, the old sorter already worked. This bug matters when some histories are incomparable, for example after a split brain or an errant write on a replica. A divergent candidate could disrupt the ordering of otherwise comparable candidates, so the problem was not limited to choosing between the divergent histories
+
 A simple example, using transaction numbers instead of full GTID sets:
 
 - A has `{1, 2, 3, 4}`
@@ -177,7 +179,7 @@ Using the same example sets:
 - B has `{1, 2, 3}` and is dominated by `1` candidate: A
 - C has `{1, 2, 5}` and is dominated by `0` candidates
 
-Sorting by this count puts A and C ahead of B. Existing preferences decide whether A or C comes first, but B can never move ahead of A
+Sorting reliably places A and C (`0`) before B (`1`). In this scenario, A and C are the two most-advanced sides of a split brain: neither contains the other's full history
 
 ERS and `PlannedReparentShard` share this sorter, so both benefit from the fix. This makes the ordering consistent; it does not tell us which of 2 x divergent histories should survive. That is a separate problem
 
