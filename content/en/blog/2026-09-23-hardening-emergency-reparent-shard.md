@@ -1,8 +1,8 @@
 ---
 author: 'Tim Vaillancourt'
-date: 2026-09-24
+date: 2026-09-23
 draft: false
-slug: '2026-09-24-hardening-emergency-reparent-shard'
+slug: '2026-09-23-hardening-emergency-reparent-shard'
 tags: ['Vitess', 'MySQL', 'EmergencyReparentShard', 'reparenting', 'high availability']
 title: 'Hardening EmergencyReparentShard in v25'
 description: 'How Vitess 25 reduces unnecessary waiting during emergency reparents and adds explicit MySQL/Percona GTID recovery from split brain'
