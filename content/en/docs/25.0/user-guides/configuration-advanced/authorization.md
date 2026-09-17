@@ -80,12 +80,17 @@ Two narrower cases tighten the same way:
 
  * A `NEXT VALUE` statement requires write permission on its sequence,
    regardless of any same-named CTE a `WITH` clause declares.
- * Once one arm of a `UNION` declares its own `WITH`, the CTE names the union
-   declares before its first `SELECT` are no longer visible inside the arms, so
-   a same-named reference there is the real table and needs its permission. In
+ * When a parenthesized arm of a `UNION` declares its own `WITH`, that arm and
+   any arm after it no longer see the CTE names the union declared before its
+   first `SELECT`; a reference to one of those names in such an arm is the real
+   table and needs its permission. In
    `WITH t AS (SELECT * FROM real1) SELECT * FROM t UNION ALL (WITH t AS (SELECT * FROM t) SELECT * FROM t)`,
-   the second arm declares its own `WITH t`, so each inner `t` resolves to the
-   real table `t`.
+   the first arm's `t` is still the union's leading CTE and needs no permission.
+   The read permission on `t` is required because the second arm declares its own
+   `WITH t AS (SELECT * FROM t)`, whose inner `t` is a same-named non-recursive
+   CTE that resolves to the real table `t`, the same tightening as the main
+   **Tightened** paragraph above. The caller needs read permission on `real1` and
+   on `t`, two permissions in total.
 
 **Loosened.** VTTablet no longer requires a permission for a CTE's name when the
 CTE is referenced from a subquery, a derived table, or a union arm of the query
