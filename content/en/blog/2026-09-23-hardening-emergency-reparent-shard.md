@@ -73,13 +73,13 @@ _TL;DR: before v25, lagging tablets unable to lead the election could still time
 
 Comparisons of candidates in ERS consider 2 x MySQL replication positions: what a replica has received and what it has applied _(the latter added to candidate sorting in v23 PR: [#18531](https://github.com/vitessio/vitess/pull/18531))_. Transactions can already be in its relay logs while the SQL thread is still working through them. Before promoting a replica, ERS must ensure it has applied everything it received
 
-Before Vitess 25, the candidate-wait phase waited for every surviving tablet still under consideration to apply its relay logs. If any one of them exceeded `--wait-replicas-timeout`, the entire ERS failed. This risk increases with the number of tablets in the shard: every additional tablet under consideration is another wait that can time out the reparent
+Before Vitess 25, the candidate-wait phase waited for every surviving tablet still under consideration to apply its relay logs. If any one of them exceeded `--wait-replicas-timeout` _(defaults to `15s` in `vtctldclient` and `30s` in `VTOrc`)_, the entire ERS failed. This risk increases with the number of tablets in the shard: every additional tablet under consideration is another wait that can time out the reparent
 
 The problem was that this included tablets we already knew were behind. Waiting for the eventual primary is necessary; letting a tablet that cannot lead the election fail the entire operation is not
 
 Although this problem has affected Vitess users since ERS was introduced, it was first formally reported in [issue #18529](https://github.com/vitessio/vitess/issues/18529) around the Vitess 22 release in 2025. The issue described a shard with 4 x tablets: the primary and 2 x replicas were current, while another replica had substantial replication lag
 
-This is not an unusual state. A busy `RDONLY`, a saturated replica, a replica catching up after a restore, or a stopped SQL thread can all leave relay logs unapplied. Before v25, one such tablet could keep a reparent from completing even when the shard had a healthy, up-to-date replacement. For an automated `VTOrc` recovery, that meant retries or manual intervention while writes remained blocked
+This is not an unusual state. A busy replica, a replica catching up after a restore, or a stopped SQL thread can all leave relay logs unapplied. Before v25, one such tablet could keep a reparent from completing even when the shard had a healthy, up-to-date replacement. For an automated `VTOrc` recovery, that meant retries or manual intervention while writes remained blocked
 
 ### Fix
 
