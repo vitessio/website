@@ -183,7 +183,7 @@ Sorting reliably places A and C (`0`) before B (`1`). In this scenario, A and C 
 
 ERS and `PlannedReparentShard` share this sorter, so both benefit from the fix. This makes the ordering consistent; it does not tell us which of 2 x divergent histories should survive. That is a separate problem
 
-## Strict recovery from split brain with MySQL GTIDs
+## Strict recovery from split brain
 
 _TL;DR: in v25, ERS on MySQL and Percona GTID shards refuses to choose between unresolved split-brain histories automatically. Operators can explicitly choose which history to preserve, accepting the loss of transactions unique to the other branches. `VTOrc` never makes that choice automatically_
 
@@ -213,7 +213,7 @@ The override does not bypass the other promotion checks. The chosen tablet still
 
 ## Summary
 
-ERS is one of Vitess' most important operations: it must resurrect a primary in the face of unplanned failure. In some common scenarios, Vitess 25 makes ERS safer, faster and less brittle. The biggest benefit is in environments where MySQL replication lag on some tablets would otherwise time out an ERS, despite an up-to-date replacement being available. Narrowing the candidate-wait phase and racing tablets with the same leading history can shorten recovery and let it succeed where it previously failed
+ERS is one of Vitess' most critical operations: it must resurrect a primary in the face of unplanned failure. In some common scenarios, Vitess 25 makes ERS safer, faster and less brittle. The biggest benefit is in environments where MySQL replication lag on some tablets would otherwise time out an ERS, despite an up-to-date replacement being available. Narrowing the candidate-wait phase and racing tablets with the same leading history can shorten recovery and let it succeed where it previously failed
 
 Candidate ordering is now consistent. For MySQL and Percona GTID shards, unresolved split brains fail closed rather than choosing a history automatically. Operators have an explicit recovery path when they need to make that choice, accepting the loss of transactions unique to other branches. The other promotion checks still apply
 
