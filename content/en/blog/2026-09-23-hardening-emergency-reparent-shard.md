@@ -73,7 +73,7 @@ _TL;DR: before v25, lagging tablets unable to lead the election could still time
 
 Comparisons of candidates in ERS consider 2 x MySQL replication positions: what a replica has received and what it has applied _(the latter added to candidate sorting in v23 PR: [#18531](https://github.com/vitessio/vitess/pull/18531))_. Transactions can already be in its relay logs while the SQL thread is still working through them. Before promoting a replica, ERS must ensure it has applied everything it received
 
-Before Vitess 25, the candidate-wait phase waited for every surviving tablet still under consideration to apply its relay logs. If any one of them exceeded `--wait-replicas-timeout`, the entire ERS failed
+Before Vitess 25, the candidate-wait phase waited for every surviving tablet still under consideration to apply its relay logs. If any one of them exceeded `--wait-replicas-timeout`, the entire ERS failed. This risk increases with the number of tablets in the shard: every additional tablet under consideration is another wait that can time out the reparent
 
 The problem was that this included tablets we already knew were behind. Waiting for the eventual primary is necessary; letting a tablet that cannot lead the election fail the entire operation is not
 
