@@ -89,7 +89,7 @@ Improved v25 ERS:
 
 1. Stops replication receivers and collects each surviving tablet's received and applied positions
 2. Filters the candidate-wait phase to the most-advanced received histories
-3. When those histories are equal, races relay-log application and continues as soon as the first tablet finishes apply
+3. When those histories are equal, races relay-log application and continues as soon as the first tablet finishes applying
 4. Completes the safety checks and primary selection, catching up a different promotion candidate if needed
 5. Promotes the selected tablet and repoints the remaining tablets as part of the reparent
 
@@ -162,7 +162,7 @@ _TL;DR: in v25, ERS refuses to choose between unresolved split-brain histories a
 
 ### Problem
 
-In a split brain, 2 x surviving `PRIMARY` tablets can each contain transactions the other does not. Neither GTID set contains the other, so ERS cannot identify a single most-advanced history
+In a split brain, 2 x surviving tablets can each contain transactions the other does not. Neither GTID set contains the other, so ERS cannot identify a single most-advanced history
 
 Picking one automatically means deciding which transactions to discard. Picking a third, older replica because it has no errant transactions can be worse, as that could discard the recent transactions from both leading branches. If ERS cannot prove which history is safe, it should not guess
 
