@@ -159,7 +159,13 @@ _TL;DR: candidate sorting could produce inconsistent results when GTID histories
 
 While improving candidate selection, there was another problem to address: GTID sets do not always have a simple ahead-or-behind relationship
 
-For example, A can be ahead of B, while C contains a divergent history that neither A nor B contains. Comparing these tablets pairwise could produce an inconsistent sort, with map iteration or RPC completion order affecting the result. B could end up ahead of A even though we knew A had the more complete history
+A simple example, using transaction numbers instead of full GTID sets:
+
+- A has `{1, 2, 3, 4}`
+- B has `{1, 2, 3}`
+- C has `{1, 2, 5}`
+
+A is ahead of B because it contains all of B's transactions. C is incomparable with both: it has transaction `5`, which they do not, and lacks transactions they have. The old sorter compared candidates pairwise and treated incomparable histories as tied. Depending on map iteration or RPC completion order, C could disrupt the sort and leave B ahead of A, even though A has the more complete history
 
 ### The Fix
 
