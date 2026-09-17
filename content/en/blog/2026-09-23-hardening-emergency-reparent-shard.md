@@ -69,7 +69,7 @@ We need to be certain about the history we preserve, but every additional wait g
 
 _TL;DR: before v25, lagging tablets unable to lead the election could still time out ERS. ERS now filters the candidate-wait phase by received GTIDs and races relay-log apply on tablets sharing the leading history, leading to faster emergency reparents that are less brittle_
 
-### Problem
+### The Problem
 
 Comparisons of candidates in ERS consider 2 x MySQL replication positions: what a replica has received and what it has applied _(the latter added to candidate sorting in v23 PR: [#18531](https://github.com/vitessio/vitess/pull/18531))_. Transactions can already be in its relay logs while the SQL thread is still working through them. Before promoting a replica, ERS must ensure it has applied everything it received
 
@@ -81,7 +81,7 @@ Although this problem has affected Vitess users since ERS was introduced, it was
 
 This is not an unusual state. A busy replica, a replica catching up after a restore, or a stopped SQL thread can all leave relay logs unapplied. Before v25, one such tablet could keep a reparent from completing even when the shard had a healthy, up-to-date replacement. For an automated `VTOrc` recovery, that meant retries or manual intervention while writes remained blocked
 
-### Fix
+### The Fix
 
 MySQL GTIDs give ERS a shard-wide view of how advanced each surviving tablet is. Close to the start of the operation, ERS stops the replication receivers and collects each reachable tablet's received and applied positions. The received history is now frozen; the SQL thread can keep applying it, but no new transactions arrive from the old primary
 
@@ -155,13 +155,13 @@ This optimization depends on the received-history information available with MyS
 
 _TL;DR: candidate sorting could produce inconsistent results when GTID histories diverged. In v25, ERS and `PlannedReparentShard` use consistent ordering that keeps a candidate behind any tablet with a strictly more complete history_
 
-### Problem
+### The Problem
 
 While improving candidate selection, there was another problem to address: GTID sets do not always have a simple ahead-or-behind relationship
 
 For example, A can be ahead of B, while C contains a divergent history that neither A nor B contains. Comparing these tablets pairwise could produce an inconsistent sort, with map iteration or RPC completion order affecting the result. B could end up ahead of A even though we knew A had the more complete history
 
-### Fix
+### The Fix
 
 [PR #20728](https://github.com/vitessio/vitess/pull/20728) fixes this by counting how many other candidates strictly dominate each candidate's history. A candidate cannot rank ahead of a tablet that dominates it. Existing preferences, such as promotion rules, then break ties
 
@@ -171,13 +171,13 @@ ERS and `PlannedReparentShard` share this sorter, so both benefit from the fix. 
 
 _TL;DR: in v25, ERS on MySQL and Percona GTID shards refuses to choose between unresolved split-brain histories automatically. Operators can explicitly choose which history to preserve, accepting the loss of transactions unique to the other branches. `VTOrc` never makes that choice automatically_
 
-### Problem
+### The Problem
 
 In a split brain, 2 x surviving tablets can each contain transactions the other does not. Neither GTID set contains the other, so ERS cannot identify a single most-advanced history
 
 Picking one automatically means deciding which transactions to discard. Picking a third, older replica because it has no errant transactions can be worse, as that could discard the recent transactions from both leading branches. If ERS cannot prove which history is safe, it should not guess
 
-### Fix
+### The Fix
 
 [PR #20780](https://github.com/vitessio/vitess/pull/20780) adds explicit split-brain recovery for MySQL and Percona GTID shards in Vitess 25. ERS records the divergent leaders before the candidate-wait phase and errant-GTID filtering. The default path can only proceed if that filtering leaves exactly one of the original leaders; otherwise ERS fails with the aliases and positions of the competing leaders
 
