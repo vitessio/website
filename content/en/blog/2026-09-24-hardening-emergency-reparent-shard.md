@@ -23,16 +23,16 @@ graph TD
     P["P: PRIMARY ❌<br/>unavailable"]
     R1["R1: REPLICA<br/>MySQL lag: 0s"]
     R2["R2: REPLICA<br/>MySQL lag: 0s"]
-    D1["D1: RDONLY<br/>MySQL lag: 0s"]
+    R3["R3: RDONLY<br/>MySQL lag: 0s"]
     P -.-> R1
     P -.-> R2
-    P -.-> D1
+    P -.-> R3
 
     classDef default fill:#f3f4f6,stroke:#6b7280,color:#111827
     classDef unavailable fill:#7f1d1d,stroke:#ef4444,color:#fef2f2
     classDef healthy fill:#dcfce7,stroke:#22c55e,color:#14532d
     class P unavailable
-    class R1,R2,D1 healthy
+    class R1,R2,R3 healthy
 ```
 
 And after ERS:
@@ -42,7 +42,7 @@ graph TD
     OldPrimary["P: still unavailable ❌"]
     NewPrimary["R2: new PRIMARY ✅"]
     Replica["R1: REPLICA<br/>MySQL lag: 0s"]
-    ReadOnly["D1: RDONLY<br/>MySQL lag: 0s"]
+    ReadOnly["R3: RDONLY<br/>MySQL lag: 0s"]
     NewPrimary --> Replica
     NewPrimary --> ReadOnly
 
@@ -104,14 +104,14 @@ graph TD
     subgraph Positions["Frozen received positions"]
         R1["R1<br/>received=120, applied=118<br/>MySQL lag: 2s"]
         R2["R2<br/>received=120, applied=120<br/>MySQL lag: 0s"]
-        D1["D1<br/>received=95, applied=80<br/>MySQL lag: 900s ❗"]
+        R3["R3<br/>received=95, applied=80<br/>MySQL lag: 900s ❗"]
     end
 
     R1 --> Filter["Filter to most-advanced<br/>received history: 120"]
     R2 --> Filter
-    D1 --> Filter
+    R3 --> Filter
     Filter --> Leading["Leading group: R1 and R2<br/>same received history"]
-    Filter --> Skipped["D1: lagging<br/>skip candidate-wait phase"]
+    Filter --> Skipped["R3: lagging<br/>skip candidate-wait phase"]
 
     Leading --> ApplyR1
     Leading --> ApplyR2
@@ -124,21 +124,21 @@ graph TD
     ApplyR2 -.-> Cancelled
     ApplyR2 --> Checks["Complete safety checks<br/>and primary selection"]
     Checks --> Primary["R2: new PRIMARY ✅"]
-    Primary --> Repoint["R1 and D1 repointed to R2 ✅"]
+    Primary --> Repoint["R1 and R3 repointed to R2 ✅"]
     Skipped -.-> Repoint
 
     classDef default fill:#f3f4f6,stroke:#6b7280,color:#111827
     classDef healthy fill:#dcfce7,stroke:#22c55e,color:#14532d
     classDef warning fill:#fef9c3,stroke:#eab308,color:#713f12
     classDef completed fill:#14532d,stroke:#22c55e,color:#f0fdf4
-    class R1,R2,D1,ApplyR1 healthy
+    class R1,R2,R3,ApplyR1 healthy
     class Skipped warning
     class ApplyR2,Primary,Repoint completed
     style Positions fill:#ffffff,stroke:#6b7280,color:#111827
     style Race fill:#ffffff,stroke:#6b7280,color:#111827
 ```
 
-Before v25, waiting for `D1` would likely cause the entire ERS to time out. Here, it does not time out the ERS because `D1` is skipped during the candidate-wait phase
+Before v25, waiting for `R3` would likely cause the entire ERS to time out. Here, it does not time out the ERS because `R3` is skipped during the candidate-wait phase
 
 Why is this safe? `R1` and `R2` received the same transactions, so applying their relay logs brings them to the same state. This is what makes the relay-log-apply race safe: ERS needs one successful apply, not every tablet to finish. It cancels the other waits, not their SQL threads
 
