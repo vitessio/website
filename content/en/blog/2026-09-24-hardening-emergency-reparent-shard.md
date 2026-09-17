@@ -132,7 +132,7 @@ graph TD
     classDef healthy fill:#dcfce7,stroke:#22c55e,color:#14532d
     classDef warning fill:#fef9c3,stroke:#eab308,color:#713f12
     classDef completed fill:#14532d,stroke:#22c55e,color:#f0fdf4
-    class R1,R2,R3,ApplyR1 healthy
+    class R1,R2,R3,ApplyR1,Cancelled healthy
     class Skipped warning
     class ApplyR2,Primary,Repoint completed
     style Positions fill:#ffffff,stroke:#6b7280,color:#111827
