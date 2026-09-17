@@ -125,6 +125,7 @@ graph TD
     ApplyR2 --> Checks["Complete safety checks<br/>and primary selection"]
     Checks --> Primary["R2: new PRIMARY ✅"]
     Primary --> Repoint["R1 and R3 repointed to R2 ✅"]
+    Cancelled -.-> Repoint
     Skipped -.-> Repoint
 
     classDef default fill:#f3f4f6,stroke:#6b7280,color:#111827
