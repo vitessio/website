@@ -185,17 +185,17 @@ ERS and `PlannedReparentShard` share this sorter, so both benefit from the fix. 
 
 ## Strict recovery from split brain
 
-_TL;DR: in v25, ERS on MySQL and Percona GTID shards refuses to choose between unresolved split-brain histories automatically. Operators can explicitly choose which history to preserve, accepting the loss of transactions unique to the other branches. `VTOrc` never makes that choice automatically_
+_TL;DR: in v25, ERS on MySQL and Percona GTID shards tracks divergent leaders before filtering, prevents fallback to an older candidate if all leaders are removed, and adds explicit operator-controlled recovery. Choosing a history can discard transactions unique to the other branches; `VTOrc` never enables this override automatically_
 
 ### The Problem
 
-In a split brain, 2 x surviving tablets can each contain transactions the other does not. Neither GTID set contains the other, so ERS cannot identify a single most-advanced history
+In a split brain, 2 x surviving tablets can each contain transactions the other lacks. Neither has the complete surviving history, so promoting either side means giving up transactions unique to the other
 
-Picking one automatically means deciding which transactions to discard. Picking a third, older replica because it has no errant transactions can be worse, as that could discard the recent transactions from both leading branches. If ERS cannot prove which history is safe, it should not guess
+When ERS cannot determine a safe history automatically, the operator needs an explicit way to choose which side to keep. Falling back to an older replica is not a safe compromise: it can lose transactions from both sides
 
 ### The Fix
 
-[PR #20780](https://github.com/vitessio/vitess/pull/20780) adds explicit split-brain recovery for MySQL and Percona GTID shards in Vitess 25. ERS records the divergent leaders before the candidate-wait phase and errant-GTID filtering. The default path can only proceed if that filtering leaves exactly one of the original leaders; otherwise ERS fails with the aliases and positions of the competing leaders
+[PR #20780](https://github.com/vitessio/vitess/pull/20780) closes this gap and adds explicit split-brain recovery for MySQL and Percona GTID shards in Vitess 25. ERS records the divergent leaders before the candidate-wait phase and errant-GTID filtering. The default path can only proceed if that filtering leaves exactly one of the original leaders; otherwise ERS fails with the aliases and positions of the competing leaders
 
 An operator who has determined which history to preserve can choose it explicitly:
 
@@ -215,7 +215,7 @@ The override does not bypass the other promotion checks. The chosen tablet still
 
 ERS is one of Vitess' most critical operations: it must resurrect a primary in the face of unplanned failure. In some common scenarios, Vitess 25 makes ERS safer, faster and less brittle. The biggest benefit is in environments where MySQL replication lag on some tablets would otherwise time out an ERS, despite an up-to-date replacement being available. Narrowing the candidate-wait phase and racing tablets with the same leading history can shorten recovery and let it succeed where it previously failed
 
-Candidate ordering is now consistent. For MySQL and Percona GTID shards, unresolved split brains fail closed rather than choosing a history automatically. Operators have an explicit recovery path when they need to make that choice, accepting the loss of transactions unique to other branches. The other promotion checks still apply
+Candidate ordering is now consistent. For MySQL and Percona GTID shards, split-brain checks now retain the original divergent leaders, preventing an older candidate from being promoted when errant-GTID filtering removes all of them. Operators also have an explicit recovery path to choose a leading history, accepting the loss of transactions unique to other branches. The other promotion checks still apply
 
 These changes will be released in Vitess 25, expected in October 2026. See the [in-progress Vitess 25 release summary](https://github.com/vitessio/vitess/blob/main/changelog/25.0/25.0.0/summary.md) and [reparenting documentation](https://vitess.io/docs/user-guides/configuration-advanced/reparenting/) for more detail
 
