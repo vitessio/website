@@ -201,3 +201,11 @@ In some common scenarios, Vitess 25 makes ERS safer, faster and less brittle. Th
 Candidate ordering is now consistent. For MySQL and Percona GTID shards, unresolved split brains fail closed rather than choosing a history automatically. Operators have an explicit recovery path when they need to make that choice, accepting the loss of transactions unique to other branches. The other promotion checks still apply
 
 These changes will be released in Vitess 25, expected in October 2026. See the [in-progress Vitess 25 release summary](https://github.com/vitessio/vitess/blob/main/changelog/25.0/25.0.0/summary.md) and [reparenting documentation](https://vitess.io/docs/user-guides/configuration-advanced/reparenting/) for more detail
+
+## Links
+
+- [PR #18531: `EmergencyReparentShard`: include SQL thread position in most-advanced candidate selection (Vitess 23)](https://github.com/vitessio/vitess/pull/18531)
+- [PR #20578: `EmergencyReparentShard`: only wait on relay-log apply for candidates that can win the election](https://github.com/vitessio/vitess/pull/20578)
+- [PR #20728: `reparentutil`: order reparent candidates by GTID dominance for a consistent sort](https://github.com/vitessio/vitess/pull/20728)
+- [PR #20762: `reparentutil`: keep nil-alias tablets out of candidate ordering](https://github.com/vitessio/vitess/pull/20762)
+- [PR #20780: `EmergencyReparentShard`: add explicit split-brain recovery](https://github.com/vitessio/vitess/pull/20780)
