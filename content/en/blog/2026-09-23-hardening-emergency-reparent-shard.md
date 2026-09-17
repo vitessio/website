@@ -102,14 +102,14 @@ The example below uses transaction numbers from one shared history instead of fu
 ```mermaid
 graph TD
     subgraph Positions["Frozen received positions"]
+        direction LR
         R1["R1<br/>received=120, applied=118<br/>MySQL lag: 2s"]
         R2["R2<br/>received=120, applied=119<br/>MySQL lag: 0s"]
         R3["R3<br/>received=95, applied=80<br/>MySQL lag: 900s ❗"]
+        R1 ~~~ R2 ~~~ R3
     end
 
-    R1 --> Filter["Filter to most-advanced<br/>received history: 120"]
-    R2 --> Filter
-    R3 --> Filter
+    Positions --> Filter["Filter to most-advanced<br/>received history: 120"]
     Filter --> Leading["Leading group: R1 and R2<br/>same received history"]
     Filter --> Skipped["R3: lagging<br/>skip candidate-wait phase"]
 
