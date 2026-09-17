@@ -207,7 +207,7 @@ vtctldclient EmergencyReparentShard <keyspace/shard> \
 
 The flag is available only to shards using MySQL or Percona GTIDs. MariaDB and file-position replication remain on the existing non-GTID path and cannot use this override. The flag requires `--new-primary`, and the requested tablet must be one of the original undominated leaders _(no other candidate contains a strictly more complete version of its history)_. ERS promotes exactly that tablet and preserves its full history
 
-This is lossy recovery, not a merge. Transactions unique to the other branches will not be part of the new primary's history, and tablets holding those branches may need to be rebuilt. `VTOrc` never enables this automatically; choosing which data to preserve is an operator decision
+This is lossy recovery, not a merge. Transactions unique to the losing side will not be part of the new primary's history, and tablets from the losing side should be rebuilt. `VTOrc` never enables this automatically; choosing which data to preserve is an operator decision
 
 The override does not bypass the other promotion checks. The chosen tablet still has to apply its relay logs, satisfy promotion and cross-cell rules, make forward progress under the durability policy and pass the shard-lock checks. Only the chosen leader is waited on, so a losing branch stuck applying relay logs cannot block that wait
 
