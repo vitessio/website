@@ -140,7 +140,7 @@ graph TD
 
 Before v25, waiting for `R3` would likely cause the entire ERS to time out. Here, it does not time out the ERS because `R3` is skipped during the candidate-wait phase
 
-Why is this safe? `R1` and `R2` received the same transactions, so applying their relay logs brings them to the same state. This is what makes the relay-log-apply race safe: ERS needs one successful apply, not every tablet to finish. It cancels the other waits, not their SQL threads
+Why is this safe? `R1` and `R2` received the same most-advanced transactions, so applying their relay logs brings them to the same state. This is what makes the relay-log-apply race safe: ERS needs one successful apply, not every tablet to finish. It cancels the other waits, not their SQL threads
 
 Winning that race is not an unconditional promotion. The most-advanced tablet can act as an intermediate replication source if the promotion rules or an explicit `--new-primary` request require a different primary. That candidate must catch up before it is promoted. The benefit is that ERS can move on without waiting for every peer to finish the candidate-wait phase
 
