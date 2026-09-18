@@ -83,7 +83,9 @@ To gauge impact before enforcing, enable
 `--queryserver-config-enable-table-acl-dry-run`. The denial is then only
 recorded, emitting the
 [TableACLPseudoDenied](../../configuration-basic/monitoring) metric, and the
-statement still runs.
+statement still runs. Each pseudo-denial carries `undetermined-table-set` in the
+metric's `TableName` label, so you can filter and count these prospective
+denials.
 
 When strict table ACL is off, which is the default, nothing changes and these
 statements run as before.
