@@ -119,7 +119,7 @@ graph TD
         ApplyR1["R1: still applying ⏳"]
         ApplyR2["R2: finishes applying first ✅<br/>wins apply race"]
         ApplyR1 --> Cancelled["R1: apply wait cancelled ⏹️<br/>SQL thread continues ☑️"]
-        ApplyR2 -. cancel .-> Cancelled
+        ApplyR2 -. cancel context .-> Cancelled
     end
 
     ApplyR2 --> Checks["Complete safety checks<br/>and primary selection"]
@@ -145,7 +145,7 @@ Why is this safe? `R1` and `R2` received the same most-advanced transactions, so
 
 Winning that race is not an unconditional promotion. The most-advanced tablet can act as an intermediate replication source if the promotion rules or an explicit `--new-primary` request require a different primary. That candidate must catch up before it is promoted. The benefit is that ERS can move on without waiting for every peer to finish the relaylog apply phase
 
-The existing promises and safety-checks of ERS are unchanged. Unreachable tablets are not automatically ignored: reachability and durability checks can still block ERS. Under `semi_sync` durability, this includes an unreachable primary and another unreachable potential acknowledger, just as before v25. Promotion rules, cross-cell restrictions, errant-GTID detection, semi-sync forward progress and shard-lock checks still apply. A tablet that returns an apply error is excluded from promotion and cannot count as a semi-sync acknowledger, but its received position is retained as evidence for errant-GTID detection
+The existing promises and safety-checks of ERS are unchanged. Unreachable tablets are not automatically ignored: reachability and durability checks can still block ERS. Under `semi_sync` durability, an unreachable primary and another unreachable potential acknowledger can block ERS because the pair could still accept writes. This protection predates v25. Promotion rules, cross-cell restrictions, errant-GTID detection, semi-sync forward progress and shard-lock checks still apply. A tablet that returns an apply error is excluded from promotion and cannot count as a semi-sync acknowledger, but its received position is retained as evidence for errant-GTID detection
 
 The relay-log waits share the configured timeout budget, including any additional waits needed after errant-GTID detection. This is not a guarantee that a slow tablet can never delay another part of the reparent; it removes the requirement for every tablet to finish the relaylog apply phase
 
