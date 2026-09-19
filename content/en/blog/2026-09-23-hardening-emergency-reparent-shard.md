@@ -104,7 +104,7 @@ graph TD
     subgraph Positions["Frozen received positions"]
         direction LR
         R1["R1<br/>received=120, applied=118<br/>MySQL lag: 2s"]
-        R2["R2<br/>received=120, applied=119<br/>MySQL lag: 0s"]
+        R2["R2<br/>received=120, applied=119<br/>MySQL lag: 1s"]
         R3["R3<br/>received=95, applied=80<br/>MySQL lag: 900s ❗"]
         R1 ~~~ R2 ~~~ R3
     end
@@ -139,13 +139,13 @@ graph TD
     style Race fill:#ffffff,stroke:#6b7280,color:#111827
 ```
 
-Before v25, waiting for `R3` would likely cause the entire ERS to time out. Here, it does not time out the ERS because `R3` is skipped during the candidate-wait phase
+Before v25, `R3` could time out the entire ERS while applying its own received history (`95`), not while catching up to its peers (`120`). In v25, `R3` is skipped during the initial candidate-wait phase
 
-Why is this safe? `R1` and `R2` received the same most-advanced transactions, so applying their relay logs brings them to the same state. This is what makes the relay-log-apply race safe: ERS needs one successful apply, not every tablet to finish. It cancels the other waits, not their SQL threads. Positions are usually a good guide to which tablet will finish applying first, but slower hardware or competing workloads can change that. Racing the leading group lets reality prove who applies fastest, shortening the wait and helping ERS finish sooner
+Why is this safe? `R1` and `R2` received the same most-advanced transactions, so applying their relay logs brings them to the same state. ERS needs one leading candidate to apply successfully, so a stalled or failing peer need not block the race. If no leading candidate completes, including when the sole leading candidate fails, ERS fails. After a successful apply, the relay log apply waits on non-race-winners are cancelled, but those tablets continue to apply. Positions are usually a good guide to which tablet will finish applying first, but slower hardware or competing workloads can change that. Racing the leading group lets reality prove who applies fastest, shortening the wait and helping ERS finish sooner
 
 Winning that race is not an unconditional promotion. The most-advanced tablet can act as an intermediate replication source if the promotion rules or an explicit `--new-primary` request require a different primary. That candidate must catch up before it is promoted. The benefit is that ERS can move on without waiting for every peer to finish the candidate-wait phase
 
-The existing promises and safety-checks of ERS are unchanged. Promotion rules, cross-cell restrictions, errant-GTID detection, semi-sync forward progress and shard-lock checks still apply. A tablet that returns an apply error is excluded from promotion and cannot count as a semi-sync acknowledger, but its received position is retained as evidence for errant-GTID detection
+The existing promises and safety-checks of ERS are unchanged. Unreachable tablets are not automatically ignored: reachability and durability checks can still block ERS. Under `semi_sync` durability, this includes an unreachable primary and another unreachable potential acknowledger, just as before v25. Promotion rules, cross-cell restrictions, errant-GTID detection, semi-sync forward progress and shard-lock checks still apply. A tablet that returns an apply error is excluded from promotion and cannot count as a semi-sync acknowledger, but its received position is retained as evidence for errant-GTID detection
 
 The relay-log waits share the configured timeout budget, including any additional waits needed after errant-GTID detection. This is not a guarantee that a slow tablet can never delay another part of the reparent; it removes the requirement for every tablet to finish the candidate-wait phase
 
@@ -153,7 +153,7 @@ This optimization depends on the received-history information available with MyS
 
 ## Making candidate ordering more predictable
 
-_TL;DR: candidate sorting could produce inconsistent results when GTID histories diverged. In v25, ERS and `PlannedReparentShard` use consistent ordering that keeps a candidate behind any tablet with a strictly more complete history_
+_TL;DR: candidate sorting could produce inconsistent results when GTID histories diverged. Since Vitess 23.0.6 and 24.0.3, ERS and `PlannedReparentShard` use consistent ordering that keeps a candidate behind any tablet with a strictly more complete history. These fixes are also included in v25_
 
 ### The Problem
 
@@ -161,25 +161,25 @@ While improving candidate selection, there was another problem to address: GTID 
 
 When candidate histories form a simple ahead-or-behind chain, as with ordinary replication lag, the old sorter already worked. This bug matters when some histories are incomparable, for example after a split brain or an errant write on a replica. A divergent candidate could disrupt the ordering of otherwise comparable candidates, so the problem was not limited to choosing between the divergent histories
 
-A simple example, using transaction numbers instead of full GTID sets:
+A simple example, using `p`, `a` and `c` as short labels for distinct originating server UUIDs:
 
-- A has `{1, 2, 3, 4}`
-- B has `{1, 2, 3}`
-- C has `{1, 2, 5}`
+- A has `p:1-2,a:1-2`
+- B has `p:1-2,a:1`
+- C has `p:1-2,c:1`
 
-A is ahead of B because it contains all of B's transactions. C is incomparable with both: it has transaction `5`, which they do not, and lacks transactions they have. The old sorter compared candidates pairwise and treated incomparable histories as tied. Depending on map iteration or RPC completion order, C could disrupt the sort and leave B ahead of A, even though A has the more complete history
+A is ahead of B because it contains all of B's transactions, plus `a:2`. C is incomparable with both: it has `c:1`, which they do not, and lacks their transactions from UUID `a`. GTID sequence numbers are per UUID, so `c:1` is a transaction from a different origin, not a gap in the shared `p:1-2` history. The old sorter compared candidates pairwise and treated incomparable histories as tied. Depending on map iteration or RPC completion order, C could disrupt the sort and leave B ahead of A, even though A has the more complete history
 
 ### The Fix
 
-[PR #20728](https://github.com/vitessio/vitess/pull/20728) fixes this by counting how many other candidates strictly dominate each candidate's history. A candidate cannot rank ahead of a tablet that dominates it. Existing preferences, such as promotion rules, then break ties
+[PR #20728](https://github.com/vitessio/vitess/pull/20728) fixes this by counting how many other candidates strictly dominate each candidate's history. A candidate cannot rank ahead of a tablet that dominates it. Existing preferences, such as promotion rules, then break ties. This fix and its nil-alias follow-up ([PR #20762](https://github.com/vitessio/vitess/pull/20762)) shipped in Vitess 23.0.6 and 24.0.3, and are included in v25
 
-Using the same example sets:
+Using the same GTID sets:
 
-- A has `{1, 2, 3, 4}` and is dominated by `0` candidates
-- B has `{1, 2, 3}` and is dominated by `1` candidate: A
-- C has `{1, 2, 5}` and is dominated by `0` candidates
+- A has `p:1-2,a:1-2` and is dominated by `0` candidates
+- B has `p:1-2,a:1` and is dominated by `1` candidate: A
+- C has `p:1-2,c:1` and is dominated by `0` candidates
 
-Sorting reliably places A and C (`0`) before B (`1`). In this scenario, A and C are the two most-advanced sides of a split brain: neither contains the other's full history
+Sorting reliably places A and C (`0`) before B (`1`). C's incomparable history can no longer cause B to rank ahead of A
 
 ERS and `PlannedReparentShard` share this sorter, so both benefit from the fix. This makes the ordering consistent, but it cannot decide which side of an unresolved split brain to preserve. The next improvement gives operators an explicit way to make that choice
 
@@ -207,7 +207,7 @@ vtctldclient EmergencyReparentShard <keyspace/shard> \
 
 The flag is available only to shards using MySQL or Percona GTIDs. MariaDB and file-position replication remain on the existing non-GTID path and cannot use this override. The flag requires `--new-primary`, and the requested tablet must be one of the original undominated leaders _(no other candidate contains a strictly more complete version of its history)_. ERS promotes exactly that tablet and preserves its full history
 
-This is lossy recovery, not a merge. Transactions unique to the losing side will not be part of the new primary's history, and tablets from the losing side should be rebuilt. `VTOrc` never enables this automatically; choosing which data to preserve is an operator decision
+This is lossy recovery, not a merge. Transactions unique to the losing side will not be part of the new primary's history, and tablets from the losing side should be rebuilt. `VTOrc` never enables this automatically; choosing which data to preserve is an operator decision. Completed override promotions increment `EmergencyReparentSplitBrainOverrides{Keyspace,Shard}`, allowing operators to monitor and alert on its use
 
 The override does not bypass the other promotion checks. The chosen tablet still has to apply its relay logs, satisfy promotion and cross-cell rules, make forward progress under the durability policy and pass the shard-lock checks. Only the chosen leader is waited on, so a losing branch stuck applying relay logs cannot block that wait
 
@@ -217,13 +217,13 @@ ERS is one of Vitess' most critical operations: it must resurrect a primary in t
 
 Candidate ordering is now consistent. For MySQL and Percona GTID shards, split-brain checks now retain the original divergent leaders, preventing an older candidate from being promoted when errant-GTID filtering removes all of them. Operators also have an explicit recovery path to choose a leading history, accepting the loss of transactions unique to other branches. The other promotion checks still apply
 
-These changes will be released in Vitess 25, expected in October 2026. See the [in-progress Vitess 25 release summary](https://github.com/vitessio/vitess/blob/main/changelog/25.0/25.0.0/summary.md) and [reparenting documentation](https://vitess.io/docs/user-guides/configuration-advanced/reparenting/) for more detail
+All changes discussed here will be available in Vitess 25, expected in October 2026. See the [in-progress Vitess 25 release summary](https://github.com/vitessio/vitess/blob/main/changelog/25.0/25.0.0/summary.md) and [reparenting documentation](https://vitess.io/docs/user-guides/configuration-advanced/reparenting/) for more detail
 
 ## Links
 
 - [PR #18531: `EmergencyReparentShard`: include SQL thread position in most-advanced candidate selection (Vitess 23)](https://github.com/vitessio/vitess/pull/18531)
 - [PR #20578: `EmergencyReparentShard`: only wait on relay-log apply for candidates that can win the election](https://github.com/vitessio/vitess/pull/20578)
-- [PR #20728: `reparentutil`: order reparent candidates by GTID dominance for a consistent sort](https://github.com/vitessio/vitess/pull/20728)
-- [PR #20762: `reparentutil`: keep nil-alias tablets out of candidate ordering](https://github.com/vitessio/vitess/pull/20762)
+- [PR #20728: `reparentutil`: order reparent candidates by GTID dominance for a consistent sort (backported to 23.0.6 / 24.0.3)](https://github.com/vitessio/vitess/pull/20728)
+- [PR #20762: `reparentutil`: keep nil-alias tablets out of candidate ordering (backported to 23.0.6 / 24.0.3)](https://github.com/vitessio/vitess/pull/20762)
 - [PR #20780: `EmergencyReparentShard`: add explicit split-brain recovery](https://github.com/vitessio/vitess/pull/20780)
 - [PR #20831: `EmergencyReparentShard`: skip zero-position candidates in errant GTID detection](https://github.com/vitessio/vitess/pull/20831)
