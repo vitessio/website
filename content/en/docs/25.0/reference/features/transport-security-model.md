@@ -196,6 +196,7 @@ Vitess refuses a CRL at startup when it cannot apply the file as a complete list
 * a delta, indirect, or scope-limited CRL;
 * a file that contains no X.509 CRL block;
 * a server CRL configured without a CA;
+* a server CRL (`--grpc-crl`, `--mysql-server-ssl-crl`) configured without the matching certificate and key, which leaves the server without TLS so the CRL cannot apply;
 * a CRL dated more than 5 minutes in the future;
 * unsupported critical extensions.
 
