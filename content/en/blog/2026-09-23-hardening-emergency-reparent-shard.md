@@ -12,7 +12,7 @@ description: 'How Vitess 25 reduces unnecessary waiting during emergency reparen
 
 ## What is `EmergencyReparentShard`?
 
-[`EmergencyReparentShard`](https://vitess.io/docs/user-guides/configuration-advanced/reparenting/) (ERS) is the Vitess failover process used when a shard's current primary is dead or unreachable. While `PlannedReparentShard` gets a clean handoff from a healthy primary, ERS has to pick a replacement using only surviving tablets. It compares their transaction histories, promotes an eligible replacement, updates the topology and points the other tablets at the new primary. `VTOrc` uses ERS to resolve many unplanned failures automatically
+[`EmergencyReparentShard`](https://vitess.io/docs/user-guides/configuration-advanced/reparenting/) (ERS) is the Vitess failover process used when a shard's current primary is dead or unreachable. While [`PlannedReparentShard`](https://vitess.io/docs/reference/programs/vtctldclient/vtctldclient_plannedreparentshard/) gets a clean handoff from a healthy primary, ERS has to pick a replacement using only surviving tablets. It compares their transaction histories, promotes an eligible replacement, updates the topology and points the other tablets at the new primary. [`VTOrc`](https://vitess.io/docs/reference/vtorc/) uses ERS to resolve many unplanned failures automatically
 
 The goal is to promote a tablet that has applied the most-advanced surviving transaction history as quickly as possible, as an outage of the primary blocks shard writes - this is an emergency!
 
@@ -59,40 +59,40 @@ At a high level, ERS moves through these phases:
 
 1. Lock the shard. This prevents competing reparent operations from changing the shard at the same time
 2. Stop replication receivers and collect state. ERS freezes the incoming transaction histories and checks what each reachable tablet has received and applied, giving it a stable view of the surviving data
-3. Candidate-wait phase and history validation. The candidate-wait phase waits for received transactions to be applied from relay logs. ERS also checks for errant or conflicting histories so that primary selection is based on a history it can safely preserve
+3. Relaylog apply phase and history validation. The relaylog apply phase waits for received transactions to be applied from relay logs. ERS also checks for errant or conflicting histories so that primary selection is based on a history it can safely preserve
 4. Choose a promotion candidate. ERS considers promotion rules, cell restrictions and durability requirements. The most-advanced tablet is not necessarily the final primary; if a different tablet is selected, it must first catch up from that source
 5. Complete the reparent. ERS repoints replicas, ensures any required semi-sync acknowledgers are ready before promotion, and records the new primary in topology so the shard can resume writes
 
-We need to be certain about the history we preserve, but every additional wait gives the ERS another place to fail. This matters for both manual reparents and automatic recoveries triggered by `VTOrc`
+We need to be certain about the history we preserve, but every additional wait gives the ERS another place to fail. This matters for both manual reparents and automatic recoveries triggered by [`VTOrc`](https://vitess.io/docs/reference/vtorc/)
 
-## Optimizing candidate-wait phase using MySQL GTIDs
+## Optimizing relaylog apply phase using MySQL GTIDs
 
-_TL;DR: before v25, lagging tablets unable to lead the election could still time out ERS. ERS now filters the candidate-wait phase by received GTIDs and races relay-log apply on tablets sharing the leading history, leading to faster emergency reparents that are less brittle_
+_TL;DR: before v25, lagging tablets unable to lead the election could still time out ERS. ERS now filters the relaylog apply phase by received GTIDs and races relay-log apply on tablets sharing the leading history, leading to faster emergency reparents that are less brittle_
 
 ### The Problem
 
 Comparisons of candidates in ERS consider 2 x MySQL replication positions: what a replica has received and what it has applied _(the latter added to candidate sorting in v23 PR: [#18531](https://github.com/vitessio/vitess/pull/18531))_. Transactions can already be in its relay logs while the SQL thread is still working through them. Before promoting a replica, ERS must ensure it has applied everything it received
 
-Before Vitess 25, the candidate-wait phase waited for every surviving tablet still under consideration to apply its relay logs. If any one of them exceeded `--wait-replicas-timeout` _(defaults to `15s` in `vtctldclient` and `30s` in `VTOrc`)_, the entire ERS failed. This risk increases with the number of tablets in the shard: every additional tablet under consideration is another wait that can time out the reparent
+Before Vitess 25, the relaylog apply phase waited for every surviving tablet still under consideration to apply its relay logs. If any one of them exceeded `--wait-replicas-timeout` _(defaults to `15s` in [`vtctldclient`](https://vitess.io/docs/reference/programs/vtctldclient/) and `30s` in [`VTOrc`](https://vitess.io/docs/reference/vtorc/))_, the entire ERS failed. This risk increases with the number of tablets in the shard: every additional tablet under consideration is another wait that can time out the reparent
 
 The problem was that this included tablets we already knew were behind. Waiting for the eventual primary is necessary; letting a tablet that cannot lead the election fail the entire operation is not
 
 Although this problem has affected Vitess users since ERS was introduced, it was first formally reported in [issue #18529](https://github.com/vitessio/vitess/issues/18529) around the Vitess 22 release in 2025. The issue described a shard with 4 x tablets: the primary and 2 x replicas were current, while another replica had substantial replication lag
 
-This is not an unusual state. A busy replica, a replica catching up after a restore, or a stopped SQL thread can all leave relay logs unapplied. Before v25, one such tablet could keep a reparent from completing even when the shard had a healthy, up-to-date replacement. For an automated `VTOrc` recovery, that meant retries or manual intervention while writes remained blocked
+This is not an unusual state. A busy replica, a replica catching up after a restore, or a stopped SQL thread can all leave relay logs unapplied. Before v25, one such tablet could keep a reparent from completing even when the shard had a healthy, up-to-date replacement. For an automated [`VTOrc`](https://vitess.io/docs/reference/vtorc/) recovery, that meant retries or manual intervention while writes remained blocked
 
 ### The Fix
 
 MySQL GTIDs give ERS a shard-wide view of how advanced each surviving tablet is. Close to the start of the operation, ERS stops the replication receivers and collects each reachable tablet's received and applied positions. The received history is now frozen; the SQL thread can keep applying it, but no new transactions arrive from the old primary
 
-This distinction is important. If one tablet received transactions through `120` and another only received through `95` from the same history, waiting for the second tablet to apply through `95` cannot put it ahead of the first. Before v25, ERS already had this information but did not use it to narrow the candidate-wait phase
+This distinction is important. If one tablet received transactions through `120` and another only received through `95` from the same history, waiting for the second tablet to apply through `95` cannot put it ahead of the first. Before v25, ERS already had this information but did not use it to narrow the relaylog apply phase
 
 [PR #20578](https://github.com/vitessio/vitess/pull/20578) uses these frozen positions to identify the leading group early in the operation, before waiting for relay logs to apply
 
 Improved v25 ERS:
 
 1. Stops replication receivers and collects each surviving tablet's received and applied positions
-2. Filters the candidate-wait phase to the most-advanced received histories
+2. Filters the relaylog apply phase to the most-advanced received histories
 3. When those histories are equal, races relay-log application and continues as soon as the first tablet finishes applying
 4. Completes the safety checks and primary selection, catching up a different promotion candidate if needed
 5. Promotes the selected tablet and repoints the remaining tablets as part of the reparent
@@ -111,7 +111,7 @@ graph TD
 
     Positions --> Filter["Filter to most-advanced<br/>received history: 120"]
     Filter --> Leading["Leading group: R1 and R2<br/>same received history"]
-    Filter --> Skipped["R3: lagging<br/>skip candidate-wait phase"]
+    Filter --> Skipped["R3: lagging 🐢<br/>skip relaylog apply phase"]
 
     Leading --> ApplyR1
     Leading --> ApplyR2
@@ -119,7 +119,7 @@ graph TD
         ApplyR1["R1: still applying ⏳"]
         ApplyR2["R2: finishes applying first ✅<br/>wins apply race"]
         ApplyR1 --> Cancelled["R1: apply wait cancelled ⏹️<br/>SQL thread continues ☑️"]
-        ApplyR2 -.-> Cancelled
+        ApplyR2 -. cancel .-> Cancelled
     end
 
     ApplyR2 --> Checks["Complete safety checks<br/>and primary selection"]
@@ -139,21 +139,21 @@ graph TD
     style Race fill:#ffffff,stroke:#6b7280,color:#111827
 ```
 
-Before v25, `R3` could time out the entire ERS while applying its own received history (`95`), not while catching up to its peers (`120`). In v25, `R3` is skipped during the initial candidate-wait phase
+Before v25, `R3` could time out the entire ERS while applying its own received history (`95`), not while catching up to its peers (`120`). In v25, `R3` is skipped during the initial relaylog apply phase
 
 Why is this safe? `R1` and `R2` received the same most-advanced transactions, so applying their relay logs brings them to the same state. ERS needs one leading candidate to apply successfully, so a stalled or failing peer need not block the race. If no leading candidate completes, including when the sole leading candidate fails, ERS fails. After a successful apply, the relay log apply waits on non-race-winners are cancelled, but those tablets continue to apply. Positions are usually a good guide to which tablet will finish applying first, but slower hardware or competing workloads can change that. Racing the leading group lets reality prove who applies fastest, shortening the wait and helping ERS finish sooner
 
-Winning that race is not an unconditional promotion. The most-advanced tablet can act as an intermediate replication source if the promotion rules or an explicit `--new-primary` request require a different primary. That candidate must catch up before it is promoted. The benefit is that ERS can move on without waiting for every peer to finish the candidate-wait phase
+Winning that race is not an unconditional promotion. The most-advanced tablet can act as an intermediate replication source if the promotion rules or an explicit `--new-primary` request require a different primary. That candidate must catch up before it is promoted. The benefit is that ERS can move on without waiting for every peer to finish the relaylog apply phase
 
 The existing promises and safety-checks of ERS are unchanged. Unreachable tablets are not automatically ignored: reachability and durability checks can still block ERS. Under `semi_sync` durability, this includes an unreachable primary and another unreachable potential acknowledger, just as before v25. Promotion rules, cross-cell restrictions, errant-GTID detection, semi-sync forward progress and shard-lock checks still apply. A tablet that returns an apply error is excluded from promotion and cannot count as a semi-sync acknowledger, but its received position is retained as evidence for errant-GTID detection
 
-The relay-log waits share the configured timeout budget, including any additional waits needed after errant-GTID detection. This is not a guarantee that a slow tablet can never delay another part of the reparent; it removes the requirement for every tablet to finish the candidate-wait phase
+The relay-log waits share the configured timeout budget, including any additional waits needed after errant-GTID detection. This is not a guarantee that a slow tablet can never delay another part of the reparent; it removes the requirement for every tablet to finish the relaylog apply phase
 
 This optimization depends on the received-history information available with MySQL GTIDs. File-position replication and MariaDB retain the existing wait-for-all behaviour on this path. For eligible shards there is no new flag to enable; this is the default in Vitess 25
 
-## Making candidate ordering more predictable
+## Making position ordering more predictable
 
-_TL;DR: candidate sorting could produce inconsistent results when GTID histories diverged. Since Vitess 23.0.6 and 24.0.3, ERS and `PlannedReparentShard` use consistent ordering that keeps a candidate behind any tablet with a strictly more complete history. These fixes are also included in v25_
+_TL;DR: candidate sorting could produce inconsistent results when GTID histories diverged. Since Vitess 23.0.6 and 24.0.3, ERS and [`PlannedReparentShard`](https://vitess.io/docs/reference/programs/vtctldclient/vtctldclient_plannedreparentshard/) use consistent ordering that keeps a candidate behind any tablet with a strictly more complete history. These fixes are also included in v25_
 
 ### The Problem
 
@@ -181,11 +181,11 @@ Using the same GTID sets:
 
 Sorting reliably places A and C (`0`) before B (`1`). C's incomparable history can no longer cause B to rank ahead of A
 
-ERS and `PlannedReparentShard` share this sorter, so both benefit from the fix. This makes the ordering consistent, but it cannot decide which side of an unresolved split brain to preserve. The next improvement gives operators an explicit way to make that choice
+ERS and [`PlannedReparentShard`](https://vitess.io/docs/reference/programs/vtctldclient/vtctldclient_plannedreparentshard/) share this sorter, so both benefit from the fix. This makes the ordering consistent, but it cannot decide which side of an unresolved split brain to preserve. The next improvement gives operators an explicit way to make that choice
 
 ## Strict recovery from split brain
 
-_TL;DR: in v25, ERS on MySQL and Percona GTID shards tracks divergent leaders before filtering, prevents fallback to an older candidate if all leaders are removed, and adds explicit operator-controlled recovery. Choosing a history can discard transactions unique to the other branches; `VTOrc` never enables this override automatically_
+_TL;DR: in v25, ERS on MySQL and Percona GTID shards tracks divergent leaders before filtering, prevents fallback to an older candidate if all leaders are removed, and adds explicit operator-controlled recovery. Choosing a history can discard transactions unique to the other branches; [`VTOrc`](https://vitess.io/docs/reference/vtorc/) never enables this override automatically_
 
 ### The Problem
 
@@ -195,7 +195,7 @@ When ERS cannot determine a safe history automatically, the operator needs an ex
 
 ### The Fix
 
-[PR #20780](https://github.com/vitessio/vitess/pull/20780) closes this gap and adds explicit split-brain recovery for MySQL and Percona GTID shards in Vitess 25. ERS records the divergent leaders before the candidate-wait phase and errant-GTID filtering. The default path can only proceed if that filtering leaves exactly one of the original leaders; otherwise ERS fails with the aliases and positions of the competing leaders
+[PR #20780](https://github.com/vitessio/vitess/pull/20780) closes this gap and adds explicit split-brain recovery for MySQL and Percona GTID shards in Vitess 25. ERS records the divergent leaders before the relaylog apply phase and errant-GTID filtering. The default path can only proceed if that filtering leaves exactly one of the original leaders; otherwise ERS fails with the aliases and positions of the competing leaders
 
 An operator who has determined which history to preserve can choose it explicitly:
 
@@ -207,13 +207,13 @@ vtctldclient EmergencyReparentShard <keyspace/shard> \
 
 The flag is available only to shards using MySQL or Percona GTIDs. MariaDB and file-position replication remain on the existing non-GTID path and cannot use this override. The flag requires `--new-primary`, and the requested tablet must be one of the original undominated leaders _(no other candidate contains a strictly more complete version of its history)_. ERS promotes exactly that tablet and preserves its full history
 
-This is lossy recovery, not a merge. Transactions unique to the losing side will not be part of the new primary's history, and tablets from the losing side should be rebuilt. `VTOrc` never enables this automatically; choosing which data to preserve is an operator decision. Completed override promotions increment `EmergencyReparentSplitBrainOverrides{Keyspace,Shard}`, allowing operators to monitor and alert on its use
+This is lossy recovery, not a merge. Transactions unique to the losing side will not be part of the new primary's history, and tablets from the losing side should be rebuilt. [`VTOrc`](https://vitess.io/docs/reference/vtorc/) never enables this automatically; choosing which data to preserve is an operator decision. Completed override promotions increment `EmergencyReparentSplitBrainOverrides{Keyspace,Shard}`, allowing operators to monitor and alert on its use
 
 The override does not bypass the other promotion checks. The chosen tablet still has to apply its relay logs, satisfy promotion and cross-cell rules, make forward progress under the durability policy and pass the shard-lock checks. Only the chosen leader is waited on, so a losing branch stuck applying relay logs cannot block that wait
 
 ## Summary
 
-ERS is one of Vitess' most critical operations: it must resurrect a primary in the face of unplanned failure. In some common scenarios, Vitess 25 makes ERS safer, faster and less brittle. The biggest benefit is in environments where MySQL replication lag on some tablets would otherwise time out an ERS, despite an up-to-date replacement being available. Narrowing the candidate-wait phase and racing tablets with the same leading history can shorten recovery and let it succeed where it previously failed
+ERS is one of the most critical operations in Vitess: it must resurrect a primary in the face of unplanned failure; every delay is more outage. In some common scenarios, Vitess 25 makes ERS safer, faster and less brittle. The biggest benefit is in environments where MySQL replication lag on some tablets would otherwise time out an ERS, despite an up-to-date replacement being available. Narrowing the relaylog apply phase and racing tablets with the same leading history can shorten recovery and let it succeed where it previously failed
 
 Candidate ordering is now consistent. For MySQL and Percona GTID shards, split-brain checks now retain the original divergent leaders, preventing an older candidate from being promoted when errant-GTID filtering removes all of them. Operators also have an explicit recovery path to choose a leading history, accepting the loss of transactions unique to other branches. The other promotion checks still apply
 
