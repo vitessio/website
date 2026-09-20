@@ -46,7 +46,7 @@ vtorc --topo-implementation etcd2 \
 
 You can optionally add a `clusters_to_watch` flag that contains a comma separated list of keyspaces or `keyspace/shard` values. If specified, VTOrc will manage only those clusters.
 
-Starting in v25, VTOrc automatically excludes any tablet started with the `--unmanaged` flag. Such [unmanaged tablets](../../configuration-advanced/unmanaged-tablet) are never probed, analyzed, or repaired by VTOrc, and do not appear in its API, UI, or metrics. Because of this, a `clusters_to_watch` exclusion is no longer required to keep VTOrc away from unmanaged tablets. Independent of this change, unmanaged tablets are always expected to occupy their own keyspace; mixing unmanaged and managed tablets in a single shard is not supported.
+Starting in v25, VTOrc automatically excludes any tablet started with the `--unmanaged` flag. Such [unmanaged tablets](../../configuration-advanced/unmanaged-tablet) are never probed, analyzed, or repaired by VTOrc, and do not appear in its API, UI, or metrics. Because of this, a `clusters_to_watch` exclusion is no longer required to keep VTOrc away from unmanaged tablets. If you remove such an exclusion, restore it before downgrading either the unmanaged `vttablet`s or the VTOrc that watches them to a pre-v25 version. The topology field that lets VTOrc recognize and skip unmanaged tablets exists only from v25 onward, so an older VTOrc would otherwise resume watching them. Independent of this change, unmanaged tablets are always expected to occupy their own keyspace; mixing unmanaged and managed tablets in a single shard is not supported.
 
 ### Cell Awareness
 
