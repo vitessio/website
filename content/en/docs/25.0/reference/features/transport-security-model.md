@@ -53,6 +53,28 @@ With these options, it is possible to use TLS-secured connections for all parts 
 
 This is not enabled by default, as usually the different Vitess servers will run on a private network. It is also important to note, that in a Cloud environment, for example, usually all local traffic is already secured between VMs.
 
+### Optional TLS
+
+A server started with `--grpc-enable-optional-tls` accepts both encrypted (TLS) and plain-text gRPC connections on the same port. With it, you can move an existing cluster to TLS without downtime. Clients switch to TLS one at a time while the server keeps serving both types of connection. It applies to any Vitess gRPC server and builds on the `--grpc-cert`, `--grpc-key`, and `--grpc-ca` flags described above. It is disabled by default; a server started without it is unchanged.
+
+When a server also runs `--grpc-ca` (which requires a client certificate), it refuses plain-text callers: it closes the connection and the caller's RPC fails. It keeps serving clients that present a valid client certificate over TLS. A client certificate can only be presented inside a TLS handshake. A plain-text connection performs no handshake, so it cannot meet the requirement. A `--grpc-crl` configured alongside `--grpc-ca` is enforced on those TLS clients.
+
+A server that runs `--grpc-enable-optional-tls` without `--grpc-ca` keeps accepting plain-text connections.
+
+At startup the server logs a warning stating whether it will accept or refuse plain-text connections, so you can confirm which policy is in effect before moving clients.
+
+#### Migrate to Mutual TLS Without Downtime
+
+To reach mutual TLS without refusing any client mid-migration, add `--grpc-ca` last:
+
+1. Start each server with `--grpc-cert`, `--grpc-key`, and `--grpc-enable-optional-tls`.
+2. Move each client to TLS with its own client certificate.
+3. Once every client presents a valid client certificate, add `--grpc-ca` and remove `--grpc-enable-optional-tls` at the same time, so the server now requires mutual TLS.
+
+No client is refused at any stage, so the cluster reaches mutual TLS without downtime.
+
+Adding `--grpc-ca` to a server before that server's clients have moved to TLS refuses that server's remaining plain-text connections.
+
 ### Options for vtctld
 
   | Name | Type | Definition |

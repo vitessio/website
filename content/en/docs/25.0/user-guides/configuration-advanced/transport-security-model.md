@@ -382,6 +382,10 @@ In Vitess, communication between vtgate and vttablet instances are via gRPC. gRP
 Other components, as detailed above, also connect to vttablet via gRPC. After configuring vttablet gRPC for TLS, you will need to configure all these components (vtgate, other vttablets, vtctld) explicitly to connect using TLS to vttablet via gRPC, or you will have a partially or wholly non-functional system.
 
 {{< info >}}
+To make these gRPC server transitions without downtime, configure each server for [Optional TLS](../../../reference/features/transport-security-model/#optional-tls) so it accepts both plain-text and TLS connections while you move its clients to TLS one at a time.
+{{< /info >}}
+
+{{< info >}}
 If a CRL is configured for any of these gRPC connections — through `--tablet-grpc-crl`, `--tablet-manager-grpc-crl`, `--binlog-player-grpc-crl`, or `--vtctld-grpc-crl` — revocation is enforced on every connection, so a formerly working connection can now be rejected. See [Certificate Revocation Lists (CRLs)](../../../reference/features/transport-security-model/#certificate-revocation-lists-crls) for the flags and enforcement details.
 {{< /info >}}
 
@@ -482,7 +486,7 @@ This means that you will need to add the following option to your vtgate instanc
   --tablet-grpc-server-name vttablet1 --tablet-grpc-ca /home/user/config/ca.crt
 ```
 
-Adding this option to a vtgate instance will require all vttablet instances this vtgate connects to to be configured for TLS as well. This is unfortunately an all-or-nothing proposition, there is no incremental migration to using TLS in this case.
+Adding this option to a vtgate instance will require all vttablet instances this vtgate connects to to be configured for TLS as well. For a downtime-free path, configure the vttablets for [Optional TLS](../../../reference/features/transport-security-model/#optional-tls), which accepts both plain-text and TLS connections so you can move clients to TLS one at a time.
 
 If you have vtgate instances accessing your vttablet instance after you have configured TLS on the vttablet side, you may see errors like this in the vttablet logs:
 
