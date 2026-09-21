@@ -33,6 +33,16 @@ Caller ID is a feature provided by the Vitess stack to identify the source of qu
   - It is not authenticated.
   - It is exposed in query logs. Enabling it can be useful for debugging issues like the source of a slow query.
 
+## Trust Boundary
+
+VTTablet's gRPC endpoint is intended for trusted VTGate instances and trusted administrative and replication components — such as vtctld and VTOrc, and VReplication's replication streams. Treat access to it as administrative, and restrict network reachability and credentials accordingly.
+
+VTTablet enforces table ACLs against the Immediate Caller ID forwarded in each request, not against the authenticated identity of the connection. A caller with direct VTTablet gRPC access can present any caller ID, so table ACLs do not isolate an untrusted party that reaches VTTablet directly.
+
+VTTablet exposes the query service (query execution) and the tablet manager service (administrative RPCs) behind the same gRPC authentication, so a caller who can reach one can reach the other. When the tablet manager is reachable, `ExecuteFetchAsDba` runs SQL as the tablet's DBA user without consulting table ACLs.
+
+For configuring table ACLs, see [Configuring Authorization](../../user-guides/configuration-advanced/authorization/).
+
 ## gRPC Transport
 
 ### gRPC Encrypted Transport
@@ -102,7 +112,7 @@ This is not enabled by default, as usually the different Vitess servers will run
 
 ### Certificates and Caller ID
 
-Additionally, if a client uses a certificate to connect to Vitess (VTGate) via gRPC, the common name of that certificate is passed to vttablet as the Immediate Caller ID. It can then be used by table ACLs to grant read, write or admin access to individual tables. This should be used if different clients should have different access to Vitess tables.
+Additionally, if a client uses a certificate to connect to Vitess (VTGate) via gRPC, the common name of that certificate is passed to VTTablet as the Immediate Caller ID, but only when the presented client certificate is verified. It can then be used by table ACLs to grant read, write or admin access to individual tables. This should be used if different clients should have different access to Vitess tables.
 
 ### Static Authentication
 
@@ -143,17 +153,24 @@ When the static auth plugin is in use, the `grpc-use-static-authentication-calle
 
 ### Caller ID Override
 
-In a private network, where TLS security is not required, it might still be desirable to use table ACLs as a safety mechanism to prevent a user from accessing sensitive data. The gRPC connector provides the `grpc_use_effective_callerid` flag for this purpose: if specified when running vtgate, the Effective Caller ID's principal is copied into the Immediate Caller ID, and then used throughout the Vitess stack.
+Two VTGate flags let a trusted client supply the Immediate Caller ID through its Effective Caller ID, so that table ACLs can act on a client-provided identity:
 
-**Important**: This is not secure. Any user code can provide any value for the Effective Caller ID's principal, and therefore access any data. This is intended as a safety feature to make sure some applications do not misbehave. Therefore, this flag is not enabled by default.
+* `--grpc-use-effective-callerid` (disabled by default): whenever no username is available from a verified client certificate, VTGate sets the Immediate Caller ID from a non-empty client-supplied Effective Caller ID principal. This fallback applies on unencrypted connections and on TLS connections that present no verified client certificate.
+* `--grpc-use-effective-groups` (disabled by default) takes effect only when `--grpc-use-effective-callerid` is also enabled. When both flags are enabled and no username is available from a verified client certificate, VTGate copies the non-empty client-supplied Effective Caller ID groups — the security-group values an application attaches alongside its principal — into the Immediate Caller ID's security groups, on unencrypted and TLS connections alike.
 
-Another way to customize the immediateCallerID is to set the `grpc-use-static-authentication-callerid` flag on vtgate, which is only effective if you're using the static authentication plugin with vtgate. In this case, the username from the current authenticated session to vtgate is copied over as the Immediate Caller ID, and used throughout the Vitess stack.
+VTGate resolves the Immediate Caller ID in this order:
+
+1. A client certificate's common name, used only when its certificate chain verifies.
+2. When `--grpc-use-effective-callerid` is enabled, a non-empty Effective Caller ID principal, which takes precedence over the static authentication caller ID.
+3. The static authentication caller ID, copied from the authenticated session username by `--grpc-use-static-authentication-callerid` when the static authentication plugin is in use.
+
+**Important**: neither flag is an authentication mechanism. A client can claim any principal or groups through its Effective Caller ID, so enable these flags only for trusted clients. See [Trust Boundary](#trust-boundary).
 
 ### Example
 
 For a concrete example, see [encrypted_transport_test.go](https://github.com/vitessio/vitess/blob/main/go/test/endtoend/encryption/encryptedtransport/encrypted_transport_test.go) in the source tree.
 
-It first sets up all the certificates, some table ACLs, and then uses the golang client to connect with TLS. It also exercises the `grpc_use_effective_callerid` flag, by connecting without TLS.
+It first sets up all the certificates, some table ACLs, and then uses the golang client to connect with TLS. It also exercises the `--grpc-use-effective-callerid` fallback on a connection that has no verified client certificate.
 
 ## MySQL Transport to VTGate
 

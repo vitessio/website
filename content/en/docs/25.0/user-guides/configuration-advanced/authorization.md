@@ -30,6 +30,10 @@ level, as opposed to on VTGate, where authentication is enforced.
 There are a number of VTTablet command line parameters that control the
 behavior of ACLs.  Let's review these:
 
+{{< warning >}}
+Table ACLs are enforced at VTTablet against the Immediate Caller ID forwarded from VTGate, and assume callers reach VTTablet only through trusted components. They are not an isolation boundary against a party with direct VTTablet gRPC access. See the [Trust Boundary](../../reference/features/transport-security-model/#trust-boundary) section of the Transport Security Model.
+{{< /warning >}}
+
  * `--enforce-tableacl-config`:  Set this to `true` to ensure VTTablet will not
    start unless there is a valid ACL configuration. This is used to
    catch misconfigurations resulting in blanket access to authenticated
