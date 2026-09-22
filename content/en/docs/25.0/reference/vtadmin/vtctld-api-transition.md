@@ -3,6 +3,10 @@ title: vtctld API Transition
 weight: 3
 ---
 
+{{< warning >}}
+The vtctld HTTP API in the table below is being removed in Vitess 25.0. Once that change ships, requests to these endpoints return `404 Not Found`. Use the VTAdmin API, or `vtctldclient` (the `VtctldServer` gRPC service), for these operations. The table is retained as a historical mapping to guide migration to the VTAdmin API.
+{{< /warning >}}
+
 The following table highlights old vtctld API methods and their counterparts in the newer VTAdmin API. 
 
 Some methods do not have a 1:1 mapping from vtctld to VTAdmin. These cases include:

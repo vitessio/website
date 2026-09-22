@@ -2,6 +2,8 @@
 title: vtctld
 ---
 
-**vtctld** is an HTTP server that lets you browse the information stored in the Topology Service. It is useful for troubleshooting or for getting a high-level overview of the servers and their current states.
+**vtctld** is the Vitess cluster-management server. It serves `vtctldclient` connections through the `VtctldServer` gRPC API. VTAdmin reaches vtctld over the same API.
 
-`vtctld` also acts as the server for `vtctldclient` connections.
+[VTAdmin](../vtadmin) replaced the vtctld web UI. Use it to browse the [Topology Service](../topology-service) or get a high-level overview of the servers and their current states.
+
+vtctld also exposes the `/debug/health` and `/debug/status` HTTP endpoints.
