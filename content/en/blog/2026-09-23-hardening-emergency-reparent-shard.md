@@ -219,6 +219,8 @@ Candidate ordering is now consistent. For MySQL and Percona GTID shards, split-b
 
 All changes discussed here will be available in Vitess 25, expected in October 2026. See the [in-progress Vitess 25 release summary](https://github.com/vitessio/vitess/blob/main/changelog/25.0/25.0.0/summary.md) and [reparenting documentation](https://vitess.io/docs/user-guides/configuration-advanced/reparenting/) for more detail
 
+Further ERS improvements may be covered in future blog posts as more changes land
+
 ## Links
 
 - [PR #18531: `EmergencyReparentShard`: include SQL thread position in most-advanced candidate selection (Vitess 23)](https://github.com/vitessio/vitess/pull/18531)
