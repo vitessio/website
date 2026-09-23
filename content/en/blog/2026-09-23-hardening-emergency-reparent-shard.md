@@ -79,7 +79,7 @@ The problem was that this included tablets we already knew were behind. Waiting 
 
 Although this problem has affected Vitess users since ERS was introduced, it was first formally reported in [issue #18529](https://github.com/vitessio/vitess/issues/18529) around the Vitess 22 release in 2025. The issue described a shard with 4 x tablets: the primary and 2 x replicas were current, while another replica had substantial replication lag
 
-This is not an unusual state. A busy replica, a replica catching up after a restore, or a stopped SQL thread can all leave relay logs unapplied. Before v25, one such tablet could keep a reparent from completing even when the shard had a healthy, up-to-date replacement. For an automated [`VTOrc`](https://vitess.io/docs/reference/vtorc/) recovery, that meant retries or manual intervention while writes remained blocked
+This is not an unusual state. Network or I/O-thread delays, a busy or stopped SQL thread, or catching up after a restore can all leave a replica behind. Before v25, ERS still issued relay-log apply waits for these tablets even when their received histories meant they could not win; an apply backlog could turn an unnecessary wait into a timeout. For an automated [`VTOrc`](https://vitess.io/docs/reference/vtorc/) recovery, that meant retries or manual intervention while writes remained blocked
 
 ### The Fix
 
