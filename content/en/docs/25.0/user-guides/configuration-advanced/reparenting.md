@@ -86,6 +86,19 @@ This command performs the following actions:
     - On the primary-elect tablet, insert a row in the `reparent_journal` table and then updates the `PrimaryAlias` property of the global shard object.
     - In parallel on each replica, excluding the old primary, set the new primary as the replication source and wait for the inserted row to replicate to the replica tablets.
 
+### Requiring a position on the new primary
+
+`EmergencyReparentShard` ranks candidates only against each other and promotes the most advanced. When every surviving candidate has lost the same relay log, they all look fully caught up relative to one another. This can happen after a `CHANGE REPLICATION SOURCE TO` or a restart with `relay_log_recovery=1`. In that state, the command can promote a replica that is missing transactions the failed primary had already acknowledged.
+
+The optional [`--required-position`](../../../reference/programs/vtctldclient/vtctldclient_EmergencyReparentShard/) flag guards against this. It names a position the new primary must already have received, either applied or still sitting unapplied in its relay log. Pass a MySQL GTID set, with or without the `MySQL56/` prefix (for example `<uuid>:1-100`):
+
+* If at least one candidate has received the position, the reparent proceeds as it normally would.
+* If no candidate has received it, `EmergencyReparentShard` fails and reports the most advanced received positions it found, so you can see how far behind the survivors are. It runs this check before waiting on any relay log, so an unsatisfiable requirement fails fast instead of leaving replication stopped until a wait times out.
+
+The check is off by default; omit the flag to keep the standard "most advanced among the surviving candidates" behavior. It is supported only on shards that use MySQL GTID-based replication. A value supplied on a non-GTID shard, in a non-MySQL56 flavor, or that cannot be parsed is rejected before the reparent runs.
+
+`--required-position` only asserts a floor for the new primary; it does not recover the missing transactions itself. Supply it when an external source of truth (a backup, a surviving semi-sync acknowledgement, or an application checkpoint) tells you a position was durably committed. Use it when you would rather have the emergency reparent fail than silently promote a stale replica.
+
 ### MySQL version-aware primary election
 
 When choosing a new primary, both `PlannedReparentShard` and `EmergencyReparentShard` also consider each candidate's MySQL server version and prefer a candidate running a lower version. When all candidates run the same MySQL version, version awareness has no effect and election behaves exactly as it did before. The lower-version preference exists because MySQL only guarantees forward replication compatibility: an older-version source can replicate to a newer-version replica, but not the reverse. During a rolling MySQL upgrade, promoting a newer-version tablet could break replication for replicas that are still on the older version. Version awareness is an *additional* factor layered on top of the durability-policy and replication-position logic described above — it does not replace either of them. Because version awareness is applied when candidates are ranked, it affects both manually triggered reparents and those [VTOrc](../../configuration-basic/vtorc) performs automatically.
