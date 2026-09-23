@@ -45,7 +45,7 @@ If you have deployed in multiple regions and would like the flexibility of queri
 ## Checklist
 
 * Ensure that vtctlds come up successfully. If there is a failure, check the log files for any errors.
-* Ensure that you can query the http port of vtctld: `curl http://localhost:15000/cells/`
+* Ensure that the cell you created is visible: `vtctldclient GetCellInfoNames`
 * If you configured a separate cell-specific topo, ensure that you can connect to it using the parameters in the cell information.
 * Ensure that the cell-specific topos are reachable from other cells.
 
