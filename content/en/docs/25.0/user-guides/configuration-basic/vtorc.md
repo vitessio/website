@@ -109,6 +109,26 @@ A few behaviors are worth keeping in mind:
 
 Every quorum decision is observable. VTOrc logs why it did or did not fail over an unreachable primary, records the per-observer vote tally in the recovery audit message, and exposes the live per-shard quorum state — the primary, the verdict, and each observer's vote — at the read-only [`/api/shard-tablet-health-quorum`](../../../reference/vtorc/ui_api_metrics) endpoint.
 
+### Requiring the last known primary position in an emergency reparent
+
+When VTOrc reparents away from a dead primary, its `EmergencyReparentShard` promotes the most advanced replica among those still reachable. ERS ranks the candidates only against each other, so when every replica has lost the same received transactions — for example after a `CHANGE REPLICATION SOURCE TO` or a restart with `relay_log_recovery=1` clears the relay logs — the replicas all look fully caught up, and ERS cannot tell that they are behind the failed primary. The promotion then drops transactions the primary had already acknowledged to clients.
+
+Starting in v25, VTOrc can require that the new primary has received the last position VTOrc saw on the failed primary. VTOrc stores the primary's `gtid_executed` on every successful poll and passes that stored set to ERS as a [required position](../../configuration-advanced/reparenting/#requiring-a-position-on-the-new-primary). If no reachable replica has received it, ERS fails rather than promoting a stale one.
+
+The feature is opt-in and disabled by default. Set `--emergency-reparent-require-primary-position` on VTOrc. VTOrc then passes the stored position to ERS only when all of the following hold:
+
+- **The failed tablet is the primary.** A recovery detected on a replica has no primary position to require.
+- **The keyspace [durability policy](../../configuration-basic/durability_policy) uses semi-sync.** Under a policy without semi-sync the primary can hold transactions that no replica received, and that policy accepts their loss, so VTOrc skips the requirement. A semi-sync policy still gets the requirement even if replication had fallen back to asynchronous at the last poll, because clients were told those transactions had committed.
+- **VTOrc has a stored position for the primary.** See the limitation below.
+
+{{< warning >}}
+**With the requirement enabled, a shard can stop failing over automatically.** If no reachable replica has received the required position, VTOrc promotes none of them: the `EmergencyReparentShard` fails, and the shard has no serving primary until an operator runs `EmergencyReparentShard` by hand. This trades availability for durability — it stops VTOrc from promoting a replica that is missing already-acknowledged transactions.
+{{< /warning >}}
+
+VTOrc can require only a position it saw on the primary before the primary failed. It does not keep its stored data across a restart and cannot poll a dead primary, so VTOrc has no stored position if it restarted after the primary failed, or if the primary failed before VTOrc first polled it. In those cases VTOrc runs the reparent **without** the requirement — the same behavior as when the flag is off — and records a warning in the recovery audit. Running more than one VTOrc per shard makes this less likely but does not prevent it, because VTOrc instances do not share stored data and a restarted VTOrc can acquire the shard lock first.
+
+The recovery audit records the outcome either way: the position VTOrc required, or the reason it required none, and the ERS error — including the most advanced positions the replicas had received — when the requirement is not met.
+
 ### Running VTOrc using the Vitess Operator
 
 To find information about deploying VTOrc using Vitess Operator please take a look at this [page](../../../reference/vtorc/running_with_vtop).
