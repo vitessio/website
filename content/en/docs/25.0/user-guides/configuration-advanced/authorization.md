@@ -203,24 +203,31 @@ requires, are:
 
  * `CREATE TABLE ... AS SELECT`: read access on every source table the
    `SELECT` reads, including through CTEs, joins and unions, plus admin
-   access on the table being created. `CREATE VIEW ... AS SELECT` is
-   unchanged, because it reads nothing when the view is created.
- * `EXPLAIN ANALYZE <statement>`: the explained statement's own access,
-   because MySQL runs it. That is write access for a DML statement, and
-   read access for a `SELECT`.
+   access on the table being created.
+ * `CREATE VIEW ... AS SELECT` and `ALTER VIEW ... AS SELECT`: read access
+   on every source table the `SELECT` reads. A view reads nothing when it is
+   defined, but whenever it is queried it reads its source tables as
+   VTTablet's own MySQL user, and the ACL then sees only the view's name. So
+   VTTablet checks the source tables when the view is defined, as MySQL
+   requires read access on them to create the view.
+ * `EXPLAIN <statement>`, in any format, and `DESCRIBE <statement>`: the
+   explained statement's own access, which is write access for a DML
+   statement and read access for a `SELECT`, because MySQL requires the
+   explained statement's privileges. `EXPLAIN ANALYZE` runs the statement,
+   and a plain `EXPLAIN` reads too: MySQL reads single-row tables and
+   evaluates uncorrelated subqueries while it plans, and the plan reveals the
+   outcome (an `Impossible WHERE`). This covers the `EXPLAIN` that `VEXPLAIN
+   MYSQLPLAN` sends to each shard.
  * `SHOW ... WHERE <expr>`: read access on any table a subquery in the
    `WHERE` filter reads, because MySQL evaluates the filter. This covers
    `SHOW VITESS_MIGRATIONS ... WHERE`.
  * `SET` run as a statement: read access on any table a subquery in its
    expressions reads.
 
-VTTablet does not check reads for statements that only plan or describe a
-query, or that name a table as their subject rather than reading it. These
-statements need no extra grants:
-
- * plain `EXPLAIN` in any format, `DESCRIBE` and `VEXPLAIN MYSQLPLAN`
- * the subject of a `SHOW`, such as the table in `SHOW COLUMNS FROM <table>`
- * the source `SELECT` of a `CREATE VIEW`
+VTTablet does not check the subject of a `SHOW`, such as the table in
+`SHOW COLUMNS FROM <table>`: a `SHOW` names that table rather than reading
+it, so it needs no extra grant. Only a subquery in the `SHOW`'s `WHERE`
+filter is checked.
 
 When VTTablet cannot fully parse a `CREATE TABLE`, it cannot determine
 which tables the statement reads. Cases VTTablet cannot parse include the
@@ -256,19 +263,22 @@ value `undetermined-table-set` on the `TableACLPseudoDenied` and
 `TableACLDenied` [metrics](../../configuration-basic/monitoring), which
 lets you tell it apart from a per-table denial while you gauge impact.
 
-## Connection settings cannot contain subqueries
+## Connection settings cannot contain subqueries under strict table ACL
 
 A connection setting is a session system-variable setting (a `SET` of a
 system variable) that VTTablet applies to the connection it uses for the
-session. VTTablet rejects a connection setting whose expression contains a
-subquery, before it acquires a connection for the session. This applies
-whether or not strict table ACL is enabled, because a setting is applied to
-the connection without a table ACL check, so any table a subquery in the
-setting reads would go unchecked. Unlike the strict-table-ACL denials in the
-previous section, a dry run (`--queryserver-config-enable-table-acl-dry-run`)
-does not soften this rejection: it always applies, because the setting is
-validated before a connection is acquired, outside the table-ACL enforcement
-path.
+session. A setting is applied to the connection without a table ACL check,
+so any table a subquery in it reads would go unchecked. Under strict table
+ACL, VTTablet therefore rejects a connection setting whose expression
+contains a subquery, before it acquires a connection for the session.
+Without strict table ACL the setting is accepted, because there is then
+nothing for the check to protect.
+
+A dry run (`--queryserver-config-enable-table-acl-dry-run`) does not soften
+this rejection, unlike the per-statement checks in the previous section. The
+setting is validated before a connection is acquired, outside the table-ACL
+enforcement path; whenever strict table ACL is on, a connection setting with
+a subquery is rejected outright.
 
 A connection setting must be a constant expression. When one contains a
 subquery, VTTablet returns an `INVALID_ARGUMENT` error,
