@@ -271,17 +271,23 @@ session. A setting is applied to the connection without a table ACL check,
 so any table a subquery in it reads would go unchecked. Under strict table
 ACL, VTTablet therefore rejects a connection setting whose expression
 contains a subquery, before it acquires a connection for the session.
-Without strict table ACL the setting is accepted, because there is then
-nothing for the check to protect.
+Connection settings must be constant expressions. Without strict table ACL
+the setting is accepted, because there is then nothing for the check to
+protect.
 
-A dry run (`--queryserver-config-enable-table-acl-dry-run`) does not soften
-this rejection, unlike the per-statement checks in the previous section. The
-setting is validated before a connection is acquired, outside the table-ACL
-enforcement path; whenever strict table ACL is on, a connection setting with
-a subquery is rejected outright.
+A dry run (`--queryserver-config-enable-table-acl-dry-run`) accepts such a
+setting, as it does any request the table ACL would deny. A connection
+setting has no caller or table to record a denial against, so VTTablet does
+not count it in the `TableACLPseudoDenied` metric. Instead, it logs a
+throttled warning that names the setting strict table ACL would reject. With
+`--sanitize-log-messages`, the warning shows only the variables the setting
+sets, not their values. As with the other dry-run checks, VTTablet logs this
+warning whether or not strict table ACL is on. Review these warnings before
+you turn off dry run. They show, for example, an older vtgate that still
+sends a targeted session's `SET` expression as written instead of its value.
 
-A connection setting must be a constant expression. When one contains a
-subquery, VTTablet returns an `INVALID_ARGUMENT` error,
+When the setting is rejected (strict table ACL on, dry run off), VTTablet
+returns an `INVALID_ARGUMENT` error,
 `connection setting must not contain a subquery: <setting>`. Use a constant
 value instead.
 
