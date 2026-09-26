@@ -187,6 +187,22 @@ __Run the following vtctl command to backup a specific shard:__
 vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard [--allow-primary=false] [--upgrade-safe=false] <keyspace/shard>
 ```
 
+### Get the backup result as JSON
+
+By default, `Backup` and `BackupShard` print progress as log events, ending with a `backup completed` line. To identify the new backup from a script without parsing those logs, add `--json` (or `-j`):
+
+```sh
+vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard --json <keyspace/shard> > backup-result.json
+```
+
+In JSON mode, the command writes log events to stderr and, when the backup finishes, writes one JSON object to stdout with these fields:
+
+* `status`: `USABLE` when a backup was stored, or `EMPTY` when an [incremental backup](#create-an-incremental-backup-with-vtctl) found nothing new to back up. During a rolling upgrade, the status is `UNKNOWN` when an older `vtctld` or `vttablet` does not report the outcome.
+* `backup_name`: the name of the stored backup. It is empty for an `EMPTY` backup.
+* `manifest`: the backup's `MANIFEST` contents as a JSON object. It is `null` for an `EMPTY` backup, when an older component does not return the manifest, or when the manifest is not valid JSON.
+
+The manifest is sent to `vtctldclient` in a single gRPC message, so a very large manifest is subject to the `--grpc-max-message-size` limit.
+
 ## Create an incremental backup with vtctl
 
 An incremental backup requires additional information: the point from which to start the backup. An incremental backup is taken by supplying `--incremental-from-pos` to the `Backup` or `BackupShard` command. The argument may either indicate:
@@ -215,7 +231,7 @@ When `--incremental-from-pos="auto"`, Vitess chooses the position of the last su
 
 An incremental backup backs up one or more MySQL binary log files. These binary log files may begin with the requested position, or with an earlier position. They will necessarily include the requested position. When the incremental backup begins, Vitess rotates the MySQL binary logs on the tablet, so that it does not back up an active log file.
 
-If Vitess finds that the database made no writes since the requested backup/position, then the incremental backup is deemed _empty_ and produces no artifacts, essentially becoming a no-op. The `Backup/BackupShard` command exits with success code, but there is no `MANIFEST` file created and no backup name.
+If Vitess finds that the database made no writes since the requested backup/position, then the incremental backup is deemed _empty_ and produces no artifacts, essentially becoming a no-op. No `MANIFEST` file or backup name is created. By default, the `Backup` and `BackupShard` commands exit with code `0` for an empty backup, the same as for a stored one. With `--json`, they report status `EMPTY` and exit with code `2`. A script can check for this exit code to skip follow-up work, such as verifying or copying the backup.
 
 An incremental backup fails when it is unable to find binary log files that covers the requested position. This can happen if the binary logs are purged earlier than the incremental backup was taken. It essentially means there's a gap in the changelog events. **Note** that while on one tablet the binary logs may be missing, another tablet may still have binary logs that cover the requested position.
 
