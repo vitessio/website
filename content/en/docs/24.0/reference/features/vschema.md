@@ -68,28 +68,28 @@ Vitess allows you to create an unsharded table and deploy it into all shards of 
 
 Typically, such a table has a canonical source in an unsharded keyspace, and the copies in the sharded keyspace are kept up-to-date through VReplication.
 
-## Controlling cross-keyspace JOINs
+## Controlling cross-keyspace reads
 
-By default, Vitess will execute JOINs across tables in different keyspaces. You can restrict this behavior at two levels:
+By default, Vitess allows reads that require JOINs or UNIONs across keyspaces. You can restrict this behavior at two levels:
 
-1. **Globally via VTGate**: Use the `--no-cross-keyspace-joins` flag when starting VTGate to deny all cross-keyspace JOINs.
+1. **Globally via VTGate**: Use the `--prevent-cross-keyspace-reads` flag when starting VTGate to prevent cross-keyspace reads.
 
-2. **Per-keyspace via VSchema**: Set `no_cross_keyspace_joins: true` in a keyspace's VSchema to deny cross-keyspace JOINs involving that keyspace.
+2. **Per-keyspace via VSchema**: Set `"prevent_cross_keyspace_reads": true` in a keyspace's VSchema to prevent cross-keyspace reads involving that keyspace.
 
-When cross-keyspace JOINs are denied, the planner rejects queries that join tables from different keyspaces with an error like:
+When cross-keyspace reads are prevented, the planner rejects queries that require JOINs or UNIONs across keyspaces with an error like:
 
 ```
-cross-keyspace join between keyspaces 'ks1' and 'ks2' (use /*vt+ ALLOW_CROSS_KEYSPACE_JOINS */ to override)
+cross-keyspace JOIN between keyspaces "ks1" and "ks2" (use /*vt+ ALLOW_CROSS_KEYSPACE_READS */ to override)
 ```
 
-The VTGate flag takes precedence—when `--no-cross-keyspace-joins` is set, cross-keyspace JOINs are denied globally regardless of per-keyspace VSchema settings.
+The VTGate flag takes precedence: when `--prevent-cross-keyspace-reads` is set, the restriction applies globally regardless of per-keyspace VSchema settings.
 
 ### Per-query override
 
-To override the restriction for a specific query, use the `ALLOW_CROSS_KEYSPACE_JOINS` [comment directive](../../../user-guides/configuration-advanced/comment-directives/):
+To override either restriction for a specific query, use the `ALLOW_CROSS_KEYSPACE_READS` [comment directive](../../../user-guides/configuration-advanced/comment-directives/#allow-cross-keyspace-reads-allow_cross_keyspace_reads):
 
 ```sql
-SELECT /*vt+ ALLOW_CROSS_KEYSPACE_JOINS */ * FROM ks1.t1 JOIN ks2.t2 ON t1.id = t2.id;
+SELECT /*vt+ ALLOW_CROSS_KEYSPACE_READS */ * FROM ks1.t1 JOIN ks2.t2 ON t1.id = t2.id;
 ```
 
 ## Per-Keyspace VSchema
