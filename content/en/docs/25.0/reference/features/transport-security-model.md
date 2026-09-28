@@ -161,6 +161,44 @@ To get VTGate to support TLS use the `--mysql-server-ssl-cert` and `--mysql-serv
 
 Finally, if you want to require all VTGate clients to only be able to connect using TLS, you can use the `--mysql-server-require-secure-transport` flag.
 
+## Reloading TLS Files
+
+Vitess servers can reload their TLS files without a restart. You can rotate certificates, change the trusted CAs, or publish a new CRL while the server keeps serving traffic. A reload re-reads these files from disk:
+
+* The files of the gRPC server that every Vitess component serving gRPC runs: `--grpc-cert`, `--grpc-key`, `--grpc-ca`, `--grpc-crl`, and `--grpc-server-ca`.
+* The files of VTGate's MySQL server: `--mysql-server-ssl-cert`, `--mysql-server-ssl-key`, `--mysql-server-ssl-ca`, `--mysql-server-ssl-crl`, and `--mysql-server-ssl-server-ca`.
+
+Client-side TLS files, such as `--tablet-grpc-cert` or `--vtgate-grpc-ca`, are not reloaded. Restart the component to apply changes to them.
+
+Connections that are already open keep the TLS configuration they were established with. New connections use the reloaded files.
+
+### Triggering a Reload
+
+Vitess reloads the server TLS files in two ways:
+
+* **On `SIGHUP`**: Send `SIGHUP` to the process, for example with `kill -HUP <pid>`. The server always reloads its TLS files when it receives the signal.
+* **On an interval**: Set `--tls-reload-interval` to a duration, for example `--tls-reload-interval=5m`. At each interval, the server checks whether the contents of its TLS files changed, and reloads them only if they did. The default, `0`, turns off interval checks. The flag is available on the components that run a gRPC server, including `vtgate`, `vttablet`, `vtctld`, and `mysqlctld`.
+
+Use an interval when a certificate manager or secrets agent replaces the files on disk but cannot signal the Vitess process.
+
+When the CA file changes, clients cannot resume a TLS session that was established before the reload. Each client then completes a full handshake, and the server verifies its certificate against the new CA. A client whose certificate chain leads to a CA you removed is therefore rejected.
+
+### Failed Reloads
+
+If the new files cannot be loaded, the server keeps serving with the TLS configuration it already has and logs an error. Examples include a key that does not match its certificate, a missing file, or a CRL that fails the checks in [Startup Validation](#startup-validation). After you fix the files, send `SIGHUP` again or wait for the next interval check.
+
+### Reload Metrics
+
+Each server exports the following metrics, labeled by `Server` with the value `grpc` or `mysql`:
+
+| Metric | Type | Description |
+| :-------- | :--------- | :--------- |
+| `TLSReloadSuccessTimestamp` | gauge | Unix time of the last successful load of the server's TLS files. |
+| `TLSReloadErrors` | counter | Number of reloads that failed. |
+| `TLSCertNotAfter` | gauge | Unix time at which the certificate the server presents expires. |
+
+Alert when `TLSCertNotAfter` approaches the current time, to catch a certificate that is about to expire. Alert when `TLSReloadErrors` increases, to catch a rotation that did not take effect.
+
 ## Certificate Revocation Lists (CRLs)
 
 Vitess uses a configured certificate revocation list (CRL) to reject certificates that an operator has revoked before they expire. A CRL is a signed list of certificates that their issuer has invalidated ahead of their scheduled expiry. When Vitess loads one, Vitess refuses any TLS connection whose certificate chain contains a revoked certificate. This section covers configuring Vitess to enforce a CRL, not generating, distributing, or rotating the CRL itself, and it assumes familiarity with the TLS and CA/certificate-chain concepts covered earlier on this page. With a CRL in place, a certificate you revoke stops being accepted, on new and resumed connections alike.
