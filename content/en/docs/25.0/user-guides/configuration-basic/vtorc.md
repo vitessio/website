@@ -37,11 +37,9 @@ vtorc --topo-implementation etcd2 \
   --topo-global-root /vitess/global \
   --cell zone1 \
   --port 15000 \
-  --log-dir=${VTDATAROOT}/tmp \
   --recovery-period-block-duration "10m" \
   --instance-poll-time "1s" \
-  --topo-information-refresh-duration "30s" \
-  --alsologtostderr
+  --topo-information-refresh-duration "30s"
  ```
 
 You can optionally add a `clusters_to_watch` flag that contains a comma separated list of keyspaces or `keyspace/shard` values. If specified, VTOrc will manage only those clusters.

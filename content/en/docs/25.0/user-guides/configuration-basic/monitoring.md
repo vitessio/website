@@ -8,7 +8,7 @@ This section describes how to monitor Vitess components. Additionally, we recomm
 
 ## Logging
 
-Vitess uses structured JSON logging by default. Log output goes to stderr as JSON, making it easy to ingest into systems like Elasticsearch, Splunk, or Loki.
+Vitess writes structured logs to stderr. The default JSON format is easy to ingest into systems like Elasticsearch, Splunk, or Loki. To keep logs in files, redirect stderr or collect it with your process manager or container runtime.
 
 ### Log format
 
@@ -35,10 +35,6 @@ Use the `--log-level` flag to control the minimum log level:
 | `info` | General operational information (default) |
 | `warn` | Warning messages |
 | `error` | Error messages only |
-
-### Legacy logging
-
-To revert to the previous glog-based logging backend, pass `--log-structured=false`. glog is deprecated as of v24 and will be removed in v25.
 
 ## Tools
 

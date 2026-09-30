@@ -21,7 +21,6 @@ The necessary arguments to a `mysqlctl` are the `tablet_uid` and `mysql_port`. H
 
 ```sh
 mysqlctl \
-  --log-dir=${VTDATAROOT}/tmp \
   --tablet-uid=100 \
   --mysql-port=17100 \
   init
@@ -40,7 +39,6 @@ And then launch mysqlctl with as follows:
 
 ```sh
 EXTRA_MY_CNF=”/path/to/common.cnf” mysqlctl \
-  --log-dir=${VTDATAROOT}/tmp \
   --tablet-uid=100 \
   --mysql-port=17100 \
   init
@@ -108,7 +106,6 @@ To enable communication with vttablet, the server must be configured to receive 
 
 ```
 mysqlctld \
-  --log-dir=${VTDATAROOT}/tmp \
   --tablet-uid=100 \
   --mysql-port=17100 \
   --socket-file=/path/to/socket_file
@@ -148,7 +145,6 @@ Here is a typical vttablet invocation:
 
 ```text
 vttablet <topo_flags> <backup_flags> \
-  --log-dir=${VTDATAROOT}/tmp \
   --cell=cell1 \
   --tablet-path=cell1-100 \
   --init-keyspace=commerce \

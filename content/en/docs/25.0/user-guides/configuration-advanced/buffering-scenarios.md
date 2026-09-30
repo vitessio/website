@@ -39,7 +39,7 @@ the terminal window and hit enter:
 ```
 Terminal 1
     $ vtgate --topo-implementation etcd2 --topo-global-server-address localhost:2379 \
-    --topo-global-root /vitess/global --log-dir ~/github/vitess/examples/local/vtdataroot/tmp \
+    --topo-global-root /vitess/global \
     --log-queries-to-file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
     --port 15001 --grpc-port 15991 --mysql-server-port 15306 --mysql-server-socket-path /tmp/mysql.sock \
     --cell zone1 --cells-to-watch zone1 --tablet-types-to-wait PRIMARY,REPLICA \
@@ -202,7 +202,7 @@ to our vtgate process: `-enable_buffer=1`
 ```
 Terminal 1:
     $ vtgate --topo-implementation etcd2 --topo-global-server-address localhost:2379 \
-    --topo-global-root /vitess/global --log-dir ~/github/vitess/examples/local/vtdataroot/tmp \
+    --topo-global-root /vitess/global \
     --log-queries-to-file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
     --port 15001 --grpc-port 15991 --mysql-server-port 15306 --mysql-server-socket-path /tmp/mysql.sock \
     --cell zone1 --cells-to-watch zone1 --tablet-types-to-wait PRIMARY,REPLICA \
@@ -270,7 +270,7 @@ Restart the vtgate process to clear metrics:
 Terminal 1:
     Ctrl + C
     $ vtgate --topo-implementation etcd2 --topo-global-server-address localhost:2379 \
-    --topo-global-root /vitess/global --log-dir ~/github/vitess/examples/local/vtdataroot/tmp \
+    --topo-global-root /vitess/global \
     --log-queries-to-file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
     --port 15001 -grpc_port 15991 --mysql-server-port 15306 --mysql-server-socket-path /tmp/mysql.sock \
     --cell zone1 -cells_to_watch zone1 --tablet-types-to-wait PRIMARY,REPLICA \
@@ -342,7 +342,7 @@ Terminal 1:
     Hit "Ctrl + C" to kill the vtgate process
 
     $ vtgate --topo-implementation etcd2 --topo-global-server-address localhost:2379 \
-    --topo-global-root /vitess/global --log-dir ~/github/vitess/examples/local/vtdataroot/tmp \
+    --topo-global-root /vitess/global \
     --log-queries-to-file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
     --port 15001 --grpc-port 15991 --mysql-server-port 15306 --mysql-server-socket-path /tmp/mysql.sock \
     --cell zone1 --cells-to-watch zone1 --tablet-types-to-wait PRIMARY,REPLICA \
@@ -400,7 +400,7 @@ Terminal 1:
     Hit "Ctrl + C" to kill the vtgate process
 
     $ vtgate --topo-implementation etcd2 --topo-global-server-address localhost:2379 \
-    --topo-global-root /vitess/global --log-dir ~/github/vitess/examples/local/vtdataroot/tmp \
+    --topo-global-root /vitess/global \
     --log-queries-to-file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
     --port 15001 --grpc-port 15991 --mysql-server-port 15306 --mysql-server-socket-path /tmp/mysql.sock \
     --cell zone1 --cells-to-watch zone1 --tablet-types-to-wait PRIMARY,REPLICA \
@@ -472,7 +472,7 @@ Terminal 1:
     $ ps aux | grep [v]tgate
     $ pkill vtgate
     $ vtgate --topo-implementation etcd2 --topo-global-server-address localhost:2379 \
-    --topo-global-root /vitess/global --log-dir ~/github/vitess/examples/local/vtdataroot/tmp \
+    --topo-global-root /vitess/global \
     --log-queries-to-file ~/github/vitess/examples/local/vtdataroot/tmp/vtgate_querylog.txt \
     --port 15001 --grpc-port 15991 --mysql-server-port 15306 --mysql-server-socket-path /tmp/mysql.sock \
     --cell zone1 --cells-to-watch zone1 --tablet-types-to-wait PRIMARY,REPLICA \

@@ -9,7 +9,6 @@ Even if brought up within each cell, vtctld itself is not tied to that cell. It 
 
 ```sh
 vtctld <topo_flags> <backup_flags> \
-  --log-dir=${VTDATAROOT}/tmp \
   --port=15000 \
   --grpc-port=15999 \
   --service-map='grpc-vtctl,grpc-vtctld'

@@ -18,7 +18,6 @@ Here is a sample vtgate invocation:
 
 ```text
 vtgate <topo_flags> \
-  --log-dir=${VTDATAROOT}/tmp \
   --cell=cell1 \
   --cells-to-watch=cell1 \
   --tablet-types-to-wait=PRIMARY,REPLICA \

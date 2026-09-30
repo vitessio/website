@@ -51,7 +51,7 @@ vtctldclient --server=<vtctld_host>:<vtctld_port> RestoreFromBackup <tablet-alia
 Example:
 
 ```shell
-vtctldclient --server localhost:15999 --alsologtostderr RestoreFromBackup zone1-0000000101
+vtctldclient --server localhost:15999 RestoreFromBackup zone1-0000000101
 ```
 
 If successful, the tablet's MySQL server rejoins the shard's replication stream, to eventually captch up and be able to serve traffic.

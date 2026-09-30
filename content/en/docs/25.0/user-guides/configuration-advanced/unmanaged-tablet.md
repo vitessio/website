@@ -56,7 +56,6 @@ The variables `TOPOLOGY_FLAGS` and `VTDATAROOT` should already be in the environ
 mkdir -p $VTDATAROOT/vt_0000000401
 vttablet \
  $TOPOLOGY_FLAGS \
- --logtostderr \
  --log-queries-to-file $VTDATAROOT/tmp/vttablet_0000000401_querylog.txt \
  --tablet-path "zone1-0000000401" \
  --init-keyspace legacy \

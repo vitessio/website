@@ -60,10 +60,12 @@ To avoid repetition we will use `<backup_flags>` in our examples to signify the 
 
 ## Logging
 
-Vitess servers write to log files, and they are rotated when they reach a maximum size. It’s recommended that you run at INFO level logging. The information printed in the log files can come in handy for troubleshooting. You can limit the disk usage by running cron jobs that periodically purge or archive them.
+Vitess servers write their logs to stderr as structured JSON. Plan to capture stderr with your process manager, container runtime, or log collector. To keep logs in local files, redirect stderr:
 
-All Vitess servers accept a `--log-dir` argument and will create the log files in that specified directory. For example:
-
-```text
---log-dir=${VTDATAROOT}/tmp
+```sh
+vtgate <flags> 2> ${VTDATAROOT}/tmp/vtgate.log
 ```
+
+Run at the default `info` log level, which records the information you need for most troubleshooting. If you write logs to files, rotate, purge, or archive them to limit disk usage.
+
+See [Monitoring](../monitoring/#logging) for the `--log-level` and `--log-format` flags.
