@@ -184,8 +184,25 @@ If the engine is `xtrabackup`, the tablet can continue to serve traffic while th
 __Run the following vtctl command to backup a specific shard:__
 
 ``` sh
-vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard [--allow-primary=false] [--upgrade-safe=false] <keyspace/shard>
+vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard [--allow-primary=false] [--upgrade-safe=false] [--tablet-types=<types>] <keyspace/shard>
 ```
+
+By default, `BackupShard` takes the backup on whichever `REPLICA`, `RDONLY`, or `SPARE` tablet in the shard has the lowest replication lag, regardless of its type. Tablets whose replication lag is unknown are skipped. If no such tablet is available and you pass `--allow-primary`, the backup is taken on the primary instead.
+
+To control which type of tablet runs the backup, pass `--tablet-types` with a comma-separated list of types in order of preference. Vitess uses the first listed type that has a usable tablet, and picks the tablet with the lowest replication lag within that type. For example, backups are resource-intensive, so you might run them on an `RDONLY` tablet to keep the load off the tablets serving replica reads:
+
+```sh
+# Prefer an RDONLY tablet, falling back to a REPLICA
+vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard --tablet-types=rdonly,replica commerce/0
+
+# Use an RDONLY tablet only; fail if none can take the backup
+vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard --tablet-types=rdonly commerce/0
+
+# Use the primary only when no RDONLY tablet can take the backup
+vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard --tablet-types=rdonly,primary --allow-primary commerce/0
+```
+
+`--tablet-types` accepts `replica`, `rdonly`, `spare`, and `primary`. Listing `primary` requires `--allow-primary`; otherwise the command is rejected. When `--tablet-types` is set, `--allow-primary` doesn't add the primary on its own: the primary is only considered if it appears in the list, at its position in the list.
 
 ## Create an incremental backup with vtctl
 
