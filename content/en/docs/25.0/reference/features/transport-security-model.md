@@ -55,25 +55,30 @@ This is not enabled by default, as usually the different Vitess servers will run
 
 ### Optional TLS
 
-A server started with `--grpc-enable-optional-tls` accepts both encrypted (TLS) and plain-text gRPC connections on the same port. With it, you can move an existing cluster to TLS without downtime. Clients switch to TLS one at a time while the server keeps serving both types of connection. It applies to any Vitess gRPC server and builds on the `--grpc-cert`, `--grpc-key`, and `--grpc-ca` flags described above. It is disabled by default; a server started without it is unchanged.
+A server started with `--grpc-enable-optional-tls` accepts both TLS and plain-text gRPC connections on the same port. Use it to move an existing cluster to TLS without downtime. Clients switch to TLS one at a time while the server keeps serving the rest in plain text. It applies to any Vitess gRPC server and works with the `--grpc-cert`, `--grpc-key`, and `--grpc-ca` flags described above. It is disabled by default.
 
-When a server also runs `--grpc-ca` (which requires a client certificate), it refuses plain-text callers: it closes the connection and the caller's RPC fails. It keeps serving clients that present a valid client certificate over TLS. A client certificate can only be presented inside a TLS handshake. A plain-text connection performs no handshake, so it cannot meet the requirement. A `--grpc-crl` configured alongside `--grpc-ca` is enforced on those TLS clients.
+{{< warning >}}
+Plain-text connections are served unauthenticated, even when the server also runs `--grpc-ca`. A client certificate can only be presented in a TLS handshake. The client certificate check of `--grpc-ca`, and a `--grpc-crl` configured with it, therefore only applies to TLS connections. Any caller that connects in plain text bypasses that check for as long as optional TLS is enabled. Remove `--grpc-enable-optional-tls` once every client uses TLS.
+{{< /warning >}}
 
-A server that runs `--grpc-enable-optional-tls` without `--grpc-ca` keeps accepting plain-text connections.
+At startup, a server with optional TLS logs a warning that it accepts plain-text connections. When `--grpc-ca` is also set, the warning adds that those connections are not authenticated.
 
-At startup the server logs a warning stating whether it will accept or refuse plain-text connections, so you can confirm which policy is in effect before moving clients.
+#### Connection Metrics
+
+A server with optional TLS reports its connections by transport, labeled `tls` or `plaintext`, in two metrics at its `/debug/vars` endpoint (see [Monitoring](../monitoring/)):
+
+| Name | Type | Description |
+|:----|:-----|:------------|
+| `GrpcOptionalTlsOpenConnections` | gauge | Connections currently open, by transport. |
+| `GrpcOptionalTlsConnections` | counter | Connections that completed a handshake since the server started, by transport. |
+
+Check both before you remove `--grpc-enable-optional-tls`. gRPC connections are long-lived, and a client that connected long ago does not handshake again. A `plaintext` value of zero in `GrpcOptionalTlsOpenConnections` shows that no plain-text client is connected now. A `plaintext` value of `GrpcOptionalTlsConnections` that has stopped increasing shows that no plain-text client has connected recently. Neither metric shows a client that is offline or connects only occasionally, so confirm those clients separately.
 
 #### Migrate to Mutual TLS Without Downtime
 
-To reach mutual TLS without refusing any client mid-migration, add `--grpc-ca` last:
-
-1. Start each server with `--grpc-cert`, `--grpc-key`, and `--grpc-enable-optional-tls`.
-2. Move each client to TLS with its own client certificate.
-3. Once every client presents a valid client certificate, add `--grpc-ca` and remove `--grpc-enable-optional-tls` at the same time, so the server now requires mutual TLS.
-
-No client is refused at any stage, so the cluster reaches mutual TLS without downtime.
-
-Adding `--grpc-ca` to a server before that server's clients have moved to TLS refuses that server's remaining plain-text connections.
+1. Start each server with `--grpc-cert`, `--grpc-key`, and `--grpc-enable-optional-tls`. You can add `--grpc-ca` at this stage. It requires a valid client certificate from TLS clients while plain-text clients keep connecting. You can then confirm the certificate check on each client as it moves.
+2. Move each client to TLS, with its own client certificate if the server uses `--grpc-ca`.
+3. When the connection metrics show no plain-text connections, and any clients that connect only occasionally have moved, remove `--grpc-enable-optional-tls` from each server. The server then accepts only TLS connections and, with `--grpc-ca`, requires a client certificate from each one.
 
 ### Options for vtctld
 
