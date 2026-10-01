@@ -88,16 +88,23 @@ This command performs the following actions:
 
 ### Requiring a position on the new primary
 
-`EmergencyReparentShard` ranks candidates only against each other and promotes the most advanced. When every surviving candidate has lost the same relay log, they all look fully caught up relative to one another. This can happen after a `CHANGE REPLICATION SOURCE TO` or a restart with `relay_log_recovery=1`. In that state, the command can promote a replica that is missing transactions the failed primary had already acknowledged.
+`EmergencyReparentShard` compares candidates only to each other and promotes the most advanced one. If every candidate lost the same received transactions, they all look fully applied, and the command cannot see that they are behind the failed primary. This can happen after a `CHANGE REPLICATION SOURCE TO` or a restart with `relay_log_recovery=1`, which discard the relay log. The command then promotes a replica that is missing transactions the failed primary had already acknowledged.
 
-The optional [`--required-position`](../../../reference/programs/vtctldclient/vtctldclient_EmergencyReparentShard/) flag guards against this. It names a position the new primary must already have received, either applied or still sitting unapplied in its relay log. Pass a MySQL GTID set, with or without the `MySQL56/` prefix (for example `<uuid>:1-100`):
+To prevent this, pass the optional [`--required-position`](../../../reference/programs/vtctldclient/vtctldclient_EmergencyReparentShard/) flag with a position that the new primary must not lose, for example the last `gtid_executed` of the failed primary. The value is a MySQL GTID set such as `<uuid>:1-100`. The `MySQL56/` prefix is optional. A candidate meets the requirement when it has received the position, either applied or still in its relay log. The flag sets the `required_position` field of the `EmergencyReparentShard` RPC.
 
-* If at least one candidate has received the position, the reparent proceeds as it normally would.
-* If no candidate has received it, `EmergencyReparentShard` fails and reports the most advanced received positions it found, so you can see how far behind the survivors are. It runs this check before waiting on any relay log, so an unsatisfiable requirement fails fast instead of leaving replication stopped until a wait times out.
+```shell
+vtctldclient EmergencyReparentShard --required-position "<uuid>:1-100" <keyspace>/<shard>
+```
 
-The check is off by default; omit the flag to keep the standard "most advanced among the surviving candidates" behavior. It is supported only on shards that use MySQL GTID-based replication. A value supplied on a non-GTID shard, in a non-MySQL56 flavor, or that cannot be parsed is rejected before the reparent runs.
+* If at least one candidate has received the position, the reparent continues as usual.
+* If no candidate has received it, the command fails with `FAILED_PRECONDITION` and reports the most advanced positions that the candidates received. It checks before it waits on any relay log, so the reparent fails without waiting for a timeout. It checks again after errant GTID detection, and fails in the same way if detection removed every candidate that has the position.
 
-`--required-position` only asserts a floor for the new primary; it does not recover the missing transactions itself. Supply it when an external source of truth (a backup, a surviving semi-sync acknowledgement, or an application checkpoint) tells you a position was durably committed. Use it when you would rather have the emergency reparent fail than silently promote a stale replica.
+The flag does not recover missing transactions. It makes the reparent fail instead of promoting a stale replica, and you decide how to recover.
+
+Keep these limitations in mind:
+
+* **MySQL GTID shards only.** A value that is not a MySQL GTID set, or an empty GTID set, fails with `INVALID_ARGUMENT` before the command locks the shard. On a shard that does not use MySQL GTIDs, the command fails with `INVALID_ARGUMENT` only after it stops replication and demotes a reachable primary. Do not use the flag on such a shard.
+* **vtctld runs the check.** An older vtctld ignores the flag and runs the reparent without the requirement. Upgrade vtctld before you rely on the flag.
 
 ### MySQL version-aware primary election
 
