@@ -69,23 +69,34 @@ ACL check for these statements, it denies them. The affected statements are
 non-exempt callers could otherwise use these statements to reach tables their
 ACL denied.
 
-The denial applies to every caller that is not in the exempt ACL, including
-callers whose table grants would otherwise be sufficient, because VTTablet
-cannot determine which tables the statement touches.
+Because VTTablet cannot determine which tables the statement touches, a grant
+on specific tables cannot cover it. Two kinds of callers can still run these
+statements:
 
-To keep running these statements, add the caller to the exempt ACL through
-`--queryserver-config-acl-exempt-acl`. Exempt callers short-circuit the check
-and can still run them. The name you list there is the `name` field of an ACL
-rule, described in
-[Format of the table ACL config file](#format-of-the-table-acl-config-file).
+ * A caller listed in `readers`, `writers`, and `admins` of an ACL rule whose
+   `table_names_or_prefixes` is `%`. That caller can already read, write, and
+   alter every table, so the statement cannot reach anything beyond its
+   grants. All three roles are required, because no role implies another: a
+   caller that is only an admin on `%` is still denied. A `%` rule covers every
+   table, so it must be the only rule in the config.
+ * A caller in the exempt ACL. Name the ACL with
+   `--queryserver-config-acl-exempt-acl`; exempt callers skip table ACL
+   checks entirely. The name you list there is the `name` field of an ACL
+   rule, described in
+   [Format of the table ACL config file](#format-of-the-table-acl-config-file).
+
+Every other caller is denied, including callers whose grants on specific
+tables would otherwise be sufficient.
 
 To gauge impact before enforcing, enable
 `--queryserver-config-enable-table-acl-dry-run`. The denial is then only
 recorded, emitting the
 [TableACLPseudoDenied](../../configuration-basic/monitoring) metric, and the
-statement still runs. Each pseudo-denial carries `undetermined-table-set` in the
-metric's `TableName` label, so you can filter and count these prospective
-denials.
+statement still runs. These checks have no table to name, so they carry
+`undetermined-table-set` in the `TableName` label. Look for that label in
+`TableACLPseudoDenied` and `TableACLDenied` for denied callers, and in
+`TableACLAllowed` for callers with every role on `%`. For an allowed caller,
+the `TableGroup` label is the name of the `%` rule.
 
 When strict table ACL is off, which is the default, nothing changes and these
 statements run as before.
