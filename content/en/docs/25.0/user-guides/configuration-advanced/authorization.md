@@ -233,14 +233,21 @@ When VTTablet cannot fully parse a `CREATE TABLE`, it cannot determine
 which tables the statement reads. Cases VTTablet cannot parse include the
 row-copying forms `CREATE TABLE <table> (SELECT ...)` and `AS TABLE <source>`,
 an `EXCEPT` or `INTERSECT` source, and any other syntax it does not support.
-Under strict table ACL it denies such a statement outright for any caller
-not in the exempt ACL, returning a `PERMISSION_DENIED` (`PermissionDenied`)
-error that reports the command was denied `for a table set that cannot be
-determined`.
+Under strict table ACL it denies such a statement, returning a
+`PERMISSION_DENIED` (`PermissionDenied`) error that reports the command was
+denied `for a table set that cannot be determined`.
 
-To let a legitimate caller run these statements, an operator adds its ACL to
-[`--queryserver-config-acl-exempt-acl`](#vttablet-parameters-for-table-acls) in
-the VTTablet configuration. An exempt ACL bypasses all strict-table-ACL
+Two kinds of callers can still run such a statement:
+
+ * A caller listed in `readers`, `writers`, and `admins` of an ACL rule whose
+   `table_names_or_prefixes` is `%`. It already holds every role on every
+   table, so the statement cannot reach anything beyond its grants. A caller
+   missing any one of the three roles on `%` is denied.
+ * A caller in an ACL that an operator adds to
+   [`--queryserver-config-acl-exempt-acl`](#vttablet-parameters-for-table-acls)
+   in the VTTablet configuration.
+
+An exempt ACL bypasses all strict-table-ACL
 enforcement, not only the unparseable-`CREATE TABLE` denial: its callers also
 skip the base read, write and admin checks and every embedded-read check in this
 section. Exempting an ACL therefore reopens that access. Schema operations invoked through
@@ -251,17 +258,18 @@ ACL checks.
 
 This checking applies only under strict table ACL, which is off by default
 (`--queryserver-config-strict-table-acl` defaults to `false`). Turning it
-on denies a caller that is under-granted for one of the statements above,
-and denies an unparseable `CREATE TABLE` from a non-exempt caller. This
+on denies a caller that is under-granted for one of the statements above.
+It also denies an unparseable `CREATE TABLE` unless the caller is exempt or
+holds every role on `%`. This
 trade-off applies to operators who already run strict table ACL. Preview
 the impact with a dry run before you enforce it.
 
 Under a dry run (`--queryserver-config-enable-table-acl-dry-run`), these
-prospective denials are recorded rather than enforced. A denial for a
+prospective denials are recorded rather than enforced. A check for a
 statement whose table set could not be determined carries the table-label
-value `undetermined-table-set` on the `TableACLPseudoDenied` and
-`TableACLDenied` [metrics](../../configuration-basic/monitoring), which
-lets you tell it apart from a per-table denial while you gauge impact.
+value `undetermined-table-set` on the `TableACLPseudoDenied`, `TableACLDenied`,
+and `TableACLAllowed` [metrics](../../configuration-basic/monitoring), which
+lets you tell it apart from a per-table check while you gauge impact.
 
 ## Connection settings cannot contain subqueries under strict table ACL
 
