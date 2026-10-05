@@ -10,7 +10,7 @@ Choose the right installation method for your use case. Each option serves diffe
 ## Quickstart Guide (Linux)
 If you are new to Vitess, start with the local install guide to install Vitess for testing purposes, from pre-compiled binaries.
 
-The [Local Install](local/) guide runs Vitess directly on Linux using pre-compiled binaries. Use the local install to get hands-on experience without container orchestration.
+The [Quickstart Install](local/) guide runs Vitess directly on Linux using pre-compiled binaries. Use the local install to get hands-on experience without container orchestration.
 
 **Prerequisites:** 4GB+ RAM, 20GB disk, MySQL 8.0, etcd, Node.js.
 
