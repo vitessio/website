@@ -83,7 +83,7 @@ These error messages are internal to Vitess. If you are getting other errors fro
 | VT09027 |  | Recursive Common Table Expression '%s' can contain neither aggregation nor window functions in recursive query block | 3575 | HY000 |
 | VT09028 |  | In recursive query block of Recursive Common Table Expression '%s', the recursive table must neither be in the right argument of a LEFT JOIN, nor be forced to be non-first with join order hints | 3576 | HY000 |
 | VT09029 |  | In recursive query block of Recursive Common Table Expression %s, the recursive table must be referenced only once, and not in any subquery | 3577 | HY000 |
-| VT09030 |  | Recursive query aborted after 1000 iterations. | 3636 | HY000 |
+| VT09030 |  | Recursive query aborted after %d iterations. Try increasing @@cte_max_recursion_depth to a larger value. | 3636 | HY000 |
 | VT09031 |  | Primary demotion is stalled | 0 |  |
 | VT09032 | This error occurs after a VT15001 error was sent to the client. Later queries in the same session will continue to fail until the client sends a ROLLBACK. | previous transaction failed. Issue a ROLLBACK to resolve the failure. | 0 |  |
 | VT09033 | Vitess does not allow modifications to internal Vitess tables. | modification of internal table '%s' is not allowed | 0 |  |

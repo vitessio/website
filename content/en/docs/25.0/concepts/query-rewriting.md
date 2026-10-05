@@ -169,6 +169,7 @@ Here is a list of all the system variables that are handled by Vitess and how th
 | thread_pool_high_priority_connection    | NotSupported   |
 | thread_pool_prio_kickup_timer           | NotSupported   |
 | transaction_write_set_extraction        | NotSupported   |
+| cte_max_recursion_depth                 | ReservedConn   |
 | default_week_format                     | ReservedConn   |
 | end_markers_in_json                     | ReservedConn   |
 | eq_range_index_dive_limit               | ReservedConn   |

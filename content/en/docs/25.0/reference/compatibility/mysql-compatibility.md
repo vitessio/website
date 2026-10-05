@@ -163,6 +163,7 @@ Use cases:
 ### Common Table Expressions
  - Non-recursive CTEs are supported.
  - Recursive CTEs have experimental support; feedback is encouraged.
+ - The `cte_max_recursion_depth` session system variable sets how many iterations a recursive CTE can run before Vitess aborts it with error `VT09030`. The default is 1000, matching MySQL.
 
 ### Window Functions
 
