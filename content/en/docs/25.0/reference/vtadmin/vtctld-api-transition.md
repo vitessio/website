@@ -38,9 +38,9 @@ One of the main differences between vtctld and VTAdmin API is that VTAdmin API r
 | Get SrvKeyspaces for a specific keyspace | GET`/srv_keyspace/<cell>/<keyspace>` | - | GET `/api/srvkeyspace/<cluster>/<keyspace>` | <li>`cell`: Optional cell filter</li> | - |
 | Get all tablets by cell and/or shard | GET `/tablets` | `shard`,`cell` | GET `/api/tablets` | <li>`cluster_id`: Optional cluster filter</li> | - |
 | Get a tablet | GET `/tablets/<tablet>` | - | GET `/api/tablets/<tablet>` | <li>`cluster_id`: Optional cluster filter</li> | - |
-| Get tablet health | GET `/tablets/<tablet>/health` | - | GET `/api/tablet/<tablet>/healthcheck` | <li>`cluster_id`: Optional cluster filter</li> | - |
+| Get tablet health | GET `/tablets/<tablet>/health` | - | POST `/api/tablet/<tablet>/healthcheck` | <li>`cluster_id`: Optional cluster filter</li> | - |
 | Get a tablet's full status | - | - | GET `/api/tablet/<tablet>/full_status` | <li>`cluster_id`: Optional cluster filter</li> | - |
-| Ping tablet | POST `/tablets/<tablet>` | `action`: `PingTablet` | GET `/api/tablet/<tablet>/ping` | <li>`cluster_id`: Optional cluster filter</li> | - |
+| Ping tablet | POST `/tablets/<tablet>` | `action`: `PingTablet` | POST `/api/tablet/<tablet>/ping` | <li>`cluster_id`: Optional cluster filter</li> | - |
 | Refresh tablet | POST `/tablets/<tablet>` | `action`: `RefreshState` | PUT `/api/tablet/<tablet>/refresh` | <li>`cluster_id`: Optional cluster filter</li> | - |
 | Refresh tablet replication source | - | - | PUT `/api/tablet/<tablet>/refresh_replication_source`| <li>`cluster_id`: Optional cluster filter</li>  | - |
 | Reload tablet schema | POST `/tablets/<tablet>` | `action`: `ReloadSchema` | PUT `/api/tablet/<tablet>/reload_schema` | <li>`cluster_id`: Optional cluster filter</li> | - |
