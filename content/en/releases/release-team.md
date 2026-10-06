@@ -1,7 +1,9 @@
 ---
 title: Release Team
 description: Learn how a release team is structured
-weight: 2
+weight: 3
+aliases:
+  - /docs/releases/release-team/
 ---
 
 The release team changes for each [release cycle](release-cycle).

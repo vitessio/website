@@ -1,7 +1,7 @@
 ---
 title: Build on macOS
 description: Instructions for building Vitess on your machine for testing and development purposes
-weight: 1
+weight: 7
 ---
 
 {{< info >}}
