@@ -1,5 +1,5 @@
 ---
-title: Planning
+title: Setting up and Managing a Vitess Cluster
 weight: 3
 aliases: ['/docs/user-guides/configuration-basic/configuring-components/'] 
 ---

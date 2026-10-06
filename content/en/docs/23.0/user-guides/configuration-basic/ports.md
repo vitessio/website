@@ -1,9 +1,8 @@
 ---
-title: Ports
+title: Ports and Network interactions in Vitess
 weight: 16
 aliases: ['/docs/launching/server-configuration/', '/docs/user-guides/server-configuration/', '/docs/user-guides/configuring-components/']
 ---
-# Ports and Network interactions in Vitess
 
 Many/most of these ports are fully configurable, but we are listing their
 defaults or the defaults we use in examples here. Your

@@ -1,5 +1,5 @@
 ---
-title: Keyspaces and Shards
+title: Creating Keyspaces and Shards
 weight: 7
 ---
 
