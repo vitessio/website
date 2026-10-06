@@ -165,11 +165,37 @@ The total number of packets sent by this vttablet across all workflows
 ```
 
 ## VTGate Metrics
+
+VTGate exports these metrics for [VStream](../vstream/) clients at the `/debug/vars` endpoint of vtgate's http status pages. Each metric is labeled by keyspace, shard, and tablet type, so a value such as `"commerce.-80.PRIMARY"` covers the VStreams reading from that shard.
+
 #### VStreamsCreated
+
 The total number of vstreams created during the lifetime of this vtgate.
+
 #### VStreamsCount
-The number of currently active VStreams.
+
+The number of currently active VStreams. A shard stream stops being counted when it ends, with or without an error. For example, a shard stream ends without an error when a resharding journal event moves the stream to the new shards.
+
 #### VStreamsEventsStreamed
+
 The number of events sent from the VStream.
+
 #### VStreamsEndedWithErrors
+
 The number of times that the VStream has been ended with an error that was not initiated by the VStream client.
+
+#### VStreamsLag
+
+The highest lag, in seconds, across the VStreams currently streaming from each keyspace, shard, and tablet type. Lag is the difference between the time the source vttablet streams an event and the event's binlog timestamp. A shard appears once one of its open VStreams has received an event. It disappears when its last VStream closes.
+
+#### VStreamsTransactionsChunked
+
+The number of transactions that exceeded the VStream's transaction chunk size and were sent to the client in contiguous chunks.
+
+### Labeling VStream metrics by caller
+
+When several applications stream from the same shard, set the vtgate `--vstream-metrics-include-caller` flag to monitor each application separately. The flag adds a `CallerID` label to all the VTGate metrics above. For example, `"commerce.-80.PRIMARY.orders-cdc"` covers only the VStreams from the `orders-cdc` application. The flag is off by default.
+
+The `CallerID` label is the principal of the effective [`CallerID`](../vstream/#context) that the client sets in the VStream request context. Streams that do not set a principal get an empty `CallerID`.
+
+Each distinct principal adds a series for every keyspace, shard, and tablet type it streams from. To keep the number of series bounded, set the principal to a logical application name. Avoid per-instance IDs such as pod or host names.
