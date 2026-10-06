@@ -74,12 +74,15 @@ on specific tables cannot cover it. Two kinds of callers can still run these
 statements:
 
  * A caller listed in `readers`, `writers`, and `admins` of an ACL rule whose
-   `table_names_or_prefixes` is `%`. That caller can already read, write, and
-   alter every table, so the statement cannot reach anything beyond its
-   grants. All three roles are required, because no role implies another: a
-   caller that is only an admin on `%` is still denied. A `%` rule covers every
-   table, so it must be the only rule in the config.
- * A caller in the exempt ACL. Name the ACL with
+   `table_names_or_prefixes` is `%` can run `DO`, `REPAIR`, and `OPTIMIZE`.
+   That caller can already read, write, and alter every table, so these
+   statements cannot reach anything beyond its grants. All three roles are
+   required, because no role implies another: a caller that is only an admin
+   on `%` is still denied. A `%` rule covers every table, so it must be the
+   only rule in the config. Even this caller cannot run `CALL` or `LOAD DATA`.
+   A `SQL SECURITY DEFINER` procedure runs with its definer's privileges, and
+   `LOAD DATA INFILE` reads files on the server. Table ACL grants neither.
+ * A caller in the exempt ACL can run all five statements. Name the ACL with
    `--queryserver-config-acl-exempt-acl`; exempt callers skip table ACL
    checks entirely. The name you list there is the `name` field of an ACL
    rule, described in
@@ -93,10 +96,10 @@ To gauge impact before enforcing, enable
 recorded, emitting the
 [TableACLPseudoDenied](../../configuration-basic/monitoring) metric, and the
 statement still runs. These checks have no table to name, so they carry
-`undetermined-table-set` in the `TableName` label. Look for that label in
-`TableACLPseudoDenied` and `TableACLDenied` for denied callers, and in
-`TableACLAllowed` for callers with every role on `%`. For an allowed caller,
-the `TableGroup` label is the name of the `%` rule.
+`undetermined-table-set` in the `TableName` label and an empty `TableGroup`
+label. Look for `undetermined-table-set` in `TableACLPseudoDenied` and `TableACLDenied` for
+denied statements, and in `TableACLAllowed` for `DO`, `REPAIR`, and `OPTIMIZE`
+run by a caller with every role on `%`.
 
 When strict table ACL is off, which is the default, nothing changes and these
 statements run as before.
