@@ -309,6 +309,10 @@ If TLS was not setup on the vtgate at all, an error like this could have resulte
   ERROR 2026 (HY000): SSL connection error: SSL is required but the server doesn't support it
 ```
 
+{{< info >}}
+If a certificate revocation list (CRL) is configured for any gRPC or MySQL component, certificate revocation is enforced on every connection, so a connection that worked before can now be rejected. See [Certificate Revocation Lists (CRLs)](../../../reference/features/transport-security-model/#certificate-revocation-lists-crls) for the flags and enforcement details.
+{{< /info >}}
+
 ### vttablet to MySQL
 
 A common Vitess deployment model is to co-locate vttablet and MySQL on the same host/VM/container. In a case like this, vttablet connectivity to MySQL will be via local unix socket or TCP connection on localhost. It is unnecessary to configure encryption between vttablet and MySQL in this case, since the traffic never leaves the local machine/VM. However, in some deployment models vttablet and MySQL are running on different hosts, and you may want vttablet to use TLS to speak to MySQL.
@@ -376,6 +380,10 @@ Note that using the above `db_flags` will also result in the MySQL to MySQL comm
 In Vitess, communication between vtgate and vttablet instances are via gRPC. gRPC uses HTTP/2 as a transport protocol, but by default this is not encrypted in Vitess.  To secure this data path you need to, at a minimum, configure TLS for gRPC on the server (vttablet) side.
 
 Other components, as detailed above, also connect to vttablet via gRPC. After configuring vttablet gRPC for TLS, you will need to configure all these components (vtgate, other vttablets, vtctld) explicitly to connect using TLS to vttablet via gRPC, or you will have a partially or wholly non-functional system.
+
+{{< info >}}
+If a CRL is configured for any of these gRPC connections — through `--tablet-grpc-crl`, `--tablet-manager-grpc-crl`, `--binlog-player-grpc-crl`, or `--vtctld-grpc-crl` — revocation is enforced on every connection, so a formerly working connection can now be rejected. See [Certificate Revocation Lists (CRLs)](../../../reference/features/transport-security-model/#certificate-revocation-lists-crls) for the flags and enforcement details.
+{{< /info >}}
 
 #### vtgate to vttablet
 

@@ -6,7 +6,7 @@ aliases: ['/docs/user-guides/vtexplain/']
 
 # Introduction
 
-To see which queries are run on your behalf on the MySQL instances when you execute a query on vtgate, you can use `vexplain [ALL|PLAN|QUERIES|TRACE|KEYS]`.
+To see which queries are run on your behalf on the MySQL instances when you execute a query on vtgate, you can use `vexplain [ALL|MYSQLPLAN|PLAN|QUERIES|TRACE|KEYS]`.
 
 # `QUERIES` Type
 
@@ -220,6 +220,82 @@ mysql> vexplain all select * from corder join commerce.product as prod on corder
 ```
 
 This example uses the same query as the previous ones. For all the Route operators, we are annotating them with the MySQL explain output for the query that the route is executing.
+
+# `MYSQLPLAN` Type
+
+The `MYSQLPLAN` format runs MySQL's `EXPLAIN FORMAT=JSON` against the shards a `SELECT` would target. It never executes the wrapped query. Each shard's MySQL plan is attached to the corresponding `Route` node in the vtgate plan tree.
+This type is new in Vitess v25.0.
+
+## How it works
+
+`VEXPLAIN MYSQLPLAN` builds the real vtgate plan. For each `Route`, it resolves the target shards using only the vindex and topology metadata — it never queries a tablet or reads table data to do this.
+It then issues `EXPLAIN FORMAT=JSON` against every resolved shard; the wrapped query itself is never run.
+The per-shard MySQL plan is attached to the plan tree keyed by shard, so per-shard plan and cost differences are visible.
+
+Compared with the two closest modes on this page:
+
+- `PLAN`: returns the plan tree only — no MySQL explain and no resolved shards.
+- `ALL`: attaches MySQL explain but executes the query to discover the shard-level queries, and reports only one shard's plan per primitive.
+- `MYSQLPLAN`: never runs the wrapped query, and reports every resolved shard separately.
+
+## How to read the output
+
+The output contains a scalar output having a JSON description of the vtgate plan.
+Under `MYSQLPLAN`, each `Route` node carries `mysql_explain_json_by_shard`, a map keyed by shard name with one MySQL `EXPLAIN FORMAT=JSON` plan per resolved shard.
+`VEXPLAIN ALL` instead carries `mysql_explain_json`, a single object per primitive. MYSQLPLAN and ALL therefore use two separate keys, each with its own shape.
+
+### Example:
+
+```mysql
+mysql> vexplain mysqlplan select id from user;
+```
+
+```json
+{
+  "OperatorType": "Route",
+  "Variant": "Scatter",
+  "Keyspace": {
+    "Name": "ks",
+    "Sharded": true
+  },
+  "FieldQuery": "select id from `user` where 1 != 1",
+  "Query": "select id from `user`",
+  "Table": "user",
+  "mysql_explain_json_by_shard": {
+    "-40": { "query_block": { ... } },
+    "40-80": { "query_block": { ... } },
+    "80-c0": { "query_block": { ... } },
+    "c0-": { "query_block": { ... } }
+  }
+}
+```
+
+In this example the query scatters across all four shards; the routing signal is the `"Variant": "Scatter"` field shown earlier in the same JSON, distinct from the `mysql_explain_json_by_shard` map, which only shows what MySQL did on each shard. Each shard's MySQL plan appears separately under `mysql_explain_json_by_shard`, keyed by shard name.
+Each shard's value is a full `EXPLAIN FORMAT=JSON` `query_block` object, the same shape as the `ALL` example above, so the `{ ... }` placeholders here stand in for that object.
+
+## Supported and unsupported queries
+
+`VEXPLAIN MYSQLPLAN` supports only `SELECT` statements whose target shards can be resolved from a vindex without reading cluster data (a lookup vindex, which requires a mapping-table read, does not qualify — see below).
+
+Even though `MYSQLPLAN` never runs the wrapped query, MySQL itself executes the per-shard `EXPLAIN FORMAT=JSON`. That plan can materialize a derived table or a view, which is why the shapes that rely on those are rejected.
+
+Some query shapes are rejected at plan time. For these, use `VEXPLAIN ALL` instead:
+
+- DML (`INSERT`/`UPDATE`/`DELETE`) is rejected with `VEXPLAIN MYSQLPLAN only supports SELECT statements; use VEXPLAIN ALL instead`.
+- A `SELECT` whose shard set depends on data — such as a cross-shard join, a subquery, or a lookup vindex — is rejected with `VEXPLAIN MYSQLPLAN cannot resolve the target shards without executing the query (the query uses a cross-shard join, subquery, or lookup vindex); use VEXPLAIN ALL instead`.
+- A `SELECT` that reads a derived table or a view is rejected with `VEXPLAIN MYSQLPLAN does not support derived tables or views, because EXPLAIN FORMAT=JSON can materialize a derived table during optimization - running any stored function inside it once per shard - which would violate MYSQLPLAN's promise never to run the wrapped query; use VEXPLAIN ALL instead`.
+- A `SELECT SQL_CALC_FOUND_ROWS` with a `LIMIT` that also uses `GROUP BY` or `HAVING` is rejected with `VEXPLAIN MYSQLPLAN does not support SELECT SQL_CALC_FOUND_ROWS with GROUP BY or HAVING, because the planner rewrites the row count into a derived table that EXPLAIN could materialize; use VEXPLAIN ALL instead`.
+
+Three shapes are rejected with no `VEXPLAIN ALL` fallback, because running the query (which is what `VEXPLAIN ALL` does) would have a side effect:
+
+- A sequence next-value query, which would consume a sequence value.
+- A query that calls an advisory-lock function: `get_lock`, `release_lock`, `release_all_locks`, `is_free_lock`, or `is_used_lock`.
+- A query issued on a reserved connection, for example after creating a temporary table.
+
+## When to use MYSQLPLAN
+
+Use `vexplain mysqlplan` to see MySQL's chosen index and join plan for each shard of a `SELECT`, without paying the cost or side effects of running it. For example, use it to spot a single skewed shard whose optimizer statistics produce a worse plan than its peers.
+`MYSQLPLAN` shows what MySQL does on each shard, not why vtgate routed the query there: the plan's `Variant` field (for example `Scatter`) shows the routing, and `VEXPLAIN PLAN` shows the full routing plan. To narrow a query that scatters, see the [query-serving metrics](../../../reference/query-serving/metrics) and [vindex hints](../../vschema-guide/vindex-hints) guides.
 
 # `TRACE` Type
 

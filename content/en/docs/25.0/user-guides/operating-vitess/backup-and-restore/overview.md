@@ -267,6 +267,26 @@ All three programs can be made aware of Backup Engine and Backup Storage using t
         Minimum allowed value is 4 MiB. (default 1073741824 / 1 GiB)
       </td>
     </tr>
+    <tr>
+      <td><code>s3-backup-download-concurrency</code></td>
+      <td>For the <code>s3</code> plugin, the number of parallel download workers
+        (goroutines) used per file when restoring. The default of <code>1</code>
+        preserves the original behavior: each file is downloaded with a single
+        sequential <code>GetObject</code> call. Set this greater than
+        <code>1</code> to download each file in parallel using concurrent
+        byte-range GET requests via the AWS SDK transfer manager, which can
+        reduce restore time for large backups. (default 1)
+      </td>
+    </tr>
+    <tr>
+      <td><code>s3-backup-download-part-size</code></td>
+      <td>For the <code>s3</code> plugin, the size in bytes of each ranged GET
+        request when parallel downloads are enabled
+        (<code>s3-backup-download-concurrency</code> greater than 1). Has no
+        effect when download concurrency is <code>1</code>. Minimum 5 MiB.
+        (default 8388608 / 8 MiB)
+      </td>
+    </tr>
   </tbody>
 </table>
 
@@ -359,6 +379,35 @@ The chunk size itself must be at least 4 MiB, since a very small chunk size woul
 #### Compatibility
 
 Chunking is backward compatible when left disabled: with the default threshold of `0`, backups are byte-for-byte identical to the previous format and remain restorable by older Vitess versions. Once a backup is created with chunking enabled, however, it can only be restored by Vitess v25.0 or later. Older versions do not understand the `Chunks` field in the MANIFEST and cannot reassemble the chunked files, so plan your upgrades accordingly before enabling chunking in an environment where older tablets might perform restores.
+
+### Parallel S3 Downloads
+
+When restoring from S3, the `s3` backup storage plugin can download each backup file in parallel using the AWS SDK transfer manager, which issues concurrent byte-range GET requests instead of reading the file as a single sequential stream. This can improve restore throughput for large, multi-GB backups on deployments where a single-stream download does not saturate the available network bandwidth.
+
+Parallel downloads apply only to the restore (download) path. They are distinct from upload concurrency and from the `builtin` engine's chunking described above, and they work with all S3 encryption modes (SSE-S3, SSE-KMS, and SSE-C).
+
+Parallel downloads are disabled by default. With `--s3-backup-download-concurrency=1` -- the default -- the restore path is unchanged: one `GetObject` per file and no extra requests. Set `--s3-backup-download-concurrency` greater than 1 to enable them. This applies to any binary that restores from or reads S3 backups, such as `vttablet` and `vtbackup`.
+
+#### How to tune it
+
+Two flags control parallel downloads:
+
+```bash
+--s3-backup-download-concurrency=10   # parallel workers per file (default 1 = disabled)
+--s3-backup-download-part-size=8388608 # 8 MiB ranged-GET size (default)
+```
+
+`--s3-backup-download-part-size` only takes effect when concurrency is greater than 1, and its minimum is 5 MiB.
+
+To bound memory use, total per-file download memory is capped at 1 GiB, so a configuration must satisfy `part-size × concurrency + part-size ≤ 1 GiB`. A configuration that exceeds this fails fast at storage initialization. There is therefore no single maximum part size: the largest part size you can set depends on the concurrency you choose.
+
+#### Operator trade-offs when enabled
+
+Enabling parallel downloads changes how the restore interacts with S3:
+
+* An extra `HeadObject` request is issued per file to determine its size before downloading. This includes MANIFEST reads during backup selection.
+* The `AWS:Request:Send` stat is recorded per API call, so with parallel downloads it counts per part rather than per file. Existing dashboards will show higher request counts.
+* The AWS SDK transfer manager busy-spins one goroutine per in-flight file download, which consumes CPU even on network-bound workloads. With the default `--restore-concurrency`, this competes with decompression for CPU. This is upstream SDK behavior.
 
 ### Backup Compression
 
