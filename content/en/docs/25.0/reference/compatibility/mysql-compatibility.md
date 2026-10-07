@@ -235,6 +235,8 @@ Vitess supports `SELECT ... INTO DUMPFILE` and `SELECT ... INTO OUTFILE` for uns
  - Position of `INTO` must be at the end of the query.
  - For sharded keyspaces, you must specify the exact shard with a `USE` statement.
 
+Vitess does not support `SELECT ... INTO` with user-defined variables, such as `SELECT id FROM user LIMIT 1 INTO @x`. VTGate rejects the query with `VT12001: unsupported: INTO user-defined variables`.
+
 ### LOAD DATA Statement
 
 `LOAD DATA` (the counterpart to `SELECT ... INTO OUTFILE`) is supported only in unsharded keyspaces:
