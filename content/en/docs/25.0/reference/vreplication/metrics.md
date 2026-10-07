@@ -165,11 +165,31 @@ The total number of packets sent by this vttablet across all workflows
 ```
 
 ## VTGate Metrics
+
+These metrics are available at the `/debug/vars` endpoint of vtgate's http status pages. They are labeled by `VStreamManager`, set to the vtgate's cell, and by the `Keyspace`, `ShardName`, and `TabletType` of each shard stream.
+
+When the `--vstream-metrics-include-caller` flag is set, all of these metrics also get a `CallerID` label, set to the principal of the effective caller ID in the `VStreamRequest`. Streams that do not set one get an empty `CallerID`. Each distinct principal adds a series per keyspace, shard, and tablet type. For example, if each client instance sets its own principal, the number of series grows with the number of instances, so consider the cardinality before enabling the flag.
+
 #### VStreamsCreated
-The total number of vstreams created during the lifetime of this vtgate.
+
+The total number of shard streams created during the lifetime of this vtgate
+
 #### VStreamsCount
-The number of currently active VStreams.
+
+The number of currently active shard streams
+
 #### VStreamsEventsStreamed
-The number of events sent from the VStream.
+
+The total number of events sent to VStream clients
+
 #### VStreamsEndedWithErrors
-The number of times that the VStream has been ended with an error that was not initiated by the VStream client.
+
+The number of shard streams that ended with an error that was not initiated by the VStream client
+
+#### VStreamsLag
+
+The highest lag, in seconds, across the shard streams that are currently active, measured as the difference between the vttablet's current time and the binlog event timestamp. A series is removed when its last active stream ends, and a new stream is not reported until it receives its first event.
+
+#### VStreamsTransactionsChunked
+
+The number of transactions that exceeded the `transaction_chunk_size` set in the VStream request flags and were sent in contiguous chunks
