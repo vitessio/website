@@ -249,6 +249,7 @@ Note that it's technically possible to specify a rule for an action that cannot 
 | `RefreshState` | `(put, Tablet)` |
 | `RefreshTabletReplicationSource` | `(refresh_tablet_replication_source, Tablet)` |
 | `ReloadSchemas` | `(reload, Schema)` |
+| `ReloadSchemaShard` | `(reload, Schema)` |
 | `RunHealthCheck` | `(get, Tablet)` |
 | `SetReadOnly` | `(manage_tablet_writability, Tablet)` |
 | `SetReadWrite` | `(manage_tablet_writability, Tablet)` |
