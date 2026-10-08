@@ -23,13 +23,33 @@ Every GitHub pull request must go through a code review and get approved before 
 
 Every pull request should meet the following requirements:
 
-* Use the [Pull Request Template](https://github.com/vitessio/vitess/blob/main/.github/pull_request_template.md)
+* Use the [Pull Request Template](https://github.com/vitessio/vitess/blob/main/.github/pull_request_template.md), including its Motivation section unless you are a Vitess maintainer. See [Motivation and maintainer review](#motivation-and-maintainer-review).
 * Adhere to the [Go coding guidelines](https://golang.org/doc/effective_go.html) and watch out for these [common errors](https://github.com/golang/go/wiki/CodeReviewComments).
 * Contain a description message that is as detailed as possible. Here is a great example https://github.com/vitessio/vitess/pull/6543.
 * Pass all CI tests that run on PRs.
 * For bigger changes, it is a good idea to start by creating an RFC (Request for Comment) issue - this is where you can discuss the feature and why it's important.
 Once that is in place, you can create the PR, as a solution to the problem described in the issue. Separating the need and the solution this way makes discussions easier and more focused.
 * All PRs that make a change to production code, require a linked GitHub issue describing the bug being fixed or the enhancement being made.
+
+### Motivation and maintainer review
+
+Maintainer review time is limited. A pull request should show that its author understands the change and has a reason to make it, not only that the change compiles.
+Using AI tools to write code is fine. However, the project doesn't want pull requests where the author only ran an issue through an AI tool and submitted the result.
+
+Work on an issue because the problem affects you or because you are invested in the project.
+An open issue is not an invitation to submit a fix. Pull requests opened only to pick off issues from the tracker may be closed without review.
+
+Unless you are a Vitess maintainer, answer the two questions in the Motivation section of the pull request template:
+
+* **How do you use Vitess?** In production, in staging or development, evaluating it, or not at all.
+* **Did you run this change against a real Vitess deployment?** Any environment counts, not only production. Describe where you ran it and what you observed. For a bug fix, show how you reproduced the problem, ideally with a test that fails without your change.
+
+Documentation, CI, and test-only changes don't need to be run against a deployment.
+
+Maintainers don't reject pull requests from authors who don't use Vitess, or who didn't run their change, on principle. These pull requests are reviewed last and need stronger evidence that the change is correct and wanted.
+Maintainers may close a pull request that leaves the Motivation section empty or generic without reviewing it.
+
+If you are a new contributor, keep to one open pull request at a time until your first one is merged.
 
 ### Testing
 

@@ -4,7 +4,8 @@ description: Walkthrough on how to fix an issue in Vitess and create a pull requ
 weight: 6
 ---
 
-After having Vitess locally setup for development, you can go ahead and choose an issue to work on from [here](https://github.com/vitessio/vitess/issues).
+After having Vitess locally setup for development, you can choose an issue to work on from the [issue tracker](https://github.com/vitessio/vitess/issues).
+Pick a problem that affects how you use Vitess or that you are invested in. Pull requests opened only to pick off issues from the tracker may be closed without review. See [Motivation and maintainer review](../code-reviews/#motivation-and-maintainer-review).
 For first time contributors, some of the issues have been marked with the label *Good First Issue*. These can be found [here](https://github.com/vitessio/vitess/issues?q=is%3Aissue+is%3Aopen+label%3A%22Good+First+Issue%22).  
 For this walkthrough, we will pick issue [#4069](https://github.com/vitessio/vitess/issues/4069).
 Let us dive right in!
@@ -136,9 +137,10 @@ While creating the pull request, we need to take care of a few things -
 
 1. Follow the existing template for pull requests
 2. Add a description of what has been fixed
-3. Add the label for the correct component affected by the changes. In our case that is `Component: Query Serving`.
-4. Add the label for the type of changes in the PR. In our case that is `Type: Enhancement`.
-5. Add the label describing whether this PR should be backported to some of the previous releases as well. For example, in order to back port to release 15.0 we use the label `Backport to: release-15.0`.
-6. Codeowners will be automatically requested for reviews.
+3. Fill out the Motivation section. Say how you use Vitess and whether you ran the change against a real Vitess deployment, including how you reproduced the bug
+4. Add the label for the correct component affected by the changes. In our case that is `Component: Query Serving`.
+5. Add the label for the type of changes in the PR. In our case that is `Type: Enhancement`.
+6. Add the label describing whether this PR should be backported to some of the previous releases as well. For example, in order to back port to release 15.0 we use the label `Backport to: release-15.0`.
+7. Codeowners will be automatically requested for reviews.
 
 The final PR that has been created by following these steps would look like [this](https://github.com/vitessio/vitess/pull/9456).
