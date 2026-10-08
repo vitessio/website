@@ -409,7 +409,14 @@ Some character sets can't be used as a connection charset: `big5`, `cp932`, `gb1
 
 - If `--db-charset` names one of them, VTTablet fails to start. If `--db-charset` is set to an empty string and the MySQL server's default character set is one of them, VTTablet refuses its connections to MySQL.
 - VTTablet refuses a `SET` statement that would switch a session to one of them. It also refuses any connection setting that changes the connection character set.
-- VTGate refuses a `SET` of `character_set_client`, `character_set_connection`, `character_set_results`, or `collation_connection` to one of them. It also refuses a name it doesn't recognize, and a numeric collation ID that's `0`, undefined, or belongs to one of them. As in MySQL, it accepts the numeric ID of any other collation. The error looks like `unsupported connection character set 'sjis' for character_set_client: use utf8mb4`.
+- VTGate refuses a `SET` of `character_set_client`, `character_set_connection`, `character_set_results`, or `collation_connection` to one of them. It also refuses these values, because it can't confirm that they name a safe character set:
+  - A name it doesn't recognize.
+  - A numeric collation ID that's `0`, undefined, or belongs to one of them. As in MySQL, it accepts the numeric ID of any other collation.
+  - `NULL`, except for `character_set_results`, where `NULL` turns off result conversion.
+  - `DEFAULT`.
+  - An expression, such as `@@global.character_set_server` or `CONCAT(...)`.
+
+  VTGate accepts a user variable, such as `SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT`, so that mysqldump output, which restores the connection character set from user variables, can be replayed through VTGate. The error looks like `unsupported connection character set 'sjis' for character_set_client: use utf8mb4`.
 
 Use `utf8mb4` as the connection charset instead. Tables and columns can still use any of these character sets, because MySQL converts between them and the connection charset. A client can still request one of them in its connection handshake with VTGate, because VTGate also reads statements one byte at a time.
 
