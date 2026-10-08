@@ -22,7 +22,15 @@ Vitess will initially only support locking functions with these limitations:
  * Can only be used in SELECT queries
  * The queries can either have only the table `dual`, or have no `FROM` clause.
 
- ## Functionality
+A `DO` statement that calls `GET_LOCK()`, `RELEASE_LOCK()`, or `RELEASE_ALL_LOCKS()` fails with an error such as:
+
+```
+VT12001: unsupported: get_lock in a DO statement, use SELECT instead
+```
+
+VTGate does not run `DO` statements on the session's reserved connection. A lock acquired by `DO` would stay on a pooled connection that other sessions reuse, and `DO RELEASE_LOCK()` could not release a lock the session acquired with `SELECT GET_LOCK()`. Use `SELECT GET_LOCK(...)` and `SELECT RELEASE_LOCK(...)` instead. A `DO` statement that calls only `IS_FREE_LOCK()` or `IS_USED_LOCK()` still runs, because those functions only read lock state.
+
+## Functionality
 
 Locking function evaluation will have a simple and consistent routing scheme, making sure all requests happen at the same target. This way, locks will be executed on the same `mysqld`.
 The locking function evaluation always is routed to the first shard in the first keyspace known to the VTGate, sorted alphabetically.
