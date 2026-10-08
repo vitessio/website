@@ -53,6 +53,8 @@ vtadmin \
   --cluster "id=local,name=local,discovery=staticfile,discovery-staticfile-path=./vtadmin/discovery.json,tablet-fqdn-tmpl={{ .Tablet.Hostname }}:15{{ .Tablet.Alias.Uid }}" 
 ```
 
+`--http-origin` lists the origins that serve `vtadmin-web`. When `vtadmin-web` is served from a different origin than `vtadmin`, list that origin by name. A `*` entry lets pages on any origin read API responses. It doesn't let them change cluster state. `vtadmin` refuses a state-changing request, such as stopping a workflow, that a browser sends from an unlisted origin. The check skips requests from the same origin as `vtadmin` and requests from scripts and other clients that aren't browsers.
+
 To optionally configure role-based access control (RBAC), refer to the [RBAC documentation][rbac_docs].
 
 ### 3. Configure and build `vtadmin-web`
