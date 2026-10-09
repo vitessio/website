@@ -7,14 +7,14 @@ weight: 1
 The release cycle of a major version is five months long, which can be converted into 21 weeks.
 Below is a breakdown of how these weeks are planned.
 
-- [Week 1 (Planning)](#week-1--planning-)
-- [Week 2 - 17 (Development)](#week-2---17--development-)
-- [Week 17 (Code Freeze RC-1)](#week-17--code-freeze-rc-1-)
-- [Week 18 (RC-1)](#week-18--rc-1-)
-- [Week 18 - 20 (Bug Fixes)](#week-18---20--bug-fixes-)
-- [Week 20 (Code Freeze GA)](#week-20--code-freeze-ga-)
-- [Week 21 (GA)](#week-21--ga-)
-- [Beyond Week 21 (EOL)](#beyond-week-21--eol-)
+- [Week 1 (Planning)](#week-1-planning)
+- [Week 2 - 17 (Development)](#week-2---17-development)
+- [Week 17 (Code Freeze RC-1)](#week-17-code-freeze-rc-1)
+- [Week 18 (RC-1)](#week-18-rc-1)
+- [Week 18 - 20 (Bug Fixes)](#week-18---20-bug-fixes)
+- [Week 20 (Code Freeze GA)](#week-20-code-freeze-ga)
+- [Week 21 (GA)](#week-21-ga)
+- [Beyond Week 21 (EOL)](#beyond-week-21-eol)
 
 ### Week 1 (Planning)
 
