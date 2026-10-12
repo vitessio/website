@@ -22,6 +22,8 @@ The following table lists all of the supported collations in the current release
 
 Using collations that are not supported by Vitess but implemented in the underlying MySQL instance can lead to unpredictable behavior.
 
+Vitess refuses `big5`, `cp932`, `gb18030`, `gbk`, `sjis`, `ucs2`, `utf16`, `utf16le`, and `utf32` as the connection charset, with any of their collations. This applies even where the table marks a collation as supported. Tables and columns can still use these collations. For details, see [Configuring the default connection charset for a Vitess cluster](#configuring-the-default-connection-charset-for-a-vitess-cluster).
+
 | Collation | Charset | MySQL 8.0 | MySQL 5.7 | MySQL 5.6 | MariaDB 10.3 | MariaDB 10.2 | MariaDB 10.1 | MariaDB 10.0 |
 |---|---|---|---|---|---|---|---|---|
 | big5_chinese_ci | big5 | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ |
