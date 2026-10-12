@@ -40,6 +40,8 @@ However, we limit the collaboration to specific tablet types, based on `--thrott
 This means that if you enable the throttler and want to use `RDONLY` tablets as the source for any [VReplication workflow](../../vreplication/) or [VTGate VStreams](../../vreplication/vstream/) (CDC) then you will have to use `--throttle-tablet-types "replica,rdonly"` with your `vttablet` processes.
 {{</ warning >}}
 
+The `Primary` refreshes the roster of participating tablets from the topo service every `10s` by default while the throttler is enabled, even when nothing is being throttled. Each refresh reads the shard record, the replication graph in every cell, and every tablet record in the shard. In keyspaces with many shards, these reads add steady load on the topo service. To reduce that load, set a longer interval with the `--throttler-inventory-refresh-interval` VTTablet flag. The trade-off is slower discovery: the throttler notices a tablet that joins or leaves the shard, or changes type, up to one interval later. A tablet that becomes `Primary` refreshes its roster immediately, so leadership changes are not delayed. A zero or negative value falls back to the `10s` default.
+
 ### Metrics
 
 The objective of the throttler is to push back work based on database load. Previously, this was done based on a single metric, which could be either the replication lag, or the result of a custom query. Now, the throttler collects multiple metrics. The current supported metrics are:
