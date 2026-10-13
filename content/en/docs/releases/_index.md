@@ -23,7 +23,7 @@ Each major release is maintained for 1 year.
 - **End of life:** 2027-04-30
 
 ### v23.0
-- **Current version:** [v23.0.7](https://github.com/vitessio/vitess/releases/tag/v23.0.7) (2026-10-01)
+- **Current version:** [v23.0.8](https://github.com/vitessio/vitess/releases/tag/v23.0.8) (2026-10-13)
 - **Initial GA release:** [v23.0.0](https://github.com/vitessio/vitess/releases/tag/v23.0.0) (2025-11-04)
 - **End of life:** 2026-11-04
 
