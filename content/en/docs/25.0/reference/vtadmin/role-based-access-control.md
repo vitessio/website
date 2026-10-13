@@ -256,10 +256,27 @@ Note that it's technically possible to specify a rule for an action that cannot 
 | `StartReplication` | `(manage_tablet_replication, Tablet)` |
 | `StopReplication` | `(manage_tablet_replication, Tablet)` |
 | `TabletExternallyPromoted` | `(tablet_externally_promoted, Shard)` |
+| `VExplain` (`PLAN`, `KEYS`) | `(get, VExplain)` |
+| `VExplain` (`ALL`, `MYSQLPLAN`, `QUERIES`, `TRACE`) | `(get, VExplain)` and `(execute, VExplain)` |
 | `VTExplain` | `(get, VTExplain)` |
 | `ValidateKeyspace` | `(put, Keyspace)` |
 | `ValidateSchemaKeyspace` | `(put, Keyspace)` |
 | `ValidateVersionKeyspace` | `(put, Keyspace)` |
+
+#### The `execute` action for VExplain
+
+`VEXPLAIN PLAN` and `VEXPLAIN KEYS` only plan the statement, so they need only the `get` action.
+The other modes can run the statement or its functions.
+`ALL`, `QUERIES`, and `TRACE` run the statement they explain.
+`MYSQLPLAN` runs MySQL's `EXPLAIN`, which calls the statement's functions for some query shapes.
+These modes also need the `execute` action on the `VExplain` resource, so grant it only to actors who should run statements through VTAdmin.
+An actor without it gets an `unauthorized` error.
+Rules that grant all actions (`*`) include `execute`, as does running `vtadmin-api` with `--no-rbac`.
+
+For the modes that need `execute`, VTAdmin also limits what the statement can do:
+
+- It accepts only a `SELECT` statement, and rejects `SELECT ... INTO`, sequence next-values, and advisory lock functions. Use `VEXPLAIN PLAN` for other statements.
+- It runs `ALL`, `QUERIES`, and `TRACE` in a read-only transaction that it always rolls back. `MYSQLPLAN` runs outside this transaction.
 
 [authn_interface]: https://github.com/vitessio/vitess/blob/46cb4679c198c96fbe7b51f40219d8196f4284a7/go/vt/vtadmin/rbac/authentication.go#L34-L50
 [example_authn]: https://gist.github.com/ajm188/5b2c7d3ca76004a297e6e279a54c2299
