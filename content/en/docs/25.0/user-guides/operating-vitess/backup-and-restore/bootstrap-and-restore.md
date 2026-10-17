@@ -56,6 +56,8 @@ vtctldclient --server localhost:15999 --alsologtostderr RestoreFromBackup zone1-
 
 If successful, the tablet's MySQL server rejoins the shard's replication stream, to eventually captch up and be able to serve traffic.
 
+If the backup was taken with [`--include-binlogs`](../creating-a-backup/#include-binary-logs-in-a-full-backup), the restore also puts the source's binary logs in place. The restored server can then serve binlog streams for transactions from before the backup.
+
 ### Restore to a point-in-time
 
 Vitess supports restoring to a _timestamp_ or to a specific _position_. Either way, this restore method assumes backups have been taken that cover the specified position. The restore process will first determine a restore path: a sequence of backups, starting with a full backup followed by zero or more incremental backups, that when combined, include the specified timestamp or position. See more on [Restore Types](../overview/#restore-types) and on [Taking Incremental Backup](../creating-a-backup/#create-an-incremental-backup-with-vtctl).
