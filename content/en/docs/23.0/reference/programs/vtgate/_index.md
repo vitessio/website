@@ -26,12 +26,12 @@ vtgate \
 	--topo-implementation etcd2 \
 	--topo-global-server-address localhost:2379 \
 	--topo-global-root /vitess/global \
-	--log-dir $VTDATAROOT/tmp \
+	--log_dir $VTDATAROOT/tmp \
 	--port 15001 \
 	--grpc-port 15991 \
 	--mysql-server-port 15306 \
 	--cell test \
-	--cells-to-watch test \
+	--cells_to_watch test \
 	--tablet-types-to-wait PRIMARY,REPLICA \
 	--service-map 'grpc-vtgateservice' \
 	--pid-file $VTDATAROOT/tmp/vtgate.pid \
@@ -95,7 +95,7 @@ vtgate \
       --grpc-compression string                                          Which protocol to use for compressing gRPC. Default: nothing. Supported: snappy
       --grpc-crl string                                                  path to a certificate revocation list in PEM format, client certificates will be further verified against this file during TLS handshake
       --grpc-dial-concurrency-limit int                                  Maximum concurrency of grpc dial operations. This should be less than the golang max thread limit of 10000. (default 1024)
-      --grpc-enable-optional-tls                                         enable optional TLS mode when a server accepts both TLS and plain-text connections on the same port
+      --grpc-enable-optional-tls                                         enable optional TLS mode when a server accepts both TLS and plain-text connections on the same port; plain-text connections are served unauthenticated, even with --grpc-ca
       --grpc-enable-orca-metrics                                         gRPC server option to enable sending ORCA metrics to clients for load balancing
       --grpc-enable-tracing                                              Enable gRPC tracing.
       --grpc-initial-conn-window-size int                                gRPC initial connection window size
@@ -132,8 +132,8 @@ vtgate \
       --log-err-stacks                                                   log stack traces for errors
       --log-queries-to-file string                                       Enable query logging to the specified file
       --log-rotate-max-size uint                                         size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
-      --log-backtrace-at traceLocations                                  when logging hits line file:N, emit a stack trace
-      --log-dir string                                                   If non-empty, write log files in this directory
+      --log_backtrace_at traceLocations                                  when logging hits line file:N, emit a stack trace
+      --log_dir string                                                   If non-empty, write log files in this directory
       --logtostderr                                                      log to standard error instead of files
       --max-memory-rows int                                              Maximum number of rows that will be held in memory for intermediate results as well as the final result. (default 300000)
       --max-payload-size int                                             The threshold for query payloads in bytes. A payload greater than this threshold will result in a failure to handle the query.
@@ -271,3 +271,4 @@ vtgate \
       --warn-payload-size int                                            The warning threshold for query payloads in bytes. A payload greater than this threshold will cause the VtGateWarnings.WarnPayloadSizeExceeded counter to be incremented.
       --warn-sharded-only                                                If any features that are only available in unsharded mode are used, query execution warnings will be added to the session
 ```
+

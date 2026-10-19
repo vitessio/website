@@ -204,6 +204,36 @@ vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard --tablet-types=rdo
 
 `--tablet-types` accepts `replica`, `rdonly`, `spare`, and `primary`. Listing `primary` requires `--allow-primary`; otherwise the command is rejected. When `--tablet-types` is set, `--allow-primary` doesn't add the primary on its own: the primary is only considered if it appears in the list, at its position in the list.
 
+## Include binary logs in a full backup
+
+A server restored from a full backup normally starts with an empty binary log history. It can't serve binlog streams, such as replication or VStreams, for transactions from before the backup. To keep that history, pass `--include-binlogs` to `vtctldclient Backup`, `vtctldclient BackupShard`, or `vtbackup`:
+
+```sh
+vtctldclient --server=<vtctld_host>:<vtctld_port> Backup --include-binlogs <tablet-alias>
+```
+
+The backup then also contains every binary log listed in the source's binary log index. Restores need no extra flag. When a backup includes binary logs, the restore writes them under the target tablet's own `log-bin` basename. It adds them to the binary log index before `mysqld` starts. Vitess doesn't reset or purge them afterward. [Point-in-time recovery](../bootstrap-and-restore/#restore-to-a-point-in-time) from such a backup works as usual.
+
+### Requirements
+
+* Use the `builtin` backup engine. The `builtin` engine stops `mysqld` before copying files, so the binary logs end at exactly the position of the backed-up data. `xtrabackup` and `mysqlshell` back up a running server, so binary logs copied with their data could contain transactions the data lacks.
+* Take a full backup. Incremental backups can't use `--include-binlogs`.
+* Don't combine `--include-binlogs` with `vtbackup --restore-with-clone`, because [MySQL CLONE](../mysql-clone/) doesn't copy binary logs.
+* Enable `log_bin` and `log_replica_updates` on the source, so its binary logs contain replicated transactions as well as local writes.
+* Set the tablet's `log-bin` (and `log-bin-index`, if used) to the location where `mysqld` keeps its binary logs, as the `my.cnf` that Vitess generates does. Vitess checks this before it stops `mysqld`.
+* Upgrade both `vtctld` and the tablets before using the flag with `vtctldclient Backup` or `BackupShard`. An older `vtctld` or `vttablet` ignores the flag and takes a backup without binary logs.
+
+A request that uses another engine, an incremental backup, or `--restore-with-clone` fails with `INVALID_ARGUMENT`. A source that doesn't meet the `log_bin`, `log_replica_updates`, or `log-bin` requirements fails the backup with `FAILED_PRECONDITION`.
+
+### Trade-offs
+
+* Backups grow by the size of the binary logs the source retains.
+* The restored files keep their original modification times, so `binlog_expire_logs_seconds` on the restored server can purge older binary logs soon after `mysqld` starts.
+* Encrypted binary logs (`binlog_encryption`) are backed up as they are. Only a server whose keyring holds the source's binary log master key, such as one sharing the source's keyring, can restore them. `ALTER INSTANCE ROTATE BINLOG MASTER KEY` removes the previous key, so a backup whose binary logs were encrypted before a rotation can no longer be restored.
+* A restore fails if the restored server can't read a restored binary log. A missing binary log master key in the keyring is one cause. If the newest binary log is unreadable, `mysqld` doesn't start. After a failed restore, the tablet doesn't start replicating, and restarting the tablet retries the restore.
+* The binary logs keep every transaction the source logged, including errant GTIDs. The restored server sends such a transaction to any replica that lacks it, and the replica applies it. VTOrc's errant GTID detection still applies.
+* Vitess versions without this feature restore only the data from such a backup and ignore the binary logs.
+
 ## Create an incremental backup with vtctl
 
 An incremental backup requires additional information: the point from which to start the backup. An incremental backup is taken by supplying `--incremental-from-pos` to the `Backup` or `BackupShard` command. The argument may either indicate:

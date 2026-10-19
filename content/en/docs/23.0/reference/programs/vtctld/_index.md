@@ -37,7 +37,6 @@ vtctld \
 ### Options
 
 ```
-      --action-timeout duration                                          time to wait for an action before resorting to force (default 1m0s)
       --alsologtostderr                                                  log to standard error as well as files
       --azblob-backup-account-key-file string                            Path to a file containing the Azure Storage account key; if this flag is unset, the environment variable VT_AZBLOB_ACCOUNT_KEY will be used as the key itself (NOT a file path).
       --azblob-backup-account-name string                                Azure Storage Account name for backups; if this flag is unset, the environment variable VT_AZBLOB_ACCOUNT_NAME will be used.
@@ -57,7 +56,6 @@ vtctld \
       --builtinbackup-mysqld-timeout duration                            how long to wait for mysqld to shutdown at the start of the backup. (default 10m0s)
       --builtinbackup-progress duration                                  how often to send progress updates when backing up large files. (default 5s)
       --catch-sigpipe                                                    catch and ignore SIGPIPE on stdout and stderr if specified
-      --cell string                                                      cell to use
       --ceph-backup-storage-config string                                Path to JSON config file for ceph backup storage. (default "ceph_backup_config.json")
       --config-file string                                               Full path of the config file (with extension) to use. If set, --config-path, --config-type, and --config-name are ignored.
       --config-file-not-found-handling ConfigFileNotFoundHandling        Behavior when a config file is not found. (Options: error, exit, ignore, warn) (default warn)
@@ -84,7 +82,7 @@ vtctld \
       --grpc-compression string                                          Which protocol to use for compressing gRPC. Default: nothing. Supported: snappy
       --grpc-crl string                                                  path to a certificate revocation list in PEM format, client certificates will be further verified against this file during TLS handshake
       --grpc-dial-concurrency-limit int                                  Maximum concurrency of grpc dial operations. This should be less than the golang max thread limit of 10000. (default 1024)
-      --grpc-enable-optional-tls                                         enable optional TLS mode when a server accepts both TLS and plain-text connections on the same port
+      --grpc-enable-optional-tls                                         enable optional TLS mode when a server accepts both TLS and plain-text connections on the same port; plain-text connections are served unauthenticated, even with --grpc-ca
       --grpc-enable-orca-metrics                                         gRPC server option to enable sending ORCA metrics to clients for load balancing
       --grpc-enable-tracing                                              Enable gRPC tracing.
       --grpc-initial-conn-window-size int                                gRPC initial connection window size
@@ -112,8 +110,8 @@ vtctld \
       --lock-timeout duration                                            Maximum time to wait when attempting to acquire a lock from the topo server (default 45s)
       --log-err-stacks                                                   log stack traces for errors
       --log-rotate-max-size uint                                         size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
-      --log-backtrace-at traceLocations                                  when logging hits line file:N, emit a stack trace
-      --log-dir string                                                   If non-empty, write log files in this directory
+      --log_backtrace_at traceLocations                                  when logging hits line file:N, emit a stack trace
+      --log_dir string                                                   If non-empty, write log files in this directory
       --logtostderr                                                      log to standard error instead of files
       --max-stack-size int                                               configure the maximum stack size in bytes (default 67108864)
       --mysql-server-version string                                      MySQL server version to advertise. (default "8.4.6-Vitess")
@@ -124,7 +122,6 @@ vtctld \
       --port int                                                         port for the server
       --pprof strings                                                    enable profiling
       --pprof-http                                                       enable pprof http endpoints
-      --proxy-tablets                                                    Setting this true will make vtctld proxy the tablet status instead of redirecting to them
       --purge-logs-interval duration                                     how often try to remove old logs (default 1h0m0s)
       --remote-operation-timeout duration                                time to wait for a remote operation (default 15s)
       --s3-backup-aws-endpoint string                                    endpoint of the S3 backend (region must be provided).
@@ -159,7 +156,6 @@ vtctld \
       --tablet-grpc-crl string                                           the server crl to use to validate server certificates when connecting
       --tablet-grpc-key string                                           the key to use to connect
       --tablet-grpc-server-name string                                   the server name to use to validate server certificate
-      --tablet-health-keep-alive duration                                close streaming tablet health connection if there are no requests for this long (default 5m0s)
       --tablet-manager-grpc-ca string                                    the server ca to use to validate servers when connecting
       --tablet-manager-grpc-cert string                                  the cert to use to connect
       --tablet-manager-grpc-concurrency int                              concurrency to use to talk to a vttablet server for performance-sensitive RPCs (like ExecuteFetchAs{Dba,App}, CheckThrottler and FullStatus) (default 8)
@@ -199,3 +195,4 @@ vtctld \
       --vmodule vModuleFlag                                              comma-separated list of pattern=N settings for file-filtered logging
       --vtctld-sanitize-log-messages                                     When true, vtctld sanitizes logging.
 ```
+
