@@ -26,7 +26,7 @@ mysqlctld [flags]
 
 ```
 mysqlctld \
-	--log-dir=${VTDATAROOT}/logs \
+	--log_dir=${VTDATAROOT}/logs \
 	--tablet-uid=100 \
 	--mysql-port=17100 \
 	--socket-file=/path/to/socket-file
@@ -87,7 +87,7 @@ mysqlctld \
       --grpc-compression string                                          Which protocol to use for compressing gRPC. Default: nothing. Supported: snappy
       --grpc-crl string                                                  path to a certificate revocation list in PEM format, client certificates will be further verified against this file during TLS handshake
       --grpc-dial-concurrency-limit int                                  Maximum concurrency of grpc dial operations. This should be less than the golang max thread limit of 10000. (default 1024)
-      --grpc-enable-optional-tls                                         enable optional TLS mode when a server accepts both TLS and plain-text connections on the same port
+      --grpc-enable-optional-tls                                         enable optional TLS mode when a server accepts both TLS and plain-text connections on the same port; plain-text connections are served unauthenticated, even with --grpc-ca
       --grpc-enable-orca-metrics                                         gRPC server option to enable sending ORCA metrics to clients for load balancing
       --grpc-initial-conn-window-size int                                gRPC initial connection window size
       --grpc-initial-window-size int                                     gRPC initial window size
@@ -111,8 +111,8 @@ mysqlctld \
       --lameduck-period duration                                         keep running at least this long after SIGTERM before stopping (default 50ms)
       --log-err-stacks                                                   log stack traces for errors
       --log-rotate-max-size uint                                         size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
-      --log-backtrace-at traceLocations                                  when logging hits line file:N, emit a stack trace
-      --log-dir string                                                   If non-empty, write log files in this directory
+      --log_backtrace_at traceLocations                                  when logging hits line file:N, emit a stack trace
+      --log_dir string                                                   If non-empty, write log files in this directory
       --logtostderr                                                      log to standard error instead of files
       --max-stack-size int                                               configure the maximum stack size in bytes (default 67108864)
       --mysql-port int                                                   MySQL port (default 3306)
@@ -142,3 +142,4 @@ mysqlctld \
       --vmodule vModuleFlag                                              comma-separated list of pattern=N settings for file-filtered logging
       --wait-time duration                                               How long to wait for mysqld startup (default 5m0s)
 ```
+

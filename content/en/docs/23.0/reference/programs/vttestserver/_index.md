@@ -63,7 +63,7 @@ vttestserver [flags]
       --grpc-compression string                                          Which protocol to use for compressing gRPC. Default: nothing. Supported: snappy
       --grpc-crl string                                                  path to a certificate revocation list in PEM format, client certificates will be further verified against this file during TLS handshake
       --grpc-dial-concurrency-limit int                                  Maximum concurrency of grpc dial operations. This should be less than the golang max thread limit of 10000. (default 1024)
-      --grpc-enable-optional-tls                                         enable optional TLS mode when a server accepts both TLS and plain-text connections on the same port
+      --grpc-enable-optional-tls                                         enable optional TLS mode when a server accepts both TLS and plain-text connections on the same port; plain-text connections are served unauthenticated, even with --grpc-ca
       --grpc-enable-orca-metrics                                         gRPC server option to enable sending ORCA metrics to clients for load balancing
       --grpc-enable-tracing                                              Enable gRPC tracing.
       --grpc-initial-conn-window-size int                                gRPC initial connection window size
@@ -92,8 +92,8 @@ vttestserver [flags]
       --lameduck-period duration                                         keep running at least this long after SIGTERM before stopping (default 50ms)
       --log-err-stacks                                                   log stack traces for errors
       --log-rotate-max-size uint                                         size in bytes at which logs are rotated (glog.MaxSize) (default 1887436800)
-      --log-backtrace-at traceLocations                                  when logging hits line file:N, emit a stack trace
-      --log-dir string                                                   If non-empty, write log files in this directory
+      --log_backtrace_at traceLocations                                  when logging hits line file:N, emit a stack trace
+      --log_dir string                                                   If non-empty, write log files in this directory
       --logtostderr                                                      log to standard error instead of files
       --manifest-external-decompressor string                            command with arguments to store in the backup manifest when compressing a backup with an external compression engine.
       --max-stack-size int                                               configure the maximum stack size in bytes (default 67108864)
@@ -186,3 +186,4 @@ vttestserver [flags]
       --xtrabackup-stripes uint                                          If greater than 0, use data striping across this many destination files to parallelize data transfer and decompression
       --xtrabackup-user string                                           User that xtrabackup will use to connect to the database server. This user must have all necessary privileges. For details, please refer to xtrabackup documentation.
 ```
+

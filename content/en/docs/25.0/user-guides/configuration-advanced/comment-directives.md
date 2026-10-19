@@ -70,6 +70,18 @@ In Vitess, it is possible to use the `vtgate` parameter `--no-scatter` to preven
 
 This comment directive is used to override that limitation, allowing application code to be customized to allow scatters for certain chosen use-cases, but not for the general case.
 
+## Allow cross-keyspace reads (`ALLOW_CROSS_KEYSPACE_READS`)
+
+The `vtgate` flag `--prevent-cross-keyspace-reads` or the VSchema keyspace setting `prevent_cross_keyspace_reads` can prevent reads that require JOINs or UNIONs across keyspaces.
+
+The `ALLOW_CROSS_KEYSPACE_READS` comment directive overrides either restriction for a specific query:
+
+```sql
+SELECT /*vt+ ALLOW_CROSS_KEYSPACE_READS */ * FROM keyspace1.users JOIN keyspace2.orders ON users.id = orders.user_id;
+```
+
+Without this directive, the planner rejects the query when cross-keyspace reads are prevented globally or for either keyspace.
+
 ## Consolidator (`CONSOLIDATOR`)
 
 In `vttablet`, the consolidator is enabled with the `--enable-consolidator` and `--enable-consolidator-replicas` flags. Those settings may be overridden with this comment directive, allowing application code to opt into (or out of) consolidation for individual `SELECT` queries.
