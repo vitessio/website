@@ -212,7 +212,9 @@ A request that uses another engine, an incremental backup, or `--restore-with-cl
 
 * Backups grow by the size of the binary logs the source retains.
 * The restored files keep their original modification times, so `binlog_expire_logs_seconds` on the restored server can purge older binary logs soon after `mysqld` starts.
-* Encrypted binary logs (`binlog_encryption`) are backed up as they are. Only a server whose keyring holds the source's binary log master key, such as one sharing the source's keyring, can restore them. `ALTER INSTANCE ROTATE BINLOG MASTER KEY` removes the previous key, so a backup whose binary logs were encrypted before a rotation can no longer be restored. A restore fails with `FAILED_PRECONDITION` when it can't read a restored binary log.
+* Encrypted binary logs (`binlog_encryption`) are backed up as they are. Only a server whose keyring holds the source's binary log master key, such as one sharing the source's keyring, can restore them. `ALTER INSTANCE ROTATE BINLOG MASTER KEY` removes the previous key, so a backup whose binary logs were encrypted before a rotation can no longer be restored.
+* A restore fails if the restored server can't read a restored binary log. A missing binary log master key in the keyring is one cause. If the newest binary log is unreadable, `mysqld` doesn't start. After a failed restore, the tablet doesn't start replicating, and restarting the tablet retries the restore.
+* The binary logs keep every transaction the source logged, including errant GTIDs. The restored server sends such a transaction to any replica that lacks it, and the replica applies it. VTOrc's errant GTID detection still applies.
 * Vitess versions without this feature restore only the data from such a backup and ignore the binary logs.
 
 ## Create an incremental backup with vtctl
