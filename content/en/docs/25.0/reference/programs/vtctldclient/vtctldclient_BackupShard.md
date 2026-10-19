@@ -13,7 +13,7 @@ Finds the most up-to-date REPLICA, RDONLY, or SPARE tablet in the given shard an
 If no replica-type tablet can be found, the backup can be taken on the primary if --allow-primary is specified.
 
 ```
-vtctldclient BackupShard [--concurrency <concurrency>] [--allow-primary] [--incremental-from-pos=<pos>|<backup-name>|auto] [--upgrade-safe] <keyspace/shard>
+vtctldclient BackupShard [--concurrency <concurrency>] [--allow-primary] [--incremental-from-pos=<pos>|<backup-name>|auto] [--upgrade-safe] [--include-binlogs] <keyspace/shard>
 ```
 
 ### Options
@@ -22,6 +22,7 @@ vtctldclient BackupShard [--concurrency <concurrency>] [--allow-primary] [--incr
       --allow-primary                      Allow the primary of a shard to be used for the backup. WARNING: If using the builtin backup engine, this will shutdown mysqld on the primary and stop writes for the duration of the backup.
       --concurrency int32                  Specifies the number of compression/checksum jobs to run simultaneously. (default 4)
   -h, --help                               help for BackupShard
+      --include-binlogs                    Include the source's binary logs in a full builtin backup. Restores use them automatically.
       --incremental-from-pos string        Position, or name of backup from which to create an incremental backup. Default: empty. If given, then this backup becomes an incremental backup from given position or given backup. If value is 'auto', this backup will be taken from the last successful backup position.
       --init-backup-sql-fail-on-error      Whether or not to fail the backup if the init SQL queries (--init-backup-sql-queries) fail, which includes if they fail to complete before the specified timeout (--init-backup-sql-timeout)
       --init-backup-sql-queries strings    Queries to execute before taking the backup
