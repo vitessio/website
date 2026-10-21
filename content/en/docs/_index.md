@@ -7,9 +7,9 @@ Vitess is a database solution for deploying, scaling and managing large clusters
 
 ## Get started with Vitess documentation:
 
-* [Overview](/docs/25.0/overview/) — High-level information about Vitess
-* [Get Started](/docs/25.0/get-started/) — Deploy Vitess on your favorite platform
-* [Concepts](/docs/25.0/concepts/) — Learn core Vitess concepts and terminology
+* [Overview](/docs/next/overview/) — High-level information about Vitess
+* [Get Started](/docs/next/get-started/) — Deploy Vitess on your favorite platform
+* [Concepts](/docs/next/concepts/) — Learn core Vitess concepts and terminology
 
 <!-- Welcome to the docs for Vitess! The following doc versions are available: -->
 
