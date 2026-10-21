@@ -4,7 +4,7 @@
 
 {{ $entries := slice }}
 {{ range $docsSections.Sections }}
-  
+
   {{ $isCurrentVersion := in $currentRelPermalink .RelPermalink }}
   {{ if or (not .Params.hide_in_sidebar) $isCurrentVersion }}
     {{ $entries = $entries | append . }}
@@ -19,7 +19,7 @@
 </div>
 
 <!-- <div class="docs-menu">
-  
+
   {{ template "navlist" (dict "entries" $docsSections.Sections "currentRelPermalink" $currentRelPermalink ) }}
 </div> -->
 
