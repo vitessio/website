@@ -165,11 +165,37 @@ The total number of packets sent by this vttablet across all workflows
 ```
 
 ## VTGate Metrics
+
+VTGate exports these metrics for [VStream](../vstream/) clients at the `/debug/vars` endpoint of vtgate's http status pages. They are labeled by `VStreamManager`, set to the vtgate's cell, and by the `Keyspace`, `ShardName`, and `TabletType` of each shard stream, so a value such as `"zone1.commerce.-80.PRIMARY"` covers the shard streams reading from that shard.
+
 #### VStreamsCreated
-The total number of vstreams created during the lifetime of this vtgate.
+
+The total number of shard streams created during the lifetime of this vtgate.
+
 #### VStreamsCount
-The number of currently active VStreams.
+
+The number of currently active shard streams. A shard stream stops being counted when it ends, with or without an error. For example, a shard stream ends without an error when a resharding journal event moves the stream to the new shards.
+
 #### VStreamsEventsStreamed
-The number of events sent from the VStream.
+
+The total number of events sent to VStream clients.
+
 #### VStreamsEndedWithErrors
-The number of times that the VStream has been ended with an error that was not initiated by the VStream client.
+
+The number of shard streams that ended with an error that was not initiated by the VStream client.
+
+#### VStreamsLag
+
+The highest lag, in seconds, across the shard streams that are currently active, measured as the difference between the vttablet's current time and the binlog event timestamp. A series appears once one of its active streams receives an event with a binlog timestamp, so a stream that has only copied table rows so far is not reported. A series is removed when its last active stream ends.
+
+#### VStreamsTransactionsChunked
+
+The number of transactions that exceeded the `transaction_chunk_size` set in the VStream request flags and were sent in contiguous chunks.
+
+### Labeling VStream metrics by caller
+
+When several applications stream from the same shard, set the vtgate `--vstream-metrics-include-caller` flag to monitor each application separately. The flag adds a `CallerID` label to all the VTGate metrics above. For example, `"zone1.commerce.-80.PRIMARY.orders-cdc"` covers only the shard streams from the `orders-cdc` principal. The flag is off by default, and the metrics keep their existing labels when it is off.
+
+The `CallerID` label is the principal of the effective caller ID. For gRPC requests, including SQL `VSTREAM` sent over gRPC, that is the principal of the [`CallerID`](../vstream/#context) the client sets in the request, which VTGate does not authenticate. For SQL `VSTREAM` over the MySQL protocol, it is the MySQL user. Streams without a principal get an empty `CallerID`.
+
+Each distinct principal adds a series per keyspace, shard, and tablet type, and the counters keep their series until VTGate restarts, so the number of series grows with the distinct principals seen over the process lifetime, not only those of open streams. For example, if each client instance sets its own principal, the number of series grows with every instance that has connected, so consider the cardinality before enabling the flag.

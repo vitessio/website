@@ -7,7 +7,7 @@ series: vtctldclient
 Uses the BackupStorage service on the given tablet to create and store a new backup.
 
 ```
-vtctldclient Backup [--concurrency <concurrency>] [--allow-primary] [--incremental-from-pos=<pos>|<backup-name>|auto] [--upgrade-safe] [--backup-engine=enginename] <tablet_alias>
+vtctldclient Backup [--concurrency <concurrency>] [--allow-primary] [--incremental-from-pos=<pos>|<backup-name>|auto] [--upgrade-safe] [--backup-engine=enginename] [--include-binlogs] <tablet_alias>
 ```
 
 ### Options
@@ -17,6 +17,7 @@ vtctldclient Backup [--concurrency <concurrency>] [--allow-primary] [--increment
       --backup-engine string               Request a specific backup engine for this backup request. Defaults to the preferred backup engine of the target vttablet
       --concurrency int32                  Specifies the number of compression/checksum jobs to run simultaneously. (default 4)
   -h, --help                               help for Backup
+      --include-binlogs                    Include the source's binary logs in a full builtin backup. Restores use them automatically.
       --incremental-from-pos string        Position, or name of backup from which to create an incremental backup. Default: empty. If given, then this backup becomes an incremental backup from given position or given backup. If value is 'auto', this backup will be taken from the last successful backup position.
       --init-backup-sql-fail-on-error      Whether or not to fail the backup if the init SQL queries (--init-backup-sql-queries) fail, which includes if they fail to complete before the specified timeout (--init-backup-sql-timeout)
       --init-backup-sql-queries strings    Queries to execute before taking the backup
