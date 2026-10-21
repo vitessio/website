@@ -30,10 +30,6 @@
           {{ T "docs" }}
         </a>
 
-      <!-- <a class="navbar-item has-text-weight-bold" href="{{ "/releases" | relLangURL }}">
-  {{ T "releases" }}
-</a> -->
-
 <a class="navbar-item has-text-weight-bold" href="{{ if eq .Language.Lang "zh" }}/releases{{ else }}{{ "/releases" | relLangURL }}{{ end }}">
   {{ T "releases" }}
 </a>
