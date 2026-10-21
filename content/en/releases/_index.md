@@ -1,7 +1,8 @@
 ---
 title: Releases
 description: Learn about how Vitess releases work
-type: docs
+cascade:
+  type: docs
 aliases:
   - /docs/releases/
 ---
