@@ -36,9 +36,9 @@ Tablets in the same shard collaborate. The `Primary` tablet polls the replica ta
 
 However, we limit the collaboration to specific tablet types, based on `--throttle-tablet-types` VTTablet flag. By default, the `Primary` only collaborates with `replica` tablet types, which means tablets such as `backup` do not affect any throttling behavior. The throttler routinely updates the roster of participating tablets.
 
-{{< warning >}}
-This means that if you enable the throttler and want to use `RDONLY` tablets as the source for any [VReplication workflow](../../vreplication/) or [VTGate VStreams](../../vreplication/vstream/) (CDC) then you will have to use `--throttle-tablet-types "replica,rdonly"` with your `vttablet` processes.
-{{</ warning >}}
+{{< info >}}
+You can use `RDONLY` tablets as the source for a [VReplication workflow](../../vreplication/) or [VTGate VStreams](../../vreplication/vstream/) (CDC) without adding `rdonly` to `--throttle-tablet-types`. While the throttler on such a tablet is being checked, the tablet asks the `Primary` for heartbeats, so its lag stays accurate. See [Heartbeat configuration](#heartbeat-configuration). Use `--throttle-tablet-types "replica,rdonly"` when you also want lag on `RDONLY` tablets to count toward the shard's metrics.
+{{< /info >}}
 
 ### Metrics
 
@@ -784,7 +784,7 @@ To measure replication lag, the throttler uses the heartbeat writer service in V
 
 - `--heartbeat-interval` indicates how frequently heartbeats are injected. The interval should over-sample the `--throttle-threshold` by a factor of `2` to `4`. For example,if `--throttle-threshold` is `5s`, use a heartbeat interval of `1s` or `2s`.
 - `--heartbeat-on-demand-duration` ensures heartbeats are only injected when needed (e.g. during active VReplication workflows such as MoveTables or Online DDL). Heartbeats are written to the binary logs, and can therefore bloat them. If this is a concern, configure for example: `--heartbeat-on-demand-duration 5s`. This setting means: any throttler request starts a `5s` lease of heartbeat writes.
-  In normal times, heartbeats are not written. Once a throttle check is requested (e.g. by a running migration), the throttler asks the tablet to start a `5s` lease of heartbeats. that first check is likely to return a non-OK code, because heartbeats were stale. However, subsequent checks will soon pick up on the newly injected heartbeats. Checks made while the lease is held, further extend the lease time. In the scenario of a running migration, we can expect heartbeats to begin as soon as the migration begins, and terminate `5s` (in our example) after the migration completes.
+  In normal times, heartbeats are not written. Once a throttle check is requested (e.g. by a running migration), the throttler asks the tablet to start a `5s` lease of heartbeats. that first check is likely to return a non-OK code, because heartbeats were stale. However, subsequent checks will soon pick up on the newly injected heartbeats. Checks made while the lease is held, further extend the lease time. The `Primary` renews the lease for the tablet types it probes: itself and the types in `--throttle-tablet-types`. A tablet of any other type renews it by asking the `Primary` for heartbeats every half lease while its own throttler is being checked. In the scenario of a running migration, we can expect heartbeats to begin as soon as the migration begins, and terminate `5s` (in our example) after the migration completes.
   A recommended value is a multiple of `--throttle-threshold`. If `--throttle-threshold` is `5s`, reasonable values would be `10s` to `60s`.
 
 ### API
