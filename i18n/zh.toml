@@ -37,6 +37,9 @@ other = "Learn More"
 [docs]
 other = "文档"
 
+[releases]
+other = "发布版本"
+
 [blog]
 other = "博客"
 

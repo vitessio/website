@@ -1,4 +1,5 @@
 {{ $docsSections := where site.Sections "Section" "docs" }}
+{{ $currentRelPermalink := .RelPermalink }}
 
 <header class="docs-header">
   {{/* Hide on mobile / compact view because it crowds the UI and there's always a footer link anyway */}}
@@ -65,18 +66,21 @@
 
           <hr class="dropdown-divider" />
 
-          {{ range .Sections }}
-          <a class="dropdown-item has-text-weight-bold" href="{{ .RelPermalink }}">
-            {{ .Name }}
-          </a>
+                     {{ range .Sections }}
+              {{ $isCurrentVersion := in $currentRelPermalink .RelPermalink }}
+              {{ if or (not .Params.hide_in_sidebar) $isCurrentVersion }}
+            <a class="dropdown-item has-text-weight-bold" href="{{ .RelPermalink }}">
+              {{ .Name }}
+            </a>
 
-          {{ range .Pages }}
-          <a class="dropdown-item" href="{{ .RelPermalink }}">
-            {{ .Title }}
-          </a>
-          {{ end }}
-          {{ end }}
-          {{ end }}
+            {{ range .Pages }}
+            <a class="dropdown-item" href="{{ .RelPermalink }}">
+              {{ .Title }}
+            </a>
+            {{ end }}
+              {{ end }}
+            {{ end }}
+              {{ end }}
         </div>
       </div>
     </div>
