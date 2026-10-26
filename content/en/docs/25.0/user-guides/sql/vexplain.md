@@ -375,7 +375,7 @@ The output is a JSON object containing the following key information:
 - `groupingColumns`: Columns used in GROUP BY clauses
 - `joinColumns`: Columns used in join conditions, not matter if they are on the WHERE or the JOIN ... ON clause
 - `filterColumns`: Columns used in WHERE clauses that are potential candidates for indexes (or vindexes), primary keys, or sharding keys. These typically include columns used in equality comparisons or range conditions.
-- `statementType`: The type of SQL statement (e.g., SELECT, INSERT, UPDATE, DELETE)
+- `statementType`: The type of SQL statement (for example, SELECT, INSERT, REPLACE, UPDATE, DELETE)
 
 ### Example:
 

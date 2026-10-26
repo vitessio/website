@@ -434,13 +434,13 @@ Prometheus exposes this counter as `vtgate_slow_queries` with labels `query`, `p
 vtgate_slow_queries{plan="Passthrough",query="UPDATE",tablet="PRIMARY"} 1
 ```
 
-You can use this metric to alert on slow-query percentage. For example, the following alert fires when more than 1% of primary writes are slow over a five-minute window:
+You can use this metric to alert on slow-query percentage. For example, the following alert fires when more than 1% of primary writes are slow over a five-minute window. VTGate reports `REPLACE` statements with the `REPLACE` query type, not `INSERT`, so the query matcher lists it alongside the other write types:
 
 ```promql
 100 *
-sum(rate(vtgate_slow_queries{query=~"INSERT|UPDATE|DELETE",tablet="PRIMARY"}[5m]))
+sum(rate(vtgate_slow_queries{query=~"INSERT|REPLACE|UPDATE|DELETE",tablet="PRIMARY"}[5m]))
 /
-sum(rate(vtgate_query_executions{query=~"INSERT|UPDATE|DELETE",tablet="PRIMARY"}[5m]))
+sum(rate(vtgate_query_executions{query=~"INSERT|REPLACE|UPDATE|DELETE",tablet="PRIMARY"}[5m]))
 > 1
 ```
 
