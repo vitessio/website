@@ -354,7 +354,31 @@ vtbackup \
 * Choose timeout values based on how long your queries typically take, with some buffer for variability
 * Run expensive operations like `OPTIMIZE TABLE` on replica or rdonly tablets rather than the primary
 * Check the backup logs to see whether init queries were executed, skipped, or failed
-* When optimizing tables, consider using `OPTIMIZE LOCAL TABLE` to avoid binlogging and potentially replicating the statement
+* When optimizing tables, consider using `OPTIMIZE LOCAL TABLE` to avoid binlogging and potentially replicating the statement. With `vtbackup --enable-errant-gtid-checks`, a binlogged init SQL statement fails the run. For details, see [Check vtbackup runs for errant GTIDs](#check-vtbackup-runs-for-errant-gtids).
+
+## Check vtbackup runs for errant GTIDs
+
+A backup that holds errant GTIDs, which are GTIDs the shard primary doesn't have, can't be used. Every replica restored from it fails with `Errant GTID detected`. `vtbackup` restores the newest backup at the start of each run, so it carries the errant GTIDs into every later backup. `vtbackup` can pick up errant GTIDs in two ways:
+
+* It replicates from the primary without acknowledging semi-sync, so it can apply a transaction before any replica has it. If `EmergencyReparentShard` then promotes a replica that lacks the transaction, the new primary never has that GTID.
+* `--init-backup-sql-queries` runs with binary logging on. Statements such as `ANALYZE TABLE`, `OPTIMIZE TABLE`, or `FLUSH TABLES` write a GTID under `vtbackup`'s own server UUID.
+
+Pass `--enable-errant-gtid-checks` to `vtbackup` to fail the run, without completing a backup, when it finds errant GTIDs. The flag is off by default. GTIDs under the current primary's own server UUID aren't errant, which matches the rule tablets use. With the flag, `vtbackup` checks three times:
+
+1. The restored backup, or the data cloned with `--restore-with-clone`, before catch-up replication. If this check fails, the backup stays in storage.
+2. The data to back up, after init SQL queries run and before the backup starts.
+3. The new backup, just before its `MANIFEST` is written. If an emergency reparent during the upload loses transactions the backup holds, `vtbackup` aborts the backup.
+
+The error names where the errant GTIDs came from and how to repair them. The source can be the restored backup, the init SQL queries, or catch-up replication.
+
+Checks 2 and 3 can find transactions that `vtbackup` has applied but the primary hasn't committed yet. This happens while the primary waits for a semi-sync acknowledgement. If those transactions are under the primary's own UUID, `vtbackup` waits for the primary to commit them. The checks also wait for a missing or unreachable primary, and for the new primary after a reparent during the upload. These waits have no time limit of their own. Only a deadline on the job that runs `vtbackup` ends them. While checks 1 and 2 run, the `Phase` metric reports the `VerifyErrantGTIDs` phase. Check 3 runs within the `TakeNewBackup` phase.
+
+`vtbackup` checks only MySQL GTID sets. As on tablets, MariaDB isn't checked.
+
+### Before you enable the checks
+
+* If the shard's newest backup already has errant GTIDs, every run fails. Take a new backup of a healthy replica with `vtctldclient Backup` so the next run starts from it. Then remove the backups that hold the errant GTIDs with `vtctldclient RemoveBackup`. GTIDs under a former primary's UUID usually hold writes that a reparent lost. Copy any of that data the shard still needs before you remove the backups.
+* If your init SQL queries run binlogged statements, the run fails. Use the statements' `NO_WRITE_TO_BINLOG` or `LOCAL` forms, such as `OPTIMIZE LOCAL TABLE`, or start the queries with `SET sql_log_bin = 0`.
 
 ## Backing up Topology Server
 
