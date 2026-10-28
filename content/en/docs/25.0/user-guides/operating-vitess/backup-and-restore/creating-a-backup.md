@@ -369,9 +369,9 @@ Pass `--enable-errant-gtid-checks` to `vtbackup` to fail the run, without comple
 2. The data to back up, after init SQL queries run and before the backup starts.
 3. The new backup, just before its `MANIFEST` is written. If an emergency reparent during the upload loses transactions the backup holds, `vtbackup` aborts the backup.
 
-The error names where the errant GTIDs came from and how to repair them. The source can be the restored backup, the init SQL queries, or catch-up replication.
+The error names where the errant GTIDs came from and how to repair them. The source can be the restored backup, the clone donor, the init SQL queries, or catch-up replication.
 
-Checks 2 and 3 can find transactions that `vtbackup` has applied but the primary hasn't committed yet. This happens while the primary waits for a semi-sync acknowledgement. If those transactions are under the primary's own UUID, `vtbackup` waits for the primary to commit them. The checks also wait for a missing or unreachable primary, and for the new primary after a reparent during the upload. These waits have no time limit of their own. Only a deadline on the job that runs `vtbackup` ends them. While checks 1 and 2 run, the `Phase` metric reports the `VerifyErrantGTIDs` phase. Check 3 runs within the `TakeNewBackup` phase.
+Checks 2 and 3 can find transactions that `vtbackup` has applied but the primary hasn't committed yet. This happens while the primary waits for a semi-sync acknowledgement. If those transactions are under the primary's own UUID, `vtbackup` waits for the primary to commit them. The checks also wait for a missing or unreachable primary, an unreachable topology server, and the new primary after a reparent during the upload. These waits have no time limit of their own. Only a deadline on the job that runs `vtbackup` ends them. With the flag, the `Phase` metric includes a `VerifyErrantGTIDs` phase, which is active while checks 1 and 2 run. Check 3 runs within the `TakeNewBackup` phase.
 
 `vtbackup` checks only MySQL GTID sets. As on tablets, MariaDB isn't checked.
 
