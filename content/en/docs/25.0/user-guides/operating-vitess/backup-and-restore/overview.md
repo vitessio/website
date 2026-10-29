@@ -264,7 +264,7 @@ All three programs can be made aware of Backup Engine and Backup Storage using t
       <td>For the <code>builtin</code> backup engine, the target size in bytes for
         each chunk when splitting large files. Only used when
         <code>builtinbackup-file-chunk-threshold</code> is greater than 0.
-        Minimum allowed value is 4 MiB. (default 1073741824 / 1 GiB)
+        Must be at least 4 MiB and a multiple of 4096. (default 1073741824 / 1 GiB)
       </td>
     </tr>
     <tr>
@@ -364,7 +364,7 @@ Set `--builtinbackup-file-chunk-threshold` to a non-zero byte value to turn chun
 
 With this configuration, any file larger than 5 GiB is split into 1 GiB chunks during backup. On restore, those chunks are written concurrently to their positions in the destination file, sharing the same `--restore-concurrency` budget as the rest of the files.
 
-These two flags are only used during backup. Restore is driven entirely by the backup MANIFEST, so no chunking flags are needed on the restoring tablet.
+These two flags are only used during backup. Restore is driven entirely by the backup MANIFEST, so no chunking flags are needed on the restoring tablet. To speed up how the restoring tablet writes chunks to disk, see [Direct I/O for chunk restores](#direct-io-for-chunk-restores).
 
 #### Constraint: threshold must be at least the chunk size
 
@@ -374,7 +374,23 @@ The threshold must be greater than or equal to the chunk size. Vitess validates 
 builtinbackup-file-chunk-threshold (N) must be >= builtinbackup-file-chunk-size (M)
 ```
 
-The chunk size itself must be at least 4 MiB, since a very small chunk size would create an impractically large number of objects. These bounds are only enforced when chunking is enabled, that is, when the threshold is greater than 0.
+The chunk size itself must be at least 4 MiB, since a very small chunk size would create an impractically large number of objects. It must also be a multiple of 4096 bytes, so that every chunk starts at an offset that restores can write with direct I/O. The default of 1 GiB meets both requirements. These bounds are only enforced when chunking is enabled, that is, when the threshold is greater than 0.
+
+#### Direct I/O for chunk restores
+
+By default, a restore writes chunks through the operating system's page cache. Restored data is usually larger than the available memory, so the page cache gives little benefit and costs CPU time. On Linux, set `--builtinbackup-restore-write-mode=direct` on the restoring `vttablet` or `vtbackup` to write chunks with `O_DIRECT` instead, bypassing the page cache:
+
+```bash
+--builtinbackup-restore-write-mode=direct # default: buffered
+```
+
+In direct mode, Vitess also preallocates the disk space for each chunked file before writing it. On filesystems such as ext4, this lets chunks of the same file be written in parallel instead of one after another. If the filesystem can't preallocate space, Vitess leaves the file sparse and logs a warning.
+
+Direct mode only changes how chunks are written. Files that were not chunked when the backup was taken are always written through the page cache. Vitess also falls back to buffered writes, and logs a warning, in these cases:
+
+* The restoring tablet doesn't run on Linux.
+* The filesystem doesn't support `O_DIRECT`.
+* A chunk doesn't start at a multiple of 4096 bytes. This can happen with backups taken before Vitess required a chunk size that is a multiple of 4096.
 
 #### Compatibility
 
