@@ -144,8 +144,28 @@ $versions.current}}
         trackSearchEvent(query);
       }
 
+      function runQuery(keywords) {
+        try {
+          return index.search(keywords);
+        } catch (err) {
+          if (!(err instanceof lunr.QueryParseError)) throw err;
+          // Input such as "--cells" or "vtgate:" is not valid lunr query
+          // syntax, so fall back to matching the plain terms it contains,
+          // trimmed of punctuation the same way the indexed words are.
+          debugLog("runQuery: falling back to plain terms: " + err.message);
+          const terms = lunr.tokenizer(keywords)
+            .map(lunr.trimmer)
+            .filter((token) => token.toString() !== "");
+          // A query without any terms would match every document.
+          if (terms.length === 0) return [];
+          return index.query(function (q) {
+            q.term(terms);
+          });
+        }
+      }
+
       function search(keywords) {
-        const results = index.search(keywords);
+        const results = runQuery(keywords);
         const firstSearchResult = results[0];
         const currentVersion = parse[firstSearchResult?.ref]?.version;
 
@@ -196,19 +216,44 @@ $versions.current}}
         }
       }
 
+      function escapeRegExp(text) {
+        return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
       function highlightSearchTerm(element, content, keywords) {
-        // Split keywords by empty space
-        const keywordList = keywords.trim().split(/\s+/);
-        let highlightedContent = content;
+        // The index stores HTML-escaped text (e.g. "&lt;" or "&#34;"), so
+        // decode it first and only ever insert it as text, never as markup.
+        const text = new DOMParser()
+          .parseFromString(content || '', 'text/html')
+          .documentElement.textContent;
 
-        keywordList.forEach(keyword => {
-          const regex = new RegExp(keyword, 'gi');
-          highlightedContent = highlightedContent.replace(regex, match => `<mark>${match}</mark>`);
-        });
+        // Split keywords by empty space, drop lunr's "*" wildcards and match
+        // the rest literally, longest first so that a keyword is not shadowed
+        // by a shorter prefix of it.
+        const keywordList = keywords.trim().split(/\s+/)
+          .map(keyword => keyword.replace(/\*/g, ''))
+          .filter(keyword => keyword !== '')
+          .sort((a, b) => b.length - a.length)
+          .map(escapeRegExp);
 
-        // Replace with highlighted content
         element.textContent = '';
-        element.appendChild(document.createRange().createContextualFragment(highlightedContent));
+        if (keywordList.length === 0) {
+          element.textContent = text;
+          return;
+        }
+
+        // A single capturing regex makes split() return the matched keywords
+        // at the odd indexes of the resulting array.
+        const regex = new RegExp(`(${keywordList.join('|')})`, 'gi');
+        text.split(regex).forEach((part, i) => {
+          if (i % 2 === 1) {
+            const mark = document.createElement('mark');
+            mark.textContent = part;
+            element.appendChild(mark);
+          } else if (part !== '') {
+            element.appendChild(document.createTextNode(part));
+          }
+        });
       }
 
       const lunrSearchEventCategory = 'Lunr Search';
