@@ -144,28 +144,57 @@ $versions.current}}
         trackSearchEvent(query);
       }
 
-      function runQuery(keywords) {
+      function parseClauses(text) {
+        const query = new lunr.Query(index.fields);
+        new lunr.QueryParser(text, query).parse();
+        return query.clauses;
+      }
+
+      function parseQuery(keywords) {
         try {
-          return index.search(keywords);
+          return parseClauses(keywords);
         } catch (err) {
           if (!(err instanceof lunr.QueryParseError)) throw err;
-          // Input such as "--cells" or "vtgate:" is not valid lunr query
-          // syntax, so fall back to matching the plain terms it contains,
-          // trimmed of punctuation the same way the indexed words are.
-          debugLog("runQuery: falling back to plain terms: " + err.message);
-          const terms = lunr.tokenizer(keywords)
-            .map(lunr.trimmer)
-            .filter((token) => token.toString() !== "");
-          // A query without any terms would match every document.
-          if (terms.length === 0) return [];
-          return index.query(function (q) {
-            q.term(terms);
-          });
+          debugLog("parseQuery: parsing each word on its own: " + err.message);
         }
+
+        // Input such as "--cells" or "vtgate:" is not valid lunr query syntax.
+        // Keep the words that are valid clauses (e.g. "title:vtgate" or
+        // "vtgate~1") and fall back to the plain terms in the others, trimmed
+        // of punctuation the same way the indexed words are.
+        const query = new lunr.Query(index.fields);
+        keywords.trim().split(/\s+/).forEach((word) => {
+          try {
+            parseClauses(word).forEach((clause) => query.clause(clause));
+          } catch (err) {
+            if (!(err instanceof lunr.QueryParseError)) throw err;
+            lunr.tokenizer(word)
+              .map(lunr.trimmer)
+              .filter((token) => token.toString() !== "")
+              .forEach((token) => query.clause({ term: token.toString() }));
+          }
+        });
+        return query.clauses;
+      }
+
+      function highlightTerms(clauses, fields) {
+        // Highlight the terms lunr matched in the given fields, without the
+        // "*" wildcards and trimmed of punctuation like the indexed words.
+        return clauses
+          .filter((clause) => clause.presence !== lunr.Query.presence.PROHIBITED)
+          .filter((clause) => clause.fields.some((field) => fields.includes(field)))
+          .map((clause) => lunr.trimmer(new lunr.Token(clause.term.replace(/\*/g, ""))).toString())
+          .filter((term) => term !== "");
       }
 
       function search(keywords) {
-        const results = runQuery(keywords);
+        const clauses = parseQuery(keywords);
+        // A query without any clauses would match every document. lunr
+        // replaces each clause term with its stemmed form while searching,
+        // so give it copies and keep the typed terms for highlighting.
+        const results = clauses.length === 0 ? [] : index.query(function (q) {
+          clauses.forEach((clause) => q.clause({ ...clause }));
+        });
         const firstSearchResult = results[0];
         const currentVersion = parse[firstSearchResult?.ref]?.version;
 
@@ -190,6 +219,8 @@ $versions.current}}
           searchResultCount.replaceChildren(title, subTitle);
 
           // show the matched result
+          const titleTerms = highlightTerms(clauses, ["title"]);
+          const summaryTerms = highlightTerms(clauses, ["summary", "content"]);
           results.forEach(function (result) {
             const doc = parse[result.ref];
             const searchResultItem = template.content.cloneNode(true)
@@ -202,12 +233,12 @@ $versions.current}}
             const title = searchResultItem.querySelector('a.title');
             title.setAttribute('href', doc.href);
             title.textContent = doc.title;
-            highlightSearchTerm(title, doc.title, keywords);
+            highlightSearchTerm(title, doc.title, titleTerms);
 
             const subtitle = searchResultItem.querySelector('a.subtitle');
             subtitle.setAttribute('href', doc.href);
             subtitle.textContent = doc.summary;
-            highlightSearchTerm(subtitle, doc.summary, keywords);
+            highlightSearchTerm(subtitle, doc.summary, summaryTerms);
 
             searchResultItem.addEventListener('click',
               () => trackSearchResultClick(doc.href, query));
@@ -220,19 +251,16 @@ $versions.current}}
         return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       }
 
-      function highlightSearchTerm(element, content, keywords) {
+      function highlightSearchTerm(element, content, terms) {
         // The index stores HTML-escaped text (e.g. "&lt;" or "&#34;"), so
         // decode it first and only ever insert it as text, never as markup.
         const text = new DOMParser()
           .parseFromString(content || '', 'text/html')
           .documentElement.textContent;
 
-        // Split keywords by empty space, drop lunr's "*" wildcards and match
-        // the rest literally, longest first so that a keyword is not shadowed
-        // by a shorter prefix of it.
-        const keywordList = keywords.trim().split(/\s+/)
-          .map(keyword => keyword.replace(/\*/g, ''))
-          .filter(keyword => keyword !== '')
+        // Match the terms literally, longest first so that a term is not
+        // shadowed by a shorter prefix of it.
+        const keywordList = [...terms]
           .sort((a, b) => b.length - a.length)
           .map(escapeRegExp);
 
