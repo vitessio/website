@@ -185,6 +185,8 @@ SELECT /*vt+ PRIORITY=50 */ * FROM normal_table;
 SELECT /*vt+ PRIORITY=100 */ * FROM batch_table;
 ```
 
+By default, queries that differ only in their `PRIORITY` value get separate entries in the VTGate and VTTablet plan caches. To have them share plan cache entries, start `vtgate` with `--gate-query-cache-strip-priority`. VTGate then removes the directive from the SQL it plans and sends to VTTablet. It passes each query's priority to VTTablet separately, so throttling still uses the priority you set. Prepared statements keep the directive. Before you enable the flag, check your VTTablet query rules. A rule that matches the `PRIORITY` directive in the query text stops matching.
+
 ### Priority evaluation
 
 The throttler uses probabilistic priority checking:
