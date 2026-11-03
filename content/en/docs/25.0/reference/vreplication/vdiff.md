@@ -151,6 +151,34 @@ $ vtctldclient --server=localhost:15999 VDiff --format=json --target-keyspace cu
 Attempting to `stop` a VDiff that is already completed is a no-op.
 {{< /info >}}
 
+#### Updating a VDiff
+
+The `update` action changes the tablet types and cells an existing VDiff uses to select source and target tablets, while keeping its progress. Use it when the tablets a VDiff was created with are no longer suitable. For example, you might move the comparison from `REPLICA` to `RDONLY` tablets to reduce load on the replicas that serve traffic. Deleting the VDiff and creating a new one would discard the progress it has already made.
+
+You can only update a VDiff that is not running. To update a running VDiff:
+
+1. Stop it with the [`stop` action](#stopping-a-vdiff).
+2. Run `update` with the new values. Example:
+
+    ```shell
+    $ vtctldclient --server=localhost:15999 VDiff --target-keyspace customer --workflow commerce2customer update ad9bd40e-0c92-11ed-b568-920702940ee0 --tablet-types "RDONLY,REPLICA"
+    VDiff update completed
+    Shard -80: updated (state: stopped)
+    Shard 80-: updated (state: stopped)
+    ```
+
+3. Resume it with the [`resume` action](#resume-a-previous-vdiff). The VDiff continues from where it stopped, using the new tablet types and cells.
+
+If the VDiff is pending or running on a target shard, `update` fails on that shard with a `FAILED_PRECONDITION` error. Stop the VDiff and try again. An update to a completed VDiff leaves it completed; the new values take effect the next time you resume it.
+
+The `update` action changes only the values you pass, and keeps the VDiff's other settings:
+
+- `--tablet-types` sets the tablet types to use on the source and target. By default, tablets are selected in the order the types are listed; pass `--tablet-types-in-preference-order=false` to select among all of them.
+- `--source-cells` and `--target-cells` set the cells to select tablets from. To use all cells again, as `create` does by default, pass `--clear-source-cells` or `--clear-target-cells` instead.
+- `--target-shards` limits the update to the given target shards. By default, the update applies to all target shards.
+
+Both `vtctld` and the target tablets must run a Vitess version that supports `update`. See [the command's reference docs](../../../reference/programs/vtctldclient/vtctldclient_vdiff/) for all flags.
+
 #### Delete VDiff Results
 
 You use the [`delete` action](../../../reference/programs/vtctldclient/vtctldclient_vdiff/vtctldclient_vdiff_delete/) to either `delete` a specific UUID or use the `all` shorthand to delete all VDiffs created for the specified keyspace and workflow. Example:
