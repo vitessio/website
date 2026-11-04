@@ -18,7 +18,7 @@
 
 {{/* Lunr Search */}} {{ $versions := site.Params.versions }} {{ $latest :=
 $versions.current}}
-<script src="https://unpkg.com/lunr/lunr.js"></script>
+<script src="https://unpkg.com/lunr@2.3.9/lunr.js"></script>
 <script>
   window.addEventListener(
     "DOMContentLoaded",
@@ -178,13 +178,15 @@ $versions.current}}
       }
 
       function highlightTerms(clauses, fields) {
-        // Highlight the terms lunr matched in the given fields, without the
-        // "*" wildcards and trimmed of punctuation like the indexed words.
+        // Highlight the terms lunr searched for in the given fields, without
+        // the "*" wildcards. lunr only stems the parsed terms, and the
+        // fallback terms are already trimmed, so only skip the terms that
+        // have no word characters.
         return clauses
           .filter((clause) => clause.presence !== lunr.Query.presence.PROHIBITED)
           .filter((clause) => clause.fields.some((field) => fields.includes(field)))
-          .map((clause) => lunr.trimmer(new lunr.Token(clause.term.replace(/\*/g, ""))).toString())
-          .filter((term) => term !== "");
+          .map((clause) => clause.term.replace(/\*/g, ""))
+          .filter((term) => /\w/.test(term));
       }
 
       function search(keywords) {
