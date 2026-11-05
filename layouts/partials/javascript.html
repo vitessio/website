@@ -161,14 +161,16 @@ $versions.current}}
         // Input such as "--cells" or "vtgate:" is not valid lunr query syntax.
         // Keep the words that are valid clauses (e.g. "title:vtgate" or
         // "vtgate~1") and fall back to the plain terms in the others, trimmed
-        // of punctuation the same way the indexed words are.
+        // of punctuation the same way the indexed words are. The tokenizer
+        // only splits on whitespace and hyphens, so split on the query syntax
+        // characters too, or "TITLE:vtgate" would become a single term.
         const query = new lunr.Query(index.fields);
         keywords.trim().split(/\s+/).forEach((word) => {
           try {
             parseClauses(word).forEach((clause) => query.clause(clause));
           } catch (err) {
             if (!(err instanceof lunr.QueryParseError)) throw err;
-            lunr.tokenizer(word)
+            lunr.tokenizer(word.replace(/[:^~]/g, " "))
               .map(lunr.trimmer)
               .filter((token) => token.toString() !== "")
               .forEach((token) => query.clause({ term: token.toString() }));
