@@ -109,6 +109,8 @@ A client that connects to the throttler and asks for throttling advice identifie
 - `tablegc`: table lifecycle.
 - `online-ddl`: any Online DDL operation.
 - `vplayer`: a submodule of VReplication.
+- `vstreamer`, `rowstreamer`: the source tablet's streamers, which serve both VReplication workflows and [VTGate VStreams](../../vreplication/vstream/). `vstreamer` streams binary log events, and `rowstreamer` streams rows in the copy phase.
+- `vtgate-vstream`: added to the `vstreamer` and `rowstreamer` names when they serve a VTGate VStream (see below).
 - `schema-tracker`: the internal schema tracker.
 
 Some app names are special:
@@ -125,6 +127,14 @@ Clients can identify by multiple app names, separated with colon. For example, t
 - Currently issuing rowcopy via `vcopier`.
 
 The throttler treats such an app as the combined check of multiple apps, to each it will apply app metric and app rules, as discussed below.
+
+A VTGate VStream, such as a change data capture (CDC) client, reaches the source tablet through the same VStream RPC as VReplication workflows. These workflows include MoveTables, Reshard, Materialize, and Online DDL. To tell them apart, the source tablet checks the throttler as `vstreamer:vtgate-vstream` and `rowstreamer:vtgate-vstream` for VTGate VStreams, including in the catch-up and fast-forward phases. Workflows keep checking as `vstreamer` and `rowstreamer`. As a result:
+
+- A rule or app metrics for `vtgate-vstream` apply to VTGate VStreams only.
+- A rule or app metrics for `vstreamer` or `rowstreamer` apply to both VTGate VStreams and workflows.
+- `GetThrottlerStatus` lists the checks of VTGate VStreams under `vstreamer:vtgate-vstream` and `rowstreamer:vtgate-vstream`.
+
+VTGate VStreams use these names only when both VTGate and the source VTTablet run v25.0 or later. Otherwise they check as `vstreamer` and `rowstreamer`.
 
 ### Checks
 
@@ -372,6 +382,14 @@ $ vtctldclient UpdateThrottlerConfig --throttle-app "vreplication" --throttle-ap
 ```
 
 In the above we push back 80% of checks from all apps, except for `vreplication` which is completely exempted.
+
+Exempt VTGate VStreams (CDC clients) for one year, while VReplication workflows that stream from the same tablets stay subject to the throttler:
+
+```shell
+$ vtctldclient UpdateThrottlerConfig --throttle-app "vtgate-vstream" --throttle-app-duration "8760h" --throttle-app-exempt commerce
+```
+
+An exempt rule takes precedence over throttle rules for the other parts of a multi-part app name. With `vtgate-vstream` exempted, a throttle rule for `vstreamer` still applies to workflows, but no longer pauses VTGate VStreams.
 
 It is possible to expire (remove the rule) early via:
 ```shell
