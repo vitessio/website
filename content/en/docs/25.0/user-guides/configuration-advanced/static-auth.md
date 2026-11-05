@@ -4,7 +4,7 @@ weight: 2
 ---
 
 The simplest way to configure users is using a `static` auth method, and we
-can define the users in a JSON formatted file or string.
+can define the users in a JSON formatted file.
 
 ```sh
 $ cat > users.json << EOF

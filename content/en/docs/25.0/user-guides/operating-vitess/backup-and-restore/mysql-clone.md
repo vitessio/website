@@ -56,8 +56,8 @@ Configure the clone user credentials for vtbackup and vttablet:
       <td>MySQL user for clone operations. Default: <code>vt_clone</code></td>
     </tr>
     <tr>
-      <td><code>--db-clone-password</code></td>
-      <td>Password for the clone user. Default: (empty)</td>
+      <td><code>--db-credentials-file</code></td>
+      <td>Path to a JSON file that maps each MySQL user to a list of passwords. The first password listed for the clone user is used.</td>
     </tr>
     <tr>
       <td><code>--db-clone-use-ssl</code></td>
@@ -66,11 +66,17 @@ Configure the clone user credentials for vtbackup and vttablet:
   </tbody>
 </table>
 
-Example:
+Example credentials file. If the tablet's other MySQL users have passwords, list them in the same file:
+
+```json
+{
+  "vt_clone": ["<clone-password>"]
+}
+```
 
 ```sh
 vttablet ... --db-clone-user=vt_clone \
-             --db-clone-password=secret \
+             --db-credentials-file=/path/to/db_credentials.json \
              --db-clone-use-ssl=false
 ```
 

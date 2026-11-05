@@ -52,8 +52,20 @@ mysql: [Warning] Using a password on the command line interface can be insecure.
 
 The variables `TOPOLOGY_FLAGS` and `VTDATAROOT` should already be in the environment from sourcing env.sh earlier. We will call the new tablet UID 401.
 
+VTTablet reads the MySQL passwords from a credentials file. The file maps each MySQL user to a list of passwords, and VTTablet uses the first one. Every user in this example is `msandbox`, so a single entry covers them all:
+
 ```bash
 mkdir -p $VTDATAROOT/vt_0000000401
+cat > $VTDATAROOT/vt_0000000401/db_credentials.json << EOF
+{
+  "msandbox": ["msandbox"]
+}
+EOF
+```
+
+Start the tablet, using the `--db-*-user` flags to choose the users and `--db-credentials-file` to point at their passwords:
+
+```bash
 vttablet \
  $TOPOLOGY_FLAGS \
  --logtostderr \
@@ -69,15 +81,11 @@ vttablet \
  --db-host 127.0.0.1 \
  --db-port 5726 \
  --db-app-user msandbox \
- --db-app-password msandbox \
  --db-dba-user msandbox \
- --db-dba-password msandbox \
  --db-repl-user msandbox \
- --db-repl-password msandbox \
  --db-filtered-user msandbox \
- --db-filtered-password msandbox \
  --db-allprivs-user msandbox \
- --db-allprivs-password msandbox \
+ --db-credentials-file $VTDATAROOT/vt_0000000401/db_credentials.json \
  --init-db-name-override legacy \
  --unmanaged &
 ```
