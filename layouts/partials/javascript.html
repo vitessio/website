@@ -18,7 +18,7 @@
 
 {{/* Lunr Search */}} {{ $versions := site.Params.versions }} {{ $latest :=
 $versions.current}}
-<script src="https://unpkg.com/lunr/lunr.js"></script>
+<script src="https://unpkg.com/lunr@2.3.9/lunr.js"></script>
 <script>
   window.addEventListener(
     "DOMContentLoaded",
@@ -144,8 +144,61 @@ $versions.current}}
         trackSearchEvent(query);
       }
 
+      function parseClauses(text) {
+        const query = new lunr.Query(index.fields);
+        new lunr.QueryParser(text, query).parse();
+        return query.clauses;
+      }
+
+      function parseQuery(keywords) {
+        try {
+          return parseClauses(keywords);
+        } catch (err) {
+          if (!(err instanceof lunr.QueryParseError)) throw err;
+          debugLog("parseQuery: parsing each word on its own: " + err.message);
+        }
+
+        // Input such as "--cells" or "vtgate:" is not valid lunr query syntax.
+        // Keep the words that are valid clauses (e.g. "title:vtgate" or
+        // "vtgate~1") and fall back to the plain terms in the others, trimmed
+        // of punctuation the same way the indexed words are. The tokenizer
+        // only splits on whitespace and hyphens, so split on the query syntax
+        // characters too, or "TITLE:vtgate" would become a single term.
+        const query = new lunr.Query(index.fields);
+        keywords.trim().split(/\s+/).forEach((word) => {
+          try {
+            parseClauses(word).forEach((clause) => query.clause(clause));
+          } catch (err) {
+            if (!(err instanceof lunr.QueryParseError)) throw err;
+            lunr.tokenizer(word.replace(/[:^~]/g, " "))
+              .map(lunr.trimmer)
+              .filter((token) => token.toString() !== "")
+              .forEach((token) => query.clause({ term: token.toString() }));
+          }
+        });
+        return query.clauses;
+      }
+
+      function highlightTerms(clauses, fields) {
+        // Highlight the terms lunr searched for in the given fields, without
+        // the "*" wildcards. lunr only stems the parsed terms, and the
+        // fallback terms are already trimmed, so only skip the terms that
+        // have no word characters.
+        return clauses
+          .filter((clause) => clause.presence !== lunr.Query.presence.PROHIBITED)
+          .filter((clause) => clause.fields.some((field) => fields.includes(field)))
+          .map((clause) => clause.term.replace(/\*/g, ""))
+          .filter((term) => /\w/.test(term));
+      }
+
       function search(keywords) {
-        const results = index.search(keywords);
+        const clauses = parseQuery(keywords);
+        // A query without any clauses would match every document. lunr
+        // replaces each clause term with its stemmed form while searching,
+        // so give it copies and keep the typed terms for highlighting.
+        const results = clauses.length === 0 ? [] : index.query(function (q) {
+          clauses.forEach((clause) => q.clause({ ...clause }));
+        });
         const firstSearchResult = results[0];
         const currentVersion = parse[firstSearchResult?.ref]?.version;
 
@@ -170,6 +223,8 @@ $versions.current}}
           searchResultCount.replaceChildren(title, subTitle);
 
           // show the matched result
+          const titleTerms = highlightTerms(clauses, ["title"]);
+          const summaryTerms = highlightTerms(clauses, ["summary", "content"]);
           results.forEach(function (result) {
             const doc = parse[result.ref];
             const searchResultItem = template.content.cloneNode(true)
@@ -182,12 +237,12 @@ $versions.current}}
             const title = searchResultItem.querySelector('a.title');
             title.setAttribute('href', doc.href);
             title.textContent = doc.title;
-            highlightSearchTerm(title, doc.title, keywords);
+            highlightSearchTerm(title, doc.title, titleTerms);
 
             const subtitle = searchResultItem.querySelector('a.subtitle');
             subtitle.setAttribute('href', doc.href);
             subtitle.textContent = doc.summary;
-            highlightSearchTerm(subtitle, doc.summary, keywords);
+            highlightSearchTerm(subtitle, doc.summary, summaryTerms);
 
             searchResultItem.addEventListener('click',
               () => trackSearchResultClick(doc.href, query));
@@ -196,19 +251,41 @@ $versions.current}}
         }
       }
 
-      function highlightSearchTerm(element, content, keywords) {
-        // Split keywords by empty space
-        const keywordList = keywords.trim().split(/\s+/);
-        let highlightedContent = content;
+      function escapeRegExp(text) {
+        return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
 
-        keywordList.forEach(keyword => {
-          const regex = new RegExp(keyword, 'gi');
-          highlightedContent = highlightedContent.replace(regex, match => `<mark>${match}</mark>`);
-        });
+      function highlightSearchTerm(element, content, terms) {
+        // The index stores HTML-escaped text (e.g. "&lt;" or "&#34;"), so
+        // decode it first and only ever insert it as text, never as markup.
+        const text = new DOMParser()
+          .parseFromString(content || '', 'text/html')
+          .documentElement.textContent;
 
-        // Replace with highlighted content
+        // Match the terms literally, longest first so that a term is not
+        // shadowed by a shorter prefix of it.
+        const keywordList = [...terms]
+          .sort((a, b) => b.length - a.length)
+          .map(escapeRegExp);
+
         element.textContent = '';
-        element.appendChild(document.createRange().createContextualFragment(highlightedContent));
+        if (keywordList.length === 0) {
+          element.textContent = text;
+          return;
+        }
+
+        // A single capturing regex makes split() return the matched keywords
+        // at the odd indexes of the resulting array.
+        const regex = new RegExp(`(${keywordList.join('|')})`, 'gi');
+        text.split(regex).forEach((part, i) => {
+          if (i % 2 === 1) {
+            const mark = document.createElement('mark');
+            mark.textContent = part;
+            element.appendChild(mark);
+          } else if (part !== '') {
+            element.appendChild(document.createTextNode(part));
+          }
+        });
       }
 
       const lunrSearchEventCategory = 'Lunr Search';
