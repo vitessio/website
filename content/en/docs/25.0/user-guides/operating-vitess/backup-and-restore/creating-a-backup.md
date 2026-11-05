@@ -184,8 +184,27 @@ If the engine is `xtrabackup`, the tablet can continue to serve traffic while th
 __Run the following vtctl command to backup a specific shard:__
 
 ``` sh
-vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard [--allow-primary=false] [--upgrade-safe=false] <keyspace/shard>
+vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard [--allow-primary=false] [--upgrade-safe=false] [--tablet-types=<types>] <keyspace/shard>
 ```
+
+By default, `BackupShard` takes the backup on the `REPLICA`, `RDONLY`, or `SPARE` tablet in the shard with the lowest replication lag, whatever its type. It skips tablets whose replication lag is unknown. If none of these tablets can take the backup and you pass `--allow-primary`, Vitess takes the backup on the primary.
+
+Backups are resource-intensive. To keep them off the tablets that serve replica reads, pass `--tablet-types` with a comma-separated list of tablet types in order of preference. Vitess uses the first listed type that has a tablet able to take the backup. Within that type, it uses the tablet with the lowest replication lag:
+
+```sh
+# Prefer an RDONLY tablet, falling back to a REPLICA
+vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard --tablet-types=rdonly,replica commerce/0
+
+# Use an RDONLY tablet only; fail if none can take the backup
+vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard --tablet-types=rdonly commerce/0
+
+# Prefer an RDONLY tablet, falling back to the primary
+vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard --tablet-types=rdonly --allow-primary commerce/0
+```
+
+`--tablet-types` accepts `replica`, `rdonly`, and `spare`. Listing any other type, including `primary`, fails the command with an `INVALID_ARGUMENT` error. To fall back to the primary, pass `--allow-primary` instead: Vitess uses the primary only when no tablet of the listed types can take the backup. Without `--allow-primary`, the command fails with `no tablet available for backup`.
+
+Upgrade `vtctld` before using `--tablet-types`. A `vtctld` older than v25 ignores the flag and uses the lowest-lag `REPLICA`, `RDONLY`, or `SPARE` tablet, so `--tablet-types=rdonly` can still back up from a `REPLICA`.
 
 ### Get the backup result as JSON
 
@@ -370,7 +389,31 @@ vtbackup \
 * Choose timeout values based on how long your queries typically take, with some buffer for variability
 * Run expensive operations like `OPTIMIZE TABLE` on replica or rdonly tablets rather than the primary
 * Check the backup logs to see whether init queries were executed, skipped, or failed
-* When optimizing tables, consider using `OPTIMIZE LOCAL TABLE` to avoid binlogging and potentially replicating the statement
+* When optimizing tables, consider using `OPTIMIZE LOCAL TABLE` to avoid binlogging and potentially replicating the statement. With `vtbackup --enable-errant-gtid-checks`, a binlogged init SQL statement fails the run. For details, see [Check vtbackup runs for errant GTIDs](#check-vtbackup-runs-for-errant-gtids).
+
+## Check vtbackup runs for errant GTIDs
+
+A backup that holds errant GTIDs, which are GTIDs the shard primary doesn't have, can't be used. Every replica restored from it fails with `Errant GTID detected`. `vtbackup` restores the newest backup at the start of each run, so it carries the errant GTIDs into every later backup. `vtbackup` can pick up errant GTIDs in two ways:
+
+* It replicates from the primary without acknowledging semi-sync, so it can apply a transaction before any replica has it. If `EmergencyReparentShard` then promotes a replica that lacks the transaction, the new primary never has that GTID.
+* `--init-backup-sql-queries` runs with binary logging on. Statements such as `ANALYZE TABLE`, `OPTIMIZE TABLE`, or `FLUSH TABLES` write a GTID under `vtbackup`'s own server UUID.
+
+Pass `--enable-errant-gtid-checks` to `vtbackup` to fail the run, without completing a backup, when it finds errant GTIDs. The flag is off by default. GTIDs under the current primary's own server UUID aren't errant, which matches the rule tablets use. With the flag, `vtbackup` checks three times:
+
+1. The restored backup, or the data cloned with `--restore-with-clone`, before catch-up replication. If this check fails, the backup stays in storage.
+2. The data to back up, after init SQL queries run and before the backup starts.
+3. The new backup, just before its `MANIFEST` is written. If an emergency reparent during the upload loses transactions the backup holds, `vtbackup` aborts the backup.
+
+The error names where the errant GTIDs came from and how to repair them. The source can be the restored backup, the clone donor, the init SQL queries, or catch-up replication.
+
+Checks 2 and 3 can find transactions that `vtbackup` has applied but the primary hasn't committed yet. This happens while the primary waits for a semi-sync acknowledgement. If those transactions are under the primary's own UUID, `vtbackup` waits for the primary to commit them. The checks also wait for a missing or unreachable primary, an unreachable topology server, and the new primary after a reparent during the upload. These waits have no time limit of their own. Only a deadline on the job that runs `vtbackup` ends them. With the flag, the `Phase` metric includes a `VerifyErrantGTIDs` phase, which is active while checks 1 and 2 run. Check 3 runs within the `TakeNewBackup` phase.
+
+`vtbackup` checks only MySQL GTID sets. As on tablets, MariaDB isn't checked.
+
+### Before you enable the checks
+
+* If the shard's newest backup already has errant GTIDs, every run fails. Take a new backup of a healthy replica with `vtctldclient Backup` so the next run starts from it. Then remove the backups that hold the errant GTIDs with `vtctldclient RemoveBackup`. GTIDs under a former primary's UUID usually hold writes that a reparent lost. Copy any of that data the shard still needs before you remove the backups.
+* If your init SQL queries run binlogged statements, the run fails. Use the statements' `NO_WRITE_TO_BINLOG` or `LOCAL` forms, such as `OPTIMIZE LOCAL TABLE`, or start the queries with `SET sql_log_bin = 0`.
 
 ## Backing up Topology Server
 
