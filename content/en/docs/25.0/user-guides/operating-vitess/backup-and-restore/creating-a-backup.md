@@ -184,8 +184,27 @@ If the engine is `xtrabackup`, the tablet can continue to serve traffic while th
 __Run the following vtctl command to backup a specific shard:__
 
 ``` sh
-vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard [--allow-primary=false] [--upgrade-safe=false] <keyspace/shard>
+vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard [--allow-primary=false] [--upgrade-safe=false] [--tablet-types=<types>] <keyspace/shard>
 ```
+
+By default, `BackupShard` takes the backup on the `REPLICA`, `RDONLY`, or `SPARE` tablet in the shard with the lowest replication lag, whatever its type. It skips tablets whose replication lag is unknown. If none of these tablets can take the backup and you pass `--allow-primary`, Vitess takes the backup on the primary.
+
+Backups are resource-intensive. To keep them off the tablets that serve replica reads, pass `--tablet-types` with a comma-separated list of tablet types in order of preference. Vitess uses the first listed type that has a tablet able to take the backup. Within that type, it uses the tablet with the lowest replication lag:
+
+```sh
+# Prefer an RDONLY tablet, falling back to a REPLICA
+vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard --tablet-types=rdonly,replica commerce/0
+
+# Use an RDONLY tablet only; fail if none can take the backup
+vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard --tablet-types=rdonly commerce/0
+
+# Prefer an RDONLY tablet, falling back to the primary
+vtctldclient --server=<vtctld_host>:<vtctld_port> BackupShard --tablet-types=rdonly --allow-primary commerce/0
+```
+
+`--tablet-types` accepts `replica`, `rdonly`, and `spare`. Listing any other type, including `primary`, fails the command with an `INVALID_ARGUMENT` error. To fall back to the primary, pass `--allow-primary` instead: Vitess uses the primary only when no tablet of the listed types can take the backup. Without `--allow-primary`, the command fails with `no tablet available for backup`.
+
+Upgrade `vtctld` before using `--tablet-types`. A `vtctld` older than v25 ignores the flag and uses the lowest-lag `REPLICA`, `RDONLY`, or `SPARE` tablet, so `--tablet-types=rdonly` can still back up from a `REPLICA`.
 
 ## Include binary logs in a full backup
 
