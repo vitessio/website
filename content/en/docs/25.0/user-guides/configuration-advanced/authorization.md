@@ -44,6 +44,8 @@ behavior of ACLs.  Let's review these:
  * `--queryserver-config-strict-table-acl`: Set to `true` to enforce table ACL
    checking.  **This needs to be enabled for your ACLs to have any effect.**
    Any users that are not specified in an ACL policy will be denied.
+   Some statement types are also denied under strict table ACL. See
+   [Statements denied under strict table ACL](#statements-denied-under-strict-table-acl).
    Default is `false`.
  * `--queryserver-config-acl-exempt-acl`:  Allows you to specify the name
    of an ACL (see below for format) that is exempt from enforcement.
@@ -57,6 +59,50 @@ behavior of ACLs.  Let's review these:
    Note that even if you do not set this parameter, you can always force
    VTTablet to reload the ACL config file from disk by sending a SIGHUP
    signal to your VTTablet process.
+
+## Statements denied under strict table ACL
+
+When `--queryserver-config-strict-table-acl` is enabled, VTTablet fails closed
+for statement types whose table set it cannot determine. Rather than skip the
+ACL check for these statements, it denies them. The affected statements are
+`DO`, `CALL`, `REPAIR`, `OPTIMIZE`, and `LOAD DATA`. This closes a security gap:
+non-exempt callers could otherwise use these statements to reach tables their
+ACL denied.
+
+Because VTTablet cannot determine which tables the statement touches, a grant
+on specific tables cannot cover it. Two kinds of callers can still run these
+statements:
+
+ * A caller listed in `readers`, `writers`, and `admins` of an ACL rule whose
+   `table_names_or_prefixes` is `%` can run `DO`, `REPAIR`, and `OPTIMIZE`.
+   That caller can already read, write, and alter every table, so these
+   statements cannot reach anything beyond its grants. All three roles are
+   required, because no role implies another: a caller that is only an admin
+   on `%` is still denied. A `%` rule covers every table, so it must be the
+   only rule in the config. Even this caller cannot run `CALL` or `LOAD DATA`.
+   A `SQL SECURITY DEFINER` procedure runs with its definer's privileges, and
+   `LOAD DATA INFILE` reads files on the server. Table ACL grants neither.
+ * A caller in the exempt ACL can run all five statements. Name the ACL with
+   `--queryserver-config-acl-exempt-acl`; exempt callers skip table ACL
+   checks entirely. The name you list there is the `name` field of an ACL
+   rule, described in
+   [Format of the table ACL config file](#format-of-the-table-acl-config-file).
+
+Every other caller is denied, including callers whose grants on specific
+tables would otherwise be sufficient.
+
+To gauge impact before enforcing, enable
+`--queryserver-config-enable-table-acl-dry-run`. The denial is then only
+recorded, emitting the
+[TableACLPseudoDenied](../../configuration-basic/monitoring) metric, and the
+statement still runs. These checks have no table to name, so they carry
+`undetermined-table-set` in the `TableName` label and an empty `TableGroup`
+label. Look for `undetermined-table-set` in `TableACLPseudoDenied` and `TableACLDenied` for
+denied statements, and in `TableACLAllowed` for `DO`, `REPAIR`, and `OPTIMIZE`
+run by a caller with every role on `%`.
+
+When strict table ACL is off, which is the default, nothing changes and these
+statements run as before.
 
 ## Warning regarding ACL reloading
 
