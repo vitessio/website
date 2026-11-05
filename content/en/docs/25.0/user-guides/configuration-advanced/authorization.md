@@ -234,6 +234,121 @@ Whereas myuser1 is able to access its keyspace without error:
 $ mysql -h 127.0.0.1 -u myuser1 -ppassword1 -D keyspace1 -e "select * from t"
 $
 ```
+
+## Reads checked inside other statements under strict table ACL
+
+Under [`--queryserver-config-strict-table-acl`](#vttablet-parameters-for-table-acls), VTTablet stops a caller from
+reading or writing a table it lacks a grant for by embedding that access in
+a statement other than a plain `SELECT`. It checks the tables read *inside*
+such statements, treating each embedded read like a `SELECT` of the same
+tables, so the caller needs read (`readers`) access to them. This does not
+change the Read/Write/Admin model described above.
+
+The statements checked this way, and the access each embedded read
+requires, are:
+
+ * `CREATE TABLE ... AS SELECT`: read access on every source table the
+   `SELECT` reads, including through CTEs, joins and unions, plus admin
+   access on the table being created.
+ * `CREATE VIEW ... AS SELECT` and `ALTER VIEW ... AS SELECT`: read access
+   on every source table the `SELECT` reads. A view reads nothing when it is
+   defined, but whenever it is queried it reads its source tables as
+   VTTablet's own MySQL user, and the ACL then sees only the view's name. So
+   VTTablet checks the source tables when the view is defined, as MySQL
+   requires read access on them to create the view.
+ * `EXPLAIN <statement>`, in any format, and `DESCRIBE <statement>`: the
+   explained statement's own access, which is write access for a DML
+   statement and read access for a `SELECT`, because MySQL requires the
+   explained statement's privileges. `EXPLAIN ANALYZE` runs the statement,
+   and a plain `EXPLAIN` reads too: MySQL reads single-row tables and
+   evaluates uncorrelated subqueries while it plans, and the plan reveals the
+   outcome (an `Impossible WHERE`). This covers the `EXPLAIN` that `VEXPLAIN
+   MYSQLPLAN` sends to each shard.
+ * `SHOW ... WHERE <expr>`: read access on any table a subquery in the
+   `WHERE` filter reads, because MySQL evaluates the filter. This covers
+   `SHOW VITESS_MIGRATIONS ... WHERE`.
+ * `SET` run as a statement: read access on any table a subquery in its
+   expressions reads.
+
+VTTablet does not check the subject of a `SHOW`, such as the table in
+`SHOW COLUMNS FROM <table>`: a `SHOW` names that table rather than reading
+it, so it needs no extra grant. Only a subquery in the `SHOW`'s `WHERE`
+filter is checked.
+
+When VTTablet cannot fully parse a `CREATE TABLE`, it cannot determine
+which tables the statement reads. Cases VTTablet cannot parse include the
+row-copying forms `CREATE TABLE <table> (SELECT ...)` and `AS TABLE <source>`,
+an `EXCEPT` or `INTERSECT` source, and any other syntax it does not support.
+Under strict table ACL it denies such a statement, returning a
+`PERMISSION_DENIED` (`PermissionDenied`) error that reports the command was
+denied `for a table set that cannot be determined`.
+
+Two kinds of callers can still run such a statement:
+
+ * A caller listed in `readers`, `writers`, and `admins` of an ACL rule whose
+   `table_names_or_prefixes` is `%`. It already holds every role on every
+   table, so the statement cannot reach anything beyond its grants. A caller
+   missing any one of the three roles on `%` is denied.
+ * A caller in an ACL that an operator adds to
+   [`--queryserver-config-acl-exempt-acl`](#vttablet-parameters-for-table-acls)
+   in the VTTablet configuration.
+
+An exempt ACL bypasses all strict-table-ACL
+enforcement, not only the unparseable-`CREATE TABLE` denial: its callers also
+skip the base read, write and admin checks and every embedded-read check in this
+section. Exempting an ACL therefore reopens that access. Schema operations invoked through
+TabletManager RPCs, such as `ApplySchema` (which vtctld calls), are
+unaffected: the tablet executes the DDL directly against MySQL over its
+own `dba` connection, which bypasses the query-service path that table
+ACL checks.
+
+This checking applies only under strict table ACL, which is off by default
+(`--queryserver-config-strict-table-acl` defaults to `false`). Turning it
+on denies a caller that is under-granted for one of the statements above.
+It also denies an unparseable `CREATE TABLE` unless the caller is exempt or
+holds every role on `%`. This
+trade-off applies to operators who already run strict table ACL. Preview
+the impact with a dry run before you enforce it.
+
+Under a dry run (`--queryserver-config-enable-table-acl-dry-run`), these
+prospective denials are recorded rather than enforced. A check for a
+statement whose table set could not be determined carries the table-label
+value `undetermined-table-set` on the `TableACLPseudoDenied`, `TableACLDenied`,
+and `TableACLAllowed` [metrics](../../configuration-basic/monitoring), which
+lets you tell it apart from a per-table check while you gauge impact.
+
+## Connection settings cannot contain subqueries under strict table ACL
+
+A connection setting is a session system-variable setting (a `SET` of a
+system variable) that VTTablet applies to the connection it uses for the
+session. A setting is applied to the connection without a table ACL check,
+so any table a subquery in it reads would go unchecked. Under strict table
+ACL, VTTablet therefore rejects a connection setting whose expression
+contains a subquery, before it acquires a connection for the session.
+Connection settings must be constant expressions. Without strict table ACL
+the setting is accepted, because there is then nothing for the check to
+protect.
+
+A dry run (`--queryserver-config-enable-table-acl-dry-run`) accepts such a
+setting, as it does any request the table ACL would deny. A connection
+setting has no caller or table to record a denial against, so VTTablet does
+not count it in the `TableACLPseudoDenied` metric. Instead, it logs a
+throttled warning that names the setting strict table ACL would reject. With
+`--sanitize-log-messages`, the warning shows only the variables the setting
+sets, not their values. As with the other dry-run checks, VTTablet logs this
+warning whether or not strict table ACL is on. Review these warnings before
+you turn off dry run. They show, for example, an older vtgate that still
+sends a targeted session's `SET` expression as written instead of its value.
+
+When the setting is rejected (strict table ACL on, dry run off), VTTablet
+returns an `INVALID_ARGUMENT` error,
+`connection setting must not contain a subquery: <setting>`. Use a constant
+value instead.
+
+This differs from a `SET` run as a statement, which is not rejected. Its
+expressions are ACL-checked as described above, so a subquery in a `SET`
+statement needs read access on the tables the subquery reads.
+
 ## Negative ACLs
 
 If you want to set up an authorization structure like the following:
