@@ -1,7 +1,9 @@
 ---
 title: Release Notes
 description: Learn how release notes are generated
-weight: 3
+weight: 2
+aliases:
+  - /docs/releases/release-notes/
 ---
 
 The [release notes](https://github.com/vitessio/vitess/releases) of Vitess describe what a new release is about. We list the new features, bug fixes, important announcement, deprecation notice, etc.

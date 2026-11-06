@@ -37,14 +37,18 @@ other = "Learn More"
 [docs]
 other = "Docs"
 
-[blog]
-other = "Blog"
+[releases]
+other = "Releases"
+
 
 [changelog]
 other = "Changelog"
 
 [community]
 other = "Community"
+
+[blog]
+other = "Blog"
 
 # Footer
 [authors]

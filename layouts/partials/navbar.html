@@ -22,17 +22,19 @@
     <div id="navbar-menu" class="navbar-menu">
 
         {{ partial "search-bar.html" . }}
-    
+
         {{ partial "search-results.html" . }}
-	
+
       <div class="navbar-end">
         <a class="navbar-item has-text-weight-bold" href="{{ "/docs" | relLangURL }}">
           {{ T "docs" }}
         </a>
 
-        <a class="navbar-item has-text-weight-bold" href="{{ "/blog" | relLangURL }}">
-          {{ T "blog" }}
-        </a>
+<a class="navbar-item has-text-weight-bold" href="{{ if eq .Language.Lang "zh" }}/releases{{ else }}{{ "/releases" | relLangURL }}{{ end }}">
+  {{ T "releases" }}
+</a>
+
+
 
         <a class="navbar-item has-text-weight-bold" href="{{ "/changelog" | relLangURL }}">
           {{ T "changelog" }}
@@ -40,6 +42,10 @@
 
         <a class="navbar-item has-text-weight-bold" href="{{ "/community" | relLangURL }}">
           {{ T "community" }}
+        </a>
+
+         <a class="navbar-item has-text-weight-bold" href="{{ "/blog" | relLangURL }}">
+          {{ T "blog" }}
         </a>
 
         <div class="navbar-item has-dropdown is-hoverable">

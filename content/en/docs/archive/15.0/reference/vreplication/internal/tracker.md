@@ -1,7 +1,6 @@
 ---
 title: Schema Tracker
 description: Tracking schema changes in VStreams
-aliases: []
 weight: 4
 aliases: ['/user-guide/update-stream', '/docs/design-docs/vreplication/vstream/tracker/']
 ---
