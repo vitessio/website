@@ -81,6 +81,11 @@ Vitess supports all DDL queries:
 - **Managed, online schema changes** (non-blocking, revertible, etc.).
 - **Non-managed DDL** is also supported.
 
+VTGate and VTTablet parse each DDL statement in full and send MySQL the statement formatted from the parsed form, not the client's original text. A DDL statement that Vitess can't parse in full fails with a syntax error. Two forms that MySQL can accept fail in Vitess:
+
+- A statement that relies on `ANSI_QUOTES` to read a double-quoted string as an identifier, because the parser doesn't know the session's `sql_mode`. Quote identifiers in DDL with backticks instead.
+- `CREATE TABLE ... SELECT` with `EXCEPT` or `INTERSECT`.
+
 Refer to [making schema changes](../../../user-guides/schema-changes) for more details.
 
 ### Join, Subqueries, Union, Aggregation, Grouping, Having, Ordering, Limit Queries
@@ -278,7 +283,7 @@ ORDER BY foo;
 
 ### Reserved Keywords
 
-Vitess treats certain SQL keywords as reserved, matching MySQL's reserved keyword list. Starting in v25, `DUAL` is a reserved keyword.
+Starting in v25, Vitess reserves every word that MySQL 8.4 reserves, as listed in `INFORMATION_SCHEMA.KEYWORDS`. A reserved word, such as `KEYS` or `OPTION`, can be a name only when it's quoted with backticks or follows a dot, as in MySQL. For example, `` CREATE TABLE t (`keys` INT) `` works, and `CREATE TABLE t (keys INT)` fails with a syntax error.
 
 #### The DUAL Keyword
 
@@ -337,6 +342,8 @@ Use [Vitess Sequences](../../../user-guides) instead — they behave similarly t
 ## Character Set and Collation
 
 Vitess supports ~99% of MySQL collations. For details, see the [collations documentation](../../../user-guides/configuration-basic/collations).
+
+VTGate accepts only `utf8mb4`, `utf8mb3`, and `latin1` as a client's character set, and refuses a connection that requests any other. It reads unquoted identifiers in the client's character set, as MySQL does. For details, see [The client character set in VTGate](../../../user-guides/configuration-basic/collations/#the-client-character-set-in-vtgate).
 
 ## Data Types
 

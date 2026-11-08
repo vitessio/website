@@ -95,6 +95,7 @@ Here is a list of all the system variables that are handled by Vitess and how th
 | workload                                | VitessAware    |
 | charset                                 | VitessAware    |
 | names                                   | VitessAware    |
+| character_set_client                    | VitessAware    |
 | session_uuid                            | VitessAware    |
 | migration_context                       | VitessAware    |
 | enable_system_settings                  | VitessAware    |
@@ -212,7 +213,6 @@ Here is a list of all the system variables that are handled by Vitess and how th
 | updatable_views_with_limit              | ReservedConn   |
 | binlog_format                           | CheckAndIgnore |
 | block_encryption_mode                   | CheckAndIgnore |
-| character_set_client                    | CheckAndIgnore |
 | character_set_connection                | CheckAndIgnore |
 | character_set_database                  | CheckAndIgnore |
 | character_set_filesystem                | CheckAndIgnore |
