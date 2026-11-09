@@ -193,9 +193,9 @@ All three programs can be made aware of Backup Engine and Backup Storage using t
       <td>For the <code>ceph</code> plugin, this identifies the path to a text
         file with a JSON object as configuration. The JSON object requires the
         following keys: <code>accessKey</code>, <code>secretKey</code>,
-        <code>endPoint</code> and <code>useSSL</code>. Bucket name is computed
-        from keyspace name and shard name is separated for different
-        keyspaces / shards.</td>
+        <code>endPoint</code> and <code>useSSL</code>. The bucket is named
+        after the keyspace, so all shards of a keyspace share one bucket and
+        the shard is part of each backup's object path.</td>
     </tr>
     <tr>
       <td><code>restart-before-backup</code></td>
@@ -289,6 +289,8 @@ The bucket named by `--s3-backup-storage-bucket` must already exist, and the cre
 
 * `s3:ListBucket` on the bucket.
 * `s3:GetObject`, `s3:PutObject`, `s3:DeleteObject` and `s3:AbortMultipartUpload` on the objects in the bucket.
+
+If the backups are encrypted with an AWS KMS key, either through `--s3-backup-server-side-encryption=aws:kms` or the bucket's default encryption, the credentials also need `kms:GenerateDataKey` and `kms:Decrypt` on that key.
 
 #### Ceph
 
