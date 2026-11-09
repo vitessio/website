@@ -6,8 +6,13 @@
   {{ if ne . (printf "v%s" $current) }}
     {{/* Link to the same page in the latest release, or to its docs if the page doesn't exist there. */}}
     {{ $latest := printf "/docs/%s" $current }}
-    {{ $path := replaceRE `^/docs/(archive/)?[^/]+` $latest $.RelPermalink }}
-    {{ $target := default (site.GetPage $latest) (site.GetPage (strings.TrimSuffix "/" $path)) }}
+    {{/* Look the page up by its source path, since slugs can make the URL differ from it. */}}
+    {{ $source := strings.TrimSuffix "/" $.RelPermalink }}
+    {{ with $.File }}
+      {{ $source = replaceRE `/_?index$` "" (path.Join "/" .Dir .TranslationBaseName) }}
+    {{ end }}
+    {{ $path := replaceRE `^/docs/(archive/)?[^/]+` $latest $source }}
+    {{ $target := default (site.GetPage $latest) (site.GetPage $path) }}
 
     {{ $status := cond (eq . (printf "v%s" $next)) "the development version" "an older release" }}
     {{ $content := printf "This is the documentation for Vitess **%s**, %s. See the [v%s documentation](%s) for the latest release." . $status $current $target.RelPermalink }}
