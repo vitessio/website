@@ -1,5 +1,7 @@
 {{ $docsSections := where site.Sections "Section" "docs" }}
 
+{{ partial "docs/version-notice.html" . }}
+
 <header class="docs-header">
   {{/* Hide on mobile / compact view because it crowds the UI and there's always a footer link anyway */}}
   <div class="is-pulled-right is-hidden-touch edit-this-page-small">
