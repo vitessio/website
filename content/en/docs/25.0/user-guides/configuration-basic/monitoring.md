@@ -25,6 +25,22 @@ For example, to start vtgate with human-readable logs:
 vtgate --log-format text ...
 ```
 
+### Log messages and attributes
+
+Vitess is converting its log messages to fixed text, with the details of each event in structured attributes. In a converted line, the message stays the same every time the event happens. Values such as tablet aliases, keyspaces, tables, positions, queries, and errors go in attributes instead of the message. Messages that are not yet converted can still contain values.
+
+In the default JSON format, each attribute is a field next to `msg`. In the text format, attributes follow the message as `key=value` pairs.
+
+Converted lines use these attribute names:
+
+| Attribute | Contents |
+|-----------|----------|
+| `error` | The error that the line reports. |
+| `error_code` | The Vitess error code, such as `INVALID_ARGUMENT`. Many lines that log a Vitess error include it. |
+| `logger` | The name of the throttled logger that wrote the line. A throttled logger reports how many lines it dropped in a `skipped log messages` line, with the count in `skipped`. |
+
+To search or alert on a log line, match its `msg` field and filter on its attributes. For example, a VReplication apply failure logs the message `Error applying event`, with the table in `table` and the error in `error`. To find failures for the `users` table, search for that message with `table` set to `users`. A rule that matches values inside the message text stops matching once that line is converted.
+
 ### Log level
 
 Use the `--log-level` flag to control the minimum log level:
