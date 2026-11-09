@@ -69,12 +69,14 @@ After mysqld comes up, `mysqlctl` will initialize the server using an internal s
 
 There is a common pitfall to watch out for: If you see an error like this in the mysqlctl logs, you may need to [disable AppArmor](../../../get-started/local/#disable-apparmor-or-selinux):
 
-```text
-I0429 01:16:25.648506       1 mysqld.go:454] Waiting for mysqld socket file (/vtdataroot/tabletdata/mysql.sock) to be ready...
-I0429 01:16:25.656153       1 mysqld.go:399] Mysqld.Start(1588122985) stderr: mysqld: [ERROR] Could not open required defaults file: /vtdataroot/tabletdata/my.cnf
-I0429 01:16:25.656180       1 mysqld.go:399] Mysqld.Start(1588122985) stderr: mysqld: [ERROR] Fatal error in defaults handling. Program aborted!
-I0429 01:16:25.657249       1 mysqld.go:418] Mysqld.Start(1588122985) exit: exit status 1
+```json
+{"time":"2026-04-29T01:16:25.648506Z","level":"INFO","source":{"function":"vitess.io/vitess/go/vt/mysqlctl.(*Mysqld).wait","file":"/vt/src/vitess.io/vitess/go/vt/mysqlctl/mysqld.go","line":747},"msg":"Waiting for mysqld socket file to be ready...","socket_file":"/vtdataroot/tabletdata/mysql.sock"}
+{"time":"2026-04-29T01:16:25.656153Z","level":"INFO","source":{"function":"vitess.io/vitess/go/vt/mysqlctl.connectMysqldOutput.func1","file":"/vt/src/vitess.io/vitess/go/vt/mysqlctl/mysqld.go","line":634},"msg":"mysqld stderr","start_id":"Mysqld.Start(1588122985)","stderr":"mysqld: [ERROR] Could not open required defaults file: /vtdataroot/tabletdata/my.cnf"}
+{"time":"2026-04-29T01:16:25.656180Z","level":"INFO","source":{"function":"vitess.io/vitess/go/vt/mysqlctl.connectMysqldOutput.func1","file":"/vt/src/vitess.io/vitess/go/vt/mysqlctl/mysqld.go","line":634},"msg":"mysqld stderr","start_id":"Mysqld.Start(1588122985)","stderr":"mysqld: [ERROR] Fatal error in defaults handling. Program aborted!"}
+{"time":"2026-04-29T01:16:25.657249Z","level":"INFO","source":{"function":"vitess.io/vitess/go/vt/mysqlctl.(*Mysqld).startNoWait.func1","file":"/vt/src/vitess.io/vitess/go/vt/mysqlctl/mysqld.go","line":580},"msg":"mysqld exited","start_id":"Mysqld.Start(1588122985)","error":"exit status 1"}
 ```
+
+The `stderr` attribute holds the line `mysqld` wrote. If you run with `--mysqlctl-mysqld-output-to-stderr`, the same lines appear unchanged on stderr instead of in `mysqld stderr` records.
 
 Disabling AppArmor once may not be enough. Many software installs or upgrades automatically install it back. You may have to disable it again if this happens.
 

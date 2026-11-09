@@ -38,8 +38,17 @@ Converted lines use these attribute names:
 | `error` | The error that the line reports. |
 | `error_code` | The Vitess error code, such as `INVALID_ARGUMENT`. Many lines that log a Vitess error include it. |
 | `logger` | The name of the throttled logger that wrote the line. A throttled logger reports how many lines it dropped in a `skipped log messages` line, with the count in `skipped`. |
+| `mysql_errno` | The MySQL error number, as an integer, such as `1062` for a duplicate key. Vitess adds it to any line whose `error` is a MySQL error, so you can filter and alert on the number without parsing `error`. The number maps to the [MySQL error reference](https://dev.mysql.com/doc/mysql-errors/en/). |
 
 To search or alert on a log line, match its `msg` field and filter on its attributes. For example, a VReplication apply failure logs the message `Error applying event`, with the table in `table` and the error in `error`. To find failures for the `users` table, search for that message with `table` set to `users`. A rule that matches values inside the message text stops matching once that line is converted.
+
+### MySQL server output
+
+Vitess logs each line written by a `mysqld` or `mysqld_safe` that it starts itself. That covers `mysqlctl`, `mysqlctld`, `vtbackup`, `vtcombo`, and `vttablet` without `--mysqlctl-socket`. Each line is a `mysqld stdout` or `mysqld stderr` record, with the text in the `stdout` or `stderr` attribute. Every record from one start, including `Starting mysqld` and `mysqld exited`, carries the same `start_id`.
+
+To have `mysqld` write straight to the Vitess process's stderr instead, pass `--mysqlctl-mysqld-output-to-stderr`. Its lines are then written unchanged and not logged. The flag is off by default because these lines are not Vitess JSON records, so with the default JSON format stderr would mix the two. The flag has no effect when a `mysqld_start` hook starts `mysqld`.
+
+The default `my.cnf` writes MySQL's error log to a file, so the error log isn't part of this output. To include it, configure `mysqld` to log to the console, for example with `skip-log-error` in an `EXTRA_MY_CNF` file. MySQL's error log can contain user names, statements, and row values.
 
 ### Log level
 
