@@ -38,7 +38,7 @@ Converted lines use these attribute names:
 | `error` | The error that the line reports. |
 | `error_code` | The Vitess error code, such as `INVALID_ARGUMENT`. Many lines that log a Vitess error include it. |
 | `logger` | The name of the throttled logger that wrote the line. A throttled logger reports how many lines it dropped in a `skipped log messages` line, with the count in `skipped`. |
-| `mysql_errno` | The MySQL error number, as an integer, such as `1062` for a duplicate key. Vitess adds it to any line whose `error` is a MySQL error, so you can filter and alert on the number without parsing `error`. The number maps to the [MySQL error reference](https://dev.mysql.com/doc/mysql-errors/en/). |
+| `mysql_errno` | The MySQL error number, as an integer, such as `1062` for a duplicate key. Vitess adds it to any line whose `error` is a MySQL error, so you can filter and alert on the number without parsing `error`. It holds only the number, not MySQL's message text. Client error numbers, such as `2013` for a lost connection, are included. The number maps to the [MySQL error reference](https://dev.mysql.com/doc/mysql-errors/en/). |
 
 To search or alert on a log line, match its `msg` field and filter on its attributes. For example, a VReplication apply failure logs the message `Error applying event`, with the table in `table` and the error in `error`. To find failures for the `users` table, search for that message with `table` set to `users`. A rule that matches values inside the message text stops matching once that line is converted.
 
