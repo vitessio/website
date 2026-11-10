@@ -46,8 +46,6 @@ To search or alert on a log line, match its `msg` field and filter on its attrib
 
 Vitess logs each line written by a `mysqld` or `mysqld_safe` that it starts itself. That covers `mysqlctl`, `mysqlctld`, `vtbackup`, `vtcombo`, and `vttablet` without `--mysqlctl-socket`. Each line is a `mysqld stdout` or `mysqld stderr` record, with the text in the `stdout` or `stderr` attribute. Every record from one start, including `Starting mysqld` and `mysqld exited`, carries the same `start_id`.
 
-To have `mysqld` write straight to the Vitess process's stderr instead, pass `--mysqlctl-mysqld-output-to-stderr`. Its lines are then written unchanged and not logged. The flag is off by default because these lines are not Vitess JSON records, so with the default JSON format stderr would mix the two. The flag has no effect when a `mysqld_start` hook starts `mysqld`. With `mysqlctl start`, the started process keeps `mysqlctl`'s stderr open after `mysqlctl` exits, so a caller that reads that stderr until it closes waits until `mysqld` stops.
-
 The default `my.cnf` writes MySQL's error log to a file, so the error log isn't part of this output. To include it, configure `mysqld` to log to the console, for example with `skip-log-error` in an `EXTRA_MY_CNF` file. Alternatively, point the error log at a path that resolves to stderr, such as a file symlinked to `/dev/stderr`. `mysqld_safe` always passes `--log-error`, so when Vitess starts `mysqld_safe`, only the symlinked path works. On MySQL 8.4 with console logging, add `log_error_services = 'log_filter_internal; log_sink_json'` to have MySQL write its error log as JSON. MySQL's error log can contain user names, statements, and row values.
 
 ### Log level
