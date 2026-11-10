@@ -63,8 +63,8 @@ Tracks the total number of requests evaluated by the query throttler.
 
 **Labels:**
 
-* `Strategy`: The throttling strategy being used (e.g., `TabletThrottler`)
-* `Workload`: The client application workload name from the `WORKLOAD_NAME` comment directive
+* `Strategy`: The throttling strategy being used (e.g., `TABLET_THROTTLER`)
+* `Workload`: The client application workload name from the `WORKLOAD_NAME` comment directive. Without the `--enable-per-workload-table-metrics` vttablet flag, the value is always `unknown`. With the flag, queries without the directive are labeled `unknown`.
 * `Priority`: The query priority value (0-100) determining query throttling preference (lower = higher priority)
 
 #### QueryThrottlerThrottled
@@ -74,11 +74,10 @@ Tracks the number of requests that were throttled by the query throttler.
 **Labels:**
 
 * `Strategy`: The throttling strategy being used
-* `Workload`: The client application workload name from the `WORKLOAD_NAME` comment directive
+* `Workload`: The client application workload name from the `WORKLOAD_NAME` comment directive. Without the `--enable-per-workload-table-metrics` vttablet flag, the value is always `unknown`. With the flag, queries without the directive are labeled `unknown`.
 * `Priority`: The query priority value (0-100) determining query throttling preference (lower = higher priority)
-* `MetricName`: Name of the metric that triggered throttling (e.g., "cpu", "lag")
-* `MetricValue`: The value of the metric that triggered throttling
-* `DryRun`: Whether the throttler is in dry-run mode (true/false). In dry-run mode, throttling decisions are logged but queries are not throttled.
+* `MetricName`: Name of the metric that triggered throttling (e.g., `lag`, `loadavg`)
+* `DryRun`: Whether the throttler is in dry-run mode (true/false). In dry-run mode, throttling decisions are logged but queries are not throttled, and this metric counts the queries that would have been throttled.
 
 #### QueryThrottlerTotalLatencyNs
 
@@ -87,7 +86,7 @@ Measures the total latency in nanoseconds for each throttling request from entry
 **Labels:**
 
 * `Strategy`: The throttling strategy being used
-* `Workload`: The client application workload name from the `WORKLOAD_NAME` comment directive
+* `Workload`: The client application workload name from the `WORKLOAD_NAME` comment directive. Without the `--enable-per-workload-table-metrics` vttablet flag, the value is always `unknown`. With the flag, queries without the directive are labeled `unknown`.
 * `Priority`: The query priority value (0-100) determining query throttling preference (lower = higher priority)
 
 #### QueryThrottlerEvaluateLatencyNs
@@ -97,8 +96,22 @@ Measures the latency in nanoseconds of the strategy evaluation phase, specifical
 **Labels:**
 
 * `Strategy`: The throttling strategy being used
-* `Workload`: The client application workload name from the `WORKLOAD_NAME` comment directive
+* `Workload`: The client application workload name from the `WORKLOAD_NAME` comment directive. Without the `--enable-per-workload-table-metrics` vttablet flag, the value is always `unknown`. With the flag, queries without the directive are labeled `unknown`.
 * `Priority`: The query priority value (0-100) determining query throttling preference (lower = higher priority)
+
+#### QueryThrottlerTabletStrategyDecisionCount
+
+Counts the decisions of the `TABLET_THROTTLER` strategy. A tablet exports this metric, and the other metrics with the `QueryThrottlerTabletStrategy` prefix, only once it first runs the strategy.
+
+**Labels:**
+
+* `TabletType`: The tablet's type, such as `PRIMARY`
+* `StmtType`: The statement type, such as `INSERT`
+* `Path`: The decision path, `fast` or `full`
+* `Outcome`: `allowed`, `throttled`, or `would_throttle` (a throttle decision in dry-run mode)
+* `Reason`: Why the strategy reached the decision, such as `metric_breach`, `no_metric_breach`, `bypass_priority`, or `no_rule_for_stmt_type`
+
+The [QueryThrottler](../../features/query-throttler/) metrics don't count the statements that VTTablet never throttles, such as statements inside a transaction.
 
 ### Using QueryThrottler Metrics
 
