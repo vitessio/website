@@ -10,6 +10,7 @@ Vitess uses the MySQL [client server protocol](https://dev.mysql.com/doc/interna
 
 * [SHOW](../show) has some additional functionality.
 * [VEXPLAIN](../../../user-guides/sql/explain-format-vtexplain) is similar to `EXPLAIN` but specifically for Vitess plans
+* `SET @@vitess_metadata.<key> = '<value>'` stores a key/value pair in the global topology server. See [Vitess Metadata](../show/#vitess-metadata).
 * You can use a special `SELECT` query to see the next value from a sequence:
 
 ```sql
