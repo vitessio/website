@@ -50,7 +50,7 @@ If the command can't update some cells, it fails with `UNAVAILABLE` after the `K
 
 ### Basic configuration
 
-The following configuration throttles 25% of `INSERT` queries on `PRIMARY` tablets while replication lag is above 10 seconds:
+The following configuration throttles 25% of `INSERT` queries on `PRIMARY` tablets while replication lag is over 10 seconds:
 
 ```json
 {
@@ -78,7 +78,7 @@ The following configuration throttles 25% of `INSERT` queries on `PRIMARY` table
 
 Rules are keyed by tablet type under `tablet_rules`, then by statement type under `statement_rules`, then by metric under `metric_rules`. Each metric has a list of thresholds:
 
-- `above`: The metric value above which the threshold applies. It must be a finite number of 0 or more, and each threshold of a metric needs a different `above`.
+- `above`: The threshold applies only when the metric exceeds this value. A value equal to it does not breach it. It must be a finite number of 0 or more, and each threshold of a metric needs a different `above`.
 - `throttle`: The percentage of matching queries to reject, from 0 to 100.
 
 When a metric breaches several thresholds, the highest breached threshold applies. When several metrics of a rule breach a threshold, the highest throttle percentage applies.
@@ -226,11 +226,11 @@ The query throttler supports priority-based query execution using the `PRIORITY`
 
 ### How priority works
 
-Priority is specified as a value from 0 to 100, with 0 being the highest priority and 100 the lowest. A query's priority scales the share of matching queries that a rule rejects:
+Priority is specified as a value from 0 to 100, with 0 being the highest priority and 100 the lowest. The throttler first decides whether to evaluate a query, with a probability equal to its priority. A query that it evaluates is then rejected with the rule's own probability, so the two checks are independent:
 
-- **Priority 0**: Never throttled. Reserved for the most critical queries.
-- **Priority 1-99**: Evaluated with a probability equal to the priority value. A query with priority 50 is rejected half as often as a query with priority 100.
-- **Priority 100**: Always evaluated for potential throttling.
+- **Priority 0**: Never evaluated, so never throttled. Reserved for the most critical queries.
+- **Priority 1-99**: Evaluated with a probability equal to the priority value. A query with priority 50 against a rule that rejects 25% is rejected about 12.5% of the time.
+- **Priority 100**: Always evaluated, and then rejected with the rule's probability.
 
 If no priority is specified, queries default to priority 100.
 
