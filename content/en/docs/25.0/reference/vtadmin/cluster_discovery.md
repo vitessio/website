@@ -92,6 +92,20 @@ A very basic cluster configuration may look like:
 <br/>
 
 In order to use dynamic discovery, set command line argument `--enable-dynamic-clusters=true`. At this time, it is only possible to discover a single cluster with each request. We're working on adding multicluster support to dynamic discovery.
+
+A dynamic cluster configuration applies only to the requests that carry it:
+
+- If the configuration's `id` matches a cluster passed to VTAdmin API at startup, VTAdmin uses that cluster and ignores the rest of the configuration.
+- Otherwise, VTAdmin builds a cluster from the configuration and caches it for requests that carry the same configuration. Requests without that configuration don't see the cluster.
+
+Because a client supplies the configuration, VTAdmin refuses one that would make it read server-side files or credentials. A dynamic cluster configuration can't:
+
+- Set `vtsql-credentials-path-tmpl` or `vtctld-credentials-path-tmpl`. To pass VTGate credentials, set `vtsql-credentials-username` and `vtsql-credentials-password` in the configuration instead.
+- Use `staticfile` discovery.
+- Use a flag name that contains `=`.
+
+VTAdmin also refuses dynamic clusters when it runs with `--grpc-auth-static-client-creds`, because it would send those credentials to every address in the configuration. When VTAdmin refuses a configuration whose `id` doesn't match a startup cluster, the request fails because VTAdmin has no cluster with that `id`.
+
 #### HTTP header cookie
 A cluster configuration can be passed as an HTTP cookie named `cluster` along with HTTP requests.
 
