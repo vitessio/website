@@ -1,5 +1,7 @@
 {{- $index := slice -}}
 {{- range $page := $.Site.RegularPages -}}
-    {{- $index = $index | append (dict "title" $page.Title  "content" ($page.Content | plainify | safeHTML) "version" (index (first 3 (split (delimit (split $page.RelPermalink "/") "," "") ",")) 2) "href" $page.Permalink  "summary" ($page.Summary | plainify | safeHTML) "path" ($page.Permalink | relURL)  ) -}}
+    {{- /* Keep only the first two sentences of the summary, so that each search result stays short. A sentence ends with ".", "!" or "?" followed by whitespace and an uppercase letter, so that abbreviations such as "e.g." don't end it. */ -}}
+    {{- $summary := replaceRE `(?s)^(.*?\S[.!?]\s+\p{Lu}.*?\S[.!?])\s+\p{Lu}.*$` "$1" ($page.Summary | plainify) -}}
+    {{- $index = $index | append (dict "title" $page.Title  "content" ($page.Content | plainify | safeHTML) "version" (index (first 3 (split (delimit (split $page.RelPermalink "/") "," "") ",")) 2) "href" $page.Permalink  "summary" ($summary | safeHTML) "path" ($page.Permalink | relURL)  ) -}}
 {{- end -}}
 {{- $index | jsonify -}}
