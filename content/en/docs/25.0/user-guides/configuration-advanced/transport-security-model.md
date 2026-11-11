@@ -684,7 +684,7 @@ When you set `--topo-zk-auth-file`, Vitess also protects the topology data in `Z
  * Vitess creates new znodes with an ACL that grants access only to the identities the client authenticated as. If the client has no identity, for example because it could not read the auth file, `Zookeeper` rejects the create.
  * At startup, Vitess replaces the `world` and `ip` ACL entries on existing znodes under the topology root with entries for the same identity. It keeps the existing permissions and any other ACL entries. The migration runs in the background and retries until it succeeds.
 
-After the migration, clients that do not authenticate with the same credentials can no longer read or change the topology. Configure every Vitess component that uses the topology, such as vtgate, vttablet, vtctld, and VTOrc, with the same `--topo-zk-auth-file` credentials, and make sure any other client that accesses the topology authenticates with them too. Without `--topo-zk-auth-file`, Vitess keeps creating znodes with world ACLs.
+After the migration, clients that do not authenticate with the same credentials can no longer read or change the topology. Configure every Vitess component that uses the topology, such as vtgate, vttablet, vtctld, and VTOrc, with the same `--topo-zk-auth-file` credentials. Any other client that accesses the topology must authenticate with them too. Without `--topo-zk-auth-file`, Vitess keeps creating znodes with world ACLs.
 
 As is necessary for your design/architecture, add one or more of the above options to your vtgate, vttablet and vtctld instances.
 
