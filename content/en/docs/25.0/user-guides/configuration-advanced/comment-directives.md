@@ -5,6 +5,8 @@ weight: 35
 
 Vitess supports a small set of meta-directives that can be passed from the application to Vitess as SQL comments in the application. These directives can be used to alter the behavior of Vitess on a per-query basis. This is often used by advanced Vitess users to obtain finely granular control over the behavior of Vitess, often for the purposes of optimizing performance.
 
+A directive applies only to the statement that carries it and to the queries VTGate runs on that statement's behalf, such as lookup vindex queries. It doesn't carry over to later statements on the same connection. To apply `WORKLOAD_NAME`, `PRIORITY`, or `CONSOLIDATOR` to every statement, add the directive to each statement. A gRPC client can instead set `WorkloadName`, `Priority`, or `Consolidator` in its session's `Options`. A directive on a statement overrides the session value for that statement.
+
 All the comment directives, included as part of the query, take the form:
 
 ```sh
@@ -132,8 +134,7 @@ VTGate exposes the following metrics for monitoring warming reads:
 ### Limitations
 
 - For warming reads, only affects warming read queries forwarded to replicas; does not affect the primary query execution
-- Invalid priority values (non-numeric) are ignored and clear any previously set priority
-- Priority values outside the 0-100 range are clamped to the nearest valid value
+- VTGate rejects a query whose `PRIORITY` value isn't an integer from 0 to 100 with the error `Invalid priority value specified in query`
 
 ### Workload name (`WORKLOAD_NAME`)
 
