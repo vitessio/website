@@ -52,6 +52,19 @@ Beyond what the tools export, it is important to also monitor system resource us
 
 Beyond the monitoring variables, the Vitess processes export additional information about their status on other URL paths. Some of those pages are for human consumption, and others are machine-readable meant for building automation.
 
+## Redacting queries on debug pages
+
+Several of these pages and the query logs show SQL statements, bind variables, and error messages, which can contain your application's data. To keep that data off them, start vtgate and vttablet with `--redact-debug-ui-queries`. With the flag set:
+
+* The query log on `/debug/querylog`, `/querylogz` (vttablet), and `/debug/querylogz` (vtgate) shows `[REDACTED]` in place of the statement, the bind variables, and any error message. Error messages are redacted too because they can include the statement.
+* `/queryz` and `/debug/query_stats` on vttablet, and `/debug/queryz` and `/debug/scatter_stats` on vtgate, show `[REDACTED]` in place of each query.
+* `/twopcz` on vttablet shows `[REDACTED]` in place of the statements of prepared and failed transactions.
+* `/debug/tablet_plans` on vttablet lists only the plan type and table of each plan.
+* `/debug/query_plans` on vtgate, and `/txlogz` and `/debug/hotrows` on vttablet, show a redaction notice instead of their content.
+* `/livequeryz` and `/debug/consolidations` on vttablet show each statement with its literal values replaced.
+
+The flag also applies to query logs written to a file with `--log-queries-to-file`, and to the vttablet syslog query log enabled with `--log-queries`. These logs then don't contain statement text, bind variables, or error messages. If you rely on them to see which statements ran, leave the flag off.
+
 ## VTTablet
 
 ### /debug/status
