@@ -127,6 +127,10 @@ __Required flags:__
 * `--mysql-shell-backup-location string`
 	* This stores the location where MySQL Shell will store the backups. As mentioned above, this
 	is different than the Vitess backup location.
+	* Tablets that restore a backup also need this flag, set to the same value used when taking the
+	backup. Vitess restores only from a location under this path, for both local directories and
+	object storage. The restore fails if the backup's MANIFEST points to a location outside it. With
+	object storage, the restore also fails if the flag isn't set.
 * `--mysql-shell-flags="-js"`
 	* `-js` is required to be in the mysql shell flags otherwise we can't run the necessary commands.
 	* There you can also pass other seetings that you would add to connect to your database, including
