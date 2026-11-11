@@ -95,7 +95,7 @@ tasks cannot concurrently alter the data.
 ### VSchema data
 
 The VSchema data contains sharding and routing information for
-the [VTGate API](https://github.com/vitessio/vitess/blob/main/doc/design-docs/VTGateV3Features.md).
+the [VTGate API]({{< vitess_code_url "doc/design-docs/VTGateV3Features.md" >}}).
 
 ## Local data
 
