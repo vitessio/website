@@ -37,6 +37,25 @@ If you'd like to add your logo to the [Who uses Vitess](https://vitess.io/#who-u
 
 You can check the site's internal links by running `make check-internal-links` and all links—internal *and* external—by running `make check-all-links`.
 
+## Linking to Vitess source code
+
+To link from the docs to a file or directory in the [vitessio/vitess](https://github.com/vitessio/vitess) repository, use the `vitess_code_url` shortcode instead of a hardcoded GitHub URL:
+
+```markdown
+See the [unsupported queries]({{< vitess_code_url "go/vt/vtgate/planbuilder/testdata/unsupported_cases.json" >}}).
+```
+
+The shortcode picks the branch from the `version` of the docs page, so a link keeps matching its docs when they're copied for a new release:
+
+| Page | Branch |
+| --- | --- |
+| Released docs, such as `docs/24.0` or `docs/archive/22.0` | `release-24.0`, `release-22.0` |
+| Development docs (`params.versions.next` in `config.toml`) and pages outside the versioned docs | `main` |
+
+For example, the link above points to `https://github.com/vitessio/vitess/blob/release-24.0/go/vt/vtgate/planbuilder/testdata/unsupported_cases.json` in the v24.0 docs.
+
+When `tools/rc_release.sh` moves `params.versions.next` forward for a release candidate, the links in the docs being released switch from `main` to their new release branch. The path can end with a line anchor, such as `"go/vt/sysvars/sysvars.go#L174-L217"`. If a link must point to one exact commit, keep the hardcoded URL.
+
 ## CSS/SASS
 
 The Vitess website uses [Bulma](https://bulma.io/), a CSS (and SASS) framework that provides all kinds of variables, utilities, and components.

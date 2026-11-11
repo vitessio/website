@@ -8,7 +8,7 @@ Backup and Restore are integrated features provided by tablets managed by Vitess
 
 ## Concepts
 
-Vitess supports pluggable interfaces for both [Backup Storage Services](https://github.com/vitessio/vitess/blob/main/go/vt/mysqlctl/backupstorage/interface.go) and [Backup Engines](https://github.com/vitessio/vitess/blob/main/go/vt/mysqlctl/backupengine.go).
+Vitess supports pluggable interfaces for both [Backup Storage Services]({{< vitess_code_url "go/vt/mysqlctl/backupstorage/interface.go" >}}) and [Backup Engines]({{< vitess_code_url "go/vt/mysqlctl/backupengine.go" >}}).
 
 ### Backup Storage Services
 

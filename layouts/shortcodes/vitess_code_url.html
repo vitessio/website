@@ -1,0 +1,22 @@
+{{- /*
+  Return the GitHub URL of a path in the vitessio/vitess repository, at the
+  branch that matches the version of the docs page using it:
+
+  - released docs (for example v24.0) use their release branch (release-24.0)
+  - the development docs (params.versions.next) and unversioned pages use main
+
+  Usage: [planbuilder]({{< vitess_code_url "go/vt/vtgate/planbuilder" >}})
+
+  Line anchors can be appended to the path, such as "go/vt/sysvars/sysvars.go#L174".
+*/ -}}
+{{- $path := .Get 0 -}}
+{{- if not $path -}}
+  {{- errorf "The %q shortcode requires a path in the vitessio/vitess repository: %s" .Name .Position -}}
+{{- end -}}
+{{- $branch := "main" -}}
+{{- with .Page.Params.version -}}
+  {{- if ne . (printf "v%s" site.Params.versions.next) -}}
+    {{- $branch = printf "release-%s" (strings.TrimPrefix "v" .) -}}
+  {{- end -}}
+{{- end -}}
+{{- printf "https://github.com/vitessio/vitess/blob/%s/%s" $branch (strings.TrimPrefix "/" $path) -}}

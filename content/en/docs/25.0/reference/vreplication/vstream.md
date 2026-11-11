@@ -242,7 +242,7 @@ responses will be sent when available. Each response consisting of the following
 
 ### Example Usage
 
-You can find a full example go client [here](https://github.com/vitessio/vitess/blob/main/examples/local/vstream_client.go).
+You can find a full example go client [here]({{< vitess_code_url "examples/local/vstream_client.go" >}}).
 
 Below is a snippet showing how to use the `VStream` API in go:
 
