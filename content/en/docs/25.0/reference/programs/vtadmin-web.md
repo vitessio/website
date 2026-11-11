@@ -27,7 +27,7 @@ These environment variables can be passed inline to the `npm run build` command 
 [vite_env_file_ref]: https://vitejs.dev/guide/env-and-mode.html#env-files#adding-development-environment-variables-in-env
 [operators_guide]: ../../vtadmin/operators_guide
 [rbac]: ../../vtadmin/role-based-access-control
-[vtadmin_env_ref]: https://github.com/vitessio/vitess/blob/main/web/vtadmin/vite-env.d.ts
+[vtadmin_env_ref]: {{< vitess_code_url "web/vtadmin/vite-env.d.ts" >}}
 
 These environment variables are automatically [filled in by vite](https://vitejs.dev/guide/env-and-mode.html#env-variables) and you do not have to provide them. They are available in the `import.meta.env` object at run time, and listed here for full coverage of environment variables:
 

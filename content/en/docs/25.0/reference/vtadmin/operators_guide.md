@@ -19,7 +19,7 @@ minimal invocation of the `vtadmin` and `vtadmin-web` binaries.
 
 ### Prerequisites
 
-- Building `vtadmin-web` requires [node](https://nodejs.org/en/) at the version given in the [package.json file](https://github.com/vitessio/vitess/blob/main/web/vtadmin/package.json).
+- Building `vtadmin-web` requires [node](https://nodejs.org/en/) at the version given in the [package.json file]({{< vitess_code_url "web/vtadmin/package.json" >}}).
 
 ### 1. Define the cluster configuration
 
@@ -30,7 +30,7 @@ VTAdmin is mapped to one or more Vitess clusters two ways:
 
 When both command-line cluster configs and a config file are provided, any options for a given cluster on the command-line take precedence over options for that cluster in the config file. 
 
-For a well-commented example enumerating the cluster configuration options, see [clusters.example.yaml](https://github.com/vitessio/vitess/blob/main/doc/vtadmin/clusters.yaml).
+For a well-commented example enumerating the cluster configuration options, see [clusters.example.yaml]({{< vitess_code_url "doc/vtadmin/clusters.yaml" >}}).
 
 
 ### 2. Configure `vtadmin`
@@ -106,13 +106,13 @@ For further reading on VTAdmin's RBAC design, please refer to the [reference pag
 There is no trust boundary between `vtadmin-web` and `vtadmin-api`, with deployment-specific authentication mechanisms being left to the operator to design for their specific environment.
 As such, you should deploy VTAdmin **within** a trusted environment, for example, behind a single sign-on (SSO) integration, such as [okta](https://developer.okta.com/docs/guides/sign-into-web-app-redirect/go/main/).
 
-[discovery_json]: https://github.com/vitessio/vitess/blob/main/examples/common/vtadmin/discovery.json
+[discovery_json]: {{< vitess_code_url "examples/common/vtadmin/discovery.json" >}}
 [go_embed]:https://pkg.go.dev/embed
-[local_example]: https://github.com/vitessio/vitess/blob/main/examples/common/scripts/vtadmin-up.sh
+[local_example]: {{< vitess_code_url "examples/common/scripts/vtadmin-up.sh" >}}
 [npm_serve]: https://www.npmjs.com/package/serve
 [principle_of_least_privilege]: https://csrc.nist.gov/glossary/term/least_privilege#:~:text=Definition(s)%3A,needs%20to%20perform%20its%20function.
 [rbac_docs]: ../role-based-access-control
 [vtadmin_flag_ref]: ../../programs/vtadmin
 [vtadmin_web_env_ref]: ../../programs/vtadmin-web
-[vtadmin_web_src]: https://github.com/vitessio/vitess/tree/main/web/vtadmin
+[vtadmin_web_src]: {{< vitess_code_url "web/vtadmin" >}}
 [web_caching]: https://create-react-app.dev/docs/production-build/#static-file-caching

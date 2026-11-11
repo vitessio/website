@@ -121,7 +121,7 @@ Flag: `--transaction-limit-per-user`
 ### vtgate system settings
 Flag: `--enable-system-settings`
 
-This vtgate flag allows clients to modify a [subset of system settings](https://github.com/vitessio/vitess/blob/main/go/vt/sysvars/sysvars.go#L174-L217) on the MySQL.
+This vtgate flag allows clients to modify a [subset of system settings]({{< vitess_code_url "go/vt/sysvars/sysvars.go#L174-L217" >}}) on the MySQL.
 
 Flag: `--denied-system-variables`
 

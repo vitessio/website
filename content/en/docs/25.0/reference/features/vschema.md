@@ -41,7 +41,7 @@ If you have multiple unsharded keyspaces, you can still avoid defining a VSchema
 1. Connect to a keyspace and all queries are sent to it.
 2. Connect to Vitess without specifying a keyspace (unspecified mode), but use qualified names for tables, like `keyspace.table` in your queries.
 
-However, once the setup exceeds the above complexity, VSchemas become a necessity. Vitess has a [working demo](https://github.com/vitessio/vitess/tree/main/examples/demo) of VSchemas.
+However, once the setup exceeds the above complexity, VSchemas become a necessity. Vitess has a [working demo]({{< vitess_code_url "examples/demo" >}}) of VSchemas.
 
 ## Sharding Model
 

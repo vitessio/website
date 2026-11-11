@@ -38,7 +38,7 @@ nvm install --lts 24
 nvm use 24
 ```
 
-See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
+See the [vtadmin README]({{< vitess_code_url "web/vtadmin/README.md" >}}) for more details.
 
 ## PATH Settings
 
