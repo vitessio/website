@@ -315,10 +315,16 @@ If a certificate revocation list (CRL) is configured for any gRPC or MySQL compo
 
 ### vttablet to MySQL
 
-A common Vitess deployment model is to co-locate vttablet and MySQL on the same host/VM/container. In a case like this, vttablet connectivity to MySQL will be via local unix socket or TCP connection on localhost. The traffic never leaves the local machine/VM in this case, so a unix socket connection needs no encryption. A TCP connection on localhost can still need TLS to log in, as the note below explains. However, in some deployment models vttablet and MySQL are running on different hosts, and you may want vttablet to use TLS to speak to MySQL.
+A common Vitess deployment model is to co-locate vttablet and MySQL on the same host/VM/container. In a case like this, vttablet connectivity to MySQL will be via local unix socket or TCP connection on localhost. A unix socket connection never leaves the local machine/VM, so it needs no encryption. In other deployment models vttablet and MySQL run on different hosts and connect over TCP.
+
+When vttablet connects to MySQL over TCP and `--db-ssl-mode` is not set, it uses `verify_identity` by default, including on localhost. The connection requires TLS, and vttablet verifies the MySQL server certificate against `--db-ssl-ca` (or the system root certificates) and `--db-server-name` (or the host name). If MySQL does not offer TLS, or vttablet cannot verify its certificate, the connection fails. To connect over TCP, do one of the following:
+
+* Configure MySQL with a certificate and set `--db-ssl-ca` and `--db-server-name`, as described in the rest of this section.
+* Set `--db-ssl-mode` explicitly, for example to `required` to encrypt without verifying the certificate.
+* Set `--db-<user>-use-ssl=false` for a user whose connection should ignore the `--db-ssl-*` flags.
 
 {{< info >}}
-vttablet sends its MySQL password in clear text only over TLS or a unix socket. For an account that uses `caching_sha2_password`, the default authentication plugin since MySQL 8.0, MySQL asks for it whenever the account's credentials are not cached. The cache is empty after MySQL restarts, for example. MySQL also asks for it when it switches the connection to the `mysql_clear_password` plugin. On a TCP connection without TLS, including one to localhost, vttablet then refuses to send the password and the connection fails with `server asked for the clear text password, which requires a TLS or Unix socket connection`. To avoid this, connect vttablet to MySQL over a unix socket with `--db-socket`, or configure TLS as described in the rest of this section.
+vttablet sends its MySQL password in clear text only over TLS or a unix socket. For an account that uses `caching_sha2_password`, the default authentication plugin since MySQL 8.0, MySQL asks for it whenever the account's credentials are not cached. The cache is empty after MySQL restarts, for example. MySQL also asks for it when it switches the connection to the `mysql_clear_password` plugin. On a TCP connection without TLS, for example with `--db-ssl-mode disabled`, vttablet refuses to send the password. The connection then fails with `server asked for the clear text password, which requires a TLS or Unix socket connection`.
 {{< /info >}}
 
 We will not cover configuring MySQL to use TLS certificates extensively here, just the minimum.  Please consult the MySQL documentation for further information. Again, we will also assume that vttablet will be using MySQL username/password client authentication.
@@ -371,13 +377,13 @@ Restart the vttablet. Note that the `db_server_name` parameter value will differ
 
 The `1073743872` is a combination of the MySQL `CLIENT_SSL` (2048) and `CLIENT_SSL_VERIFY_SERVER_CERT` flags (1073741824);  which means "encrypt the connection to MySQL *and* verify the SSL cert presented by the server".
 
-If you just wish to encrypt the vttablet -> MySQL server communication and you do not care about server certificate validation, you can just use this vttablet flag instead:
+To encrypt the vttablet -> MySQL server communication without validating the server certificate, use this vttablet flag instead:
 
 ```
-  --db-flags 2048
+  --db-ssl-mode required
 ```
 
-Note that using the above `db_flags` will also result in the MySQL to MySQL communication for replication between the replica/rdonly instances of a Vitess shard and its primary to be encrypted, as long as the upstream MySQL instance the replica is connecting to has been configured correctly to support TLS MySQL protocol connections (see above).
+The above flags also encrypt the MySQL to MySQL replication traffic between the replica/rdonly instances of a Vitess shard and its primary. The upstream MySQL instance that the replica connects to must be configured to support TLS MySQL protocol connections (see above).
 
 ## vttablet data and control paths
 
