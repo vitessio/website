@@ -184,7 +184,7 @@ Starting the first vttablet against a keyspace and shard performs the following 
 * Create a tablet record, which will allow vtgates to discover it.
 * No restore action will be performed because this is the first time vttablet is coming up and no backups exist yet.
 
-The vttablet will be unhealthy because the database for the keyspace has not been created. Visiting the `/debug/status` page on its port should show the following information:
+The vttablet will be unhealthy because the database for the keyspace has not been created. Visiting the `/debug/status` page on its port should show the following information. This page requires the `debugging` role, so start vttablet with a [`--security-policy`](../../../reference/features/monitoring/#access-to-status-and-debug-pages) that grants it, such as `read-only`. Otherwise, the page returns `403 Forbidden`.
 
 ![unhealthy-tablet](../img/unhealthy-tablet.png)
 

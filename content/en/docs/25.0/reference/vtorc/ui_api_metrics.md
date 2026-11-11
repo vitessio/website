@@ -14,6 +14,8 @@ Currently, the `/debug/status` lists the recent recoveries that VTOrc has perfor
 
 VTOrc supports the following APIs which can be used for monitoring and changing the behaviour of VTOrc.
 
+`/api/disable-global-recoveries` and `/api/enable-global-recoveries` require the `admin` role. `/debug/status` requires the `debugging` role. The other APIs require the `monitoring` role or no role. With the default empty `--security-policy`, VTOrc grants only the `monitoring` role, so the recovery APIs and `/debug/status` return `403 Forbidden`. To use them, start VTOrc with a `--security-policy` that grants the roles they need. See [Access to status and debug pages](../../features/monitoring/#access-to-status-and-debug-pages).
+
  | New API                          | Additional notes                                                                                                                                                                                        |
 |----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
  | `/api/problems`                  | This API lists all the instances that have any problems in them. The problems range from replication not running to errant GTIDs. The new API also supports filtering using the keyspace and shard name |

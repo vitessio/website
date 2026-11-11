@@ -211,6 +211,10 @@ vtadmin-web is running!
   - PID: 49698
 ```
 
+{{< info >}}
+The vtgate `/debug/status` page in this output requires the `debugging` role, which the default security policy doesn't grant, so it returns `403 Forbidden`. To view it, run `export VTGATE_EXTRA_FLAGS="--security-policy=read-only"` before you run `101_initial_cluster.sh`. To view the vttablet and vtctld debug pages too, set the same flag in `VTTABLET_EXTRA_FLAGS` and `VTCTLD_EXTRA_FLAGS`. For more about roles and policies, see [Access to status and debug pages](../../reference/features/monitoring/#access-to-status-and-debug-pages).
+{{< /info >}}
+
 If you encounter any errors, such as ports already in use, you can kill the processes and start over. Ensure you're in the vitess/examples/local directory, then issue the statement to kill the processes and remove the data directory. 
 This data directory `vtdataroot` will get recreated when you run the 101_initial_cluster.sh startup script again.
 

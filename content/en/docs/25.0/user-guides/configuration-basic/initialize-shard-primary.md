@@ -21,7 +21,7 @@ Until this step is complete, you may see errors like this in the vttablet logs: 
 
 If you have semi-sync enabled and did not set up at least two replicas, InitShardPrimary could hang indefinitely. Even if it succeeds, future operations that perform failovers could cause this shard to go into a deadlocked state.
 
-After this step, visiting the `/debug/status` page on the vttablets should show all the tablets as healthy:
+After this step, visiting the `/debug/status` page on the vttablets should show all the tablets as healthy. As with the earlier vttablet step, this page requires a [`--security-policy`](../../../reference/features/monitoring/#access-to-status-and-debug-pages) that grants the `debugging` role.
 
 ![healthy-tablet](../img/healthy-tablet.png)
 

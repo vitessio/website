@@ -78,7 +78,7 @@ You can also set the following flags to control load-balancing for replicas:
 * `discovery_high_replication_lag_minimum_serving`: If the replication lag of a vttablet exceeds this value, vtgate will treat it as unhealthy and will not send queries to it. This value is meant to match vttablet’s `unhealthy_threshold` value.
 * `discovery_low_replication_lag`: If a single vttablet lags beyond this value, vtgate will not send it any queries. However, if too many replicas exceed this threshold, then vtgate will send queries to the ones that have the least lag. A weighted average algorithm is used to exclude the outliers. This value is meant to match vttablet’s `degraded_threshold` value.
 
-A vtgate that comes up successfully will show all the vttablets it has discovered in its `/debug/status` page under the `Health Check Cache` section.
+A vtgate that comes up successfully will show all the vttablets it has discovered in its `/debug/status` page under the `Health Check Cache` section. This page requires the `debugging` role, so start vtgate with a [`--security-policy`](../../../reference/features/monitoring/#access-to-status-and-debug-pages) that grants it, such as `read-only`. Otherwise, the page returns `403 Forbidden`.
 
 ![vtgate-healthy-tablets](../img/vtgate-healthy-tablets.png)
 

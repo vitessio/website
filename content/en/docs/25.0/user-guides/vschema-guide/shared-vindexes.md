@@ -140,7 +140,7 @@ mysql> select c.uname, o.oname, p.pname from customer c join corder o on c.custo
 5 rows in set (0.01 sec)
 ```
 
-Although the underlying work performed by Vitess is not visible here, you can see it in the bottom right panel if using the demo app. Alternatively, you can also stream this information with the following command:
+Although the underlying work performed by Vitess is not visible here, you can see it in the bottom right panel if using the demo app. Alternatively, if vtgate runs with a `--security-policy` that grants the `debugging` role, such as `read-only`, you can stream this information with the following command:
 
 ```text
 curl localhost:12345/debug/querylog
