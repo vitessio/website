@@ -315,7 +315,11 @@ If a certificate revocation list (CRL) is configured for any gRPC or MySQL compo
 
 ### vttablet to MySQL
 
-A common Vitess deployment model is to co-locate vttablet and MySQL on the same host/VM/container. In a case like this, vttablet connectivity to MySQL will be via local unix socket or TCP connection on localhost. It is unnecessary to configure encryption between vttablet and MySQL in this case, since the traffic never leaves the local machine/VM. However, in some deployment models vttablet and MySQL are running on different hosts, and you may want vttablet to use TLS to speak to MySQL.
+A common Vitess deployment model is to co-locate vttablet and MySQL on the same host/VM/container. In a case like this, vttablet connectivity to MySQL will be via local unix socket or TCP connection on localhost. The traffic never leaves the local machine/VM in this case, so a unix socket connection needs no encryption. A TCP connection on localhost can still need TLS to log in, as the note below explains. However, in some deployment models vttablet and MySQL are running on different hosts, and you may want vttablet to use TLS to speak to MySQL.
+
+{{< info >}}
+vttablet sends its MySQL password in clear text only over TLS or a unix socket. For an account that uses `caching_sha2_password`, the default authentication plugin since MySQL 8.0, MySQL asks for it whenever the account's credentials are not cached. The cache is empty after MySQL restarts, for example. MySQL also asks for it when it switches the connection to the `mysql_clear_password` plugin. On a TCP connection without TLS, including one to localhost, vttablet then refuses to send the password and the connection fails with `server asked for the clear text password, which requires a TLS or Unix socket connection`. To avoid this, connect vttablet to MySQL over a unix socket with `--db-socket`, or configure TLS as described in the rest of this section.
+{{< /info >}}
 
 We will not cover configuring MySQL to use TLS certificates extensively here, just the minimum.  Please consult the MySQL documentation for further information. Again, we will also assume that vttablet will be using MySQL username/password client authentication.
 
