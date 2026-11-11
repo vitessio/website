@@ -52,10 +52,10 @@ One of `cluster`, `cluster-defaults`, or `cluster-config` file is required. Mult
 | `http-origin` | **Required** | string | - | repeated, comma-separated flag of allowed CORS origins. omit to disable CORS |
 | `http-metrics-endpoint` | **Recommended** | string | "/metrics" | HTTP endpoint to expose prometheus metrics on. Omit to disable scraping metrics. Using a path used by VTAdmin's http API is unsupported and causes undefined behavior.|
 | `http-tablet-url-tmpl` | **Recommended** | string | "https://{{ .Tablet.Hostname }}:80" | Go template string to generate a reachable http(s) address for a tablet. Currently used to make passthrough requests to /debug/vars endpoints. Example: `"https://{{ .Tablet.Hostname }}:80"` |
-| `http-debug-omit-env` | Optional | boolean | `false` | The name of an environment variable to omit from /debug/env, if http debug endpoints are enabled. Specify multiple times to omit multiple env vars. |
-| `http-debug-sanitize-env`| Optional | string | - | The name of an environment variable to sanitize in /debug/env, if http debug endpoints are enabled. Specify multiple times to sanitize multiple env vars. | 
+| `http-debug-omit-env` | Optional | string | - | The name of an environment variable to omit from `/debug/env`, if HTTP debug endpoints are enabled. Specify multiple times to omit multiple env vars. |
+| `http-debug-sanitize-env`| Optional | string | - | Deprecated and has no effect. `/debug/env` redacts the value of every environment variable. |
 | `http-no-compress` | Optional | boolean | `false` | Whether to disable compression of HTTP API responses. |
-| `http-no-debug` | Optional | boolean | `false` | Whether to disable `/debug/pprof/*` and `/debug/env` HTTP endpoints | 
+| `http-no-debug` | Optional | boolean | `false` | Whether to disable the `/debug/pprof/*`, `/debug/env`, `/debug/clusters`, and `/debug/cluster/{cluster_id}` HTTP endpoints. These endpoints use the same authentication and RBAC as `/api`: `/debug/clusters` and `/debug/cluster/{cluster_id}` return only the clusters the caller can `get`. They redact cluster flag values, such as credentials. `/debug/pprof/cmdline` is not served. |
 
 
 ### RBAC flags
