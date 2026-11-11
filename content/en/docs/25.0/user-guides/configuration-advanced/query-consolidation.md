@@ -8,7 +8,7 @@ Query consolidation is a VTTablet feature meant to protect your database from an
 Without this feature enabled such spikes can completely overwhelm the database. With this feature enabled the following will occur: when a vttablet receives a query, if an identical query is already in the process of being executed, the query will then wait.
 As soon as the first query returns from the underlying database, the result is sent to all callers that have been waiting.
 
-**Note**: an identical query is one that is exactly the same, including literals and bind variables.
+**Note**: an identical query is one that is exactly the same, including literals and bind variables, and that runs with the same session settings. Session system variables such as `time_zone` and `sql_mode` reach vttablet as connection settings, so two otherwise identical reads with different settings execute separately.
 
 Flags:
 
