@@ -52,6 +52,8 @@ Beyond what the tools export, it is important to also monitor system resource us
 
 Beyond the monitoring variables, the Vitess processes export additional information about their status on other URL paths. Some of those pages are for human consumption, and others are machine-readable meant for building automation.
 
+Most of the pages below require the `debugging` role, and the default empty `--security-policy` grants only the `monitoring` role. Without a policy that grants `debugging`, such as `read-only`, these pages return `403 Forbidden`. For the roles each page needs and the built-in policies, see [Access to status and debug pages](../../../reference/features/monitoring/#access-to-status-and-debug-pages).
+
 ## Redacting queries on debug pages
 
 Several of these pages and the query logs show SQL statements, bind variables, and error messages, which can contain your application's data. To keep that data off them, start vtgate and vttablet with `--redact-debug-ui-queries`. With the flag set:
