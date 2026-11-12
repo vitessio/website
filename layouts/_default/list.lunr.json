@@ -1,5 +1,7 @@
 {{- $index := slice -}}
 {{- range $page := $.Site.RegularPages -}}
-    {{- $index = $index | append (dict "title" $page.Title  "content" ($page.Content | plainify | safeHTML) "version" (index (first 3 (split (delimit (split $page.RelPermalink "/") "," "") ",")) 2) "href" $page.Permalink  "summary" ($page.Summary | plainify | safeHTML) "path" ($page.Permalink | relURL)  ) -}}
+    {{- /* Take the version from the path without the language prefix, so that it is "25.0" for both /docs/25.0/... and /zh/docs/25.0/... */ -}}
+    {{- $path := strings.TrimPrefix site.LanguagePrefix $page.RelPermalink -}}
+    {{- $index = $index | append (dict "title" $page.Title  "content" ($page.Content | plainify | safeHTML) "version" (index (first 3 (split (delimit (split $path "/") "," "") ",")) 2) "href" $page.Permalink  "summary" ($page.Summary | plainify | safeHTML) "path" ($page.Permalink | relURL)  ) -}}
 {{- end -}}
 {{- $index | jsonify -}}
