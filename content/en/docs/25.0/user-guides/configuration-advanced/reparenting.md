@@ -40,6 +40,8 @@ The `PlannedReparentShard` command reparents a healthy shard to a new primary. I
 
 {{< info >}}
 Tablets in `RESTORE` type (actively restoring from a backup) are automatically excluded from `PlannedReparentShard` operations, including reachability checks, promotion candidate selection, and replication configuration updates. This allows PRS to succeed even when a tablet is actively restoring from a backup.
+
+Two cases are refused instead. A `RESTORE` tablet cannot be the primary-elect. And when there is no clear primary and the tablet that the shard record names as primary is in `RESTORE`, the PRS fails with `FAILED_PRECONDITION`. That happens when a primary restarts on an empty data directory and restores from a backup. Skipping that tablet would leave nothing to check that the primary-elect has all of its transactions, so use `EmergencyReparentShard` instead.
 {{< /info >}}
 
 This command performs the following actions when used to change the current primary:
