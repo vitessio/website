@@ -29,8 +29,13 @@ $versions.current}}
       const _debug = false;
       const debugLog = _debug ? console.log : () => { };
       const currentUrl = window.location.pathname;
-      const currentLocation = String(currentUrl).split("/");
-      const currentVersion = currentLocation[2];
+      // Pages in a language other than the default one live under a prefix
+      // such as /zh, so drop it before taking the version from the path.
+      const languagePrefix = "{{ site.LanguagePrefix }}";
+      const currentPath = currentUrl.startsWith(languagePrefix + "/")
+        ? currentUrl.slice(languagePrefix.length)
+        : currentUrl;
+      const currentVersion = currentPath.split("/")[2];
       const loadingIcon = document.createElement("i");
       const spinnerContainer = document.createElement("p");
       const input = document.getElementById("search-bar");
@@ -42,6 +47,66 @@ $versions.current}}
       let searchPopover = document.querySelector(".search-popover");
       let query = input.value.trim();
       let parse = {};
+
+      // lunr's tokenizer only splits text on whitespace and hyphens, so a
+      // Chinese sentence would be a single token, and lunr's trimmer would
+      // then remove its Han characters as if they were punctuation. Index and
+      // search every pair of adjacent Han characters (bigram) instead, the
+      // usual way to search Chinese text without a dictionary.
+      const hanPattern = /\p{Script=Han}/u;
+
+      function splitHanRuns(text) {
+        // Split the text into runs of Han characters and runs of the others.
+        return text.match(/\p{Script=Han}+|\P{Script=Han}+/gu);
+      }
+
+      function splitHanText(text) {
+        return splitHanRuns(text).flatMap((piece) => {
+          if (!hanPattern.test(piece)) {
+            const term = lunr.trimmer(new lunr.Token(piece)).toString();
+            return term === "" ? [] : [term];
+          }
+          const characters = Array.from(piece);
+          if (characters.length === 1) return characters;
+          return characters.slice(1).map((character, i) => characters[i] + character);
+        });
+      }
+
+      function splitHanTokens(token) {
+        if (!hanPattern.test(token.toString())) return token;
+        return splitHanText(token.toString()).map((term) => token.clone(() => term));
+      }
+
+      function trimNonHanTokens(token) {
+        // lunr's trimmer would remove the Han characters, so leave the tokens
+        // with Han characters to splitHanTokens, which trims the other text
+        // in them.
+        return hanPattern.test(token.toString()) ? token : lunr.trimmer(token);
+      }
+
+      function hanHighlightTerms(term) {
+        // Highlight every part of a run of Han characters that is at least a
+        // bigram long, so that "ABC" is highlighted as a whole where it is
+        // found, and not as "AB" followed by an unhighlighted "C".
+        return splitHanRuns(term).flatMap((piece) => {
+          if (!hanPattern.test(piece)) {
+            return [lunr.trimmer(new lunr.Token(piece)).toString()];
+          }
+          const characters = Array.from(piece);
+          if (characters.length === 1) return characters;
+          const parts = [];
+          for (let start = 0; start < characters.length - 1; start++) {
+            for (let end = start + 2; end <= characters.length; end++) {
+              parts.push(characters.slice(start, end).join(""));
+            }
+          }
+          return parts;
+        });
+      }
+
+      // lunr warns about pipeline functions that aren't registered
+      lunr.Pipeline.registerFunction(splitHanTokens, "splitHanTokens");
+      lunr.Pipeline.registerFunction(trimNonHanTokens, "trimNonHanTokens");
 
       // set class name for icon
       loadingIcon.className = "fa fa-spinner fa-spin is-size-4";
@@ -84,7 +149,7 @@ $versions.current}}
       );
 
       async function initSearchIndex() {
-        const searchResults = await fetch("/index.json", { method: "GET" })
+        const searchResults = await fetch("{{ "index.json" | relLangURL }}", { method: "GET" })
           .then((response) => response.json())
           .then((data) => {
             return data;
@@ -92,6 +157,10 @@ $versions.current}}
           .catch((err) => console.error("error:", err));
         index = lunr(function () {
           const documents = searchResults;
+
+          this.pipeline.reset();
+          this.pipeline.add(splitHanTokens, trimNonHanTokens, lunr.stopWordFilter, lunr.stemmer);
+          this.searchPipeline.before(lunr.stemmer, splitHanTokens);
 
           this.ref("href");
           this.field("title", {
@@ -170,8 +239,10 @@ $versions.current}}
             parseClauses(word).forEach((clause) => query.clause(clause));
           } catch (err) {
             if (!(err instanceof lunr.QueryParseError)) throw err;
+            // Words with Han characters stay whole, and the search pipeline
+            // splits them into bigrams.
             lunr.tokenizer(word.replace(/[:^~]/g, " "))
-              .map(lunr.trimmer)
+              .map(trimNonHanTokens)
               .filter((token) => token.toString() !== "")
               .forEach((token) => query.clause({ term: token.toString() }));
           }
@@ -183,12 +254,14 @@ $versions.current}}
         // Highlight the terms lunr searched for in the given fields, without
         // the "*" wildcards. lunr only stems the parsed terms, and the
         // fallback terms are already trimmed, so only skip the terms that
-        // have no word characters.
+        // have no word or Han characters. lunr searches Chinese text by its
+        // bigrams, so also highlight the parts of a term that are found.
         return clauses
           .filter((clause) => clause.presence !== lunr.Query.presence.PROHIBITED)
           .filter((clause) => clause.fields.some((field) => fields.includes(field)))
           .map((clause) => clause.term.replace(/\*/g, ""))
-          .filter((term) => /\w/.test(term));
+          .flatMap((term) => hanPattern.test(term) ? hanHighlightTerms(term) : [term])
+          .filter((term) => /[\w\p{Script=Han}]/u.test(term));
       }
 
       function search(keywords) {
