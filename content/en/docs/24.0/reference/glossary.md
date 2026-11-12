@@ -20,7 +20,7 @@ Where Vitess stores backups, selected with the `--backup-storage-implementation`
 
 ## Buffering
 
-A VTGate feature that holds queries for a shard in memory while its primary is unavailable during a planned failover or a resharding cutover, and sends them on to the new primary once it is serving, instead of returning errors to the application. See [VTGate Buffering](../features/vtgate-buffering/).
+A VTGate feature that holds queries for a shard in memory during a planned failover, or while SwitchTraffic or ReverseTraffic switches the traffic of a MoveTables or Reshard workflow, and sends them on once the new primary, shards or keyspace are serving, instead of returning errors to the application. See [VTGate Buffering](../features/vtgate-buffering/).
 
 ## CDC
 
@@ -128,7 +128,7 @@ A [VReplication](#vreplication) workflow that moves tables from another Vitess c
 
 ## Mirror rules
 
-Rules that make VTGate send a copy of a percentage of the queries for some tables to another keyspace, to see how the queries perform there before switching traffic with [MoveTables](#movetables). See [Schema Mirror Rules](../features/schema-mirror-rules/).
+Rules that make VTGate send a copy of a percentage of the read queries for some tables to another keyspace, to see how the queries perform there before switching traffic with [MoveTables](#movetables). See [Schema Mirror Rules](../features/schema-mirror-rules/).
 
 ## Mount
 
