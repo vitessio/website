@@ -8,7 +8,7 @@ This glossary briefly explains the terms that you will come across in the Vitess
 
 ## Backup (tablet type)
 
-A [tablet type](#tablet-type) for a tablet that has stopped replication at a consistent point to upload a new backup of its shard. When the backup is done, it resumes replication and returns to its previous type.
+A [tablet type](#tablet-type) for a tablet that has stopped replication at a consistent point to upload a new backup of its shard. A tablet only takes this type when the backup requires taking it out of service, such as a full backup with the `builtin` engine. When the backup is done, it resumes replication and returns to its previous type.
 
 ## Backup engine
 
@@ -64,7 +64,7 @@ A `vtctldclient` command that promotes a new primary when the current primary is
 
 ## etcd
 
-A distributed key-value store and the default backend of the [topology service](#topology-service) (the `etcd2` topology implementation). Vitess also supports ZooKeeper (`zk2`) and Consul (`consul`).
+A distributed key-value store and the most commonly used backend of the [topology service](#topology-service) (the `etcd2` topology implementation). Vitess also supports ZooKeeper (`zk2`) and Consul (`consul`).
 
 ## Execution plan
 
@@ -196,7 +196,7 @@ The relationships between each shard's primary and its replicas, which Vitess us
 
 ## Reserved connection
 
-A MySQL connection that is dedicated to a single client session, instead of being shared through the connection pools of VTTablet, because the session has changed state that only that connection has, such as a temporary table or a system variable. VTGate reserves one on each shard that the session uses. See [Reserved Connections](../query-serving/reserved-conn/).
+A MySQL connection that is dedicated to a single client session, instead of being shared through the connection pools of VTTablet, because the session has changed state that only that connection has, such as a temporary table or an advisory lock taken with `GET_LOCK()`. VTGate reserves one on each shard that the session uses. See [Reserved Connections](../query-serving/reserved-conn/).
 
 ## Reshard
 
@@ -244,7 +244,7 @@ The name of a shard of a sharded keyspace, which is its [key range](#key-range) 
 
 ## Shard targeting
 
-Sending queries to one shard or tablet type instead of letting VTGate route them, by naming it in the database name of the connection or in a `USE` statement, for example `USE commerce:-80` or `USE commerce@replica`.
+Sending queries to one shard or tablet type instead of letting VTGate route them, by naming it in the database name of the connection or in a `USE` statement, for example ``USE `commerce:-80` `` or `USE commerce@replica`.
 
 ## Sharded keyspace
 
@@ -280,7 +280,7 @@ A VTTablet service that measures the load on its shard, such as replication lag,
 
 ## Tablet type
 
-The role of a tablet, which decides what traffic VTGate sends to it. The main types are [primary](#primary-tablet-type), [replica](#replica-tablet-type) and [rdonly](#rdonly-tablet-type). A tablet is temporarily of the [backup](#backup-tablet-type) or [restore](#restore-tablet-type) type while it takes or restores a backup. See [Tablet Types](../../concepts/tablet/#tablet-types).
+The role of a tablet, which decides what traffic VTGate sends to it. The main types are [primary](#primary-tablet-type), [replica](#replica-tablet-type) and [rdonly](#rdonly-tablet-type). A tablet is temporarily of the [backup](#backup-tablet-type) type while it takes a backup that requires taking it out of service, such as a full backup with the `builtin` engine, and of the [restore](#restore-tablet-type) type while it restores a backup. See [Tablet Types](../../concepts/tablet/#tablet-types).
 
 ## Topo
 
