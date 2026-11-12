@@ -8,7 +8,7 @@ This glossary briefly explains the terms that you will come across in the Vitess
 
 ## Backup (tablet type)
 
-A [tablet type](#tablet-type) for a tablet that has stopped replication at a consistent point to upload a new backup of its shard. A tablet only takes this type when the backup requires taking it out of service, such as a full backup with the `builtin` engine. When the backup is done, it resumes replication and returns to its previous type.
+A [tablet type](#tablet-type) for a tablet that is out of service while it takes a backup of its shard. A tablet only takes this type when the backup requires it, such as a full backup with the `builtin` engine, which stops replication and shuts down MySQL while it copies the data files. When the backup is done, the tablet returns to its previous type.
 
 ## Backup engine
 
@@ -204,7 +204,7 @@ A [VReplication](#vreplication) workflow that splits shards into more shards, or
 
 ## Restore (tablet type)
 
-A [tablet type](#tablet-type) for a tablet that started with no data and is restoring the latest backup of its shard. When the restore is done, it starts replicating from the [GTID](#gtid) position of the backup and becomes a [replica](#replica-tablet-type) or [rdonly](#rdonly-tablet-type) tablet.
+A [tablet type](#tablet-type) for a tablet that is restoring a backup of its shard, either because it started with no data or because of the `RestoreFromBackup` command. When the restore is done, it starts replicating from the [GTID](#gtid) position of the backup and becomes a [replica](#replica-tablet-type) or [rdonly](#rdonly-tablet-type) tablet, except after a point-in-time recovery, which leaves replication stopped and the tablet [drained](#drained-tablet-type).
 
 ## ReverseTraffic
 
@@ -264,7 +264,7 @@ A workflow command that switches reads, writes, or both from the source to the t
 
 ## Table lifecycle
 
-The steps in which Vitess drops a table without locking up the database: it renames the table, keeps it for a while so that it can be restored, purges its rows gradually, and only then drops it. See [Table lifecycle](../../user-guides/schema-changes/table-lifecycle/).
+The steps in which Vitess drops a table without locking up the database: it renames the table, keeps it for a while so that it can be restored, and then drops it, first purging its rows gradually if the MySQL server needs that to drop a large table without stalling. See [Table lifecycle](../../user-guides/schema-changes/table-lifecycle/).
 
 ## Tablet
 
