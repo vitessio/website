@@ -152,7 +152,7 @@ Online transaction processing: many short reads and writes. `oltp` is the defaul
 
 ## Online DDL
 
-Schema changes that Vitess schedules, runs and tracks for you, and that it can cancel, retry or revert. With the `vitess` [DDL strategy](#ddl-strategy), they don't block the table that is being changed. See [Managed, Online Schema Changes](../../user-guides/schema-changes/managed-online-schema-changes/).
+Schema changes that Vitess schedules, runs and tracks for you, and that it can cancel, retry or revert. With the `vitess` [DDL strategy](#ddl-strategy), they don't block the table while they run, apart from holding its queries briefly at the [cutover](#cutover). See [Managed, Online Schema Changes](../../user-guides/schema-changes/managed-online-schema-changes/).
 
 ## PlannedReparentShard (PRS)
 
