@@ -96,7 +96,7 @@ A VTTablet feature that queues transactions that update the same row, so that a 
 
 ## Key range
 
-A range of [keyspace IDs](#keyspace-id). Each shard of a sharded keyspace covers one key range, and the shards of a keyspace together cover all keyspace IDs without overlapping. The [shard name](#shard-name) is its key range. See [Sharding](../features/sharding/).
+A range of [keyspace IDs](#keyspace-id). Each shard of a sharded keyspace covers one key range, and the serving shards of a keyspace together cover all keyspace IDs without overlapping. The [shard name](#shard-name) is its key range. See [Sharding](../features/sharding/).
 
 ## Keyspace
 
@@ -196,7 +196,7 @@ The relationships between each shard's primary and its replicas, which Vitess us
 
 ## Reserved connection
 
-A MySQL connection that is dedicated to a single client session, instead of being shared through the connection pools of VTTablet, because the session has changed state that only that connection has, such as a temporary table or an advisory lock taken with `GET_LOCK()`. VTGate reserves one on each shard that the session uses. See [Reserved Connections](../query-serving/reserved-conn/).
+A MySQL connection that is dedicated to a single client session, instead of being shared through the connection pools of VTTablet, because the session has changed state that only that connection has, such as a temporary table or an advisory lock taken with `GET_LOCK()`. With a temporary table, VTGate reserves one on each shard that the session uses. Advisory locks all use one reserved connection, on the first shard of the alphabetically first keyspace. See [Reserved Connections](../query-serving/reserved-conn/) and [Locking Functions](../query-serving/locking-functions/).
 
 ## Reshard
 
