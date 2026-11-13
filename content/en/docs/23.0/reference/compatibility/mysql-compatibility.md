@@ -27,6 +27,7 @@ Vitess supports MySQL and gRPC server protocols, allowing it to serve as a drop-
    13. [Create/Drop Database](#createdrop-database)
    14. [User Defined Functions (UDFs)](#user-defined-functions)
    15. [LAST_INSERT_ID](#last_insert_id)
+   16. [Replication Statements](#replication-statements)
 3. [Cross-shard Transactions](#cross-shard-transactions)
 4. [Auto Increment](#auto-increment)
 5. [Character Set and Collation](#character-set-and-collation)
@@ -194,6 +195,18 @@ SELECT LAST_INSERT_ID(col)
 FROM table 
 ORDER BY foo;
 ```
+
+### Replication Statements
+
+Vitess manages MySQL replication between the tablets of each shard, so vtgate does not support statements that manage replication or binary logs:
+ - `START REPLICA`, `STOP REPLICA`, `CHANGE REPLICATION SOURCE TO`, `RESET REPLICA` and `RESET BINARY LOGS AND GTIDS`, and their older forms such as `START SLAVE`, `CHANGE MASTER TO` and `RESET MASTER`, return a syntax error, even when you target a specific shard.
+ - `PURGE BINARY LOGS` returns an error.
+ - Use [`vtctldclient`](../../programs/vtctldclient/) instead: [`StartReplication`](../../programs/vtctldclient/vtctldclient_startreplication/) and [`StopReplication`](../../programs/vtctldclient/vtctldclient_stopreplication/) for a single tablet, and [`PlannedReparentShard`](../../programs/vtctldclient/vtctldclient_plannedreparentshard/) or [`EmergencyReparentShard`](../../programs/vtctldclient/vtctldclient_emergencyreparentshard/) to change the primary of a shard.
+
+Statements that show replication state, such as `SHOW REPLICA STATUS`, `SHOW BINARY LOGS` and `SHOW BINLOG EVENTS`, are sent to a single tablet and only return the state of that tablet's MySQL server:
+ - If you [target a shard](#use-statements), the statement goes to that shard. Otherwise, it goes to a random shard of the keyspace in use, or of any keyspace if none is selected.
+ - The statement goes to a tablet of the type you target, which is `PRIMARY` by default. For example, after `` USE `commerce:-80@replica` `` it returns the status of a replica in the `-80` shard.
+ - To see the replication status of every replica and rdonly tablet, use [`SHOW VITESS_REPLICATION_STATUS`](../../features/show/). To see the replication positions of the tablets in one shard, use [`vtctldclient ShardReplicationPositions`](../../programs/vtctldclient/vtctldclient_shardreplicationpositions/).
 
 ## Cross-shard Transactions
 
