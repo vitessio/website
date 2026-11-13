@@ -32,6 +32,16 @@ Example Output:
 +----------+
 ```
 
+* `SHOW VITESS_METADATA VARIABLES [LIKE "<pattern>"]` -- Lists the key/value pairs stored with `SET @@vitess_metadata.<key>`, optionally filtered by key with a `LIKE` pattern. See [Vitess Metadata](#vitess-metadata).
+```shell
+Example Output:
++-------------+--------+
+| Key         | Value  |
++-------------+--------+
+| app_version | v1.2.3 |
++-------------+--------+
+```
+
 * `SHOW VITESS_REPLICATION_STATUS [LIKE "<Keyspace/<Shard>"]` (**Experimental; 12.0+**) -- Shows the Replication (_not_ [VReplication](../../vreplication/vreplication/)) health for the Vitess deployment. It returns a row for each `REPLICA` and `RDONLY` tablet in the topology -- with support for filtering by Keyspace/Shard using a `LIKE` clause -- providing relevant health and status information, including the current [tablet throttler](../tablet-throttler/) status.
 ```shell
 Example Output:
@@ -116,3 +126,26 @@ Example Output:
 | 80-   |       1 |       1.5 |
 +-------+---------+-----------+
 ```
+
+### Vitess Metadata
+
+Vitess metadata is a key/value store in the global [topology server](../topology-service/). Applications and tools can read and write it through vtgate to share small pieces of state, such as the version of an application or the progress of a workflow. Every change is a write to the global topology server, so it is not meant for large values or frequent updates.
+
+To store a value, use `SET` with the `vitess_metadata` scope:
+
+```sql
+set @@vitess_metadata.app_version = 'v1.2.3';
+```
+
+* Only the users listed in the vtgate `--vschema-ddl-authorized-users` flag can set or delete keys. Other users get a `not authorized to perform vitess metadata operations` error. `SHOW VITESS_METADATA VARIABLES` has no such restriction.
+* The value must be a string literal. Numbers, expressions and other values are rejected.
+* Vitess converts both the key and the value to lowercase before it stores them.
+* Setting a key to an empty string deletes it. Deleting a key that does not exist returns an error.
+
+To read the stored values, use `SHOW VITESS_METADATA VARIABLES`. `_` and `%` are wildcards in a `LIKE` pattern, so escape them to match them literally:
+
+```sql
+show vitess_metadata variables like 'app\_%';
+```
+
+The rows are not sorted. If no keys are stored, the statement returns a `node doesn't exist` error instead of an empty result.
