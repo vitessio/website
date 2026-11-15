@@ -672,7 +672,7 @@ We will not cover setting up `Zookeeper` with certificates in this guide. You ca
 
 ### Configuring secure connectivity between vtgate/vttablet/vtctld and ZooKeeper
 
-The Vitess servers (vtgate/vttablet/vtctld) share the same set of parameters to connect via TLS to `Zookeeper`:
+The Vitess servers (vtgate/vttablet/vtctld) and the `zk` command-line tool share the same set of parameters to connect via TLS to `Zookeeper`:
 
  * `--topo-zk-tls-ca` : Path to the PEM certificate used to authenticate the TLS CA certificate presented by the `Zookeeper` server.  Enables TLS to `etcd` if present.
  * `--topo-zk-tls-cert` : Path to a PEM client certificate (mTLS) used to authenticate this client to the `Zookeeper` server. Only necessary if your `Zookeeper` server requires client authentication.

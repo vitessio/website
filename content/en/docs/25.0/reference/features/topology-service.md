@@ -251,8 +251,10 @@ sub-networks for higher resilience. For our integration tests, we use a single
 ZK server that serves both global and local cells.
 
 We provide the `zk` utility for easy access to the topology data in
-Zookeeper. It can list, read and write files inside any Zoopeeker server. Just
-specify the `-server` parameter to point to the Zookeeper servers. Note the
+Zookeeper. It can list, read, and write files inside any Zookeeper server. Pass
+the `--server` flag to point it to the Zookeeper servers, for example
+`zk --server localhost:2181 ls /`. If your Zookeeper servers require TLS or
+authentication, pass the same `--topo-zk-*` flags that the Vitess servers use. The
 VTAdmin UI can also be used to see the contents of the topology data.
 
 To configure a Zookeeper installation, let's start with the global cell
@@ -263,7 +265,7 @@ want to use servers `global_server1,global_server2` in path `/vitess/global`:
 ``` sh
 # The root directory in the global server will be created
 # automatically, same as when running this command:
-# zk -server global_server1,global_server2 touch -p /vitess/global
+# zk --server global_server1,global_server2 touch -p /vitess/global
 
 # Set the following flags to let Vitess use this global server:
 # --topo-implementation zk2
@@ -686,8 +688,8 @@ topology would be:
 # /vitess/cell1 in the local topology service.
 
 # Create the new topology service roots in global and local cell.
-zk -server global_server1,global_server2 touch -p /vitess/global
-zk -server cell1_server1,cell1_server2 touch -p /vitess/cell1
+zk --server global_server1,global_server2 touch -p /vitess/global
+zk --server cell1_server1,cell1_server2 touch -p /vitess/cell1
 
 # Store the flags in a shell variable to simplify the example below.
 GLOBAL_TOPOLOGY="--topo-implementation zk2 --topo-global-server-address global_server1,global_server2 --topo-global-root /vitess/global"
