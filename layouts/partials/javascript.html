@@ -31,6 +31,8 @@ $versions.current}}
       const currentUrl = window.location.pathname;
       const currentLocation = String(currentUrl).split("/");
       const currentVersion = currentLocation[2];
+      const currentScope =
+         currentLocation[1] === "releases" ? "releases" : currentVersion;
       const loadingIcon = document.createElement("i");
       const spinnerContainer = document.createElement("p");
       const input = document.getElementById("search-bar");
@@ -110,9 +112,9 @@ $versions.current}}
             boost: 10,
           });
           // make search to query results depending on the version of the docs
-          if (currentVersion) {
+          if (currentScope) {
             documents.forEach(function (doc) {
-              if (doc.version === currentVersion) {
+              if (doc.scope === currentScope) {
                 this.add(doc);
                 parse[doc.href] = {
                   title: doc.title,
