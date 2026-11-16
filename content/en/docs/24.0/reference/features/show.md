@@ -138,11 +138,11 @@ set @@vitess_metadata.app_version = 'v1.2.3';
 ```
 
 * Only the users listed in the vtgate `--vschema-ddl-authorized-users` flag can set or delete keys. Other users get a `not authorized to perform vitess metadata operations` error. `SHOW VITESS_METADATA VARIABLES` has no such restriction.
-* The value must be a string literal. Numbers, expressions and other values are rejected.
-* Vitess converts both the key and the value to lowercase before it stores them.
+* Quote the value: a number, `NULL` or an expression is rejected.
+* Vitess converts the key and a quoted value to lowercase before it stores them.
 * Setting a key to an empty string deletes it. Deleting a key that does not exist returns an error.
 
-To read the stored values, use `SHOW VITESS_METADATA VARIABLES`. `_` and `%` are wildcards in a `LIKE` pattern, so escape them to match them literally:
+To read the stored values, use `SHOW VITESS_METADATA VARIABLES`. `_` and `%` are wildcards in a `LIKE` pattern, so escape them to match them literally. The match is case-sensitive, so use a lowercase pattern:
 
 ```sql
 show vitess_metadata variables like 'app\_%';
