@@ -162,12 +162,18 @@ $versions.current}}
             title.textContent = `No results found for "${keywords}"`;
           } else if (results.length == 1) {
             title.textContent = `Found one result for "${keywords}"`;
-            subTitle.textContent = `Showing results for v${currentVersion}`;
+            subTitle.textContent =
+              currentScope === "releases"
+                ? "Showing results for Releases"
+                : `Showing results for v${currentVersion}`;
           } else if (results.length > 1 && keywords === "") {
             title.textContent = "Enter search keyword";
           } else {
             title.textContent = `Found ${results.length} results for "${keywords}"`;
-            subTitle.textContent = `Showing results for v${currentVersion}`;
+            subTitle.textContent =
+              currentScope === "releases"
+                ? "Showing results for Releases"
+                : `Showing results for v${currentVersion}`;
           }
           searchResultCount.replaceChildren(title, subTitle);
 
