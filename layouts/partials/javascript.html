@@ -77,6 +77,16 @@ $versions.current}}
         return splitHanText(token.toString()).map((term) => token.clone(() => term));
       }
 
+      function splitHanIndexTokens(token) {
+        // Also index every Han character on its own, so that a word of one
+        // character is found inside the longer runs that contain it. Queries
+        // of two or more characters only search the bigrams.
+        if (!hanPattern.test(token.toString())) return token;
+        const terms = splitHanText(token.toString());
+        const characters = Array.from(token.toString()).filter((c) => hanPattern.test(c));
+        return [...new Set([...terms, ...characters])].map((term) => token.clone(() => term));
+      }
+
       function trimNonHanTokens(token) {
         // lunr's trimmer would remove the Han characters, so leave the tokens
         // with Han characters to splitHanTokens, which trims the other text
@@ -111,6 +121,7 @@ $versions.current}}
 
       // lunr warns about pipeline functions that aren't registered
       lunr.Pipeline.registerFunction(splitHanTokens, "splitHanTokens");
+      lunr.Pipeline.registerFunction(splitHanIndexTokens, "splitHanIndexTokens");
       lunr.Pipeline.registerFunction(trimNonHanTokens, "trimNonHanTokens");
 
       // set class name for icon
@@ -164,7 +175,7 @@ $versions.current}}
           const documents = searchResults;
 
           this.pipeline.reset();
-          this.pipeline.add(splitHanTokens, trimNonHanTokens, lunr.stopWordFilter, lunr.stemmer);
+          this.pipeline.add(splitHanIndexTokens, trimNonHanTokens, lunr.stopWordFilter, lunr.stemmer);
           this.searchPipeline.before(lunr.stemmer, splitHanTokens);
 
           this.ref("href");
@@ -255,14 +266,16 @@ $versions.current}}
         return query.clauses;
       }
 
-      function splitHanWildcardClause(clause) {
+      function splitHanClause(clause) {
         // lunr does not run the search pipeline on terms with a wildcard, so
-        // the bigrams that the index holds would never be found. Split the
-        // term into bigrams here, keeping the field and presence of the
-        // clause, and keep the wildcards on the first and last part.
+        // the bigrams that the index holds would never be found. And it ORs
+        // the bigrams of a term that the pipeline splits, so "+ABC" would
+        // only require one of "AB" and "BC". Split the term into bigrams
+        // here, one clause for each, keeping the field, boost and presence of
+        // the clause, and keep the wildcards on the first and last part.
         const term = clause.term;
         const core = term.replace(/^\*|\*$/g, "");
-        if (!hanPattern.test(term) || !term.includes("*") || core.includes("*")) {
+        if (!hanPattern.test(term) || core.includes("*")) {
           return [clause];
         }
         const parts = splitHanText(core);
@@ -272,6 +285,12 @@ $versions.current}}
           term: (i === 0 && term.startsWith("*") ? "*" : "") + part +
             (i === lastPart && term.endsWith("*") ? "*" : ""),
         }));
+      }
+
+      function isProhibitedHanWord(clause) {
+        return clause.presence === lunr.Query.presence.PROHIBITED &&
+          hanPattern.test(clause.term) &&
+          !clause.term.replace(/^\*|\*$/g, "").includes("*");
       }
 
       function highlightTerms(clauses, fields) {
@@ -293,9 +312,20 @@ $versions.current}}
         // A query without any clauses would match every document. lunr
         // replaces each clause term with its stemmed form while searching,
         // so give it copies and keep the typed terms for highlighting.
+        // lunr drops the pages that have any bigram of a prohibited Han word,
+        // so leave those clauses out and drop the pages that contain the whole
+        // word instead.
+        const prohibitedWords = clauses.filter(isProhibitedHanWord);
         const results = clauses.length === 0 ? [] : index.query(function (q) {
-          clauses.flatMap(splitHanWildcardClause).forEach((clause) => q.clause({ ...clause }));
-        });
+          clauses
+            .filter((clause) => !prohibitedWords.includes(clause))
+            .flatMap(splitHanClause)
+            .forEach((clause) => q.clause({ ...clause }));
+        }).filter((result) => !prohibitedWords.some((clause) => {
+          const word = clause.term.replace(/^\*|\*$/g, "").toLowerCase();
+          return clause.fields.some((field) =>
+            (parse[result.ref][field] || "").toLowerCase().includes(word));
+        }));
         const firstSearchResult = results[0];
         const currentVersion = parse[firstSearchResult?.ref]?.version;
 
