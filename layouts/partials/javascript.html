@@ -288,8 +288,11 @@ $versions.current}}
       }
 
       function isProhibitedHanWord(clause) {
+        // Fuzzy clauses ("~N") stay in the lunr query, which applies the edit
+        // distance, so only exact words are dropped by their whole text.
         return clause.presence === lunr.Query.presence.PROHIBITED &&
           hanPattern.test(clause.term) &&
+          !clause.editDistance &&
           !clause.term.replace(/^\*|\*$/g, "").includes("*");
       }
 
