@@ -84,6 +84,8 @@ $versions.current}}
         return hanPattern.test(token.toString()) ? token : lunr.trimmer(token);
       }
 
+      const maxHanHighlightLength = 12;
+
       function hanHighlightTerms(term) {
         // Highlight every part of a run of Han characters that is at least a
         // bigram long, so that "ABC" is highlighted as a whole where it is
@@ -94,13 +96,16 @@ $versions.current}}
           }
           const characters = Array.from(piece);
           if (characters.length === 1) return characters;
-          const parts = [];
+          // Bound the parts by length, so that a long pasted text creates a
+          // number of parts that is linear in its length and not quadratic.
+          const parts = new Set();
           for (let start = 0; start < characters.length - 1; start++) {
-            for (let end = start + 2; end <= characters.length; end++) {
-              parts.push(characters.slice(start, end).join(""));
+            const last = Math.min(characters.length, start + maxHanHighlightLength);
+            for (let end = start + 2; end <= last; end++) {
+              parts.add(characters.slice(start, end).join(""));
             }
           }
-          return parts;
+          return [...parts];
         });
       }
 
@@ -250,6 +255,25 @@ $versions.current}}
         return query.clauses;
       }
 
+      function splitHanWildcardClause(clause) {
+        // lunr does not run the search pipeline on terms with a wildcard, so
+        // the bigrams that the index holds would never be found. Split the
+        // term into bigrams here, keeping the field and presence of the
+        // clause, and keep the wildcards on the first and last part.
+        const term = clause.term;
+        const core = term.replace(/^\*|\*$/g, "");
+        if (!hanPattern.test(term) || !term.includes("*") || core.includes("*")) {
+          return [clause];
+        }
+        const parts = splitHanText(core);
+        const lastPart = parts.length - 1;
+        return parts.map((part, i) => ({
+          ...clause,
+          term: (i === 0 && term.startsWith("*") ? "*" : "") + part +
+            (i === lastPart && term.endsWith("*") ? "*" : ""),
+        }));
+      }
+
       function highlightTerms(clauses, fields) {
         // Highlight the terms lunr searched for in the given fields, without
         // the "*" wildcards. lunr only stems the parsed terms, and the
@@ -270,7 +294,7 @@ $versions.current}}
         // replaces each clause term with its stemmed form while searching,
         // so give it copies and keep the typed terms for highlighting.
         const results = clauses.length === 0 ? [] : index.query(function (q) {
-          clauses.forEach((clause) => q.clause({ ...clause }));
+          clauses.flatMap(splitHanWildcardClause).forEach((clause) => q.clause({ ...clause }));
         });
         const firstSearchResult = results[0];
         const currentVersion = parse[firstSearchResult?.ref]?.version;
