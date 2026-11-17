@@ -29,7 +29,7 @@ vtgate --log-format text ...
 
 Vitess is converting its log messages to fixed text, with the details of each event in structured attributes. In a converted line, the message stays the same every time the event happens. Values such as tablet aliases, keyspaces, tables, positions, queries, and errors go in attributes instead of the message. Messages that are not yet converted can still contain values.
 
-In the default JSON format, each attribute is a field next to `msg`. In the text format, attributes follow the message as `key=value` pairs.
+In the default JSON format, each attribute is a field next to `msg`. In the text format, attributes follow the message as `key=value` pairs. Attributes logged as durations are integer nanoseconds in the JSON format and readable values, such as `1.5s`, in the text format. With `--log-err-stacks` set, Vitess errors logged as attributes still include their stack traces in both formats.
 
 Converted lines use these attribute names:
 
@@ -38,9 +38,17 @@ Converted lines use these attribute names:
 | `error` | The error that the line reports. |
 | `error_code` | The Vitess error code, such as `INVALID_ARGUMENT`. Many lines that log a Vitess error include it. |
 | `logger` | The name of the throttled logger that wrote the line. A throttled logger reports how many lines it dropped in a `skipped log messages` line, with the count in `skipped`. |
-| `mysql_errno` | The MySQL error number, as an integer, such as `1062` for a duplicate key. Vitess adds it to any line whose `error` is a MySQL error, so you can filter and alert on the number without parsing `error`. It holds only the number, not MySQL's message text. Client error numbers, such as `2013` for a lost connection, are included. The number maps to the [MySQL error reference](https://dev.mysql.com/doc/mysql-errors/en/). |
+| `mysql_errno` | The MySQL error number, as an integer, such as `1062` for a duplicate key. Lines that log a MySQL error under `error` include it, so you can filter and alert on the number without parsing `error`. Client error numbers, such as `2013` for a lost connection, are included. The number maps to the [MySQL error reference](https://dev.mysql.com/doc/mysql-errors/en/). |
+
+`mysql_errno` holds only the number. MySQL's error text stays in `error`. With `--queryserver-config-terse-errors`, vttablet's `Request failed` line can carry `mysql_errno` and `sql_state` without `error`. When an error reaches a Vitess component as plain text, Vitess reads the number back out of that text. A client can influence that text, so the number can be wrong or missing. Use `mysql_errno` to filter and alert, not as proof of what MySQL returned.
 
 To search or alert on a log line, match its `msg` field and filter on its attributes. For example, a VReplication apply failure logs the message `Error applying event`, with the table in `table` and the error in `error`. To find failures for the `users` table, search for that message with `table` set to `users`. A rule that matches values inside the message text stops matching once that line is converted.
+
+### Attributes that can contain user data
+
+In a converted line, `msg` never carries user data, but some attributes can hold query text, row values, column definitions, or error messages. Before you send Vitess logs somewhere others can read them, decide which attributes to drop or redact. Keys that can hold user data include `error`, `query`, `row`, `values`, `alter`, `stderr`, and `message`. The doc comment in [`go/tools/logcheck/logcheck.go`](https://github.com/vitessio/vitess/blob/main/go/tools/logcheck/logcheck.go) lists more, but that list isn't complete either.
+
+To filter reliably, keep only the keys you know are safe instead of trying to block every unsafe one. `tablet` and `error_code` carry no user data. `keyspace`, `shard`, `table`, and `workflow` carry no row or query data, but they hold names that users or clients chose. Lines that aren't converted yet can still carry these values in `msg`.
 
 ### MySQL server output
 
