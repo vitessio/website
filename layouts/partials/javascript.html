@@ -258,7 +258,7 @@ $versions.current}}
       // and an uppercase letter. That way "e.g.", "v25.0" and list markers
       // such as "1." don't end it.
       const twoSentences =
-        /^([\s\S]*?[^\s.]{2}[.!?]\s+\p{Lu}[\s\S]*?[^\s.]{2}[.!?])\s+\p{Lu}[\s\S]*$/u;
+        /^([\s\S]*?[^\s.]{2}[.!?]\s+(?=\p{Lu})[\s\S]*?[^\s.]{2}[.!?])\s+\p{Lu}[\s\S]*$/u;
 
       function shortSummary(summary) {
         return (summary || '').replace(twoSentences, '$1');
