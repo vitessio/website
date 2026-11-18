@@ -325,7 +325,10 @@ $versions.current}}
             .flatMap(splitHanClause)
             .forEach((clause) => q.clause({ ...clause }));
         }).filter((result) => !prohibitedWords.some((clause) => {
-          const word = clause.term.replace(/^\*|\*$/g, "").toLowerCase();
+          // Trim the term like the index does, so "-分片。" drops what "-分片" does.
+          const word = clause.term
+            .replace(/^[^\w\p{Script=Han}]+|[^\w\p{Script=Han}]+$/gu, "")
+            .toLowerCase();
           return clause.fields.some((field) =>
             (parse[result.ref][field] || "").toLowerCase().includes(word));
         }));
