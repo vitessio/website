@@ -84,13 +84,13 @@ We can observe metrics in two scopes: `self`, or `shard`.
 
 Each tablet's throttler collects metrics from its own tablet and from the MySQL server operated by the tablet. Each tablet then refers to those metrics in the `self` scope.
 
-The `Primary` tablet further collects metrics from shard tablets (limited by `throttle_tablet_types` flag as mentioned above). It then uses the maximum (read: worst) value collected, including its own, as the `shard` metric value.
+The `Primary` tablet further collects metrics from shard tablets (limited by `throttle_tablet_types` flag as mentioned above). It then uses the maximum (read: worst) value collected, including its own, as the `shard` metric value. To keep a few slow tablets from throttling the whole shard, set a [shard percentile](#shard-percentiles) for the metric.
 
 We can therefore refer _scoped_ metrics. On any tablet, we can query for `self` or `shard` metrics:
 
 - `self/loadavg`: the load average on a specific tablet.
 - `self/lag`: the lag on a specific tablet. While this makes most sense to query on a replica, it's also an indicative value on the `Primary`. The throttler measures lag using heartbeat injection. In the case of extremely high workload, this value can be indicative of transaction commit latencies.
-- `shard/lag`: when querying the `Primary`, this return the highest replication lag across the shard. A replica does not have the collective metrics across the shard, and the value effectively equals `self/lag`.
+- `shard/lag`: when querying the `Primary`, this returns the highest replication lag across the shard, or the configured [shard percentile](#shard-percentiles) of the replicas' lag. A replica does not have the collective metrics across the shard, and the value effectively equals `self/lag`.
 
 Each metric has a _default scope_:
 
@@ -100,6 +100,25 @@ Each metric has a _default scope_:
 Querying a `Primary` tablet for the `lag` metric is therefore equal to querying for `shard/lag`, and querying for `threads_running` equals to querying for `self/threads_running`.
 
 For backwards compatibility, it is also possible to query for the `self` or for the `shard` metrics, in which case the result is based on either the `lag` metric (if `custom-query` is undefined) or the `custom` metric (if `custom-query` is defined).
+
+### Shard percentiles
+
+By default, a single lagging replica throttles the whole shard, because the `shard` value is the highest value collected. This includes a replica whose replication is stopped for maintenance. To tolerate a few slow tablets, set a shard percentile for a metric. The `Primary` then uses the nearest-rank percentile of the probed tablets' values as the metric's `shard` value.
+
+With nearest rank, the `Primary` uses the smallest value that the given percentage of tablets don't exceed. For example:
+
+- With `75` and four replicas, the `Primary` uses the third lowest value. One lagging replica doesn't throttle, but two do.
+- With `50` and two replicas, the `Primary` uses the lower of the two values.
+- With `75` and three replicas, the `Primary` still uses the highest value. A percentile tolerates a lagging replica only when the shard has enough replicas.
+
+A shard percentile works as follows:
+
+- It applies only to the metric's `shard` scope on the `Primary`. The `self` scope, and the values on replicas, don't change. A check on a metric in the `self` scope, such as a bare `loadavg`, isn't affected.
+- While a metric uses a percentile below 100, the `Primary` leaves its own value out if it probes at least one other tablet. Otherwise, the `Primary`'s near-zero lag would pull the percentile down.
+- A percentile of `0` or `100`, or no percentile, keeps the highest value.
+- The throttler no longer holds back Online DDL and VReplication for the tablets whose values are above the percentile.
+
+Set a shard percentile with `vtctldclient UpdateThrottlerConfig --metric-name <metric> --shard-percentile <percentile>`. See [UpdateThrottlerConfig](#updatethrottlerconfig). The percentiles are stored per metric in the keyspace's throttler configuration, in `metric_shard_percentiles`. Set them with a v25 `vtctld`, and run a v25 `vttablet` on the `Primary`. A v24 `vtctld` ignores the percentile, and the command succeeds without storing it. A v24 `vttablet` ignores the percentiles and uses the highest value.
 
 ### Apps
 
@@ -402,6 +421,16 @@ Clear a metric threshold (return to "factory defaults"):
 ```shell
 $ vtctldclient UpdateThrottlerConfig --metric-name "loadavg" --threshold "0" commerce
 ```
+
+Set a [shard percentile](#shard-percentiles) for a metric, between 0 and 100. The metric's threshold doesn't change:
+```shell
+$ vtctldclient UpdateThrottlerConfig --metric-name "lag" --shard-percentile "75" commerce
+```
+Remove a metric's shard percentile, so that the `Primary` uses the highest value again:
+```shell
+$ vtctldclient UpdateThrottlerConfig --metric-name "lag" --shard-percentile "0" commerce
+```
+`--metric-name` takes a bare metric name, such as `lag`, not a scoped name such as `shard/lag`. You can pass `--threshold` and `--shard-percentile` in the same command.
 
 Pre multi-metrics compliant, set the "default" threshold (applies to replication lag if custom query is undefined):
 ```shell
@@ -722,6 +751,9 @@ $ vtctldclient GetKeyspace commerce | jq .keyspace.throttler_config
   },
   "metric_thresholds": {
     "threads_running": 128
+  },
+  "metric_shard_percentiles": {
+    "lag": 75
   }
 }
 ```
@@ -734,7 +766,7 @@ $ vtctldclient GetKeyspace commerce | jq .keyspace.throttler_config
 - In addition, the shard's `PRIMARY` is responsible for collecting metrics from all shard's tablet.
 - The throttler begins in dormant probe mode. As long as no application or client is actually looking for metrics, it probes the servers at multi-second intervals.
 - When applications check for throttle advice, the throttler begins probing servers in subsecond intervals. It reverts to dormant probe mode if no requests are made in the duration of `1min`.
-- The throttler aggregates the last probed values from all relevant tablets, and considers the _highest_ (worst) value to be the `shard` scope value.
+- The throttler aggregates the last probed values from all relevant tablets, and considers the _highest_ (worst) value to be the `shard` scope value. For a metric with a [shard percentile](#shard-percentiles), it uses that percentile of the replicas' values instead.
 
 The cluster's metric is only as accurate as the following metrics:
 
@@ -813,7 +845,7 @@ Gauge, the current metric value on the tablet. This is the result of a self-chec
 
 ##### `ThrottlerAggregatedShard<metric>`
 
-Gauge, on the `PRIMARY` tablet only, this is the aggregated collected metric value from all serving shard tables, including the `PRIMARY`. The value is the highest (aka _worst_) of all collected tablets. Available per metric:
+Gauge, on the `PRIMARY` tablet only, this is the aggregated collected metric value from all serving shard tables, including the `PRIMARY`. The value is the highest (aka _worst_) of all collected tablets. For a metric with a [shard percentile](#shard-percentiles), the value is that percentile of the replicas' values. Available per metric:
 
 - `ThrottlerAggregatedShardCustom`
 - `ThrottlerAggregatedShardHistoryListLength`

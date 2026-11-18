@@ -182,11 +182,49 @@ A rule whose metric can't be read does not throttle.
 
 ### Replication lag on a primary
 
-On a primary, `lag` (or `shard/lag`) is the highest of the primary's own heartbeat lag and the lag of the tablets of the `--throttle-tablet-types` types (default `replica`). On a replica, `lag` is the replica's own lag.
+On a primary, `lag` (or `shard/lag`) is the highest of the primary's own heartbeat lag and the lag of the tablets of the `--throttle-tablet-types` types (default `replica`). A [shard percentile](#shard-percentiles) for `lag` changes this. On a replica, `lag` is the replica's own lag.
 
-A single lagging replica therefore makes the primary reject queries that match a `PRIMARY` rule on `lag`, for as long as that replica lags. This includes a replica whose replication is stopped for maintenance or broken. The primary leaves a replica out only when it can't probe the replica or read its lag. It also leaves out a replica that doesn't run the query throttler, for example while it isn't serving. VTGate does not retry these rejections. Before maintenance, take the tablet out of the probed types, for example by changing its type to `DRAINED`.
+So without a shard percentile, one lagging replica makes the primary reject queries that match a `PRIMARY` rule on `lag` while it lags. This includes a replica whose replication is stopped for maintenance or broken. The primary leaves a replica out only when it can't probe the replica or read its lag. It also leaves out a replica that doesn't run the query throttler, for example while it isn't serving. VTGate does not retry these rejections. Before maintenance, take the tablet out of the probed types, for example by changing its type to `DRAINED`.
 
 After a reparent, `lag` reads high on every tablet of the shard until the new primary writes its first heartbeat. With the default `--heartbeat-interval` of 1 second, that lasts for the duration of the reparent plus up to about 3 seconds. A rule whose lowest `above` is below that value can reject matching queries for up to one `--query-throttler-cache-update-interval` after a reparent.
+
+### Shard percentiles
+
+To keep a few lagging replicas from making the primary reject queries, set a shard percentile for a metric in `tablet_strategy_config.metric_shard_percentiles`. The primary then uses the nearest-rank percentile of the probed tablets' values, instead of the highest value, for that metric's `shard` scope. The following configuration uses the 75th percentile of the replicas' lag:
+
+```json
+{
+  "enabled": true,
+  "strategy": "TABLET_THROTTLER",
+  "tablet_strategy_config": {
+    "metric_shard_percentiles": {
+      "lag": 75
+    },
+    "tablet_rules": {
+      "PRIMARY": {
+        "statement_rules": {
+          "INSERT": {
+            "metric_rules": {
+              "lag": {
+                "thresholds": [
+                  {"above": 5, "throttle": 50},
+                  {"above": 10, "throttle": 100}
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+With four replicas, the primary uses the third lowest lag, so one lagging replica doesn't throttle, but two do. With fewer replicas, the percentile can still select the highest value. For example, `75` tolerates one lagging replica only when the shard has at least four replicas. While a metric uses a percentile below 100, the primary leaves its own value out if it probes at least one other tablet. A percentile of `0` or `100`, or no percentile, keeps the highest value.
+
+The percentile is set per metric, not per rule. Every rule that reads the metric's `shard` scope uses it. A rule on a metric in the `self` scope, such as `self/lag` or a bare `loadavg`, isn't affected, and neither are rules on replicas. The tablet throttler's shard percentiles, which `vtctldclient UpdateThrottlerConfig` sets, don't apply to the query throttler. See [Shard percentiles](../tablet-throttler/#shard-percentiles) in the tablet throttler documentation.
+
+`UpdateQueryThrottlerConfig` refuses a percentile outside 0 to 100. It also refuses a metric name it doesn't know, `default`, and a scoped name such as `shard/lag`.
 
 ### Heartbeats
 
@@ -334,7 +372,7 @@ The query throttler adds minimal overhead:
 1. **Start in dry-run mode**: Enable a configuration with `"dry_run": true` and watch `QueryThrottlerThrottled` before you enforce it
 2. **Use priority carefully**: Reserve priority 0 for truly critical queries only
 3. **Set graduated thresholds**: Use multiple threshold levels to gradually increase throttling as metrics worsen
-4. **Plan for replica maintenance**: Remove a replica from the probed tablet types before you stop its replication, so `PRIMARY` rules on `lag` don't reject queries
+4. **Plan for replica maintenance**: Remove a replica from the probed tablet types before you stop its replication, so `PRIMARY` rules on `lag` don't reject queries. With enough replicas, a [shard percentile](#shard-percentiles) for `lag` also tolerates one lagging replica
 5. **Test in development**: Test throttling configurations in non-production environments first
 6. **Combine with workload names**: Use `WORKLOAD_NAME` with `--enable-per-workload-table-metrics` to track which workloads are being throttled most
 7. **Adjust thresholds**: Start with conservative thresholds and adjust based on observed behavior
