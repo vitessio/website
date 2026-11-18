@@ -318,20 +318,23 @@ $versions.current}}
         // lunr drops the pages that have any bigram of a prohibited Han word,
         // so leave those clauses out and drop the pages that contain the whole
         // word instead.
-        const prohibitedWords = clauses.filter(isProhibitedHanWord);
+        const prohibitedClauses = clauses.filter(isProhibitedHanWord);
+        // Trim each term once, like the index does, so "-分片。" drops what
+        // "-分片" does.
+        const prohibitedWords = prohibitedClauses.map((clause) => ({
+          fields: clause.fields,
+          word: clause.term
+            .replace(/^[^\w\p{Script=Han}]+|[^\w\p{Script=Han}]+$/gu, "")
+            .toLowerCase(),
+        }));
         const results = clauses.length === 0 ? [] : index.query(function (q) {
           clauses
-            .filter((clause) => !prohibitedWords.includes(clause))
+            .filter((clause) => !prohibitedClauses.includes(clause))
             .flatMap(splitHanClause)
             .forEach((clause) => q.clause({ ...clause }));
-        }).filter((result) => !prohibitedWords.some((clause) => {
-          // Trim the term like the index does, so "-分片。" drops what "-分片" does.
-          const word = clause.term
-            .replace(/^[^\w\p{Script=Han}]+|[^\w\p{Script=Han}]+$/gu, "")
-            .toLowerCase();
-          return clause.fields.some((field) =>
-            (parse[result.ref][field] || "").toLowerCase().includes(word));
-        }));
+        }).filter((result) => !prohibitedWords.some(({ fields, word }) =>
+          fields.some((field) =>
+            (parse[result.ref][field] || "").toLowerCase().includes(word))));
         const firstSearchResult = results[0];
         const currentVersion = parse[firstSearchResult?.ref]?.version;
 
