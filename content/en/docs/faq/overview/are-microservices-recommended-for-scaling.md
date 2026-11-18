@@ -3,6 +3,8 @@ title: "Are microservices recommended for scaling?"
 shorten_nav_links: true
 notoc: true
 weight: 6
+aliases:
+  - /docs/faq/getting-started/overview/are-microservices-recommended-for-scaling/
 ---
 
 It’s better to think of microservices as a design principle rather than as a scaling trick. This architecture is more tailored to improving resilience and flexibility for deployment, by breaking up monolithic deployments into more loosely coupled, isolated elements. The complexity of managing resources for horizontal sharding aligns closely with the challenges of managing resources in a microservices architecture.

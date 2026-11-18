@@ -6,5 +6,6 @@ description: >
 notoc: true
 cascade:
   version: v24.0
-weight: 76
+weight: 1
+hide_in_sidebar: true
 ---
