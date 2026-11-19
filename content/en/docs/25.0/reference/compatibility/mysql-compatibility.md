@@ -73,7 +73,7 @@ but the vttablet setting still applies.
 
 ## SQL Support
 
-While Vitess is mostly compatible with MySQL, there are some limitations. A current list of unsupported queries is maintained in the [Vitess GitHub repo](https://github.com/vitessio/vitess/blob/main/go/vt/vtgate/planbuilder/testdata/unsupported_cases.json).
+While Vitess is mostly compatible with MySQL, there are some limitations. A current list of unsupported queries is maintained in the [Vitess GitHub repo]({{< vitess_code_url "go/vt/vtgate/planbuilder/testdata/unsupported_cases.json" >}}).
 
 ### DDL
 

@@ -151,7 +151,7 @@ Another way to customize the immediateCallerID is to set the `grpc-use-static-au
 
 ### Example
 
-For a concrete example, see [encrypted_transport_test.go](https://github.com/vitessio/vitess/blob/main/go/test/endtoend/encryption/encryptedtransport/encrypted_transport_test.go) in the source tree.
+For a concrete example, see [encrypted_transport_test.go]({{< vitess_code_url "go/test/endtoend/encryption/encryptedtransport/encrypted_transport_test.go" >}}) in the source tree.
 
 It first sets up all the certificates, some table ACLs, and then uses the golang client to connect with TLS. It also exercises the `grpc_use_effective_callerid` flag, by connecting without TLS.
 

@@ -16,7 +16,7 @@ In this tutorial, we will perform resharding on an existing keyspace using a loc
 
 ## Create and Start the Cluster
 
-Start by copying the [`region_sharding` examples](https://github.com/vitessio/vitess/tree/main/examples/region_sharding)
+Start by copying the [`region_sharding` examples]({{< vitess_code_url "examples/region_sharding" >}})
 included with Vitess to your preferred location and running the `101_initial_cluster.sh` script:
 
 ```bash

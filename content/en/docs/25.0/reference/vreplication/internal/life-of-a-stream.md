@@ -36,9 +36,9 @@ streaming gRPC response (for [`vtgate` `vstream` API](../../vstream/) clients).
 #### Transformation and Filtering
 
 Note that for all steps the data selected from the source will only be from the tables specified
-in the [`Match`](https://github.com/vitessio/vitess/blob/main/proto/binlogdata.proto#LL128C5) field of the Rule
+in the [`Match`]({{< vitess_code_url "proto/binlogdata.proto#LL128C5" >}}) field of the Rule
 specification of the VReplication workflow. Furthermore, if a
-[`Filter`](https://github.com/vitessio/vitess/blob/main/proto/binlogdata.proto#LL133C5) is specified for a table it will
+[`Filter`]({{< vitess_code_url "proto/binlogdata.proto#LL133C5" >}}) is specified for a table it will
 be applied before being sent to the target. Columns may also be transformed based on the Filter’s `SELECT` clause.
 
 #### Source and Sink

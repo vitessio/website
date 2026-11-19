@@ -305,7 +305,7 @@ VTGate doesn't retry a throttled query. To keep a critical query from being thro
 
 ## Upgrading
 
-Upgrade every `vtctld`, `vttablet`, and `vtgate` to v25 before you enable a `TABLET_THROTTLER` configuration. Until every component is upgraded, query throttling can stop without anything reporting it, and `lag` rules can reject queries on a healthy shard. A v24 `vtgate` also returns throttled queries to clients as `ER_TOO_MANY_USER_CONNECTIONS` (1203) rather than 1041. See the [v25.0.0 release notes](https://github.com/vitessio/vitess/blob/main/changelog/25.0/25.0.0/summary.md) for details.
+Upgrade every `vtctld`, `vttablet`, and `vtgate` to v25 before you enable a `TABLET_THROTTLER` configuration. Until every component is upgraded, query throttling can stop without anything reporting it, and `lag` rules can reject queries on a healthy shard. A v24 `vtgate` also returns throttled queries to clients as `ER_TOO_MANY_USER_CONNECTIONS` (1203) rather than 1041. See the [v25.0.0 release notes]({{< vitess_code_url "changelog/25.0/25.0.0/summary.md" >}}) for details.
 
 ## Differences from tablet throttler
 
