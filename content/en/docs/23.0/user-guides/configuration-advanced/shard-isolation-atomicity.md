@@ -79,7 +79,7 @@ As can be seen from this output, we just issue all the inserts with the subset o
 
 ### Method 2:  The I-don't-want-this way (a.k.a. SINGLE)
 
-In certain situations, a schema may be constructed in a fashion where cross-shard writes are very rare (or should not happen). In a situation like this Vitess provides for a transaction mode (set via the MySQL set statement `set transaction_mode = 'single'`) called **SINGLE**.  In this transaction mode, any write that needs to span multiple shards will fail with an error. Similarly, any **transactional read** (i.e. using `BEGIN` & `COMMIT`) that spans multiple shards will also get an error.
+In certain situations, a schema may be constructed in a fashion where cross-shard writes are very rare (or should not happen). In a situation like this Vitess provides for a transaction mode (set via the MySQL set statement `set transaction_mode = 'single'`) called **SINGLE**.  In this transaction mode, a transaction fails with an error as soon as it writes to more than one shard. Reads don't count: a transaction (i.e. using `BEGIN` & `COMMIT`) can read from any number of shards, as long as it writes to only one of them.
 
 Here is our example for this case using `vtexplain` and [`atomicity_method2.sh`](https://github.com/vitessio/vitess/tree/main/examples/vtexplain/atomicity_method2.sh):
 
@@ -114,19 +114,43 @@ INSERT INTO t1 (c1) values (10),(14),(15),(16)
 ----------------------------------------------------------------------
 ```
 
-Here is the result if we attempted a transactional read across shards while in `transaction_mode` of `single` (note the `BEGIN` and `COMMIT` in the query):
+A transactional read that spans multiple shards works in `transaction_mode` of `single`, because none of the shards is written to (note the `BEGIN` and `COMMIT` in the query):
 
 ```sh
 $ ./method2_reads.sh
 + vtexplain --vschema-file atomicity_vschema.json --schema-file atomicity_schema.sql --shards 4 --sql 'SET transaction_mode="single"; BEGIN; SELECT * from t1; COMMIT;'
-E0803 17:00:49.524545   89777 tabletserver.go:1368] unknown error: unsupported query rollback (errno 1105) (sqlstate HY000): Sql: "rollback", BindVars: {}
-E0803 17:00:49.524549   89777 tabletserver.go:1368] unknown error: unsupported query rollback (errno 1105) (sqlstate HY000): Sql: "rollback", BindVars: {}
-E0803 17:00:49.524581   89777 tabletserver.go:1368] unknown error: unsupported query rollback (errno 1105) (sqlstate HY000): Sql: "rollback", BindVars: {}
-E0803 17:00:49.524661   89777 tabletserver.go:1368] unknown error: unsupported query rollback (errno 1105) (sqlstate HY000): Sql: "rollback", BindVars: {}
-ERROR: vtexplain execute error in 'SELECT * from t1': multi-db transaction attempted: [target:{keyspace:"ks1" shard:"c0-" tablet_type:PRIMARY} transaction_id:1628035249495856333 tablet_alias:{cell:"explainCell" uid:4} target:{keyspace:"ks1" shard:"80-c0" tablet_type:PRIMARY} transaction_id:1628035249493377809 tablet_alias:{cell:"explainCell" uid:3} target:{keyspace:"ks1" shard:"-40" tablet_type:PRIMARY} transaction_id:1628035249485888657 tablet_alias:{cell:"explainCell" uid:1} target:{keyspace:"ks1" shard:"40-80" tablet_type:PRIMARY} transaction_id:1628035249490426670 tablet_alias:{cell:"explainCell" uid:2}]
-multi-db transaction attempted: [target:{keyspace:"ks1" shard:"c0-" tablet_type:PRIMARY} transaction_id:1628035249495856333 tablet_alias:{cell:"explainCell" uid:4} target:{keyspace:"ks1" shard:"80-c0" tablet_type:PRIMARY} transaction_id:1628035249493377809 tablet_alias:{cell:"explainCell" uid:3} target:{keyspace:"ks1" shard:"-40" tablet_type:PRIMARY} transaction_id:1628035249485888657 tablet_alias:{cell:"explainCell" uid:1}]
-multi-db transaction attempted: [target:{keyspace:"ks1" shard:"c0-" tablet_type:PRIMARY} transaction_id:1628035249495856333 tablet_alias:{cell:"explainCell" uid:4} target:{keyspace:"ks1" shard:"80-c0" tablet_type:PRIMARY} transaction_id:1628035249493377809 tablet_alias:{cell:"explainCell" uid:3}]
+----------------------------------------------------------------------
+SET transaction_mode="single"
+
+
+----------------------------------------------------------------------
+BEGIN
+
+
+----------------------------------------------------------------------
+SELECT * from t1
+
+1 ks1/-40: begin
+1 ks1/-40: select * from t1 limit 10001
+1 ks1/40-80: begin
+1 ks1/40-80: select * from t1 limit 10001
+1 ks1/80-c0: begin
+1 ks1/80-c0: select * from t1 limit 10001
+1 ks1/c0-: begin
+1 ks1/c0-: select * from t1 limit 10001
+
+----------------------------------------------------------------------
+COMMIT
+
+2 ks1/-40: commit
+3 ks1/40-80: commit
+4 ks1/80-c0: commit
+5 ks1/c0-: commit
+
+----------------------------------------------------------------------
 ```
+
+The transaction could also write to one of these shards, for example `INSERT INTO t1 (c1) values (10)` after the `SELECT`, but a write to any other shard would then fail with the `multi-db transaction attempted` error.
 
 
 ### Method 3:  The default way
