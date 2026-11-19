@@ -312,6 +312,8 @@ Vitess supports all MySQL data types. Using `FLOAT` as part of a `PRIMARY KEY` i
 
 Vitess behaves similarly to `STRICT_TRANS_TABLES` and does not recommend changing the SQL Mode.
 
+VTGate rejects an SQL mode that changes how SQL text is parsed, such as `ANSI_QUOTES` or `NO_BACKSLASH_ESCAPES`. See [System Variables](../system-variables/#sql-mode).
+
 ## Network Protocol
 
 ### Authentication Plugins
