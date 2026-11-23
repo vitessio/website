@@ -155,7 +155,7 @@ Attempting to `stop` a VDiff that is already completed is a no-op.
 
 The `update` action changes the tablet types and cells an existing VDiff uses to select source and target tablets, while keeping its progress. Use it when the tablets a VDiff was created with are no longer suitable. For example, you might move the comparison from `REPLICA` to `RDONLY` tablets to reduce load on the replicas that serve traffic. Deleting the VDiff and creating a new one would discard the progress it has already made.
 
-You can only update a VDiff that is not running. To update a running VDiff:
+You can update a VDiff only when it is stopped or completed on each target shard you update. To update a running VDiff:
 
 1. Stop it with the [`stop` action](#stopping-a-vdiff).
 2. Run `update` with the new values. Example:
@@ -169,15 +169,18 @@ You can only update a VDiff that is not running. To update a running VDiff:
 
 3. Resume it with the [`resume` action](#resume-a-previous-vdiff). The VDiff continues from where it stopped, using the new tablet types and cells.
 
-If the VDiff is pending or running on a target shard, `update` fails on that shard with a `FAILED_PRECONDITION` error. Stop the VDiff and try again. An update to a completed VDiff leaves it completed; the new values take effect the next time you resume it.
+The new values apply only to rows the VDiff has not compared yet. Rows it already compared are not compared again. To compare every row using the new tablets, create a new VDiff. A completed VDiff stays completed after an update, and uses the new values only if you resume it.
 
-The `update` action changes only the values you pass, and keeps the VDiff's other settings:
+If the VDiff is pending, started, or in the error state on a target shard, `update` fails on that shard with a `FAILED_PRECONDITION` error. Stop the VDiff, and then run `update` again. If `stop` does not move a VDiff in the error state to the stopped state, create a new VDiff instead. When `update` fails on one shard, other shards might already have the new values. You can safely run the same `update` again after you stop the VDiff on the remaining shards.
 
-- `--tablet-types` sets the tablet types to use on the source and target. By default, tablets are selected in the order the types are listed; pass `--tablet-types-in-preference-order=false` to select among all of them.
-- `--source-cells` and `--target-cells` set the cells to select tablets from. To use all cells again, as `create` does by default, pass `--clear-source-cells` or `--clear-target-cells` instead.
+The `update` action changes only the values you pass, and keeps the VDiff's other settings and progress:
+
+- `--tablet-types` sets the tablet types to use on the source and target. Accepted types are `PRIMARY`, `REPLICA`, and `RDONLY`. By default, tablets are selected in the order the types are listed. To select among all of the listed types, pass `--tablet-types-in-preference-order=false`.
+- `--source-cells` and `--target-cells` set the cells to select tablets from. Each value must be a cell or cell alias in the topology.
+- `--clear-source-cells` resets the source cells to all cells in the source cluster. For `Mount` and `Migrate` workflows, the source cluster is the external cluster. `--clear-target-cells` resets the target cells to all cells in the local cluster. You cannot combine a clear flag with its matching cells flag.
 - `--target-shards` limits the update to the given target shards. By default, the update applies to all target shards.
 
-Both `vtctld` and the target tablets must run a Vitess version that supports `update`. See [the command's reference docs](../../../reference/programs/vtctldclient/vtctldclient_vdiff/) for all flags.
+Both `vtctld` and the target tablets must run Vitess v25 or later. A shard whose primary tablet runs an older version rejects the update with a `FAILED_PRECONDITION` error. See [the command's reference docs](../../../reference/programs/vtctldclient/vtctldclient_vdiff/) for all flags.
 
 #### Delete VDiff Results
 
