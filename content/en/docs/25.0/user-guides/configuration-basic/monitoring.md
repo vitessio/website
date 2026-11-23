@@ -186,7 +186,9 @@ The vttablet queries exec time is roughly equal to the sum of the MySQL exec tim
 
 #### Waits
 
-Waits is a histogram variable that tracks various waits in the system. Right now, the only categories are "Consolidations" and "StreamConsolidations". A consolidation happens when one query waits for the results of an identical query already executing, thereby saving the database from performing duplicate work.
+Waits is a histogram variable that tracks various waits in the system. The categories are "Consolidations", "StreamConsolidations", and "DDLCommitWait". A consolidation happens when one query waits for the results of an identical query already executing, thereby saving the database from performing duplicate work.
+
+"DDLCommitWait" times how long VTTablet waits for MySQL to commit a schema-changing DDL before it reloads the schema. The DDL is one that a VStream has read from the binlog. The wait applies to DDLs that have a MySQL GTID. VStreams that reach the same DDL share one wait, which is timed once. A DDL that is slow to commit, such as one held for a semi-sync acknowledgement, shows here. In Prometheus, look for `vttablet_waits_bucket{type="DDLCommitWait"}` and its `_sum` and `_count` series.
 
 This variable used to report connection pool waits, but a refactor moved those variables out into the pool related vars.
 

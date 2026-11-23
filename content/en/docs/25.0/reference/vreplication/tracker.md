@@ -67,9 +67,19 @@ change notification.
 
 1. When the primary comes up, a vstream is started from the current `GTID` position to monitor replication events
 1. Say, a DDL is applied
-1. The vstream sees the DDL and asks the schema engine to reload the schema, providing the corresponding `GTID` position
+1. The vstream sees the DDL and waits for MySQL to commit it
+1. The vstream asks the schema engine to reload the schema, providing the corresponding `GTID` position
 1. The tracker is notified of the schema change
 1. Tracker stores its latest schema into the `_vt.schema_version` table associated with the given `GTID` and DDL
+
+MySQL sends a DDL's binlog events to replication streams before it commits the DDL. With semi-sync replication, the commit also waits for a replica's acknowledgement. A schema reload in that window would load the schema from before the DDL. The tracker would then store that outdated schema as the DDL's version. To prevent this, a vstream that reads a schema-changing DDL waits until MySQL has committed the DDL's GTID. Then it reloads the schema. This wait is normally a few milliseconds, or as long as the semi-sync acknowledgement takes.
+
+- The vstreams that reach the same DDL share one wait and one MySQL connection. Once the schema is reloaded at the DDL's position, vstreams that reach it later don't wait.
+- The [`--schema-change-reload-timeout`](../../programs/vttablet/) `vttablet` flag (30s by default) bounds the wait. It separately bounds the reload, so a reload after a DDL can take up to twice the timeout. If MySQL hasn't committed the DDL by then, the vstream fails with an error, and its client retries it.
+- A vstream sends no heartbeats while it waits. VTGate ends a VStream when none of its shards sends anything for 10 minutes. So if you raise the timeout to about 10 minutes or more, a VTGate VStream can end before the wait times out.
+- Streams from an external MySQL source always use the 30s default.
+- The wait applies only to MySQL GTID positions. Streams that use file positions or MariaDB GTIDs reload without waiting.
+- Each wait is timed under the `DDLCommitWait` category of the `Waits` [tablet metric](../../../user-guides/configuration-basic/monitoring/#waits), and a wait longer than a second is logged as a warning.
 
 #### Historian/VStreams:
 
