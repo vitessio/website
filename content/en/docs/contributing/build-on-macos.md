@@ -43,11 +43,11 @@ Do not install etcd via brew otherwise it will not be the version that is suppor
 
 Do not set up MySQL or etcd to restart at login.
 
-[Install node](https://nodejs.org/) >= `16.13.0 LTS` (note you also need `npm >= 8.1.0`, which will come with `node`). For example, using `nvm` (which we installed earlier with homebrew):
+[Install node](https://nodejs.org/) >= `24.15.0 LTS` (note you also need `npm >= 11.12.1`, which will come with `node`). For example, using `nvm` (which we installed earlier with homebrew):
 
 ```shell
-nvm install --lts 16.13.0
-nvm use 16.13.0
+nvm install --lts 24
+nvm use 24
 ```
 
 See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.

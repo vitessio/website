@@ -22,6 +22,8 @@ The following table lists all of the supported collations in the current release
 
 Using collations that are not supported by Vitess but implemented in the underlying MySQL instance can lead to unpredictable behavior.
 
+Starting with v23.0.8, Vitess refuses `big5`, `cp932`, `gb18030`, `gbk`, `sjis`, `ucs2`, `utf16`, `utf16le`, and `utf32` as the connection charset, with any of their collations. This applies even where the table marks a collation as supported. Tables and columns can still use these collations. For details, see [Configuring the default connection charset for a Vitess cluster](#configuring-the-default-connection-charset-for-a-vitess-cluster).
+
 | Collation | Charset | MySQL 8.0 | MySQL 5.7 | MySQL 5.6 | MariaDB 10.3 | MariaDB 10.2 | MariaDB 10.1 | MariaDB 10.0 |
 |---|---|---|---|---|---|---|---|---|
 | big5_chinese_ci | big5 | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ |
@@ -405,9 +407,19 @@ Using collations that are not supported by Vitess but implemented in the underly
 **The default connection charset for a Vitess cluster is configured in your VTTablet instances** via the `--db-charset` flag. This flag modifies the behavior of the _connections_ that the tablet creates, not the underlying MySQL instance: it defines the charset that VTTablet uses when opening connections to MySQL.
 If the `--db-charset` flag is left empty, VTTablet will default to an `utf8mb4` charset based on the underlying MySQL version. For instance, MySQL 5.x will default to `utf8mb4_general_ci`, while MySQL 8.x defaults to `utf8mb4_0900_ai_ci`. Because the handshake packet of MySQL leaves only 1 byte to reference the charset ID, only charset IDs <= 255 are supported.
 
+Starting with v23.0.8, some character sets can't be used as a connection charset: `big5`, `cp932`, `gb18030`, `gbk`, `sjis`, `ucs2`, `utf16`, `utf16le`, and `utf32`. Vitess parses and escapes SQL text one byte at a time. That's only safe when a quote, backslash, or backtick byte is never part of a multibyte character. In `big5`, `cp932`, `gb18030`, `gbk`, and `sjis`, the second byte of a character can be a backslash or a backtick. Vitess could misparse or corrupt text in these character sets. MySQL doesn't accept `ucs2`, `utf16`, `utf16le`, or `utf32` as a client character set. Vitess refuses these character sets, and their collations, as follows:
+
+- If `--db-charset` names one of them, VTTablet fails to start. If `--db-charset` is set to an empty string and the MySQL server's default character set is one of them, VTTablet refuses its connections to MySQL.
+- VTTablet refuses a `SET` statement that would switch a session to one of them. It also refuses any connection setting that changes the connection character set.
+- VTGate refuses a `SET` of `character_set_client`, `character_set_connection`, `character_set_results`, or `collation_connection` to one of them. It also refuses a name it doesn't recognize, and a numeric collation ID that's `0`, undefined, or belongs to one of them. As in MySQL, it accepts the numeric ID of any other collation. The error looks like `unsupported connection character set 'sjis' for character_set_client: use utf8mb4`.
+
+Use `utf8mb4` as the connection charset instead. Tables and columns can still use any of these character sets, because MySQL converts between them and the connection charset. A client can still request one of them in its connection handshake with VTGate, because VTGate also reads statements one byte at a time.
+
+Every connection that Vitess opens to MySQL restores its negotiated character set and collation with `SET NAMES` right after connecting. As a result, a MySQL `init_connect` setting that changes the character set has no effect on Vitess connections.
+
 The `@character_set_client` of a VTTablet is automatically propagated to all the VTGates that connect to it, and hence to all the MySQL clients connected to the VTGates. It is a configuration error to deploy several VTTablets in the same Vitess cluster with different connection charset: it will cause warning messages in the VTGates and lead to inconsistent behaviors. 
 
-**The `@character_set_client` of a Vitess cluster is constant**: it cannot be changed at runtime via SQL (e.g. by issuing a `SET character_set_client = utf8` statement). VTGates will reject such queries.
+**The `@character_set_client` of a Vitess cluster is constant**: it can't be changed at runtime through SQL. VTGate accepts a statement such as `SET character_set_client = utf8mb4` but ignores it, and refuses one that names an unsupported character set, as described above.
 
 Do note that, as the MySQL documentation explains, the `@character_set_client` setting only applies when performing character comparisons in SQL queries that don't have explicit collation information. For instance, a query such as `SELECT 'foo' = 'FOO'` will use the default `@character_set_client` for the cluster when picking the charset and collation for the two string literals, because these literals contain no explicit charset or collation information. A query such as `SELECT c FROM t WHERE c = 'foo'` will **not** use the `@character_set_client`; it will use the charset and collation that was defined for column `c` when creating table `t`.
 

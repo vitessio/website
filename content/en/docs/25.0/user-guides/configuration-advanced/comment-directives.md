@@ -119,6 +119,8 @@ SELECT /*vt+ PRIORITY=50 */ * FROM users WHERE id = 123;
 
 This allows applications to mark less critical warming queries so they are shed first when approaching the concurrency limit.
 
+VTTablet's [query throttler](../../../reference/features/query-throttler/#priority-based-throttling) also reads the `PRIORITY` directive. There, a query without the directive has priority 100, and a query with priority 0 is never throttled.
+
 ### Monitoring
 
 VTGate exposes the following metrics for monitoring warming reads:
@@ -129,7 +131,7 @@ VTGate exposes the following metrics for monitoring warming reads:
 
 ### Limitations
 
-- Only affects warming read queries forwarded to replicas; does not affect the primary query execution
+- For warming reads, only affects warming read queries forwarded to replicas; does not affect the primary query execution
 - Invalid priority values (non-numeric) are ignored and clear any previously set priority
 - Priority values outside the 0-100 range are clamped to the nearest valid value
 

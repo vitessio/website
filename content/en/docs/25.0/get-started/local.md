@@ -52,8 +52,8 @@ export NVM_DIR="$HOME/.nvm"
 Finally, install [node](https://nodejs.org/):
 
 ```sh
-nvm install 22
-nvm use 22
+nvm install 24
+nvm use 24
 ```
 
 See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.

@@ -30,12 +30,12 @@ When MySQL installs with brew it will startup, you will want to shut this proces
 $ brew services stop mysql
 ```
 
-### Install Node 22+ (required to run VTAdmin)
+### Install Node 24.15.0+ (required to run VTAdmin)
 
 ```bash
 brew install nvm
-nvm install --lts 22
-nvm use 22
+nvm install --lts 24
+nvm use 24
 ```
 
 See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.

@@ -1,5 +1,5 @@
 {{ $isDocsPage := eq .Section "docs" }}
-{{ $showGa     := eq hugo.Environment "production" }}
+{{ $showGa     := hugo.IsProduction }}
 <!DOCTYPE html>
 <html>
   <head>

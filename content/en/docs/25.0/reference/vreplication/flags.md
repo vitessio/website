@@ -231,6 +231,34 @@ On the source, events are buffered and batched where applicable, to minimize net
 
 **vstream-packet-size** specifies the suggested packet size for VReplication vstreamer. This is used only as a recommendation. The actual packet size may be more or less than this amount depending on the number and type of events yet to be sent on the source.
 
+#### vstream-memory-bounds
+
+**Type** bool\
+**Default** true\
+**Applicable on** source and target
+
+Limits the memory that a row stream holds for its lifetime. VReplication copies and VDiffs read table rows through row streams (`VStreamRows` and `VStreamTables`). Each stream reuses one set of row buffers for every packet, on both the source tablet and the receiving tablet. Without a bound, each reused buffer keeps the largest size it has held. A long copy of a table with uneven row sizes can then hold several gigabytes per stream and run the tablet out of memory.
+
+When this flag is enabled:
+
+* Each tablet releases the reused row buffers when they grow past about four times the size of the current packet. The minimum limit is 1 MiB.
+* When `--vstream-dynamic-packet-size` is enabled, the packet size grows to at most 16 times [`--vstream-packet-size`](#vstream-packet-size).
+
+Set `--vstream-memory-bounds=false` to keep the reused buffers and remove the packet size cap.
+
+To change the source-side behavior for one workflow, set the `vstream-memory-bounds` key with the `--config-overrides` flag when creating or updating the workflow. The receiving tablet always uses its own `--vstream-memory-bounds` value. If a workflow needs packets larger than the cap, raise `vstream-packet-size` for that workflow instead:
+
+```sh
+vtctldclient Workflow --keyspace customer update --workflow commerce2customer \
+  --config-overrides 'vstream-packet-size=1000000'
+```
+
+VDiffs and the copy phase of VTGate `VStream` requests don't use workflow config overrides. Their row streams follow the tablets' `--vstream-memory-bounds` and `--vstream-packet-size` flags.
+
+{{< warning >}}
+A tablet rejects a config override key it doesn't recognize. On a tablet that runs a release earlier than v25.0, a `vstream-memory-bounds` override fails the workflow with an error that names the key. Upgrade every source and target tablet in the workflow before you set it.
+{{< /warning >}}
+
 #### track-schema-versions
 
 **Type** bool\

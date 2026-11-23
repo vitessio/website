@@ -202,9 +202,9 @@ All three programs can be made aware of Backup Engine and Backup Storage using t
       <td>For the <code>ceph</code> plugin, this identifies the path to a text
         file with a JSON object as configuration. The JSON object requires the
         following keys: <code>accessKey</code>, <code>secretKey</code>,
-        <code>endPoint</code> and <code>useSSL</code>. Bucket name is computed
-        from keyspace name and shard name is separated for different
-        keyspaces / shards.</td>
+        <code>endPoint</code> and <code>useSSL</code>. The bucket is named
+        after the keyspace, so all shards of a keyspace share one bucket and
+        the shard is part of each backup's object path.</td>
     </tr>
     <tr>
       <td><code>restart-before-backup</code></td>
@@ -276,10 +276,47 @@ Only VTTablet can be configured to restore from a previous backup. The flags bel
 
 ### Authentication
 
+#### Google Cloud Storage
+
 Note that for the Google Cloud Storage plugin, we currently only support
 [Application Default Credentials](https://developers.google.com/identity/protocols/application-default-credentials). This means that access to Google Cloud Storage (GCS) is automatically granted by virtue of the fact that you're already running within Google Compute Engine (GCE) or Google Kubernetes Engine (GKE).
 
 For this to work, the GCE instances must have been created with the [scope](https://cloud.google.com/compute/docs/authentication#using) that grants read-write access to GCS. When using GKE, you can do this for all the instances it creates by adding `--scopes storage-rw` to the `gcloud container clusters create` command.
+
+#### Amazon S3
+
+The `s3` plugin has no credential flags. It finds credentials with the [default credential chain of the AWS SDK for Go](https://docs.aws.amazon.com/sdk-for-go/v2/developer-guide/configure-gosdk.html#specifying-credentials), which checks these sources in order:
+
+1. Environment variables: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and optionally `AWS_SESSION_TOKEN`, or `AWS_WEB_IDENTITY_TOKEN_FILE` and `AWS_ROLE_ARN` for a web identity token.
+2. The shared `credentials` and `config` files in `~/.aws`. Set `AWS_PROFILE` to use a profile other than `default`.
+3. The IAM role of the Amazon ECS task.
+4. The IAM role of the Amazon EC2 instance.
+
+Every process that accesses backups, such as `vttablet`, `vtbackup` and `vtctld`, needs these credentials.
+
+The bucket named by `--s3-backup-storage-bucket` must already exist, and the credentials need these permissions:
+
+* `s3:ListBucket` on the bucket.
+* `s3:GetObject`, `s3:PutObject`, `s3:DeleteObject` and `s3:AbortMultipartUpload` on the objects in the bucket.
+
+If the backups are encrypted with an AWS KMS key, either through `--s3-backup-server-side-encryption=aws:kms` or the bucket's default encryption, the credentials also need `kms:GenerateDataKey` and `kms:Decrypt` on that key.
+
+#### Ceph
+
+The `ceph` plugin reads its credentials from the JSON file named by `--ceph-backup-storage-config`, which defaults to `ceph_backup_config.json` in the working directory of the process. Every process that accesses backups, such as `vttablet`, `vtbackup` and `vtctld`, needs this file. It contains the secret key, so restrict who can read it. For example:
+
+```json
+{
+  "accessKey": "<access key>",
+  "secretKey": "<secret key>",
+  "endPoint": "ceph-rgw.example.com:443",
+  "useSSL": true
+}
+```
+
+`endPoint` is the host of the Ceph Object Gateway and optionally its port, without a scheme. `useSSL` selects whether to connect over HTTPS. The plugin signs its requests with AWS Signature Version 2, so the gateway must accept that version.
+
+The plugin stores the backups of each keyspace in a bucket named after the keyspace, in lowercase and with underscores replaced by hyphens. If the bucket doesn't exist when a backup starts, the plugin creates it, so these credentials need permission to create buckets unless you create them in advance.
 
 ### Backup Frequency
 

@@ -18,7 +18,7 @@ The following has been verified to work on __Ubuntu 19.10__ and __Debian 10__. I
 [Download and install](http://golang.org/doc/install) Golang. Vitess is tested and shipped using a specific Golang version for each release.
 For maximum compatibility we encourage you to use the same Golang version as [the one specified in our `go.mod` file](https://github.com/vitessio/vitess/blob/main/go.mod#L3).
 
-### Install Node 16.13.0+
+### Install Node 24.15.0+
 
 ```
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
@@ -34,8 +34,8 @@ export NVM_DIR="$HOME/.nvm"
 Finally, install [node](https://nodejs.org/):
 
 ```
-nvm install --lts 16.13.0
-nvm use 16.13.0
+nvm install --lts 24
+nvm use 24
 ```
 
 See the [vtadmin README](https://github.com/vitessio/vitess/blob/main/web/vtadmin/README.md) for more details.
