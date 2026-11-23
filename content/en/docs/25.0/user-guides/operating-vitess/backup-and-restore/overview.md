@@ -264,7 +264,17 @@ All three programs can be made aware of Backup Engine and Backup Storage using t
       <td>For the <code>builtin</code> backup engine, the target size in bytes for
         each chunk when splitting large files. Only used when
         <code>builtinbackup-file-chunk-threshold</code> is greater than 0.
-        Must be at least 4 MiB and a multiple of 4096. (default 1073741824 / 1 GiB)
+        Must be at least 4 MiB and a multiple of 1 MiB (1048576). (default 1073741824 / 1 GiB)
+      </td>
+    </tr>
+    <tr>
+      <td><code>builtinbackup-restore-write-mode</code></td>
+      <td>For the <code>builtin</code> backup engine, how chunks of chunked files
+        are written to disk during a restore. <code>buffered</code> writes them
+        through the page cache. <code>direct</code> writes them with
+        <code>O_DIRECT</code>, bypassing the page cache. See
+        <a href="#direct-io-for-chunk-restores">Direct I/O for chunk restores</a>.
+        (default <code>buffered</code>)
       </td>
     </tr>
     <tr>
@@ -411,7 +421,7 @@ The threshold must be greater than or equal to the chunk size. Vitess validates 
 builtinbackup-file-chunk-threshold (N) must be >= builtinbackup-file-chunk-size (M)
 ```
 
-The chunk size itself must be at least 4 MiB, since a very small chunk size would create an impractically large number of objects. It must also be a multiple of 4096 bytes, so that every chunk starts at an offset that restores can write with direct I/O. The default of 1 GiB meets both requirements. These bounds are only enforced when chunking is enabled, that is, when the threshold is greater than 0.
+The chunk size itself must be at least 4 MiB, since a very small chunk size would create an impractically large number of objects. It must also be a multiple of 1 MiB (`1048576` bytes), so that restores can write every chunk with direct I/O. Any other chunk size fails the backup with the error `builtinbackup-file-chunk-size must be a multiple of 1048576`. The default of 1 GiB meets both requirements. These bounds are only enforced when chunking is enabled, that is, when the threshold is greater than 0.
 
 #### Direct I/O for chunk restores
 
@@ -421,13 +431,23 @@ By default, a restore writes chunks through the operating system's page cache. R
 --builtinbackup-restore-write-mode=direct # default: buffered
 ```
 
-In direct mode, Vitess also preallocates the disk space for each chunked file before writing it. On filesystems such as ext4, this lets chunks of the same file be written in parallel instead of one after another. If the filesystem can't preallocate space, Vitess leaves the file sparse and logs a warning.
+In direct mode, Vitess also preallocates the disk space for each chunked file with `fallocate` before writing to it. On filesystems such as ext4, writes to a sparse file can be serialized. Preallocation keeps the chunks of a file writing in parallel.
 
-Direct mode only changes how chunks are written. Files that were not chunked when the backup was taken are always written through the page cache. Vitess also falls back to buffered writes, and logs a warning, in these cases:
+Direct mode only applies to files that were chunked when the backup was taken, that is, files larger than `--builtinbackup-file-chunk-threshold`. Vitess writes all other files through the page cache. If the backup has no chunked files, the flag has no effect and Vitess logs a warning. Incremental backups always use buffered writes. Their binary logs go to a temporary directory and are read only once.
 
-* The restoring tablet doesn't run on Linux.
-* The filesystem doesn't support `O_DIRECT`.
-* A chunk doesn't start at a multiple of 4096 bytes. This can happen with backups taken before Vitess required a chunk size that is a multiple of 4096.
+Direct mode has these requirements:
+
+* The restoring tablet runs on Linux.
+* The filesystem that holds the MySQL data supports `O_DIRECT` and `fallocate`.
+* Every chunk starts at an offset that is a multiple of 1 MiB. Backups taken with a chunk size that is a multiple of 1 MiB, such as the 1 GiB default, meet this requirement.
+
+Vitess checks these requirements before it stops MySQL and removes the existing data. If one isn't met, the restore fails without changing anything. For an unsupported platform, filesystem, or chunk offset, the error includes:
+
+```
+can't restore with --builtinbackup-restore-write-mode=direct, use --builtinbackup-restore-write-mode=buffered instead
+```
+
+To restore that backup, run the restore again with `--builtinbackup-restore-write-mode=buffered`.
 
 #### Compatibility
 
