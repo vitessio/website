@@ -145,7 +145,7 @@ I0310 12:34:47.900363  211809 backup.go:163] I0310 20:34:47.900004 xtrabackupeng
 Streaming in tar format is no longer supported in 8.0; use xbstream instead
 ```
 
-Fix: Set the `-xtrabackup_stream_mode` flag to to xbstream on vttablets and vtctlds
+Fix: Set the `-xtrabackup_stream_mode` flag to xbstream on vttablets and vtctlds
 
 ### Unsupported mysql server version
 
