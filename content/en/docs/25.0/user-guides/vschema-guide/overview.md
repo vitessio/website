@@ -17,7 +17,7 @@ This guide explains how to build vschemas for Vitess keyspaces.
 
 ### Demo
 
-To illustrate the various features of the VSchema, we will make use of the [demo app](https://github.com/vitessio/vitess/tree/main/examples/demo). After installing Vitess, you can launch this demo by running `go run demo.go`. Following this, you can visit http://localhost:8000 to view the tables, issue arbitrary queries, and view their effects.
+To illustrate the various features of the VSchema, we will make use of the [demo app]({{< vitess_code_url "examples/demo" >}}). After installing Vitess, you can launch this demo by running `go run demo.go`. Following this, you can visit http://localhost:8000 to view the tables, issue arbitrary queries, and view their effects.
 
 Alternatively, you can also connect to Vitess using a MySQL client: `mysql -h 127.0.0.1 -P 12348`.
 
@@ -29,6 +29,6 @@ You can also use the demo app to follow the steps of this user guide. If so, you
 
 ### VSchema DDL
 
-The demo describes the VSchema JSON syntax. Many of the changes can be executed by issuing special DDL commands that Vitess understands. Wherever applicable, we have provided the equivalent DDL construct you could apply if you were running a live system. All the DDLs are also listed in the [vschema_ddls.sql](https://github.com/vitessio/vitess/blob/main/examples/demo/vschema_ddls.sql) file.
+The demo describes the VSchema JSON syntax. Many of the changes can be executed by issuing special DDL commands that Vitess understands. Wherever applicable, we have provided the equivalent DDL construct you could apply if you were running a live system. All the DDLs are also listed in the [vschema_ddls.sql]({{< vitess_code_url "examples/demo/vschema_ddls.sql" >}}) file.
 
 It is generally recommended that you get familiar with the JSON syntax as it will be useful for troubleshooting if something does not work as intended.

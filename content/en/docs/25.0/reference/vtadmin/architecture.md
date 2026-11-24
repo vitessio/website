@@ -8,7 +8,7 @@ VTAdmin is made up of two components:
 - `vtadmin-web`, the browser interface
 - `vtadmin-api`, the HTTP(S) and gRPC API
 
-The `vtadmin-web` front-end queries its data from `vtadmin-api`. In turn, `vtadmin-api` issues queries against the vtgates and vtctlds across one or more Vitess clusters. The [clusters.yaml config file](https://github.com/vitessio/vitess/blob/main/doc/vtadmin/clusters.yaml) defines this mapping from VTAdmin to cluster(s).
+The `vtadmin-web` front-end queries its data from `vtadmin-api`. In turn, `vtadmin-api` issues queries against the vtgates and vtctlds across one or more Vitess clusters. The [clusters.yaml config file]({{< vitess_code_url "doc/vtadmin/clusters.yaml" >}}) defines this mapping from VTAdmin to cluster(s).
 
 Single-cluster deployments are the simplest and most common configuration. The local example in the ["Get Started" documentation](../../../get-started/) is a good example of a single-cluster deployment.
 

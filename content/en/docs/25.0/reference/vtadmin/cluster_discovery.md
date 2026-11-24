@@ -5,7 +5,7 @@ title: Cluster Discovery
 # Overview
 VTAdmin manages to be stateless because it mostly proxies queries to VTGates and Vtctlds within Vitess clusters. It is able to do this through **cluster discovery**, the mechanism by which addresses for VTGates and Vtctlds are discovered.
 
-Discovery is specified as a part of [cluster configuration](https://github.com/vitessio/vitess/blob/main/doc/vtadmin/clusters.yaml). Cluster configuration is passed as the command line argument `--cluster` to VTAdmin API like so:
+Discovery is specified as a part of [cluster configuration]({{< vitess_code_url "doc/vtadmin/clusters.yaml" >}}). Cluster configuration is passed as the command line argument `--cluster` to VTAdmin API like so:
 ```bash
 vtadmin \
   --addr ":14200" \

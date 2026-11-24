@@ -29,7 +29,7 @@ mysqlctl \
 
 ### my.cnf
 
-`mysqlctl` **will not** read configuration files from common locations such as `/etc/my.cnf` or `/etc/mysql/my.cnf`. Instead, it will create a separate `my.cnf` config file using builtin defaults. The source files can be found [here](https://github.com/vitessio/vitess/tree/main/config/mycnf). To add your own settings, you can set the `EXTRA_MY_CNF` environment variable to a list of colon-separated files. Alternatively, you can override the default behavior by specifying your own template file using the `-mysqlctl_mycnf_template` command line argument.
+`mysqlctl` **will not** read configuration files from common locations such as `/etc/my.cnf` or `/etc/mysql/my.cnf`. Instead, it will create a separate `my.cnf` config file using builtin defaults. The source files can be found [here]({{< vitess_code_url "config/mycnf" >}}). To add your own settings, you can set the `EXTRA_MY_CNF` environment variable to a list of colon-separated files. Alternatively, you can override the default behavior by specifying your own template file using the `-mysqlctl_mycnf_template` command line argument.
 
 For example, to override the default innodb buffer pool size, you would create a file named `/path/to/common.cnf` as follows:
 ```text
@@ -63,7 +63,7 @@ Support was recently added to override `sql_mode`. However, we recommend keeping
 
 ### init\_db.sql
 
-After mysqld comes up, `mysqlctl` will initialize the server using an internal script, the contents of which can be found [here](https://github.com/vitessio/vitess/blob/main/config/init_db.sql). You can override this behavior by providing your own script using the `-init_db_sql_file` command line argument.
+After mysqld comes up, `mysqlctl` will initialize the server using an internal script, the contents of which can be found [here]({{< vitess_code_url "config/init_db.sql" >}}). You can override this behavior by providing your own script using the `-init_db_sql_file` command line argument.
 
 ### Disable AppArmor
 
