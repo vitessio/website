@@ -11,7 +11,9 @@
   {{ end }}
 {{ end }}
 
-
+{{ if eq .Section "releases" }}
+  {{ $entries = $entries | append (site.GetPage "/releases") }}
+{{ end }}
 
 
 <div class="docs-menu">

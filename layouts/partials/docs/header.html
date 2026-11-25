@@ -1,4 +1,7 @@
 {{ $docsSections := where site.Sections "Section" "docs" }}
+{{ if eq .Section "releases" }}
+  {{ $docsSections = $docsSections | append (site.GetPage "/releases") }}
+{{ end }}
 {{ $currentRelPermalink := .RelPermalink }}
 
 <header class="docs-header">
