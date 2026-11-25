@@ -6,7 +6,7 @@ aliases:
   - /docs/releases/release-team/
 ---
 
-The release team changes for each [release cycle](release-cycle).
+The release team changes for each [release cycle](../release-cycle/).
 A team remains the same for the entire lifecycle of a major release.
 Below is a table that describes how the team is composed.
 
