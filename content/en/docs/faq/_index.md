@@ -1,7 +1,7 @@
 ---
 title: FAQ
 description: Frequently Asked Questions about Vitess
-weight: 3
+weight: 2100
 cascade:
   skipversions: true
 aliases: ['/docs/user-guides/faq/']

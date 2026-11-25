@@ -2,6 +2,6 @@
 title: Learning Resources
 description: Talks, presentations and podcasts for your learning!
 type: learning-resources
-weight: 4
+weight: 2200
 ---
 

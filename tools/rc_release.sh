@@ -16,6 +16,7 @@ for lang in {en,zh} ; do
   sed -E -r -i.bak 's/weight: [0-9]+/weight: '$((100-next_release))'/' ./content/${lang}/docs/$((next_release)).0/_index.md
   sed -i.bak 's/'$((next_release-1))'.0/'$((next_release))'.0/' ./content/${lang}/docs/$((next_release)).0/_index.md
   sed -i.bak 's/(Development)/(RC)/' ./content/${lang}/docs/$((next_release-1)).0/_index.md
+  sed -i.bak 's/hide_in_sidebar: false/hide_in_sidebar: true/' ./content/${lang}/docs/$((next_release-1)).0/_index.md
   sed -i.bak 's/Under construction, development release./Release Candidate./' ./content/${lang}/docs/$((next_release-1)).0/_index.md
   rm -f ./content/${lang}/docs/$((next_release)).0/_index.md.bak
   rm -f ./content/${lang}/docs/$((next_release-1)).0/_index.md.bak
