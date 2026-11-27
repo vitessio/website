@@ -20,7 +20,7 @@ Consider this DDL:
 alter table `customer` add column `status` int unsigned not null;
 ```
 
-You can only run this change successfully once. Once it it applied, the column `status` exists; any attempt to run the migration again yields an error.
+You can only run this change successfully once. Once it is applied, the column `status` exists; any attempt to run the migration again yields an error.
 
 Sometimes it is desirable to be able to retry a migration. For example, if you apply a migration on a sharded keyspace, where one or more of the shards can be down. In such scenario some shards receive and apply the DDL, while other shards do not, and are not aware of its existence. Attempting to re-apply the same DDL will generate errors on the shards that have received and applied it on the first attempt.
 

@@ -10,7 +10,7 @@ be encrypted and/or authenticated. This guide will provide an overview of these 
 
 There are two paths a data path and a control path that could be secured. The focus in the guide will be to secure the data path. You can read more about the two paths [here](../../configuration-basic/ports/).
 
-Note that the sensitive information mainly flows over the data path, and depending on your deployment model, you may not have to encrypt all of the the control or meta-data path.  We recommend that you evaluate your needs in the context of your compliance directives, threat model and risk management framework.
+Note that the sensitive information mainly flows over the data path, and depending on your deployment model, you may not have to encrypt all of the control or meta-data path.  We recommend that you evaluate your needs in the context of your compliance directives, threat model and risk management framework.
 
 It should also be noted that while Vitess provides the mechanism for securing these communication channels, it does **not** manage the certificate management tasks like:
  
@@ -169,7 +169,7 @@ For each vtgate you should generate a server private key and certificate. We wil
 - First we generate a private key and certificate request.  
 - We will then use the CA to sign that request to produce the server certificate.
   
-For the the prompts during `gen-req`, you can just hit enter. You will be prompted to type `yes` and enter the CA password during the `sign-req` phase.
+For the prompts during `gen-req`, you can just hit enter. You will be prompted to type `yes` and enter the CA password during the `sign-req` phase.
 
 ```bash
   $ cd ~/CA/
@@ -474,7 +474,7 @@ This means that you will need to add the following option to your vtgate instanc
   -tablet_grpc_server_name vttablet1 -tablet_grpc_ca /home/user/config/ca.crt 
 ```
 
-Adding this option to a vtgate instance will require all vttablet instances this vtgate connects to to be configured for TLS as well. This is unfortunately an all-or-nothing proposition, there is no incremental migration to using TLS in this case.
+Adding this option to a vtgate instance will require all vttablet instances contacted by this vtgate to be configured for TLS as well. This is unfortunately an all-or-nothing proposition, there is no incremental migration to using TLS in this case.
 
 If you have vtgate instances accessing your vttablet instance after you have configured TLS on the vttablet side, you may see errors like this in the vttablet logs:
 
@@ -500,7 +500,7 @@ For vreplication to work between vttablet instances once the gRPC server TLS opt
 Since each vttablet instance may need to talk to more than one other vttablet instances for vreplication streams, the implication is that each vttablet instances needs to either:
 
   * Use the same vttablet server key material and server certificate common name for each vttablet instance. This is obviously the easiest option, but might not conform to your compliance requirements.
-  * or, ensure each vttablet server certificate common name or IP SAN matches the DNS name or IP it it accessed via. In this case, you can omit the use of the `-tablet_grpc_server_name` above for vttablet, and also for vtgate.
+  * or, ensure each vttablet server certificate common name or IP SAN matches the DNS name or IP it is accessed via. In this case, you can omit the use of the `-tablet_grpc_server_name` above for vttablet, and also for vtgate.
   
 #### vtctld to vttablet
 
@@ -612,7 +612,7 @@ At this point, all vtctlclient connections to vtctld will need the appropriate a
 
 ## Topology server data paths
 
-Vitess supports several topology server implementations, with the major ones being `etcd` and `ZooKeeper`. Since each of these use their own protocols, securing communications between Vitess components (like vtgate, vttablet and vtctld) and the topology server is specific to the topology server implementation.  We we will cover `etcd` first, then `ZooKeeper`.
+Vitess supports several topology server implementations, with the major ones being `etcd` and `ZooKeeper`. Since each of these use their own protocols, securing communications between Vitess components (like vtgate, vttablet and vtctld) and the topology server is specific to the topology server implementation.  We will cover `etcd` first, then `ZooKeeper`.
 
 It should be noted that regardless of the implementation, no sensitive data is stored in the Vitess topology server, i.e.:
 
@@ -644,8 +644,8 @@ Flags:
 
   * `--listen-client-urls`: specify an `https://` host and port prefix
   * `--advertise-client-urls`: specify an `https://` host and port prefix
-  * `--cert-file`:  Point to to a server cert PEM file
-  * `--key-file`:  Point to to a server key PEM file
+  * `--cert-file`:  Point to a server cert PEM file
+  * `--key-file`:  Point to a server key PEM file
   * (optional) `--cipher-suites`:  Can be used to limit the cipher suites the etc server will negotiate (e.g. `TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384` is a popular combination).  
   
 Note that the Vitess client components will negotiate any of the standard golang TLS client cipher suites (which can vary somewhat depending on which golang version Vitess was compiled with, and what libraries are available on the platform).  It is not possible to limit the cipher suites from the etcd client (i.e. Vitess) components.

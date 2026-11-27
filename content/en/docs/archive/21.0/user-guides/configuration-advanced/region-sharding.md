@@ -131,7 +131,7 @@ $ vtctldclient --server localhost:15999 GetVSchema main
 </br>
 
 We are next going to prepare for having a sharded vschema in the cluster by editing the
-`main_vschema_sharded.json` file and updating the the `region_map` key's value to point to the
+`main_vschema_sharded.json` file and updating the `region_map` key's value to point to the
 filesystem path where that file resides on your machine. For example (relative paths are OK):
 
 ```json
@@ -350,7 +350,7 @@ vtctldclient --server localhost:15999 Reshard --target-keyspace main --workflow 
 
 </br>
 
-We now have a running stream from the source tablet (`100`) to each of of our new `main` target shards that will
+We now have a running stream from the source tablet (`100`) to each of our new `main` target shards that will
 keep the tables up-to-date with the source shard (`0`).
 
 ## Cutover
