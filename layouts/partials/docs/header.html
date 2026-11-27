@@ -83,7 +83,15 @@
             {{ end }}
               {{ end }}
             {{ end }}
+
+            {{ range .RegularPages }}
+            <a class="dropdown-item" href="{{ .RelPermalink }}">
+              {{ .Title }}
+            </a>
+            {{ end }}
               {{ end }}
+
+            
         </div>
       </div>
     </div>
