@@ -26,6 +26,14 @@
     // Cuddle up the search input + social icons for the full-width navbar
     .navbar-item-search
       padding-left: 0
+      min-width: 0
+      flex-shrink: 1
+
+      #search-bar
+        min-width: 0
+    +until($widescreen)
+      .navbar-item-search #search-bar
+        width: 184px
 
 .search-popover
   color: #000

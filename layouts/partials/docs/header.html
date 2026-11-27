@@ -1,4 +1,8 @@
 {{ $docsSections := where site.Sections "Section" "docs" }}
+{{ if eq .Section "releases" }}
+  {{ $docsSections = $docsSections | append (site.GetPage "/releases") }}
+{{ end }}
+{{ $currentRelPermalink := .RelPermalink }}
 
 {{ partial "docs/version-notice.html" . }}
 
@@ -67,18 +71,29 @@
 
           <hr class="dropdown-divider" />
 
-          {{ range .Sections }}
-          <a class="dropdown-item has-text-weight-bold" href="{{ .RelPermalink }}">
-            {{ .Name }}
-          </a>
+                     {{ range .Sections }}
+              {{ $isCurrentVersion := in $currentRelPermalink .RelPermalink }}
+              {{ if or (not .Params.hide_in_sidebar) $isCurrentVersion }}
+            <a class="dropdown-item has-text-weight-bold" href="{{ .RelPermalink }}">
+              {{ .Name }}
+            </a>
 
-          {{ range .Pages }}
-          <a class="dropdown-item" href="{{ .RelPermalink }}">
-            {{ .Title }}
-          </a>
-          {{ end }}
-          {{ end }}
-          {{ end }}
+            {{ range .Pages }}
+            <a class="dropdown-item" href="{{ .RelPermalink }}">
+              {{ .Title }}
+            </a>
+            {{ end }}
+              {{ end }}
+            {{ end }}
+
+            {{ range .RegularPages }}
+            <a class="dropdown-item" href="{{ .RelPermalink }}">
+              {{ .Title }}
+            </a>
+            {{ end }}
+              {{ end }}
+
+            
         </div>
       </div>
     </div>
