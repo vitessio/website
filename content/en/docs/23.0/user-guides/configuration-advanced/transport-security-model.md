@@ -474,7 +474,7 @@ This means that you will need to add the following option to your vtgate instanc
   --tablet-grpc-server-name vttablet1 --tablet-grpc-ca /home/user/config/ca.crt
 ```
 
-Adding this option to a vtgate instance will require all vttablet instances this vtgate connects to be configured for TLS as well. This is unfortunately an all-or-nothing proposition, there is no incremental migration to using TLS in this case.
+Adding this option to a vtgate instance will require all vttablet instances contacted by this vtgate to be configured for TLS as well. This is unfortunately an all-or-nothing proposition, there is no incremental migration to using TLS in this case.
 
 If you have vtgate instances accessing your vttablet instance after you have configured TLS on the vttablet side, you may see errors like this in the vttablet logs:
 
