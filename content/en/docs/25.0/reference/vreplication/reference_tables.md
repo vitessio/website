@@ -93,6 +93,18 @@ UPDATE countries SET name = 'The Netherlands' WHERE name = 'Netherlands'
 Once this query is executed against the source table, the VReplication workflows (see below) will propagate the
 changes to the corresponding reference tables in all other shards.
 
+vtgate rejects an `UPDATE` or `DELETE` that would write a reference table through a route to a sharded table. For
+example, this statement joins `countries` with the sharded `sales` table:
+
+```sql
+DELETE c FROM countries c JOIN sales s ON s.country_id = c.id WHERE s.id = 1
+```
+
+If vtgate sent this statement to the shards, each shard would delete rows from its own copy of `countries`. The rows
+it deleted would depend on the `sales` rows that shard holds, so the copies would no longer match. To make such a
+change, first select the reference table rows to change. Then run the `UPDATE` or `DELETE` on the reference table
+alone, filtering by those values.
+
 ## Keeping Reference Tables in Sync
 
 The [VReplication Materialize](https://vitess.io/docs/user-guides/migration/materialize/) workflow is the mechanism that
