@@ -3,8 +3,6 @@ title: "What is Vitess?"
 shorten_nav_links: true
 notoc: true
 weight: 1
-aliases:
-  - /docs/faq/getting-started/overview/what-is-vitess/
 ---
 
 **Vitess is a database solution for deploying, scaling and managing large clusters of database instances.** 
